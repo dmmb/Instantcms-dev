@@ -1,0 +1,325 @@
+#usr_links{
+	margin-top:0px;
+	margin-bottom:10px;
+	overflow:hidden;
+	clear:both;
+	padding:10px;
+}
+
+#usr_photoalbum, #usr_files, #usr_blog, #usr_board, #usr_comments{
+	display: block;
+	height:32px;
+	line-height:32px;
+	padding-left:46px;
+	padding-right:15px;
+	font-size:14px;
+	font-weight:bold;
+	margin:5px;
+}
+
+.online{
+	padding-left:3px;
+	padding-right:3px;
+	background-color:#009900;
+	color:#FFF;
+}
+
+.cmm_votes{
+	float: right;
+	padding: 2px;
+    margin-right:15px;
+    color:silver;
+    font-weight:bold;
+}
+.cmm_good{
+    color:green;
+}
+.cmm_bad{
+    color:red;
+}
+
+div.users_list_buttons{ overflow: hidden; }
+div.users_list_buttons .button{ width:130px; text-align:center; height:30px; line-height:30px; float:left; background:url(/components/users/images/button.jpg) no-repeat; }
+div.users_list_buttons .button a { color:#666666; }
+
+div.users_list_buttons .selected_positive{ font-weight: bold; background:url(/components/users/images/button_selected_pos.jpg) no-repeat; }
+div.users_list_buttons .selected_positive a{ color: #FFF; }
+div.users_list_buttons .selected_negative{ font-weight: bold; background:url(/components/users/images/button_selected_neg.jpg) no-repeat; }
+div.users_list_buttons .selected_negative a{ color: #FFF; }
+div.users_list_buttons .selected_rating{ font-weight: bold; background:url(/components/users/images/button_selected_rat.jpg) no-repeat; }
+div.users_list_buttons .selected_rating a{ color: #FFF; }
+
+div.users_list { border: solid 1px #999; padding:10px; margin-bottom:10px; }
+
+table.users_list div.number{ color:#999; }
+table.users_list div.nickname { font-size:18px; margin-bottom:4px; float:left;}
+table.users_list div.karma { float:right; clear:right; overflow:hidden; padding-top:4px; }
+table.users_list div.karma span { font-size:16px; padding:2px;  padding-left:17px; }
+table.users_list div.karma span.rating { color:#006699; font-size:16px; padding:2px; padding-left:20px; background:url(/components/users/images/rating.gif) no-repeat left center; }
+
+table.users_list div.city { clear:both; }
+table.users_list div.city a{ color:#666; }
+table.users_list div.status { clear:both; margin-top:2px; }
+table.users_list div.status .online{ padding:0px 2px 0px 2px; background-color:#00CC00; color:#FFF; font-size:10px;}
+table.users_list div.status .offline{ color:#999999; font-size:10px; background:none; padding:0px;}
+
+div.stat_block { margin-left: 20px; }
+div.stat_block div.title { font-size:24px; color:#006699; }
+div.stat_block div.body li { list-style:none; margin-bottom:3px; }
+
+div.stat_block_bday { margin-left: 20px;    }
+div.stat_block_bday div.title { padding-left:18px; background:url(/components/users/images/birthday.gif) no-repeat left center; font-size:16px; color:#006699;; font-weight:bold; margin-bottom:5px; margin-top:20px;}
+div.stat_block_bday div.body { text-indent:30px; }
+/*---------------------------------------------------------------------------------------*/
+
+div#user_ratings { padding:10px; }
+
+div#user_ratings div.karma, div#user_ratings div.rating { float:left; text-align:center; width: 50%; }
+
+div#user_ratings .karma .title, div#user_ratings .rating .title { color:#666; }
+
+div#user_ratings .value,  div#user_ratings .value-positive, div#user_ratings .value-negative{ font-size:16px; padding: 4px; margin: 2px; }
+
+div#user_ratings .karma .value-positive { background-color:#00AA00; color:#FFF; }
+div#user_ratings .karma .value-negative { background-color:#AA0000; color:#FFF; }
+
+div#user_ratings .karma table { margin-left:auto; margin-right:auto; }
+div#user_ratings .karma table td { font-size:16px; }
+
+div#user_ratings .rating .value {  background-color:#006699; color:#FFF; padding:6px; }
+
+div#user_profile_url{
+    clear:both;
+    display:block;
+    padding-top:15px;
+    text-align:center;
+}
+
+div.usr_clubs {padding: 15px; }
+div.usr_clubs span.label { margin-right:15px; font-weight:bold; }
+div.usr_clubs a.usr_club_link { padding-left:18px; background:url(/images/icons/club.gif) no-repeat left center; height:16px; line-height:16px; margin-right:5px; }
+
+/*---------------------------------------------------------------------------------------*/
+
+div.usr_profile_menu{ margin-top:10px; clear:both; overflow:hidden; }
+
+div.usr_profile_menu a { padding:4px; height:24px; width:24px; border: solid 1px #FFF; overflow:hidden; float:left; }
+div.usr_profile_menu a:hover { padding:4px; height:24px; width:24px; background-color:#ebebeb; border:solid 1px gray; overflow:hidden; float:left; }
+
+a.select-avatar{
+    height:16px;
+    line-height:16px;
+    padding-left:18px;
+    background:url(/components/users/images/selectavatar.gif) no-repeat left center;
+}
+
+/*---------------------------------------------------------------------------------------*/
+
+div.user_profile_data { padding:10px; padding-top:0px; padding-bottom:0px;}
+
+div.user_profile_data .offline{
+	padding-left:3px;
+	padding-right:3px;
+	background-color:#990000;
+	color:#FFF;
+}
+
+.usr_friends_entry .offline{
+	color:#999999;
+}
+
+div.user_profile_data .field{ overflow: hidden; clear:both; }
+
+div.user_profile_data .field .title, 
+div.user_profile_data .field .value { float:left; height:24px; line-height:24px; }
+
+div.user_profile_data .field .title { width:170px; font-weight:bold; }
+div.user_profile_data .field .value {  }
+
+/*---------------------------------------------------------------------------------------*/
+
+#usr_photoalbum{ background:url(/components/users/images/profile/photoalbum.png) no-repeat; }
+#usr_board{	background:url(/components/users/images/profile/board.png) no-repeat; }
+#usr_files{	background:url(/components/users/images/profile/files.png) no-repeat; }
+#usr_blog{ background:url(/components/users/images/profile/blog.png) no-repeat; }
+#usr_comments{ background:url(/components/users/images/profile/comments.png) no-repeat; }
+
+.usr_friends_query{
+	padding:10px; margin-top:10px; border:solid 1px silver;
+}
+
+.content_title { font-size:14px; font-weight:bold; }
+
+.usr_friends_feed{ padding:6px; }
+.usr_friends_feed a.nickname { color:gray; }
+
+.usr_com_title{	padding: 5px; background-color:#EBEBEB; border-top:solid 1px #666;	border-bottom:none; }
+.usr_com_body{	padding-top: 15px; }
+
+.usr_wall_entry { padding: 5px; border: dashed 1px #CCC; margin-bottom:2px; }
+.usr_wall_title{ padding: 5px; font-weight:bold; float:left; }
+.usr_wall_delete { float:right; padding:5px; }
+.usr_wall_delete a { background:url(/components/users/images/delete.gif) no-repeat left center; padding-left:18px; height:16px; line-height:16px; }
+
+.usr_msg_title{	padding: 10px; }
+.usr_msg_body{ padding: 10px; }
+
+.usr_publ_albums{ overflow:hidden;	background-color:#EBEBEB; padding:6px; margin-bottom:10px; }
+.usr_photo_thumb{ padding:1px; float:left; height:140px;	width:120px;	display:block;	margin:4px;	padding:1px; padding-top:10px;border:dotted 1px silver;	background-color:#FFFFFF; text-align:center; }
+.usr_photo_view{ text-align:center; padding:10px; background-color:#FFFFFF; }
+.usr_editprof{	background-color:#FFFFFF; border:solid 1px gray; padding:8px; width:100%; }
+.usr_edithint{	color:#666666;	font-size:10px; }
+
+/*---------------------------------------------------------------------------------------*/
+
+.usr_q_title{ font-weight:bold; margin:1px;	margin-bottom:12px;	padding:5px; clear:both; border-bottom:dashed 1px gray; }
+
+.usr_q_thumb{ margin-left:1px; margin-bottom:1px; float:left; display:block; width:70px; }
+.usr_q_thumbimg{ background-color:#FFFFFF; border:solid 1px gray; }
+.usr_q_link{ color:#003366; }
+
+.usr_award_block{ display:block; margin:2px; width:100%; }
+.usr_award_date{ font-size:10px; color:#999999;	margin-top:5px; }
+
+.usr_deleted{ font-size:18px; color:#990000; }
+.usr_restore{ margin-top:10px; }
+
+.usr_btnlink{ padding:10px;	margin:2px;	border:solid 1px silver; width:120px; }
+
+.usr_files_orderbar{ background-color:#EBEBEB;	margin-bottom:4px;	padding:5px; }
+.usr_files_orderbtn{ font-size:9px;	background-color:#CCCCCC; border:solid 1px gray; height:20px; }
+.usr_files_link{ font-size:10px; color:#999999; }
+
+/*---------------------------------------------------------------------------------------*/
+
+.usr_wall{ margin-top:5px; padding:2px;	overflow:hidden; }
+.usr_wall #addwall{	padding-right: 10px;}
+
+.usr_wall_header{ font-size:18px; padding:2px; color:#7192A6;}
+.usr_wall_body{	padding:2px; }
+.usr_wall_addlink{
+	margin-top:10px;
+	padding:3px;
+	padding-left:20px;
+	line-height:12px;
+	background-image:url(/components/users/images/writewall.gif);
+	background-repeat:no-repeat;
+}
+.usr_wall_addlink a{ text-decoration:underline;	color:gray;}
+.usr_friendslink{ text-decoration:underline; color:#999999; }
+
+textarea.wall_message{ width:100%; height:100px; }
+
+#karmalink{	font-size:16px;	font-weight:bold; padding:4px; background-color:#EBEBEB; margin:2px; margin-left:8px; }
+#usertitle{	margin-bottom:4px;	overflow:hidden;}
+#nickname{	margin:0px; }
+
+.usr_group{
+	padding:2px;
+	padding-left:20px;
+	margin-top:5px;
+	margin-bottom:5px;
+	background:url(/components/users/images/group.gif);
+	background-repeat:no-repeat;
+	line-height:16px;
+	color:#666666;
+}
+.usr_awlist_link{
+	font-size:14px;
+	background:#ccc;
+	padding:5px;
+	text-align:center;
+	font-weight:bold;
+}
+
+.usr_awlist_link a{	text-decoration:none; }
+.usr_aw_dettable{ margin:5px;	margin-bottom:20px; }
+.usr_aw_img{ padding:5px; border:solid 1px #ccc; }
+.usr_aw_title{ font-size:18px; }
+.usr_aw_desc{ font-size:14px; color:#666666; }
+.usr_aw_who{ padding:10px;	background:#EBEBEB; }
+.usr_aw_who #m{	background:url(/images/markers/usermale.png) no-repeat 0px 2px;	padding-left:20px;	line-height:18px; }
+.usr_aw_who #f{	background:url(/images/markers/userfemale.png) no-repeat 0px 2px; padding-left:20px; line-height:18px; }
+.usr_aw_users{ margin-bottom:4px; }
+
+div.awards_list_link { padding:5px; }
+div.awards_list_link a{ padding-left:18px;  background:url(/images/icons/help.gif) no-repeat left center; }
+
+#usr_profparams{ width:750px; border:dashed 1px silver;	padding:10px; }
+
+#usr_profsavebtns{	background:#EBEBEB;	width:775px; margin-top:10px; margin-bottom:5px; text-align:center; }
+
+#usr_prof_form{	padding:10px;padding-top:0px; }
+
+#usr_prof_form em{ color:#999; }
+
+#usr_prof_form #title{ width:170px; height:24px; line-height:24px; }
+#usr_prof_form #field{ height:24px; line-height:24px; }
+
+#usr_prof_form table{ width:100%; }
+
+.usr_msgmenu_active{ margin-right:0px;	background-color:#EBEBEB; padding:10px;	font-weight:bold; }
+.usr_msgmenu_link{	margin-right:0px;	padding:10px;	}
+
+.in_link{ padding-left:26px; background:url(/components/users/images/messages/message-in.gif) no-repeat 8px center #FFF; }
+.in_span{ padding-left:26px; background:url(/components/users/images/messages/message-in.gif) no-repeat 8px center #EBEBEB; }
+
+.out_link{ padding-left:26px; background:url(/components/users/images/messages/message-out.gif) no-repeat 8px center #FFF; }
+.out_span{ padding-left:26px; background:url(/components/users/images/messages/message-out.gif) no-repeat 8px center #EBEBEB; }
+
+.new_link{ padding-left:26px; background:url(/components/users/images/messages/message-new.gif) no-repeat 8px center #FFF; }
+.new_span{ padding-left:26px; background:url(/components/users/images/messages/message-new.gif) no-repeat 8px center #EBEBEB; }
+
+.history_span{ padding-left:26px; background:url(/components/users/images/msghistory.gif) no-repeat 5px center #EBEBEB; }
+
+a.msg_delete{
+	background:url(/components/users/images/delete.gif) no-repeat 3px 5px;
+	padding:2px;
+	padding-left:24px;
+}
+a.msg_reply{
+	background:url(/components/users/images/messages.gif) no-repeat 3px 5px;
+	padding:2px;
+	padding-left:24px;
+}
+a.msg_history{
+	background:url(/components/users/images/msghistory.gif) no-repeat 3px 5px;
+	padding:2px;
+	padding-left:24px;
+}
+
+table.feed { margin-top:10px; margin-bottom:10px; }
+table.feed td { font-size:14px; }
+table.feed td.date { font-size:12px; text-align:left; width:110px; }
+table.feed td.date strong { color:green; }
+
+.usr_files_head{
+    background-color:#ECECEC;
+    font-weight:bold;
+    padding:4px;
+}
+
+.usr_status_bar{
+    clear:both;
+    margin-top:0px;
+    padding-bottom:10px;
+}
+
+.usr_status_text{
+    font-style:italic;
+    background:url(/components/users/images/messages.gif) no-repeat left center;
+    padding-left:19px;
+    float:left;
+}
+
+.usr_status_date{
+    font-size:9px;
+    color:gray;
+    font-style:normal;
+    margin-left:14px;
+    margin-right:14px;
+}
+
+.usr_status_link{
+    float:left;
+}
