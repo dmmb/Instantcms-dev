@@ -1,6 +1,3 @@
-function setControls() {
-}
-
 $(document).ready(function(){
 	$('#hmenu ul li').hover(
 		function() {
@@ -19,15 +16,25 @@ $(document).ready(function(){
 	
 	$('input[@type=button]').addClass('button');
 	$('input[@type=submit]').addClass('button');
-	
-	setControls();			
-});
 
-$(window).resize(function() {
-    setControls();
-});
+    $('input[@name=published][@type=checkbox]').click(function(){
 
-function getKeywords(field_id){
-	var text = $('#'+field_id).val();	
-	alert(text);
-}
+        var checked = $(this).attr('checked');
+
+        if (checked){
+            $('label[@for=published] strong').css('color', 'green');
+        } else {
+            $('label[@for=published] strong').css('color', 'red');
+        }
+
+    });
+
+    var checked = $('input[@name=published][@type=checkbox]').attr('checked');
+
+    if (checked){
+        $('label[@for=published] strong').css('color', 'green');
+    } else {
+        $('label[@for=published] strong').css('color', 'red');
+    }
+
+});

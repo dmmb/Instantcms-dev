@@ -18,14 +18,14 @@ a:active,a:focus {outline:0;}
 .jwts_tabberlive .jwts_tabbertab h2,
 .jwts_tabberlive .jwts_tabbertab h3,
 .jwts_tabberlive .jwts_tabbertabhide {display:none;}
-ul.jwts_tabbernav {margin:0px;padding:6px;list-style:none;list-style-image:none;background:none;line-height:normal;height:auto;}
+ul.jwts_tabbernav {margin:0px;padding:6px;list-style:none;list-style-image:none;background:none;line-height:normal;height:auto;margin-bottom:10px;}
 ul.jwts_tabbernav li {margin:0px;padding:0px;list-style:none;list-style-image:none;background:none;display:inline;}
 ul.jwts_tabbernav li a,
 ul.jwts_tabbernav li a:link {font-size:14px;margin:0px 1px;padding:12px;color:gray;background:#ccc; text-decoration:none;}
 ul.jwts_tabbernav li a:visited {color:#333;}
 ul.jwts_tabbernav li a:hover {font-size:14px;margin:0px 1px;padding:12px;color:#FF6600;background:#f2f2f2;text-decoration:none;}
 ul.jwts_tabbernav li a:active,ul.jwts_tabbernav li a:focus {outline:0; color:#000; }
-ul.jwts_tabbernav li.jwts_tabberactive a {background:#ebebeb;border-bottom:1px solid #fff; color:#000; font-weight:bold; }
+ul.jwts_tabbernav li.jwts_tabberactive a {background:#fff;border-bottom:1px solid #fff; color:#000;}
 ul.jwts_tabbernav li.jwts_tabberactive a:hover {background:#fff;border-bottom:1px solid #fff;text-decoration:none;}
 ul.jwts_tabbernav li.jwts_tabberactive,
 ul.jwts_tabbernav li.jwts_tabberinactive {background:none;padding:0px;margin:0px; border-top:solid 2px #ffcc00; }

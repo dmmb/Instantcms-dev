@@ -30,9 +30,9 @@ function showIns(){
 function checkGroupList(){
 
 	if(document.addform.show_all.checked){
-		document.getElementById('grp').style.display = 'none';
+		$('select#showin').attr('disabled', 'disabled');
 	} else {
-		document.getElementById('grp').style.display = 'block';
+		$('select#showin').attr('disabled', '');
 	}
 
 }

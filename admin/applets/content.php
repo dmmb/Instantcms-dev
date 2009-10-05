@@ -640,7 +640,7 @@ function applet_content(){
             </tr>
         </table>
 
-        <div style="margin-top:6px;">
+        <p>
             <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add') { echo 'value="Создать материал"'; } else { echo 'value="Сохранить материал"'; } ?> />
             <input name="back" type="button" id="back" value="Отмена" onclick="window.history.back();"/>
             <input name="do" type="hidden" id="do" <?php if ($do=='add') { echo 'value="submit"'; } else { echo 'value="update"'; } ?> />
@@ -649,7 +649,7 @@ function applet_content(){
                     echo '<input name="id" type="hidden" value="'.$mod['id'].'" />';
                 }
             ?>
-        </div>
+        </p>
     </form>
     <?php
     }

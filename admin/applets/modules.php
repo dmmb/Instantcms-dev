@@ -559,13 +559,13 @@ function applet_modules(){
                             }
                         }
                         
-                        echo '<div id="grp" style="'.(@$show_all ? 'display:none' : 'display:block').'">';
+                        echo '<div id="grp">';
 
                         echo '<div style="margin-top:13px">
-                                <strong>Где показывать модуль</strong>
+                                <strong>Где показывать модуль?</strong>
                               </div>';
 
-                        echo '<select style="width: 100%" name="showin[]" size="9" multiple="multiple">';
+                        echo '<select style="width: 100%" id="showin" name="showin[]" size="9" multiple="multiple" '.(@$show_all ? 'disabled="disabled"' : '').'>';
 
                         if (mysql_num_rows($result)){
                             while ($item=mysql_fetch_assoc($result)){
@@ -595,7 +595,7 @@ function applet_modules(){
                         </div>
 
                         <div style="margin-top:15px">
-                            <strong>Период кеширования</strong>
+                            <strong>Период обновления кеша</strong>
                         </div>
                         <div>
                             <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:5px;">

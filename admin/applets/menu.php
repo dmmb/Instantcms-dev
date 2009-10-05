@@ -25,7 +25,7 @@ function iconList(){
 	
 	if (!$n) { echo '<p>Папка "/images/menuicons" пуста!</p>'; }
 	
-	echo '<p align="right">[<a href="javascript:selectIcon(\'\')">Без иконки</a>] [<a href="javascript:hideIcons()">Закрыть</a>]</p>';
+	echo '<div align="right" style="clear:both">[<a href="javascript:selectIcon(\'\')">Без иконки</a>] [<a href="javascript:hideIcons()">Закрыть</a>]</div>';
 	
 	return;
 }
@@ -453,9 +453,12 @@ function applet_menu(){
 
 
    if ($do == 'add' || $do == 'edit'){
+
 		$GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="js/menu.js"></script>';
-	 	$GLOBALS['cp_page_head'][] = '';
-	
+
+        require('../includes/jwtabs.php');
+		$GLOBALS['cp_page_head'][] = jwHeader();
+
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'save.gif';
 		$toolmenu[0]['title'] = 'Сохранить';
@@ -499,38 +502,35 @@ function applet_menu(){
 					 cpAddPathway($mod['title'], 'index.php?view=menu&do=edit&id='.$mod['id']);
 			}   
 	?>
-        <form id="addform" name="addform" method="post" action="index.php">
-            <input type="hidden" name="view" value="menu" />
-            <table width="650" border="0" cellpadding="0" cellspacing="10" class="proptable">
-                <tr>
-                    <td width="350" valign="top">
-                        <strong>Заголовок пунта меню:</strong><br />
-                        <span class="hinttext">Отображается на сайте</span>
-                    </td>
-                    <td valign="top">
-                        <input name="title" type="text" id="title" size="30" style="width:280px" value="<?php echo @$mod['title'];?>"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top"><strong>Меню:</strong></td>
-                    <td valign="top">
-                        <select name="menu" id="menu" style="width:280px">
+    <form id="addform" name="addform" method="post" action="index.php">
+        <input type="hidden" name="view" value="menu" />
+
+        <table class="proptable" width="100%" cellpadding="15" cellspacing="2">
+            <tr>
+
+                <!-- главная ячейка -->
+                <td valign="top">
+
+                    <div><strong>Заголовок пункта меню</strong> <span class="hinttext">&mdash; отображается на сайте</span></div>
+                    <div><input name="title" type="text" id="title" style="width:100%" value="<?php echo @$mod['title'];?>" /></div>
+
+                    <div>
+                        <select name="menu" id="menu" style="width:100%">
                             <option value="mainmenu" <?php if (@$mod['menu']=='mainmenu' || !isset($mod['menu'])) { echo 'selected'; }?>>Главное меню</option>
-                            <option value="menu1" <?php if (@$mod['menu']=='menu1') { echo 'selected'; }?>>Дополнительно меню 1</option>
-                            <option value="menu2" <?php if (@$mod['menu']=='menu2') { echo 'selected'; }?>>Дополнительно меню 2</option>
-                            <option value="menu3" <?php if (@$mod['menu']=='menu3') { echo 'selected'; }?>>Дополнительно меню 3</option>
-                            <option value="menu4" <?php if (@$mod['menu']=='menu4') { echo 'selected'; }?>>Дополнительно меню 4</option>
-                            <option value="menu5" <?php if (@$mod['menu']=='menu5') { echo 'selected'; }?>>Дополнительно меню 5</option>
+                            <option value="menu1" <?php if (@$mod['menu']=='menu1') { echo 'selected'; }?>>Дополнительное меню 1</option>
+                            <option value="menu2" <?php if (@$mod['menu']=='menu2') { echo 'selected'; }?>>Дополнительное меню 2</option>
+                            <option value="menu3" <?php if (@$mod['menu']=='menu3') { echo 'selected'; }?>>Дополнительное меню 3</option>
+                            <option value="menu4" <?php if (@$mod['menu']=='menu4') { echo 'selected'; }?>>Дополнительное меню 4</option>
+                            <option value="menu5" <?php if (@$mod['menu']=='menu5') { echo 'selected'; }?>>Дополнительное меню 5</option>
                         </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top"><strong>Родительский пункт: </strong></td>
-                    <td valign="top">
+                    </div>
+
+                    <div><strong>Родительский пункт</strong></div>
+                    <div>
                         <?php
                             $rootid = dbGetField('cms_menu', 'parent_id=0', 'id');
                         ?>
-                        <select name="parent_id" size="8" id="parent_id" style="width:280px">
+                        <select name="parent_id" size="10" id="parent_id" style="width:100%">
                             <option value="<?php echo $rootid?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- Корень меню --</option>
                             <?php
                                 if (isset($mod['parent_id'])){
@@ -541,73 +541,198 @@ function applet_menu(){
                             ?>
                         </select>
                         <input type="hidden" name="oldparent" value="<?php echo @$mod['parent_id'];?>" />
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top"><strong>Открывать: </strong></td>
-                    <td valign="top">
-                        <select name="target" id="target" style="width:280px">
+                    </div>
+
+                    <div><strong>Действие пункта меню</strong></div>
+                    <div>
+                        <select name="linktype" id="linktype" style="width:100%" onchange="showMenuTarget()">
+                            <option value="link" <?php if (@$mod['linktype']=='link' || !isset($mod['mode'])) { echo 'selected'; }?>>Открыть ссылку</option>
+                            <option value="content" <?php if (@$mod['linktype']=='content') { echo 'selected'; }?>>Открыть статью</option>
+                            <option value="category" <?php if (@$mod['linktype']=='category') { echo 'selected'; }?>>Открыть раздел (список статей)</option>
+                            <option value="component" <?php if (@$mod['linktype']=='component') { echo 'selected'; }?>>Открыть компонент</option>
+                            <option value="blog" <?php if (@$mod['linktype']=='blog') { echo 'selected'; }?>>Открыть блог</option>
+                            <option value="uccat" <?php if (@$mod['linktype']=='uccat') { echo 'selected'; }?>>Открыть категорию каталога</option>
+                            <option value="pricecat" <?php if (@$mod['linktype']=='pricecat') { echo 'selected'; }?>>Открыть категорию прайс-листа</option>
+                        </select>                        
+                    </div>
+
+                    <div id="t_link" class="menu_target" style="display:<?php if ($mod['linktype']=='link'||$mod['linktype']=='ext'||!$mod['linktype']) { echo  'block'; } else { echo 'none'; } ?>">
+                        <div>
+                            <strong>Адрес ссылки</strong> <span class="hinttext">&mdash; для внешних ссылок не забывайте префикс <b>http://</b></span>
+                        </div>
+                        <div>
+                            <input name="link" type="text" id="link" size="50" style="width:100%" <?php if (@$mod['linktype']=='link'||@$mod['linktype']=='ext') { echo  'value="'.$mod['link'].'"'; } ?>/>
+                        </div>
+                    </div>
+
+                    <div id="t_content" class="menu_target" style="display:<?php if ($mod['linktype']=='content') { echo  'block'; } else { echo 'none'; } ?>">
+                        <div>
+                            <strong>Выберите статью</strong>
+                        </div>
+                        <div>
+                            <select name="content" id="content" style="width:100%">
+                                <?php
+                                    if (@$mod['linktype']=='content') {
+                                        echo $inCore->getListItems('cms_content', $mod['linkid']);
+                                    } else {
+                                        echo $inCore->getListItems('cms_content');
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="t_category" class="menu_target" style="display:<?php if ($mod['linktype']=='category') { echo  'block'; } else { echo 'none'; } ?>">
+                        <div>
+                            <strong>Выберите раздел</strong>
+                        </div>
+                        <div>
+                            <select name="category" id="category" style="width:100%">
+                                    <?php
+                                    if (@$mod['linktype']=='category') {
+                                        echo $inCore->getListItemsNS('cms_category', $mod['linkid']);
+                                    } else {
+                                        echo $inCore->getListItemsNS('cms_category');
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="t_component" class="menu_target" style="display:<?php if ($mod['linktype']=='component') { echo  'block'; } else { echo 'none'; } ?>">
+                        <div>
+                            <strong>Выберите компонент</strong>
+                        </div>
+                        <div>
+                           <select name="component" id="component" style="width:100%">
+                                <?php
+                                    if (@$mod['linktype']=='component') {
+                                        echo $inCore->getListItems('cms_components', $mod['linkid'], 'title', 'asc', 'internal=0', 'link');
+                                    } else {
+                                        echo $inCore->getListItems('cms_components', 0, 'title', 'asc', 'internal=0', 'link');
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="t_blog" class="menu_target" style="display:<?php if ($mod['linktype']=='blog') { echo  'block'; } else { echo 'none'; } ?>">
+                        <div>
+                            <strong>Выберите блог</strong>
+                        </div>
+                        <div>
+                           <select name="blog" id="blog" style="width:100%">
+                                <?php
+                                    if (@$mod['linktype']=='blog') {
+                                        echo $inCore->getListItems('cms_blogs', $mod['linkid'], 'title', 'asc', "owner='user'");
+                                    } else {
+                                        echo $inCore->getListItems('cms_blogs', 0, 'title', 'asc', "owner='user'");
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="t_uccat" class="menu_target" style="display:<?php if ($mod['linktype']=='uccat') { echo  'block'; } else { echo 'none'; } ?>">
+                        <div>
+                            <strong>Выберите категорию каталога</strong>
+                        </div>
+                        <div>
+                           <select name="uccat" id="uccat" style="width:100%">
+                                <?php
+                                    if (@$mod['linktype']=='uccat') {
+                                        echo $inCore->getListItems('cms_uc_cats', $mod['linkid']);
+                                    } else {
+                                        echo $inCore->getListItems('cms_uc_cats');
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="t_pricecat" class="menu_target" style="display:<?php if ($mod['linktype']=='pricecat') { echo  'block'; } else { echo 'none'; } ?>">
+                        <div>
+                            <strong>Выберите категорию прайс-листа</strong>
+                        </div>
+                        <div>
+                           <select name="pricecat" id="pricecat" style="width:100%">
+                                <?php
+                                    if (@$mod['linktype']=='pricecat') {
+                                        echo $inCore->getListItems('cms_price_cats', $mod['linkid']);
+                                    } else {
+                                        echo $inCore->getListItems('cms_price_cats');
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                </td>
+
+                <!-- боковая ячейка -->
+                <td width="300" valign="top" style="background:#ECECEC;">
+
+                    <?php ob_start(); ?>
+
+                    {tab=Публикация}
+
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
+                            <tr>
+                                <td width="20"><input type="checkbox" name="published" id="published" value="1" <?php if ($mod['published'] || $do=='add') { echo 'checked="checked"'; } ?>/></td>
+                                <td><label for="published"><strong>Публиковать пункт меню</strong></label></td>
+                            </tr>
+                        </table>
+
+                        <div style="margin-top:15px">
+                            <strong>Открывать пункт меню</strong>
+                        </div>
+                        <div>
+                            <select name="target" id="target" style="width:100%">
                                 <option value="_self" <?php if (@$mod['target']=='_self') { echo 'selected'; }?>>В этом же окне (self)</option>
                                 <option value="_parent">В родительском окне (parent)</option>
                                 <option value="_blank" <?php if (@$mod['target']=='_blank') { echo 'selected'; }?>>В новом окне (blank)</option>
                                 <option value="_top" <?php if (@$mod['target']=='_top') { echo 'selected'; }?>>Поверх всех окон (top)</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top">
-                        <strong>Шаблон:</strong><br />
-                        <span class="hinttext">Выберите, если открытие пункта меню должно сопровождаться сменой шаблона</span>
-                    </td>
-                    <td valign="top">
-                        <select name="template" id="template" style="width:280px">
-                                <option value="0" <?php if (@$mod['template']==0 || !$mod['template']) { echo 'selected'; } ?>>По умолчанию</option>
-                                <?php if (isset($mod['template'])){
-                                    $inCore->templatesList($mod['template']);
-                                } else {
-                                    $inCore->templatesList(-1);
-                                }
+                            </select>
+                        </div>
+
+                        <div style="margin-top:15px">
+                            <strong>Шаблон сайта</strong><br/>
+                            <span class="hinttext">Выберите, если нужно чтобы открытие пункта меню сопровождалось сменой дизайна сайта</span>
+                        </div>
+                        <div>
+                            <select name="template" id="template" style="width:100%">
+                                <option value="0" <?php if (@$mod['template']==0 || !$mod['template']) { echo 'selected'; } ?>>По-умолчанию</option>
+                                <?php
+                                    if (isset($mod['template'])){
+                                        $inCore->templatesList($mod['template']);
+                                    } else {
+                                        $inCore->templatesList(-1);
+                                    }
                                 ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top">
-                        <strong>Иконка:</strong><br />
-                        <span class="hinttext">Название gif-файла в папке &quot;/images/menuicons&quot;</span>
-                    </td>
-                    <td valign="top">
-                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                            <tr>
-                                <td>
-                                    <input name="iconurl" type="text" id="iconurl" size="30" value="<?php echo @$mod['iconurl'];?>" style="width:280px"/>
-                                    <a id="iconlink" style="display:block; float:left" href="javascript:showIcons()"> Выбрать иконку</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div id="icondiv" style="display:none; width:270px; padding:6px;border:solid 1px gray">
-                                        <div><?php iconList(); ?></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top"><strong>Публиковать пункт?</strong></td>
-                    <td valign="top">
-                        <input name="published" type="radio" value="1" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> /> Да
-                        <input name="published" type="radio" value="0" <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> /> Нет
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top">
-                        <strong>Доступ:</strong><br />
-                        <span class="hinttext">Какой группе пользователей показывать и разрешать открывать этот пункт меню </span>
-                    </td>
-                    <td valign="top">
-                        <select name="allow_group" id="allow_group" style="width:280px">
+                            </select>
+                        </div>
+
+                        <div style="margin-top:15px">
+                            <strong>Иконка</strong><br/>
+                            <span class="hinttext">Название файла в папке "/images/menuicons"</span>
+                        </div>
+                        <div>
+                            <input name="iconurl" type="text" id="iconurl" size="30" value="<?php echo @$mod['iconurl'];?>" style="width:100%"/>
+                            <div>
+                                <a id="iconlink" style="display:block;" href="javascript:showIcons()"> Выбрать иконку</a>
+                                <div id="icondiv" style="display:none; padding:6px;border:solid 1px gray;background:#FFF">
+                                    <div><?php iconList(); ?></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {tab=Доступ}
+
+                        <div>
+                            <strong>Группа пользователей</strong>
+                        </div>
+                        <div>
+                            <select name="allow_group" id="allow_group" style="width:100%">
                                 <option value="-1" <?php if (@$mod['allow_group']==-1 || !isset($mod['allow_group'])) { echo 'selected="selected"'; } ?>>-- Все группы --</option>
                                 <?php
                                     if (isset($mod['allow_group'])) {
@@ -616,188 +741,30 @@ function applet_menu(){
                                         echo $inCore->getListItems('cms_user_groups');
                                     }
                                 ?>
-                        </select>
-                    </td>
-                </tr>
-            </table>
+                            </select>
+                        </div>
 
-            <h3>Действие пункта меню</h3>
+                    {/tabs}
 
-            <table width="650" border="0" cellpadding="0" cellspacing="10" class="proptable" style="margin-top:4px">
-                <tr>
-                    <td width="275" valign="top">
-                        <strong>Ссылка:</strong><br />
-                        <span class="hinttext">Для внешних ссылок не забывайте &quot;http://&quot; </span>
-                    </td>
-                    <td valign="top">
-                        <table width="100%" border="0" cellspacing="8" bgcolor="#F2F2F2" style="<?php echo (@$mod['linktype']=='link'||@$mod['linktype']=='ext')?'border: solid 1px gray':''?>" id="t_link">
-                            <tr>
-                                <td width="24"><input onclick="highlight('t_link')" name="mode" type="radio" class="mode" value="link" <?php if (@$mod['linktype']=='link'||@$mod['linktype']=='ext') { echo  'checked'; } ?>/></td>
-                                <td width="429"><input name="link" type="text" id="link" size="50" style="width:300px" <?php if (@$mod['linktype']=='link'||@$mod['linktype']=='ext') { echo  'value="'.$mod['link'].'"'; } ?>/></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top">
-                        <strong>Материал:</strong><br />
-                        <span class="hinttext">Пункт меню будет открывать статью </span>
-                    </td>
-                    <td valign="top">
-                        <table width="100%" border="0" cellspacing="8" bgcolor="#F2F2F2" style="<?php echo (@$mod['linktype']=='content')?'border: solid 1px gray':''?>" id="t_content">
-                            <tr>
-                                <td width="24"><input onclick="highlight('t_content')" name="mode" type="radio" class="mode" value="content" <?php if (@$mod['linktype']=='content') { echo  'checked'; } ?>/></td>
-                                <td width="429">
-                                    <select name="content" id="content" style="width:300px">
-                                        <?php
-                                            if (@$mod['linktype']=='content') {
-                                                echo $inCore->getListItems('cms_content', $mod['linkid']);
-                                            } else {
-                                                echo $inCore->getListItems('cms_content');
-                                            }
-                                        ?>
-                                    </select>
-                                </td>
-                            </tr>
-                    </table></td>
-                </tr>
-                <tr>
-                    <td valign="top">
-                        <strong>Раздел:</strong><br />
-                        <span class="hinttext">Пункт меню будет показывать содержимое раздела </span>
-                    </td>
-                    <td valign="top">
-                        <table width="100%" border="0" cellspacing="8" bgcolor="#F2F2F2" style="<?php echo (@$mod['linktype']=='category')?'border: solid 1px gray':''?>" id="t_category">
-                            <tr>
-                                <td width="24"><input onclick="highlight('t_category')" name="mode" type="radio" class="mode" value="category" <?php if (@$mod['linktype']=='category') { echo  'checked'; } ?>/></td>
-                                <td width="429">
-                                    <select name="category" id="category" style="width:300px">
-                                        <?php
-                                        if (@$mod['linktype']=='category') {
-                                            echo $inCore->getListItemsNS('cms_category', $mod['linkid']);
-                                        } else {
-                                            echo $inCore->getListItemsNS('cms_category');
-                                        }
-                                        ?>
-                                    </select>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <?php if ($inCore->isComponentInstalled('price')) { ?>
-                    <tr>
-                        <td valign="top">
-                            <strong>Категория прайса:</strong><br />
-                            <span class="hinttext">Пункт меню будет показывать товары из прайслиста </span>
-                        </td>
-                        <td valign="top">
-                            <table width="100%" border="0" cellspacing="8" bgcolor="#F2F2F2" style="<?php echo (@$mod['linktype']=='pricecat')?'border: solid 1px gray':''?>" id="t_pricecat">
-                                <tr>
-                                    <td width="24"><input onclick="highlight('t_pricecat')" name="mode" type="radio" class="mode" value="pricecat" <?php if (@$mod['linktype']=='pricecat') { echo  'checked'; } ?>/></td>
-                                    <td width="429">
-                                        <select name="pricecat" id="pricecat" style="width:300px">
-                                            <?php
-                                            if (@$mod['linktype']=='pricecat') {
-                                                echo $inCore->getListItems('cms_price_cats', $mod['linkid']);
-                                            } else {
-                                                echo $inCore->getListItems('cms_price_cats');
-                                            }
-                                            ?>
-                                        </select>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                <?php } ?>
-                <?php  if ($inCore->isComponentInstalled('catalog')) { ?>
-                    <tr>
-                        <td valign="top"><strong>Рубрика каталога: </strong><br />
-                        <span class="hinttext">Пункт меню будет показывать записи из универсального каталога </span></td>
-                        <td valign="top"><table width="100%" border="0" cellspacing="8" bgcolor="#F2F2F2" style="<?php echo (@$mod['linktype']=='uccat')?'border: solid 1px gray':''?>" id="t_uccat">
-                                <tr>
-                                    <td width="24"><input onclick="highlight('t_uccat')" name="mode" type="radio" class="mode" value="uccat" <?php if (@$mod['linktype']=='uccat') { echo  'checked'; } ?>/></td>
-                                    <td width="429">
-                                        <select name="uccat" id="uccat" style="width:300px">
-                                            <?php
-                                                if (@$mod['linktype']=='uccat') {
-                                                    echo $inCore->getListItems('cms_uc_cats', $mod['linkid']);
-                                                } else {
-                                                    echo $inCore->getListItems('cms_uc_cats');
-                                                }
-                                            ?>
-                                        </select>
-                                    </td>
-                                </tr>
-                        </table></td>
-                    </tr>
-                <?php } ?>
-                <?php  if ($inCore->isComponentInstalled('blog')) { ?>
-                    <tr>
-                        <td valign="top">
-                            <strong>Блог: </strong><br />
-                            <span class="hinttext">Пункт меню будет показывать записи из выбранного блога </span>
-                        </td>
-                        <td valign="top">
-                            <table width="100%" border="0" cellspacing="8" bgcolor="#F2F2F2" style="<?php echo (@$mod['linktype']=='blog')?'border: solid 1px gray':''?>" id="t_blog">
-                                <tr>
-                                    <td width="24"><input onclick="highlight('t_blog')" name="mode" type="radio" class="mode" value="blog" <?php if (@$mod['linktype']=='blog') { echo  'checked'; } ?>/></td>
-                                    <td width="429">
-                                        <select name="blog" id="blog" style="width:300px">
-                                            <?php
-                                                if (@$mod['linktype']=='blog') {
-                                                    echo $inCore->getListItems('cms_blogs', $mod['linkid'], 'title', 'asc', "owner='user'");
-                                                } else {
-                                                    echo $inCore->getListItems('cms_blogs', 0, 'title', 'asc', "owner='user'");
-                                                }
-                                            ?>
-                                        </select>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                <?php  } ?>
-                <tr>
-                    <td valign="top">
-                        <strong>Компонент:</strong><br />
-                        <span class="hinttext">Пункт меню будет запускать компонент сайта</span>
-                    </td>
-                    <td valign="top">
-                        <table width="100%" border="0" cellspacing="8" bgcolor="#F2F2F2" style="<?php echo (@$mod['linktype']=='component')?'border: solid 1px gray':''?>" id="t_component">
-                            <tr>
-                                <td width="24"><input onclick="highlight('t_component')" name="mode" type="radio" class="mode" value="component" <?php if (@$mod['linktype']=='component') { echo  'checked'; } ?>/></td>
-                                <td width="429">
-                                    <select name="component" id="component" style="width:300px">
-                                        <?php
-                                            if (@$mod['linktype']=='component') {
-                                                echo $inCore->getListItems('cms_components', $mod['linkid'], 'title', 'asc', 'internal=0', 'link');
-                                            } else {
-                                                echo $inCore->getListItems('cms_components', 0, 'title', 'asc', 'internal=0', 'link');
-                                            }
-                                        ?>
-                                    </select>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            <div>
-                <span style="margin-top:15px">
-                    <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add') { echo 'value="Создать пункт"'; } else { echo 'value="Сохранить пункт"'; } ?> />
-                    <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=menu';"/>
-                </span>
-                <input name="do" type="hidden" id="do" <?php if ($do=='add') { echo 'value="submit"'; } else { echo 'value="update"'; } ?> />
-                <?php
-                    if ($do=='edit'){
-                        echo '<input name="id" type="hidden" value="'.$mod['id'].'" />';
-                    }
-                ?>
-            </div>
-        </form>
-<?php
+                    <?php echo jwTabs(ob_get_clean()); ?>
+
+                </td>
+
+            </tr>
+        </table>
+
+        <p>
+            <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add') { echo 'value="Создать пункт"'; } else { echo 'value="Сохранить пункт"'; } ?> />
+            <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=menu';"/>
+            <input name="do" type="hidden" id="do" <?php if ($do=='add') { echo 'value="submit"'; } else { echo 'value="update"'; } ?> />
+            <?php
+                if ($do=='edit'){
+                    echo '<input name="id" type="hidden" value="'.$mod['id'].'" />';
+                }
+            ?>
+        </p>
+    </form>
+    <?php
    }
 }
 

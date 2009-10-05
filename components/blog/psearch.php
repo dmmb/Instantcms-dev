@@ -14,45 +14,11 @@ function search_blog($query, $look, $mode='text'){ //query sends here already pr
 
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
-			
-		//SPLIT QUERY TO WORDS	
-		$words = split(' ', $query);
-		$count = sizeof($words);
-		$n=0;
-		
-		//BUILD SQL QUERY
+
+        //BUILD SQL QUERY
 		$sql = "SELECT DISTINCT con.*, cat.title cat_title, cat.id cat_id, cat.owner owner, cat.user_id user_id
 				FROM cms_blog_posts con, cms_blogs cat
-				WHERE ";	
-										
-		if($look == 'anyword'){
-			//$looktype = 'любое слово';
-			foreach($words as $w){
-				if(strlen($w)>1){
-					$n++;
-					if ($n==1) { $sql .= "content LIKE '%$w%'"; }
-					else { $sql .= " OR content LIKE '%$w%'"; }
-				}
-			}		
-		}
-	
-		if($look == 'allwords'){
-			//looktype = 'все слова';		
-			foreach($words as $w){
-				if(strlen($w)>1){
-					$n++;
-					if ($n==1) { $sql .= "content LIKE '%$w%'"; }
-					else { $sql .= " AND content LIKE '%$w%'"; }
-				}
-			}		
-		}
-		
-		if($look == 'phrase'){
-			//$looktype = 'фраза целиком';		
-			$sql .= "content LIKE '%$query%'";			
-		}
-		
-		$sql .= " AND con.blog_id = cat.id ";
+				WHERE MATCH(con.content) AGAINST ('$query' IN BOOLEAN MODE) AND con.blog_id = cat.id";
 
 		//QUERY TO GET TOTAL RESULTS COUNT
 		$result = $inDB->query($sql);
@@ -67,14 +33,15 @@ function search_blog($query, $look, $mode='text'){ //query sends here already pr
 				$placelink = "/blogs/0/".$item['cat_id']."/blog.html";				
 				//include item to search results
 				if (!dbRowsCount('cms_search', "session_id='".session_id()."' AND link='$link'")){				
-					$sql = "INSERT INTO cms_search (`session_id`, `title`, `link`, `place`, `placelink`)
-							VALUES ('".session_id()."', '".$item['title']."', '$link', '$place', '$placelink')";
+					$sql = "INSERT INTO cms_search (`id`, `session_id`, `title`, `link`, `place`, `placelink`)
+							VALUES ('', '".session_id()."', '".$item['title']."', '$link', '$place', '$placelink')";
 					$inDB->query($sql);				
 				}				
 			}
 		}
 		
 		return;
+        
 }
 
 
