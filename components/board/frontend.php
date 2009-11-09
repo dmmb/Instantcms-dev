@@ -30,7 +30,27 @@ function obTypesLinks($cat_id, $types){
 	return $html;
 }
 
-function orderForm($orderby, $orderto){
+function obTypesOptions($types, $selected=''){
+    $inCore     = cmsCore::getInstance();
+    $inDB       = cmsDatabase::getInstance();
+    $inUser     = cmsUser::getInstance();
+	global $menuid;
+	$html = '';
+	$types = explode("\n", $types);
+	$total = sizeof($types); $c = 0;
+	foreach($types as $id=>$type){
+		$c++;
+		$type = trim($type);
+        if ($selected == $type){ $sel = 'selected="selected"'; } else { $sel = ''; }
+		$html .= '<option value="'.ucfirst($type).'" '.$sel.'>'.ucfirst($type).'</option>';
+		if ($c < $total){
+			$html .= ', ';
+		}
+	}
+	return $html;
+}
+
+function orderForm($orderby, $orderto, $obtypes){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
@@ -38,7 +58,7 @@ function orderForm($orderby, $orderto){
 	if (isset($_SESSION['board_city'])) { $bcity = $_SESSION['board_city']; } else { $bcity = ''; }	
 	$smarty = $inCore->initSmarty('components', 'com_board_order_form.tpl');				
 		$smarty->assign('btype', $btype);
-		$smarty->assign('btypes', $inCore->boardTypesList($btype));
+		$smarty->assign('btypes', $inCore->boardTypesList($btype, $obtypes));
 		$smarty->assign('bcity', $bcity);
 		$smarty->assign('bcities', $inCore->boardCities($bcity));
 		$smarty->assign('orderby', $orderby);
@@ -63,6 +83,7 @@ function pageBar($cat_id, $current, $perpage){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
+    global $_LANG;
 	$html   = '';
 	
 	$result = $inDB->query("SELECT id FROM cms_board_items WHERE category_id = $cat_id") ;
@@ -72,7 +93,7 @@ function pageBar($cat_id, $current, $perpage){
 		$pages = ceil($records / $perpage);
 		if($pages>1){
 			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>Страницы: </strong></span>';	
+			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {			
 					$link = '/board/'.$inCore->menuId().'/'.@$_REQUEST['id'].'-'.$p;
@@ -97,7 +118,9 @@ function board(){
 	$menuid     = $inCore->menuId();
 	$cfg        = $inCore->loadComponentConfig('board');
 
-	//DEFAULT VALUES	
+    global $_LANG;
+
+    //DEFAULT VALUES
 	if (!isset($cfg['showlat'])) { $cfg['showlat'] = 1; }		
 	if (!isset($cfg['photos'])) { $cfg['photos'] = 1; }
 	if (!isset($cfg['photos'])) { $cfg['photos'] = 1; }
@@ -146,7 +169,7 @@ if ($do=='view'){
 	if ($id == $root['id']){
 		$pagetitle  = $inCore->menuTitle();
 		if ($pagetitle) { $inPage->setTitle($pagetitle); } 
-		if (!$pagetitle) { $inPage->setTitle('Доска объявлений'); $pagetitle = 'Доска объявлений'; }
+		if (!$pagetitle) { $inPage->setTitle($_LANG['BOARD']); $pagetitle = $_LANG['BOARD']; }
 	}
 
     if ($id != $root['id']) {
@@ -159,7 +182,7 @@ if ($do=='view'){
             $inPage->addPathway($pcat['title'], '/board/'.$menuid.'/'.$pcat['id']);
 		}        
         
-        $inPage->setTitle($pagetitle  . ' - Доска объявлений');
+        $inPage->setTitle($pagetitle  . ' - '.$_LANG['BOARD']);
 		$inPage->addPathway($category['title']);
 	}		
 	
@@ -174,7 +197,7 @@ if ($do=='view'){
 		foreach($subcats_list as $cat) {
             $sub                = $model->getSubCatsCount($cat['id']);
 			$cat['subtext']     = $sub ? '/'.$sub : '';
-			$cat['ob_links']    = obTypesLinks($cat['id'], $cfg['obtypes']);
+			$cat['ob_links']    = obTypesLinks($cat['id'], $cat['obtypes']);
             $cats[]             = $cat;
 		}
 	}
@@ -223,7 +246,7 @@ if ($do=='view'){
 
     //DISPLAY ORDER FORM
     if ($category['orderform'] && $root['id']!=$id){
-        echo orderForm($orderby, $orderto);
+        echo orderForm($orderby, $orderto, $category['obtypes']);
     }
 
     $items      = array();
@@ -277,7 +300,7 @@ if($do=='read'){
 		
 		//PATHWAY ENTRY
 		$pagetitle =  $item['title'];
-		$inPage->setTitle($pagetitle  . ' - Доска объявлений');
+		$inPage->setTitle($pagetitle  . ' - '.$_LANG['BOARD']);
 
 		//PATHWAY ENTRY
 		$left_key       = $item['NSLeft'];
@@ -329,45 +352,45 @@ if ($do=='additem'){
 
     $cat = $model->getCategory($id);
 
-    if ( !$cat ) { $inCore->halt('Рубрика не найдена'); }
+    if ( !$cat ) { $inCore->halt($_LANG['CAT_NOT_FOUND']); }
 	
     if ( $cat['public'] == -1 ) { $cat['public'] = $cfg['public']; }
 
     $inPage->addPathway($cat['title'], '/board/'.$menuid.'/'.$cat['id']);
-	$inPage->addPathway('Добавить объявление');
+	$inPage->addPathway($_LANG['ADD_ADV']);
 
     if ( !$inUser->id ) {
-		$inPage->printHeading('Требуется регистрация');
-		echo '<div>Возможность добавления объявлений есть только у зарегистрированных пользователей.</div>';
-		echo '<div><a href="/registration">Перейти к регистрации</a></div>';
+		$inPage->printHeading($_LANG['NEED_REGISTRATION']);
+		echo '<div>'.$_LANG['NEED_REGISTRATION_TEXT'].'</div>';
+		echo '<div><a href="/registration">'.$_LANG['GOTO_REGISTRATION'].'</a></div>';
         return;
 	}
 
-    $inPage->printHeading('Добавить объявление');
+    $inPage->printHeading($_LANG['ADD_ADV']);
 
     if ( !(loadedByUser24h($inUser->id, $cat['id'])<$cat['uplimit'] || $cat['uplimit'] == 0) ){       
-        echo '<p>Достигнут предел добавлений в сутки. Вы сможете добавить объявление в эту рубрику через 24 часа.</p>';
+        echo '<p>'.$_LANG['MAX_VALUE_OF_ADD_ADV'].'</p>';
         return;
     }
    
     if ( !$cat['public'] ){
-        echo '<p>Вы не можете добавлять объявления в эту рубрику</p>';
+        echo '<p>'.$_LANG['YOU_CANT_ADD_ADV'].'</p>';
         return;
     }
     
     ///////////// first upload step ////////////////////////////////////////////
     if ( !$inCore->inRequest('submit') ) {
 
-        $inPage->setTitle('Добавить объявление');
+        $inPage->setTitle($_LANG['ADD_ADV']);
 
         $smarty = $inCore->initSmarty('components', 'com_board_edit.tpl');
         $smarty->assign('action', "/board/{$menuid}/{$cat['id']}/add.html");
         $smarty->assign('form_do', 'add');
         $smarty->assign('cfg', $cfg);
-        $smarty->assign('obtypes', $inCore->boardTypesList(''));
+        $smarty->assign('obtypes', obTypesOptions($cat['obtypes']));
         $smarty->assign('title', '');
         $smarty->assign('city', $inDB->get_field('cms_user_profiles', 'id='.$inUser->id, 'city'));
-        $smarty->assign('cities', $inCore->boardCities('', '-- не выбран --'));
+        $smarty->assign('cities', $inCore->boardCities('', '-- '.$_LANG['NOT_SELECT'].' --'));
         $smarty->assign('content', '');
         $smarty->assign('pubdays', '');
         $smarty->assign('file', '');
@@ -405,18 +428,18 @@ if ($do=='additem'){
         if ($cfg['srok']){  $pubdays = $inCore->request('pubdays', 'int'); }
         if (!$cfg['srok']){ $pubdays = isset($cfg['pubdays']) ? $cfg['pubdays'] : 14; }
 
-        if (empty($title)) 	 { $errors .= '<div style="color:red">Необходимо указать заголовок объявления!</div>'; }
-        if (empty($content)) { $errors .= '<div style="color:red">Необходимо указать текст объявления!</div>'; }
-        if (empty($city))    { $errors .= '<div style="color:red">Необходимо указать город!</div>'; }
+        if (empty($title)) 	 { $errors .= '<div style="color:red">'.$_LANG['NEED_TITLE'].'</div>'; }
+        if (empty($content)) { $errors .= '<div style="color:red">'.$_LANG['NEED_TEXT_ADV'].'</div>'; }
+        if (empty($city))    { $errors .= '<div style="color:red">'.$_LANG['NEED_CITY'].'</div>'; }
 
-        if (!$inCore->checkCaptchaCode($captcha) && !$inUser->is_admin){	$errors .= '<div style="color:red">Неправильно указан код с картинки!</div>';		}
+        if (!$inCore->checkCaptchaCode($captcha) && !$inUser->is_admin){	$errors .= '<div style="color:red">'.$_LANG['ERR_CAPTCHA'].'</div>';		}
 
         if ($errors){
             //finish
-            echo '<p><strong>Объявление не добавлено.</strong></p>';
+            echo '<p><strong>'.$_LANG['ADV_NOT_ADDED'].'</strong></p>';
             echo '<p>'.$errors.'</p>';
-            echo '<p>&larr; <a href="/board/'.$menuid.'/'.$id.'/add.html">Повторить добавление</a><br/>';
-            echo '&larr; <a href="/board/'.$menuid.'/'.$id.'">Вернуться к доске объявлений</a><br/>';
+            echo '<p>&larr; <a href="/board/'.$menuid.'/'.$id.'/add.html">'.$_LANG['REPEAT_ADD'].'</a><br/>';
+            echo '&larr; <a href="/board/'.$menuid.'/'.$id.'">'.$_LANG['RETURN_TO_BOARD'].'</a><br/>';
             return;
         }
 
@@ -440,7 +463,7 @@ if ($do=='additem'){
                 if ($cfg['watermark']) { @img_add_watermark($uploadphoto);	}
                 @unlink($uploadphoto);
             } else {
-                echo '<p>Файл фотографии не был загружен.</p>';
+                echo '<p>'.$_LANG['PHOTO_NOT_UPLOAD'].'</p>';
             }
         }
 
@@ -457,10 +480,10 @@ if ($do=='additem'){
                                 ));
 
         //finish
-        echo '<p><strong>Объявление успешно добавлено.</strong></p>';
-        if (!$published) { echo '<p>Объявление будет опубликовано после проверки администратором.</p>'; }
-        echo '<p>&larr; <a href="/board/'.$menuid.'/'.$id.'/add.html">Добавить еще объявление</a><br/>';
-        echo '&larr; <a href="/board/'.$menuid.'/'.$id.'">Вернуться к доске объявлений</a><br/>';
+        echo '<p><strong>'.$_LANG['ADV_NOT_ADDED'].'</strong></p>';
+        if (!$published) { echo '<p>'.$_LANG['ADV_PREMODER_TEXT'].'</p>'; }
+        echo '<p>&larr; <a href="/board/'.$menuid.'/'.$id.'/add.html">'.$_LANG['ADD_ADV_MORE'].'</a><br/>';
+        echo '&larr; <a href="/board/'.$menuid.'/'.$id.'">'.$_LANG['RETURN_TO_BOARD'].'</a><br/>';
 
         return;
     }
@@ -471,18 +494,19 @@ if ($do=='edititem'){
 
 	//Load data
     $item = $model->getRecord($id);
+    $cat  = $model->getCategory($item['category_id']);
 
 	if (!$item){
-   		$inPage->printHeading('Объявление не найдено');
-		echo '<p>Возможно оно было удалено.</p>';
+   		$inPage->printHeading($_LANG['ADV_NOT_FOUND']);
+		echo '<p>'.$_LANG['ADV_NOT_FOUND_TEXT'].'</p>';
 		return;
     }
 
-    $inPage->setTitle('Редактировать объявление');
+    $inPage->setTitle($_LANG['EDIT_ADV']);
     $inPage->addPathway($item['category'], '/board/'.$menuid.'/'.$item['cat_id']);
-    $inPage->addPathway('Редактировать объявление');
+    $inPage->addPathway($_LANG['EDIT_ADV']);
 
-    $inPage->printHeading('Редактировать объявление');
+    $inPage->printHeading($_LANG['EDIT_ADV']);
 
 	//Check user access
 	if ($inUser->id){	
@@ -493,8 +517,8 @@ if ($do=='edititem'){
 				
 	//Show data only for moderators and owners
 	if (!$moderator){
-		echo '<div class="con_heading">Доступ запрещен</div>';
-		echo '<p>Вы не имеете доступа к этой странице.</p>';
+		echo '<div class="con_heading">'.$_LANG['ACCESS_DENIED'].'</div>';
+		echo '<p>'.$_LANG['YOU_HAVENT_ACCESS'].'</p>';
         return;
 	}
 
@@ -504,10 +528,10 @@ if ($do=='edititem'){
         $smarty->assign('action', "/board/{$menuid}/edit{$id}.html");
         $smarty->assign('form_do', 'edit');
         $smarty->assign('cfg', $cfg);
-        $smarty->assign('obtypes', $inCore->boardTypesList($item['obtype']));
+        $smarty->assign('obtypes', obTypesOptions($cat['obtypes'], $item['obtype']));
         $smarty->assign('title', trim(str_replace($item['obtype'], '', $item['title'])));
         $smarty->assign('city', $item['city']);
-        $smarty->assign('cities', $inCore->boardCities('', '-- не выбран --'));
+        $smarty->assign('cities', $inCore->boardCities('', '-- '.$_LANG['NOT_SELECT'].' --'));
         $smarty->assign('content', $item['content']);
         $smarty->assign('pubdays', $item['pubdays']);
         $smarty->assign('file', $item['file']);
@@ -539,17 +563,17 @@ if ($do=='edititem'){
         if ($cfg['srok']){  $pubdays = $inCore->request('pubdays', 'int'); }
         if (!$cfg['srok']){ $pubdays = isset($cfg['pubdays']) ? $cfg['pubdays'] : 14; }
 
-        if (empty($title)) 	 { $errors .= '<div style="color:red">Необходимо указать заголовок объявления!</div>'; }
-        if (empty($content)) { $errors .= '<div style="color:red">Необходимо указать текст объявления!</div>'; }
-        if (empty($city)) { $errors .= '<div style="color:red">Необходимо указать город!</div>'; }
+        if (empty($title)) 	 { $errors .= '<div style="color:red">'.$_LANG['NEED_TITLE'].'</div>'; }
+        if (empty($content)) { $errors .= '<div style="color:red">'.$_LANG['NEED_TEXT_ADV'].'</div>'; }
+        if (empty($city)) { $errors .= '<div style="color:red">'.$_LANG['NEED_CITY'].'</div>'; }
         
-        if (!$inCore->checkCaptchaCode($captcha) && !$inUser->is_admin){	$errors .= '<div style="color:red">Неправильно указан код с картинки!</div>';		}
+        if (!$inCore->checkCaptchaCode($captcha) && !$inUser->is_admin){	$errors .= '<div style="color:red">'.$_LANG['ERR_CAPTCHA'].'</div>';		}
 
         if ($errors){
-            echo '<p><strong>Объявление не изменено.</strong></p>';
+            echo '<p><strong>'.$_LANG['ADV_NOT_MODIFY'].'</strong></p>';
             echo '<p>'.$errors.'</p>';
-            echo '<p>&larr; <a href="/board/'.$menuid.'/edit'.$id.'.html">Повторить редактирование</a><br/>';
-            echo '&larr; <a href="/board/'.$menuid.'/'.$item['cat_id'].'">Вернуться к доске объявлений</a><br/>';
+            echo '<p>&larr; <a href="/board/'.$menuid.'/edit'.$id.'.html">'.$_LANG['REPEAT_EDIT'].'</a><br/>';
+            echo '&larr; <a href="/board/'.$menuid.'/'.$item['cat_id'].'">'.$_LANG['RETURN_TO_BOARD'].'</a><br/>';
             return;
         }
 
@@ -592,9 +616,9 @@ if ($do=='edititem'){
                                 ));
 
         //finish
-        echo '<p><strong>Объявление изменено.</strong></p>';
-        if (!$published) { echo '<p>Объявление скрыто и будет вновь опубликовано после проверки администратором.</p>'; }
-        echo '<p>&larr; <a href="/board/'.$menuid.'/'.$item['cat_id'].'">Вернуться к доске объявлений</a></p>';
+        echo '<p><strong>'.$_LANG['ADV_MODIFIED'].'</strong></p>';
+        if (!$published) { echo '<p>'.$_LANG['ADV_EDIT_PREMODER_TEXT'].'</p>'; }
+        echo '<p>&larr; <a href="/board/'.$menuid.'/'.$item['cat_id'].'">'.$_LANG['RETURN_TO_BOARD'].'</a></p>';
 
     }
 }
@@ -604,8 +628,8 @@ if ($do == 'delete'){
 	$item = $model->getRecord($id);
 
     if (!$item){
-        $inPage->printHeading('Объявление не найдено');
-        echo '<p>Возможно оно уже было удалено.</p>';
+        $inPage->printHeading($_LANG['ADV_NOT_FOUND']);
+        echo '<p>'.$_LANG['ADV_NOT_FOUND_TEXT_DEL'].'</p>';
         return false;
     }
 
@@ -619,12 +643,12 @@ if ($do == 'delete'){
 
         if (!$inCore->inRequest('godelete')){
 			//confirmation
-            $inPage->setTitle('Удалить объявление');
+            $inPage->setTitle($_LANG['DELETE_ADV']);
             $inPage->addPathway($item['category'], '/board/'.$menuid.'/'.$item['cat_id']);
-            $inPage->addPathway('Удалить объявление');
+            $inPage->addPathway($_LANG['DELETE_ADV']);
 
-            $confirm['title']               = 'Удаление объявления';
-            $confirm['text']                = 'Вы действительно желаете удалить объявление "'.$item['title'].'"?';
+            $confirm['title']               = $_LANG['DELETING_ADV'];
+            $confirm['text']                = $_LANG['YOU_SURE_DELETE_ADV'].' "'.$item['title'].'"?';
             $confirm['action']              = $_SERVER['REQUEST_URI'];
             $confirm['yes_button']['name']  = 'godelete';
 

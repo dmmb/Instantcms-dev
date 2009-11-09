@@ -83,7 +83,7 @@ function albumDelete($album_id, $differ=''){
     $inDB = cmsDatabase::getInstance();
 	$inCore->loadLib('tags');
 	$sql = "SELECT id, file FROM cms_photo_files WHERE album_id = $album_id";
-	$result = $inDB->_query($sql) ;
+	$result = $inDB->query($sql) ;
 	//DELETE ALL PHOTOS IN ALBUM
 	if ($inDB->num_rows($result)){
 		while($photo = $inDB->fetch_assoc($result)){

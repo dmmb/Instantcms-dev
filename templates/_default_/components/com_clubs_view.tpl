@@ -6,7 +6,7 @@
 
 {if $can_create}
 	<div class="new_club">
-		Вы можете <a href="/clubs/{$menuid}/create.html">создать новый клуб</a>
+		{$LANG.YOU_CAN} <a href="/clubs/{$menuid}/create.html">{$LANG.TO_CREATE_NEW_CLUB}</a>
 	</div>
 {/if}
 
@@ -24,8 +24,8 @@
 					<a href="/clubs/{$menuid}/{$club.id}">{$club.title}</a>
 				</div>
 				<div class="details">
-					<span class="rating"><strong>Рейтинг</strong> &mdash; {$club.rating}</span>
-					<span class="members"><strong>{$club.members|spellcount:'участник':'участника':'участников'}</strong></span>
+					<span class="rating"><strong>{$LANG.RATING}</strong> &mdash; {$club.rating}</span>
+					<span class="members"><strong>{$club.members|spellcount:$LANG.USER:$LANG.USER2:$LANG.USER10}</strong></span>
 				</div>
 			</div>
 		</div>
@@ -33,5 +33,5 @@
 	
 	{if $pagination}<div style="margin-top:40px">{$pagination}</div>{/if}
 {else}
-	<p style="clear:both">Нет активных клубов.</p>
+	<p style="clear:both">{$LANG.NOT_ACTIVE_CLUBS}</p>
 {/if}

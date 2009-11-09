@@ -175,10 +175,10 @@ function clubPhotoAlbums($club_id, $is_admin=false, $is_moder=false, $is_member=
 					}
 					$today = dbRowsCount('cms_photo_files', 'published=1 AND DATE_FORMAT(NOW(), \'%d-%m-%Y\')=DATE_FORMAT(pubdate, \'%d-%m-%Y\') AND album_id='.$album['id']);
 					if ($today) { $new = ' <span class="new">+'.$today.'</span>'; } else { $new = ''; }
-					$html .= '<li id="'.$album['id'].'"><a href="/photos/'.$menuid.'/'.$album['id'].'">'.$album['title'].'</a> ('.$album['content_count'].$new.') '.$on_moderate.$delete;			
+					$html .= '<li class="club_album" id="'.$album['id'].'"><a href="/photos/'.$menuid.'/'.$album['id'].'">'.$album['title'].'</a> ('.$album['content_count'].$new.') '.$on_moderate.$delete;
 				}
 		} else {
-			$html .= '<li>В клубе нет фотоальбомов.</li>';	
+			$html .= '<li class="no_albums">В клубе нет фотоальбомов.</li>';
 		}
 	$html .= '</ul>';	
 	return $html;

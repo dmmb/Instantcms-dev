@@ -69,6 +69,7 @@ function applet_config(){
 		$newCFG['smtpuser']		= $inCore->request('smtpuser', 'str');
 		$newCFG['smtppass']		= $inCore->request('smtppass', 'str');
 		$newCFG['smtphost']		= $inCore->request('smtphost', 'str');
+        $newCFG['lang']         = $_CFG['lang'];
 
 		if ($inConf->saveToFile($newCFG)){
            $inCore->redirect('index.php?view=config&msg=ok');

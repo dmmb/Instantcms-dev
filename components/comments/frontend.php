@@ -30,6 +30,9 @@ function comments($target='', $target_id=0){
     $back   = $inCore->getBackURL();
     
     $do     = $inCore->request('do', 'str', 'view');
+    global $_LANG;
+
+    $inCore->loadLanguage('components/comments');
 
 //========================================================================================================================//
 //========================================================================================================================//
@@ -83,15 +86,15 @@ function comments($target='', $target_id=0){
         $target_id      = $inCore->request('target_id', 'int', 0);
 
         //Проверяем ошибки
-        if ($user_id != $inUser->id) { $error = 'Ошибка определения пользователя!'; }
-        if (!$guestname && !$user_id) { $error = 'Вы не указали свое имя!'; }
-        if (!$content) { $error = 'Введите текст комментария!'; }
-        if ($need_captcha && !$inCore->checkCaptchaCode($_REQUEST['code'])) { $error = 'Неправильно указан код с картинки!'; }
+        if ($user_id != $inUser->id) { $error = $_LANG['ERR_DEFINE_USER']; }
+        if (!$guestname && !$user_id) { $error = $_LANG['ERR_USER_NAME']; }
+        if (!$content) { $error = $_LANG['ERR_COMMENT_TEXT']; }
+        if ($need_captcha && !$inCore->checkCaptchaCode($_REQUEST['code'])) { $error = $_LANG['ERR_CAPTCHA']; }
 
 		if ($target && $target_id){
 			$t      = $inCore->getCommentLink($target, $target_id, false, true);
 		} else {
-            $error  = 'Ошибка добавления комментария!';
+            $error  = $_LANG['ERR_COMMENT_ADD'];
         }
 
 		if(!$error){ //Если ошибок не было, действуем
@@ -122,16 +125,16 @@ function comments($target='', $target_id=0){
 
 			//смотрим настройки модерации
 			if (!$cfg['publish']){
-				$_SESSION['cm_message'] = 'Спасибо! Ваш комментарий будет добавлен после проверки администратором!';
+				$_SESSION['cm_message'] = $_LANG['COMM_PREMODER_TEXT'];
 			}
 
 			//отправляем админу уведомление о комментарии на e-mail, если нужно
 			if($cfg['email']) {
-				$mailmsg = "Дата: ".date('d m Y (H:i)')."\n";
-				$mailmsg .= "Новый комментарий: $t\n-------------------------------------------------------\n";
+				$mailmsg = $_LANG['DATE'].": ".date('d m Y (H:i)')."\n";
+				$mailmsg .= $_LANG['NEW_COMMENT'].": $t\n-------------------------------------------------------\n";
 				$mailmsg .= strip_tags($content);
 				$mailmsg = wordwrap($mailmsg, 70);
-				$inCore->mailText($cfg['email'], 'InstantCMS: Новый комментарий!', $mailmsg);
+				$inCore->mailText($cfg['email'], $_LANG['EMAIL_SUDJECT_NEW_COMM'], $mailmsg);
 			}
 
 			//если коммент для блога или фотографии, отправляем автору уведомление на e-mail
@@ -139,17 +142,17 @@ function comments($target='', $target_id=0){
 				switch($target){
 					case 'userphoto':
 						$table      = 'cms_user_photos';
-						$subj       = 'вашей фотографии';
+						$subj       = $_LANG['YOUR_PHOTO'];
 						$targetlink = 'http://'.$_SERVER['HTTP_HOST'].'/users/0/%author_id%/photo'.$target_id.'.html#c'.$comment_id;
 					break;
 					case 'photo':
 						$table      = 'cms_photo_files';
-						$subj       = 'вашей фотографии';
+						$subj       = $_LANG['YOUR_PHOTO'];
 						$targetlink = 'http://'.$_SERVER['HTTP_HOST'].'/photos/0/photo'.$target_id.'.html#c'.$comment_id;
 					break;
 					case 'blog':
 						$table      = 'cms_blog_posts';
-						$subj       = 'вашей записи';
+						$subj       = $_LANG['YOUR_POST'];
 						$targetlink = 'http://'.$_SERVER['HTTP_HOST'].'/blogs/0/%blog_id%/post'.$target_id.'.html#c'.$comment_id;
 					break;
 				}
@@ -182,7 +185,7 @@ function comments($target='', $target_id=0){
 							$letter = str_replace('{targetlink}', $targetlink, $letter);
 							$letter = str_replace('{date}', $postdate, $letter);
 							$letter = str_replace('{from}', $from_nick, $letter);
-							$inCore->mailText($to_email, 'Новый комментарий! - '.$inConf->sitename, $letter);
+							$inCore->mailText($to_email, $_LANG['NEW_COMMENT'].'! - '.$inConf->sitename, $letter);
 					}
 				}
 			}
@@ -209,7 +212,7 @@ function comments($target='', $target_id=0){
 
 			if($is_admin || ($is_my&&$inCore->isUserCan('comments/delete')) || $inCore->isUserCan('comments/moderate')){
 				$model->deleteComment($id);
-				$_SESSION['cm_message'] = 'Комментарий успешно удален';
+				$_SESSION['cm_message'] = $_LANG['COMM_SUC_DELETE'];
 			}
 		}
 

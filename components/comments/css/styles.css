@@ -86,6 +86,14 @@
 .cmm_content {
 	padding: 10px;
 }
+
+.cmm_content_av .quote {
+color:#000000;
+font-style:italic;
+background-color: #F3F9F2;
+border:thin dashed #999999;
+}
+
 .cmm_addentry a{
 	text-decoration:underline;
 }

@@ -28,9 +28,13 @@ define("VALID_CMS", 1);
     $inDB       = cmsDatabase::getInstance();
 
     $inConf     = cmsConfig::getInstance();
-    
-	$menuid = $inCore->menuId();
+
+    $inCore->loadLanguage('components/rssfeed');
+    global $_LANG;
+
+    $menuid = $inCore->menuId();
 	$cfg    = $inCore->loadComponentConfig('rssfeed');
+
 
 	if (isset($_REQUEST['do'])){ $do = $_REQUEST['do'];	} else { $do = 'rss'; 		}
 	if (isset($_REQUEST['target'])){ $target = $_REQUEST['target'];	} else { die(); }
@@ -93,11 +97,11 @@ if ($do=='rss'){
 			$rss .= '</rss>';
 	
 		} else {	
-			$rss = '<p>«апрашиваема€ вами RSS-лента не содержит записей.</p>';	
+			$rss = '<p>'.$_LANG['NOT_POST_IN_RSS'].'</p>';
 		}
 		
 	} else {
-		$rss = '<p>Ќе удалось найти RSS-генератор дл€ указанного содержимого.</p>';	
+		$rss = '<p>'.$_LANG['NOT_RSS_GENERATOR'].'</p>';
 	}
 	
 	echo $rss;

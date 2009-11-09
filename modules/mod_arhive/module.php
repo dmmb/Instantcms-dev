@@ -11,7 +11,7 @@
 function mod_arhive($module_id){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
-			
+	global $_LANG;
 		$cfg = $inCore->loadModuleConfig($module_id);
 		if ($cfg['menuid']>0) {
 			$menuid = $cfg['menuid'];
@@ -46,7 +46,7 @@ function mod_arhive($module_id){
 				echo '<div class="arhive_month"><a href="/arhive/'.$menuid.'/'.$item['year'].'/'.$item['month'].'">'.$item['fdate'].'</a> ('.$item['num'].')</div>';
 			
 			}		
-		} else { echo '<p>Нет материалов для отображения</p>'; }
+		} else { echo '<p>'.$_LANG['ARHIVE_NOT_MATERIAL'].'</p>'; }
 		return true;
 }
 ?>

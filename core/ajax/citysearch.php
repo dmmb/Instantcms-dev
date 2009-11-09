@@ -1,5 +1,7 @@
 <?php
 
+    if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
+
     $q = @iconv('UTF-8//IGNORE', 'WINDOWS-1251//IGNORE', htmlspecialchars($_GET['q'], ENT_QUOTES));
 	$q = strtolower($q);
 

@@ -172,8 +172,11 @@ if ($opt == 'submit'){
     $id = dbLastId('cms_clubs');
 
     //create blog
-    $sql = "INSERT INTO cms_blogs (user_id, title, pubdate, allow_who, view_type, showcats, ownertype, premod, forall, owner)
-                    VALUES ('$id', 'Блог', NOW(), 'all', 'list', 1, 'multi', 0, 0, 'club')";
+
+    $blog_seolink = cmsCore::strToURL($title);
+
+    $sql = "INSERT INTO cms_blogs (user_id, title, pubdate, allow_who, view_type, showcats, ownertype, premod, forall, owner, seolink)
+                    VALUES ('$id', 'Блог', NOW(), 'all', 'list', 1, 'multi', 0, 0, 'club', '$blog_seolink')";
     dbQuery($sql);
 
     $moders 		= $_POST['moderslist'];

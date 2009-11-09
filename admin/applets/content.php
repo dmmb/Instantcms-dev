@@ -43,6 +43,9 @@ function applet_content(){
 	if (!$inCore->isAdminCan('admin/content', $adminAccess)) { cpAccessDenied(); }
 
     $cfg = $inCore->loadComponentConfig('content');
+    if(!isset($cfg['img_small_w'])) { $cfg['img_small_w'] = 100; }
+    if(!isset($cfg['img_big_w'])) { $cfg['img_big_w'] = 200; }
+    if(!isset($cfg['img_sqr'])) { $cfg['img_sqr'] = 1; }
 
     $inCore->loadModel('content');
     $model = new cms_model_content();
@@ -139,7 +142,7 @@ function applet_content(){
 		$actions[2]['link']  = '?view=content&do=delete&id=%id%';
 				
 		//Print table
-		cpListTable('cms_content', $fields, $actions, 'is_arhive=0');		
+		cpListTable('cms_content', $fields, $actions, 'is_arhive=0', 'id DESC');
 	}
 	
 	if ($do == 'autoorder'){
@@ -264,7 +267,26 @@ function applet_content(){
 				$showfor = $_REQUEST['showfor'];				
                 $model->setArticleAccess($id, $showfor);
 			}
-            
+
+            if (isset($_FILES["picture"]["name"]) && @$_FILES["picture"]["name"]!=''){
+                //generate image file
+                $tmp_name   = $_FILES["picture"]["tmp_name"];
+                $file       = 'article'.$id.'.jpg';
+                if (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/photos/'.$file)){
+                    @unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/small'.$file);
+                    @unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/'.$file);
+                }
+                //upload image and insert record in db
+                if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/photos/$file")){
+                    $inCore->includeGraphics();                  
+                    @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
+                    @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
+                    @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", 0644);
+                    @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", 0644);
+                    @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", 0644);
+                }
+            }
+
 			if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
 				header('location:?view=content');		
 			} else {
@@ -326,6 +348,21 @@ function applet_content(){
             cmsAutoCreateThread($article, $cfg);
         }
 
+        if (isset($_FILES["picture"]["name"]) && @$_FILES["picture"]["name"]!=''){
+            //generate image file
+            $tmp_name   = $_FILES["picture"]["tmp_name"];
+            $file       = 'article'.$article['id'].'.jpg';
+            //upload image and insert record in db
+            if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/photos/$file")){
+                $inCore->includeGraphics();
+                @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
+                @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
+                @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", 0644);
+                @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", 0644);
+                @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", 0644);
+            }
+        }
+
 		header('location:?view=content');
 	}	  
 
@@ -378,7 +415,7 @@ function applet_content(){
  					 cpAddPathway($mod['title'], 'index.php?view=menu&do=edit&id='.$mod['id']);
 			}   
 	?>
-    <form id="addform" name="addform" method="post" action="index.php">
+    <form id="addform" name="addform" method="post" action="index.php" enctype="multipart/form-data">
         <input type="hidden" name="view" value="content" />
 
         <table class="proptable" width="100%" cellpadding="15" cellspacing="2">
@@ -485,6 +522,22 @@ function applet_content(){
                         </select>
                     </div>
 
+                    <div style="margin-top:25px"><strong>Фотография</strong></div>
+                    <div style="margin-bottom:10px">
+                        <?php
+                            if ($do=='edit'){
+                                if (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/photos/article'.$mod['id'].'.jpg')){
+                        ?>
+                        <div style="margin-top:3px;margin-bottom:3px;padding:10px;border:solid 1px gray;text-align:center">
+                            <img src="/images/photos/small/article<?php echo $mod['id']; ?>.jpg" border="0" />
+                        </div>
+                        <?php
+                                }
+                            }
+                        ?>
+                        <input type="file" name="picture" style="width:100%" />
+                    </div>
+                    
                     <div style="margin-top:25px"><strong>Параметры публикации</strong></div>
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
                         <tr>

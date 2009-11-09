@@ -9,11 +9,6 @@ class cms_model_blog{
 
     public function install(){
 
-        cmsCore::registerAction('blogpost', 'add', 'публикует пост', 'cms_blog_posts');
-        cmsCore::registerAction('blogpost', 'remove', 'удаляет пост', 'cms_blog_posts');
-        cmsCore::registerAction('blog', 'add', 'создает блог', 'cms_blogs');
-        cmsCore::registerAction('blog', 'remove', 'удаляет блог', 'cms_blogs');
-    
         return true;
 
     }

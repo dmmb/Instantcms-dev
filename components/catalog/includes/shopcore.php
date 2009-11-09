@@ -73,7 +73,7 @@ function shopCartLink(){
 	global $menuid;
 	$items = shopIsInCart();	
 	$html = '';
-		$html .= '<a id="shop_cartlink" href="/catalog/'.$menuid.'/viewcart.html">Корзина';
+		$html .= '<a id="shop_cartlink" href="/catalog/'.$menuid.'/viewcart.html">'.$_LANG['CART'];
 		if ($items){
 			$html .= ' ('.$items.')';
 		}
@@ -105,14 +105,15 @@ function shopCart(){
     $inPage = cmsPage::getInstance();
     $inUser = cmsUser::getInstance();
 	global $menuid;
+	global $_LANG;
 	if (isset($inUser->id)){ $user_id = $inUser->id; } else { $user_id = 0; }	
 	$sid = session_id();
 	
 		$inPage->backButton(false);
-	 	$inPage->setTitle('Корзина');
-		$inPage->addPathway('Корзина');
+	 	$inPage->setTitle($_LANG['CART']);
+		$inPage->addPathway($_LANG['CART']);
 
-		$inPage->printHeading('Корзина');
+		$inPage->printHeading($_LANG['CART']);
 		
 		if ($user_id){ $user_sql = "(c.user_id=$user_id OR session_id='$sid')"; } else { $user_sql = "(c.user_id=0 AND c.session_id='$sid')"; }
 		
@@ -127,12 +128,12 @@ function shopCart(){
 			//delete confirmation js
 			echo '<script type="text/javascript">'."\n";
 				echo "function deleteItem(id){
-						if(confirm('Удалить позицию из корзины?')){
+						if(confirm('".$_LANG['DEL_POSITION_FROM_CART']."')){
 							window.location.href = '/catalog/0/cartremove'+id+'.html';	
 						}
 					}";
 				echo "function clearCart(){
-						if(confirm('Очистить корзину?')){
+						if(confirm('".$_LANG['CLEAR_CART']."?')){
 							window.location.href = '/catalog/0/clearcart.html';	
 						}
 					}";				
@@ -145,10 +146,10 @@ function shopCart(){
 			echo '<table width="100%" cellpadding="5" cellspacing="0" border="0">';
 			echo '<tr>';
 				echo '<td width="16">&nbsp;</td>';
-				echo '<td><strong>Позиция</strong></td>';
-				echo '<td width="200"><strong>Рубрика</strong></td>';
-				echo '<td width="120" align="center"><strong>Кол-во</strong></td>';
-				echo '<td width="100"  align="center"><strong>Цена</strong></td>';
+				echo '<td><strong>'.$_LANG['ITEM'].'</strong></td>';
+				echo '<td width="200"><strong>'.$_LANG['CAT'].'</strong></td>';
+				echo '<td width="120" align="center"><strong>'.$_LANG['QTY'].'</strong></td>';
+				echo '<td width="100"  align="center"><strong>'.$_LANG['PRICE'].'</strong></td>';
 				echo '<td width="20" align="center">&nbsp;</td>';
 			echo '</tr>';
 			$row=0; $total = 0;
@@ -171,7 +172,7 @@ function shopCart(){
 					echo '<td class="'.$class.'" align="center">'.$item['price'].' x '.shopItemsCounter($item['cid'], $item['itemscount'], $item['canmany']).' =</td>';
 					echo '<td class="'.$class.'" align="center"><strong>'.$item['totalprice'].'</strong></td>';
 					echo '<td class="'.$class.'" align="center">';
-							echo '<a href="javascript:deleteItem('.$item['id'].')" title="Удалить"><img src="/admin/images/actions/delete.gif" border="0"/></a>';					
+							echo '<a href="javascript:deleteItem('.$item['id'].')" title="'.$_LANG['DELETE'].'"><img src="/admin/images/actions/delete.gif" border="0"/></a>';
 					echo '</td>';
 				echo '</tr>';
                 
@@ -182,34 +183,34 @@ function shopCart(){
             shopDiscountsInfo(&$total, true);
 			$total = number_format($total, 2, '.', '');
 			echo '<div id="cart_total">';
-				echo '<span>Стоимость заказа:</span> '.$total.' руб.';
+				echo '<span>'.$_LANG['CART_TOTAL'].':</span> '.$total.' '.$_LANG['RUB'];
 			echo '</div>';
 			
 			//buttons			
 			echo '<div id="cart_buttons">';
 				echo '<div id="cart_buttons1">';
-					echo '<a href="javascript:saveCart()" title="Сохранить">';
-						echo '<img src="/components/catalog/images/shop/savecart.jpg" border="0" alt="Сохранить"/>';
+					echo '<a href="javascript:saveCart()" title="'.$_LANG['SAVE'].'">';
+						echo '<img src="/components/catalog/images/shop/savecart.jpg" border="0" alt="'.$_LANG['SAVE'].'"/>';
 					echo '</a> ';
-					echo '<a href="javascript:clearCart();" title="Очистить корзину">';
-						echo '<img src="/components/catalog/images/shop/clearcart.jpg" border="0" alt="Очистить корзину"/>';
+					echo '<a href="javascript:clearCart();" title="'.$_LANG['CLEAR_CART'].'">';
+						echo '<img src="/components/catalog/images/shop/clearcart.jpg" border="0" alt="'.$_LANG['CLEAR_CART'].'"/>';
 					echo '</a> ';
 				echo '</div>';
 				echo '<div id="cart_buttons2">';
-					echo '<a href="/catalog/'.$menuid.'" title="Вернуться в магазин">';
-						echo '<img src="/components/catalog/images/shop/cartback.jpg" border="0" alt="Вернуться в магазин"/>';
+					echo '<a href="/catalog/'.$menuid.'" title="'.$_LANG['BACK_TO_SHOP'].'">';
+						echo '<img src="/components/catalog/images/shop/cartback.jpg" border="0" alt="'.$_LANG['BACK_TO_SHOP'].'"/>';
 					echo '</a> ';
-					echo '<a href="/catalog/'.$menuid.'/order.html" title="Оформить заказ">';
-						echo '<img src="/components/catalog/images/shop/cartorder.jpg" border="0" alt="Оформить заказ"/>';
+					echo '<a href="/catalog/'.$menuid.'/order.html" title="'.$_LANG['CART_ORDER'].'">';
+						echo '<img src="/components/catalog/images/shop/cartorder.jpg" border="0" alt="'.$_LANG['CART_ORDER'].'"/>';
 					echo '</a> ';
 				echo '</div>';
 			echo '</div>';
 		} else {
 			//NO ITEMS
-			echo '<p>В корзине нет товаров.</p>';
+			echo '<p>'.$_LANG['NOITEMS_IN_CART'].'</p>';
 			echo '<div id="cart_buttons2">';
-				echo '<a href="/catalog/'.$menuid.'" title="Вернуться в магазин">';
-					echo '<img src="/components/catalog/images/shop/cartback.jpg" border="0" alt="Вернуться в магазин"/>';
+				echo '<a href="/catalog/'.$menuid.'" title="'.$_LANG['BACK_TO_SHOP'].'">';
+					echo '<img src="/components/catalog/images/shop/cartback.jpg" border="0" alt="'.$_LANG['BACK_TO_SHOP'].'"/>';
 				echo '</a> ';
 			echo '</div>';
 
@@ -223,15 +224,16 @@ function shopOrder($cfg){
     $inPage = cmsPage::getInstance();
     $inUser = cmsUser::getInstance();
 	global $menuid;
+	global $_LANG;
 	if (isset($inUser->id)){ $user_id = $inUser->id; } else { $user_id = 0; }	
 	$sid = session_id();
 	
 		$inPage->backButton(false);
-	 	$inPage->setTitle('Оформление заказа');
-		$inPage->addPathway('Корзина', '/catalog/'.$menuid.'/viewcart.html');
-		$inPage->addPathway('Оформление заказа', $_SERVER['REQUEST_URI']);
+	 	$inPage->setTitle($_LANG['CART_ORDERING']);
+		$inPage->addPathway($_LANG['CART'], '/catalog/'.$menuid.'/viewcart.html');
+		$inPage->addPathway($_LANG['CART_ORDERING'], $_SERVER['REQUEST_URI']);
 
-		echo '<div class="con_heading">Оформление заказа</div>';
+		echo '<div class="con_heading">'.$_LANG['CART_ORDERING'].'</div>';
 		
 		echo '<div class="con_description">'.nl2br($cfg['delivery']).'</div>';
 		
@@ -250,10 +252,10 @@ function shopOrder($cfg){
 			echo '<table width="100%" cellpadding="5" cellspacing="0" border="0">';
 			echo '<tr>';
 				echo '<td width="16">&nbsp;</td>';
-				echo '<td><strong>Позиция</strong></td>';
-				echo '<td width="200"><strong>Рубрика</strong></td>';
-				echo '<td width="120" align="center"><strong>Кол-во</strong></td>';
-				echo '<td width="100"  align="center"><strong>Цена</strong></td>';
+				echo '<td><strong>'.$_LANG['ITEM'].'</strong></td>';
+				echo '<td width="200"><strong>'.$_LANG['CAT'].'</strong></td>';
+				echo '<td width="120" align="center"><strong>'.$_LANG['QTY'].'</strong></td>';
+				echo '<td width="100"  align="center"><strong>'.$_LANG['PRICE'].'</strong></td>';
 			echo '</tr>';
 			$row=0; $total = 0;
 			while($item = $inDB->fetch_assoc($rs)){
@@ -282,32 +284,32 @@ function shopOrder($cfg){
             $total = number_format($total, 2, '.', '');
 
 			echo '<div id="cart_total">';
-				echo '<span>Итоговая стоимость заказа:</span> '.$total.' руб.';
+				echo '<span>'.$_LANG['TOTAL_PRICE'].':</span> '.$total.' '.$_LANG['RUB'];
 			echo '</div>';            
 
 			//DELIVERY INFO FORM
-			echo '<div class="con_heading">Информация покупателя</div>';
+			echo '<div class="con_heading">'.$_LANG['INFO_CUSTOMER'].'</div>';
 			
 			echo '<form action="/catalog/'.$menuid.'/finish.html" method="POST">';
 			echo '<table width="100%" cellspacing="0" cellpadding="5">';
 			echo '<tr>';		
-				echo '<td width="40%" align="right">ФИО покупателя: </td>';
+				echo '<td width="40%" align="right">'.$_LANG['FIO_CUSTOMER'].': </td>';
 				echo '<td width="60%" align="left"><input name="customer_fio" type="text" size="45" /></td>';			
 			echo '</tr>';
 			echo '<tr>';		
-				echo '<td width="40%" align="right">Организация: </td>';
+				echo '<td width="40%" align="right">'.$_LANG['ORGANIZATION'].': </td>';
 				echo '<td width="60%" align="left"><input name="customer_company" type="text" size="45" /></td>';			
 			echo '</tr>';
 			echo '<tr>';		
-				echo '<td width="40%" align="right">Контактный телефон: </td>';
+				echo '<td width="40%" align="right">'.$_LANG['CONTACT_PHONE'].': </td>';
 				echo '<td width="60%" align="left"><input name="customer_phone" type="text" size="45" /></td>';			
 			echo '</tr>';
 			echo '<tr>';
-				echo '<td width="40%" align="right">Адрес e-mail: </td>';
+				echo '<td width="40%" align="right">'.$_LANG['ADRESS_EMAIL'].': </td>';
 				echo '<td width="60%" align="left"><input name="customer_email" type="text" size="45" /></td>';
 			echo '</tr>';
 			echo '<tr>';		
-				echo '<td width="40%" align="right">Дополнительные сведения: </td>';
+				echo '<td width="40%" align="right">'.$_LANG['CUSTOMER_COMMENT'].': </td>';
 				echo '<td width="60%" align="left"><input name="customer_comment" type="text" size="45" /></td>';			
 			echo '</tr>';
 
@@ -320,17 +322,17 @@ function shopOrder($cfg){
 
 			echo '<tr>';		
 				echo '<td width="30%" align="right">&nbsp;</td>';
-				echo '<td width="70%" align="left"><input name="order" type="submit" value="Отправить заказ" /></td>';			
+				echo '<td width="70%" align="left"><input name="order" type="submit" value="'.$_LANG['SUBMIT_ORDER'].'" /></td>';
 			echo '</tr>';
 			echo '</table>';
 			echo '</form>';
 
 		} else {
 			//NO ITEMS
-			echo '<p>В корзине нет товаров.</p>';
+			echo '<p>'.$_LANG['NOITEMS_IN_CART'].'</p>';
 			echo '<div id="cart_buttons2">';
-				echo '<a href="/catalog/'.$menuid.'" title="Вернуться в магазин">';
-					echo '<img src="/components/catalog/images/shop/cartback.jpg" border="0" alt="Вернуться в магазин"/>';
+				echo '<a href="/catalog/'.$menuid.'" title="'.$_LANG['BACK_TO_SHOP'].'">';
+					echo '<img src="/components/catalog/images/shop/cartback.jpg" border="0" alt="'.$_LANG['BACK_TO_SHOP'].'"/>';
 				echo '</a> ';
 			echo '</div>';
 
@@ -409,11 +411,12 @@ function shopFinishOrder($cfg){
     $inConf = cmsConfig::getInstance();
 	global $menuid;
     global $_CFG;
+    global $_LANG;
 	if (isset($inUser->id)){ $user_id = $inUser->id; } else { $user_id = 0; }	
 	$sid = session_id();
 	
 		$inPage->backButton(false);
-	 	$inPage->setTitle('Заказ принят');
+	 	$inPage->setTitle($_LANG['ORDER_COMPLETE']);
 		
 		if ($user_id){ $user_sql = "(c.user_id=$user_id OR session_id='$sid')"; } else { $user_sql = "(c.user_id=0 AND c.session_id='$sid')"; }
 		
@@ -428,26 +431,26 @@ function shopFinishOrder($cfg){
 		if ($inDB->num_rows($rs)){
 			//check user data
 			$customer = array();
-			if(!empty($_REQUEST['customer_fio'])) { $customer['fio'] = $_REQUEST['customer_fio']; } else { $error .= 'Укажите свое имя!<br/>'; }
-			if(!empty($_REQUEST['customer_phone'])) { $customer['phone'] = $_REQUEST['customer_phone']; } else { $error .= 'Укажите контактный телефон!<br/>'; }		
+			if(!empty($_REQUEST['customer_fio'])) { $customer['fio'] = $_REQUEST['customer_fio']; } else { $error .= $_LANG['EMPTY_NAME'].'<br/>'; }
+			if(!empty($_REQUEST['customer_phone'])) { $customer['phone'] = $_REQUEST['customer_phone']; } else { $error .= $_LANG['EMPTY_PHONE'].'<br/>'; }
 			$customer['company'] = @$_REQUEST['customer_company'];
             $customer['email']   = @$_REQUEST['customer_email'];
 			$customer['comment'] = @$_REQUEST['customer_comment'];			
-			if(!$inCore->checkCaptchaCode($_REQUEST['code'])) { $error .= 'Неправильно указан защитный код с картинки!<br/>'; }
+			if(!$inCore->checkCaptchaCode($_REQUEST['code'])) { $error .= $_LANG['ERR_CAPTCHA'].'<br/>'; }
 
 			//BUILD MESSAGE
 			if($error==''){
 				//message heading
 				$mail_message = '';				
-				$mail_message .= "Получен заказ из каталога \"".$inConf->sitename."\".\n\n";
-				$mail_message .= "ПОКУПАТЕЛЬ\n-----------------------------\n";				
-				$mail_message .= "ФИО: " . $customer['fio'] . "\n";
-				$mail_message .= "КОМПАНИЯ: " . $customer['company'] . "\n";
-				$mail_message .= "ТЕЛЕФОН: " . $customer['phone'] . "\n";
+				$mail_message .= $_LANG['GET_ORDER_FROM_CATALOG']." \"".$inConf->sitename."\".\n\n";
+				$mail_message .= $_LANG['CUSTOMER']."\n-----------------------------\n";
+				$mail_message .= $_LANG['FIO'].": " . $customer['fio'] . "\n";
+				$mail_message .= $_LANG['COMPANY'].": " . $customer['company'] . "\n";
+				$mail_message .= $_LANG['PHONE'].": " . $customer['phone'] . "\n";
                 $mail_message .= "EMAIL: " . $customer['email'] . "\n";
-				$mail_message .= "ДОПОЛНИТЕЛЬНО: " . @$customer['comment'] . "\n\n";	
+				$mail_message .= $_LANG['ORDER_COMMENT'].": " . @$customer['comment'] . "\n\n";
 				//list of items
-				$mail_message .= "ЗАКАЗ\n---------------------------------\n";					
+				$mail_message .= $_LANG['ORDER']."\n---------------------------------\n";
 				$row=0; $total = 0;
 				while($item = $inDB->fetch_assoc($rs)){
 					$row++;
@@ -456,35 +459,35 @@ function shopFinishOrder($cfg){
                     $item['price']          = number_format($item['price'], 2, '.', '');
                     $item['totalprice']     = number_format($item['totalprice'], 2, '.', '');
                     $total += $item['totalprice'];
-					$mail_message .= $row . '. ' . $item['title'] . ' (' . $item['itemscount'] . '  x ' . $item['price'] . ' руб) = ' . $item['totalprice'] . ' руб.' . "\n";
+					$mail_message .= $row . '. ' . $item['title'] . ' (' . $item['itemscount'] . '  x ' . $item['price'] . ' '.$_LANG['RUB'].') = ' . $item['totalprice'] . ' '.$_LANG['RUB'] . "\n";
 				}
 
                 ob_start(); shopDiscountsInfo(&$total); ob_clean();
 				$total = number_format($total, 2, '.', '');
                 
-				$mail_message .= "\n" . 'Общая сумма заказа: '.$total.' руб.' . "\n";				
-				$inCore->mailText($cfg['email'], 'InstantCMS: ЗАКАЗ ИЗ КАТАЛОГА', $mail_message);
+				$mail_message .= "\n" . $_LANG['TOTAL_ORDER_PRICE'].': '.$total.' '.$_LANG['RUB'] . "\n";
+				$inCore->mailText($cfg['email'], $_LANG['EMAIL_SUBJECT'], $mail_message);
 
                 if ($cfg['notice'] && $customer['email']){
-                    $inCore->mailText($customer['email'], 'Ваш заказ поступил в обработку', $mail_message);
+                    $inCore->mailText($customer['email'], $_LANG['CUSTOMER_EMAIL_SUBJECT'], $mail_message);
                 }
 				//order completed							
-				echo '<div class="con_heading">Спасибо!</div>';						
-				echo '<p style="clear:both"><b>Ваш заказ поступил в обработку.</b><br/>Наши менеджеры свяжутся с вами по указанному вами телефону в самое ближайшее время.</p>';		
-				echo '<p><a href="/">Продолжить</a></p>';
+				echo '<div class="con_heading">'.$_LANG['THANK'].'!</div>';
+				echo '<p style="clear:both"><b>'.$_LANG['CUSTOMER_EMAIL_SUBJECT'].'.</b><br/>'.$_LANG['CUSTOMER_EMAIL_TEXT'].'</p>';
+				echo '<p><a href="/">'.$_LANG['CONTINUE'].'</a></p>';
 				shopClearCart();	
 			} else {			
 				//order failed
-				echo '<div class="con_heading">Ошибка!</div>';						
+				echo '<div class="con_heading">'.$_LANG['ERROR'].'!</div>';
 				echo '<p style="clear:both; color:red">'.$error.'</p>';		
-				echo '<p><a href="#" onClick="window.history.back()">Назад</a></p>';						
+				echo '<p><a href="#" onClick="window.history.back()">'.$_LANG['BACK'].'</a></p>';
 			}
 		} else {
 			//NO ITEMS
-			echo '<p>В корзине нет товаров.</p>';
+			echo '<p>'.$_LANG['NOITEMS_IN_CART'].'</p>';
 			echo '<div id="cart_buttons2">';
-				echo '<a href="/catalog/'.$menuid.'" title="Вернуться в магазин">';
-					echo '<img src="/components/catalog/images/shop/cartback.jpg" border="0" alt="Вернуться в магазин"/>';
+				echo '<a href="/catalog/'.$menuid.'" title="'.$_LANG['BACK_TO_SHOP'].'">';
+					echo '<img src="/components/catalog/images/shop/cartback.jpg" border="0" alt="'.$_LANG['BACK_TO_SHOP'].'"/>';
 				echo '</a> ';
 			echo '</div>';
 

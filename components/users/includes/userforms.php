@@ -16,7 +16,7 @@ function usrFormEditor($user_id, $form_id, $formsdata){
     $inPage = cmsPage::getInstance();
     $inDB   = cmsDatabase::getInstance();
 	$html   = '';
-		
+	global $_LANG;
 	//GET FORM DATA
 	$sql = "SELECT *
 			FROM cms_forms
@@ -50,7 +50,7 @@ function usrFormEditor($user_id, $form_id, $formsdata){
             $html .= '<td valign="top">'.$inPage->buildFormField(1, $field, $default).'</td></tr>';
         }
         $html .= '</table>';
-    } else { $html .= '<p>В форме нет полей.</p>'; }
+    } else { $html .= '<p>'.$_LANG['IN_FORM_NOT_FIELDS'].'</p>'; }
 
 	return $html;
 
@@ -58,7 +58,7 @@ function usrFormEditor($user_id, $form_id, $formsdata){
 
 function usrForm($user_id, $form_id, $formsdata){
     global $menuid;
-
+    global $_LANG;
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
 	$html = '';
@@ -84,7 +84,7 @@ function usrForm($user_id, $form_id, $formsdata){
 						$html .= '<tr><td valign="top" id="title">';
 							$html .= '<strong>'.$field['title'].'</strong>';
 							
-						$default = '<em>Не указано</em>';
+						$default = '<em>'.$_LANG['NOT_SET'].'</em>';
 						if(is_array($formsdata)){
 							if (array_key_exists($field['id'], $formsdata)){
 								if ($formsdata[$field['id']]){
@@ -96,7 +96,7 @@ function usrForm($user_id, $form_id, $formsdata){
 						$html .= '<td valign="top" id="field">'.cmsPage::getMetaSearchLink('/users/'.$menuid.'/hobby/', $default).'</td></tr>';
 					}					
 					$html .= '</table>';												
-				} else { $html .= '<p>В форме "'.$form['title'].'" нет полей.</p>'; }
+				} else { $html .= '<p>'.$_LANG['IN_FORM'].' "'.$form['title'].'" '.$_LANG['NOT_FIELDS'].'.</p>'; }
 					
 			$html .= '</div>';
 	}

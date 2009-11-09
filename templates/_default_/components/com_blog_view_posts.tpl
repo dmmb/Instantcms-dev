@@ -8,30 +8,30 @@
     <div class="blog_type_menu">
 
             {if !$ownertype}
-                <span class="blog_type_active">Лента записей</span>
+                <span class="blog_type_active">{$LANG.POSTS_RSS}</span>
             {else}
-                <a class="blog_type_link" href="/blogs/{$menuid}/latest.html">Лента записей</a>
+                <a class="blog_type_link" href="/blogs/{$menuid}/latest.html">{$LANG.POSTS_RSS}</a>
             {/if}
 
              {if $ownertype == 'all'}
-                <span class="blog_type_active">Все блоги</span>
+                <span class="blog_type_active">{$LANG.ALL_BLOGS}</span>
              {else}
-                <a class="blog_type_link" href="/blogs/{$menuid}/all.html">Все блоги</a>
+                <a class="blog_type_link" href="/blogs/{$menuid}/all.html">{$LANG.ALL_BLOGS}</a>
              {/if}
 
             {if $single_blogs && $multi_blogs}
                 {if $ownertype == 'single'}
-                    <span class="blog_type_active">Персональные <span class="blog_type_num">({$single_blogs})</span></span>
+                    <span class="blog_type_active">{$LANG.PERSONALS} <span class="blog_type_num">({$single_blogs})</span></span>
                 {else}
-                    <a class="blog_type_link" href="/blogs/{$menuid}/single.html">Персональные <span class="blog_type_num">({$single_blogs})</span></a>
+                    <a class="blog_type_link" href="/blogs/{$menuid}/single.html">{$LANG.PERSONALS} <span class="blog_type_num">({$single_blogs})</span></a>
                 {/if}
             {/if}
 
             {if $single_blogs && $multi_blogs}
                 {if $ownertype == 'multi' && $multi_blogs}
-                    <span class="blog_type_active">Коллективные <span class="blog_type_num">({$multi_blogs})</span></span>
+                    <span class="blog_type_active">{$LANG.COLLECTIVES} <span class="blog_type_num">({$multi_blogs})</span></span>
                 {else}
-                    <a class="blog_type_link" href="/blogs/{$menuid}/multi.html">Коллективные <span class="blog_type_num">({$multi_blogs})</span></a>
+                    <a class="blog_type_link" href="/blogs/{$menuid}/multi.html">{$LANG.COLLECTIVES} <span class="blog_type_num">({$multi_blogs})</span></a>
                 {/if}
             {/if}
 
@@ -61,17 +61,17 @@
 							<div class="blog_entry_text">{$post.msg}</div>
 							<div class="blog_comments">
 								{if ($post.comments > 0)}
-									<a class="blog_comments_link" href="{$post.url}#c">{$post.comments|spellcount:'комментарий':'комментария':'комментариев'}</a>
+									<a class="blog_comments_link" href="{$post.url}#c">{$post.comments|spellcount:$LANG.COMMENT:$LANG.COMMENT2:$LANG.COMMENT10}</a>
 								{else}
-									<a class="blog_comments_link" href="{$post.url}#c">Нет комментариев</a>
+									<a class="blog_comments_link" href="{$post.url}#c">{$LANG.NOT_COMMENTS}</a>
 								{/if}
 							{if $post.tagline != false}
 								 <span class="tagline">{$post.tagline}</span>
 							{/if}
 							{if $myblog || $post.user_id == $uid || $is_admin}
 								<span class="editlinks">
-									| <a href="/blogs/{$menuid}/{$post.blog_id}/editpost{$post.id}.html" class="blog_entry_edit">Редактировать</a>
-									| <a href="/blogs/{$menuid}/{$post.blog_id}/delpost{$post.id}.html" class="blog_entry_delete">Удалить</a>				
+									| <a href="/blogs/{$menuid}/{$post.blog_id}/editpost{$post.id}.html" class="blog_entry_edit">{$LANG.EDIT}</a>
+									| <a href="/blogs/{$menuid}/{$post.blog_id}/delpost{$post.id}.html" class="blog_entry_delete">{$LANG.DELETE}</a>
 								</span>
 							{/if}
 							</div>
@@ -85,5 +85,5 @@
 	
 	{$pagination}
 {else}
-	<p style="clear:both">Нет записей.</p>
+	<p style="clear:both">{$LANG.NOT_POSTS}</p>
 {/if}

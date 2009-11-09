@@ -11,7 +11,7 @@
 function mod_bestcontent($module_id){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
-
+        global $_LANG;
 		if (!function_exists('cmsKarmaFormat')){ //if not included earlier
 			include($_SERVER['DOCUMENT_ROOT'].'/core/lib_karma.php');
 		}		
@@ -25,11 +25,11 @@ function mod_bestcontent($module_id){
 		}
 		
 		if (!isset($cfg['shownum'])){
-			echo '<p>Задайте настройки модуля в панели управления.</p>';
+			echo '<p>'.$_LANG['BESTCONTENT_CONFIG_TEXT'].'</p>';
 			return;
 		}
 
-		$sql = "SELECT c.*, IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'),	DATE_FORMAT(c.pubdate, '<strong>Сегодня</strong> в %H:%i'), 
+		$sql = "SELECT c.*, IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'),	DATE_FORMAT(c.pubdate, '<strong>{$_LANG['TODAY']}</strong> в %H:%i'),
 						DATE_FORMAT(c.pubdate, '%d-%m-%Y'))  as fpubdate, IFNULL(SUM(r.points), 0) as points,
 						u.nickname as author, u.login as author_login
 				FROM cms_users u, cms_content c
@@ -67,7 +67,7 @@ function mod_bestcontent($module_id){
 			$smarty->assign('cfg', $cfg);			
 			$smarty->display('mod_bestcontent.tpl');
 							
-		} else { echo '<p>Нет статей для отображения.</p>'; }
+		} else { echo '<p>'.$_LANG['BESTCONTENT_NOT_ARTICLES'].'</p>'; }
 				
 		return true;
 }

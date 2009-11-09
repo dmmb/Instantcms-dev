@@ -1,4 +1,7 @@
 <?php
+
+    if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
+
 	session_start();
 
 	if (!isset($_REQUEST['target'])) { die(2); } else { $target = $_REQUEST['target']; }

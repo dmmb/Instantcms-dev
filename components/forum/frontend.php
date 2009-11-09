@@ -46,6 +46,7 @@ function forumsList($selected=0){
 function createPoll($thread_id, $poll, $cfg){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
+    global $_LANG;
 	global $menuid;
 	
 	$poll_error = '';
@@ -79,9 +80,9 @@ function createPoll($thread_id, $poll, $cfg){
 				VALUES ($thread_id, '$title', '$desc', '$str_answers', '$str_options', (NOW() + INTERVAL $days DAY))";
 		$inDB->query($sql);
 	} else { 
-		$poll_error = '<p><strong>Ошибка создания опроса:</strong> Укажите минимум 2 варианта ответа.</p>'; 
-		$poll_error .= '<p>Тема была создана, но опрос не прикреплен.</p>';	
-		$poll_error .= '<p><a href="/forum/'.$menuid.'/thread'.$thread_id.'.html">Продолжить</a> &rarr;</p>';			
+		$poll_error = '<p><strong>'.$_LANG['ERR_POLL'].':</strong> '.$_LANG['ERR_POLL_VARIANT'].'</p>';
+		$poll_error .= '<p>'.$_LANG['ERR_POLL_ATTACH'].'</p>';
+		$poll_error .= '<p><a href="/forum/'.$menuid.'/thread'.$thread_id.'.html">'.$_LANG['CONTINUE'].'</a> &rarr;</p>';
 	}
 	
 	return $poll_error;	
@@ -90,16 +91,17 @@ function createPoll($thread_id, $poll, $cfg){
 function pageSelect($records, $current, $perpage, $field='page', $form='pageform'){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
+    global $_LANG;
 	$html = '';
 	if ($records){
 		$pages = ceil($records / $perpage);
 		if($pages>1){
-			$html .= '<td width="60"><strong>Страница: </strong></span></td>';	
+			$html .= '<td width="60"><strong>'.$_LANG['PAGE'].': </strong></span></td>';
 			if ($current>2){
-				$html .= '<td width="16"><a href="javascript:goPage('.(1-$current).', \''.$field.'\', \''.$form.'\')" title="Первая"><img src="/images/icons/first.gif" border="0"/></a></td>';	
+				$html .= '<td width="16"><a href="javascript:goPage('.(1-$current).', \''.$field.'\', \''.$form.'\')" title="'.$_LANG['FIRST'].'"><img src="/images/icons/first.gif" border="0"/></a></td>';
 			}
 			if ($current>1) { 
-				$html .= '<td width="16"><a href="javascript:goPage('.(-1).', \''.$field.'\', \''.$form.'\')" title="Предыдущая"><img src="/images/icons/prev.gif" border="0"/></a></td>';
+				$html .= '<td width="16"><a href="javascript:goPage('.(-1).', \''.$field.'\', \''.$form.'\')" title="'.$_LANG['PREVIOUS'] .'"><img src="/images/icons/prev.gif" border="0"/></a></td>';
 			}
 			$html .= '<td width="40" align="center"><form style="margin:0px;padding:0px" action="" name="'.$form.'" id="'.$form.'" method="POST">';
 			$html .= '<select style="width:40px" name="page" id="'.$field.'" onchange="$(\'#'.$form.'\').submit()">';
@@ -112,10 +114,10 @@ function pageSelect($records, $current, $perpage, $field='page', $form='pageform
 			}
 			$html .= '</select></form></td>';
 			if ($current<$pages) { 
-				$html .= '<td width="16"><a href="javascript:goPage('.(+1).', \''.$field.'\', \''.$form.'\')" title="Следущая"><img src="/images/icons/next.gif" border="0"/></a></td>';
+				$html .= '<td width="16"><a href="javascript:goPage('.(+1).', \''.$field.'\', \''.$form.'\')" title="'.$_LANG['NEXT'].'"><img src="/images/icons/next.gif" border="0"/></a></td>';
 			}
 			if ($current<$pages-1){
-				$html .= '<td width=""><a href="javascript:goPage('.($pages-$current).', \''.$field.'\', \''.$form.'\')" title="Последняя"><img src="/images/icons/last.gif" border="0"/></a></td>';	
+				$html .= '<td width=""><a href="javascript:goPage('.($pages-$current).', \''.$field.'\', \''.$form.'\')" title="'.$_LANG['LAST'].'"><img src="/images/icons/last.gif" border="0"/></a></td>';
 			} else {
 				$html .= '<td width="">&nbsp;</td>';
 			}
@@ -127,6 +129,7 @@ function pageSelect($records, $current, $perpage, $field='page', $form='pageform
 function pageBarThread($thread_id, $current, $perpage){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
+    global $_LANG;
 	$html = '';
 	global $menuid;
 	$result = $inDB->query("SELECT id FROM cms_forum_posts WHERE thread_id = $thread_id") ;
@@ -135,7 +138,7 @@ function pageBarThread($thread_id, $current, $perpage){
 		$pages = ceil($records / $perpage);
 		if($pages>1){
 			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>Страницы: </strong></span>';	
+			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {			
 					
@@ -155,6 +158,7 @@ function pageBarThread($thread_id, $current, $perpage){
 function uploadFiles($post_id, $cfg){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
+    global $_LANG;
 	$file_error = false;
 	if ($_POST['fa_count']){
 		$c = 0;
@@ -188,11 +192,12 @@ function uploadFiles($post_id, $cfg){
 }
 
 function uploadError($menuid, $id, $post_id, $filesize, $ext){
-	echo '<p style="color:red;font-weight:bold">Ошибки при загрузке одного или нескольких файлов. Проверьте их тип и размеры.</p>';
-	echo '<div><strong>Максимальный размер:</strong> '.$filesize.' Кб.</div>'; 
-	echo '<div><strong>Допустимые типы файлов:</strong> .'.strtolower(str_replace(' ', ' .', $ext)).'</div>';
-	echo '<p>Сообщение было опубликовано, однако возможно не все файлы были прикреплены.</p>';
-	echo '<p><a href="/forum/'.$menuid.'/thread'.$id.'.html#'.$post_id.'">Продолжить</a> &rarr;</p>';
+        global $_LANG;
+	echo '<p style="color:red;font-weight:bold">'.$_LANG['ERR_UPLOAD_FILE'].'</p>';
+	echo '<div><strong>'.$_LANG['UPLOAD_MAXSIZE'].':</strong> '.$filesize.' '.$_LANG['KBITE'].'.</div>';
+	echo '<div><strong>'.$_LANG['UPLOAD_FILETYPE'].':</strong> .'.strtolower(str_replace(' ', ' .', $ext)).'</div>';
+	echo '<p>'.$_LANG['NOT_ALL_FILE_ATTACH'].'</p>';
+	echo '<p><a href="/forum/'.$menuid.'/thread'.$id.'.html#'.$post_id.'">'.$_LANG['CONTINUE'].'</a> &rarr;</p>';
 	return true;
 }
 
@@ -210,10 +215,10 @@ function forum(){
     $model = new cms_model_forum();
 
     $menutitle = $inCore->menuTitle();
-
+    global $_LANG;
 	if (!$cfg['is_on']){
-		echo '<div class="con_heading">Форум не доступен.</div>';
-		echo '<p>Работа форума временно остановлена. Попробуйте вернуться сюда позже.</p>';
+		echo '<div class="con_heading">'.$_LANG['FORUM_NOT_ACCESS'].'</div>';
+		echo '<p>'.$_LANG['FORUM_NOT_ACCESS_TEXT'].'</p>';
 		return;
 	}
 
@@ -229,10 +234,10 @@ function forum(){
 ///////////////////////////// VIEW FORUMS LIST /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){
 
-    $inPage->printHeading('Форумы');
-    $inPage->setTitle('Форумы');
+    $inPage->printHeading($_LANG['FORUMS']);
+    $inPage->setTitle($_LANG['FORUMS']);
 
-    if ($menuid==0) { $inPage->addPathway('Форумы', '/forum/'.$menuid); }
+    if ($menuid==0) { $inPage->addPathway($_LANG['FORUMS'], '/forum/'.$menuid); }
 
     $groupsql = forumUserAuthSQL();
     $sql = "SELECT *
@@ -284,7 +289,7 @@ if ($do=='view'){
                             echo '<div class="forum_desc">'.$f['description'].'</div>';
                             //SUBFORUMS
                             if ($sub){
-                                echo '<div class="forum_subs"><span class="forum_subs_title">Подфорумы:</span> '.$subforums.'</div>';
+                                echo '<div class="forum_subs"><span class="forum_subs_title">'.$_LANG['SUBFORUMS'].':</span> '.$subforums.'</div>';
                             }
                         echo '</td>';
                         echo '<td width="120" class="'.$class.'" style="font-size:10px" valign="top">'.forumMessages($f['id']).'</td>';
@@ -294,24 +299,24 @@ if ($do=='view'){
                 }
                 echo '</table>';
             } else {
-                echo '<p>Нет форумов в этой категории.</p>';
+                echo '<p>'.$_LANG['NOT_FORUMS_IN_CAT'].'</p>';
             }
         }
     } else {
-        echo '<p>Нет категорий форумов.</p>';
+        echo '<p>'.$_LANG['NOT_CATS_OF_FORUM'].'</p>';
     }
 		
 }	
 ///////////////////////////// VIEW THREADS /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='forum'){
 
-	if($menuid==0) { $inPage->addPathway('Форумы', '/forum/'.$menuid); }
+	if($menuid==0) { $inPage->addPathway($_LANG['FORUMS'], '/forum/'.$menuid); }
 
     $f = $model->getForum($id);
 
 	if (!$f){
-        echo '<h1 class="con_heading">Форум не найден</h1>';
-        echo '<p>Форум не найден. Возможно он был удален.</p>';
+        echo '<h1 class="con_heading">'.$_LANG['FORUM_NOT_FOUND'].'</h1>';
+        echo '<p>'.$_LANG['FORUM_NOT_FOUND_TEXT'].'</p>';
         return;
     }
         
@@ -339,7 +344,7 @@ if ($do=='forum'){
                            FROM cms_forums
                            WHERE published = 1 AND parent_id = $id $groupsql
                            ORDER BY ordering";
-    
+
     $subforums_result   = $inDB->query($subforums_sql);
     $subforums_count    = $inDB->num_rows($fresult);
 
@@ -434,7 +439,7 @@ if ($do=='forum'){
 ///////////////////////////// READ THREAD /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='thread'){
 
-	if ($menuid == 0) { $inPage->addPathway('Форумы', '/forum/0'); }
+	if ($menuid == 0) { $inPage->addPathway($_LANG['FORUMS'], '/forum/0'); }
 
 	$sql = "SELECT t.*, f.title as forum, f.id as fid, f.NSLeft as forum_left, f.NSRight as forum_right
 			FROM cms_forum_threads t, cms_forums f
@@ -487,48 +492,48 @@ if ($do=='thread'){
 			echo '<table cellspacing="2" cellpadding="2" align="right"><tr>';
 			if (!$t['closed']){
 				echo '<td width="16"><img src="/components/forum/images/toolbar/newpost.gif"/></td>
-					  <td><a href="/forum/'.$menuid.'/reply'.$t['id'].'.html"><strong>Новое сообщение</strong></a></td>';
+					  <td><a href="/forum/'.$menuid.'/reply'.$t['id'].'.html"><strong>'.$_LANG['NEW_MESSAGE'].'</strong></a></td>';
 			} else {
-				echo '<td><strong>Тема закрыта</td>';
+				echo '<td><strong>'.$_LANG['THREAD_CLOSE'].'</td>';
 			}
 			
 			if($is_admin || $is_moder) { 
 				if (!$t['closed']){
 					echo '<td width="16"><img src="/components/forum/images/toolbar/closethread.gif"/></td>
-						  <td><a href="/forum/'.$menuid.'/closethread'.$t['id'].'.html">Закрыть</a></td>'; 
+						  <td><a href="/forum/'.$menuid.'/closethread'.$t['id'].'.html">'.$_LANG['CLOSE'].'</a></td>';
 				} else {
 					echo '<td width="16"><img src="/components/forum/images/toolbar/openthread.gif"/></td>
-						  <td><a href="/forum/'.$menuid.'/openthread'.$t['id'].'.html">Открыть</a></td>'; 					
+						  <td><a href="/forum/'.$menuid.'/openthread'.$t['id'].'.html">'.$_LANG['OPEN'].'</a></td>';
 				}
 			}
 			if(usrCheckAuth()) {
 				if (!cmsUser::isSubscribed($inUser->id, 'forum', $t['id'])){
 						echo '<td width="16"><img src="/components/forum/images/toolbar/subscribe.gif"/></td>
-							  <td><a href="/forum/'.$menuid.'/subscribe'.$t['id'].'.html">Подписка на тему</a></td>';		
+							  <td><a href="/forum/'.$menuid.'/subscribe'.$t['id'].'.html">'.$_LANG['SUBSCRIBE_THEME'].'</a></td>';
 				} else {
 					echo '<td width="16"><img src="/components/forum/images/toolbar/unsubscribe.gif"/></td>
-						  <td><a href="/forum/'.$menuid.'/unsubscribe'.$t['id'].'.html">Прекратить подписку</a></td>';				
+						  <td><a href="/forum/'.$menuid.'/unsubscribe'.$t['id'].'.html">'.$_LANG['UNSUBSCRIBE'].'</a></td>';
 				}
 				if ($is_admin || $is_moder){					
 					if (!$t['pinned']){
 						echo '<td width="16"><img src="/components/forum/images/toolbar/pinthread.gif"/></td>
-							  <td><a href="/forum/'.$menuid.'/pinthread'.$t['id'].'.html">Прикрепить</a></td>';
+							  <td><a href="/forum/'.$menuid.'/pinthread'.$t['id'].'.html">'.$_LANG['PIN'].'</a></td>';
 					} else {
 						echo '<td width="16"><img src="/components/forum/images/toolbar/unpinthread.gif"/></td>
-							  <td><a href="/forum/'.$menuid.'/unpinthread'.$t['id'].'.html">Открепить</a></td>';
+							  <td><a href="/forum/'.$menuid.'/unpinthread'.$t['id'].'.html">'.$_LANG['UNPIN'].'</a></td>';
 					}
 					echo '<td width="16"><img src="/components/forum/images/toolbar/movethread.gif"/></td>
-						  <td><a href="/forum/'.$menuid.'/movethread'.$t['id'].'.html">Перенести</a></td>'; 					
+						  <td><a href="/forum/'.$menuid.'/movethread'.$t['id'].'.html">'.$_LANG['MOVE'].'</a></td>';
 					echo '<td width="16"><img src="/components/forum/images/toolbar/edit.gif"/></td>
-						  <td><a href="/forum/'.$menuid.'/renamethread'.$t['id'].'.html">Переименовать</a></td>'; 					
+						  <td><a href="/forum/'.$menuid.'/renamethread'.$t['id'].'.html">'.$_LANG['RENAME'].'</a></td>';
 				}
 				if ($inCore->userIsAdmin($inUser->id) || $mythread){
 					echo '<td width="16"><img src="/components/forum/images/toolbar/delete.gif"/></td>
-						  <td><a href="javascript:deleteThread(\'/forum/'.$menuid.'/deletethread'.$t['id'].'.html\')">Удалить</a></td>';						
+						  <td><a href="javascript:deleteThread(\'/forum/'.$menuid.'/deletethread'.$t['id'].'.html\')">'.$_LANG['DELETE'].'</a></td>';
 				}
 			}
 			echo '<td width="16"><img src="/components/forum/images/toolbar/back.gif"/></td>
-				  <td><a href="/forum/'.$menuid.'/'.$t['fid'].'">Назад</a></td>';
+				  <td><a href="/forum/'.$menuid.'/'.$t['fid'].'">'.$_LANG['BACKB'].'</a></td>';
 			echo '</tr></table>';
 			echo '</td>';
 		} else { echo '<td>&nbsp;</td>'; }
@@ -574,12 +579,12 @@ if ($do=='thread'){
 					echo '<tr>';
 						//user column
 						echo '<td class="post_usercell" width="140" align="center" valign="top" height="150">';
-							echo '<div><a class="post_userlink" href="javascript:addNickname(\''.$p['author'].'\');" title="Вставить имя в быстрый ответ"/>'.$p['author'].'</a></div>';
+							echo '<div><a class="post_userlink" href="javascript:addNickname(\''.$p['author'].'\');" title="'.$_LANG['ADD_NICKNAME'].'"/>'.$p['author'].'</a></div>';
 														
 							echo '<div class="post_userrank">'.forumUserRank($p['uid'], $user_messages, $cfg['ranks'], $cfg['modrank']).'</div>';
 						
 							echo '<div class="post_userimg">';
-								echo '<a href="'.cmsUser::getProfileURL($p['author_login']).'" title="Перейти в профиль">'.usrImage($p['uid'], 'small').'</a>';
+								echo '<a href="'.cmsUser::getProfileURL($p['author_login']).'" title="'.$_LANG['GOTO_PROFILE'].'">'.usrImage($p['uid'], 'small').'</a>';
 								
 								$awards = cmsUser::getAwardsList($p['uid']);
 								if ($awards){
@@ -591,7 +596,7 @@ if ($do=='thread'){
 								}							
 							echo '</div>';
 							
-							echo '<div class="post_usermsgcnt">Сообщений: '.$user_messages.'</div>';
+							echo '<div class="post_usermsgcnt">'.$_LANG['MESSAGES'].': '.$user_messages.'</div>';
 														
 						echo '</td>';
 						//message column
@@ -606,17 +611,17 @@ if ($do=='thread'){
                                         <tr>';
 
                                         echo '<td width="15"><img src="/components/forum/images/toolbar/post-quote.gif"/></td>
-                                              <td><a href="javascript:addQuoteText(\''.$p['author'].'\')" title="Вставить выделенную цитату в быстрый ответ">Цитировать выделенное</a></td>';
+                                              <td><a href="javascript:addQuoteText(\''.$p['author'].'\')" title="'.$_LANG['ADD_SELECTED_QUOTE'].'">'.$_LANG['ADD_QUOTE_TEXT'].'</a></td>';
 
                                         echo '<td width="15"><img style="margin-left:5px" src="/components/forum/images/toolbar/post-reply.gif"/></td>';
-                                        echo '<td><a href="/forum/'.$menuid.'/thread'.$t['id'].'-quote'.$p['id'].'.html" title="Ответить с полным цитированием">Ответить</a></td>';
+                                        echo '<td><a href="/forum/'.$menuid.'/thread'.$t['id'].'-quote'.$p['id'].'.html" title="'.$_LANG['REPLY_FULL_QUOTE'].'">'.$_LANG['REPLY'].'</a></td>';
 
                                         if ($mypost || ($is_moder && !$inCore->userIsAdmin($p['uid']))){
                                             echo '<td width="15"><img style="margin-left:5px" src="/components/forum/images/toolbar/post-edit.gif"/></td>
-                                                  <td><a href="/forum/'.$menuid.'/editpost'.$p['id'].'.html">Редактировать</a></td>';
+                                                  <td><a href="/forum/'.$menuid.'/editpost'.$p['id'].'.html">'.$_LANG['EDIT'].'</a></td>';
                                             if ($num > 1){
                                                 echo '<td width="15"><img style="margin-left:5px" src="/components/forum/images/toolbar/post-delete.gif"/></td>
-                                                      <td><a href="/forum/'.$menuid.'/deletepost'.$p['id'].'.html">Удалить</a></td>';
+                                                      <td><a href="/forum/'.$menuid.'/deletepost'.$p['id'].'.html">'.$_LANG['DELETE'].'</a></td>';
                                             }
                                         }
                                 echo '</tr></table>';
@@ -636,7 +641,7 @@ if ($do=='thread'){
 							}
 							//edit details
 							if ($p['edittimes']){
-								echo '<div class="post_editdate">Редактировалось: '.$p['edittimes'].' раз (Последний: '.$p['editdate'].' в '.$p['edittime'].')</div>';
+								echo '<div class="post_editdate">'.$_LANG['EDITED'].': '.$p['edittimes'].' '.$_LANG['COUNT'].' ('.$_LANG['LAST_EDIT'].': '.$p['editdate'].' '.$_LANG['IN'].' '.$p['edittime'].')</div>';
 							}
 							//user signature
 							if ($p['signature']){
@@ -650,7 +655,7 @@ if ($do=='thread'){
 				
 				//BOTTOM TOOLBAR
 				if ($page == $lastpage) { echo '<a name="new"></a>'; }
-				echo '<table width="100%" cellspacing="0" cellpadding="5"  class="forum_toolbar"><tr><td><a href="#">В начало страницы</a></td>'. $toolbar;					
+				echo '<table width="100%" cellspacing="0" cellpadding="5"  class="forum_toolbar"><tr><td><a href="#">'.$_LANG['GOTO_BEGIN_PAGE'].'</a></td>'. $toolbar;
 				
 				//NAV BAR
 				$previd = dbGetFields('cms_forum_threads', 'id<'.$t['id'].' AND forum_id = '.$t['forum_id'], 'id, title', 'id DESC');
@@ -662,18 +667,18 @@ if ($do=='thread'){
 							echo '<table cellpadding="5" cellspacing="0" border="0" align="center" style="margin-left:auto;margin-right:auto"><tr>';
 								if ($previd){
 									echo '<td align="right" width="">';
-										echo '<div>&larr; <a href="/forum/'.$menuid.'/thread'.$previd['id'].'.html">Предыдущая тема</a></div>';
+										echo '<div>&larr; <a href="/forum/'.$menuid.'/thread'.$previd['id'].'.html">'.$_LANG['PREVIOUS_THREAD'].'</a></div>';
 									echo '</td>';
 								}
 								if ($previd && $nextid) { echo '<td>|</td>'; }
 								if ($nextid){
 									echo '<td align="left" width="">';
-										echo '<div><a href="/forum/'.$menuid.'/thread'.$nextid['id'].'.html">Следующая тема</a> &rarr;</div>';
+										echo '<div><a href="/forum/'.$menuid.'/thread'.$nextid['id'].'.html">'.$_LANG['NEXT_THREAD'].'</a> &rarr;</div>';
 									echo '</td>';
 								}			
 							echo '</tr></table>';				
 						echo '</td>';
-						echo '<td width="150" align="right">Перейти на форум: </td>';								
+						echo '<td width="150" align="right">'.$_LANG['GOTO_FORUM'].': </td>';
 						echo '<td width="220" align="right">';			
 							echo forumsList($t['forum_id']);
 						echo '</td>';
@@ -688,7 +693,7 @@ if ($do=='thread'){
 				if (!isset($cfg['fast_bb'])) { $cfg['fast_bb'] = 1; }				
 				if ($cfg['fast_on'] && !$t['closed']){
 					echo '<div class="forum_fast">';
-						echo '<div class="forum_fast_header">Быстрый ответ</div>';
+						echo '<div class="forum_fast_header">'.$_LANG['FAST_ANSWER'].'</div>';
 						if ($inUser->id){
 							if ($cfg['fast_bb']){
                                 $inPage->addHeadJS('core/js/smiles.js');
@@ -700,19 +705,19 @@ if ($do=='thread'){
 							echo '<div class="forum_fast_form">';
 								echo '<form action="/forum/'.$menuid.'/reply'.$id.'.html" method="post">';
 									echo '<textarea id="message" name="message" rows="5"></textarea>';
-									echo '<div class="forum_fast_submit"><input type="submit" name="gosend" value="Отправить"/></div>';
+									echo '<div class="forum_fast_submit"><input type="submit" name="gosend" value="'.$_LANG['SEND'].'"/></div>';
 								echo '</form>';
 							echo '</div>';
 						} else {
-							echo '<div style="padding:5px">Чтобы писать на форуме, <a href="/registration">зарегистрируйтесь</a> или авторизуйтесь.</div>';
+							echo '<div style="padding:5px">'.$_LANG['FOR_WRITE_ON_FORUM'].', <a href="/registration">'.$_LANG['REGISTER'].'</a> '.$_LANG['OR_LOGIN'].'.</div>';
 						}
 					echo '</div>';
 				}
 				
 			} else {
-				echo '<p>Нет сообщений в этой теме.</p>';
+				echo '<p>'.$_LANG['NO_MESS_IN_THREAD'].'</p>';
 			}					
-	} else { echo '<p>Тема не найдена. Возможно она была удалена.</p>'; }
+	} else { echo '<p>'.$_LANG['THREAD_NOT_FOUND_TEXT'].'</p>'; }
 
 }
 ///////////////////////////// NEW THREAD / POST /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -723,37 +728,37 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 		$inPage->addHeadJS('core/js/smiles.js');
 
 		if ($do == 'newthread') { 
-			$inPage->setTitle('Новая тема');
-			$inPage->addPathway('Новая тема', $_SERVER['REQUEST_URI']);
-			echo '<div class="con_heading">Новая тема</div>';				
+			$inPage->setTitle($_LANG['NEW_THREAD']);
+			$inPage->addPathway($_LANG['NEW_THREAD'], $_SERVER['REQUEST_URI']);
+			echo '<div class="con_heading">'.$_LANG['NEW_THREAD'].'</div>';
 		} else {
 			if ($do == 'newpost'){
 				$sql = "SELECT * FROM cms_forum_threads WHERE id = $id";
 				$res = $inDB->query($sql);
 				if ($inDB->num_rows($res)){		
 					$t = $inDB->fetch_assoc($res);
-					$inPage->setTitle('Новое сообщение');
-					$inPage->addPathway('Новое сообщение', $_SERVER['REQUEST_URI']);	
-					echo '<div class="con_heading">Новое сообщение</div>';				
+					$inPage->setTitle($_LANG['NEW_POST']);
+					$inPage->addPathway($_LANG['NEW_POST'], $_SERVER['REQUEST_URI']);
+					echo '<div class="con_heading">'.$_LANG['NEW_POST'].'</div>';
 					echo '<div style="margin-bottom:10px">
-							<strong>Тема: </strong><a href="/forum/'.$menuid.'/thread'.$t['id'].'.html">'.$t['title'].'</a>
+							<strong>'.$_LANG['THREAD'].': </strong><a href="/forum/'.$menuid.'/thread'.$t['id'].'.html">'.$t['title'].'</a>
 						  </div>';
 				} else {
-					die('Тема не найдена.');
+					die($_LANG['THREAD_NOT_FOUND']);
 				}
 			} else { //edit post				
 					$sql = "SELECT content, thread_id
 							FROM cms_forum_posts
 							WHERE id = $id";
 							
-					if(!$inCore->userIsAdmin($inUser->id)) { $sql .= " AND user_id=".$inUser->id; }
+					if(!$inCore->userIsAdmin($inUser->id) && !$inCore->isUserCan('forum/moderate')) { $sql .= " AND user_id=".$inUser->id; }
 					
 					$result = $inDB->query($sql) ;
 				
 					if ($inDB->num_rows($result)>0){
-						$inPage->setTitle('Редактировать сообщение');
-						$inPage->addPathway('Редактировать сообщение', $_SERVER['REQUEST_URI']);
-						echo '<div class="con_heading">Редактировать сообщение</div>';							
+						$inPage->setTitle($_LANG['EDIT_POST']);
+						$inPage->addPathway($_LANG['EDIT_POST'], $_SERVER['REQUEST_URI']);
+						echo '<div class="con_heading">'.$_LANG['EDIT_POST'].'</div>';
 					
 						$msg = $inDB->fetch_assoc($result);
 						$oldmsg = str_replace('<br/>', "\r\n", $msg['content']);	
@@ -787,11 +792,11 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 						echo '<input type="hidden" name="forum_id" value="'.$id.'" />'; 
 						echo '<div class="forum_postinfo"><table width="100%">';
 							echo '<tr>';
-								echo '<td width="150">Название темы:</td>';
+								echo '<td width="150">'.$_LANG['THREAD_TITLE'].':</td>';
 								echo '<td width=""><input type="text" name="title" size="30"/></td>';								
 							echo '</tr>';
 							echo '<tr>';
-								echo '<td width="">Описание темы:</td>';
+								echo '<td width="">'.$_LANG['THREAD_DESCRIPTION'].':</td>';
 								echo '<td width=""><input type="text" name="description" size="50"/></td>';								
 							echo '</tr>';
 						echo '</table></div>';
@@ -816,11 +821,11 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 					}
 
 					if (($do=='newpost' && !cmsUser::isSubscribed($inUser->id, 'forum', @$id)) || ($do=='newthread')){
-						echo '<div style="margin-top:16px;"><input name="subscribe" type="checkbox" value="1" /> Уведомлять об ответах в теме</div>';
+						echo '<div style="margin-top:16px;"><input name="subscribe" type="checkbox" value="1" /> '.$_LANG['SUBSCRIBE_THREAD'].'</div>';
 					}
 					
-					echo '<div style="margin-top:6px;"><input type="submit" name="gosend" value="Отправить" style="font-size:18px"/> ';
-					echo '<input type="button" name="gosend" value="Отмена" style="font-size:18px" onclick="window.history.go(-1)"/></div>';
+					echo '<div style="margin-top:6px;"><input type="submit" name="gosend" value="'.$_LANG['SEND'].'" style="font-size:18px"/> ';
+					echo '<input type="button" name="gosend" value="'.$_LANG['CANCEL'].'" style="font-size:18px" onclick="window.history.go(-1)"/></div>';
 			echo '</td>';	
 							
 			echo '</tr></table>';
@@ -920,7 +925,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 							}
 						}
 					} else {
-						echo '<p>Необходимо указать название темы и ваше сообщение.</p>';
+						echo '<p>'.$_LANG['NEED_TITLE_THREAD_YOUR_POST'].'</p>';
 					}
 				} else { //edit post
 					if($message){
@@ -932,7 +937,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 						$inDB->query($sql) ;
 						$inCore->registerUploadImages(session_id(), $id, 'forum');						
 						header('location:/forum/'.$menuid.'/thread'.$msg['thread_id'].'.html');
-					} else { echo '<p>Необходимо ввести текст сообщения.</p>'; }
+					} else { echo '<p>'.$_LANG['NEED_TEXT_POST'].'</p>'; }
 				}
 			}
 		}
@@ -954,10 +959,10 @@ if ($do=='movethread'){
 			
 			if (!isset($_POST['gomove'])){ //SHOW MOVE FORM
 						
-				$inPage->setTitle('Перенести тему');
-				$inPage->addPathway('Перенести тему', $_SERVER['REQUEST_URI']);
+				$inPage->setTitle($_LANG['MOVE_THREAD']);
+				$inPage->addPathway($_LANG['MOVE_THREAD'], $_SERVER['REQUEST_URI']);
 
-				echo '<div class="con_heading">Перенести тему</div>';
+				echo '<div class="con_heading">'.$_LANG['MOVE_THREAD'].'</div>';
 					
 				$sql = "SELECT * FROM cms_forum_threads WHERE id = $id LIMIT 1";
 				$result = $inDB->query($sql) ;
@@ -965,9 +970,9 @@ if ($do=='movethread'){
 				if ($inDB->num_rows($result)>0){
 					$t = $inDB->fetch_assoc($result);											
 					
-					echo '<div style="margin-top:10px"><strong>Тема:</strong> <a href="/forum/'.$menuid.'/thread'.$t['id'].'.html">'.$t['title'].'</a></div>';
+					echo '<div style="margin-top:10px"><strong>'.$_LANG['THREAD'].':</strong> <a href="/forum/'.$menuid.'/thread'.$t['id'].'.html">'.$t['title'].'</a></div>';
 					echo '<div><form action="" method="POST">';
-					echo '<table border="0" cellspacing="10" style="background-color:#EBEBEB"><tr><td valign="top">Перенести тему в форум:</td>';
+					echo '<table border="0" cellspacing="10" style="background-color:#EBEBEB"><tr><td valign="top">'.$_LANG['MOVE_THREAD_IN_FORUM'].':</td>';
 					
 						echo '<td valign="top"><select name="forum_id">';
 
@@ -983,10 +988,10 @@ if ($do=='movethread'){
 						
 						echo '</select></td>';
 
-					echo '<td valign="top"><input type="submit" name="gomove" value="Перенести"/></td></tr></table>';
+					echo '<td valign="top"><input type="submit" name="gomove" value="'.$_LANG['MOVE'].'"/></td></tr></table>';
 					echo '</form></div>';				
 					
-				} else { echo 'Тема не найдена.'; }
+				} else { echo $_LANG['THREAD_NOT_FOUND']; }
 			} else { //DO MOVE
 			
 				if (@$_POST['forum_id']){				
@@ -1009,10 +1014,10 @@ if ($do=='renamethread'){
 			
 			if (!isset($_POST['gorename'])){ //SHOW MOVE FORM
 						
-				$inPage->setTitle('Переименовать тему');
-				$inPage->addPathway('Переименовать тему', $_SERVER['REQUEST_URI']);
+				$inPage->setTitle($_LANG['RENAME_THREAD']);
+				$inPage->addPathway($_LANG['RENAME_THREAD'], $_SERVER['REQUEST_URI']);
 
-				echo '<div class="con_heading">Переименовать тему</div>';
+				echo '<div class="con_heading">'.$_LANG['RENAME_THREAD'].'</div>';
 					
 				$sql = "SELECT * FROM cms_forum_threads WHERE id = $id LIMIT 1";
 				$result = $inDB->query($sql) ;
@@ -1020,19 +1025,19 @@ if ($do=='renamethread'){
 				if ($inDB->num_rows($result)>0){
 					$t = $inDB->fetch_assoc($result);											
 					
-					echo '<div style="margin-top:10px"><strong>Тема:</strong> <a href="/forum/'.$menuid.'/thread'.$t['id'].'.html">'.$t['title'].'</a></div>';
+					echo '<div style="margin-top:10px"><strong>'.$_LANG['THREAD'].':</strong> <a href="/forum/'.$menuid.'/thread'.$t['id'].'.html">'.$t['title'].'</a></div>';
 					
 					echo '<div style="margin-top:5px"><form action="" method="POST">';
 					
 					echo '<table border="0" cellspacing="10" style="background-color:#EBEBEB">
-						  <tr><td valign="top">Название темы:</td>';
+						  <tr><td valign="top">'.$_LANG['THREAD_TITLE'].':</td>';
 					
 						echo '<td valign="top">
 								<input type="hidden" name="tid" value="'.$t['id'].'"/>
 								<input type="text" size="45" value="'.$t['title'].'" name="title" id="title"/>
 							 </td>';
 
-					echo '</tr><tr><td valign="top">Описание:</td>';
+					echo '</tr><tr><td valign="top">'.$_LANG['DESCRIPTION'].':</td>';
 					
 						echo '<td valign="top">
 								<input type="text" size="45" value="'.$t['description'].'" name="description" id="title"/>
@@ -1040,9 +1045,9 @@ if ($do=='renamethread'){
 						
 					echo '</tr></table>';
 					
-					echo '<div style="margin-top:5px"><input type="submit" name="gorename" value="Сохранить"/> <input type="button" onclick="window.history.go(-1);" name="cancel" value="Отмена"/></div></form></div>';				
+					echo '<div style="margin-top:5px"><input type="submit" name="gorename" value="'.$_LANG['SAVE'].'"/> <input type="button" onclick="window.history.go(-1);" name="cancel" value="'.$_LANG['CANCEL'].'"/></div></form></div>';
 					
-				} else { echo 'Тема не найдена.'; }
+				} else { echo $_LANG['THREAD_NOT_FOUND']; }
 			} else { //DO RENAME
 			
 				if (@$_POST['title']){				
@@ -1151,8 +1156,8 @@ if ($do=='reloadfile'){
 		if ($inDB->num_rows($result)){
 		//if file found		
 	
-			$inPage->addPathway('Перезакачать файл', $_SERVER['REQUEST_URI']);
-			echo '<div class="con_heading">Перезакачать файл</div>';
+			$inPage->addPathway($_LANG['RELOAD_FILE'], $_SERVER['REQUEST_URI']);
+			echo '<div class="con_heading">'.$_LANG['RELOAD_FILE'].'</div>';
 				
 			$file = $inDB->fetch_assoc($result);			
 			if ($file['uid'] == @$inUser->id || @$inCore->userIsAdmin(@$inUser->id) || $inCore->isUserCan('forum/moderate')){		
@@ -1188,32 +1193,32 @@ if ($do=='reloadfile'){
 								
 								header('location:/forum/'.$menuid.'/thread'.$file['tid'].'.html#'.$file['post_id']);
 							} else {
-								echo '<p style="color:red"><strong>Ошибка:</strong> Недопустимый тип файла.</p>';
-								echo '<p><strong>Допустимые типы файлов:</strong> .'.strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</p>';
+								echo '<p style="color:red"><strong>'.$_LANG['ERROR'].':</strong> '.$_LANG['ERR_FILE_TYPE'].'</p>';
+								echo '<p><strong>'.$_LANG['MUST_FILE_TYPE'].':</strong> .'.strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</p>';
 							}
 						
-						} else { echo '<p style="color:red"><strong>Ошибка:</strong> Размер файла превышает максимально допустимый ('.$cfg['fa_size'].' Кб).</p>'; }
+						} else { echo '<p style="color:red"><strong>'.$_LANG['ERROR'].':</strong> '.$_LANG['ERR_FILE_SIZE'].' ('.$cfg['fa_size'].' '.$_LANG['KBITE'].').</p>'; }
 					}  else { 
-								echo '<p style="color:red"><strong>Ошибка:</strong> Проверьте правильность размера и типа файла.</p>'; 
-								echo '<p><strong>Максимальный размер:</strong> '.$cfg['fa_size'].' Кб.</p>'; 
-								echo '<p><strong>Допустимые типы файлов:</strong> .'.strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</p>';								
+								echo '<p style="color:red"><strong>'.$_LANG['ERROR'].':</strong> '.$_LANG['CHECK_SIZE_TYPE_FILE'].'</p>';
+								echo '<p><strong>'.$_LANG['MAX_SIZE'].':</strong> '.$cfg['fa_size'].' '.$_LANG['KBITE'].'.</p>';
+								echo '<p><strong>'.$_LANG['MUST_FILE_TYPE'].':</strong> .'.strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</p>';
 							}
 				} else {
 					//show reload form													
-					echo '<div><strong>Файл:</strong> <a href="/upload/forum/post'.$file['post_id'].'/'.$file['filename'].'">'.$file['filename'].'</a> ('.round(($file['filesize']/1024),2).' Кб).</div>';
-					echo '<div><strong>Дата загрузки:</strong> '.$file['fpubdate'].'.</div>';
+					echo '<div><strong>'.$_LANG['FILE'].':</strong> <a href="/upload/forum/post'.$file['post_id'].'/'.$file['filename'].'">'.$file['filename'].'</a> ('.round(($file['filesize']/1024),2).' '.$_LANG['KBITE'].').</div>';
+					echo '<div><strong>'.$_LANG['DATE_UPLOAD'].':</strong> '.$file['fpubdate'].'.</div>';
 
 					echo '<div><form enctype="multipart/form-data" action="" method="POST">' . "\n";	
-						echo '<p>Выберите новый файл для загрузки: </p>' . "\n";
+						echo '<p>'.$_LANG['SELECT_NEW_FILE_UPLOAD'].': </p>' . "\n";
 						echo '<input name="MAX_FILE_SIZE" type="hidden" value="'.($cfg['fa_size']*1024).'"/>'. "\n";
 						echo '<input name="newfile" type="file" id="newfile" size="45" />'. "\n";
-						echo '<p>Максимальный размер: '.$cfg['fa_size'].' Кб.</p>'. "\n";
-						echo '<p><input type="submit" name="goreload" value="Загрузить"> <input type="button" onclick="window.history.go(-1);" value="Отмена"/></p>'. "\n";			
+						echo '<p>'.$_LANG['MAX_SIZE'].': '.$cfg['fa_size'].' '.$_LANG['KBITE'].'.</p>'. "\n";
+						echo '<p><input type="submit" name="goreload" value="'.$_LANG['UPLOAD'].'"> <input type="button" onclick="window.history.go(-1);" value="'.$_LANG['CANCEL'].'"/></p>'. "\n";
 					echo '</form></div>'. "\n";				
 				}
 			
 			} else 	{ usrAccessDenied(); }
-		} else { echo '<p>Файл не найден!</p>'; }
+		} else { echo '<p>'.$_LANG['FILE_NOT_FOUND'].'!</p>'; }
 	
 	
 	} else { usrAccessDenied(); }

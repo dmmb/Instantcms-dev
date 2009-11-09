@@ -56,6 +56,8 @@
     $inConf     = cmsConfig::getInstance();
     $inUser     = cmsUser::getInstance();
 
+    cmsCore::loadLanguage('lang');      //главный языковый файл
+
     if ( !$inUser->update() ) { $inCore->redirect('/404'); }
 
     $home_title = $inConf->hometitle ? $inConf->hometitle : $inConf->sitename;
@@ -92,7 +94,7 @@
 	$menuid = $inCore->menuId();
 		
 	//Строим глубиномер
-	$inPage->addPathway('Главная', '/');
+	$inPage->addPathway($_LANG['PATH_HOME'], '/');
     $inPage->setTitle( $inCore->menuTitle() );
 	if ($menuid > 1) { $inPage->addMenuPathway($menuid); }
 
@@ -118,12 +120,12 @@
 
 	$time = $end_time - $start_time;
 
-    echo '<!-- Время генерации страницы: '.number_format($time, 4).' сек. -->';
+    echo '<!-- '.$_LANG['DEBUG_TIME_GEN_PAGE'].': '.number_format($time, 4).' '.$_LANG['DEBUG_SEC'].' -->';
 
     if (strstr($_SERVER['REQUEST_URI'], 'benchmark')){
         echo '<p>';
-            echo '<div><strong>Время генерации страницы:</strong> '.number_format($time, 4).' сек.</div>';
-            echo '<div><strong>Запросы к базе:</strong> '.$inDB->q_count.'</div>';
+            echo '<div><strong>'.$_LANG['DEBUG_TIME_GEN_PAGE'].'</strong> '.number_format($time, 4).' '.$_LANG['DEBUG_SEC'].'</div>';
+            echo '<div><strong>'.$_LANG['DEBUG_QUERY_DB'].'</strong> '.$inDB->q_count.'</div>';
         echo '</p>';
     }
 

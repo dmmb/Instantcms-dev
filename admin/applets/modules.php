@@ -116,7 +116,39 @@ function applet_modules(){
 		$actions[2]['link']  = '?view=modules&do=delete&id=%id%';
 				
 		//Print table
-		cpListTable('cms_modules', $fields, $actions);		
+		cpListTable('cms_modules', $fields, $actions);
+
+        ?>
+
+        <div class="filter" id="com_filter">
+            <table width="100%">
+                <tbody>
+                    <tr>
+                        <td width="125">Фильтр по названию: </td>
+                        <td width="">
+                            <a href="javascript:" onclick="$('input#_filterText3').val('стат|материалы').trigger('keyup');">статьи</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('блог').trigger('keyup');">блоги</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('клуб').trigger('keyup');">клубы</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('пользовател|авторизация').trigger('keyup');">пользователи</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('каталог|корзина').trigger('keyup');">каталог</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('фото|изображен').trigger('keyup');">фотографии</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('форум').trigger('keyup');">форум</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('форум').trigger('keyup');">файлы</a> | 
+                            <a href="javascript:" onclick="$('input#_filterText3').val('форум').trigger('keyup');">вопросы</a> |
+                            <a href="javascript:" onclick="$('input._filterText').val('').trigger('keyup');" style="color:gray"> показать все</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <script type="text/javascript">
+            $('.filter').eq(0).after('<div class="filter">'+$('#com_filter').html()+'</div>');
+            $('#com_filter').remove();
+        </script>
+
+        <?php
+
 	}
 
 	if ($do == 'autoorder'){

@@ -10,9 +10,6 @@ class cms_model_forum{
 
     public function install(){
 
-        cmsCore::registerAction('thread', 'add', 'создает тему', 'cms_forum_threads');
-        cmsCore::registerAction('thread', 'post', 'отвечает в теме', 'cms_forum_threads');
-
         return true;
 
     }

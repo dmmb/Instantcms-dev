@@ -24,6 +24,8 @@ function applet_users(){
 	if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { $id = -1; }
 	if (isset($_REQUEST['co'])) { $co = $_REQUEST['co']; } else { $co = -1; } //current ordering, while resort
 
+    $inDB = cmsDatabase::getInstance();
+
     $inCore->loadModel('users');
     $model = new cms_model_users();
 		
@@ -71,8 +73,7 @@ function applet_users(){
 
 		$fields[4]['title'] = 'E-Mail';		$fields[4]['field'] = 'email';		$fields[4]['width'] = '160';
 
-		$fields[5]['title'] = 'Дата<br/>регистрации';	$fields[5]['field'] = 'regdate';	$fields[5]['width'] = '160';
-		
+		$fields[5]['title'] = 'Дата<br/>регистрации';	$fields[5]['field'] = 'regdate';	$fields[5]['width'] = '160';		
 
 		$fields[6]['title'] = 'Последний<br/>вход';		$fields[6]['field'] = 'logdate';	$fields[6]['width'] = '160';
 		
@@ -113,30 +114,66 @@ function applet_users(){
 	}
 	
 	if ($do == 'submit'){
-		$login = htmlspecialchars($_REQUEST['login'], ENT_QUOTES);
-		$nickname = htmlspecialchars($_REQUEST['nickname'], ENT_QUOTES, 'cp1251');
-		$email = $_REQUEST['email'];
-		$group_id = $_REQUEST['group_id'];
-		$is_locked = $_REQUEST['is_locked'];
-		
-		$pass = md5($_REQUEST['pass']);
-		
-		//create user record
-		$sql = "INSERT INTO cms_users (login, nickname, password, email, icq, regdate, logdate, birthdate, is_locked)
-				VALUES ('$login', '$nickname', '$pass', '$email', '', NOW(), NOW(), '', '$is_locked')";
-		dbQuery($sql) ;
 
-		//create advanced user profile
-		$sql = "SELECT id FROM cms_users WHERE login = '$login' AND password = '$pass'";
-		$result = dbQuery($sql);
-		
-		if (mysql_num_rows($result)==1){
-			$usr = mysql_fetch_assoc($result);
-			$sql = "INSERT INTO cms_user_profiles (user_id, city, description, showmail, showbirth, showicq, karma, imageurl, allow_who)
-					VALUES (".$usr['id'].", '', '', '0', '0', '1', '0', '', 'all')";
-			dbQuery($sql) ;													
-		}					
-		header('location:?view=users');		
+		$login      = htmlspecialchars($_REQUEST['login'], ENT_QUOTES);
+		$nickname   = htmlspecialchars($_REQUEST['nickname'], ENT_QUOTES, 'cp1251');
+		$email      = $inCore->request('email', 'str');
+		$group_id   = $inCore->request('group_id', 'int');
+		$is_locked  = $inCore->request('is_locked', 'int');
+
+        $pass       = $inCore->request('pass', 'str');
+        $pass2      = $inCore->request('pass2', 'str');
+
+        $error      = '';
+
+        if (!$login) { $error .= 'Нужно указать логин пользователя!<br/>'; }
+        if (!$nickname) { $error .= 'Нужно указать никнейм!<br/>'; }
+        if (!$email) { $error .= 'Нужно указать адрес e-mail!<br/>'; }
+        if ($pass != $pass2) { $error .= 'Пароли не совпали!'; }
+
+        if (!eregi("^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$", $email)){ $error .= 'Некорректный адрес e-mail!<br/>'; }
+
+        if(!$error){
+            $login_exists = $inDB->get_field('cms_users', "login='{$login}'", 'id');
+            $email_exists = $inDB->get_field('cms_users', "email='{$email}'", 'id');
+            if ($login_exists) { $error .= 'Указанный логин занят.<br/>'; }
+            if ($email_exists) { $error .= 'Указанный email занят.<br/>'; }
+        }
+
+        if (!$error){
+
+            $pass       = md5($pass);
+
+            //create user record
+            $sql = "INSERT INTO cms_users (login, nickname, password, email, icq, regdate, logdate, birthdate, is_locked)
+                    VALUES ('$login', '$nickname', '$pass', '$email', '', NOW(), NOW(), '', '$is_locked')";
+            dbQuery($sql);
+
+            //create advanced user profile
+            $sql = "SELECT id FROM cms_users WHERE login = '$login' AND password = '$pass'";
+            $result = dbQuery($sql);
+
+            if (mysql_num_rows($result)==1){
+                $usr = mysql_fetch_assoc($result);
+                $sql = "INSERT INTO cms_user_profiles (user_id, city, description, showmail, showbirth, showicq, karma, imageurl, allow_who)
+                        VALUES (".$usr['id'].", '', '', '0', '0', '1', '0', '', 'all')";
+                dbQuery($sql);
+            }
+
+            header('location:?view=users');
+
+        }
+
+        if ($error){
+
+            $mod['login']       = $login;
+            $mod['nickname']    = $nickname;
+            $mod['email']       = $email;
+
+            $do = 'add';
+            
+        }
+        
 	}
 	
 	if ($do == 'update'){
@@ -173,9 +210,9 @@ function applet_users(){
 			header('location:?view=users&do=edit');		
 		}
 	}
-	
+
    if ($do == 'edit' || $do== 'add'){
- 
+
  		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'save.gif';
 		$toolmenu[0]['title'] = 'Сохранить';
@@ -186,9 +223,9 @@ function applet_users(){
 		$toolmenu[1]['link'] = 'javascript:history.go(-1);';
 
 		cpToolMenu($toolmenu);
-   					
+
 		if ($do=='edit'){
-   
+
 					 if(isset($_REQUEST['multiple'])){				 
 						if (isset($_REQUEST['item'])){					
 							$_SESSION['editlist'] = $_REQUEST['item'];
@@ -221,6 +258,11 @@ function applet_users(){
 		}
 		$GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/components/registration/js/check.js"></script>';
 	?>
+      <?php if ($error){ ?>
+          <div style="color:red;margin-bottom:10px;">
+            <?php echo $error; ?>
+          </div>
+      <?php } ?>
       <form action="index.php?view=users" method="post" enctype="multipart/form-data" name="addform" id="addform">
         <table width="600" border="0" cellpadding="0" cellspacing="10" class="proptable">
           <tr>
@@ -247,16 +289,14 @@ function applet_users(){
 			<?php } else { ?>
 	            <td valign="middle"><strong>Пароль:</strong> </td>		
 			<?php } ?>
-            <td><input name="pass" type="password" id="title2" style="width:220px"/></td>
+            <td><input name="pass" type="password" id="pass" style="width:220px"/></td>
             <td>&nbsp;</td>
           </tr>
-		  <?php if($do=='edit'){ ?>
           <tr>
             <td valign="middle"><strong>Повтор пароля:</strong> </td>
-            <td valign="middle"><input name="pass2" type="password" id="title22" style="width:220px"/></td>
+            <td valign="middle"><input name="pass2" type="password" id="pass2" style="width:220px"/></td>
             <td>&nbsp;</td>
           </tr>
-		  <?php } ?>
           <tr>
             <td valign="middle"><strong>Группа:</strong></td>
             <td valign="middle">

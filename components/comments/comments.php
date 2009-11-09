@@ -34,6 +34,7 @@
     $inCore->loadClass('user');
 
     $inCore->loadModel('comments');
+    $inCore->loadLanguage('components/comments');
 
     $inDB       = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();

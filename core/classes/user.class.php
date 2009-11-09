@@ -779,7 +779,7 @@ class cmsUser {
             $myprofile = ($inUser->id == $user_id || $inUser->is_admin);
         } else {
             $inCore->loadLib('clubs');
-            $myprofile = (clubUserIsRole($user_id, $inUser->id, 'moderator') || $inUser->is_admin);
+            $myprofile = (clubUserIsRole($user_id, $inUser->id, 'moderator') || clubUserIsAdmin($user_id, $inUser->id) || $inUser->is_admin);
         }
 
         $records = array();
@@ -792,7 +792,7 @@ class cmsUser {
         
         if ($total){
             //получаем нужную страницу записей стены
-            $sql = "SELECT w.*, u.nickname as author, u.login as author_login, DATE_FORMAT(w.pubdate, '%d-%m-%Y (%h:%i)') as fpubdate
+            $sql = "SELECT w.*, u.nickname as author, u.login as author_login, DATE_FORMAT(w.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate
                     FROM cms_user_wall w, cms_users u
                     WHERE w.user_id = $user_id AND w.author_id = u.id AND w.usertype = '$usertype'
                     ORDER BY w.pubdate DESC

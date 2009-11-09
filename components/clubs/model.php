@@ -12,10 +12,6 @@ class cms_model_clubs{
 
     public function install(){
 
-        cmsCore::registerAction('club', 'join', 'вступает в клуб', 'cms_clubs');
-        cmsCore::registerAction('club', 'leave', 'покидает клуб', 'cms_clubs');
-        cmsCore::registerAction('club', 'add', 'создает клуб', 'cms_clubs');
-
         return true;
 
     }
@@ -25,10 +21,10 @@ class cms_model_clubs{
 
     public function getClubs($page=1, $perpage=100) {
         $clubs = array();
-
+        global $_LANG;
         $sql =  "SELECT c.*,
-                 IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(c.pubdate, 'Cегодня'),
-                 IF(DATEDIFF(NOW(), c.pubdate)=1, DATE_FORMAT(c.pubdate, 'Вчера'),DATE_FORMAT(c.pubdate, '%d/%m/%Y') ))  as pubdate
+                 IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(c.pubdate, '{$_LANG['TODAY']}'),
+                 IF(DATEDIFF(NOW(), c.pubdate)=1, DATE_FORMAT(c.pubdate, '{$_LANG['YESTERDAY']}'),DATE_FORMAT(c.pubdate, '%d/%m/%Y') ))  as pubdate
                  FROM cms_clubs c
                  WHERE c.published = 1
                  ORDER BY c.rating DESC
@@ -51,9 +47,10 @@ class cms_model_clubs{
 
     public function getClub($club_id) {
 
+        global $_LANG;
         $sql =  "SELECT *,
-                        IF(DATE_FORMAT(pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(pubdate, 'Cегодня'),
-                        IF(DATEDIFF(NOW(), pubdate)=1, DATE_FORMAT(pubdate, 'Вчера'),DATE_FORMAT(pubdate, '%d/%m/%Y') ))  as pubdate
+                        IF(DATE_FORMAT(pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(pubdate, '{$_LANG['TODAY']}'),
+                        IF(DATEDIFF(NOW(), pubdate)=1, DATE_FORMAT(pubdate, '{$_LANG['YESTERDAY']}'),DATE_FORMAT(pubdate, '%d/%m/%Y') ))  as pubdate
                  FROM cms_clubs
                  WHERE id = $club_id";
         $result = $this->inDB->query($sql);

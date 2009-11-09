@@ -11,6 +11,7 @@
 function mod_comments($module_id){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
+        global $_LANG;
         
 		$cfg = $inCore->loadModuleConfig($module_id);
 
@@ -27,7 +28,7 @@ function mod_comments($module_id){
                        c.target as target,
                        c.target_id as target_id,
                        c.content as content, 
-                       IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(c.pubdate, '<strong>Сегодня</strong> в %H:%i'),
+                       IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(c.pubdate, '<strong>{$_LANG['TODAY']}</strong> {$_LANG['IN']} %H:%i'),
                        DATE_FORMAT(c.pubdate, '%d-%m-%Y'))  as fpubdate,
                        u.id as user_id,
                        u.nickname as author,
@@ -61,7 +62,7 @@ function mod_comments($module_id){
 				echo '<table cellspacing="2" cellpadding="4" border="0">';
 				while($con = $inDB->fetch_assoc($result)){
 
-                    if ($count > $cfg['shownum']) { break; }
+                    if ($count >= $cfg['shownum']) { break; }
 
                     if ($con['rating'] >= $cfg['minrate']){
 
@@ -88,13 +89,13 @@ function mod_comments($module_id){
                 if ($cfg['showrss']){
 					echo '<table align="right" style="margin-top:5px"><tr>';
 						echo '<td width="16"><img src="/images/markers/rssfeed.png" /></td>';
-						echo '<td><a href="/rss/comments/all/feed.rss" style="text-decoration:underline;color:#333">Лента комментариев</a></td>';
+						echo '<td><a href="/rss/comments/all/feed.rss" style="text-decoration:underline;color:#333">'.$_LANG['COMMENTS_RSS'].'</a></td>';
 					echo '</tr></table>';
 				}
-			} else { echo '<p>Нет комментариев для отображения.</p>'; }
+			} else { echo '<p>'.$_LANG['COMMENTS_NOT_COMM'].'</p>'; }
 
 		} else {
-			echo '<p>Не выбран тип комментариев для показа.</p>';
+			echo '<p>'.$_LANG['COMMENTS_NOT_SHOWTYPE'].'</p>';
 		}
 				
 		return true;

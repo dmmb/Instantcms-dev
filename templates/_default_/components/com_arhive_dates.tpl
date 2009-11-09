@@ -13,5 +13,5 @@
         {/foreach}
     </ul>
 {else}
-    <p>Нет материалов.</p>
+    <p>{$LANG.ARHIVE_NO_MATERIALS}</p>
 {/if}

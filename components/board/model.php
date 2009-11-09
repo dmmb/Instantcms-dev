@@ -12,9 +12,6 @@ class cms_model_board{
 
     public function install(){
 
-        cmsCore::registerAction('boardpost', 'add', 'добавл€ет объ€вление', 'cms_board_items');
-        cmsCore::registerAction('boardpost', 'remove', 'удал€ет объ€вление', 'cms_board_items');
-
         return true;
 
     }
@@ -32,6 +29,11 @@ class cms_model_board{
     public function getCategory($category_id) {
         $category   = $this->inDB->get_fields('cms_board_cats', 'id='.$category_id, '*');
         $category   = cmsCore::callEvent('GET_BOARD_CAT', $category);
+
+        if (!$category['obtypes']){
+            $category['obtypes'] = $this->inDB->get_field('cms_board_cats', "NSLeft <= {$category['NSLeft']} AND NSRight >= {$category['NSRight']} AND obtypes <> ''", 'obtypes');
+        }
+
         return $category;
     }
 
@@ -74,6 +76,9 @@ class cms_model_board{
         if (!$this->inDB->num_rows($result)){ return false; }
 
         while($cat = $this->inDB->fetch_assoc($result)){
+            if (!$cat['obtypes']){
+                $cat['obtypes'] = $this->inDB->get_field('cms_board_cats', "NSLeft <= {$cat['NSLeft']} AND NSRight >= {$cat['NSRight']} AND obtypes <> ''", 'obtypes');
+            }
             $cats[] = $cat;
         }
 
@@ -98,11 +103,14 @@ class cms_model_board{
         $city_filter = isset($_SESSION['board_city']) ? "AND city = '".$_SESSION['board_city']."'" : '';
         $type_filter = isset($_SESSION['board_type']) ? "AND obtype = '".$_SESSION['board_type']."'" : '';
 
+        $rootcat = $this->inDB->get_fields('cms_board_cats', 'id='.$category_id, 'NSLeft, NSRight');
+        $catsql  = "AND (i.category_id = cat.id AND (i.category_id=$category_id OR (cat.NSLeft >= {$rootcat['NSLeft']} AND cat.NSRight <= {$rootcat['NSRight']})))";
+
         $sql = "SELECT i.*,
-                       IF(DATE_FORMAT(i.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(i.pubdate, '<strong>—егодн€</strong>'), DATE_FORMAT(i.pubdate, '%d-%m-%Y'))  as fpubdate,
+                       IF(DATE_FORMAT(i.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(i.pubdate, '<strong>{$_LANG['TODAY']}</strong>'), DATE_FORMAT(i.pubdate, '%d-%m-%Y'))  as fpubdate,
                        u.nickname as user
-                FROM cms_board_items i, cms_users u
-                WHERE i.category_id = $category_id AND i.user_id = u.id AND i.published = 1 $city_filter $type_filter
+                FROM cms_board_items i, cms_users u, cms_board_cats cat
+                WHERE i.user_id = u.id AND i.published = 1 $city_filter $type_filter $catsql
                 GROUP BY i.id
                 ORDER BY $orderby $orderto
                 LIMIT ".($page-1)*$perpage.", $perpage";

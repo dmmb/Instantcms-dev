@@ -2,40 +2,37 @@
 {* ============================== Создание блога ================================== *}
 {* ================================================================================ *}
 
-<div class="con_heading">Создать блог</div>
+<div class="con_heading">{$LANG.CREATE_BLOG}</div>
 
-<p><strong>Блог</strong> - это отличный способ поделиться мыслями с миром. В отличие от обычного бумажного дневника, который
-не принято показывать окружающим, интернет-дневник создан для общения. Публикуемые в блогe записи могут комментироваться другими пользователями.</p>
-<p>Расскажите всем о своей ежедневной жизни, поделитесь своим творчеством или просто создавайте поводы для дискуссий.</p>
-<p>Создайте персональный интернет-блог - покажите себя миру!</p>
+<p><strong>{$LANG.BLOG}</strong> {$LANG.BLOG_DESCRIPTION}</p>
 <form style="margin-top:15px" action="" method="post" name="addform">
   <table style="background-color:#EBEBEB" border="0" cellspacing="0" cellpadding="6">
 	<tr>
-	  <td width="180"><strong>Название блога: </strong></td>
+	  <td width="180"><strong>{$LANG.BLOG_TITLE}: </strong></td>
 	  <td><input name="title" type="text" id="title" size="40" /></td>
 	</tr>
 	<tr>
-	  <td><strong>Тип блога: </strong></td>
+	  <td><strong>{$LANG.BLOG_TYPE}: </strong></td>
 	  <td>
 	  	  <select name="ownertype" id="ownertype">
-			  <option value="single" selected>Персональный {$min_karma_private}</option>
-			  <option value="multi" >Коллективный {$min_karma_public}</option>
+			  <option value="single" selected>{$LANG.PERSONAL} {$min_karma_private}</option>
+			  <option value="multi" >{$LANG.COLLECTIVE} {$min_karma_public}</option>
 		  </select>
 	  </td>
 	</tr>
 	<tr>
-	  <td><strong>Показывать:</strong></td>
+	  <td><strong>{$LANG.SHOW_BLOG}:</strong></td>
 	  <td>
 	  	<select name="allow_who" id="allow_who">
-			<option value="all" selected="selected">Всем</option>
-			<option value="friends" {if $friends eq 1}selected="selected"{/if}>Моим друзьям</option>
-			<option value="nobody">Только мне</option>
+			<option value="all" selected="selected">{$LANG.TO_ALL}</option>
+			<option value="friends" {if $friends eq 1}selected="selected"{/if}>{$LANG.TO_MY_FRIENDS}</option>
+			<option value="nobody">{$LANG.TO_ONLY_ME}</option>
 		</select>
 	   </td>
 	</tr>
   </table>			
   <p>
-  	<input name="goadd" type="submit" id="goadd" value="Создать блог" /> 
-  	<input name="cancel" type="button" onclick="window.history.go(-1)" value="Отмена" />
+  	<input name="goadd" type="submit" id="goadd" value="{$LANG.CREATE_BLOG}" />
+  	<input name="cancel" type="button" onclick="window.history.go(-1)" value="{$LANG.CANCEL}" />
   </p>
 </form>

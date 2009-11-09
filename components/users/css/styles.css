@@ -131,7 +131,7 @@ div.user_profile_data .offline{
 div.user_profile_data .field{ overflow: hidden; clear:both; }
 
 div.user_profile_data .field .title, 
-div.user_profile_data .field .value { float:left; height:24px; line-height:24px; }
+div.user_profile_data .field .value { float:left; line-height:24px; }
 
 div.user_profile_data .field .title { width:170px; font-weight:bold; }
 div.user_profile_data .field .value {  }

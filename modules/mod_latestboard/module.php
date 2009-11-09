@@ -11,7 +11,7 @@
 function mod_latestboard($module_id){	
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
-
+        global $_LANG;
 		$cfg = $inCore->loadModuleConfig($module_id);
 
 		if ($cfg['menuid']>0) {
@@ -21,7 +21,7 @@ function mod_latestboard($module_id){
 		}
 		if (!isset($cfg['showrss'])) { $cfg['showrss'] = 1;}
 		if (!isset($cfg['shownum'])){
-			echo '<p>Задайте настройки модуля в панели управления.</p>';
+			echo '<p>'.$_LANG['LATESTBOARD_CONFIG_TEXT'].'</p>';
 			return true;
 		}
 		
@@ -38,8 +38,8 @@ function mod_latestboard($module_id){
 		} else { $catsql = 'AND i.category_id = cat.id'; $rssid = 'all'; } 
 		
 		$sql = "SELECT i.title, i.id, i.city as city, u.id as user_id, u.nickname as nickname,
-					   IF(DATE_FORMAT(i.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(i.pubdate, 'Cегодня'), 
-					   IF(DATEDIFF(NOW(), i.pubdate)=1, DATE_FORMAT(i.pubdate, 'Вчера'),DATE_FORMAT(i.pubdate, '%d.%m.%Y') ))  as pubdate
+					   IF(DATE_FORMAT(i.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(i.pubdate, {$_LANG['TODAY']}),
+					   IF(DATEDIFF(NOW(), i.pubdate)=1, DATE_FORMAT(i.pubdate, {$_LANG['YESTERDAY']}),DATE_FORMAT(i.pubdate, '%d.%m.%Y') ))  as pubdate
 				FROM cms_board_items i, cms_users u, cms_board_cats cat
 				WHERE i.user_id = u.id $catsql
 				ORDER BY i.pubdate DESC";
@@ -61,7 +61,7 @@ function mod_latestboard($module_id){
 			$smarty->assign('menuid', $menuid);		
 			$smarty->display('mod_latestboard.tpl');
 			
-		} else { echo '<p>Нет объявлений для отображения.</p>'; }
+		} else { echo '<p>'.$_LANG['LATESTBOARD_NOT_ADV'].'</p>'; }
 		
 		return true;				
 }

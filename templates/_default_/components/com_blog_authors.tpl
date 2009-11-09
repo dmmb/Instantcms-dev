@@ -2,7 +2,7 @@
 {* ========================= Список авторов блога ================================= *}
 {* ================================================================================ *}
 
-<h1 class="con_heading">{$blog} - Авторы</h1>
+<h1 class="con_heading">{$blog} - {$LANG.AVTORS}</h1>
     
     {assign var="col" value="1"}
     {assign var="maxcols" value="5"}
@@ -25,6 +25,6 @@
     </table>
 {else}
     <span style="padding:5px">
-        Нет авторов.
+        {$LANG.NO_AVTORS}.
     </span>
 {/if}

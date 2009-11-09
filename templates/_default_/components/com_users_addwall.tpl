@@ -15,10 +15,10 @@
             <textarea name="message" id="message" class="wall_message"></textarea>
         </div>
         <div style="text-align:right">
-            <input type="submit" value="Отправить" />
-            <input name="Button" type="button" value="Отмена" onclick="{literal}$('#addwall').slideToggle();$('.usr_wall_addlink').toggle();{/literal}"/>
+            <input type="submit" value="{$LANG.SEND}" />
+            <input name="Button" type="button" value="{$LANG.CANCEL}" onclick="{literal}$('#addwall').slideToggle();$('.usr_wall_addlink').toggle();{/literal}"/>
         </div>
     </form>
 {else}
-    <p>Записи на стене могут оставлять только зарегистрированные пользователи.</p>
+    <p>{$LANG.ONLY_REG_USER_CAN_WALL}</p>
 {/if}

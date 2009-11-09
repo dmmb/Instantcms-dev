@@ -32,8 +32,8 @@
 											<span class="bd_item_user"><a href="/users/0/{$con.user_id}/profile.html">{$con.user}</a></span>
 										{/if}
 										{if $con.moderator}
-											<span class="bd_item_edit"><a href="/board/{$menuid}/edit{$con.id}.html">–едактировать</a></span>
-											<span class="bd_item_delete"><a href="/board/{$menuid}/delete{$con.id}.html">”далить</a></span>
+											<span class="bd_item_edit"><a href="/board/{$menuid}/edit{$con.id}.html">{$LANG.EDIT}</a></span>
+											<span class="bd_item_delete"><a href="/board/{$menuid}/delete{$con.id}.html">{$LANG.DELETE}</a></span>
 										{/if}
 								</div>										
 							</td>
@@ -48,13 +48,13 @@
 		</table>
 		{$pagebar}
 	{elseif $cat.id != $root_id}
-		<p>ќбъ€влени€ не найдены.</p>
+		<p>{$LANG.ADVS_NOT_FOUND}</p>
 	{/if}
 </div>
 
 {if $cat.public && $is_user}
 	<table cellpadding="2" cellspacing="0" style="margin-bottom:10px">
 		<tr><td><img src="/components/board/images/add.gif" border="0"/></td>
-		<td><a style="text-decoration:underline" href="/board/{$menuid}/{$cat.id}/add.html">ƒобавить объ€вление в эту рубрику</a></td></tr>
+		<td><a style="text-decoration:underline" href="/board/{$menuid}/{$cat.id}/add.html">{$LANG.ADD_ADV_TO_CAT}</a></td></tr>
 	</table>
 {/if}						

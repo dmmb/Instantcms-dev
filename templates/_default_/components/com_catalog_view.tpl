@@ -14,7 +14,7 @@
 {if $alphabet} {$alphabet} {/if}
 
 <div id="shop_toollink_div">
-	<a id="shop_searchlink" href="/catalog/{$menuid}/{$cat.id}/search.html">Поиск по рубрике</a>
+	<a id="shop_searchlink" href="/catalog/{$menuid}/{$cat.id}/search.html">{$LANG.SEARCH_BY_CAT}</a>
 	{if $cat.view_type=='shop'} {$shopcartlink}	{/if}
 </div>
 
@@ -43,7 +43,7 @@
 								{/if}
 							{if $cat.view_type=='shop'}
 								<div id="shop_small_price">
-									<span>{$item.price}</span> руб.
+									<span>{$item.price}</span> {$LANG.RUB}
 								</div>
 							{/if}
 						</td>
@@ -68,20 +68,20 @@
 								{/foreach}
 							</div>
 							{if $cat.showtags}
-								<div class="uc_tagline"><strong>Тэги:</strong> {$item.tagline}</div>
+								<div class="uc_tagline"><strong>{$LANG.TAGS}:</strong> {$item.tagline}</div>
 							{/if}
 
 							{if $cat.view_type=='list'}
 								{if $cat.showmore}
-									<a href="/catalog/{$menuid}/item{$item.id}.html">Подробнее...</a> 
+									<a href="/catalog/{$menuid}/item{$item.id}.html">{$LANG.DETAILS}...</a>
 								{/if}										
 							{else}
 								<div id="shop_list_buttons">
-									<a href="/catalog/{$menuid}/item{$item.id}.html" title="Подробнее">
-										<img src="/components/catalog/images/shop/more.jpg" border="0" alt="Подробнее"/>
+									<a href="/catalog/{$menuid}/item{$item.id}.html" title="{$LANG.DETAILS}">
+										<img src="/components/catalog/images/shop/more.jpg" border="0" alt="{$LANG.DETAILS}"/>
 									</a> 
-									<a href="/catalog/{$menuid}/addcart{$item.id}.html" title="Добавить в корзину">
-										<img src="/components/catalog/images/shop/addcart.jpg" border="0" alt="Добавить в корзину"/>
+									<a href="/catalog/{$menuid}/addcart{$item.id}.html" title="{$LANG.ADD_TO_CART}">
+										<img src="/components/catalog/images/shop/addcart.jpg" border="0" alt="{$LANG.ADD_TO_CART}"/>
 									</a>
 								</div>
 							{/if}

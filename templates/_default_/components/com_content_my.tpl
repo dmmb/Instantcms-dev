@@ -5,14 +5,14 @@
 <table width="100%" cellpadding="5" cellspacing="0" border="0">
 	<thead>
 		<tr>
-			<td width="60"><strong>Дата</strong></td>
+			<td width="60"><strong>{$LANG.DATE}</strong></td>
 			<td width="16">&nbsp;</td>
-			<td><strong>Статья</strong></td>
-			<td width="100"><strong>Статус</strong></td>
+			<td><strong>{$LANG.ARTICLE}</strong></td>
+			<td width="100"><strong>{$LANG.STATUS}</strong></td>
 			<td width="16">&nbsp;</td>
 			<td width="20">&nbsp;</td>
-			<td width="200"><strong>Раздел</strong></td>
-			<td width="100" align="center"><strong>Действия</strong></td>
+			<td width="200"><strong>{$LANG.CAT}</strong></td>
+			<td width="100" align="center"><strong>{$LANG.ACTION}</strong></td>
 		</tr>
 	</thead>
 	<tbody>
@@ -26,9 +26,9 @@
 			<td class="{$article.class}">{$article.comments}</td>
 			<td class="{$article.class}"><a href="/content/0/{$article.category_id}">{$article.category}</a></td>
 			<td class="{$article.class}" align="center">
-				<a href="/content/edit{$article.id}.html" title="Редактировать"><img src="/admin/images/actions/edit.gif" border="0"/></a>
+				<a href="/content/edit{$article.id}.html" title="{$LANG.EDIT}"><img src="/admin/images/actions/edit.gif" border="0"/></a>
 				{if $user_can_delete}
-					<a href="javascript:deleteArticle({$article.id})" title="Удалить"><img src="/admin/images/actions/delete.gif" border="0"/></a>					
+					<a href="javascript:deleteArticle({$article.id})" title="{$LANG.DELETE}"><img src="/admin/images/actions/delete.gif" border="0"/></a>
 				{/if}
 			</td>
 		</tr>			

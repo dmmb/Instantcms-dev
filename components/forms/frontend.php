@@ -20,7 +20,7 @@ function forms(){
     $back   = $inCore->getBackURL();
 
     $do     = $inCore->request('do', 'str', 'processform');
-
+    global $_LANG;
 //========================================================================================================================//
 //========================================================================================================================//
     if ($do=='processform'){
@@ -46,10 +46,10 @@ function forms(){
 				$form   = $inDB->fetch_assoc($result);
 
 				if($form['sendto']=='mail'){
-					 $mail_message .= 'ФОРМА: ' . $form['title'];
+					 $mail_message .= $_LANG['FORM'].': ' . $form['title'];
 					 $mail_message .=  "\n----------------------------------------------\n\n";
 				} else {
-					 $mail_message .= '[h3]ФОРМА: ' . $form['title'] . '[/h3]';
+					 $mail_message .= '[h3]'.$_LANG['FORM'].': ' . $form['title'] . '[/h3]';
 					 $mail_message .=  "[h3]----------------------------------------------[/h3]";
 				}
 
@@ -68,7 +68,7 @@ function forms(){
 					while($field = $inDB->fetch_assoc($result)){
 						$field['title'] = str_replace(':', '', $field['title']);
 						if ($field['mustbe']==1 && (!isset($_REQUEST['field'][$field['id']]) || empty($_REQUEST['field'][$field['id']]))) {
-							$error .= 'Поле "'.$field['title'].'" обязательно для заполнения!<br/>';
+							$error .= $_LANG['FIELD'].' "'.$field['title'].'" '.$_LANG['MUST_BE_FILLED'].'<br/>';
 						} else {
 							if($form['sendto']=='mail'){
 								$mail_message .= $field['title'] . ":\n" . $fields[$field['id']] . "\n\n";
@@ -83,7 +83,7 @@ function forms(){
 			}
 		}//check code
 		else {
-			$error .= 'Неверно указан код с картинки!<br/>';
+			$error .= $_LANG['ERR_CAPTCHA'].'<br/>';
 		}
 
 		if($error==''){
@@ -91,7 +91,7 @@ function forms(){
 			unset ($_SESSION['form_last'.$form_id]);
 
 			if ($form['sendto']=='mail'){
-				$inCore->mailText($form['email'], 'InstantCMS: '.$form['title'], $mail_message);
+				$inCore->mailText($form['email'], $_LANG['INSTANT_CMS'].': '.$form['title'], $mail_message);
 			} else {
 				$mail_message = nl2br($mail_message);
 				$mail_message = str_replace('<br /><br /><br /><br />', '<br/>', $mail_message);

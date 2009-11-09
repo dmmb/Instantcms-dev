@@ -30,7 +30,7 @@
 {* ============================ Список вопросов ============================ *}
 {if $is_quests}
     {if $id==0}
-        <h1 class="con_heading">Последние вопросы</h1>
+        <h1 class="con_heading">{$LANG.LAST_QUESTIONS}</h1>
     {/if}
 	{foreach key=tid item=quest from=$quests}
 		<div class="faq_quest">
@@ -55,7 +55,7 @@
 		<tr>
 			<td width="16" valign="top"><img src="/components/faq/images/sendquest.gif" border="0" /></td>
 			<td width="" valign="middle">
-				<a href="/faq/{$menuid}/sendquest.html">Задать вопрос</a>
+				<a href="/faq/{$menuid}/sendquest.html">{$LANG.SET_QUESTION}</a>
 			</td>	
 		</tr>
 	</table>

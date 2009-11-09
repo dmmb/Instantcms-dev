@@ -2,9 +2,9 @@
 {* =============== Страница модерации новых постов в коллективном блоге =========== *}
 {* ================================================================================ *}
 
-<div class="con_heading">Записи на модерации</div>
+<div class="con_heading">{$LANG.POSTS_ON_MODERATE}</div>
 
-<div><strong>Количество записей:</strong> {$total} | <a href="/blogs/{$menuid}/{$id}/blog.html">Вернуться в блог</a></div>
+<div><strong>{$LANG.POSTS_COUNT}:</strong> {$total} | <a href="/blogs/{$menuid}/{$id}/blog.html">{$LANG.BACK_TO_BLOG}</a></div>
 
 <div class="blog_entries">
 	{foreach key=tid item=post from=$posts}
@@ -19,12 +19,12 @@
 				<tr>
 					<td>
 						<div class="blog_entry_text">{$post.msg}</div>
-						<div class="blog_comments"><a class="blog_moderate_yes" href="/blogs/{$menuid}/{$id}/publishpost{$post.id}.html">Разрешить</a>
-							 | <a class="blog_moderate_no" href="/blogs/{$menuid}/{$id}/delpost{$post.id}.html">Удалить</a>
+						<div class="blog_comments"><a class="blog_moderate_yes" href="/blogs/{$menuid}/{$id}/publishpost{$post.id}.html">{$LANG.ALLOW}</a>
+							 | <a class="blog_moderate_no" href="/blogs/{$menuid}/{$id}/delpost{$post.id}.html">{$LANG.DELETE}</a>
 							{if $post.tagline != false}
-								 | <strong>Тэги:</strong> {$post.tagline}
+								 | <strong>{$LANG.TAGS}:</strong> {$post.tagline}
 							{/if}
-								 | <a href="/blogs/{$menuid}/{$blog.id}/editpost{$post.id}.html" class="blog_entry_edit">Редактировать</a>
+								 | <a href="/blogs/{$menuid}/{$blog.id}/editpost{$post.id}.html" class="blog_entry_edit">{$LANG.EDIT}</a>
 						</div>
 					</td>
 				</tr>

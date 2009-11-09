@@ -11,6 +11,8 @@
 function mod_latest_faq($module_id){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
+        global $_LANG;
+
 		$cfg = $inCore->loadModuleConfig($module_id);
 		if ($cfg['menuid']>0) {
 			$menuid = $cfg['menuid'];
@@ -52,7 +54,7 @@ function mod_latest_faq($module_id){
 			$smarty->assign('faq', $faq);
 			$smarty->display('mod_latest_faq.tpl');
 						
-		} else { echo '<p>Нет вопросов для отображения.</p>'; }
+		} else { echo '<p>'.$_LANG['LATEST_FAQ_NOT_QUES'].'</p>'; }
 		
 				
 		return true;

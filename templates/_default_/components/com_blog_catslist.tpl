@@ -5,7 +5,7 @@
 <div class="blog_catlist">
 
 	<div class="blog_cat">
-		<table cellspacing="0" cellpadding="0"><tr><td><strong>Рубрики:</strong></div></td></tr></table>
+		<table cellspacing="0" cellpadding="0"><tr><td><strong>{$LANG.CATS}:</strong></div></td></tr></table>
 	</div>
 
 	<div class="blog_cat">
@@ -13,9 +13,9 @@
 			<tr>
 				<td width="16"><img src="/components/blog/images/cat.gif" border="0" /></td>
 				{if $cat_id!=-1}
-					<td><a href="/blogs/{$menuid}/{$bloglink}">Все рубрики</a> <span style="color:#666666">({$rootposts})</span></td>
+					<td><a href="/blogs/{$menuid}/{$bloglink}">{$LANG.ALL_CATS}</a> <span style="color:#666666">({$rootposts})</span></td>
 				{else}
-					<td>Все рубрики <span style="color:#666666">({$rootposts})</span></td>
+					<td>{$LANG.ALL_CATS} <span style="color:#666666">({$rootposts})</span></td>
 				{/if}
 			</tr>
 		</table>

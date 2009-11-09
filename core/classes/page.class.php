@@ -453,6 +453,7 @@ public function printModules($position){
     $inDB       = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
     global $_CFG;
+    global $_LANG;
     //check menu item number
     $menuid = $inCore->menuId();
     //check position
@@ -481,6 +482,8 @@ public function printModules($position){
             
             $modulefile = PATH.'/modules/'.$mod['content'].'/module.php';
 
+            cmsCore::loadLanguage('modules/'.$mod['content']);
+            
             if( !$mod['is_external'] ){
                     //PROCESS FILTERS
                     $filters = $inCore->getFilters();
@@ -735,8 +738,6 @@ public static function getMetaSearchLink($link, $text){
         $html .= '<a href="'.$link.urlencode($text).'">'.$text.'</a>';
     } else {
         $text = str_replace(', ', ',', $text);
-        $text = str_replace('. ', ',', $text);
-        $text = str_replace('.', ',', $text);
         $text = str_replace('&nbsp;', '', $text);
         $text = str_replace('&#8217;', "'", $text);
         $text = str_replace('&quot;', '"', $text);
@@ -749,7 +750,7 @@ public static function getMetaSearchLink($link, $text){
             $value = strip_tags($value);
             $value = str_replace("\r", '', $value);
             $value = str_replace("\n", '', $value);
-            $value = trim($value);
+            $value = trim($value, ' .');
             $html .= '<a href="'.$link.urlencode($value).'">'.$value.'</a>';
             if ($n<sizeof($words)) { $html .= ', '; } else { $html .= '.'; }
         }

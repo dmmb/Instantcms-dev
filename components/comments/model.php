@@ -14,8 +14,6 @@ class cms_model_comments{
 
     public function install(){
 
-        cmsCore::registerAction('comment', 'add', 'оставляет комментарий', 'cms_comments');
-
         return true;
 
     }

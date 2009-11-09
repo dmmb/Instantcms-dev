@@ -5,13 +5,13 @@
 <table width="100%" cellpadding="5" cellspacing="0" border="0">
 	<thead>
 		<tr>
-			<td width="70" align="center"><strong>Рейтинг</strong></td>
-			<td width="50" align="center"><strong>Голосов</strong></td>
-			<td width="80"><strong>Дата</strong></td>
-			<td colspan="2"><strong>Статья</strong></td>
+			<td width="70" align="center"><strong>{$LANG.RATING}</strong></td>
+			<td width="50" align="center"><strong>{$LANG.VOTES}</strong></td>
+			<td width="80"><strong>{$LANG.DATE}</strong></td>
+			<td colspan="2"><strong>{$LANG.ARTICLE}</strong></td>
 			<td width="16">&nbsp;</td>
 			<td width="20">&nbsp;</td>
-			<td width="200"><strong>Раздел</strong></td>
+			<td width="200"><strong>{$LANG.CAT}</strong></td>
 		</tr>
 	</thead>
 	<tbody>

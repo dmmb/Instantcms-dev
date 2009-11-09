@@ -11,6 +11,8 @@
 	function mod_lastreg($module_id){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
+        global $_LANG;
+
 		$cfg = $inCore->loadModuleConfig($module_id);
 		if ($cfg['menuid']>0) {
 			$menuid = $cfg['menuid'];
@@ -50,9 +52,9 @@
 					if ($now < $total-1) { echo ', '; }
 					$now ++;
 				}
-				echo '<p><strong>Всего:</strong> '.dbRowsCount('cms_users', 'is_deleted=0 AND is_locked=0').'</p>';			
+				echo '<p><strong>'.$_LANG['LASTREG_TOTAL'].':</strong> '.dbRowsCount('cms_users', 'is_deleted=0 AND is_locked=0').'</p>';
 			}
-		} else { echo '<p>Нет данных для отображения.</p>'; }
+		} else { echo '<p>'.$_LANG['LASTREG_NOT_DATA'].'</p>'; }
 		
 				
 		return true;

@@ -8,7 +8,7 @@
     <table width="100%" cellspacing="0" cellpadding="5"  class="forum_toolbar">
         <tr>
             <td width="16"><img src="/components/forum/images/toolbar/subforums.gif"/></td>
-            <td><div class="subforumshead">Подфорумы</div></td>
+            <td><div class="subforumshead">{$LANG.SUBFORUMS}</div></td>
         </tr>
     </table>
 
@@ -24,7 +24,7 @@
                     <div class="forum_link"><a href="/forum/{$menuid}/{$subf.id}">{$subf.title}</a></div>
                     <div class="forum_desc">{$subf.description}</div>
                     {if $subf.subforums}
-                        <div class="forum_subs"><span class="forum_subs_title">Подфорумы:</span> {$subf.subforums}</div>
+                        <div class="forum_subs"><span class="forum_subs_title">{$LANG.SUBFORUMS}:</span> {$subf.subforums}</div>
                     {/if}
                 </td>
                 <td width="120" class="'.$class.'" style="font-size:10px" valign="top">{$subf.messages}</td>
@@ -45,7 +45,7 @@
                 <table cellspacing="2" cellpadding="2">
                     <tr>
                         <td width="16"><img src="/components/forum/images/toolbar/newthread.gif"/></td>
-                        <td><a href="/forum/{$menuid}/{$forum.id}/newthread.html"><strong>Новая тема</strong></a></td>
+                        <td><a href="/forum/{$menuid}/{$forum.id}/newthread.html"><strong>{$LANG.NEW_THREAD}</strong></a></td>
                     </tr>
                 </table>
             </td>
@@ -72,15 +72,15 @@
         {/php}
         <tr>
             {if $thread.pinned}
-                <td width="30" class="{php}echo $class{/php}" align="center" valign="middle"><img alt="Прикрепленная тема" src="/components/forum/images/pinned.gif" border="0" /></td>
+                <td width="30" class="{php}echo $class{/php}" align="center" valign="middle"><img alt="{$LANG.ATTACHED_THREAD}" src="/components/forum/images/pinned.gif" border="0" /></td>
             {else}
                 {if $thread.closed}
-                    <td width="30" class="{php}echo $class{/php}" align="center" valign="middle"><img alt="Тема закрыта" src="/components/forum/images/closed.gif" border="0" /></td>
+                    <td width="30" class="{php}echo $class{/php}" align="center" valign="middle"><img alt="{$LANG.THREAD_CLOSE}" src="/components/forum/images/closed.gif" border="0" /></td>
                 {else}
                     {if $thread.is_new}
-                        <td width="30" class="{php}echo $class{/php}" align="center" valign="middle"><img alt="Есть новые сообщения" src="/components/forum/images/new.gif" border="0" /></td>
+                        <td width="30" class="{php}echo $class{/php}" align="center" valign="middle"><img alt="{$LANG.HAVE_NEW_MESS}" src="/components/forum/images/new.gif" border="0" /></td>
                     {else}
-                        <td width="30" class="{php}echo $class{/php}" align="center" valign="middle"><img alt="Нет новых сообщений" src="/components/forum/images/old.gif" border="0" /></td>
+                        <td width="30" class="{php}echo $class{/php}" align="center" valign="middle"><img alt="{$LANG.NOT_NEW_MESS}" src="/components/forum/images/old.gif" border="0" /></td>
                     {/if}
                 {/if}
             {/if}
@@ -90,7 +90,7 @@
                         <span class="thread_pagination"> (
                             {php}
                                 for ($tp=1; $tp<=$pages; $tp++){
-                                    echo '<a href="/forum/'.$menuid.'/thread'.$t['id'].'-'.$tp.'.html" title="Страница '.$tp.'">'.$tp.'</a>';
+                                    echo '<a href="/forum/'.$menuid.'/thread'.$t['id'].'-'.$tp.'.html" title="'.$LANG['PAGE'].' '.$tp.'">'.$tp.'</a>';
                                 }
                             {/php}
                         ) </span>
@@ -102,8 +102,8 @@
             </td>
             <td width="120" style="font-size:12px" class="{php}echo $class{/php}"><a href="{profile_url login=$thread.author.login}">{$thread.author.nickname}</a></td>
             <td width="120" style="font-size:12px" class="{php}echo $class{/php}">
-                <strong>Просмотров:</strong> {$thread.hits}<br/>
-                <strong>Ответов:</strong> {$thread.answers}
+                <strong>{$LANG.HITS}:</strong> {$thread.hits}<br/>
+                <strong>{$LANG.REPLIES}:</strong> {$thread.answers}
             </td>
             <td width="200" style="font-size:12px" class="{php}echo $class{/php}">{$thread.last_message}</td>
         </tr>
@@ -112,5 +112,5 @@
     </table>
     {$pagination}
 {else}
-    <p>Нет тем в этом форуме.</p>
+    <p>{$LANG.NOT_THREADS_IN_FORUM}.</p>
 {/if}

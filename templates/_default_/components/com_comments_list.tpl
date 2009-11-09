@@ -15,7 +15,7 @@
 					{else}
 						<span class="cmm_author"><a href="{profile_url login=$comment.author.login}">{$comment.author.nickname}</a></span>
 					{/if}
-                        <a class="cmm_anchor" href="#c{$comment.id}" title="Ссылка на комментарий">#</a>
+                        <a class="cmm_anchor" href="#c{$comment.id}" title="{$LANG.LINK_TO_COMMENT}">#</a>
                         <span class="cmm_time">{$comment.fpubtime}</span>
 						<span class="cmm_date">{$comment.fpubdate}</span>
                         {if !$is_user || $comment.is_voted}
@@ -24,8 +24,8 @@
                             <span class="cmm_votes" id="votes{$comment.id}">
                                 <table border="0" cellpadding="0" cellspacing="0"><tr>
                                 <td>{$comment.votes}</td>
-                                <td><a href="javascript:void(0);" onclick="voteComment({$comment.id}, -1);" title="Плохой комментарий"><img border="0" alt="-" src="/components/comments/images/vote_down.gif" style="margin-left:8px"/></a></td>
-                                <td><a href="javascript:void(0);" onclick="voteComment({$comment.id}, 1);" title="Хороший комментарий"><img border="0" alt="+" src="/components/comments/images/vote_up.gif" style="margin-left:2px"/></a></td>
+                                <td><a href="javascript:void(0);" onclick="voteComment({$comment.id}, -1);" title="{$LANG.BAD_COMMENT}"><img border="0" alt="-" src="/components/comments/images/vote_down.gif" style="margin-left:8px"/></a></td>
+                                <td><a href="javascript:void(0);" onclick="voteComment({$comment.id}, 1);" title="{$LANG.GOOD_COMMENT}"><img border="0" alt="+" src="/components/comments/images/vote_up.gif" style="margin-left:2px"/></a></td>
                                 </tr></table>
                             </span>
                         {/if}
@@ -46,17 +46,17 @@
 					{if $comment.show}
 						{$comment.content}
 					{else}
-						<a href="javascript:void(0)" onclick="expandComment({$comment.id})" id="expandlink{$comment.id}">показать комментарий</a>
+						<a href="javascript:void(0)" onclick="expandComment({$comment.id})" id="expandlink{$comment.id}">{$LANG.SHOW_COMMENT}</a>
 						<div id="expandblock{$comment.id}" style="display:none">{$comment.content}</div>
 					{/if}
                             {if $is_user}
                                 <div style="display:block; margin-top:20px;">
-                                    [<a href="javascript:void(0)" onclick="addComment('{php}echo md5(session_id());{/php}', '{$target}', '{$target_id}', {$comment.id})">Ответить</a>]
+                                    [<a href="javascript:void(0)" onclick="addComment('{php}echo md5(session_id());{/php}', '{$target}', '{$target_id}', {$comment.id})">{$LANG.REPLY}</a>]
                                     {if $is_admin}
-                                        [<a href="/admin/index.php?view=components&do=config&id=7&opt=edit&item_id={$comment.id}">Редактировать</a>]
+                                        [<a href="/admin/index.php?view=components&do=config&id=7&opt=edit&item_id={$comment.id}">{$LANG.EDIT}</a>]
                                     {/if}
                                     {if $is_admin || ($comment.is_my && $user_can_delete) || $user_can_moderate}
-                                        [<a href="/comments/delete/{$comment.id}">{if $comments[$next].level > $comment.level}Удалить ветвь{else}Удалить{/if}</a>]
+                                        [<a href="/comments/delete/{$comment.id}">{if $comments[$next].level > $comment.level}{$LANG.DELETE_BRANCH}{else}{$LANG.DELETE}{/if}</a>]
                                     {/if}
                                 </div>
                             {/if}
@@ -73,5 +73,5 @@
 
 {else}
     {* ================================= Нет комментариев =============================== *}
-	<p>Нет комментариев. Ваш будет первым!</p>
+	<p>{$LANG.NOT_COMMENT_TEXT}</p>
 {/if}

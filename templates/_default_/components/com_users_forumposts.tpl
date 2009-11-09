@@ -2,7 +2,7 @@
 {* =================== Список постов пользователя на форуме ======================= *}
 {* ================================================================================ *}
 
-<div class="con_heading"><a href="/users/{$menuid}/{$user_id}/profile.html">{$nickname}</a> &rarr; Форум</div>
+<div class="con_heading"><a href="/users/{$menuid}/{$user_id}/profile.html">{$nickname}</a> &rarr; {$LANG.FORUM}</div>
 
 <div style="margin-top:15px">
     {foreach key=tid item=post from=$posts}

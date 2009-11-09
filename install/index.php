@@ -72,6 +72,7 @@
 			$_CFG['metadesc']   = 'InstantCMS - бесплатная система управления сайтом с социальными функциями';
 			$_CFG['fastcfg']    = '1';
             $_CFG['debug']      = '0';
+            $_CFG['lang'] 	= 'ru';
 
             $inConf->saveToFile($_CFG);
 			

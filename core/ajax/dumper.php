@@ -1,4 +1,7 @@
 <?php
+
+    if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
+
 	session_start();
 
 	define("VALID_CMS", 1);

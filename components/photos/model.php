@@ -12,9 +12,6 @@ class cms_model_photos{
 
     public function install(){
 
-        cmsCore::registerAction('photo', 'add', 'добавляет фото', 'cms_photo_files');
-        cmsCore::registerAction('photo', 'remove', 'удаляет фото', 'cms_photo_files');
-
         return true;
 
     }

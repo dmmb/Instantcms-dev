@@ -17,13 +17,13 @@ function sendActivationNotice($send_pass, $user_id){
     $inConf = cmsConfig::getInstance();
     $inDB   = cmsDatabase::getInstance();
     $user   = dbGetFields('cms_users', 'id='.$user_id, '*');
-
+    global $_LANG;
     $code = md5($user['email']);
     $codelink = 'http://'.$_SERVER['HTTP_HOST'].'/activate/'.$code;
 
     $sql = "INSERT cms_users_activate (pubdate, user_id, code)
             VALUES (NOW(), '".$user['id']."', '$code')";
-    $inDB->query($sql) or die('Ошибка отправки письма активации!');
+    $inDB->query($sql) or die($_LANG['ERR_SEND_ACTIVATION_MAIL']);
     $user['password'] = $send_pass;
     $letter_path = PATH.'/includes/letters/activation.txt';
     $letter = file_get_contents($letter_path);
@@ -33,7 +33,7 @@ function sendActivationNotice($send_pass, $user_id){
     $letter= str_replace('{sitename}', $inConf->sitename, $letter);
     $letter= str_replace('{codelink}', $codelink, $letter);
 
-    $inCore->mailText($user['email'], 'Активация аккаунта - '.$inConf->sitename, $letter);
+    $inCore->mailText($user['email'], $_LANG['ACTIVATION_ACCOUNT'].' - '.$inConf->sitename, $letter);
 
     return true;
 }
@@ -46,6 +46,7 @@ function registration(){
     $inUser     = cmsUser::getInstance();
     
     global $_CFG;
+    global $_LANG;
 
     $menuid = $inCore->menuId();    
     $cfg = $inCore->loadComponentConfig('registration');
@@ -64,18 +65,18 @@ function registration(){
 
     if ($do=='passremind'){
 
-        $inPage->setTitle('Напоминание пароля');
-        $inPage->addPathway('Напоминание пароля', $_SERVER['REQUEST_URI']);
+        $inPage->setTitle($_LANG['REMINDER_PASS']);
+        $inPage->addPathway($_LANG['REMINDER_PASS'], $_SERVER['REQUEST_URI']);
 
-        echo '<div class="con_heading">Напоминание пароля</div>';
+        echo '<div class="con_heading">'.$_LANG['REMINDER_PASS'].'</div>';
 
         if (!isset($_POST['goremind'])){
             //PRINT QUERY FORM
             echo '<form name="prform" action="" method="POST">';
             echo '<table style="background-color:#EBEBEB" border="0" cellspacing="0" cellpadding="9"><tr>';
-            echo '<td>Введите e-mail, указанный при регистрации: </td>';
+            echo '<td>'.$_LANG['WRITE_REGISTRATION_EMAIL'].': </td>';
             echo '<td><input name="email" type="text" size="25" /></td>';
-            echo '<td><input name="goremind" type="submit" value="Отправить"/></td>';
+            echo '<td><input name="goremind" type="submit" value="'.$_LANG['SEND'].'"/></td>';
             echo '</tr></table>';
             echo '</form>';
         } else {
@@ -83,7 +84,7 @@ function registration(){
             $email = $_POST['email'];
 
             if (!eregi("^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$", $email)){
-                echo '<p style="color:red">Введен не корректный адрес email!</p>';
+                echo '<p style="color:red">'.$_LANG['ERR_EMAIL'].'</p>';
             } else {
 
                 $sql = "SELECT * FROM cms_users WHERE email = '$email' LIMIT 1";
@@ -95,22 +96,22 @@ function registration(){
                     $newpassword = substr(md5(microtime()), 0, 6);
                     $inDB->query("UPDATE cms_users SET password = '".md5($newpassword)."' WHERE id = ".$usr['id']) ;
 
-                    $mail_message = 'Здравствуйте, ' . $usr['nickname'] . '!'. "\n\n";
-                    $mail_message .= 'Вы, либо кто-то еще запросили напоминание пароля по email на сайте "'.$inConf->sitename.'".' . "\n\n";
-                    $mail_message .= 'Пароли на нашем сайте хранятся в зашифрованном виде' . "\n";
-                    $mail_message .= 'поэтому мы не можем напомнить вам старый пароль.' . "\n\n";
-                    $mail_message .= '########## Ваш логин: ' .$usr['login']. "\n\n";
-                    $mail_message .= '########## Ваш новый пароль: ' .$newpassword . "\n\n";
-                    $mail_message .= 'Вы всегда можете сменить этот пароль на более удобный'."\n";
-                    $mail_message .= 'в настройках своего профиля: '. cmsUser::getProfileURL($usr['login']) . "\n\n";
-                    $mail_message .= 'C уважением, '. $inConf->sitename . ' ('.HOST.').' . "\n";
+                    $mail_message = $_LANG['HELLO'].', ' . $usr['nickname'] . '!'. "\n\n";
+                    $mail_message .= $_LANG['REMINDER_TEXT'].' "'.$inConf->sitename.'".' . "\n\n";
+                    $mail_message .= $_LANG['OUR_PASS_IS_MD5'] . "\n";
+                    $mail_message .= $_LANG['OUR_PASS_IS_MD5_TEXT'] . "\n\n";
+                    $mail_message .= '########## '.$_LANG['YOUR_LOGIN'].': ' .$usr['login']. "\n\n";
+                    $mail_message .= '########## '.$_LANG['YOUR_NEW_PASS'].': ' .$newpassword . "\n\n";
+                    $mail_message .= $_LANG['YOU_CAN_CHANGE_PASS']."\n";
+                    $mail_message .= $_LANG['IN_CONFIG_PROFILE'].': '. cmsUser::getProfileURL($usr['login']) . "\n\n";
+                    $mail_message .= $_LANG['SIGNATURE'].', '. $inConf->sitename . ' ('.HOST.').' . "\n";
                     $mail_message .= date('d-m-Y (H:i)');
 
-                    $inCore->mailText($email, $inConf->sitename.' - Напоминание пароля', $mail_message);
-                    echo '<p>Новый пароль был выслан на указанный e-mail.</p>';
+                    $inCore->mailText($email, $inConf->sitename.' - '.$_LANG['REMINDER_PASS'], $mail_message);
+                    echo '<p>'.$_LANG['NEW_PAS_SENDED'].'</p>';
 
                 } else {
-                    echo '<p style="color:red">Адрес "'.$email.'" не встречается в нашей базе данных.</p>';
+                    echo '<p style="color:red">'.$_LANG['ADRESS'].' "'.$email.'" '.$_LANG['NOT_IN_OUR_BASE'].'</p>';
                 }
 
             }
@@ -122,23 +123,23 @@ function registration(){
 
     if ($do=='register'){
 
-        $inPage->setTitle('Регистрация');
+        $inPage->setTitle($_LANG['REGISTRATION']);
 
         $msg = '';
-        if(strlen($inCore->request('login'))>=2) { $login = $inCore->request('login', 'str', ''); } else { $msg .= 'Укажите логин (не короче 2х символов)!<br/>'; }
-        if($inCore->request('pass')) { $pass = $inCore->request('pass', 'str', ''); } else { $msg .= 'Укажите пароль!<br/>'; }
-        if($inCore->request('pass2')) { $pass2 = $inCore->request('pass2', 'str', ''); } else { $msg .= 'Укажите пароль дважды!<br/>'; }
+        if(strlen($inCore->request('login'))>=2) { $login = $inCore->request('login', 'str', ''); } else { $msg .= $_LANG['TYPE_LOGIN'].'<br/>'; }
+        if($inCore->request('pass')) { $pass = $inCore->request('pass', 'str', ''); } else { $msg .= $_LANG['TYPE_PASS'].'<br/>'; }
+        if($inCore->request('pass2')) { $pass2 = $inCore->request('pass2', 'str', ''); } else { $msg .= $_LANG['TYPE_PASS_TWICE'].'<br/>'; }
 
         if (!eregi("^[a-zA-Z0-9]+\$", $login)){
-            $msg  .= 'Логин должен состоять только из латинских букв и цифр!<br/>';
+            $msg  .= $_LANG['ERR_LOGIN'].'<br/>';
         }
 
         if($cfg['name_mode']=='nickname'){
-            if($inCore->request('nickname', 'str', '')) { $nickname = $inCore->request('nickname', 'str', ''); } else { $msg .= 'Укажите никнейм!<br/>'; }
+            if($inCore->request('nickname', 'str', '')) { $nickname = $inCore->request('nickname', 'str', ''); } else { $msg .= $_LANG['TYPE_NICKNAME'].'<br/>'; }
         } else {
             $namemsg = '';
-            if($inCore->request('realname1', 'str', '')) { $realname1 = $inCore->request('realname1', 'str', ''); } else { $namemsg .= 'Укажите ваше имя!<br/>'; }
-            if($inCore->request('realname2', 'str', '')) { $realname2 = $inCore->request('realname2', 'str', ''); } else { $namemsg .= 'Укажите вашу фамилию!<br/>'; }
+            if($inCore->request('realname1', 'str', '')) { $realname1 = $inCore->request('realname1', 'str', ''); } else { $namemsg .= $_LANG['TYPE_NAME'].'<br/>'; }
+            if($inCore->request('realname2', 'str', '')) { $realname2 = $inCore->request('realname2', 'str', ''); } else { $namemsg .= $_LANG['TYPE_SONAME'].'<br/>'; }
             if (!$namemsg){
                 $nickname = trim($realname1) . ' ' . trim($realname2);
             } else {
@@ -147,13 +148,13 @@ function registration(){
         }
 
         if(!$inCore->inRequest('email')) {
-            $msg .= 'Укажите e-mail!<br/>';
+            $msg .= $_LANG['TYPE_EMAIL'].'<br/>';
         }
 
         if($inCore->inRequest('email')) {
             $email = $inCore->request('email', 'str', '');
             if (!eregi("^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$", $email)){
-                $msg  .= 'Введен не корректный адрес email!<br/>';
+                $msg  .= $_LANG['ERR_EMAIL'].'<br/>';
             }
         }
 
@@ -169,8 +170,8 @@ function registration(){
             $icq = '';
         }
 
-        if($_REQUEST['code']) { $code = $_REQUEST['code']; } else { $msg .= 'Введите код, указанный на картинке!<br/>'; }
-        if(@$pass != @$pass2) { $msg .= 'Пароли не совпали!<br/>'; }
+        if($_REQUEST['code']) { $code = $_REQUEST['code']; } else { $msg .= $_LANG['TYPE_CAPTCHA'].'<br/>'; }
+        if(@$pass != @$pass2) { $msg .= $_LANG['WRONG_PASS'].'<br/>'; }
 
         if($msg==''){
 
@@ -205,11 +206,11 @@ function registration(){
 
                 } else {
                     $u = $inDB->fetch_assoc($result);
-                    if ($login == $u['login']) { $msg .= 'Логин "'.$login.'" уже занят!'; }
-                    else { $msg .= 'Указанный email уже зарегистрирован!'; }
+                    if ($login == $u['login']) { $msg .= $_LANG['LOGIN'].' "'.$login.'" '.$_LANG['IS_BUSY']; }
+                    else { $msg .= $_LANG['EMAIL_IS_BUSY']; }
                 }
             } else {
-                $msg = 'Неверно указан код на картинке!';
+                $msg = $_LANG['ERR_CAPTCHA'];
             }
 
         }
@@ -220,10 +221,10 @@ function registration(){
 
     if ($do=='view' || @$msg!=''){
 
-        $inPage->setTitle('Регистрация');
+        $inPage->setTitle($_LANG['REGISTRATION']);
 
         $do = 'view';
-        echo '<div class="con_heading">Регистрация</div>';
+        echo '<div class="con_heading">'.$_LANG['REGISTRATION'].'</div>';
 
         if ($cfg['is_on']){
 
@@ -279,12 +280,19 @@ function registration(){
         }
 
         if( !$inCore->inRequest('logout') ) {
+            
                 if ($inCore->inRequest('login')) { $login = $inCore->request('login', 'str'); } else { $inCore->redirect($back); }
                 if ($inCore->inRequest('pass')) { $passw = $inCore->request('pass', 'str'); } else { $inCore->redirect($back); }
 
                 $remember_pass = $inCore->inRequest('remember');
 
-                $sql    = "SELECT * FROM cms_users WHERE login = '$login' AND password = md5('$passw') AND is_deleted = 0 AND is_locked = 0";
+                if (!eregi("^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$", $login)){
+                    $where_login = "login = '{$login}'";
+                } else {
+                    $where_login = "email = '{$login}'";
+                }
+
+                $sql    = "SELECT * FROM cms_users WHERE $where_login AND password = md5('$passw') AND is_deleted = 0 AND is_locked = 0";
                 $result = $inDB->query($sql);
 
                 if($inDB->num_rows($result)==1) {
@@ -347,10 +355,10 @@ function registration(){
         
         if ($user_id){
             $sql = "UPDATE cms_users SET is_locked = 0 WHERE id = $user_id";
-            $inDB->query($sql) or die('Ошибка активации! Обратитесь к администрации сайта.');
+            $inDB->query($sql) or die($_LANG['ERR_ACTIVATION']);
 
             $sql = "DELETE FROM cms_users_activate WHERE code = '$code'";
-            $inDB->query($sql) or die('Ошибка активации! Обратитесь к администрации сайта.');
+            $inDB->query($sql) or die($_LANG['ERR_ACTIVATION']);
 
             $inCore->redirect('/registration/complete.html');
         } else {

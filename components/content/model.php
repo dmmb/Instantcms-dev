@@ -12,9 +12,6 @@ class cms_model_content{
 
     public function install(){
 
-        cmsCore::registerAction('content', 'add', 'добавляет статью', 'cms_content');
-        cmsCore::registerAction('content', 'remove', 'удаляет статью', 'cms_content');
-
         return true;
 
     }
@@ -243,10 +240,10 @@ class cms_model_content{
 
     public function getArticle($article_id) {
 
-		$sql = "SELECT con.*, DATE_FORMAT(con.pubdate, '%d-%m-%Y (%H:%i)') pubdate,
+		$sql = "SELECT  con.*, DATE_FORMAT(con.pubdate, '%d-%m-%Y (%H:%i)') pubdate,
 						DATE_FORMAT(con.pubdate, '%d-%m-%Y') shortdate,
 						cat.title cat_title, cat.id cat_id, cat.NSLeft as leftkey, cat.NSRight as rightkey, cat.showtags as showtags,
-						u.nickname as author, con.user_id as user_id
+						u.nickname as author, con.user_id as user_id, u.login as user_login
 				FROM cms_content con, cms_category cat, cms_users u
 				WHERE con.id = $article_id AND con.category_id = cat.id AND con.user_id = u.id AND con.published = 1";
 
@@ -270,7 +267,7 @@ class cms_model_content{
 		$sql = "SELECT con.*, DATE_FORMAT(con.pubdate, '%d-%m-%Y (%H:%i)') pubdate,
 						DATE_FORMAT(con.pubdate, '%d-%m-%Y') shortdate,
 						cat.title cat_title, cat.id cat_id, cat.NSLeft as leftkey, cat.NSRight as rightkey, cat.showtags as showtags,
-						u.nickname as author, con.user_id as user_id
+						u.nickname as author, con.user_id as user_id, u.login as user_login
 				FROM cms_content con, cms_category cat, cms_users u
 				WHERE con.seolink = '$seolink' AND con.category_id = cat.id AND con.user_id = u.id AND con.published = 1";
 

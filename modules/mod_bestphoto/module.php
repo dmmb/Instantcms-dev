@@ -11,7 +11,7 @@
 function mod_bestphoto($module_id){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
-	
+	global $_LANG;
 		$cfg = $inCore->loadModuleConfig($module_id);
 		if ($cfg['menuid']>0) {
 			$menuid = $cfg['menuid'];
@@ -28,7 +28,7 @@ function mod_bestphoto($module_id){
 		$col = 1; $maxcols = $cfg['maxcols'];
 
 		$sql = "SELECT f.*, f.id as fid,
-					   IF(DATE_FORMAT(f.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(f.pubdate, '<strong>Сегодня</strong>'), DATE_FORMAT(f.pubdate, '%d-%m-%Y'))  as fpubdate, 
+					   IF(DATE_FORMAT(f.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(f.pubdate, '<strong>{$_LANG['TODAY']}</strong>'), DATE_FORMAT(f.pubdate, '%d-%m-%Y'))  as fpubdate,
 					   a.id as album_id, a.title as album, 
 					   IFNULL(SUM(r.points), 0) as rating
 				FROM cms_photo_files f
@@ -90,9 +90,9 @@ function mod_bestphoto($module_id){
 			if ($col>1) { echo '<td colspan="'.($maxcols-$col+1).'">&nbsp;</td></tr>'; }
 			echo '</table>';
 			if ($cfg['showmore']){
-				echo '<div style="text-align:right"><a style="text-decoration:underline" href="/photos/'.$menuid.'/top.html">Все лучшие фото</a> &rarr;</div>';
+				echo '<div style="text-align:right"><a style="text-decoration:underline" href="/photos/'.$menuid.'/top.html">'.$_LANG['BESTPHOTO_ALL_BEST_PHOTO'].'</a> &rarr;</div>';
 			}
-		} else { echo '<p>Нет материалов для отображения.</p>'; }
+		} else { echo '<p>'.$_LANG['BESTCONTENT_NOT_MATERIALS'].'</p>'; }
 		
 				
 		return true;

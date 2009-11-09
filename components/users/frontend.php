@@ -23,6 +23,7 @@ function karmaPoints($points){
 function pageBar($current, $perpage, $orderby, $orderto, $records){
     $inDB   = cmsDatabase::getInstance();
 	global $menuid;
+        global $_LANG;
 	$html = '';
 	if (!@$_SESSION['usr_online']){
 		$result = $inDB->query("SELECT * FROM cms_users WHERE is_locked=0 AND is_deleted=0") ;
@@ -34,7 +35,7 @@ function pageBar($current, $perpage, $orderby, $orderto, $records){
 		$pages = ceil($records / $perpage);
 		if($pages>1){
 			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>Страницы: </strong></span>';	
+			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {			
 					$link = '/users/'.$menuid.'-'.$p.'/'.$orderby.'-'.$orderto.'.html';
@@ -52,6 +53,7 @@ function pageBar($current, $perpage, $orderby, $orderto, $records){
 function pageBarStatic($current, $perpage, $user_id, $page='entries', $table='cms_comment'){
     $inDB   = cmsDatabase::getInstance();
 	global $menuid;
+        global $_LANG;
 	$html = '';
 	
 	$result = $inDB->query("SELECT id FROM $table WHERE user_id = $user_id");
@@ -62,7 +64,7 @@ function pageBarStatic($current, $perpage, $user_id, $page='entries', $table='cm
 
 		if($pages>1){
 			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>Страницы: </strong></span>';	
+			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {			
 					$link = '/users/'.$menuid.'/'.$user_id.'/'.$page.$p.'.html';
@@ -80,17 +82,18 @@ function pageBarStatic($current, $perpage, $user_id, $page='entries', $table='cm
 function pageSelectFiles($records, $current, $perpage){
     $inDB   = cmsDatabase::getInstance();
 	$html = '';
+        global $_LANG;
 	if ($records){
 		$pages = ceil($records / $perpage);
 
 		if($pages>1){
-			$html .= '<td width="60"><strong>Страница: </strong></span></td>';	
+			$html .= '<td width="60"><strong>'.$_LANG['PAGE'].': </strong></span></td>';
 
 			if ($current>2){
-				$html .= '<td width="16"><a href="javascript:goPage('.(1-$current).')" title="Первая"><img src="/images/icons/first.gif" border="0"/></a></td>';	
+				$html .= '<td width="16"><a href="javascript:goPage('.(1-$current).')" title="'.$_LANG['FIRST'].'"><img src="/images/icons/first.gif" border="0"/></a></td>';
 			}
 			if ($current>1) { 
-				$html .= '<td width="16"><a href="javascript:goPage(-1)" title="Предыдущая"><img src="/images/icons/prev.gif" border="0"/></a></td>';
+				$html .= '<td width="16"><a href="javascript:goPage(-1)" title="'.$_LANG['PREVIOUS'].'"><img src="/images/icons/prev.gif" border="0"/></a></td>';
 			}
 
 			$html .= '<td width="40" align="center"><form style="margin:0px;padding:0px" action="" name="pageform" method="POST">';
@@ -106,10 +109,10 @@ function pageSelectFiles($records, $current, $perpage){
 			$html .= '</select></form></td>';
 
 			if ($current<$pages) { 
-				$html .= '<td width="16"><a href="javascript:goPage(+1)" title="Следущая"><img src="/images/icons/next.gif" border="0"/></a></td>';
+				$html .= '<td width="16"><a href="javascript:goPage(+1)" title="'.$_LANG['NEXT'].'"><img src="/images/icons/next.gif" border="0"/></a></td>';
 			}
 			if ($current<$pages-1){
-				$html .= '<td width="16"><a href="javascript:goPage('.($pages-$current).')" title="Последняя"><img src="/images/icons/last.gif" border="0"/></a></td>';	
+				$html .= '<td width="16"><a href="javascript:goPage('.($pages-$current).')" title="'.$_LANG['LAST'].'"><img src="/images/icons/last.gif" border="0"/></a></td>';
 			}
 		}
 	}
@@ -119,7 +122,7 @@ function pageSelectFiles($records, $current, $perpage){
 function pageBarBoard($user_id, $current, $perpage){
     $inDB   = cmsDatabase::getInstance();
 	$html = '';
-	
+	global $_LANG;
 	$result = $inDB->query("SELECT id FROM cms_board_items WHERE user_id = $user_id") ;
 	$records = $inDB->num_rows($result);
 	
@@ -128,7 +131,7 @@ function pageBarBoard($user_id, $current, $perpage){
 
 		if($pages>1){
 			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>Страницы: </strong></span>';	
+			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {			
 					if ($p==1) { $pnum = ''; } else { $pnum = $p; }
@@ -154,7 +157,7 @@ function pageBarAvatars($current, $perpage, $records, $userid){
 
 		if($pages>1){
 			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>Страницы: </strong></span>';
+			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {
 					$link = '/users/'.$menuid.'/'.$userid.'/select-avatar-'.$p.'.html';
@@ -190,7 +193,7 @@ function users(){
     $inPage = cmsPage::getInstance();
     $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
-
+    global $_LANG;
 	$inCore->includeFile('components/users/includes/usercore.php');
 	$inCore->includeFile('components/users/includes/userforms.php');
 	
@@ -202,6 +205,7 @@ function users(){
     $model = new cms_model_users();
 
     $cfg = $inCore->loadComponentConfig('users');
+    $inCore->loadLanguage('components/users');
 
     if (!isset($cfg['showgroup'])) { $cfg['showgroup']  = 0; }
     if (!isset($cfg['sw_feed']))   { $cfg['sw_feed']    = 1; }
@@ -212,7 +216,7 @@ function users(){
 	$id     =   $inCore->request('id', 'int', 0);
 	$do     =   $inCore->request('do', 'str', 'view');
 
-    $inPage->setTitle('Пользователи');
+    $inPage->setTitle($_LANG['USERS']);
 	
 /////////////////////////////// SEARCH BY CITY ///////////////////////////////////////////////////////////////////////////////////////
 if ($do=='city'){
@@ -224,7 +228,7 @@ if ($do=='city'){
 				WHERE u.is_locked = 0 AND p.user_id = u.id AND p.city LIKE '%$city%' AND u.is_deleted = 0
 				ORDER BY city DESC";
 	
-	$querymsg = '<div class="con_description"><strong>Поиск по городу:</strong> '.$city.' (<a href="/users/'.$menuid.'/all.html">Отменить поиск и показать всех</a>)</div>';
+	$querymsg = '<div class="con_description"><strong>'.$_LANG['SEARCH_BY_CITY'].':</strong> '.$city.' (<a href="/users/'.$menuid.'/all.html">'.$_LANG['CANCEL_SEARCH'].'</a>)</div>';
 	
 	$do = 'view';
 
@@ -243,7 +247,7 @@ if ($do=='hobby'){
 				WHERE u.is_locked = 0 AND p.user_id = u.id AND (LOWER(p.description) LIKE '%$hobby%' OR LOWER(p.formsdata) LIKE '%$hobby%') AND u.is_deleted = 0
 				ORDER BY city DESC";
 	
-	$querymsg = '<div class="con_description"><strong>Поиск по интересам:</strong> '.$hobby.' (<a href="/users/'.$menuid.'/all.html">Отменить поиск и показать всех</a>)</div>';
+	$querymsg = '<div class="con_description"><strong>'.$_LANG['SEARCH_BY_HOBBY'].':</strong> '.$hobby.' (<a href="/users/'.$menuid.'/all.html">'.$_LANG['CANCEL_SEARCH_SHOWALL'].'</a>)</div>';
 	
 	$do = 'view';
 
@@ -257,55 +261,55 @@ if ($do=='search'){
 		$val = $inCore->request('gender', 'str', 'm');
 		if ($val=='m'){
 			$s .= " AND p.gender = 'm'"; 
-			$stext[] = "Мужчины";
+			$stext[] = $_LANG['MALE'];
 		} elseif ($val=='f') {
 			$s .= " AND p.gender = 'f'"; 
-			$stext[] = "Женщины";
+			$stext[] = $_LANG['FEMALE'];
 		}
 	}	
 	if (@$_REQUEST['agefrom']){
 		$val = $inCore->request('agefrom', 'int', 18);
 		$s .= ' AND DATEDIFF(NOW(), u.birthdate) >= '.($val*365); 
-		$stext[] = "Не моложе $val лет";
+		$stext[] = $_LANG['NOT_YOUNG']." $val ".$_LANG['YEARS'];
 	}			
 	if (@$_REQUEST['ageto']){
 		$val = $inCore->request('ageto', 'int');
 		$s .= ' AND DATEDIFF(NOW(), u.birthdate) <= '.($val*365); 
-		$stext[] = "Не старше $val лет";
+		$stext[] = $_LANG['NOT_OLD']." $val ".$_LANG['YEARS'];
 	}
 
     if (@$_REQUEST['name']){
 		$val = $inCore->request('name', 'str', '');
         $val = strtolower($val);
 		$s .= ' AND LOWER(u.nickname) LIKE \'%'.$val.'%\'';
-		$stext[] = "Имя &mdash; ".$val;
+		$stext[] = $_LANG['NAME']." &mdash; ".$val;
 	}
 
     if (@$_REQUEST['city']){
 		$val = $inCore->request('city', 'str', '');
         $val = strtolower($val);
 		$s .= ' AND LOWER(p.city) LIKE \''.$val.'%\'';
-		$stext[] = "Город &mdash; ".$val;
+		$stext[] = $_LANG['CITY']." &mdash; ".$val;
 	}
 
     if (@$_REQUEST['hobby']){
 		$val = $inCore->request('hobby', 'str', '');
         $val = strtolower($val);        
 		$s .= ' AND (LOWER(p.description) LIKE \'%'.$val.'%\' OR LOWER(p.formsdata) LIKE \'%'.$val.'%\')';
-		$stext[] = "Интересы &mdash; ".$val;
+		$stext[] = $_LANG['HOBBY']." &mdash; ".$val;
 	}
 
 	$querysql = "SELECT u.*, p.*, u.id as id, 
 						DATE_FORMAT(u.regdate, '%d-%m-%Y') as fregdate, 
-						IF(DATE_FORMAT(u.logdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(u.logdate, 'cегодня в %H:%i'), 
-					    IF(u.logdate >= DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_FORMAT(u.logdate, 'вчера в %H:%i'),DATE_FORMAT(u.logdate, '%d-%m-%Y в %H:%i') ))  as flogdate					
+						IF(DATE_FORMAT(u.logdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(u.logdate, '{$_LANG['TODAY']} {$_LANG['IN']} %H:%i'),
+					    IF(u.logdate >= DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_FORMAT(u.logdate, '{$_LANG['YESTERDAY']} {$_LANG['IN']} %H:%i'),DATE_FORMAT(u.logdate, '%d-%m-%Y {$_LANG['IN']} %H:%i') ))  as flogdate
 				FROM cms_users u, cms_user_profiles p
 				WHERE u.is_deleted = 0 AND u.is_locked = 0 AND p.user_id = u.id $s
 				ORDER BY city DESC";
 
     echo '<pre>'.$sql.'</pre>';
 	
-	$querymsg = '<h3>Результаты поиска</h3>';
+	$querymsg = '<h3>'.$_LANG['SEARCH_RESULT'].'</h3>';
 	
 	if (sizeof($stext)){
 		$querymsg .= '<ul>';
@@ -345,8 +349,8 @@ if ($do=='view'){
 	if (!isset($querysql)){
 		if (!@$_SESSION['usr_online']){
 			$sql = "SELECT u.*, p.*, u.id as id, u.is_deleted as is_deleted, DATE_FORMAT(u.regdate, '%d-%m-%Y') as fregdate,  p.karma as karma, 
-						   IF(DATE_FORMAT(u.logdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(u.logdate, 'cегодня в %H:%i'), 
-						   IF(DATEDIFF(NOW(), u.logdate)=1, DATE_FORMAT(u.logdate, 'вчера в %H:%i'),DATE_FORMAT(u.logdate, '%d-%m-%Y %H:%i') ))  as flogdate,
+						   IF(DATE_FORMAT(u.logdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(u.logdate, '{$_LANG['TODAY']} {$_LANG['IN']} %H:%i'),
+						   IF(DATEDIFF(NOW(), u.logdate)=1, DATE_FORMAT(u.logdate, '{$_LANG['YESTERDAY']} {$_LANG['IN']} %H:%i'),DATE_FORMAT(u.logdate, '%d-%m-%Y %H:%i') ))  as flogdate,
                            p.gender as gender
 					FROM cms_user_profiles p, cms_users u
 					WHERE u.is_locked = 0 AND u.is_deleted = 0 AND p.user_id = u.id
@@ -354,8 +358,8 @@ if ($do=='view'){
 					LIMIT ".(($page-1)*$perpage).", $perpage";
 		} else {
 			$sql = "SELECT u.*, p.*, u.id as id, u.is_deleted as is_deleted, DATE_FORMAT(u.regdate, '%d-%m-%Y') as fregdate,  p.karma as karma,
-						   IF(DATE_FORMAT(u.logdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(u.logdate, 'cегодня в %H:%i'), 
-						   IF(DATEDIFF(NOW(), u.logdate)=1, DATE_FORMAT(u.logdate, 'вчера в %H:%i'),DATE_FORMAT(u.logdate, '%d-%m-%Y %H:%i') ))  as flogdate,
+						   IF(DATE_FORMAT(u.logdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(u.logdate, '{$_LANG['TODAY']} {$_LANG['IN']} %H:%i'),
+						   IF(DATEDIFF(NOW(), u.logdate)=1, DATE_FORMAT(u.logdate, '{$_LANG['YESTERDAY']} {$_LANG['IN']} %H:%i'),DATE_FORMAT(u.logdate, '%d-%m-%Y %H:%i') ))  as flogdate,
                            p.gender as gender
 					FROM cms_users u, cms_user_profiles p, cms_online o
 					WHERE u.is_locked = 0 AND u.is_deleted = 0 AND p.user_id = u.id AND p.user_id = o.user_id
@@ -382,9 +386,9 @@ if ($do=='view'){
 		$people = cmsUser::getOnlineCount();
 		
 		if (!@$_SESSION['usr_online']) { 
-			$online_link = '<a href="/users/'.$menuid.'/online.html" rel=”nofollow”>Показать только тех, кто онлайн</a>';
+			$online_link = '<a href="/users/'.$menuid.'/online.html" rel=”nofollow”>'.$_LANG['SHOW_ONLY_ONLINE'].'</a>';
 		} else {
-			$online_link = '<a href="/users/'.$menuid.'/all.html" rel=”nofollow”>Показать всех</a>'; 
+			$online_link = '<a href="/users/'.$menuid.'/all.html" rel=”nofollow”>'.$_LANG['SHOW_ALL'].'</a>';
 		}
 	
 		$link['positive'] = '/users/'.$menuid.'-1/karma-desc.html';
@@ -463,14 +467,15 @@ if ($do=='editprofile'){
 					$msg = '';
 
 					$nickname = $inCore->request('nickname', 'str');
-					if (strlen($nickname)<2) { $emsg .= 'Никнейм не может быть короче 2х символов!<br/>'; }
+					if (strlen($nickname)<2) { $emsg .= $_LANG['SHORT_NICKNAME'].'<br/>'; }
 
 					$gender = $inCore->request('gender', 'str');
 					
 					$city = $inCore->request('city', 'str');
+					if (strlen($city)>20) { $emsg .= $_LANG['LONG_CITY_NAME'].'<br/>'; }
 
 					$email = $inCore->request('email', 'str');
-					if (!strpos($email, '@') || !strpos($email, '.')) { $emsg .= 'Укажите настоящий адрес e=mail!<br/>'; }					
+					if (!strpos($email, '@') || !strpos($email, '.')) { $emsg .= $_LANG['REALY_ADRESS_EMAIL'].'<br/>'; }
 					
 					$showmail = $inCore->request('showmail', 'int');
 					$email_newmsg = $inCore->request('email_newmsg', 'int');
@@ -526,7 +531,7 @@ if ($do=='editprofile'){
 								WHERE id = $id";
 						$inDB->query($sql) ;
 
-						$msg = 'Профиль успешно сохранен.';
+						$msg = $_LANG['PROFILE_SAVED'];
 
 					}
 					$inCore->redirect(cmsUser::getProfileURL($inUser->login));
@@ -535,13 +540,13 @@ if ($do=='editprofile'){
 				if ($opt == 'changepass'){
 					$emsg = '';
 					$msg = '';
-					if ($_SESSION['user']['password']==md5($_POST['oldpass'])){ $oldpass = $inCore->request('oldpass', 'str'); } else { $emsg .= 'Старый пароль введен не верно.<br/>'; }
-					if ($_POST['newpass']==$_POST['newpass2']){ $newpass = $inCore->request('newpass', 'str'); } else { $emsg .= 'Пароли не совпали.<br/>'; }					
+					if ($_SESSION['user']['password']==md5($_POST['oldpass'])){ $oldpass = $inCore->request('oldpass', 'str'); } else { $emsg .= $_LANG['OLD_PASS_WRONG'].'<br/>'; }
+					if ($_POST['newpass']==$_POST['newpass2']){ $newpass = $inCore->request('newpass', 'str'); } else { $emsg .= $_LANG['WRONG_PASS'].'<br/>'; }
 
 					if (strlen($emsg)==0){
 						$sql = "UPDATE cms_users SET password='".md5($newpass)."' WHERE id = $id AND password='".md5($oldpass)."'";
 						$inDB->query($sql);
-						$msg = 'Пароль успешно изменен.';															
+						$msg = $_LANG['PASS_CHANGED'];
 					}
 					$inCore->redirect(cmsUser::getProfileURL($inUser->login));
 				}
@@ -563,9 +568,9 @@ if ($do=='editprofile'){
 			if ($inDB->num_rows($result)){
 				$usr = $inDB->fetch_assoc($result);
 		
-				$inPage->setTitle('Настройки профиля - '.$usr['nickname']);
+				$inPage->setTitle($_LANG['CONFIG_PROFILE'].' - '.$usr['nickname']);
 				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-				$inPage->addPathway('Настройки профиля');
+				$inPage->addPathway($_LANG['CONFIG_PROFILE']);
 																				
 				if ($opt == 'edit'||$opt=='save'||$opt=='changepass'){
 					
@@ -619,11 +624,11 @@ if ($do=='comments'){
 		$page       = $inCore->request('page', 'int', 1);
 		$perpage    = 15;
 	
-		$inPage->setTitle('Комментарии - '.$usr['nickname']);
+		$inPage->setTitle($_LANG['COMMENTS'].' - '.$usr['nickname']);
 		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-		$inPage->addPathway('Комментарии', $_SERVER['REQUEST_URI']);
+		$inPage->addPathway($_LANG['COMMENTS'], $_SERVER['REQUEST_URI']);
 		
-		if ($page>1) { echo '<div class="con_description"><strong>Страница:</strong> '.$page.'</div>'; }
+		if ($page>1) { echo '<div class="con_description"><strong>'.$_LANG['PAGE'].':</strong> '.$page.'</div>'; }
 
 		$sql = "SELECT c.*, DATE_FORMAT(c.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate,  IFNULL(SUM(v.vote), 0) as votes
                 FROM cms_comments c
@@ -657,8 +662,8 @@ if ($do=='comments'){
 			$smarty->assign('pagebar', pageBarStatic($page, $perpage, $id, 'comments', 'cms_comments'));
 			$smarty->display('com_users_comments.tpl');	
 
-		} else { echo '<p>Пользователь не оставлял комментарии.</p>';	}
-	} else { echo '<p>Пользователь не найден. Возможно аккаунт был удален.</p>'; }
+		} else { echo '<p>'.$_LANG['NO_USER_COMMENT'].'</p>';	}
+	} else { echo '<p>'.$_LANG['USER_NOT_FOUND_TEXT'].'</p>'; }
 		
 }
 /////////////////////////////// VIEW USER POSTS /////////////////////////////////////////////////////////////////////////////////////
@@ -673,11 +678,11 @@ if ($do=='forumposts'){
 		$page = $inCore->request('page', 'int', 1);
 		$perpage = 15;
 
-        $inPage->setTitle('Сообщения на форуме - '.$usr['nickname']);
+        $inPage->setTitle($_LANG['POSTS_IN_FORUM'].' - '.$usr['nickname']);
         $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-        $inPage->addPathway('Сообщения на форуме', $_SERVER['REQUEST_URI']);
+        $inPage->addPathway($_LANG['POSTS_IN_FORUM'], $_SERVER['REQUEST_URI']);
 
-		if ($page>1) { echo '<div class="con_description"><strong>Страница:</strong> '.$page.'</div>'; }
+		if ($page>1) { echo '<div class="con_description"><strong>'.$_LANG['PAGE'].':</strong> '.$page.'</div>'; }
 
 		$sql = "SELECT *, DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as date, t.title as topic, p.id as id, t.id as thread_id
                 FROM cms_forum_posts p, cms_forum_threads t
@@ -705,8 +710,8 @@ if ($do=='forumposts'){
 			$smarty->assign('pagebar', pageBarStatic($page, $perpage, $id, 'forumposts', 'cms_forum_posts'));
 			$smarty->display('com_users_forumposts.tpl');
 
-		} else { echo '<p>Пользователь не оставлял сообщений на форуме.</p>';	}
-	} else { echo '<p>Пользователь не найден. Возможно аккаунт был удален.</p>'; }
+		} else { echo '<p>'.$_LANG['NOT_USER_POSTS_IN_FORUM'].'</p>';	}
+	} else { echo '<p>'.$_LANG['USER_NOT_FOUND_TEXT'].'</p>'; }
 
 }
 /////////////////////////////// VIEW PROFILE /////////////////////////////////////////////////////////////////////////////////////////
@@ -723,8 +728,8 @@ if ($do=='profile'){
     $usr = $model->getUser($id);
     
 	if (!$usr || !$id) {
-		$inPage->printHeading('Пользователь не найден');
-		echo '<p>Возможно аккаунт был удален</p>';
+		$inPage->printHeading($_LANG['USER_NOT_FOUND']);
+		echo '<p>'.$_LANG['ACCOUNT_MAYBE_DELETE'].'</p>';
         return;
 	}
 
@@ -783,7 +788,7 @@ if ($do=='profile'){
     $usr['flogdate']            = strip_tags(usrStatus($usr['id'], $usr['flogdate'], false, $usr['gender']));
     $usr['karma']				= strip_tags( cmsUser::getKarmaFormat($usr['id'], false), '<table><tr><td><img><a>' );
     $usr['karma_int']			= strip_tags($usr['karma']);
-    $usr['karma_link']			= '<a href="/users/'.$menuid.'/'.$id.'/karma.html" title="История кармы" id="karmalink">?</a>';
+    $usr['karma_link']			= '<a href="/users/'.$menuid.'/'.$id.'/karma.html" title="'.$_LANG['KARMA_HISTORY'].'" id="karmalink">?</a>';
 
     $usr['photos_count']		= (int)usrPhotoCount($id);
     $usr['board_count']			= (int)$inDB->rows_count('cms_board_items', "user_id=$id AND published=1");
@@ -803,13 +808,13 @@ if ($do=='profile'){
     $usr['blog_seolink']    = $usr['blog']['seolink'];
     
     if($usr['blog_id']){
-        $usr['blog_link'] 		= '<a href="/blogs/'.$menuid.'/'.$usr['blog_seolink'].'">Блог</a>';
+        $usr['blog_link'] 		= '<a href="/blogs/'.$menuid.'/'.$usr['blog_seolink'].'">'.$_LANG['BLOG'].'</a>';
     } elseif($myprofile) {
-        $usr['blog_link'] 		= '<a href="/blogs/'.$menuid.'/createblog.html">Создать блог</a>';
+        $usr['blog_link'] 		= '<a href="/blogs/'.$menuid.'/createblog.html">'.$_LANG['CREATE_BLOG'].'</a>';
     }
 
     if (!$usr['description']) {
-        $usr['description']		= '<span style="color:#999"><em>Метки не указаны</em></span>';
+        $usr['description']		= '<span style="color:#999"><em>'.$_LANG['TAGS_NOT_SPEC'].'</em></span>';
     } else {
         $usr['description']     = cmsPage::getMetaSearchLink('/users/'.$menuid.'/hobby/', $usr['description']);
     }
@@ -826,8 +831,8 @@ if ($do=='profile'){
     $usr['genderimg']			= '';
     if ($usr['gender']) {
         switch ($usr['gender']){
-            case 'm': $usr['genderimg'] = '<img src="/components/users/images/male.gif"/>'; $usr['gender']='Мужской'; break;
-            case 'f': $usr['genderimg'] = '<img src="/components/users/images/female.gif"/>'; $usr['gender']='Женский'; break;
+            case 'm': $usr['genderimg'] = '<img src="/components/users/images/male.gif"/>'; $usr['gender']=$_LANG['MALES']; break;
+            case 'f': $usr['genderimg'] = '<img src="/components/users/images/female.gif"/>'; $usr['gender']=$_LANG['FEMALES']; break;
         }
     }
 
@@ -873,11 +878,11 @@ if ($do=='messages'){
 		if ($inDB->num_rows($result)){
 			$usr = $inDB->fetch_assoc($result);
 			if ($inUser->id==$id || $inCore->userIsAdmin($inUser->id)) {
-				$inPage->setTitle('Мои сообщения');
-				$inPage->addPathway('Мои сообщения', '/users/'.$menuid.'/'.$id.'/messages.html');			
+				$inPage->setTitle($_LANG['MY_MESS']);
+				$inPage->addPathway($_LANG['MY_MESS'], '/users/'.$menuid.'/'.$id.'/messages.html');
 				include 'components/users/messages.php';			
 			} else { usrAccessDenied(); }
-		} else { echo '<p>Пользователь не найден. Возможно аккаунт был удален.</p>'; }		
+		} else { echo '<p>'.$_LANG['USER_NOT_FOUND_TEXT'].'</p>'; }
 	} else { usrAccessDenied(); }
 	
 }
@@ -891,10 +896,10 @@ if ($do=='avatar'){
 		if ($inDB->num_rows($result)){
 			$usr = $inDB->fetch_assoc($result);
 	
-			$inPage->setTitle('Загрузка аватара');
+			$inPage->setTitle($_LANG['LOAD_AVATAR']);
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-			$inPage->addPathway('Загрузка аватара', $_SERVER['REQUEST_URI']);
-			echo '<div class="con_heading">Загрузка аватара</div>';
+			$inPage->addPathway($_LANG['LOAD_AVATAR'], $_SERVER['REQUEST_URI']);
+			echo '<div class="con_heading">'.$_LANG['LOAD_AVATAR'].'</div>';
 	
 			if ($inCore->inRequest('upload')) {
 				$inCore->includeGraphics();
@@ -940,25 +945,25 @@ if ($do=='avatar'){
 							//GO BACK TO PROFILE VIEW			
 							$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 						} else {
-							echo '<p><strong>ОШИБКА:</strong> '.$inCore->uploadError().'!</p>';
+							echo '<p><strong>'.$_LANG['ERROR'].':</strong> '.$inCore->uploadError().'!</p>';
 						}
 						
-						echo '<ul><li><a href="/users/'.$menuid.'/'.$userid.'/avatar.html">Повторить попытку</a></li>'."\n";
-						echo '<li><a href="'.cmsUser::getProfileURL($usr['login']).'">Вернуться к профилю</a></li></ul>'."\n";
+						echo '<ul><li><a href="/users/'.$menuid.'/'.$userid.'/avatar.html">'.$_LANG['REPEAT'].'</a></li>'."\n";
+						echo '<li><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$_LANG['BACK_TO_PROFILE'].'</a></li></ul>'."\n";
 						
 					} else { usrAccessDenied(); }
 				} else { usrAccessDenied(); }
 			
 			} else {
 				echo '<form enctype="multipart/form-data" action="/users/'.$menuid.'/'.$id.'/avatar.html" method="POST">' . "\n";	
-					echo '<p>Выберите файл для загрузки: </p>' . "\n";
+					echo '<p>'.$_LANG['SELECT_UPLOAD_FILE'].': </p>' . "\n";
 					echo '<input name="upload" type="hidden" value="1"/>' . "\n";			
 					echo '<input name="userid" type="hidden" value="'.$id.'"/>'. "\n";									
 					echo '<input name="picture" type="file" id="picture" size="30" />'. "\n";
-					echo '<p><input type="submit" value="Загрузить"> <input type="button" onclick="window.history.go(-1);" value="Отмена"/></p>'. "\n";			
+					echo '<p><input type="submit" value="'.$_LANG['UPLOAD'].'"> <input type="button" onclick="window.history.go(-1);" value="'.$_LANG['CANCEL'].'"/></p>'. "\n";
 				echo '</form>'. "\n";
 
-                echo '<p><a href="/users/'.$menuid.'/'.$id.'/select-avatar.html" class="select-avatar">Выбрать аватар из коллекции сайта</a></p>';
+                echo '<p><a href="/users/'.$menuid.'/'.$id.'/select-avatar.html" class="select-avatar">'.$_LANG['SELECT_AVATAR_FROM_COLL'].'</a></p>';
 			}	
 		}
 	}//auth
@@ -975,9 +980,9 @@ if ($do=='select_avatar'){
         if (!$inCore->inRequest('set_avatar')){
 
             //SHOW AVATARS LIST
-            $inPage->setTitle('Выбор аватара');
+            $inPage->setTitle($_LANG['SELECT_AVATAR']);
 			$inPage->addPathway($inUser->nickname, cmsUser::getProfileURL($inUser->login));
-			$inPage->addPathway('Выбор аватара');
+			$inPage->addPathway($_LANG['SELECT_AVATAR']);
 
             //get avatars list from library directory
             $avatars_dir_handle = opendir($avatars_dir);
@@ -1061,7 +1066,9 @@ if ($do=='select_avatar'){
 }
 /////////////////////////////// PHOTO UPLOAD /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='addphoto'){
-	$inCore->loadLib('tags');
+
+    $inCore->loadLib('tags');
+    $inCore->loadLanguage('components/photos');
 
 	if ( $inUser->id==$id || $inCore->userIsAdmin($inUser->id) ){
 		$sql = "SELECT * FROM cms_users WHERE id = $id";
@@ -1071,9 +1078,9 @@ if ($do=='addphoto'){
 			$usr = $inDB->fetch_assoc($result);
 	
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($inUser->login));
-			$inPage->addPathway('Добавить фотографию');
+			$inPage->addPathway($_LANG['ADD_PHOTO']);
 			
-			$inPage->printHeading('Добавить фотографию');
+			$inPage->printHeading($_LANG['ADD_PHOTO']);
             $inPage->backButton(false);
 	
 			if ($inCore->inRequest('upload')) {
@@ -1083,6 +1090,7 @@ if ($do=='addphoto'){
 				if ($inCore->inRequest('userid')){
 					$userid = $inCore->request('userid', 'int');
 					if ($userid == $inUser->id){
+
 						$uploaddir 				= $_SERVER['DOCUMENT_ROOT'].'/images/users/photos/';		
 						$realfile 				= $_FILES['picture']['name'];
 
@@ -1104,13 +1112,13 @@ if ($do=='addphoto'){
 							@img_resize($uploadphoto, $uploadthumb['medium'], 600, 600, false, $cfg['watermark']);
 							if ($cfg['watermark']) { @img_add_watermark($uploadphoto);	}					
 							//PREPARE FOR STEP 2
-							$inPage->setTitle('Добавить фотографию - Шаг 2');
+							$inPage->setTitle($_LANG['ADD_PHOTO'].' - '.$_LANG['STEP'].' 2');
 													
 							$inPage->initAutocomplete();
 							$autocomplete_js = $inPage->getAutocompleteJS('tagsearch', 'tags');
 							
 							$form_action = '/users/'.$menuid.'/'.$userid.'/addphoto.html';
-															
+
 							$smarty = $inCore->initSmarty('components', 'com_photos_add2.tpl');			
 							$smarty->assign('form_action', $form_action);
 							$smarty->assign('filename', $filename);
@@ -1119,7 +1127,7 @@ if ($do=='addphoto'){
 							$smarty->display('com_photos_add2.tpl');							
 
 						} else {
-							echo '<p><strong>ОШИБКА:</strong> '.$inCore->uploadError().'!</p>';
+							echo '<p><strong>'.$_LANG['ERROR'].':</strong> '.$inCore->uploadError().'!</p>';
 						}
 										
 					} else { usrAccessDenied(); }
@@ -1132,7 +1140,7 @@ if ($do=='addphoto'){
 					$description 	= $inCore->request('description', 'str');					
 					$allow_who 		= $inCore->request('allow_who', 'str');
 
-					if ($title == '') { $title = 'Фото без названия'; }
+					if ($title == '') { $title = $_LANG['PHOTO_WITHOUT_NAME']; }
 
 					$imageurl = str_replace("'", '',  $inCore->request('imageurl', 'str'));
 					$imageurl = str_replace("*", '',  $imageurl);
@@ -1151,18 +1159,18 @@ if ($do=='addphoto'){
 					$tags = $inCore->request('tags', 'str');			
 					cmsInsertTags($tags, 'userphoto', $photoid);
 					
-					echo '<p><strong>Фотография успешно добавлена.</strong></p>' ."\n";
+					echo '<p><strong>'.$_LANG['PHOTO_ADDED'].'</strong></p>' ."\n";
 					echo '<ul>' ."\n";
-					echo '<li><a href="/users/'.$menuid.'/'.$id.'/photo'.$photoid.'.html">Перейти к фотографии</a></li>' ."\n";
-					echo '<li><a href="/users/'.$menuid.'/'.$id.'/addphoto.html">Добавить еще фотографию</a></li>' ."\n";
-					echo '<li><a href="/users/'.$menuid.'/'.$id.'/photoalbum.html">Перейти к фотоальбому</a></li>' ."\n";		
-					echo '<li><a href="'.cmsUser::getProfileURL($inUser->login).'">Вернуться к профилю</a></li>' ."\n";
+					echo '<li><a href="/users/'.$menuid.'/'.$id.'/photo'.$photoid.'.html">'.$_LANG['GOTO_PHOTO'].'</a></li>' ."\n";
+					echo '<li><a href="/users/'.$menuid.'/'.$id.'/addphoto.html">'.$_LANG['ADD_PHOTO_MORE'].'</a></li>' ."\n";
+					echo '<li><a href="/users/'.$menuid.'/'.$id.'/photoalbum.html">'.$_LANG['GOTO_PHOTOALBUM'].'</a></li>' ."\n";
+					echo '<li><a href="'.cmsUser::getProfileURL($inUser->login).'">'.$_LANG['BACK_TO_PROFILE'].'</a></li>' ."\n";
 					echo '</ul>' ."\n";
 					
 				} else { 
 					if(usrPhotoCount($id)<$cfg['photosize'] || $cfg['photosize']==0){
 						//upload form
-						$inPage->setTitle('Добавить фотографию - Шаг 1');
+						$inPage->setTitle($_LANG['ADD_PHOTO'].' - '.$_LANG['STEP'].' 1');
 						
 						$form_action = '/users/'.$menuid.'/'.$id.'/addphoto.html';
 						
@@ -1172,8 +1180,8 @@ if ($do=='addphoto'){
 						$smarty->display('com_photos_add1.tpl');							
 						
 					} else {
-						echo '<p><strong>Достигнут предел количества фотографий</strong></p>';
-						echo '<p>Вы можете разместить в своем фотоальбоме не более '.$cfg['photosize'].' фотографий.<br/>Чтобы добавить новое фото, удалите какое-либо из имеющихся.</p>';						
+						echo '<p><strong>'.$_LANG['PHOTO_LIMIT'].'</strong></p>';
+						echo '<p>'.$_LANG['PHOTO_LIMIT_TEXT'].' '.$cfg['photosize'].' '.$_LANG['PHOTOS'].'.<br/>'.$_LANG['FOR_ADD_PHOTO_TEXT'].'</p>';
 					}
 				}
 			}	
@@ -1184,7 +1192,7 @@ if ($do=='addphoto'){
 if ($do=='delphoto'){
 	$inCore->loadLib('tags');
 	$max_mb = 2; //max filesize in Mb
-	
+	$inCore->loadLanguage('components/photos');
 	$photoid = @intval($_REQUEST['photoid']);	
 	
 	if (usrCheckAuth() && (@$inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
@@ -1199,13 +1207,13 @@ if ($do=='delphoto'){
 				if ($inDB->num_rows($result)){
 					$photo = $inDB->fetch_assoc($result);				
 					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-					$inPage->addPathway('Фотоальбом', '/users/'.$menuid.'/'.$id.'/photoalbum.html');
-					$inPage->addPathway('Удалить фотографию', $_SERVER['REQUEST_URI']);
-					echo '<div class="con_heading">Удаление фотографии</div>';				
-					echo '<p>Вы действительно желаете удалить фото "'.$photo['title'].'"?</p>';
+					$inPage->addPathway($_LANG['PHOTOALBUM'], '/users/'.$menuid.'/'.$id.'/photoalbum.html');
+					$inPage->addPathway($_LANG['DELETE_PHOTO'], $_SERVER['REQUEST_URI']);
+					echo '<div class="con_heading">'.$_LANG['DELETING_PHOTO'].'</div>';
+					echo '<p>'.$_LANG['REALLY_DELETE_PHOTO'].' "'.$photo['title'].'"?</p>';
 					echo '<div><form action="'.$_SERVER['REQUEST_URI'].'" method="POST"><p>
-							<input style="font-size:24px; width:100px" type="button" name="cancel" value="Нет" onclick="window.history.go(-1)" /> 
-							<input style="font-size:24px; width:100px" type="submit" name="godelete" value="Да" /> 
+							<input style="font-size:24px; width:100px" type="button" name="cancel" value="'.$_LANG['NO'].'" onclick="window.history.go(-1)" />
+							<input style="font-size:24px; width:100px" type="submit" name="godelete" value="'.$_LANG['YES'].'" />
 						 </p></form></div>';
 				} else { usrAccessDenied(); }
 			}
@@ -1228,7 +1236,7 @@ if ($do=='delphoto'){
 /////////////////////////////// PHOTO EDIT /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='editphoto'){
 	$inCore->loadLib('tags');
-
+    $inCore->loadLanguage('components/photos');
 	$max_mb = 2; //max filesize in Mb
 	
 	$user_id = $inUser->id;
@@ -1243,14 +1251,14 @@ if ($do=='editphoto'){
 			$usr = $inDB->fetch_assoc($result);
 	
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-			$inPage->addPathway('Фотоальбом', '/users/'.$menuid.'/'.$id.'/photoalbum.html');
-			$inPage->addPathway('Редактировать фотографию', $_SERVER['REQUEST_URI']);
-			echo '<div class="con_heading">Редактировать фотографию</div>';
+			$inPage->addPathway($_LANG['PHOTOALBUM'], '/users/'.$menuid.'/'.$id.'/photoalbum.html');
+			$inPage->addPathway($_LANG['EDIT_PHOTO'], $_SERVER['REQUEST_URI']);
+			echo '<div class="con_heading">'.$_LANG['EDIT_PHOTO'].'</div>';
 			
 			if (isset($_POST['save'])){							
 					$title = strip_tags(htmlspecialchars($_POST['title'], ENT_QUOTES, 'cp1251'));
 					$description = strip_tags(htmlspecialchars($_POST['description'], ENT_QUOTES, 'cp1251'));
-					if ($title == '') { $title = 'Фото без названия'; }
+					if ($title == '') { $title = $_LANG['PHOTO_WITHOUT_NAME']; }
 					$allow_who = strip_tags(htmlspecialchars($_POST['allow_who'], ENT_QUOTES, 'cp1251'));
 					//replace file					
 					if (@$_FILES['picture']['name']){
@@ -1297,9 +1305,9 @@ if ($do=='editphoto'){
 							WHERE id = $photoid";	
 					$inDB->query($sql) or die(mysql_error()."<br/>".$sql);	
 					
-					echo '<p><strong>Фотография успешно cохранена.</strong></p>';
-					echo '<p>&larr; <a href="/users/'.$menuid.'/'.$id.'/photoalbum.html">Вернуться к фотоальбому</a><br/>';
-					echo '&larr; <a href="'.cmsUser::getProfileURL($inUser->login).'">Вернуться к профилю</a></p>';
+					echo '<p><strong>'.$_LANG['PHOTO_SAVED'].'</strong></p>';
+					echo '<p>&larr; <a href="/users/'.$menuid.'/'.$id.'/photoalbum.html">'.$_LANG['BACK_TO_PHOTOALBUM'].'</a><br/>';
+					echo '&larr; <a href="'.cmsUser::getProfileURL($inUser->login).'">'.$_LANG['BACK_TO_PROFILE'].'</a></p>';
 					
 				} else { 
 							if(isset($_REQUEST['photoid'])){								
@@ -1315,51 +1323,51 @@ if ($do=='editphoto'){
                                       <tr>
                                         <td width="120" valign="top"><table width="110" border="0" cellspacing="0" cellpadding="0">
                                           <tr>
-                                            <td width="110" align="center" valign="top" style="border:solid 1px gray; padding:5px; background-color:#FFFFFF;"><img src="/images/users/photos/small/<?php echo $photo['imageurl']?>" border="0" style="border:solid 1px black" /></td>
+                                            <td width="110" align="center" valign="top" style="border:solid 1px gray; padding:5px; background-color:#FFFFFF;"><img alt="" src="/images/users/photos/small/<?php echo $photo['imageurl']?>" border="0" style="border:solid 1px black" /></td>
                                           </tr>
                                         </table></td>
                                         <td width="460" align="right" valign="top"><table width="460">
                                           <tr>
-                                            <td valign="top"><strong>Название фото: </strong></td>
+                                            <td valign="top"><strong><?php echo $_LANG['PHOTO_TITLE']; ?>: </strong></td>
                                           </tr>
                                           <tr>
                                             <td valign="top"><input name="title" type="text" id="title" size="40" maxlength="250" value="<?php echo $photo['title']?>"/></td>
                                           </tr>
                                           <tr>
-                                            <td valign="top"><strong>Описание фото:</strong> </td>
+                                            <td valign="top"><strong><?php echo $_LANG['PHOTO_DESCRIPTION']; ?>:</strong> </td>
                                           </tr>
                                           <tr>
                                             <td valign="top"><textarea name="description" cols="39" rows="5" id="description"><?php echo $photo['description']?></textarea></td>
                                           </tr>
                                           <tr>
-                                            <td valign="top"><strong>Теги:</strong></td>
+                                            <td valign="top"><strong><?php echo $_LANG['TAGS']; ?>:</strong></td>
                                           </tr>
                                           <tr>
                                             <td valign="top"><input name="tags" type="text" id="tags" size="40" value="<?php if (isset($photo['id'])) { echo cmsTagLine('userphoto', $photo['id'], false); } ?>"/>
                                               <br />
-                                              <span><small>ключевые слова через запятую</small></span></td>
+                                              <span><small><?php echo $_LANG['KEYWORDS']; ?></small></span></td>
                                           </tr>
                                           <tr>
-                                            <td valign="top"><strong>Заменить файлом</strong>:</td>
+                                            <td valign="top"><strong><?php echo $_LANG['REPLACE_FILE']; ?></strong>:</td>
                                           </tr>
                                           <tr>
                                             <td valign="top"><input name="MAX_FILE_SIZE" type="hidden" value="<?php echo ($max_mb * 1024 * 1024)?>"/>
                                               <input name="picture" type="file" size="30" /></td>
                                           </tr>
                                           <tr>
-                                            <td valign="top"><strong>Показывать:</strong></td>
+                                            <td valign="top"><strong><?php echo $_LANG['SHOW']; ?>:</strong></td>
                                           </tr>
                                           <tr>
                                             <td valign="top"><select name="allow_who" id="allow_who">
-                                              <option value="all" <?php if ($photo['allow_who']=='all') { echo 'selected'; } ?>>Всем</option>
-                                              <option value="registered" <?php if ($photo['allow_who']=='registered') { echo 'selected'; } ?>>Зарегистрированным</option>
-                                              <option value="friends" <?php if ($photo['allow_who']=='friends') { echo 'selected'; } ?>>Моим друзьям</option>
+                                              <option value="all" <?php if ($photo['allow_who']=='all') { echo 'selected'; } ?>><?php echo $_LANG['EVERYBODY']; ?></option>
+                                              <option value="registered" <?php if ($photo['allow_who']=='registered') { echo 'selected'; } ?>><?php echo $_LANG['REGISTERED']; ?></option>
+                                              <option value="friends" <?php if ($photo['allow_who']=='friends') { echo 'selected'; } ?>><?php echo $_LANG['MY_FRIENDS']; ?></option>
                                             </select></td>
                                           </tr>
                                           <tr>
                                             <td valign="top">
-                                              <input style="margin-top:10px;font-size:18px" type="submit" name="save" value="Сохранить" />
-										      <input style="margin-top:10px;font-size:18px" type="button" name="cancel" value="Отмена" onclick="window.history.go(-1)"/>
+                                              <input style="margin-top:10px;font-size:18px" type="submit" name="save" value="<?php echo $_LANG['SAVE']; ?>" />
+										      <input style="margin-top:10px;font-size:18px" type="button" name="cancel" value="<?php echo $_LANG['CANCEL']; ?>" onclick="window.history.go(-1)"/>
                                             </td>
                                           </tr>
                                         </table></td>
@@ -1380,29 +1388,89 @@ if ($do=='editphoto'){
 }
 /////////////////////////////// VIEW ALBUM /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='viewalbum'){
-	$sql = "SELECT * FROM cms_users WHERE id = $id";
+
+    $sql = "SELECT * FROM cms_users WHERE id = $id";
 	$result = $inDB->query($sql);
 	
-	if ($inDB->num_rows($result)>0){
-		//if (usrCheckAuth()){
-			if (isset($_GET['page'])) { $page = intval($_GET['page']); } else { $page = 1; }		
-			$perpage = 15;
-				
-			$usr = $inDB->fetch_assoc($result);
-			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-			$inPage->addPathway('Фотоальбом', $_SERVER['REQUEST_URI']);
+	if (!$inDB->num_rows($result)){ echo '<p>'.$_LANG['USER_NOT_FOUND_TEXT'].'</p>'; return; }
 
-			echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; Фотоальбом</div>';
-	
-			if ($page>1) { echo '<div class="con_description"><strong>Страница:</strong> '.$page.'</div>'; }
-	
-			echo usrPhotos($usr['id'], 0, false, (($page-1)*$perpage), $perpage);
-			
-			echo pageBarStatic($page, $perpage, $id, 'photoalbum', 'cms_user_photos');
-		
-		//} else { echo usrNeedReg(); }
-	} else { echo '<p>Пользователь не найден. Возможно аккаунт был удален.</p>'; }
+    $usr = $inDB->fetch_assoc($result);
+    $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+    $inPage->addPathway($_LANG['PHOTOALBUM'], $_SERVER['REQUEST_URI']);
+
+    echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; '.$_LANG['PHOTOALBUM'].'</div>';
+
+    $photos     = array();
+
+    //Определяем, друзья мы или нет
+    $we_friends = $inDB->rows_count('cms_user_friends', "(to_id={$id} AND from_id={$inUser->id}) OR (to_id={$inUser->id} AND from_id={$id})", 1);
+
+    //Мой профиль или нет
+    $my_profile = ($inUser->id == $id);
+
+    //Фильтр приватности
+    $filter = '';
+    if (!$my_profile){ $filter = "AND ( allow_who='all' OR (allow_who='registered' AND ({$inUser->id}>0)) OR (allow_who='friends' AND ({$we_friends}=1)) )"; }
+
+    //Получаем личные фотографии
+    $private_sql = "SELECT id, DATE_FORMAT(pubdate, '%d-%m-%Y') as fpubdate, imageurl as file, hits
+                    FROM cms_user_photos
+                    WHERE user_id = {$id} $filter";
+
+    $private_res = $inDB->query($private_sql);
+
+    if ($inDB->num_rows($private_res)) {
+        while($photo = $inDB->fetch_assoc($private_res)){
+            $photo['file']  = '/images/users/photos/small/'.$photo['file'];
+            $photo['url']   = '/users/'.$menuid.'/'.$id.'/photo'.$photo['id'].'.html';
+            $photos[]       = $photo;
+        }
+    }
+
+    //Получаем фотографии из галереи
+    $public_sql = "SELECT id, DATE_FORMAT(pubdate, '%d-%m-%Y') as fpubdate, file, hits
+                    FROM cms_photo_files
+                    WHERE user_id = {$id} AND published = 1";
+
+    $public_res = $inDB->query($public_sql);
+
+    if ($inDB->num_rows($public_res)) {
+        while($photo = $inDB->fetch_assoc($public_res)){
+            $photo['file']  = '/images/photos/small/'.$photo['file'];
+            $photo['url']   = '/photos/0/photo'.$photo['id'].'.html';
+            $photos[]       = $photo;
+        }
+    }
+
+    //Делим на страницы
+    $total      = sizeof($photos);
+
+    if ($total){
+        $perpage        = 20;
+        $page           = $inCore->request('page', 'int', 1);
+        $pagination     = cmsPage::getPagebar($total, $page, $perpage, '/users/%menuid%/%user_id%/photoalbum%page%.html', array('menuid'=>$menuid, 'user_id'=>$id));
+        $page_photos    = array();
+        $start          = $perpage*($page-1);
+        for($p=$start; $p<$start+$perpage; $p++){
+            if ($photos[$p]){
+                $page_photos[] = $photos[$p];
+            }
+        }
+        $photos = $page_photos; unset($page_photos);
+    }
+
+    //Отдаем в шаблон
+    $smarty = $inCore->initSmarty('components', 'com_users_photos.tpl');
+	$smarty->assign('menuid', $menuid);
+	$smarty->assign('photos', $photos);
+	$smarty->assign('user_id', $id);
+	$smarty->assign('my_profile', $my_profile);
+	$smarty->assign('pagebar', $pagination);
+	$smarty->assign('_LANG', $_LANG);
+    $smarty->display('com_users_photos.tpl');
+
 }
+
 /////////////////////////////// VIEW BOARD ENTRIES ///////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='viewboard'){ 
 	$sql = "SELECT * FROM cms_users WHERE id = $id";
@@ -1411,17 +1479,17 @@ if ($do=='viewboard'){
 	if ($inDB->num_rows($result)>0){
 		$usr = $inDB->fetch_assoc($result);
 		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-		$inPage->addPathway('Объявления');
-        $inPage->setTitle('Объявления - '.$usr['nickname']);
+		$inPage->addPathway($_LANG['ADVS']);
+        $inPage->setTitle($_LANG['ADVS'].' - '.$usr['nickname']);
         $inPage->addHeadCSS('components/board/css/styles.css');
         
-		echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; Объявления</div>';
+		echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; '.$_LANG['ADVS'].'</div>';
 
-		$sql = "SELECT *, IF(DATE_FORMAT(pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(pubdate, '<strong>Сегодня</strong>'), DATE_FORMAT(pubdate, '%d-%m-%Y'))  as fpubdate
+		$sql = "SELECT *, IF(DATE_FORMAT(pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(pubdate, '<strong>{$_LANG['TODAY']}</strong>'), DATE_FORMAT(pubdate, '%d-%m-%Y'))  as fpubdate
 				FROM cms_board_items
 				WHERE user_id = $id
-				ORDER BY pubdate DESC				
-				";						
+				ORDER BY pubdate DESC
+				";
 		
 		$perpage = 10;
 		if (isset($_REQUEST['page'])) { $page = abs((int)$_REQUEST['page']); } else { $page = 1; }
@@ -1454,9 +1522,9 @@ if ($do=='viewboard'){
 									echo '<div class="bd_text">'.$con['content'].'</div>';	
 									echo '<div class="bd_item_details">';
 											if ($con['published']){
-												echo '<span class="bd_item_status_ok">Опубликовано</span>';
+												echo '<span class="bd_item_status_ok">'.$_LANG['PUBLISHED'].'</span>';
 											} else {
-												echo '<span class="bd_item_status_bad">Ожидает модерации</span>';
+												echo '<span class="bd_item_status_bad">'.$_LANG['WAIT_MODER'].'</span>';
 											}											
 											echo '<span class="bd_item_date">'.$con['fpubdate'].'</span>';
 											if ($con['city']){
@@ -1470,8 +1538,8 @@ if ($do=='viewboard'){
 											}											
 											
 											if ($moderator){
-												echo '<span class="bd_item_edit"><a href="/board/'.$menuid.'/edit'.$con['id'].'.html">Редактировать</span>';
-												echo '<span class="bd_item_delete"><a href="/board/'.$menuid.'/delete'.$con['id'].'.html">Удалить</span>';
+												echo '<span class="bd_item_edit"><a href="/board/'.$menuid.'/edit'.$con['id'].'.html">'.$_LANG['EDIT'].'</span>';
+												echo '<span class="bd_item_delete"><a href="/board/'.$menuid.'/delete'.$con['id'].'.html">'.$_LANG['DELETE'].'</span>';
 											}
 									echo '</div>';									
 								echo '</td>';
@@ -1484,7 +1552,7 @@ if ($do=='viewboard'){
 				echo '</div>';		
 				echo pageBarBoard($id, $page, $perpage);	
 		} else { 
-				 echo '<p>Нет объявлений.</p>';
+				 echo '<p>'.$_LANG['NOT_ADVS'].'</p>';
 				}					
 	}//END - MY BOARD ITEMS
 }
@@ -1500,14 +1568,14 @@ if ($do=='friendlist'){
 				
 			$usr = $inDB->fetch_assoc($result);
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-			$inPage->addPathway('Друзья', $_SERVER['REQUEST_URI']);
+			$inPage->addPathway($_LANG['FRIENDS'], $_SERVER['REQUEST_URI']);
 
-			echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; Друзья</div>';
+			echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; '.$_LANG['FRIENDS'].'</div>';
 	
 			echo usrFriends($usr['id'], false);
 		
 		} else { echo usrNeedReg(); }
-	} else { echo '<p>Пользователь не найден. Возможно аккаунт был удален.</p>'; }
+	} else { echo '<p>'.$_LANG['USER_NOT_FOUND_TEXT'].'</p>'; }
 }
 
 /////////////////////////////// VIEW PHOTO /////////////////////////////////////////////////////////////////////////////////////////
@@ -1537,7 +1605,7 @@ if ($do=='viewphoto'){
 				
 				$inDB->query("UPDATE cms_user_photos SET hits = hits + 1 WHERE id = ".$photo['id']) ;
 	
-				$inPage->addPathway('Фотоальбом', '/users/'.$menuid.'/'.$id.'/photoalbum.html');			
+				$inPage->addPathway($_LANG['PHOTOALBUM'], '/users/'.$menuid.'/'.$id.'/photoalbum.html');
 				$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
 
 				if (usrAllowed($photo['allow_who'], $id) || $inCore->userIsAdmin($inUser->id)){
@@ -1545,18 +1613,18 @@ if ($do=='viewphoto'){
 					echo '<div class="con_heading">'.$photo['title'].'</div>';				
 					if ($photo['description']){	echo '<div class="con_description">'.$photo['description'].'</div>'; }
 			
-					echo '<div class="con_description">'.cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, '', $usr['login']).' &mdash; <strong>Просмотров:</strong> '.$photo['hits'].' &mdash; <strong>Размер:</strong> '.round(filesize($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/'.$photo['imageurl'])/1024, 2).' кб</div>';
+					echo '<div class="con_description">'.cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, '', $usr['login']).' &mdash; <strong>'.$_LANG['HITS'].':</strong> '.$photo['hits'].' &mdash; <strong>'.$_LANG['SIZE'].':</strong> '.round(filesize($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/'.$photo['imageurl'])/1024, 2).' '.$_LANG['KBITE'].'</div>';
 			
 					echo '<div class="usr_photo_view">
 							<a href="/images/users/photos/'.$photo['imageurl'].'" target="_blank"><img border="0" src="/images/users/photos/medium/'.$photo['imageurl'].'" alt="'.$photo['title'].'" /></a>';
 
 					$bbcode = '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/users/photos/medium/'.$photo['imageurl'].'[/IMG]';
-					echo '<div style="margin-top:15px"><label for="bbcode">Код для вставки на форумы: </label><input type="text" id="bbcode" name="bbcode" size="50" value="'.$bbcode.'"/></div>';			
+					echo '<div style="margin-top:15px"><label for="bbcode">'.$_LANG['CODE_FOR_FORUM'].': </label><input type="text" id="bbcode" name="bbcode" size="50" value="'.$bbcode.'"/></div>';
 							
 					if ($myprofile || $inCore->userIsAdmin($user_id)) {
 						echo '<div style="margin-top:5px">';
-							echo '<a style="height:16px; line-height:16px; margin-right:5px; padding-left:20px; background:url(/components/users/images/edit.gif) no-repeat;" href="/users/'.$menuid.'/'.$usr['id'].'/editphoto'.$photoid.'.html">Редактировать</a> ';
-							echo '<a style="height:16px; line-height:16px; padding-left:20px; background:url(/components/users/images/delete.gif) no-repeat;"  href="/users/'.$menuid.'/'.$usr['id'].'/delphoto'.$photoid.'.html">Удалить</a> ';
+							echo '<a style="height:16px; line-height:16px; margin-right:5px; padding-left:20px; background:url(/components/users/images/edit.gif) no-repeat;" href="/users/'.$menuid.'/'.$usr['id'].'/editphoto'.$photoid.'.html">'.$_LANG['EDIT'].'</a> ';
+							echo '<a style="height:16px; line-height:16px; padding-left:20px; background:url(/components/users/images/delete.gif) no-repeat;"  href="/users/'.$menuid.'/'.$usr['id'].'/delphoto'.$photoid.'.html">'.$_LANG['DELETE'].'</a> ';
 						echo '</div>';
 					}
 					echo '</div>';
@@ -1593,13 +1661,13 @@ if ($do=='viewphoto'){
 			//	} else { usrNotAllowed(); }
 							
 			} else {
-				echo '<div class="con_heading">Фотография не найдена</div>';
-				echo '<p>Возможно она была удалена или пользователь ограничил ее просмотр.</p>';			
+				echo '<div class="con_heading">'.$_LANG['PHOTO_NOT_FOUND'].'</div>';
+				echo '<p>'.$_LANG['PHOTO_NOT_FOUND_TEXT'].'</p>';
 			}						
 		} else { echo usrNeedReg(); }
 	} else { 
-		echo '<div class="con_heading">Пользователь не найден</div>';
-		echo '<p>Возможно аккаунт был удален.</p>'; 
+		echo '<div class="con_heading">'.$_LANG['USER_NOT_FOUND'].'</div>';
+		echo '<p>'.$_LANG['ACCOUNT_MAYBE_DELETE'].'</p>';
 	}
 }
 /////////////////////////////// ADD FRIEND /////////////////////////////////////////////////////////////////////////////////////////
@@ -1625,14 +1693,14 @@ if ($do=='addfriend'){
 			
 				$inPage->backButton(false);
 				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-				$inPage->addPathway('Добавить в друзья');
+				$inPage->addPathway($_LANG['ADD_TO_FRIEND']);
                 $inPage->backButton(false);
-				echo '<div class="con_heading">Добавить в друзья</div>';				
-				echo '<p><strong>Отправить пользователю '.ucfirst($usr['nickname']).' предложение дружбы?</strong></p>';
-				echo '<p>Если '.ucfirst($usr['nickname']).' примет предложение, он будет добавлен в число ваших друзей.</p>';
+				echo '<div class="con_heading">'.$_LANG['ADD_TO_FRIEND'].'</div>';
+				echo '<p><strong>'.$_LANG['SEND_TO_USER'].' '.ucfirst($usr['nickname']).' '.$_LANG['FRIENDSHIP_OFFER'].'?</strong></p>';
+				echo '<p>'.$_LANG['IF'].' '.ucfirst($usr['nickname']).' '.$_LANG['SUCCESS_TEXT'].'</p>';
 				echo '<div><form action="'.$_SERVER['REQUEST_URI'].'" method="POST"><p>
-						<input style="font-size:24px; width:100px" type="button" name="cancel" value="Нет" onclick="window.history.go(-1)" /> 
-						<input style="font-size:24px; width:100px" type="submit" name="goadd" value="Да" /> 
+						<input style="font-size:24px; width:100px" type="button" name="cancel" value="'.$_LANG['NO'].'" onclick="window.history.go(-1)" />
+						<input style="font-size:24px; width:100px" type="submit" name="goadd" value="'.$_LANG['YES'].'" />
 					 </p></form></div>';
 
 		} else {
@@ -1644,7 +1712,7 @@ if ($do=='addfriend'){
 					$inDB->query($sql) ;
 				}
 				
-				cmsUser::sendMessage(USER_UPDATER, $to_id, '[b]Получено предложение дружбы[/b]. Вы можете посмотреть его в своем [url='.cmsUser::getProfileURL($usr['login']).']профиле[/url].');
+				cmsUser::sendMessage(USER_UPDATER, $to_id, '[b]'.$_LANG['RECEIVED_F_O'].'[/b]. '.$_LANG['YOU_CAN_SEE'].' [url='.cmsUser::getProfileURL($usr['login']).']'.$_LANG['INPROFILE'].'[/url].');
 				
 				$inCore->redirect(cmsUser::getProfileURL($inUser->login));
 		}//!goadd
@@ -1679,10 +1747,10 @@ if ($do=='sendmessage'){
 		if ($usr){
 			if (usrCheckAuth()){
 
-				$inPage->setTitle('Отправить сообщение');				
+				$inPage->setTitle($_LANG['SEND_MESS']);
 		
 				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-				$inPage->addPathway('Отправить сообщение', $_SERVER['REQUEST_URI']);
+				$inPage->addPathway($_LANG['SEND_MESS'], $_SERVER['REQUEST_URI']);
 					
 				if(!isset($_POST['gosend'])){		
 					if (isset($_GET['replyid'])) { $replyid = $_GET['replyid']; }
@@ -1697,7 +1765,7 @@ if ($do=='sendmessage'){
 						if ($inDB->num_rows($result)>0){
 							$msg = $inDB->fetch_assoc($result);
 							echo '<div>';
-								echo '<div class="con_heading">Исходное сообщение</div>';
+								echo '<div class="con_heading">'.$_LANG['ORIGINAL_MESS'].'</div>';
 								echo '<div class="usr_msgreply_source">';
 									echo '<div class="usr_msgreply_sourcetext">'.$msg['message'].'</div>';
 									echo '<div class="usr_msgreply_author"><a href="'.cmsUser::getProfileURL($msg['login']).'">'.$msg['nickname'].'</a>, '.$msg['senddate'].'</div>';
@@ -1708,7 +1776,7 @@ if ($do=='sendmessage'){
 						}
 					}
 
-					echo '<div class="con_heading">Отправить сообщение</div>';				
+					echo '<div class="con_heading">'.$_LANG['SEND_MESS'].'</div>';
 
 					echo '<table width="100%" cellpadding="0" cellspacing="5"><tr>';
 					
@@ -1728,10 +1796,10 @@ if ($do=='sendmessage'){
 							echo cmsPage::getSmilesPanel('message');
 							echo '<textarea style="font-size:18px;border:solid 1px gray;width:100%;height:200px;" name="message" id="message"></textarea>';
 							if ($inCore->userIsAdmin($inUser->id)){
-								echo '<input name="massmail" type="checkbox" value="1" /> Отправить всем (массовая рассылка)';
+								echo '<input name="massmail" type="checkbox" value="1" /> '.$_LANG['SEND_TO_ALL'];
 							}
-							echo '<div style="margin-top:6px;"><input type="submit" name="gosend" value="Отправить" style="font-size:18px"/> ';
-							echo '<input type="button" name="gosend" value="Отмена" style="font-size:18px" onclick="window.history.go(-1)"/></div>';							
+							echo '<div style="margin-top:6px;"><input type="submit" name="gosend" value="'.$_LANG['SEND'].'" style="font-size:18px"/> ';
+							echo '<input type="button" name="gosend" value="'.$_LANG['CANCEL'].'" style="font-size:18px" onclick="window.history.go(-1)"/></div>';
 						echo '</form>';
 					echo '</td>';					
 					echo '</tr></table>';
@@ -1765,7 +1833,7 @@ if ($do=='sendmessage'){
 								$letter= str_replace('{answerlink}', $answerlink, $letter);
 								$letter= str_replace('{date}', $postdate, $letter);
 								$letter= str_replace('{from}', $from_nick, $letter);	
-								$inCore->mailText($to_email, 'У вас новое сообщение! - '.$inConf->sitename, $letter);
+								$inCore->mailText($to_email, $_LANG['YOU_HAVE_NEW_MESS'].'! - '.$inConf->sitename, $letter);
 						}
 					} else {
 						if ($inCore->userIsAdmin($inUser->id)){
@@ -1817,14 +1885,14 @@ if ($do=='karma'){
 		if ($inDB->num_rows($result)>0){
 				$usr = $inDB->fetch_assoc($result);
 		
-				$inPage->setTitle('История кармы');
+				$inPage->setTitle($_LANG['KARMA_HISTORY']);
 		
 				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-				$inPage->addPathway('История кармы', $_SERVER['REQUEST_URI']);
+				$inPage->addPathway($_LANG['KARMA_HISTORY'], $_SERVER['REQUEST_URI']);
 				
-				echo '<div class="con_heading">История кармы - '.$usr['nickname'].'</div>';
+				echo '<div class="con_heading">'.$_LANG['KARMA_HISTORY'].' - '.$usr['nickname'].'</div>';
 				
-				$ksql = "SELECT k.*, k.points as kpoints, DATE_FORMAT(k.senddate, '%d-%m-%Y в %H:%i') fsenddate, u.*
+				$ksql = "SELECT k.*, k.points as kpoints, DATE_FORMAT(k.senddate, '%d-%m-%Y {$_LANG['IN']} %H:%i') fsenddate, u.*
 						 FROM cms_user_karma k, cms_users u
 						 WHERE k.user_id = $id AND k.sender_id = u.id
 						 ORDER BY k.senddate DESC
@@ -1842,9 +1910,9 @@ if ($do=='karma'){
 					}
 					echo '</table>';
 				
-				} else { echo '<p>Карма пользователя еще не изменялась.</p><p>Оставляйте комментарии и сообщения на форуме чтобы другие могли изменять Вашу карму.</p><p>Карма является аналогом рейтинга и показывает насколько хорошо Вас оценивают другие пользователи сайта.</p>'; }
+				} else { echo '<p>'.$_LANG['KARMA_NOT_MODIFY'].'</p><p>'.$_LANG['KARMA_NOT_MODIFY_TEXT'].'</p><p>'.$_LANG['KARMA_DESCRIPTION'].'</p>'; }
 
-		} else { echo '<p>Пользователь не найден.</p>'; }	
+		} else { echo '<p>'.$_LANG['USER_NOT_FOUND'].'</p>'; }
 }
 /////////////////////////////// GIVE AWARD ///////////////////////////////////////////////////////////////////////////////////////
 if ($do=='giveaward'){
@@ -1859,48 +1927,48 @@ if ($do=='giveaward'){
 		if ($inDB->num_rows($result)>0){
 				$usr = $inDB->fetch_assoc($result);
 		
-				$inPage->setTitle('Награждение пользователя');
+				$inPage->setTitle($_LANG['AWARD_USER']);
 				$inPage->addHeadJS('components/users/js/awards.js');
 		
 				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-				$inPage->addPathway('Награждение', $_SERVER['REQUEST_URI']);
+				$inPage->addPathway($_LANG['AWARD'], $_SERVER['REQUEST_URI']);
 					
 				if(!isset($_POST['gosend'])){		
 					
-					echo '<div class="con_heading">Награждение пользователя</div>';				
+					echo '<div class="con_heading">'.$_LANG['AWARD_USER'].'</div>';
 					echo '<form action="" method="POST" name="addform" id="addform">';
 						echo '<table width="100%" cellpadding="0" cellspacing="5">';				
 							echo '<tr>';
-								echo '<td width="150" valign="middle">Изображение награды:</td>';					
+								echo '<td width="150" valign="middle">'.$_LANG['AWARD_IMG'].':</td>';
 								echo '<td valign="middle">';
 									echo '<div style="overflow:hidden;_height:1%">'.usrAwardsList('aw.gif').'</div>';
 								echo '</td>';												
 							echo '</tr>';
 							echo '<tr>';
-								echo '<td width="150">Название награды:</td>';					
+								echo '<td width="150">'.$_LANG['AWARD_NAME'].':</td>';
 								echo '<td><input type="text" name="title" size="35" /></td>';												
 							echo '</tr>';
 							echo '<tr>';
-								echo '<td width="150">Описание награды:</td>';					
+								echo '<td width="150">'.$_LANG['AWARD_DESC'].':</td>';
 								echo '<td><textarea name="description" cols="35" rows="4"></textarea></td>';												
 							echo '</tr>';
 						echo '</table>';
 
-						echo '<div style="margin-top:6px;"><input type="submit" name="gosend" value="Наградить" style="font-size:18px"/> ';
-						echo '<input type="button" name="gosend" value="Отмена" style="font-size:18px" onclick="window.history.go(-1)"/></div>';							
+						echo '<div style="margin-top:6px;"><input type="submit" name="gosend" value="'.$_LANG['TO_AWARD'].'" style="font-size:18px"/> ';
+						echo '<input type="button" name="gosend" value="'.$_LANG['CANCEL'].'" style="font-size:18px" onclick="window.history.go(-1)"/></div>';
 
 					echo '</form>';
 
 				} else {
-					$title = $inCore->request('title', 'str', 'Награда');
+					$title = $inCore->request('title', 'str', $_LANG['AWRD']);
 					$description = $inCore->request('description', 'str', '');
-					$imageurl = $inCore->request('imageurl', 'str', 'Награда');
+					$imageurl = $inCore->request('imageurl', 'str', $_LANG['AWRD']);
 					$award_id = 0;					
 					if (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/users/awards/'.$imageurl)){							
 						$sql = "INSERT INTO cms_user_awards (user_id, pubdate, title, description, imageurl, from_id, award_id)
 								VALUES ('$to_id', NOW(), '$title', '$description', '$imageurl', '$from_id', '$award_id')";
 						$inDB->query($sql) ;
-						cmsUser::sendMessage(USER_UPDATER, $to_id, '[b]Получена награда:[/b] [url='.cmsUser::getProfileURL($usr['login']).']'.$title.'[/url]');
+						cmsUser::sendMessage(USER_UPDATER, $to_id, '[b]'.$_LANG['RECEIVED_AWARD'].':[/b] [url='.cmsUser::getProfileURL($usr['login']).']'.$title.'[/url]');
 					}
 					$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 				}						
@@ -1949,11 +2017,11 @@ if ($do == 'delprofile'){
 					//MENU
 					if ($inUser->id == $data['id'] || $inCore->userIsAdmin($inUser->id)){
 						$GLOBALS['ed_menu'][0]['link'] = 'javascript:window.history.go(-1)';
-						$GLOBALS['ed_menu'][0]['title'] = 'Отмена';				
-						$GLOBALS['ed_page_title'] = 'Удаление профиля';						
-						echo '<div class="con_heading">Удаление профиля</div>';		
-						echo '<p style="margin-bottom:30px">Вы действительно хотите удалить профиль?<br/> Вместе с пользователем будет удален его блог со всеми материалами.</p>';		
-						echo '<a href="/users/'.$menuid.'/'.$id.'/delprofile-yes.html" class="usr_btnlink">ДА</a><a href="javascript:window.history.go(-1)" class="usr_btnlink">НЕТ</a>';
+						$GLOBALS['ed_menu'][0]['title'] = $_LANG['CANCEL'];
+						$GLOBALS['ed_page_title'] = $_LANG['DELETING_PROFILE'];
+						echo '<div class="con_heading">'.$_LANG['DELETING_PROFILE'].'</div>';
+						echo '<p style="margin-bottom:30px">'.$_LANG['REALLY_DEL_PROFILE'].'<br/> '.$_LANG['REALLY_DEL_PROFILE_TEXT'].'</p>';
+						echo '<a href="/users/'.$menuid.'/'.$id.'/delprofile-yes.html" class="usr_btnlink">'.$_LANG['YES'].'</a><a href="javascript:window.history.go(-1)" class="usr_btnlink">'.$_LANG['NO'].'</a>';
 					} else { usrAccessDenied(); }					
 				}	
 			}
@@ -1996,12 +2064,12 @@ if ($do=='files'){
 	if ($inDB->num_rows($result)>0){
 			$usr = $inDB->fetch_assoc($result);			
 			//heading
-			echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; Файлы</div>';
-			$inPage->setTitle($usr['nickname'].' - Файлы');
+			echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; '.$_LANG['FILES'].'</div>';
+			$inPage->setTitle($usr['nickname'].' - '.$_LANG['FILES']);
 			$inPage->addHeadJS('components/users/js/pageselfiles.js');
 			//pathway			
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-			$inPage->addPathway('Файловый архив', '/users/'.$menuid.'/'.$id.'/files.html');
+			$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$menuid.'/'.$id.'/files.html');
 			//ordering & paging
 			//ordering
 			if (isset($_REQUEST['orderby'])) { 
@@ -2050,20 +2118,20 @@ if ($do=='files'){
 					echo pageSelectFiles($total_files, $page, $perpage);
 					echo '<td width="15">&nbsp;</td>';
 					//file statistics
-					echo '<td width="80"><strong>Файлов: </strong>'.$total_files.'</td>';
+					echo '<td width="80"><strong>'.$_LANG['FILE_COUNT'].': </strong>'.$total_files.'</td>';
 					if ($inUser->id==$id){
-						echo '<td width="130"><strong>Свободно: </strong>'.$free_mb.' Мб</td>';
+						echo '<td width="130"><strong>'.$_LANG['FREE'].': </strong>'.$free_mb.' '.$_LANG['MBITE'].'</td>';
 						echo '<td width="16"><img src="/components/users/images/upload.gif" border="0" /></td>';
-						echo '<td width="100"><a href="addfile.html">Загрузить файлы</a></td>';				
+						echo '<td width="100"><a href="addfile.html">'.$_LANG['UPLOAD_FILES'].'</a></td>';
 					}
 					//order buttons
 					if ($total_files>1){
 						echo '<td align="right">
 							   <form name="orderform" method="post" action="" style="margin:0px">
-								   <input type="button" class="usr_files_orderbtn" onclick="orderPage(\'pubdate\')" name="order_date" value="По дате" '.($orderby=='pubdate'?'disabled':'').'/> 
-								   <input type="button" class="usr_files_orderbtn" onclick="orderPage(\'filename\')" name="order_title" value="По названию" '.($orderby=='filename'?'disabled':'').'/> 
-								   <input type="button" class="usr_files_orderbtn" onclick="orderPage(\'filesize\')" name="order_size" value="По размеру" '.($orderby=='filesize'?'disabled':'').'/> 
-								   <input type="button" class="usr_files_orderbtn" onclick="orderPage(\'hits\')" name="order_hits" value="По загрузкам" '.($orderby=='hits'?'disabled':'').'/>
+								   <input type="button" class="usr_files_orderbtn" onclick="orderPage(\'pubdate\')" name="order_date" value="'.$_LANG['ORDER_BY_DATE'].'" '.($orderby=='pubdate'?'disabled':'').'/>
+								   <input type="button" class="usr_files_orderbtn" onclick="orderPage(\'filename\')" name="order_title" value="'.$_LANG['ORDER_BY_NAME'].'" '.($orderby=='filename'?'disabled':'').'/>
+								   <input type="button" class="usr_files_orderbtn" onclick="orderPage(\'filesize\')" name="order_size" value="'.$_LANG['ORDER_BY_SIZE'].'" '.($orderby=='filesize'?'disabled':'').'/>
+								   <input type="button" class="usr_files_orderbtn" onclick="orderPage(\'hits\')" name="order_hits" value="'.$_LANG['ORDER_BY_DOWNLOAD'].'" '.($orderby=='hits'?'disabled':'').'/>
 								   <input id="orderby" type="hidden" name="orderby" value="'.$orderby.'"/>
 								</form>
 							  </td>';
@@ -2077,13 +2145,13 @@ if ($do=='files'){
 				echo '<table width="100%" cellspacing="0" cellpadding="5" style="border:solid 1px gray">';
 					echo '<tr>';
 						echo '<td class="usr_files_head" width="20" align="center">#</td>';
-						echo '<td class="usr_files_head" width="" colspan="2">Название файла '.($orderby=='filename'?'&darr;':'').'</td>';
+						echo '<td class="usr_files_head" width="" colspan="2">'.$_LANG['FILE_NAME'].' '.($orderby=='filename'?'&darr;':'').'</td>';
 						if ($inUser->id==$id){
-							echo '<td class="usr_files_head" width="100" align="center">Видимость</td>';
+							echo '<td class="usr_files_head" width="100" align="center">'.$_LANG['VISIBILITY'].'</td>';
 						}
-						echo '<td class="usr_files_head" width="100">Размер '.($orderby=='filesize'?'&darr;':'').'</td>';
-						echo '<td class="usr_files_head" width="120">Дата создания '.($orderby=='pubdate'?'&darr;':'').'</td>';
-						echo '<td class="usr_files_head" width="80" align="center">Загрузок '.($orderby=='hits'?'&darr;':'').'</td>';
+						echo '<td class="usr_files_head" width="100">'.$_LANG['SIZE'].' '.($orderby=='filesize'?'&darr;':'').'</td>';
+						echo '<td class="usr_files_head" width="120">'.$_LANG['CREATE_DATE'].' '.($orderby=='pubdate'?'&darr;':'').'</td>';
+						echo '<td class="usr_files_head" width="80" align="center">'.$_LANG['DOWNLOAD_HITS'].' '.($orderby=='hits'?'&darr;':'').'</td>';
 						if ($inUser->id==$id){
 							echo '<td class="usr_files_head" width="16">&nbsp;</td>';
 						}
@@ -2104,20 +2172,20 @@ if ($do=='files'){
 							
 							if ($inUser->id==$id){
 								if ($file['allow_who'] == 'all'){
-									echo '<td class="'.$class.'" align="center"><img src="/components/users/images/yes.gif" border="0" title="Файл виден всем"/></td>';
+									echo '<td class="'.$class.'" align="center"><img src="/components/users/images/yes.gif" border="0" title="'.$_LANG['FILE_VIS_ALL'].'"/></td>';
 								} else {
-									echo '<td class="'.$class.'" align="center"><img src="/components/users/images/no.gif" border="0" title="Файл скрыт"/></td>';
+									echo '<td class="'.$class.'" align="center"><img src="/components/users/images/no.gif" border="0" title="'.$_LANG['FILE_HIDEN'].'"/></td>';
 								}
 							}
 							
 							$mb = round(($file['filesize']/1024)/1024, 2);if ($mb == '0') { $mb = '~ 0'; }
-							echo '<td class="'.$class.'">'.$mb.' Мб</td>';
+							echo '<td class="'.$class.'">'.$mb.' '.$_LANG['MBITE'].'</td>';
 
 							echo '<td class="'.$class.'">'.$file['pubdate'].'</td>';
 							echo '<td class="'.$class.'" align="center">'.$file['hits'].'</td>';							
 							if ($inUser->id==$id){
 								echo '<td class="'.$class.'" align="center">';
-								echo '<a href="/users/'.$menuid.'/'.$id.'/delfile'.$file['id'].'.html"><img src="/components/users/images/delete.gif" border="0" alt="Удалить файл"/></a>';
+								echo '<a href="/users/'.$menuid.'/'.$id.'/delfile'.$file['id'].'.html"><img src="/components/users/images/delete.gif" border="0" alt="'.$_LANG['DELETE_FILE'].'"/></a>';
 								echo '</td>';
 							}
 						echo '</tr>';			
@@ -2126,19 +2194,19 @@ if ($do=='files'){
 				echo '</table>';
 				if ($inUser->id==$id){
 					echo '<div style="margin-top:6px">
-							<input type="button" class="usr_files_orderbtn" name="delete_btn" id="delete_btn" onclick="delFiles()" value="Удалить"/>
-							<input type="button" class="usr_files_orderbtn" name="hide_btn" id="delete_btn" onclick="pubFiles(0)" value="Скрыть"/> 
-							<input type="button" class="usr_files_orderbtn" name="show_btn" id="delete_btn" onclick="pubFiles(1)" value="Показать"/> 
+							<input type="button" class="usr_files_orderbtn" name="delete_btn" id="delete_btn" onclick="delFiles()" value="'.$_LANG['DELETE'].'"/>
+							<input type="button" class="usr_files_orderbtn" name="hide_btn" id="delete_btn" onclick="pubFiles(0)" value="'.$_LANG['HIDE'].'"/>
+							<input type="button" class="usr_files_orderbtn" name="show_btn" id="delete_btn" onclick="pubFiles(1)" value="'.$_LANG['SHOW'].'"/>
 						  </div>';
 				}
 				echo '</form>';
 			} else { 
-				echo '<p>Пользователь не загружал файлы в архив.</p>'; 
+				echo '<p>'.$_LANG['USER_NO_UPLOAD'].'</p>';
 				if ($inUser->id==$id){
-					echo '<a href="addfile.html">Загрузить файлы в архив</a>';
+					echo '<a href="addfile.html">'.$_LANG['UPLOAD_FILE_IN_ARCHIVE'].'</a>';
 				}
 			} 
-	} else { echo '<p>Пользователи не найдены.</p>'; }		
+	} else { echo '<p>'.$_LANG['USERS_NOT_FOUND'].'.</p>'; }
 	
 }
 
@@ -2163,8 +2231,8 @@ if ($do=='download'){
 			header('Content-Disposition: attachment; filename='.basename($fileurl) . "\n");
 			header('Content-Type: application/x-force-download; name="'.$fileurl.'"' . "\n");
 			header('Location:'.$fileurl);
-		} else { $inCore->halt('Файл не найден.'); }
-	} else { $inCore->halt('Файл не найден.'); }
+		} else { $inCore->halt($_LANG['FILE_NOT_FOUND']); }
+	} else { $inCore->halt($_LANG['FILE_NOT_FOUND']); }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='addfile'){
@@ -2178,9 +2246,9 @@ if ($do=='addfile'){
 		
 			if (isset($_POST['upload'])){
 				//uploading files
-				$inPage->setTitle('Загрузка файлов завершена');
+				$inPage->setTitle($_LANG['FILE_UPLOAD_FINISH']);
 				$inPage->backButton(false);
-				echo '<div class="con_heading">Загрузка файлов завершена</div>';
+				echo '<div class="con_heading">'.$_LANG['FILE_UPLOAD_FINISH'].'</div>';
 				
 				$e = false;
 				
@@ -2211,25 +2279,25 @@ if ($do=='addfile'){
 				}
 				
 				if ($size_limit) { 
-					echo '<div style="color:#660000;margin-bottom:10px;font-weight:bold">Доступное место для ваших файлов ('.$max_mb.' Мб) исчерпано.</div>';
-					echo '<div style="color:#660000;font-weight:bold">Чтобы загрузить новые файлы, удалите какие-либо из имеющихся.</div>';
+					echo '<div style="color:#660000;margin-bottom:10px;font-weight:bold">'.$_LANG['YOUR_FILE_LIMIT'].' ('.$max_mb.' '.$_LANG['MBITE'].') '.$_LANG['IS_OVER_LIMIT'].'.</div>';
+					echo '<div style="color:#660000;font-weight:bold">'.$_LANG['FOR_NEW_FILE_DEL_OLD'].'</div>';
 				}
 										
 				if (sizeof($loaded_files)){
-					echo '<div><strong>Загруженные файлы:</strong></div>';
+					echo '<div><strong>'.$_LANG['UPLOADED_FILES'].':</strong></div>';
 					echo '<ul>';
 						foreach($loaded_files as $k=>$val){
 							echo '<li>'.$val.'</li>';						
 						}
 					echo '</ul>';
 					
-					echo '<div style="margin-top:10px"><strong>Осталось доступного места:</strong> '.round($free_mb-$size_mb, 2).' Мб</div>';
+					echo '<div style="margin-top:10px"><strong>'.$_LANG['FREE_SPACE_LEFT'].':</strong> '.round($free_mb-$size_mb, 2).' '.$_LANG['MBITE'].'</div>';
 				} else {
-					echo '<div style="color:red">Ни один файл не был загружен. Может файлы слишком большие?</div>';
-					echo '<div style="color:red">Имена файлов не должны содержать пробелов и русских букв.</div>';
+					echo '<div style="color:red">'.$_LANG['ERR_BIG_FILE'].'</div>';
+					echo '<div style="color:red">'.$_LANG['ERR_FILE_NAME'].'</div>';
 				}
 				
-				echo '<div><a href="/users/'.$menuid.'/'.$id.'/files.html">Продолжить</a> &rarr;</div>';
+				echo '<div><a href="/users/'.$menuid.'/'.$id.'/files.html">'.$_LANG['CONTINUE'].'</a> &rarr;</div>';
 							
 			} else {
 				$sql = "SELECT * FROM cms_users WHERE id = $id";
@@ -2239,14 +2307,14 @@ if ($do=='addfile'){
 					$usr = $inDB->fetch_assoc($result);
 		
 					//build upload form
-					$inPage->setTitle('Загрузить файлы');
+					$inPage->setTitle($_LANG['UPLOAD_FILES']);
 					$inPage->backButton(false);
                     $inPage->addHeadJS('includes/jquery/multifile/jquery.multifile.js');
 					
 					$multi_js = '<script type="text/javascript">
 												  function startUpload(){
 													$("#upload_btn").attr(\'disabled\', \'true\');
-													$("#upload_btn").attr(\'value\', \'Идет загрузка...\');
+													$("#upload_btn").attr(\'value\', \''.$_LANG['LOADING'].'...\');
 													$("#cancel_btn").css(\'display\', \'none\');
 													$("#loadergif").css(\'display\', \'block\');
 													document.uploadform.submit();													
@@ -2256,38 +2324,38 @@ if ($do=='addfile'){
                     $inPage->addHead($multi_js);
 				
 					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-					$inPage->addPathway('Файловый архив', '/users/'.$menuid.'/'.$id.'/files.html');
-					$inPage->addPathway('Загрузить файлы', $_SERVER['REQUEST_URI']);
+					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$menuid.'/'.$id.'/files.html');
+					$inPage->addPathway($_LANG['UPLOAD_FILES'], $_SERVER['REQUEST_URI']);
 					
-					echo '<div class="con_heading">Загрузить файлы</div>';			
+					echo '<div class="con_heading">'.$_LANG['UPLOAD_FILES'].'</div>';
 					
 					if ($free_mb>0){
 					
 						$post_max_b = return_bytes(ini_get('upload_max_filesize'));
-						$post_max_mb = (round($post_max_b/1024)/1024) . ' Мб';
+						$post_max_mb = (round($post_max_b/1024)/1024) . ' '.$_LANG['MBITE'];
 					
-						echo '<div>Выбирайте все необходимые файлы поочередно, используя поле.</div>';
-						echo '<div>Имена файлов не должны содержать пробелов и русских букв.</div>';
+						echo '<div>'.$_LANG['SELECT_FILE_TEXT'].'</div>';
+						echo '<div>'.$_LANG['ERR_FILE_NAME'].'</div>';
 						
-						echo '<div style="margin:10px 0px 0px 0px"><strong>Доступное место:</strong> '.$free_mb.' Мб</div>';
-						echo '<div style="margin:0px 0px 10px 0px"><strong>Максимальный размер файла:</strong> '.$post_max_mb.'</div>';
+						echo '<div style="margin:10px 0px 0px 0px"><strong>'.$_LANG['YOUR_FILE_LIMIT'].':</strong> '.$free_mb.' '.$_LANG['MBITE'].'</div>';
+						echo '<div style="margin:0px 0px 10px 0px"><strong>'.$_LANG['MAX_FILE_SIZE'].':</strong> '.$post_max_mb.'</div>';
 						
 						echo '<form action="" method="post" enctype="multipart/form-data" name="uploadform">';
 
 						echo '<input name="MAX_FILE_SIZE" type="hidden" value="'.$post_max_b.'"/>'. "\n";
 						echo '<input type="file" class="multi" name="upfile" id="upfile"/>';														
 						echo '<div style="margin-top:20px;overflow:hidden">';
-							echo '<input style="float:left;margin-right:4px" type="button" name="upload_btn" id="upload_btn" value="Загрузить файлы" onclick="startUpload()"/> ';
-							echo '<input style="float:left" type="button" name="cancel_btn" id="cancel_btn" value="Отмена" onclick="window.history.go(-1)" />';
+							echo '<input style="float:left;margin-right:4px" type="button" name="upload_btn" id="upload_btn" value="'.$_LANG['UPLOAD_FILES'].'" onclick="startUpload()"/> ';
+							echo '<input style="float:left" type="button" name="cancel_btn" id="cancel_btn" value="'.$_LANG['CANCEL'].'" onclick="window.history.go(-1)" />';
 							echo '<div id="loadergif" style="display:none;float:left;margin:6px"><img src="/images/ajax-loader.gif" border="0"/></div>';					
 						echo '</div>';
 							echo '<input type="hidden" name="upload" value="1"/>';							
 						echo '</form>';
 					} else {
-						echo '<div style="color:#660000;margin-bottom:10px;font-weight:bold">Доступное место для ваших файлов ('.$max_mb.' Мб) исчерпано.</div>';
-						echo '<div style="color:#660000;font-weight:bold">Чтобы загрузить новые файлы, удалите какие-либо из имеющихся.</div>';			
+						echo '<div style="color:#660000;margin-bottom:10px;font-weight:bold">'.$_LANG['YOUR_FILE_LIMIT'].' ('.$max_mb.' '.$_LANG['MBITE'].') '.$_LANG['IS_OVER_LIMIT'].'.</div>';
+						echo '<div style="color:#660000;font-weight:bold">'.$_LANG['FOR_NEW_FILE_DEL_OLD'].'</div>';
 						echo '<div style="margin-top:20px">';
-							echo '<input type="button" name="cancel" value="Отмена" onclick="window.history.go(-1)" />';					
+							echo '<input type="button" name="cancel" value="'.$_LANG['CANCEL'].'" onclick="window.history.go(-1)" />';
 						echo '</div>';
 					}
 				}
@@ -2313,13 +2381,13 @@ if ($do=='delfile'){
 				if ($inDB->num_rows($result)){
 					$file = $inDB->fetch_assoc($result);				
 					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-					$inPage->addPathway('Файловый архив', '/users/'.$menuid.'/'.$id.'/files.html');
-					$inPage->addPathway('Удалить файл', $_SERVER['REQUEST_URI']);
-					echo '<div class="con_heading">Удаление файла</div>';				
-					echo '<p>Вы действительно желаете удалить файл "'.$file['filename'].'"?</p>';
+					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$menuid.'/'.$id.'/files.html');
+					$inPage->addPathway($_LANG['DELETE_FILE'], $_SERVER['REQUEST_URI']);
+					echo '<div class="con_heading">'.$_LANG['DELETING_FILE'].'</div>';
+					echo '<p>'.$_LANG['YOU_REALLY_DEL_FILE'].' "'.$file['filename'].'"?</p>';
 					echo '<div><form action="'.$_SERVER['REQUEST_URI'].'" method="POST"><p>
-							<input style="font-size:24px; width:100px" type="button" name="cancel" value="Нет" onclick="window.history.go(-1)" /> 
-							<input style="font-size:24px; width:100px" type="submit" name="godelete" value="Да" /> 
+							<input style="font-size:24px; width:100px" type="button" name="cancel" value="'.$_LANG['NO'].'" onclick="window.history.go(-1)" />
+							<input style="font-size:24px; width:100px" type="submit" name="godelete" value="'.$_LANG['YES'].'" />
 						 </p></form></div>';
 				} else { usrAccessDenied(); }
 			}
@@ -2339,7 +2407,7 @@ if ($do=='delfile'){
 /////////////////////////////// MULTIPLE FILES DELETE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delfilelist'){
 	if (sizeof($_POST['files'])) { $files = $_POST['files']; }
-	else { die('Нет выбранных файлов'); }
+	else { die($_LANG['NOT_SELECTED_FILES']); }
 	
 	if (usrCheckAuth() && (@$inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
 		if (!isset($_POST['godelete'])){
@@ -2361,10 +2429,10 @@ if ($do=='delfilelist'){
 				$result = $inDB->query($sql);
 				if ($inDB->num_rows($result)){
 					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-					$inPage->addPathway('Файловый архив', '/users/'.$menuid.'/'.$id.'/files.html');
-					$inPage->addPathway('Удалить файлы', $_SERVER['REQUEST_URI']);
-					echo '<div class="con_heading">Удаление файлов</div>';				
-					echo '<p><strong>Вы действительно желаете удалить эти файлы?</strong></p>';
+					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$menuid.'/'.$id.'/files.html');
+					$inPage->addPathway($_LANG['DELETE_FILES'], $_SERVER['REQUEST_URI']);
+					echo '<div class="con_heading">'.$_LANG['DELETING_FILES'].'</div>';
+					echo '<p><strong>'.$_LANG['YOU_REALLY_DEL_FILES'].'?</strong></p>';
 
 					echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
 						echo '<ul>';
@@ -2375,8 +2443,8 @@ if ($do=='delfilelist'){
 						}
 						echo '</ul>';
 						echo '<div style="margin-top:10px">';
-							echo '<input style="font-size:24px; width:100px" type="button" name="cancel" value="Нет" onclick="window.history.go(-1)" /> ';
-							echo '<input style="font-size:24px; width:100px" type="submit" name="godelete" value="Да" />';
+							echo '<input style="font-size:24px; width:100px" type="button" name="cancel" value="'.$_LANG['NO'].'" onclick="window.history.go(-1)" /> ';
+							echo '<input style="font-size:24px; width:100px" type="submit" name="godelete" value="'.$_LANG['YES'].'" />';
 						echo '</div>';
 					echo '</form>';
 				} else { usrAccessDenied(); }
@@ -2406,7 +2474,7 @@ if ($do=='delfilelist'){
 /////////////////////////////// MULTIPLE FILES PUBLISHING /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='pubfilelist'){
 	if (sizeof($_POST['files'])) { $files = $_POST['files']; }
-	else { die('Нет выбранных файлов'); }
+	else { die($_LANG['NOT_SELECTED_FILES']); }
 	
 	$allow = $_GET['allow'];
 	
@@ -2425,11 +2493,11 @@ if ($do=='pubfilelist'){
 
 /////////////////////////////// VIEW AWARDS LIST ///////////////////////////////////////////////////////////////////////////////////////	
 if ($do=='awardslist'){
-	$inPage->setTitle('Награды сайта');
+	$inPage->setTitle($_LANG['SITE_AWARDS']);
 	
-	$inPage->addPathway('Награды сайта');
+	$inPage->addPathway($_LANG['SITE_AWARDS']);
 
-	echo '<div class="con_heading">Награды сайта</div>';
+	echo '<div class="con_heading">'.$_LANG['SITE_AWARDS'].'</div>';
 	
 	$sql = "SELECT * 
 			FROM cms_user_autoawards
@@ -2460,7 +2528,7 @@ if ($do=='awardslist'){
 								echo '<td><img src="/admin/components/autoawards/images/p_comment.gif" width="16" height="16" /></td>'."\n";
 								echo '<td>'."\n";
 								  echo $aw['p_comment']."\n";
-								echo ' комментариев</td>'."\n";
+								echo ' '.$_LANG['COMMENTS'].'</td>'."\n";
 							echo '</tr>'."\n";
 						}
 						if ($aw['p_forum']>0){  
@@ -2468,7 +2536,7 @@ if ($do=='awardslist'){
 								echo '<td><img src="/admin/components/autoawards/images/p_forum.gif" width="16" height="16" /></td>'."\n";
 								echo '<td>'."\n";
 								  echo $aw['p_forum']."\n";
-								echo ' сообщений на форуме</td>'."\n";
+								echo ' '.$_LANG['MESS_IN_FORUM'].'</td>'."\n";
 							echo '</tr>'."\n";
 						}
 						if ($aw['p_content']>0){  
@@ -2476,7 +2544,7 @@ if ($do=='awardslist'){
 								echo '<td><img src="/admin/components/autoawards/images/p_forum.gif" width="16" height="16" /></td>'."\n";
 								echo '<td>'."\n";
 								  echo $aw['p_content']."\n";
-								echo ' опубликованных статей</td>'."\n";
+								echo ' '.$_LANG['PUBLISHED_ARTICLES'].'</td>'."\n";
 							echo '</tr>'."\n";
 						}
 						if ($aw['p_blog']>0){  
@@ -2484,7 +2552,7 @@ if ($do=='awardslist'){
 								echo '<td><img src="/admin/components/autoawards/images/p_blog.gif" width="16" height="16" /></td>'."\n";
 								echo '<td>'."\n";
 								  echo $aw['p_blog']."\n";
-								echo ' записей в блоге</td>'."\n";
+								echo ' '.$_LANG['POSTS_IN_BLOG'].'</td>'."\n";
 							echo '</tr>'."\n";
 						}
 						if ($aw['p_karma']>0){  
@@ -2492,7 +2560,7 @@ if ($do=='awardslist'){
 								echo '<td><img src="/admin/components/autoawards/images/p_karma.gif" width="16" height="16" /></td>'."\n";
 								echo '<td>'."\n";
 								  echo $aw['p_karma']."\n";
-								echo ' баллов личной кармы</td>'."\n";
+								echo ' '.$_LANG['KARMA_POINTS'].'</td>'."\n";
 							echo '</tr>'."\n";
 						}
 						if ($aw['p_photo']>0){  
@@ -2500,7 +2568,7 @@ if ($do=='awardslist'){
 								echo '<td><img src="/admin/components/autoawards/images/p_photo.gif" width="16" height="16" /></td>'."\n";
 								echo '<td>'."\n";
 								  echo $aw['p_photo']."\n";
-								echo ' фотографий в общих альбомах</td>'."\n";
+								echo ' '.$_LANG['PHOTOS_IN_ALBUMS'].'</td>'."\n";
 							echo '</tr>'."\n";
 						}
 						if ($aw['p_privphoto']>0){  
@@ -2508,7 +2576,7 @@ if ($do=='awardslist'){
 								echo '<td><img src="/admin/components/autoawards/images/p_privphoto.gif" width="16" height="16" /></td>'."\n";
 								echo '<td>'."\n";
 								  echo $aw['p_privphoto']."\n";
-								echo ' фотографий в личном альбоме</td>'."\n";
+								echo ' '.$_LANG['PHOTOS_IN_PRIVATE_ALBUM'].'</td>'."\n";
 							echo '</tr>'."\n";
 						}
                     echo '</table>';
@@ -2530,10 +2598,10 @@ if ($do=='awardslist'){
 							if ($row<$total){ $uhtml .= ', '; }
 						}
 					} else {
-						$uhtml = 'Нет пользователей с этой наградой';	
+						$uhtml = $_LANG['NOT_USERS_WITH_THIS_AWARD'];
 					}
 								
-					echo '<div class="usr_aw_users"><strong>Наградой обладают:</strong></div>';
+					echo '<div class="usr_aw_users"><strong>'.$_LANG['AWARD_HAVES'].':</strong></div>';
 					echo '<div class="usr_aw_userslist">'.$uhtml.'</div>';
 				echo '</td>';
 				
@@ -2541,7 +2609,7 @@ if ($do=='awardslist'){
 		}
 		echo '</table>';
 				
-	} else { echo '<p>На сайте нет наград.</p>'; }		
+	} else { echo '<p>'.$_LANG['NOT_AWARDS_ON_SITE'].'</p>'; }
 	
 }
 
@@ -2582,9 +2650,11 @@ if ($do=='votekarma'){
 				}
                 elseif ($usertype=='club'){
 					$inCore->loadLib('clubs');
-					$club_id 	= $inDB->get_field('cms_user_wall', "id=$record_id", 'user_id');
-                    $club_admin = $inDB->get_field('cms_clubs', "id=$club_id", 'admin_id');
-					$can_delete = clubUserIsRole($club_id, $my_id, 'moderator') || ($club_admin == $my_id);
+					$club_id        = $inDB->get_field('cms_user_wall', "id=$record_id", 'user_id');
+                    $is_club_admin  = clubUserIsAdmin($club_id, $my_id);
+                    $is_club_moder  = clubUserIsRole($club_id, $my_id, 'moderator');
+                    $is_author      = $inDB->rows_count('cms_user_wall', "id=$record_id AND author_id=$my_id");
+					$can_delete     = $is_author || $is_club_admin || $is_club_moder;
 				}
 
 				if ($can_delete || $inCore->userIsAdmin( $my_id )){
@@ -2631,7 +2701,7 @@ if ($do=='votekarma'){
                             $letter= str_replace('{profilelink}', $profilelink, $letter);
                             $letter= str_replace('{date}', $postdate, $letter);
                             $letter= str_replace('{from}', $from_nick, $letter);
-                            $inCore->mailText($to_email, 'Новая запись на стене! - '.$inConf->sitename, $letter);
+                            $inCore->mailText($to_email, $_LANG['NEW_POST_ON_WALL'].'! - '.$inConf->sitename, $letter);
                     }
                 }
             }

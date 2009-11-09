@@ -9,7 +9,7 @@
 			<td valign="top">
 				<div class="con_icons">
 					<div class="con_rss_icon">
-						<a href="/rss/content/{$id}/feed.rss" title="RSS лента"><img src="/images/markers/rssfeed.png" border="0" alt="RSS лента"/></a>
+						<a href="/rss/content/{$id}/feed.rss" title="{$LANG.RSS}"><img src="/images/markers/rssfeed.png" border="0" alt="{$LANG.RSS}"/></a>
 					</div>
 				</div>
 			</td>
@@ -58,7 +58,16 @@
                             <a href="{$article.url}" class="con_titlelink">{$article.title}</a>
                         </div>
 						{if $cat.showdesc}
-							<div class="con_desc">{$article.description}</div>
+							<div class="con_desc">
+                                {if $article.image}
+                                    <div class="con_image" style="float:left;margin-right:16px;margin-bottom:16px">
+                                        <a href="{$article.url}" title="{$article.title}">
+                                            <img src="/images/photos/small/{$article.image}" border="0" alt="{$article.title}"/>
+                                        </a>
+                                    </div>
+                                {/if}
+                                {$article.description}
+                            </div>
 						{/if}
 							
 						{if $cat.showcomm || $showdate || ($cat.showtags && $article.tagline)}
@@ -68,12 +77,12 @@
 								{/if}
 								{if $cat.showcomm}
 									{if $showdate} | {/if}
-                                    <a href="{$article.url}" title="Подробнее">Подробнее</a>
-									| <a href="{$article.url}#c" title="Комментарии">{$article.comments|spellcount:'комментарий':'комментария':'комментариев'}</a>
+                                    <a href="{$article.url}" title="{$LANG.DETAIL}">{$LANG.DETAIL}</a>
+									| <a href="{$article.url}#c" title="{$LANG.COMMENTS}">{$article.comments|spellcount:$LANG.COMMENT:$LANG.COMMENT2:$LANG.COMMENT10}</a>
 								{/if}
 								{if $cat.showtags && $article.tagline}
 									{if $showdate || $cat.showcomm} <br/> {/if}
-									{if $article.tagline} <strong>Теги:</strong> {$article.tagline} {/if}
+									{if $article.tagline} <strong>{$LANG.TAGS}:</strong> {$article.tagline} {/if}
 								{/if}
 							</div>
 						{/if}					

@@ -47,7 +47,7 @@ class mosPHPMailer
 	 * "7bit", "binary", "base64", and "quoted-printable".
 	 * @var string
 	 */
-	var $Encoding		  = "8bit";
+	var $Encoding		  = "base64";
 
 	/**
 	 * Holds the most recent mailer error message.

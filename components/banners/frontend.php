@@ -20,7 +20,7 @@ function banners(){
 
     $inCore->loadModel('banners');
     $model = new cms_model_banners();
-
+    global $_LANG;
     $do = $inCore->request('do', 'str', 'click');
 
 //======================================================================================================================//

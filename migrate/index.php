@@ -30,6 +30,22 @@
 // ========================================================================================== //
 // ========================================================================================== //
 
+    //Для доски объявлений (разные типы объявлений в каждой рубрике)
+
+    if (!$inDB->isFieldExists('cms_board_cats', 'obtypes')){
+
+        $sql = "ALTER TABLE `cms_board_cats` ADD `obtypes` TEXT NOT NULL";
+        $result = $inDB->query($sql);
+
+        echo '<p>Таблица <strong>cms_board_cats</strong> обновлена...</p>';
+
+    }
+    
+// ========================================================================================== //
+// ========================================================================================== //
+
+    //Для установщика компонентов
+
     if (!$inDB->isFieldExists('cms_components', 'published')){
 
         $sql = "ALTER TABLE `cms_components` ADD `published` INT NOT NULL DEFAULT '1'";
@@ -44,6 +60,37 @@
         echo '<p>Таблица <strong>cms_components</strong> обновлена...</p>';
 
     }
+
+// ========================================================================================== //
+// ========================================================================================== //
+
+    //Для fulltext-поиска
+
+    $sql = "ALTER TABLE `cms_forum_threads` ADD FULLTEXT (`title`)";
+    $result = $inDB->query($sql);
+
+    $sql = "ALTER TABLE `cms_forum_posts` ADD FULLTEXT (`content`)";
+    $result = $inDB->query($sql);
+
+    $sql = "ALTER TABLE `cms_content` ADD FULLTEXT (`title` ,`description` ,`content`)";
+    $result = $inDB->query($sql);
+
+    $sql = "ALTER TABLE `cms_blog_posts` ADD FULLTEXT (`content`)";
+    $result = $inDB->query($sql);
+
+    $sql = "ALTER TABLE `cms_board_items` ADD FULLTEXT (`content`)";
+    $result = $inDB->query($sql);
+
+    $sql = "ALTER TABLE `cms_uc_items` ADD FULLTEXT (`title` ,`fieldsdata`)";
+    $result = $inDB->query($sql);
+
+    $sql = "ALTER TABLE `cms_photo_files` ADD FULLTEXT (`title` ,`description`)";
+    $result = $inDB->query($sql);
+
+    $sql = "ALTER TABLE `cms_price_items` ADD FULLTEXT (`title`)";
+    $result = $inDB->query($sql);
+
+    echo '<p>Fulltext-индексы созданы...</p>';
 
 // ========================================================================================== //
 // ========================================================================================== //

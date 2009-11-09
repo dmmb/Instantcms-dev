@@ -3,7 +3,7 @@
 {* ================================================================================ *}
 
 <div class="con_heading">
-	<a href="/clubs/{$menuid}/{$club.id}">{$club.title}</a> &rarr; Настройки
+	<a href="/clubs/{$menuid}/{$club.id}">{$club.title}</a> &rarr; {$LANG.CONFIG}
 </div>
 
 {add_js file='includes/jquery/tabs/jquery.ui.min.js'}
@@ -14,11 +14,11 @@
 
 <div id="configtabs">
 	<ul id="tabs"> 
-		<li><a href="#tab1"><span>Описание клуба</span></a></li> 
-		<li><a href="#tab2"><span>Модераторы</span></a></li> 
-		<li><a href="#tab3"><span>Участники</span></a></li>
+		<li><a href="#tab1"><span>{$LANG.CLUB_DESC}</span></a></li>
+		<li><a href="#tab2"><span>{$LANG.MODERATORS}</span></a></li>
+		<li><a href="#tab3"><span>{$LANG.MEMBERS}</span></a></li>
 		{if $club.enabled_photos || $club.enabled_blogs}
-		<li><a href="#tab4"><span>Ограничения</span></a></li> 
+		<li><a href="#tab4"><span>{$LANG.LIMITS}</span></a></li>
 		{/if}
 	</ul> 
 	
@@ -32,7 +32,7 @@
 					</div>
 				</td>
 				<td width="120">
-					<label>Загрузить логотип:</label>
+					<label>{$LANG.UPLOAD_LOGO}:</label>
 				</td>
 				<td>
 					<input name="picture" type="file" id="picture" />
@@ -46,12 +46,12 @@
 		<table width="500" border="0" cellspacing="0" cellpadding="10" id="multiuserscfg">
 			<tr>
 				<td colspan="3">
-					<div class="hint">Модераторы имеют доступ ко всему содержимому клуба. Они могут редактировать, удалять и модерировать посты в блоге, фотографии и фотоальбомы.</div>
+					<div class="hint">{$LANG.MODERATE_TEXT}</div>
 				</td>
 			</tr>	
 			<tr>			
 				<td align="center" valign="top">
-					<p><strong>Модераторы клуба: </strong></p>
+					<p><strong>{$LANG.CLUB_MODERATORS}: </strong></p>
 					<select name="moderslist[]" size="10" multiple id="moderslist" style="width:200px">
 						{$moders_list}
 					</select>
@@ -61,7 +61,7 @@
 					<div><input name="moderator_remove" type="button" id="moderator_remove" value="&gt;&gt;" style="margin-top:4px"></div>
 				</td>
 				<td align="center" valign="top">
-					<p><strong>Все пользователи:</strong></p>
+					<p><strong>{$LANG.ALL_USERS}:</strong></p>
 					<select name="userslist1" size="10" multiple id="userslist1" style="width:200px">
 						{$users_list}
 					</select>
@@ -73,42 +73,42 @@
 	<div id="tab3">		
 		<table width="500" border="0" cellspacing="0" cellpadding="10">
 			<tr>
-			  <td>Максимальное число участников:<br/><span style="color:#CCCCCC">Установите "0" для бесконечного количества</span> </td>
+			  <td>{$LANG.MAX_MEMBERS}:<br/><span style="color:#CCCCCC">{$LANG.MAX_MEMBERS_TEXT}</span> </td>
 			  <td><input name="maxsize" type="text" style="width:200px"  value="{$club.maxsize}"/></td>
 		  </tr>
 			<tr>
 				<td>
-					<label>Выберите тип клуба:</label>
+					<label>{$LANG.SELECT_CLUB_TYPE}:</label>
 				</td>
 				<td width="200">
 					<select name="clubtype" id="clubtype" style="width:200px" onchange="toggleMembers()">
-                        <option value="public" {if $club.clubtype=='public'}selected="selected"{/if}>Открыт для всех (public)</option>
-                        <option value="private" {if $club.clubtype=='private'}selected="selected"{/if}>Открыт для избранных (private)</option>
+                        <option value="public" {if $club.clubtype=='public'}selected="selected"{/if}>{$LANG.PUBLIC} (public)</option>
+                        <option value="private" {if $club.clubtype=='private'}selected="selected"{/if}>{$LANG.PRIVATE} (private)</option>
                      </select>
 				</td>			
 			</tr>	
 		</table>
 		<table width="500" border="0" cellspacing="0" id="minkarma" cellpadding="10" style="display: {if $club.clubtype!='public'}none;{else}table;{/if}">
 			<tr>
-			  <td>Использовать ограничение по карме: <br/><span style="color:#CCCCCC">Если отключено, любой пользователь <br/> сможет вступить в клуб</span></td>
+			  <td>{$LANG.USE_LIMITS_KARMA}: <br/><span style="color:#CCCCCC">{$LANG.USE_LIMITS_KARMA_TEXT}</span></td>
 			  <td valign="top">
-					<input name="join_karma_limit" type="radio" value="1" {if $club.join_karma_limit}checked{/if}/> Да 
-					<input name="join_karma_limit" type="radio" value="0" {if !$club.join_karma_limit}checked{/if}/> Нет
+					<input name="join_karma_limit" type="radio" value="1" {if $club.join_karma_limit}checked{/if}/> {$LANG.YES}
+					<input name="join_karma_limit" type="radio" value="0" {if !$club.join_karma_limit}checked{/if}/> {$LANG.NO}
 			  </td>
 		  </tr>
 			<tr>
 				<td>
-					Ограничение по карме: <br/><span style="color:#CCCCCC">Размер кармы, необходимый пользователю <br/> для вступления клуб</span>
+					{$LANG.LIMITS_KARMA}: <br/><span style="color:#CCCCCC">{$LANG.LIMITS_KARMA_TEXT}</span>
 				</td>
 				<td width="200" valign="top">
-					&ge; <input name="join_min_karma" type="text" style="width:60px" value="{$club.join_min_karma}"/> баллов
+					&ge; <input name="join_min_karma" type="text" style="width:60px" value="{$club.join_min_karma}"/> {$LANG.POINTS}
 				</td>			
 			</tr>	
 		</table>		
 		<table width="500" border="0" cellspacing="0" cellpadding="10" id="members" style="display: {if $club.clubtype=='public'}none;{else}table;{/if}">
 			<tr>
 				<td align="center" valign="top">
-					<p><strong>Участники клуба: </strong></p>
+					<p><strong>{$LANG.CLUB_MEMBERS}: </strong></p>
 					<select name="memberslist[]" size="10" multiple id="memberslist" style="width:200px">
 						{$members_list}
 					</select>
@@ -118,7 +118,7 @@
 					<div><input name="member_remove" type="button" id="member_remove" value="&gt;&gt;" style="margin-top:4px"></div>
 				</td>
 				<td align="center" valign="top">
-					<p><strong>Все пользователи:</strong></p>
+					<p><strong>{$LANG.ALL_USERS}:</strong></p>
 					<select name="userslist2" size="10" multiple id="userslist2" style="width:200px">
 						{$users_list}
 					</select>
@@ -133,51 +133,51 @@
 			{if $club.enabled_blogs}
 			<tr>
 				<td>
-					<label><strong>Премодерация записей в блогах:</strong></label>
+					<label><strong>{$LANG.PREMODER_POSTS_IN_BLOGS}:</strong></label>
 				</td>
 				<td width="150">
-					<input name="blog_premod" type="radio" value="1" {if $club.blog_premod}checked{/if}/> Да 
-					<input name="blog_premod" type="radio" value="0" {if !$club.blog_premod}checked{/if}/> Нет
+					<input name="blog_premod" type="radio" value="1" {if $club.blog_premod}checked{/if}/> {$LANG.YES}
+					<input name="blog_premod" type="radio" value="0" {if !$club.blog_premod}checked{/if}/> {$LANG.NO}
 				</td>			
 			</tr>	
 			{/if}
 			{if $club.enabled_photos}
 			<tr>
 				<td>
-					<label><strong>Премодерация фотографий:</strong></label>
+					<label><strong>{$LANG.PREMODER_PHOTOS}:</strong></label>
 				</td>
 				<td width="150">
-					<input name="photo_premod" type="radio" value="1" {if $club.photo_premod}checked{/if}/> Да 
-					<input name="photo_premod" type="radio" value="0" {if !$club.photo_premod}checked{/if}/> Нет
+					<input name="photo_premod" type="radio" value="1" {if $club.photo_premod}checked{/if}/> {$LANG.YES}
+					<input name="photo_premod" type="radio" value="0" {if !$club.photo_premod}checked{/if}/> {$LANG.NO}
 				</td>			
 			</tr>	
 			{/if}
 			{if $club.enabled_blogs}
 			<tr>
 				<td>
-					<label>Ограничение по карме для <br/>создания новых постов в блоге:</label>
+					<label>{$LANG.KARMA_LIMITS_FOR_NEW_POSTS}:</label>
 				</td>
-				<td width="150">&ge; <input name="blog_min_karma" type="text" style="width:60px" value="{$club.blog_min_karma}"/> баллов
+				<td width="150">&ge; <input name="blog_min_karma" type="text" style="width:60px" value="{$club.blog_min_karma}"/> {$LANG.POINTS}
 			  </td></tr>	
 			{/if}
 			{if $club.enabled_photos}
 			<tr>
 				<td>
-					<label>Ограничение по карме для <br/>добавления фотографий:</label>
+					<label>{$LANG.KARMA_LIMITS_FOR_ADD_PHOTOS}:</label>
 				</td>
 				<td width="150">
 					&ge;  
-					<input name="photo_min_karma" type="text" style="width:60px" value="{$club.photo_min_karma}"/> баллов
+					<input name="photo_min_karma" type="text" style="width:60px" value="{$club.photo_min_karma}"/> {$LANG.POINTS}
 				</td>			
 			</tr>	
 			{/if}
 			{if $club.enabled_photos}	
 			<tr>
 				<td>
-					<label>Ограничение по карме для <br/>cоздания фотоальбомов:</label>
+					<label>{$LANG.KARMA_LIMITS_NEW_PHOTOALBUM}:</label>
 				</td>
 				<td width="150">
-					&ge; <input name="album_min_karma" type="text" style="width:60px" value="{$club.album_min_karma}"/> баллов
+					&ge; <input name="album_min_karma" type="text" style="width:60px" value="{$club.album_min_karma}"/> {$LANG.POINTS}
 			  </td>			
 			</tr>	
 			{/if}							
@@ -188,8 +188,8 @@
 </div>
 
 <p>
-	<input type="submit" class="button" name="save" value="Сохранить"/> 
-	<input type="button" class="button" name="back" value="Отмена" onclick="window.history.go(-1)"/> 
+	<input type="submit" class="button" name="save" value="{$LANG.SAVE}"/>
+	<input type="button" class="button" name="back" value="{$LANG.CANCEL}" onclick="window.history.go(-1)"/>
 </p>
 
 </form>

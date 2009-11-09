@@ -19,16 +19,16 @@
         {$usr.nickname}
     </div>
     {if $cfg.showgroup}<div class="usr_group" style="float:right">{$usr.grp}</div>{/if}
-    {if $usr.banned}<div style="color:red;padding:10px;">Пользователь находится в бан-листе</div>{/if}
+    {if $usr.banned}<div style="color:red;padding:10px;">{$LANG.USER_IN_BANLIST}</div>{/if}
 </div>
 
 <div class="usr_status_bar">
     <div class="usr_status_text" {if !$usr.status_text}style="display:none"{/if}>
         <span>{$usr.status_text}</span>
-        <span class="usr_status_date" >// {$usr.status_date} назад</span>
+        <span class="usr_status_date" >// {$usr.status_date} {$LANG.BACK}</span>
     </div>
     {if $myprofile}
-        <div class="usr_status_link">[ <a href="javascript:setStatus()">изменить статус</a> ]</div>
+        <div class="usr_status_link">[ <a href="javascript:setStatus()">{$LANG.CHANGE_STATUS}</a> ]</div>
     {/if}
 </div>
 
@@ -48,7 +48,7 @@
 					<td>
 						<div id="user_ratings">
 							<div class="karma">
-								<div class="title">Карма</div>
+								<div class="title">{$LANG.KARMA}</div>
 								{if $usr.karma_int >= 0}
 									<div class="value-positive">{$usr.karma}</div>
 								{else}
@@ -56,7 +56,7 @@
 								{/if}
 							</div>
 							<div class="rating">
-								<div class="title">Рейтинг</div>
+								<div class="title">{$LANG.RATING}</div>
 								<div class="value">{$usr.user_rating}</div>
 							</div>
 						</div>
@@ -71,7 +71,7 @@
 				  		{/if}
 
                         <div id="user_profile_url">
-                            <div>Ссылка на эту страницу:</div>
+                            <div>{$LANG.LINK_TO_THIS_PAGE}:</div>
                             <a href="{$usr.profile_link}" title="{$usr.nickname}">{$usr.profile_link}</a>
                         </div>
 
@@ -82,21 +82,21 @@
     	<td valign="top" style="padding-left:10px">	
 			<div id="profiletabs">
 				<ul id="tabs"> 
-					<li><a href="#profile"><span>Профиль</span></a></li> 
+					<li><a href="#profile"><span>{$LANG.PROFILE}</span></a></li>
 					{if $myprofile && $cfg.sw_feed}
-						<li><a href="#feed"><span>Лента</span></a></li>
+						<li><a href="#feed"><span>{$LANG.FEED}</span></a></li>
 					{/if}
                     {if $cfg.sw_content}
-                        <li><a href="#content"><span>Контент</span></a></li>
+                        <li><a href="#content"><span>{$LANG.CONTENT}</span></a></li>
                     {/if}
 					{if $cfg.sw_friends}
-						<li><a href="#friends"><span>Друзья</span></a></li> 
+						<li><a href="#friends"><span>{$LANG.FRIENDS}</span></a></li>
 					{/if}
 					{if $cfg.sw_clubs}
-						<li><a href="#clubs"><span>Клубы</span></a></li>
+						<li><a href="#clubs"><span>{$LANG.CLUBS}</span></a></li>
 					{/if}
                     {if $cfg.sw_awards}
-                        <li><a href="#awards"><span>Награды</span></a></li>
+                        <li><a href="#awards"><span>{$LANG.AWARDS}</span></a></li>
                     {/if}
                     {foreach key=id item=plugin from=$plugins}
                         <li><a href="#{$plugin.name}"><span>{$plugin.title}</span></a></li>
@@ -108,30 +108,30 @@
 					<div class="user_profile_data">
 					
 						<div class="field">
-							<div class="title">Статус:</div>
+							<div class="title">{$LANG.STATUS}:</div>
 							<div class="value">{$usr.status}</div>
 						</div>
 						
 						<div class="field">
-							<div class="title">Последний визит:</div>
+							<div class="title">{$LANG.LAST_VISIT}:</div>
 							<div class="value">{$usr.flogdate}</div>
 						</div>
 						
 						<div class="field">
-							<div class="title">Дата регистрации:</div>
+							<div class="title">{$LANG.DATE_REGISTRATION}:</div>
 							<div class="value">{$usr.fregdate}</div>
 						</div>
 						
 						{if $usr.showbirth && $usr.birthdate}
 						<div class="field">
-							<div class="title">Дата рождения:</div>
+							<div class="title">{$LANG.BIRTH}:</div>
 							<div class="value">{$usr.birthdate}</div>
 						</div>
 						{/if}
 						
 						{if $usr.gender}
 						<div class="field">
-							<div class="title">Пол:</div>
+							<div class="title">{$LANG.SEX}:</div>
 							<div class="value">{$usr.gender}</div>
 						</div>
 						{/if}
@@ -158,24 +158,24 @@
 
                         {if $cfg.sw_comm}
 						<div class="field">
-							<div class="title">Комментариев:</div>
+							<div class="title">{$LANG.COMMENTS}:</div>
 							<div class="value">{$usr.comments_count}
-                                {if $usr.comments_count}<a href="/users/{$menuid}/{$usr.id}/comments.html" title="Читать">&rarr;</a>{/if}
+                                {if $usr.comments_count}<a href="/users/{$menuid}/{$usr.id}/comments.html" title="{$LANG.READ}">&rarr;</a>{/if}
                             </div>
 						</div>
                         {/if}
 
                         {if $cfg.sw_forum}
 						<div class="field">
-							<div class="title">Сообщений на форуме:</div>
+							<div class="title">{$LANG.MESS_IN_FORUM}:</div>
 							<div class="value">{$usr.forum_count}
-                                {if $usr.forum_count}<a href="/users/{$menuid}/{$usr.id}/forumposts.html" title="Читать">&rarr;</a>{/if}
+                                {if $usr.forum_count}<a href="/users/{$menuid}/{$usr.id}/forumposts.html" title="{$LANG.READ}">&rarr;</a>{/if}
                             </div>
 						</div>
                         {/if}
 						
 						<div class="field">
-							<div class="title">Интересы (метки):</div>
+							<div class="title">{$LANG.HOBBY} ({$LANG.TAGSS}):</div>
 							<div class="value">{$usr.description}</div>
 						</div>					
 					</div>
@@ -187,13 +187,13 @@
 						
 						{if $cfg.sw_wall}
 							<div class="usr_wall">
-								<div class="usr_wall_header">Стена пользователя</div>
+								<div class="usr_wall_header">{$LANG.USER_WALL}</div>
 								<div class="usr_wall_body">
                                     <div class="wall_body">{$usr.wall_html}</div>
                                 </div>
                                 <div class="usr_wall_addlink">
                                     <a href="#addwall" id="addlink" onclick="{literal}$('div#addwall').slideToggle();$('.usr_wall_addlink').toggle();$('.wall_message').focus();{/literal}">
-                                        Написать на стене
+                                        {$LANG.WRITE_ON_WALL}
                                     </a>
                                 </div>
 								<div id="addwall" style="display:none">{$usr.addwall_html}</div>
@@ -208,7 +208,7 @@
                         {if $usr.friends}
                             <div class="usr_friends_feed">
                                 {if $usr.friends_comments}
-                                    <div class="content_title">Последние комментарии друзей:</div>
+                                    <div class="content_title">{$LANG.LAST_FRIEND_COMM}:</div>
 
                                     <table cellpadding="3" cellspacing="0" border="0" width="100%" class="feed">
                                         {foreach key=tid item=comment from=$usr.friends_comments}
@@ -225,7 +225,7 @@
                                     </table>
                                 {/if}
                                 {if $usr.friends_posts}
-                                    <div class="content_title">Последние посты в блогах друзей:</div>
+                                    <div class="content_title">{$LANG.LAST_POSTS_IN_FRIEND_BLOG}:</div>
 
                                     <table cellpadding="3" cellspacing="0" border="0" width="100%" class="feed">
                                         {foreach key=tid item=post from=$usr.friends_posts}
@@ -242,7 +242,7 @@
                                     </table>
                                 {/if}
                                 {if $usr.friends_photos}
-                                    <div class="content_title">Последние фотографии друзей:</div>
+                                    <div class="content_title">{$LANG.LAST_FRIEND_PHOTOS}:</div>
 
                                     <table cellpadding="3" cellspacing="0" border="0" width="100%" class="feed">
                                         {foreach key=tid item=photo from=$usr.friends_photos}
@@ -260,8 +260,8 @@
                                 {/if}                                
                             </div>
                        {else}
-                            <p>Лента служит для быстрого просмотра новых фотографий и постов в блогах ваших друзей.</p>
-                            <p>У вас пока нет друзей на сайте, поэтому лента пуста.</p>
+                            <p>{$LANG.FEED_DESC}</p>
+                            <p>{$LANG.FEED_EMPTY_TEXT}</p>
                        {/if}
 					</div>	
 				{/if}		
@@ -270,7 +270,7 @@
                 {if $cfg.sw_content}
                     <div id="content">
                         {if $myprofile}
-                            <div class="content_title">Ваш контент:</div>
+                            <div class="content_title">{$LANG.YOUR_CONTENT}:</div>
                         {/if}
                         <div id="usr_links">
                             {if $cfg.sw_blogs}
@@ -282,22 +282,22 @@
                             {/if}
                             {if $cfg.sw_comm}
                                 <div id="usr_comments">
-                                    <a href="/users/{$menuid}/{$usr.id}/comments.html">Комментарии</a> ({$usr.comments_count})
+                                    <a href="/users/{$menuid}/{$usr.id}/comments.html">{$LANG.USR_COMMENTS}</a> ({$usr.comments_count})
                                 </div>
                             {/if}
                             {if $cfg.sw_photo}
                                 <div id="usr_photoalbum">
-                                    <a href="/users/{$menuid}/{$usr.id}/photoalbum.html">Фотоальбом</a> ({$usr.photos_count})
+                                    <a href="/users/{$menuid}/{$usr.id}/photoalbum.html">{$LANG.PHOTOALBUM}</a> ({$usr.photos_count})
                                 </div>
                             {/if}
                             {if $cfg.sw_files}
                                 <div id="usr_files">
-                                    <a href="/users/{$menuid}/{$usr.id}/files.html">Файлы</a> ({$usr.files_count})
+                                    <a href="/users/{$menuid}/{$usr.id}/files.html">{$LANG.FILES}</a> ({$usr.files_count})
                                 </div>
                             {/if}
                             {if $cfg.sw_board}
                                 <div id="usr_board">
-                                    <a href="/users/{$menuid}/{$usr.id}/board.html">Объявления</a> ({$usr.board_count})
+                                    <a href="/users/{$menuid}/{$usr.id}/board.html">{$LANG.ADVS}</a> ({$usr.board_count})
                                 </div>
                             {/if}
                         </div>
@@ -311,9 +311,9 @@
                             {$usr.friends}
                         {else}
                             {if !$myprofile}
-                                <p>У пользователя пока нет друзей на сайте.</p>
+                                <p>{$LANG.NOT_FRIENDS_IN_USER}</p>
                             {else}
-                                <p>У вас пока нет друзей на сайте.</p>
+                                <p>{$LANG.NOT_FRIENDS_IN_YOUR}</p>
                             {/if}
                         {/if}
                     </div>
@@ -325,7 +325,7 @@
 						{if $usr.clubs}
 							{if sizeof($usr.clubs.member)}
 								<div class="usr_clubs">
-									<span class="label">Состоит в:</span>
+									<span class="label">{$LANG.CONSIST}:</span>
 									{foreach key=tid item=club from=$usr.clubs.member}
 										<a class="usr_club_link" href="/clubs/0/{$club.id}">{$club.title}</a>
 									{/foreach}
@@ -333,7 +333,7 @@
 							{/if}
 							{if sizeof($usr.clubs.moder)}
 								<div class="usr_clubs">
-									<span class="label">Модерирует:</span>
+									<span class="label">{$LANG.MODERATE}:</span>
 									{foreach key=tid item=club from=$usr.clubs.moder}
 										<a class="usr_club_link" href="/clubs/0/{$club.id}">{$club.title}</a>
 									{/foreach}
@@ -341,7 +341,7 @@
 							{/if}
 							{if sizeof($usr.clubs.admin)}
 								<div class="usr_clubs">
-									<span class="label">Администрирует:</span>
+									<span class="label">{$LANG.ADMINING}:</span>
 									{foreach key=tid item=club from=$usr.clubs.admin}
 										<a class="usr_club_link" href="/clubs/0/{$club.id}">{$club.title}</a>
 									{/foreach}
@@ -349,9 +349,9 @@
 							{/if}													
 						{else}
                             {if !$myprofile}
-                                <p><strong>{$usr.nickname}</strong> не состоит в клубах.</p>
+                                <p><strong>{$usr.nickname}</strong> {$LANG.USET_NOT_IN_CLUBS}</p>
                             {else}
-                                <p>Вы не состоите в клубах на сайте.</p>
+                                <p>{$LANG.YOU_NOT_IN_CLUBS}</p>
                             {/if}
 						{/if}
 					</div>
@@ -360,9 +360,9 @@
 				{* ============================== ЗАКЛАДКА №6 ============================================== *}
 
                 {if $cfg.sw_awards}
-					<div id="awards">						
+					<div id="awards">
 						<div class="awards_list_link">
-							<a href="/users/awardslist.html">Как получить награду?</a>
+							<a href="/users/awardslist.html">{$LANG.HOW_GET_AWARD}</a>
 						</div>
 						{if sizeof($usr.awards_html)}
 							{$usr.awards_html}
@@ -373,7 +373,7 @@
                 {foreach key=id item=plugin from=$plugins}
                     <div id="{$plugin.name}">{$plugin.html}</div>
                 {/foreach}
-								
+
 			</div>						
 	</td>
   </tr>

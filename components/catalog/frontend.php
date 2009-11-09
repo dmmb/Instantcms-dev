@@ -26,6 +26,7 @@ function isNew($item_id, $shownew, $newint){
 function getAlphaList($cat_id){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
+    global $_LANG;
     global $menuid;
     $html = '';
     $sql = "SELECT UPPER(SUBSTRING(LTRIM( title ) , 1, 1)) AS first_letter, COUNT( id ) AS num
@@ -36,7 +37,7 @@ function getAlphaList($cat_id){
     if ($inDB->num_rows($result)){
         $html .= '<div class="uc_alpha_list">';
         while($a = $inDB->fetch_assoc($result)){
-            $html .= '<a class="uc_alpha_link" href="/catalog/'.$menuid.'/'.$cat_id.'/find-first/'.urlencode($a['first_letter']).'" title="Записей: '.$a['num'].'">'.$a['first_letter'].'</a>';
+            $html .= '<a class="uc_alpha_link" href="/catalog/'.$menuid.'/'.$cat_id.'/find-first/'.urlencode($a['first_letter']).'" title="'.$_LANG['ARTICLES'].': '.$a['num'].'">'.$a['first_letter'].'</a>';
         }
         $html .= '</div>';
     }
@@ -63,8 +64,9 @@ function ratingData($item_id){
 function buildRating($rating){
     $inCore     = cmsCore::getInstance();
     $inDB       = cmsDatabase::getInstance();
+    global $_LANG;
     $rating     = round($rating, 2);
-    $html = '<a href="#" title="Рейтинг: '.$rating.'">';
+    $html = '<a href="#" title="'.$_LANG['RATING'].': '.$rating.'">';
     for($r = 0; $r < 5; $r++){
         if (round($rating) > $r){
             $html .= '<img src="/images/ratings/starfull.gif" border="0" />';
@@ -92,22 +94,23 @@ function alreadyVoted($item_id){
 function ratingForm($ratingdata, $item_id){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
+    global $_LANG;
     $html = '';
     $html .= '<form name="rateform" action="?'.$_SERVER['QUERY_STRING'].'" method="POST"><div class="uc_detailrating"><table><tr>' ."\n";
     $html .= '<td width="90">'."\n";
-    $html .= '<strong>Рейтинг:</strong> '.round($ratingdata['rating'], 2)."\n";
+    $html .= '<strong>'.$_LANG['RATING'].':</strong> '.round($ratingdata['rating'], 2)."\n";
     $html .= '</td>'."\n";
     $html .= '<td width="100" valign="middle">'."\n";
     $html .= buildRating($ratingdata['rating'])."\n";
     $html .= '</td>'."\n";
     $html .= '<td width="50">'."\n";
-    $html .= '<strong>Голосов:</strong> '."\n";
+    $html .= '<strong>'.$_LANG['VOTES'].':</strong> '."\n";
     $html .= '</td>'."\n";
     $html .= '<td width="40" valign="middle">'."\n";
     $html .= $ratingdata['votes']."\n";
     $html .= '</td>'."\n";
     $html .= '<td width="100">'."\n";
-    $html .= '<strong>Ваша оценка:</strong> '."\n";
+    $html .= '<strong>'.$_LANG['YOUR_VOTE'].':</strong> '."\n";
     $html .= '</td>'."\n";
     $html .= '<td width=""> '."\n";
     $myvote = alreadyVoted($item_id);
@@ -129,21 +132,22 @@ function ratingForm($ratingdata, $item_id){
 function orderForm($orderby, $orderto, $shop=false){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
+    global $_LANG;
     $html = '';
     $html .= '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST"><div class="catalog_sortform"><table cellspacing="2" cellpadding="2" >' ."\n";
     $html .= '<tr>' ."\n";
-    $html .= '<td>Сортировка записей: </td>' ."\n";
+    $html .= '<td>'.$_LANG['ORDER_ARTICLES'].': </td>' ."\n";
     $html .= '<td valign="top"><select name="orderby" id="orderby">' ."\n";
     if($shop){
-        $html .= '<option value="price" '; if($orderby=='price') { $html .= 'selected'; } $html .= '>По цене</option>' ."\n";
+        $html .= '<option value="price" '; if($orderby=='price') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_PRICE'].'</option>' ."\n";
     }
-    $html .= '<option value="title" '; if($orderby=='title') { $html .= 'selected'; } $html .= '>По алфавиту</option>' ."\n";
-    $html .= '<option value="pubdate" '; if($orderby=='pubdate') { $html .= 'selected'; } $html .= '>По дате</option>' ."\n";
-    $html .= '<option value="rating" '; if($orderby=='rating') { $html .= 'selected'; } $html .= '>По рейтингу</option>' ."\n";
-    $html .= '<option value="hits" '; if($orderby=='hits') { $html .= 'selected'; } $html .= '>По просмотрам</option>' ."\n";
+    $html .= '<option value="title" '; if($orderby=='title') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_TITLE'].'</option>' ."\n";
+    $html .= '<option value="pubdate" '; if($orderby=='pubdate') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_DATE'].'</option>' ."\n";
+    $html .= '<option value="rating" '; if($orderby=='rating') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_RATING'].'</option>' ."\n";
+    $html .= '<option value="hits" '; if($orderby=='hits') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_HITS'].'</option>' ."\n";
     $html .= '</select> <select name="orderto" id="orderto">';
-    $html .= '<option value="desc" '; if($orderto=='desc') { $html .= 'selected'; } $html .= '>по убыванию</option>' ."\n";
-    $html .= '<option value="asc" '; if($orderto=='asc') { $html .= 'selected'; } $html .= '>по возрастанию</option>' ."\n";
+    $html .= '<option value="desc" '; if($orderto=='desc') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_DESC'].'</option>' ."\n";
+    $html .= '<option value="asc" '; if($orderto=='asc') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_ASC'].'</option>' ."\n";
     $html .= '</select>';
     $html .= ' <input type="submit" value=">>" />' ."\n";
     $html .= '</td>' ."\n";
@@ -202,7 +206,7 @@ function pageBar($total, $current, $perpage){
         $pages = ceil($total / $perpage);
         if($pages>1){
             $html .= '<div class="pagebar">';
-            $html .= '<span class="pagebar_title"><strong>Страницы: </strong></span>';
+            $html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
             for ($p=1; $p<=$pages; $p++){
                 if ($p != $current) {
 
@@ -305,7 +309,7 @@ function catalog(){
     $inPage = cmsPage::getInstance();
     $inDB = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
-
+    global $_LANG;
     $menuid = $inCore->menuId();
     $menutitle = $inCore->menuTitle();
     $cfg = $inCore->loadComponentConfig('catalog');
@@ -344,7 +348,7 @@ function catalog(){
                         FROM cms_uc_items
                         WHERE category_id = $id AND published = 1 AND tags LIKE '%$query%'";
             $do = 'cat';
-        } else { echo 'Совпадений не найдено.'; }
+        } else { echo $_LANG['NO_MATCHING_FOUND']; }
 
     }
     //////////////////////////// ADVANCED SEARCH ////////////////////////////////////////////////////////////////////
@@ -400,8 +404,8 @@ function catalog(){
 
                 //heading
                 $inPage->addPathway($cat['title'], '/catalog/'.$menuid.'/'.$cat['id']);
-                $inPage->addPathway('Поиск', '/catalog/'.$menuid.'/'.$cat['id'].'/search.html');
-                $inPage->setTitle('Поиск в каталоге' . ' - ' . $menutitle);
+                $inPage->addPathway($_LANG['SEARCH'], '/catalog/'.$menuid.'/'.$cat['id'].'/search.html');
+                $inPage->setTitle($_LANG['SEARCH_IN_CAT'] . ' - ' . $menutitle);
 
                 $inPage->addHeadJS('components/catalog/js/search.js');
 
@@ -477,7 +481,7 @@ function catalog(){
         if ($cats_html){
             echo $cats_html;
         } else {
-            echo '<p>В каталоге нет рубрик или все рубрики пусты.</p>';
+            echo '<p>'.$_LANG['NO_CAT_IN_CATALOG'].'</p>';
         }
     }
 
@@ -523,7 +527,7 @@ function catalog(){
             } else {
                 $sql = $findsql;
                 if (!$advsearch){ $inPage->addPathway(ucfirst($query), $_SERVER['REQUEST_URI']); } else
-                { $inPage->addPathway('Результаты поиска', $_SERVER['REQUEST_URI']); }
+                { $inPage->addPathway($_LANG['SEARCH_RESULT'], $_SERVER['REQUEST_URI']); }
             }
 
             //ordering
@@ -575,9 +579,9 @@ function catalog(){
                 $search_details = '';
                 if (isset($findsql)){
                     if ($advsearch){
-                        $search_details = '<div class="uc_queryform"><strong>Результаты поиска - </strong> Найдено: '.$itemscount.' | <a href="/catalog/'.$menuid.'/'.$cat['id'].'">Отменить поиск</a></div>';
+                        $search_details = '<div class="uc_queryform"><strong>'.$_LANG['SEARCH_RESULT'].' - </strong> '.$_LANG['FOUNDED'].': '.$itemscount.' | <a href="/catalog/'.$menuid.'/'.$cat['id'].'">'.$_LANG['CANCEL_SEARCH'].'</a></div>';
                     } else {
-                        $search_details = '<div class="uc_queryform"><strong>Поиск по ключевому слову</strong> "'.ucfirst($query).'" (совпадений: '.$itemscount.') <a href="/catalog/'.$menuid.'/'.$cat['id'].'">Отменить поиск</a></div>';
+                        $search_details = '<div class="uc_queryform"><strong>'.$_LANG['SEARCH_BY_TAG'].'</strong> "'.ucfirst($query).'" ('.$_LANG['MATCHES'].': '.$itemscount.') <a href="/catalog/'.$menuid.'/'.$cat['id'].'">'.$_LANG['CANCEL_SEARCH'].'</a></div>';
                     }
                 }
 
@@ -617,7 +621,7 @@ function catalog(){
                                     //$field = substr(strip_tags($item['fdata'][$key]), 0, 260).'...';
                                     $field = $item['fdata'][$key];
                                 }
-                                if (isset($query)) { if (@strstr($query, $fdata[$key]) || @strstr($fdata[$key], $query)) { $field .= '<span class="uc_findsame"> &larr; <i>совпадение</i></span>';} }
+                                if (isset($query)) { if (@strstr($query, $fdata[$key]) || @strstr($fdata[$key], $query)) { $field .= '<span class="uc_findsame"> &larr; <i>'.$_LANG['MATCHE'].'</i></span>';} }
                                 $fields_show++;
                                 $item['fields'][$value] = $field;
                             } else { break; }
@@ -635,7 +639,7 @@ function catalog(){
 
             $smarty->display('com_catalog_view.tpl');
 
-        } else { echo 'Рубрика каталога не найдена.'; }
+        } else { echo $_LANG['CAT_NOT_FOUND']; }
 
         return true;
 
@@ -643,7 +647,7 @@ function catalog(){
 
     //////////////////////////// VIEW ITEM DETAILS ///////////////////////////////////////////////////////////////////////
     if ($do == 'item'){
-        $id  = $inCore->request('id', 'int', 0);
+        $id = intval($_REQUEST['id']);
         $sql = "SELECT * FROM cms_uc_items WHERE id = $id";
         $itemres = $inDB->query($sql) ;
 
@@ -654,8 +658,8 @@ function catalog(){
             $item = $inDB->fetch_assoc($itemres);
             $fdata = unserialize($item['fieldsdata']);
 
-            if ($item['meta_keys']) { $inPage->setKeywords($item['meta_keys']); }
-            if ($item['meta_desc']) { $inPage->setDescription($item['meta_desc']); }
+            if ($item['meta_keys']) { $GLOBALS['page_keys'] = $item['meta_keys']; }
+            if ($item['meta_desc']) { $GLOBALS['page_desc'] = $item['meta_desc']; }
 
             $ratingdata = ratingData($id);
 
@@ -742,11 +746,11 @@ function catalog(){
                 $already = shopIsInCart($item['id']);
                 $item['price'] = number_format(shopDiscountPrice($item['id'], $item['category_id'], $item['price']), 2, '.', ' ');
                 echo '<div id="shop_price">';
-                echo '<span>Цена:</span> '. $item['price'] . ' руб.';
+                echo '<span>'.$_LANG['PRICE'].':</span> '. $item['price'] . ' '.$_LANG['RUB'];
                 echo '</div>';
                 echo '<div id="shop_ac_itemdiv">';
-                echo '<a href="/catalog/'.$menuid.'/addcart'.$item['id'].'.html" title="Добавить в корзину" id="shop_ac_item_link">';
-                echo '<img src="/components/catalog/images/shop/addcart.jpg" border="0" alt="Добавить в корзину"/>';
+                echo '<a href="/catalog/'.$menuid.'/addcart'.$item['id'].'.html" title="'.$_LANG['ADD_TO_CART'].'" id="shop_ac_item_link">';
+                echo '<img src="/components/catalog/images/shop/addcart.jpg" border="0" alt="'.$_LANG['ADD_TO_CART'].'"/>';
                 echo '</a>';
                 echo '</div>';
             }
@@ -754,7 +758,7 @@ function catalog(){
             echo '</tr></table>';
 
             if ($cat['showtags']){
-                echo '<div class="uc_detailtags"><strong>Тэги: </strong>'.tagLine($item['tags'], $cat['id']).'</div>';
+                echo '<div class="uc_detailtags"><strong>'.$_LANG['TAGS'].': </strong>'.tagLine($item['tags'], $cat['id']).'</div>';
             }
             if ($cat['is_ratings']){ echo ratingForm($ratingdata, $item['id']);	}
 
@@ -764,7 +768,7 @@ function catalog(){
                 comments('catalog', $item['id']);
             }
 
-        } else { echo 'Указанная запись в каталоге не существует. Возможно она была удалена или перемещена.'; }
+        } else { echo $_LANG['NOT_FOUUND_ARTICLE_TEXT']; }
 
         return true;
     }

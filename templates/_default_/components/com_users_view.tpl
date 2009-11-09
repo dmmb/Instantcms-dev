@@ -2,37 +2,37 @@
 {* ========================= —писок пользователей ================================= *}
 {* ================================================================================ *}
 
-<h1 class="con_heading">ѕользователи</h1>
+<h1 class="con_heading">{$LANG.USERS}</h1>
 
     {if $cfg.sw_search}
     <div style="margin-bottom:15px;">
         <div id="slink">
-            <a href="javascript:void(0)" style="background:url(/components/catalog/images/icons/search.png) no-repeat;padding-left:18px;" onclick="{literal}$('#sbar').slideToggle();$('#slink').slideToggle();{/literal}">ѕоиск пользователей</a>
+            <a href="javascript:void(0)" style="background:url(/components/catalog/images/icons/search.png) no-repeat;padding-left:18px;" onclick="{literal}$('#sbar').slideToggle();$('#slink').slideToggle();{/literal}">{$LANG.USERS_SEARCH}</a>
         </div>
         <div id="sbar" style="padding:6px;background:#ECECEC;display:none;">
             <form name="usr_search_form" method="post" action="/users/{$menuid}/search.html">
                 <table cellpadding="2">
                     <tr>
-                        <td>Ќайти: </td>
+                        <td>{$LANG.FIND}: </td>
                         <td>
                             <select name="gender" id="gender" style="width:150px">
-                                <option value="f">женщин</option>
-                                <option value="m">мужчин</option>
-                                <option value="0" selected>всех</option>
+                                <option value="f">{$LANG.FIND_FEMALE}</option>
+                                <option value="m">{$LANG.FIND_MALE}</option>
+                                <option value="0" selected>{$LANG.FIND_ALL}</option>
                             </select>,
                         </td>
                     </tr>
                     <tr>
-                         <td>возраст от</td>
+                         <td>{$LANG.AGE_FROM}</td>
                          <td>
                             <input style="width:60px" name="agefrom" type="text" id="agefrom" value="18"/>
-                            до
-                            <input style="width:60px" name="ageto" type="text" id="ageto" value=""/> лет
+                            {$LANG.TO}
+                            <input style="width:60px" name="ageto" type="text" id="ageto" value=""/> {$LANG.YEARS}
                          </td>
                     </tr>
                     <tr>
                          <td>
-                             им€
+                             {$LANG.NAME}
                          </td>
                          <td>
                             <input style="width:150px" id="name" name="name" type="text" value=""/>,
@@ -43,7 +43,7 @@
                     </tr>
                     <tr>
                          <td>
-                             город
+                             {$LANG.CITY}
                          </td>                    
                          <td>
                             <input style="width:150px" id="city" name="city" type="text" value=""/>,
@@ -53,13 +53,13 @@
                          </td>
                     </tr>
                     <tr>
-                         <td>интересы</td>
+                         <td>{$LANG.HOBBY}</td>
                          <td>
                             <input style="" id="hobby" name="hobby" type="text" value=""/>
                          </td>
                          <td>
-                             <input name="gosearch" type="submit" id="gosearch" value="ѕоиск" />
-                             <input name="hide" type="button" id="hide" value="—крыть" onclick="{literal}$('#sbar').slideToggle();$('#slink').slideToggle();{/literal}"/>
+                             <input name="gosearch" type="submit" id="gosearch" value="{$LANG.SEARCH}" />
+                             <input name="hide" type="button" id="hide" value="{$LANG.HIDE}" onclick="{literal}$('#sbar').slideToggle();$('#slink').slideToggle();{/literal}"/>
                          </td>
                     </tr>
                 </table>
@@ -75,9 +75,9 @@
 			<td width="50%" valign="top">
 			{* ========================= —ѕ»—ќ  ѕќЋ№«ќ¬ј“≈Ћ≈… ============================*}				
 				<div class="users_list_buttons">
-					<div class="button {if $link.selected=='positive'}selected_positive{/if}"><a rel=ФnofollowФ href="{$link.positive}">ѕозитивные</a></div>
-					<div class="button {if $link.selected=='rating'}selected_rating{/if}"><a rel=ФnofollowФ href="{$link.rating}">–ейтинг</a></div>
-					<div class="button {if $link.selected=='negative'}selected_negative{/if}"><a rel=ФnofollowФ href="{$link.negative}">Ќегативные</a></div>
+					<div class="button {if $link.selected=='positive'}selected_positive{/if}"><a rel=ФnofollowФ href="{$link.positive}">{$LANG.POSITIVE}</a></div>
+					<div class="button {if $link.selected=='rating'}selected_rating{/if}"><a rel=ФnofollowФ href="{$link.rating}">{$LANG.RATING}</a></div>
+					<div class="button {if $link.selected=='negative'}selected_negative{/if}"><a rel=ФnofollowФ href="{$link.negative}">{$LANG.NEGATIVE}</a></div>
 				</div>
 				<div class="users_list">
 					<table width="100%" cellspacing="5" cellpadding="5" class="users_list">
@@ -99,7 +99,7 @@
 						{else}
 							<tr>
 								<td>
-									<p>ѕользователи не найдены.</p>
+									<p>{$LANG.USERS_NOT_FOUND}.</p>
 								</td>
 							</tr>
 						{/if}
@@ -110,10 +110,10 @@
 			<td width="40%" valign="top">
 			{* ========================= —“ј“»—“» ј ѕќЋ№«ќ¬ј“≈Ћ≈… ============================*}				
 				<div class="stat_block">
-					<div class="title">—колько нас?</div>
+					<div class="title">{$LANG.HOW_MUCH_US}</div>
 					<div class="body">				
 						<ul>
-							<li>{$total_usr|spellcount:'пользователь':'пользовател€':'пользователей'}</li>
+							<li>{$total_usr|spellcount:$LANG.USER:$LANG.USER2:$LANG.USER10}</li>
 						</ul>
 					</div>
 				</div>
@@ -122,8 +122,8 @@
 					<div class="title"> то онлайн?</div>
 					<div class="body">				
 						<ul>
-							<li>{$people.users|spellcount:'пользователь':'пользовател€':'пользователей'}</li>
-							<li>{$people.guests|spellcount:'гость':'гост€':'гостей'}</li>
+							<li>{$people.users|spellcount:$LANG.USER:$LANG.USER2:$LANG.USER10}</li>
+							<li>{$people.guests|spellcount:$LANG.GUEST:$LANG.GUEST2:$LANG.GUEST10}</li>
 							<li>{$online_link}</li>
 						</ul>
 					</div>
@@ -133,15 +133,15 @@
 					<div class="title"> то мы?</div>
 					<div class="body">
 						<ul>
-							<li><a href="javascript:void(0)" rel=ФnofollowФ onclick="searchGender('m', {$menuid})">{$gender_stats.male|spellcount:'мужчина':'мужчины':'мужчин'}</a></li>
-							<li><a href="javascript:void(0)" rel=ФnofollowФ onclick="searchGender('f', {$menuid})">{$gender_stats.female|spellcount:'женщина':'женщины':'женщин'}</a></li>
-							<li>Ќе определились &mdash; {$gender_stats.unknown}</li>
+							<li><a href="javascript:void(0)" rel=ФnofollowФ onclick="searchGender('m', {$menuid})">{$gender_stats.male|spellcount:$LANG.MALE1:$LANG.MALE2:$LANG.MALE10}</a></li>
+							<li><a href="javascript:void(0)" rel=ФnofollowФ onclick="searchGender('f', {$menuid})">{$gender_stats.female|spellcount:$LANG.FEMALE1:$LANG.FEMALE2:$LANG.FEMALE10}</a></li>
+							<li>{$LANG.UNKNOWN} &mdash; {$gender_stats.unknown}</li>
 						</ul>
 					</div>
 				</div>
 				
 				<div class="stat_block">
-					<div class="title">ќткуда мы?</div>
+					<div class="title">{$LANG.WHERE_WE_FROM}</div>
 					<div class="body">
 						<ul>
 							{foreach key=tid item=city from=$city_stats}
@@ -157,7 +157,7 @@
 				
 				{if $bday}
 				<div class="stat_block_bday" style="margin-top:10px;">
-					<div class="title">—егодн€ день рождени€:</div>
+					<div class="title">{$LANG.TODAY_BIRTH}:</div>
 					<div class="body">
 						{$bday}
 					</div>

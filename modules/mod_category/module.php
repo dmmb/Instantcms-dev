@@ -11,6 +11,7 @@
 function mod_category($module_id){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
+	global $_LANG;
 	
 		$cfg = $inCore->loadModuleConfig($module_id);
 
@@ -53,7 +54,7 @@ function mod_category($module_id){
 				}
 			}
 			echo '</table>';
-		} else { echo '<p>Нет разделов для отображения.</p>'; }
+		} else { echo '<p>'.$_LANG['CATEGORY_NOT_CAT'].'</p>'; }
 				
 		return true;
 }

@@ -14,18 +14,19 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 function orderForm($orderby, $orderto){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
+    global $_LANG;
 	$html = '';
 	$html .= '<form action="" method="POST"><div class="photo_sortform"><table cellspacing="2" cellpadding="2" >' ."\n";
 	 	$html .= '<tr>' ."\n";
-			$html .= '<td>Сортировка фотографий: </td>' ."\n";
+			$html .= '<td>'.$_LANG['SORTING_PHOTOS'].': </td>' ."\n";
 			$html .= '<td valign="top"><select name="orderby" id="orderby">' ."\n";
-				$html .= '<option value="title" '; if($orderby=='title') { $html .= 'selected'; } $html .= '>По алфавиту</option>' ."\n";
-				$html .= '<option value="pubdate" '; if($orderby=='pubdate') { $html .= 'selected'; } $html .= '>По дате</option>' ."\n";
-				$html .= '<option value="rating" '; if($orderby=='rating') { $html .= 'selected'; } $html .= '>По рейтингу</option>' ."\n";
-				$html .= '<option value="hits" '; if($orderby=='hits') { $html .= 'selected'; } $html .= '>По просмотрам</option>' ."\n";
+				$html .= '<option value="title" '; if($orderby=='title') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_TITLE'].'</option>' ."\n";
+				$html .= '<option value="pubdate" '; if($orderby=='pubdate') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_DATE'].'</option>' ."\n";
+				$html .= '<option value="rating" '; if($orderby=='rating') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_RATING'].'</option>' ."\n";
+				$html .= '<option value="hits" '; if($orderby=='hits') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_HITS'].'</option>' ."\n";
 			$html .= '</select> <select name="orderto" id="orderto">';
-				$html .= '<option value="desc" '; if($orderto=='desc') { $html .= 'selected'; } $html .= '>по убыванию</option>' ."\n";
-				$html .= '<option value="asc" '; if($orderto=='asc') { $html .= 'selected'; } $html .= '>по возрастанию</option>' ."\n";
+				$html .= '<option value="desc" '; if($orderto=='desc') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_DESC'].'</option>' ."\n";
+				$html .= '<option value="asc" '; if($orderto=='asc') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_ASC'].'</option>' ."\n";
 			$html .= '</select>';
 			$html .= ' <input type="submit" value=">>" />' ."\n";
 			$html .= '</td>' ."\n";
@@ -46,6 +47,7 @@ function loadedByUser24h($user_id, $album_id){
 function pageBar($cat_id, $current, $perpage){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
+    global $_LANG;
 	$html = '';
 	$result = $inDB->query("SELECT id FROM cms_photo_files WHERE album_id = $cat_id") ;
 	$records = $inDB->num_rows($result);
@@ -53,7 +55,7 @@ function pageBar($cat_id, $current, $perpage){
 		$pages = ceil($records / $perpage);
 		if($pages>1){
 			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>Страницы: </strong></span>';	
+			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {			
 					
@@ -76,7 +78,7 @@ function photos(){
     $inPage = cmsPage::getInstance();
     $inDB = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
-
+    global $_LANG;
 	$menuid = $inCore->menuId();
 	$cfg = $inCore->loadComponentConfig('photos');
 	
@@ -115,20 +117,20 @@ if ($do=='view'){
 		if($id == $root['id']){
 			$pagetitle = $inCore->menuTitle();
 			if ($pagetitle) { $inPage->setTitle($pagetitle); } 
-			else { $inPage->setTitle('Фотогалерея'); $pagetitle = 'Фотогалерея'; }
+			else { $inPage->setTitle($_LANG['PHOTOGALLERY']); $pagetitle = $_LANG['PHOTOGALLERY']; }
 		} elseif(strstr($album['NSDiffer'],'club')) {		
-			$pagetitle = '<a href="/clubs/'.$menuid.'/'.$club['id'].'">'.$club['title'].'</a> &rarr Фотоальбомы';
-			$inPage->setTitle('Фотоальбомы - '.$club['title']);
+			$pagetitle = '<a href="/clubs/'.$menuid.'/'.$club['id'].'">'.$club['title'].'</a> &rarr '.$_LANG['PHOTOALBUMS'];
+			$inPage->setTitle($_LANG['PHOTOALBUMS'].' - '.$club['title']);
 			$inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$club['id']);
-			$inPage->addPathway('Фотоальбомы');
+			$inPage->addPathway($_LANG['PHOTOALBUMS']);
 		}
 	} else {
 		$pagetitle =  $album['title'];
 		if(strstr($album['NSDiffer'],'club')) {	
 			$inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$club['id']);
-			$inPage->addPathway('Фотоальбомы', '/photos/'.$menuid.'/'.$club['root_album_id']);
+			$inPage->addPathway($_LANG['PHOTOALBUMS'], '/photos/'.$menuid.'/'.$club['root_album_id']);
 		} else {
-			$inPage->setTitle($pagetitle  . ' - Фотогалерея');
+			$inPage->setTitle($pagetitle  . ' - '.$_LANG['PHOTOGALLERY']);
 			$left_key = $album['NSLeft'];
 			$right_key = $album['NSRight'];
 			$sql = "SELECT id, title, NSLevel FROM cms_photo_albums WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0 AND NSDiffer = '' ORDER BY NSLeft";
@@ -150,9 +152,9 @@ if ($do=='view'){
 			echo '<table border="0" cellspacing="0" cellpadding="5">';
 			  echo '<tr>';
 				echo '<td><img src="/components/photos/images/latest.gif" /></td>';
-				echo '<td><a href="/photos/'.$menuid.'/latest.html">Последние загруженные</a></td>';
+				echo '<td><a href="/photos/'.$menuid.'/latest.html">'.$_LANG['LAST_UPLOADED'].'</a></td>';
 				echo '<td><img src="/components/photos/images/best.gif" /></td>';
-				echo '<td><a href="/photos/'.$menuid.'/top.html">Лучшие фото</a></td>';
+				echo '<td><a href="/photos/'.$menuid.'/top.html">'.$_LANG['BEST_PHOTOS'].'</a></td>';
 			  echo '</tr>';
 			echo '</table>';
 		echo '</div>';
@@ -203,7 +205,7 @@ if ($do=='view'){
 			if (isset($userid)){
 				$usersql = "AND f.user_id = ".$userid;
 				$user    = dbGetField('cms_users', 'id='.$userid, 'nickname, login');
-				echo '<div class="photo_userbar"><strong>Фотографии пользователя: </strong><a href="'.cmsUser::getProfileURL($user['login']).'">'.$user['nickname'].'</a> (<a href="/photos/'.$menuid.'/'.$id.'">Показать все</a>)</div>';
+				echo '<div class="photo_userbar"><strong>'.$_LANG['USER_PHOTOS'].': </strong><a href="'.cmsUser::getProfileURL($user['login']).'">'.$user['nickname'].'</a> (<a href="/photos/'.$menuid.'/'.$id.'">'.$_LANG['SHOW_ALL'].'</a>)</div>';
 			} else {
 				$usersql = '';
 			}
@@ -212,7 +214,7 @@ if ($do=='view'){
 
 			//SQL BUILD			
 			$sql = "SELECT f.*,
-							IF(DATE_FORMAT(f.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(f.pubdate, '<strong>Сегодня</strong> в %H:%i'), 
+							IF(DATE_FORMAT(f.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(f.pubdate, '<strong>{$_LANG['TODAY']}</strong> в %H:%i'),
 							DATE_FORMAT(f.pubdate, '%d-%m-%Y'))  as fpubdate, IFNULL(AVG(r.points), 0) as rating
 					FROM cms_photo_files f
 					LEFT JOIN cms_ratings r ON r.item_id=f.id
@@ -262,7 +264,7 @@ if ($do=='view'){
 			if ($album['public'] && @$can_add){
 				echo '<table cellpadding="2" cellspacing="0" style="margin-bottom:10px">';
 					echo '<tr><td><img src="/components/photos/images/addphoto.gif" border="0"/></td>'."\n";
-					echo '<td><a style="text-decoration:underline" href="/photos/'.$menuid.'/'.$album['id'].'/addphoto.html">Добавить фото в альбом</a></td></tr>'."\n";
+					echo '<td><a style="text-decoration:underline" href="/photos/'.$menuid.'/'.$album['id'].'/addphoto.html">'.$_LANG['ADD_PHOTO_TO_ALBUM'].'</a></td></tr>'."\n";
 				echo '</table>';
 			}		
 			
@@ -279,9 +281,9 @@ if ($do=='view'){
 							echo '</td>';	
 							if($album['showdate']){
 								$fcols = 6;
-								echo '<td width="16" valign="top"><img src="/images/icons/comments.gif" alt="Комментарии" border="0"/></td>';			
-								echo '<td width="25" valign="top"><a href="/photos/'.$menuid.'/photo'.$con['id'].'.html#c" title="Комментарии">'.$inCore->getCommentsCount('photo', $photo['id']).'</a></td>';			
-								echo '<td width="16" valign="top" class="photo_date_td"><img src="/images/icons/date.gif" alt="Дата публикации" /></td>';			
+								echo '<td width="16" valign="top"><img src="/images/icons/comments.gif" alt="'.$_LANG['COMMENTS'].'" border="0"/></td>';
+								echo '<td width="25" valign="top"><a href="/photos/'.$menuid.'/photo'.$con['id'].'.html#c" title="'.$_LANG['COMMENTS'].'">'.$inCore->getCommentsCount('photo', $photo['id']).'</a></td>';
+								echo '<td width="16" valign="top" class="photo_date_td"><img src="/images/icons/date.gif" alt="'.$_LANG['PUB_DATE'].'" /></td>';
 								echo '<td width="70" align="center" valign="top" class="photo_date_td">'.$con['pubdate'].'</td>';			
 							} else {
 								$fcols = 2;
@@ -327,8 +329,8 @@ if ($do=='view'){
 						if ($show_hidden && $con['published']==0){
 							$inPage->addHeadJS('components/photos/js/photos.js');
 							echo '<tr id="moder'.$con['id'].'"><td align="center">
-								<div style="margin-top:4px">Ожидает модерации.</div>
-								<div><a href="javascript:publishPhoto('.$con['id'].')" style="color:green">Опубликовать</a> | <a href="/photos/'.$menuid.'/delphoto'.$con['id'].'.html" style="color:red">Удалить</a></div>
+								<div style="margin-top:4px">'.$_LANG['WAIT_MODERING'].'</div>
+								<div><a href="javascript:publishPhoto('.$con['id'].')" style="color:green">'.$_LANG['PUBLISH'].'</a> | <a href="/photos/'.$menuid.'/delphoto'.$con['id'].'.html" style="color:red">'.$_LANG['DELETE'].'</a></div>
 							</td></tr>';						
 						}
 						echo '</table>';
@@ -348,7 +350,7 @@ if ($do=='view'){
 
 				}
 			} else { 
-					 if($album['parent_id']>0) { echo '<p>Нет фотографий в этом альбоме.</p>'; }
+					 if($album['parent_id']>0) { echo '<p>'.$_LANG['NOT_PHOTOS_IN_ALBUM'].'</p>'; }
 					}
 					
 		}//END - ALBUM CONTENT
@@ -370,7 +372,7 @@ if($do=='viewphoto'){
 		if (strstr($photo['NSDiffer'],'club')){
 			$club = dbGetFields('cms_clubs', 'id='.$photo['album_user_id'], '*');
 			$inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$club['id']);
-			$inPage->addPathway('Фотоальбомы', '/photos/'.$menuid.'/'.clubRootAlbumId($club['id']));
+			$inPage->addPathway($_LANG['PHOTOALBUMS'], '/photos/'.$menuid.'/'.clubRootAlbumId($club['id']));
 		}
 
 		//PATHWAY ENTRY
@@ -404,8 +406,8 @@ if($do=='viewphoto'){
 			echo '<tr><td colspan="3" align="center"><div class="photo_desc">'.$photo['description'].'</div></td></tr>';		
 			//BACK LINKS
 			echo '<tr><td colspan="3" align="center">
-						<div>&larr; Вернуться к <a href="/photos/'.$menuid.'/'.$photo['cat_id'].'">альбому</a>'; 
-			if ($photo['NSDiffer']==''){ echo '| <a href="/photos/'.$menuid.'">списку альбомов</a></div>'; }
+						<div>&larr; '.$_LANG['BACK_TO'].' <a href="/photos/'.$menuid.'/'.$photo['cat_id'].'">'.$_LANG['TO_ALBUM'].'</a>';
+			if ($photo['NSDiffer']==''){ echo '| <a href="/photos/'.$menuid.'">'.$_LANG['TO_LIST_ALBUMS'].'</a></div>'; }
 			echo '</td></tr>';
 			//PHOTO		
 			echo '<tr>';
@@ -415,7 +417,7 @@ if($do=='viewphoto'){
 			if($photo['a_bbcode']){
 				echo '<tr><td style="text-align:center">';			
 					$bbcode = '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/photos/medium/'.$photo['file'].'[/IMG]';
-					echo '<label for="bbcode">Код для вставки на форумы: </label><input type="text" id="bbcode" name="bbcode" class="photo_bbinput" value="'.$bbcode.'"/>';			
+					echo '<label for="bbcode">'.$_LANG['CODE_INPUT_TO_FORUMS'].': </label><input type="text" id="bbcode" name="bbcode" class="photo_bbinput" value="'.$bbcode.'"/>';
 				echo '</td></tr>';
 			}
 			//Navigation
@@ -425,13 +427,13 @@ if($do=='viewphoto'){
 						echo '<table cellpadding="5" cellspacing="0" border="0" align="center" style="margin-left:auto;margin-right:auto"><tr>';
 							if ($previd){
 								echo '<td align="right">';
-									echo '<div>&larr; <a href="/photos/'.$menuid.'/photo'.$previd['id'].'.html">Предыдущая</a></div>';
+									echo '<div>&larr; <a href="/photos/'.$menuid.'/photo'.$previd['id'].'.html">'.$_LANG['PREVIOUS'].'</a></div>';
 								echo '</td>';
 							}
 							if ($previd && $nextid) { echo '<td>|</td>'; }
 							if ($nextid){
 								echo '<td align="left">';
-									echo '<div><a href="/photos/'.$menuid.'/photo'.$nextid['id'].'.html">Следующая</a> &rarr;</div>';
+									echo '<div><a href="/photos/'.$menuid.'/photo'.$nextid['id'].'.html">'.$_LANG['NEXT'].'</a> &rarr;</div>';
 								echo '</td>';
 							}						
 						echo '</tr></table>';
@@ -445,7 +447,7 @@ if($do=='viewphoto'){
 		if ($photo['a_type'] != 'simple'){
 			echo '<div class="photo_bar">';
 				echo '<table width="" cellspacing="0" cellpadding="4" align="center"><tr>';
-					echo '<td width=""><strong>Добавлена:</strong> '.$photo['pubdate'].'</td>';
+					echo '<td width=""><strong>'.$_LANG['ADDED'].':</strong> '.$photo['pubdate'].'</td>';
 					if ($photo['public']){
 						$usr = dbGetFields('cms_users', 'id='.$photo['user_id'], 'id, nickname, login');
 						if ($usr['id']){							
@@ -455,15 +457,15 @@ if($do=='viewphoto'){
 
 					$karma = cmsKarma('photo', $photo['id']);
 
-					echo '<td width=""><strong>Просмотров: </strong> '.$photo['hits'].'</td>';
-					echo '<td width=""><strong>Рейтинг: </strong><span id="karmapoints">'.cmsKarmaFormatSmall($karma['points']).'</span></td>';
+					echo '<td width=""><strong>'.$_LANG['HITS'].': </strong> '.$photo['hits'].'</td>';
+					echo '<td width=""><strong>'.$_LANG['RATING'].': </strong><span id="karmapoints">'.cmsKarmaFormatSmall($karma['points']).'</span></td>';
 					
 					echo '<td width="">'.cmsKarmaButtons('photo', $photo['id']).'</td>';
 		
 					if($cfg['link']){
 						$file = PATH.'/images/photos/'.$photo['file'];
 						if (file_exists($file)){
-							echo '<td><a href="/images/photos/'.$photo['file'].'" target="_blank">Открыть оригинал</a></td>'; 
+							echo '<td><a href="/images/photos/'.$photo['file'].'" target="_blank">'.$_LANG['OPEN_ORIGINAL'].'</a></td>';
 						}
 					}
 					
@@ -477,11 +479,11 @@ if($do=='viewphoto'){
 					
 					if(($photo['public'] && $inUser->id) || $inUser->is_admin){
 						if ($is_author || $is_admin){
-							echo '<td><a href="/photos/'.$menuid.'/editphoto'.$photo['id'].'.html" title="Редактировать"><img src="/images/icons/edit.gif" border="0"/></a></td>';
+							echo '<td><a href="/photos/'.$menuid.'/editphoto'.$photo['id'].'.html" title="'.$_LANG['EDIT'].'"><img src="/images/icons/edit.gif" border="0"/></a></td>';
 							if ($is_admin){
-								echo '<td><a href="/photos/'.$menuid.'/movephoto'.$photo['id'].'.html" title="Переместить"><img src="/images/icons/move.gif" border="0"/></a></td>';
+								echo '<td><a href="/photos/'.$menuid.'/movephoto'.$photo['id'].'.html" title="'.$_LANG['MOVE'].'"><img src="/images/icons/move.gif" border="0"/></a></td>';
 							}
-							echo '<td><a href="/photos/'.$menuid.'/delphoto'.$photo['id'].'.html" title="Удалить"><img src="/images/icons/delete.gif" border="0"/></a></td>';
+							echo '<td><a href="/photos/'.$menuid.'/delphoto'.$photo['id'].'.html" title="'.$_LANG['DELETE'].'"><img src="/images/icons/delete.gif" border="0"/></a></td>';
 						}
 					}
 				echo '</tr></table>';
@@ -506,7 +508,7 @@ if ($do=='addphoto'){
 
 	$sql = "SELECT * FROM cms_photo_albums WHERE id = $id";
 	$result = $inDB->query($sql) ;
-	if ($inDB->num_rows($result)) { $album = $inDB->fetch_assoc($result); } else { die('Альбом не найден'); }
+	if ($inDB->num_rows($result)) { $album = $inDB->fetch_assoc($result); } else { die($_LANG['ALBUM_NOT_FOUND']); }
 
 	$uid = $inUser->id;
 	$user_karma = cmsUser::getKarma($uid);
@@ -522,19 +524,19 @@ if ($do=='addphoto'){
 			$club = dbGetFields('cms_clubs', 'id='.$album['user_id'], '*');
 			$can_add = clubUserIsMember($club['id'], $uid) || clubUserIsAdmin($club['id'], $uid);		
 			$inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$club['id']);
-			$inPage->addPathway('Фотоальбомы');
+			$inPage->addPathway($_LANG['PHOTOALBUMS']);
 			$min_karma = $club['photo_min_karma'];
 		}				
 	}
 
 	$inPage->addPathway($album['title'], '/photos/'.$menuid.'/'.$album['id']);
-	$inPage->addPathway('Добавить фотографию');
+	$inPage->addPathway($_LANG['ADD_PHOTO']);
 	
 	if ($uid){
 		if (loadedByUser24h($uid, $album['id'])<$album['uplimit'] || $album['uplimit'] == 0){	
 			if ($album['public'] && $can_add){
 			if ($min_karma === false || $user_karma>=$min_karma || clubUserIsAdmin($club['id'], $uid) || clubUserIsRole($club['id'], $uid, 'moderator')){
-				$inPage->printHeading('Добавить фотографию');
+				$inPage->printHeading($_LANG['ADD_PHOTO']);
 					if ($inCore->inRequest('upload')) {
 						//first upload step
 						if (isset($_POST['userid'])){
@@ -560,12 +562,12 @@ if ($do=='addphoto'){
 	
 									if ( !isset($cfg['watermark']) ) 	{ $cfg['watermark'] = 0; 			}
 									if ( $cfg['watermark'] ) 		 	{ @img_add_watermark($uploadphoto);	}
-									if ( @!$cfg['saveorig'] )			{ @unlink($destination);			}
+									if ( @!$cfg['saveorig'] )			{ @unlink($uploadphoto);			}
 									
 									$inPage->initAutocomplete();
 									$autocomplete_js = $inPage->getAutocompleteJS('tagsearch', 'tags');
 									
-									$inPage->setTitle('Добавить фотографию - Шаг 2');							
+									$inPage->setTitle($_LANG['ADD_PHOTO'].' - '.$_LANG['STEP'].' 2');
 	
 									$form_action = '/photos/'.$menuid.'/'.$album['id'].'/addphoto.html';
 									
@@ -575,18 +577,18 @@ if ($do=='addphoto'){
 									$smarty->assign('autocomplete_js', $autocomplete_js);
 									$smarty->display('com_photos_add2.tpl');
 								} else {
-									echo '<p><strong>ОШИБКА:</strong> '.$inCore->uploadError().'!</p>';
+									echo '<p><strong>'.$_LANG['ERROR'].':</strong> '.$inCore->uploadError().'!</p>';
 								}
 												
-							} else { die('Доступ запрещен'); }
-						} else { die('Доступ запрещен'); }
+							} else { die($_LANG['ACCESS_DENIED']); }
+						} else { die($_LANG['ACCESS_DENIED']); }
 					
 					} else {
 						if (isset($_POST['submit'])){		
 							//final upload step
 
                             $photo['album_id']      = $id;
-							$photo['title']         = $inCore->request('title', 'str', 'Фото без названия');
+							$photo['title']         = $inCore->request('title', 'str', $_LANG['PHOTO_WITHOUT_NAME']);
 							$photo['description']   = $inCore->request('description', 'str');
 							$photo['tags']          = $inCore->request('tags', 'str');
 		
@@ -616,7 +618,7 @@ if ($do=='addphoto'){
 								
 						} else { 
 							//upload form
-							$inPage->setTitle('Добавить фотографию - Шаг 1');
+							$inPage->setTitle($_LANG['ADD_PHOTO'].' - '.$_LANG['STEP'].' 1');
 							
 							$form_action = '/photos/'.$menuid.'/'.$id.'/addphoto.html';
 							
@@ -627,21 +629,21 @@ if ($do=='addphoto'){
 						}
 					}
 				} else {
-					$inPage->printHeading('Не хватает кармы');
-					echo '<p><strong>У вас не хватает кармы для добавления фотографии в этот альбом.</strong></p>';
-					echo '<p>Требуется '.$min_karma.', а имеется только '.$user_karma.'.</p>';
-					echo '<p>Хотите посмотреть <a href="/users/'.$menuid.'/'.$uid.'/karma.html">историю своей кармы</a>?</p>';				
+					$inPage->printHeading($_LANG['NEED_KARMA']);
+					echo '<p><strong>'.$_LANG['NEED_KARMA_TEXT'].'</strong></p>';
+					echo '<p>'.$_LANG['NEEDED'].' '.$min_karma.', '.$_LANG['HAVE_ONLY'].' '.$user_karma.'.</p>';
+					echo '<p>'.$_LANG['WANT_SEE'].' <a href="/users/'.$menuid.'/'.$uid.'/karma.html">'.$_LANG['HISTORY_YOUR_KARMA'].'</a>?</p>';
 				}	
-			} else { echo '<p>Вы не можете добавлять фото в этот альбом.</p>'; }
+			} else { echo '<p>'.$_LANG['YOU_CANT_ADD_PHOTO'].'</p>'; }
 		} else { 
-			echo '<div class="con_heading">Добавить фотографию</div>';
-			echo '<div><strong>Достигнут предел загрузок в сутки.</strong> Вы сможете добавить фотографии в этот альбом завтра.</div>'; 
+			echo '<div class="con_heading">'.$_LANG['ADD_PHOTO'].'</div>';
+			echo '<div><strong>'.$_LANG['MAX_UPLOAD_IN_DAY'].'</strong> '.$_LANG['CAN_UPLOAD_TOMORROW'].'</div>';
 		}
 	}//auth 
 	else { 
-		echo '<div class="con_heading">Требуется регистрация</div>'; 
-		echo '<div>Возможность добавления фотографий есть только у зарегистрированных пользователей.</div>';
-		echo '<p><a href="/registration">Перейти к регистрации</a></p>';
+		echo '<div class="con_heading">'.$_LANG['NEED_REGISTRATION'].'</div>';
+		echo '<div>'.$_LANG['NEED_REGISTRATION_TEXT'].'</div>';
+		echo '<p><a href="/registration">'.$_LANG['GOTO_REGISTRATION'].'</a></p>';
 	}
 }
 
@@ -651,12 +653,12 @@ if ($do=='uploaded'){
 	$photo = dbGetFields('cms_photo_files', 'id='.$id, 'album_id, published');
 	
 	if ($id && $photo['published']!==false){
-		echo '<p><strong>Фотография успешно добавлена.</strong></p>';
-		if (!$photo['published']) { echo '<p>Фотография будет опубликована в галерее после проверки администратором.</p>'; }
+		echo '<p><strong>'.$_LANG['PHOTO_ADDED'].'</strong></p>';
+		if (!$photo['published']) { echo '<p>'.$_LANG['PHOTO_PREMODER_TEXT'].'</p>'; }
 		echo '<ul>';
-			echo '<li><a href="/photos/'.$menuid.'/photo'.$id.'.html">Перейти к фотографии</a></li>';
-			echo '<li><a href="/photos/'.$menuid.'/'.$photo['album_id'].'/addphoto.html">Добавить еще фотографию</a></li>';
-			echo '<li><a href="/photos/'.$menuid.'/'.$photo['album_id'].'">Вернуться к фотоальбому</a></li>';
+			echo '<li><a href="/photos/'.$menuid.'/photo'.$id.'.html">'.$_LANG['GOTO_PHOTO'].'</a></li>';
+			echo '<li><a href="/photos/'.$menuid.'/'.$photo['album_id'].'/addphoto.html">'.$_LANG['ADD_MORE_PHOTO'].'</a></li>';
+			echo '<li><a href="/photos/'.$menuid.'/'.$photo['album_id'].'">'.$_LANG['BACK_TO_PHOTOALBUM'].'</a></li>';
 		echo '</ul>';
 	}
 }
@@ -692,11 +694,11 @@ if ($do=='editphoto'){
 		if ($inDB->num_rows($result)){
 			$usr = $inDB->fetch_assoc($result);
 	
-			$inPage->addPathway('Редактировать фотографию');
-			echo '<div class="con_heading">Редактировать фотографию</div>';
+			$inPage->addPathway($_LANG['EDIT_PHOTO']);
+			echo '<div class="con_heading">'.$_LANG['EDIT_PHOTO'].'</div>';
 			
             if ($inCore->inRequest('save')){
-					$photo['title']         = $inCore->request('title', 'str', 'Фото без названия');
+					$photo['title']         = $inCore->request('title', 'str', $_LANG['PHOTO_WITHOUT_NAME']);
 					$photo['description']   = $inCore->request('description', 'str');
 					$photo['tags']          = $inCore->request('tags', 'str');
                     $photo['filename']      = $inCore->request('file', 'str');
@@ -735,9 +737,9 @@ if ($do=='editphoto'){
 					//UPDATE                    
 					$model->updatePhoto($photo['id'], $photo);
 					
-					echo '<p><strong>Фотография успешно cохранена.</strong></p>';
-					echo '<p>&larr; <a href="/photos/'.$menuid.'/photo'.$photo['id'].'.html">Вернуться к фотографии</a><br/>
-							 &larr; <a href="/photos/'.$menuid.'/'.$photo['album_id'].'">Вернуться к фотоальбому</a></p>';
+					echo '<p><strong>'.$_LANG['PHOTO_SAVED'].'</strong></p>';
+					echo '<p>&larr; <a href="/photos/'.$menuid.'/photo'.$photo['id'].'.html">'.$_LANG['BACK_TO_PHOTO'].'</a><br/>
+							 &larr; <a href="/photos/'.$menuid.'/'.$photo['album_id'].'">'.$_LANG['BACK_TO_PHOTOALBUM'].'</a></p>';
 					
 				} else { 
 							if(isset($_REQUEST['id'])){								
@@ -758,35 +760,35 @@ if ($do=='editphoto'){
                                         </table></td>
                                         <td align="right" valign="top"><table width="409">
                                           <tr>
-                                            <td width="401" valign="top"><strong>Название фото: </strong></td>
+                                            <td width="401" valign="top"><strong><?php echo $_LANG['PHOTO_TITLE']; ?>: </strong></td>
                                           </tr>
                                           <tr>
                                             <td valign="top"><input name="title" type="text" id="title" size="40" maxlength="250" value="<?php echo $photo['title']?>"/></td>
                                           </tr>
                                           <tr>
-                                            <td width="401" valign="top"><strong>Описание фото: </strong></td>
+                                            <td width="401" valign="top"><strong><?php echo $_LANG['PHOTO_DESCRIPTION']; ?>: </strong></td>
                                           </tr>
                                           <tr>
                                             <td valign="top"><textarea name="description" cols="50" rows="8" id="description"><?php echo $photo['description']?></textarea></td>
                                           </tr>
                                           <tr>
-                                            <td><strong>Теги:</strong></td>
+                                            <td><strong><?php echo $_LANG['TAGS']; ?>:</strong></td>
                                           </tr>
                                           <tr>
                                             <td><input name="tags" type="text" id="music" size="40" value="<?php if (isset($photo['id'])) { echo cmsTagLine('photo', $photo['id'], false); } ?>"/>
                                             <br />
-                                            <small>ключевые слова, через запятую</small></td>
+                                            <small><?php echo $_LANG['KEYWORDS']; ?></small></td>
                                           </tr>
                                           <tr>
-                                            <td valign="top"><strong>Заменить файлом:</strong></td>
+                                            <td valign="top"><strong><?php echo $_LANG['REPLACE_FILE']; ?>:</strong></td>
                                           </tr>
                                           <tr>
                                             <td valign="top"><input name="MAX_FILE_SIZE" type="hidden" value="<?php echo ($max_mb * 1024 * 1024)?>"/>
                                               <input name="picture" type="file" size="30" /></td>
                                           </tr>
                                           <tr>
-                                            <td valign="top"><input style="margin-top:10px;font-size:18px" type="submit" name="save" value="Сохранить" />
-											<input style="margin-top:10px;font-size:18px" type="button" name="cancel" value="Отмена" onclick="window.history.go(-1);"/></td>
+                                            <td valign="top"><input style="margin-top:10px;font-size:18px" type="submit" name="save" value="<?php echo $_LANG['SAVE']; ?>" />
+											<input style="margin-top:10px;font-size:18px" type="button" name="cancel" value="<?php echo $_LANG['CANCEL']; ?>" onclick="window.history.go(-1);"/></td>
                                           </tr>
                                         </table></td>
                                       </tr>
@@ -825,16 +827,16 @@ if ($do=='movephoto'){
 			
 			if (!isset($_POST['gomove'])){ //SHOW MOVE FORM
 						
-				$inPage->setTitle('Перенести фото');
-				$inPage->addPathway('Перенести фото', $_SERVER['REQUEST_URI']);
+				$inPage->setTitle($_LANG['MOVE_PHOTO']);
+				$inPage->addPathway($_LANG['MOVE_PHOTO'], $_SERVER['REQUEST_URI']);
 
-				echo '<div class="con_heading">Перенести фото</div>';
+				echo '<div class="con_heading">'.$_LANG['MOVE_PHOTO'].'</div>';
 					
-				echo '<div style="margin-top:10px; margin-bottom:15px;"><strong>Фото:</strong> <a href="/photos/'.$menuid.'/photo'.$photo['id'].'.html">'.$photo['title'].'</a></div>';
+				echo '<div style="margin-top:10px; margin-bottom:15px;"><strong>'.$_LANG['PHOTO'].':</strong> <a href="/photos/'.$menuid.'/photo'.$photo['id'].'.html">'.$photo['title'].'</a></div>';
 				
 				echo '<div><form action="" method="POST">';
 				
-				echo '<table border="0" cellspacing="10" style="background-color:#EBEBEB"><tr><td>Перенести в альбом:</td>';
+				echo '<table border="0" cellspacing="10" style="background-color:#EBEBEB"><tr><td>'.$_LANG['MOVE_INTO_ALBUM'].':</td>';
 				
 					echo '<td><select name="album_id">';
 	
@@ -854,7 +856,7 @@ if ($do=='movephoto'){
 					
 					echo '</select></td>';
 	
-				echo '<td><input type="submit" name="gomove" value="Перенести"/></td></tr></table>';
+				echo '<td><input type="submit" name="gomove" value="'.$_LANG['MOVING'].'"/></td></tr></table>';
 				echo '</form></div>';								
 
 			} else { //DO MOVE
@@ -906,12 +908,12 @@ if ($do=='delphoto'){
 				$result = $inDB->query($sql) ;
 				if ($inDB->num_rows($result)){
 					$photo = $inDB->fetch_assoc($result);				
-					$inPage->addPathway('Удалить фотографию', $_SERVER['REQUEST_URI']);
-					echo '<div class="con_heading">Удаление фотографии</div>';				
-					echo '<p>Вы действительно желаете удалить фото "'.$photo['title'].'"?</p>';
+					$inPage->addPathway($_LANG['DELETE_PHOTOGALLERY'], $_SERVER['REQUEST_URI']);
+					echo '<div class="con_heading">'.$_LANG['DELETING_PHOTO'].'</div>';
+					echo '<p>'.$_LANG['YOU_REALLY_DELETE_PHOTO'].' "'.$photo['title'].'"?</p>';
 					echo '<div><form action="'.$_SERVER['REQUEST_URI'].'" method="POST"><p>
-							<input style="font-size:24px; width:100px" type="button" name="cancel" value="Нет" onclick="window.history.go(-1)" /> 
-							<input style="font-size:24px; width:100px" type="submit" name="godelete" value="Да" /> 
+							<input style="font-size:24px; width:100px" type="button" name="cancel" value="'.$_LANG['NO'].'" onclick="window.history.go(-1)" />
+							<input style="font-size:24px; width:100px" type="submit" name="godelete" value="'.$_LANG['YES'].'" />
 						 </p></form>';
 				} else { usrAccessDenied(); }
 			}
@@ -925,7 +927,7 @@ if ($do=='delphoto'){
 if ($do=='latest'){
 	$col = 1; $maxcols = 4;
 
-	$sql = "SELECT f.*, IF(DATE_FORMAT(f.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(f.pubdate, '<strong>Сегодня</strong>, %H:%i'), DATE_FORMAT(f.pubdate, '%d-%m-%Y'))  as fpubdate, a.id as album_id, a.title as album
+	$sql = "SELECT f.*, IF(DATE_FORMAT(f.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(f.pubdate, '<strong>{$_LANG['TODAY']}</strong>, %H:%i'), DATE_FORMAT(f.pubdate, '%d-%m-%Y'))  as fpubdate, a.id as album_id, a.title as album
 			FROM cms_photo_files f, cms_photo_albums a
 			WHERE f.published = 1 AND f.album_id = a.id
 			ORDER BY pubdate DESC
@@ -933,8 +935,8 @@ if ($do=='latest'){
 
 	$result = $inDB->query($sql) ;
 
-	$inPage->addPathway('Новые фото в галерее', $_SERVER['REQUEST_URI']);
-	echo '<div class="con_heading">Новые фото в галерее</div>';
+	$inPage->addPathway($_LANG['NEW_PHOTO_IN_GALLERY'], $_SERVER['REQUEST_URI']);
+	echo '<div class="con_heading">'.$_LANG['NEW_PHOTO_IN_GALLERY'].'</div>';
 		
 	if ($inDB->num_rows($result)){	
 		echo '<table cellspacing="2" border="0" width="100%">';
@@ -968,14 +970,14 @@ if ($do=='latest'){
 		}			
 		if ($col>1) { echo '<td colspan="'.($maxcols-$col+1).'">&nbsp;</td></tr>'; }
 		echo '</table>';
-	} else { echo '<p>Нет материалов для отображения.</p>'; }
+	} else { echo '<p>'.$_LANG['NO_MATERIALS_TO_SHOW'].'</p>'; }
 }
 /////////////////////////////// VIEW BEST PHOTOS ///////////////////////////////////////////////////////////////////////////////////
 if ($do=='best'){
 	$col = 1; $maxcols = 4;
 
 	$sql = "SELECT f.*, f.id as fid,
-				   IF(DATE_FORMAT(f.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(f.pubdate, '<strong>Сегодня</strong>, %H:%i'), DATE_FORMAT(f.pubdate, '%d-%m-%Y'))  as fpubdate, 
+				   IF(DATE_FORMAT(f.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(f.pubdate, '<strong>{$_LANG['TODAY']}</strong>, %H:%i'), DATE_FORMAT(f.pubdate, '%d-%m-%Y'))  as fpubdate,
 				   a.id as album_id, a.title as album, 
 				   IFNULL(SUM(r.points), 0) as rating
 			FROM cms_photo_files f
@@ -988,8 +990,8 @@ if ($do=='best'){
 
 	$result = $inDB->query($sql) ;
 		
-	$inPage->addPathway('Лучшие фото', $_SERVER['REQUEST_URI']);
-	echo '<div class="con_heading">Лучшие фото</div>';
+	$inPage->addPathway($_LANG['BEST_PHOTOS'], $_SERVER['REQUEST_URI']);
+	echo '<div class="con_heading">'.$_LANG['BEST_PHOTOS'].'</div>';
 
 	if ($inDB->num_rows($result)){	
 		$num = 1;
@@ -1024,7 +1026,7 @@ if ($do=='best'){
 		}			
 		if ($col>1) { echo '<td colspan="'.($maxcols-$col+1).'">&nbsp;</td></tr>'; }
 		echo '</table>';
-	} else { echo '<p>Нет материалов для отображения.</p>'; }
+	} else { echo '<p>'.$_LANG['NO_MATERIALS_TO_SHOW'].'</p>'; }
 }
 /////////////////////////////// /////////////////////////////// /////////////////////////////// /////////////////////////////// //////
 } //function

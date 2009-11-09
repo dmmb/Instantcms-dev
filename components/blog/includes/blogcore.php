@@ -95,18 +95,20 @@ function blogPostNav($post_pubdate, $blog_id){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
 	global $menuid;
+    global $_LANG;
 	
 	$html1 = '';
 	$html2 = '';
-		
-	$prev_id = dbGetField('cms_blog_posts', "pubdate < '$post_pubdate' AND blog_id = $blog_id ORDER BY pubdate DESC", 'id');
+
+	$prev_id = $inDB->get_field('cms_blog_posts', "pubdate < '$post_pubdate' AND blog_id = $blog_id ORDER BY pubdate DESC", 'id');
+
 	if ($prev_id) { 
-		$html1 .= '&larr; <a href="/blogs/'.$menuid.'/'.$blog_id.'/post'.$prev_id.'.html">Предыдущая запись</a>'; 
+		$html1 .= '&larr; <a href="/blogs/'.$menuid.'/'.$blog_id.'/post'.$prev_id.'.html">'.$_LANG['PREV_POST'].'</a>';
 	}
 
-	$next_id = dbGetField('cms_blog_posts', "pubdate > '$post_pubdate' AND blog_id = $blog_id ORDER BY pubdate ASC", 'id');
+	$next_id = $inDB->get_field('cms_blog_posts', "pubdate > '$post_pubdate' AND blog_id = $blog_id ORDER BY pubdate ASC", 'id');
 	if ($next_id) { 
-		$html2 = '<a href="/blogs/'.$menuid.'/'.$blog_id.'/post'.$next_id.'.html">Следущая запись</a> &rarr;'; 
+		$html2 = '<a href="/blogs/'.$menuid.'/'.$blog_id.'/post'.$next_id.'.html">'.$_LANG['NEXT_POST'].'</a> &rarr;';
 	}
 	
 	if ($html1 && $html2){

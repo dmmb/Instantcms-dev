@@ -11,6 +11,7 @@
 function mod_forum($module_id){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
+        global $_LANG;
 		$cfg = $inCore->loadModuleConfig($module_id);
 		if ($cfg['menuid']>0) {
 			$menuid = $cfg['menuid'];
@@ -74,9 +75,9 @@ function mod_forum($module_id){
                     $threads[$next]['msg'] = $msg;
 
 					if ($t['postsnum']==1) {
-						$threads[$next]['act'] = 'начинает тему'; 
+						$threads[$next]['act'] = $_LANG['FORUM_START_THREAD'];
 					} else { 
-						$threads[$next]['act'] = 'отвечает в теме'; 
+						$threads[$next]['act'] = $_LANG['FORUM_REPLY_THREAD'];
 					}										
 				}
 			
@@ -85,7 +86,7 @@ function mod_forum($module_id){
 				$smarty->assign('cfg', $cfg);				
 				$smarty->display('mod_forum_'.$cfg['showtype'].'.tpl');	
 														
-		} else { echo '<p>Ќет тем на форумах.</p>'; }
+		} else { echo '<p>'.$_LANG['FORUM_NOT_THREAD'].'</p>'; }
 
 		return true;	
 	}

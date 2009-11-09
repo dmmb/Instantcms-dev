@@ -12,7 +12,8 @@ function createAlbum(clubid, menuid){
 		  data: "title="+title+"&clubid="+clubid,
 		  success: function(msg){
 				if (msg!='error'){
-					$('ul#albums_list').prepend('<li><a href="/photos/'+menuid+'/'+msg+'">'+title+'</a> (0)</li>');
+					$('ul#albums_list').prepend('<li class="club_album"><a href="/photos/'+menuid+'/'+msg+'">'+title+'</a> (0)</li>');
+                    $('ul#albums_list li.no_albums').remove();
 				} else {
 					alert('Ошибка! Альбом не создан.');	
 				}
@@ -35,12 +36,15 @@ function deleteAlbum(id, title, clubid){
 		  success: function(msg){
 				if (msg=='ok'){
 					$('ul#albums_list li#'+id).remove();
+                    if ($('ul#albums_list li.club_album').length==0){
+                        $('ul#albums_list').prepend('<li class="club_album">В клубе нет фотоальбомов.</li>');
+                    }
 				} else {
 					alert('Ошибка! Альбом не удален.');	
 				}
-				$('#add_album_wait').hide();
+                $('#add_album_wait').hide();
 		  }
-		});	
+		});        
 	}	
 }
 

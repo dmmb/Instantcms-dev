@@ -14,6 +14,9 @@
 
 	$inCore     = cmsCore::getInstance();
 
+    $inCore->loadLanguage('lang');
+    $inCore->loadLanguage('components/comments');
+
     $inCore->loadClass('config');       //конфигурация
     $inCore->loadClass('db');           //база данных
     $inCore->loadClass('page');         //страница
@@ -37,7 +40,7 @@
 	if (!isset($cfg['min_karma_add'])) { $cfg['min_karma_add'] = 0; }
 	if (!isset($cfg['min_karma_show'])) { $cfg['min_karma_show'] = 0; }	
 	if (!isset($cfg['regcap'])) { $cfg['regcap'] = 1; }
-	
+
 	//bb code toolbar
 	if (!isset($cfg['img_on'])) { $cfg['img_on'] = 1; }
 

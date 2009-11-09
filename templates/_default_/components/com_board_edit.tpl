@@ -2,7 +2,7 @@
 	<table cellpadding="2">
 		<tr>
 			<td width="150">
-				<span>Заголовок:</span>
+				<span>{$LANG.TITLE}:</span>
 			</td>
 			<td height="35">
 				<select name="obtype" id="obtype" style="width:120px">
@@ -13,15 +13,15 @@
 		</tr>
 		<tr class="proptable">
 			<td>
-				<span>Город:</span>
+				<span>{$LANG.CITY}:</span>
 			</td>
 			<td height="35" valign="top">
-				<input name="city_ed" type="text" id="city_ed" style="width:182px" value="{$city}"/> или выберите {$cities}
+				<input name="city_ed" type="text" id="city_ed" style="width:182px" value="{$city}"/> {$LANG.OR_SELECTING} {$cities}
 			</td>
 		</tr>
 		<tr>
 			<td valign="top">
-				<span>Текст объявления:</span>
+				<span>{$LANG.TEXT_ADV}:</span>
 			</td>
 			<td height="100" valign="top">
 				<textarea name="content" style="width:400px" rows="5" id="content">{$content}</textarea>
@@ -29,12 +29,12 @@
 		</tr>
 		{if $form_do == 'edit'}
 			<tr>
-				<td height="35"><span>Срок публикации:</span></td>
-				<td height="35">{$pubdays} дней</td>
+				<td height="35"><span>{$LANG.PERIOD_PUBL}:</span></td>
+				<td height="35">{$pubdays} {$LANG.DAYS}</td>
 			</tr>
 		{elseif $cfg.srok}
 			<tr>
-				<td><span>Срок публикации:</span></td>
+				<td><span>{$LANG.PERIOD_PUBL}:</span></td>
 				<td>
 					<select name="pubdays" id="pubdays">
 						<option value="5">5</option>
@@ -42,18 +42,18 @@
 						<option value="14">14</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
-					</select> дней
+					</select>  {$LANG.DAYS}
 				</td>
 			</tr>
 		{/if}
 		{if $cfg.photos}
 			<tr>
-				<td><span>Фотография:</span></td>
+				<td><span>{$LANG.PHOTO}:</span></td>
 				<td><input name="picture" type="file" id="picture" style="width:400px;" /></td>
 			</tr>
 			{if strlen($file)}
 				<tr>
-					<td height="30" valign="middle"><span>Удалить фотографию:</span></td>
+					<td height="30" valign="middle"><span>{$LANG.DEL_PHOTO}:</span></td>
 					<td valign="middle"><input type="checkbox" name="delphoto" value="1" id="delphoto" /></td>
 				</tr>
 			{/if}
@@ -61,10 +61,10 @@
 
 		{if $category_id}
 			<tr>
-				<td height="30"><span>Перенести в рубрику:</span></td>
+				<td height="30"><span>{$LANG.MOVE_TO_CAT}:</span></td>
 				<td>
 					<select name="category_id" id="category_id" style="width:400px">
-						<option value="0">-- не переносить --</option>
+						<option value="0">-- {$LANG.DONT_MOVE} --</option>
 						{$catslist}
 					</select>
 				</td>
@@ -78,7 +78,7 @@
         {/if}
 		<tr>
 			<td height="40" colspan="2" valign="middle">
-				<input name="submit" type="submit" id="submit" style="margin-top:10px;font-size:18px" value="Сохранить объявление" />
+				<input name="submit" type="submit" id="submit" style="margin-top:10px;font-size:18px" value="{$LANG.SAVE_ADV}" />
 			</td>
 		</tr>
 	</table>

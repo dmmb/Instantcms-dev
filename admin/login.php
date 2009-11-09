@@ -104,7 +104,7 @@ body {
       </tr>
 	  <tr>
 	  <td>
-	  	<div id="copy"><a href="http://www.instantcms.ru/">InstantCMS</a> &copy; 2008</div>
+	  	<div id="copy"><a href="http://www.instantcms.ru/">InstantCMS</a> &copy; 2007-<?php echo date('Y'); ?></div>
 	  </td>
 	  </tr>
     </table></td>

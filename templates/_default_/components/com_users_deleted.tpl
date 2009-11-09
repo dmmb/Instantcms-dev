@@ -21,12 +21,12 @@
 
 	    </td>
     	<td valign="top" style="padding-left:10px">	
-				<div class="usr_deleted">Профиль пользователя был удален.</div>
+				<div class="usr_deleted">{$LANG.USER_PROFILE_DELETED}</div>
 				{if $is_admin}
                     {if !$others_active}
-                        <div class="usr_restore">Вы можете <a href="/users/restoreprofile{$id}.html">восстановить профиль</a></div>
+                        <div class="usr_restore">{$LANG.YOU_CAN} <a href="/users/restoreprofile{$id}.html">{$LANG.RESTORE_PROFILE}</a></div>
                     {else}
-                        <div class="usr_restore">Вы не можете восстановить этот профиль, т.к. на сайте есть активные пользователи с таким же логином ({$login}).</div>
+                        <div class="usr_restore">{$LANG.CANT_RESTORE_PROFILE_TEXT} ({$login}).</div>
                     {/if}
 				{/if}
 		</td>

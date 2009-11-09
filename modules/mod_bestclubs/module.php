@@ -11,7 +11,7 @@
 function mod_bestclubs($module_id){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
-
+        global $_LANG;
 		$inCore->loadLib('clubs');
 	
 		$cfg = $inCore->loadModuleConfig($module_id);
@@ -21,8 +21,8 @@ function mod_bestclubs($module_id){
 		if (!isset($cfg['menuid'])) { $cfg['menuid'] = 0;}
 
 		$sql =  "SELECT c.*, 					
-						IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(c.pubdate, 'Cегодня'), 
-						IF(DATEDIFF(NOW(), c.pubdate)=1, DATE_FORMAT(c.pubdate, 'Вчера'),DATE_FORMAT(c.pubdate, '%d/%m/%Y') ))  as pubdate
+						IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(c.pubdate, {$_LANG['TODAY']}),
+						IF(DATEDIFF(NOW(), c.pubdate)=1, DATE_FORMAT(c.pubdate, {$_LANG['YESTERDAY']}),DATE_FORMAT(c.pubdate, '%d/%m/%Y') ))  as pubdate
 				 FROM cms_clubs c
 				 WHERE c.published = 1
 				 ORDER BY c.rating DESC
@@ -46,7 +46,7 @@ function mod_bestclubs($module_id){
 			$smarty->assign('menuid', $menuid);			
 			$smarty->display('mod_clubs.tpl');
 						
-		} else { echo '<p>Нет клубов для отображения.</p>'; }
+		} else { echo '<p>'.$_LANG['BESTCLUBS_NOT_CLUBS'].'</p>'; }
 		
 		return true;
 	

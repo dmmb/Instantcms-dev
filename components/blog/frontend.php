@@ -30,6 +30,8 @@ function blog(){
 	$inPage->addHeadJS('includes/jquery/jquery.jcorners.js');
     $inPage->addHeadJS('core/js/karma.js');
 
+    global $_LANG;
+
     $inCore->loadModel('blog');
     $model = new cms_model_blog();
 		
@@ -65,7 +67,7 @@ function blog(){
         if ($bloglink){     $blog   = $model->getBlogByLink($bloglink);     }
         if ($id){           $blog   = $model->getBlog($id);                 }
     
-        $error  = $blog ? '' : 'Блог не найден';
+        $error  = $blog ? '' : $_LANG['BLOG_NOT_FOUND'];
 
 		if ($blog){
 			$owner = $blog['owner'];
@@ -85,12 +87,12 @@ if ($do=='create'){
     if ($model->getUserBlogId($inUser->id)) { $inCore->redirectBack(); }
 
 	$inPage->addHeadJS('components/blog/js/blog.js');
-	$inPage->addPathway('Блоги', '/blogs/'.$menuid);			
-	$inPage->addPathway('Создание блога');
+	$inPage->addPathway($_LANG['BLOGS'], '/blogs/'.$menuid);
+	$inPage->addPathway($_LANG['PATH_CREATING_BLOG']);
 
     //Показ формы создания блога
     if (!$inCore->inRequest('goadd')){
-        $inPage->setTitle('Создать блог');
+        $inPage->setTitle($_LANG['CREATE_BLOG']);
         $inPage->backButton(false);
 
         //только для друзей, по-умолчанию?
@@ -100,8 +102,8 @@ if ($do=='create'){
         $min_karma_private  = '';
         $min_karma_public   = '';
         if ($cfg['min_karma'] && !$inCore->userIsAdmin($inUser->id)){
-            if ($cfg['min_karma_private'] >0) { $min_karma_private  = '(Требуется кармы: '.$cfg['min_karma_private'].')';	}
-            if ($cfg['min_karma_public']  >0) { $min_karma_public   = '(Требуется кармы: '.$cfg['min_karma_public'] .')';	}
+            if ($cfg['min_karma_private'] >0) { $min_karma_private  = '('.$_LANG['BLOG_KARMA_NEED'].' '.$cfg['min_karma_private'].')';	}
+            if ($cfg['min_karma_public']  >0) { $min_karma_public   = '('.$_LANG['BLOG_KARMA_NEED'].' '.$cfg['min_karma_public'] .')';	}
         }
 
         //выводим форму
@@ -123,21 +125,21 @@ if ($do=='create'){
         $ownertype  = $inCore->request('ownertype', 'str', 'single');
 
         //Проверяем название
-        if (strlen($title)<5) { $error_msg .= '<p>Укажите название блога! Название должно быть не короче 5-ти символов.</p>'; }
+        if (strlen($title)<5) { $error_msg .= '<p>'.$_LANG['BLOG_ERR_TITLE'].'</p>'; }
 
         //Проверяем хватает ли кармы, но только если это не админ
         if ($cfg['min_karma'] && !$inCore->userIsAdmin($inUser->id)){
             $user_karma = cmsUser::getKarma($inUser->id);
             if ($ownertype=='single' && ($user_karma < $cfg['min_karma_private']))
-                $error_msg = '<p>Вам не хватает <a href="/users/0/'.$user_id.'/karma.html">кармы</a> для создания личного блога. Требуется &mdash; '.$cfg['min_karma_private'].', имеется &mdash; '.$user_karma.'.</p>';
+                $error_msg = '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/0/'.$user_id.'/karma.html">'.$_LANG['BLOG_KARMS'].'</a> '.$_LANG['FOR_CREATE_PERSON_BLOG'].' &mdash; '.$cfg['min_karma_private'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
             if ($ownertype=='multi' && ($user_karma < $cfg['min_karma_public']))
-                $error_msg = '<p>Вам не хватает <a href="/users/0/'.$user_id.'/karma.html">кармы</a> для создания коллективного блога. Требуется &mdash; '.$cfg['min_karma_public'].', имеется &mdash; '.$user_karma.'.</p>';
+                $error_msg = '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/0/'.$user_id.'/karma.html">'.$_LANG['BLOG_KARMS'].'</a> '.$_LANG['FOR_CREATE_TEAM_BLOG'].' &mdash; '.$cfg['min_karma_public'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
         }
 
         //Если ошибки не были найдены
         if(!$error_msg){
             $inPage->backButton(false);
-            $inPage->setTitle('Дневник создан');
+            $inPage->setTitle($_LANG['BLOG_CREATED']);
             //Добавляем блог в базу
             $blog_id = $model->addBlog(array('user_id'=>$user_id, 'title'=>$title, 'allow_who'=>$allow_who, 'ownertype'=>$ownertype));
             //Выводим сообщение о том что блог создан
@@ -150,7 +152,7 @@ if ($do=='create'){
 
         //Если найдены ошибки
         if($error_msg){
-            $inPage->setTitle('Ошибка создания блога!');
+            $inPage->setTitle($_LANG['ERR_BLOG_CREATE']);
             $smarty = $inCore->initSmarty('components', 'com_blog_create_error.tpl');
             $smarty->assign('error_msg', $error_msg);
             $smarty->display('com_blog_create_error.tpl');
@@ -176,15 +178,15 @@ if ($do=='config'){
 
     //Если нет запроса на сохранение, показываем форму настроек блога
     if ( !$inCore->inRequest('goadd') ){
-        $inPage->setTitle('Настройка блога');
-        $inPage->printHeading('Настройка блога');
+        $inPage->setTitle($_LANG['CONFIG_BLOG']);
+        $inPage->printHeading($_LANG['CONFIG_BLOG']);
         $inPage->backButton(false);
         //Получаем список авторов блога
         $authors = blogAuthors($blog['id']);
         //Получаем ограничения по карме
         if ($cfg['min_karma'] && !$inCore->userIsAdmin($inUser->id)){
-            if ($cfg['min_karma_private'] >0 && $blog['owner_type']!='single') { $min_karma_private = '(Требуется кармы: '.$cfg['min_karma_private'].')';	} else { $min_karma_private = ''; }
-            if ($cfg['min_karma_public']  >0 && $blog['owner_type']!='multi') { $min_karma_public = '(Требуется кармы: '.$cfg['min_karma_public'] .')';	} else { $min_karma_public = ''; }
+            if ($cfg['min_karma_private'] >0 && $blog['owner_type']!='single') { $min_karma_private = '('.$_LANG['BLOG_KARMA_NEED'].' '.$cfg['min_karma_private'].')';	} else { $min_karma_private = ''; }
+            if ($cfg['min_karma_public']  >0 && $blog['owner_type']!='multi') { $min_karma_public = '('.$_LANG['BLOG_KARMA_NEED'].' '.$cfg['min_karma_public'] .')';	} else { $min_karma_public = ''; }
         }
         //Выводим форму
         $smarty = $inCore->initSmarty('components', 'com_blog_config.tpl');
@@ -212,15 +214,15 @@ if ($do=='config'){
         $showcats 	= $inCore->request('showcats', 'int', 1);
 
         //Проверяем настройки
-        if (strlen($title)<5) { $error_msg .= 'Укажите название блога! Название должно быть не короче 5-ти символов.'; }
+        if (strlen($title)<5) { $error_msg .= $_LANG['BLOG_ERR_TITLE']; }
 
         //Проверяем ограничения по карме (для смены типа блога)
         if ($cfg['min_karma'] && !$inCore->userIsAdmin($inUser->id)){
             $user_karma = cmsUser::getKarma($inUser->id);
             if ($ownertype=='single' && ($user_karma < $cfg['min_karma_private']))
-                $error_msg = '<p>Вам не хватает <a href="/users/0/'.$user_id.'/karma.html">кармы</a> для создания личного блога. Требуется &mdash; '.$cfg['min_karma_private'].', имеется &mdash; '.$user_karma.'.</p>';
+                $error_msg = '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/0/'.$user_id.'/karma.html">'.$_LANG['KARMS'].'</a> '.$_LANG['FOR_CREATE_PERSON_BLOG'].' &mdash; '.$cfg['min_karma_private'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
             if ($ownertype=='multi' && ($user_karma < $cfg['min_karma_public']))
-                $error_msg = '<p>Вам не хватает <a href="/users/0/'.$user_id.'/karma.html">кармы</a> для создания коллективного блога. Требуется &mdash; '.$cfg['min_karma_public'].', имеется &mdash; '.$user_karma.'.</p>';
+                $error_msg = '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/0/'.$user_id.'/karma.html">'.$_LANG['KARMS'].'</a> '.$_LANG['FOR_CREATE_TEAM_BLOG'].' &mdash; '.$cfg['min_karma_public'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
         }
 
         //Если ошибки не найдены
@@ -238,7 +240,7 @@ if ($do=='config'){
         //Если найдены ошибки
         if($error_msg) {
             //Показываем сообщение об ошибках
-            $inPage->setTitle('Ошибка настройки блога!');
+            $inPage->setTitle($_LANG['ERR_CONFIG_BLOG']);
             $smarty = $inCore->initSmarty('components', 'com_blog_create_ok.tpl');
             $smarty->assign('error_msg', $error_msg);
             $smarty->display('com_blog_save_error.tpl');
@@ -250,7 +252,7 @@ if ($do=='config'){
 ////////// СПИСОК БЛОГОВ ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){
 
-	$inPage->setTitle('Блоги');
+	$inPage->setTitle($_LANG['BLOGS']);
 
     //Получаем ID пользователя
 	$user_id 		= $inUser->id;
@@ -330,14 +332,14 @@ if ($do=='blog'){
 		$blog['author'] = clubAdminLink($blog['user_id']);
         $blog['club']   = $inDB->get_field('cms_clubs', "id={$blog['user_id']}", 'title');
         //Устанавливаем заголовок страницы и глубиномер
-	    $inPage->setTitle('Блог - '.$blog['author']);
+	    $inPage->setTitle($_LANG['BLOG'].' - '.$blog['author']);
         $inPage->addPathway($blog['club'], '/clubs/'.$menuid.'/'.$blog['user_id']);
-		$inPage->addPathway('Блог');
+		$inPage->addPathway($_LANG['BLOG']);
 	}
 
     //Если доступа нет, добавляем сообщение об ошибке
 	if ( !($can_view || $inCore->userIsAdmin($user_id)) ) {
-        $error = '<h1 class="con_heading">Закрытый блог</h1><p>Пользователь ограничил доступ к своему блогу настройками безопасности.</p>';
+        $error = '<h1 class="con_heading">'.$_LANG['CLOSED_BLOG'].'</h1><p>'.$_LANG['CLOSED_BLOG_TEXT'] .'</p>';
     }
 
     //Если есть ошибки - показываем и выходим
@@ -377,9 +379,9 @@ if ($do=='blog'){
     $authors_status = '';
     if ($blog['owner'] == 'user') {
         if ($blog['forall']){
-            $authors_status = '<span class="blog_authorsall">блог открыт для всех</span>';
+            $authors_status = '<span class="blog_authorsall">'.$_LANG['BLOG_OPENED_FOR_ALL'].'</span>';
         } else {
-            $authors_status = '<a href="/blogs/'.$menuid.'/'.$blog['id'].'/authors.html" class="blog_authorslink">авторы блога</a>';
+            $authors_status = '<a href="/blogs/'.$menuid.'/'.$blog['id'].'/authors.html" class="blog_authorslink">'.$_LANG['AVTORS_BLOG'].'</a>';
         }
     }
 
@@ -491,15 +493,15 @@ if ($do=='moderate'){
 
     //Проверяем отсутствие доступа
     if (!$myblog && !$is_admin){
-		echo '<p style="color:red">Доступ запрещен</p>';
+		echo '<p style="color:red">'.$_LANG['ACCESS_DENIED'].'</p>';
         return;
 	}
 
     //Устанавливаем глубиномер и заголовок страницы
     if ($owner=='club') { $inPage->addPathway($blog['author'], '/clubs/'.$menuid.'/'.$blog['user_id']); }
     $inPage->addPathway($blog['title'], '/blogs/'.$menuid.'/'.$id.'/blog.html');
-    $inPage->addPathway('Записи на модерации', $_SERVER['REQUEST_URI']);
-    $inPage->setTitle('Модерация - '.$blog['title']);
+    $inPage->addPathway($_LANG['POSTS_ON_MODERATE'], $_SERVER['REQUEST_URI']);
+    $inPage->setTitle($_LANG['MODERATING'].' - '.$blog['title']);
 
     //Считаем число записей, ожидающих модерации
     $total = $model->getModerationCount($blog['id']);
@@ -515,7 +517,7 @@ if ($do=='moderate'){
 
     //Сообщаем, если записей нет
     if (!$records){
-        echo '<p style="clear:both">Нет записей на модерацию.</p>';
+        echo '<p style="clear:both">'.$_LANG['NOT_POSTS_MODERATE'].'</p>';
         return;
     }
 
@@ -546,7 +548,7 @@ if ($do=='moderate'){
 if ($do=='authors'){
 
     //Устанавливаем заголовок страницы
-	$inPage->setTitle($blog['title'].' - Авторы');
+	$inPage->setTitle($blog['title'].' - '.$_LANG['AVTORS']);
 
     $authors        = array();
 
@@ -608,10 +610,10 @@ if ($do=='newpost' || $do=='editpost'){
 
     //Проверяем, хватает ли кармы
     if ( !($min_karma === false || $user_karma>=$min_karma || clubUserIsAdmin($blog['user_id'], $user_id) || clubUserIsRole($blog['user_id'], $user_id, 'moderator')) ){
-        $inPage->printHeading('Не хватает кармы');
-        echo '<p><strong>У вас не хватает кармы для создания поста в этом блоге.</strong></p>';
-        echo '<p>Требуется '.$min_karma.', а имеется только '.$user_karma.'.</p>';
-        echo '<p>Хотите посмотреть <a href="/users/'.$menuid.'/'.$user_id.'/karma.html">историю своей кармы</a>?</p>';
+        $inPage->printHeading($_LANG['NEED_KARMA']);
+        echo '<p><strong>'.$_LANG['NEED_KARMA_TEXT'].'</strong></p>';
+        echo '<p>'.$_LANG['NEEDED'].' '.$min_karma.', '.$_LANG['HAVE_ONLY'].' '.$user_karma.'.</p>';
+        echo '<p>'.$_LANG['WANT_SEE'].' <a href="/users/'.$menuid.'/'.$user_id.'/karma.html">'.$_LANG['HISTORY_YOUR_KARMA'].'</a>?</p>';
         return;
     }
 
@@ -620,9 +622,9 @@ if ($do=='newpost' || $do=='editpost'){
         //Проверяем доступ
 		if (!$myblog && !$is_author && !$is_admin) { $inCore->redirectBack(); }
         //Устанавливаем заголовки
-        $inPage->addPathway('Новая запись', $_SERVER['REQUEST_URI']);
-		$inPage->setTitle('Новая запись');
-		$inPage->printHeading('Новая запись');
+        $inPage->addPathway($_LANG['NEW_POST'], $_SERVER['REQUEST_URI']);
+		$inPage->setTitle($_LANG['NEW_POST']);
+		$inPage->printHeading($_LANG['NEW_POST']);
 	} 
 
     //для редактирования поста
@@ -631,9 +633,9 @@ if ($do=='newpost' || $do=='editpost'){
         $is_post_author = $model->isUserPostAuthor($post_id, $user_id);
 		if (!$myblog && !$is_post_author && !$is_admin) { $inCore->redirectBack(); }
         //Устанавливаем заголовки
-        $inPage->addPathway('Редактировать запись');
-		$inPage->setTitle('Редактировать запись');
-		$inPage->printHeading('Редактировать запись');
+        $inPage->addPathway($_LANG['EDIT_POST']);
+		$inPage->setTitle($_LANG['EDIT_POST']);
+		$inPage->printHeading($_LANG['EDIT_POST']);
         //Получаем исходный пост из базы
         $post = $model->getPost($post_id);
         if (!$post){ $inCore->redirectBack(); }
@@ -703,13 +705,13 @@ if ($do=='newpost' || $do=='editpost'){
         $tags 		= $inCore->request('tags', 'str', '');
 
         //Проверяем их
-        if (strlen($title)<2) { $error_msg .= 'Укажите заголовок записи! Название должно быть не короче 2-х символов.<br/>'; }
-        if (strlen($content)<5) { $error_msg .= 'Укажите текст записи! Текст должен быть не короче 5-ти символов.<br/>'; }
+        if (strlen($title)<2) { $error_msg .= $_LANG['POST_ERR_TITLE'].'<br/>'; }
+        if (strlen($content)<5) { $error_msg .= $_LANG['POST_ERR_TEXT'].'<br/>'; }
 
         //Если найдены ошибки - показываем и выходим
         if($error_msg) {
-            $inPage->setTitle('Ошибка создания записи!');
-            $inPage->printHeading('Ошибка создания записи!');
+            $inPage->setTitle($_LANG['ERR_POST_CREATE']);
+            $inPage->printHeading($_LANG['ERR_POST_CREATE']);
             echo '<p style="color:red">'.$error_msg.'</p>';
             return;
         }
@@ -753,9 +755,9 @@ if ($do=='newpost' || $do=='editpost'){
 
                 if (!$published) {
                     $inPage->backButton(false);
-                    $inPage->printHeading('Запись успешно добавлена');
-                    echo '<p>Запись будет опубликована в блоге после проверки администратором.</p>';
-                    echo '<p><a href="/blogs/'.$menuid.'/'.$blog['id'].'/blog.html">Продолжить</a> &rarr;</p>';
+                    $inPage->printHeading($_LANG['POST_CREATED']);
+                    echo '<p>'.$_LANG['POST_PREMODER_TEXT'].'</p>';
+                    echo '<p><a href="/blogs/'.$menuid.'/'.$blog['id'].'/blog.html">'.$_LANG['CONTINUE'].'</a> &rarr;</p>';
                     return;
                 }
             }
@@ -807,16 +809,16 @@ if ($do=='newcat' || $do=='editcat'){
     //Новая рубрики
 	if ($do=='newcat'){
         //Устанавливаем заголовки и глубиномер
-		$inPage->addPathway('Новая рубрика');
-		$inPage->setTitle('Новая рубрика');
-        $inPage->printHeading('Новая рубрика');
+		$inPage->addPathway($_LANG['NEW_CAT']);
+		$inPage->setTitle($_LANG['NEW_CAT']);
+        $inPage->printHeading($_LANG['NEW_CAT']);
 	}
     //Редактирование рубрики
     if ($do=='editcat'){
         //Устанавливаем заголовки и глубиномер
-		$inPage->addPathway('Редактировать запись');
-		$inPage->setTitle('Редактировать рубрику');
-		$inPage->printHeading('Редактировать рубрику');
+		$inPage->addPathway($_LANG['EDIT_CAT']);
+		$inPage->setTitle($_LANG['EDIT_CAT']);
+		$inPage->printHeading($_LANG['EDIT_CAT']);
         //Загружаем рубрику
         $cat    = $model->getBlogCategory($cat_id);
         if (!$cat) {
@@ -838,12 +840,12 @@ if ($do=='newcat' || $do=='editcat'){
         $error_msg = '';;
         //получаем и проверяем название рубрики
         $title = $inCore->request('title', 'str');
-        if (strlen($title)<2) { $error_msg .= 'Укажите заголовок рубрики! Название должно быть не короче 2-х символов.<br/>'; }
+        if (strlen($title)<2) { $error_msg .= $_LANG['CAT_ERR_TITLE'].'<br/>'; }
 
         //если была ошибка
         if ($error_msg){
-            $inPage->setTitle('Ошибка создания рубрики!');
-            $inPage->printHeading('Ошибка создания рубрики!');
+            $inPage->setTitle($_LANG['ERR_CAT_CREATE']);
+            $inPage->printHeading($_LANG['ERR_CAT_CREATE']);
             echo '<p style="color:red">'.$error_msg.'</p>';
             return;
         }
@@ -884,25 +886,25 @@ if($do=='post'){
     if ($seolink) { $post = $model->getPostByLink($seolink); }
 
     if (!$post){
-		$inPage->printHeading('Запись не найдена');
-        echo '<p>Возможно она была удалена или перемещена.</p>'; return;
+		$inPage->printHeading($_LANG['POST_NOT_FOUND']);
+        echo '<p>'.$_LANG['POST_NOT_FOUND_TEXT'].'</p>'; return;
 	}
 
     $can_view = ($blog['allow_who']=='all' || ($blog['allow_who']=='friends' && usrIsFriends($blog['user_id'], $user_id)) || $post['user_id']==$user_id || $inCore->userIsAdmin($user_id));
 
     if (!$can_view){
-        $inPage->printHeading('Закрытая запись');
-        echo '<p>Пользователь ограничил доступ к этой записи дневника.</p>'; return;
+        $inPage->printHeading($_LANG['CLOSED_POST']);
+        echo '<p>'.$_LANG['CLOSED_POST_TEXT'].'</p>'; return;
     }
 
-    $post['fpubdate'] = cmsCore::dateDiffNow($post['fpubdate']).' назад ('.$post['fpubdate'].')';
-    $post['feditdate'] = cmsCore::dateDiffNow($post['feditdate']).' назад';
+    $post['fpubdate'] = cmsCore::dateDiffNow($post['fpubdate']).' '.$_LANG['BACK'].' ('.$post['fpubdate'].')';
+    $post['feditdate'] = cmsCore::dateDiffNow($post['feditdate']).' '.$_LANG['BACK'];
 
     if ($post['cat_id']){
         $cat = $model->getBlogCategory($post['cat_id']);
         $cat = $cat['title']; 
     } else { 
-        $cat = 'Без рубрики';
+        $cat = $_LANG['WITHOUT_CAT'];
     }
 
     $inPage->setTitle($post['title']);
@@ -933,7 +935,7 @@ if($do=='post'){
         $smarty->assign('cat', $cat);
         $smarty->assign('karma_form', cmsKarmaForm('blogpost', $post['id']));
         $smarty->assign('msg', $msg);
-        $smarty->assign('nav', blogPostNav($post['pubdate'], $id));
+        $smarty->assign('nav', blogPostNav($post['pubdate'], $blog['id']));
         $smarty->assign('tag_bar', cmsTagBar('blogpost', $post['id']));
     $smarty->display('com_blog_view_post.tpl');
 
@@ -968,10 +970,10 @@ if ($do == 'delpost'){
     if ( !$inCore->inRequest('confirm') ) {
         //MENU
         if ($myblog || $is_author || $post['user_id']==$user_id || $inUser->is_admin){
-            $inPage->setTitle('Удаление записи');
+            $inPage->setTitle($_LANG['DELETE_POST']);
             $inPage->backButton(false);
-            $confirm['title'] = 'Удаление записи';
-            $confirm['text'] = 'Вы действительно хотите удалить запись "<a href="/blogs/'.$menuid.'/'.$id.'/post'.$post_id.'.html">'.$post['title'].'</a>" из блога?';
+            $confirm['title'] = $_LANG['DELETE_POST'];
+            $confirm['text'] = $_LANG['YOU_REALY_DELETE_POST'].' "<a href="/blogs/'.$menuid.'/'.$id.'/post'.$post_id.'.html">'.$post['title'].'</a>" '.$_LANG['FROM_BLOG'];
             $confirm['action'] = 'javascript:void(0);';
             $confirm['yes_button'] = array();
             $confirm['yes_button']['type'] = 'button';
@@ -991,7 +993,7 @@ if ($do == 'delpost'){
 
             if ($user_id != $post['user_id']){
                 if ($blog['owner']=='club') { $blog['title'] = dbGetField('cms_clubs', 'id='.$blog['user_id'], 'title'); }
-                cmsUser::sendMessage(-1, $post['user_id'], 'Ваша запись <b>&laquo;'.$post['title'].'&raquo;</b> была удалена из блога <b>&laquo;<a href="/blogs/'.$menuid.'/'.$blog['id'].'/blog.html">'.$blog['title'].'</a>&raquo;</b>');
+                cmsUser::sendMessage(-1, $post['user_id'], $_LANG['YOUR_POST'].' <b>&laquo;'.$post['title'].'&raquo;</b> '.$_LANG['WAS_DELETED_FROM_BLOG'].' <b>&laquo;<a href="/blogs/'.$menuid.'/'.$blog['id'].'/blog.html">'.$blog['title'].'</a>&raquo;</b>');
             }
         }
         $inCore->redirect('/blogs/'.$menuid.'/'.$id.'/blog.html');
@@ -1000,8 +1002,11 @@ if ($do == 'delpost'){
 }
 ///////////////////////// PUBLISH POST /////////////////////////////////////////////////////////////////////////////
 if ($do == 'publishpost'){
-	$inPage->backButton(false);
-    $user_id = $inUser->id;
+
+    $inPage->backButton(false);
+
+    $post_id 	= $inCore->request('post_id', 'int', 0);
+    $user_id    = $inUser->id;
 
 	if (!$user_id){ $inCore->halt(); }
 
@@ -1010,7 +1015,7 @@ if ($do == 'publishpost'){
         if ($post){
             $model->publishPost($post_id);
             if ($blog['owner']=='club') { $blog['title'] = $inDB->get_field('cms_clubs', 'id='.$blog['user_id'], 'title'); }
-            cmsUser::sendMessage(-1, $post['author_id'], 'Ваша запись <b>&laquo;<a href="/blogs/'.$menuid.'/'.$blog['id'].'/post'.$post['id'].'.html">'.$post['title'].'</a>&raquo;</b> опубликована в блоге <b>&laquo;<a href="/blogs/'.$menuid.'/'.$blog['id'].'/blog.html">'.$blog['title'].'</a>&raquo;</b>');
+            cmsUser::sendMessage(-1, $post['author_id'], $_LANG['YOUR_POST'].' <b>&laquo;<a href="/blogs/'.$menuid.'/'.$blog['id'].'/post'.$post['id'].'.html">'.$post['title'].'</a>&raquo;</b> '.$_LANG['PUBLISHED_IN_BLOG'].' <b>&laquo;<a href="/blogs/'.$menuid.'/'.$blog['id'].'/blog.html">'.$blog['title'].'</a>&raquo;</b>');
         }
     }
     
@@ -1038,9 +1043,9 @@ if ($do == 'delblog'){
 
     if ( !$inCore->inRequest('confirm') ){
         if ($user_id == $blog['user_id'] || $inCore->userIsAdmin($user_id)){
-            $inPage->setTitle('Удаление блога');
-            $confirm['title']                   = 'Удаление блога';
-            $confirm['text']                    = 'Вы действительно хотите удалить свой блог?';
+            $inPage->setTitle($_LANG['DELETE_BLOG']);
+            $confirm['title']                   = $_LANG['DELETE_BLOG'];
+            $confirm['text']                    = $_LANG['YOU_REALY_DELETE_BLOG'];
             $confirm['action']                  = 'javascript:void(0);';
             $confirm['yes_button']              = array();
             $confirm['yes_button']['type']      = 'button';
@@ -1100,9 +1105,9 @@ if ($do == 'delcat'){
 
         if (!$inCore->inRequest('confirm')){
             if ($can_delete){
-                $inPage->setTitle('Удаление рубрики');
-                $confirm['title'] = 'Удаление рубрики';
-                $confirm['text'] = '<p>Вы действительно хотите удалить рубрику "<a href="/blogs/'.$menuid.'/'.$id.'/blog'.$cat_id.'.html">'.$data['title'].'</a>" из блога?</p><p>Все записи из этой рубрики будут удалены без возмножности восстановления.</p>';
+                $inPage->setTitle($_LANG['DELETE_CAT']);
+                $confirm['title'] = $_LANG['DELETE_CAT'];
+                $confirm['text'] = '<p>'.$_LANG['YOU_REALY_DELETE_CAT'].' "<a href="/blogs/'.$menuid.'/'.$id.'/blog'.$cat_id.'.html">'.$data['title'].'</a>" '.$_LANG['FROM_BLOG'].'</p><p>'.$_LANG['DELETE_CAT_TEXT'].'</p>';
                 $confirm['action'] = 'javascript:void(0);';
                 $confirm['yes_button'] = array();
                 $confirm['yes_button']['type'] = 'button';
@@ -1141,8 +1146,8 @@ if ($do=='latest'){
 		$is_admin = $inCore->userIsAdmin($user_id);
 	
 		//TITLES
-		$inPage->setTitle('Лента блогов');
-		$inPage->addPathway('Лента блогов');
+		$inPage->setTitle($_LANG['RSS_BLOGS']);
+		$inPage->addPathway($_LANG['RSS_BLOGS']);
 
 		//PAGINATION
 		$perpage = isset($cfg['perpage']) ? $cfg['perpage'] : 10;
@@ -1187,7 +1192,7 @@ if ($do=='latest'){
 
         $smarty->assign('is_posts', (bool)sizeof($posts));
         $smarty->assign('is_latest', (bool)sizeof($posts));
-        $smarty->assign('pagetitle', 'Блоги');
+        $smarty->assign('pagetitle', $_LANG['BLOGS']);
         $smarty->assign('is_admin', $is_admin);
         $smarty->assign('total', $total);
         $smarty->assign('menuid', $menuid);
@@ -1229,8 +1234,8 @@ if ($do=='best'){
 		$is_admin = $inCore->userIsAdmin($user_id);
 	
 		//TITLES
-		$inPage->setTitle('Популярное в блогах');
-		$inPage->addPathway('Популярное в блогах');
+		$inPage->setTitle($_LANG['POPULAR_IN_BLOGS']);
+		$inPage->addPathway($_LANG['POPULAR_IN_BLOGS']);
 
 		//PAGINATION
 		$perpage    = isset($cfg['perpage']) ? $cfg['perpage'] : 20;
@@ -1275,7 +1280,7 @@ if ($do=='best'){
 
     $smarty->assign('is_posts', (bool)sizeof($posts));
 
-    $smarty->assign('pagetitle', 'Популярное в блогах');
+    $smarty->assign('pagetitle', $_LANG['POPULAR_IN_BLOGS']);
     $smarty->assign('is_admin', $is_admin);
     $smarty->assign('total', $total);
     $smarty->assign('menuid', $menuid);

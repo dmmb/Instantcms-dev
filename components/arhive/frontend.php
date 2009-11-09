@@ -27,10 +27,12 @@ function arhive(){
     $year       = $inCore->request('y', 'int', 'all');
     $month      = $inCore->request('m', 'int', 'all');
     $day        = $inCore->request('d', 'int', 'all');
+    global $_LANG;
 
-	$inPage->setTitle('Архив материалов');	
+	$inPage->setTitle($_LANG['ARCHIVE_MATERIALS']);
 
  //======================================================================================================//
+    //echo $_LANG['ARCHIVE_MATERIALS'];
 
 	if ($year == 'all'){
 
@@ -54,7 +56,7 @@ function arhive(){
 		}
 
         $smarty = $inCore->initSmarty('components', 'com_arhive_dates.tpl');
-        $smarty->assign('heading', 'Архив материалов');
+        $smarty->assign('heading', $_LANG['ARCHIVE_MATERIALS']);
         $smarty->assign('menuid', $menu_id);
         $smarty->assign('items', $items);
         $smarty->assign('items_count', $items_count);
@@ -88,7 +90,7 @@ function arhive(){
 		}
 
         $smarty = $inCore->initSmarty('components', 'com_arhive_dates.tpl');
-        $smarty->assign('heading', 'Материалы за '.$year.' год');
+        $smarty->assign('heading', $_LANG['MATERIALS_FROM'].$year.$_LANG['ARHIVE_YEAR']);
         $smarty->assign('menuid', $menu_id);
         $smarty->assign('items', $items);
         $smarty->assign('items_count', $items_count);
@@ -105,7 +107,7 @@ function arhive(){
     if ($year != 'all' && $month != 'all' &&  $day == 'all') {
         $inPage->addPathway($year, '/arhive/'.$menuid.'/'.$year);
         $inPage->addPathway($month_name, '/arhive/'.$menuid.'/'.$year.'/'.$month);
-        $heading    = 'Материалы за '.$month_name.' '.$year.' года';
+        $heading    = $_LANG['MATERIALS_FROM'].$month_name.' '.$year.$_LANG['ARHIVE_YEARS'];
         $date_str   = $year.'-'.$month;
         $date_where = "DATE_FORMAT(con.pubdate, '%Y-%c') LIKE '$date_str'";
     }
@@ -114,7 +116,7 @@ function arhive(){
         $inPage->addPathway($year, '/arhive/'.$menuid.'/'.$year);
         $inPage->addPathway($month_name, '/arhive/'.$menuid.'/'.$year.'/'.$month);
         $inPage->addPathway($day, '/arhive/'.$menuid.'/'.$year.'/'.$month.'/'.$day);
-        $heading    = 'Материалы за '.$day.', '.$inCore->getRusDate(date('F', mktime(0,0,0,$month,1,$year))).' '.$year.' года';
+        $heading    = $_LANG['MATERIALS_FROM'].$day.', '.$inCore->getRusDate(date('F', mktime(0,0,0,$month,1,$year))).' '.$year.$_LANG['ARHIVE_YEARS'];
         $date_str   = $year.'-'.$month.'-'.$day;
         $date_where = "DATE_FORMAT(con.pubdate, '%Y-%c-%e') LIKE '$date_str'";
     }

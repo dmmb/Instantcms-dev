@@ -4,16 +4,16 @@
 	{/if}
 	<table width="100%" border="0" cellpadding="6" cellspacing="0">
 		<tr>
-			<td width="160"><strong>Заголовок записи: </strong></td>
+			<td width="160"><strong>{$LANG.TITLE_POST}: </strong></td>
 		  	<td><input name="title" type="text" id="title" style="width:400px" value="{$mod.title}"/></td>
 		</tr>
 
 		{if $blog.showcats}
 			<tr>
-				<td><strong>Рубрика блога:</strong></td>
+				<td><strong>{$LANG.BLOG_CAT}:</strong></td>
 				<td>
 					<select name="cat_id" id="cat_id" style="width:400px">
-						<option value="0" {if !isset($mod.cat_id) || $mod.cat_id==0}  selected {/if}>Без рубрики</option>
+						<option value="0" {if !isset($mod.cat_id) || $mod.cat_id==0}  selected {/if}>{$LANG.WITHOUT_CAT}</option>
 						{$cat_list}
 					</select>
 				</td>
@@ -22,12 +22,12 @@
 		
 		{if $myblog}
 			<tr>
-				<td><strong>Показывать запись:</strong></td>
+				<td><strong>{$LANG.SHOW_POST}:</strong></td>
 				<td>
 					<select name="allow_who" id="allow_who" style="width:400px">
-						<option value="all" {if !isset($mod.allow_who) || $mod.allow_who=='all'} selected {/if}>Всем</option>
-						<option value="friends" {if $mod.allow_who=='friends'} selected {/if}>Моим друзьям</option>
-						<option value="nobody" {if $mod.allow_who=='nobody'} selected {/if}>Только мне</option>
+						<option value="all" {if !isset($mod.allow_who) || $mod.allow_who=='all'} selected {/if}>{$LANG.TO_ALL}</option>
+						<option value="friends" {if $mod.allow_who=='friends'} selected {/if}>{$LANG.TO_MY_FRIENDS}</option>
+						<option value="nobody" {if $mod.allow_who=='nobody'} selected {/if}>{$LANG.TO_ONLY_ME}</option>
 					</select>
 				</td>
 			</tr>
@@ -36,11 +36,11 @@
 		{/if}
 		
 		<tr>
-			<td><strong>Ваше настроение:</strong></td>
+			<td><strong>{$LANG.YOUR_MOOD}:</strong></td>
 			<td><input name="feel" type="text" id="feel" style="width:400px" value="{$mod.feel}"/></td>
 		</tr>
 		<tr>
-			<td><strong>Играет музыка:</strong></td>
+			<td><strong>{$LANG.PLAY_MUSIC}:</strong></td>
 			<td><input name="music" type="text" id="music" style="width:400px" value="{$mod.music}"/></td>
 		</tr>			
 		<tr>
@@ -50,15 +50,15 @@
 				{$autogrow}
 				<div><textarea class="ajax_autogrowarea" name="content" id="message">{$msg}</textarea></div>
                 <div style="margin-top:12px;margin-bottom:15px;">
-                    <strong>Важно:</strong> если текст поста достаточно большой, не забудьте разделить его на две части (анонс и основное тело), 
-                    <a href="javascript:addTagCut('message');">вставив разделитель</a> между ними.
+                    <strong>{$LANG.IMPORTANT}:</strong> {$LANG.CUT_TEXT},
+                    <a href="javascript:addTagCut('message');">{$LANG.ADD_CUT_TAG}</a> {$LANG.BETWEEN}.
                 </div>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<strong>Теги:</strong><br />
-				<span><small>Ключевые слова, через запятую</small></span>
+				<strong>{$LANG.TAGS}:</strong><br />
+				<span><small>{$LANG.KEYWORDS}</small></span>
 			</td>
 			<td>
 				<input name="tags" type="text" id="tags" style="width:400px" value="{$tagline}"/>
@@ -70,7 +70,7 @@
 		</tr>
 	</table>
 	<p>
-		<input name="goadd" type="submit" id="goadd" value="Сохранить запись" /> 
-		<input name="cancel" type="button" onclick="window.history.go(-1)" value="Отмена" />
+		<input name="goadd" type="submit" id="goadd" value="{$LANG.SAVE_POST}" />
+		<input name="cancel" type="button" onclick="window.history.go(-1)" value="{$LANG.CANCEL}" />
 	</p>
 </form>

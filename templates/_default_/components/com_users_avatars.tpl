@@ -2,15 +2,15 @@
 {* ==================== Список аватаров, доступных для выбора ===================== *}
 {* ================================================================================ *}
 
-<div class="con_heading">Выберите аватар</div>
-<div class="con_text">Щелкните по аватару, чтобы установить его в свой профиль:</div>
+<div class="con_heading">{$LANG.SELECTING_AVATAR}</div>
+<div class="con_text">{$LANG.CLICK_ON_AVATAR_TEXT}:</div>
 
 <table class="" style="margin-top:15px;margin-bottom:15px;" cellpadding="5" width="100%" border="0">
     {assign var="col" value="1"}
     {foreach key=tid item=avatar from=$avatars}
         {if $col==1} <tr> {/if}
             <td width="25%" valign="middle" align="center">
-                    <a href="/users/{$menuid}/{$userid}/select-avatar/{$avatar|urlencode}" title="Выбрать аватар">
+                    <a href="/users/{$menuid}/{$userid}/select-avatar/{$avatar|urlencode}" title="{$LANG.SELECT_AVATAR}">
                         <img src="{$avatars_dir}/{$avatar}" border="0" />
                     </a>
             </td>

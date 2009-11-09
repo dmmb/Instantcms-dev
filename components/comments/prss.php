@@ -14,6 +14,7 @@ function rss_comments($item_id, $cfg, &$rssdata){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
 		global $_CFG;
+        global $_LANG;
 	
 		$maxitems = $cfg['maxitems'];
 		$rooturl = 'http://'.$_SERVER['HTTP_HOST'];
@@ -25,13 +26,13 @@ function rss_comments($item_id, $cfg, &$rssdata){
 			$catsql = "AND c.target = '".$item_id[0]."' AND c.target_id = ".$item_id[1]."";			
 			$target_title = strip_tags($inCore->getCommentLink($item_id[0], $item_id[1], false, false));
 			$target_link = $inCore->getCommentLink($item_id[0], $item_id[1], false, true);
-			$channel['title'] = $target_title. ' - Комментарии';
+			$channel['title'] = $target_title. ' - '.$_LANG['COMMENTS'];
 			$channel['description'] = '';
 			$channel['link'] = $target_link;
 		} else {
 			$catsql = '';		
-			$channel['title'] = 'Комментарии на сайте';
-			$channel['description'] = 'Комментарии на сайте';
+			$channel['title'] = $_LANG['COMMENTS_ON_SITE'];
+			$channel['description'] = $_LANG['COMMENTS_ON_SITE'];
 			$channel['link'] = $rooturl;
 		}		
 		//ITEMS		
@@ -62,6 +63,5 @@ function rss_comments($item_id, $cfg, &$rssdata){
 		$rssdata['items'] = $items;
 		return;
 }
-
 
 ?>

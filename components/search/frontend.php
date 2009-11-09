@@ -14,6 +14,8 @@ function pageBar($current, $perpage, $sql, $query, $look, $limitStr){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
 	$html = '';
+
+    global $_LANG;
 	
 	$sql = str_replace($limitStr, '', $sql);
 	
@@ -25,7 +27,7 @@ function pageBar($current, $perpage, $sql, $query, $look, $limitStr){
 		
 		if($pages>1){
 			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>Страницы: </strong></span>';	
+			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {			
 					
@@ -44,13 +46,15 @@ function pageBar($current, $perpage, $sql, $query, $look, $limitStr){
 
 function pageBarTags($records, $current, $perpage, $query=''){
 	$html = '';
-	
+
+    global $_LANG;
+
 	if ($records){
 		$pages = ceil($records / $perpage);
 
 		if($pages>1){
 			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>Страницы: </strong></span>';	
+			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {			
 					
@@ -75,6 +79,8 @@ function search(){
     
 	$inCore->loadLib('tags');
 
+    global $_LANG;
+
 	$menuid     = $inCore->menuId();
 	$cfg        = $inCore->loadComponentConfig('search');
 
@@ -88,11 +94,7 @@ function search(){
 	$query = str_replace('"', '', $query);
 
 	if ($menuid==0){
-		if ($mode=='text'){
-			$inPage->addPathway('Поиск', $_SERVER['REQUEST_URI']);	
-		} else {
-			$inPage->addPathway('Поиск по тегу', $_SERVER['REQUEST_URI']);	
-		}
+        $inPage->addPathway($_LANG['SEARCH']);
 	}
 	
 	//GET PAGING OPTIONS
@@ -101,15 +103,15 @@ function search(){
 	
 	unset($_SESSION['searchquery']);
 
-	$inPage->setTitle('Поиск');
+	$inPage->setTitle($_LANG['SEARCH']);
 
-	echo '<div class="con_heading">Поиск</div>';
+	echo '<div class="con_heading">'.$_LANG['SEARCH'].'</div>';
 	
 	if ($mode == 'text'){
         
 		//PRINT SEARCH FORM
 		echo '<form action="/index.php" method="GET" style="clear:both">';
-			echo '<strong>Найти на сайте:</strong> ';
+			echo '<strong>'.$_LANG['SEARCH_ON_SITE'].':</strong> ';
 			echo '<input type="hidden"
 						 name="view"
 						 value="search" class="search_input"/>';
@@ -119,12 +121,12 @@ function search(){
 						 value="'.$query.'" 
 						 /> ';
 			echo '<select name="look" style="width:200px">
-					<option value="allwords" '.($look=='allwords'||$look==''?'selected="selected"':'').'>Все слова</option>
-                    <option value="anyword" '.($look=='anyword'?'selected="selected"':'').'>Любое слово</option>
-					<option value="phrase" '.($look=='phrase'?'selected="selected"':'').'>Фраза целиком</option>
+					<option value="allwords" '.($look=='allwords'||$look==''?'selected="selected"':'').'>'.$_LANG['ALL_WORDS'].'</option>
+                    <option value="anyword" '.($look=='anyword'?'selected="selected"':'').'>'.$_LANG['ANY_WORD'].'</option>
+					<option value="phrase" '.($look=='phrase'?'selected="selected"':'').'>'.$_LANG['PHRASE'].'</option>
 				  </select> ';
 			echo '<input type="hidden" name="menuid" value="'.$menuid.'"/>';
-			echo '<input type="submit" value="Найти"/>';
+			echo '<input type="submit" value="'.$_LANG['FIND'].'"/>';
 			
 		echo '</form>';
 		
@@ -189,7 +191,7 @@ function search(){
             $num        = ($page-1)*$perpage;
 
 			if ($found){
-				echo '<p style="margin-bottom:20px"><strong>Найдено материалов:</strong> '.$total.'</p>';
+				echo '<p style="margin-bottom:20px"><strong>'.$_LANG['FOUND_MATERIALS'].':</strong> '.$total.'</p>';
 
 				while ($item = $inDB->fetch_assoc($rs)){
 
@@ -214,12 +216,12 @@ function search(){
 				
 				$_SESSION['searchquery'] = $query;
 			} else {
-				echo '<p>По запросу "'.$query.'" ничего не найдено. <a href="http://www.yandex.ru/yandsearch?text='.urlencode($query).'" target="_blank">Поискать в Яндексе?</a></p>';
+				echo '<p>'.$_LANG['BY_QUERY'].' "'.$query.'" '.$_LANG['NOTHING_FOUND'].'. <a href="'.str_replace('%q%', urlencode($query), $_LANG['FIND_EXTERNAL_URL']).'" target="_blank">'.$_LANG['FIND_EXTERNAL'].'</a></p>';
 			}
 							
 		} else {
 			if (strlen($query)>0){
-				echo '<p><strong>Ошибка:</strong> <span style="color:red">слишком короткий запрос!</span></p>';
+				echo '<p><strong>'.$_LANG['ERROR'].':</strong> <span style="color:red">'.$_LANG['SHORT_QUERY'].'</span></p>';
 			}
 		}
 	}
@@ -227,13 +229,13 @@ function search(){
 	if ($mode == 'tag'){
 	
 		if (!strlen($query)){
-			echo '<p>Пустой поисковый запрос</p>';
+			echo '<p>'.$_LANG['EMPTY_QUERY'].'</p>';
 		} else {
 		
 			if (isset($cfg['perpage'])) { $perpage = $cfg['perpage']; } else { $perpage = 20; }				
 			if (isset($_REQUEST['page'])) { $page = abs((int)$_REQUEST['page']); } else { $page = 1; }		
 		
-			echo '<p style="padding:5px;padding-bottom:0px"><strong>Поиск по тегу:</strong> &laquo;'.$query.'&raquo;</p>';
+			echo '<p style="padding:5px;padding-bottom:0px"><strong>'.$_LANG['SEARCH_BY_TAG'].':</strong> &laquo;'.$query.'&raquo;</p>';
 		
 			$sql = "SELECT * 
 					FROM cms_tags
@@ -252,14 +254,14 @@ function search(){
 							LIMIT ".(($page-1)*$perpage).", $perpage";
 					$rs = $inDB->query($sql) ;
 						
-					echo '<p style="padding:5px;padding-top:0px"><strong>Найдено материалов:</strong> '.$found;
+					echo '<p style="padding:5px;padding-top:0px"><strong>'.$_LANG['FOUND_MATERIALS'].':</strong> '.$found;
 					if ($perpage < $found){
-						echo '<br/><strong>Показаны:</strong> '.((($page-1)*$perpage)+1).' &mdash; '.((($page-1)*$perpage)+$perpage);
+						echo '<br/><strong>'.$_LANG['SHOWN'].':</strong> '.((($page-1)*$perpage)+1).' &mdash; '.((($page-1)*$perpage)+$perpage);
 					}
 					echo '</p>';
 					echo '<table width="100%" cellpadding="5" cellspacing="0" border="0">';
 						echo '<tr>';
-							echo '<td class="search_head"><strong>Найдено:</strong></td>';
+							echo '<td class="search_head"><strong>'.$_LANG['FOUND'].':</strong></td>';
 						echo '</tr>';
 					$row = 1;
 					while ($item = $inDB->fetch_assoc($rs)){
@@ -284,7 +286,7 @@ function search(){
 					echo pageBarTags($found, $page, $perpage, $query);
                     
 				} else {
-					echo '<p>По тегу "'.$query.'" ничего не найдено. <a href="http://www.yandex.ru/yandsearch?text='.urlencode($query).'" target="_blank">Поискать в Яндексе?</a></p>';
+					echo '<p>'.$_LANG['BY_TAG'].' "'.$query.'" '.$_LANG['NOTHING_FOUND'].'. <a href="'.str_replace('%q%', urlencode($query), $_LANG['FIND_EXTERNAL_URL']).'" target="_blank">'.$_LANG['FIND_EXTERNAL'].'</a></p>';
 				}		
 		
 		}

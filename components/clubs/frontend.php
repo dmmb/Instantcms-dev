@@ -17,7 +17,7 @@ function clubs(){
     $inPage = cmsPage::getInstance();
     $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
-
+    global $_LANG;
 	$inCore->includeFile("components/users/includes/usercore.php");
 	$inCore->includeFile("components/blog/includes/blogcore.php");
 
@@ -109,10 +109,10 @@ if ($do=='club'){
 				
 	if(!$club){
 		//CLUB NOT FOuND
-		$pagetitle = 'Клуб не найден';
-        $inPage->setTitle('Клуб не найден');
-		$inPage->addPathway('Клуб не найден');
-        $inPage->printHeading('Клуб не найден');
+		$pagetitle = $_LANG['CLUB_NOT_FOUND'];
+        $inPage->setTitle($_LANG['CLUB_NOT_FOUND']);
+		$inPage->addPathway($_LANG['CLUB_NOT_FOUND']);
+        $inPage->printHeading($_LANG['CLUB_NOT_FOUND']);
         return;
 	}
     
@@ -144,9 +144,9 @@ if ($do=='club'){
 
     //JOIN/LEAVE LINK
     if ( clubUserIsMember($id, $user_id) ){
-        $club['member_link'] = '<a href="/clubs/'.$menuid.'/'.$id.'/leave.html" class="leave">Выйти из состава клуба</a>';;
+        $club['member_link'] = '<a href="/clubs/'.$menuid.'/'.$id.'/leave.html" class="leave">'.$_LANG['LEAVE_CLUB'].'</a>';;
     } elseif ($club['clubtype']=='public' && ($user_id != $club['admin_id'])){
-        $club['member_link'] = '<a href="/clubs/'.$menuid.'/'.$id.'/join.html" class="join">Вступить в клуб</a>';
+        $club['member_link'] = '<a href="/clubs/'.$menuid.'/'.$id.'/join.html" class="join">'.$_LANG['JOIN_CLUB'].'</a>';
     } else {
         $club['member_link'] = '';
     }
@@ -186,14 +186,14 @@ if ($do == 'create'){
 
 	if (!$user_id){ return; }
 
-    $inPage->addPathway('Создать клуб');
+    $inPage->addPathway($_LANG['CREATE_CLUB']);
 
     $can_create = $user_id && ( $inCore->userIsAdmin($user_id) || ($cfg['cancreate'] && cmsUser::getKarma($user_id)>=$cfg['create_min_karma'] && cmsUser::getRating($user_id)>=$cfg['create_min_rating']));
 
     if (!$can_create){ return; }
 
     if ( !$inCore->inRequest('create') ){
-        $inPage->setTitle('Создать клуб');
+        $inPage->setTitle($_LANG['CREATE_CLUB']);
         $smarty = $inCore->initSmarty('components', 'com_clubs_create.tpl');
         $smarty->assign('confirm', $confirm);
         $smarty->display('com_clubs_create.tpl');
@@ -301,8 +301,8 @@ if ($do == 'config'){
 
         //show config form
         $inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$id);
-        $inPage->addPathway('Настройки клуба');
-        $inPage->setTitle('Настройки клуба');
+        $inPage->addPathway($_LANG['CONFIG_CLUB']);
+        $inPage->setTitle($_LANG['CONFIG_CLUB']);
 
         $moderators     = clubModerators($id);
         $members        = clubMembers($id);
@@ -348,7 +348,7 @@ if ($do == 'leave'){
     if (!$club){ return; }
 
     $inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$id);
-    $inPage->addPathway('Выход из клуба');
+    $inPage->addPathway($_LANG['EXIT_FROM_CLUB']);
 
     if ( $inCore->inRequest('confirm') ){
         clubRemoveUser($id, $inUser->id);
@@ -359,10 +359,10 @@ if ($do == 'leave'){
     if ( !$inCore->inRequest('confirm') ){
         if (!clubUserIsMember($id, $inUser->id)){ return; }
 
-        $inPage->setTitle('Выход из клуба');
+        $inPage->setTitle($_LANG['EXIT_FROM_CLUB']);
 
-        $confirm['title']               = 'Выход из клуба';
-        $confirm['text']                = 'Вы действительно хотите прекратить свое участие в клубе?';
+        $confirm['title']               = $_LANG['EXIT_FROM_CLUB'];
+        $confirm['text']                = $_LANG['REALY_EXIT_FROM_CLUB'];
         $confirm['action']              = '';
         $confirm['yes_button']['type']  = 'submit';
         $confirm['yes_button']['name']  = 'confirm';
@@ -383,18 +383,19 @@ if ($do == 'join'){
     if (!$club){    return; }
 
     $inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$id);
-    $inPage->addPathway('Вступление в клуб');
+    $inPage->addPathway($_LANG['JOINING_CLUB']);
 
-    if ( $inCore->inRequest('confirm') ){
+    if (clubUserIsMember($id, $inUser->id)){ return; }
+
+    if ( $inCore->inRequest('confirm') ){        
         clubAddUser($id, $inUser->id);
         setClubsRating();
         $inCore->redirect('/clubs/'.$menuid.'/'.$id);
     }
 
     if ( !$inCore->inRequest('confirm') ) {
-        if (clubUserIsMember($id, $inUser->id)){ return; }
 
-        $inPage->setTitle('Вступление в клуб');
+        $inPage->setTitle($_LANG['JOINING_CLUB']);
 
         $min_karma = $club['join_min_karma'];
         $user_karma = cmsUser::getKarma($inUser->id);
@@ -402,8 +403,8 @@ if ($do == 'join'){
         if(($user_karma >= $min_karma) || !$club['join_karma_limit']){
 
             $inPage->backButton(false);
-            $confirm['title'] = 'Вступление в клуб';
-            $confirm['text'] = 'Вы действительно хотите вступить в <strong>'.$club['title'].'</strong>?';
+            $confirm['title'] = $_LANG['JOINING_CLUB'];
+            $confirm['text'] = $_LANG['YOU_REALY_JOIN_TO'].' <strong>'.$club['title'].'</strong>?';
             $confirm['action'] = '';
             $confirm['yes_button']['type'] = 'submit';
             $confirm['yes_button']['name'] = 'confirm';
@@ -415,10 +416,10 @@ if ($do == 'join'){
         } else {
 
             $inPage->backButton(true);
-            $inPage->printHeading('Не хватает кармы');
-            echo '<p><strong>У вас не хватает кармы для вступления в этот клуб.</strong></p>';
-            echo '<p>Требуется '.$min_karma.', а имеется только '.$user_karma.'.</p>';
-            echo '<p>Хотите посмотреть <a href="/users/'.$menuid.'/'.$uid.'/karma.html">историю своей кармы</a>?</p>';
+            $inPage->printHeading($_LANG['NEED_KARMA']);
+            echo '<p><strong>'.$_LANG['NEED_KARMA_TEXT'].'</strong></p>';
+            echo '<p>'.$_LANG['NEEDED'].' '.$min_karma.', '.$_LANG['HAVE_ONLY'].' '.$user_karma.'.</p>';
+            echo '<p>'.$_LANG['WANT_SEE'].' <a href="/users/'.$menuid.'/'.$uid.'/karma.html">'.$_LANG['HISTORY_YOUR_KARMA'].'</a>?</p>';
             
         }
     }

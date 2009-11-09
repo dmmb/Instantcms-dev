@@ -15,8 +15,8 @@
 		</span>
 	{/if}
 	{if $moderator}
-		<span class="bd_item_edit"><a href="/board/{$menuid}/edit{$item.id}.html">Редактировать</a></span>
-		<span class="bd_item_delete"><a href="/board/{$menuid}/delete{$item.id}.html">Удалить</a></span>
+		<span class="bd_item_edit"><a href="/board/{$menuid}/edit{$item.id}.html">{$LANG.EDIT}</a></span>
+		<span class="bd_item_delete"><a href="/board/{$menuid}/delete{$item.id}.html">{$LANG.DELETE}</a></span>
 	{/if}				
 </div>
 
@@ -36,8 +36,8 @@
 <div class="bd_links">
 	{if $is_user}
 		{if $item.user_id != $user_id}
-			<span class="bd_message"><a href="/users/0/{$item.user_id}/sendmessage.html">Написать сообщение автору</a></span>
+			<span class="bd_message"><a href="/users/0/{$item.user_id}/sendmessage.html">{$LANG.WRITE_MESS_TO_AVTOR}</a></span>
 		{/if}
 	{/if}
-	<span class="bd_author"><a href="/users/{$menuid}/{$item.user_id}/board.html">Все объявления автора</a></span>
+	<span class="bd_author"><a href="/users/{$menuid}/{$item.user_id}/board.html">{$LANG.ALL_AVTOR_ADVS}</a></span>
 </div>

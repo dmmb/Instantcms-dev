@@ -10,8 +10,6 @@ class cms_model_registration{
 
     public function install(){
 
-        cmsCore::registerAction('register', 'register', 'регистрируется на сайте', '');
-
         return true;
 
     }

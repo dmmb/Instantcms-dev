@@ -30,8 +30,8 @@ function rss_blog($item_id, $cfg, &$rssdata){
 		} else {
 			$catsql = '';
 		
-			$channel['title'] = 'Новые записи в блогах';
-			$channel['description'] = 'Новые записи в блогах';
+			$channel['title'] = $_LANG['NEW_POSTS_IN_BLOGS'];
+			$channel['description'] = $_LANG['NEW_POSTS_IN_BLOGS'];
 			$channel['link'] = $rooturl;
 		}		
 		//ITEMS

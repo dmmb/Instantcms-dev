@@ -14,6 +14,7 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 function pageBar($cat_id, $current, $perpage){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
+    global $_LANG;
 	$html = '';
 	$result = $inDB->query("SELECT id FROM cms_faq_quests WHERE category_id = $cat_id") ;
 	$records = $inDB->num_rows($result);
@@ -21,7 +22,7 @@ function pageBar($cat_id, $current, $perpage){
 		$pages = ceil($records / $perpage);
 		if($pages>1){
 			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>Страницы: </strong></span>';	
+			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {			
 					$link = '/faq/'.$inCore->menuId().'/'.@$_REQUEST['id'].'-'.$p;
@@ -41,7 +42,7 @@ function faq(){
     $inCore = cmsCore::getInstance();
     $inPage = cmsPage::getInstance();
     $inDB = cmsDatabase::getInstance();
-
+    global $_LANG;
 	$menuid = $inCore->menuId();
 	$cfg = $inCore->loadComponentConfig('faq');
 	
@@ -69,8 +70,8 @@ if ($do=='view'){
 		$pagetitle = $cat['title'];
 		$inPage->setTitle($cat['title']);
 	} else {
-		$pagetitle = 'Вопросы и ответы';
-		$inPage->setTitle('Вопросы и ответы');
+		$pagetitle = $_LANG['FAQ'];
+		$inPage->setTitle($_LANG['FAQ']);
 	}
 	
 	//PATHWAY ENTRY
@@ -174,8 +175,8 @@ if ($do=='read'){
 ///////////////////////////////////// SEND QUEST ////////////////////////////////////////////////////////////////////////////////
 if ($do=='sendquest'){
 
-	$inPage->setTitle('Задать вопрос');
-	$inPage->addPathway('Задать вопрос');
+	$inPage->setTitle($_LANG['ASK_QUE']);
+	$inPage->addPathway($_LANG['ASK_QUE']);
 	
 	$inPage->backButton(false);
 	$inPage->addHeadJS('components/faq/js/common.js');
@@ -195,14 +196,14 @@ if ($do=='sendquest'){
 				VALUES ('$category_id', NOW(), 0, '$message', '', 0, 0, NOW(), 0)";
 		$inDB->query($sql);
 		
-		$inPage->setTitle('Вопрос отправлен');
-		$inPage->addPathway('Вопрос отправлен', $_SERVER['REQUEST_URI']);		
+		$inPage->setTitle($_LANG['QUESTION_SEND']);
+		$inPage->addPathway($_LANG['QUESTION_SEND'], $_SERVER['REQUEST_URI']);
 		$inPage->backButton(false);
 		
-		echo '<div class="con_heading">Вопрос отправлен</div>';
+		echo '<div class="con_heading">'.$_LANG['QUESTION_SEND'].'</div>';
 		
-		echo '<div style="margin-top:10px">Вопрос и ответ на него будет опубликован после проверки администратором.</div>';
-		echo '<div style="margin-top:10px"><a href="/faq/'.$menuid.'">Продолжить</a></div>';
+		echo '<div style="margin-top:10px">'.$_LANG['QUESTION_PREMODER'].'</div>';
+		echo '<div style="margin-top:10px"><a href="/faq/'.$menuid.'">'.$_LANG['CONTINUE'].'</a></div>';
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

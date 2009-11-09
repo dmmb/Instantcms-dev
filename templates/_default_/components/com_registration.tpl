@@ -6,8 +6,8 @@
     <table width="100%" border="0" align="center" cellpadding="5" cellspacing="0">
         <tr>
             <td width="269" valign="top" class="">
-                <div><strong>Логин:</strong></div>
-                <div><small>Будет использоваться при авторизации.<br/>Только латинские буквы и цифры.</small></div>
+                <div><strong>{$LANG.LOGIN}:</strong></div>
+                <div><small>{$LANG.USED_FOR_AUTH}<br/>{$LANG.ONLY_LAT_SYMBOLS}</small></div>
             </td>
             <td  valign="top" class="">
                 <input name="login" id="logininput" type="text" size="30" value="{$login}" onchange="checkLogin()" autocomplete="off"/>
@@ -18,8 +18,8 @@
         {if $cfg.name_mode == 'nickname'}
             <tr>
                 <td valign="top" class="">
-                    <div><strong>Никнейм:</strong></div>
-                    <small>Этим именем будут подписываться ваши сообщения. Русские и английские буквы и цифры.</small>
+                    <div><strong>{$LANG.NICKNAME}:</strong></div>
+                    <small>{$LANG.NICKNAME_TEXT}</small>
                 </td>
                 <td valign="top" class="">
                     <input name="nickname" id="nickinput" type="text" size="30" value="{$nickname}" />
@@ -29,7 +29,7 @@
         {else}
             <tr>
                 <td valign="top" class="">
-                    <div><strong>Имя:</strong></div>
+                    <div><strong>{$LANG.NAME}:</strong></div>
                 </td>
                 <td valign="top" class="">
                     <input name="realname1" id="realname1" type="text" size="30" value="{$realname1}" />
@@ -38,7 +38,7 @@
             </tr>
             <tr>
                 <td valign="top" class="">
-                    <div><strong>Фамилия:</strong></div>
+                    <div><strong>{$LANG.SURNAME}:</strong></div>
                 </td>
                 <td valign="top" class="">
                     <input name="realname2" id="realname2" type="text" size="30" value="{$realname2}" />
@@ -47,14 +47,14 @@
             </tr>
         {/if}
         <tr>
-            <td valign="top" class=""><strong>Пароль:</strong></td>
+            <td valign="top" class=""><strong>{$LANG.PASS}:</strong></td>
             <td valign="top" class="">
                 <input name="pass" id="pass1input" type="password" size="30" onchange="{literal}$('#passcheck').html('');{/literal}"/>
                 <span class="regstar">*</span>
             </td>
         </tr>
         <tr>
-            <td valign="top" class=""><strong>Повторите пароль: </strong></td>
+            <td valign="top" class=""><strong>{$LANG.REPEAT_PASS}: </strong></td>
             <td valign="top" class="">
                 <input name="pass2" id="pass2input" type="password" size="30" onchange="checkPasswords()" />
                 <span class="regstar">*</span>
@@ -63,8 +63,8 @@
         </tr>
         <tr>
             <td valign="top" class="">
-                <div><strong>E-Mail:</strong></div>
-                <div><small>По-умолчанию  не публикуется</small></div>
+                <div><strong>{$LANG.EMAIL}:</strong></div>
+                <div><small>{$LANG.NOPUBLISH_TEXT}</small></div>
             </td>
             <td valign="top" class="">
                 <input name="email" type="text" size="30" value="{$email}"/>
@@ -82,16 +82,16 @@
         {if $cfg.ask_birthdate}
             <tr>
                 <td valign="top" class="">
-                    <div><strong>Дата рождения:</strong></div>
-                    <div><small>По-умолчанию  не публикуется</small></div>
+                    <div><strong>{$LANG.BIRTH}:</strong></div>
+                    <div><small>{$LANG.NOPUBLISH_TEXT}</small></div>
                 </td>
                 <td valign="top" class="">{php}$inCore=cmsCore::getInstance(); echo $inCore->getDateForm('birthdate'){/php}</td>
             </tr>
         {/if}
         <tr>
             <td valign="top" class="">
-                <div><strong>Защита от спама: </strong></div>
-                <div><small>Введите число, изображенное на картинке</small></div>
+                <div><strong>{$LANG.SECUR_SPAM}: </strong></div>
+                <div><small>{$LANG.SECUR_SPAM_TEXT}</small></div>
             </td>
             <td valign="top" class="">
                 {php}echo cmsPage::getCaptcha();{/php}
@@ -101,7 +101,7 @@
             <td valign="top" class="">&nbsp;</td>
             <td valign="top" class="">
                 <input name="do" type="hidden" value="register" />
-                <input name="save" type="submit" id="save" value="Регистрация" />
+                <input name="save" type="submit" id="save" value="{$LANG.REGISTRATION}" />
             </td>
         </tr>
     </table>

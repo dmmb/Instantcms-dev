@@ -49,6 +49,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$cfg['pt_hide']     = $inCore->request('pt_hide', 'int', 0);
 		$cfg['autokeys']    = $inCore->request('autokeys', 'int', 0);
 
+        $cfg['img_small_w'] = $inCore->request('img_small_w', 'int', 100);
+        $cfg['img_big_w']   = $inCore->request('img_big_w', 'int', 200);
+        $cfg['img_sqr']     = $inCore->request('img_sqr', 'int', 1);
+
         $cfg['af_on']           = $inCore->request('af_on', 'int', 0);
         $cfg['af_delete']       = $inCore->request('af_delete', 'int', 1);
         $cfg['af_showlink']     = $inCore->request('af_showlink', 'int', 1);
@@ -68,6 +72,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if(!isset($cfg['perpage'])) { $cfg['perpage'] = 20; }	
 	if(!isset($cfg['autokeys'])) { $cfg['autokeys'] = 1; }
     if(!isset($cfg['readdesc'])) { $cfg['readdesc'] = 0; }
+
+	if(!isset($cfg['img_small_w'])) { $cfg['img_small_w'] = 100; }
+	if(!isset($cfg['img_big_w'])) { $cfg['img_big_w'] = 200; }
+    if(!isset($cfg['img_sqr'])) { $cfg['img_sqr'] = 1; }
 
     if(!isset($cfg['af_on'])) { $cfg['af_on'] = 0; }
     if(!isset($cfg['af_delete'])) { $cfg['af_delete'] = 1; }
@@ -140,6 +148,28 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             <td>
                 <input name="pt_hide" type="radio" value="1" <?php if (@$cfg['pt_hide']) { echo 'checked="checked"'; } ?>/> Да
                 <input name="pt_hide" type="radio" value="0" <?php if (@!$cfg['pt_hide']) { echo 'checked="checked"'; } ?>/> Нет
+            </td>
+        </tr>
+    </table>
+    {tab=Фото статей}
+    <table width="450" border="0" cellpadding="10" cellspacing="0" class="proptable">
+        <tr>
+            <td><strong>Ширина маленькой копии:</strong></td>
+            <td width="120">
+                <input name="img_small_w" type="text" id="img_small_w" value="<?php echo @$cfg['img_small_w'];?>" size="5" /> пикс.
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Ширина большой копии:</strong></td>
+            <td>
+                <input name="img_big_w" type="text" id="img_big_w" value="<?php echo @$cfg['img_big_w'];?>" size="5" /> пикс.
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Квадратные:</strong></td>
+            <td>
+                <input name="img_sqr" type="radio" value="1" <?php if (@$cfg['img_sqr']) { echo 'checked="checked"'; } ?>/> Да
+                <input name="img_sqr" type="radio" value="0" <?php if (@!$cfg['img_sqr']) { echo 'checked="checked"'; } ?>/> Нет
             </td>
         </tr>
     </table>

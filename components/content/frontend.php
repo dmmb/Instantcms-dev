@@ -14,7 +14,7 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 function pageBar($cat_id, $cat_seolink, $model, $current, $perpage){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
-
+    global $_LANG;
     $html = '';
 	
 	$result = $inDB->query("SELECT id FROM cms_content WHERE category_id = $cat_id AND published = 1") ;
@@ -24,7 +24,7 @@ function pageBar($cat_id, $cat_seolink, $model, $current, $perpage){
 		$pages = ceil($records / $perpage);
 		if($pages>1){
 			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>Страницы: </strong></span>';	
+			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {
 					$link = $model->getCategoryURL($inCore->menuId(), $cat_seolink, $p);
@@ -42,12 +42,13 @@ function pageBar($cat_id, $cat_seolink, $model, $current, $perpage){
 function pageBarMy($records, $current, $perpage){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
+    global $_LANG;
 	$html = '';
 		if ($records){
 		$pages = ceil($records / $perpage);
 		if($pages>1){
 			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>Страницы: </strong></span>';	
+			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {								
 					$link = '/content/my'.$p.'.html';					
@@ -79,7 +80,7 @@ function content(){
 
     $inCore->loadModel('content');
     $model = new cms_model_content();
-	
+    global $_LANG;
 	if(!isset($cfg['perpage'])) { $cfg['perpage'] = 20; }
 	if(!isset($cfg['autokeys'])) { $cfg['autokeys'] = 1; }
     if(!isset($cfg['af_showlink'])) { $cfg['af_showlink'] = 1; }
@@ -113,8 +114,8 @@ if ($do=='view'){
 	}
 
     if ($cat['id']<=0){
-		$inPage->setTitle('Каталог статей');
-		$pagetitle  = 'Каталог статей';
+		$inPage->setTitle($_LANG['CATALOG_ARTICLES']);
+		$pagetitle  = $_LANG['CATALOG_ARTICLES'];
 	}
 
 	//PATHWAY ENTRY
@@ -173,6 +174,7 @@ if ($do=='view'){
 			$con['comments'] 	 = $inCore->getCommentsCount('article', $con['id']);
 			$con['user_access']  = $inCore->checkUserAccess('material', $con['id']);
             $con['url']          = $model->getArticleURL($menuid, $con['seolink']);
+            $con['image']       = (file_exists(PATH.'/images/photos/small/article'.$con['id'].'.jpg') ? 'article'.$con['id'].'.jpg' : '');
 			$cons[]              = $con;
 		}
 		$is_articles = true;
@@ -211,17 +213,17 @@ if ($do=='read'){
     if ($id) { $article = $model->getArticle($id); }
 
     if ( !$article ) {
-        $inPage->setTitle('Страница не найдена');
-        $inPage->printHeading('Страница не найдена');
-        echo '<p>Возможно она была удалена или перемещена.</p>';
+        $inPage->setTitle($_LANG['PAGE_NOT_FOUND']);
+        $inPage->printHeading($_LANG['PAGE_NOT_FOUND']);
+        echo '<p>'.$_LANG['PAGE_NOT_FOUND_TEXT'].'</p>';
         return;
     }
 
 	if( !$inCore->checkUserAccess('material', $article['id']) ){
-		$inPage->setTitle('Нет прав для просмотра');
-		$inPage->printHeading('Нет прав для просмотра');
-		echo '<p><b>У вас нет прав для просмотра этого материала.</b></p>';
-		echo '<p>Обратитесь к администрации сайта для получения доступа, либо зарегистрируйтесь.</p>';
+		$inPage->setTitle($_LANG['NO_PERM_FOR_VIEW']);
+		$inPage->printHeading($_LANG['NO_PERM_FOR_VIEW']);
+		echo '<p><b>'.$_LANG['NO_PERM_FOR_VIEW_TEXT'].'</b></p>';
+		echo '<p>'.$_LANG['NO_PERM_FOR_VIEW_RULES'].'</p>';
         return;
 	}
 
@@ -321,6 +323,9 @@ if ($do=='read'){
     if ($cfg['pt_disp']) { $disp_style = 'display: block;'; } else { $disp_style = 'display: none;'; }
     $smarty->assign('pt_disp_style', $disp_style);
 
+    $article_image = (file_exists(PATH.'/images/photos/article'.$article['id'].'.jpg') ? 'article'.$article['id'].'.jpg' : '');
+    $smarty->assign('article_image', $article_image);
+
     $smarty->assign('article_content', $article_content);
     $smarty->assign('forum_thread_id', $forum_thread_id);
     $smarty->assign('tagbar', cmsTagBar('content', $article['id']));
@@ -338,8 +343,8 @@ if ($do=='read'){
 if ($do=='addarticle' || $do=='editarticle'){
 
 	if (!$inCore->isUserCan('content/add')){
-        $inPage->printHeading('Доступ запрещен');
-        echo '<p>Доступ запрещен.</p>';
+        $inPage->printHeading($_LANG['ACCESS_DENIED']);
+        echo '<p>'.$_LANG['ACCESS_DENIED'].'</p>';
         return;
     }
 
@@ -357,22 +362,22 @@ if ($do=='addarticle' || $do=='editarticle'){
 
     if ( !$inCore->inRequest('add_mod') ){
 
-        $inPage->addPathway('Мои статьи', '/content/my.html');
+        $inPage->addPathway($_LANG['MY_ARTICLES'], '/content/my.html');
         if ($do=='addarticle'){
-            $inPage->setTitle('Добавить статью');
-            $inPage->addPathway('Добавить статью');
-            $pagetitle = 'Добавить статью';
+            $inPage->setTitle($_LANG['ADD_ARTICLE']);
+            $inPage->addPathway($_LANG['ADD_ARTICLE']);
+            $pagetitle = $_LANG['ADD_ARTICLE'];
         }
 
         if ($do=='editarticle'){
-            $inPage->setTitle('Редактировать статью');
-            $inPage->addPathway('Редактировать статью');
-            $pagetitle = 'Редактировать статью';
+            $inPage->setTitle($_LANG['EDIT_ARTICLE']);
+            $inPage->addPathway($_LANG['EDIT_ARTICLE']);
+            $pagetitle = $_LANG['EDIT_ARTICLE'];
             $mod['tags'] = cmsTagLine('content', $mod['id'], false);
             $smarty->assign('mod', $mod);
 
             if (!$inCore->isUserCan('content/autoadd')){
-                $add_notice = '<p><strong>Внимание:</strong> после сохранения изменений статья отправится на проверку повторно!</p>';
+                $add_notice = '<p><strong>'.$_LANG['ATTENTION'].':</strong> '.$_LANG['EDIT_ARTICLE_PREMODER'].'</p>';
             }
         }
 
@@ -426,7 +431,7 @@ if ($do=='addarticle' || $do=='editarticle'){
 
             cmsUser::checkAwards($user_id);
 
-            cmsInsertTags($article['tags'], 'content', $article['id']);
+            cmsInsertTags($tags, 'content', $article['id']);
 
             //autoforum
             if ($cfg['af_on'] && $category_id != $cfg['af_hidecat_id'] && $article['published']){
@@ -434,16 +439,16 @@ if ($do=='addarticle' || $do=='editarticle'){
             }
 
             //MESSAGE
-            $inPage->setTitle('Статья отправлена');
+            $inPage->setTitle($_LANG['ARTICLE_SEND']);
             $inPage->backButton(false);
-            $inPage->addPathway('Статья отправлена');
-            $inPage->printHeading('Статья отправлена');
+            $inPage->addPathway($_LANG['ARTICLE_SEND']);
+            $inPage->printHeading($_LANG['ARTICLE_SEND']);
 
             if (!$inCore->isUserCan('content/autoadd')){
-                echo '<p>После проверки администратором она будет опубликована на сайте.</p>';
+                echo '<p>'.$_LANG['ARTICLE_PREMODER_TEXT'].'</p>';
             }
 
-            echo '<p><a href="/">Продолжить</a></p>';
+            echo '<p><a href="/">'.$_LANG['CONTINUE'].'</a></p>';
             return;
 
         }
@@ -478,17 +483,17 @@ if ($do=='deletearticle'){
 if ($do=='my'){
 
     if (!$inCore->isUserCan('content/add')){
-        $inPage->printHeading('Доступ запрещен');
-        echo '<p>Доступ запрещен.</p>';
+        $inPage->printHeading($_LANG['ACCESS_DENIED']);
+        echo '<p>'.$_LANG['ACCESS_DENIED'].'</p>';
         return;
     }
     
     $user_id = $inUser->id;
 	
-    $inPage->setTitle('Мои статьи');
-    $inPage->addPathway('Мои статьи');
+    $inPage->setTitle($_LANG['MY_ARTICLES']);
+    $inPage->addPathway($_LANG['MY_ARTICLES']);
 
-    $inPage->printHeading('Мои статьи');
+    $inPage->printHeading($_LANG['MY_ARTICLES']);
 
     //total count
     $sql = "SELECT con.id
@@ -500,7 +505,7 @@ if ($do=='my'){
 
     //current page
     $sql = "SELECT con.*, cat.title as category, DATE_FORMAT(con.pubdate, '%d-%m-%Y') as pubdate,
-                   IF(con.published=1, '<span style=\"color:green\">Одобрена</span>', '<span style=\"color:#CC0000\">На проверке</span>') as status
+                   IF(con.published=1, '<span style=\"color:green\">".$_LANG['PUBLISHED']."</span>', '<span style=\"color:#CC0000\">".$_LANG['NO_PUBLISHED']."</span>') as status
             FROM cms_content con, cms_category cat
             WHERE con.user_id = $user_id AND con.category_id = cat.id
             ORDER BY con.pubdate DESC
@@ -513,7 +518,7 @@ if ($do=='my'){
     $rs = $inDB->query($sql);
 
     if (!$inDB->num_rows($rs)){
-        echo '<p>На сайте нет ваших статей. <a href="/content/add.html">Добавить статью?</a></p>';
+        echo '<p>'.$_LANG['NO_YOUR_ARTICL_ON_SITE'].'. <a href="/content/add.html">'.$_LANG['ADD_ARTICLE'] .'?</a></p>';
         return;
     }
 
@@ -541,12 +546,12 @@ if ($do=='best'){
 
     $user_id = $inUser->id;
 
-    $inPage->setTitle('Рейтинг статей');
-    $inPage->addPathway('Рейтинг статей');
+    $inPage->setTitle($_LANG['ARTICLES_RATING']);
+    $inPage->addPathway($_LANG['ARTICLES_RATING']);
 
-    $inPage->printHeading('Рейтинг статей');
+    $inPage->printHeading($_LANG['ARTICLES_RATING']);
 
-    $sql = "SELECT c.*, IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'),	DATE_FORMAT(c.pubdate, '<strong>Сегодня</strong> в %H:%i'),
+    $sql = "SELECT c.*, IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'),	DATE_FORMAT(c.pubdate, '<strong>{$_LANG['TODAY']}</strong> {$_LANG['IN']} %H:%i'),
                     DATE_FORMAT(c.pubdate, '%d-%m-%Y'))  as pubdate, IFNULL(SUM(r.points), 0) as points, IFNULL(COUNT(r.points), 0) as votes,
                     u.nickname as author, cat.title as category
             FROM cms_users u, cms_category cat, cms_content c
@@ -559,7 +564,7 @@ if ($do=='best'){
 
     if (!$inDB->num_rows($rs)){
         ////NO ARTICLES
-        echo '<p>На сайте нет оцененных статей.</p>';
+        echo '<p>'.$_LANG['NO_ARTICLES_PUBL_ON_SITE'].'</p>';
         return;
     }
 

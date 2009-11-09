@@ -2,7 +2,7 @@
 {* =================== Список комментариев пользователя =========================== *}
 {* ================================================================================ *}
 
-<div class="con_heading"><a href="{profile_url login=$login}">{$nickname}</a> &rarr; Комментарии</div>
+<div class="con_heading"><a href="{profile_url login=$login}">{$nickname}</a> &rarr; {$LANG.COMMENTS}</div>
 
 <div style="margin-top:15px">
     {foreach key=tid item=comment from=$comments}

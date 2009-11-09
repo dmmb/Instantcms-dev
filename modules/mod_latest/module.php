@@ -12,7 +12,7 @@ function mod_latest($module_id){
 
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
-
+        global $_LANG;
 		$cfg = $inCore->loadModuleConfig($module_id);
 		if ($cfg['menuid']>0) {
 			$menuid = $cfg['menuid'];
@@ -59,6 +59,7 @@ function mod_latest($module_id){
 				$articles[$next]['comments']    = $inCore->getCommentsCount('article', $con['id']);
 				$articles[$next]['date']        = $con['fdate'];
 				$articles[$next]['description'] = $con['description'];
+                $articles[$next]['image']       = (file_exists(PATH.'/images/photos/small/article'.$con['id'].'.jpg') ? 'article'.$con['id'].'.jpg' : '');
 			}
 			
 			$smarty = $inCore->initSmarty('modules', 'mod_latest.tpl');			
@@ -68,7 +69,7 @@ function mod_latest($module_id){
 			$smarty->display('mod_latest.tpl');			
 			
 		} else { 
-			echo '<p>Нет материалов для отображения.</p>'; 
+			echo '<p>'.$_LANG['LATEST_NOT_MATERIAL'].'</p>';
 		}
 
 		return true;

@@ -6,14 +6,14 @@
 	<form action="/comments/add" id="msgform" method="POST">
         <input type="hidden" name="parent_id" value="{$parent_id}" />
 		{if $no_guests && !$is_user}
-			<p>Комментарии могут добавлять только <a href="/registration" />зарегистрированные</a> пользователи.</p>
+			<p>{$LANG.COMMENTS_CAN_ADD_ONLY} <a href="/registration" />{$LANG.REGISTERED}</a> {$LANG.USERS}.</p>
 		{else}
 			{if $user_can_add}
             
 				{if $can_by_karma || !$cfg.min_karma}
 
 					{if !$is_user}
-						<div style="margin-bottom:10px"><label>Ваше имя: <input type="text" maxchars="20" size="30" name="guestname"/></label></div>
+						<div style="margin-bottom:10px"><label>{$LANG.YOUR_NAME}: <input type="text" maxchars="20" size="30" name="guestname"/></label></div>
 					{else}
 						<input type="hidden" name="user_id" value="{$is_user}"/>
 					{/if}
@@ -26,7 +26,7 @@
                     {/if}
 
 					{if $cfg.smiles}
-						<div class="cm_smiles">{if !$cfg.bbcode}<a href="javascript:void(0);" onclick="$('#smilespanel').toggle()">Вставить смайл</a> &darr;{/if}
+						<div class="cm_smiles">{if !$cfg.bbcode}<a href="javascript:void(0);" onclick="$('#smilespanel').toggle()">{$LANG.INSERT_SMILE}</a> &darr;{/if}
 							{$smilies}
 						</div>
 					{/if}
@@ -38,7 +38,7 @@
 					{if $is_user}
 						{if !$user_subscribed}
 							<div style="margin-top:5px;margin-bottom:5px">
-								<label style="padding:5px"><input name="subscribe" type="checkbox" value="1" /> Уведомлять о новых комментариях [<a href="/users/0/{$is_user}/editprofile.html#notices" target="_blank">Настройка уведомлений</a>]</label>
+								<label style="padding:5px"><input name="subscribe" type="checkbox" value="1" /> {$LANG.NOTIFY_NEW_COMM} [<a href="/users/0/{$is_user}/editprofile.html#notices" target="_blank">{$LANG.CONFIG_NOTIFY}</a>]</label>
 							</div>
 						{/if}
 					{/if}						
@@ -50,18 +50,18 @@
 									<td width="">{php}echo cmsPage::getCaptcha();{/php}</td>
 								{/if}
 								<td width="" align="right">
-									<input class="cm_submit" type="submit" value="Отправить"/> 									
+									<input class="cm_submit" type="submit" value="{$LANG.SEND}"/>
 								</td>
 							</tr>
 						</table>
 					</div>
 					
 				{else}
-					<p>У вас не хватает <a href="/users/0/{$is_user}/karma.html">кармы</a> для добавления комментария. Требуется &mdash; {$karma_need}, имеется &mdash; {$karma_has}.</p>
+					<p>{$LANG.YOU_NEED} <a href="/users/0/{$is_user}/karma.html">{$LANG.KARMS}</a> {$LANG.TO_ADD_COMM}. {$LANG.NEED} &mdash; {$karma_need}, {$LANG.HAS} &mdash; {$karma_has}.</p>
 				{/if}
 
 			{else}
-				<p>У вас нет прав на добавление комментариев. Обратитесь к администрации сайта.</p>
+				<p>{$LANG.YOU_HAVENT_ACCESS_TEXT}</p>
 			{/if}
 		{/if}
 	</form>

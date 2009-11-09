@@ -14,7 +14,7 @@ function rss_content($item_id, $cfg, &$rssdata){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
 		global $_CFG;
-		
+		global $_LANG;
 		$maxitems = $cfg['maxitems'];
 		$rooturl = 'http://'.$_SERVER['HTTP_HOST'];
 		if ($item_id == 'all') { $item_id = 0; }	
@@ -31,8 +31,8 @@ function rss_content($item_id, $cfg, &$rssdata){
 		} else {
 			$catsql = '';
 		
-			$channel['title'] = 'Новые материалы';
-			$channel['description'] = 'Последние статьи и новости';
+			$channel['title'] = $_LANG['NEW_MATERIALS'];
+			$channel['description'] = $_LANG['LAST_ARTICLES_NEWS'];
 			$channel['link'] = $rooturl;
 		}		
 		//ITEMS

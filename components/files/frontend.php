@@ -16,7 +16,7 @@ function files(){
     $inCore     = cmsCore::getInstance();
     $inPage     = cmsPage::getInstance();
     $inDB       = cmsDatabase::getInstance();
-
+    global $_LANG;
     $do = $inCore->request('do', 'str', 'download');
 
 //========================================================================================================================//
@@ -26,7 +26,7 @@ function files(){
 
         $fileurl    = $inCore->request('fileurl', 'str', '');
 
-        if (!$fileurl) { $inCore->halt('Файл не найден'); }
+        if (!$fileurl) { $inCore->halt($_LANG['FILE_NOT_FOUND']); }
 
         if (strstr($fileurl, 'http:/')){
             if (!strstr($fileurl, 'http://')){ $fileurl = str_replace('http:/', 'http://', $fileurl); }
@@ -53,7 +53,7 @@ function files(){
             header('Location:'.$fileurl);
 
         } else {
-            $inCore->halt('Файл не найден');
+            $inCore->halt($_LANG['FILE_NOT_FOUND']);
         }
        
     }

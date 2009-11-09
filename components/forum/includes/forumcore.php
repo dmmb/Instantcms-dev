@@ -14,12 +14,13 @@ function forumMessages($forum_id){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
 	$html = '';
+	global $_LANG;
 	
 	$sql = "SELECT * FROM cms_forum_threads WHERE forum_id = $forum_id";
 	$result = $inDB->query($sql) ;
 	
 	if ($inDB->num_rows($result)){
-		$html .= '<strong>Темы:</strong> '.$inDB->num_rows($result);
+		$html .= '<strong>'.$_LANG['THREADS'].':</strong> '.$inDB->num_rows($result);
 		$tsql = "SELECT id FROM cms_forum_posts WHERE ";
 		$t = 0;
 		while ($thread= $inDB->fetch_assoc($result)){
@@ -29,9 +30,9 @@ function forumMessages($forum_id){
 		}
 		$tresult = $inDB->query($tsql) or die(mysql_error().'<br/><br/>'.$tsql);
 		if ($inDB->num_rows($tresult)){
-			$html .= '<br/><strong>Сообщений:</strong> '.$inDB->num_rows($tresult);
-		} else { $html .= '<br/><strong>Сообщений:</strong> 0'; }
-	} else { $html .= 'Нет тем'; }
+			$html .= '<br/><strong>'.$_LANG['MESSAGES'].':</strong> '.$inDB->num_rows($tresult);
+		} else { $html .= '<br/><strong>'.$_LANG['MESSAGES'].':</strong> 0'; }
+	} else { $html .= $_LANG['NOT_THREADS']; }
 	
 	return $html;
 }
@@ -155,6 +156,7 @@ function forumAttachedPoll($thread_id){
     $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
 	global $menuid;
+        global $_LANG;
 	$html = '';
 	
 	if (isset($_POST['votepoll'])){
@@ -211,7 +213,7 @@ function forumAttachedPoll($thread_id){
 					  }
 					 $html .= '</table>';
 					 if (@$inUser->id && !$uservote){
-						 $html .= '<div class="forum_poll_submit"><input type="submit" name="votepoll" value="Голосовать"></div>';
+						 $html .= '<div class="forum_poll_submit"><input type="submit" name="votepoll" value="'.$_LANG['VOTING'].'"></div>';
 					 }
 					$html .= '</form>';
 				} else {
@@ -231,54 +233,54 @@ function forumAttachedPoll($thread_id){
 				}
 			$html .= '</td>';
 			$html .= '<td width="" valign="top">';
-				$html .= '<div class="forum_poll_param"><strong>Всего голосов:</strong> '.$total.'</div>';
-				$html .= '<div class="forum_poll_param"><strong>Дата окончания опроса:</strong> '.$poll['fenddate'].'</div>';				
+				$html .= '<div class="forum_poll_param"><strong>'.$_LANG['TOTAL_VOTES'].':</strong> '.$total.'</div>';
+				$html .= '<div class="forum_poll_param"><strong>'.$_LANG['END_DATE_POOL'].':</strong> '.$poll['fenddate'].'</div>';
 				
 				if (!$poll_closed){
-					$html .= '<div class="forum_poll_param"><strong>Дней до окончания:</strong> '.$poll['daysleft'].'</div>';
+					$html .= '<div class="forum_poll_param"><strong>'.$_LANG['DAYS_FOR_END'].':</strong> '.$poll['daysleft'].'</div>';
 					switch($opt['result']){
-					 case 0: $html .= '<div class="forum_poll_param"><strong>Результаты:</strong> доступны для всех</div>';				
+					 case 0: $html .= '<div class="forum_poll_param"><strong>'.$_LANG['RESULTS'].':</strong> '.$_LANG['AVAILABLE_FOR_ALL'].'</div>';
 							 break;
-					 case 1: $html .= '<div class="forum_poll_param"><strong>Результаты:</strong> доступны для проголосовавших</div>';				
+					 case 1: $html .= '<div class="forum_poll_param"><strong>'.$_LANG['RESULTS'].':</strong> '.$_LANG['AVAILABLE_FOR_VOTERS'].'</div>';
 							 break;
-					 case 2: $html .= '<div class="forum_poll_param"><strong>Результаты:</strong> станут доступны после окончания опроса</div>';				
+					 case 2: $html .= '<div class="forum_poll_param"><strong>'.$_LANG['RESULTS'].':</strong> '.$_LANG['AVAILABLE_AFTER_VOTE'].'</div>';
 							 break;			
 					}
 	
 					switch($opt['change']){
-					 case 0: $html .= '<div class="forum_poll_param"><strong>Изменение ответа:</strong> запрещено</div>';				
+					 case 0: $html .= '<div class="forum_poll_param"><strong>'.$_LANG['ANSWER_CHANGING'].':</strong> '.$_LANG['PROHIBITED'].'</div>';
 							 break;
-					 case 1: $html .= '<div class="forum_poll_param"><strong>Изменение ответа:</strong> разрешено</div>';				
+					 case 1: $html .= '<div class="forum_poll_param"><strong>'.$_LANG['ANSWER_CHANGING'].':</strong> '.$_LANG['ALLOW'].'</div>';
 							 break;
 					}
 					if(!isset($inUser->id)){
-						$html .= '<div class="forum_poll_param" style="color:red">Гости не участвуют в опросах.</div>';		
+						$html .= '<div class="forum_poll_param" style="color:red">'.$_LANG['GUEST_NOT_VOTED'].'</div>';
 					}
 					if (!$uservote && $opt['result'] == 0){
 						if (!isset($_REQUEST['viewpoll'])){										
-							$html .= '<div class="forum_poll_param">[<a href="/forum/'.$menuid.'/viewpoll'.$thread_id.'.html">Результаты опроса</a>]</div>';
+							$html .= '<div class="forum_poll_param">[<a href="/forum/'.$menuid.'/viewpoll'.$thread_id.'.html">'.$_LANG['RESULT_POOL'].'</a>]</div>';
 						}					
 					} else {
 						 if (isset($_REQUEST['viewpoll'])) {
-							$html .= '<div class="forum_poll_param">[<a href="/forum/'.$menuid.'/thread'.$thread_id.'.html">Убрать результаты</a>]</div>';
+							$html .= '<div class="forum_poll_param">[<a href="/forum/'.$menuid.'/thread'.$thread_id.'.html">'.$_LANG['DELETE_POOL'].'</a>]</div>';
 						} elseif ($opt['change'] && $uservote){
-							$html .= '<div class="forum_poll_param">[<a href="/forum/'.$menuid.'/revote'.$thread_id.'.html">Изменить ответ</a>]</div>';
+							$html .= '<div class="forum_poll_param">[<a href="/forum/'.$menuid.'/revote'.$thread_id.'.html">'.$_LANG['CHANGE_VOTE'].'</a>]</div>';
 						}
 					}					
 				} else {
-					$html .= '<div class="forum_poll_param" style="color:#660000"><strong>Опрос закончен.</strong></div>';
+					$html .= '<div class="forum_poll_param" style="color:#660000"><strong>'.$_LANG['POOL_FINISHED'].'</strong></div>';
 				}
 
 				
 				if ($uservote){
 					$ua = forumUserAnswer($poll['id']);
 					if ($ua) {
-						$html .= '<div class="forum_poll_param"><strong>Ваш ответ:</strong> '.$answers_title[$ua].'</div>';					
+						$html .= '<div class="forum_poll_param"><strong>'.$_LANG['YOUR_ANSWER'].':</strong> '.$answers_title[$ua].'</div>';
 					}
 				}
 								
 				if (@$inUser->id){
-					$html .= '<div class="forum_poll_param">[<a href="/forum/'.$menuid.'/reply'.$thread_id.'.html">Комментировать опрос</a>]</div>';
+					$html .= '<div class="forum_poll_param">[<a href="/forum/'.$menuid.'/reply'.$thread_id.'.html">'.$_LANG['COMMENT_POOL'].'</a>]</div>';
 				}
 			$html .= '</td>';
 		$html .= '</tr>';
@@ -307,7 +309,7 @@ function forumAttachedFiles($post_id, $mypost, $showimg=false){
 	
 	if ($inDB->num_rows($result)){
 		$html .= '<div class="fa_attach">';
-		$html .= '<div class="fa_attach_title">Прикрепленные файлы:</div>';
+		$html .= '<div class="fa_attach_title">'.$_LANG['ATTACHED_FILE'].':</div>';
 		while($file = $inDB->fetch_assoc($result)){		
 			$filename = $file['filename'];
 			$filesize = $file['filesize'];
@@ -320,22 +322,22 @@ function forumAttachedFiles($post_id, $mypost, $showimg=false){
 						$html .= '<td width="16">'.$inCore->fileIcon($filename).'</td>';
 						$html .= '<td>';
 							$html .= '<a class="fa_file_link" href="/forum/'.$menuid.'/download'.$file['id'].'.html">'.$filename.'</a> | 
-									  <span class="fa_file_desc">'.round(($filesize/1024),2).' Кб | Скачали: '.$file['hits'].'</span>';
+									  <span class="fa_file_desc">'.round(($filesize/1024),2).' '.$_LANG['KBITE'].' | '.$_LANG['DOWNLOADED'].': '.$file['hits'].'</span>';
 									  
 							if ($mypost){
-								$html .= ' <a href="/forum/'.$menuid.'/reloadfile'.$file['id'].'.html" title="Перезакачать файл"><img src="/images/icons/reload.gif" border="0"/></a>';
-								$html .= ' <a href="/forum/'.$menuid.'/delfile'.$file['id'].'.html" title="Удалить файл"><img src="/images/icons/delete.gif" border="0"/></a>';
+								$html .= ' <a href="/forum/'.$menuid.'/reloadfile'.$file['id'].'.html" title="'.$_LANG['RELOAD_FILE'].'"><img src="/images/icons/reload.gif" border="0"/></a>';
+								$html .= ' <a href="/forum/'.$menuid.'/delfile'.$file['id'].'.html" title="'.$_LANG['DELETE_FILE'].'"><img src="/images/icons/delete.gif" border="0"/></a>';
 							}								  
 						$html .= '</td>';
 					} else {
 						$html .= '<td><img src="/upload/forum/post'.$post_id.'/'.$filename.'" border="1" width="160" height="120" /></td>';
 						$html .= '<td>';
 							$html .= '<a class="fa_file_link" href="/forum/'.$menuid.'/download'.$file['id'].'.html">'.$filename.'</a> | 
-									  <span class="fa_file_desc">'.round(($filesize/1024),2).' Кб | Скачали: '.$file['hits'].'</span>';
+									  <span class="fa_file_desc">'.round(($filesize/1024),2).' '.$_LANG['KBITE'].' | '.$_LANG['DOWNLOADED'].': '.$file['hits'].'</span>';
 									  
 							if ($mypost){
-								$html .= ' <a href="/forum/'.$menuid.'/reloadfile'.$file['id'].'.html" title="Перезакачать файл"><img src="/images/icons/reload.gif" border="0"/></a>';
-								$html .= ' <a href="/forum/'.$menuid.'/delfile'.$file['id'].'.html" title="Удалить файл"><img src="/images/icons/delete.gif" border="0"/></a>';
+								$html .= ' <a href="/forum/'.$menuid.'/reloadfile'.$file['id'].'.html" title="'.$_LANG['RELOAD_FILE'].'"><img src="/images/icons/reload.gif" border="0"/></a>';
+								$html .= ' <a href="/forum/'.$menuid.'/delfile'.$file['id'].'.html" title="'.$_LANG['DELETE_FILE'].'"><img src="/images/icons/delete.gif" border="0"/></a>';
 							}								  
 						$html .= '</td>';
 					}
@@ -356,7 +358,7 @@ function forumAttachForm($cfg){
     $inDB   = cmsDatabase::getInstance();
 
     $inPage->addHeadJS('components/forum/js/attach.js');
-
+    global $_LANG;
 	$html = '';
 	
 	if ($cfg['fa_size']) {	
@@ -366,26 +368,26 @@ function forumAttachForm($cfg){
 	$html .= '<input type="hidden" name="fa_count" value="1"/>';
 	
 	$html .= '<div class="forum_fa">' . "\n";
-		$html .= '<div class="forum_fa_title"><a href="javascript:toggleFilesAttach()">Прикрепить файлы</a></div>' . "\n";
+		$html .= '<div class="forum_fa_title"><a href="javascript:toggleFilesAttach()">'.$_LANG['ATTACH_FILES'].'</a></div>' . "\n";
 			$html .= '<div class="forum_fa_entries" id="fa_entries">';
 				$html .= '<div class="forum_fa_desc">';
-					$html .= '<div><strong>Максимум файлов:</strong> '.$cfg['fa_max'].'</div>';
-					$html .= '<div><strong>Максимальный размер файла:</strong> '.$cfg['fa_size'].' Кб.</div>';
-					$html .= '<div><strong>Допустимые типы файлов:</strong> .'.strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</div>';												
+					$html .= '<div><strong>'.$_LANG['MAXIMUM_FILES'].':</strong> '.$cfg['fa_max'].'</div>';
+					$html .= '<div><strong>'.$_LANG['MAX_SIZE_FILE'].':</strong> '.$cfg['fa_size'].' '.$_LANG['KBITE'].'.</div>';
+					$html .= '<div><strong>'.$_LANG['MUST_FILE_TYPE'].':</strong> .'.strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</div>';
 				$html .= '</div>';
 				if ($cfg['fa_max']) { $files = $cfg['fa_max']; } else { $files = 50; }
 				for($f=1; $f<=$files; $f++){
 					if ($f == 1) { $style= 'display:block'; } else { $style = 'display:none'; }
 					$html .= '<div id="fa_entry'.$f.'" style="'.$style.'"><table cellspacing="0" class="forum_fa_entry" cellpadding="5">';
 						$html .= '<tr>';
-							$html .= '<td>Файл: </td>';	
+							$html .= '<td>'.$_LANG['FILE'].': </td>';
 							$html .= '<td><input name="fa[]" type="file" class="forum_fa_browse" size="30" id="fa_entry_input'.$f.'" /></td>';	
 							$html .= '<td><div id="fa_entry_btn'.$f.'">';
 								if ($f<$files) {
-									$html .= '<a href="javascript:showFaEntry('.($f+1).')" title="Добавить файл"><img src="/images/icons/plus.gif" border="0"/></a>';
+									$html .= '<a href="javascript:showFaEntry('.($f+1).')" title="'.$_LANG['ADD_FILE'].'"><img src="/images/icons/plus.gif" border="0"/></a>';
 								}				
 								if ($f>1) {
-									$html .= '<a href="javascript:hideFaEntry('.$f.')" title="Убрать файл"><img src="/images/icons/minus.gif" border="0"/></a>';
+									$html .= '<a href="javascript:hideFaEntry('.$f.')" title="'.$_LANG['HIDE_FILE'].'"><img src="/images/icons/minus.gif" border="0"/></a>';
 								}				
 							$html .= '</div></td>';	
 						$html .= '</tr>';
@@ -402,63 +404,63 @@ function forumPollForm($cfg){
     $inCore = cmsCore::getInstance();
     $inPage = cmsPage::getInstance();
     $inDB   = cmsDatabase::getInstance();
-
+    global $_LANG;
 	$inPage->addHeadJS('components/forum/js/attach.js');
 
 	$html = '';
 	
 	$html .= '<div class="forum_fa">' . "\n";
-		$html .= '<div class="forum_fa_title"><a href="javascript:togglePollsAttach()">Прикрепить опрос</a></div>' . "\n";
+		$html .= '<div class="forum_fa_title"><a href="javascript:togglePollsAttach()">'.$_LANG['ATTACH_POOL'].'</a></div>' . "\n";
 			$html .= '<div class="forum_fa_entries" id="pa_entries">';
-			$html .= '<div class="forum_fa_title" style="margin-bottom:10px">Параметры опроса</div>' . "\n";			
+			$html .= '<div class="forum_fa_title" style="margin-bottom:10px">'.$_LANG['POOL_PARAMS'].'</div>' . "\n";
 			//poll details
 				$html .= '<div style="margin-bottom:10px"><table cellspacing="0" class="forum_fa_entry" cellpadding="5">';
 					$html .= '<tr>';
-						$html .= '<td>Вопрос: </td>';	
+						$html .= '<td>'.$_LANG['QUESTION'].': </td>';
 						$html .= '<td><input name="poll[title]" type="text" size="30"/></td>';	
 					$html .= '</tr>';
 					$html .= '<tr>';
-						$html .= '<td>Комментарий к опросу: </td>';	
+						$html .= '<td>'.$_LANG['COMMENT_FOR_POOL'].': </td>';
 						$html .= '<td><input name="poll[desc]" type="text" size="30"/></td>';	
 					$html .= '</tr>';
 					$html .= '<tr>';
-						$html .= '<td>Длительность опроса: </td>';	
-						$html .= '<td><input name="poll[days]" type="text" size="4"/> дней</td>';	
+						$html .= '<td>'.$_LANG['LENGTH_POOL'].': </td>';
+						$html .= '<td><input name="poll[days]" type="text" size="4"/> '.$_LANG['DAYS'].'</td>';
 					$html .= '</tr>';
 					$html .= '<tr>';
-						$html .= '<td>Показывать результаты: </td>';	
+						$html .= '<td>'.$_LANG['SHOW_RESULT'].': </td>';
 						$html .= '<td><select name="poll[result]">
-						                 <option value="0">Всем и всегда</option>
-										 <option value="1">Только проголосовавшим</option>
-										 <option value="2">Только после завершения опроса</option>										 
+						                 <option value="0">'.$_LANG['FOR_ALL_EVER'].'</option>
+										 <option value="1">'.$_LANG['ONLY_VOTERS'].'</option>
+										 <option value="2">'.$_LANG['ONLY_END_POOL'].'</option>
 						              </select>				
 							      </td>';	
 					$html .= '</tr>';
 					$html .= '<tr>';
-						$html .= '<td>Смена голоса пользователем: </td>';	
+						$html .= '<td>'.$_LANG['CHANGE_VOTE_USER'].': </td>';
 						$html .= '<td><select name="poll[change]">
-						                 <option value="0">Запретить</option>
-										 <option value="1">Разрешить</option>
+						                 <option value="0">'.$_LANG['PROHIBITING'].'</option>
+										 <option value="1">'.$_LANG['ALLOWING'].'</option>
 						              </select>				
 							      </td>';	
 					$html .= '</tr>';
 				$html .= '</table></div>';
 
 			//answer options
-			$html .= '<div class="forum_fa_title" style="margin-bottom:10px">Варианты ответов</div>' . "\n";			
+			$html .= '<div class="forum_fa_title" style="margin-bottom:10px">'.$_LANG['OPTIONS_ANSWER'].'</div>' . "\n";
 				for($f=1; $f<=12; $f++){
 					if ($f < 5) { $style= 'display:block'; } else { $style = 'display:none'; }
 					$html .= '<div id="pa_entry'.$f.'" style="'.$style.'"><table cellspacing="0" class="forum_fa_entry" cellpadding="5">';
 						$html .= '<tr>';
-							$html .= '<td>Вариант №'.$f.': </td>';	
+							$html .= '<td>'.$_LANG['OPTION'].' №'.$f.': </td>';
 							$html .= '<td><input name="poll[answers][]" type="text" size="30" id="pa_entry_input'.$f.'" /></td>';	
 							if ($f >= 4) { $style= 'display:block'; } else { $style = 'display:none'; }
 							$html .= '<td><div id="pa_entry_btn'.$f.'" style="'.$style.'">';								
 								if ($f<12) {
-									$html .= '<a href="javascript:showPaEntry('.($f+1).')" title="Добавить вариант"><img src="/images/icons/plus.gif" border="0"/></a>';
+									$html .= '<a href="javascript:showPaEntry('.($f+1).')" title="'.$_LANG['ADD_OPTION'].'"><img src="/images/icons/plus.gif" border="0"/></a>';
 								}				
 								if ($f>2) {
-									$html .= '<a href="javascript:hidePaEntry('.$f.')" title="Убрать вариант"><img src="/images/icons/minus.gif" border="0"/></a>';
+									$html .= '<a href="javascript:hidePaEntry('.$f.')" title="'.$_LANG['HIDE_OPTION'].'"><img src="/images/icons/minus.gif" border="0"/></a>';
 								}				
 							$html .= '</div></td>';	
 						$html .= '</tr>';
@@ -472,12 +474,12 @@ function forumPollForm($cfg){
 }
 
 function forumDate($datestr, $daysleft){
-
+        global $_LANG;
 	if ($daysleft == '0'){
-		return '<strong>Сегодня</strong>';
+		return '<strong>'.$_LANG['TODAY'].'</strong>';
 	}
 	if ($daysleft == '1'){
-		return '<strong>Вчера</strong>';
+		return '<strong>'.$_LANG['YESTERDAY'].'</strong>';
 	}
 	return $datestr;
 
@@ -487,6 +489,7 @@ function forumLastMessage($forum_id, $perpage_thread){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
 	global $menuid;
+        global $_LANG;
 	$html = '';
 	
 	$forumNS = dbGetFields('cms_forums', 'id='.$forum_id, 'NSLeft, NSRight');
@@ -516,10 +519,10 @@ function forumLastMessage($forum_id, $perpage_thread){
 			$link = '/forum/'.$menuid.'/thread'.$post['threadid'].'-'.$lastpage.'.html#new';		
 		}
 	
-		$html .= '<strong>Последнее сообщение <br/>';
-		$html .= 'в теме: <a href="'.$link.'">'.$post['threadtitle'].'</a></strong><br/>';
-		$html .= forumDate($post['pubdate'], $post['daysleft']) . ' в ' .$post['pubtime'].' от <a href="'.cmsUser::getProfileURL($post['author_login']).'">'.$post['author'].'</a>';
-	} else { $html .= 'Нет сообщений'; }
+		$html .= '<strong>'.$_LANG['LAST_POST'].' <br/>';
+		$html .= $_LANG['IN THREAD'].': <a href="'.$link.'">'.$post['threadtitle'].'</a></strong><br/>';
+		$html .= forumDate($post['pubdate'], $post['daysleft']) . ' '.$_LANG['IN'].' ' .$post['pubtime'].' '.$_LANG['FROM'].' <a href="'.cmsUser::getProfileURL($post['author_login']).'">'.$post['author'].'</a>';
+	} else { $html .= $_LANG['NOT_POSTS']; }
 	
 	return $html;
 
@@ -530,7 +533,7 @@ function threadLastMessage($thread_id){
     $inDB   = cmsDatabase::getInstance();
 	global $menuid;
 	$html = '';
-	
+	global $_LANG;
 	$sql = "SELECT DATE_FORMAT(p.pubdate, '%d-%m-%Y') as pubdate, DATE_FORMAT(p.pubdate, '%H:%i') as pubtime, 
 				   (TO_DAYS(CURDATE()) - TO_DAYS(p.pubdate)) as daysleft, u.id as uid, u.nickname as author,
                    u.login as author_login
@@ -542,9 +545,9 @@ function threadLastMessage($thread_id){
 	
 	if ($inDB->num_rows($result)){
 		$post = $inDB->fetch_assoc($result);
-		$html .= '<strong>Последнее сообщение: </strong><br/>';
-		$html .= forumDate($post['pubdate'], $post['daysleft']) . ' в ' .$post['pubtime'].' от <a href="'.cmsUser::getProfileURL($post['author_login']).'">'.$post['author'].'</a>';
-	} else { $html .= 'Нет сообщений'; }
+		$html .= '<strong>'.$_LANG['LAST_POST'].': </strong><br/>';
+		$html .= forumDate($post['pubdate'], $post['daysleft']) . ' '.$_LANG['IN'].' ' .$post['pubtime'].' '.$_LANG['FROM'].' <a href="'.cmsUser::getProfileURL($post['author_login']).'">'.$post['author'].'</a>';
+	} else { $html .= $_LANG['NOT_POSTS']; }
 	
 	return $html;
 }
@@ -695,11 +698,12 @@ function forumUserAuthSQL($tablepreffix=''){
 function forumUserRank($uid, $messages, $ranks, $modrank=true){
     $inDB   = cmsDatabase::getInstance();
     $inCore = cmsCore::getInstance();
+    global $_LANG;
 	$userrank = '';
 	
 	//check is admin
 	if ($inCore->userIsAdmin($uid)){
-		$userrank = '<span id="admin">Администратор</span>';
+		$userrank = '<span id="admin">'.$_LANG['ADMINISTRATOR'].'</span>';
 	} else {
 		//rank by messages
 		if(is_array($ranks)){
@@ -709,15 +713,15 @@ function forumUserRank($uid, $messages, $ranks, $modrank=true){
 				}
 			}
 		} else {
-			$userrank = '<span id="rank">Посетитель</span>';
+			$userrank = '<span id="rank">'.$_LANG['USER'].'</span>';
 		}
 		//check is moderator
 		$rights = dbGetFields('cms_user_groups g, cms_users u', "u.group_id = g.id AND u.id = $uid", 'g.id, g.access as access');
 		if (strstr($rights['access'], 'forum/moderate')){
 			if ($modrank){
-				$userrank .= '<span id="moder">Модератор</span>';
+				$userrank .= '<span id="moder">'.$_LANG['MODER'].'</span>';
 			} else {
-				$userrank = '<span id="moder">Модератор</span>';
+				$userrank = '<span id="moder">'.$_LANG['MODER'].'</span>';
 			}
 		}
 	}

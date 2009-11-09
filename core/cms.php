@@ -12,8 +12,8 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-define('CORE_VERSION', 		'1.5.2');
-define('CORE_BUILD', 		'3');
+define('CORE_VERSION', 		'1.5.3');
+define('CORE_BUILD', 		'1');
 define('CORE_VERSION_DATE', '2009-05-23');
 define('CORE_BUILD_DATE', 	'2008-08-31');
 
@@ -42,6 +42,27 @@ class cmsCore {
         return self::$instance;
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static function loadLanguage($file) {    
+    global $_CFG;
+    global $_LANG;
+    $langfile = PATH.'/languages/'.$_CFG['lang'].'/'.$file.'.php';
+    if (file_exists($langfile)){
+        // Загружаем языковый файл выбранного языка
+            include_once($langfile);
+            return true;
+        } else {
+            $langfile = PATH.'/languages/ru/'.$file.'.php';
+            if (file_exists($langfile)){
+        // Загружаем языковый файл стандартного языка - русский (ru)
+            include_once($langfile);
+            return true;
+            } else {
+                return false;
+            }
+        }
+    }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
@@ -1010,6 +1031,8 @@ class cmsCore {
                 strstr($component, '<')	)
             { die('HACKING ATTEMPT BLOCKED'); }
             //EXECUTE COMPONENT
+           if($this->loadLanguage('components/'.$component))
+           {           
             if(file_exists('components/'.$component.'/frontend.php')){
                 echo '<div class="component">';
                     require ('components/'.$component.'/frontend.php');
@@ -1018,6 +1041,7 @@ class cmsCore {
                 $is_component = true;
                 if ($menuid != 1 && $inPage->back_button) { echo "<p><a href='javascript:history.go(-1)' class=\"backlink\">&laquo; Назад</a></p>"; }
             } else { echo '<p>Компонент не найден!</p>'; }
+            } else { echo '<p>Языковый файл компонента не найден!</p>'; }
         }
         $inPage->page_body = ob_get_clean();
 
@@ -1209,6 +1233,7 @@ class cmsCore {
     public function initSmarty($for='modules', $tpl=''){ //cmsSmartyInit
         global $smarty;
         global $_CFG;
+        global $_LANG;
         $smarty->compile_dir = PATH.'/templates/_default_/'.$for.'/'.$for.'_c';
 
         if (!is_writable($smarty->compile_dir)){ @chmod($smarty->compile_dir, 0755); }
@@ -1218,7 +1243,8 @@ class cmsCore {
         } else {
             $smarty->template_dir = PATH.'/templates/_default_/'.$for;
         }
-
+        // Передаем языковый массив в шаблон
+        $smarty->assign('LANG', $_LANG);
         $smarty->register_modifier("NoSpam", "cmsSmartyNoSpam");
         $smarty->register_function('add_js', 'cmsSmartyAddJS');
         $smarty->register_function('add_css', 'cmsSmartyAddCSS');
@@ -1723,13 +1749,17 @@ class cmsCore {
      * @param int $selected
      * @return html
      */
-    public function boardTypesList($selected){
+    public function boardTypesList($selected, $list=false){
         $inDB = cmsDatabase::getInstance();
         $html = '';
-        $cfg = $this->loadComponentConfig('board');
-        if ($cfg){
-            $types = explode("\n", $cfg['obtypes']);
-            foreach($types as $id=>$type){
+        if (!$list){
+            $cfg = $this->loadComponentConfig('board');
+            $list = explode("\n", $cfg['obtypes']);
+        } else {
+            $list = explode("\n", $list);
+        }
+        if ($list){
+            foreach($list as $id=>$type){
                 $type = trim($type);
                 if (strtolower($selected) == strtolower($type)) { $sel = 'selected="selected"'; } else { $sel =''; }
                 $html .= '<option value="'.ucfirst($type).'" '.$sel.'>'.ucfirst($type).'</option>';
@@ -2695,7 +2725,7 @@ class cmsCore {
         $now        = time();
         $date       = strtotime($date);
 
-        //if ($date == 0) { return 'миллион лет'; }
+        if ($date == 0) { return 'не известно'; }
 
         $diff_sec   = $now - $date;
 

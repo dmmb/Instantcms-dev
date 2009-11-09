@@ -12,6 +12,7 @@
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
         $inUser = cmsUser::getInstance();
+        global $_LANG;
 
 		$cfg = $inCore->loadModuleConfig($module_id);
 		$menuid = $inCore->menuId();
@@ -51,7 +52,7 @@
 						
 			if ($items_count){	
 				echo '<div class="cart_detaillink">
-						<a href="'.$cartlink.'">Перейти в корзину  &raquo;</a>
+						<a href="'.$cartlink.'">'.$_LANG['CART_GOTO_CART'].'  &raquo;</a>
 					  </div>';
 				$num = 0; $total_summ = 0;
 				
@@ -81,9 +82,9 @@
 							echo '<td class="'.$bgcolor.'" width="" valign="top">';															
 								echo '<div class="cart_item">'.$con['title'].'</div>';
 								if ($quantity==1){
-									echo '<div class="cart_price">'.$item_totalcost.' р.</div>';
+									echo '<div class="cart_price">'.$item_totalcost.' '.$_LANG['CART_R'].'.</div>';
 								} else {
-									echo '<div class="cart_price">'.$quantity.' x '.$price.' = '.$item_totalcost.' р.</div>';
+									echo '<div class="cart_price">'.$quantity.' x '.$price.' = '.$item_totalcost.' '.$_LANG['CART_R'].'.</div>';
 								}
 							echo '</td>';														
 						echo '</tr>';
@@ -92,7 +93,7 @@
 					
 					$total_summ = number_format($total_summ, 2, '.', ' ');
 					echo '<div align="right" class="cart_total">
-							<b>Сумма:</b> '.$total_summ.' руб.
+							<b>'.$_LANG['CART_SUMM'].':</b> '.$total_summ.' '.$_LANG['CART_RUB'].'.
 						  </div>';				
 				}
 				
@@ -108,15 +109,15 @@
 						$item_totalcost =  $price * $quantity;
 						$total_summ += $item_totalcost;
 					}
-					echo '<div class="cart_count"><strong>Товаров:</strong> <a href="/price/cart.html">'.$num.' шт.</a></div>';
+					echo '<div class="cart_count"><strong>'.$_LANG['CART_ITEMS'].':</strong> <a href="/price/cart.html">'.$num.' '.$_LANG['CART_QTY'].'.</a></div>';
 					$total_summ = number_format($total_summ, 2, '.', ' ');
 					if ($cfg['showtype']=='qtyprice'){
-						echo '<div class="cart_total"><strong>Итого:</strong> '.$total_summ.' руб.</div>';
+						echo '<div class="cart_total"><strong>'.$_LANG['CART_TOTAL'].':</strong> '.$total_summ.' '.$_LANG['CART_RUB'].'.</div>';
 					}
 				}
 			}	
 		} else { 
-					echo '<p style="clear:both"><b>В корзине нет товаров</b></p>';				
+					echo '<p style="clear:both"><b>'.$_LANG['CART_NOT_ITEMS'].'</b></p>';
 			}			
 		
 				

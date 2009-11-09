@@ -11,7 +11,7 @@
 function mod_bestblogs($module_id){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
-
+        global $_LANG;
 		if (!function_exists('cmsKarmaFormat')){ //if not included earlier
 			include($_SERVER['DOCUMENT_ROOT'].'/core/lib_karma.php');
 		}		
@@ -25,7 +25,7 @@ function mod_bestblogs($module_id){
 		}
 		
 		if (!isset($cfg['shownum'])){
-			echo '<p>Задайте настройки модуля в панели управления.</p>';
+			echo '<p>'.$_LANG['BESTBLOGS_CONFIG_TEXT'].'</p>';
 			return;
 		}
 
@@ -36,7 +36,7 @@ function mod_bestblogs($module_id){
 						DATE_FORMAT(p.pubdate, '%d-%m-%Y'))  as fpubdate, IFNULL(SUM(r.points), 0) as points
 				FROM cms_blogs b, cms_blog_posts p
 				LEFT JOIN cms_ratings r ON r.item_id=p.id AND r.target='blogpost'
-				WHERE p.blog_id = b.id AND b.allow_who = 'all'
+				WHERE p.blog_id = b.id AND b.allow_who = 'all' AND p.published = 1
 				GROUP BY p.id
 				ORDER BY points DESC";
 		
@@ -67,7 +67,7 @@ function mod_bestblogs($module_id){
 			$smarty->assign('posts', $posts);
 			$smarty->display('mod_bestblogs.tpl');
 
-		} else { echo '<p>Нет записей в блогах для отображения.</p>'; }
+		} else { echo '<p>'.$_LANG['BESTBLOGS_NOT_POSTS'].'</p>'; }
 				
 		return true;
 }

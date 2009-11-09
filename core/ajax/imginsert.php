@@ -1,5 +1,8 @@
 <?php
-	session_start();
+
+    if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
+
+    session_start();
 
 	define("VALID_CMS", 1);
     define('PATH', $_SERVER['DOCUMENT_ROOT']);

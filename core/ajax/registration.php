@@ -1,5 +1,7 @@
 <?php
 
+    if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
+
 	define("VALID_CMS", 1);
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
     define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
