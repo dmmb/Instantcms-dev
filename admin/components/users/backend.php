@@ -45,38 +45,42 @@ if (!isset($cfg['sw_feed'])) { $cfg['sw_feed'] = 1; }
 if (!isset($cfg['sw_content'])) { $cfg['sw_content'] = 1; }
 if (!isset($cfg['sw_awards'])) { $cfg['sw_awards'] = 1; }
 
+if (!isset($cfg['smallw'])) { $cfg['smallw'] = 64; }
+if (!isset($cfg['medw'])) { $cfg['medw'] = 200; }
+if (!isset($cfg['medh'])) { $cfg['medh'] = 200; }
 
 if($opt=='saveconfig'){	
     $cfg = array();
-    $cfg['showgroup'] = $_REQUEST['showgroup'];
-    $cfg['sw_stats'] = $_REQUEST['sw_stats'];
-    $cfg['sw_comm'] = $_REQUEST['sw_comm'];
-    $cfg['sw_search'] = $_REQUEST['sw_search'];
-    $cfg['sw_forum'] = $_REQUEST['sw_forum'];
-    $cfg['sw_photo'] = $_REQUEST['sw_photo'];
-    $cfg['sw_wall'] = $_REQUEST['sw_wall'];
-    $cfg['sw_friends'] = $_REQUEST['sw_friends'];
-    $cfg['sw_blogs'] = $_REQUEST['sw_blogs'];
-    $cfg['sw_clubs'] = $_REQUEST['sw_clubs'];
-    $cfg['sw_feed'] = $_REQUEST['sw_feed'];
-    $cfg['sw_content'] = $_REQUEST['sw_content'];
-    $cfg['sw_awards'] = $_REQUEST['sw_awards'];
-    $cfg['sw_board'] = $_REQUEST['sw_board'];
-    $cfg['sw_msg'] = $_REQUEST['sw_msg'];
+    $cfg['showgroup']   = $_REQUEST['showgroup'];
+    $cfg['sw_stats']    = $_REQUEST['sw_stats'];
+    $cfg['sw_comm']     = $_REQUEST['sw_comm'];
+    $cfg['sw_search']   = $_REQUEST['sw_search'];
+    $cfg['sw_forum']    = $_REQUEST['sw_forum'];
+    $cfg['sw_photo']    = $_REQUEST['sw_photo'];
+    $cfg['sw_wall']     = $_REQUEST['sw_wall'];
+    $cfg['sw_friends']  = $_REQUEST['sw_friends'];
+    $cfg['sw_blogs']    = $_REQUEST['sw_blogs'];
+    $cfg['sw_clubs']    = $_REQUEST['sw_clubs'];
+    $cfg['sw_feed']     = $_REQUEST['sw_feed'];
+    $cfg['sw_content']  = $_REQUEST['sw_content'];
+    $cfg['sw_awards']   = $_REQUEST['sw_awards'];
+    $cfg['sw_board']    = $_REQUEST['sw_board'];
+    $cfg['sw_msg']      = $_REQUEST['sw_msg'];
 
-    $cfg['karmatime'] = (int)$_REQUEST['karmatime'];
-    $cfg['karmaint'] = $_REQUEST['karmaint'];
+    $cfg['karmatime']   = (int)$_REQUEST['karmatime'];
+    $cfg['karmaint']    = $_REQUEST['karmaint'];
 
-    $cfg['photosize'] = $_REQUEST['photosize'];
-    $cfg['watermark'] = $_REQUEST['watermark'];
+    $cfg['photosize']   = $_REQUEST['photosize'];
+    $cfg['watermark']   = $_REQUEST['watermark'];
 
-    $cfg['smallw'] = $_REQUEST['smallw'];
-    $cfg['medw'] = $_REQUEST['medw'];
+    $cfg['smallw']      = $inCore->request('smallw', 'int', 64);
+    $cfg['medw']        = $inCore->request('medw', 'int', 200);
+    $cfg['medh']        = $inCore->request('medh', 'int', 200);
 
-    $cfg['sw_files'] = $_REQUEST['sw_files'];
-    $cfg['filessize'] = $_REQUEST['filessize'];
+    $cfg['sw_files']    = $_REQUEST['sw_files'];
+    $cfg['filessize']   = $_REQUEST['filessize'];
 
-    $cfg['privforms'] = $_REQUEST['privforms'];
+    $cfg['privforms']   = $_REQUEST['privforms'];
 
     $inCore->saveComponentConfig('users', $cfg);
 
@@ -98,6 +102,7 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
 
     <ul id="tabs">
         <li><a href="#basic"><span>Настройки профилей</span></a></li>
+        <li><a href="#avatars"><span>Аватары</span></a></li>
         <li><a href="#proftabs"><span>Вкладки профилей</span></a></li>
         <li><a href="#forms"><span>Дополнительные поля</span></a></li>
         <li><a href="#photos"><span>Фотоальбомы</span></a></li>
@@ -168,14 +173,6 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
                     <td>[<a href="index.php?view=editor&lang=css&file=/includes/letters/newmessage.txt">Редактировать</a>]</td>
                 </tr>
                 <tr>
-                    <td><strong>Ширина маленького аватара: </strong></td>
-                    <td><input name="smallw" type="text" id="smallw" size="5" value="<?php echo @$cfg['smallw'];?>"/> пикс.</td>
-                </tr>
-                <tr>
-                    <td><strong>Ширина большого аватара: </strong></td>
-                    <td><input name="medw" type="text" id="medw" size="5" value="<?php echo @$cfg['medw'];?>"/> пикс.</td>
-                </tr>
-                <tr>
                     <td>
                         <strong>Период голосования за карму:</strong><br />
                         <span class="hinttext">Пользователь может изменить карму другого пользователя только 1 раз за указанное время </span>
@@ -192,6 +189,24 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
                 </tr>
             </table>
         </div>
+
+        <div id="avatars">
+            <table width="605" border="0" cellpadding="10" cellspacing="0" class="proptable" style="border:none">
+                <tr>
+                    <td><strong>Ширина маленького аватара: </strong></td>
+                    <td><input name="smallw" type="text" id="smallw" size="5" value="<?php echo @$cfg['smallw'];?>"/> пикс.</td>
+                </tr>
+                <tr>
+                    <td><strong>Ширина большого аватара: </strong></td>
+                    <td><input name="medw" type="text" id="medw" size="5" value="<?php echo @$cfg['medw'];?>"/> пикс.</td>
+                </tr>
+                <tr>
+                    <td><strong>Высота большого аватара: </strong></td>
+                    <td><input name="medh" type="text" id="medh" size="5" value="<?php echo @$cfg['medh'];?>"/> пикс.</td>
+                </tr>
+            </table>
+        </div>
+
 
         <div id="proftabs">
             <table width="605" border="0" cellpadding="10" cellspacing="0" class="proptable" style="border:none">
