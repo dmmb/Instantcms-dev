@@ -37,7 +37,9 @@ function mod_latest($module_id){
 
 		$sql = "SELECT DISTINCT con.*, DATE_FORMAT(con.pubdate, '%d-%m-%Y (%H:%i)') as fdate, u.nickname as author, u.login as author_login
 				FROM cms_content con, cms_category cat, cms_users u
-				WHERE con.published = 1 AND con.showlatest = 1 AND con.user_id = u.id ".$catsql."
+				WHERE con.published = 1 AND con.showlatest = 1 AND con.user_id = u.id 
+                      AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= NOW() AND con.pubdate <= NOW()))
+                      ".$catsql."
 				ORDER BY con.pubdate DESC
 				LIMIT ".$cfg['newscount'];
  	

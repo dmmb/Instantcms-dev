@@ -35,6 +35,7 @@ function mod_bestcontent($module_id){
 				FROM cms_users u, cms_content c
 				LEFT JOIN cms_ratings r ON r.item_id=c.id AND r.target='content'
 				WHERE c.published = 1 AND c.user_id = u.id AND c.canrate = 1
+                      AND (c.is_end=0 OR (c.is_end=1 AND c.enddate >= NOW() AND c.pubdate <= NOW()))
 				GROUP BY r.item_id
 				ORDER BY points DESC";
 		
