@@ -31,22 +31,17 @@
 		
 		cpToolMenu($toolmenu);
 
-	
 	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'config'; }
 		
-	
-
 	if($opt == 'save'){	
 		$cfg = array();
-		$cfg['cat_id'] = $_REQUEST['cat_id'];
-		$cfg['source'] = $_REQUEST['source'];
-		$cfg['menuid'] = $_REQUEST['menuid'];
+
+		$cfg['cat_id'] = $inCore->request('cat_id', 'int', 0);
+		$cfg['source'] = $inCore->request('source', 'str', 'arhive');
+		$cfg['menuid'] = $inCore->request('menu_id', 'int', 0);
 			
         $inCore->saveModuleConfig($_REQUEST['id'], $cfg);
 
-		$sql = "UPDATE cms_modules SET config = '".serialize($cfg)."' WHERE id = ".$_REQUEST['id'];
-		dbQuery($sql) ;
-		
 		$msg = 'Настройки сохранены.';
 		
 	}
@@ -69,7 +64,7 @@
             <td><strong>Показывать статьи из раздела:</strong></td>
             <td>
                 <select name="cat_id" id="cat_id">
-                    <option value="-1" selected>-- Все разделы --</option>
+                    <option value="-1" <?php if ($cfg['cat_id']==-1){ ?>selected="selected"<?php } ?>>-- Все разделы --</option>
                     <?php
                         if (isset($cfg['cat_id'])) {
                             echo $inCore->getListItemsNS('cms_category', $cfg['cat_id']);
