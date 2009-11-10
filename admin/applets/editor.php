@@ -20,11 +20,11 @@ function applet_editor(){
 	$fileshort = $file;
 	$file = $_SERVER['DOCUMENT_ROOT'].$file;
 
-	$GLOBALS['cp_page_title'] = 'Редактор '.strtoupper($lang);
+	$GLOBALS['cp_page_title'] = 'Редактор файлов';
  	cpAddPathway('Настройки сайта', 'index.php?view=config');	
- 	cpAddPathway('Редактор '.strtoupper($lang), 'index.php?view=csseditor');	
+ 	cpAddPathway('Редактор файлов', 'index.php?view=csseditor');
 	
-	echo '<h3>Редактор '.strtoupper($lang).'</h3>';
+	echo '<h3>Редактор файлов</h3>';
 	
 	if ($do == 'list'){
 		$toolmenu = array();
