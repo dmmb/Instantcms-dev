@@ -929,7 +929,7 @@ if ($do=='avatar'){
 							//CREATE THUMBNAIL
 							if (isset($cfg['smallw'])) { $smallw = $cfg['smallw']; } else { $smallw = 64; }
 							if (isset($cfg['medw'])) { 	 $medw = $cfg['medw']; } else { $medw = 200; }
-							if (isset($cfg['medh'])) { 	 $medw = $cfg['medh']; } else { $medw = 200; }
+							if (isset($cfg['medh'])) { 	 $medh = $cfg['medh']; } else { $medh = 200; }
 							
 							@img_resize($uploadfile, $uploadavatar, $medw, $medh);
 							@img_resize($uploadfile, $uploadthumb, $smallw, $smallw);
