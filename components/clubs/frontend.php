@@ -79,7 +79,6 @@ if ($do=='view'){
 					$club['imageurl'] = 'nopic.jpg';
 				}
 			}
-			$club['members'] = clubTotalMembers($club['id']);
 			$clubs[] = $club;
 		}
 		$total      = $model->getClubsCount();
@@ -88,15 +87,15 @@ if ($do=='view'){
 	
 	$can_create = $user_id && ( $inCore->userIsAdmin($user_id) || ($cfg['cancreate'] && !$inDB->get_field('cms_clubs', 'admin_id='.$user_id, 'id') && cmsUser::getKarma($user_id)>=$cfg['create_min_karma'] && cmsUser::getRating($user_id)>=$cfg['create_min_rating']));
 	
-	$smarty = $inCore->initSmarty('components', 'com_clubs_view.tpl');			
+	$smarty = $inCore->initSmarty('components', 'com_clubs_view.tpl');
 	$smarty->assign('pagetitle', $pagetitle);
 	$smarty->assign('menuid', $menuid);
 	$smarty->assign('clubid', $id);
 	$smarty->assign('can_create', $can_create);
-	$smarty->assign('clubs', $clubs);	
-	$smarty->assign('total', $total);	
+	$smarty->assign('clubs', $clubs);
+	$smarty->assign('total', $total);
 	$smarty->assign('pagination', $pagination);	
-	$smarty->display('com_clubs_view.tpl');																
+	$smarty->display('com_clubs_view.tpl');
 
 }
 ////////// VIEW SINGLE CLUB ////////////////////////////////////////////////////////////////////////////////////////
@@ -126,10 +125,16 @@ if ($do=='club'){
     $is_moder 	= clubUserIsRole($id, $user_id, 'moderator');
     $is_member 	= clubUserIsRole($id, $user_id, 'member');
 
+    $is_access = true;
+
+    if ($club['clubtype']=='private' && (!$is_admin && !$is_moder && !$is_member)){
+        $is_access = false;
+    }
+
+    $is_karma_enabled = false;
+
     if ($user_id){
         $is_karma_enabled = (cmsUser::getKarma($user_id) >= $club['album_min_karma']) && clubUserIsMember($club['id'], $user_id) ? true : false;
-    } else {
-        $is_karma_enabled = false;
     }
 
     //CHECK IMAGE
@@ -139,16 +144,15 @@ if ($do=='club'){
         }
     }
 
-    clubRepairAlbums();
     if (!clubRootAlbumId($id)) { albumCreateRoot($id, 'club'.$id); }
 
     //JOIN/LEAVE LINK
+    $club['member_link'] = '';
     if ( clubUserIsMember($id, $user_id) ){
         $club['member_link'] = '<a href="/clubs/'.$menuid.'/'.$id.'/leave.html" class="leave">'.$_LANG['LEAVE_CLUB'].'</a>';;
-    } elseif ($club['clubtype']=='public' && ($user_id != $club['admin_id'])){
+    } 
+    if ($club['clubtype']=='public' && ($user_id != $club['admin_id'])){
         $club['member_link'] = '<a href="/clubs/'.$menuid.'/'.$id.'/join.html" class="join">'.$_LANG['JOIN_CLUB'].'</a>';
-    } else {
-        $club['member_link'] = '';
     }
 
     //PARAMS
@@ -167,6 +171,7 @@ if ($do=='club'){
 
     $smarty->assign('clubid', $id);
     $smarty->assign('club', $club);
+    $smarty->assign('is_access', $is_access);
     $smarty->assign('uid', $user_id);
     $smarty->assign('is_admin', $is_admin);
     $smarty->assign('is_moder', $is_moder);

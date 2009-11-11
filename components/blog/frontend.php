@@ -315,7 +315,7 @@ if ($do=='blog'){
 	//Если хозяин блога - пользователь
 	if($owner=='user'){
         //Определяем, есть ли доступ к этому блогу
-		$can_view       = ($blog['allow_who']=='all' || ($blog['allow_who']=='friends' && usrIsFriends($blog['user_id'], $user_id)) || $blog['user_id']==$user_id || $inCore->userIsAdmin($user_id));
+		$can_view       = ($blog['allow_who']=='all' || ($blog['allow_who']=='friends' && usrIsFriends($blog['user_id'], $user_id)) || $blog['user_id']==$user_id || $inUser->is_admin);
         //Получаем html-код ссылки на автора с иконкой его пола
 		$blog['author'] = cmsUser::getGenderLink($blog['user_id'], $blog['author'], $menuid);
         //Устанавливаем заголовок страницы и глубиномер
@@ -325,21 +325,24 @@ if ($do=='blog'){
 
     //Если хозяин блога - клуб
     if ($owner=='club'){
+        $blog['club']   = $inDB->get_fields('cms_clubs', "id={$blog['user_id']}", 'title, clubtype');
         //Блоги клубов открыты всегда и для всех
-		$can_view 		= true;
+		$can_view 		= $blog['club']['clubtype'] == 'public' || ($blog['club']['clubtype'] == 'private' && (clubUserIsMember($blog['user_id'], $inUser->id) || $inUser->is_admin || clubUserIsAdmin($blog['user_id'], $inUser->id)));
         //Получаем заголовок блога и ссылку на профиль администратора
 		$blog['title'] 	= '<a href="/clubs/'.$menuid.'/'.$blog['user_id'].'">'.$blog['author'].'</a> &rarr; Блог';		
-		$blog['author'] = clubAdminLink($blog['user_id']);
-        $blog['club']   = $inDB->get_field('cms_clubs', "id={$blog['user_id']}", 'title');
+		$blog['author'] = clubAdminLink($blog['user_id']);        
         //Устанавливаем заголовок страницы и глубиномер
-	    $inPage->setTitle($_LANG['BLOG'].' - '.$blog['author']);
-        $inPage->addPathway($blog['club'], '/clubs/'.$menuid.'/'.$blog['user_id']);
+	    $inPage->setTitle($_LANG['BLOG'].' - '.$blog['club']['title']);
+        $inPage->addPathway($blog['club']['title'], '/clubs/'.$menuid.'/'.$blog['user_id']);
 		$inPage->addPathway($_LANG['BLOG']);
 	}
 
     //Если доступа нет, добавляем сообщение об ошибке
-	if ( !($can_view || $inCore->userIsAdmin($user_id)) ) {
+	if ( !$can_view && $owner=='user' ) {
         $error = '<h1 class="con_heading">'.$_LANG['CLOSED_BLOG'].'</h1><p>'.$_LANG['CLOSED_BLOG_TEXT'] .'</p>';
+    }
+	if ( !$can_view && $owner=='club' ) {
+        $error = '<h1 class="con_heading">'.$_LANG['CLOSED_BLOG'].'</h1><p>'.str_replace('%link%', '/clubs/0/'.$blog['user_id'], $_LANG['CLOSED_BLOG_CLUB_TEXT']).'</p>';
     }
 
     //Если есть ошибки - показываем и выходим
@@ -872,10 +875,13 @@ if($do=='post'){
 	$post_id 	= $inCore->request('post_id', 'int', 0);
     $user_id    = $inUser->id;
 
-	if($owner=='user'){	
+	if($owner=='user'){
+        $can_view = ($blog['allow_who']=='all' || ($blog['allow_who']=='friends' && usrIsFriends($blog['user_id'], $user_id)) || $post['user_id']==$user_id || $inUser->is_admin);
 		$inPage->addPathway($blog['title'], $model->getBlogURL($menuid, $blog['seolink']));
 	}
     if ($owner=='club'){
+        $blog['club']   = $inDB->get_fields('cms_clubs', "id={$blog['user_id']}", 'title, clubtype');
+        $can_view = $blog['club']['clubtype'] == 'public' || ($blog['club']['clubtype'] == 'private' && (clubUserIsMember($blog['user_id'], $user_id) || $inUser->is_admin || clubUserIsAdmin($blog['user_id'], $user_id)));
 		$inPage->addPathway($blog['author'], '/clubs/'.$menuid.'/'.$blog['user_id']);	
 		$inPage->addPathway('Блог', '/blogs/'.$menuid.'/'.$blog['id'].'/blog.html');	
 		$blog['title'] 		= $blog['author'];
@@ -890,11 +896,11 @@ if($do=='post'){
         echo '<p>'.$_LANG['POST_NOT_FOUND_TEXT'].'</p>'; return;
 	}
 
-    $can_view = ($blog['allow_who']=='all' || ($blog['allow_who']=='friends' && usrIsFriends($blog['user_id'], $user_id)) || $post['user_id']==$user_id || $inCore->userIsAdmin($user_id));
-
     if (!$can_view){
         $inPage->printHeading($_LANG['CLOSED_POST']);
-        echo '<p>'.$_LANG['CLOSED_POST_TEXT'].'</p>'; return;
+        if ($owner == 'user') { echo '<p>'.$_LANG['CLOSED_POST_TEXT'].'</p>'; }
+        if ($owner == 'club') { echo '<p>'.str_replace('%link%', '/clubs/0/'.$blog['user_id'], $_LANG['CLOSED_BLOG_CLUB_TEXT']).'</p>'; }
+        return;
     }
 
     $post['fpubdate'] = cmsCore::dateDiffNow($post['fpubdate']).' '.$_LANG['BACK'].' ('.$post['fpubdate'].')';

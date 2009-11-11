@@ -404,10 +404,11 @@ class cms_model_blog{
                        u.nickname as author, u.id as author_id,
                        b.allow_who blog_allow_who,
                        b.seolink bloglink,
-                       b.title blog_title
+                       b.title blog_title,
+                       b.owner
                 FROM cms_blogs b, cms_users u, cms_blog_posts p
                 LEFT JOIN cms_ratings r ON r.item_id=p.id AND r.target='blogpost'
-                WHERE p.user_id = u.id AND p.published = 1 AND p.blog_id = b.id
+                WHERE p.user_id = u.id AND p.published = 1 AND p.blog_id = b.id AND b.owner = 'user'
                 GROUP BY p.id
                 ORDER BY p.pubdate DESC
                 LIMIT ".(($page-1)*$perpage).", $perpage";
@@ -429,10 +430,17 @@ class cms_model_blog{
     public function getBestPosts($page=1, $perpage=20){
         $list = array();
 
-        $sql = "SELECT p.*, DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate, IFNULL(SUM(r.points), 0) as points, u.nickname as author, u.id as author_id, b.allow_who blog_allow_who, b.seolink bloglink
+        $sql = "SELECT  p.*,
+                        DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate,
+                        IFNULL(SUM(r.points), 0) as points,
+                        u.nickname as author,
+                        u.id as author_id,
+                        b.allow_who blog_allow_who,
+                        b.seolink bloglink,
+                        b.owner
                 FROM cms_blogs b, cms_users u, cms_blog_posts p
                 LEFT JOIN cms_ratings r ON r.item_id=p.id AND r.target='blogpost'
-                WHERE p.user_id = u.id AND p.published = 1 AND p.blog_id = b.id AND DATEDIFF(NOW(), p.pubdate) <= 7
+                WHERE p.user_id = u.id AND p.published = 1 AND p.blog_id = b.id AND DATEDIFF(NOW(), p.pubdate) <= 7 AND b.owner = 'user'
                 GROUP BY p.id
                 ORDER BY points DESC
                 LIMIT ".(($page-1)*$perpage).", $perpage";
@@ -470,10 +478,10 @@ class cms_model_blog{
 /* ==================================================================================================== */
 
     public function getLatestCount(){
-        $sql = "SELECT p.*, DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate, IFNULL(SUM(r.points), 0) as points
+        $sql = "SELECT p.id, p.published, p.blog_id, b.id, b.owner
 				FROM cms_blogs b, cms_blog_posts p
 				LEFT JOIN cms_ratings r ON r.item_id=p.id AND r.target='blogpost'
-				WHERE p.published = 1
+				WHERE p.published = 1 AND p.blog_id = b.id AND b.owner = 'user'
 				GROUP BY p.id";
 		$result = $this->inDB->query($sql);
 		$total  = $this->inDB->num_rows($result);
@@ -484,10 +492,10 @@ class cms_model_blog{
 /* ==================================================================================================== */
 
     public function getBestCount(){
-		$sql = "SELECT p.*, DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate, IFNULL(SUM(r.points), 0) as points
+		$sql = "SELECT p.id, p.published, p.blog_id, b.id, b.owner
 				FROM cms_blogs b, cms_blog_posts p
 				LEFT JOIN cms_ratings r ON r.item_id=p.id AND r.target='blogpost'
-				WHERE p.published = 1 AND DATEDIFF(NOW(), p.pubdate) <= 7
+				WHERE p.published = 1 AND DATEDIFF(NOW(), p.pubdate) <= 7 AND p.blog_id = b.id AND b.owner = 'user'
 				GROUP BY p.id";
 		$result = $this->inDB->query($sql);
 		$total  = $this->inDB->num_rows($result);

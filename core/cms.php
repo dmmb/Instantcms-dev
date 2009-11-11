@@ -1126,7 +1126,7 @@ class cmsCore {
     public function request($var, $type='str', $default=false){
         if (isset($_REQUEST[$var])){
             switch($type){
-                case 'int':   return abs((int)$_REQUEST[$var]); break;
+                case 'int':   return (int)$_REQUEST[$var]; break;
                 case 'str':   if ($_REQUEST[$var]) { return $this->strClear($_REQUEST[$var]); } else { return $default; } break;
                 case 'html':  if ($_REQUEST[$var]) { return $this->strClear($_REQUEST[$var], false); } else { return $default; } break;
                 case 'array': if (is_array($_REQUEST[$var])) { return $_REQUEST[$var]; } else { return $default; } break;

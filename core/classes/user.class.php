@@ -53,6 +53,7 @@ class cmsUser {
 
         if (!$user_id){
             $this->id   = 0;
+            $this->is_admin = 0;
             $this->group_id = self::getGuestGroupId();
             return true;
         }
@@ -65,7 +66,7 @@ class cmsUser {
             $this->{$key}   = $value;
         }
 
-        $this->id           = $user_id;
+        $this->id           = (int)$user_id;
 
         $this->checkBan();
 

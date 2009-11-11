@@ -105,20 +105,26 @@ if ($do=='view'){
 	$album = dbGetFields('cms_photo_albums', 'id='.$id, '*');
 
 	$show_hidden = 0; //по-умолчанию не показывать скрытые фотки
-	
-	if(strstr($album['NSDiffer'],'club')) { 
+
+    $owner = 'user';
+
+	if(strstr($album['NSDiffer'],'club')) {
+        $owner = 'club';
 		$club = dbGetFields('cms_clubs', 'id='.$album['user_id'], '*');
 		$club['root_album_id'] = dbGetField('cms_photo_albums', "parent_id=0 AND NSDiffer='club".$club['id']."' AND user_id = ".$club['id'], 'id');
 		if (clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator')) { $show_hidden = 1; } //показывать скрытые фотки админам и модераторам клуба
 	}
 
-	//PAGE HEADING		
+    $can_view = true;
+
+	//PAGE HEADING
 	if ($album['parent_id']==0){
 		if($id == $root['id']){
 			$pagetitle = $inCore->menuTitle();
 			if ($pagetitle) { $inPage->setTitle($pagetitle); } 
 			else { $inPage->setTitle($_LANG['PHOTOGALLERY']); $pagetitle = $_LANG['PHOTOGALLERY']; }
-		} elseif(strstr($album['NSDiffer'],'club')) {		
+		} elseif($owner == 'club') {
+            $can_view = $club['clubtype'] == 'public' || ($club['clubtype'] == 'private' && (clubUserIsMember($club['id'], $inUser->id) || $inUser->is_admin || clubUserIsAdmin($club['id'], $inUser->id)));
 			$pagetitle = '<a href="/clubs/'.$menuid.'/'.$club['id'].'">'.$club['title'].'</a> &rarr '.$_LANG['PHOTOALBUMS'];
 			$inPage->setTitle($_LANG['PHOTOALBUMS'].' - '.$club['title']);
 			$inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$club['id']);
@@ -126,23 +132,26 @@ if ($do=='view'){
 		}
 	} else {
 		$pagetitle =  $album['title'];
-		if(strstr($album['NSDiffer'],'club')) {	
+		if($owner == 'club') {
+            $can_view = $club['clubtype'] == 'public' || ($club['clubtype'] == 'private' && (clubUserIsMember($club['id'], $inUser->id) || $inUser->is_admin || clubUserIsAdmin($club['id'], $inUser->id)));
 			$inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$club['id']);
 			$inPage->addPathway($_LANG['PHOTOALBUMS'], '/photos/'.$menuid.'/'.$club['root_album_id']);
 		} else {
 			$inPage->setTitle($pagetitle  . ' - '.$_LANG['PHOTOGALLERY']);
 			$left_key = $album['NSLeft'];
 			$right_key = $album['NSRight'];
-			$sql = "SELECT id, title, NSLevel FROM cms_photo_albums WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0 AND NSDiffer = '' ORDER BY NSLeft";
+			$sql     = "SELECT id, title, NSLevel FROM cms_photo_albums WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0 AND NSDiffer = '' ORDER BY NSLeft";
 			$rs_rows = $inDB->query($sql) or die('Error while building album path');
 			while($pcat=$inDB->fetch_assoc($rs_rows)){
-					$inPage->addPathway($pcat['title'], '/photos/'.$menuid.'/'.$pcat['id']);
+                $inPage->addPathway($pcat['title'], '/photos/'.$menuid.'/'.$pcat['id']);
 			}
 		}				
 		$inPage->setTitle($album['title']);
 		$inPage->addPathway($album['title']);
-	}		
-	
+	}
+
+    if (!$can_view && $owner=='club') { $inCore->redirect('/clubs/0/'.$club['id']); }
+
 	//TITLE
 	echo '<h1 class="con_heading">'.$pagetitle.'</h1>';
 	
@@ -368,12 +377,19 @@ if($do=='viewphoto'){
 
 	if ($inDB->num_rows($result)){
 		$photo = $inDB->fetch_assoc($result);
-		
+
+        $can_view = true;
 		if (strstr($photo['NSDiffer'],'club')){
+            $owner = 'club';
 			$club = dbGetFields('cms_clubs', 'id='.$photo['album_user_id'], '*');
+            $can_view = $club['clubtype'] == 'public' || ($club['clubtype'] == 'private' && (clubUserIsMember($club['id'], $inUser->id) || $inUser->is_admin || clubUserIsAdmin($club['id'], $inUser->id)));
 			$inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$club['id']);
-			$inPage->addPathway($_LANG['PHOTOALBUMS'], '/photos/'.$menuid.'/'.clubRootAlbumId($club['id']));
+			$inPage->addPathway($_LANG['PHOTOALBUMS'], '/photos/'.$menuid.'/'.clubRootAlbumId($club['id']));            
 		}
+
+        print_r($club);
+
+        if (!$can_view && $owner=='club') { $inCore->redirect('/clubs/0/'.$club['id']); }
 
 		//PATHWAY ENTRY
 		$left_key = $photo['NSLeft'];

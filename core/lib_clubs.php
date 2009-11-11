@@ -248,7 +248,7 @@ function clubTotalMembers($club_id){
 	$rs = $inDB->query($sql);
 	if ($inDB->num_rows($rs)){
 		return $inDB->num_rows($rs) +1; //+1 потому что считаем еще и админа, не только юзеров
-	} else {	
+	} else {
 		return 1;
 	}
 }

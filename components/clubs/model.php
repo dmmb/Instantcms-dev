@@ -20,16 +20,28 @@ class cms_model_clubs{
 /* ==================================================================================================== */
 
     public function getClubs($page=1, $perpage=100) {
-        $clubs = array();
+        $inUser = cmsUser::getInstance();
+        $clubs  = array();
+        
         global $_LANG;
-        $sql =  "SELECT c.*,
+
+        $sql =  "SELECT c.*, (COUNT(uc.user_id)+1) as members, 
                  IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(c.pubdate, '{$_LANG['TODAY']}'),
-                 IF(DATEDIFF(NOW(), c.pubdate)=1, DATE_FORMAT(c.pubdate, '{$_LANG['YESTERDAY']}'),DATE_FORMAT(c.pubdate, '%d/%m/%Y') ))  as pubdate
+                 IF(DATEDIFF(NOW(), c.pubdate)=1, DATE_FORMAT(c.pubdate, '{$_LANG['YESTERDAY']}'),DATE_FORMAT(c.pubdate, '%d/%m/%Y') )) as pubdate
                  FROM cms_clubs c
+                 LEFT JOIN cms_user_clubs uc ON uc.club_id = c.id
                  WHERE c.published = 1
-                 ORDER BY c.rating DESC
+                       AND (
+                                c.clubtype='public'
+                                OR (
+                                        c.clubtype='private' AND ((uc.club_id = c.id AND uc.user_id = {$inUser->id}) OR c.admin_id = {$inUser->id} OR {$inUser->is_admin} = 1)
+                                   )
+                           )
+                 GROUP BY c.id
+                 ORDER BY members DESC
                  LIMIT ".(($page-1)*$perpage).", $perpage";
-        $rs  = $this->inDB->query($sql);
+
+        $rs  = $this->inDB->query($sql) or die(mysql_error());
 
         if (!$this->inDB->num_rows($rs)){ return false;	}
 

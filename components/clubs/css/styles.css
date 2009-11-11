@@ -9,8 +9,9 @@ div.club_entry .data{ float: left; }
 
 div.club_entry .data .title { margin-bottom: 5px; margin-top:5px;  }
 div.club_entry .data .title a{ font-size: 16px; font-weight:bold;  }
+div.club_entry .data .title a.private{ font-size: 16px; font-weight:bold; color:gray; }
 
-div.club_entry .data .details { float:left; padding-left:10px; }
+div.club_entry .data .details { float:left; }
 div.club_entry .data .details span{ color: #999; padding-left:19px; margin-right:4px; height:18px; font-size:10px; height:16px;line-height:16px;display:block; }
 div.club_entry .data .details span.rating{ background:url(/images/icons/rating.gif) no-repeat left center; }
 div.club_entry .data .details span.date{ background:url(/images/icons/date.gif) no-repeat left center; }

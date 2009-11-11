@@ -5,7 +5,9 @@
 <div class="con_heading">{$pagetitle}</div>
 
 {if $club}
-	
+
+    {if $is_access}
+
 		<table class="club_full_entry" cellpadding="0" cellspacing="0">
 			<tr>
 				<td valign="top" class="left">
@@ -65,7 +67,7 @@
 							</div>
 						</div>
 						{/if}
-					</div>				
+					</div>
 					<div class="wall">
                         {add_js file="components/users/js/wall.js"}
 						<div class="header">{$LANG.CLUB_WALL}</div>
@@ -78,10 +80,15 @@
                             </a>
                         </div>
 						<div id="addwall" style="display:none">{$club.addwall_html}</div>
-					</div>					
+					</div>
 				</td>
 			</tr>
 		</table>
+
+        {else}
+            <p>{$LANG.CLUB_PRIVATE}</p>
+            <p>{$LANG.CLUB_ADMIN}: {$club.admin}</p>
+        {/if}
 
 {else}
 	<p>{$LANG.CLUB_NOT_FOUND_TEXT}</p>
