@@ -260,46 +260,36 @@ function getContentCount($cat_id, &$total, $inDB){
     }
 
     return ;
+    
 }
 
 function subCatsList($parent_id, $left_key, $right_key){
 
     $inCore = cmsCore::getInstance();
-    $inDB = cmsDatabase::getInstance();
+    $inDB   = cmsDatabase::getInstance();
 
-    if (!$parent_id) { $parent_id = 0; }
+    $html   = '';
+    $model  = new cms_model_catalog();
 
     global $menuid;
 
-    $sql = "SELECT c.*, IFNULL(COUNT(i.id), 0) as content_count
-            FROM cms_uc_cats c
-            LEFT JOIN cms_uc_items i ON i.category_id = c.id AND i.published = 1
-            WHERE (c.parent_id = {$parent_id}) AND c.published = 1
-            GROUP BY c.id
-            ORDER BY c.title";
-    
-    $result = $inDB->query($sql);
+    if (!$parent_id) { $parent_id = $inDB->get_field('cms_uc_cats', 'parent_id=0', 'id'); }
 
-    if ( !$inDB->num_rows($result)>0 ){ return ''; }
+    $cats = $model->getSubCats($parent_id, $left_key, $right_key);
 
-    $cats = array();
+    if ($cats){
+        $smarty = $inCore->initSmarty('components', 'com_catalog_cats.tpl');
+        $smarty->assign('menuid', $menuid);
+        $smarty->assign('cats', $cats);
 
-    while($cat = $inDB->fetch_assoc($result)){
+        ob_start();
 
-        getContentCount($cat['id'], $cat['content_count'], $inDB);
-        $cats[] = $cat;
+        $smarty->display('com_catalog_cats.tpl');
 
+        $html = ob_get_clean();
     }
 
-    $smarty = $inCore->initSmarty('components', 'com_catalog_cats.tpl');
-    $smarty->assign('menuid', $menuid);
-    $smarty->assign('cats', $cats);
-
-    ob_start();
-
-    $smarty->display('com_catalog_cats.tpl');
-    
-    return ob_get_clean();
+    return $html;
     
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -307,18 +297,24 @@ function catalog(){
 
     $inCore = cmsCore::getInstance();
     $inPage = cmsPage::getInstance();
-    $inDB = cmsDatabase::getInstance();
-    $inUser     = cmsUser::getInstance();
+    $inDB   = cmsDatabase::getInstance();
+    $inUser = cmsUser::getInstance();
+
     global $_LANG;
-    $menuid = $inCore->menuId();
-    $menutitle = $inCore->menuTitle();
-    $cfg = $inCore->loadComponentConfig('catalog');
+
+    $inCore->loadModel('catalog');
+    $model = new cms_model_catalog();
+
+    $menuid     = $inCore->menuId();
+    $menutitle  = $inCore->menuTitle();
+    $cfg        = $inCore->loadComponentConfig('catalog');
 
     if ($inCore->inRequest('cat_id')){
         $id = $inCore->request('cat_id', 'int', 0);
     } else {
         $id = $inCore->request('id', 'int', 0);
     }
+
     $do = $inCore->request('do', 'str', 'view');
 
     $inCore->includeFile('components/catalog/includes/shopcore.php');
@@ -419,6 +415,8 @@ function catalog(){
                     $fstruct_ready[$key] = $value;
                 }
 
+                $inPage->backButton(false);
+
                 //searchform
                 $smarty = $inCore->initSmarty('components', 'com_catalog_search.tpl');
                 $smarty->assign('id', $id);
@@ -500,11 +498,18 @@ function catalog(){
             $fstruct    = unserialize($cat['fieldsstruct']);
 
             //heading
-            if ($cat['parent_id']){
-                $parent_cat = dbGetFields('cms_uc_cats', 'id = '.$cat['parent_id'], 'id, title');
-                $inPage->addPathway($parent_cat['title'], '/catalog/'.$menuid.'/'.$parent_cat['id']);
+            //PATHWAY ENTRY
+            $left_key   = $cat['NSLeft'];
+            $right_key  = $cat['NSRight'];
+
+            $path_list  = $model->getCategoryPath($left_key, $right_key);
+
+            if ($path_list){
+                foreach($path_list as $pcat){
+                    $inPage->addPathway($pcat['title'], '/catalog/'.$menuid.'/'.$pcat['id']);
+                }
             }
-            
+           
             $inPage->addPathway($cat['title'], '/catalog/'.$menuid.'/'.$cat['id']);
             $inPage->setTitle($cat['title'] . ' - ' . $menutitle);
 

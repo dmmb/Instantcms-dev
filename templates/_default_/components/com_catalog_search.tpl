@@ -7,17 +7,8 @@
 	<strong>{$LANG.CAT}:</strong> <a href="/catalog/{$menuid}/{$cat.id}">{$cat.title}</a>
 </div>
 
-<table width="100%" border="0" cellpadding="10" style="background-color:#EBEBEB; border:solid 1px gray">	
-	<tr>
-		<td>
-			<strong>{$LANG.ADVICE}:</strong> {$LANG.ADVICE_TEXT} <br /><br/>
-			<strong>%</strong> - {$LANG.ANY_SEQ_LETTERS}<br />
-			<strong>?</strong> - {$LANG.ANY_ONE_LETTER}
-		 </td>
-	</tr>
-</table>		  				
-
 <p><strong>{$LANG.FILL_FIELDS}:</strong></p>
+
 <form action="/catalog/{$menuid}/{$id}/search.html" name="searchform" method="post" >
 	<table width="100%" border="0" cellspacing="5">	
 		<tr>
