@@ -1,0 +1,132 @@
+table.bd_item{
+	margin-bottom:10px;
+	border-bottom:dashed 1px silver;
+	padding-bottom:10px;
+}
+
+.board_toolbar{
+	margin-bottom:10px;
+}
+.board_toolbar table{
+	padding:4px;
+	background-color:#EBEBEB;
+}
+.board_toolbar a{
+	text-decoration:underline;
+	color:#666666;
+}
+
+div.bd_title{
+	margin-bottom:0px;
+}
+
+div.bd_title a{
+	font-size:16px;
+	font-weight:bold;
+	margin:0px;
+}
+
+img.bd_image_small{
+	padding:2px;
+	border:solid 1px gray;
+	margin-right:10px;
+}
+
+div.board_gallery{
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+bd_text{
+	margin:0px;
+}
+
+div.bd_item_details{
+	margin-top:20px;
+	float:right;
+}
+div.bd_item_details a{
+	color:#666;
+}
+
+div.bd_item_details_full{
+	margin-bottom:10px;
+}
+
+div.bd_item_details_full a{
+	color:#666666;
+}
+
+div.bd_item_details span, div.bd_item_details_full span{
+	height:18px;
+	line-height:18px;
+	padding:0px;
+	padding-left:18px;
+	padding-right:10px;	
+	font-size:10px;
+}
+
+div.bd_links{
+	padding:0px;
+	border-top:dashed 1px silver;
+	margin-top:10px;
+	padding-top:10px;
+}
+
+div.bd_links span{
+	height:18px;
+	line-height:18px;
+	padding-left:20px;
+	padding-right:10px;	
+}
+
+div.bd_links span.bd_message{
+	background:url(/components/board/images/message.gif) no-repeat 0px 2px;
+}
+div.bd_links span.bd_author{
+	background:url(/components/board/images/list.gif) no-repeat 0px 2px;
+}
+
+span.bd_item_date{
+	background:url(/components/board/images/latest.gif) no-repeat;
+}
+
+span.bd_item_city{
+	background:url(/components/board/images/city.gif) no-repeat;
+}
+
+span.bd_item_edit{
+	background:url(/images/icons/edit.gif) no-repeat;
+}
+
+span.bd_item_delete{
+	background:url(/images/icons/delete.gif) no-repeat;
+}
+
+span.bd_item_user{
+	background:url(/components/board/images/user.gif) no-repeat;
+}
+
+span.bd_item_status_ok{
+	color:green;
+	background:url(/components/board/images/status_ok.gif) no-repeat;
+}
+span.bd_item_status_bad{
+	color:red;
+	background:url(/components/board/images/status_bad.gif) no-repeat;
+}
+
+img.bd_cat_main_icon{
+	margin-right:10px;
+}
+div.bd_cat_main_title{
+	margin-bottom:4px;
+}
+
+div.bd_cat_main_title a{
+	font-size:18px;
+	font-weight:bold;
+}
+div.bd_cat_main_obtypes a{
+	color:#666;
+}
