@@ -526,12 +526,15 @@ function applet_modules(){
                         </select>
                     </div>
 
+                    
+
                     <?php if(!isset($mod['user']) || $mod['user']==1 || $do=='add'){ ?>
                         <div id="user_div">
                             <div style="margin-top:15px">
                                 <strong>Содержимое модуля</strong>
                             </div>
-                            <div>
+                            <div><?php insertPanel(); ?></div>
+                            <div>                             
                                 <?php
                                         $inCore->insertEditor('content', $mod['content'], '250', '100%');
                                 ?>

@@ -38,24 +38,24 @@
 			$totalitems = shopIsInCart();
 			$cartlink = '/catalog/'.$cfg['menuid'].'/viewcart.html';
 
-			if ($user_id){ $user_sql = "(user_id=$user_id OR session_id='$sid')"; } else { $user_sql = "(user_id=0 AND session_id='$sid')"; }
+			if ($user_id){ $user_sql = "(c.user_id=$user_id OR c.session_id='$sid')"; } else { $user_sql = "(c.user_id=0 AND c.session_id='$sid')"; }
 
 			$sql = "SELECT i.title as title, i.price as price, c.itemscount as itemscount, i.category_id as category_id
 					FROM cms_uc_cart c, cms_uc_items i
-					WHERE c.item_id = i.id AND $user_sql";					
+					WHERE c.item_id = i.id AND $user_sql";
 		}
 
 		if($totalitems){
 			//GET ITEMS DATA FROM DATABASE			
-			$result = $inDB->query($sql) ;
+			$result = $inDB->query($sql);
 			$items_count = $inDB->num_rows($result);
-						
+
 			if ($items_count){	
 				echo '<div class="cart_detaillink">
 						<a href="'.$cartlink.'">'.$_LANG['CART_GOTO_CART'].'  &raquo;</a>
 					  </div>';
 				$num = 0; $total_summ = 0;
-				
+
 				if ($cfg['showtype']=='list'){
 				
 					echo '<table style="font-size:9px" cellpadding="4" cellspacing="0" border="0" width="100%">';

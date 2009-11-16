@@ -439,9 +439,7 @@ class cms_model_content{
 
         if (!sizeof($showfor_list)){ return true; }
 
-        $sql = "DELETE FROM cms_content_access WHERE content_id = $id";
-        
-        $this->inDB->query($sql);
+        $this->clearArticleAccess($id);
 
         foreach ($showfor_list as $key=>$value){
             $sql = "INSERT INTO cms_content_access (content_id, content_type, group_id)
@@ -449,6 +447,18 @@ class cms_model_content{
             $this->inDB->query($sql);
         }
         
+        return true;
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function clearArticleAccess($id){
+
+        $sql = "DELETE FROM cms_content_access WHERE content_id = $id AND content_type = 'material'";
+
+        $this->inDB->query($sql);
+
         return true;
     }
 

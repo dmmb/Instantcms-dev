@@ -59,11 +59,12 @@ function shopIsInCart($item_id=0){
 	
 	if ($user_id){ $user_sql = "(user_id=$user_id OR session_id='$sid')"; } else { $user_sql = "(user_id=0 AND session_id='$sid')"; }
 
-	if ($item_id){
+	if ($item_id){        
 		$isin = dbRowsCount('cms_uc_cart', "item_id = $item_id AND $user_sql");
-	} else {
+	} else {        
 		$isin = dbRowsCount('cms_uc_cart', "$user_sql");
 	}
+
 	return $isin;
 }
 
@@ -71,6 +72,7 @@ function shopCartLink(){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
 	global $menuid;
+    global $_LANG;
 	$items = shopIsInCart();	
 	$html = '';
 		$html .= '<a id="shop_cartlink" href="/catalog/'.$menuid.'/viewcart.html">'.$_LANG['CART'];

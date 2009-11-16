@@ -44,3 +44,13 @@ function toggleDiscountLimit(){
     if (sign==3){ $('tr.if_limit').show(); }
     else { $('tr.if_limit').hide(); }
 }
+
+function checkGroupList(){
+
+	if(document.addform.is_public.checked){
+		$('select#showin').attr('disabled', '');
+	} else {
+		$('select#showin').attr('disabled', 'disabled');
+	}
+
+}

@@ -24,6 +24,12 @@
 	padding-left:25px;
 	padding-right:5px;
 }
+#shop_addlink{
+	float:left;
+	background:url(/images/icons/add.gif) no-repeat 2px 2px;
+	padding-left:22px;
+	padding-right:5px;
+}
 #cart_buttons{
 	margin-top:20px;
 	text-align:center;
@@ -69,8 +75,8 @@
 #shop_price{
 	float:left;
 	font-size:14px;
-	margin-left:40px;
-	margin-top:30px;
+	margin-left:15px;
+	margin-top:10px;
 	height:43px;
 	line-height:43px;
 	width:190px;
@@ -85,8 +91,8 @@
 	margin-top:12px;
 }
 #shop_ac_itemdiv{
-	margin-left:4px;
-	margin-top:32px;
+	margin-left:5px;
+	margin-top:10px;
 }
 
 .catalog_sortform{
@@ -129,4 +135,13 @@ ul.uc_cat_list{
 ul.uc_cat_list li.uc_cat_item{
 	background:url(/images/markers/folder.png) no-repeat;
 	padding-left:20px;
+}
+.hint{
+    color:gray;
+}
+#shop_moder_form{
+    padding:15px;
+}
+#shop_moder_form p.notice{
+    font-weight:bold;
 }

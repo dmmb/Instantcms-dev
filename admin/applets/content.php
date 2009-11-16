@@ -263,10 +263,12 @@ function applet_content(){
 				
 			$model->updateArticle($id, $article);
 
-			if (!$inCore->inRequest('is_public')){
+			if (!$inCore->request('is_public', 'int', 0)){
 				$showfor = $_REQUEST['showfor'];				
                 $model->setArticleAccess($id, $showfor);
-			}
+			} else {
+                $model->clearArticleAccess($id);
+            }
 
             if (isset($_FILES["picture"]["name"]) && @$_FILES["picture"]["name"]!=''){
                 //generate image file
@@ -331,9 +333,9 @@ function applet_content(){
 
         $article['id']              = $model->addArticle($article);
 		
-		if (!$inCore->inRequest('is_public')){
+		if (!$inCore->request('is_public', 'int', 0)){
 			$showfor = $_REQUEST['showfor'];
-			if (sizeof($showfor)>0  && !$inCore->inRequest('is_public')){
+			if (sizeof($showfor)>0  && !$inCore->request('is_public', 'int', 0)){
                 $model->setArticleAccess($article['id'], $showfor);
             }
 		}
@@ -468,6 +470,7 @@ function applet_content(){
                     <div><?php $inCore->insertEditor('description', $mod['description'], '200', '100%'); ?></div>
 
                     <div><strong>Полный текст статьи</strong></div>
+                    <?php insertPanel(); ?>
                     <div><?php $inCore->insertEditor('content', $mod['content'], '400', '100%'); ?></div>
 
                     <div><strong>Теги статьи</strong></div>
@@ -625,7 +628,7 @@ function applet_content(){
                                     $sql    = "SELECT * FROM cms_user_groups";
                                     $result = dbQuery($sql) ;
 
-                                    $style  = 'display: none';
+                                    $style  = 'disabled="disabled"';
                                     $public = 'checked="checked"';
 
                                     if ($do == 'edit'){
@@ -654,7 +657,7 @@ function applet_content(){
                         </span>
                     </div>
 
-                    <div style="margin-top:10px;padding:5px;padding-right:0px; <?php echo $style?>" id="grp">
+                    <div style="margin-top:10px;padding:5px;padding-right:0px;" id="grp">
                         <div>
                             <strong>Показывать группам:</strong><br />
                             <span class="hinttext">
@@ -663,7 +666,7 @@ function applet_content(){
                         </div>
                         <div>
                             <?php
-                                echo '<select style="width: 99%" name="showfor[]" size="6" multiple="multiple">';
+                                echo '<select style="width: 99%" name="showfor[]" id="showin" size="6" multiple="multiple" '.$style.'>';
 
                                 if (mysql_num_rows($result)){
                                     while ($item=mysql_fetch_assoc($result)){

@@ -986,8 +986,6 @@ function dbDeleteList($table, $list){
 ///////////////////////////////////////////// HTML GENERATORS ////////////////////////////////////////////////
 function insertPanel(){
     $inCore=cmsCore::getInstance();
-    
-    $submit_btn = '<input type="button" value="Вставить" style="width:100px" onClick="insertTag(document.addform.ins.options[document.addform.ins.selectedIndex].value)">';
 
 echo '<table width="100%" border="0" cellspacing="0" cellpadding="8" class="proptable"><tr><td>';
 	echo '<table width="100%" border="0" cellspacing="0" cellpadding="2">';
@@ -996,8 +994,8 @@ echo '<table width="100%" border="0" cellspacing="0" cellpadding="8" class="prop
 			echo '<strong>Вставить:</strong> ';
 		echo '</td>';
 		echo '<td width="">';
-			echo '<select name="ins" id="ins" style="width:99%" onChange="showIns()">
-					<option value="material">ссылка на статью</option>
+			echo '<select name="ins" id="ins" style="width:100%" onChange="showIns()">
+					<option value="material">ссылка на материал</option>
 					<option value="photo">ссылка на фотографию</option>
 					<option value="album">ссылка на фотоальбом</option>
 					<option value="price">ссылка на категорию прайса</option>
@@ -1009,96 +1007,44 @@ echo '<table width="100%" border="0" cellspacing="0" cellpadding="8" class="prop
 					<option value="page">-- разрыв страницы --</option>					
 				  </select>';
 		echo '</td>';
-        echo '<td width="100">&nbsp;</td>';
 	echo '</tr>';
-	echo '<tr id="material">';
-		echo '<td width="120">
-                    <strong>Статья:</strong>
-              </td>';
-        echo '<td>
-                    <select name="m" style="width:99%">'.$inCore->getListItems('cms_content').'</select>
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
-	echo '<tr id="photo">';
-		echo '<td width="120">
-                    <strong>Фото:</strong>
-              </td>';
-        echo '<td>
-                    <select name="f" style="width:99%">'.$inCore->getListItems('cms_photo_files').'</select>
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
-	echo '<tr id="album">';
-		echo '<td width="120">
-                    <strong>Альбом:</strong>
-              </td>';
-        echo '<td>
-                    <select name="a" style="width:99%">'.$inCore->getListItemsNS('cms_photo_albums').'</select>
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
-	echo '<tr id="price">';
-		echo '<td width="120">
-                    <strong>Категория::</strong>
-              </td>';
-        echo '<td>
-                    <select name="p" style="width:99%">'.$inCore->getListItems('cms_price_cats').'</select>
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
-	echo '<tr id="frm">';
-		echo '<td width="120">
-                    <strong>Форма:</strong>
-              </td>';
-        echo '<td>
-                    <select name="fm" style="width:99%">'.$inCore->getListItems('cms_forms').'</select>
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
-	echo '<tr id="blank">';
-		echo '<td width="120">
-                    <strong>Бланк:</strong>
-              </td>';
-        echo '<td>
-                    <select name="b" style="width:99%">'.$inCore->getListItems('cms_forms').'</select>
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
-	echo '<tr id="include">';
-		echo '<td width="120">
-                    <strong>Файл:</strong>
-              </td>';
-        echo '<td>
-                    /includes/myphp/<input name="i" type="text" value="myscript.php" />
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
-	echo '<tr id="filelink">';
-		echo '<td width="120">
-                    <strong>Файл:</strong>
-              </td>';
-        echo '<td>
-                    <input name="fl" type="text" value="/files/myfile.rar" />
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
-	echo '<tr id="banpos">';
-		echo '<td width="120">
-                    <strong>Позиция:</strong>
-              </td>';
-        echo '<td>
-                    <select name="ban" style="width:99%">'.$inCore->bannersList().'</select>
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
+	echo '<tr>';
+		echo '<td colspan="2">';
+		
+		echo '<div id="material" style="float:left"> 
+				<strong style="width:120px">Материал:</strong> <select name="m" style="border:solid 1px black">'.$inCore->getListItems('cms_content').'</select>
+			  </div>';
+		echo '<div id="photo" style="float:left; display: none"> 
+				<strong>Фото:</strong> <select name="f" style="border:solid 1px black">'.$inCore->getListItems('cms_photo_files').'</select>
+			  </div>';
+		echo '<div id="album" style="float:left; display: none"> 
+				<strong>Альбом:</strong> <select name="a" style="border:solid 1px black">'.$inCore->getListItemsNS('cms_photo_albums').'</select>
+			  </div>';
+		echo '<div id="price" style="float:left; display: none"> 
+				<strong>Категория:</strong> <select name="p" style="border:solid 1px black">'.$inCore->getListItems('cms_price_cats').'</select>
+			  </div>';
+		echo '<div id="frm" style="float:left; display: none"> 
+				<strong>Форма:</strong> <select name="fm" style="border:solid 1px black">'.$inCore->getListItems('cms_forms').'</select>
+			  </div>';
+		echo '<div id="blank" style="float:left; display: none"> 
+				<strong>Бланк:</strong> <select name="b" style="border:solid 1px black">'.$inCore->getListItems('cms_forms').'</select>
+			  </div>';
+		echo '<div id="include" style="float:left; display: none"> 
+				<strong>Файл:</strong> /includes/myphp/<input name="i" type="text" size="30" value="myscript.php"/>
+			  </div>';
+		echo '<div id="filelink" style="float:left; display: none"> 
+				<strong>Файл</strong> (начиная с "/"): <input name="fl" type="text" size="30" value="/files/myfile.rar"/>
+			  </div>';
+		echo '<div id="banpos" style="float:left; display: none"> 
+				<strong>Позиция:</strong> <select name="ban" style="border:solid 1px black">'.$inCore->bannersList().'</select>
+			  </div>';
+		echo ' <input type="button" value="Вставить" onClick="insertTag(document.addform.ins.options[document.addform.ins.selectedIndex].value)">';
+		echo '</td>';
 
-
+	echo '</tr>';
 	echo '</table>';
 
    echo '</td></tr></table>';
-
-   echo '<script type="text/javascript">showIns();</script>';
 		
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -14,4 +14,5 @@
 	$last_ip = dbGetField('cms_users', 'id='.$user_id, 'last_ip');
 	
 	echo $last_ip;
+    
 ?>

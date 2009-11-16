@@ -2,11 +2,6 @@
 
     if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
 
-	$q = iconv('UTF-8//IGNORE', 'WINDOWS-1251//IGNORE', htmlspecialchars($_GET['q'], ENT_QUOTES));
-	$q = strtolower($q);
-
-	if (!$q) return;
-
 	define("VALID_CMS", 1);
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
     define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
@@ -14,6 +9,13 @@
 	include(PATH.'/core/cms.php');
 
     $inCore = cmsCore::getInstance();
+
+    $q = $inCore->request('q', 'str', '');
+
+    if (!$q) return;
+
+	$q = iconv('UTF-8//IGNORE', 'WINDOWS-1251//IGNORE', $q);
+	$q = strtolower($q);
 
     $inCore->loadClass('config');           //конфигурация
     $inCore->loadClass('db');               //база данных

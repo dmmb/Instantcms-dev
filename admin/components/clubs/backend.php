@@ -596,7 +596,7 @@ if ($opt=='config') {
         <tr>
             <td><strong>Создание клубов пользователями:</strong><br />
                 <span class="hinttext">Если включено, каждый пользователь может<br />
-            создать собственный клуб, но только один </span></td>
+            создать собственный клуб</span></td>
             <td valign="top">
                 <input name="cancreate" type="radio" value="1"  <?php if (@$cfg['cancreate']) { echo 'checked="checked"'; } ?> />Да
             <input name="cancreate" type="radio" value="0"  <?php if (@!$cfg['cancreate']) { echo 'checked="checked"'; } ?> /> Нет			</td>

@@ -20,6 +20,12 @@
 
     $inCore->loadClass('config');       //конфигурация
     $inCore->loadClass('db');           //база данных
+    $inCore->loadClass('user');         //пользователь
+
+    $inUser = cmsUser::getInstance();
+
+    if (!$inUser->update()) { $inCore->halt(); }
+    if (!$inUser->is_admin) { $inCore->halt(); }
 
     $inConf = cmsConfig::getInstance();
 
@@ -43,18 +49,18 @@
 	}
 	
 	if ($opt=='import'){
-		$uploaddump = $dir.'/import.sql';	
+		$uploaddump = $dir.'/import.sql';
 		if (@move_uploaded_file($_FILES['dumpfile']['tmp_name'], $uploaddump)) {
 			include($_SERVER['DOCUMENT_ROOT'].'/includes/dbimport.inc.php');
 			$errors = '';
 			if(dbRunSQL($uploaddump, $inConf->db_prefix)){
 				@unlink($uploaddump);
-				echo '<span style="color:green">Импорт базы данных завершен.</span>';	
+				echo '<span style="color:green">Импорт базы данных завершен.</span>';
 			} else {
-				echo '<span style="color:red">'.$errors.'</span>';		
+				echo '<span style="color:red">'.$errors.'</span>';
 			}
 		} else {
-			echo '<span style="color:red">Ошибка импорта базы</span>';		
+			echo '<span style="color:red">Ошибка импорта базы</span>';
 		}
 	}
 	

@@ -9,9 +9,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //                                                                                           //
 /*********************************************************************************************/
 
-function newContent($table){
-				$new = dbGetField($table, "DATE_FORMAT(pubdate, '%d-%m-%Y') = DATE_FORMAT(NOW(), '%d-%m-%Y')", 'COUNT(id)');
-				return $new;
+function newContent($table, $where=''){
+    if ($where) { $where = ' AND '.$where; }
+    $new = dbGetField($table, "DATE_FORMAT(pubdate, '%d-%m-%Y') = DATE_FORMAT(NOW(), '%d-%m-%Y'){$where}", 'COUNT(id)');
+    return $new;
 }
 
 function applet_main(){
@@ -112,38 +113,9 @@ function applet_main(){
 		<div class="small_title"><strong>Обновления на сайте</strong></div>
 	    <div style="padding:6px;font-size:10px">
 			<?php echo cpUpdates();?>
-		</div>
-		<?php 
-			$new_photos 	= dbRowsCount('cms_photo_files', 'published=0');
-			$new_quests 	= dbRowsCount('cms_faq_quests', 'published=0');
-			$new_content 	= dbRowsCount('cms_content', 'published=0');
-		?>		
-		<?php if ($new_photos || $new_quests || $new_content){ ?>
-		<div style="padding:10px;font-size:10px;border-top:dashed 1px #999999">
-		<div style="margin-bottom:5px;font-weight:bold">Ожидают модерации / не публикуются:</div>
-		<table width="100%" border="0" cellspacing="0" cellpadding="2" align="center">
-		  <?php if ($new_content){ ?>
-		  <tr>
-			<td width="16"><img src="images/updates/content.gif" width="16" height="16" /></td>
-			<td><a href="index.php?view=content&sort=published">Статьи</a> (<?php echo $new_content; ?>)</td>
-	      </tr>
-		  <?php } ?>
-		  <?php if ($new_photos){ ?>
-		  <tr>
-			<td width="16"><img src="images/updates/photos.gif" width="16" height="16" /></td>
-			<td><a href="index.php?view=components&amp;do=config&amp;id=<?php echo dbGetField('cms_components', "link='photos'", 'id')?>&amp;opt=list_photos">Фотографии</a> (<?php echo $new_photos; ?>)</td>
-	      </tr>
-		  <?php } ?>
-		  <?php if ($new_quests){ ?>
-		  <tr>
-			<td width="16"><img src="images/updates/quests.gif" width="16" height="16" /></td>
-			<td><a href="index.php?view=components&amp;do=config&amp;id=<?php echo dbGetField('cms_components', "link='faq'", 'id')?>&amp;opt=list_items">Вопросы</a> (<?php echo $new_quests; ?>)</td>
-	      </tr>
-		  <?php } ?>
-		</table>
-		</div>
-		<?php } ?>		
+		</div>			
 	</div>
+    
 	<div class="small_box">
 		<?php if ($inCore->isComponentInstalled('rssfeed')){ ?>
 		<div class="small_title">RSS-ленты сайта</div>
@@ -168,6 +140,49 @@ function applet_main(){
     <td width="33%" valign="top" style=""><table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td height="100" valign="top">
+        <?php
+			$new_photos 	= dbRowsCount('cms_photo_files', 'published=0');
+			$new_quests 	= dbRowsCount('cms_faq_quests', 'published=0');
+			$new_content 	= dbRowsCount('cms_content', 'published=0');
+			$new_catalog 	= dbRowsCount('cms_uc_items', 'on_moderate=1');
+		?>
+        <?php if ($new_photos || $new_quests || $new_content || $new_catalog){ ?>
+            <div class="small_box">
+                <div class="small_title">
+                    <span style="padding-left:20px;background:url(/admin/images/icons/attention.gif) no-repeat left center">
+                        <strong>Материалы на модерацию</strong>
+                    </span>
+                </div>
+                <div style="padding:10px">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="2" align="center">
+                      <?php if ($new_content){ ?>
+                      <tr>
+                        <td width="16"><img src="images/updates/content.gif" width="16" height="16" /></td>
+                        <td><a href="index.php?view=content&sort=published">Статьи</a> (<?php echo $new_content; ?>)</td>
+                      </tr>
+                      <?php } ?>
+                      <?php if ($new_photos){ ?>
+                      <tr>
+                        <td width="16"><img src="images/updates/photos.gif" width="16" height="16" /></td>
+                        <td><a href="index.php?view=components&amp;do=config&amp;link=photos&amp;opt=list_photos">Фотографии</a> (<?php echo $new_photos; ?>)</td>
+                      </tr>
+                      <?php } ?>
+                      <?php if ($new_quests){ ?>
+                      <tr>
+                        <td width="16"><img src="images/updates/quests.gif" width="16" height="16" /></td>
+                        <td><a href="index.php?view=components&amp;do=config&amp;link=faq&amp;opt=list_items">Вопросы</a> (<?php echo $new_quests; ?>)</td>
+                      </tr>
+                      <?php } ?>
+                      <?php if ($new_catalog){ ?>
+                      <tr>
+                        <td width="16"><img src="images/updates/content.gif" width="16" height="16" /></td>
+                        <td><a href="index.php?view=components&amp;do=config&amp;link=catalog&amp;opt=list_items&amp;on_moderate=1">Записи каталога</a> (<?php echo $new_catalog; ?>)</td>
+                      </tr>
+                      <?php } ?>
+                    </table>
+                </div>
+            </div>
+        <?php } ?>
         <!--
 		<div class="small_box">
 		  <div class="small_title">Обновления InstantCMS</div>

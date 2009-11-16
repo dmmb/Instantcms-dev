@@ -26,6 +26,8 @@ function files(){
 
         $fileurl    = $inCore->request('fileurl', 'str', '');
 
+        if(strstr($fileurl, '..')){ $inCore->halt(); }
+
         if (!$fileurl) { $inCore->halt($_LANG['FILE_NOT_FOUND']); }
 
         if (strstr($fileurl, 'http:/')){
@@ -64,7 +66,9 @@ function files(){
     if ($do=='redirect'){
 
     	$url = str_replace('--q--', '?', $inCore->request('url', 'str', ''));
-        
+
+        if(strstr($url, '..')){ $inCore->halt(); }
+
         if (!$url) { $inCore->halt(); }
 
         if (strstr($url, 'http:/')){

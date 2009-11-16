@@ -121,11 +121,52 @@
 
 	}
 
+    //Переводим каталог на нестед
+
     if (!$inDB->isFieldExists('cms_uc_cats', 'NSLeft')){
 
         remakeCats();
 
         echo '<p>Категории каталога переведены на nested sets...</p>';
+
+    }
+
+// ========================================================================================== //
+// ========================================================================================== //
+
+    //Для каталога (возможность добавления товаров юзерами)
+
+    if (!$inDB->isFieldExists('cms_uc_cats', 'is_public')){
+
+        $sql = "ALTER TABLE `cms_uc_cats` ADD `is_public` INT NOT NULL DEFAULT '0'";
+        $result = $inDB->query($sql);
+
+        echo '<p>Таблица <strong>cms_uc_cats</strong> обновлена...</p>';
+
+    }
+
+    if (!$inDB->isFieldExists('cms_uc_items', 'user_id')){
+
+        $sql = "ALTER TABLE `cms_uc_items` ADD `user_id` INT NOT NULL DEFAULT '1'";
+        $result = $inDB->query($sql);
+
+        $sql = "ALTER TABLE `cms_uc_items` ADD `on_moderate` INT NOT NULL DEFAULT '0'";
+        $result = $inDB->query($sql);
+
+        echo '<p>Таблица <strong>cms_uc_items</strong> обновлена...</p>';
+
+    }
+
+    if (!$inDB->isTableExists('cms_uc_cats_access')){
+
+        $sql = "CREATE TABLE cms_uc_cats_access (
+                    `cat_id` INT NOT NULL ,
+                    `group_id` INT NOT NULL ,
+                    INDEX ( `cat_id` , `group_id` )
+                ) ENGINE = MYISAM";
+        $result = $inDB->query($sql);
+
+        echo '<p>Таблица <strong>cms_uc_cats_access</strong> создана...</p>';
 
     }
 

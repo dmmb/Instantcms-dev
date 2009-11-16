@@ -122,6 +122,10 @@ function applet_repairnested(){
 	$tables[3]['title']		= 'Дерево разделов доски объявлений';
 	$tables[3]['differ']	= '';	
 
+	$tables[4]['name']	 	= 'cms_uc_cats';
+	$tables[4]['title']		= 'Дерево разделов каталога';
+	$tables[4]['differ']	= '';
+
 	if (isset($_POST['go_repair']) && isset($_POST['tables'])){
 		if (is_array($_POST['tables'])){
 			foreach ($_POST['tables'] as $key=>$table_id){

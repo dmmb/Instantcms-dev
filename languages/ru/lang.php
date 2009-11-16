@@ -36,6 +36,7 @@ $_LANG['PAGE_NOT_FOUND']        ='Страница не найдена';
 $_LANG['PAGE_NOT_FOUND_TEXT']   ='Возможно она была удалена или перемещена.';
 $_LANG['NOT_SELECT']            ='не выбран';
 $_LANG['SEARCH']                ='Поиск';
+$_LANG['ADD']                   ='Добавить';
 $_LANG['EDIT']                  ='Редактировать';
 $_LANG['MOVE']                  ='Переместить';
 $_LANG['DELETE']                ='Удалить';
@@ -55,6 +56,12 @@ $_LANG['DATE']                  ='Дата';
 
 $_LANG['NO']                    ='Нет';
 $_LANG['YES']                   ='Да';
+
+$_LANG['TAGS']                  ='Теги';
+$_LANG['KEYWORDS']              ='ключевые слова, через запятую';
+
+$_LANG['TITLE']                 ='Название';
+$_LANG['IMAGE']                 ='Изображение';
 
 // For All Modules
 $_LANG['CONFIG_MODULE']         ='Настроить модуль';

@@ -17,6 +17,7 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * site: firs.org.ua
  */
 
+$_LANG['CATALOG']                 ='Универсальный каталог';
 
 $_LANG['ARTICLES']                ='Записей';
 $_LANG['RATING']                  ='Рейтинг';
@@ -41,6 +42,19 @@ $_LANG['SEARCH_BY_TAG']           ='Поиск по ключевому слову';
 $_LANG['MATCHES']                 ='совпадений';
 $_LANG['MATCHE']                  ='совпадение';
 $_LANG['CAT_NOT_FOUND']           ='Рубрика каталога не найдена.';
+
+$_LANG['ADD_ITEM']                ='Добавить запись';
+$_LANG['ADDED_BY']                ='Автор записи';
+$_LANG['COMMA_SEPARATE']          ='Через запятую, если несколько';
+$_LANG['CAN_MANY']                ='Разрешить выбор количества';
+$_LANG['TYPE_LINK']               ='Введите ссылку';
+$_LANG['ITEM_PREMOD_NOTICE']      ='Запись будет опубликована в каталоге после проверки администратором.';
+$_LANG['WAIT_MODERATION']         ='Запись ожидает модерации';
+$_LANG['MODERATION_ACCEPT']       ='Разрешить';
+$_LANG['MODERATION_REJECT']       ='Удалить';
+$_LANG['MSG_ITEM_SUBMIT']         ='Пользователь %user% добавил в каталог запись [b]%link%[/b].'."\n".'Необходима модерация.';
+$_LANG['MSG_ITEM_REJECTED']       ='Ваша запись "%item%" была не принята в каталог и удалена';
+$_LANG['MSG_ITEM_ACCEPTED']       ='Ваша запись "%link%" была принята в каталог';
 
 $_LANG['PRICE']                   ='Цена';
 $_LANG['RUB']                     ='руб.';

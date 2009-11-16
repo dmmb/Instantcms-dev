@@ -77,8 +77,6 @@ $_LANG['WAIT_MODERING']           ='Ожидает модерации.';
 
 $_LANG['PHOTO_TITLE']             ='Название фото';
 $_LANG['PHOTO_DESCRIPTION']       ='Описание фото';
-$_LANG['TAGS']                    ='Теги';
-$_LANG['KEYWORDS']                ='ключевые слова, через запятую';
 $_LANG['REPLACE_FILE']            ='Заменить файлом';
 
 $_LANG['MOVE_PHOTO']              ='Перенести фото';

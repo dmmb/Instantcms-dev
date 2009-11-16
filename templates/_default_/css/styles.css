@@ -679,7 +679,7 @@ td{
 	padding: 2px;
 }
 .uc_list_itemdesc{
-	padding-left: 12px;
+	padding-left: 0px;
 }
 
 .uc_thumb_item{
@@ -699,9 +699,11 @@ td{
 .uc_detailfield{
 	margin:0px;
 	margin-bottom: 8px;
+    padding:0px;
 }
 .uc_detaillist{
 	margin:0px;
+    padding-left:15px;
 	list-style: none;
 }
 .uc_detaillink{

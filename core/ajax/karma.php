@@ -22,7 +22,7 @@
     $inCore->loadClass('user');
 
     $inUser = cmsUser::getInstance();
-    $inUser->update();
+    if (!$inUser->update()) { $inCore->halt(); }
 
 	$inCore->loadLib('karma');
 	

@@ -78,7 +78,7 @@
 					
 				} else { 
 						echo "{";
-						echo	"error: 'Не верный тип файла! Допустимые типы: jpg, jpeg, gif, png, bmp.',\n";
+						echo	"error: 'Неверный тип файла! Допустимые типы: jpg, jpeg, gif, png, bmp.',\n";
 						echo	"msg: ''\n";
 						echo "}";
 				} //filetype

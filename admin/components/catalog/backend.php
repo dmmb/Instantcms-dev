@@ -404,7 +404,7 @@ function cpPriceInput($id){
                     @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$file.jpg", 0644);
 				} else { $msg = 'Ошибка загрузки изображения!'; }				
 			}					
-					
+
 			$model->updateItem($id, $item);
 		}
 		if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
@@ -530,8 +530,18 @@ function cpPriceInput($id){
 		}
 
 		$cat['fields'] = serialize($fstruct);
-				
-        $model->addCategory($cat);
+
+        $cat['is_public'] = $inCore->request('is_public', 'int', 0);
+
+        $cat['id'] = $model->addCategory($cat);
+
+        if ($cat['is_public']){
+			$showfor = $_REQUEST['showfor'];
+			if (sizeof($showfor)>0){
+                $model->setCategoryAccess($cat['id'], $showfor);
+            }
+		}
+        
 		$inCore->redirect('?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
     }
 
@@ -567,7 +577,7 @@ function cpPriceInput($id){
             $cat['is_ratings']     = $inCore->request('is_ratings', 'int');
             $cat['filters']        = $inCore->request('filters', 'int');
             $cat['orderby']        = $inCore->request('orderby', 'str');
-            $cat['ordetto']        = $inCore->request('ordetto', 'str');
+            $cat['orderto']        = $inCore->request('orderto', 'str');
 
             $cat['shownew']        = $inCore->request('shownew', 'int');
             $cat['newint']         = $inCore->request('int_1', 'int') . ' ' . $inCore->request('int_2', 'str');
@@ -584,6 +594,17 @@ function cpPriceInput($id){
             }
 
             $cat['fields'] = serialize($fstruct);
+
+            $cat['is_public'] = $inCore->request('is_public', 'int', 0);
+
+            if ($cat['is_public']){
+                $showfor = $_REQUEST['showfor'];
+                if (sizeof($showfor)>0){
+                    $model->setCategoryAccess($id, $showfor);
+                }
+            } else {
+                $model->clearCategoryAccess($id);
+            }
 
             $model->updateCategory($id, $cat);
 							
@@ -647,7 +668,12 @@ function cpPriceInput($id){
 		$GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/admin/components/catalog/js/common.js"></script>';
 	
 		cpAddPathway('Записи', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
-		echo '<h3>Записи</h3>';
+
+        if ($inCore->inRequest('on_moderate')){
+            echo '<h3>Записи на модерацию</h3>';
+        } else {
+            echo '<h3>Записи</h3>';
+        }
 		
 		//TABLE COLUMNS
 		$fields = array();
@@ -655,7 +681,13 @@ function cpPriceInput($id){
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
 		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
-		$fields[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
+
+        if ($inCore->inRequest('on_moderate')){
+            $fields[1]['link'] = '/catalog/0/item%id%.html';
+        } else {
+            $fields[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
+        }
+
 		$fields[1]['filter'] = 15;
 		
 		$fields[2]['title'] = 'Показ';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
@@ -685,9 +717,11 @@ function cpPriceInput($id){
 		$actions[3]['icon']  = 'delete.gif';
 		$actions[3]['confirm'] = 'Удалить запись из каталога?';
 		$actions[3]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete_item&item_id=%id%';
-				
+
+        if ($inCore->inRequest('on_moderate')){ $where = 'on_moderate=1'; } else { $where = ''; }
+
 		//Print table
-		cpListTable('cms_uc_items', $fields, $actions);		
+		cpListTable('cms_uc_items', $fields, $actions, $where);
 	}
 
 //=================================================================================================//
@@ -1181,6 +1215,14 @@ function cpPriceInput($id){
                             {tab=Записи}
 
                             <div style="margin-top:5px;">
+                                <strong>Количество полей</strong><br/>
+                                <span class="hinttext">Сколько полей (характеристик) показывать для каждой записи при просмотре рубрики</span>
+                            </div>
+                            <div>
+                                <input name="fieldsshow" type="text" id="fieldsshow" style="width:100%" value="<?php if ($opt=='edit_cat') { echo $mod['fields_show']; } else { echo '10'; } ?>"/>
+                            </div>
+
+                            <div style="margin-top:10px;">
                                 <strong>Сортировка записей</strong>
                             </div>
                             <div>
@@ -1239,6 +1281,69 @@ function cpPriceInput($id){
                                         </td>
                                     </tr>
                                 </table>
+                            </div>
+
+                            {tab=Доступ}
+
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist" style="margin-top:5px">
+                                <tr>
+                                    <td width="20">
+                                        <?php
+                                            if ($opt == 'edit_cat'){
+
+                                                $sql2 = "SELECT * FROM cms_uc_cats_access WHERE cat_id = ".$mod['id'];
+                                                $result2 = dbQuery($sql2);
+                                                $ord = array();
+
+                                                if (mysql_num_rows($result2)){
+                                                    while ($r = mysql_fetch_assoc($result2)){
+                                                        $ord[] = $r['group_id'];
+                                                    }
+                                                }
+                                            }
+                                        ?>
+                                        <input name="is_public" type="checkbox" id="is_public" onclick="checkGroupList()" value="1" <?php if(@$mod['is_public']){ echo 'checked="checked"'; } ?> />
+                                    </td>
+                                    <td><label for="is_public"><strong>Разрешить пользователям добавлять записи</strong></label></td>
+                                </tr>
+                            </table>
+                            <div style="padding:5px">
+                                <span class="hinttext">
+                                    Если отмечено, пользователи из выбранных групп будут видеть ссылку "Добавить запись" в этой рубрике каталога.
+                                </span>
+                            </div>
+
+                            <div style="margin-top:10px;padding:5px;padding-right:0px;" id="grp">
+                                <div>
+                                    <strong>Разрешить группам:</strong><br />
+                                    <span class="hinttext">
+                                        Можно выбрать несколько, удерживая CTRL.
+                                    </span>
+                                </div>
+                                <div>
+                                    <?php
+                                        echo '<select style="width: 99%" name="showfor[]" id="showin" size="6" multiple="multiple" '.(@$mod['is_public']?'':'disabled="disabled"').'>';
+
+                                        $sql    = "SELECT * FROM cms_user_groups";
+                                        $result = dbQuery($sql) ;
+
+                                        if (mysql_num_rows($result)){
+                                            while ($item=mysql_fetch_assoc($result)){
+                                                echo '<option value="'.$item['id'].'"';
+                                                if ($opt=='edit_cat'){
+                                                    if (inArray($ord, $item['id'])){
+                                                        echo 'selected';
+                                                    }
+                                                }
+
+                                                echo '>';
+                                                echo $item['title'].'</option>';
+                                            }
+                                        }
+
+                                        echo '</select>';
+                                    ?>
+                                </div>
                             </div>
 
                             {/tabs}
@@ -1364,9 +1469,11 @@ function cpPriceInput($id){
 
 	if($opt=='saveconfig'){	
 		$cfg = array();
-		$cfg['email']       = $_REQUEST['email'];
-		$cfg['delivery']    = $_REQUEST['delivery'];
-        $cfg['notice']      = $_REQUEST['notice'];
+		$cfg['email']       = $inCore->request('email', 'str', '');
+		$cfg['delivery']    = $inCore->request('delivery', 'html', '');
+        $cfg['notice']      = $inCore->request('notice', 'int', 0);
+        $cfg['premod']      = $inCore->request('premod', 'int', 1);
+        $cfg['premod_msg']  = $inCore->request('premod_msg', 'int', 1);
 		$cfg['delivery']    = str_replace('\"', '&quot;', $cfg['delivery']);
 		$cfg['delivery']    = str_replace('"', '&quot;', $cfg['delivery']);
 		
@@ -1382,6 +1489,8 @@ function cpPriceInput($id){
 		if (!isset($cfg['email'])) { $cfg['email'] = 'shop@site.ru'; }
 		if (!isset($cfg['delivery'])) { $cfg['delivery'] = 'Сведения о доставке'; }
         if (!isset($cfg['notice'])) { $cfg['notice'] = 0; }
+        if (!isset($cfg['premod'])) { $cfg['premod'] = 1; }
+        if (!isset($cfg['premod_msg'])) { $cfg['premod_msg'] = 1; }
 		
 		cpAddPathway('Настройки', $_SERVER['REQUEST_URI']);
 		
@@ -1391,8 +1500,8 @@ function cpPriceInput($id){
          <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
              <table width="600" border="0" cellpadding="10" cellspacing="0" class="proptable">
                  <tr>
-                     <td width="218"><strong>E-mail продавца:</strong></td>
-                     <td width="338"><input name="email" type="text" id="email" size="30" value="<?php echo @$cfg['email'];?>"/></td>
+                     <td width=""><strong>E-mail продавца:</strong></td>
+                     <td width="260"><input name="email" type="text" id="email" style="width:250px" value="<?php echo @$cfg['email'];?>"/></td>
                  </tr>
                  <tr>
                      <td><strong>Отправлять уведомление покупателю: </strong></td>
@@ -1404,10 +1513,26 @@ function cpPriceInput($id){
              </table>
              <table width="600" border="0" cellpadding="10" cellspacing="0" class="proptable">
                  <tr>
+                     <td><strong>Премодерация записей пользователей: </strong></td>
+                     <td width="260">
+                         <input name="premod" type="radio" value="1" <?php if (@$cfg['premod']) { echo 'checked="checked"'; } ?> /> Да
+                         <input name="premod" type="radio" value="0"  <?php if (@!$cfg['premod']) { echo 'checked="checked"'; } ?> /> Нет
+                     </td>
+                 </tr>
+                 <tr>
+                     <td><strong>Сообщать администратору о новых записях: </strong></td>
+                     <td width="260">
+                         <input name="premod_msg" type="radio" value="1" <?php if (@$cfg['premod_msg']) { echo 'checked="checked"'; } ?> /> Да
+                         <input name="premod_msg" type="radio" value="0"  <?php if (@!$cfg['premod_msg']) { echo 'checked="checked"'; } ?> /> Нет
+                     </td>
+                 </tr>
+             </table>
+             <table width="600" border="0" cellpadding="10" cellspacing="0" class="proptable">
+                 <tr>
                      <td><p><strong>Информация о доставке:</strong></p>
                          <p>
                              <label>
-                                 <textarea name="delivery" style="width:100%;height:150px;border:solid 1px gray"><?php echo @$cfg['delivery'];?></textarea>
+                                 <textarea name="delivery" style="width:568px;height:150px;border:solid 1px gray"><?php echo @$cfg['delivery'];?></textarea>
                              </label>
                      </p></td>
                  </tr>

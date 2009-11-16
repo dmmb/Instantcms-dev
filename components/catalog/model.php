@@ -77,16 +77,23 @@ class cms_model_catalog{
 /* ==================================================================================================== */
 
 	public function addItem($item){
-        $inDB = cmsDatabase::getInstance();
+        $inUser = cmsUser::getInstance();
+
+        if (!isset($item['on_moderate'])) { $item['on_moderate'] = 0; }
+
         $item = cmsCore::callEvent('ADD_CATALOG_ITEM', $item);
 
-		$sql = "INSERT INTO cms_uc_items (category_id, title, pubdate, published, imageurl, fieldsdata, is_comments, tags, rating, meta_desc, meta_keys, price, canmany)
+		$sql = "INSERT INTO cms_uc_items (category_id, title, pubdate, published, imageurl, fieldsdata, is_comments, tags, rating, meta_desc, meta_keys, price, canmany, user_id, on_moderate)
 				VALUES ({$item['cat_id']}, '{$item['title']}', '{$item['pubdate']}', '{$item['published']}',
                         '{$item['file']}', '{$item['fields']}', {$item['is_comments']}, '{$item['tags']}', 0,
-                        '{$item['meta_desc']}', '{$item['meta_keys']}', '{$item['price']}', {$item['canmany']})";
+                        '{$item['meta_desc']}', '{$item['meta_keys']}', '{$item['price']}', {$item['canmany']}, {$inUser->id}, {$item['on_moderate']})";
 		$this->inDB->query($sql);
 
-		cmsInsertTags($item['tags'], 'catalog', dbLastId('cms_uc_items'));
+        $item_id = dbLastId('cms_uc_items');
+
+		cmsInsertTags($item['tags'], 'catalog', $item_id);
+
+        return $item_id;
     }
 
 /* ==================================================================================================== */
@@ -161,6 +168,7 @@ class cms_model_catalog{
 /* ==================================================================================================== */
 
 	public function deleteCategory($id){
+        $inCore = cmsCore::getInstance();
         cmsCore::callEvent('DELETE_CATALOG_CAT', $id);
         $sql = "SELECT id FROM cms_uc_items WHERE category_id = $id";
         $result = dbQuery($sql) ;
@@ -169,8 +177,9 @@ class cms_model_catalog{
                 $this->deleteItem($item['id']);
             }
         }
-        $sql = "DELETE FROM cms_uc_cats WHERE id = $id LIMIT 1";
-        $this->inDB->query($sql);
+        $ns = $inCore->nestedSetsInit('cms_uc_cats');
+        $ns->DeleteNode($id);
+        return true;
     }
 
 /* ==================================================================================================== */
@@ -202,7 +211,8 @@ class cms_model_catalog{
                     showabc = '{$cat['showabc']}',
                     shownew = '{$cat['shownew']}',
                     newint = '{$cat['newint']}',
-                    filters = '{$cat['filters']}'
+                    filters = '{$cat['filters']}',
+                    is_public = '{$cat['is_public']}'
                 WHERE id = $id
                 LIMIT 1";
         $this->inDB->query($sql);
@@ -237,10 +247,13 @@ class cms_model_catalog{
                     showabc = '{$cat['showabc']}',
                     shownew = '{$cat['shownew']}',
                     newint = '{$cat['newint']}',
-                    filters = '{$cat['filters']}'
+                    filters = '{$cat['filters']}',
+                    is_public = '{$cat['is_public']}'
                 WHERE id = {$cat['id']}
                 LIMIT 1";
         $this->inDB->query($sql);
+
+        return $cat['id'];
     }
 
 /* ==================================================================================================== */
@@ -323,4 +336,49 @@ class cms_model_catalog{
         return $subcats;
 
     }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function setCategoryAccess($id, $showfor_list){
+
+        $this->clearCategoryAccess($id);
+
+        if (!sizeof($showfor_list)){ return true; }
+
+        foreach ($showfor_list as $key=>$value){
+            $sql = "INSERT INTO cms_uc_cats_access (cat_id, group_id)
+                    VALUES ($id, $value)";
+            $this->inDB->query($sql);
+        }
+
+        return true;
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function clearCategoryAccess($id){
+
+        $sql = "DELETE FROM cms_uc_cats_access WHERE cat_id = $id";
+
+        $this->inDB->query($sql);
+
+        return true;
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function checkCategoryAccess($cat_id, $cat_public, $group_id) {
+        return ($cat_public && $this->inDB->rows_count('cms_uc_cats_access', "cat_id={$cat_id} AND group_id={$group_id}", 1));
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function addModerationItem($item_id) {
+
+    }
+
 }

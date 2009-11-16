@@ -227,6 +227,7 @@ function tagLine($tagstr, $cat_id){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
     $html = '';
+    if (!$tagstr) { return ''; }
     $tagstr = str_replace(', ', ',', $tagstr);
     $tagstr = str_replace(' ,', ',', $tagstr);
     $tags = explode(',', $tagstr);
@@ -307,7 +308,14 @@ function catalog(){
 
     $menuid     = $inCore->menuId();
     $menutitle  = $inCore->menuTitle();
+    if (!$menutitle) { $menutitle = $_LANG['CATALOG']; }
     $cfg        = $inCore->loadComponentConfig('catalog');
+
+    if (!isset($cfg['email'])) { $cfg['email'] = 'shop@site.ru'; }
+    if (!isset($cfg['delivery'])) { $cfg['delivery'] = 'Сведения о доставке'; }
+    if (!isset($cfg['notice'])) { $cfg['notice'] = 0; }
+    if (!isset($cfg['premod'])) { $cfg['premod'] = 1; }
+    if (!isset($cfg['premod_msg'])) { $cfg['premod_msg'] = 1; }
 
     if ($inCore->inRequest('cat_id')){
         $id = $inCore->request('cat_id', 'int', 0);
@@ -555,10 +563,13 @@ function catalog(){
             }
 
             $sql .=  " ORDER BY ".$orderby." ".$orderto;
-
+            
             //get total items count
             $result = $inDB->query($sql) ;
             $itemscount = $inDB->num_rows($result);
+
+            //can user add items here?
+            $is_can_add = $model->checkCategoryAccess($cat['id'], $cat['is_public'], $inUser->group_id) || $inUser->is_admin;
 
             $smarty = $inCore->initSmarty('components', 'com_catalog_view.tpl');
             $smarty->assign('id', $id);
@@ -568,6 +579,7 @@ function catalog(){
             $smarty->assign('alphabet', $alphabet);
             $smarty->assign('shopcartlink', $shopcartlink);
             $smarty->assign('itemscount', $itemscount);
+            $smarty->assign('is_can_add', $is_can_add);
             $smarty->assign('orderform', orderForm($orderby, $orderto, ($cat['view_type']=='shop')));
 
             if ($itemscount>0){
@@ -597,7 +609,7 @@ function catalog(){
                     $item['price'] = number_format(shopDiscountPrice($item['id'], $item['category_id'], $item['price']), 2, '.', ' ');
                     $item['rating'] = buildRating($item['ratingdata']['rating']);
                     $item['is_new'] = isNew($item['id'], $cat['shownew'], $cat['newint']);
-                    $item['tagline'] 	= tagLine($item['tags'], $cat['id']);
+                    $item['tagline'] = tagLine($item['tags'], $cat['id']);
 
                     $item['fields'] = array();
 
@@ -661,6 +673,11 @@ function catalog(){
 
         if ($inDB->num_rows($itemres)>0){
             $item = $inDB->fetch_assoc($itemres);
+
+            if ((!$item['published'] || $item['on_premod']) && !$inUser->is_admin){
+                $inCore->halt();
+            }
+
             $fdata = unserialize($item['fieldsdata']);
 
             if ($item['meta_keys']) { $GLOBALS['page_keys'] = $item['meta_keys']; }
@@ -759,6 +776,35 @@ function catalog(){
                 echo '</a>';
                 echo '</div>';
             }
+            if ($item['on_moderate']){
+                $user = $inDB->get_fields('cms_users', "id={$item['user_id']}", 'login, nickname');
+                echo '<div id="shop_moder_form">';
+                    echo '<p class="notice">'.$_LANG['WAIT_MODERATION'].':</p>';
+                    echo '<table cellpadding="0" cellspacing="0" border="0"><tr>';
+                    echo '<td>
+                            <form action="/catalog/'.$menuid.'/moderation/accept'.$item['id'].'.html" method="POST">
+                                <input type="submit" name="accept" value="'.$_LANG['MODERATION_ACCEPT'].'"/>
+                            </form>
+                          </td>';
+                    echo '<td>
+                            <form action="/admin/index.php" target="_blank" method="GET">
+                                <input type="hidden" name="view" value="components" />
+                                <input type="hidden" name="do" value="config" />
+                                <input type="hidden" name="link" value="catalog" />
+                                <input type="hidden" name="opt" value="edit_item" />
+                                <input type="hidden" name="item_id" value="'.$item['id'].'" />
+                                <input type="submit" name="accept" value="'.$_LANG['EDIT'].'"/>
+                            </form>
+                          </td>';
+                    echo '<td>
+                            <form action="/catalog/'.$menuid.'/moderation/reject'.$item['id'].'.html" method="POST">
+                                 <input type="submit" name="accept" value="'.$_LANG['MODERATION_REJECT'].'"/>
+                            </form>
+                          </td>';
+                    echo '</tr></table>';
+                    echo '<p>'.$_LANG['ADDED_BY'].': '.cmsUser::getProfileLink($user['login'], $user['nickname']).'</p>';
+                echo '</div>';
+            }
             echo '</td>';
             echo '</tr></table>';
 
@@ -822,5 +868,201 @@ function catalog(){
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    if ($do == 'add_item'){
+
+        $cat_id     = $inCore->request('cat_id', 'int');
+        $cat        = $inDB->get_fields('cms_uc_cats', 'id='.$cat_id, '*');
+
+        $inPage->setTitle($_LANG['ADD_ITEM']);
+        $inPage->backButton(false);
+
+        $is_can_add = $model->checkCategoryAccess($cat['id'], $cat['is_public'], $inUser->group_id) || $inUser->is_admin;
+        if (!$is_can_add){ $inCore->halt(); }
+
+        $left_key   = $cat['NSLeft'];
+        $right_key  = $cat['NSRight'];
+
+        $path_list  = $model->getCategoryPath($left_key, $right_key);
+
+        if ($path_list){
+            foreach($path_list as $pcat){
+                $inPage->addPathway($pcat['title'], '/catalog/'.$menuid.'/'.$pcat['id']);
+            }
+        }
+
+        $inPage->addPathway($_LANG['ADD_ITEM']);
+
+        $fields     = array();
+
+        if ($cat){
+
+            $fstruct    = unserialize($cat['fieldsstruct']);
+
+            foreach($fstruct as $value){
+
+                if (strstr($value, '/~h~/')) { $ftype = 'html'; $value=str_replace('/~h~/', '', $value); }
+                elseif (strstr($value, '/~l~/')) { $ftype = 'link'; $value=str_replace('/~l~/', '', $value); } else { $ftype='text'; }
+
+                if (strstr($value, '/~m~/')) { $makelink = true; $value=str_replace('/~m~/', '', $value); }
+                else { $makelink = false; }
+
+                $next['ftype'] = $ftype;
+                $next['value'] = $value;
+                $next['makelink'] = $makelink;
+                $fields[] = $next;
+            }
+
+        }
+
+        $smarty = $inCore->initSmarty('components', 'com_catalog_add.tpl');
+            $smarty->assign('fields', $fields);
+            $smarty->assign('cat', $cat);
+            $smarty->assign('cfg', $cfg);
+            $smarty->assign('is_admin', $inUser->is_admin);
+            $smarty->assign('menuid', $menuid);
+            $smarty->assign('cat_id', $cat_id);
+        $smarty->display('com_catalog_add.tpl');
+
+        return;
+
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    if ($do == 'submit_item'){
+
+        $cat_id     = $inCore->request('cat_id', 'int');
+        $cat        = $inDB->get_fields('cms_uc_cats', 'id='.$cat_id, '*');
+
+        $is_can_add = $model->checkCategoryAccess($cat['id'], $cat['is_public'], $inUser->group_id) || $inUser->is_admin;
+        if (!$is_can_add){ $inCore->halt(); }
+
+        $inCore->includeGraphics();
+
+        $inCore->loadLib('tags');
+
+        $item = array();
+
+        //get variables
+        $item['cat_id']         = $cat_id;
+        $item['title']          = $inCore->request('title', 'str');
+
+        $item['published']      = ($cfg['premod']&&!$inUser->is_admin ? 0 : 1);
+        $item['on_moderate']    = ($cfg['premod']&&!$inUser->is_admin ? 1 : 0);
+
+        $item['fdata']          = $_POST['fdata'];
+        foreach($item['fdata'] as $key=>$value) { $item['fdata'][$key] = trim($value); }
+
+        $item['is_comments']    = 1;
+        $item['meta_desc']      = $item['title'];
+        $item['meta_keys']      = $item['title'];
+        $item['tags']           = $inCore->request('tags', 'str');
+
+        $item['pubdate']        = date('Y-m-d H:i');
+
+        $item['canmany']        = 1;
+
+        //get fields data
+        $item['fields'] = serialize($item['fdata']);
+        $item['fields'] = $inDB->escape_string($item['fields']);
+
+        $item['price']          = 0;
+        $item['canmany']        = 1;
+
+		if ($inCore->inRequest('price')) {
+            $canmany        = $inCore->request('canmany', 'int');
+			$price          = $inCore->request('price', 'str');
+			$price          = str_replace(',', '.', $price);
+			$price          = round($price, 2);
+            $item['price']  = $price;
+            $item['canmany']= $canmany;
+		}
+
+        $item['file']   = '';
+
+        if (isset($_FILES["imgfile"]["name"]) && @$_FILES["imgfile"]["name"]!=''){
+            //generate image file
+            $tmp_name       = $_FILES["imgfile"]["tmp_name"];
+            $file           = $_FILES["imgfile"]["name"];
+            $path_parts     = pathinfo($file);
+            $ext            = $path_parts['extension'];
+            $file           = md5($file.time()).'.'.$ext;
+            $item['file']   = $file;
+            //upload image and insert record in db
+            if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/catalog/$file")){
+                @img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", $_SERVER['DOCUMENT_ROOT']."/images/catalog/small/$file.jpg", 100, 100);
+                @img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", $_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$file.jpg", 250, 250);
+                @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", 0644);
+                @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/small/$file.jpg", 0644);
+                @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$file.jpg", 0644);
+            }
+        }
+
+        $item_id = $model->addItem($item);
+
+        if ($inUser->id != 1 && $cfg['premod'] && $cfg['premod_msg']){
+
+            $link = "[url=/catalog/0/item{$item_id}.html]{$item['title']}[/url]";
+            $user = "[url=".cmsUser::getProfileURL($inUser->login)."]{$inUser->nickname}[/url]";
+
+            $message = $_LANG['MSG_ITEM_SUBMIT'];
+            $message = str_replace('%user%', $user, $message);
+            $message = str_replace('%link%', $link, $message);
+
+            cmsUser::sendMessage(USER_UPDATER, 1, $message);
+        }
+
+        $inCore->redirect('/catalog/'.$menuid.'/'.$cat_id);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    if ($do == 'accept_item'){
+
+        $item_id = $inCore->request('item_id', 'int');
+
+        if (!$item_id || !$inUser->is_admin){ $inCore->halt(); }
+
+        $inDB->query("UPDATE cms_uc_items SET published=1, on_moderate=0 WHERE id={$item_id}");
+
+        $item = $inDB->get_fields('cms_uc_items', "id={$item_id}", 'title, user_id');
+        
+        $item_link  = '[url=/catalog/0/item'.$item_id.'.html]'.$item['title'].'[/url]';
+
+        $message = str_replace('%link%', $item_link, $_LANG['MSG_ITEM_ACCEPTED']);
+
+        cmsUser::sendMessage(USER_UPDATER, $item['user_id'], $message);
+
+        $inCore->redirectBack();
+
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    if ($do == 'delete_item'){
+
+        $item_id = $inCore->request('item_id', 'int');
+
+        if (!$item_id){ $inCore->halt(); }
+
+        $item = $inDB->get_fields('cms_uc_items', "id={$item_id}", '*');
+
+        if (!($item['user_id']==$inUser->id || $inUser->is_admin)){ $inCore->halt(); }
+
+        $model->deleteItem($item_id);
+
+        $message = str_replace('%item%', $item['title'], $_LANG['MSG_ITEM_REJECTED']);
+        cmsUser::sendMessage(USER_UPDATER, $item['user_id'], $message);
+
+        $inCore->redirect('/catalog/'.$menuid.'/'.$item['category_id']);
+
+    }
+
 } //function
 ?>

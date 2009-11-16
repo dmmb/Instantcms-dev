@@ -36,11 +36,13 @@ define("VALID_CMS", 1);
 	$cfg    = $inCore->loadComponentConfig('rssfeed');
 
 
-	if (isset($_REQUEST['do'])){ $do = $_REQUEST['do'];	} else { $do = 'rss'; 		}
-	if (isset($_REQUEST['target'])){ $target = $_REQUEST['target'];	} else { die(); }
-	if (isset($_REQUEST['item_id'])) { $item_id = $_REQUEST['item_id']; } else { die(); }
+    $do      = $inCore->request('do', 'str', 'rss');
+    $target  = $inCore->request('target', 'str', 'rss');
+    $item_id = $inCore->request('item_id', 'int', 0);
 
-	if (!isset($cfg['addsite'])) { $cfg['addsite'] = 1; }
+    if (strstr($target, '..') || strstr($target, '/')){ $inCore->halt(); }
+
+    if (!isset($cfg['addsite'])) { $cfg['addsite'] = 1; }
 	if (!isset($cfg['icon_on'])) { $cfg['icon_on'] = 0; }
 	if (!isset($cfg['maxitems'])) { $cfg['maxitems'] = 50; }
 

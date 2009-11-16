@@ -16,6 +16,9 @@
 <div id="shop_toollink_div">
 	<a id="shop_searchlink" href="/catalog/{$menuid}/{$cat.id}/search.html">{$LANG.SEARCH_BY_CAT}</a>
 	{if $cat.view_type=='shop'} {$shopcartlink}	{/if}
+    {if $is_can_add}
+    <a id="shop_addlink" href="/catalog/{$menuid}/{$cat.id}/add.html">{$LANG.ADD_ITEM}</a>
+    {/if}
 </div>
 
 {if $cat.showsort} {$orderform} {/if}
@@ -33,7 +36,7 @@
 					<table border="0" cellspacing="2" cellpadding="0" id="catalog_item_table"><tr>
 						<td valign="top" align="center" id="catalog_list_itempic" width="110">							
 								{if $item.imageurl}
-									<a class="lightbox-enabled" rel="lightbox" href="/images/catalog/{$item.imageurl}">
+									<a class="lightbox-enabled" title="{$item.title}" rel="lightbox" href="/images/catalog/{$item.imageurl}">
 										<img alt="{$item.title}" src="/images/catalog/small/{$item.imageurl}.jpg" border="0" />
 									</a>
 								{else}
@@ -60,14 +63,16 @@
 
 							<div class="uc_itemfieldlist">
 								{foreach key=field item=value from=$item.fields}
-									{if !strstr($field, '/~l~/')}
-										<div class="uc_itemfield"><strong>{$field}</strong>: {$value}
-									{else}
-										{$value}
-									{/if}
+                                    {if $value}
+                                        {if !strstr($field, '/~l~/')}
+                                            <div class="uc_itemfield"><strong>{$field}</strong>: {$value}
+                                        {else}
+                                            {$value}
+                                        {/if}
+                                    {/if}
 								{/foreach}
 							</div>
-							{if $cat.showtags}
+                            {if $item.tagline && $cat.showtags}
 								<div class="uc_tagline"><strong>{$LANG.TAGS}:</strong> {$item.tagline}</div>
 							{/if}
 
@@ -112,5 +117,3 @@
 		
 		{$pagebar}
 {/if}
-
-

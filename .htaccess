@@ -237,6 +237,11 @@ RewriteRule ^catalog/([0-9]*)/([0-9]*)-([0-9]*)/find/(.*)$ /index.php?view=catal
 ### view category ###
 RewriteRule ^catalog/([0-9]*)/([0-9]*)$ /index.php?view=catalog&do=cat&cat_id=$2&menuid=$1
 RewriteRule ^catalog/([0-9]*)/([0-9]*)-([0-9]*)$ /index.php?view=catalog&do=cat&cat_id=$2&menuid=$1&page=$3
+### add item ###
+RewriteRule ^catalog/([0-9]*)/([0-9]*)/add.html$ /index.php?view=catalog&do=add_item&cat_id=$2&menuid=$1
+RewriteRule ^catalog/([0-9]*)/([0-9]*)/submit.html$ /index.php?view=catalog&do=submit_item&cat_id=$2&menuid=$1
+RewriteRule ^catalog/([0-9]*)/moderation/accept([0-9]*).html$ /index.php?view=catalog&do=accept_item&item_id=$2&menuid=$1
+RewriteRule ^catalog/([0-9]*)/moderation/reject([0-9]*).html$ /index.php?view=catalog&do=delete_item&item_id=$2&menuid=$1
 ### other ###
 RewriteRule ^catalog/([0-9]*)/([0-9]*)/search.html$ /index.php?view=catalog&do=search&cat_id=$2&menuid=$1
 RewriteRule ^catalog/([0-9]*)$ /index.php?view=catalog&menuid=$1
