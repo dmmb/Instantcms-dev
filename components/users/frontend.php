@@ -299,7 +299,7 @@ if ($do=='search'){
 		$stext[] = $_LANG['HOBBY']." &mdash; ".$val;
 	}
 
-	$querysql = "SELECT u.*, p.*, u.id as id, 
+	$querysql = "SELECT u.*, p.*, u.id as id, u.status as microstatus, 
 						DATE_FORMAT(u.regdate, '%d-%m-%Y') as fregdate, 
 						IF(DATE_FORMAT(u.logdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(u.logdate, '{$_LANG['TODAY']} {$_LANG['IN']} %H:%i'),
 					    IF(u.logdate >= DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_FORMAT(u.logdate, '{$_LANG['YESTERDAY']} {$_LANG['IN']} %H:%i'),DATE_FORMAT(u.logdate, '%d-%m-%Y {$_LANG['IN']} %H:%i') ))  as flogdate
@@ -351,7 +351,7 @@ if ($do=='view'){
 			$sql = "SELECT u.*, p.*, u.id as id, u.is_deleted as is_deleted, DATE_FORMAT(u.regdate, '%d-%m-%Y') as fregdate,  p.karma as karma, 
 						   IF(DATE_FORMAT(u.logdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(u.logdate, '{$_LANG['TODAY']} {$_LANG['IN']} %H:%i'),
 						   IF(DATEDIFF(NOW(), u.logdate)=1, DATE_FORMAT(u.logdate, '{$_LANG['YESTERDAY']} {$_LANG['IN']} %H:%i'),DATE_FORMAT(u.logdate, '%d-%m-%Y %H:%i') ))  as flogdate,
-                           p.gender as gender
+                           p.gender as gender, u.status as microstatus
 					FROM cms_user_profiles p, cms_users u
 					WHERE u.is_locked = 0 AND u.is_deleted = 0 AND p.user_id = u.id
 					ORDER BY ".$orderby." ".$orderto."
@@ -360,7 +360,7 @@ if ($do=='view'){
 			$sql = "SELECT u.*, p.*, u.id as id, u.is_deleted as is_deleted, DATE_FORMAT(u.regdate, '%d-%m-%Y') as fregdate,  p.karma as karma,
 						   IF(DATE_FORMAT(u.logdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(u.logdate, '{$_LANG['TODAY']} {$_LANG['IN']} %H:%i'),
 						   IF(DATEDIFF(NOW(), u.logdate)=1, DATE_FORMAT(u.logdate, '{$_LANG['YESTERDAY']} {$_LANG['IN']} %H:%i'),DATE_FORMAT(u.logdate, '%d-%m-%Y %H:%i') ))  as flogdate,
-                           p.gender as gender
+                           p.gender as gender, u.status as microstatus
 					FROM cms_users u, cms_user_profiles p, cms_online o
 					WHERE u.is_locked = 0 AND u.is_deleted = 0 AND p.user_id = u.id AND p.user_id = o.user_id
 					ORDER BY ".$orderby." ".$orderto."
@@ -771,6 +771,7 @@ if ($do=='profile'){
     if ($usr['friends']){
         $usr['friends_photos']	= cmsUser::getUserFriendsPhotos($usr['id']);
         $usr['friends_posts']	= cmsUser::getUserFriendsPosts($usr['id']);
+        $usr['friends_comments']	= cmsUser::getUserFriendsComments($usr['id']);
     }
 
     $usr['awards_html']			= usrAwards($usr['id']);
@@ -789,6 +790,8 @@ if ($do=='profile'){
     $usr['karma']				= strip_tags( cmsUser::getKarmaFormat($usr['id'], false), '<table><tr><td><img><a>' );
     $usr['karma_int']			= strip_tags($usr['karma']);
     $usr['karma_link']			= '<a href="/users/'.$menuid.'/'.$id.'/karma.html" title="'.$_LANG['KARMA_HISTORY'].'" id="karmalink">?</a>';
+
+    $usr['cityurl']             = urlencode($usr['city']);
 
     $usr['photos_count']		= (int)usrPhotoCount($id);
     $usr['board_count']			= (int)$inDB->rows_count('cms_board_items', "user_id=$id AND published=1");
@@ -1111,7 +1114,8 @@ if ($do=='addphoto'){
 							if(!isset($cfg['watermark'])) { $cfg['watermark'] = 0; }
 							@img_resize($uploadphoto, $uploadthumb['small'], 96, 96, true);
 							@img_resize($uploadphoto, $uploadthumb['medium'], 600, 600, false, $cfg['watermark']);
-							if ($cfg['watermark']) { @img_add_watermark($uploadphoto);	}					
+							if ($cfg['watermark']) { @img_add_watermark($uploadphoto);	}
+                            @unlink($uploadphoto);
 							//PREPARE FOR STEP 2
 							$inPage->setTitle($_LANG['ADD_PHOTO'].' - '.$_LANG['STEP'].' 2');
 													
@@ -1286,7 +1290,8 @@ if ($do=='editphoto'){
 						if ($_FILES['picture']['size'] <= $max_mb*1024*1024){
 							if (@move_uploaded_file($_FILES['picture']['tmp_name'], $uploadphoto)) {
 								@img_resize($uploadphoto, $uploadthumb, 96, 96, true);
-								@img_resize($uploadphoto, $uploadthumb2, 600, 600, false);		
+								@img_resize($uploadphoto, $uploadthumb2, 600, 600, false);
+                                @unlink($uploadphoto);
 								$sql = "UPDATE cms_user_photos
 										SET imageurl = '$filename'
 										WHERE id = $photoid AND user_id = $id";	
@@ -1614,10 +1619,10 @@ if ($do=='viewphoto'){
 					echo '<div class="con_heading">'.$photo['title'].'</div>';				
 					if ($photo['description']){	echo '<div class="con_description">'.$photo['description'].'</div>'; }
 			
-					echo '<div class="con_description">'.cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, '', $usr['login']).' &mdash; <strong>'.$_LANG['HITS'].':</strong> '.$photo['hits'].' &mdash; <strong>'.$_LANG['SIZE'].':</strong> '.round(filesize($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/'.$photo['imageurl'])/1024, 2).' '.$_LANG['KBITE'].'</div>';
+					echo '<div class="con_description">'.cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, '', $usr['login']).' &mdash; <strong>'.$_LANG['HITS'].':</strong> '.$photo['hits'].' &mdash; <strong>'.$_LANG['SIZE'].':</strong> '.round(filesize($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/medium/'.$photo['imageurl'])/1024, 2).' '.$_LANG['KBITE'].'</div>';
 			
 					echo '<div class="usr_photo_view">
-							<a href="/images/users/photos/'.$photo['imageurl'].'" target="_blank"><img border="0" src="/images/users/photos/medium/'.$photo['imageurl'].'" alt="'.$photo['title'].'" /></a>';
+							<a href="/images/users/photos/medium/'.$photo['imageurl'].'" target="_blank"><img border="0" src="/images/users/photos/medium/'.$photo['imageurl'].'" alt="'.$photo['title'].'" /></a>';
 
 					$bbcode = '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/users/photos/medium/'.$photo['imageurl'].'[/IMG]';
 					echo '<div style="margin-top:15px"><label for="bbcode">'.$_LANG['CODE_FOR_FORUM'].': </label><input type="text" id="bbcode" name="bbcode" size="50" value="'.$bbcode.'"/></div>';
@@ -1715,7 +1720,7 @@ if ($do=='addfriend'){
 				
 				cmsUser::sendMessage(USER_UPDATER, $to_id, '[b]'.$_LANG['RECEIVED_F_O'].'[/b]. '.$_LANG['YOU_CAN_SEE'].' [url='.cmsUser::getProfileURL($usr['login']).']'.$_LANG['INPROFILE'].'[/url].');
 				
-				$inCore->redirect(cmsUser::getProfileURL($inUser->login));
+				$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 		}//!goadd
 		} else { $inCore->redirectBack(); }
 	} else { usrAccessDenied(); } //usrCheckAuth
@@ -1745,7 +1750,7 @@ if ($do=='sendmessage'){
 		$result     = $inDB->query($sql) ;
         $usr        = $inDB->fetch_assoc($result);
 
-		if ($usr){
+		if ($usr || isset($_POST['massmail'])){
 			if (usrCheckAuth()){
 
 				$inPage->setTitle($_LANG['SEND_MESS']);

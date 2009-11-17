@@ -35,6 +35,7 @@
 		$cfg['shownum']     = $_REQUEST['shownum'];
 		$cfg['showrss']     = $_REQUEST['showrss'];
 		$cfg['menuid']      = $_REQUEST['menuid'];
+		$cfg['namemode']    = $_REQUEST['namemode'];
 
         $cfg['minrate']     = $_REQUEST['minrate'];
         if ($cfg['minrate'] < 0) { $cfg['minrate'] = 0; }
@@ -47,6 +48,7 @@
 	
     if (!isset($cfg['showrss'])) { $cfg['showrss'] = 1;}
     if (!isset($cfg['minrate'])) { $cfg['minrate'] = 0;}
+    if (!isset($cfg['namemode'])) { $cfg['namemode'] = 'blog';}
 
 	if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
 
@@ -56,7 +58,7 @@
     <tr>
       <td width=""><strong>Переходить в меню: </strong><br/>
           <span class="hinttext">Открытие объектов из модуля будет сопровождаться<br/>сменой пункта главного меню</span></td>
-      <td width="205" valign="top"><select name="menuid" id="menuid">
+      <td width="250" valign="top"><select name="menuid" id="menuid" style="width:250px">
           <option value="0">-- не переходить --</option>
           <?php
                         if (isset($cfg['menuid'])){
@@ -66,6 +68,18 @@
                         }
                     ?>
       </select></td>
+    </tr>
+    <tr>
+      <td width="">
+            <strong>Формат имени личных блогов: </strong><br/>
+            <span class="hinttext">Показывать название блога или имя его хозяина</span>
+      </td>
+      <td width="205" valign="top">
+        <select name="namemode" id="namemode" style="width:250px">
+          <option value="blog" <?php if ($cfg['namemode']=='blog') { echo 'selected="selected"'; } ?>>Название блога</option>
+          <option value="user" <?php if ($cfg['namemode']=='user') { echo 'selected="selected"'; } ?>>Имя пользователя</option>
+        </select>
+      </td>
     </tr>
     <tr>
       <td><strong>Количество новых записей:</strong></td>

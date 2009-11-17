@@ -257,7 +257,9 @@ function applet_content(){
 
             $olddate                   = $inCore->request('olddate', 'str', '');
 			$pubdate                   = $inCore->request('pubdate', 'str', '');
-			
+
+            $article['user_id']         = $inCore->request('user_id', 'int', $inUser->id);
+
             $date = explode('.', $pubdate);
             $article['pubdate'] = $date[2] . '-' . $date[1] . '-' . $date[0] . ' ' .date('H:i');
 				
@@ -283,9 +285,9 @@ function applet_content(){
                     $inCore->includeGraphics();                  
                     @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
                     @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
-                    @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", 0644);
-                    @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", 0644);
-                    @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", 0644);
+                    @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/$file");
+                    @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", 0755);
+                    @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", 0755);
                 }
             }
 
@@ -329,7 +331,7 @@ function applet_content(){
         $date                       = explode('.', $article['pubdate']);
 		$article['pubdate']         = $date[2] . '-' . $date[1] . '-' . $date[0] . ' ' .date('H:i');
 		
-		$article['user_id']         = $inUser->id;
+		$article['user_id']         = $inCore->request('user_id', 'int', $inUser->id);
 
         $article['id']              = $model->addArticle($article);
 		
@@ -359,9 +361,9 @@ function applet_content(){
                 $inCore->includeGraphics();
                 @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
                 @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
-                @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", 0644);
-                @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", 0644);
-                @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", 0644);
+                @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/$file");
+                @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", 0755);
+                @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", 0755);
             }
         }
 
@@ -525,7 +527,22 @@ function applet_content(){
                         </select>
                     </div>
 
-                    <div style="margin-top:25px"><strong>Фотография</strong></div>
+                    <div style="margin-top:25px">
+                        <strong>Автор статьи</strong>
+                    </div>
+                    <div>
+                        <select name="user_id" id="user_id" style="width:99%">
+                          <?php
+                              if (isset($mod['user_id'])) {
+                                    echo $inCore->getListItems('cms_users', $mod['user_id'], 'nickname', 'ASC', 'is_deleted=0 AND is_locked=0');
+                              } else {
+                                    echo $inCore->getListItems('cms_users', $inUser->id, 'nickname', 'ASC', 'is_deleted=0 AND is_locked=0');
+                              }
+                          ?>
+                        </select>
+                    </div>
+
+                    <div style="margin-top:12px"><strong>Фотография</strong></div>
                     <div style="margin-bottom:10px">
                         <?php
                             if ($do=='edit'){

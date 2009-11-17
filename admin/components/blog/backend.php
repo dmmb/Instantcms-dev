@@ -33,6 +33,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if($opt=='saveconfig'){	
 		$cfg = array();
 		$cfg['perpage'] = $inCore->request('perpage', 'int');
+		$cfg['update_date'] = $inCore->request('update_date', 'int');
 		
 		$cfg['min_karma_private'] 	= (int)$_REQUEST['min_karma_private'];
 		$cfg['min_karma_public'] 	= (int)$_REQUEST['min_karma_public'];	
@@ -49,11 +50,13 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if (!isset($cfg['min_karma_private'])) { $cfg['min_karma_private'] = 0; }
 	if (!isset($cfg['min_karma_public'])) {	 $cfg['min_karma_public'] = 0; }
 	if (!isset($cfg['min_karma'])) { 		 $cfg['min_karma'] = 0; 		}
+	if (!isset($cfg['update_date'])) { 		 $cfg['update_date'] = 1; 		}
 
 	if (!isset($cfg['rss_all'])) { $cfg['rss_all'] = 1; }
 	if (!isset($cfg['rss_one'])) { $cfg['rss_one'] = 1; }
 
 	if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
+    
 ?>
 <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
   <table width="609" border="0" cellpadding="10" cellspacing="0" class="proptable">
@@ -64,6 +67,21 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
       <td valign="top"><strong>Постов на странице в блоге: </strong></td>
       <td width="100" valign="top"><input name="perpage" type="text" id="perpage" value="<?php echo @$cfg['perpage'];?>" size="5" />
       шт.</td>
+    </tr>
+    <tr>
+      <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Настройки редактирования</h4></td>
+    </tr>
+    <tr>
+      <td valign="top">
+            <strong>Обновлять дату поста после редактирования:</strong><br />
+            <span class="hinttext">
+                Если включено, после редактирования поста его дата будет устанавливаться в текущую
+            </span>
+      </td>
+      <td valign="top">
+        <input name="update_date" type="radio" value="1" <?php if (@$cfg['update_date']) { echo 'checked="checked"'; } ?> /> Да
+        <input name="update_date" type="radio" value="0" <?php if (@!$cfg['update_date']) { echo 'checked="checked"'; } ?>/> Нет
+      </td>
     </tr>
     <tr>
       <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Ограничения по карме</h4></td>

@@ -38,7 +38,7 @@
 
 		$cfg['cat_id'] = $inCore->request('cat_id', 'int', 0);
 		$cfg['source'] = $inCore->request('source', 'str', 'arhive');
-		$cfg['menuid'] = $inCore->request('menu_id', 'int', 0);
+		$cfg['menuid'] = $inCore->request('menuid', 'int', 0);
 			
         $inCore->saveModuleConfig($_REQUEST['id'], $cfg);
 

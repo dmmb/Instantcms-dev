@@ -43,6 +43,7 @@ function blog(){
 	if (!isset($cfg['rss_all'])) { $cfg['rss_all'] = 1; }
 	if (!isset($cfg['rss_one'])) { $cfg['rss_one'] = 1; }
     if (!isset($cfg['img_on'])) { $cfg['img_on'] = 1; }
+    if (!isset($cfg['update_date'])) { $cfg['update_date'] = 1; }
 	
 	//Получаем параметры
 	$menuid 	= $inCore->menuId();
@@ -142,10 +143,13 @@ if ($do=='create'){
             $inPage->setTitle($_LANG['BLOG_CREATED']);
             //Добавляем блог в базу
             $blog_id = $model->addBlog(array('user_id'=>$user_id, 'title'=>$title, 'allow_who'=>$allow_who, 'ownertype'=>$ownertype));
+            $blog_link = $inDB->get_field('cms_blogs', "id={$blog_id}", 'seolink');
             //Выводим сообщение о том что блог создан
             $smarty  = $inCore->initSmarty('components', 'com_blog_create_ok.tpl');
             $smarty->assign('menuid', $menuid);
             $smarty->assign('blogid', $blog_id);
+            $smarty->assign('url', $model->getBlogURL($menuid, $blog_link));
+            $smarty->assign('profile_url', cmsUser::getProfileURL($inUser->login)); 
             $smarty->assign('userid', $user_id);
             $smarty->display('com_blog_create_ok.tpl');
         }
@@ -753,7 +757,8 @@ if ($do=='newpost' || $do=='editpost'){
                 cmsUser::checkAwards($user_id);
 
                 if ($published) {
-                    $inCore->redirect('/blogs/'.$menuid.'/'.$id.'/post'.$post_id.'.html');
+                    $post_seolink = $inDB->get_field('cms_blog_posts', "id={$post_id}", 'seolink');
+                    $inCore->redirect($model->getPostURL($menuid, $blog['seolink'], $post_seolink));
                 }
 
                 if (!$published) {
@@ -779,7 +784,12 @@ if ($do=='newpost' || $do=='editpost'){
                                                     'tags'=>$tags
                                                  ));
 
+                if ($cfg['update_date']){
+                    $inDB->query("UPDATE cms_blog_posts SET pubdate = NOW() WHERE id={$post_id}");
+                }
+
                 $inCore->redirect('/blogs/'.$menuid.'/'.$id.'/blog.html');
+                
             }
         } 
     }
@@ -875,6 +885,9 @@ if($do=='post'){
 	$post_id 	= $inCore->request('post_id', 'int', 0);
     $user_id    = $inUser->id;
 
+    if ($post_id) { $post = $model->getPost($post_id); }
+    if ($seolink) { $post = $model->getPostByLink($seolink); }
+
 	if($owner=='user'){
         $can_view = ($blog['allow_who']=='all' || ($blog['allow_who']=='friends' && usrIsFriends($blog['user_id'], $user_id)) || $post['user_id']==$user_id || $inUser->is_admin);
 		$inPage->addPathway($blog['title'], $model->getBlogURL($menuid, $blog['seolink']));
@@ -888,9 +901,6 @@ if($do=='post'){
 		$blog['author'] 	= clubAdminLink($blog['user_id']);
 	}
 	
-    if ($post_id) { $post = $model->getPost($post_id); }
-    if ($seolink) { $post = $model->getPostByLink($seolink); }
-
     if (!$post){
 		$inPage->printHeading($_LANG['POST_NOT_FOUND']);
         echo '<p>'.$_LANG['POST_NOT_FOUND_TEXT'].'</p>'; return;
@@ -1042,8 +1052,9 @@ if ($do == 'delblog'){
     if (!$blog){ $inCore->halt(); }
 
     if ( $inCore->inRequest('confirm') ){
-        if ($user_id == $data['user_id'] || $inCore->userIsAdmin($user_id)){
+        if ($user_id == $blog['user_id'] || $inUser->is_admin){
             $model->deleteBlog($id);
+            $inCore->redirect('/blogs/'.$menuid);
         }        
     }
 
@@ -1061,9 +1072,7 @@ if ($do == 'delblog'){
             $smarty->display('action_confirm.tpl');
             return;
         }
-    }
-
-    $inCore->redirect('/blogs/'.$menuid);
+    }    
 
 }
 

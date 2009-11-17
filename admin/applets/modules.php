@@ -133,8 +133,8 @@ function applet_modules(){
                             <a href="javascript:" onclick="$('input#_filterText3').val('каталог|корзина').trigger('keyup');">каталог</a> |
                             <a href="javascript:" onclick="$('input#_filterText3').val('фото|изображен').trigger('keyup');">фотографии</a> |
                             <a href="javascript:" onclick="$('input#_filterText3').val('форум').trigger('keyup');">форум</a> |
-                            <a href="javascript:" onclick="$('input#_filterText3').val('форум').trigger('keyup');">файлы</a> | 
-                            <a href="javascript:" onclick="$('input#_filterText3').val('форум').trigger('keyup');">вопросы</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('файл').trigger('keyup');">файлы</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('вопросы').trigger('keyup');">вопросы</a> |
                             <a href="javascript:" onclick="$('input._filterText').val('').trigger('keyup');" style="color:gray"> показать все</a>
                         </td>
                     </tr>

@@ -552,6 +552,9 @@ if ($do=='edititem'){
 
         $captcha    = $inCore->request('code', 'str', '');
 
+        $new_cat_id     = $inCore->request('category_id', 'int', 0);
+        if ($new_cat_id){ $item['category_id'] = $new_cat_id; }
+
         $city_ed    = $inCore->request('city_ed', 'str', '');
         $city       = $inCore->request('city', 'str', '');
         $city       = $city ? $city : $city_ed;
@@ -606,7 +609,7 @@ if ($do=='edititem'){
         }
 
         $model->updateRecord($id, array(
-                                    'category_id'=>$item['cat_id'],
+                                    'category_id'=>$item['category_id'],
                                     'obtype'=>$obtype,
                                     'title'=>$title,
                                     'content'=>$content,

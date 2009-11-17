@@ -110,7 +110,7 @@ function applet_main(){
 	</td>
     <td width="33%" valign="top" style="">
 	<div class="small_box">
-		<div class="small_title"><strong>Обновления на сайте</strong></div>
+		<div class="small_title"><strong>Последние комментарии</strong></div>
 	    <div style="padding:6px;font-size:10px">
 			<?php echo cpUpdates();?>
 		</div>			
@@ -195,16 +195,16 @@ function applet_main(){
 		  <div class="small_title">Сообщество InstantCMS</div>
             <ul>
               <li><a href="http://www.instantcms.ru/"><strong>Официальный сайт InstantCMS</strong></a></li>
-              <li><a href="http://www.instantcms.ru/view-content/id-11/menuid-40">Документация по работе с системой</a></li>
+              <li><a href="http://www.instantcms.ru/wiki">Документация по работе с системой</a></li>
               <li><a href="http://www.instantcms.ru/view-forum/menuid-43">Форум InstantCMS </a></li>
             </ul>
 		</div>
 		<div class="small_box">
             <div class="small_title">Участвуйте в разработке</div>
             <ul>
+                <li><a href="http://trac.instantcms.ru/">Сообщайте об ошибках</a></li>
+                <li><a href="http://trac.instantcms.ru/wiki/Team/Join">Вступите в команду</a></li>
                 <li><a href="http://instantcms.ru/content/0/read80.html">Поддержите проект</a></li>
-                <li><a href="http://instantcms.ru/content/0/read81.html">Партнерство</a></li>
-                <li><a href="mailto:info@instantcms.ru">Напишите нам</a></li>
             </ul>
         </div>
 		  </td>

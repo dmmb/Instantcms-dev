@@ -15,6 +15,8 @@ function search_blog($query, $look, $mode='text'){ //query sends here already pr
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
 
+        global $_LANG;
+
         //BUILD SQL QUERY
 		$sql = "SELECT DISTINCT con.*, cat.title cat_title, cat.id cat_id, cat.owner owner, cat.user_id user_id
 				FROM cms_blog_posts con, cms_blogs cat
@@ -28,8 +30,10 @@ function search_blog($query, $look, $mode='text'){ //query sends here already pr
 			while($item = $inDB->fetch_assoc($result)){
 				if ($item['owner'] == 'club') { $item['cat_title'] = dbGetField('cms_clubs','id='.$item['user_id'],'title'); }
 				//build params
+                $inCore->loadLanguage('components/blog');
+
 				$link = "/blogs/0/".$item['cat_id']."/post".$item['id'].".html";
-				$place = 'Блог &laquo;'.$item['cat_title'].'&raquo;';
+				$place = $_LANG['BLOG'].' &laquo;'.$item['cat_title'].'&raquo;';
 				$placelink = "/blogs/0/".$item['cat_id']."/blog.html";				
 				//include item to search results
 				if (!dbRowsCount('cms_search', "session_id='".session_id()."' AND link='$link'")){				

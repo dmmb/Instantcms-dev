@@ -416,7 +416,8 @@ function usrStatus($user_id, $logdate='', $online=false, $gender='m'){
 	} else {
 				if ($logdate){
                     if (!strstr(strtolower($logdate), $_LANG['YESTERDAY']) && !strstr(strtolower($logdate), $_LANG['TODAY'])){
-                        $logdate = cmsCore::dateDiffNow($logdate) . ' '.$_LANG['BACK'];
+                        $logdate = cmsCore::dateDiffNow($logdate);                        
+                        if (!strstr($logdate, 'не известно')) { $logdate .=  ' '.$_LANG['BACK']; }
                     }
 					return '<span class="offline">'.$logdate.'</span>';
 				} else {

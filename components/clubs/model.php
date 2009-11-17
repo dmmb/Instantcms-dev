@@ -31,12 +31,6 @@ class cms_model_clubs{
                  FROM cms_clubs c
                  LEFT JOIN cms_user_clubs uc ON uc.club_id = c.id
                  WHERE c.published = 1
-                       AND (
-                                c.clubtype='public'
-                                OR (
-                                        c.clubtype='private' AND ((uc.club_id = c.id AND uc.user_id = {$inUser->id}) OR c.admin_id = {$inUser->id} OR {$inUser->is_admin} = 1)
-                                   )
-                           )
                  GROUP BY c.id
                  ORDER BY members DESC
                  LIMIT ".(($page-1)*$perpage).", $perpage";

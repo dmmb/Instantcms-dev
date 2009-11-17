@@ -45,23 +45,17 @@ class cmsCore {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static function loadLanguage($file) {    
-    global $_CFG;
-    global $_LANG;
-    $langfile = PATH.'/languages/'.$_CFG['lang'].'/'.$file.'.php';
-    if (file_exists($langfile)){
-        // Загружаем языковый файл выбранного языка
-            include_once($langfile);
-            return true;
-        } else {
+        global $_CFG;
+        global $_LANG;
+
+        $langfile = PATH.'/languages/'.$_CFG['lang'].'/'.$file.'.php';
+
+        if (!file_exists($langfile)){
             $langfile = PATH.'/languages/ru/'.$file.'.php';
-            if (file_exists($langfile)){
-        // Загружаем языковый файл стандартного языка - русский (ru)
-            include_once($langfile);
-            return true;
-            } else {
-                return false;
-            }
         }
+
+        include_once($langfile);
+        return true;
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

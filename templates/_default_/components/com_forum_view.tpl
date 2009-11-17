@@ -15,20 +15,26 @@
     <table class="forums_table" width="100%" cellspacing="0" cellpadding="8" border="0" bordercolor="#999999" >
         {php}$row=1;{/php}
         {foreach key=id item=subf from=$subforums}
-            {if $row % 2}{php}$class='row1';{/php}{else}{php}$class = 'row2';{/php}{/if}
+            {php}
+                if ($row % 2) {
+                    $class='row1';
+                } else {
+                    $class='row2';
+                }
+            {/php}
             <tr>
-                <td width="40" class="{php}echo $class{/php}" align="center" valign="top">
+                <td width="40" class="{php}echo $class{/php}" align="center" valign="middle">
                     <img src="/components/forum/images/forum.gif" border="0" />
                 </td>
-                <td width="" class="{php}echo $class{/php}" align="left" valign="top">
+                <td width="" class="{php}echo $class{/php}" align="left" valign="middle">
                     <div class="forum_link"><a href="/forum/{$menuid}/{$subf.id}">{$subf.title}</a></div>
                     <div class="forum_desc">{$subf.description}</div>
                     {if $subf.subforums}
                         <div class="forum_subs"><span class="forum_subs_title">{$LANG.SUBFORUMS}:</span> {$subf.subforums}</div>
                     {/if}
                 </td>
-                <td width="120" class="'.$class.'" style="font-size:10px" valign="top">{$subf.messages}</td>
-                <td width="250" style="font-size:10px" class="'.$class.'" valign="top">{$subf.lastmessage}</td>
+                <td width="120" class="{php}echo $class{/php}" style="font-size:10px" valign="top">{$subf.messages}</td>
+                <td width="250" style="font-size:10px" class="{php}echo $class{/php}" valign="top">{$subf.lastmessage}</td>
             </tr>
             {php}$row++;{/php}
         {/foreach}

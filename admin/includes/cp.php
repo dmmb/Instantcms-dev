@@ -68,8 +68,9 @@ function cpUpdates(){
 			LIMIT 5";
 	$result = dbQuery($sql);
 	if(mysql_num_rows($result)){
-		$html .= '<div class="upd_title">Последние комментарии:</div>';
 		while($item = mysql_fetch_assoc($result)){
+            $text = $inCore->strClear($item['content']);
+            if (strlen($text)>100) { $text = substr($text, 0, 100) . ' (...)'; }
 			$html .= '<div class="upd_listitem">
 						<table width="100%" cellpadding="2" cellspacing="0"><tr>
 							<td valign="top" width="16">
@@ -78,7 +79,7 @@ function cpUpdates(){
 							<td valign="top">
 								<div>'.$inCore->getCommentLink($item['target'], $item['target_id']).':</div>
 								<div style="color:silver">'.$item['fpubdate'].'</div>
-								<div>'.$inCore->strClear($item['content']).'</div>
+								<div>'.$text.'</div>
 							</td>
 						</tr></table>
 					  </div>';
@@ -793,11 +794,15 @@ function cpFaqCatById($id){
 
 function cpCatalogCatById($id){
 
-	$result = dbQuery("SELECT title FROM cms_uc_cats WHERE id = $id") ;
+	$result = dbQuery("SELECT title, parent_id FROM cms_uc_cats WHERE id = $id") ;
 	
 	if (mysql_num_rows($result)) { 
-		$cat = mysql_fetch_assoc($result);		
-		return '<a href="index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id='.$id.'">'.$cat['title'].'</a> ('.$id.')';
+		$cat = mysql_fetch_assoc($result);
+        if ($cat['parent_id']){
+            return '<a href="index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id='.$id.'">'.$cat['title'].'</a> ('.$id.')';
+        } else {
+            return $cat['title'];
+        }
 	} else { return '--'; }
 
 }
@@ -838,11 +843,15 @@ function cpGroupById($id){
 
 function cpCatById($id){
 
-	$result = dbQuery("SELECT title FROM cms_category WHERE id = $id") ;
+	$result = dbQuery("SELECT title, parent_id FROM cms_category WHERE id = $id") ;
 	
-	if (mysql_num_rows($result)) { 
-		$cat = mysql_fetch_assoc($result);		
-		return '<a href="index.php?view=cats&do=edit&id='.$id.'">'.$cat['title'].'</a> ('.$id.')';
+	if (mysql_num_rows($result)) {
+		$cat = mysql_fetch_assoc($result);
+        if ($cat['parent_id']){
+            return '<a href="index.php?view=cats&do=edit&id='.$id.'">'.$cat['title'].'</a> ('.$id.')';
+        } else {
+            return $cat['title'];
+        }
 	} else { return '--'; }
 
 }
@@ -1006,7 +1015,8 @@ echo '<table width="100%" border="0" cellspacing="0" cellpadding="8" class="prop
 					<option value="include">внешний скрипт</option>	
 					<option value="filelink">ссылка "Скачать файл"</option>
 					<option value="banpos">баннерная позиция</option>	
-					<option value="page">-- разрыв страницы --</option>					
+					<option value="pagebreak">-- разрыв страницы --</option>
+					<option value="pagetitle">-- новая страница --</option>
 				  </select>';
 		echo '</td>';
         echo '<td width="100">&nbsp;</td>';
@@ -1089,6 +1099,24 @@ echo '<table width="100%" border="0" cellspacing="0" cellpadding="8" class="prop
               </td>';
         echo '<td>
                     <select name="ban" style="width:99%">'.$inCore->bannersList().'</select>
+              </td>';
+        echo '<td width="100">'.$submit_btn.'</td>';
+    echo '</tr>';
+	echo '<tr id="pagebreak">';
+		echo '<td width="120">
+                    <strong>Тег:</strong>
+              </td>';
+        echo '<td>
+                    {pagebreak}
+              </td>';
+        echo '<td width="100">'.$submit_btn.'</td>';
+    echo '</tr>';
+	echo '<tr id="pagetitle">';
+		echo '<td width="120">
+                    <strong>Заголовок:</strong>
+              </td>';
+        echo '<td>
+                    <input type="text" name="ptitle" style="width:99%" />
               </td>';
         echo '<td width="100">'.$submit_btn.'</td>';
     echo '</tr>';

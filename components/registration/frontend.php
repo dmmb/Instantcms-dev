@@ -173,6 +173,10 @@ function registration(){
         if($_REQUEST['code']) { $code = $_REQUEST['code']; } else { $msg .= $_LANG['TYPE_CAPTCHA'].'<br/>'; }
         if(@$pass != @$pass2) { $msg .= $_LANG['WRONG_PASS'].'<br/>'; }
 
+        if($inDB->rows_count('cms_users', 'LOWER(nickname) LIKE "'.strtolower($nickname).'"', 1)){
+            $msg .= $_LANG['ERR_NICK_EXISTS'].'<br/>';
+        }
+
         if($msg==''){
 
             if ($inCore->checkCaptchaCode($code)){

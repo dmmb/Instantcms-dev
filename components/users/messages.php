@@ -205,7 +205,7 @@ function pageSelect($records, $current, $perpage){
 			echo '<form action="" id="newmessage" method="POST" name="msgform">';			
 				echo '<table class="usr_msgmenu_bar" width="100%" height="30" border="0" cellpadding="5" cellspacing="0"><tr>';
 					echo '<tr>';
-						echo '<td width="40"><strong>'.$_LANG['TO'].':</strong> </td>';
+						echo '<td width="40"><strong>'.$_LANG['SEND_TO'].':</strong> </td>';
 						echo '<td width="160"><select name="id" id="to_id" style="width:150px">'.cmsUser::getFriendsList($inUser->id).'</select></td>';
 						if ($inUser->is_admin){
 							echo '<td width="10"><input name="massmail" type="checkbox" value="1" /></td>';					

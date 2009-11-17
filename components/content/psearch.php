@@ -12,10 +12,10 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 	
 function search_content($query, $look){ //query sends here already prepared and secured!
 
-        global $_LANG;
-
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
+
+        global $_LANG;
 
 		//BUILD SQL QUERY
 		$sql = "SELECT DISTINCT con.*, cat.title cat_title, cat.id cat_id
@@ -29,6 +29,7 @@ function search_content($query, $look){ //query sends here already prepared and 
 		if ($found){
 			while($item = $inDB->fetch_assoc($result)){
 				//build params
+                $inCore->loadLanguage('components/content');
 				$link = "/content/0/read".$item['id'].".html";
 				$place = $_LANG['CATALOG_ARTICLES'];
 				$placelink = "/content/0/".$item['cat_id'];				

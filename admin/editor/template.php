@@ -35,8 +35,7 @@
 </table>
 <table width="100%" height="50" border="0" cellpadding="0" cellspacing="0">
   <tr>
-    <td align="center" valign="middle"><a href="http://www.instantcms.ru/"><strong>InstantCMS</strong></a><strong> v<?php echo CORE_VERSION; ?> &copy; <?php echo date('Y'); ?></strong><br />
-      <a href="mailto:info@instantcms.ru">info@instantcms.ru</a></td>
+    <td align="center" valign="middle"><a href="http://www.instantcms.ru/"><strong>InstantCMS</strong></a><strong> v<?php echo CORE_VERSION; ?> &copy; <?php echo date('Y'); ?></strong>      
   </tr>
 </table>
 </body>

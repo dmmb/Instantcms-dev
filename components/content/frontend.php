@@ -80,13 +80,20 @@ function content(){
 
     $inCore->loadModel('content');
     $model = new cms_model_content();
+
     global $_LANG;
-	if(!isset($cfg['perpage'])) { $cfg['perpage'] = 20; }
+
+    if(!isset($cfg['perpage'])) { $cfg['perpage'] = 20; }
 	if(!isset($cfg['autokeys'])) { $cfg['autokeys'] = 1; }
     if(!isset($cfg['af_showlink'])) { $cfg['af_showlink'] = 1; }
     if(!isset($cfg['readdesc'])) { $cfg['readdesc'] = 0; }
     if(!isset($cfg['rating'])) { $cfg['rating'] = 1; }
-	
+
+	if(!isset($cfg['img_small_w'])) { $cfg['img_small_w'] = 100; }
+	if(!isset($cfg['img_big_w'])) { $cfg['img_big_w'] = 200; }
+    if(!isset($cfg['img_sqr'])) { $cfg['img_sqr'] = 1; }
+    if(!isset($cfg['img_users'])) { $cfg['img_users'] = 1; }
+
 	$id = $inCore->request('id', 'int', 0);
 	$do = $inCore->request('do', 'str', 'view');
 
@@ -323,7 +330,7 @@ if ($do=='read'){
     if ($cfg['pt_disp']) { $disp_style = 'display: block;'; } else { $disp_style = 'display: none;'; }
     $smarty->assign('pt_disp_style', $disp_style);
 
-    $article_image = (file_exists(PATH.'/images/photos/article'.$article['id'].'.jpg') ? 'article'.$article['id'].'.jpg' : '');
+    $article_image = (file_exists(PATH.'/images/photos/medium/article'.$article['id'].'.jpg') ? 'article'.$article['id'].'.jpg' : '');
     $smarty->assign('article_image', $article_image);
 
     $smarty->assign('article_content', $article_content);
@@ -392,6 +399,7 @@ if ($do=='addarticle' || $do=='editarticle'){
 
         //display form
         $smarty->assign('do', $do);
+        $smarty->assign('cfg', $cfg);
         $smarty->assign('menuid', $menuid);
         $smarty->assign('pubcats', $pubcats);
         $smarty->assign('pagetitle', $pagetitle);
@@ -429,6 +437,8 @@ if ($do=='addarticle' || $do=='editarticle'){
 
             $article['id'] = $model->addArticle($article);
 
+            $id = $article['id'];
+
             cmsUser::checkAwards($user_id);
 
             cmsInsertTags($tags, 'content', $article['id']);
@@ -449,7 +459,6 @@ if ($do=='addarticle' || $do=='editarticle'){
             }
 
             echo '<p><a href="/">'.$_LANG['CONTINUE'].'</a></p>';
-            return;
 
         }
 
@@ -461,9 +470,27 @@ if ($do=='addarticle' || $do=='editarticle'){
 
             cmsInsertTags($article['tags'], 'content', $id);
 
-            $inCore->redirect('/content/my.html');
-            
         }
+
+        if (isset($_FILES["picture"]["name"]) && @$_FILES["picture"]["name"]!=''){
+            //generate image file
+            $tmp_name   = $_FILES["picture"]["tmp_name"];
+            $file       = 'article'.$id.'.jpg';
+            //upload image and insert record in db
+            if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/photos/$file")){
+                $inCore->includeGraphics();
+                @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
+                @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
+                @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/$file");
+                @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", 0755);
+                @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", 0755);
+            }
+        }
+
+        if ($do=='editarticle'){
+            $inCore->redirect('/content/my.html');
+        }
+
 
     }
 
@@ -504,8 +531,11 @@ if ($do=='my'){
    $rs = $inDB->query($sql); $total = $inDB->num_rows($rs);
 
     //current page
-    $sql = "SELECT con.*, cat.title as category, DATE_FORMAT(con.pubdate, '%d-%m-%Y') as pubdate,
-                   IF(con.published=1, '<span style=\"color:green\">".$_LANG['PUBLISHED']."</span>', '<span style=\"color:#CC0000\">".$_LANG['NO_PUBLISHED']."</span>') as status
+    $sql = "SELECT  con.*,
+                    cat.title as category,
+                    cat.seolink as category_seolink, 
+                    DATE_FORMAT(con.pubdate, '%d-%m-%Y') as pubdate,
+                    IF(con.published=1, '<span style=\"color:green\">".$_LANG['PUBLISHED']."</span>', '<span style=\"color:#CC0000\">".$_LANG['NO_PUBLISHED']."</span>') as status
             FROM cms_content con, cms_category cat
             WHERE con.user_id = $user_id AND con.category_id = cat.id
             ORDER BY con.pubdate DESC
@@ -529,7 +559,9 @@ if ($do=='my'){
         $row++;
         $articles[$row] = $con;
         if ($row %2) { $articles[$row]['class']="search_row1"; } else { $articles[$row]['class']="search_row2"; }
-        $articles[$row]['comments'] = $inCore->getCommentsCount('content', $con['id']);
+        $articles[$row]['category_href']    = $model->getCategoryURL(0, $con['category_seolink']);
+        $articles[$row]['href']             = $model->getArticleURL(0, $con['seolink']);
+        $articles[$row]['comments']         = $inCore->getCommentsCount('content', $con['id']);
     }
 
     $smarty = $inCore->initSmarty('components', 'com_content_my.tpl');

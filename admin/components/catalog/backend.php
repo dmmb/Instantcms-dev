@@ -236,9 +236,15 @@ function cpPriceInput($id){
 
 	if ($opt == 'show_item'){
 		if (!isset($_REQUEST['item'])){
-			if (isset($_REQUEST['item_id'])){ dbShow('cms_uc_items', $_REQUEST['item_id']);  }
+			if (isset($_REQUEST['item_id'])){ 
+                dbShow('cms_uc_items', $_REQUEST['item_id']);
+                dbQuery('UPDATE cms_uc_items SET on_moderate = 0 WHERE id='.$_REQUEST['item_id']);
+            }
 		} else {
-			dbShowList('cms_uc_items', $_REQUEST['item']);				
+			dbShowList('cms_uc_items', $_REQUEST['item']);
+            foreach($_REQUEST['item'] as $k=>$id){
+                dbQuery('UPDATE cms_uc_items SET on_moderate = 0 WHERE id='.$id);
+            }
 		}			
 		echo '1'; exit;
 	}

@@ -387,8 +387,6 @@ if($do=='viewphoto'){
 			$inPage->addPathway($_LANG['PHOTOALBUMS'], '/photos/'.$menuid.'/'.clubRootAlbumId($club['id']));            
 		}
 
-        print_r($club);
-
         if (!$can_view && $owner=='club') { $inCore->redirect('/clubs/0/'.$club['id']); }
 
 		//PATHWAY ENTRY

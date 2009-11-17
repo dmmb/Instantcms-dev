@@ -85,6 +85,8 @@ function showIns(){
 	document.getElementById('filelink').style.display = 'none';
 	document.getElementById('include').style.display = 'none';
 	document.getElementById('banpos').style.display = 'none';
+	document.getElementById('pagebreak').style.display = 'none';
+	document.getElementById('pagetitle').style.display = 'none';
 
 	needDiv = document.addform.ins.options[document.addform.ins.selectedIndex].value;
 
@@ -126,8 +128,11 @@ function insertTag(kind){
 		if (kind=='banpos'){
 			text = '{¡¿ÕÕ≈–=' + document.addform.ban.value + '}';
 		}
-		if (kind=='page'){
+		if (kind=='pagebreak'){
 			text = '{pagebreak}';
+		}
+		if (kind=='pagetitle'){
+			text = '{—“–¿Õ»÷¿=' + document.addform.ptitle.value + '}';
 		}
 
 		oEditor.InsertHtml( text ) ;

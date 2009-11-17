@@ -346,7 +346,7 @@ if ($do=='forum'){
                            ORDER BY ordering";
 
     $subforums_result   = $inDB->query($subforums_sql);
-    $subforums_count    = $inDB->num_rows($fresult);
+    $subforums_count    = $inDB->num_rows($subforums_result);
 
     $subforums          = array();
 

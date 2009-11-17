@@ -473,7 +473,7 @@ function catalog(){
                     FROM cms_uc_items i
                     LEFT JOIN cms_uc_ratings r ON r.item_id = i.id
                     WHERE i.published = 1 AND i.category_id = $id AND i.fieldsdata LIKE '%$query%'
-                    GROUP BY r.item_id";
+                    GROUP BY i.id";
 
         $do = 'cat';
         $advsearch = 0;

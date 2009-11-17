@@ -39,7 +39,7 @@
         {/if}
         <tr>
             <td width="27"><img src="/components/users/images/menu/my.gif" border="0"/></td>
-            <td><a href="#" onclick="$('div#mycontent').slideToggle('slow');">Мой контент</a></td>
+            <td><a href="javascript:" onclick="$('div#mycontent').slideToggle('slow');">Мой контент</a></td>
         </tr>
         <tr>
             <td colspan="2">

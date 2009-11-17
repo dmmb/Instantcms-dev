@@ -85,6 +85,9 @@ class cms_model_blog{
             $seolink = cmsCore::strToURL($club);
         }
 
+        $is_exists = $this->inDB->rows_count('cms_blogs', "seolink='{$seolink}'", 1);
+        if ($is_exists) { $seolink .= '-' . $blog['id']; }
+
         //Обновляем пути всех постов этого блога
         $sql = "SELECT id, title FROM cms_blog_posts WHERE blog_id = {$blog['id']}";
 
@@ -630,7 +633,6 @@ class cms_model_blog{
         $item = cmsCore::callEvent('UPDATE_POST', $item);
         $sql = "UPDATE cms_blog_posts
                 SET cat_id={$item['cat_id']},
-                    pubdate=NOW(),
                     title='{$item['title']}',
                     feel='{$item['feel']}',
                     music='{$item['music']}',

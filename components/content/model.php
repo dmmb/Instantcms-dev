@@ -190,6 +190,10 @@ class cms_model_content{
 
         $seolink .= cmsCore::strToURL($article['title']);
 
+        $is_exists = $this->inDB->rows_count('cms_content', "seolink='{$seolink}'", 1);
+
+        if ($is_exists) { $seolink .= '-' . $article['id']; }
+
         return $seolink;
 
     }
@@ -372,22 +376,23 @@ class cms_model_content{
     public function addArticle($article){
         $inCore = cmsCore::getInstance();
 
-        $article['seolink'] = $this->getSeoLink($article);
-
         $article = cmsCore::callEvent('ADD_ARTICLE', $article);
 
         $sql = "INSERT INTO cms_content (category_id, user_id, pubdate, enddate, is_end, title, description, content, published, hits, meta_desc, meta_keys, showtitle, showdate, showlatest, showpath, ordering, comments, seolink, canrate, pagetitle)
 				VALUES ({$article['category_id']}, {$article['user_id']}, '{$article['pubdate']}', '{$article['enddate']}',
                          {$article['is_end']}, '{$article['title']}', '{$article['description']}', '{$article['content']}', {$article['published']}, 0,
                         '{$article['meta_desc']}', '{$article['meta_keys']}', '{$article['showtitle']}', '{$article['showdate']}', '{$article['showlatest']}',
-                        '{$article['showpath']}', 1, {$article['comments']}, '{$article['seolink']}', {$article['canrate']}, '{$article['pagetitle']}')";
+                        '{$article['showpath']}', 1, {$article['comments']}, '', {$article['canrate']}, '{$article['pagetitle']}')";
 
 		$this->inDB->query($sql) ;
 
-		$id = $this->inDB->get_last_id('cms_content');
+		$article['id'] = $this->inDB->get_last_id('cms_content');
+
+        $article['seolink'] = $this->getSeoLink($article);
+        $this->inDB->query("UPDATE cms_content SET seolink='{$article['seolink']}' WHERE id = {$article['id']}");
 
         $inCore->loadLib('tags');
-		cmsInsertTags($article['tags'], 'content', $id);
+		cmsInsertTags($article['tags'], 'content', $article['id']);
 
         return $id;
     }
@@ -396,11 +401,17 @@ class cms_model_content{
 /* ==================================================================================================== */
 
     public function updateArticle($id, $article){
-        $inCore  = cmsCore::getInstance();
+
+        $inCore             = cmsCore::getInstance();
+        $inUser             = cmsUser::getInstance();
+
+        $article['id']      = $id;
 
         $article['seolink'] = $this->getSeoLink($article);
 
-        $article = cmsCore::callEvent('UPDATE_ARTICLE', $article);
+        if (!$article['user_id']) { $article['user_id'] = $inUser->id; }
+
+        $article = cmsCore::callEvent('UPDATE_ARTICLE', $article);        
 
         $sql = "UPDATE cms_content
                 SET category_id = {$article['category_id']},
@@ -420,16 +431,18 @@ class cms_model_content{
                     comments={$article['comments']},
                     seolink='{$article['seolink']}',
                     canrate={$article['canrate']},
-                    pagetitle='{$article['pagetitle']}'
+                    pagetitle='{$article['pagetitle']}',
+                    user_id='{$article['user_id']}'
                 WHERE id = $id
                 LIMIT 1";
 
         $this->inDB->query($sql) ;
 
         $inCore->loadLib('tags');
-        cmsInsertTags($article['tags'], 'content', $id);
+        cmsInsertTags($article['tags'], 'content', $article['id']);
 
         return true;
+        
     }
 
 /* ==================================================================================================== */

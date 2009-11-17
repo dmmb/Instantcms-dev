@@ -44,7 +44,7 @@
 <div class="con_text" style="overflow:hidden">
     {if $article_image}
         <div class="con_image" style="float:left;margin-top:10px;margin-right:20px;margin-bottom:20px">
-            <img src="/images/photos/{$article_image}" border="0" alt="{$article_image}"/>
+            <img src="/images/photos/medium/{$article_image}" border="0" alt="{$article_image}"/>
         </div>
     {/if}
     {$article_content}

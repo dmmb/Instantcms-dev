@@ -10,11 +10,15 @@ function setStatus(){
         $('.usr_status_date').html('// Только что');
         $('.usr_status_bar').fadeIn();
     } else {
-        $('.usr_status_text').hide();
-        $('.usr_status_date').hide();
+        if (new_status == ''){
+            $('.usr_status_text').hide();
+            $('.usr_status_date').hide();
+        }
     }
 
-    $.post('/components/users/ajax/status.php', {'status': new_status}, function(data){});
+    if (new_status || new_status == '') {
+        $.post('/components/users/ajax/status.php', {'status': new_status}, function(data){});
+    }
 
 }
 

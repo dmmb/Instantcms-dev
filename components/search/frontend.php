@@ -117,7 +117,7 @@ function search(){
 						 value="search" class="search_input"/>';
 			echo '<input type="text" 
 						 name="query"
-						 size="60"
+						 size="30"
 						 value="'.$query.'" 
 						 /> ';
 			echo '<select name="look" style="width:200px">

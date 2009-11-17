@@ -24,6 +24,7 @@ function mod_latestblogs($module_id){
 
 		if (!isset($cfg['showrss'])) { $cfg['showrss'] = 1;}
 		if (!isset($cfg['minrate'])) { $cfg['minrate'] = 0;}
+        if (!isset($cfg['namemode'])) { $cfg['namemode'] = 'blog';}
 
 		if (!isset($cfg['shownum'])){
 			echo '<p>'.$_LANG['LATESTBLOGS_CONFIG_TEXT'].'</p>';
@@ -40,10 +41,13 @@ function mod_latestblogs($module_id){
                         IF(DATE_FORMAT(p.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'),
 						DATE_FORMAT(p.pubdate, '<strong>{$_LANG['TODAY']}</strong> {$_LANG['IN']} %H:%i'), DATE_FORMAT(p.pubdate, '%d-%m-%Y'))  as fpubdate,
 						b.user_id as uid,
-                        IFNULL(SUM(r.points), 0) as rating
-				FROM cms_blogs b, cms_blog_posts p
+                        IFNULL(SUM(r.points), 0) as rating,
+                        b.owner as owner,
+                        b.ownertype as ownertype,
+                        u.nickname as author
+				FROM cms_users u, cms_blogs b, cms_blog_posts p
                 LEFT JOIN cms_ratings r ON r.item_id=p.id AND r.target='blogpost'
-				WHERE p.blog_id = b.id AND b.allow_who = 'all' AND p.published = 1
+				WHERE p.blog_id = b.id AND b.allow_who = 'all' AND p.published = 1 AND b.user_id = u.id
                 GROUP BY p.id
 				ORDER BY p.pubdate DESC
                 LIMIT 50";
@@ -60,6 +64,10 @@ function mod_latestblogs($module_id){
                 if ($count > $cfg['shownum']) { break; }
 
                 if ($con['rating'] >= $cfg['minrate']){
+
+                    if ($con['owner']=='user' && $con['ownertype']=='single' && $cfg['namemode']=='user'){
+                        $con['blog'] = $con['author'];
+                    }
 
                     if ($con['owner']=='club'){
                         $con['blog'] = dbGetField('cms_clubs', 'id='.$con['uid'], 'title');

@@ -93,6 +93,9 @@
 									<td valign="top">
 										<div class="nickname">{$usr.nickname}</div>
 										<div class="karma">{$usr.karma} <span class="rating">{$usr.rating}</span></div>
+                                        {if $usr.microstatus}
+                                            <div style="clear:both">&mdash; {$usr.microstatus}</div>
+                                        {/if}
 										<div class="status">{$usr.status}</div>
 									</td>
 							{/foreach}		

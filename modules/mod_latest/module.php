@@ -61,9 +61,9 @@ function mod_latest($module_id){
 				$articles[$next]['comments']    = $inCore->getCommentsCount('article', $con['id']);
 				$articles[$next]['date']        = $con['fdate'];
 				$articles[$next]['description'] = $con['description'];
-                $articles[$next]['image']       = (file_exists(PATH.'/images/photos/small/article'.$con['id'].'.jpg') ? 'article'.$con['id'].'.jpg' : '');
+                $articles[$next]['image']       = (file_exists(PATH.'/images/photos/small/article'.$con['id'].'.jpg') ? 'article'.$con['id'].'.jpg' : '');                
 			}
-			
+
 			$smarty = $inCore->initSmarty('modules', 'mod_latest.tpl');			
 			$smarty->assign('articles', $articles);
 			$smarty->assign('rssid', $rssid);

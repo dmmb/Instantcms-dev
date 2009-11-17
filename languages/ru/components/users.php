@@ -345,6 +345,7 @@ $_LANG['FIND_MALE']                 ='мужчин';
 $_LANG['FIND_ALL']                  ='всех';
 $_LANG['AGE_FROM']                  ='возраст от';
 $_LANG['TO']                        ='до';
+$_LANG['SEND_TO']                   ='Кому';
 $_LANG['SEARCH']                    ='Поиск';
 $_LANG['POSITIVE']                  ='Позитивные';
 $_LANG['NEGATIVE']                  ='Негативные';

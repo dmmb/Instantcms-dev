@@ -545,7 +545,7 @@ function applet_menu(){
 
                     <div><strong>Действие пункта меню</strong></div>
                     <div>
-                        <select name="linktype" id="linktype" style="width:100%" onchange="showMenuTarget()">
+                        <select name="mode" id="linktype" style="width:100%" onchange="showMenuTarget()">
                             <option value="link" <?php if (@$mod['linktype']=='link' || !isset($mod['mode'])) { echo 'selected'; }?>>Открыть ссылку</option>
                             <option value="content" <?php if (@$mod['linktype']=='content') { echo 'selected'; }?>>Открыть статью</option>
                             <option value="category" <?php if (@$mod['linktype']=='category') { echo 'selected'; }?>>Открыть раздел (список статей)</option>

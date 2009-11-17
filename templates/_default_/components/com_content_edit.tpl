@@ -4,18 +4,18 @@
 
 <div class="con_heading">{$pagetitle}</div>
 
-<form id="addform" name="addform" method="post" action="">
+<form id="addform" name="addform" method="post" action="" enctype="multipart/form-data">
 	<table width="605" border="0" cellspacing="0" cellpadding="0">
 		<tr>
 			<td>
-				<table width="605" border="0" cellspacing="5" class="proptable">
+				<table width="700" border="0" cellspacing="5" class="proptable">
 					<tr>
-						<td width="236" valign="top">
+						<td width="" valign="top">
 							<strong>Заголовок статьи:</strong><br />
 							<span class="hinttext">{$LANG.SHOW_ON_SITE}</span>
 						</td>
-						<td width="348" valign="top">
-						 	<input name="title" type="text" id="title" style="width:300px" value="{$mod.title}" />
+						<td width="350" valign="top">
+						 	<input name="title" type="text" id="title" style="width:350px" value="{$mod.title}" />
 						</td>
 					</tr>
 					<tr>
@@ -24,12 +24,22 @@
 							<span class="hinttext">{$LANG.KEYWORDS_TEXT}</span>
 						</td>
 						<td valign="top">
-							<input name="tags" type="text" id="tags" style="width:300px" value="{$mod.tags}" />
+							<input name="tags" type="text" id="tags" style="width:350px" value="{$mod.tags}" />
 							<script type="text/javascript">
 								{$autocomplete_js}
 							</script>
 						</td>
 					</tr>
+                    {if $cfg.img_users}
+					<tr>
+						<td>
+							<strong>Фотография:</strong>
+						</td>
+						<td>
+							<input type="file" name="picture" style="width:350px" />
+						</td>
+					</tr>
+                    {/if}
 					{if $do=='addarticle'}
 					<tr>
 						<td valign="top">
@@ -40,7 +50,7 @@
 							{/if}
 						</td>
 						<td valign="top">
-							<select name="category_id" size="8" id="category_id" style="width:304px">								
+							<select name="category_id" size="8" id="category_id" style="width:350px">
 								{$pubcats}
 							</select>
 						</td>
@@ -70,7 +80,7 @@
 	{/if}
 
 	<p>
-		<input name="add_mod" type="submit" id="add_mod" {if $do=='addarticle'} value="{$LANG.ADD_ARTICLE} {else} value="{$LANG.SAVE_CHANGES}" {/if} />
+		<input name="add_mod" type="submit" id="add_mod" {if $do=='addarticle'} value="{$LANG.ADD_ARTICLE}" {else} value="{$LANG.SAVE_CHANGES}" {/if} />
 		<input name="back" type="button" id="back" value="{$LANG.CANCEL}" onclick="window.history.back();"/>
 		{if $do=='editarticle'}
 			<input name="id" type="hidden" value="{$mod.id}" />

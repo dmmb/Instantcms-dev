@@ -52,6 +52,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         $cfg['img_small_w'] = $inCore->request('img_small_w', 'int', 100);
         $cfg['img_big_w']   = $inCore->request('img_big_w', 'int', 200);
         $cfg['img_sqr']     = $inCore->request('img_sqr', 'int', 1);
+        $cfg['img_users']   = $inCore->request('img_users', 'int', 1);
 
         $cfg['af_on']           = $inCore->request('af_on', 'int', 0);
         $cfg['af_delete']       = $inCore->request('af_delete', 'int', 1);
@@ -76,6 +77,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if(!isset($cfg['img_small_w'])) { $cfg['img_small_w'] = 100; }
 	if(!isset($cfg['img_big_w'])) { $cfg['img_big_w'] = 200; }
     if(!isset($cfg['img_sqr'])) { $cfg['img_sqr'] = 1; }
+    if(!isset($cfg['img_users'])) { $cfg['img_users'] = 1; }
 
     if(!isset($cfg['af_on'])) { $cfg['af_on'] = 0; }
     if(!isset($cfg['af_delete'])) { $cfg['af_delete'] = 1; }
@@ -92,7 +94,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
     <?php ob_start(); ?>
     {tab=Внешний вид}
-    <table width="450" border="0" cellpadding="10" cellspacing="0" class="proptable">
+    <table width="550" border="0" cellpadding="10" cellspacing="0" class="proptable">
         <tr>
             <td><strong>Показывать заголовки статей: </strong></td>
             <td width="110">
@@ -128,7 +130,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             <td><input name="perpage" type="text" id="perpage" value="<?php echo @$cfg['perpage'];?>" size="5" /> шт.</td>
         </tr>
     </table>
-    <table width="450" border="0" cellpadding="10" cellspacing="0" class="proptable">
+    <table width="550" border="0" cellpadding="10" cellspacing="0" class="proptable">
         <tr>
             <td><strong>Показывать содержание статей: </strong></td>
             <td width="110">
@@ -152,7 +154,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         </tr>
     </table>
     {tab=Фото статей}
-    <table width="450" border="0" cellpadding="10" cellspacing="0" class="proptable">
+    <table width="550" border="0" cellpadding="10" cellspacing="0" class="proptable">
         <tr>
             <td><strong>Ширина маленькой копии:</strong></td>
             <td width="120">
@@ -172,34 +174,44 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                 <input name="img_sqr" type="radio" value="0" <?php if (@!$cfg['img_sqr']) { echo 'checked="checked"'; } ?>/> Нет
             </td>
         </tr>
+        <tr>
+            <td>
+                <strong>Разрешить пользователям:</strong><br/>
+                <span class="hinttext">Смогут ли пользователи добавлять фотографии к своим статьям</span>
+            </td>
+            <td>
+                <input name="img_users" type="radio" value="1" <?php if (@$cfg['img_users']) { echo 'checked="checked"'; } ?>/> Да
+                <input name="img_users" type="radio" value="0" <?php if (@!$cfg['img_users']) { echo 'checked="checked"'; } ?>/> Нет
+            </td>
+        </tr>
     </table>
     {tab=Автофорум}
-    <table width="" border="0" cellpadding="10" cellspacing="0" class="proptable">
+    <table width="550" border="0" cellpadding="10" cellspacing="0" class="proptable">
         <tr>
             <td><strong>Автоматически создавать темы на форуме<br/>для обсуждения статей:</strong></td>
-            <td width="400">
+            <td width="250">
                 <input name="af_on" type="radio" value="1" <?php if (@$cfg['af_on']) { echo 'checked="checked"'; } ?>/> Да
                 <input name="af_on" type="radio" value="0" <?php if (@!$cfg['af_on']) { echo 'checked="checked"'; } ?>/> Нет
             </td>
         </tr>
         <tr>
             <td><strong>Удалять темы при удалении статей:</strong></td>
-            <td width="400">
+            <td width="250">
                 <input name="af_delete" type="radio" value="1" <?php if (@$cfg['af_delete']) { echo 'checked="checked"'; } ?>/> Да
                 <input name="af_delete" type="radio" value="0" <?php if (@!$cfg['af_delete']) { echo 'checked="checked"'; } ?>/> Нет
             </td>
         </tr>
         <tr>
             <td><strong>Показывать ссылку из статьи на связанную тему форума:</strong></td>
-            <td width="400">
+            <td width="250">
                 <input name="af_showlink" type="radio" value="1" <?php if (@$cfg['af_showlink']) { echo 'checked="checked"'; } ?>/> Да
                 <input name="af_showlink" type="radio" value="0" <?php if (@!$cfg['af_showlink']) { echo 'checked="checked"'; } ?>/> Нет
             </td>
         </tr>
         <tr>
             <td><strong>Помещать темы в форум:</strong></td>
-            <td width="400">
-                <select name="af_forum_id" style="width:300px">
+            <td width="250">
+                <select name="af_forum_id" style="width:250px">
                     <?php
                         if (isset($cfg['af_forum_id'])){
                             echo $inCore->getListItemsNS('cms_forums', $cfg['af_forum_id']);
@@ -212,8 +224,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         </tr>
         <tr>
             <td><strong>Не создавать темы для статей из раздела:</strong></td>
-            <td width="400">
-                <select name="af_hidecat_id" style="width:300px">
+            <td width="250">
+                <select name="af_hidecat_id" style="width:250px">
                     <?php
                         if (isset($cfg['af_hidecat_id'])){
                             echo $inCore->getListItemsNS('cms_category', $cfg['af_hidecat_id']);

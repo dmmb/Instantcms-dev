@@ -18,6 +18,10 @@ function mod_bestblogs($module_id){
 		
 		$cfg = $inCore->loadModuleConfig($module_id);
 
+        if (!isset($cfg['namemode'])) { $cfg['namemode'] = 'blog';}
+        if (!isset($cfg['shownum'])) { $cfg['shownum'] = 10; }
+        if (!isset($cfg['menuid'])) { $cfg['menuid'] = 0; }
+
 		if ($cfg['menuid']>0) {
 			$menuid = $cfg['menuid'];
 		} else {
@@ -40,10 +44,13 @@ function mod_bestblogs($module_id){
                         b.user_id as uid, 
                         IF(DATE_FORMAT(p.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'),	DATE_FORMAT(p.pubdate, '<strong>Сегодня</strong> в %H:%i'),
                         DATE_FORMAT(p.pubdate, '%d-%m-%Y'))  as fpubdate,
-                        IFNULL(SUM(r.points), 0) as points
-				FROM cms_blogs b, cms_blog_posts p
+                        IFNULL(SUM(r.points), 0) as points,
+                        b.owner as owner,
+                        b.ownertype as ownertype,
+                        u.nickname as author
+				FROM cms_users u, cms_blogs b, cms_blog_posts p
 				LEFT JOIN cms_ratings r ON r.item_id=p.id AND r.target='blogpost'
-				WHERE p.blog_id = b.id AND b.allow_who = 'all' AND p.published = 1
+				WHERE p.blog_id = b.id AND b.allow_who = 'all' AND p.published = 1 AND b.user_id = u.id
 				GROUP BY p.id
 				ORDER BY points DESC";
 		
@@ -65,6 +72,10 @@ function mod_bestblogs($module_id){
 
 				$posts[$next]['title'] = $text;
                 $posts[$next]['href'] = $model->getPostURL($menuid, $con['bloglink'], $con['seolink']);
+
+                if ($con['owner']=='user' && $con['ownertype']=='single' && $cfg['namemode']=='user'){
+                    $con['blog'] = $con['author'];
+                }
 
 				$posts[$next]['blog'] = $con['blog'];
                 $posts[$next]['bloghref'] = $model->getBlogURL($menuid, $con['bloglink']);

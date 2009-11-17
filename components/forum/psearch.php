@@ -12,6 +12,7 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 	
 function search_forum($query, $look){ //query sends here already prepared and secured!
 
+        $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
         global $_LANG;
 
@@ -52,6 +53,7 @@ function search_forum($query, $look){ //query sends here already prepared and se
 		if ($found){
 			while($item = $inDB->fetch_assoc($result)){
 				//build params
+                $inCore->loadLanguage('components/forum');
 				$link = "/forum/0/thread".$item['thread_id'].".html";
 				$place = $_LANG['FORUM_POST'];
 				$placelink = $link;	
