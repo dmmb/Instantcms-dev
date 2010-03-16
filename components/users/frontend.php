@@ -768,9 +768,10 @@ if ($do=='profile'){
         $smarty->display('com_users_deleted.tpl');
         return;
     }
-
+	
     $usr['avatar']				= usrImage($usr['id'], 'big');
-    $usr['menu']				= usrMenu($usr['id'], $cfg, $usr['banned']);
+	$usr['isfriend']			= usrIsFriends($usr['id'], $inUser->id);
+	$usr['isfriend_not_add']	= usrIsFriends($usr['id'], $inUser->id, false);
     $usr['is_new_friends']		= ($inUser->id==$usr['id'] && $model->isNewFriends($usr['id']) && $cfg['sw_friends']);
     if ($usr['is_new_friends']){
         $usr['new_friends'] 	= usrFriendQueriesList($usr['id'], $model);
@@ -804,6 +805,7 @@ if ($do=='profile'){
     $usr['cityurl']             = urlencode($usr['city']);
 
     $usr['photos_count']		= (int)usrPhotoCount($id);
+	$usr['can_add_foto']		= ((usrPhotoCount($usr['id'])<$cfg['photosize'] || $cfg['photosize']==0) && $cfg['sw_photo']);
     $usr['board_count']			= (int)$inDB->rows_count('cms_board_items', "user_id=$id AND published=1");
     $usr['comments_count']		= (int)$inDB->rows_count('cms_comments', "user_id=$id AND published=1");
 
@@ -874,6 +876,7 @@ if ($do=='profile'){
     $smarty->assign('messages', cmsCore::getSessionMessages());
     $smarty->assign('cfg', $cfg);
     $smarty->assign('myprofile', $myprofile);
+	$smarty->assign('is_admin', $inUser->is_admin);
     $smarty->assign('is_auth', $inUser->id);
 
     $smarty->display('com_users_profile.tpl');
@@ -970,15 +973,10 @@ if ($do=='avatar'){
 				} else { usrAccessDenied(); }
 			
 			} else {
-				echo '<form enctype="multipart/form-data" action="/users/'.$menuid.'/'.$id.'/avatar.html" method="POST">' . "\n";	
-					echo '<p>'.$_LANG['SELECT_UPLOAD_FILE'].': </p>' . "\n";
-					echo '<input name="upload" type="hidden" value="1"/>' . "\n";			
-					echo '<input name="userid" type="hidden" value="'.$id.'"/>'. "\n";									
-					echo '<input name="picture" type="file" id="picture" size="30" />'. "\n";
-					echo '<p><input type="submit" value="'.$_LANG['UPLOAD'].'"> <input type="button" onclick="window.history.go(-1);" value="'.$_LANG['CANCEL'].'"/></p>'. "\n";
-				echo '</form>'. "\n";
-
-                echo '<p><a href="/users/'.$menuid.'/'.$id.'/select-avatar.html" class="select-avatar">'.$_LANG['SELECT_AVATAR_FROM_COLL'].'</a></p>';
+				$smarty = $inCore->initSmarty('components', 'com_users_avatar_upload.tpl');
+			    $smarty->assign('menuid', $menuid);
+    			$smarty->assign('id', $id);
+    			$smarty->display('com_users_avatar_upload.tpl');
 			}	
 		}
 	}//auth
@@ -1175,14 +1173,13 @@ if ($do=='addphoto'){
 					$tags = $inCore->request('tags', 'str');			
 					cmsInsertTags($tags, 'userphoto', $photoid);
 					
-					echo '<p><strong>'.$_LANG['PHOTO_ADDED'].'</strong></p>' ."\n";
-					echo '<ul>' ."\n";
-					echo '<li><a href="/users/'.$menuid.'/'.$id.'/photo'.$photoid.'.html">'.$_LANG['GOTO_PHOTO'].'</a></li>' ."\n";
-					echo '<li><a href="/users/'.$menuid.'/'.$id.'/addphoto.html">'.$_LANG['ADD_PHOTO_MORE'].'</a></li>' ."\n";
-					echo '<li><a href="/users/'.$menuid.'/'.$id.'/photoalbum.html">'.$_LANG['GOTO_PHOTOALBUM'].'</a></li>' ."\n";
-					echo '<li><a href="'.cmsUser::getProfileURL($inUser->login).'">'.$_LANG['BACK_TO_PROFILE'].'</a></li>' ."\n";
-					echo '</ul>' ."\n";
-					
+					$smarty = $inCore->initSmarty('components', 'com_photos_added.tpl');			
+					$smarty->assign('id', $id);
+					$smarty->assign('menuid', $menuid);
+					$smarty->assign('photoid', $photoid);
+					$smarty->assign('url_profile', cmsUser::getProfileURL($inUser->login));
+					$smarty->display('com_photos_added.tpl');
+
 				} else { 
 					if(usrPhotoCount($id, false)<$cfg['photosize'] || $cfg['photosize']==0){
 						//upload form
@@ -1225,12 +1222,17 @@ if ($do=='delphoto'){
 					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 					$inPage->addPathway($_LANG['PHOTOALBUM'], '/users/'.$menuid.'/'.$id.'/photoalbum.html');
 					$inPage->addPathway($_LANG['DELETE_PHOTO'], $_SERVER['REQUEST_URI']);
-					echo '<div class="con_heading">'.$_LANG['DELETING_PHOTO'].'</div>';
-					echo '<p>'.$_LANG['REALLY_DELETE_PHOTO'].' "'.$photo['title'].'"?</p>';
-					echo '<div><form action="'.$_SERVER['REQUEST_URI'].'" method="POST"><p>
-							<input style="font-size:24px; width:100px" type="button" name="cancel" value="'.$_LANG['NO'].'" onclick="window.history.go(-1)" />
-							<input style="font-size:24px; width:100px" type="submit" name="godelete" value="'.$_LANG['YES'].'" />
-						 </p></form></div>';
+					
+					$confirm['title']                   = $_LANG['DELETING_PHOTO'];
+					$confirm['text']                    = "".$_LANG['REALLY_DELETE_PHOTO']." ".$photo['title']."?";
+					$confirm['action']                  = $_SERVER['REQUEST_URI'];
+					$confirm['yes_button']              = array();
+					$confirm['yes_button']['type']      = 'submit';
+					$confirm['yes_button']['name']  	= 'godelete';
+					$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
+					$smarty->assign('confirm', $confirm);
+					$smarty->display('action_confirm.tpl');
+
 				} else { usrAccessDenied(); }
 			}
 		} else {
@@ -1332,68 +1334,20 @@ if ($do=='editphoto'){
 								$result = $inDB->query($sql);
 								if ($inDB->num_rows($result)){	
 									$photo = $inDB->fetch_assoc($result);		
-									ob_start(); ?>
-									
-									<form action="/users/<?php echo $menuid?>/<?php echo $id?>/editphoto<?php echo $photoid?>.html" method="POST" enctype="multipart/form-data">
-									<input type="hidden" name="imageurl" value="<?php echo $photo['imageurl']?>" />
-									<table border="0" cellspacing="0" cellpadding="0">
-                                      <tr>
-                                        <td width="120" valign="top"><table width="110" border="0" cellspacing="0" cellpadding="0">
-                                          <tr>
-                                            <td width="110" align="center" valign="top" style="border:solid 1px gray; padding:5px; background-color:#FFFFFF;"><img alt="" src="/images/users/photos/small/<?php echo $photo['imageurl']?>" border="0" style="border:solid 1px black" /></td>
-                                          </tr>
-                                        </table></td>
-                                        <td width="460" align="right" valign="top"><table width="460">
-                                          <tr>
-                                            <td valign="top"><strong><?php echo $_LANG['PHOTO_TITLE']; ?>: </strong></td>
-                                          </tr>
-                                          <tr>
-                                            <td valign="top"><input name="title" type="text" id="title" size="40" maxlength="250" value="<?php echo $photo['title']?>"/></td>
-                                          </tr>
-                                          <tr>
-                                            <td valign="top"><strong><?php echo $_LANG['PHOTO_DESCRIPTION']; ?>:</strong> </td>
-                                          </tr>
-                                          <tr>
-                                            <td valign="top"><textarea name="description" cols="39" rows="5" id="description"><?php echo $photo['description']?></textarea></td>
-                                          </tr>
-                                          <tr>
-                                            <td valign="top"><strong><?php echo $_LANG['TAGS']; ?>:</strong></td>
-                                          </tr>
-                                          <tr>
-                                            <td valign="top"><input name="tags" type="text" id="tags" size="40" value="<?php if (isset($photo['id'])) { echo cmsTagLine('userphoto', $photo['id'], false); } ?>"/>
-                                              <br />
-                                              <span><small><?php echo $_LANG['KEYWORDS']; ?></small></span></td>
-                                          </tr>
-                                          <tr>
-                                            <td valign="top"><strong><?php echo $_LANG['REPLACE_FILE']; ?></strong>:</td>
-                                          </tr>
-                                          <tr>
-                                            <td valign="top"><input name="MAX_FILE_SIZE" type="hidden" value="<?php echo ($max_mb * 1024 * 1024)?>"/>
-                                              <input name="picture" type="file" size="30" /></td>
-                                          </tr>
-                                          <tr>
-                                            <td valign="top"><strong><?php echo $_LANG['SHOW']; ?>:</strong></td>
-                                          </tr>
-                                          <tr>
-                                            <td valign="top"><select name="allow_who" id="allow_who">
-                                              <option value="all" <?php if ($photo['allow_who']=='all') { echo 'selected'; } ?>><?php echo $_LANG['EVERYBODY']; ?></option>
-                                              <option value="registered" <?php if ($photo['allow_who']=='registered') { echo 'selected'; } ?>><?php echo $_LANG['REGISTERED']; ?></option>
-                                              <option value="friends" <?php if ($photo['allow_who']=='friends') { echo 'selected'; } ?>><?php echo $_LANG['MY_FRIENDS']; ?></option>
-                                            </select></td>
-                                          </tr>
-                                          <tr>
-                                            <td valign="top">
-                                              <input style="margin-top:10px;font-size:18px" type="submit" name="save" value="<?php echo $_LANG['SAVE']; ?>" />
-										      <input style="margin-top:10px;font-size:18px" type="button" name="cancel" value="<?php echo $_LANG['CANCEL']; ?>" onclick="window.history.go(-1)"/>
-                                            </td>
-                                          </tr>
-                                        </table></td>
-                                      </tr>
-                                    </table>
-									</form>
-									
-									<?php 
-									echo ob_get_clean();
+									if (isset($photo['id'])) { $photo_tag = cmsTagLine('userphoto', $photo['id'], false); }
+									$photo_max_size = ($max_mb * 1024 * 1024);
+
+									$smarty = $inCore->initSmarty('components', 'com_photos_edit.tpl');
+									$smarty->assign('menuid', $menuid);
+									$smarty->assign('id', $id);
+									$smarty->assign('photo', $photo);
+									$smarty->assign('photoid', $photoid);
+									$smarty->assign('photo_tag', $photo_tag);
+									$smarty->assign('photo_max_size', $photo_max_size);
+									$smarty->assign('_LANG', $_LANG);
+									$smarty->display('com_photos_edit.tpl');
+
+
 								}//photo exists
 								else { usrAccessDenied(); }
 							} //isset photo id

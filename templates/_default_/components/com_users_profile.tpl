@@ -46,9 +46,49 @@
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td align="center" valign="middle" style="padding:10px; border:solid 1px gray; background-color:#FFFFFF">
-						{$usr.avatar}
+					{$usr.avatar}
 						{if $is_auth}
-							<div id="usermenu" style="text-align:center;">{$usr.menu}</div>
+{* ===============================меню в профиле================================================= *}
+							<div id="usermenu" style="text-align:center;">
+                            <div class="usr_profile_menu">
+							<table cellpadding="0" cellspacing="1" align="center" style="margin-left:auto;margin-right:auto"><tr>
+							{if !$myprofile}
+							<td><a href="/users/{$menuid}/{$usr.id}/sendmessage.html" title="{$LANG.WRITE_MESS}"><img src="/components/users/images/profilemenu/message.gif" border="0"/></a></td>
+							{/if}
+                            {if !$myprofile && $cfg.sw_friends}
+                            	{if !$usr.isfriend}
+                                	{if !$usr.isfriend_not_add}
+                                	<td><a href="/users/{$menuid}/{$usr.id}/friendship.html" title="{$LANG.ADD_TO_FRIEND}"><img src="/components/users/images/profilemenu/friends.gif" border="0"/></a></td>
+                                    {else}
+                                    <td><a href="/users/{$menuid}/{$usr.id}/nofriends.html" title="{$LANG.STOP_FRIENDLY}"><img src="/components/users/images/profilemenu/nofriends.gif" border="0"/></a></td>
+                                	{/if}
+                                {else}
+                                <td><a href="/users/{$menuid}/{$usr.id}/nofriends.html" title="{$LANG.STOP_FRIENDLY}"><img src="/components/users/images/profilemenu/nofriends.gif" border="0"/></a>
+                                {/if}
+                            {/if}
+							{if !$myprofile}
+                            	{if $is_admin}
+                                	{if !$usr.banned}
+                                    <td><a href="/users/{$menuid}/{$usr.id}/giveaward.html" title="{$LANG.TO_AWARD}"><img src="/components/users/images/profilemenu/award.gif" border="0"/></a></td>
+									<td><a href="/admin/index.php?view=userbanlist&do=add&to={$usr.id}" title="{$LANG.TO_BANN}"><img src="/components/users/images/profilemenu/ban.gif" border="0"/></a></td>
+                                    {/if}
+                         		<td><a href="/users/{$menuid}/{$usr.id}/delprofile.html" title="{$LANG.DEL_PROFILE}"><img src="/components/users/images/profilemenu/delprofile.gif" border="0"/></a></td>
+                                {/if}
+                         	{/if}
+                         	{if $myprofile}
+                            	{if $cfg.sw_msg}
+                                <td><a href="/users/{$menuid}/{$usr.id}/messages.html" title="{$LANG.MY_MESS}"><img src="/components/users/images/profilemenu/message.gif" border="0"/></a></td>
+                                {/if}
+                            <td><a href="/users/{$menuid}/{$usr.id}/editprofile.html" title="{$LANG.CONFIG_PROFILE}"><img src="/components/users/images/profilemenu/edit.gif" border="0"/></a></td>
+							<td><a href="/users/{$menuid}/{$usr.id}/avatar.html" title="{$LANG.SET_AVATAR}"><img src="/components/users/images/profilemenu/avatar.gif" border="0"/></a></td>
+                            	{if $usr.can_add_foto}
+                                <td><a href="/users/{$menuid}/{$usr.id}/addphoto.html" title="{$LANG.ADD_PHOTO}"><img src="/components/users/images/profilemenu/addphoto.gif" border="0"/></a></td>
+                                {/if}
+                            {/if}
+                            <td><a href="/users/{$menuid}/{$usr.id}/karma.html" title="{$LANG.KARMA_HISTORY}"><img src="/components/users/images/profilemenu/karma.gif" border="0"/></a></td>
+                            </tr></table></div>
+                            </div>
+{* ================================================================================ *}
 						{/if}
 					</td>
 				</tr>
