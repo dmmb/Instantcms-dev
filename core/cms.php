@@ -24,8 +24,13 @@ class cmsCore {
 
     private static  $instance;
     private         $menu_item;
+    private         $menu_struct;
 
-    private function __construct() {}
+    private function __construct() {
+        $this->loadClass('db');
+        $this->loadClass('config');
+        $this->loadMenuStruct();
+    }
 
     private function __clone() {}  
 
@@ -1598,28 +1603,6 @@ class cmsCore {
      * @return string
      */
     public function menuSeoLink($link, $linktype, $menuid=1){
-//        if (!strlen($link)){
-//            if ($menuid>2){
-//                $newlink = "/index.php?menuid=".$menuid;
-//            } else {
-//                $newlink = "/";
-//            }
-//        } else {
-//            if ($linktype!='link'){
-//                if (strpos($link, '?')){
-//                    $newlink = $link.'&menuid='.$menuid;
-//                } else {
-//                    $newlink = $link.'?menuid='.$menuid;
-//                }
-//            } else {$newlink = $link;}
-//        }
-//
-//        $newlink = str_replace('/index.php?', '/', $newlink);
-//        $newlink = str_replace('?', '', $newlink);
-//        $newlink = str_replace('&', '/', $newlink);
-//        $newlink = str_replace('=', '-', $newlink);
-
-//        return $newlink;
         return $link;
     }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1670,14 +1653,52 @@ class cmsCore {
 
         $inDB = cmsDatabase::getInstance();
 
-        if (!$menuid) { return false; }
-
-        $item = $inDB->get_fields('cms_menu', "id={$menuid}", '*');
-
-        if (!$item){ return false; }
-
-        return $item;
+        return $this->menu_struct[$menuid];
         
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Загружает всю структуру меню
+     * 
+     */
+    private function loadMenuStruct(){
+
+        if (is_array($this->menu_struct)){ return; }
+
+        $inDB = cmsDatabase::getInstance();
+
+        $sql    = "SELECT * FROM cms_menu";
+        $result = $inDB->query($sql);
+
+        if (!$inDB->rows_count($result)){ return; }
+
+        while ($item = $inDB->fetch_assoc($result)){
+            $this->menu_struct[$item['id']] = $item;
+        }
+
+        return;        
+
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Возвращает ID пункта меню, к которому привязан компонент
+     * @param string $component
+     * @return int
+     */
+    public function getComponentMenuId($component) {
+
+        foreach($this->menu_struct as $item){
+            if ($item['linktype']=='component' && $item['linkid']==$component){
+                return $item['id'];
+            }
+        }
+
+        return 0;
+
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1754,7 +1775,7 @@ class cmsCore {
     public function getListItems($table, $selected=0, $order_by='id', $order_to='ASC', $where='', $id_field='id'){
         $inDB = cmsDatabase::getInstance();
         $html = '';
-        $sql  = "SELECT * FROM {$table} \n";
+        $sql  = "SELECT {$id_field}, title FROM {$table} \n";
         if ($where){
             $sql .= "WHERE {$where} \n";
         }
@@ -1954,7 +1975,7 @@ class cmsCore {
         switch($target){
             case 'article':  $result = $inDB->query("SELECT title, seolink FROM cms_content WHERE id = $target_id LIMIT 1") ;
                              if (mysql_num_rows($result)){
-                                $data = mysql_fetch_assoc($result);
+                                $data = mysql_fetch_assoc($reproceedBodysult);
                                 $inCore->loadModel('content');
                                 $model = new cms_model_content();
                                 if ($short) { $data['title'] = substr($data['title'], 0, 30).'...'; }
@@ -2035,7 +2056,7 @@ class cmsCore {
     public function getCommentsCount($target, $target_id){
         $inDB = cmsDatabase::getInstance();
         if ($this->isComponentInstalled('comments')){
-            $sql = "SELECT * FROM cms_comments WHERE target = '$target' AND target_id = '$target_id'";
+            $sql = "SELECT id FROM cms_comments WHERE target = '$target' AND target_id = '$target_id'";
             $result = $inDB->query($sql) ;
             return mysql_num_rows($result);
         } else { return 0; }

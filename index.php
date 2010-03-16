@@ -45,9 +45,7 @@
 
     $inCore     = cmsCore::getInstance();
     
-    $inCore->loadClass('page');         //страница
-    $inCore->loadClass('config');       //конфигурация
-    $inCore->loadClass('db');           //база данных
+    $inCore->loadClass('page');         //страница    
     $inCore->loadClass('plugin');       //плагины
     $inCore->loadClass('user');         //пользователь
 
