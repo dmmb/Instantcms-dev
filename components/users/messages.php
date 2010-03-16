@@ -47,9 +47,9 @@ function pageSelect($records, $current, $perpage){
 			$result = $inDB->query($sql) ;
 			$msg_count = $inDB->num_rows($result);
 			//sql
-			$sql = "SELECT m.*, DATE_FORMAT(m.senddate, '%d-%m-%Y (%H:%i)') as fpubdate, m.from_id as sender_id
-					FROM cms_user_msg m
-					WHERE m.to_id = $id
+			$sql = "SELECT m.*, m.senddate as fpubdate, m.from_id as sender_id, u.nickname as author, u.login as author_login, u.is_deleted, p.imageurl
+					FROM cms_user_msg m, cms_users u, cms_user_profiles p
+					WHERE m.to_id = $id AND m.from_id = u.id AND m.from_id = p.user_id
 					ORDER BY senddate DESC
 					LIMIT ".(($page-1)*$perpage).", $perpage";	
 		} else {
@@ -59,9 +59,9 @@ function pageSelect($records, $current, $perpage){
 				$result = $inDB->query($sql) ;
 				$msg_count = $inDB->num_rows($result);
 				//sql
-				$sql = "SELECT m.*, u.nickname as author, u.login as author_login, DATE_FORMAT(m.senddate, '%d-%m-%Y (%H:%i)') as fpubdate, m.to_id as sender_id
-						FROM cms_user_msg m, cms_users u
-						WHERE m.from_id = $id AND m.to_id = u.id
+				$sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.to_id as sender_id, u.is_deleted, p.imageurl
+						FROM cms_user_msg m, cms_users u, cms_user_profiles p
+						WHERE m.from_id = $id AND m.to_id = u.id AND m.to_id = p.user_id
 						ORDER BY senddate DESC
 						LIMIT ".(($page-1)*$perpage).", $perpage";							
 			}
@@ -70,15 +70,14 @@ function pageSelect($records, $current, $perpage){
 				//how many records
 				$sql = "SELECT m.id
 						FROM cms_user_msg m, cms_users u
-						WHERE ((m.from_id = $id AND m.to_id = $with_id) OR (m.from_id = $with_id AND m.to_id = $id)) AND m.from_id = u.id
-						ORDER BY senddate ASC";
+						WHERE ((m.from_id = $id AND m.to_id = $with_id) OR (m.from_id = $with_id AND m.to_id = $id)) AND m.from_id = u.id";
 				$result = $inDB->query($sql) ;
 				$msg_count = $inDB->num_rows($result);
 				//sql		
-				$sql = "SELECT m.*, u.nickname as author, u.login as author_login, DATE_FORMAT(m.senddate, '%d-%m-%Y (%H:%i)') as fpubdate, m.from_id as sender_id
-						FROM cms_user_msg m, cms_users u
-						WHERE ((m.from_id = $id AND m.to_id = $with_id) OR (m.from_id = $with_id AND m.to_id = $id)) AND m.from_id = u.id
-						ORDER BY senddate ASC
+				$sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.from_id as sender_id, u.is_deleted, p.imageurl
+						FROM cms_user_msg m, cms_users u, cms_user_profiles p
+						WHERE ((m.from_id = $id AND m.to_id = $with_id) OR (m.from_id = $with_id AND m.to_id = $id)) AND m.from_id = u.id AND m.from_id = p.user_id
+						ORDER BY senddate DESC
 						LIMIT ".(($page-1)*$perpage).", $perpage";							
 			}
 		}
@@ -135,8 +134,7 @@ function pageSelect($records, $current, $perpage){
 					while($record = $inDB->fetch_assoc($result)){
 	
 						if($record['sender_id']>0){ 
-							$author     = $inDB->get_fields('cms_users', 'id = '.$record['sender_id'], 'nickname, login');
-							$authorlink = '<a href="'.cmsUser::getProfileURL($author['login']).'">'.$author['nickname'].'</a>';
+							$authorlink = '<a href="'.cmsUser::getProfileURL($record['author_login']).'">'.$record['author'].'</a>';
 						} else {
 							if ($record['sender_id']==USER_UPDATER){
 								$authorlink = $_LANG['SERVICE_UPDATE'];
@@ -183,10 +181,10 @@ function pageSelect($records, $current, $perpage){
 						$text = strip_tags($text, '<img><br><a><b><u><i><table><tr><td><th><h1><h2><h3><div><span><pre>');
 						
 						if ($record['sender_id']>0){
-							$user_img = '<a href="'.cmsUser::getProfileURL($author['login']).'">'.usrImage($record['sender_id'], 'small').'</a>';
+							$user_img = '<a href="'.cmsUser::getProfileURL($record['author_login']).'">'.usrImageNOdb($record['sender_id'], 'small', $record['imageurl'], $record['is_deleted'], $record['author_login']).'</a>';
 						} else {
-							$user_img = usrImage($record['sender_id'], 'small');
-						}
+							$user_img = usrImageNOdb($record['sender_id'], 'small', $record['imageurl'], $record['is_deleted'], $record['author_login']);
+						}	
 						
 						echo '<tr>';						
 							echo '<td width="70" height="70" valign="middle" align="center" style="border:solid 1px silver">'.$user_img.'</td>';			

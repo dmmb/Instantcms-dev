@@ -1788,22 +1788,26 @@ if ($do=='sendmessage'){
 						
 						//send email notification, if user want it
 						$needmail = dbGetField('cms_user_profiles', "user_id='{$to_id}'", 'email_newmsg');
-						if ($needmail){
-								$inConf     = cmsConfig::getInstance();
-														
-								$postdate   = date('d/m/Y H:i:s');
-								$to_email   = dbGetField('cms_users', "id='{$to_id}'", 'email');
-								$from_nick  = dbGetField('cms_users', "id='{$from_id}'", 'nickname');
-								$answerlink = HOST.'/users/'.$menuid.'/'.$from_id.'/reply'.$msg_id.'.html';
-						
-								$letter_path    = PATH.'/includes/letters/newmessage.txt';
-								$letter         = file_get_contents($letter_path);
-								
-								$letter= str_replace('{sitename}', $inConf->sitename, $letter);
-								$letter= str_replace('{answerlink}', $answerlink, $letter);
-								$letter= str_replace('{date}', $postdate, $letter);
-								$letter= str_replace('{from}', $from_nick, $letter);	
-								$inCore->mailText($to_email, $_LANG['YOU_HAVE_NEW_MESS'].'! - '.$inConf->sitename, $letter);
+						//Ïğîâåğÿåì, åñëè şçåğ îíëàéí, òî óâåäîìëåíèå íà ïî÷òó íå îòïğàâëÿåì.
+						$isonline = dbGetField('cms_online', "user_id='{$to_id}'", 'id');
+						if (!$isonline){
+							if ($needmail){
+									$inConf     = cmsConfig::getInstance();
+															
+									$postdate   = date('d/m/Y H:i:s');
+									$to_email   = dbGetField('cms_users', "id='{$to_id}'", 'email');
+									$from_nick  = dbGetField('cms_users', "id='{$from_id}'", 'nickname');
+									$answerlink = HOST.'/users/'.$menuid.'/'.$from_id.'/reply'.$msg_id.'.html';
+							
+									$letter_path    = PATH.'/includes/letters/newmessage.txt';
+									$letter         = file_get_contents($letter_path);
+									
+									$letter= str_replace('{sitename}', $inConf->sitename, $letter);
+									$letter= str_replace('{answerlink}', $answerlink, $letter);
+									$letter= str_replace('{date}', $postdate, $letter);
+									$letter= str_replace('{from}', $from_nick, $letter);	
+									$inCore->mailText($to_email, $_LANG['YOU_HAVE_NEW_MESS'].'! - '.$inConf->sitename, $letter);
+							}
 						}
 					} else {
 						if ($inCore->userIsAdmin($inUser->id)){

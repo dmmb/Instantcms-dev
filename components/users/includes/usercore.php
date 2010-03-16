@@ -380,6 +380,35 @@ function usrImage($user_id, $small='small'){
 	}
 }
 
+function usrImageNOdb($user_id, $small='small', $usr_imageurl, $usr_is_deleted){
+	if ($user_id == -1) {	return '<img border="0" class="usr_img_small" src="/images/messages/update.jpg" />';	}
+	if ($user_id == -2) {	return '<img border="0" class="usr_img_small" src="/images/messages/massmail.jpg" />'; }
+
+	if ($usr_imageurl){
+		if($usr_is_deleted){
+			if ($small=='small'){
+				return '<img border="0" class="usr_img_small" src="/images/users/avatars/small/noprofile.jpg" />';
+			} else {
+				return '<img border="0" class="usr_img" src="/images/users/avatars/noprofile.jpg" />';
+			}	
+		} else {
+			if ($usr_imageurl && @file_exists($_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/'.$usr_imageurl)){
+				if ($small=='small'){
+					return '<img border="0" class="usr_img_small" src="/images/users/avatars/small/'.$usr_imageurl.'" />';
+				} else {
+					return '<img border="0" class="usr_img" src="/images/users/avatars/'.$usr_imageurl.'" />';
+				}
+			} else {
+				if ($small=='small'){ return '<img border="0" class="usr_img_small" src="/images/users/avatars/small/nopic.jpg" />';
+				} else { return '<img border="0" class="usr_img" src="/images/users/avatars/nopic.jpg" />'; }
+			}
+		}
+	} else {
+			if ($small=='small'){ return '<img border="0" class="usr_img_small" src="/images/users/avatars/small/nopic.jpg" />';
+			} else { return '<img border="0" class="usr_img" src="/images/users/avatars/nopic.jpg" />'; }
+	}
+}
+
 function usrCanKarma($to, $from){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
