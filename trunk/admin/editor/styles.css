@@ -1,0 +1,92 @@
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #000000;
+	margin: 0px;
+	background-color: #CCCCCC;
+}
+.maintable {
+	background-color: #FFFFFF;
+	border-bottom-width: 3px;
+	border-bottom-style: double;
+	border-bottom-color: #666666;
+}
+
+
+.title{
+	font-size: 24px;
+	margin-bottom:8px;
+}
+.desc{
+	margin-bottom:15px;
+}
+
+.toollink{
+	color:#666666;
+	text-decoration:none;
+}
+.toollink:hover{
+	color:#FF6600;
+	text-decoration:none;	
+}
+
+.content{
+	font-size: 12px;
+}
+
+a{
+	color:#006699;
+}
+
+a:hover{
+	color:#FF6600;
+}
+
+.exitlink{
+	color:#FFFFFF;
+}
+
+.pagebar{
+	font-size:12px;
+	margin-top:15px;
+	padding-top:10px;
+	width:100%;
+	border-top:solid 1px silver;
+}
+
+.menuitem{
+	display:block;
+	float:left;
+	height:40px;
+	padding-left:15px;
+	padding-right:15px;
+	text-decoration:none;
+	background-color:#EBEBEB;
+	line-height:38px;
+	color:#000000;
+}
+.menuitem:hover{
+	display:block;
+	height:40px;
+	float:left;
+	padding-left:15px;
+	padding-right:15px;
+	text-decoration:none;
+	color:#FFFFFF;
+	background-color:gray;
+	line-height:38px;	
+}
+.proptable{
+	border:solid 1px silver;
+}
+.hinttext{
+	font-size:10px;
+	color:#999999;
+}
+.btnlink{
+	font-size:18px;
+	padding:10px;
+	margin:2px;
+	border:solid 1px silver;
+	text-decoration:none;
+}
