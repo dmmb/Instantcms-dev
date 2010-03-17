@@ -47,9 +47,11 @@ function pageSelect($records, $current, $perpage){
 			$result = $inDB->query($sql) ;
 			$msg_count = $inDB->num_rows($result);
 			//sql
-			$sql = "SELECT m.*, m.senddate as fpubdate, m.from_id as sender_id, u.nickname as author, u.login as author_login, u.is_deleted, p.imageurl
-					FROM cms_user_msg m, cms_users u, cms_user_profiles p
-					WHERE m.to_id = $id AND m.from_id = u.id AND m.from_id = p.user_id
+					$sql = "SELECT m.*, m.senddate as fpubdate, m.from_id as sender_id, u.nickname as author, u.login as author_login, u.is_deleted, p.imageurl
+					FROM cms_user_msg m
+					LEFT JOIN zbl_users u ON m.from_id = u.id
+					LEFT JOIN zbl_user_profiles p ON m.from_id = p.user_id
+					WHERE m.to_id = $id
 					ORDER BY senddate DESC
 					LIMIT ".(($page-1)*$perpage).", $perpage";	
 		} else {
