@@ -36,7 +36,6 @@ RewriteRule ^content/delete([0-9]*).html$ /index.php?view=content&do=deleteartic
 RewriteRule ^content/my.html$ /index.php?view=content&do=my&page=1
 RewriteRule ^content/my([0-9]*).html$ /index.php?view=content&do=my&page=$1
 RewriteRule ^content$ /index.php?view=content
-
 RewriteRule ^content/(.*)/page-([0-9]*).html$ /index.php?view=content&do=read&seolink=$1&page=$2
 RewriteRule ^content/(.*).html$ /index.php?view=content&do=read&seolink=$1
 RewriteRule ^content/(.*)/page-([0-9]*)$ /index.php?view=content&do=view&seolink=$1&page=$2
