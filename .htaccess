@@ -13,10 +13,10 @@ RewriteRule ^auth/error.html$ /core/auth/autherror.html
 RewriteRule ^rss/([a-z]*)/(.*)/feed.rss$ /components/rssfeed/frontend.php?&target=$1&item_id=$2
 
 #COMPONENT "ARHIVE"
-RewriteRule ^arhive/([0-9]*)/([0-9]*)/([0-9]*)/([0-9]*)$ /index.php?view=arhive&y=$2&m=$3&d=$4&menuid=$1
-RewriteRule ^arhive/([0-9]*)/([0-9]*)/([0-9]*)$ /index.php?view=arhive&y=$2&m=$3&menuid=$1
-RewriteRule ^arhive/([0-9]*)/([0-9]*)$ /index.php?view=arhive&y=$2&menuid=$1
-RewriteRule ^arhive/([0-9]*)$ /index.php?view=arhive&menuid=$1
+RewriteRule ^arhive/([0-9]*)/([0-9]*)/([0-9]*)$ /index.php?view=arhive&y=$1&m=$2&d=$3
+RewriteRule ^arhive/([0-9]*)/([0-9]*)$ /index.php?view=arhive&y=$1&m=$2
+RewriteRule ^arhive/([0-9]*)$ /index.php?view=arhive&y=$1
+RewriteRule ^arhive$ /index.php?view=arhive
 
 #OUTER LINKS
 RewriteRule ^gobanner([0-9]*)$ /index.php?view=banners&do=click&id=$1
@@ -24,28 +24,23 @@ RewriteRule ^go/url=(.*)$ /index.php?view=files&do=redirect&url=$1
 RewriteRule ^load/url=(.*)$ /index.php?view=files&do=download&fileurl=$1
 
 #SEARCH SITE CONTENT BY TAG
-RewriteRule ^search/tag/(.*)/page([0-9]*).html$ /index.php?view=search&mode=tag&menuid=0&query=$1&page=$2
-RewriteRule ^search/tag/(.*)$ /index.php?view=search&mode=tag&menuid=0&query=$1
-RewriteRule ^search/([0-9]*)$ /index.php?view=search&menuid=$1
+RewriteRule ^search/tag/(.*)/page([0-9]*).html$ /index.php?view=search&mode=tag&query=$1&page=$2
+RewriteRule ^search/tag/(.*)$ /index.php?view=search&mode=tag&query=$1
+RewriteRule ^search$ /index.php?view=search
 
 #COMPONENT "CONTENT"
-RewriteRule ^content/top.html$ /index.php?view=content&do=best&menuid=0
+RewriteRule ^content/top.html$ /index.php?view=content&do=best
 RewriteRule ^content/add.html$ /index.php?view=content&do=addarticle
 RewriteRule ^content/edit([0-9]*).html$ /index.php?view=content&do=editarticle&id=$1
 RewriteRule ^content/delete([0-9]*).html$ /index.php?view=content&do=deletearticle&id=$1
 RewriteRule ^content/my.html$ /index.php?view=content&do=my&page=1
 RewriteRule ^content/my([0-9]*).html$ /index.php?view=content&do=my&page=$1
-RewriteRule ^content/([0-9]*)/([0-9]*)$ /index.php?view=content&id=$2&menuid=$1
-RewriteRule ^content/([0-9]*)/([0-9]*)-([0-9]*)$ /index.php?view=content&id=$2&menuid=$1&page=$3
-RewriteRule ^content/([0-9]*)/read([0-9]*).html$ /index.php?view=content&do=read&id=$2&menuid=$1
-RewriteRule ^content/([0-9]*)/read([0-9]*)-([0-9]*).html$ /index.php?view=content&do=read&id=$2&page=$3&menuid=$1
-RewriteRule ^content/([0-9]*)$ /index.php?view=content&menuid=$1
 RewriteRule ^content$ /index.php?view=content
 
-RewriteRule ^content/([0-9]*)/(.*)/page-([0-9]*).html$ /index.php?view=content&do=read&seolink=$2&menuid=$1&page=$3
-RewriteRule ^content/([0-9]*)/(.*).html$ /index.php?view=content&do=read&seolink=$2&menuid=$1
-RewriteRule ^content/([0-9]*)/(.*)/page-([0-9]*)$ /index.php?view=content&do=view&seolink=$2&menuid=$1&page=$3
-RewriteRule ^content/([0-9]*)/(.*)$ /index.php?view=content&do=view&seolink=$2&menuid=$1
+RewriteRule ^content/(.*)/page-([0-9]*).html$ /index.php?view=content&do=read&seolink=$1&page=$2
+RewriteRule ^content/(.*).html$ /index.php?view=content&do=read&seolink=$1
+RewriteRule ^content/(.*)/page-([0-9]*)$ /index.php?view=content&do=view&seolink=$1&page=$2
+RewriteRule ^content/(.*)$ /index.php?view=content&do=view&seolink=$1
 
 #COMPONENT "COMMENTS"
 RewriteRule ^comments/add$ /index.php?view=comments&do=add
@@ -58,43 +53,39 @@ RewriteRule ^polls/vote$ /index.php?view=polls&do=vote
 RewriteRule ^forms/process$ /index.php?view=forms&do=processform
 
 #COMPONENT "FAQ"
-RewriteRule ^faq/([0-9]*)/([0-9]*)$ /index.php?view=faq&id=$2&menuid=$1
-RewriteRule ^faq/([0-9]*)/([0-9]*)$ /index.php?view=faq&id=$2&menuid=$1
-RewriteRule ^faq/([0-9]*)/([0-9]*)-([0-9]*)$ /index.php?view=faq&id=$2&menuid=$1&page=$3
-RewriteRule ^faq/([0-9]*)/quest([0-9]*).html$ /index.php?view=faq&do=read&id=$2&menuid=$1
-RewriteRule ^faq/([0-9]*)/sendquest.html$ /index.php?view=faq&do=sendquest&menuid=$1
-RewriteRule ^faq/([0-9]*)$ /index.php?view=faq&menuid=$1
+RewriteRule ^faq/([0-9]*)$ /index.php?view=faq&id=$1
+RewriteRule ^faq/([0-9]*)-([0-9]*)$ /index.php?view=faq&id=$1&page=$2
+RewriteRule ^faq/quest([0-9]*).html$ /index.php?view=faq&do=read&id=$1
+RewriteRule ^faq/sendquest.html$ /index.php?view=faq&do=sendquest
 RewriteRule ^faq$ /index.php?view=content
 
 #COMPONENT "PHOTOGALLERY"
-RewriteRule ^photos/([0-9]*)/([0-9]*)$ /index.php?view=photos&id=$2&menuid=$1
-RewriteRule ^photos/([0-9]*)/([0-9]*)/byuser([0-9]*).html$ /index.php?view=photos&id=$2&menuid=$1&userid=$3
-RewriteRule ^photos/([0-9]*)/([0-9]*)-([0-9]*)$ /index.php?view=photos&id=$2&menuid=$1&page=$3
-RewriteRule ^photos/([0-9]*)/latest.html$ /index.php?view=photos&menuid=$1&do=latest
-RewriteRule ^photos/([0-9]*)/top.html$ /index.php?view=photos&menuid=$1&do=best
-RewriteRule ^photos/([0-9]*)/([0-9]*)/addphoto.html$ /index.php?view=photos&id=$2&menuid=$1&do=addphoto
-RewriteRule ^photos/([0-9]*)/([0-9]*)/uploaded.html$ /index.php?view=photos&id=$2&menuid=$1&do=uploaded
-RewriteRule ^photos/([0-9]*)/editphoto([0-9]*).html$ /index.php?view=photos&id=$2&menuid=$1&do=editphoto
-RewriteRule ^photos/([0-9]*)/movephoto([0-9]*).html$ /index.php?view=photos&id=$2&menuid=$1&do=movephoto
-RewriteRule ^photos/([0-9]*)/delphoto([0-9]*).html$ /index.php?view=photos&id=$2&menuid=$1&do=delphoto
-RewriteRule ^photos/([0-9]*)/publish([0-9]*).html$ /index.php?view=photos&id=$2&menuid=$1&do=pubphoto
-RewriteRule ^photos/([0-9]*)/photo([0-9]*).html$ /index.php?view=photos&do=viewphoto&id=$2&menuid=$1
-RewriteRule ^photos/([0-9]*)$ /index.php?view=photos&menuid=$1
+RewriteRule ^photos/([0-9]*)$ /index.php?view=photos&id=$1
+RewriteRule ^photos/([0-9]*)/byuser([0-9]*).html$ /index.php?view=photos&id=$1&userid=$2
+RewriteRule ^photos/([0-9]*)/([0-9]*)-([0-9]*)$ /index.php?view=photos&id=$1&page=$2
+RewriteRule ^photos/latest.html$ /index.php?view=photos&do=latest
+RewriteRule ^photos/top.html$ /index.php?view=photos&do=best
+RewriteRule ^photos/([0-9]*)/addphoto.html$ /index.php?view=photos&id=$1&do=addphoto
+RewriteRule ^photos/([0-9]*)/uploaded.html$ /index.php?view=photos&id=$1&do=uploaded
+RewriteRule ^photos/editphoto([0-9]*).html$ /index.php?view=photos&id=$1&do=editphoto
+RewriteRule ^photos/movephoto([0-9]*).html$ /index.php?view=photos&id=$1&do=movephoto
+RewriteRule ^photos/delphoto([0-9]*).html$ /index.php?view=photos&id=$1&do=delphoto
+RewriteRule ^photos/publish([0-9]*).html$ /index.php?view=photos&id=$1&do=pubphoto
+RewriteRule ^photos/photo([0-9]*).html$ /index.php?view=photos&do=viewphoto&id=$1
 RewriteRule ^photos$ /index.php?view=photos
 
 #COMPONENT "BULLETIN BOARD"
-RewriteRule ^board/([0-9]*)/([0-9]*)$ /index.php?view=board&id=$2&menuid=$1
-RewriteRule ^board/([0-9]*)/([0-9]*)/type/(.*)$ /index.php?view=board&id=$2&menuid=$1&obtype=$3
-RewriteRule ^board/([0-9]*)/([0-9]*)-([0-9]*)$ /index.php?view=board&id=$2&menuid=$1&page=$3
-RewriteRule ^board/([0-9]*)/latest.html$ /index.php?view=board&menuid=$1&do=latest
-RewriteRule ^board/([0-9]*)/([0-9]*)/add.html$ /index.php?view=board&id=$2&menuid=$1&do=additem
-RewriteRule ^board/([0-9]*)/edit([0-9]*).html$ /index.php?view=board&id=$2&menuid=$1&do=edititem
-RewriteRule ^board/([0-9]*)/edititem([0-9]*).html$ /index.php?view=board&id=$2&menuid=$1&do=edititem
-RewriteRule ^board/([0-9]*)/moveitem([0-9]*).html$ /index.php?view=board&id=$2&menuid=$1&do=moveitem
-RewriteRule ^board/([0-9]*)/delete([0-9]*).html$ /index.php?view=board&id=$2&menuid=$1&do=delete
-RewriteRule ^board/([0-9]*)/read([0-9]*).html$ /index.php?view=board&do=read&id=$2&menuid=$1
-RewriteRule ^board/([0-9]*)/city/(.*)$ /index.php?view=board&do=city&menuid=$1&city=$2
-RewriteRule ^board/([0-9]*)$ /index.php?view=board&menuid=$1
+RewriteRule ^board/([0-9]*)/([0-9]*)$ /index.php?view=board&id=$1
+RewriteRule ^board/([0-9]*)/type/(.*)$ /index.php?view=board&id=$1&obtype=$2
+RewriteRule ^board/([0-9]*)-([0-9]*)$ /index.php?view=board&id=$1&page=$2
+RewriteRule ^board/latest.html$ /index.php?view=board&do=latest
+RewriteRule ^board/([0-9]*)/add.html$ /index.php?view=board&id=$1&do=additem
+RewriteRule ^board/edit([0-9]*).html$ /index.php?view=board&id=$1&menuid=$1&do=edititem
+RewriteRule ^board/edititem([0-9]*).html$ /index.php?view=board&id=$1&do=edititem
+RewriteRule ^board/moveitem([0-9]*).html$ /index.php?view=board&id=$1&do=moveitem
+RewriteRule ^board/delete([0-9]*).html$ /index.php?view=board&id=$1&do=delete
+RewriteRule ^board/read([0-9]*).html$ /index.php?view=board&do=read&id=$1
+RewriteRule ^board/city/(.*)$ /index.php?view=board&do=city&city=$1
 RewriteRule ^board$ /index.php?view=board
 
 #COMPONENT "PRICELIST"
@@ -110,11 +101,11 @@ RewriteRule ^price$ /index.php?view=price
 RewriteRule ^registration/complete.html$ /core/auth/regcomplete.html
 RewriteRule ^registration/activate.html$ /core/auth/regactivate.html
 RewriteRule ^activate/(.*)$ /index.php?view=registration&do=activate&code=$1
-RewriteRule ^([0-9]*)/passremind.html$ /index.php?view=registration&do=passremind&menuid=$1
-RewriteRule ^registration/([0-9]*)$ /index.php?view=registration&menuid=$1
+RewriteRule ^passremind.html$ /index.php?view=registration&do=passremind
 RewriteRule ^registration$ /index.php?view=registration
 
 #COMPONENT "USER PROFILES"
+RewriteRule ^users$ /index.php?view=users&online=0
 ### karma voting ###
 RewriteRule ^users/karma/plus/([0-9]*)/([0-9]*)$ /index.php?view=users&do=votekarma&sign=plus&to=$1&from=$2
 RewriteRule ^users/karma/minus/([0-9]*)/([0-9]*)$ /index.php?view=users&do=votekarma&sign=minus&to=$1&from=$2
@@ -157,7 +148,7 @@ RewriteRule ^users/([0-9]*)/([0-9]*)/forumposts([0-9]*).html$ /index.php?view=us
 ### user lists ###
 RewriteRule ^users/([0-9]*)-([0-9]*)/([a-z]*)-([a-z]*).html$ /index.php?view=users&menuid=$1&page=$2&orderby=$3&orderto=$4
 RewriteRule ^users/([0-9]*)/online.html$ /index.php?view=users&menuid=$1&online=1
-RewriteRule ^users/([0-9]*)/all.html$ /index.php?view=users&menuid=$1&online=0
+RewriteRule ^users/([0-9]*)/all.html$ /index.php?view=users&online=0
 RewriteRule ^users/([0-9]*)-([0-9]*)$ /index.php?view=users&menuid=$1&page=$2&
 ### profile ###
 RewriteRule ^users/([0-9]*)/([0-9]*)/profile.html$ /index.php?view=users&do=profile&id=$2&menuid=$1
@@ -183,48 +174,43 @@ RewriteRule ^users/([0-9]*)/([0-9]*)/showfilelist.html$ /index.php?view=users&do
 RewriteRule ^users/([0-9]*)/([0-9]*)/hidefilelist.html$ /index.php?view=users&do=pubfilelist&id=$2&menuid=$1&allow=nobody
 RewriteRule ^users/files/download.html$ /index.php?view=users&do=download
 RewriteRule ^users/files/download([0-9]*).html$ /index.php?view=users&do=download&fileid=$1
-RewriteRule ^users/([a-zA-z0-9\.]*)$ /index.php?view=users&do=profile&login=$1&menuid=0
 ### default ###
+RewriteRule ^users/([a-zA-z0-9\.]*)$ /index.php?view=users&do=profile&login=$1&menuid=0
 RewriteRule ^users/([0-9]*)$ /index.php?view=users&menuid=$1
-RewriteRule ^users$ /index.php?view=users
+
 
 #COMPONENT "BLOG"
-RewriteRule ^blogs/([0-9]*)$ /index.php?view=blog&do=latest&menuid=$1
-RewriteRule ^blogs/([0-9]*)/createblog.html$ /index.php?view=blog&do=create&menuid=$1
-RewriteRule ^blogs/([0-9]*)/latest.html$ /index.php?view=blog&do=latest&menuid=$1
-RewriteRule ^blogs/([0-9]*)/latest-([0-9]*).html$ /index.php?view=blog&do=latest&menuid=$1&page=$2
-RewriteRule ^blogs/([0-9]*)/popular.html$ /index.php?view=blog&do=best&menuid=$1
-RewriteRule ^blogs/([0-9]*)/popular-([0-9]*).html$ /index.php?view=blog&do=best&menuid=$1&page=$2
-RewriteRule ^blogs/([0-9]*)/all.html$ /index.php?view=blog&do=view&menuid=$1&ownertype=all
-RewriteRule ^blogs/([0-9]*)/single.html$ /index.php?view=blog&do=view&menuid=$1&ownertype=single
-RewriteRule ^blogs/([0-9]*)/multi.html$ /index.php?view=blog&do=view&menuid=$1&ownertype=multi
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/moderate.html$ /index.php?view=blog&do=moderate&menuid=$1&id=$2
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/publishpost([0-9]*).html$ /index.php?view=blog&do=publishpost&menuid=$1&id=$2&post_id=$3
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/blog.html$ /index.php?view=blog&do=blog&menuid=$1&id=$2
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/blog-([0-9]*).html$ /index.php?view=blog&do=blog&menuid=$1&id=$2&page=$3
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/blog([0-9]*)-([0-9]*).html$ /index.php?view=blog&do=blog&menuid=$1&id=$2&page=$4&cat_id=$3
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/blog([0-9]*).html$ /index.php?view=blog&do=blog&menuid=$1&id=$2&cat_id=$3
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/authors.html$ /index.php?view=blog&do=authors&menuid=$1&id=$2
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/editblog.html$ /index.php?view=blog&do=config&menuid=$1&id=$2
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/delblog.html$ /index.php?view=blog&do=delblog&menuid=$1&id=$2
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/delblog-yes.html$ /index.php?view=blog&do=delblog&menuid=$1&id=$2&confirm=yes
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/post([0-9]*).html$ /index.php?view=blog&do=post&menuid=$1&id=$2&post_id=$3
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/delpost([0-9]*).html$ /index.php?view=blog&do=delpost&menuid=$1&id=$2&post_id=$3
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/delpost([0-9]*)-yes.html$ /index.php?view=blog&do=delpost&menuid=$1&id=$2&post_id=$3&confirm=yes
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/delcat([0-9]*).html$ /index.php?view=blog&do=delcat&menuid=$1&id=$2&cat_id=$3
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/delcat([0-9]*)-yes.html$ /index.php?view=blog&do=delcat&menuid=$1&id=$2&cat_id=$3&confirm=yes
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/newpost.html$ /index.php?view=blog&do=newpost&menuid=$1&id=$2
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/newcat.html$ /index.php?view=blog&do=newcat&menuid=$1&id=$2
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/editpost([0-9]*).html$ /index.php?view=blog&do=editpost&menuid=$1&id=$2&post_id=$3
-RewriteRule ^blogs/([0-9]*)/([0-9]*)/editcat([0-9]*).html$ /index.php?view=blog&do=editcat&menuid=$1&id=$2&cat_id=$3
+RewriteRule ^blogs$ /index.php?view=blog&do=latest
+RewriteRule ^blogs/createblog.html$ /index.php?view=blog&do=create
+RewriteRule ^blogs/latest.html$ /index.php?view=blog&do=latest
+RewriteRule ^blogs/latest-([0-9]*).html$ /index.php?view=blog&do=latest&page=$1
+RewriteRule ^blogs/popular.html$ /index.php?view=blog&do=best
+RewriteRule ^blogs/popular-([0-9]*).html$ /index.php?view=blog&do=best&page=$1
+RewriteRule ^blogs/all.html$ /index.php?view=blog&do=view&ownertype=all
+RewriteRule ^blogs/single.html$ /index.php?view=blog&do=view&ownertype=single
+RewriteRule ^blogs/multi.html$ /index.php?view=blog&do=view&ownertype=multi
+RewriteRule ^blogs/([0-9]*)/moderate.html$ /index.php?view=blog&do=moderate&id=$1
+RewriteRule ^blogs/([0-9]*)/publishpost([0-9]*).html$ /index.php?view=blog&do=publishpost&id=$1&post_id=$2
+RewriteRule ^blogs/([0-9]*)/authors.html$ /index.php?view=blog&do=authors&id=$1
+RewriteRule ^blogs/([0-9]*)/editblog.html$ /index.php?view=blog&do=config&id=$1
+RewriteRule ^blogs/([0-9]*)/delblog.html$ /index.php?view=blog&do=delblog&id=$1
+RewriteRule ^blogs/([0-9]*)/delblog-yes.html$ /index.php?view=blog&do=delblog&id=$1&confirm=yes
+RewriteRule ^blogs/([0-9]*)/delpost([0-9]*).html$ /index.php?view=blog&do=delpost&id=$1&post_id=$2
+RewriteRule ^blogs/([0-9]*)/delpost([0-9]*)-yes.html$ /index.php?view=blog&do=delpost&id=$1&post_id=$2&confirm=yes
+RewriteRule ^blogs/([0-9]*)/delcat([0-9]*).html$ /index.php?view=blog&do=delcat&id=$1&cat_id=$2
+RewriteRule ^blogs/([0-9]*)/delcat([0-9]*)-yes.html$ /index.php?view=blog&do=delcat&id=$1&cat_id=$2&confirm=yes
+RewriteRule ^blogs/([0-9]*)/newpost.html$ /index.php?view=blog&do=newpost&id=$1
+RewriteRule ^blogs/([0-9]*)/newcat.html$ /index.php?view=blog&do=newcat&id=$1
+RewriteRule ^blogs/([0-9]*)/editpost([0-9]*).html$ /index.php?view=blog&do=editpost&id=$1&post_id=$2
+RewriteRule ^blogs/([0-9]*)/editcat([0-9]*).html$ /index.php?view=blog&do=editcat&id=$1&cat_id=$2
 
-RewriteRule ^blogs/([0-9]*)/([a-zA-Z0-9\-]*)$ /index.php?view=blog&do=blog&menuid=$1&bloglink=$2
-RewriteRule ^blogs/([0-9]*)/([a-zA-Z0-9\-]*)/$ /index.php?view=blog&do=blog&menuid=$1&bloglink=$2
-RewriteRule ^blogs/([0-9]*)/([a-zA-Z0-9\-]*)/page-([0-9]*)$ /index.php?view=blog&do=blog&menuid=$1&bloglink=$2&page=$3
-RewriteRule ^blogs/([0-9]*)/([a-zA-Z0-9\-]*)/cat-([0-9]*)$ /index.php?view=blog&do=blog&menuid=$1&bloglink=$2&cat_id=$3
-RewriteRule ^blogs/([0-9]*)/([a-zA-Z0-9\-]*)/page-([0-9]*)/cat-([0-9]*)$ /index.php?view=blog&do=blog&menuid=$1&bloglink=$2&page=$3&cat_id=$4
+RewriteRule ^blogs/([a-zA-Z0-9\-]*)$ /index.php?view=blog&do=blog&bloglink=$1
+RewriteRule ^blogs/([a-zA-Z0-9\-]*)/$ /index.php?view=blog&do=blog&bloglink=$1
+RewriteRule ^blogs/([a-zA-Z0-9\-]*)/page-([0-9]*)$ /index.php?view=blog&do=blog&bloglink=$1&page=$2
+RewriteRule ^blogs/([a-zA-Z0-9\-]*)/cat-([0-9]*)$ /index.php?view=blog&do=blog&bloglink=$1&cat_id=$2
+RewriteRule ^blogs/([a-zA-Z0-9\-]*)/page-([0-9]*)/cat-([0-9]*)$ /index.php?view=blog&do=blog&bloglink=$1&page=$2&cat_id=$3
 
-RewriteRule ^blogs/([0-9]*)/([a-zA-Z0-9\-]*)/([a-zA-Z0-9\-]*).html$ /index.php?view=blog&do=post&menuid=$1&bloglink=$2&seolink=$3
+RewriteRule ^blogs/([a-zA-Z0-9\-]*)/([a-zA-Z0-9\-]*).html$ /index.php?view=blog&do=post&bloglink=$1&seolink=$2
 
 #COMPONENT "CATALOG"
 ### search by tag ###

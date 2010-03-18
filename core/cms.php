@@ -1078,16 +1078,18 @@ class cmsCore {
             return false;
         }
 
-        switch($component){ 
+        switch($component){
             case 'content':     $where_link = "linktype='content' OR linktype='category' OR linkid='content'"; break;
             case 'catalog':     $where_link = "linktype='uccat' OR linkid='catalog'"; break;
             case 'price':       $where_link = "linktype='pricecat' OR linkid='price'"; break;
-            case 'blog':        $where_link = "linkid='blog' OR linkid='clubs'"; break;
+            case 'blog':        $where_link = "linkid='blog' OR linkid='clubs' OR linktype='blog'"; break;
             case 'photos':      $where_link = "linkid='photos' OR linkid='clubs'"; break;
             case 'subscribes':  $where_link = "1=1"; break;
             case 'users':       $where_link = "1=1"; break;
             default:            $where_link = "linktype='{$component}' OR linkid='{$component}'"; break;
         }
+
+        $component_menu_id = $this->getComponentMenuId($component);
 
         //проверяем что menuid правильный
         if ($menuid > 0 && !($menuid == 1 && $inConf->homecom == $component) && !$inDB->get_field('cms_menu', "id={$menuid} AND ({$where_link})", 'id')){
@@ -1629,18 +1631,29 @@ class cmsCore {
      */
     public function menuId(){
 
-        if (isset($_REQUEST['menuid'])){
-            if (is_numeric($_REQUEST['menuid'])){
-                $menuid = $_REQUEST['menuid'];
-            } else {
-                $menuid = 1;
+        $view       = $this->request('view', 'str', '');
+        $uri        = $_SERVER['REQUEST_URI'];
+        $menu       = array_reverse($this->menu_struct);
+        $menuid     = 1;
+
+        foreach($menu as $item){
+
+            if ($uri == $item['link']){
+                $menuid = $item['id'];
+                break;
             }
-        } else {
-            $view = $this->request('view', 'str', '');
-            if ($view) { $menuid = 0; }
-            if (!$view){ $menuid = 1; }
+
+            $uri_first_part = substr($uri, 0, strlen($item['link']));
+
+            if ($uri_first_part == $item['link']){
+                $menuid = $item['id'];
+                break;
+            }
+            
         }
+
         return $menuid;
+
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1672,7 +1685,7 @@ class cmsCore {
         $sql    = "SELECT * FROM cms_menu";
         $result = $inDB->query($sql);
 
-        if (!$inDB->rows_count($result)){ return; }
+        if (!$inDB->num_rows($result)){ return; }
 
         while ($item = $inDB->fetch_assoc($result)){
             $this->menu_struct[$item['id']] = $item;
@@ -1691,14 +1704,54 @@ class cmsCore {
      */
     public function getComponentMenuId($component) {
 
+        $target_linkid      = array();
+        $target_linktype    = array();
+
+        switch($component){
+            case 'content':     $target_linktype    = array('content', 'category');
+                                $target_linkid      = array('content');
+                                break;
+
+            case 'catalog':     $target_linktype    = array('uccat');
+                                $target_linkid      = array('catalog');
+                                break;
+
+            case 'price':       $target_linktype    = array('pricecat');
+                                $target_linkid      = array('price');
+                                break;
+
+            case 'blog':        $target_linktype    = array('blog'); 
+                                $target_linkid      = array('blog', 'clubs'); 
+                                break;
+
+            case 'photos':      $target_linkid      = array('photos', 'clubs');
+                                break;
+
+            case 'users':       $target_linkid      = array('users');
+                                break;
+
+            default:            $target_linktype    = array($component);
+                                $target_linkid      = array($component);
+                                break;
+
+        }
+
         foreach($this->menu_struct as $item){
-            if ($item['linktype']=='component' && $item['linkid']==$component){
-                return $item['id'];
+            if (in_array($item['linktype'], $target_linktype) ||
+                in_array($item['linkid'], $target_linkid)){
+                    return $item['id'];
             }
         }
 
         return 0;
 
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public function getMenuStruct() {
+        return $this->menu_struct;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1717,16 +1770,12 @@ class cmsCore {
 
         $menulink = '';
 
-        if (!$linktype || !$linkid) { return '/menuid-'.$menuid; }
+        if (!$linktype || !$linkid) { return '/page' . $menuid; }
 
         if ($linktype=='component'){
             if ($linkid=='blog') { $linkid = 'blogs'; }
 
-            $menulink = '/'.$linkid.'/'.$menuid;
-
-            if ($linkid=='users'){
-                $menulink = '/users/'.$menuid.'/all.html';
-            }
+            $menulink = '/'.$linkid;
         }
 
         if ($linktype=='link'){
@@ -1737,23 +1786,23 @@ class cmsCore {
             $inCore->loadModel('content');
             $model = new cms_model_content();
             switch($linktype){
-                case 'category': $menulink = $model->getCategoryURL($menuid, $inDB->get_field('cms_category', "id={$linkid}", 'seolink')); break;
-                case 'content':  $menulink = $model->getArticleURL($menuid, $inDB->get_field('cms_content', "id={$linkid}", 'seolink')); break;
+                case 'category': $menulink = $model->getCategoryURL(null, $inDB->get_field('cms_category', "id={$linkid}", 'seolink')); break;
+                case 'content':  $menulink = $model->getArticleURL(null, $inDB->get_field('cms_content', "id={$linkid}", 'seolink')); break;
             }
         }
 
         if ($linktype=='blog'){
             $inCore->loadModel('blog');
             $model = new cms_model_blog();
-            $menulink = $model->getBlogURL($menuid, $inDB->get_field('cms_blogs', "id={$linkid}", 'seolink'));
+            $menulink = $model->getBlogURL(null, $inDB->get_field('cms_blogs', "id={$linkid}", 'seolink'));
         }
 
         if ($linktype=='uccat'){
-            $menulink = '/catalog/'.$menuid.'/'.$linkid;
+            $menulink = '/catalog/'.$linkid;
         }
 
         if ($linktype=='pricecat'){
-            $menulink = '/price/'.$menuid.'/'.$linkid;
+            $menulink = '/price/'.$linkid;
         }
 
         return $menulink;
@@ -1975,7 +2024,7 @@ class cmsCore {
         switch($target){
             case 'article':  $result = $inDB->query("SELECT title, seolink FROM cms_content WHERE id = $target_id LIMIT 1") ;
                              if (mysql_num_rows($result)){
-                                $data = mysql_fetch_assoc($reproceedBodysult);
+                                $data = mysql_fetch_assoc($result);
                                 $inCore->loadModel('content');
                                 $model = new cms_model_content();
                                 if ($short) { $data['title'] = substr($data['title'], 0, 30).'...'; }

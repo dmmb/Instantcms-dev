@@ -306,7 +306,7 @@ class cms_model_content{
 
         $page_section = ($page>1 ? '/page-'.$page : '');
 
-        $url = '/content/'.$menuid.'/'.$seolink.$page_section.'.html';
+        $url = '/content/'.$seolink.$page_section.'.html';
 
         return $url;
 
@@ -319,7 +319,7 @@ class cms_model_content{
 
         $page_section = ($page>1 ? '/page-'.$page : '');
 
-        $url = '/content/'.$menuid.'/'.$seolink.$page_section;
+        $url = '/content/'.$seolink.$page_section;
 
         return $url;
 
