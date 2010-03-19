@@ -1067,18 +1067,29 @@ class cmsCore {
      */
     private function detectURI(){
 
-        $uri = $this->request('uri', 'str', '');
+        $uri    = $this->request('uri', 'str', '');
+        $rules  = array();
 
-        if(!file_exists(PATH.'/url_rewrite.php')){
-            return $uri;
+        if(file_exists(PATH.'/url_rewrite.php')) {
+            //подключаем список rewrite-правил
+            $this->includeFile('url_rewrite.php');
+            if(function_exists('rewrite_rules')){
+                //получаем правила
+                $rules = rewrite_rules();
+            }
         }
 
-        //подключаем список rewrite-правил
-        $this->includeFile('url_rewrite.php');
+        if(file_exists(PATH.'/custom_rewrite.php')) {
+            //подключаем список пользовательских rewrite-правил
+            $this->includeFile('custom_rewrite.php');
+            if(function_exists('custom_rewrite_rules')){
+                //добавляем к полученным ранее правилам пользовательские
+                $rules = array_merge($rules, custom_rewrite_rules());
+            }
+        }
 
-        if(function_exists('rewrite_rules')){
-            $rules = rewrite_rules();
-            foreach($rules as $rule_id=>$rule){
+        if ($rules){
+            foreach($rules as $rule_id=>$rule) {
                 if (preg_match($rule['source'], $uri)){
                     $uri = $rule['target'];
                     break;
