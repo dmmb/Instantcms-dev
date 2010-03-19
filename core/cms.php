@@ -1834,8 +1834,8 @@ class cmsCore {
                                 $target_linkid      = array('price');
                                 break;
 
-            case 'blog':        $target_linktype    = array('blog'); 
-                                $target_linkid      = array('blog', 'clubs'); 
+            case 'blogs':       $target_linktype    = array('blogs');
+                                $target_linkid      = array('blogs', 'clubs');
                                 break;
 
             case 'photos':      $target_linkid      = array('photos', 'clubs');
