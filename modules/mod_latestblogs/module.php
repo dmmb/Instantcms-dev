@@ -13,8 +13,8 @@ function mod_latestblogs($module_id){
         $inDB = cmsDatabase::getInstance();
         $cfg = $inCore->loadModuleConfig($module_id);
         global $_LANG;
-        $inCore->loadModel('blog');
-        $model = new cms_model_blog();
+        $inCore->loadModel('blogs');
+        $model = new cms_model_blogs();
 
 		if ($cfg['menuid']>0) {
 			$menuid = $cfg['menuid'];

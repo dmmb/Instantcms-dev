@@ -177,10 +177,10 @@ class cms_model_clubs{
 
         $inCore->loadLib('clubs');
         $inCore->loadLib('tags');
-        $inCore->loadModel('blog');
+        $inCore->loadModel('blogs');
         $inCore->loadModel('photos');
 
-        $blog_model     = new cms_model_blog();
+        $blog_model     = new cms_model_blogs();
         $photos_model   = new cms_model_photos();
 
         //Удаляем логотип клуба

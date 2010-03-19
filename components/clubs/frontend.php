@@ -163,8 +163,8 @@ if ($do=='club'){
     $club['blog_id']		= clubBlogId($club['id']);
     $club['blog_content']	= clubBlogContent($club['blog_id'], $is_admin, $is_moder, $is_member);
 
-    $inCore->loadModel('blog');
-    $blog_model = new cms_model_blog();
+    $inCore->loadModel('blogs');
+    $blog_model = new cms_model_blogs();
 
     $club['blog_url']       = $blog_model->getBlogURL($menuid, $inDB->get_field('cms_blogs', "id={$club['blog_id']}", 'seolink'));
 

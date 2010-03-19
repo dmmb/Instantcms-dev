@@ -11,7 +11,7 @@
 /*********************************************************************************************/
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-function blog(){
+function blogs(){
 
     $inCore = cmsCore::getInstance();
     $inPage = cmsPage::getInstance();
@@ -31,11 +31,11 @@ function blog(){
 
     global $_LANG;
 
-    $inCore->loadModel('blog');
-    $model = new cms_model_blog();
+    $inCore->loadModel('blogs');
+    $model = new cms_model_blogs();
 		
 	//Загрузка настроек блогов
-	$cfg = $inCore->loadComponentConfig('blog');
+	$cfg = $inCore->loadComponentConfig('blogs');
 	
 	//Значения настроек по-умолчанию
 	$cfg['fa_ext'] = 'gif jpeg jpg png bmp';		

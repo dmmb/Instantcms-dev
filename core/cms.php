@@ -24,12 +24,26 @@ class cmsCore {
 
     private static  $instance;
     private         $menu_item;
+    private         $menu_id = 0;
     private         $menu_struct;
+    private         $uri;
+    private         $component;
 
     private function __construct() {
+
+        //подключим базу и конфиг
         $this->loadClass('db');
         $this->loadClass('config');
+
+        //загрузим структуру меню в память
         $this->loadMenuStruct();
+
+        //получим URI
+        $this->uri = $this->detectURI();
+
+        //определим компонент
+        $this->component = $this->detectComponent();
+
     }
 
     private function __clone() {}  
@@ -1046,25 +1060,138 @@ class cmsCore {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
+     * Возвращает текущий URI
+     * Нужна для того, чтобы иметь возможность переопределить URI.
+     * По сути является эмулятором внутреннего mod_rewrite
+     * @return string
+     */
+    private function detectURI(){
+
+        $uri = $this->request('uri', 'str', '');
+
+        if(!file_exists(PATH.'/url_rewrite.php')){
+            return $uri;
+        }
+
+        //подключаем список rewrite-правил
+        $this->includeFile('url_rewrite.php');
+
+        if(function_exists('rewrite_rules')){
+            $rules = rewrite_rules();
+            foreach($rules as $rule_id=>$rule){
+                if (preg_match($rule['source'], $uri)){
+                    $uri = $rule['target'];
+                    break;
+                }
+            }
+        }
+
+        return $uri;
+        
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Определяет текущий компонент
+     * Считается, что компонент указан в первом сегменте URI,
+     * иначе подключается компонент для главной страницы
+     * @return string $component
+     */
+    private function detectComponent(){
+
+        $inConf     = cmsConfig::getInstance();
+
+        //компонент на главной
+        if (!$this->uri && $inConf->homecom) { return $inConf->homecom; }
+
+        //определяем, есть ли слэши в адресе
+        $first_slash_pos = strpos($this->uri, '/');
+
+        if ($first_slash_pos){
+            //если есть слэши, то компонент это сегмент до первого слэша
+            return substr($this->uri, 0, $first_slash_pos);
+        } else {
+            //если слэшей нет, то компонент совпадает с адресом
+            return $this->uri;
+        }
+        
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Функция подключает файл router.php из папки с текущим компонентом
+     * и вызывает метод route_component(), которые возвращает массив правил
+     * для анализа URI. Если в массиве найдено совпадение с текущим URI,
+     * то URI парсится и переменные, содержащиеся в нем, забиваются в массив $_REQUEST.
+     * @return boolean
+     */
+    private function parseComponentRoute(){
+
+        $component = $this->component;
+
+        //проверяем что компонент и адрес указаны
+        if (!$component || !$this->uri) { return false; }
+
+        if(!file_exists('components/'.$component.'/router.php')){ return false; }
+
+        //подключаем список маршрутов компонента
+        $this->includeFile('components/'.$component.'/router.php');
+
+        $routes = call_user_func('routes_'.$component);
+
+        //перебираем все маршруты
+        foreach($routes as $route_id=>$route){
+
+            //сравниваем шаблон маршрута с текущим URI
+            preg_match($route['_uri'], $this->uri, $matches);
+
+            //Если найдено совпадение
+            if ($matches){
+
+                //удаляем шаблон из параметров маршрута, чтобы не мешал при переборе
+                unset($route['_uri']);
+
+                //перебираем параметры маршрута в виде ключ=>значение
+                foreach($route as $key=>$value){
+                    if (is_integer($key)){
+                        //Если ключ - целое число, то значением является сегмент URI
+                        $_REQUEST[$value] = $matches[$key];
+                    } else {
+                        //иначе, значение берется из маршрута
+                        $_REQUEST[$key]   = $value;
+                    }
+                }
+
+                //раз найдено совпадение, прерываем цикл
+                break;
+
+            }
+
+        }
+
+        return true;
+
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
      * Генерирует тело страницы, вызывая нужный компонент
      */
     public function proceedBody(){
 
         $inPage         = cmsPage::getInstance();
-        $inDB           = cmsDatabase::getInstance();
-        $inConf         = cmsConfig::getInstance();
-        $menuid         = $this->menuId();
+        $inDB           = cmsDatabase::getInstance();        
         $is_component   = false;
-        $component      = $this->request('view', 'str', '');
-
-        //компонент на главной
-        if ($menuid == 1 && $inConf->homecom) { $component = $inConf->homecom; }
+        $component      = $this->component;
 
         //проверяем что компонент указан
         if (!$component) { return false; }
 
         //проверяем что в названии только буквы и цифры
-        if (!eregi("^[a-z0-9]+$", $component)){ $this->halt(); }
+        if (!eregi("^[a-z0-9]+$", $component)){ $this->error404(); }
 
         //проверяем наличие ланг-файла
         if (!$this->loadLanguage('components/'.$component)){
@@ -1078,21 +1205,8 @@ class cmsCore {
             return false;
         }
 
-        switch($component){
-            case 'content':     $where_link = "linktype='content' OR linktype='category' OR linkid='content'"; break;
-            case 'catalog':     $where_link = "linktype='uccat' OR linkid='catalog'"; break;
-            case 'price':       $where_link = "linktype='pricecat' OR linkid='price'"; break;
-            case 'blog':        $where_link = "linkid='blog' OR linkid='clubs' OR linktype='blog'"; break;
-            case 'photos':      $where_link = "linkid='photos' OR linkid='clubs'"; break;
-            case 'subscribes':  $where_link = "1=1"; break;
-            case 'users':       $where_link = "1=1"; break;
-            default:            $where_link = "linktype='{$component}' OR linkid='{$component}'"; break;
-        }
-
-        //проверяем что menuid правильный
-        if ($menuid > 0 && !($menuid == 1 && $inConf->homecom == $component) && !$inDB->get_field('cms_menu', "id={$menuid} AND ({$where_link})", 'id')){
-            self::error404();
-        }
+        //парсим адрес и заполняем массив $_REQUEST (временное решение)
+        $this->parseComponentRoute();
 
         ob_start();
 
@@ -1100,10 +1214,6 @@ class cmsCore {
             require('components/'.$component.'/frontend.php');
             call_user_func($component);
         echo '</div>';
-
-        if ($menuid != 1 && $inPage->back_button) { 
-            echo "<p><a href='javascript:history.go(-1)' class=\"backlink\">&laquo; Назад</a></p>";
-        }
 
         $inPage->page_body = ob_get_clean();
 
@@ -1631,8 +1741,10 @@ class cmsCore {
      */
     public function menuId(){
 
+        if ($this->menu_id) { return $this->menu_id; }
+
         $view       = $this->request('view', 'str', '');
-        $uri        = $_SERVER['REQUEST_URI'];
+        $uri        = '/'.$this->uri;
         $menu       = array_reverse($this->menu_struct);
         $menuid     = 1;
 
@@ -1651,6 +1763,8 @@ class cmsCore {
             }
             
         }
+
+        $this->menu_id = $menuid;
 
         return $menuid;
 
@@ -1773,8 +1887,6 @@ class cmsCore {
         if (!$linktype || !$linkid) { return '/page' . $menuid; }
 
         if ($linktype=='component'){
-            if ($linkid=='blog') { $linkid = 'blogs'; }
-
             $menulink = '/'.$linkid;
         }
 
@@ -1792,8 +1904,8 @@ class cmsCore {
         }
 
         if ($linktype=='blog'){
-            $inCore->loadModel('blog');
-            $model = new cms_model_blog();
+            $inCore->loadModel('blogs');
+            $model = new cms_model_blogs();
             $menulink = $model->getBlogURL(null, $inDB->get_field('cms_blogs', "id={$linkid}", 'seolink'));
         }
 
@@ -2051,8 +2163,8 @@ class cmsCore {
             case 'blog':     $result = $inDB->query("SELECT p.title as title, b.seolink as bloglink, p.seolink as seolink FROM cms_blog_posts p, cms_blogs b WHERE p.id = $target_id AND p.blog_id = b.id LIMIT 1") ;
                              if (mysql_num_rows($result)){
                                 $data = mysql_fetch_assoc($result);
-                                $inCore->loadModel('blog');
-                                $model = new cms_model_blog();
+                                $inCore->loadModel('blogs');
+                                $model = new cms_model_blogs();
                                 if ($short) { $data['title'] = substr($data['title'], 0, 30).'...'; }
                                 $html .= '<a href="'.$model->getPostURL(0, $data['bloglink'], $data['seolink']).'#c">'.$data['title'].'</a>';
                                 if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].$model->getPostURL(0, $data['bloglink'], $data['seolink']).'#c'; }

@@ -103,9 +103,9 @@ function clubBlogContent($blog_id, $is_admin=false, $is_moder=false, $is_member=
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
 
-    $inCore->loadModel('blog');
+    $inCore->loadModel('blogs');
 
-    $model = new cms_model_blog();
+    $model = new cms_model_blogs();
 
 	$html = '';
 	$sql = "SELECT p.*,

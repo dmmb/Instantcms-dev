@@ -99,10 +99,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
     }
 
 	//LOAD CURRENT CONFIG
-	$cfg = $inCore->loadComponentConfig('blog');
+	$cfg = $inCore->loadComponentConfig('blogs');
 
-    $inCore->loadModel('blog');
-    $model = new cms_model_blog();
+    $inCore->loadModel('blogs');
+    $model = new cms_model_blogs();
 
 	if($opt=='saveconfig'){	
 		$cfg = array();

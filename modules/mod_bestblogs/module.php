@@ -33,8 +33,8 @@ function mod_bestblogs($module_id){
 			return;
 		}
 
-        $inCore->loadModel('blog');
-        $model = new cms_model_blog();
+        $inCore->loadModel('blogs');
+        $model = new cms_model_blogs();
 
 		$sql = "SELECT  p.*,
                         b.title as blog,

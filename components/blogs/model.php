@@ -1,7 +1,7 @@
 <?php
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-class cms_model_blog{
+class cms_model_blogs{
 
 	function __construct(){
         $this->inDB = cmsDatabase::getInstance();

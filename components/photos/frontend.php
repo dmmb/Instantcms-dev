@@ -77,10 +77,11 @@ function photos(){
 
     $inCore = cmsCore::getInstance();
     $inPage = cmsPage::getInstance();
-    $inDB = cmsDatabase::getInstance();
-    $inUser     = cmsUser::getInstance();
+    $inDB   = cmsDatabase::getInstance();
+    $inUser = cmsUser::getInstance();
+
     global $_LANG;
-	$menuid = $inCore->menuId();
+
 	$cfg = $inCore->loadComponentConfig('photos');
 	
 	if (!isset($cfg['showlat'])) { $cfg['showlat'] = 1; }
@@ -126,17 +127,17 @@ if ($do=='view'){
 			else { $inPage->setTitle($_LANG['PHOTOGALLERY']); $pagetitle = $_LANG['PHOTOGALLERY']; }
 		} elseif($owner == 'club') {
             $can_view = $club['clubtype'] == 'public' || ($club['clubtype'] == 'private' && (clubUserIsMember($club['id'], $inUser->id) || $inUser->is_admin || clubUserIsAdmin($club['id'], $inUser->id)));
-			$pagetitle = '<a href="/clubs/'.$menuid.'/'.$club['id'].'">'.$club['title'].'</a> &rarr; '.$_LANG['PHOTOALBUMS'];
+			$pagetitle = '<a href="/clubs/'.$club['id'].'">'.$club['title'].'</a> &rarr; '.$_LANG['PHOTOALBUMS'];
 			$inPage->setTitle($_LANG['PHOTOALBUMS'].' - '.$club['title']);
-			$inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$club['id']);
+			$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
 			$inPage->addPathway($_LANG['PHOTOALBUMS']);
 		}
 	} else {
 		$pagetitle =  $album['title'];
 		if($owner == 'club') {
             $can_view = $club['clubtype'] == 'public' || ($club['clubtype'] == 'private' && (clubUserIsMember($club['id'], $inUser->id) || $inUser->is_admin || clubUserIsAdmin($club['id'], $inUser->id)));
-			$inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$club['id']);
-			$inPage->addPathway($_LANG['PHOTOALBUMS'], '/photos/'.$menuid.'/'.$club['root_album_id']);
+			$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
+			$inPage->addPathway($_LANG['PHOTOALBUMS'], '/photos/'.$club['root_album_id']);
 		} else {
 			$inPage->setTitle($pagetitle  . ' - '.$_LANG['PHOTOGALLERY']);
 			$left_key = $album['NSLeft'];
@@ -144,7 +145,7 @@ if ($do=='view'){
 			$sql     = "SELECT id, title, NSLevel FROM cms_photo_albums WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0 AND NSDiffer = '' ORDER BY NSLeft";
 			$rs_rows = $inDB->query($sql) or die('Error while building album path');
 			while($pcat=$inDB->fetch_assoc($rs_rows)){
-                $inPage->addPathway($pcat['title'], '/photos/'.$menuid.'/'.$pcat['id']);
+                $inPage->addPathway($pcat['title'], '/photos/'.$pcat['id']);
 			}
 		}				
 		$inPage->setTitle($album['title']);
@@ -162,9 +163,9 @@ if ($do=='view'){
 			echo '<table border="0" cellspacing="0" cellpadding="5">';
 			  echo '<tr>';
 				echo '<td><img src="/components/photos/images/latest.gif" /></td>';
-				echo '<td><a href="/photos/'.$menuid.'/latest.html">'.$_LANG['LAST_UPLOADED'].'</a></td>';
+				echo '<td><a href="/photos/latest.html">'.$_LANG['LAST_UPLOADED'].'</a></td>';
 				echo '<td><img src="/components/photos/images/best.gif" /></td>';
-				echo '<td><a href="/photos/'.$menuid.'/top.html">'.$_LANG['BEST_PHOTOS'].'</a></td>';
+				echo '<td><a href="/photos/top.html">'.$_LANG['BEST_PHOTOS'].'</a></td>';
 			  echo '</tr>';
 			echo '</table>';
 		echo '</div>';
@@ -192,7 +193,7 @@ if ($do=='view'){
                     $sub = dbRowsCount('cms_photo_albums', 'NSLeft > '.$cat['NSLeft'].' AND NSRight < '.$cat['NSRight']);
                     if ($sub>1) { $subtext = '/'.$sub; } else { $subtext = ''; }
                     //print album
-                    echo '<div><a href="/photos/'.$menuid.'/'.$cat['id'].'">'.$cat['title'].'</a> ('.$cat['content_count'].$subtext.')</div>';
+                    echo '<div><a href="/photos/'.$cat['id'].'">'.$cat['title'].'</a> ('.$cat['content_count'].$subtext.')</div>';
                     if ($cat['description']) { echo '<div>'.$cat['description'].'</div>'; }
                 echo '</td>';
             if ($col==$maxcols) { echo '</tr>'; $col=1; } else { $col++; }
@@ -274,7 +275,7 @@ if ($do=='view'){
 			if ($album['public'] && @$can_add){
 				echo '<table cellpadding="2" cellspacing="0" style="margin-bottom:10px">';
 					echo '<tr><td><img src="/components/photos/images/addphoto.gif" border="0"/></td>'."\n";
-					echo '<td><a style="text-decoration:underline" href="/photos/'.$menuid.'/'.$album['id'].'/addphoto.html">'.$_LANG['ADD_PHOTO_TO_ALBUM'].'</a></td></tr>'."\n";
+					echo '<td><a style="text-decoration:underline" href="/photos/'.$album['id'].'/addphoto.html">'.$_LANG['ADD_PHOTO_TO_ALBUM'].'</a></td></tr>'."\n";
 				echo '</table>';
 			}		
 			
@@ -287,12 +288,12 @@ if ($do=='view'){
 						if ($col==1) { echo '<tr>'; }
 							echo '<td width="20" valign="top"><img src="/images/markers/photo.png" border="0" /></td>';
 							echo '<td width="" valign="top">';
-									echo '<a href="/photos/'.$menuid.'/photo'.$con['id'].'.html">'.$con['title'].'</a>';
+									echo '<a href="/photos/photo'.$con['id'].'.html">'.$con['title'].'</a>';
 							echo '</td>';	
 							if($album['showdate']){
 								$fcols = 6;
 								echo '<td width="16" valign="top"><img src="/images/icons/comments.gif" alt="'.$_LANG['COMMENTS'].'" border="0"/></td>';
-								echo '<td width="25" valign="top"><a href="/photos/'.$menuid.'/photo'.$con['id'].'.html#c" title="'.$_LANG['COMMENTS'].'">'.$inCore->getCommentsCount('photo', $photo['id']).'</a></td>';
+								echo '<td width="25" valign="top"><a href="/photos/photo'.$con['id'].'.html#c" title="'.$_LANG['COMMENTS'].'">'.$inCore->getCommentsCount('photo', $photo['id']).'</a></td>';
 								echo '<td width="16" valign="top" class="photo_date_td"><img src="/images/icons/date.gif" alt="'.$_LANG['PUB_DATE'].'" /></td>';
 								echo '<td width="70" align="center" valign="top" class="photo_date_td">'.$con['pubdate'].'</td>';			
 							} else {
@@ -316,11 +317,11 @@ if ($do=='view'){
 					while($con = $inDB->fetch_assoc($result)){			
 						if ($album['showtype'] == 'lightbox'){
 							$photolink = '/images/photos/medium/'.$con['file'];
-							$photolink2 = '/photos/'.$menuid.'/photo'.$con['id'].'.html';
+							$photolink2 = '/photos/photo'.$con['id'].'.html';
 						} else {
 							if ($album['showtype']!='fast'){
-								$photolink = '/photos/'.$menuid.'/photo'.$con['id'].'.html';
-								$photolink2 = '/photos/'.$menuid.'/photo'.$con['id'].'.html';
+								$photolink = '/photos/photo'.$con['id'].'.html';
+								$photolink2 = '/photos/photo'.$con['id'].'.html';
 							} else {
 								$photolink = '/images/photos/'.$con['file'];
 								$photolink2 = '/images/photos/'.$con['file'];
@@ -385,8 +386,8 @@ if($do=='viewphoto'){
             $owner = 'club';
 			$club = dbGetFields('cms_clubs', 'id='.$photo['album_user_id'], '*');
             $can_view = $club['clubtype'] == 'public' || ($club['clubtype'] == 'private' && (clubUserIsMember($club['id'], $inUser->id) || $inUser->is_admin || clubUserIsAdmin($club['id'], $inUser->id)));
-			$inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$club['id']);
-			$inPage->addPathway($_LANG['PHOTOALBUMS'], '/photos/'.$menuid.'/'.clubRootAlbumId($club['id']));            
+			$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
+			$inPage->addPathway($_LANG['PHOTOALBUMS'], '/photos/'.clubRootAlbumId($club['id']));            
 		}
 
         if (!$can_view && $owner=='club') { $inCore->redirect('/clubs/0/'.$club['id']); }
@@ -397,7 +398,7 @@ if($do=='viewphoto'){
 		$sql = "SELECT id, title, NSLevel FROM cms_photo_albums WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0 AND NSDiffer = '".$photo['NSDiffer']."' ORDER BY NSLeft";
 		$rs_rows = $inDB->query($sql);
 		while($pcat=$inDB->fetch_assoc($rs_rows)){
-				$inPage->addPathway($pcat['title'], '/photos/'.$menuid.'/'.$pcat['id']);
+				$inPage->addPathway($pcat['title'], '/photos/'.$pcat['id']);
 		}
 		$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
 		
@@ -422,8 +423,8 @@ if($do=='viewphoto'){
 			echo '<tr><td colspan="3" align="center"><div class="photo_desc">'.$photo['description'].'</div></td></tr>';		
 			//BACK LINKS
 			echo '<tr><td colspan="3" align="center">
-						<div>&larr; '.$_LANG['BACK_TO'].' <a href="/photos/'.$menuid.'/'.$photo['cat_id'].'">'.$_LANG['TO_ALBUM'].'</a>';
-			if ($photo['NSDiffer']==''){ echo '| <a href="/photos/'.$menuid.'">'.$_LANG['TO_LIST_ALBUMS'].'</a></div>'; }
+						<div>&larr; '.$_LANG['BACK_TO'].' <a href="/photos/'.$photo['cat_id'].'">'.$_LANG['TO_ALBUM'].'</a>';
+			if ($photo['NSDiffer']==''){ echo '| <a href="/photos">'.$_LANG['TO_LIST_ALBUMS'].'</a></div>'; }
 			echo '</td></tr>';
 			//PHOTO		
 			echo '<tr>';
@@ -443,13 +444,13 @@ if($do=='viewphoto'){
 						echo '<table cellpadding="5" cellspacing="0" border="0" align="center" style="margin-left:auto;margin-right:auto"><tr>';
 							if ($previd){
 								echo '<td align="right">';
-									echo '<div>&larr; <a href="/photos/'.$menuid.'/photo'.$previd['id'].'.html">'.$_LANG['PREVIOUS'].'</a></div>';
+									echo '<div>&larr; <a href="/photos/photo'.$previd['id'].'.html">'.$_LANG['PREVIOUS'].'</a></div>';
 								echo '</td>';
 							}
 							if ($previd && $nextid) { echo '<td>|</td>'; }
 							if ($nextid){
 								echo '<td align="left">';
-									echo '<div><a href="/photos/'.$menuid.'/photo'.$nextid['id'].'.html">'.$_LANG['NEXT'].'</a> &rarr;</div>';
+									echo '<div><a href="/photos/photo'.$nextid['id'].'.html">'.$_LANG['NEXT'].'</a> &rarr;</div>';
 								echo '</td>';
 							}						
 						echo '</tr></table>';
@@ -495,11 +496,11 @@ if($do=='viewphoto'){
 					
 					if(($photo['public'] && $inUser->id) || $inUser->is_admin){
 						if ($is_author || $is_admin){
-							echo '<td><a href="/photos/'.$menuid.'/editphoto'.$photo['id'].'.html" title="'.$_LANG['EDIT'].'"><img src="/images/icons/edit.gif" border="0"/></a></td>';
+							echo '<td><a href="/photos/editphoto'.$photo['id'].'.html" title="'.$_LANG['EDIT'].'"><img src="/images/icons/edit.gif" border="0"/></a></td>';
 							if ($is_admin){
-								echo '<td><a href="/photos/'.$menuid.'/movephoto'.$photo['id'].'.html" title="'.$_LANG['MOVE'].'"><img src="/images/icons/move.gif" border="0"/></a></td>';
+								echo '<td><a href="/photos/movephoto'.$photo['id'].'.html" title="'.$_LANG['MOVE'].'"><img src="/images/icons/move.gif" border="0"/></a></td>';
 							}
-							echo '<td><a href="/photos/'.$menuid.'/delphoto'.$photo['id'].'.html" title="'.$_LANG['DELETE'].'"><img src="/images/icons/delete.gif" border="0"/></a></td>';
+							echo '<td><a href="/photos/delphoto'.$photo['id'].'.html" title="'.$_LANG['DELETE'].'"><img src="/images/icons/delete.gif" border="0"/></a></td>';
 						}
 					}
 				echo '</tr></table>';
@@ -539,13 +540,13 @@ if ($do=='addphoto'){
 		} elseif (strstr($album['NSDiffer'],'club')){
 			$club = dbGetFields('cms_clubs', 'id='.$album['user_id'], '*');
 			$can_add = clubUserIsMember($club['id'], $uid) || clubUserIsAdmin($club['id'], $uid) || $inUser->is_admin;
-			$inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$club['id']);
+			$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
 			$inPage->addPathway($_LANG['PHOTOALBUMS']);
 			$min_karma = $club['photo_min_karma'];
 		}				
 	}
 
-	$inPage->addPathway($album['title'], '/photos/'.$menuid.'/'.$album['id']);
+	$inPage->addPathway($album['title'], '/photos/'.$album['id']);
 	$inPage->addPathway($_LANG['ADD_PHOTO']);
 	
 	if ($uid){
@@ -585,7 +586,7 @@ if ($do=='addphoto'){
 									
 									$inPage->setTitle($_LANG['ADD_PHOTO'].' - '.$_LANG['STEP'].' 2');
 	
-									$form_action = '/photos/'.$menuid.'/'.$album['id'].'/addphoto.html';
+									$form_action = '/photos/'.$album['id'].'/addphoto.html';
 									
 									$smarty = $inCore->initSmarty('components', 'com_photos_add2.tpl');			
 									$smarty->assign('form_action', $form_action);
@@ -630,13 +631,13 @@ if ($do=='addphoto'){
 							//ADD TO ALBUM
 							$photo_id = $model->addPhoto($photo);
 							
-							$inCore->redirect('/photos/'.$menuid.'/'.$photo_id.'/uploaded.html');
+							$inCore->redirect('/photos/'.$photo_id.'/uploaded.html');
 								
 						} else { 
 							//upload form
 							$inPage->setTitle($_LANG['ADD_PHOTO'].' - '.$_LANG['STEP'].' 1');
 							
-							$form_action = '/photos/'.$menuid.'/'.$id.'/addphoto.html';
+							$form_action = '/photos/'.$id.'/addphoto.html';
 							
 							$smarty = $inCore->initSmarty('components', 'com_photos_add1.tpl');			
 							$smarty->assign('form_action', $form_action);
@@ -648,7 +649,7 @@ if ($do=='addphoto'){
 					$inPage->printHeading($_LANG['NEED_KARMA']);
 					echo '<p><strong>'.$_LANG['NEED_KARMA_TEXT'].'</strong></p>';
 					echo '<p>'.$_LANG['NEEDED'].' '.$min_karma.', '.$_LANG['HAVE_ONLY'].' '.$user_karma.'.</p>';
-					echo '<p>'.$_LANG['WANT_SEE'].' <a href="/users/'.$menuid.'/'.$uid.'/karma.html">'.$_LANG['HISTORY_YOUR_KARMA'].'</a>?</p>';
+					echo '<p>'.$_LANG['WANT_SEE'].' <a href="/users/'.$uid.'/karma.html">'.$_LANG['HISTORY_YOUR_KARMA'].'</a>?</p>';
 				}	
 			} else { echo '<p>'.$_LANG['YOU_CANT_ADD_PHOTO'].'</p>'; }
 		} else { 
@@ -672,9 +673,9 @@ if ($do=='uploaded'){
 		echo '<p><strong>'.$_LANG['PHOTO_ADDED'].'</strong></p>';
 		if (!$photo['published']) { echo '<p>'.$_LANG['PHOTO_PREMODER_TEXT'].'</p>'; }
 		echo '<ul>';
-			echo '<li><a href="/photos/'.$menuid.'/photo'.$id.'.html">'.$_LANG['GOTO_PHOTO'].'</a></li>';
-			echo '<li><a href="/photos/'.$menuid.'/'.$photo['album_id'].'/addphoto.html">'.$_LANG['ADD_MORE_PHOTO'].'</a></li>';
-			echo '<li><a href="/photos/'.$menuid.'/'.$photo['album_id'].'">'.$_LANG['BACK_TO_PHOTOALBUM'].'</a></li>';
+			echo '<li><a href="/photos/photo'.$id.'.html">'.$_LANG['GOTO_PHOTO'].'</a></li>';
+			echo '<li><a href="/photos/'.$photo['album_id'].'/addphoto.html">'.$_LANG['ADD_MORE_PHOTO'].'</a></li>';
+			echo '<li><a href="/photos/'.$photo['album_id'].'">'.$_LANG['BACK_TO_PHOTOALBUM'].'</a></li>';
 		echo '</ul>';
 	}
 }
@@ -688,13 +689,13 @@ if ($do=='editphoto'){
 	$photoid = @intval($_REQUEST['id']);	
 	$photo = dbGetFields('cms_photo_files', 'id='.$photoid, '*');
 	
-	if (!$photo) { $inCore->redirect('/photos/'.$menuid); }
+	if (!$photo) { $inCore->redirect('/photos'); }
 	
 	$album = dbGetFields('cms_photo_albums', 'id='.$photo['album_id'], '*');
 	
 	if ($album['NSDiffer'] == 'club'){
 		$club = dbGetFields('cms_clubs', 'id='.$album['user_id'], '*');
-		$inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$club['id']);
+		$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
 		$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');	
 	} else {
 		$is_admin = $inCore->userIsAdmin($inUser->id);
@@ -754,8 +755,8 @@ if ($do=='editphoto'){
 					$model->updatePhoto($photo['id'], $photo);
 					
 					echo '<p><strong>'.$_LANG['PHOTO_SAVED'].'</strong></p>';
-					echo '<p>&larr; <a href="/photos/'.$menuid.'/photo'.$photo['id'].'.html">'.$_LANG['BACK_TO_PHOTO'].'</a><br/>
-							 &larr; <a href="/photos/'.$menuid.'/'.$photo['album_id'].'">'.$_LANG['BACK_TO_PHOTOALBUM'].'</a></p>';
+					echo '<p>&larr; <a href="/photos/photo'.$photo['id'].'.html">'.$_LANG['BACK_TO_PHOTO'].'</a><br/>
+							 &larr; <a href="/photos/'.$photo['album_id'].'">'.$_LANG['BACK_TO_PHOTOALBUM'].'</a></p>';
 					
 				} else { 
 							if(isset($_REQUEST['id'])){								
@@ -765,7 +766,7 @@ if ($do=='editphoto'){
 									$photo = $inDB->fetch_assoc($result);		
 									ob_start(); ?>
 									
-									<form action="/photos/<?php echo $menuid?>/editphoto<?php echo $photoid?>.html" method="POST" enctype="multipart/form-data">
+									<form action="/photos/editphoto<?php echo $photoid?>.html" method="POST" enctype="multipart/form-data">
 									<input type="hidden" name="file" value="<?php echo $photo['file']?>" />
 									<table border="0" cellspacing="0" cellpadding="0">
                                       <tr>
@@ -832,7 +833,7 @@ if ($do=='movephoto'){
 		$album = dbGetFields('cms_photo_albums', 'id='.$photo['album_id'], '*');	
 		if ($album['NSDiffer'] == 'club'){
 			$club = dbGetFields('cms_clubs', 'id='.$album['user_id'], '*');
-			$inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$club['id']);
+			$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
 			$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');	
 		} else {
 			$is_admin = $inCore->userIsAdmin($inUser->id);
@@ -848,7 +849,7 @@ if ($do=='movephoto'){
 
 				echo '<div class="con_heading">'.$_LANG['MOVE_PHOTO'].'</div>';
 					
-				echo '<div style="margin-top:10px; margin-bottom:15px;"><strong>'.$_LANG['PHOTO'].':</strong> <a href="/photos/'.$menuid.'/photo'.$photo['id'].'.html">'.$photo['title'].'</a></div>';
+				echo '<div style="margin-top:10px; margin-bottom:15px;"><strong>'.$_LANG['PHOTO'].':</strong> <a href="/photos/photo'.$photo['id'].'.html">'.$photo['title'].'</a></div>';
 				
 				echo '<div><form action="" method="POST">';
 				
@@ -883,7 +884,7 @@ if ($do=='movephoto'){
 						$inDB->query("UPDATE cms_photo_files SET album_id = $fid WHERE id = $id") ;
 					}									
 				}
-				header('location:/photos/'.$menuid.'/'.$fid);
+				header('location:/photos/'.$fid);
 			}
 			
 		} else { usrAccessDenied(); }
@@ -899,12 +900,12 @@ if ($do=='delphoto'){
 	$photo_id = @intval($_REQUEST['id']);
 	
 	$photo = dbGetFields('cms_photo_files', 'id='.$photo_id, '*');
-	if (!$photo) { $inCore->redirect('/photos/'.$menuid); }	
+	if (!$photo) { $inCore->redirect('/photos'); }	
 	$album = dbGetFields('cms_photo_albums', 'id='.$photo['album_id'], '*');
 	
 	if ($album['NSDiffer'] == 'club'){
 		$club = dbGetFields('cms_clubs', 'id='.$album['user_id'], '*');
-		$inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$club['id']);
+		$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
 		$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');	
 	} else {
 		$is_admin = $inCore->userIsAdmin($inUser->id);
@@ -935,7 +936,7 @@ if ($do=='delphoto'){
 			}
 		} else {
             $model->deletePhoto($photo_id);
-			header('location:/photos/'.$menuid.'/'.$photo['album_id']);
+			header('location:/photos/'.$photo['album_id']);
 		}
 	} else { usrAccessDenied(); }
 }
@@ -960,22 +961,22 @@ if ($do=='latest'){
 			if ($col==1) { echo '<tr>'; } 
 			echo '<td align="center" valign="middle" class="mod_lp_photo" width="'.round(100/$maxcols, 0).'%">';
 			echo '<table width="100%" height="100" cellspacing="0" cellpadding="0">';
-			echo '<tr><td align="center"><div class="mod_lp_titlelink"><a href="/photos/'.$menuid.'/photo'.$con['id'].'.html" title="'.$con['title'].'">'.$con['title'].'</a></div></td></tr>';
+			echo '<tr><td align="center"><div class="mod_lp_titlelink"><a href="/photos/photo'.$con['id'].'.html" title="'.$con['title'].'">'.$con['title'].'</a></div></td></tr>';
 			echo '<tr>
 				  <td valign="middle" align="center">';
-					echo '<a href="/photos/'.$menuid.'/photo'.$con['id'].'.html" title="'.$con['title'].'">';
+					echo '<a href="/photos/photo'.$con['id'].'.html" title="'.$con['title'].'">';
 						echo '<img class="photo_thumb_img" src="/images/photos/small/'.$con['file'].'" alt="'.$con['title'].'" border="0" />';
 					echo '</a>';
 			echo '</td></tr>';
 				echo '<tr>';
 				echo '<td align="center">';
-					echo '<div class="mod_lp_albumlink"><a href="/photos/'.$menuid.'/'.$con['album_id'].'" title="'.$con['album'].'">'.$con['album'].'</a></div>';
+					echo '<div class="mod_lp_albumlink"><a href="/photos/'.$con['album_id'].'" title="'.$con['album'].'">'.$con['album'].'</a></div>';
 					echo '<div class="mod_lp_details">';
 					echo '<table cellpadding="2" cellspacing="2" align="center" border="0"><tr>';
 						echo '<td><img src="/images/icons/date.gif" border="0"/></td>';
 						echo '<td>'.$con['fpubdate'].'</td>';
 						echo '<td><img src="/images/icons/comments.gif" border="0"/></td>';
-						echo '<td><a href="/photos/'.$menuid.'/photo'.$con['id'].'.html#c">'.$inCore->getCommentsCount('photo', $con['id']).'</td>';
+						echo '<td><a href="/photos/photo'.$con['id'].'.html#c">'.$inCore->getCommentsCount('photo', $con['id']).'</td>';
 					echo '</tr></table>';
 					echo '</div>';
 				echo '</td>';
@@ -1015,22 +1016,22 @@ if ($do=='best'){
 		while($con = $inDB->fetch_assoc($result)){
 			if ($col==1) { echo '<tr>'; } echo '<td align="center" valign="middle" class="mod_lp_photo" width="'.round(100/$maxcols, 0).'%">';
 			echo '<table width="100%" height="100" cellspacing="0" cellpadding="0">';
-			  echo '<tr><td align="center"><div class="mod_lp_titlelink">'.$num.'. <a href="/photos/'.$menuid.'/photo'.$con['id'].'.html" title="'.$con['title'].' ('.$con['rating'].')">'.$con['title'].'</a></div></td></tr>';
+			  echo '<tr><td align="center"><div class="mod_lp_titlelink">'.$num.'. <a href="/photos/photo'.$con['id'].'.html" title="'.$con['title'].' ('.$con['rating'].')">'.$con['title'].'</a></div></td></tr>';
 			  echo '<tr>';
 			  echo '<td valign="middle" align="center">';
-			echo '<a href="/photos/'.$menuid.'/photo'.$con['id'].'.html" title="'.$con['title'].'">';
+			echo '<a href="/photos/photo'.$con['id'].'.html" title="'.$con['title'].'">';
 				echo '<img class="photo_thumb_img" src="/images/photos/small/'.$con['file'].'" alt="'.$con['title'].' ('.$con['rating'].')" border="0" />';
 			echo '</a>';
 			echo '</td></tr>';
 				echo '<tr>';
 				echo '<td align="center">';
-						echo '<div class="mod_lp_albumlink"><a href="/photos/'.$menuid.'/'.$con['album_id'].'" title="'.$con['album'].'">'.$con['album'].'</a></div>';
+						echo '<div class="mod_lp_albumlink"><a href="/photos/'.$con['album_id'].'" title="'.$con['album'].'">'.$con['album'].'</a></div>';
 						echo '<div class="mod_lp_details">';
 						echo '<table cellpadding="2" cellspacing="2" align="center" border="0"><tr>';
 								$inCore->loadLib('karma');
 								echo '<td style="font-weight:bold">'.cmsKarmaFormat($con['rating']).'</td>';
 								echo '<td><img src="/images/icons/comments.gif" border="0"/></td>';
-								echo '<td><a href="/photos/'.$menuid.'/photo'.$con['id'].'.html#c">'.$inCore->getCommentsCount('photo', $con['id']).'</td>';
+								echo '<td><a href="/photos/photo'.$con['id'].'.html#c">'.$inCore->getCommentsCount('photo', $con['id']).'</td>';
 						echo '</tr></table>';
 						echo '</div>';
 				echo '</td>';
