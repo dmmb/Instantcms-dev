@@ -1089,8 +1089,6 @@ class cmsCore {
             default:            $where_link = "linktype='{$component}' OR linkid='{$component}'"; break;
         }
 
-        $component_menu_id = $this->getComponentMenuId($component);
-
         //проверяем что menuid правильный
         if ($menuid > 0 && !($menuid == 1 && $inConf->homecom == $component) && !$inDB->get_field('cms_menu', "id={$menuid} AND ({$where_link})", 'id')){
             self::error404();
@@ -1103,7 +1101,9 @@ class cmsCore {
             call_user_func($component);
         echo '</div>';
 
-        if ($menuid != 1 && $inPage->back_button) { echo "<p><a href='javascript:history.go(-1)' class=\"backlink\">&laquo; Назад</a></p>"; }
+        if ($menuid != 1 && $inPage->back_button) { 
+            echo "<p><a href='javascript:history.go(-1)' class=\"backlink\">&laquo; Назад</a></p>";
+        }
 
         $inPage->page_body = ob_get_clean();
 

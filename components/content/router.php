@@ -17,62 +17,77 @@
     $routes[] = array(
                         '_uri'  => '/^\/content\/edit([0-9]+).html$/i',
                         'do'    => 'editarticle',
-                        'id'    => '$1'
+                        1       => 'id'
                      );
 
     $routes[] = array(
                         '_uri'  => '/^\/content\/delete([0-9]+).html$/i',
                         'do'    => 'deletearticle',
-                        'id'    => '$1'
+                        1       => 'id'
                      );
 
     $routes[] = array(
                         '_uri'  => '/^\/content\/my.html$/i',
                         'do'    => 'my',
-                        'page'  => 1
+                        1       => 'page'
                      );
 
     $routes[] = array(
                         '_uri'  => '/^\/content\/my([0-9]+).html$/i',
                         'do'    => 'my',
-                        'page'  => '$1'
+                        1       => 'page'
                      );
 
     $routes[] = array(
                         '_uri'      => '/^\/content\/(.+)\/page\-([0-9]+).html$/i',
                         'do'        => 'read',
-                        'seolink'   => '$1',
-                        'page'      => '$2'
+                        1           => 'seolink',
+                        2           => 'page'
                      );
 
     $routes[] = array(
                         '_uri'      => '/^\/content\/(.+).html$/i',
                         'do'        => 'read',
-                        'seolink'   => '$1'
+                        1           => 'seolink'
                      );
 
     $routes[] = array(
                         '_uri'      => '/^\/content\/(.+)\/page\-([0-9]+)$/i',
                         'do'        => 'view',
-                        'seolink'   => '$1',
-                        'page'      => '$2'
+                        1           => 'seolink',
+                        2           => 'page'
                      );
 
     $routes[] = array(
                         '_uri'      => '/^\/content\/(.+)$/i',
                         'do'        => 'view',
-                        'seolink'   => '$1'
+                        1           => 'seolink'
                      );
 
-    foreach($routes as $route){
+    foreach($routes as $route_id=>$route){
 
         preg_match($route['_uri'], $request_uri, $matches);
 
         if ($matches){
-            echo '<pre>'; print_r($matches); echo '</pre>';
+
+            echo 'route_id = '.$route_id.'<pre>'; print_r($matches); echo '</pre>';
+
+            unset($route['_uri']);
+
+            foreach($route as $key=>$value){
+                if (is_integer($key)){
+                    $_REQUEST[$value] = $matches[$key];
+                } else {
+                    $_REQUEST[$key] = $value;
+                }
+            }
+
             break;
+
         }
 
     }
+
+    echo '<pre>'; print_r($_REQUEST); echo '</pre>';
 
 ?>
