@@ -1,7 +1,7 @@
 <?php
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-class cms_model_blog{
+class cms_model_blogs{
 
 	function __construct(){
         $this->inDB = cmsDatabase::getInstance();
@@ -163,7 +163,7 @@ class cms_model_blog{
 
     public function getPostURL($menuid, $bloglink, $seolink){
 
-        $url = '/blogs/'.$menuid.'/'.$bloglink.'/'.$seolink.'.html';
+        $url = '/blogs/'.$bloglink.'/'.$seolink.'.html';
 
         return $url;
 
@@ -177,7 +177,7 @@ class cms_model_blog{
         $cat_section  = ($cat_id >0 ? '/cat-'.$cat_id   : '');
         $page_section = ($page   >1 ? '/page-'.$page    : '');
 
-        $url = '/blogs/'.$menuid.'/'.$bloglink.'/'.$cat_section.$page_section;
+        $url = '/blogs/'.$bloglink.'/'.$cat_section.$page_section;
 
         return $url;
 

@@ -477,8 +477,8 @@ class cmsUser {
 
         if (!$inDB->num_rows($result)){ return false; }
 
-        $inCore->loadModel('blog');
-        $model = new cms_model_blog();
+        $inCore->loadModel('blogs');
+        $model = new cms_model_blogs();
 
         while ($post = $inDB->fetch_assoc($result)){
             $post['pubdate']    = $inCore->getRusDate($post['pubdate']);

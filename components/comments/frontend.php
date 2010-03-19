@@ -171,8 +171,8 @@ function comments($target='', $target_id=0){
 							$targetlink = str_replace('%author_id%', $author['id'], $targetlink);
 
 							if (strstr($targetlink, '%post_url%')){
-                                $inCore->loadModel('blog');
-                                $model = new cms_model_blog();
+                                $inCore->loadModel('blogs');
+                                $model = new cms_model_blogs();
                                 $post       = $model->getPost($target_id);
                                 $targetlink = str_replace('%post_url%', $model->getPostURL(0, $post['bloglink'], $post['seolink']), $targetlink);
 							}

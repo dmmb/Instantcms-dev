@@ -10,7 +10,7 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 	
-function rss_blog($item_id, $cfg, &$rssdata){
+function rss_blogs($item_id, $cfg, &$rssdata){
     
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
@@ -27,8 +27,8 @@ function rss_blog($item_id, $cfg, &$rssdata){
 			$cat    = $inDB->get_fields('cms_blogs', 'id='.$item_id, 'id, title, seolink');
 			$catsql = "AND p.blog_id = $item_id";
 
-            $inCore->loadModel('blog');
-            $model = new cms_model_blog();
+            $inCore->loadModel('blogs');
+            $model = new cms_model_blogs();
 
 			$channel['title']       = $cat['title'];
 			$channel['description'] = '';
@@ -59,8 +59,8 @@ function rss_blog($item_id, $cfg, &$rssdata){
 
 		if ($inDB->num_rows($rs)){
 
-            $inCore->loadModel('blog');
-            $model = new cms_model_blog();
+            $inCore->loadModel('blogs');
+            $model = new cms_model_blogs();
 
 			while ($item = $inDB->fetch_assoc($rs)){
 				$id = $item['id'];

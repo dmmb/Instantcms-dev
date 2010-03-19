@@ -2021,8 +2021,8 @@ if ($do == 'delprofile'){
 						$inDB->query("DELETE FROM cms_user_friends WHERE to_id = $id OR from_id = $id");
 						$user_blog_id = dbGetField('cms_blogs', 'user_id='.$id, 'id');
 						if ($user_blog_id) {
-                            $inCore->loadModel('blog');
-                            $blog_model = new cms_model_blog();
+                            $inCore->loadModel('blogs');
+                            $blog_model = new cms_model_blogs();
                             $blog_model->deleteBlog($user_blog_id);
                         }
 					}

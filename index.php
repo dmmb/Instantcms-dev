@@ -17,7 +17,7 @@
     define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
 
 ////////////////////////////// Проверяем что система установлена /////////////////////////////
-//
+
 //if(is_dir('install')||is_dir('migrate')) {
 //	if (!file_exists(PATH.'/includes/config.inc.php')){
 //		header('location:/install/');

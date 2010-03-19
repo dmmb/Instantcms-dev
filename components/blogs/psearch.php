@@ -10,7 +10,7 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 	
-function search_blog($query, $look, $mode='text'){ //query sends here already prepared and secured!
+function search_blogs($query, $look, $mode='text'){ //query sends here already prepared and secured!
 
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
@@ -32,8 +32,8 @@ function search_blog($query, $look, $mode='text'){ //query sends here already pr
 				//build params
                 $inCore->loadLanguage('components/blog');
 
-                $inCore->loadModel('blog');
-                $model = new cms_model_blog();
+                $inCore->loadModel('blogs');
+                $model = new cms_model_blogs();
 
 				$link = $model->getPostURL(0, $item['bloglink'], $item['seolink']);
 				$place = $_LANG['BLOG'].' &laquo;'.$item['cat_title'].'&raquo;';
