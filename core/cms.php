@@ -1757,7 +1757,7 @@ class cmsCore {
         $view       = $this->request('view', 'str', '');
         $uri        = '/'.$this->uri;
         $menu       = array_reverse($this->menu_struct);
-        $menuid     = 1;
+        $menuid     = ($uri == '/' ? 1 : 0);
 
         foreach($menu as $item){
 

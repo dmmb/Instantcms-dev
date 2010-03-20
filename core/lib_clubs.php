@@ -266,7 +266,7 @@ function clubRemoveUser($club_id, $user_id){
 	return;
 }
 
-function clubSaveUsers($club_id, $list, $role, $clubtype='public', $cfg=false, $menuid=0){
+function clubSaveUsers($club_id, $list, $role, $clubtype='public', $cfg=false){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
@@ -299,7 +299,7 @@ function clubSaveUsers($club_id, $list, $role, $clubtype='public', $cfg=false, $
                 //send notice
                 if($cfg['notify_in'] && ($user_id != $inUser->id)){
                     $club_title = dbGetField('cms_clubs', 'id='.$club_id, 'title');
-                    cmsUser::sendMessage(USER_UPDATER, $user_id, '[b]Получено приглашение в клуб.[/b] Пользователь [url='.cmsUser::getProfileURL($inUser->login).']'.$inUser->nickname.'[/url] добавил Вас в число участников клуба [URL=http://'.$_SERVER['HTTP_HOST'].'/clubs/'.$menuid.'/'.$club_id.']'.$club_title.'[/URL].');
+                    cmsUser::sendMessage(USER_UPDATER, $user_id, '[b]Получено приглашение в клуб.[/b] Пользователь [url='.cmsUser::getProfileURL($inUser->login).']'.$inUser->nickname.'[/url] добавил Вас в число участников клуба [URL=http://'.$_SERVER['HTTP_HOST'].'/clubs/'.$club_id.']'.$club_title.'[/URL].');
                 }
             } else {
                 //user already in club, update his role if necessary
@@ -320,7 +320,6 @@ function clubSaveUsers($club_id, $list, $role, $clubtype='public', $cfg=false, $
 function clubAdminLink($club_id){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
-	global $menuid;
 	$sql = "SELECT u.id as id, u.nickname as nickname, u.login as login, p.gender as gender
 			FROM cms_clubs c, cms_users u, cms_user_profiles p
 			WHERE c.id = $club_id AND c.admin_id = u.id AND p.user_id = u.id";
@@ -328,7 +327,7 @@ function clubAdminLink($club_id){
 	$html = '';
 	if (@$inDB->num_rows($rs) == 1){
 		$usr = $inDB->fetch_assoc($rs);
-		$html .= cmsUser::getGenderLink($usr['id'], $usr['nickname'], $menuid, $usr['gender'], $usr['login']);
+		$html .= cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login']);
 	}
 	return $html;
 }
@@ -337,8 +336,6 @@ function clubMembersList($club_id){
     $inCore     = cmsCore::getInstance();
     $inDB       = cmsDatabase::getInstance();
 	
-    global $menuid;
-
 	$sql = "SELECT u.id as id, u.nickname as nickname, u.login as login, p.gender as gender
 			FROM cms_user_clubs c, cms_users u, cms_user_profiles p
 			WHERE c.club_id = $club_id AND c.user_id = u.id AND p.user_id = u.id AND u.is_locked = 0 AND u.is_deleted = 0";
@@ -349,7 +346,7 @@ function clubMembersList($club_id){
 	$now=0; $html = '';
 
 	while($usr = $inDB->fetch_assoc($rs)){				
-		$html .= cmsUser::getGenderLink($usr['id'], $usr['nickname'], $menuid, $usr['gender'], $usr['login']);
+		$html .= cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login']);
 		if ($now < $total-1) { $html .= ', '; }
 		$now ++;
 	}

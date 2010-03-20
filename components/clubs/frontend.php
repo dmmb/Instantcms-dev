@@ -47,7 +47,6 @@ function clubs(){
     if(!isset($cfg['notify_out'])) { $cfg['notify_out'] = 1; }
 	
 	//INPUT PARAMETERS
-	$menuid 	= $inCore->menuId();
 	$id 		= $inCore->request('id', 'int', 0);
 	$do 		= $inCore->request('do', 'str', 'view');
 
@@ -80,14 +79,13 @@ if ($do=='view'){
 			$clubs[] = $club;
 		}
 		$total      = $model->getClubsCount();
-        $pagination = cmsPage::getPagebar($total, $page, $perpage, '/clubs/%menuid%-%page%', array('menuid'=>$menuid));
+        $pagination = cmsPage::getPagebar($total, $page, $perpage, '/clubs/page-%page%', array());
 	}
 
 	$can_create = $user_id && ( $inUser->is_admin || ($cfg['cancreate'] && !$inDB->get_field('cms_clubs', 'admin_id='.$user_id, 'id') && cmsUser::getKarma($user_id)>=$cfg['create_min_karma'] && cmsUser::getRating($user_id)>=$cfg['create_min_rating']));
 
 	$smarty = $inCore->initSmarty('components', 'com_clubs_view.tpl');
 	$smarty->assign('pagetitle', $pagetitle);
-	$smarty->assign('menuid', $menuid);
 	$smarty->assign('clubid', $id);
 	$smarty->assign('can_create', $can_create);
 	$smarty->assign('clubs', $clubs);
@@ -103,7 +101,6 @@ if ($do=='club'){
 	$club   = $model->getClub($id);
 
 	$smarty = $inCore->initSmarty('components', 'com_clubs_view_club.tpl');			
-	$smarty->assign('menuid', $menuid);
 				
 	if(!$club){
 		//CLUB NOT FOuND
@@ -148,10 +145,10 @@ if ($do=='club'){
     //JOIN/LEAVE LINK
     $club['member_link'] = '';
     if ( clubUserIsMember($id, $user_id) ){
-        $club['member_link'] = '<a href="/clubs/'.$menuid.'/'.$id.'/leave.html" class="leave">'.$_LANG['LEAVE_CLUB'].'</a>';;
+        $club['member_link'] = '<a href="/clubs/'.$id.'/leave.html" class="leave">'.$_LANG['LEAVE_CLUB'].'</a>';;
     } 
     if ($club['clubtype']=='public' && ($user_id != $club['admin_id']) && !clubUserIsMember($id, $user_id)){
-        $club['member_link'] = '<a href="/clubs/'.$menuid.'/'.$id.'/join.html" class="join">'.$_LANG['JOIN_CLUB'].'</a>';
+        $club['member_link'] = '<a href="/clubs/'.$id.'/join.html" class="join">'.$_LANG['JOIN_CLUB'].'</a>';
     }
 
     //PARAMS
@@ -166,7 +163,7 @@ if ($do=='club'){
     $inCore->loadModel('blogs');
     $blog_model = new cms_model_blogs();
 
-    $club['blog_url']       = $blog_model->getBlogURL($menuid, $inDB->get_field('cms_blogs', "id={$club['blog_id']}", 'seolink'));
+    $club['blog_url']       = $blog_model->getBlogURL(null, $inDB->get_field('cms_blogs', "id={$club['blog_id']}", 'seolink'));
 
     $club['photo_albums']	= clubPhotoAlbums($club['id'],  $is_admin, $is_moder, $is_member);
     $club['root_album_id']	= clubRootAlbumId($club['id']);
@@ -232,9 +229,9 @@ if ($do == 'create'){
         if(!$errors){
             $created_id = $model->addClub(array('user_id'=>$user_id, 'title'=>$title, 'clubtype'=>$clubtype));
             if($created_id){ setClubRating($created_id); }
-            $inCore->redirect('/clubs/'.$menuid.'/'.$created_id);
+            $inCore->redirect('/clubs/'.$created_id);
         } else {
-            $inCore->redirect('/clubs/'.$menuid);
+            $inCore->redirect('/clubs');
         }
         
     }
@@ -313,10 +310,10 @@ if ($do == 'config'){
         if ($moders) { if (array_search($admin_id, $moders)) { unset($moders[array_search($admin_id, $moders)]); }	}
         if ($members) { if (array_search($admin_id, $members)) { unset($members[array_search($admin_id, $members)]); }	}
 
-        clubSaveUsers($id, $members, 'member', $clubtype, $cfg, $menuid);
-        clubSaveUsers($id, $moders, 'moderator', $clubtype, $cfg, $menuid);
+        clubSaveUsers($id, $members, 'member', $clubtype, $cfg);
+        clubSaveUsers($id, $moders, 'moderator', $clubtype, $cfg);
 
-        $inCore->redirect('/clubs/'.$menuid.'/'.$id);
+        $inCore->redirect('/clubs/'.$id);
     }
 
     if ( !$inCore->inRequest('save') ){
@@ -324,7 +321,7 @@ if ($do == 'config'){
         if ( !(clubUserIsAdmin($id, $user_id) || $inCore->userIsAdmin($user_id)) ){ return; }
 
         //show config form
-        $inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$id);
+        $inPage->addPathway($club['title'], '/clubs/'.$id);
         $inPage->addPathway($_LANG['CONFIG_CLUB']);
         $inPage->setTitle($_LANG['CONFIG_CLUB']);
 
@@ -351,7 +348,6 @@ if ($do == 'config'){
         $club['enabled_photos']	= $club['enabled_photos'] == 1 || ($club['enabled_photos']==0 && $cfg['enabled_photos']==1);
 
         $smarty = $inCore->initSmarty('components', 'com_clubs_config.tpl');
-        $smarty->assign('menuid', $menuid);
         $smarty->assign('club', $club);
         $smarty->assign('moders_list', $moders_list);
         $smarty->assign('members_list', $members_list);
@@ -371,13 +367,13 @@ if ($do == 'leave'){
 	if (!$user_id){ return; }
     if (!$club){ return; }
 
-    $inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$id);
+    $inPage->addPathway($club['title'], '/clubs/'.$id);
     $inPage->addPathway($_LANG['EXIT_FROM_CLUB']);
 
     if ( $inCore->inRequest('confirm') ){
         clubRemoveUser($id, $inUser->id);
         setClubsRating($id);
-        $inCore->redirect('/clubs/'.$menuid.'/'.$id);
+        $inCore->redirect('/clubs/'.$id);
     }
 
     if ( !$inCore->inRequest('confirm') ){
@@ -406,7 +402,7 @@ if ($do == 'join'){
 	if (!$user_id){ return; }
     if (!$club){    return; }
 
-    $inPage->addPathway($club['title'], '/clubs/'.$menuid.'/'.$id);
+    $inPage->addPathway($club['title'], '/clubs/'.$id);
     $inPage->addPathway($_LANG['JOINING_CLUB']);
 
     if (clubUserIsMember($id, $inUser->id)){ return; }
@@ -414,7 +410,7 @@ if ($do == 'join'){
     if ( $inCore->inRequest('confirm') ){        
         clubAddUser($id, $inUser->id);
         setClubsRating($id);
-        $inCore->redirect('/clubs/'.$menuid.'/'.$id);
+        $inCore->redirect('/clubs/'.$id);
     }
 
     if ( !$inCore->inRequest('confirm') ) {
@@ -443,7 +439,7 @@ if ($do == 'join'){
             $inPage->printHeading($_LANG['NEED_KARMA']);
             echo '<p><strong>'.$_LANG['NEED_KARMA_TEXT'].'</strong></p>';
             echo '<p>'.$_LANG['NEEDED'].' '.$min_karma.', '.$_LANG['HAVE_ONLY'].' '.$user_karma.'.</p>';
-            echo '<p>'.$_LANG['WANT_SEE'].' <a href="/users/'.$menuid.'/'.$uid.'/karma.html">'.$_LANG['HISTORY_YOUR_KARMA'].'</a>?</p>';
+            echo '<p>'.$_LANG['WANT_SEE'].' <a href="/users/'.$uid.'/karma.html">'.$_LANG['HISTORY_YOUR_KARMA'].'</a>?</p>';
             
         }
     }
