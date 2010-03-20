@@ -19,7 +19,7 @@ function blogs(){
     $inUser = cmsUser::getInstance();
     
 	$inCore->includeFile("components/users/includes/usercore.php");
-	$inCore->includeFile("components/blog/includes/blogcore.php");
+	$inCore->includeFile("components/blogs/includes/blogcore.php");
 
 	$inCore->loadLib("users");
 	$inCore->loadLib("tags");
@@ -45,7 +45,6 @@ function blogs(){
     if (!isset($cfg['update_date'])) { $cfg['update_date'] = 1; }
 	
 	//Получаем параметры
-	$menuid 	= $inCore->menuId();
 	$id 		= $inCore->request('id', 'int', 0);	
 	$bloglink   = $inCore->request('bloglink', 'str', '');
 	$seolink    = $inCore->request('seolink', 'str', '');
@@ -86,8 +85,8 @@ if ($do=='create'){
     //Если у пользователя уже есть блог, то выходим
     if ($model->getUserBlogId($inUser->id)) { $inCore->redirectBack(); }
 
-	$inPage->addHeadJS('components/blog/js/blog.js');
-	$inPage->addPathway($_LANG['BLOGS'], '/blogs/'.$menuid);
+	$inPage->addHeadJS('components/blogs/js/blog.js');
+	$inPage->addPathway($_LANG['BLOGS'], '/blogs');
 	$inPage->addPathway($_LANG['PATH_CREATING_BLOG']);
 
     //Показ формы создания блога
@@ -145,9 +144,8 @@ if ($do=='create'){
             $blog_link = $inDB->get_field('cms_blogs', "id={$blog_id}", 'seolink');
             //Выводим сообщение о том что блог создан
             $smarty  = $inCore->initSmarty('components', 'com_blog_create_ok.tpl');
-            $smarty->assign('menuid', $menuid);
             $smarty->assign('blogid', $blog_id);
-            $smarty->assign('url', $model->getBlogURL($menuid, $blog_link));
+            $smarty->assign('url', $model->getBlogURL(null, $blog_link));
             $smarty->assign('profile_url', cmsUser::getProfileURL($inUser->login)); 
             $smarty->assign('userid', $user_id);
             $smarty->display('com_blog_create_ok.tpl');
@@ -176,9 +174,9 @@ if ($do=='config'){
 	//Проверяем является пользователь хозяином блога или админом
     if ( $blog['user_id']!=$user_id && !$inCore->userIsAdmin($user_id) ) { $inCore->redirectBack(); }
 
-    $inPage->addPathway($blog['title'], $model->getBlogURL($menuid, $blog['seolink']));
+    $inPage->addPathway($blog['title'], $model->getBlogURL(null, $blog['seolink']));
 	$inPage->addPathway($_LANG['CONFIG_BLOG']);
-    $inPage->addHeadJS('components/blog/js/blog.js');
+    $inPage->addHeadJS('components/blogs/js/blog.js');
 
     //Если нет запроса на сохранение, показываем форму настроек блога
     if ( !$inCore->inRequest('goadd') ){
@@ -195,7 +193,6 @@ if ($do=='config'){
         //Выводим форму
         $smarty = $inCore->initSmarty('components', 'com_blog_config.tpl');
         $smarty->assign('blog', $blog);
-        $smarty->assign('menuid', $menuid);
         $smarty->assign('id', $blog['id']);
         $smarty->assign('authors_list', cmsUser::getAuthorsList($authors));
         $smarty->assign('users_list', cmsUser::getUsersList(false, $authors));
@@ -238,7 +235,7 @@ if ($do=='config'){
             //сохраняем настройки блога
             $model->updateBlog($blog['id'], array('title'=>$title, 'allow_who'=>$allow_who, 'showcats'=>$showcats, 'ownertype'=>$ownertype, 'premod'=>$premod, 'forall'=>$forall));
             //Перенаправляем на главную страницу блога
-            $inCore->redirect($model->getBlogURL($menuid, $blog['seolink']));
+            $inCore->redirect($model->getBlogURL(null, $blog['seolink']));
         }
 
         //Если найдены ошибки
@@ -278,7 +275,7 @@ if ($do=='view'){
 		//Если блог доступен для пользователя
 		if ($blog['can_view']) { 
             //Получаем ссылку на блог
-            $blog['url']        = $model->getBlogURL($menuid, $blog['seolink']);
+            $blog['url']        = $model->getBlogURL(null, $blog['seolink']);
             //Считаем число комментариев
             $blog['comments']   = blogComments($blog['id']);
             //Форматируем значение кармы блога
@@ -296,7 +293,6 @@ if ($do=='view'){
 	$smarty->assign('single_blogs', $single_blogs);
 	$smarty->assign('multi_blogs', $multi_blogs);
 	$smarty->assign('ownertype', $ownertype);
-	$smarty->assign('menuid', $menuid);
 	$smarty->assign('is_admin', $inCore->userIsAdmin($user_id));
 	$smarty->assign('blogs', $blogs);
 	$smarty->assign('is_blogs', $is_blogs);	
@@ -321,7 +317,7 @@ if ($do=='blog'){
         //Определяем, есть ли доступ к этому блогу
 		$can_view       = ($blog['allow_who']=='all' || ($blog['allow_who']=='friends' && usrIsFriends($blog['user_id'], $user_id)) || $blog['user_id']==$user_id || $inUser->is_admin);
         //Получаем html-код ссылки на автора с иконкой его пола
-		$blog['author'] = cmsUser::getGenderLink($blog['user_id'], $blog['author'], $menuid);
+		$blog['author'] = cmsUser::getGenderLink($blog['user_id'], $blog['author'], null);
         //Устанавливаем заголовок страницы и глубиномер
 		$inPage->setTitle($blog['title']);
 		$inPage->addPathway($blog['title']);	
@@ -333,11 +329,11 @@ if ($do=='blog'){
         //Блоги клубов открыты не всегда и не для всех
 		$can_view 		= $blog['club']['clubtype'] == 'public' || ($blog['club']['clubtype'] == 'private' && (clubUserIsMember($blog['user_id'], $inUser->id) || $inUser->is_admin || clubUserIsAdmin($blog['user_id'], $inUser->id)));
         //Получаем заголовок блога и ссылку на профиль администратора
-		$blog['title'] 	= '<a href="/clubs/'.$menuid.'/'.$blog['user_id'].'">'.$blog['author'].'</a> &rarr; Блог';		
+		$blog['title'] 	= '<a href="/clubs/'.$blog['user_id'].'">'.$blog['author'].'</a> &rarr; Блог';		
 		$blog['author'] = clubAdminLink($blog['user_id']);        
         //Устанавливаем заголовок страницы и глубиномер
 	    $inPage->setTitle($_LANG['BLOG'].' - '.$blog['club']['title']);
-        $inPage->addPathway($blog['club']['title'], '/clubs/'.$menuid.'/'.$blog['user_id']);
+        $inPage->addPathway($blog['club']['title'], '/clubs/'.$blog['user_id']);
 		$inPage->addPathway($_LANG['BLOG']);
 	}
 
@@ -389,7 +385,7 @@ if ($do=='blog'){
         if ($blog['forall']){
             $authors_status = '<span class="blog_authorsall">'.$_LANG['BLOG_OPENED_FOR_ALL'].'</span>';
         } else {
-            $authors_status = '<a href="/blogs/'.$menuid.'/'.$blog['id'].'/authors.html" class="blog_authorslink">'.$_LANG['AVTORS_BLOG'].'</a>';
+            $authors_status = '<a href="/blogs/'.$blog['id'].'/authors.html" class="blog_authorslink">'.$_LANG['AVTORS_BLOG'].'</a>';
         }
     }
 
@@ -414,9 +410,9 @@ if ($do=='blog'){
 
         //Генерируем панель со страницами
         if ($cat_id != -1){
-            $pagination = cmsPage::getPagebar($total, $page, $perpage, '/blogs/%menuid%/%bloglink%/page-%page%/cat-%catid%', array('menuid'=>$menuid, 'bloglink'=>$blog['seolink'], 'catid'=>$cat_id));
+            $pagination = cmsPage::getPagebar($total, $page, $perpage, '/blogs/%bloglink%/page-%page%/cat-%catid%', array('bloglink'=>$blog['seolink'], 'catid'=>$cat_id));
         } else {
-            $pagination = cmsPage::getPagebar($total, $page, $perpage, '/blogs/%menuid%/%bloglink%/page-%page%', array('menuid'=>$menuid, 'bloglink'=>$blog['seolink']));
+            $pagination = cmsPage::getPagebar($total, $page, $perpage, '/blogs/%bloglink%/page-%page%', array('bloglink'=>$blog['seolink']));
         }
 
         //Извлекаем записи
@@ -427,7 +423,7 @@ if ($do=='blog'){
                 $can_view = ($blog['allow_who']=='all' || ($blog['allow_who']=='friends' && usrIsFriends($blog['user_id'], $user_id)) || $post['user_id']==$user_id || $inCore->userIsAdmin($user_id));
                 if ($can_view){
 
-                    $post['url']        = $model->getPostURL($menuid, $blog['seolink'], $post['seolink']);
+                    $post['url']        = $model->getPostURL(null, $blog['seolink'], $post['seolink']);
                     $post['comments']   = dbRowsCount('cms_comments', "target='blog' AND target_id=".$post['id']);
                     $post['karma']      = cmsKarmaFormatSmall($post['points']);
                     
@@ -465,7 +461,6 @@ if ($do=='blog'){
     $smarty->assign('cat_id', $cat_id);
     $smarty->assign('blogcats', $blogcats);
     $smarty->assign('total', $total);
-    $smarty->assign('menuid', $menuid);
     $smarty->assign('uid', $user_id);
     $smarty->assign('blog', $blog);
     if (@$posts)        { $smarty->assign('posts', $posts);           }
@@ -507,8 +502,8 @@ if ($do=='moderate'){
 	}
 
     //Устанавливаем глубиномер и заголовок страницы
-    if ($owner=='club') { $inPage->addPathway($blog['author'], '/clubs/'.$menuid.'/'.$blog['user_id']); }
-    $inPage->addPathway($blog['title'], $model->getBlogURL($menuid, $blog['seolink']));
+    if ($owner=='club') { $inPage->addPathway($blog['author'], '/clubs/'.$blog['user_id']); }
+    $inPage->addPathway($blog['title'], $model->getBlogURL(null, $blog['seolink']));
     $inPage->addPathway($_LANG['POSTS_ON_MODERATE'], $_SERVER['REQUEST_URI']);
     $inPage->setTitle($_LANG['MODERATING'].' - '.$blog['title']);
 
@@ -517,7 +512,7 @@ if ($do=='moderate'){
 
     //Если записей нет, редиректим на главную блога
     if (!$total){
-        $inCore->redirect($model->getBlogURL($menuid, $blog['seolink']));
+        $inCore->redirect($model->getBlogURL(null, $blog['seolink']));
     }
 
     //Получаем ожидающие записи из базы
@@ -538,17 +533,16 @@ if ($do=='moderate'){
         $msg                = str_replace("&amp;", '&', $msg);
         $post['msg']        = $msg;
         $post['tagline']    = cmsTagLine('blogpost', $post['id']);
-        $post['url']        = $model->getPostURL($menuid, $post['bloglink'], $post['seolink']);
+        $post['url']        = $model->getPostURL(null, $post['bloglink'], $post['seolink']);
         $posts[]            = $post;
     }
 
-    $blog['url'] = $model->getBlogURL($menuid, $blog['seolink']);
+    $blog['url'] = $model->getBlogURL(null, $blog['seolink']);
 
     //Выводим записи
     $smarty = $inCore->initSmarty('components', 'com_blog_moderate.tpl');
         $smarty->assign('myblog', $myblog);
         $smarty->assign('total', $total);
-        $smarty->assign('menuid', $menuid);
         $smarty->assign('id', $id);
         $smarty->assign('uid', $user_id);
         $smarty->assign('posts', $posts);
@@ -580,7 +574,6 @@ if ($do=='authors'){
 
     //Выводим список
     $smarty = $inCore->initSmarty('components', 'com_blog_authors.tpl');
-        $smarty->assign('menuid', $menuid);
         $smarty->assign('blog', $blog['title']);
         $smarty->assign('is_authors', $is_authors);
         $smarty->assign('authors', $authors);
@@ -617,7 +610,7 @@ if ($do=='newpost' || $do=='editpost'){
         $is_author  = clubUserIsRole($blog['user_id'], $user_id, 'member');
         $is_admin   = $inCore->userIsAdmin($user_id) || clubUserIsAdmin($blog['user_id'], $user_id);
         $min_karma  = $model->getClubBlogMinKarma($blog['user_id']);
-        $inPage->addPathway($blog['author'], '/clubs/'.$menuid.'/'.$blog['user_id']);
+        $inPage->addPathway($blog['author'], '/clubs/'.$blog['user_id']);
     }
 
     //Проверяем, хватает ли кармы
@@ -625,7 +618,7 @@ if ($do=='newpost' || $do=='editpost'){
         $inPage->printHeading($_LANG['NEED_KARMA']);
         echo '<p><strong>'.$_LANG['NEED_KARMA_TEXT'].'</strong></p>';
         echo '<p>'.$_LANG['NEEDED'].' '.$min_karma.', '.$_LANG['HAVE_ONLY'].' '.$user_karma.'.</p>';
-        echo '<p>'.$_LANG['WANT_SEE'].' <a href="/users/'.$menuid.'/'.$user_id.'/karma.html">'.$_LANG['HISTORY_YOUR_KARMA'].'</a>?</p>';
+        echo '<p>'.$_LANG['WANT_SEE'].' <a href="/users/'.$user_id.'/karma.html">'.$_LANG['HISTORY_YOUR_KARMA'].'</a>?</p>';
         return;
     }
 
@@ -653,7 +646,7 @@ if ($do=='newpost' || $do=='editpost'){
         if (!$post){ $inCore->redirectBack(); }
 	}
 
-	$inPage->addPathway($blog['title'], $model->getBlogURL($menuid, $blog['seolink']));
+	$inPage->addPathway($blog['title'], $model->getBlogURL(null, $blog['seolink']));
 	$inPage->initAutocomplete();
 
     //Удаляем промежуточные данные о загруженных изображениях
@@ -763,14 +756,14 @@ if ($do=='newpost' || $do=='editpost'){
 
                 if ($published) {
                     $post_seolink = $inDB->get_field('cms_blog_posts', "id={$post_id}", 'seolink');
-                    $inCore->redirect($model->getPostURL($menuid, $blog['seolink'], $post_seolink));
+                    $inCore->redirect($model->getPostURL(null, $blog['seolink'], $post_seolink));
                 }
 
                 if (!$published) {
                     $inPage->backButton(false);
                     $inPage->printHeading($_LANG['POST_CREATED']);
                     echo '<p>'.$_LANG['POST_PREMODER_TEXT'].'</p>';
-                    echo '<p><a href="'.$model->getBlogURL($menuid, $blog['seolink']).'">'.$_LANG['CONTINUE'].'</a> &rarr;</p>';
+                    echo '<p><a href="'.$model->getBlogURL(null, $blog['seolink']).'">'.$_LANG['CONTINUE'].'</a> &rarr;</p>';
                     return;
                 }
             }
@@ -793,7 +786,7 @@ if ($do=='newpost' || $do=='editpost'){
                     $inDB->query("UPDATE cms_blog_posts SET pubdate = NOW() WHERE id={$post_id}");
                 }
 
-                $inCore->redirect($model->getBlogURL($menuid, $blog['seolink']));
+                $inCore->redirect($model->getBlogURL(null, $blog['seolink']));
                 
             }
         } 
@@ -822,7 +815,7 @@ if ($do=='newcat' || $do=='editcat'){
 	}
 	if (!$myblog) { $inCore->redirectBack(); }
 	
-	$inPage->addPathway($blog['title'], $model->getBlogURL($menuid, $blog['seolink']));
+	$inPage->addPathway($blog['title'], $model->getBlogURL(null, $blog['seolink']));
 
     //Новая рубрики
 	if ($do=='newcat'){
@@ -878,7 +871,7 @@ if ($do=='newcat' || $do=='editcat'){
             if ($do=='editcat'){
                 $model->updateBlogCategory($cat_id, array('title'=>$title));
             }
-            $inCore->redirect($model->getBlogURL($menuid, $blog['seolink']));
+            $inCore->redirect($model->getBlogURL(null, $blog['seolink']));
         }
 
     }
@@ -895,13 +888,13 @@ if($do=='post'){
 
 	if($owner=='user'){
         $can_view = ($blog['allow_who']=='all' || ($blog['allow_who']=='friends' && usrIsFriends($blog['user_id'], $user_id)) || $post['user_id']==$user_id || $inUser->is_admin);
-		$inPage->addPathway($blog['title'], $model->getBlogURL($menuid, $blog['seolink']));
+		$inPage->addPathway($blog['title'], $model->getBlogURL(null, $blog['seolink']));
 	}
     if ($owner=='club'){
         $blog['club']   = $inDB->get_fields('cms_clubs', "id={$blog['user_id']}", 'title, clubtype');
         $can_view = $blog['club']['clubtype'] == 'public' || ($blog['club']['clubtype'] == 'private' && (clubUserIsMember($blog['user_id'], $user_id) || $inUser->is_admin || clubUserIsAdmin($blog['user_id'], $user_id)));
-		$inPage->addPathway($blog['author'], '/clubs/'.$menuid.'/'.$blog['user_id']);	
-		$inPage->addPathway('Блог', $model->getBlogURL($menuid, $blog['seolink']));
+		$inPage->addPathway($blog['author'], '/clubs/'.$blog['user_id']);	
+		$inPage->addPathway('Блог', $model->getBlogURL(null, $blog['seolink']));
 		$blog['title'] 		= $blog['author'];
 		$blog['author'] 	= clubAdminLink($blog['user_id']);
 	}
@@ -966,7 +959,6 @@ if($do=='post'){
     $smarty = $inCore->initSmarty('components', 'com_blog_view_post.tpl');
         $smarty->assign('post', $post);
         $smarty->assign('blog', $blog);
-        $smarty->assign('menuid', $menuid);
         $smarty->assign('id', $id);
         $smarty->assign('cat', $cat);
         $smarty->assign('is_author', $is_author);
@@ -1013,11 +1005,11 @@ if ($do == 'delpost'){
             $inPage->setTitle($_LANG['DELETE_POST']);
             $inPage->backButton(false);
             $confirm['title'] = $_LANG['DELETE_POST'];
-            $confirm['text'] = $_LANG['YOU_REALY_DELETE_POST'].' "<a href="'.$model->getPostURL($menuid, $post['bloglink'], $post['seolink']).'">'.$post['title'].'</a>" '.$_LANG['FROM_BLOG'];
+            $confirm['text'] = $_LANG['YOU_REALY_DELETE_POST'].' "<a href="'.$model->getPostURL(null, $post['bloglink'], $post['seolink']).'">'.$post['title'].'</a>" '.$_LANG['FROM_BLOG'];
             $confirm['action'] = 'javascript:void(0);';
             $confirm['yes_button'] = array();
             $confirm['yes_button']['type'] = 'button';
-            $confirm['yes_button']['onclick'] = "window.location.href='/blogs/".$menuid."/".$id."/delpost".$post_id."-yes.html';";
+            $confirm['yes_button']['onclick'] = "window.location.href='/blogs/".$id."/delpost".$post_id."-yes.html';";
             $smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
             $smarty->assign('confirm', $confirm);
             $smarty->display('action_confirm.tpl');
@@ -1036,7 +1028,7 @@ if ($do == 'delpost'){
                 cmsUser::sendMessage(-1, $post['user_id'], $_LANG['YOUR_POST'].' <b>&laquo;'.$post['title'].'&raquo;</b> '.$_LANG['WAS_DELETED_FROM_BLOG'].' <b>&laquo;<a href="'.$model->getBlogURL(0, $blog['seolink']).'">'.$blog['title'].'</a>&raquo;</b>');
             }
         }
-        $inCore->redirect($model->getBlogURL($menuid, $blog['seolink']));
+        $inCore->redirect($model->getBlogURL(null, $blog['seolink']));
     }
 
 }
@@ -1059,7 +1051,7 @@ if ($do == 'publishpost'){
         }
     }
     
-    $inCore->redirect('/blogs/'.$menuid.'/'.$blog['id'].'/moderate.html');
+    $inCore->redirect('/blogs/'.$blog['id'].'/moderate.html');
     
 }
 
@@ -1078,7 +1070,7 @@ if ($do == 'delblog'){
     if ( $inCore->inRequest('confirm') ){
         if ($user_id == $blog['user_id'] || $inUser->is_admin){
             $model->deleteBlog($id);
-            $inCore->redirect('/blogs/'.$menuid);
+            $inCore->redirect('/blogs');
         }        
     }
 
@@ -1090,7 +1082,7 @@ if ($do == 'delblog'){
             $confirm['action']                  = 'javascript:void(0);';
             $confirm['yes_button']              = array();
             $confirm['yes_button']['type']      = 'button';
-            $confirm['yes_button']['onclick']   = "window.location.href='/blogs/".$menuid."/".$id."/delblog-yes.html';";
+            $confirm['yes_button']['onclick']   = "window.location.href='/blogs/".$id."/delblog-yes.html';";
             $smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
             $smarty->assign('confirm', $confirm);
             $smarty->display('action_confirm.tpl');
@@ -1139,18 +1131,18 @@ if ($do == 'delcat'){
             if ($can_delete){
                 $model->deleteBlogCategory($cat_id);
             }
-            $inCore->redirect($model->getBlogURL($menuid, $blog['seolink']));
+            $inCore->redirect($model->getBlogURL(null, $blog['seolink']));
         }
 
         if (!$inCore->inRequest('confirm')){
             if ($can_delete){
                 $inPage->setTitle($_LANG['DELETE_CAT']);
                 $confirm['title'] = $_LANG['DELETE_CAT'];
-                $confirm['text'] = '<p>'.$_LANG['YOU_REALY_DELETE_CAT'].' "<a href="/blogs/'.$menuid.'/'.$id.'/blog'.$cat_id.'.html">'.$data['title'].'</a>" '.$_LANG['FROM_BLOG'].'</p><p>'.$_LANG['DELETE_CAT_TEXT'].'</p>';
+                $confirm['text'] = '<p>'.$_LANG['YOU_REALY_DELETE_CAT'].' "<a href="/blogs/'.$id.'/blog'.$cat_id.'.html">'.$data['title'].'</a>" '.$_LANG['FROM_BLOG'].'</p><p>'.$_LANG['DELETE_CAT_TEXT'].'</p>';
                 $confirm['action'] = 'javascript:void(0);';
                 $confirm['yes_button'] = array();
                 $confirm['yes_button']['type'] = 'button';
-                $confirm['yes_button']['onclick'] = "window.location.href='/blogs/".$menuid."/".$id."/delcat".$cat_id."-yes.html';";
+                $confirm['yes_button']['onclick'] = "window.location.href='/blogs/".$id."/delcat".$cat_id."-yes.html';";
                 $smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
                 $smarty->assign('confirm', $confirm);
                 $smarty->display('action_confirm.tpl');
@@ -1198,7 +1190,7 @@ if ($do=='latest'){
         $posts_list = $model->getLatestPosts($page, $perpage);
 
         //PAGINATION
-        $pagination = cmsPage::getPagebar($total, $page, $perpage, '/blogs/%menuid%/latest-%page%.html', array('menuid'=>$menuid));
+        $pagination = cmsPage::getPagebar($total, $page, $perpage, '/blogs/latest-%page%.html', array());
 
         //FETCH ENTRIES
         if ($posts_list){
@@ -1206,11 +1198,11 @@ if ($do=='latest'){
                 $can_view = ($post['blog_allow_who']=='all' || ($post['blog_allow_who']=='friends' && usrIsFriends($post['user_id'], $user_id)) || $post['user_id']==$user_id || $inCore->userIsAdmin($user_id));
                 if ($can_view){
 
-                    $post['url']        = $model->getPostURL($menuid, $post['bloglink'], $post['seolink']);
+                    $post['url']        = $model->getPostURL(null, $post['bloglink'], $post['seolink']);
                     $post['comments']   = $inDB->rows_count('cms_comments', "target='blog' AND target_id=".$post['id']);
                     $post['karma']      = cmsKarmaFormatSmall($post['points']);
 
-                    $post['blog_url']   = $model->getBlogURL($menuid, $post['bloglink']);
+                    $post['blog_url']   = $model->getBlogURL(null, $post['bloglink']);
 
                     $msg = $post['content'];
                     $msg = $inCore->parseSmiles($msg, true);
@@ -1234,7 +1226,6 @@ if ($do=='latest'){
         $smarty->assign('pagetitle', $_LANG['BLOGS']);
         $smarty->assign('is_admin', $is_admin);
         $smarty->assign('total', $total);
-        $smarty->assign('menuid', $menuid);
         $smarty->assign('uid', $user_id);
 
         $smarty->assign('single_blogs', $single_blogs);
@@ -1287,14 +1278,14 @@ if ($do=='best'){
         $posts_list = $model->getBestPosts($page, $perpage);
 
         //PAGINATION
-        $pagination = cmsPage::getPagebar($total, $page, $perpage, '/blogs/%menuid%/popular-%page%.html', array('menuid'=>$menuid));
+        $pagination = cmsPage::getPagebar($total, $page, $perpage, '/blogs/popular-%page%.html', array());
 
         //FETCH ENTRIES
         if ($posts_list){
             foreach($posts_list as $post){
                 $can_view = ($post['blog_allow_who']=='all' || ($post['blog_allow_who']=='friends' && usrIsFriends($post['user_id'], $user_id)) || $post['user_id']==$user_id || $inCore->userIsAdmin($user_id));
                 if ($can_view){
-                    $post['url']        = $model->getPostURL($menuid, $post['bloglink'], $post['seolink']);
+                    $post['url']        = $model->getPostURL(null, $post['bloglink'], $post['seolink']);
 
                     $post['comments']   = $inDB->rows_count('cms_comments', "target='blog' AND target_id=".$post['id']);
                     $post['karma']      = cmsKarmaFormatSmall($post['points']);
@@ -1322,7 +1313,6 @@ if ($do=='best'){
     $smarty->assign('pagetitle', $_LANG['POPULAR_IN_BLOGS']);
     $smarty->assign('is_admin', $is_admin);
     $smarty->assign('total', $total);
-    $smarty->assign('menuid', $menuid);
     $smarty->assign('uid', $user_id);
     if (@$posts) { $smarty->assign('posts', $posts); }
     if (@$pagination) { $smarty->assign('pagination', $pagination); }

@@ -36,7 +36,7 @@
 
         //RewriteRule ^blogs/all.html$ /index.php?view=blog&do=view&ownertype=all
         $routes[] = array(
-                            '_uri'      => '/^blogs/all.html$/i',
+                            '_uri'      => '/^blogs\/all.html$/i',
                             'do'        => 'view',
                             'ownertype' => 'all'
                          );
@@ -109,7 +109,8 @@
 
         //RewriteRule ^blogs/([0-9]*)/delpost([0-9]*)-yes.html$ /index.php?view=blog&do=delpost&id=$1&post_id=$2&confirm=yes
         $routes[] = array(
-                            '_uri'      => '/^blogs\/([0-9]+)/delpost([0-9]+)\-yes.html$/i',
+                            '_uri'      => '/^blogs\/([0-9]+)\/delpost([0-9]+)\-yes.html$/i',
+                            'do'        => 'delpost',
                             1           => 'id',
                             2           => 'post_id',
                             'confirm'   => 'yes'
@@ -126,6 +127,7 @@
         //RewriteRule ^blogs/([0-9]*)/delcat([0-9]*)-yes.html$ /index.php?view=blog&do=delcat&id=$1&cat_id=$2&confirm=yes
         $routes[] = array(
                             '_uri'      => '/^blogs\/([0-9]+)\/delcat([0-9]+)\-yes.html$/i',
+                            'do'        => 'delcat', 
                             1           => 'id',
                             2           => 'cat_id',
                             'confirm'   => 'yes'
@@ -148,6 +150,7 @@
         //RewriteRule ^blogs/([0-9]*)/editpost([0-9]*).html$ /index.php?view=blog&do=editpost&id=$1&post_id=$2
         $routes[] = array(
                             '_uri'  => '/^blogs\/([0-9]+)\/editpost([0-9]+).html$/i',
+                            'do'    => 'editpost', 
                             1       => 'id',
                             2       => 'post_id'
                          );
@@ -163,6 +166,13 @@
         //RewriteRule ^blogs/([a-zA-Z0-9\-]*)$ /index.php?view=blog&do=blog&bloglink=$1
         $routes[] = array(
                             '_uri'  => '/^blogs\/([a-zA-Z0-9\-]+)$/i',
+                            'do'    => 'blog',
+                            1       => 'bloglink'
+                         );
+
+        //RewriteRule ^blogs/([a-zA-Z0-9\-]*)$ /index.php?view=blog&do=blog&bloglink=$1
+        $routes[] = array(
+                            '_uri'  => '/^blogs\/([a-zA-Z0-9\-]+)\/$/i',
                             'do'    => 'blog',
                             1       => 'bloglink'
                          );
