@@ -4,12 +4,12 @@
 
 <h1 class="con_heading">{$LANG.SEARCH_IN_CAT}</h1>
 <div class="con_description">
-	<strong>{$LANG.CAT}:</strong> <a href="/catalog/{$menuid}/{$cat.id}">{$cat.title}</a>
+	<strong>{$LANG.CAT}:</strong> <a href="/catalog/{$cat.id}">{$cat.title}</a>
 </div>
 
 <p><strong>{$LANG.FILL_FIELDS}:</strong></p>
 
-<form action="/catalog/{$menuid}/{$id}/search.html" name="searchform" method="post" >
+<form action="/catalog/{$id}/search.html" name="searchform" method="post" >
 	<table width="100%" border="0" cellspacing="5">	
 		<tr>
 			<td width="160" valign="top">{$LANG.TITLE}: </td>

@@ -27,7 +27,6 @@ function getAlphaList($cat_id){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
     global $_LANG;
-    global $menuid;
     $html = '';
     $sql = "SELECT UPPER(SUBSTRING(LTRIM( title ) , 1, 1)) AS first_letter, COUNT( id ) AS num
             FROM cms_uc_items
@@ -37,7 +36,7 @@ function getAlphaList($cat_id){
     if ($inDB->num_rows($result)){
         $html .= '<div class="uc_alpha_list">';
         while($a = $inDB->fetch_assoc($result)){
-            $html .= '<a class="uc_alpha_link" href="/catalog/'.$menuid.'/'.$cat_id.'/find-first/'.urlencode($a['first_letter']).'" title="'.$_LANG['ARTICLES'].': '.$a['num'].'">'.$a['first_letter'].'</a>';
+            $html .= '<a class="uc_alpha_link" href="/catalog/'.$cat_id.'/find-first/'.urlencode($a['first_letter']).'" title="'.$_LANG['ARTICLES'].': '.$a['num'].'">'.$a['first_letter'].'</a>';
         }
         $html .= '</div>';
     }
@@ -177,22 +176,21 @@ function tagsList($cat_id){
 function addPageNum($url, $page){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
-    global $menuid;
     $catid = intval($_REQUEST['cat_id']);
     if (!$catid) { $catid = intval($_REQUEST['id']); }
     $url = str_replace("\r", '', $url);
     $url = str_replace("\n", '', $url);
-    $first = '/catalog/'.$menuid.'/'.$catid;
+    $first = '/catalog/'.$catid;
     if (isset($_REQUEST['page'])) { $first .= '-'.intval($_REQUEST['page']); }
     $url = str_replace($first, '', $url);
     if ($url){
         if ($url[0]=='/') { $url = substr($url, 1,strlen($url)-1); }
     }
     if (strstr($url, 'view-')){
-        $newurl = '/catalog/'.$menuid.'/'.$catid.'-'.$page;
+        $newurl = '/catalog/'.$catid.'-'.$page;
     }
     else {
-        $newurl = '/catalog/'.$menuid.'/'.$catid.'-'.$page.'/'.$url;
+        $newurl = '/catalog/'.$catid.'-'.$page.'/'.$url;
     }
     if ($newurl[strlen($newurl)-1]=='/') { $newurl = substr($newurl, 0,strlen($newurl)-1); }
     return $newurl;
@@ -272,15 +270,12 @@ function subCatsList($parent_id, $left_key, $right_key){
     $html   = '';
     $model  = new cms_model_catalog();
 
-    global $menuid;
-
     if (!$parent_id) { $parent_id = $inDB->get_field('cms_uc_cats', 'parent_id=0', 'id'); }
 
     $cats = $model->getSubCats($parent_id, $left_key, $right_key);
 
     if ($cats){
         $smarty = $inCore->initSmarty('components', 'com_catalog_cats.tpl');
-        $smarty->assign('menuid', $menuid);
         $smarty->assign('cats', $cats);
 
         ob_start();
@@ -306,7 +301,6 @@ function catalog(){
     $inCore->loadModel('catalog');
     $model = new cms_model_catalog();
 
-    $menuid     = $inCore->menuId();
     $menutitle  = $inCore->menuTitle();
     if (!$menutitle) { $menutitle = $_LANG['CATALOG']; }
     $cfg        = $inCore->loadComponentConfig('catalog');
@@ -407,8 +401,8 @@ function catalog(){
                 $fstruct = unserialize($cat['fieldsstruct']);
 
                 //heading
-                $inPage->addPathway($cat['title'], '/catalog/'.$menuid.'/'.$cat['id']);
-                $inPage->addPathway($_LANG['SEARCH'], '/catalog/'.$menuid.'/'.$cat['id'].'/search.html');
+                $inPage->addPathway($cat['title'], '/catalog/'.$cat['id']);
+                $inPage->addPathway($_LANG['SEARCH'], '/catalog/'.$cat['id'].'/search.html');
                 $inPage->setTitle($_LANG['SEARCH_IN_CAT'] . ' - ' . $menutitle);
 
                 $inPage->addHeadJS('components/catalog/js/search.js');
@@ -428,7 +422,6 @@ function catalog(){
                 //searchform
                 $smarty = $inCore->initSmarty('components', 'com_catalog_search.tpl');
                 $smarty->assign('id', $id);
-                $smarty->assign('menuid', $menuid);
                 $smarty->assign('cat', $cat);
                 $smarty->assign('fstruct', $fstruct_ready);
                 $smarty->display('com_catalog_search.tpl');
@@ -514,11 +507,11 @@ function catalog(){
 
             if ($path_list){
                 foreach($path_list as $pcat){
-                    $inPage->addPathway($pcat['title'], '/catalog/'.$menuid.'/'.$pcat['id']);
+                    $inPage->addPathway($pcat['title'], '/catalog/'.$pcat['id']);
                 }
             }
            
-            $inPage->addPathway($cat['title'], '/catalog/'.$menuid.'/'.$cat['id']);
+            $inPage->addPathway($cat['title'], '/catalog/'.$cat['id']);
             $inPage->setTitle($cat['title'] . ' - ' . $menutitle);
 
             //subcategories
@@ -573,7 +566,6 @@ function catalog(){
 
             $smarty = $inCore->initSmarty('components', 'com_catalog_view.tpl');
             $smarty->assign('id', $id);
-            $smarty->assign('menuid', $menuid);
             $smarty->assign('cat', $cat);
             $smarty->assign('subcats', $subcats);
             $smarty->assign('alphabet', $alphabet);
@@ -596,9 +588,9 @@ function catalog(){
                 $search_details = '';
                 if (isset($findsql)){
                     if ($advsearch){
-                        $search_details = '<div class="uc_queryform"><strong>'.$_LANG['SEARCH_RESULT'].' - </strong> '.$_LANG['FOUNDED'].': '.$itemscount.' | <a href="/catalog/'.$menuid.'/'.$cat['id'].'">'.$_LANG['CANCEL_SEARCH'].'</a></div>';
+                        $search_details = '<div class="uc_queryform"><strong>'.$_LANG['SEARCH_RESULT'].' - </strong> '.$_LANG['FOUNDED'].': '.$itemscount.' | <a href="/catalog/'.$cat['id'].'">'.$_LANG['CANCEL_SEARCH'].'</a></div>';
                     } else {
-                        $search_details = '<div class="uc_queryform"><strong>'.$_LANG['SEARCH_BY_TAG'].'</strong> "'.ucfirst($query).'" ('.$_LANG['MATCHES'].': '.$itemscount.') <a href="/catalog/'.$menuid.'/'.$cat['id'].'">'.$_LANG['CANCEL_SEARCH'].'</a></div>';
+                        $search_details = '<div class="uc_queryform"><strong>'.$_LANG['SEARCH_BY_TAG'].'</strong> "'.ucfirst($query).'" ('.$_LANG['MATCHES'].': '.$itemscount.') <a href="/catalog/'.$cat['id'].'">'.$_LANG['CANCEL_SEARCH'].'</a></div>';
                     }
                 }
 
@@ -632,7 +624,7 @@ function catalog(){
                                             }
                                         } else {
                                             if ($makelink){
-                                                $field = $inCore->getUCSearchLink($cat['id'], $menuid, $key, $item['fdata'][$key]);
+                                                $field = $inCore->getUCSearchLink($cat['id'], null, $key, $item['fdata'][$key]);
                                             } else {
                                                 $field = $item['fdata'][$key];
                                             }
@@ -708,11 +700,11 @@ function catalog(){
 
             if ($path_list){
                 foreach($path_list as $pcat){
-                    $inPage->addPathway($pcat['title'], '/catalog/'.$menuid.'/'.$pcat['id']);
+                    $inPage->addPathway($pcat['title'], '/catalog/'.$pcat['id']);
                 }
             }
 
-            $inPage->addPathway($item['title'], '/catalog/'.$menuid.'/item'.$item['id'].'.html');
+            $inPage->addPathway($item['title'], '/catalog/item'.$item['id'].'.html');
             $inPage->setTitle($item['title'] . ' - ' . $menutitle);
             echo '<div class="con_heading">'.$item['title'].'</div>';
 
@@ -758,7 +750,7 @@ function catalog(){
                             echo '<li class="uc_detailfield"><strong>'.$value.'</strong>: ';
                             if (isset($htmlfield)) {
                                 if ($makelink) {
-                                    echo $inCore->getUCSearchLink($cat['id'], $menuid, $key, strip_tags($field));
+                                    echo $inCore->getUCSearchLink($cat['id'], null, $key, strip_tags($field));
                                 } else {
                                     //PROCESS FILTERS, if neccessary
                                     if ($cat['filters']){
@@ -774,7 +766,7 @@ function catalog(){
                                 }
                             } else {
                                 if ($makelink) {
-                                    echo $inCore->getUCSearchLink($cat['id'], $menuid, $key, $field);
+                                    echo $inCore->getUCSearchLink($cat['id'], null, $key, $field);
                                 } else {
                                     echo $field;
                                 }
@@ -792,7 +784,7 @@ function catalog(){
                 echo '<span>'.$_LANG['PRICE'].':</span> '. $item['price'] . ' '.$_LANG['RUB'];
                 echo '</div>';
                 echo '<div id="shop_ac_itemdiv">';
-                echo '<a href="/catalog/'.$menuid.'/addcart'.$item['id'].'.html" title="'.$_LANG['ADD_TO_CART'].'" id="shop_ac_item_link">';
+                echo '<a href="/catalog/addcart'.$item['id'].'.html" title="'.$_LANG['ADD_TO_CART'].'" id="shop_ac_item_link">';
                 echo '<img src="/components/catalog/images/shop/addcart.jpg" border="0" alt="'.$_LANG['ADD_TO_CART'].'"/>';
                 echo '</a>';
                 echo '</div>';
@@ -803,7 +795,7 @@ function catalog(){
                     echo '<p class="notice">'.$_LANG['WAIT_MODERATION'].':</p>';
                     echo '<table cellpadding="0" cellspacing="0" border="0"><tr>';
                     echo '<td>
-                            <form action="/catalog/'.$menuid.'/moderation/accept'.$item['id'].'.html" method="POST">
+                            <form action="/catalog/moderation/accept'.$item['id'].'.html" method="POST">
                                 <input type="submit" name="accept" value="'.$_LANG['MODERATION_ACCEPT'].'"/>
                             </form>
                           </td>';
@@ -818,7 +810,7 @@ function catalog(){
                             </form>
                           </td>';
                     echo '<td>
-                            <form action="/catalog/'.$menuid.'/moderation/reject'.$item['id'].'.html" method="POST">
+                            <form action="/catalog/moderation/reject'.$item['id'].'.html" method="POST">
                                  <input type="submit" name="accept" value="'.$_LANG['MODERATION_REJECT'].'"/>
                             </form>
                           </td>';
@@ -856,7 +848,7 @@ function catalog(){
     ///////////////////////// ADD TO CART /////////////////////////////////////////////////////////////////////////////
     if ($do == 'addcart'){
         shopAddToCart($id, 1);
-        header('location:/catalog/'.$menuid.'/viewcart.html');
+        header('location:/catalog/viewcart.html');
     }
     ///////////////////////// VIEW CART /////////////////////////////////////////////////////////////////////////////
     if ($do == 'viewcart'){
@@ -912,7 +904,7 @@ function catalog(){
 
         if ($path_list){
             foreach($path_list as $pcat){
-                $inPage->addPathway($pcat['title'], '/catalog/'.$menuid.'/'.$pcat['id']);
+                $inPage->addPathway($pcat['title'], '/catalog/'.$pcat['id']);
             }
         }
 
@@ -945,7 +937,6 @@ function catalog(){
             $smarty->assign('cat', $cat);
             $smarty->assign('cfg', $cfg);
             $smarty->assign('is_admin', $inUser->is_admin);
-            $smarty->assign('menuid', $menuid);
             $smarty->assign('cat_id', $cat_id);
         $smarty->display('com_catalog_add.tpl');
 
@@ -1039,7 +1030,7 @@ function catalog(){
             cmsUser::sendMessage(USER_UPDATER, 1, $message);
         }
 
-        $inCore->redirect('/catalog/'.$menuid.'/'.$cat_id);
+        $inCore->redirect('/catalog/'.$cat_id);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1083,7 +1074,7 @@ function catalog(){
         $message = str_replace('%item%', $item['title'], $_LANG['MSG_ITEM_REJECTED']);
         cmsUser::sendMessage(USER_UPDATER, $item['user_id'], $message);
 
-        $inCore->redirect('/catalog/'.$menuid.'/'.$item['category_id']);
+        $inCore->redirect('/catalog/'.$item['category_id']);
 
     }
 

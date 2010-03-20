@@ -39,7 +39,7 @@
 								<div>{$club.member_link}</div>
                                 {/if}
 								{if $is_admin}
-									<div><a class="config" href="/clubs/{$menuid}/{$club.id}/config.html">{$LANG.CONFIG_CLUB}</a></div>
+									<div><a class="config" href="/clubs/{$club.id}/config.html">{$LANG.CONFIG_CLUB}</a></div>
 								{/if}
 							</div>			
 						{/if}																								
@@ -53,7 +53,7 @@
 						{/if}
 						{if $club.enabled_photos}
 						<div class="album">
-							<div class="title"><a href="/photos/{$menuid}/{$club.root_album_id}">{$LANG.PHOTOALBUMS}</a></div>
+							<div class="title"><a href="/photos/{$club.root_album_id}">{$LANG.PHOTOALBUMS}</a></div>
 							<div class="content">
 								{$club.photo_albums}
 								{if $is_admin || $is_moder || $is_karma_enabled}
@@ -61,7 +61,7 @@
 										<span id="add_album_link"><a class="service" href="javascript:void(0)" onclick="{literal}$('#add_album_link').toggle();$('#add_album_form').toggle();$('#add_album_form input.text').focus();{/literal}">{$LANG.ADD_PHOTOALBUM}</a></span>
 										<span id="add_album_form" style="display:none">
 											<input type="text" class="text" name="album_title" id="album_title"/> 
-											<input type="button" value="{$LANG.CREATE}" onclick="javascript:createAlbum({$club.id}, {$menuid});"/>
+											<input type="button" value="{$LANG.CREATE}" onclick="javascript:createAlbum({$club.id});"/>
 										</span>
 										<span id="add_album_wait" style="display:none">{$LANG.LOADING}...</span>
 									</p>

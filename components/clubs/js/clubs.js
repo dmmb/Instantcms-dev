@@ -1,4 +1,4 @@
-function createAlbum(clubid, menuid){
+function createAlbum(clubid){
 	var title = $('input#album_title').val();
 
 	if (title){
@@ -12,7 +12,7 @@ function createAlbum(clubid, menuid){
 		  data: "title="+title+"&clubid="+clubid,
 		  success: function(msg){
 				if (msg!='error'){
-					$('ul#albums_list').prepend('<li id="'+msg+'" class="club_album"><a href="/photos/'+menuid+'/'+msg+'">'+title+'</a> (0) <a class="delete" onclick="deleteAlbum('+msg+', \''+title+'\', '+clubid+')" href="javascript:void(0)" title="Удалить альбом">X</a></li>');
+					$('ul#albums_list').prepend('<li id="'+msg+'" class="club_album"><a href="/photos/'+msg+'">'+title+'</a> (0) <a class="delete" onclick="deleteAlbum('+msg+', \''+title+'\', '+clubid+')" href="javascript:void(0)" title="Удалить альбом">X</a></li>');
                     $('ul#albums_list li.no_albums').remove();
 				} else {
 					alert('Ошибка! Альбом не создан.');	

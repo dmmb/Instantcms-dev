@@ -3,7 +3,7 @@
 {* ================================================================================ *}
 
 <div class="con_heading">
-	<a href="/clubs/{$menuid}/{$club.id}">{$club.title}</a> &rarr; {$LANG.CONFIG}
+	<a href="/clubs/{$club.id}">{$club.title}</a> &rarr; {$LANG.CONFIG}
 </div>
 
 {add_js file='includes/jquery/tabs/jquery.ui.min.js'}

@@ -71,11 +71,10 @@ function shopIsInCart($item_id=0){
 function shopCartLink(){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
-	global $menuid;
     global $_LANG;
 	$items = shopIsInCart();	
 	$html = '';
-		$html .= '<a id="shop_cartlink" href="/catalog/'.$menuid.'/viewcart.html">'.$_LANG['CART'];
+		$html .= '<a id="shop_cartlink" href="/catalog/viewcart.html">'.$_LANG['CART'];
 		if ($items){
 			$html .= ' ('.$items.')';
 		}
@@ -106,7 +105,6 @@ function shopCart(){
     $inDB = cmsDatabase::getInstance();
     $inPage = cmsPage::getInstance();
     $inUser = cmsUser::getInstance();
-	global $menuid;
 	global $_LANG;
 	if (isset($inUser->id)){ $user_id = $inUser->id; } else { $user_id = 0; }	
 	$sid = session_id();
@@ -131,12 +129,12 @@ function shopCart(){
 			echo '<script type="text/javascript">'."\n";
 				echo "function deleteItem(id){
 						if(confirm('".$_LANG['DEL_POSITION_FROM_CART']."')){
-							window.location.href = '/catalog/0/cartremove'+id+'.html';	
+							window.location.href = '/catalog/cartremove'+id+'.html';	
 						}
 					}";
 				echo "function clearCart(){
 						if(confirm('".$_LANG['CLEAR_CART']."?')){
-							window.location.href = '/catalog/0/clearcart.html';	
+							window.location.href = '/catalog/clearcart.html';	
 						}
 					}";				
 				echo "function saveCart(){
@@ -169,8 +167,8 @@ function shopCart(){
 
 				echo '<tr>';
 					echo '<td class="'.$class.'"><img src="/components/catalog/images/icons/cart.png" border="0"></td>';
-					echo '<td class="'.$class.'"><a href="/catalog/'.$menuid.'/item'.$item['id'].'.html">'.$item['title'].'</a></td>';
-					echo '<td class="'.$class.'"><a href="/catalog/'.$menuid.'/'.$item['category_id'].'">'.$item['category'].'</a></td>';
+					echo '<td class="'.$class.'"><a href="/catalog/item'.$item['id'].'.html">'.$item['title'].'</a></td>';
+					echo '<td class="'.$class.'"><a href="/catalog/'.$item['category_id'].'">'.$item['category'].'</a></td>';
 					echo '<td class="'.$class.'" align="center">'.$item['price'].' x '.shopItemsCounter($item['cid'], $item['itemscount'], $item['canmany']).' =</td>';
 					echo '<td class="'.$class.'" align="center"><strong>'.$item['totalprice'].'</strong></td>';
 					echo '<td class="'.$class.'" align="center">';
@@ -199,10 +197,10 @@ function shopCart(){
 					echo '</a> ';
 				echo '</div>';
 				echo '<div id="cart_buttons2">';
-					echo '<a href="/catalog/'.$menuid.'" title="'.$_LANG['BACK_TO_SHOP'].'">';
+					echo '<a href="/catalog" title="'.$_LANG['BACK_TO_SHOP'].'">';
 						echo '<img src="/components/catalog/images/shop/cartback.jpg" border="0" alt="'.$_LANG['BACK_TO_SHOP'].'"/>';
 					echo '</a> ';
-					echo '<a href="/catalog/'.$menuid.'/order.html" title="'.$_LANG['CART_ORDER'].'">';
+					echo '<a href="/catalog/order.html" title="'.$_LANG['CART_ORDER'].'">';
 						echo '<img src="/components/catalog/images/shop/cartorder.jpg" border="0" alt="'.$_LANG['CART_ORDER'].'"/>';
 					echo '</a> ';
 				echo '</div>';
@@ -211,7 +209,7 @@ function shopCart(){
 			//NO ITEMS
 			echo '<p>'.$_LANG['NOITEMS_IN_CART'].'</p>';
 			echo '<div id="cart_buttons2">';
-				echo '<a href="/catalog/'.$menuid.'" title="'.$_LANG['BACK_TO_SHOP'].'">';
+				echo '<a href="/catalog" title="'.$_LANG['BACK_TO_SHOP'].'">';
 					echo '<img src="/components/catalog/images/shop/cartback.jpg" border="0" alt="'.$_LANG['BACK_TO_SHOP'].'"/>';
 				echo '</a> ';
 			echo '</div>';
@@ -225,14 +223,13 @@ function shopOrder($cfg){
     $inDB = cmsDatabase::getInstance();
     $inPage = cmsPage::getInstance();
     $inUser = cmsUser::getInstance();
-	global $menuid;
 	global $_LANG;
 	if (isset($inUser->id)){ $user_id = $inUser->id; } else { $user_id = 0; }	
 	$sid = session_id();
 	
 		$inPage->backButton(false);
 	 	$inPage->setTitle($_LANG['CART_ORDERING']);
-		$inPage->addPathway($_LANG['CART'], '/catalog/'.$menuid.'/viewcart.html');
+		$inPage->addPathway($_LANG['CART'], '/catalog/viewcart.html');
 		$inPage->addPathway($_LANG['CART_ORDERING'], $_SERVER['REQUEST_URI']);
 
 		echo '<div class="con_heading">'.$_LANG['CART_ORDERING'].'</div>';
@@ -273,8 +270,8 @@ function shopOrder($cfg){
                 $total += $item['totalprice'];
 				echo '<tr>';
 					echo '<td class="'.$class.'"><img src="/components/catalog/images/icons/cart.png" border="0"></td>';
-					echo '<td class="'.$class.'"><a href="/catalog/'.$menuid.'/item'.$item['id'].'.html">'.$item['title'].'</a></td>';
-					echo '<td class="'.$class.'"><a href="/catalog/'.$menuid.'/'.$item['category_id'].'">'.$item['category'].'</a></td>';
+					echo '<td class="'.$class.'"><a href="/catalog/item'.$item['id'].'.html">'.$item['title'].'</a></td>';
+					echo '<td class="'.$class.'"><a href="/catalog/'.$item['category_id'].'">'.$item['category'].'</a></td>';
 					echo '<td class="'.$class.'" align="center">'.$item['price'].' x '.$item['itemscount'].' =</td>';
 					echo '<td class="'.$class.'" align="center"><strong>'.$item['totalprice'].'</strong></td>';
 				echo '</tr>';			
@@ -292,7 +289,7 @@ function shopOrder($cfg){
 			//DELIVERY INFO FORM
 			echo '<div class="con_heading">'.$_LANG['INFO_CUSTOMER'].'</div>';
 			
-			echo '<form action="/catalog/'.$menuid.'/finish.html" method="POST">';
+			echo '<form action="/catalog/finish.html" method="POST">';
 			echo '<table width="100%" cellspacing="0" cellpadding="5">';
 			echo '<tr>';		
 				echo '<td width="40%" align="right">'.$_LANG['FIO_CUSTOMER'].': </td>';
@@ -333,7 +330,7 @@ function shopOrder($cfg){
 			//NO ITEMS
 			echo '<p>'.$_LANG['NOITEMS_IN_CART'].'</p>';
 			echo '<div id="cart_buttons2">';
-				echo '<a href="/catalog/'.$menuid.'" title="'.$_LANG['BACK_TO_SHOP'].'">';
+				echo '<a href="/catalog" title="'.$_LANG['BACK_TO_SHOP'].'">';
 					echo '<img src="/components/catalog/images/shop/cartback.jpg" border="0" alt="'.$_LANG['BACK_TO_SHOP'].'"/>';
 				echo '</a> ';
 			echo '</div>';
@@ -411,7 +408,6 @@ function shopFinishOrder($cfg){
     $inPage = cmsPage::getInstance();
     $inUser = cmsUser::getInstance();
     $inConf = cmsConfig::getInstance();
-	global $menuid;
     global $_CFG;
     global $_LANG;
 	if (isset($inUser->id)){ $user_id = $inUser->id; } else { $user_id = 0; }	
@@ -488,7 +484,7 @@ function shopFinishOrder($cfg){
 			//NO ITEMS
 			echo '<p>'.$_LANG['NOITEMS_IN_CART'].'</p>';
 			echo '<div id="cart_buttons2">';
-				echo '<a href="/catalog/'.$menuid.'" title="'.$_LANG['BACK_TO_SHOP'].'">';
+				echo '<a href="/catalog" title="'.$_LANG['BACK_TO_SHOP'].'">';
 					echo '<img src="/components/catalog/images/shop/cartback.jpg" border="0" alt="'.$_LANG['BACK_TO_SHOP'].'"/>';
 				echo '</a> ';
 			echo '</div>';

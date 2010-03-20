@@ -19,7 +19,6 @@ function searchForm($query=''){
 		  <form action="/index.php" method="GET" style="clear:both">';
 		echo '<input type="hidden" name="view" value="price"/>';
 		echo '<input type="hidden" name="do" value="search"/>';					
-		echo '<input type="hidden" name="menuid" value="'.$inCore->menuId().'"/>';
 		echo '<label>';							 
 			echo '<b>'.$_LANG['SEARCH_PRODUCT'].':</b> ';
 			echo '<input type="text" name="query" value="'.$query.'" class="price_search">';
@@ -50,7 +49,7 @@ function pageBar($cat_id, $current, $perpage){
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {			
 					
-					$link = '/price/'.$inCore->menuId().'/'.@$_REQUEST['id'].'-'.$p;
+					$link = '/price/'.@$_REQUEST['id'].'-'.$p;
 					
 					$html .= ' <a href="'.$link.'" class="pagebar_page">'.$p.'</a> ';		
 				} else {
@@ -69,7 +68,6 @@ function price(){
     $inPage = cmsPage::getInstance();
     $inDB   = cmsDatabase::getInstance();
     global $_LANG;
-	$menuid = $inCore->menuId();
 	$cfg    = $inCore->loadComponentConfig('price');
 	
 	if (isset($_REQUEST['id'])){ if(is_numeric($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { die('HACKING ATTEMPT BLOCKED'); } } else { $id = 0; }
@@ -284,7 +282,7 @@ function price(){
 					else { $count_field = '<input type="hidden" name="kolvo['.$con['id'].']" value="1"/>1'; }
 					
 					echo '<tr>';
-						echo '<td class="'.$class.'" width="16" valign="top"><a href="/index.php?view=price&do=removeitem&id='.$con['id'].'" title="'.$_LANG['DEL_POSITION'].'"><img src="/images/icons/delete.gif" border="0"/></a></td>';
+						echo '<td class="'.$class.'" width="16" valign="top"><a href="/price/cart/removeitem'.$con['id'].'.html" title="'.$_LANG['DEL_POSITION'].'"><img src="/images/icons/delete.gif" border="0"/></a></td>';
 						echo '<td class="'.$class.'" width="16" valign="top"><img src="/images/markers/priceitem.png" border="0" /></td>';
 						echo '<td class="'.$class.'" width="" valign="top">';															
 						echo $con['title'];
@@ -340,7 +338,7 @@ function price(){
 					echo '<tr>';
 						echo '<td width="16" valign="top"><img src="/images/markers/pricelist.png" border="0" /></td>';
 						echo '<td width="500">';
-							echo '<a href="/price/'.$menuid.'/'.$cat['id'].'">'.$cat['title'].'</a> ('.$cat['content_count'].')';
+							echo '<a href="/price/'.$cat['id'].'">'.$cat['title'].'</a> ('.$cat['content_count'].')';
 						echo '</td>';				
 					echo '</tr>';
 				}

@@ -20,7 +20,7 @@
 <div id="configtabs">
 
     <div id="form">
-        <form method="post" action="/catalog/{$menuid}/{$cat_id}/submit.html" enctype="multipart/form-data">
+        <form method="post" action="/catalog/{$cat_id}/submit.html" enctype="multipart/form-data">
         <table cellpadding="5" cellspacing="0" style="margin-bottom:10px">
             <tr>
                 <td width="210">

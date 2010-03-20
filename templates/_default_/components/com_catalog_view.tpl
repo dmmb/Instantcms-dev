@@ -14,10 +14,10 @@
 {if $alphabet} {$alphabet} {/if}
 
 <div id="shop_toollink_div">
-	<a id="shop_searchlink" href="/catalog/{$menuid}/{$cat.id}/search.html">{$LANG.SEARCH_BY_CAT}</a>
+	<a id="shop_searchlink" href="/catalog/{$cat.id}/search.html">{$LANG.SEARCH_BY_CAT}</a>
 	{if $cat.view_type=='shop'} {$shopcartlink}	{/if}
     {if $is_can_add}
-    <a id="shop_addlink" href="/catalog/{$menuid}/{$cat.id}/add.html">{$LANG.ADD_ITEM}</a>
+    <a id="shop_addlink" href="/catalog/{$cat.id}/add.html">{$LANG.ADD_ITEM}</a>
     {/if}
 </div>
 
@@ -40,7 +40,7 @@
 										<img alt="{$item.title}" src="/images/catalog/small/{$item.imageurl}.jpg" border="0" />
 									</a>
 								{else}
-									<a href="/catalog/{$menuid}/item{$item.id}.html">
+									<a href="/catalog/item{$item.id}.html">
 										<img alt="{$item.title}" src="/images/catalog/small/nopic.jpg" border="0" />								
 									</a>										
 								{/if}
@@ -52,7 +52,7 @@
 						</td>
 						<td class="uc_list_itemdesc" align="left" valign="top">
 							<div>
-								<a class="uc_itemlink" href="/catalog/{$menuid}/item{$item.id}.html">{$item.title}</a> 
+								<a class="uc_itemlink" href="/catalog/item{$item.id}.html">{$item.title}</a> 
 								{if $item.is_new}
 									<span class="uc_new"><img src="/images/ratings/new.gif" border="0"/></span>
 								{/if}									
@@ -78,14 +78,14 @@
 
 							{if $cat.view_type=='list'}
 								{if $cat.showmore}
-									<a href="/catalog/{$menuid}/item{$item.id}.html">{$LANG.DETAILS}...</a>
+									<a href="/catalog/item{$item.id}.html">{$LANG.DETAILS}...</a>
 								{/if}										
 							{else}
 								<div id="shop_list_buttons">
-									<a href="/catalog/{$menuid}/item{$item.id}.html" title="{$LANG.DETAILS}">
+									<a href="/catalog/item{$item.id}.html" title="{$LANG.DETAILS}">
 										<img src="/components/catalog/images/shop/more.jpg" border="0" alt="{$LANG.DETAILS}"/>
 									</a> 
-									<a href="/catalog/{$menuid}/addcart{$item.id}.html" title="{$LANG.ADD_TO_CART}">
+									<a href="/catalog/addcart{$item.id}.html" title="{$LANG.ADD_TO_CART}">
 										<img src="/components/catalog/images/shop/addcart.jpg" border="0" alt="{$LANG.ADD_TO_CART}"/>
 									</a>
 								</div>
@@ -99,7 +99,7 @@
 				<div class="uc_thumb_item">
 					<table border="0" cellspacing="2" cellpadding="0" width="100%">
 						<tr><td height="110" align="center" valign="middle">
-							<a href="/catalog/{$menuid}/item{$item.id}.html">
+							<a href="/catalog/item{$item.id}.html">
 								{if $item.imageurl}
 									<img alt="{$item.title}" src="/images/catalog/small/{$item.imageurl}.jpg" border="0" />
 								{else}
@@ -108,7 +108,7 @@
 							</a>
 						</td></tr>
 						<tr><td align="center" valign="middle">
-							<a class="uc_thumb_itemlink" href="/catalog/{$menuid}/item{$item.id}.html">{$item.title}</a>								
+							<a class="uc_thumb_itemlink" href="/catalog/item{$item.id}.html">{$item.title}</a>								
 						</td></tr>						
 					</table>
 				</div>				

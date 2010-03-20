@@ -4,6 +4,6 @@ RewriteEngine On
 RewriteBase /
 RewriteRule ^.htaccess$ - [F]
 
-RewriteCond $1 !^(index\.php|(.*)images(.*)|robots\.txt|(.*)\.jpg|\.gif|(.*)\.png|(.*)\.swf|(.*)\.js|(.*)\.css|admin|(.*).php)
+RewriteCond $1 !^(index\.php|(.*)images(.*)|robots\.txt|(.*)\.jpg|(.*)\.gif|(.*)\.xml|(.*)\.png|(.*)\.swf|(.*)\.js|(.*)\.css|admin|(.*)fckeditor(.*)|(.*).php)
 
 RewriteRule ^(.*)$ /index.php?uri=$1 [L]
