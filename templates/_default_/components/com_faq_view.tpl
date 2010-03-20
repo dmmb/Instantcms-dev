@@ -16,7 +16,7 @@
 				<tr>
 					<td width="32" valign="top"><img src="/components/faq/images/folder.gif" border="0" /></td>
 					<td width="" valign="">				    
-						<div style="margin:0px;"><a href="/faq/{$menuid}/{$subcat.id}">{$subcat.title}</a></div>
+						<div style="margin:0px;"><a href="/faq/{$subcat.id}">{$subcat.title}</a></div>
 						{if $subcat.description}
 							<div style="margin:0px;">{$subcat.description}</div>
 						{/if}
@@ -38,9 +38,9 @@
 				<tr>
 					<td width="20" valign="top"><img src="/components/faq/images/quest.gif" border="0" /></td>
 					<td width="" valign="middle">
-						<div><a href="/faq/{$menuid}/quest{$quest.id}.html">{$quest.quest}</a></div>
+						<div><a href="/faq/quest{$quest.id}.html">{$quest.quest}</a></div>
 						<div class="faq_questdate">{$quest.pubdate}</div>
-						<div class="faq_questcat"><a href="/faq/{$menuid}/{$quest.cid}">{$quest.cat_title}</a></div>					
+						<div class="faq_questcat"><a href="/faq/{$quest.cid}">{$quest.cat_title}</a></div>					
 					</td>	
 				</tr>
 			</table>
@@ -55,7 +55,7 @@
 		<tr>
 			<td width="16" valign="top"><img src="/components/faq/images/sendquest.gif" border="0" /></td>
 			<td width="" valign="middle">
-				<a href="/faq/{$menuid}/sendquest.html">{$LANG.SET_QUESTION}</a>
+				<a href="/faq/sendquest.html">{$LANG.SET_QUESTION}</a>
 			</td>	
 		</tr>
 	</table>

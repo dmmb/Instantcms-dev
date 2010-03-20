@@ -6,7 +6,7 @@
 	<span class="bd_item_date">{$item.pubdate}</span>
 	{if $item.city}
 		<span class="bd_item_city">
-			<a href="/board/{$menuid}/city/{$item.enc_city}">{$item.city}</a>
+			<a href="/board/city/{$item.enc_city}">{$item.city}</a>
 		</span>
 	{/if}
 	{if $item.user}
@@ -15,8 +15,8 @@
 		</span>
 	{/if}
 	{if $moderator}
-		<span class="bd_item_edit"><a href="/board/{$menuid}/edit{$item.id}.html">{$LANG.EDIT}</a></span>
-		<span class="bd_item_delete"><a href="/board/{$menuid}/delete{$item.id}.html">{$LANG.DELETE}</a></span>
+		<span class="bd_item_edit"><a href="/board/edit{$item.id}.html">{$LANG.EDIT}</a></span>
+		<span class="bd_item_delete"><a href="/board/delete{$item.id}.html">{$LANG.DELETE}</a></span>
 	{/if}				
 </div>
 
@@ -39,5 +39,5 @@
 			<span class="bd_message"><a href="/users/0/{$item.user_id}/sendmessage.html">{$LANG.WRITE_MESS_TO_AVTOR}</a></span>
 		{/if}
 	{/if}
-	<span class="bd_author"><a href="/users/{$menuid}/{$item.user_id}/board.html">{$LANG.ALL_AVTOR_ADVS}</a></span>
+	<span class="bd_author"><a href="/users/{$item.user_id}/board.html">{$LANG.ALL_AVTOR_ADVS}</a></span>
 </div>

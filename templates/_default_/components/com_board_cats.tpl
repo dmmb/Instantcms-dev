@@ -9,7 +9,7 @@
 			{if $col==1} <tr> {/if}
 				<td width="48" valign="top"><img class="bd_cat_main_icon" src="/images/board/icons/{$cat.icon}" border="0" /></td>
 				<td width="" valign="top">
-					<div class="bd_cat_main_title"><a href="/board/{$menuid}/{$cat.id}">{$cat.title}</a> ({$cat.content_count}{$cat.subtext})</div>					
+					<div class="bd_cat_main_title"><a href="/board/{$cat.id}">{$cat.title}</a> ({$cat.content_count}{$cat.subtext})</div>					
 					{if $cat.description} 
 						<div class="bd_cat_main_desc">{$cat.description}</div>
 					{/if}					

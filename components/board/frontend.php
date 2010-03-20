@@ -15,14 +15,13 @@ function obTypesLinks($cat_id, $types){
     $inCore     = cmsCore::getInstance();
     $inDB       = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
-	global $menuid;
 	$html = '';
 	$types = explode("\n", $types);
 	$total = sizeof($types); $c = 0;
 	foreach($types as $id=>$type){
 		$c++;
 		$type = trim($type);
-		$html .= '<a href="/board/'.$menuid.'/'.$cat_id.'/type/'.urlencode(ucfirst($type)).'">'.ucfirst($type).'</a>';
+		$html .= '<a href="/board/'.$cat_id.'/type/'.urlencode(ucfirst($type)).'">'.ucfirst($type).'</a>';
 		if ($c < $total){
 			$html .= ', ';
 		}
@@ -34,7 +33,6 @@ function obTypesOptions($types, $selected=''){
     $inCore     = cmsCore::getInstance();
     $inDB       = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
-	global $menuid;
 	$html = '';
 	$types = explode("\n", $types);
 	$total = sizeof($types); $c = 0;
@@ -117,7 +115,6 @@ function board(){
     $inDB       = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
 
-	$menuid     = $inCore->menuId();
 	$cfg        = $inCore->loadComponentConfig('board');
 
     global $_LANG;
@@ -180,7 +177,7 @@ if ($do=='view'){
 		$right_key      = $category['NSRight'];
         $category_path  = $model->getCategoryPath($left_key, $right_key);
 		foreach($category_path as $pcat){
-            $inPage->addPathway($pcat['title'], '/board/'.$menuid.'/'.$pcat['id']);
+            $inPage->addPathway($pcat['title'], '/board/'.$pcat['id']);
 		}        
         
         $inPage->setTitle($pagetitle  . ' - '.$_LANG['BOARD']);
@@ -204,7 +201,6 @@ if ($do=='view'){
 	}
 
 	$smarty = $inCore->initSmarty('components', 'com_board_cats.tpl');			
-		$smarty->assign('menuid', $menuid);
 		$smarty->assign('is_subcats', $is_subcats);
 		$smarty->assign('cats', $cats);
 		$smarty->assign('maxcols', $maxcols);
@@ -280,7 +276,6 @@ if ($do=='view'){
     
     //DISPLAY
     $smarty = $inCore->initSmarty('components', 'com_board_items.tpl');
-        $smarty->assign('menuid', $menuid);
         $smarty->assign('is_items', $is_items);
         $smarty->assign('cfg', $cfg);
         $smarty->assign('cat', $category);
@@ -308,7 +303,7 @@ if($do=='read'){
 		$right_key      = $item['NSRight'];
 		$category_path  = $model->getCategoryPath($left_key, $right_key);
 		foreach($category_path as $pcat){
-            $inPage->addPathway($pcat['title'], '/board/'.$menuid.'/'.$pcat['id']);
+            $inPage->addPathway($pcat['title'], '/board/'.$pcat['id']);
 		}
 		$inPage->addPathway($item['title']);
 
@@ -336,7 +331,6 @@ if($do=='read'){
 		
 		//DISPLAY
 		$smarty = $inCore->initSmarty('components', 'com_board_item.tpl');						
-			$smarty->assign('menuid', $menuid);
 			$smarty->assign('moderator', $moderator);
 			$smarty->assign('item', $item);
 			$smarty->assign('cfg', $cfg);
@@ -357,7 +351,7 @@ if ($do=='additem'){
 	
     if ( $cat['public'] == -1 ) { $cat['public'] = $cfg['public']; }
 
-    $inPage->addPathway($cat['title'], '/board/'.$menuid.'/'.$cat['id']);
+    $inPage->addPathway($cat['title'], '/board/'.$cat['id']);
 	$inPage->addPathway($_LANG['ADD_ADV']);
 
     if ( !$inUser->id ) {
@@ -385,7 +379,7 @@ if ($do=='additem'){
         $inPage->setTitle($_LANG['ADD_ADV']);
 
         $smarty = $inCore->initSmarty('components', 'com_board_edit.tpl');
-        $smarty->assign('action', "/board/{$menuid}/{$cat['id']}/add.html");
+        $smarty->assign('action', "/board/{$cat['id']}/add.html");
         $smarty->assign('form_do', 'add');
         $smarty->assign('cfg', $cfg);
         $smarty->assign('obtypes', obTypesOptions($cat['obtypes']));
@@ -439,8 +433,8 @@ if ($do=='additem'){
             //finish
             echo '<p><strong>'.$_LANG['ADV_NOT_ADDED'].'</strong></p>';
             echo '<p>'.$errors.'</p>';
-            echo '<p>&larr; <a href="/board/'.$menuid.'/'.$id.'/add.html">'.$_LANG['REPEAT_ADD'].'</a><br/>';
-            echo '&larr; <a href="/board/'.$menuid.'/'.$id.'">'.$_LANG['RETURN_TO_BOARD'].'</a><br/>';
+            echo '<p>&larr; <a href="/board/'.$id.'/add.html">'.$_LANG['REPEAT_ADD'].'</a><br/>';
+            echo '&larr; <a href="/board/'.$id.'">'.$_LANG['RETURN_TO_BOARD'].'</a><br/>';
             return;
         }
 
@@ -480,11 +474,13 @@ if ($do=='additem'){
                                     'file'=>$filename
                                 ));
 
+
+
         //finish
         echo '<p><strong>'.$_LANG['ADV_NOT_ADDED'].'</strong></p>';
         if (!$published) { echo '<p>'.$_LANG['ADV_PREMODER_TEXT'].'</p>'; }
-        echo '<p>&larr; <a href="/board/'.$menuid.'/'.$id.'/add.html">'.$_LANG['ADD_ADV_MORE'].'</a><br/>';
-        echo '&larr; <a href="/board/'.$menuid.'/'.$id.'">'.$_LANG['RETURN_TO_BOARD'].'</a><br/>';
+        echo '<p>&larr; <a href="/board/'.$id.'/add.html">'.$_LANG['ADD_ADV_MORE'].'</a><br/>';
+        echo '&larr; <a href="/board/'.$id.'">'.$_LANG['RETURN_TO_BOARD'].'</a><br/>';
 
         return;
     }
@@ -504,7 +500,7 @@ if ($do=='edititem'){
     }
 
     $inPage->setTitle($_LANG['EDIT_ADV']);
-    $inPage->addPathway($item['category'], '/board/'.$menuid.'/'.$item['cat_id']);
+    $inPage->addPathway($item['category'], '/board/'.$item['cat_id']);
     $inPage->addPathway($_LANG['EDIT_ADV']);
 
     $inPage->printHeading($_LANG['EDIT_ADV']);
@@ -526,7 +522,7 @@ if ($do=='edititem'){
     if (!$inCore->inRequest('submit')){
         //show form
         $smarty = $inCore->initSmarty('components', 'com_board_edit.tpl');
-        $smarty->assign('action', "/board/{$menuid}/edit{$id}.html");
+        $smarty->assign('action', "/board/edit{$id}.html");
         $smarty->assign('form_do', 'edit');
         $smarty->assign('cfg', $cfg);
         $smarty->assign('obtypes', obTypesOptions($cat['obtypes'], $item['obtype']));
@@ -576,8 +572,8 @@ if ($do=='edititem'){
         if ($errors){
             echo '<p><strong>'.$_LANG['ADV_NOT_MODIFY'].'</strong></p>';
             echo '<p>'.$errors.'</p>';
-            echo '<p>&larr; <a href="/board/'.$menuid.'/edit'.$id.'.html">'.$_LANG['REPEAT_EDIT'].'</a><br/>';
-            echo '&larr; <a href="/board/'.$menuid.'/'.$item['cat_id'].'">'.$_LANG['RETURN_TO_BOARD'].'</a><br/>';
+            echo '<p>&larr; <a href="/board/edit'.$id.'.html">'.$_LANG['REPEAT_EDIT'].'</a><br/>';
+            echo '&larr; <a href="/board/'.$item['cat_id'].'">'.$_LANG['RETURN_TO_BOARD'].'</a><br/>';
             return;
         }
 
@@ -622,7 +618,7 @@ if ($do=='edititem'){
         //finish
         echo '<p><strong>'.$_LANG['ADV_MODIFIED'].'</strong></p>';
         if (!$published) { echo '<p>'.$_LANG['ADV_EDIT_PREMODER_TEXT'].'</p>'; }
-        echo '<p>&larr; <a href="/board/'.$menuid.'/'.$item['cat_id'].'">'.$_LANG['RETURN_TO_BOARD'].'</a></p>';
+        echo '<p>&larr; <a href="/board/'.$item['cat_id'].'">'.$_LANG['RETURN_TO_BOARD'].'</a></p>';
 
     }
 }
@@ -648,7 +644,7 @@ if ($do == 'delete'){
         if (!$inCore->inRequest('godelete')){
 			//confirmation
             $inPage->setTitle($_LANG['DELETE_ADV']);
-            $inPage->addPathway($item['category'], '/board/'.$menuid.'/'.$item['cat_id']);
+            $inPage->addPathway($item['category'], '/board/'.$item['cat_id']);
             $inPage->addPathway($_LANG['DELETE_ADV']);
 
             $confirm['title']               = $_LANG['DELETING_ADV'];
@@ -664,7 +660,7 @@ if ($do == 'delete'){
         if ($inCore->inRequest('godelete')){
 			//deleting
             $model->deleteRecord($id);
-            $inCore->redirect('/board/'.$menuid.'/'.$item['cat_id']);
+            $inCore->redirect('/board/'.$item['cat_id']);
 		}
 
 }

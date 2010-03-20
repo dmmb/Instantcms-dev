@@ -130,7 +130,6 @@ if ($do=='view'){
 	}
 	
 	$smarty = $inCore->initSmarty('components', 'com_faq_view.tpl');			
-	$smarty->assign('menuid', $menuid);
 	$smarty->assign('pagetitle', $pagetitle);
 	$smarty->assign('id', $id);
 	$smarty->assign('subcats', $subcats);
@@ -164,11 +163,10 @@ if ($do=='read'){
 			
 			$inPage->setTitle($shortquest);
 				
-			$inPage->addPathway($quest['cat_title'], '/faq/'.$menuid.'/'.$quest['cat_id']);
+			$inPage->addPathway($quest['cat_title'], '/faq/'.$quest['cat_id']);
 			$inPage->addPathway($shortquest);
 							
 			$smarty = $inCore->initSmarty('components', 'com_faq_read.tpl');			
-			$smarty->assign('menuid', $menuid);
 			$smarty->assign('quest', $quest);
 			$smarty->display('com_faq_read.tpl');														
 		}
@@ -185,7 +183,6 @@ if ($do=='sendquest'){
 	if (!$inCore->inRequest('message')){
 		//FORM								
 		$smarty = $inCore->initSmarty('components', 'com_faq_add.tpl');			
-		$smarty->assign('menuid', $menuid);
 		$smarty->assign('catslist', $inCore->getListItems('cms_faq_cats'));
 		$smarty->display('com_faq_add.tpl');		
 	} else {
@@ -204,7 +201,7 @@ if ($do=='sendquest'){
 		echo '<div class="con_heading">'.$_LANG['QUESTION_SEND'].'</div>';
 		
 		echo '<div style="margin-top:10px">'.$_LANG['QUESTION_PREMODER'].'</div>';
-		echo '<div style="margin-top:10px"><a href="/faq/'.$menuid.'">'.$_LANG['CONTINUE'].'</a></div>';
+		echo '<div style="margin-top:10px"><a href="/faq">'.$_LANG['CONTINUE'].'</a></div>';
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
