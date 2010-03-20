@@ -10,20 +10,20 @@
             {if !$ownertype}
                 <span class="blog_type_active">{$LANG.POSTS_RSS}</span>
             {else}
-                <a class="blog_type_link" href="/blogs/{$menuid}/latest.html">{$LANG.POSTS_RSS}</a>
+                <a class="blog_type_link" href="/blogs/latest.html">{$LANG.POSTS_RSS}</a>
             {/if}
 
              {if $ownertype == 'all'}
                 <span class="blog_type_active">{$LANG.ALL_BLOGS}</span>
              {else}
-                <a class="blog_type_link" href="/blogs/{$menuid}/all.html">{$LANG.ALL_BLOGS}</a>
+                <a class="blog_type_link" href="/blogs/all.html">{$LANG.ALL_BLOGS}</a>
              {/if}
 
             {if $single_blogs && $multi_blogs}
                 {if $ownertype == 'single'}
                     <span class="blog_type_active">{$LANG.PERSONALS} <span class="blog_type_num">({$single_blogs})</span></span>
                 {else}
-                    <a class="blog_type_link" href="/blogs/{$menuid}/single.html">{$LANG.PERSONALS} <span class="blog_type_num">({$single_blogs})</span></a>
+                    <a class="blog_type_link" href="/blogs/single.html">{$LANG.PERSONALS} <span class="blog_type_num">({$single_blogs})</span></a>
                 {/if}
             {/if}
 
@@ -31,7 +31,7 @@
                 {if $ownertype == 'multi' && $multi_blogs}
                     <span class="blog_type_active">{$LANG.COLLECTIVES} <span class="blog_type_num">({$multi_blogs})</span></span>
                 {else}
-                    <a class="blog_type_link" href="/blogs/{$menuid}/multi.html">{$LANG.COLLECTIVES} <span class="blog_type_num">({$multi_blogs})</span></a>
+                    <a class="blog_type_link" href="/blogs/multi.html">{$LANG.COLLECTIVES} <span class="blog_type_num">({$multi_blogs})</span></a>
                 {/if}
             {/if}
 
@@ -70,8 +70,8 @@
 							{/if}
 							{if $myblog || $post.user_id == $uid || $is_admin}
 								<span class="editlinks">
-									| <a href="/blogs/{$menuid}/{$post.blog_id}/editpost{$post.id}.html" class="blog_entry_edit">{$LANG.EDIT}</a>
-									| <a href="/blogs/{$menuid}/{$post.blog_id}/delpost{$post.id}.html" class="blog_entry_delete">{$LANG.DELETE}</a>
+									| <a href="/blogs/{$post.blog_id}/editpost{$post.id}.html" class="blog_entry_edit">{$LANG.EDIT}</a>
+									| <a href="/blogs/{$post.blog_id}/delpost{$post.id}.html" class="blog_entry_delete">{$LANG.DELETE}</a>
 								</span>
 							{/if}
 							</div>

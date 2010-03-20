@@ -19,12 +19,12 @@
 				<tr>
 					<td>
 						<div class="blog_entry_text">{$post.msg}</div>
-						<div class="blog_comments"><a class="blog_moderate_yes" href="/blogs/{$menuid}/{$id}/publishpost{$post.id}.html">{$LANG.ALLOW}</a>
-							 | <a class="blog_moderate_no" href="/blogs/{$menuid}/{$id}/delpost{$post.id}.html">{$LANG.DELETE}</a>
+						<div class="blog_comments"><a class="blog_moderate_yes" href="/blogs/{$id}/publishpost{$post.id}.html">{$LANG.ALLOW}</a>
+							 | <a class="blog_moderate_no" href="/blogs/{$id}/delpost{$post.id}.html">{$LANG.DELETE}</a>
 							{if $post.tagline != false}
 								 | <strong>{$LANG.TAGS}:</strong> {$post.tagline}
 							{/if}
-								 | <a href="/blogs/{$menuid}/{$blog.id}/editpost{$post.id}.html" class="blog_entry_edit">{$LANG.EDIT}</a>
+								 | <a href="/blogs/{$blog.id}/editpost{$post.id}.html" class="blog_entry_edit">{$LANG.EDIT}</a>
 						</div>
 					</td>
 				</tr>

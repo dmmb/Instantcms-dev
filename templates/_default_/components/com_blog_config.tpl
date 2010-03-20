@@ -79,7 +79,7 @@
   </table>
   <p>
 	<input name="goadd" type="submit" id="goadd" value="{$LANG.SAVE_CONFIG}" />
-	<input name="delete" type="button" onclick="window.location.href='/blogs/{$menuid}/{$id}/delblog.html'" value="{$LANG.DEL_BLOG}" />
+	<input name="delete" type="button" onclick="window.location.href='/blogs/{$id}/delblog.html'" value="{$LANG.DEL_BLOG}" />
 	<input name="cancel" type="button" onclick="window.history.go(-1)" value="{$LANG.CANCEL}" />
   </p>
 </form>

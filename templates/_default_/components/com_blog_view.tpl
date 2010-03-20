@@ -10,7 +10,7 @@
 			<td valign="top">
 				<div class="con_icons">
 					<div class="con_rss_icon">
-						<a href="/rss/blog/{$blog.id}/feed.rss" title="{$LANG.RSS}"><img src="/images/markers/rssfeed.png" border="0" alt="{$LANG.RSS}"/></a>
+						<a href="/rss/blogs/{$blog.id}/feed.rss" title="{$LANG.RSS}"><img src="/images/markers/rssfeed.png" border="0" alt="{$LANG.RSS}"/></a>
 					</div>
 				</div>
 			</td>
@@ -46,32 +46,32 @@
 		<table cellspacing="0" cellpadding="5" class="blog_toolbar">
 			<tr>
 				{if $on_moderate && $myblog}
-					<td width="16"><img src="/components/blog/images/moderate.gif" border="0"/></td>
-					<td width=""><a class="blog_moderate_link" href="/blogs/{$menuid}/{$blog.id}/moderate.html">{$LANG.MODERATING}</a> ({$on_moderate})</td>
+					<td width="16"><img src="/components/blogs/images/moderate.gif" border="0"/></td>
+					<td width=""><a class="blog_moderate_link" href="/blogs/{$blog.id}/moderate.html">{$LANG.MODERATING}</a> ({$on_moderate})</td>
 				{/if}						
-				<td width="16"><img src="/components/blog/images/record_add.gif" border="0"/></td>
-				<td width=""><a href="/blogs/{$menuid}/{$blog.id}/newpost.html">{$LANG.NEW_POST}</a></td>
+				<td width="16"><img src="/components/blogs/images/record_add.gif" border="0"/></td>
+				<td width=""><a href="/blogs/{$blog.id}/newpost.html">{$LANG.NEW_POST}</a></td>
                 {if $blog.owner=='user' || $is_moder || $is_admin}
-                    <td width="16"><img src="/components/blog/images/cat_add.gif" border="0"/></td>
-                    <td width=""><a href="/blogs/{$menuid}/{$blog.id}/newcat.html">{$LANG.NEW_CAT}</a></td>
+                    <td width="16"><img src="/components/blogs/images/cat_add.gif" border="0"/></td>
+                    <td width=""><a href="/blogs/{$blog.id}/newcat.html">{$LANG.NEW_CAT}</a></td>
                     {if $cat_id>0}
-                        <td width="16"><img src="/components/blog/images/cat_edit.gif" border="0"/></td>
-                        <td width=""><a href="/blogs/{$menuid}/{$blog.id}/editcat{$cat_id}.html">{$LANG.RENAME_CAT}</a></td>
-                        <td width="16"><img src="/components/blog/images/cat_delete.gif" border="0"/></td>
-                        <td width=""><a href="/blogs/{$menuid}/{$blog.id}/delcat{$cat_id}.html">{$LANG.DEL_CAT}</a></td>
+                        <td width="16"><img src="/components/blogs/images/cat_edit.gif" border="0"/></td>
+                        <td width=""><a href="/blogs/{$blog.id}/editcat{$cat_id}.html">{$LANG.RENAME_CAT}</a></td>
+                        <td width="16"><img src="/components/blogs/images/cat_delete.gif" border="0"/></td>
+                        <td width=""><a href="/blogs/{$blog.id}/delcat{$cat_id}.html">{$LANG.DEL_CAT}</a></td>
                     {/if}
                 {/if}
 				{if $is_config}
-					<td width="16"><img src="/components/blog/images/blog_edit.gif" border="0"/></td>
-					<td width=""><a href="/blogs/{$menuid}/{$blog.id}/editblog.html">{$LANG.CONFIG}</a></td>
+					<td width="16"><img src="/components/blogs/images/blog_edit.gif" border="0"/></td>
+					<td width=""><a href="/blogs/{$blog.id}/editblog.html">{$LANG.CONFIG}</a></td>
 				{/if}
 			</tr>
 		</table>
 	{elseif $is_author}
 		<table cellspacing="0" cellpadding="5" class="blog_toolbar">
 			<tr>
-				<td width="16"><img src="/components/blog/images/record_add.gif" border="0"/></td>
-				<td width=""><a href="/blogs/{$menuid}/{$blog.id}/newpost.html">{$LANG.NEW_POST}</a></td>
+				<td width="16"><img src="/components/blogs/images/record_add.gif" border="0"/></td>
+				<td width=""><a href="/blogs/{$blog.id}/newpost.html">{$LANG.NEW_POST}</a></td>
 			</tr>
 		</table>
 	{/if}
@@ -109,8 +109,8 @@
 							{/if}
 							{if $myblog || $post.user_id == $uid || $is_admin}
 								<span class="editlinks">
-									| <a href="/blogs/{$menuid}/{$blog.id}/editpost{$post.id}.html" class="blog_entry_edit">{$LANG.EDIT}</a>
-									| <a href="/blogs/{$menuid}/{$blog.id}/delpost{$post.id}.html" class="blog_entry_delete">{$LANG.DELETE}</a>
+									| <a href="/blogs/{$blog.id}/editpost{$post.id}.html" class="blog_entry_edit">{$LANG.EDIT}</a>
+									| <a href="/blogs/{$blog.id}/delpost{$post.id}.html" class="blog_entry_delete">{$LANG.DELETE}</a>
 								</span>
 							{/if}
 							</div>

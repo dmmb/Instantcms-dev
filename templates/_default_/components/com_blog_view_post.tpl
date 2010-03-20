@@ -6,8 +6,8 @@
 
 {if $myblog || $is_admin || $is_moder || $is_author}
     <div class="editlinks" >
-        <a style="color:gray" href="/blogs/{$menuid}/{$post.blog_id}/editpost{$post.id}.html" class="blog_entry_edit">{$LANG.EDIT}</a>
-        | <a style="color:gray" href="/blogs/{$menuid}/{$post.blog_id}/delpost{$post.id}.html" class="blog_entry_delete">{$LANG.DELETE}</a>
+        <a style="color:gray" href="/blogs/{$post.blog_id}/editpost{$post.id}.html" class="blog_entry_edit">{$LANG.EDIT}</a>
+        | <a style="color:gray" href="/blogs/{$post.blog_id}/delpost{$post.id}.html" class="blog_entry_delete">{$LANG.DELETE}</a>
     </div>
 {/if}
 
@@ -17,9 +17,9 @@
 			<div class="blog_post_data">
 				<div style="margin-bottom:10px"><strong>{$LANG.AVTOR}:</strong> {$post.author}</div>
 				<div><strong>{$LANG.PUBLISHED}:</strong> {$post.fpubdate}</div>
-				<div><strong>{$LANG.BLOG}:</strong> <a href="/blogs/{$menuid}/{$blog.seolink}">{$blog.title}</a></div>
+				<div><strong>{$LANG.BLOG}:</strong> <a href="/blogs/{$blog.seolink}">{$blog.title}</a></div>
 				{if $blog.showcats}
-					<div><strong>{$LANG.CAT}:</strong> <a href="/blogs/{$menuid}/{$blog.seolink}{if $post.cat_id}/cat-{$post.cat_id}{/if}">{$cat}</a></div>
+					<div><strong>{$LANG.CAT}:</strong> <a href="/blogs/{$blog.seolink}{if $post.cat_id}/cat-{$post.cat_id}{/if}">{$cat}</a></div>
 				{/if}
 				{if $post.edit_times}
 					<div><strong>{$LANG.EDITED}:</strong> {$post.edit_times|spellcount:$LANG.TIME1:$LANG.TIME2:$LANG.TIME10} &mdash; {if $post.edit_times>1}{$LANG.LATS_TIME}{/if} {$post.feditdate}</div>
