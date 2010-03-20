@@ -63,7 +63,7 @@ function mod_forum($module_id){
                         $threads[$next]['secret']   = 1;
                     }
 
-					if (strlen($lastmessage['msg'])>70) { $lastmesage['msg'] = substr($lastmesage['msg'], 0, 70).'...'; } 
+					if (strlen($lastmessage['msg'])>70) { $lastmessage['msg'] = substr($lastmessage['msg'], 0, 70).'...'; }
 
                     $msg = $lastmessage['msg'];
 
