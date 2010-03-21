@@ -1088,12 +1088,40 @@ class cmsCore {
             }
         }
 
+        $found = false;
+
         if ($rules){
+            //перебираем правила
             foreach($rules as $rule_id=>$rule) {
-                if (preg_match($rule['source'], $uri)){
-                    $uri = $rule['target'];
-                    break;
+                //небольшая валидация правила
+                if (!$rule['source'] || !$rule['target'] || !$rule['action']) { continue; }
+                //проверяем совпадение выражения source с текущим uri
+                if (preg_match($rule['source'], $uri, $matches)){
+
+                    //перебираем совпавшие сегменты и добавляем их в target
+                    //чтобы сохранить параметры из $uri в новом адресе
+                    foreach($matches as $key=>$value){
+                        if (!$key) { continue; }
+                        if (strstr($rule['target'], '{'.$key.'}')){
+                            $rule['target'] = str_replace('{'.$key.'}', $value, $rule['target']);
+                        }
+                    }
+
+                    //действие по-умолчанию: rewrite
+                    if (!$rule['action']) { $rule['action'] = 'rewrite'; }
+
+                    //выполняем действие
+                    switch($rule['action']){
+                        case 'rewrite'      : $uri = $rule['target']; $found = true; break;
+                        case 'redirect'     : $this->redirect($rule['target']); break;
+                        case 'redirect-301' : $this->redirect($rule['target'], '301'); break;
+                        case 'alias'        : $this->includeFile($rule['target']); $this->halt();break;
+                    }
+
                 }
+
+                if ($found) { break; }
+
             }
         }
 
@@ -1337,7 +1365,12 @@ class cmsCore {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public function redirect($url){
+    public function redirect($url, $code){
+        if ($code == '301'){
+            header('HTTP/1.1 301 Moved Permanently');
+        } else {
+            header('HTTP/1.1 303 See Other');
+        }
         header('location:'.$url);
     }
 
@@ -2714,7 +2747,7 @@ class cmsCore {
         $text = strip_tags($text);
         $text = trim($text);
         if (!strstr($text, ',')){
-            $html .= '<a href="/catalog/'.$menuid.'/'.$cat_id.'/find/'.urlencode($text).'">'.$text.'</a>';
+            $html .= '<a href="/catalog/'.$cat_id.'/find/'.urlencode($text).'">'.$text.'</a>';
         } else {
             $text = str_replace(', ', ',', $text);
             $words = array();
@@ -2728,7 +2761,7 @@ class cmsCore {
                 $value = str_replace("\n", '', $value);
                 $value = trim($value);
 
-                $html .= '<a href="/catalog/'.$menuid.'/'.$cat_id.'/find/'.urlencode($value).'">'.$value.'</a>';
+                $html .= '<a href="/catalog/'.$cat_id.'/find/'.urlencode($value).'">'.$value.'</a>';
                 if ($n<sizeof($words)) { $html .= ', '; } else { $html .= '.'; }
             }
 

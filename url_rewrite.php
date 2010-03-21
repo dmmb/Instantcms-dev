@@ -1,15 +1,181 @@
 <?php
 
+    //
+    // ВНИМАНИЕ! Если вы хотите добавить собственное правило, то создайте
+    //           файл custom_rewrite.php и объявите в нем функцию
+    //           custom_rewrite_rules() по аналогии с текущим файлом!
+    //
+    // В этом файле определены системные правила для редиректа и подмены адресов
+    //
+    //      source          : регулярное выражение, для сравнения с текущим URI
+    //      target          : URI для перенаправления, при совпадении source
+    //      action          : действие при совпадении source
+    //
+    // Возможные значения для action:
+    //
+    //      rewrite         : подменить URI перед определением компонента
+    //      redirect        : редирект на target с кодом 303 See Other
+    //      redirect-303    : редирект на target с кодом 301 Moved Permanently
+    //      alias           : заинклудить файл target и остановить скрипт
+    //
+
     function rewrite_rules(){
+
+        //
+        // Вход / Выход
+        //
 
         $rules[] = array(
                             'source'  => '/^login$/i',
-                            'target'  => 'registration/login'
+                            'target'  => 'registration/login',
+                            'action'  => 'rewrite'
                          );
 
         $rules[] = array(
                             'source'  => '/^logout$/i',
-                            'target'  => 'registration/logout'
+                            'target'  => 'registration/logout',
+                            'action'  => 'rewrite'
+                         );
+
+        //
+        // Регистрация / Активация
+        //
+
+        $rules[] = array(
+                            'source'  => '/^registration\/complete.html/i',
+                            'target'  => '/core/auth/regcomplete.html',
+                            'action'  => 'alias'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^registration\/activation.html/i',
+                            'target'  => '/core/auth/regactivate.html',
+                            'action'  => 'alias'
+                         );
+
+        //
+        // Подписка
+        //
+
+        $rules[] = array(
+                            'source'  => '/^subscribe\/([a-z]+)\/([0-9]+)$/i',
+                            'target'  => 'subscribes/{1}/{2}/1',
+                            'action'  => 'rewrite'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^unsubscribe\/([a-z]+)\/([0-9]+)$/i',
+                            'target'  => 'subscribes/{1}/{2}/0',
+                            'action'  => 'rewrite'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^forum\/subscribe([0-9]+).html$/i',
+                            'target'  => 'subscribes/forum/{1}/1',
+                            'action'  => 'rewrite'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^forum\/unsubscribe([0-9]+).html$/i',
+                            'target'  => 'subscribes/forum/{1}/0',
+                            'action'  => 'rewrite'
+                         );
+
+
+        //
+        // Старые адреса статей и разделов (1.5.x)
+        //
+
+        $rules[] = array(
+                            'source'  => '/^content\/([0-9]+)\/(.+).html$/i',
+                            'target'  => '/content/{2}.html',
+                            'action'  => 'redirect-301'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^content\/([0-9]+)\/(.+)\/page\-([0-9]+).html$/i',
+                            'target'  => '/content/{2}/page-{3}.html',
+                            'action'  => 'redirect-301'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^content\/([0-9]+)\/(.+)$/i',
+                            'target'  => '/content/{2}',
+                            'action'  => 'redirect-301'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^content\/([0-9]+)\/(.+)\/page\-([0-9]+)$/i',
+                            'target'  => '/content/{2}/page-{3}',
+                            'action'  => 'redirect-301'
+                         );
+
+        //
+        // Старые адреса постов и блогов (1.5.x)
+        //
+
+        $rules[] = array(
+                            'source'  => '/^blogs\/([0-9]+)\/([a-zA-Z0-9\-]+)$/i',
+                            'target'  => '/blogs/{2}',
+                            'action'  => 'redirect-301'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^blogs\/([0-9]+)\/([a-zA-Z0-9\-]+)\/$/i',
+                            'target'  => '/blogs/{2}',
+                            'action'  => 'redirect-301'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^blogs\/([0-9]+)\/([a-zA-Z0-9\-]+)\/page\-([0-9]+)$/i',
+                            'target'  => '/blogs/{2}/page-{3}',
+                            'action'  => 'redirect-301'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^blogs\/([0-9]+)\/([a-zA-Z0-9\-]+)\/cat\-([0-9]+)$/i',
+                            'target'  => '/blogs/{2}/cat-{3}',
+                            'action'  => 'redirect-301'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^blogs\/([0-9]+)\/([a-zA-Z0-9\-]+)\/page\-([0-9]+)\/cat\-([0-9]+)$/i',
+                            'target'  => '/blogs/{2}/page-{3}/cat-{4}',
+                            'action'  => 'redirect-301'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^blogs\/([0-9]+)\/([a-zA-Z0-9\-]+)\/([a-zA-Z0-9\-]+).html$/i',
+                            'target'  => '/blogs/{2}/{3}.html',
+                            'action'  => 'redirect-301'
+                         );
+
+        //
+        // Старые адреса форума (1.5.x)
+        //
+
+        $rules[] = array(
+                            'source'  => '/^forum\/([0-9]+)\/([0-9]+)$/i',
+                            'target'  => '/forum/{2}',
+                            'action'  => 'redirect-301'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^forum\/([0-9]*)\/([0-9]*)-([0-9]*)$/i',
+                            'target'  => '/forum/{2}-{3}',
+                            'action'  => 'redirect-301'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^forum\/([0-9]*)\/thread([0-9]+).html$/i',
+                            'target'  => '/forum/thread{2}.html',
+                            'action'  => 'redirect-301'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^forum\/([0-9]*)\/thread([0-9]+)\-([0-9]+).html$/i',
+                            'target'  => '/forum/thread{2}-{3}.html',
+                            'action'  => 'redirect-301'
                          );
 
         return $rules;
