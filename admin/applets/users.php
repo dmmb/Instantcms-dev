@@ -87,7 +87,7 @@ function applet_users(){
 
 		$actions[1]['title'] = 'Личное сообщение';
 		$actions[1]['icon']  = 'message.gif';
-		$actions[1]['link']  = '/users/0/%id%/sendmessage.html';
+		$actions[1]['link']  = '/users/%id%/sendmessage.html';
 
 		$actions[2]['title'] = 'Редактировать';
 		$actions[2]['icon']  = 'edit.gif';

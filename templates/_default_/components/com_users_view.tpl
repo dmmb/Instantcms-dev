@@ -10,7 +10,7 @@
             <a href="javascript:void(0)" style="background:url(/components/catalog/images/icons/search.png) no-repeat;padding-left:18px;" onclick="{literal}$('#sbar').slideToggle();$('#slink').slideToggle();{/literal}">{$LANG.USERS_SEARCH}</a>
         </div>
         <div id="sbar" style="padding:6px;background:#ECECEC;display:none;">
-            <form name="usr_search_form" method="post" action="/users/{$menuid}/search.html">
+            <form name="usr_search_form" method="post" action="/users/search.html">
                 <table cellpadding="2">
                     <tr>
                         <td>{$LANG.FIND}: </td>
@@ -136,8 +136,8 @@
 					<div class="title">Êòî ìû?</div>
 					<div class="body">
 						<ul>
-							<li><a href="javascript:void(0)" rel=”nofollow” onclick="searchGender('m', {$menuid})">{$gender_stats.male|spellcount:$LANG.MALE1:$LANG.MALE2:$LANG.MALE10}</a></li>
-							<li><a href="javascript:void(0)" rel=”nofollow” onclick="searchGender('f', {$menuid})">{$gender_stats.female|spellcount:$LANG.FEMALE1:$LANG.FEMALE2:$LANG.FEMALE10}</a></li>
+							<li><a href="javascript:void(0)" rel=”nofollow” onclick="searchGender('m')">{$gender_stats.male|spellcount:$LANG.MALE1:$LANG.MALE2:$LANG.MALE10}</a></li>
+							<li><a href="javascript:void(0)" rel=”nofollow” onclick="searchGender('f')">{$gender_stats.female|spellcount:$LANG.FEMALE1:$LANG.FEMALE2:$LANG.FEMALE10}</a></li>
 							<li>{$LANG.UNKNOWN} &mdash; {$gender_stats.unknown}</li>
 						</ul>
 					</div>

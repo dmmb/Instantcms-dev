@@ -5,7 +5,7 @@
 {if $cfg.avatar}
     <table width="100%" border="0">
         <tr>
-            <td valign="top" class="pmenu_avatar"><a href="/users/0/{$id}/avatar.html">{$avatar}</a></td>
+            <td valign="top" class="pmenu_avatar"><a href="/users/{$id}/avatar.html">{$avatar}</a></td>
             <td>
 {/if}
 
@@ -18,10 +18,10 @@
             <tr>
                 {if $newmsg}
                     <td width="27"><img src="/components/users/images/menu/messages_new.gif" border="0"/></td>
-                    <td><a href="/users/0/{$id}/messages.html" class="new_messages_link">Сообщения</a>{$newmsg}</td>
+                    <td><a href="/users/{$id}/messages.html" class="new_messages_link">Сообщения</a>{$newmsg}</td>
                 {else}
                     <td width="27"><img src="/components/users/images/menu/messages.gif" border="0"/></td>
-                    <td><a href="/users/0/{$id}/messages.html">Сообщения</a></td>
+                    <td><a href="/users/{$id}/messages.html">Сообщения</a></td>
                 {/if}
             </tr>
         {/if}
@@ -42,13 +42,13 @@
                         {if $users_cfg.sw_photo}
                         <tr>
                             <td width="27"><img src="/components/users/images/menu/my-photos.gif" border="0"/></td>
-                            <td><a href="/users/0/{$id}/photoalbum.html">Фотоальбом</a></td>
+                            <td><a href="/users/{$id}/photoalbum.html">Фотоальбом</a></td>
                         </tr>
                         {/if}
                         {if $users_cfg.sw_board}
                         <tr>
                             <td width="27"><img src="/components/users/images/menu/my-board.gif" border="0"/></td>
-                            <td><a href="/users/0/{$id}/board.html">Объявления</a></td>
+                            <td><a href="/users/{$id}/board.html">Объявления</a></td>
                         </tr>
                         {/if}
                         {if $is_can_add}

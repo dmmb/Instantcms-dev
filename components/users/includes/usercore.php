@@ -15,7 +15,7 @@ function usrBlog($user_id){
 	return dbGetFields('cms_blogs', 'user_id = '.$user_id, 'id, seolink');
 }
 
-function usrLink($title, $user_login, $menuid){
+function usrLink($title, $user_login){
     return '<a href="'.cmsUser::getProfileURL($user_login).'" title="'.strip_tags($title).'">'.$title.'</a>';
 }
 
@@ -39,7 +39,6 @@ function usrMenu($user_id, $cfg, $is_banned=false){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
-	global $menuid;
 	global $_LANG;
 	
 	if ($inUser->id) { $my_profile = ($inUser->id == $user_id ); } else { $my_profile = false; }
@@ -48,18 +47,18 @@ function usrMenu($user_id, $cfg, $is_banned=false){
 	$html = '<div class="usr_profile_menu"><table cellpadding="0" cellspacing="1" align="center" style="margin-left:auto;margin-right:auto"><tr>';
 	if (!$is_banned){				
 		if(!$my_profile){
-			$html .= '<td><a href="/users/'.$menuid.'/'.$user_id.'/sendmessage.html" title="'.$_LANG['WRITE_MESS'].'"><img src="/components/users/images/profilemenu/message.gif" border="0"/></a></td>';
+			$html .= '<td><a href="/users/'.$user_id.'/sendmessage.html" title="'.$_LANG['WRITE_MESS'].'"><img src="/components/users/images/profilemenu/message.gif" border="0"/></a></td>';
 		}
 
 		if ($inUser->id && !$my_profile && $cfg['sw_friends']){
 			if (!usrIsFriends($user_id, $inUser->id)){
 				if (!usrIsFriends($user_id, $inUser->id, false)){				
-					$html .= '<td><a href="/users/'.$menuid.'/'.$user_id.'/friendship.html" title="'.$_LANG['ADD_TO_FRIEND'].'"><img src="/components/users/images/profilemenu/friends.gif" border="0"/></a></td>';
+					$html .= '<td><a href="/users/'.$user_id.'/friendship.html" title="'.$_LANG['ADD_TO_FRIEND'].'"><img src="/components/users/images/profilemenu/friends.gif" border="0"/></a></td>';
 				} else {
-					$html .= '<td><a href="/users/'.$menuid.'/'.$user_id.'/nofriends.html" title="'.$_LANG['STOP_FRIENDLY'].'"><img src="/components/users/images/profilemenu/nofriends.gif" border="0"/></a></td>';
+					$html .= '<td><a href="/users/'.$user_id.'/nofriends.html" title="'.$_LANG['STOP_FRIENDLY'].'"><img src="/components/users/images/profilemenu/nofriends.gif" border="0"/></a></td>';
 				}	
 			} else {
-				$html .= '<td><a href="/users/'.$menuid.'/'.$user_id.'/nofriends.html" title="'.$_LANG['STOP_FRIENDLY'].'"><img src="/components/users/images/profilemenu/nofriends.gif" border="0"/></a></td>';
+				$html .= '<td><a href="/users/'.$user_id.'/nofriends.html" title="'.$_LANG['STOP_FRIENDLY'].'"><img src="/components/users/images/profilemenu/nofriends.gif" border="0"/></a></td>';
 			}
 		}
 		
@@ -68,29 +67,29 @@ function usrMenu($user_id, $cfg, $is_banned=false){
 		if ($inUser->id && $inUser->id!=$user_id){
 			if ($inUser->is_admin && ($inUser->id==1 || $inCore->isAdminCan('admin/users'))){
                 if (!$is_banned){
-                    $html .= '<td><a href="/users/'.$menuid.'/'.$user_id.'/giveaward.html" title="'.$_LANG['TO_AWARD'].'"><img src="/components/users/images/profilemenu/award.gif" border="0"/></a></td>';
+                    $html .= '<td><a href="/users/'.$user_id.'/giveaward.html" title="'.$_LANG['TO_AWARD'].'"><img src="/components/users/images/profilemenu/award.gif" border="0"/></a></td>';
                     $html .= '<td><a href="/admin/index.php?view=userbanlist&do=add&to='.$user_id.'" title="'.$_LANG['TO_BANN'].'"><img src="/components/users/images/profilemenu/ban.gif" border="0"/></a></td>';
                 }
-                $html .= '<td><a href="/users/'.$menuid.'/'.$user_id.'/delprofile.html" title="'.$_LANG['DEL_PROFILE'].'"><img src="/components/users/images/profilemenu/delprofile.gif" border="0"/></a></td>';
+                $html .= '<td><a href="/users/'.$user_id.'/delprofile.html" title="'.$_LANG['DEL_PROFILE'].'"><img src="/components/users/images/profilemenu/delprofile.gif" border="0"/></a></td>';
 			}
 		}
 
 	//PERSONAL MENU
 	if($my_profile){
 			if ($cfg['sw_msg']){
-				$html .= '<td><a href="/users/'.$menuid.'/'.$user_id.'/messages.html" title="'.$_LANG['MY_MESS'].'"><img src="/components/users/images/profilemenu/message.gif" border="0"/></a></td>';
+				$html .= '<td><a href="/users/'.$user_id.'/messages.html" title="'.$_LANG['MY_MESS'].'"><img src="/components/users/images/profilemenu/message.gif" border="0"/></a></td>';
 			}
 			
-			$html .= '<td><a href="/users/'.$menuid.'/'.$user_id.'/editprofile.html" title="'.$_LANG['CONFIG_PROFILE'].'"><img src="/components/users/images/profilemenu/edit.gif" border="0"/></a></td>';
-			$html .= '<td><a href="/users/'.$menuid.'/'.$user_id.'/avatar.html" title="'.$_LANG['SET_AVATAR'].'"><img src="/components/users/images/profilemenu/avatar.gif" border="0"/></a></td>';
+			$html .= '<td><a href="/users/'.$user_id.'/editprofile.html" title="'.$_LANG['CONFIG_PROFILE'].'"><img src="/components/users/images/profilemenu/edit.gif" border="0"/></a></td>';
+			$html .= '<td><a href="/users/'.$user_id.'/avatar.html" title="'.$_LANG['SET_AVATAR'].'"><img src="/components/users/images/profilemenu/avatar.gif" border="0"/></a></td>';
 			
 			if ((usrPhotoCount($user_id)<$cfg['photosize'] || $cfg['photosize']==0) && $cfg['sw_photo']){			
-				$html .= '<td><a href="/users/'.$menuid.'/'.$user_id.'/addphoto.html" title="'.$_LANG['ADD_PHOTO'].'"><img src="/components/users/images/profilemenu/addphoto.gif" border="0"/></a></td>';
+				$html .= '<td><a href="/users/'.$user_id.'/addphoto.html" title="'.$_LANG['ADD_PHOTO'].'"><img src="/components/users/images/profilemenu/addphoto.gif" border="0"/></a></td>';
 			}
 						
 	}
 
-	$html .= '<td><a href="/users/'.$menuid.'/'.$user_id.'/karma.html" title="'.$_LANG['KARMA_HISTORY'].'"><img src="/components/users/images/profilemenu/karma.gif" border="0"/></a></td>';
+	$html .= '<td><a href="/users/'.$user_id.'/karma.html" title="'.$_LANG['KARMA_HISTORY'].'"><img src="/components/users/images/profilemenu/karma.gif" border="0"/></a></td>';
 	
 	$html .= '</tr></table></div>';
 	
@@ -119,7 +118,6 @@ function usrPhotoCount($user_id, $with_public=true){
 
 function usrPublicAlbums($user_id){
     $inDB = cmsDatabase::getInstance();
-    global $menuid;
     global $_LANG;
 	$html = '';
 	$sql = "SELECT f.*, a.id as id, a.title as album, COUNT(f.id) as photos
@@ -152,7 +150,6 @@ function usrPhotos($user_id, $limit=4, $preview=true, $limitfrom=0, $limitmany=0
     $inDB = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
 	$html = '';
-	global $menuid;
 	global $_LANG;
 	if (isset($inUser->id)){
 		$myprofile = ($inUser->id == $user_id || $inCore->userIsAdmin($inUser->id));
@@ -178,7 +175,7 @@ function usrPhotos($user_id, $limit=4, $preview=true, $limitfrom=0, $limitmany=0
 		while($photo = $inDB->fetch_assoc($result)){
 			if (usrAllowed($photo['allow_who'], $photo['user_id'])){
 				$html .= '<div class="usr_photo_thumb">';
-					$html .= '<a class="usr_photo_link" href="/users/'.$menuid.'/'.$user_id.'/photo'.$photo['id'].'.html" title="'.$photo['title'].'">';
+					$html .= '<a class="usr_photo_link" href="/users/'.$user_id.'/photo'.$photo['id'].'.html" title="'.$photo['title'].'">';
 					$html .= '<img border="0" src="/images/users/photos/small/'.$photo['imageurl'].'" alt="'.$photo['title'].'"/>';
 				$html .= '</a>';
 				$html .= '<div style="padding:4px;"><span style="font-size:10px; display:block"><strong>'.$_LANG['DATE'].':</strong> '.$photo['fpubdate'].'</span>';
@@ -191,12 +188,12 @@ function usrPhotos($user_id, $limit=4, $preview=true, $limitfrom=0, $limitmany=0
 		}	
 		$html .= '</div>';
 		if ($preview){
-			$html .= '<div align="right" style="margin-top:10px"><a href="/users/'.$menuid.'/'.$user_id.'/photoalbum.html">'.$_LANG['ALL_PHOTOS'].'</a> &rarr;</div>';
+			$html .= '<div align="right" style="margin-top:10px"><a href="/users/'.$user_id.'/photoalbum.html">'.$_LANG['ALL_PHOTOS'].'</a> &rarr;</div>';
 		}
 	} else { 
 		$html .= '<p>';
 		$html .= $_LANG['NOT_PHOTOS'];
-		if ($user_id==$inUser->id) { $html .= ' <a href="/users/'.$menuid.'/'.$user_id.'/addphoto.html">'.$_LANG['ADD'].'?</a>'; };
+		if ($user_id==$inUser->id) { $html .= ' <a href="/users/'.$user_id.'/addphoto.html">'.$_LANG['ADD'].'?</a>'; };
 		$html .= '</p>'; 
 	}
 	
@@ -217,7 +214,6 @@ function usrMsg($user_id, $table){
 function usrComments($user_id, $limit=5, $preview=true){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
-	global $menuid;
         global $_LANG;
 	$html = '';
 	$sql = "SELECT c.*, DATE_FORMAT(c.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate,  IFNULL(SUM(v.vote), 0) as votes
@@ -246,7 +242,7 @@ function usrComments($user_id, $limit=5, $preview=true){
 			$html .= '</table>';
 		}
 		if ($preview){
-			$html .= '<div align="right"><a href="/users/'.$menuid.'/'.$user_id.'/entries.html">'.$_LANG['ALL_COMMENTS'].'</a> &rarr;</div>';
+			$html .= '<div align="right"><a href="/users/'.$user_id.'/entries.html">'.$_LANG['ALL_COMMENTS'].'</a> &rarr;</div>';
 		}
 	} else {
 		$html .= $_LANG['USER_NOT_COMMENT'];
@@ -259,8 +255,7 @@ function usrAwards($user_id){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
-	global $menuid;
-        global $_LANG;
+    global $_LANG;
 	$html = '';
 	$sql = "SELECT *, DATE_FORMAT(pubdate, '%d-%m-%Y') as fpubdate
 			FROM cms_user_awards
@@ -281,7 +276,7 @@ function usrAwards($user_id){
 				} else {
 					if (isset($inUser->id)){
 						if ($inUser->id==$user_id || $inCore->userIsAdmin($inUser->id)){
-							$html .= '[<a href="/users/'.$menuid.'/delaward'.$aw['id'].'.html">'.$_LANG['DELETE'].'</a>]';
+							$html .= '[<a href="/users/delaward'.$aw['id'].'.html">'.$_LANG['DELETE'].'</a>]';
 						}
 					}
 					$html .= '</td>';
@@ -309,8 +304,7 @@ function usrAwards($user_id){
 function usrForumPosts($user_id, $limit=5, $preview=true){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
-	global $menuid;
-        global $_LANG;
+    global $_LANG;
 	$html = '';
 	$sql = "SELECT *, DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate, t.title as topic, p.id as pid
 			FROM cms_forum_posts p, cms_forum_threads t
@@ -326,7 +320,7 @@ function usrForumPosts($user_id, $limit=5, $preview=true){
 			$html .= '<table style="width:100%; margin-bottom:2px;" cellspacing="0">';
 			$html .= '<tr>';
 				$html .= '<td class="usr_com_title">
-								<a href="/forum/'.$menuid.'/thread'.$com['thread_id'].'.html#'.$com['pid'].'">'.$com['topic'].'</a> &mdash; '.$com['fpubdate'].'
+								<a href="/forum/thread'.$com['thread_id'].'.html#'.$com['pid'].'">'.$com['topic'].'</a> &mdash; '.$com['fpubdate'].'
 						  </td>';
 			$html .= '</tr>';		
 			$html .= '<tr>';
@@ -479,8 +473,6 @@ function usrFriendQueriesNum($user_id, $from_id=''){
 
 function usrFriendQueriesList($user_id, $model){
    
-	global $menuid;
-
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
 
@@ -498,7 +490,6 @@ function usrFriendQueriesList($user_id, $model){
 
     $smarty = $inCore->initSmarty('components', 'com_users_newfriends.tpl');
 
-    $smarty->assign('menuid', $menuid);
     $smarty->assign('friends', $query_list);
 
     $smarty->display('com_users_newfriends.tpl');
@@ -508,8 +499,7 @@ function usrFriendQueriesList($user_id, $model){
 
 function usrFriends($user_id, $short=true){
     $inDB = cmsDatabase::getInstance();
-	global $menuid;
-        global $_LANG;
+    global $_LANG;
 	$sql = "SELECT *
 			FROM cms_user_friends f
 			WHERE ((f.to_id = $user_id AND f.from_id <> $user_id) OR (f.to_id <> $user_id AND f.from_id = $user_id)) AND f.is_accepted = 1
@@ -594,7 +584,7 @@ function usrFriends($user_id, $short=true){
 			if ($col>1) { $html .=  '<td colspan="'.($maxcols-$col+1).'">&nbsp;</td></tr>'; }			
 			$html .= '</table>';
 			if ($not_all && $short){
-				$html .= '<div style="text-align:right"><a href="/users/'.$menuid.'/'.$user_id.'/friendlist.html" class="usr_friendslink">'.$_LANG['ALL_FRIENDS'].'</a> &rarr;</div>';
+				$html .= '<div style="text-align:right"><a href="/users/'.$user_id.'/friendlist.html" class="usr_friendslink">'.$_LANG['ALL_FRIENDS'].'</a> &rarr;</div>';
 			}
 		}
 	} else { $html = ''; }
@@ -661,7 +651,6 @@ function usrCityStats(){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
     global $_LANG;
-	$menuid = $inCore->menuId();
 	$stat = array();
 	$empty = $_LANG['NOT_DECIDE'];
 
@@ -672,7 +661,7 @@ function usrCityStats(){
 	$rs = $inDB->query($sql); 
 	if ($inDB->num_rows($rs)){ 
 		while($row = $inDB->fetch_assoc($rs)){
-			if ($row['city'] != $empty) { $row['href'] = '/users/'.$menuid.'/city/'.urlencode($row['city']); } else { $row['href'] = ''; }
+			if ($row['city'] != $empty) { $row['href'] = '/users/city/'.urlencode($row['city']); } else { $row['href'] = ''; }
 			$row['city'] = ucfirst(strtolower($row['city']));
 			$stat[] = $row;
 		}

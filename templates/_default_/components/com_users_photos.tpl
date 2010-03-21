@@ -7,7 +7,7 @@
         <tbody>
             <tr>
                 <td><img border="0" src="/components/photos/images/addphoto.gif"/></td>
-                <td><a href="/users/{$menuid}/{$user_id}/addphoto.html" style="text-decoration: underline;">Добавить фото</a></td></tr>
+                <td><a href="/users/{$user_id}/addphoto.html" style="text-decoration: underline;">Добавить фото</a></td></tr>
         </tbody>
     </table>
 {/if}

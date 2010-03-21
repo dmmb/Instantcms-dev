@@ -190,7 +190,7 @@
 	<div style="padding:5px; padding-bottom:15px; margin-bottom:5px;">
 		<input style="font-size:16px" name="save" type="submit" id="save" value="{$LANG.SAVE}" />
         <input style="font-size:16px" name="chpassbtn" type="button" id="chpassbtn" value="{$LANG.CHANGE_PASS}" onclick="{literal}$('div#change_password').slideToggle();{/literal}" />
-		<input style="font-size:16px" name="delbtn2" type="button" id="delbtn2" value="{$LANG.DEL_PROFILE}" onclick="location.href='/users/{$menuid}/{$usr.id}/delprofile.html';" />
+		<input style="font-size:16px" name="delbtn2" type="button" id="delbtn2" value="{$LANG.DEL_PROFILE}" onclick="location.href='/users/{$usr.id}/delprofile.html';" />
 	</div>
 </form>
 

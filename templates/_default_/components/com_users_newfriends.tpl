@@ -15,8 +15,8 @@
         <td valign="top" style="padding-left:10px">
             <div style="margin-bottom:5px"><a class="usr_q_link" href="{profile_url login=$query.sender_login}">{$query.sender}</a></div>
             <div>
-                <div><a style="height:16px; line-height:16px; padding-left:20px; background:url(/components/users/images/yes.gif) no-repeat" href="/users/{$menuid}/{$query.from_id}/friendship.html">{$LANG.ACCEPT}</a></div>
-                <div><a style="height:16px; line-height:16px; padding-left:20px; background:url(/components/users/images/no.gif) no-repeat" href="/users/{$menuid}/{$query.from_id}/nofriends.html">{$LANG.REJECT}</a></div>
+                <div><a style="height:16px; line-height:16px; padding-left:20px; background:url(/components/users/images/yes.gif) no-repeat" href="/users/{$query.from_id}/friendship.html">{$LANG.ACCEPT}</a></div>
+                <div><a style="height:16px; line-height:16px; padding-left:20px; background:url(/components/users/images/no.gif) no-repeat" href="/users/{$query.from_id}/nofriends.html">{$LANG.REJECT}</a></div>
             </div>
         </td>
     </tr></table>

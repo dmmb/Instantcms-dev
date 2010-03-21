@@ -10,7 +10,7 @@
     {foreach key=tid item=avatar from=$avatars}
         {if $col==1} <tr> {/if}
             <td width="25%" valign="middle" align="center">
-                    <a href="/users/{$menuid}/{$userid}/select-avatar/{$avatar|urlencode}" title="{$LANG.SELECT_AVATAR}">
+                    <a href="/users/{$userid}/select-avatar/{$avatar|urlencode}" title="{$LANG.SELECT_AVATAR}">
                         <img src="{$avatars_dir}/{$avatar}" border="0" />
                     </a>
             </td>

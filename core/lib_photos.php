@@ -144,9 +144,6 @@ function cmsPhotoList($album){
 			
 			if ($inDB->num_rows($result)){
 			
-				$menuid = $inDB->get_field('cms_menu', "linktype='component' AND linkid='photos' AND published = 1", 'id');
-				if (!$menuid) { $menuid = $inCore->menuId(); }
-			
 				if ($album['header']){
 					echo '<div class="con_photos_header">'.$album['header'].'</div>';
 				}
@@ -154,8 +151,8 @@ function cmsPhotoList($album){
 				//VIEW AS GALLERY (SIMPLE)			
 					echo '<table width="100%" cellpadding="0" cellspacing="0" border="0" class="con_photos">';
 					while($con = $inDB->fetch_assoc($result)){
-						$photolink = '/photos/'.$menuid.'/photo'.$con['id'].'.html';
-						$photolink2 = '/photos/'.$menuid.'/photo'.$con['id'].'.html';
+						$photolink = '/photos/photo'.$con['id'].'.html';
+						$photolink2 = '/photos/photo'.$con['id'].'.html';
 						if ($col==1) { echo '<tr>'; } echo '<td align="center" valign="middle">';
 						echo '<div class="photo_thumb">';
 						echo '<table width="100%" height="100" cellspacing="0" cellpadding="0">

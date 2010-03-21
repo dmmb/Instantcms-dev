@@ -57,7 +57,6 @@ function usrFormEditor($user_id, $form_id, $formsdata){
 }
 
 function usrForm($user_id, $form_id, $formsdata){
-    global $menuid;
     global $_LANG;
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
@@ -93,7 +92,7 @@ function usrForm($user_id, $form_id, $formsdata){
 								}
 							}                            
 						}
-						$html .= '<td valign="top" id="field">'.cmsPage::getMetaSearchLink('/users/'.$menuid.'/hobby/', $default).'</td></tr>';
+						$html .= '<td valign="top" id="field">'.cmsPage::getMetaSearchLink('/users/hobby/', $default).'</td></tr>';
 					}					
 					$html .= '</table>';												
 				} else { $html .= '<p>'.$_LANG['IN_FORM'].' "'.$form['title'].'" '.$_LANG['NOT_FIELDS'].'.</p>'; }

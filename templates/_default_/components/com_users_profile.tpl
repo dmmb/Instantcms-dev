@@ -131,7 +131,7 @@
 						</div>
 						<div class="field">
 							<div class="title">{$LANG.CITY}:</div>
-                            <div class="value"><a href="/users/{$menuid}/city/{$usr.cityurl}">{$usr.city}</a></div>
+                            <div class="value"><a href="/users/city/{$usr.cityurl}">{$usr.city}</a></div>
 						</div>
 						
 						{if $usr.showbirth && $usr.birthdate}
@@ -172,7 +172,7 @@
 						<div class="field">
 							<div class="title">{$LANG.COMMENTS}:</div>
 							<div class="value">{$usr.comments_count}
-                                {if $usr.comments_count}<a href="/users/{$menuid}/{$usr.id}/comments.html" title="{$LANG.READ}">&rarr;</a>{/if}
+                                {if $usr.comments_count}<a href="/users/{$usr.id}/comments.html" title="{$LANG.READ}">&rarr;</a>{/if}
                             </div>
 						</div>
                         {/if}
@@ -181,7 +181,7 @@
 						<div class="field">
 							<div class="title">{$LANG.MESS_IN_FORUM}:</div>
 							<div class="value">{$usr.forum_count}
-                                {if $usr.forum_count}<a href="/users/{$menuid}/{$usr.id}/forumposts.html" title="{$LANG.READ}">&rarr;</a>{/if}
+                                {if $usr.forum_count}<a href="/users/{$usr.id}/forumposts.html" title="{$LANG.READ}">&rarr;</a>{/if}
                             </div>
 						</div>
                         {/if}
@@ -264,7 +264,7 @@
                                                 </td>
                                                 <td>
                                                     <a href="{profile_url login=$photo.login}" class="nickname">{$photo.nickname}</a> &rarr;
-                                                    <a href="/photos/0/photo{$photo.id}.html">{$photo.title}</a>
+                                                    <a href="/photos/photo{$photo.id}.html">{$photo.title}</a>
                                                 </td>                                                
                                             </tr>
                                         {/foreach}
@@ -294,22 +294,22 @@
                             {/if}
                             {if $cfg.sw_comm}
                                 <div id="usr_comments">
-                                    <a href="/users/{$menuid}/{$usr.id}/comments.html">{$LANG.USR_COMMENTS}</a> ({$usr.comments_count})
+                                    <a href="/users/{$usr.id}/comments.html">{$LANG.USR_COMMENTS}</a> ({$usr.comments_count})
                                 </div>
                             {/if}
                             {if $cfg.sw_photo}
                                 <div id="usr_photoalbum">
-                                    <a href="/users/{$menuid}/{$usr.id}/photoalbum.html">{$LANG.PHOTOALBUM}</a> ({$usr.photos_count})
+                                    <a href="/users/{$usr.id}/photoalbum.html">{$LANG.PHOTOALBUM}</a> ({$usr.photos_count})
                                 </div>
                             {/if}
                             {if $cfg.sw_files}
                                 <div id="usr_files">
-                                    <a href="/users/{$menuid}/{$usr.id}/files.html">{$LANG.FILES}</a> ({$usr.files_count})
+                                    <a href="/users/{$usr.id}/files.html">{$LANG.FILES}</a> ({$usr.files_count})
                                 </div>
                             {/if}
                             {if $cfg.sw_board}
                                 <div id="usr_board">
-                                    <a href="/users/{$menuid}/{$usr.id}/board.html">{$LANG.ADVS}</a> ({$usr.board_count})
+                                    <a href="/users/{$usr.id}/board.html">{$LANG.ADVS}</a> ({$usr.board_count})
                                 </div>
                             {/if}
                         </div>
@@ -339,7 +339,7 @@
 								<div class="usr_clubs">
 									<span class="label">{$LANG.CONSIST}:</span>
 									{foreach key=tid item=club from=$usr.clubs.member}
-										<a class="usr_club_link" href="/clubs/0/{$club.id}">{$club.title}</a>
+										<a class="usr_club_link" href="/clubs/{$club.id}">{$club.title}</a>
 									{/foreach}
 								</div>
 							{/if}
@@ -347,7 +347,7 @@
 								<div class="usr_clubs">
 									<span class="label">{$LANG.MODERATE}:</span>
 									{foreach key=tid item=club from=$usr.clubs.moder}
-										<a class="usr_club_link" href="/clubs/0/{$club.id}">{$club.title}</a>
+										<a class="usr_club_link" href="/clubs/{$club.id}">{$club.title}</a>
 									{/foreach}
 								</div>
 							{/if}
@@ -355,7 +355,7 @@
 								<div class="usr_clubs">
 									<span class="label">{$LANG.ADMINING}:</span>
 									{foreach key=tid item=club from=$usr.clubs.admin}
-										<a class="usr_club_link" href="/clubs/0/{$club.id}">{$club.title}</a>
+										<a class="usr_club_link" href="/clubs/{$club.id}">{$club.title}</a>
 									{/foreach}
 								</div>
 							{/if}													

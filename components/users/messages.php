@@ -89,23 +89,23 @@ function pageSelect($records, $current, $perpage){
 			if ($opt=='in'){				
 				$inPage->addPathway($_LANG['INBOX']);
 				echo '<span class="usr_msgmenu_active in_span">'.$_LANG['INBOX'].'</span> ';
-				echo '<a class="usr_msgmenu_link out_link" href="/users/'.$menuid.'/'.$id.'/messages-sent.html">'.$_LANG['SENT'].'</a>';
-				echo '<a class="usr_msgmenu_link new_link" href="/users/'.$menuid.'/'.$id.'/messages-new.html">'.$_LANG['WRITE'].'</a>';
+				echo '<a class="usr_msgmenu_link out_link" href="/users/'.$id.'/messages-sent.html">'.$_LANG['SENT'].'</a>';
+				echo '<a class="usr_msgmenu_link new_link" href="/users/'.$id.'/messages-new.html">'.$_LANG['WRITE'].'</a>';
 			} elseif ($opt=='out') {
 				$inPage->addPathway($_LANG['SENT']);
-				echo '<a class="usr_msgmenu_link in_link" href="/users/'.$menuid.'/'.$id.'/messages.html">'.$_LANG['INBOX'].'</a> ';
+				echo '<a class="usr_msgmenu_link in_link" href="/users/'.$id.'/messages.html">'.$_LANG['INBOX'].'</a> ';
 				echo '<span class="usr_msgmenu_active out_span">'.$_LANG['SENT'].'</span>';
-				echo '<a class="usr_msgmenu_link new_link" href="/users/'.$menuid.'/'.$id.'/messages-new.html">'.$_LANG['WRITE'].'</a>';
+				echo '<a class="usr_msgmenu_link new_link" href="/users/'.$id.'/messages-new.html">'.$_LANG['WRITE'].'</a>';
 			} elseif ($opt=='new') {
 				$inPage->addPathway($_LANG['NEW_MESS']);
-				echo '<a class="usr_msgmenu_link in_link" href="/users/'.$menuid.'/'.$id.'/messages.html">'.$_LANG['INBOX'].'</a> ';
-				echo '<a class="usr_msgmenu_link out_link" href="/users/'.$menuid.'/'.$id.'/messages-sent.html">'.$_LANG['SENT'].'</a>';
+				echo '<a class="usr_msgmenu_link in_link" href="/users/'.$id.'/messages.html">'.$_LANG['INBOX'].'</a> ';
+				echo '<a class="usr_msgmenu_link out_link" href="/users/'.$id.'/messages-sent.html">'.$_LANG['SENT'].'</a>';
 				echo '<span class="usr_msgmenu_active new_span">'.$_LANG['WRITE'].'</span>';
 			} elseif ($opt=='history') {
 				$inPage->addPathway($_LANG['MESSEN_WITH'].' '.$with_name, $_SERVER['REQUEST_URI']);
-				echo '<a class="usr_msgmenu_link in_link" href="/users/'.$menuid.'/'.$id.'/messages.html">'.$_LANG['INBOX'].'</a> ';
-				echo '<a class="usr_msgmenu_link out_link" href="/users/'.$menuid.'/'.$id.'/messages-sent.html">'.$_LANG['SENT'].'</a>';
-				echo '<a class="usr_msgmenu_link new_link" href="/users/'.$menuid.'/'.$id.'/messages-new.html">'.$_LANG['WRITE'].'</a>';
+				echo '<a class="usr_msgmenu_link in_link" href="/users/'.$id.'/messages.html">'.$_LANG['INBOX'].'</a> ';
+				echo '<a class="usr_msgmenu_link out_link" href="/users/'.$id.'/messages-sent.html">'.$_LANG['SENT'].'</a>';
+				echo '<a class="usr_msgmenu_link new_link" href="/users/'.$id.'/messages-new.html">'.$_LANG['WRITE'].'</a>';
 				echo '<span class="usr_msgmenu_active history_span">'.$_LANG['MESSEN'].' &rarr; '.$with_name.'</span>';
 			}
 		echo '</div>';
@@ -125,7 +125,7 @@ function pageSelect($records, $current, $perpage){
 				}
 				
 				if ($opt=='in' && $msg_count>0){
-					echo '<td width="100" align="right"><a href="/users/'.$menuid.'/'.$id.'/delmessages.html">'.$_LANG['CLEAN_CAT'].'</a></td>';
+					echo '<td width="100" align="right"><a href="/users/'.$id.'/delmessages.html">'.$_LANG['CLEAN_CAT'].'</a></td>';
 				}
 			
 			echo '</tr></table>';
@@ -156,7 +156,7 @@ function pageSelect($records, $current, $perpage){
 									echo '<td class="usr_msg_title" width="14" align="right"><img src="/components/users/images/warning.gif" /></td>';
 									echo '<td class="usr_msg_title" width="20" align="right"><span style="color: red">'.$_LANG['NEW'].'!</span></td>';
 								} else {
-									echo '<td class="usr_msg_title" width="90" align="right"><a class="msg_delete" href="/users/'.$menuid.'/delmsg'.$record['id'].'.html">'.$_LANG['CANCEL_MESS'].'</a></td>';
+									echo '<td class="usr_msg_title" width="90" align="right"><a class="msg_delete" href="/users/delmsg'.$record['id'].'.html">'.$_LANG['CANCEL_MESS'].'</a></td>';
 								}
 							} else {
 								echo '<td class="usr_msg_title" width="14" align="right">&nbsp;</td>';						
@@ -164,12 +164,12 @@ function pageSelect($records, $current, $perpage){
 							}
 							if ($opt=='in'){
 								if ($record['sender_id']>0){
-									echo '<td class="usr_msg_title" width="80" align="right"><a class="msg_reply" href="/users/'.$menuid.'/'.$record['from_id'].'/reply'.$record['id'].'.html">'.$_LANG['REPLY'].'</a></td>';
-									echo '<td class="usr_msg_title" width="80" align="right"><a class="msg_history" href="/users/'.$menuid.'/'.$id.'/messages-history'.$record['from_id'].'.html">'.$_LANG['HISTORY'].'</a></td>';
+									echo '<td class="usr_msg_title" width="80" align="right"><a class="msg_reply" href="/users/'.$record['from_id'].'/reply'.$record['id'].'.html">'.$_LANG['REPLY'].'</a></td>';
+									echo '<td class="usr_msg_title" width="80" align="right"><a class="msg_history" href="/users/'.$id.'/messages-history'.$record['from_id'].'.html">'.$_LANG['HISTORY'].'</a></td>';
 								}
 							}
 							if ($opt=='in' || $record['to_id']==$inUser->id){
-								echo '<td class="usr_msg_title" width="70" align="right"><a class="msg_delete" href="/users/'.$menuid.'/delmsg'.$record['id'].'.html">'.$_LANG['DELETE'].'</a></td>';
+								echo '<td class="usr_msg_title" width="70" align="right"><a class="msg_delete" href="/users/delmsg'.$record['id'].'.html">'.$_LANG['DELETE'].'</a></td>';
 							}
 						echo '</tr>';
 						echo '</table>';
