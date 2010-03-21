@@ -232,32 +232,6 @@
                             2       => 'page'
                          );
 
-        //RewriteRule ^users/([0-9]*)/([a-z]*)-([a-z]*).html$ /index.php?view=users&page=$1&orderby=$2&orderto=$3
-        $routes[] = array(
-                            '_uri'  => '/^users\/([0-9]+)\/([a-z]+)\-([a-z]+).html$/i',
-                            1       => 'page',
-                            2       => 'orderby',
-                            3       => 'orderto'
-                         );
-
-        //RewriteRule ^users/online.html$ /index.php?view=users&online=1
-        $routes[] = array(
-                            '_uri'  => '/^users\/online.html$/i',
-                            'online' => '1'
-                         );
-
-        //RewriteRule ^users/all.html$ /index.php?view=users&online=0
-        $routes[] = array(
-                            '_uri'  => '/^users\/all.html$/i',
-                            'online' => '0'
-                         );
-
-        //RewriteRule ^users/([0-9]*)$ /index.php?view=users&page=$1
-        $routes[] = array(
-                            '_uri'  => '/^users\/([0-9]+)$/i',
-                            1       => 'page'
-                         );
-
         //RewriteRule ^users/([0-9]*)/delprofile.html$ /index.php?view=users&do=delprofile&id=$1
         $routes[] = array(
                             '_uri'  => '/^users\/([0-9]+)\/delprofile.html$/i',
@@ -421,6 +395,32 @@
                             '_uri'  => '/^users\/files\/download([0-9]+).html$/i',
                             'do'    => 'download',
                             1       => 'fileid'
+                         );
+
+        //RewriteRule ^users/([0-9]*)/([a-z]*)-([a-z]*).html$ /index.php?view=users&page=$1&orderby=$2&orderto=$3
+        $routes[] = array(
+                            '_uri'  => '/^users\/([0-9]+)\/([a-z]+)\-([a-z]+).html$/i',
+                            1       => 'page',
+                            2       => 'orderby',
+                            3       => 'orderto'
+                         );
+
+        //RewriteRule ^users/online.html$ /index.php?view=users&online=1
+        $routes[] = array(
+                            '_uri'  => '/^users\/online.html$/i',
+                            'online' => '1'
+                         );
+
+        //RewriteRule ^users/all.html$ /index.php?view=users&online=0
+        $routes[] = array(
+                            '_uri'  => '/^users\/all.html$/i',
+                            'online' => '0'
+                         );
+
+        //RewriteRule ^users/([0-9]*)$ /index.php?view=users&page=$1
+        $routes[] = array(
+                            '_uri'  => '/^users\/([0-9]+)$/i',
+                            1       => 'page'
                          );
 
         //RewriteRule ^users/([a-zA-z0-9\.]*)$ /index.php?view=users&do=profile&login=$1

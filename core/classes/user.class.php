@@ -352,8 +352,6 @@ class cmsUser {
         $inDB = cmsDatabase::getInstance();
         $inCore = cmsCore::getInstance();
 
-        $menuid = $inCore->menuId();
-
         $sql = "SELECT u.id as id, u.nickname as nickname, u.login as login, u.birthdate, p.gender as gender
                 FROM cms_users u, cms_user_profiles p
                 WHERE p.user_id = u.id AND u.is_locked = 0 AND u.is_deleted = 0 AND DATE_FORMAT(u.birthdate, '%d-%m')=DATE_FORMAT(NOW(), '%d-%m')";
@@ -366,7 +364,7 @@ class cmsUser {
         if (!$total){ return false; }
         
         while($usr = mysql_fetch_assoc($rs)){
-            $html .= self::getGenderLink($usr['id'], $usr['nickname'], $menuid, $usr['gender'], $usr['login']);
+            $html .= self::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login']);
             if ($now < $total-1) { $html .= ', '; }
             $now ++;
         }
@@ -770,8 +768,6 @@ class cmsUser {
         $inCore     = cmsCore::getInstance();
         $inUser     = self::getInstance();
         
-        $menuid     = $inCore->menuId();
-
         $myprofile  = false;
 
         $perpage    = 10;
@@ -819,7 +815,6 @@ class cmsUser {
 
         $smarty = $inCore->initSmarty('components', 'com_users_wall.tpl');
 
-        $smarty->assign('menuid', $menuid);
         $smarty->assign('total', $total);
         $smarty->assign('records', $records);
         $smarty->assign('user_id', $inUser->id);
@@ -1013,12 +1008,12 @@ class cmsUser {
      */
     public static function isNewMessages($user_id){
         $inDB = cmsDatabase::getInstance();
-        global $menuid;
+
         $sql = "SELECT id FROM cms_user_msg WHERE to_id = $user_id AND is_new = 1";
         $result = $inDB->query($sql);
 
         if($inDB->num_rows($result)) {
-            $html =	' (<a style="color:red" href="/users/'.$menuid.'/'.$user_id.'/messages.html">'.$inDB->num_rows($result).'</a>)';
+            $html =	' (<a style="color:red" href="/users/'.$user_id.'/messages.html">'.$inDB->num_rows($result).'</a>)';
             return $html;
         } else { return false; }
     }

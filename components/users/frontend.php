@@ -22,7 +22,6 @@ function karmaPoints($points){
 
 function pageBar($current, $perpage, $orderby, $orderto, $records){
     $inDB   = cmsDatabase::getInstance();
-	global $menuid;
         global $_LANG;
 	$html = '';
 	if (!@$_SESSION['usr_online']){
@@ -38,7 +37,7 @@ function pageBar($current, $perpage, $orderby, $orderto, $records){
 			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {			
-					$link = '/users/'.$menuid.'-'.$p.'/'.$orderby.'-'.$orderto.'.html';
+					$link = '/users/'.$p.'/'.$orderby.'-'.$orderto.'.html';
 					$html .= ' <a href="'.$link.'" class="pagebar_page">'.$p.'</a> ';		
 				} else {
 					$html .= '<span class="pagebar_current">'.$p.'</span>';
@@ -52,7 +51,6 @@ function pageBar($current, $perpage, $orderby, $orderto, $records){
 
 function pageBarStatic($current, $perpage, $user_id, $page='entries', $table='cms_comment'){
     $inDB   = cmsDatabase::getInstance();
-	global $menuid;
         global $_LANG;
 	$html = '';
 	
@@ -67,7 +65,7 @@ function pageBarStatic($current, $perpage, $user_id, $page='entries', $table='cm
 			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {			
-					$link = '/users/'.$menuid.'/'.$user_id.'/'.$page.$p.'.html';
+					$link = '/users/'.$user_id.'/'.$page.$p.'.html';
 					$html .= ' <a href="'.$link.'" class="pagebar_page">'.$p.'</a> ';		
 				} else {
 					$html .= '<span class="pagebar_current">'.$p.'</span>';
@@ -149,7 +147,6 @@ function pageBarBoard($user_id, $current, $perpage){
 
 function pageBarAvatars($current, $perpage, $records, $userid){
     $inDB   = cmsDatabase::getInstance();
-	global $menuid;
 	$html = '';
 
 	if ($records){
@@ -160,7 +157,7 @@ function pageBarAvatars($current, $perpage, $records, $userid){
 			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {
-					$link = '/users/'.$menuid.'/'.$userid.'/select-avatar-'.$p.'.html';
+					$link = '/users/'.$userid.'/select-avatar-'.$p.'.html';
 					$html .= ' <a href="'.$link.'" class="pagebar_page">'.$p.'</a> ';
 				} else {
 					$html .= '<span class="pagebar_current">'.$p.'</span>';
@@ -197,8 +194,6 @@ function users(){
 	$inCore->includeFile('components/users/includes/usercore.php');
 	$inCore->includeFile('components/users/includes/userforms.php');
 	
-	$menuid = $inCore->menuId();
-
     $inCore->loadModel('users');
     $model = new cms_model_users();
 
@@ -227,7 +222,7 @@ if ($do=='city'){
 				WHERE u.is_locked = 0 AND p.user_id = u.id AND p.city LIKE '%$city%' AND u.is_deleted = 0
 				ORDER BY city DESC";
 	
-	$querymsg = '<div class="con_description"><strong>'.$_LANG['SEARCH_BY_CITY'].':</strong> '.$city.' (<a href="/users/'.$menuid.'/all.html">'.$_LANG['CANCEL_SEARCH'].'</a>)</div>';
+	$querymsg = '<div class="con_description"><strong>'.$_LANG['SEARCH_BY_CITY'].':</strong> '.$city.' (<a href="/users/all.html">'.$_LANG['CANCEL_SEARCH'].'</a>)</div>';
 	
 	$do = 'view';
 
@@ -246,7 +241,7 @@ if ($do=='hobby'){
 				WHERE u.is_locked = 0 AND p.user_id = u.id AND (LOWER(p.description) LIKE '%$hobby%' OR LOWER(p.formsdata) LIKE '%$hobby%') AND u.is_deleted = 0
 				ORDER BY city DESC";
 	
-	$querymsg = '<div class="con_description"><strong>'.$_LANG['SEARCH_BY_HOBBY'].':</strong> '.$hobby.' (<a href="/users/'.$menuid.'/all.html">'.$_LANG['CANCEL_SEARCH_SHOWALL'].'</a>)</div>';
+	$querymsg = '<div class="con_description"><strong>'.$_LANG['SEARCH_BY_HOBBY'].':</strong> '.$hobby.' (<a href="/users/all.html">'.$_LANG['CANCEL_SEARCH_SHOWALL'].'</a>)</div>';
 	
 	$do = 'view';
 
@@ -379,21 +374,20 @@ if ($do=='view'){
 	$is_users  = $inDB->num_rows($result);
 	
 	$smarty = $inCore->initSmarty('components', 'com_users_view.tpl');			
-	$smarty->assign('menuid', $menuid);
 	if (isset($querymsg)) { $smarty->assign('querymsg', $querymsg);	}
 	$smarty->assign('page', $page);	
 	
 		$people = cmsUser::getOnlineCount();
 		
 		if (!@$_SESSION['usr_online']) { 
-			$online_link = '<a href="/users/'.$menuid.'/online.html" rel=înofollowî>'.$_LANG['SHOW_ONLY_ONLINE'].'</a>';
+			$online_link = '<a href="/users/online.html" rel=înofollowî>'.$_LANG['SHOW_ONLY_ONLINE'].'</a>';
 		} else {
-			$online_link = '<a href="/users/'.$menuid.'/all.html" rel=înofollowî>'.$_LANG['SHOW_ALL'].'</a>';
+			$online_link = '<a href="/users/all.html" rel=înofollowî>'.$_LANG['SHOW_ALL'].'</a>';
 		}
 	
-		$link['positive'] = '/users/'.$menuid.'-1/karma-desc.html';
-		$link['negative'] = '/users/'.$menuid.'-1/karma-asc.html';		
-		$link['rating'] = '/users/'.$menuid.'-1/rating-desc.html';			
+		$link['positive'] = '/users/1/karma-desc.html';
+		$link['negative'] = '/users/1/karma-asc.html';		
+		$link['rating'] = '/users/1/rating-desc.html';			
 		if ($orderby == 'karma' && $orderto == 'desc') { 
 			$link['selected'] = 'positive'; 
 		} elseif ($orderby == 'karma' && $orderto == 'asc') { 
@@ -409,7 +403,7 @@ if ($do=='view'){
 		if ($is_users){
 			while($usr = $inDB->fetch_assoc($result)){                
 					$rownum++;
-					$usr['avatar'] = usrLink(usrImage($usr['id'], 'small'), $usr['login'], $menuid);
+					$usr['avatar'] = usrLink(usrImage($usr['id'], 'small'), $usr['login']);
 					$usr['nickname'] = cmsUser::getProfileLink($usr['login'], $usr['nickname']);
 					$usr['myfriend'] = usrIsFriends($usr['id'], $inUser->id, false);
 					$usr['karma'] = strip_tags(cmsUser::getKarmaFormat($usr['id'], false, false), '<span>');
@@ -595,7 +589,6 @@ if ($do=='editprofile'){
 					$smarty = $inCore->initSmarty('components', 'com_users_edit_profile.tpl');
 				
 					$smarty->assign('opt', $opt);
-					$smarty->assign('menuid', $menuid);
 					$smarty->assign('msg', $msg);
 					$smarty->assign('emsg', $emsg);
 					$smarty->assign('usr', $usr);			
@@ -655,7 +648,6 @@ if ($do=='comments'){
 			
 			$smarty = $inCore->initSmarty('components', 'com_users_comments.tpl');
             $smarty->assign('user_id', $id);
-            $smarty->assign('menuid', $menuid);
 			$smarty->assign('nickname', $usr['nickname']);
 			$smarty->assign('login', $usr['login']);
 			$smarty->assign('comments', $comments);
@@ -696,7 +688,7 @@ if ($do=='forumposts'){
 		if ($inDB->num_rows($result)>0){
 			$posts = array();
 			while ($post = $inDB->fetch_assoc($result)){
-				$post['link'] = '/forum/0/thread'.$post['thread_id'].'.html#'.$post['id'];
+				$post['link'] = '/forum/thread'.$post['thread_id'].'.html#'.$post['id'];
                 $post['content'] = $inCore->parseSmiles($post['content'], true);
 				$post['content'] = str_replace("&amp;", '&', $post['content']);
 				$posts[] = $post;
@@ -705,7 +697,6 @@ if ($do=='forumposts'){
 			$smarty = $inCore->initSmarty('components', 'com_users_forumposts.tpl');
             $smarty->assign('user_id', $id);
             $smarty->assign('user_login', $usr['login']);
-            $smarty->assign('menuid', $menuid);
 			$smarty->assign('nickname', $usr['nickname']);
 			$smarty->assign('posts', $posts);
             $smarty->assign('avatar', usrImage($id));
@@ -799,7 +790,7 @@ if ($do=='profile'){
     $usr['flogdate']            = strip_tags(usrStatus($usr['id'], $usr['flogdate'], false, $usr['gender']));
     $usr['karma']				= strip_tags( cmsUser::getKarmaFormat($usr['id'], false), '<table><tr><td><img><a>' );
     $usr['karma_int']			= strip_tags($usr['karma']);
-    $usr['karma_link']			= '<a href="/users/'.$menuid.'/'.$id.'/karma.html" title="'.$_LANG['KARMA_HISTORY'].'" id="karmalink">?</a>';
+    $usr['karma_link']			= '<a href="/users/'.$id.'/karma.html" title="'.$_LANG['KARMA_HISTORY'].'" id="karmalink">?</a>';
 
     $usr['cityurl']             = urlencode($usr['city']);
 
@@ -821,15 +812,15 @@ if ($do=='profile'){
     $usr['blog_seolink']    = $usr['blog']['seolink'];
     
     if($usr['blog_id']){
-        $usr['blog_link'] 		= '<a href="/blogs/'.$menuid.'/'.$usr['blog_seolink'].'">'.$_LANG['BLOG'].'</a>';
+        $usr['blog_link'] 		= '<a href="/blogs/'.$usr['blog_seolink'].'">'.$_LANG['BLOG'].'</a>';
     } elseif($myprofile) {
-        $usr['blog_link'] 		= '<a href="/blogs/'.$menuid.'/createblog.html">'.$_LANG['CREATE_BLOG'].'</a>';
+        $usr['blog_link'] 		= '<a href="/blogs/createblog.html">'.$_LANG['CREATE_BLOG'].'</a>';
     }
 
     if (!$usr['description']) {
         $usr['description']		= '<span style="color:#999"><em>'.$_LANG['TAGS_NOT_SPEC'].'</em></span>';
     } else {
-        $usr['description']     = cmsPage::getMetaSearchLink('/users/'.$menuid.'/hobby/', $usr['description']);
+        $usr['description']     = cmsPage::getMetaSearchLink('/users/hobby/', $usr['description']);
     }
 
     $usr['flogdate']			= $inCore->getRusDate($usr['flogdate']);
@@ -867,7 +858,6 @@ if ($do=='profile'){
 
     $smarty = $inCore->initSmarty('components', 'com_users_profile.tpl');
 
-    $smarty->assign('menuid', $menuid);
     $smarty->assign('id', $id);
     $smarty->assign('usr', $usr);
     $smarty->assign('plugins', $plugins);
@@ -893,7 +883,7 @@ if ($do=='messages'){
 			$usr = $inDB->fetch_assoc($result);
 			if ($inUser->id==$id || $inCore->userIsAdmin($inUser->id)) {
 				$inPage->setTitle($_LANG['MY_MESS']);
-				$inPage->addPathway($_LANG['MY_MESS'], '/users/'.$menuid.'/'.$id.'/messages.html');
+				$inPage->addPathway($_LANG['MY_MESS'], '/users/'.$id.'/messages.html');
 				include 'components/users/messages.php';			
 			} else { usrAccessDenied(); }
 		} else { echo '<p>'.$_LANG['USER_NOT_FOUND_TEXT'].'</p>'; }
@@ -963,14 +953,14 @@ if ($do=='avatar'){
 							echo '<p><strong>'.$_LANG['ERROR'].':</strong> '.$inCore->uploadError().'!</p>';
 						}
 						
-						echo '<ul><li><a href="/users/'.$menuid.'/'.$userid.'/avatar.html">'.$_LANG['REPEAT'].'</a></li>'."\n";
+						echo '<ul><li><a href="/users/'.$userid.'/avatar.html">'.$_LANG['REPEAT'].'</a></li>'."\n";
 						echo '<li><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$_LANG['BACK_TO_PROFILE'].'</a></li></ul>'."\n";
 						
 					} else { usrAccessDenied(); }
 				} else { usrAccessDenied(); }
 			
 			} else {
-				echo '<form enctype="multipart/form-data" action="/users/'.$menuid.'/'.$id.'/avatar.html" method="POST">' . "\n";	
+				echo '<form enctype="multipart/form-data" action="/users/'.$id.'/avatar.html" method="POST">' . "\n";	
 					echo '<p>'.$_LANG['SELECT_UPLOAD_FILE'].': </p>' . "\n";
 					echo '<input name="upload" type="hidden" value="1"/>' . "\n";			
 					echo '<input name="userid" type="hidden" value="'.$id.'"/>'. "\n";									
@@ -978,7 +968,7 @@ if ($do=='avatar'){
 					echo '<p><input type="submit" value="'.$_LANG['UPLOAD'].'"> <input type="button" onclick="window.history.go(-1);" value="'.$_LANG['CANCEL'].'"/></p>'. "\n";
 				echo '</form>'. "\n";
 
-                echo '<p><a href="/users/'.$menuid.'/'.$id.'/select-avatar.html" class="select-avatar">'.$_LANG['SELECT_AVATAR_FROM_COLL'].'</a></p>';
+                echo '<p><a href="/users/'.$id.'/select-avatar.html" class="select-avatar">'.$_LANG['SELECT_AVATAR_FROM_COLL'].'</a></p>';
 			}	
 		}
 	}//auth
@@ -1022,7 +1012,6 @@ if ($do=='select_avatar'){
 
             //show page
             $smarty = $inCore->initSmarty('components', 'com_users_avatars.tpl');
-                $smarty->assign('menuid', $menuid);
                 $smarty->assign('userid', $id);
                 $smarty->assign('avatars', $avatars);
                 $smarty->assign('avatars_dir', $avatars_dir_rel);
@@ -1133,7 +1122,7 @@ if ($do=='addphoto'){
 							$inPage->initAutocomplete();
 							$autocomplete_js = $inPage->getAutocompleteJS('tagsearch', 'tags');
 							
-							$form_action = '/users/'.$menuid.'/'.$userid.'/addphoto.html';
+							$form_action = '/users/'.$userid.'/addphoto.html';
 
 							$smarty = $inCore->initSmarty('components', 'com_photos_add2.tpl');			
 							$smarty->assign('form_action', $form_action);
@@ -1177,9 +1166,9 @@ if ($do=='addphoto'){
 					
 					echo '<p><strong>'.$_LANG['PHOTO_ADDED'].'</strong></p>' ."\n";
 					echo '<ul>' ."\n";
-					echo '<li><a href="/users/'.$menuid.'/'.$id.'/photo'.$photoid.'.html">'.$_LANG['GOTO_PHOTO'].'</a></li>' ."\n";
-					echo '<li><a href="/users/'.$menuid.'/'.$id.'/addphoto.html">'.$_LANG['ADD_PHOTO_MORE'].'</a></li>' ."\n";
-					echo '<li><a href="/users/'.$menuid.'/'.$id.'/photoalbum.html">'.$_LANG['GOTO_PHOTOALBUM'].'</a></li>' ."\n";
+					echo '<li><a href="/users/'.$id.'/photo'.$photoid.'.html">'.$_LANG['GOTO_PHOTO'].'</a></li>' ."\n";
+					echo '<li><a href="/users/'.$id.'/addphoto.html">'.$_LANG['ADD_PHOTO_MORE'].'</a></li>' ."\n";
+					echo '<li><a href="/users/'.$id.'/photoalbum.html">'.$_LANG['GOTO_PHOTOALBUM'].'</a></li>' ."\n";
 					echo '<li><a href="'.cmsUser::getProfileURL($inUser->login).'">'.$_LANG['BACK_TO_PROFILE'].'</a></li>' ."\n";
 					echo '</ul>' ."\n";
 					
@@ -1188,7 +1177,7 @@ if ($do=='addphoto'){
 						//upload form
 						$inPage->setTitle($_LANG['ADD_PHOTO'].' - '.$_LANG['STEP'].' 1');
 						
-						$form_action = '/users/'.$menuid.'/'.$id.'/addphoto.html';
+						$form_action = '/users/'.$id.'/addphoto.html';
 						
 						$smarty = $inCore->initSmarty('components', 'com_photos_add1.tpl');			
 						$smarty->assign('form_action', $form_action);
@@ -1223,7 +1212,7 @@ if ($do=='delphoto'){
 				if ($inDB->num_rows($result)){
 					$photo = $inDB->fetch_assoc($result);				
 					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-					$inPage->addPathway($_LANG['PHOTOALBUM'], '/users/'.$menuid.'/'.$id.'/photoalbum.html');
+					$inPage->addPathway($_LANG['PHOTOALBUM'], '/users/'.$id.'/photoalbum.html');
 					$inPage->addPathway($_LANG['DELETE_PHOTO'], $_SERVER['REQUEST_URI']);
 					echo '<div class="con_heading">'.$_LANG['DELETING_PHOTO'].'</div>';
 					echo '<p>'.$_LANG['REALLY_DELETE_PHOTO'].' "'.$photo['title'].'"?</p>';
@@ -1245,7 +1234,7 @@ if ($do=='delphoto'){
 				$inDB->query("DELETE FROM cms_comments WHERE target = 'userphoto' AND target_id = $photoid");
 				cmsClearTags('userphoto', $photoid);
 			}			
-			header('location:/users/'.$menuid.'/'.$id.'/photoalbum.html');
+			header('location:/users/'.$id.'/photoalbum.html');
 		}
 	} else { usrAccessDenied(); }
 }
@@ -1267,7 +1256,7 @@ if ($do=='editphoto'){
 			$usr = $inDB->fetch_assoc($result);
 	
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-			$inPage->addPathway($_LANG['PHOTOALBUM'], '/users/'.$menuid.'/'.$id.'/photoalbum.html');
+			$inPage->addPathway($_LANG['PHOTOALBUM'], '/users/'.$id.'/photoalbum.html');
 			$inPage->addPathway($_LANG['EDIT_PHOTO'], $_SERVER['REQUEST_URI']);
 			echo '<div class="con_heading">'.$_LANG['EDIT_PHOTO'].'</div>';
 			
@@ -1323,7 +1312,7 @@ if ($do=='editphoto'){
 					$inDB->query($sql) or die(mysql_error()."<br/>".$sql);	
 					
 					echo '<p><strong>'.$_LANG['PHOTO_SAVED'].'</strong></p>';
-					echo '<p>&larr; <a href="/users/'.$menuid.'/'.$id.'/photoalbum.html">'.$_LANG['BACK_TO_PHOTOALBUM'].'</a><br/>';
+					echo '<p>&larr; <a href="/users/'.$id.'/photoalbum.html">'.$_LANG['BACK_TO_PHOTOALBUM'].'</a><br/>';
 					echo '&larr; <a href="'.cmsUser::getProfileURL($inUser->login).'">'.$_LANG['BACK_TO_PROFILE'].'</a></p>';
 					
 				} else { 
@@ -1334,7 +1323,7 @@ if ($do=='editphoto'){
 									$photo = $inDB->fetch_assoc($result);		
 									ob_start(); ?>
 									
-									<form action="/users/<?php echo $menuid?>/<?php echo $id?>/editphoto<?php echo $photoid?>.html" method="POST" enctype="multipart/form-data">
+									<form action="/users/<?php echo $id?>/editphoto<?php echo $photoid?>.html" method="POST" enctype="multipart/form-data">
 									<input type="hidden" name="imageurl" value="<?php echo $photo['imageurl']?>" />
 									<table border="0" cellspacing="0" cellpadding="0">
                                       <tr>
@@ -1439,7 +1428,7 @@ if ($do=='viewalbum'){
     if ($inDB->num_rows($private_res)) {
         while($photo = $inDB->fetch_assoc($private_res)){
             $photo['file']  = '/images/users/photos/small/'.$photo['file'];
-            $photo['url']   = '/users/'.$menuid.'/'.$id.'/photo'.$photo['id'].'.html';
+            $photo['url']   = '/users/'.$id.'/photo'.$photo['id'].'.html';
             $photos[]       = $photo;
         }
     }
@@ -1454,7 +1443,7 @@ if ($do=='viewalbum'){
     if ($inDB->num_rows($public_res)) {
         while($photo = $inDB->fetch_assoc($public_res)){
             $photo['file']  = '/images/photos/small/'.$photo['file'];
-            $photo['url']   = '/photos/0/photo'.$photo['id'].'.html';
+            $photo['url']   = '/photos/photo'.$photo['id'].'.html';
             $photos[]       = $photo;
         }
     }
@@ -1465,7 +1454,7 @@ if ($do=='viewalbum'){
     if ($total){
         $perpage        = 20;
         $page           = $inCore->request('page', 'int', 1);
-        $pagination     = cmsPage::getPagebar($total, $page, $perpage, '/users/%menuid%/%user_id%/photoalbum%page%.html', array('menuid'=>$menuid, 'user_id'=>$id));
+        $pagination     = cmsPage::getPagebar($total, $page, $perpage, '/users/%user_id%/photoalbum%page%.html', array('user_id'=>$id));
         $page_photos    = array();
         $start          = $perpage*($page-1);
         for($p=$start; $p<$start+$perpage; $p++){
@@ -1478,7 +1467,6 @@ if ($do=='viewalbum'){
 
     //ŒÚ‰‡ÂÏ ‚ ¯‡·ÎÓÌ
     $smarty = $inCore->initSmarty('components', 'com_users_photos.tpl');
-	$smarty->assign('menuid', $menuid);
 	$smarty->assign('photos', $photos);
 	$smarty->assign('user_id', $id);
 	$smarty->assign('my_profile', $my_profile);
@@ -1532,7 +1520,7 @@ if ($do=='viewboard'){
 										<img class="bd_image_small" src="/images/board/small/'.$file.'" border="0" alt="'.$con['title'].'"/>
 									  </td>';
 								echo '<td valign="top">';
-									echo '<div class="bd_title"><a href="/board/0/read'.$con['id'].'.html" title="'.$con['title'].'">';
+									echo '<div class="bd_title"><a href="/board/read'.$con['id'].'.html" title="'.$con['title'].'">';
 										echo $con['title'];
 									echo '</a></div>';
 									echo '<div class="bd_text">'.$con['content'].'</div>';	
@@ -1544,7 +1532,7 @@ if ($do=='viewboard'){
 											}											
 											echo '<span class="bd_item_date">'.$con['fpubdate'].'</span>';
 											if ($con['city']){
-												echo '<span class="bd_item_city"><a href="/board/0/city/'.urlencode($con['city']).'">'.$con['city'].'</a></span>';
+												echo '<span class="bd_item_city"><a href="/board/city/'.urlencode($con['city']).'">'.$con['city'].'</a></span>';
 											}
 											
 											if ($inUser->id){
@@ -1554,8 +1542,8 @@ if ($do=='viewboard'){
 											}											
 											
 											if ($moderator){
-												echo '<span class="bd_item_edit"><a href="/board/'.$menuid.'/edit'.$con['id'].'.html">'.$_LANG['EDIT'].'</span>';
-												echo '<span class="bd_item_delete"><a href="/board/'.$menuid.'/delete'.$con['id'].'.html">'.$_LANG['DELETE'].'</span>';
+												echo '<span class="bd_item_edit"><a href="/board/edit'.$con['id'].'.html">'.$_LANG['EDIT'].'</span>';
+												echo '<span class="bd_item_delete"><a href="/board/delete'.$con['id'].'.html">'.$_LANG['DELETE'].'</span>';
 											}
 									echo '</div>';									
 								echo '</td>';
@@ -1621,7 +1609,7 @@ if ($do=='viewphoto'){
 				
 				$inDB->query("UPDATE cms_user_photos SET hits = hits + 1 WHERE id = ".$photo['id']) ;
 	
-				$inPage->addPathway($_LANG['PHOTOALBUM'], '/users/'.$menuid.'/'.$id.'/photoalbum.html');
+				$inPage->addPathway($_LANG['PHOTOALBUM'], '/users/'.$id.'/photoalbum.html');
 				$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
 
 				if (usrAllowed($photo['allow_who'], $id) || $inCore->userIsAdmin($inUser->id)){
@@ -1639,8 +1627,8 @@ if ($do=='viewphoto'){
 							
 					if ($myprofile || $inCore->userIsAdmin($user_id)) {
 						echo '<div style="margin-top:5px">';
-							echo '<a style="height:16px; line-height:16px; margin-right:5px; padding-left:20px; background:url(/components/users/images/edit.gif) no-repeat;" href="/users/'.$menuid.'/'.$usr['id'].'/editphoto'.$photoid.'.html">'.$_LANG['EDIT'].'</a> ';
-							echo '<a style="height:16px; line-height:16px; padding-left:20px; background:url(/components/users/images/delete.gif) no-repeat;"  href="/users/'.$menuid.'/'.$usr['id'].'/delphoto'.$photoid.'.html">'.$_LANG['DELETE'].'</a> ';
+							echo '<a style="height:16px; line-height:16px; margin-right:5px; padding-left:20px; background:url(/components/users/images/edit.gif) no-repeat;" href="/users/'.$usr['id'].'/editphoto'.$photoid.'.html">'.$_LANG['EDIT'].'</a> ';
+							echo '<a style="height:16px; line-height:16px; padding-left:20px; background:url(/components/users/images/delete.gif) no-repeat;"  href="/users/'.$usr['id'].'/delphoto'.$photoid.'.html">'.$_LANG['DELETE'].'</a> ';
 						echo '</div>';
 					}
 					echo '</div>';
@@ -1653,13 +1641,13 @@ if ($do=='viewphoto'){
 						echo '<table cellpadding="5" cellspacing="0" border="0" align="center" style="margin-left:auto;margin-right:auto"><tr>';
 							if ($previd){
 								echo '<td align="right">';
-									echo '<div>&larr; <a href="/users/'.$menuid.'/'.$usr['id'].'/photo'.$previd['id'].'.html">'.$previd['title'].'</a></div>';
+									echo '<div>&larr; <a href="/users/'.$usr['id'].'/photo'.$previd['id'].'.html">'.$previd['title'].'</a></div>';
 								echo '</td>';
 							}
 							if ($previd && $nextid) { echo '<td>|</td>'; }
 							if ($nextid){
 								echo '<td align="left">';
-									echo '<div><a href="/users/'.$menuid.'/'.$usr['id'].'/photo'.$nextid['id'].'.html">'.$nextid['title'].'</a> &rarr;</div>';
+									echo '<div><a href="/users/'.$usr['id'].'/photo'.$nextid['id'].'.html">'.$nextid['title'].'</a> &rarr;</div>';
 								echo '</td>';
 							}						
 						echo '</tr></table>';
@@ -1751,7 +1739,7 @@ if ($do=='delfriend'){
 }//do
 /////////////////////////////// SEND MESSAGE ///////////////////////////////////////////////////////////////////////////////////////
 if ($do=='sendmessage'){
-	if (usrCheckAuth() && $inUser->id!=$id){
+	if (usrCheckAuth() && $inUser->id!=$id || isset($_POST['massmail'])){
 
 		$from_id    = $inUser->id;
 		$to_id      = $id;
@@ -1798,10 +1786,10 @@ if ($do=='sendmessage'){
 					
 					echo '<td width="200" height="200" valign="top">
 							<div style="background-color:#FFFFFF;padding:5px;border:solid 1px gray;text-align:center">
-								'.usrLink(usrImage($usr['id'], 'big'), $usr['login'], $menuid).'
+								'.usrLink(usrImage($usr['id'], 'big'), $usr['login']).'
 							</div>
 							<div style="padding:5px;width:100%">
-								 ÓÏÛ: '.usrLink($usr['nickname'], $usr['login'], $menuid).'
+								 ÓÏÛ: '.usrLink($usr['nickname'], $usr['login']).'
 							</div>
 						 </td>';						 
 					echo '<td valign="top">';
@@ -1840,7 +1828,7 @@ if ($do=='sendmessage'){
 								$postdate   = date('d/m/Y H:i:s');
 								$to_email   = dbGetField('cms_users', "id='{$to_id}'", 'email');
 								$from_nick  = dbGetField('cms_users', "id='{$from_id}'", 'nickname');
-								$answerlink = HOST.'/users/'.$menuid.'/'.$from_id.'/reply'.$msg_id.'.html';
+								$answerlink = HOST.'/users/'.$from_id.'/reply'.$msg_id.'.html';
 						
 								$letter_path    = PATH.'/includes/letters/newmessage.txt';
 								$letter         = file_get_contents($letter_path);
@@ -1852,7 +1840,7 @@ if ($do=='sendmessage'){
 								$inCore->mailText($to_email, $_LANG['YOU_HAVE_NEW_MESS'].'! - '.$inConf->sitename, $letter);
 						}
 					} else {
-						if ($inCore->userIsAdmin($inUser->id)){
+						if ($inUser->is_admin){
 							$userlist = dbGetTable('cms_users', ' id > 0 AND is_locked = 0 AND is_deleted = 0');
 							foreach ($userlist as $key=>$usr){
 								$sql = "INSERT INTO cms_user_msg (to_id, from_id, senddate, is_new, message)
@@ -1862,12 +1850,14 @@ if ($do=='sendmessage'){
 						}
 					}
 											
-					$inCore->redirect('/users/'.$menuid.'/'.$from_id.'/messages-sent.html');			
+					$inCore->redirect('/users/'.$inUser->id.'/messages-sent.html');
 				}
 			
 			}
 		}
-	} else { usrAccessDenied(); } //usrCheckAuth
+	} else { 
+        usrAccessDenied();
+        } //usrCheckAuth
 }//do
 /////////////////////////////// DEL MESSAGE /////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delmessage'){
@@ -2037,7 +2027,7 @@ if ($do == 'delprofile'){
 						$GLOBALS['ed_page_title'] = $_LANG['DELETING_PROFILE'];
 						echo '<div class="con_heading">'.$_LANG['DELETING_PROFILE'].'</div>';
 						echo '<p style="margin-bottom:30px">'.$_LANG['REALLY_DEL_PROFILE'].'<br/> '.$_LANG['REALLY_DEL_PROFILE_TEXT'].'</p>';
-						echo '<a href="/users/'.$menuid.'/'.$id.'/delprofile-yes.html" class="usr_btnlink">'.$_LANG['YES'].'</a><a href="javascript:window.history.go(-1)" class="usr_btnlink">'.$_LANG['NO'].'</a>';
+						echo '<a href="/users/'.$id.'/delprofile-yes.html" class="usr_btnlink">'.$_LANG['YES'].'</a><a href="javascript:window.history.go(-1)" class="usr_btnlink">'.$_LANG['NO'].'</a>';
 					} else { usrAccessDenied(); }					
 				}	
 			}
@@ -2085,7 +2075,7 @@ if ($do=='files'){
 			$inPage->addHeadJS('components/users/js/pageselfiles.js');
 			//pathway			
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-			$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$menuid.'/'.$id.'/files.html');
+			$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
 			//ordering & paging
 			//ordering
 			if (isset($_REQUEST['orderby'])) { 
@@ -2201,7 +2191,7 @@ if ($do=='files'){
 							echo '<td class="'.$class.'" align="center">'.$file['hits'].'</td>';							
 							if ($inUser->id==$id){
 								echo '<td class="'.$class.'" align="center">';
-								echo '<a href="/users/'.$menuid.'/'.$id.'/delfile'.$file['id'].'.html"><img src="/components/users/images/delete.gif" border="0" alt="'.$_LANG['DELETE_FILE'].'"/></a>';
+								echo '<a href="/users/'.$id.'/delfile'.$file['id'].'.html"><img src="/components/users/images/delete.gif" border="0" alt="'.$_LANG['DELETE_FILE'].'"/></a>';
 								echo '</td>';
 							}
 						echo '</tr>';			
@@ -2313,7 +2303,7 @@ if ($do=='addfile'){
 					echo '<div style="color:red">'.$_LANG['ERR_FILE_NAME'].'</div>';
 				}
 				
-				echo '<div><a href="/users/'.$menuid.'/'.$id.'/files.html">'.$_LANG['CONTINUE'].'</a> &rarr;</div>';
+				echo '<div><a href="/users/'.$id.'/files.html">'.$_LANG['CONTINUE'].'</a> &rarr;</div>';
 							
 			} else {
 				$sql = "SELECT * FROM cms_users WHERE id = $id";
@@ -2340,7 +2330,7 @@ if ($do=='addfile'){
                     $inPage->addHead($multi_js);
 				
 					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$menuid.'/'.$id.'/files.html');
+					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
 					$inPage->addPathway($_LANG['UPLOAD_FILES'], $_SERVER['REQUEST_URI']);
 					
 					echo '<div class="con_heading">'.$_LANG['UPLOAD_FILES'].'</div>';
@@ -2397,7 +2387,7 @@ if ($do=='delfile'){
 				if ($inDB->num_rows($result)){
 					$file = $inDB->fetch_assoc($result);				
 					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$menuid.'/'.$id.'/files.html');
+					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
 					$inPage->addPathway($_LANG['DELETE_FILE'], $_SERVER['REQUEST_URI']);
 					echo '<div class="con_heading">'.$_LANG['DELETING_FILE'].'</div>';
 					echo '<p>'.$_LANG['YOU_REALLY_DEL_FILE'].' "'.$file['filename'].'"?</p>';
@@ -2415,7 +2405,7 @@ if ($do=='delfile'){
 				@unlink($_SERVER['DOCUMENT_ROOT'].'/upload/userfiles/'.$id.'/'.$file['filename']);
 				$inDB->query("DELETE FROM cms_user_files WHERE id = $fileid") ;
 			}			
-			header('location:/users/'.$menuid.'/'.$id.'/files.html');
+			header('location:/users/'.$id.'/files.html');
 		}
 	} else { usrAccessDenied(); }
 }
@@ -2445,7 +2435,7 @@ if ($do=='delfilelist'){
 				$result = $inDB->query($sql);
 				if ($inDB->num_rows($result)){
 					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$menuid.'/'.$id.'/files.html');
+					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
 					$inPage->addPathway($_LANG['DELETE_FILES'], $_SERVER['REQUEST_URI']);
 					echo '<div class="con_heading">'.$_LANG['DELETING_FILES'].'</div>';
 					echo '<p><strong>'.$_LANG['YOU_REALLY_DEL_FILES'].'?</strong></p>';
@@ -2482,7 +2472,7 @@ if ($do=='delfilelist'){
 					}
 					$inDB->query("DELETE FROM cms_user_files WHERE $findsql");
 				}			
-				header('location:/users/'.$menuid.'/'.$id.'/files.html');
+				header('location:/users/'.$id.'/files.html');
 		}
 	} else { usrAccessDenied(); }
 }
@@ -2503,7 +2493,7 @@ if ($do=='pubfilelist'){
 		}				
 				
 		$inDB->query("UPDATE cms_user_files SET allow_who = '$allow' WHERE $findsql") ;
-		header('location:/users/'.$menuid.'/'.$id.'/files.html');
+		header('location:/users/'.$id.'/files.html');
 	} else { usrAccessDenied(); }
 }
 

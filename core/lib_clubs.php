@@ -96,8 +96,6 @@ function clubBlogId($club_id){
 
 function clubBlogContent($blog_id, $is_admin=false, $is_moder=false, $is_member=false){
 
-    global $menuid;
-
     if (!$blog_id) { exit; }
 
     $inCore = cmsCore::getInstance();
@@ -125,22 +123,22 @@ function clubBlogContent($blog_id, $is_admin=false, $is_moder=false, $is_member=
 		$html = '<ul>';
 		while ($post = $inDB->fetch_assoc($rs)){
             $bloglink = $post['bloglink'];
-			$html .= '<li><a href="'.$model->getPostURL($menuid, $post['bloglink'], $post['seolink']).'">'.$post['title'].'</a> &mdash; '.$post['fpubdate'].'</li>';
+			$html .= '<li><a href="'.$model->getPostURL(null, $post['bloglink'], $post['seolink']).'">'.$post['title'].'</a> &mdash; '.$post['fpubdate'].'</li>';
 		}
 		if ($is_member || $is_moder || $is_admin){
-			$html .= '<li class="service"><a href="/blogs/'.$menuid.'/'.$blog_id.'/newpost.html">Добавить новый пост</li>';
+			$html .= '<li class="service"><a href="/blogs/'.$blog_id.'/newpost.html">Добавить новый пост</li>';
 		}
 		if (($is_admin || $is_moder) && $on_moderate){
-			$html .= '<li><a class="on_moder" href="/blogs/'.$menuid.'/'.$blog_id.'/moderate.html">Записи на модерацию</a> ('.$on_moderate.')</li>';
+			$html .= '<li><a class="on_moder" href="/blogs/'.$blog_id.'/moderate.html">Записи на модерацию</a> ('.$on_moderate.')</li>';
 		}
-		$html .= '<li class="all"><a href="'.$model->getBlogURL($menuid, $bloglink).'">Все записи</a> ('.dbRowsCount('cms_blog_posts', "blog_id=$blog_id AND published=1").')</li>';
+		$html .= '<li class="all"><a href="'.$model->getBlogURL(null, $bloglink).'">Все записи</a> ('.dbRowsCount('cms_blog_posts', "blog_id=$blog_id AND published=1").')</li>';
 		$html .= '</ul>';
 
 	} else {
 
 		if ($is_member || $is_moder || $is_admin){
 			$html .= '<ul>';
-				$html .= '<li class="service"><a href="/blogs/'.$menuid.'/'.$blog_id.'/newpost.html">Добавить новый пост</a></li>';
+				$html .= '<li class="service"><a href="/blogs/'.$blog_id.'/newpost.html">Добавить новый пост</a></li>';
 			$html .= '</ul>';	
 		} else {
 			$html = '<p>В клубном блоге нет записей.</p>';	
@@ -155,7 +153,7 @@ function clubBlogContent($blog_id, $is_admin=false, $is_moder=false, $is_member=
 function clubPhotoAlbums($club_id, $is_admin=false, $is_moder=false, $is_member=false){
     $inDB = cmsDatabase::getInstance();
 	if (!$club_id) { exit; }	
-	global $menuid;
+
 	$html = '';
 	$sql = "SELECT a.id, a.title, IFNULL(COUNT(f.id), 0) as content_count
 			FROM cms_photo_albums a
@@ -176,7 +174,7 @@ function clubPhotoAlbums($club_id, $is_admin=false, $is_moder=false, $is_member=
 					}
 					$today = dbRowsCount('cms_photo_files', 'published=1 AND DATE_FORMAT(NOW(), \'%d-%m-%Y\')=DATE_FORMAT(pubdate, \'%d-%m-%Y\') AND album_id='.$album['id']);
 					if ($today) { $new = ' <span class="new">+'.$today.'</span>'; } else { $new = ''; }
-					$html .= '<li class="club_album" id="'.$album['id'].'"><a href="/photos/'.$menuid.'/'.$album['id'].'">'.$album['title'].'</a> ('.$album['content_count'].$new.') '.$on_moderate.$delete;
+					$html .= '<li class="club_album" id="'.$album['id'].'"><a href="/photos/'.$album['id'].'">'.$album['title'].'</a> ('.$album['content_count'].$new.') '.$on_moderate.$delete;
 				}
 		} else {
 			$html .= '<li class="no_albums">В клубе нет фотоальбомов.</li>';
@@ -281,7 +279,7 @@ function clubSaveUsers($club_id, $list, $role, $clubtype='public', $cfg=false){
                 //send notice
                 if($cfg['notify_out'] && ($user_id != $inUser->id)){
                     $club_title = dbGetField('cms_clubs', 'id='.$club_id, 'title');
-                    cmsUser::sendMessage(USER_UPDATER, $user_id, 'Пользователь [url='.cmsUser::getProfileURL($inUser->login).']'.$inUser->nickname.'[/url] исключил Вас из числа участников клуба [URL=http://'.$_SERVER['HTTP_HOST'].'/clubs/'.$menuid.'/'.$club_id.']'.$club_title.'[/URL].');
+                    cmsUser::sendMessage(USER_UPDATER, $user_id, 'Пользователь [url='.cmsUser::getProfileURL($inUser->login).']'.$inUser->nickname.'[/url] исключил Вас из числа участников клуба [URL=http://'.$_SERVER['HTTP_HOST'].'/clubs/'.$club_id.']'.$club_title.'[/URL].');
                 }
             }
         }
