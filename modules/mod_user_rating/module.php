@@ -12,13 +12,8 @@
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
 		$cfg = $inCore->loadModuleConfig($module_id);
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = 0;
-		}
 
-		if (!isset($cfg['count'])) { $cfg['count'] = 20; }
+        if (!isset($cfg['count'])) { $cfg['count'] = 20; }
 		if (!isset($cfg['view_type'])) { $cfg['view_type'] = 'rating'; }	
 
 		if ($cfg['view_type']!='rating' && $cfg['view_type']!='karma') {

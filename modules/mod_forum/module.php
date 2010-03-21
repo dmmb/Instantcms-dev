@@ -13,11 +13,6 @@ function mod_forum($module_id){
         $inDB = cmsDatabase::getInstance();
         global $_LANG;
 		$cfg = $inCore->loadModuleConfig($module_id);
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
 		
         $forumcfg = $inCore->loadComponentConfig('forum');
 	
@@ -54,9 +49,9 @@ function mod_forum($module_id){
 					$threads[$next]['starterhref']  = cmsUser::getProfileURL($t['login']);
 					$threads[$next]['topic']        = ucfirst($t['title']);
 					$threads[$next]['topicdesc']    = ucfirst($t['description']);
-					$threads[$next]['topichref']    = '/forum/'.$menuid.'/thread'.$t['id'].'-'.$pages.'.html#new';
+					$threads[$next]['topichref']    = '/forum/thread'.$t['id'].'-'.$pages.'.html#new';
 					$threads[$next]['forum']        = ucfirst($t['forum']);
-					$threads[$next]['forumhref']    = '/forum/'.$menuid.'/'.$t['fid'];
+					$threads[$next]['forumhref']    = '/forum/'.$t['fid'];
 
                     $threads[$next]['secret']       = 0;
                     if ($t['auth_group']>0) {

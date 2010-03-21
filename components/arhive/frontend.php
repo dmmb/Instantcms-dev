@@ -18,7 +18,6 @@ function arhive(){
     $inPage     = cmsPage::getInstance();
     $inUser     = cmsUser::getInstance();
 
-	$menuid     = $inCore->menuId();
 	$cfg        = $inCore->loadComponentConfig('arhive');
 
     $id         = $inCore->request('id', 'int', 0);
@@ -60,7 +59,6 @@ function arhive(){
 
         $smarty = $inCore->initSmarty('components', 'com_arhive_dates.tpl');
         $smarty->assign('heading', $_LANG['ARCHIVE_MATERIALS']);
-        $smarty->assign('menuid', $menuid);
         $smarty->assign('items', $items);
         $smarty->assign('items_count', $items_count);
         $smarty->display('com_arhive_dates.tpl');
@@ -72,7 +70,7 @@ function arhive(){
 
     if($year != 'all' && $day=='all' && $month=='all'){
 
-        $inPage->addPathway($year, '/arhive/'.$menuid.'/'.$year);
+        $inPage->addPathway($year, '/arhive/'.$year);
 
         $sql = "SELECT DATE_FORMAT( pubdate, '%M' ) fdate, DATE_FORMAT( pubdate, '%Y' ) year, DATE_FORMAT( pubdate, '%m' ) month, COUNT( id ) num
                 FROM cms_content
@@ -96,7 +94,6 @@ function arhive(){
 
         $smarty = $inCore->initSmarty('components', 'com_arhive_dates.tpl');
         $smarty->assign('heading', $_LANG['MATERIALS_FROM'].$year.$_LANG['ARHIVE_YEAR']);
-        $smarty->assign('menuid', $menuid);
         $smarty->assign('items', $items);
         $smarty->assign('items_count', $items_count);
         $smarty->display('com_arhive_dates.tpl');
@@ -110,17 +107,17 @@ function arhive(){
     $month_name = $inCore->getRusDate(date('F', mktime(0,0,0,$month,1,$year)));
 
     if ($year != 'all' && $month != 'all' &&  $day == 'all') {
-        $inPage->addPathway($year, '/arhive/'.$menuid.'/'.$year);
-        $inPage->addPathway($month_name, '/arhive/'.$menuid.'/'.$year.'/'.$month);
+        $inPage->addPathway($year, '/arhive/'.$year);
+        $inPage->addPathway($month_name, '/arhive/'.$year.'/'.$month);
         $heading    = $_LANG['MATERIALS_FROM'].$month_name.' '.$year.$_LANG['ARHIVE_YEARS'];
         $date_str   = $year.'-'.$month;
         $date_where = "DATE_FORMAT(con.pubdate, '%Y-%c') LIKE '$date_str'";
     }
 
     if ($year != 'all' && $month != 'all' &&  $day != 'all') {
-        $inPage->addPathway($year, '/arhive/'.$menuid.'/'.$year);
-        $inPage->addPathway($month_name, '/arhive/'.$menuid.'/'.$year.'/'.$month);
-        $inPage->addPathway($day, '/arhive/'.$menuid.'/'.$year.'/'.$month.'/'.$day);
+        $inPage->addPathway($year, '/arhive/'.$year);
+        $inPage->addPathway($month_name, '/arhive/'.$year.'/'.$month);
+        $inPage->addPathway($day, '/arhive/'.$year.'/'.$month.'/'.$day);
         $heading    = $_LANG['MATERIALS_FROM'].$day.', '.$inCore->getRusDate(date('F', mktime(0,0,0,$month,1,$year))).' '.$year.$_LANG['ARHIVE_YEARS'];
         $date_str   = $year.'-'.$month.'-'.$day;
         $date_where = "DATE_FORMAT(con.pubdate, '%Y-%c-%e') LIKE '$date_str'";
@@ -154,7 +151,6 @@ function arhive(){
 
     $smarty = $inCore->initSmarty('components', 'com_arhive_list.tpl');
     $smarty->assign('heading', $heading);
-    $smarty->assign('menuid', $menuid);
     $smarty->assign('items', $items);
     $smarty->assign('items_count', $items_count);
     $smarty->display('com_arhive_list.tpl');

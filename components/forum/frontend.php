@@ -14,9 +14,8 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 function forumsList($selected=0){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
-	global $menuid;
 	$html = '';
-	$html .= '<select name="goforum" id="goforum" style="width:220px; margin:0px" onchange="goForum('.$menuid.')">';
+	$html .= '<select name="goforum" id="goforum" style="width:220px; margin:0px" onchange="goForum()">';
 	$nested_sets = $inCore->nestedSetsInit('cms_forums');
 	$rootid = dbGetField('cms_forums', 'parent_id=0', 'id');
 	
@@ -47,7 +46,6 @@ function createPoll($thread_id, $poll, $cfg){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
     global $_LANG;
-	global $menuid;
 	
 	$poll_error = '';
 	//title
@@ -82,7 +80,7 @@ function createPoll($thread_id, $poll, $cfg){
 	} else { 
 		$poll_error = '<p><strong>'.$_LANG['ERR_POLL'].':</strong> '.$_LANG['ERR_POLL_VARIANT'].'</p>';
 		$poll_error .= '<p>'.$_LANG['ERR_POLL_ATTACH'].'</p>';
-		$poll_error .= '<p><a href="/forum/'.$menuid.'/thread'.$thread_id.'.html">'.$_LANG['CONTINUE'].'</a> &rarr;</p>';
+		$poll_error .= '<p><a href="/forum/thread'.$thread_id.'.html">'.$_LANG['CONTINUE'].'</a> &rarr;</p>';
 	}
 	
 	return $poll_error;	
@@ -131,7 +129,6 @@ function pageBarThread($thread_id, $current, $perpage){
     $inDB   = cmsDatabase::getInstance();
     global $_LANG;
 	$html = '';
-	global $menuid;
 	$result = $inDB->query("SELECT id FROM cms_forum_posts WHERE thread_id = $thread_id") ;
 	$records = $inDB->num_rows($result);
 	if ($records){
@@ -142,7 +139,7 @@ function pageBarThread($thread_id, $current, $perpage){
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {			
 					
-					$link = '/forum/'.$menuid.'/thread'.$thread_id.'-'.$p.'.html';
+					$link = '/forum/thread'.$thread_id.'-'.$p.'.html';
 					
 					$html .= ' <a href="'.$link.'" class="pagebar_page">'.$p.'</a> ';		
 				} else {
@@ -189,13 +186,13 @@ function uploadFiles($post_id, $cfg){
 	return $file_error;	
 }
 
-function uploadError($menuid, $id, $post_id, $filesize, $ext){
+function uploadError($id, $post_id, $filesize, $ext){
         global $_LANG;
 	echo '<p style="color:red;font-weight:bold">'.$_LANG['ERR_UPLOAD_FILE'].'</p>';
 	echo '<div><strong>'.$_LANG['UPLOAD_MAXSIZE'].':</strong> '.$filesize.' '.$_LANG['KBITE'].'.</div>';
 	echo '<div><strong>'.$_LANG['UPLOAD_FILETYPE'].':</strong> .'.strtolower(str_replace(' ', ' .', $ext)).'</div>';
 	echo '<p>'.$_LANG['NOT_ALL_FILE_ATTACH'].'</p>';
-	echo '<p><a href="/forum/'.$menuid.'/thread'.$id.'.html#'.$post_id.'">'.$_LANG['CONTINUE'].'</a> &rarr;</p>';
+	echo '<p><a href="/forum/thread'.$id.'.html#'.$post_id.'">'.$_LANG['CONTINUE'].'</a> &rarr;</p>';
 	return true;
 }
 
@@ -206,7 +203,6 @@ function forum(){
     $inDB       = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
 
-	$menuid = $inCore->menuId();
 	$cfg = $inCore->loadComponentConfig('forum');
 
     $inCore->loadModel('forum');
@@ -233,7 +229,7 @@ if ($do=='view'){
     $inPage->printHeading($_LANG['FORUMS']);
     $inPage->setTitle($_LANG['FORUMS']);
 
-    if ($menuid==0) { $inPage->addPathway($_LANG['FORUMS'], '/forum/'.$menuid); }
+    $inPage->addPathway($_LANG['FORUMS'], '/forum');
 
     $groupsql = forumUserAuthSQL();
     $sql = "SELECT *
@@ -268,7 +264,7 @@ if ($do=='view'){
                     if ($sub){
                         $s = 1;
                         while ($sf=$inDB->fetch_assoc($rs)){
-                            $subforums .= '<a href="/forum/'.$menuid.'/'.$sf['id'].'">'.$sf['title'].'</a>';
+                            $subforums .= '<a href="/forum/'.$sf['id'].'">'.$sf['title'].'</a>';
                             if ($s < $sub) { $subforums .= ', '; $s++; }
                         }
                     } else {
@@ -280,7 +276,7 @@ if ($do=='view'){
                         echo '<td width="40" class="'.$class.'" align="center" valign="top"><img src="/components/forum/images/forum.gif" border="0" /></td>';
                         echo '<td width="" class="'.$class.'" align="left" valign="top">';
                             //FORUM TITLE
-                            echo '<div class="forum_link"><a href="/forum/'.$menuid.'/'.$f['id'].'">'.$f['title'].'</a></div>';
+                            echo '<div class="forum_link"><a href="/forum/'.$f['id'].'">'.$f['title'].'</a></div>';
                             //FORUM DESCRIPTION
                             echo '<div class="forum_desc">'.$f['description'].'</div>';
                             //SUBFORUMS
@@ -306,7 +302,7 @@ if ($do=='view'){
 ///////////////////////////// VIEW THREADS /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='forum'){
 
-	if($menuid==0) { $inPage->addPathway($_LANG['FORUMS'], '/forum/'.$menuid); }
+	$inPage->addPathway($_LANG['FORUMS'], '/forum');
 
     $f = $model->getForum($id);
 
@@ -328,7 +324,7 @@ if ($do=='forum'){
 
     while($pcat = $inDB->fetch_assoc($rs_rows)){
         
-        $inPage->addPathway($pcat['title'], '/forum/'.$menuid.'/'.$pcat['id']);
+        $inPage->addPathway($pcat['title'], '/forum/'.$pcat['id']);
 
     }
 
@@ -358,7 +354,7 @@ if ($do=='forum'){
             if ($inner_count){
                 $s = 1;
                 while ($sf=$inDB->fetch_assoc($inner_result)){
-                    $inner_forums .= '<a href="/forum/'.$menuid.'/'.$sf['id'].'">'.$sf['title'].'</a>';
+                    $inner_forums .= '<a href="/forum/'.$sf['id'].'">'.$sf['title'].'</a>';
                     if ($s < $sub) { $inner_forums .= ', '; $s++; }
                 }
             }
@@ -414,12 +410,11 @@ if ($do=='forum'){
 
         }
 
-       $pagination = cmsPage::getPagebar($threads_count, $page, $perpage, '/forum/%menuid%/%forum_id%-%page%', array('menuid'=>$menuid, 'forum_id'=>$id));
+       $pagination = cmsPage::getPagebar($threads_count, $page, $perpage, '/forum/%forum_id%-%page%', array('forum_id'=>$id));
         
     }
 
     $smarty = $inCore->initSmarty('components', 'com_forum_view.tpl');
-    $smarty->assign('menuid', $menuid);
     $smarty->assign('forum', $f);
     $smarty->assign('threads_count', $threads_count);
     $smarty->assign('threads', $threads);
@@ -435,7 +430,7 @@ if ($do=='forum'){
 ///////////////////////////// READ THREAD /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='thread'){
 
-	if ($menuid == 0) { $inPage->addPathway($_LANG['FORUMS'], '/forum/0'); }
+	$inPage->addPathway($_LANG['FORUMS'], '/forum');
 
 	$sql = "SELECT t.*, f.title as forum, f.id as fid, f.NSLeft as forum_left, f.NSRight as forum_right
 			FROM cms_forum_threads t, cms_forums f
@@ -466,8 +461,8 @@ if ($do=='thread'){
 		
 		$lastpage = ceil($posts_count / $perpage);
 
-		if (!strstr($_SERVER['REQUEST_URI'], '/forum/'.$menuid.'/thread'.$id.'-'.$page.'.html')){
-			$inCore->redirect('/forum/'.$menuid.'/thread'.$id.'-'.$page.'.html');
+		if (!strstr($_SERVER['REQUEST_URI'], '/forum/thread'.$id.'-'.$page.'.html')){
+			$inCore->redirect('/forum/thread'.$id.'-'.$page.'.html');
 		}
 
 		//TOOLBAR TABLE		
@@ -488,7 +483,7 @@ if ($do=='thread'){
 			echo '<table cellspacing="2" cellpadding="2" align="right"><tr>';
 			if (!$t['closed']){
 				echo '<td width="16"><img src="/components/forum/images/toolbar/newpost.gif"/></td>
-					  <td><a href="/forum/'.$menuid.'/reply'.$t['id'].'.html"><strong>'.$_LANG['NEW_MESSAGE'].'</strong></a></td>';
+					  <td><a href="/forum/reply'.$t['id'].'.html"><strong>'.$_LANG['NEW_MESSAGE'].'</strong></a></td>';
 			} else {
 				echo '<td><strong>'.$_LANG['THREAD_CLOSE'].'</td>';
 			}
@@ -496,40 +491,40 @@ if ($do=='thread'){
 			if($is_admin || $is_moder) { 
 				if (!$t['closed']){
 					echo '<td width="16"><img src="/components/forum/images/toolbar/closethread.gif"/></td>
-						  <td><a href="/forum/'.$menuid.'/closethread'.$t['id'].'.html">'.$_LANG['CLOSE'].'</a></td>';
+						  <td><a href="/forum/closethread'.$t['id'].'.html">'.$_LANG['CLOSE'].'</a></td>';
 				} else {
 					echo '<td width="16"><img src="/components/forum/images/toolbar/openthread.gif"/></td>
-						  <td><a href="/forum/'.$menuid.'/openthread'.$t['id'].'.html">'.$_LANG['OPEN'].'</a></td>';
+						  <td><a href="/forum/openthread'.$t['id'].'.html">'.$_LANG['OPEN'].'</a></td>';
 				}
 			}
 			if(usrCheckAuth()) {
 				if (!cmsUser::isSubscribed($inUser->id, 'forum', $t['id'])){
 						echo '<td width="16"><img src="/components/forum/images/toolbar/subscribe.gif"/></td>
-							  <td><a href="/forum/'.$menuid.'/subscribe'.$t['id'].'.html">'.$_LANG['SUBSCRIBE_THEME'].'</a></td>';
+							  <td><a href="/forum/subscribe'.$t['id'].'.html">'.$_LANG['SUBSCRIBE_THEME'].'</a></td>';
 				} else {
 					echo '<td width="16"><img src="/components/forum/images/toolbar/unsubscribe.gif"/></td>
-						  <td><a href="/forum/'.$menuid.'/unsubscribe'.$t['id'].'.html">'.$_LANG['UNSUBSCRIBE'].'</a></td>';
+						  <td><a href="/forum/unsubscribe'.$t['id'].'.html">'.$_LANG['UNSUBSCRIBE'].'</a></td>';
 				}
 				if ($is_admin || $is_moder){					
 					if (!$t['pinned']){
 						echo '<td width="16"><img src="/components/forum/images/toolbar/pinthread.gif"/></td>
-							  <td><a href="/forum/'.$menuid.'/pinthread'.$t['id'].'.html">'.$_LANG['PIN'].'</a></td>';
+							  <td><a href="/forum/pinthread'.$t['id'].'.html">'.$_LANG['PIN'].'</a></td>';
 					} else {
 						echo '<td width="16"><img src="/components/forum/images/toolbar/unpinthread.gif"/></td>
-							  <td><a href="/forum/'.$menuid.'/unpinthread'.$t['id'].'.html">'.$_LANG['UNPIN'].'</a></td>';
+							  <td><a href="/forum/unpinthread'.$t['id'].'.html">'.$_LANG['UNPIN'].'</a></td>';
 					}
 					echo '<td width="16"><img src="/components/forum/images/toolbar/movethread.gif"/></td>
-						  <td><a href="/forum/'.$menuid.'/movethread'.$t['id'].'.html">'.$_LANG['MOVE'].'</a></td>';
+						  <td><a href="/forum/movethread'.$t['id'].'.html">'.$_LANG['MOVE'].'</a></td>';
 					echo '<td width="16"><img src="/components/forum/images/toolbar/edit.gif"/></td>
-						  <td><a href="/forum/'.$menuid.'/renamethread'.$t['id'].'.html">'.$_LANG['RENAME'].'</a></td>';
+						  <td><a href="/forum/renamethread'.$t['id'].'.html">'.$_LANG['RENAME'].'</a></td>';
 				}
 				if ($inCore->userIsAdmin($inUser->id) || $mythread){
 					echo '<td width="16"><img src="/components/forum/images/toolbar/delete.gif"/></td>
-						  <td><a href="javascript:deleteThread(\'/forum/'.$menuid.'/deletethread'.$t['id'].'.html\')">'.$_LANG['DELETE'].'</a></td>';
+						  <td><a href="javascript:deleteThread(\'/forum/deletethread'.$t['id'].'.html\')">'.$_LANG['DELETE'].'</a></td>';
 				}
 			}
 			echo '<td width="16"><img src="/components/forum/images/toolbar/back.gif"/></td>
-				  <td><a href="/forum/'.$menuid.'/'.$t['fid'].'">'.$_LANG['BACKB'].'</a></td>';
+				  <td><a href="/forum/'.$t['fid'].'">'.$_LANG['BACKB'].'</a></td>';
 			echo '</tr></table>';
 			echo '</td>';
 		} else { echo '<td>&nbsp;</td>'; }
@@ -544,10 +539,10 @@ if ($do=='thread'){
 		$sql = "SELECT id, title, NSLevel FROM cms_forums WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0 ORDER BY NSLeft";
 		$rs_rows = $inDB->query($sql) or die('Error while building forum path');
 		while($pcat=$inDB->fetch_assoc($rs_rows)){
-				$inPage->addPathway($pcat['title'], '/forum/'.$menuid.'/'.$pcat['id']);
+				$inPage->addPathway($pcat['title'], '/forum/'.$pcat['id']);
 		}			
 	
-		$inPage->addPathway($t['title'], '/forum/'.$menuid.'/thread'.$t['id'].'.html');
+		$inPage->addPathway($t['title'], '/forum/thread'.$t['id'].'.html');
 		
 			$psql = "SELECT p.*, u.id uid, u.nickname author, u.login author_login, u.is_deleted deleted, up.imageurl imageurl, up.signature signature,
 							DATE_FORMAT(p.pubdate, '%d-%m-%Y') as pubdate, DATE_FORMAT(p.pubdate, '%H:%i') as pubtime, 
@@ -610,14 +605,14 @@ if ($do=='thread'){
                                               <td><a href="javascript:addQuoteText(\''.$p['author'].'\')" title="'.$_LANG['ADD_SELECTED_QUOTE'].'">'.$_LANG['ADD_QUOTE_TEXT'].'</a></td>';
 
                                         echo '<td width="15"><img style="margin-left:5px" src="/components/forum/images/toolbar/post-reply.gif"/></td>';
-                                        echo '<td><a href="/forum/'.$menuid.'/thread'.$t['id'].'-quote'.$p['id'].'.html" title="'.$_LANG['REPLY_FULL_QUOTE'].'">'.$_LANG['REPLY'].'</a></td>';
+                                        echo '<td><a href="/forum/thread'.$t['id'].'-quote'.$p['id'].'.html" title="'.$_LANG['REPLY_FULL_QUOTE'].'">'.$_LANG['REPLY'].'</a></td>';
 
                                         if ($mypost || ($is_moder && !$inCore->userIsAdmin($p['uid']))){
                                             echo '<td width="15"><img style="margin-left:5px" src="/components/forum/images/toolbar/post-edit.gif"/></td>
-                                                  <td><a href="/forum/'.$menuid.'/editpost'.$p['id'].'.html">'.$_LANG['EDIT'].'</a></td>';
+                                                  <td><a href="/forum/editpost'.$p['id'].'.html">'.$_LANG['EDIT'].'</a></td>';
                                             if ($num > 1){
                                                 echo '<td width="15"><img style="margin-left:5px" src="/components/forum/images/toolbar/post-delete.gif"/></td>
-                                                      <td><a href="/forum/'.$menuid.'/deletepost'.$p['id'].'.html">'.$_LANG['DELETE'].'</a></td>';
+                                                      <td><a href="/forum/deletepost'.$p['id'].'.html">'.$_LANG['DELETE'].'</a></td>';
                                             }
                                         }
                                 echo '</tr></table>';
@@ -663,13 +658,13 @@ if ($do=='thread'){
 							echo '<table cellpadding="5" cellspacing="0" border="0" align="center" style="margin-left:auto;margin-right:auto"><tr>';
 								if ($previd){
 									echo '<td align="right" width="">';
-										echo '<div>&larr; <a href="/forum/'.$menuid.'/thread'.$previd['id'].'.html">'.$_LANG['PREVIOUS_THREAD'].'</a></div>';
+										echo '<div>&larr; <a href="/forum/thread'.$previd['id'].'.html">'.$_LANG['PREVIOUS_THREAD'].'</a></div>';
 									echo '</td>';
 								}
 								if ($previd && $nextid) { echo '<td>|</td>'; }
 								if ($nextid){
 									echo '<td align="left" width="">';
-										echo '<div><a href="/forum/'.$menuid.'/thread'.$nextid['id'].'.html">'.$_LANG['NEXT_THREAD'].'</a> &rarr;</div>';
+										echo '<div><a href="/forum/thread'.$nextid['id'].'.html">'.$_LANG['NEXT_THREAD'].'</a> &rarr;</div>';
 									echo '</td>';
 								}			
 							echo '</tr></table>';				
@@ -699,7 +694,7 @@ if ($do=='thread'){
 								echo cmsPage::getSmilesPanel('message');
 							}
 							echo '<div class="forum_fast_form">';
-								echo '<form action="/forum/'.$menuid.'/reply'.$id.'.html" method="post">';
+								echo '<form action="/forum/reply'.$id.'.html" method="post">';
 									echo '<textarea id="message" name="message" rows="5"></textarea>';
 									echo '<div class="forum_fast_submit"><input type="submit" name="gosend" value="'.$_LANG['SEND'].'"/></div>';
 								echo '</form>';
@@ -737,7 +732,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 					$inPage->addPathway($_LANG['NEW_POST'], $_SERVER['REQUEST_URI']);
 					echo '<div class="con_heading">'.$_LANG['NEW_POST'].'</div>';
 					echo '<div style="margin-bottom:10px">
-							<strong>'.$_LANG['THREAD'].': </strong><a href="/forum/'.$menuid.'/thread'.$t['id'].'.html">'.$t['title'].'</a>
+							<strong>'.$_LANG['THREAD'].': </strong><a href="/forum/thread'.$t['id'].'.html">'.$t['title'].'</a>
 						  </div>';
 				} else {
 					die($_LANG['THREAD_NOT_FOUND']);
@@ -762,9 +757,8 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 			}
 		}
 			
-		if (isset($_GET['replyid'])) { $replyid = $_GET['replyid']; }
-		else { $replyid = 0; }			
-						
+		$replyid = $inCore->request('replyid', 'int', 0);
+
 		if(!isset($_POST['gosend'])){		
 					
 			$inDB->query("DELETE FROM cms_upload_images WHERE session_id='".session_id()."'");
@@ -861,12 +855,12 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 					$posts_in_thread = dbRowsCount('cms_forum_posts', 'thread_id='.$id);
 					$pages = ceil($posts_in_thread / $cfg['pp_thread']);
 					if ($pages==1){
-						header('location:/forum/'.$menuid.'/thread'.$id.'.html#new');				
+						header('location:/forum/thread'.$id.'.html#new');				
 					} else {
-						header('location:/forum/'.$menuid.'/thread'.$id.'-'.$pages.'.html#new');
+						header('location:/forum/thread'.$id.'-'.$pages.'.html#new');
 					}
 				} else {
-					uploadError($menuid, $id, $post_id, $cfg['fa_size'], $cfg['fa_ext']);
+					uploadError($id, $post_id, $cfg['fa_size'], $cfg['fa_ext']);
 				}
 			} else {
 
@@ -911,9 +905,9 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
                             $file_error = uploadFiles($lastid, $cfg);
                         }
                         if (!$file_error){
-                            header('location:/forum/'.$menuid.'/thread'.$threadlastid.'.html');
+                            header('location:/forum/thread'.$threadlastid.'.html');
                         } else {
-                            uploadError($menuid, $threadlastid, $post_id, $cfg['fa_size'], $cfg['fa_ext']);
+                            uploadError($threadlastid, $post_id, $cfg['fa_size'], $cfg['fa_ext']);
                         }
 
 					} else {
@@ -928,7 +922,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 								WHERE id = $id";
 						$inDB->query($sql) ;
 						$inCore->registerUploadImages(session_id(), $id, 'forum');						
-						header('location:/forum/'.$menuid.'/thread'.$msg['thread_id'].'.html');
+						header('location:/forum/thread'.$msg['thread_id'].'.html');
 					} else { echo '<p>'.$_LANG['NEED_TEXT_POST'].'</p>'; }
 				}
 			}
@@ -962,7 +956,7 @@ if ($do=='movethread'){
 				if ($inDB->num_rows($result)>0){
 					$t = $inDB->fetch_assoc($result);											
 					
-					echo '<div style="margin-top:10px"><strong>'.$_LANG['THREAD'].':</strong> <a href="/forum/'.$menuid.'/thread'.$t['id'].'.html">'.$t['title'].'</a></div>';
+					echo '<div style="margin-top:10px"><strong>'.$_LANG['THREAD'].':</strong> <a href="/forum/thread'.$t['id'].'.html">'.$t['title'].'</a></div>';
 					echo '<div><form action="" method="POST">';
 					echo '<table border="0" cellspacing="10" style="background-color:#EBEBEB"><tr><td valign="top">'.$_LANG['MOVE_THREAD_IN_FORUM'].':</td>';
 					
@@ -992,7 +986,7 @@ if ($do=='movethread'){
 						$inDB->query("UPDATE cms_forum_threads SET forum_id = $fid WHERE id = $id") ;
 					}									
 				}
-				header('location:/forum/'.$menuid.'/'.$fid);			
+				header('location:/forum/'.$fid);			
 			}
 			
 		} else { usrAccessDenied(); }
@@ -1017,7 +1011,7 @@ if ($do=='renamethread'){
 				if ($inDB->num_rows($result)>0){
 					$t = $inDB->fetch_assoc($result);											
 					
-					echo '<div style="margin-top:10px"><strong>'.$_LANG['THREAD'].':</strong> <a href="/forum/'.$menuid.'/thread'.$t['id'].'.html">'.$t['title'].'</a></div>';
+					echo '<div style="margin-top:10px"><strong>'.$_LANG['THREAD'].':</strong> <a href="/forum/thread'.$t['id'].'.html">'.$t['title'].'</a></div>';
 					
 					echo '<div style="margin-top:5px"><form action="" method="POST">';
 					
@@ -1050,7 +1044,7 @@ if ($do=='renamethread'){
 						$inDB->query("UPDATE cms_forum_threads SET title = '$title', description = '$description' WHERE id = $id") 	;
 					}									
 				}
-				header('location:/forum/'.$menuid.'/thread'.$tid.'.html');			
+				header('location:/forum/thread'.$tid.'.html');			
 			}
 			
 		} else { usrAccessDenied(); }
@@ -1062,11 +1056,11 @@ if ($do=='deletethread'){
 		$forum_id = dbGetField('cms_forum_threads', 'id='.$id, 'forum_id');
         $model->deleteThread($id, $inUser->id);
 	}	
-	header('location:/forum/'.$menuid.'/'.$forum_id);
+	header('location:/forum/'.$forum_id);
 }
 ///////////////////////////// PIN/UNPIN THREAD ////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='pin'){
-	if (isset($_GET['pinned'])) { $pinned = intval($_GET['pinned']); } else { header('location:'.$_SERVER['HTTP_REFERER']); }
+	$pinned = $inCore->request('pinned', 'int', 0);
 	
 	if (usrCheckAuth()){
 		$sql = "SELECT * FROM cms_forum_threads WHERE id = $id LIMIT 1";
@@ -1083,17 +1077,10 @@ if ($do=='pin'){
 }
 ///////////////////////////// SUBSCRIBE THREAD ////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='subscribe'){
-	if (isset($_GET['subscribe'])) { $subscribe = intval($_GET['subscribe']); } else { header('location:'.$_SERVER['HTTP_REFERER']); }
-	
-	if (usrCheckAuth()){
-		cmsUser::isSubscribed($inUser->id, 'forum', $id, $subscribe);
-	}	
-	
-	header('location:'.$_SERVER['HTTP_REFERER']);	
 }
 ///////////////////////////// CLOSE/OPEN THREAD ////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='close'){
-	if (isset($_GET['closed'])) { $closed = intval($_GET['closed']); } else { header('location:'.$_SERVER['HTTP_REFERER']); }
+	$closed = $inCore->request('closed', 'int', 0);
 	
 	if (usrCheckAuth()){
 		$sql = "SELECT * FROM cms_forum_threads WHERE id = $id LIMIT 1";
@@ -1131,8 +1118,8 @@ if ($do=='download'){
 ///////////////////////////// ATTACHED FILE DELETE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delfile'){
 
-	$file = uploadDelete($menuid, $id);	
-	header('location:/forum/'.$menuid.'/thread'.$file['tid'].'.html#'.$file['post_id']);
+	$file = uploadDelete($id);	
+	header('location:/forum/thread'.$file['tid'].'.html#'.$file['post_id']);
 
 }
 ///////////////////////////// ATTACHED FILE RELOADING /////////////////////////////////////////////////////////////////////////////////////////
@@ -1183,7 +1170,7 @@ if ($do=='reloadfile'){
 								$sql = "UPDATE cms_forum_files SET filename = '$filename', filesize = '$filesize', pubdate=NOW(), hits=0 WHERE id = $id";									
 								$inDB->query($sql) ;
 								
-								header('location:/forum/'.$menuid.'/thread'.$file['tid'].'.html#'.$file['post_id']);
+								header('location:/forum/thread'.$file['tid'].'.html#'.$file['post_id']);
 							} else {
 								echo '<p style="color:red"><strong>'.$_LANG['ERROR'].':</strong> '.$_LANG['ERR_FILE_TYPE'].'</p>';
 								echo '<p><strong>'.$_LANG['MUST_FILE_TYPE'].':</strong> .'.strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</p>';

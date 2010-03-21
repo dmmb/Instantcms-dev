@@ -2,7 +2,7 @@
 {* ============================ Форма регистрации ================================= *}
 {* ================================================================================ *}
 
-<form id="regform" name="regform" method="post" action="/index.php?view=registration&menuid={$menuid}">
+<form id="regform" name="regform" method="post" action="/registration">
     <table width="100%" border="0" align="center" cellpadding="5" cellspacing="0">
         <tr>
             <td width="269" valign="top" class="">

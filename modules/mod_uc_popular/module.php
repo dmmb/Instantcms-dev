@@ -27,11 +27,6 @@ function mod_uc_popular($module_id){
         $inDB = cmsDatabase::getInstance();
 
 		$cfg = $inCore->loadModuleConfig($module_id);
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
 			
 		$showtype = $cfg['showtype'];
 		
@@ -69,7 +64,7 @@ function mod_uc_popular($module_id){
 						echo '<div class="uc_latest_item">';
 							echo '<table border="0" cellspacing="2" cellpadding="0" width="100%">';
 								echo '<tr><td height="110" align="center" valign="middle">';
-									echo '<a href="/catalog/'.$menuid.'/item'.$item['id'].'.html">';
+									echo '<a href="/catalog/item'.$item['id'].'.html">';
 									if (strlen($item['imageurl'])>4) {
 										echo '<img alt="'.$item['title'].'" src="/images/catalog/small/'.$item['imageurl'].'.jpg" border="0" />';
 									} else {
@@ -78,7 +73,7 @@ function mod_uc_popular($module_id){
 									echo '</a>';
 								echo '</td></tr>';
 								echo '<tr><td align="center" valign="middle">';
-									echo '<a class="uc_latest_link" href="/catalog/'.$menuid.'/item'.$item['id'].'.html">'.$item['title'].'</a>';								
+									echo '<a class="uc_latest_link" href="/catalog/item'.$item['id'].'.html">'.$item['title'].'</a>';								
 								echo '</td></tr>';			
 								if ($item['viewtype']=='shop'){
 									echo '<tr><td align="center" valign="middle">';
@@ -95,17 +90,17 @@ function mod_uc_popular($module_id){
 				echo '<table width="100%" cellspacing="0" cellpadding="4" class="uc_latest_list">';
 					while($item = $inDB->fetch_assoc($result)){
 						if($cfg['sort']=='rating') { 
-							$key = '<a href="/catalog/'.$menuid.'/item'.$item['id'].'.html" title="Рейтинг: '.round($item['rating'], 2).'">'.buildRating(round($item['rating'], 2)).'</a>'; 
+							$key = '<a href="/catalog/item'.$item['id'].'.html" title="Рейтинг: '.round($item['rating'], 2).'">'.buildRating(round($item['rating'], 2)).'</a>'; 
 						}
 						else { 
-							$key = 'Просмотры: <a href="/catalog/'.$menuid.'/item'.$item['id'].'.html" title="Просмотры">'.$item['hits'].'</a>'; 
+							$key = 'Просмотры: <a href="/catalog/item'.$item['id'].'.html" title="Просмотры">'.$item['hits'].'</a>'; 
 						}
 			
 						$fdata = unserialize($item['fieldsdata']);
 						echo '<tr>';
-							echo '<td width="" valign="top"><a class="uc_latest_link" href="/catalog/'.$menuid.'/item'.$item['id'].'.html">'.$item['title'].'</a></td>';
+							echo '<td width="" valign="top"><a class="uc_latest_link" href="/catalog/item'.$item['id'].'.html">'.$item['title'].'</a></td>';
 							for($f = 0; $f<$cfg['showf']; $f++){
-								echo '<td valign="top">'.$inCore->getUCSearchLink($item['category_id'], $menuid, $f, $fdata[$f]).'</td>';
+								echo '<td valign="top">'.$inCore->getUCSearchLink($item['category_id'], null, $f, $fdata[$f]).'</td>';
 							}							
 							echo '<td width="" align="right" valign="top">'.$key.'</td>';
 							if ($item['viewtype']=='shop'){
@@ -118,7 +113,7 @@ function mod_uc_popular($module_id){
 					}				
 				echo '</table>';
 				if ($cfg['fulllink']){
-					echo '<div style="margin-top:5px; text-align:right;clear:both"><a href="/catalog/'.$menuid.'">Весь каталог</a> &rarr;</div>';
+					echo '<div style="margin-top:5px; text-align:right;clear:both"><a href="/catalog">Весь каталог</a> &rarr;</div>';
 				}
 			}
 		} else { echo '<p>Нет объектов для отображения.</p>'; }

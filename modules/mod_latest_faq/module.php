@@ -14,12 +14,7 @@ function mod_latest_faq($module_id){
         global $_LANG;
 
 		$cfg = $inCore->loadModuleConfig($module_id);
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
-	
+
 		if (!isset($cfg['newscount'])) { $cfg['newscount'] = 2;}
 		if (!isset($cfg['cat_id'])) { $cfg['cat_id'] = -1;}
 		if (!isset($cfg['menuid'])) { $cfg['menuid'] = 0;}
@@ -47,7 +42,7 @@ function mod_latest_faq($module_id){
 				}
 				$faq[$next]['quest'] = $con['quest'];
 				$faq[$next]['date'] = $con['pubdate'];
-				$faq[$next]['href'] = '/faq/'.$menuid.'/quest'.$con['id'].'.html';
+				$faq[$next]['href'] = '/faq/quest'.$con['id'].'.html';
 			}
 			
 			$smarty = $inCore->initSmarty('modules', 'mod_latest_faq.tpl');			

@@ -8,7 +8,7 @@
     <ul class="arhive_list">
         {foreach key=id item=item from=$items}
             <li>
-                <a href="/arhive/{$menuid}/{$item.year}/{$item.month}">{$item.fdate}</a> ({$item.num})
+                <a href="/arhive/{$item.year}/{$item.month}">{$item.fdate}</a> ({$item.num})
             </li>
         {/foreach}
     </ul>

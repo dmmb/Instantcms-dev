@@ -13,10 +13,7 @@
         $inDB = cmsDatabase::getInstance();
 		$menuid = $inCore->menuId();
 	
-		echo '<form action="/index.php" method="GET">';
-			echo '<input type="hidden"
-						 name="view"
-						 value="search"/>';
+		echo '<form action="/search" method="GET">';
 			echo '<input type="text" 
 						 name="query"
 						 class="search_field" 

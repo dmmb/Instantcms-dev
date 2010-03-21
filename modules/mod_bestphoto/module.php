@@ -11,13 +11,8 @@
 function mod_bestphoto($module_id){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
-	global $_LANG;
+    	global $_LANG;
 		$cfg = $inCore->loadModuleConfig($module_id);
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
 		
 		if ($cfg['album_id'] != '0') { $catsql = ' AND album_id = '.$cfg['album_id']; }
 		else { $catsql = ''; }
@@ -48,11 +43,11 @@ function mod_bestphoto($module_id){
 				if ($col==1) { echo '<tr>'; } echo '<td align="center" valign="middle" class="mod_lp_photo" width="'.round(100/$maxcols, 0).'%">';
 				echo '<table width="100%" height="100" cellspacing="0" cellpadding="0">';
 				if ($cfg['showtype']=='full'){
-					  echo '<tr><td align="center"><div class="mod_lp_titlelink"><a href="/photos/'.$menuid.'/photo'.$con['id'].'.html" title="'.$con['title'].' ('.$con['rating'].')">'.$con['title'].'</a></div></td></tr>';
+					  echo '<tr><td align="center"><div class="mod_lp_titlelink"><a href="/photos/photo'.$con['id'].'.html" title="'.$con['title'].' ('.$con['rating'].')">'.$con['title'].'</a></div></td></tr>';
 			  	}
 				  echo '<tr>';
 				  echo '<td valign="middle" align="center">';
-				echo '<a href="/photos/'.$menuid.'/photo'.$con['id'].'.html" title="'.$con['title'].'">';
+				echo '<a href="/photos/photo'.$con['id'].'.html" title="'.$con['title'].'">';
 					echo '<img class="photo_thumb_img" src="/images/photos/small/'.$con['file'].'" alt="'.$con['title'].' ('.$con['rating'].')" border="0" />';
 				echo '</a>';
 				echo '</td></tr>';
@@ -60,7 +55,7 @@ function mod_bestphoto($module_id){
 					echo '<tr>';
 					echo '<td align="center">';
 						if($cfg['showalbum']){
-							echo '<div class="mod_lp_albumlink"><a href="/photos/'.$menuid.'/'.$con['album_id'].'" title="'.$con['album'].'">'.$con['album'].'</a></div>';
+							echo '<div class="mod_lp_albumlink"><a href="/photos/'.$con['album_id'].'" title="'.$con['album'].'">'.$con['album'].'</a></div>';
 						}
 						if($cfg['showcom'] || $cfg['showdate']){
 							echo '<div class="mod_lp_details">';
@@ -75,7 +70,7 @@ function mod_bestphoto($module_id){
 								}
 								if ($cfg['showcom']){
 									echo '<td><img src="/images/icons/comments.gif" border="0"/></td>';
-									echo '<td><a href="/photos/'.$menuid.'/photo'.$con['id'].'.html#c">'.$inCore->getCommentsCount('photo', $con['id']).'</td>';
+									echo '<td><a href="/photos/photo'.$con['id'].'.html#c">'.$inCore->getCommentsCount('photo', $con['id']).'</td>';
 								}
 							echo '</tr></table>';
 							echo '</div>';
@@ -90,7 +85,7 @@ function mod_bestphoto($module_id){
 			if ($col>1) { echo '<td colspan="'.($maxcols-$col+1).'">&nbsp;</td></tr>'; }
 			echo '</table>';
 			if ($cfg['showmore']){
-				echo '<div style="text-align:right"><a style="text-decoration:underline" href="/photos/'.$menuid.'/top.html">'.$_LANG['BESTPHOTO_ALL_BEST_PHOTO'].'</a> &rarr;</div>';
+				echo '<div style="text-align:right"><a style="text-decoration:underline" href="/photos/top.html">'.$_LANG['BESTPHOTO_ALL_BEST_PHOTO'].'</a> &rarr;</div>';
 			}
 		} else { echo '<p>'.$_LANG['BESTCONTENT_NOT_MATERIALS'].'</p>'; }
 		

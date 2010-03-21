@@ -33,8 +33,6 @@ function mod_userfiles($module_id){
 
 		$cfg        = $inCore->loadModuleConfig($module_id);
 
-        $menuid     = $cfg['menuid'] ? $cfg['menuid'] : $inCore->menuId();
-
         if (!isset($cfg['sw_stats']))       { $cfg['sw_stats']      = 1;  }
 		if (!isset($cfg['sw_latest']))      { $cfg['sw_latest']     = 1;  }
 		if (!isset($cfg['sw_popular']))     { $cfg['sw_popular']    = 1;  }
@@ -109,8 +107,7 @@ function mod_userfiles($module_id){
         if ($latest) $smarty->assign('latest', $latest);
         if ($popular) $smarty->assign('popular', $popular);
         if ($stats) $smarty->assign('stats', $stats);
-        
-        $smarty->assign('menuid', $menuid);
+
         $smarty->assign('cfg', $cfg);
         $smarty->display('mod_userfiles.tpl');
         

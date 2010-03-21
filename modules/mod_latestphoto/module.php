@@ -13,12 +13,6 @@ function mod_latestphoto($module_id){
         $inDB = cmsDatabase::getInstance();
 		$cfg = $inCore->loadModuleConfig($module_id);
 
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
-
         $catsql = '';
 
 		if ($cfg['album_id'] != '0') {

@@ -12,11 +12,6 @@
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
 		$cfg = $inCore->loadModuleConfig($module_id);
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
 
 		$sql = "SELECT DISTINCT o.user_id, u.*, DATE_FORMAT(u.regdate, '%d-%m-%Y (%H:%i)') as fdate, p.gender as gender
 				FROM cms_users u, cms_online o, cms_user_profiles p
@@ -31,11 +26,11 @@
 				$now = 0;
 				while($usr = $inDB->fetch_assoc($result)){					
 					if ($inCore->userIsAdmin($usr['id'])){
-						echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], $menuid, $usr['gender'], $usr['login'], "color:red");
+						echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login'], "color:red");
 					} elseif ($inCore->userIsEditor($usr['id'])) {	
-						echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], $menuid, $usr['gender'], $usr['login'], "color:green");
+						echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login'], "color:green");
 					} else {
-						echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], $menuid, $usr['gender'], $usr['login']);
+						echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login']);
 					}
 					
 					if ($now < $total-1) { echo ', '; }

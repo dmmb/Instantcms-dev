@@ -14,9 +14,7 @@
         $inDB       = cmsDatabase::getInstance();
         $inUser     = cmsUser::getInstance();
 		$cfg        = $inCore->loadModuleConfig($module_id);
-
-		$menuid     = 0;
-		
+	
         $users_cfg  = $inCore->loadComponentConfig('users');
 						
 		//logged user menu
@@ -42,7 +40,6 @@
         $smarty->assign('nickname', $inUser->nickname);
         $smarty->assign('login', $inUser->login);
         $smarty->assign('id', $inUser->id);
-        $smarty->assign('menuid', $menuid);
         $smarty->assign('avatar', usrImage($inUser->id));
         $smarty->assign('newmsg', $newmsg);
         $smarty->assign('is_can_add', $inCore->isUserCan('content/add'));

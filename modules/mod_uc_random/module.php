@@ -13,12 +13,6 @@
         $inDB = cmsDatabase::getInstance();
 		$cfg = $inCore->loadModuleConfig($module_id);
 
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
-
 		if ($cfg['cat_id']>0){
 
             if (!$cfg['subs']){
@@ -44,16 +38,16 @@
 		
 		if ($inDB->num_rows($result)){
 			while ($item=$inDB->fetch_assoc($result)){
-				echo '<div align="center" id="uc_random_img"><a href="/catalog/'.$menuid.'/item'.$item['id'].'.html"><img src="/images/catalog/small/'.$item['imageurl'].'.jpg" border="0"/></a></div>';
+				echo '<div align="center" id="uc_random_img"><a href="/catalog/item'.$item['id'].'.html"><img src="/images/catalog/small/'.$item['imageurl'].'.jpg" border="0"/></a></div>';
 				if($cfg['showtitle']){
-					echo '<div style="margin-top:10px" id="uc_random_title" align="center"><a href="/catalog/'.$menuid.'/item'.$item['id'].'.html"><strong>'.$item['title'].'</strong></a></div>';
+					echo '<div style="margin-top:10px" id="uc_random_title" align="center"><a href="/catalog/item'.$item['id'].'.html"><strong>'.$item['title'].'</strong></a></div>';
 					if ($item['viewtype'] == 'shop'){
 						$price = number_format($item['price'], 2, '.', ' ');
 						echo '<div style="margin-bottom:10px" align="center" id="uc_random_price">'.$price.' руб.</div>';
 					}
 				}
 				if($cfg['showcat']){
-					echo '<div align="center" id="uc_random_cat">Рубрика: <a href="/catalog/'.$menuid.'/'.$item['category_id'].'">'.$item['category'].'</a></div>';
+					echo '<div align="center" id="uc_random_cat">Рубрика: <a href="/catalog/'.$item['category_id'].'">'.$item['category'].'</a></div>';
 				}
 			}
 		}

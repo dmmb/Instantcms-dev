@@ -13,11 +13,6 @@ function mod_uc_latest($module_id){
         $inDB = cmsDatabase::getInstance();
 	
 		$cfg = $inCore->loadModuleConfig($module_id);
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
 		
 		if ($cfg['cat_id']>0){
 
@@ -50,7 +45,7 @@ function mod_uc_latest($module_id){
 						echo '<div class="uc_latest_item">';
 							echo '<table border="0" cellspacing="2" cellpadding="0" width="100%">';
 								echo '<tr><td height="110" align="center" valign="middle">';
-									echo '<a href="/catalog/'.$menuid.'/item'.$item['id'].'.html">';
+									echo '<a href="/catalog/item'.$item['id'].'.html">';
 									if (strlen($item['imageurl'])>4) {
 										echo '<img alt="'.$item['title'].'" src="/images/catalog/small/'.$item['imageurl'].'.jpg" border="0" />';
 									} else {
@@ -59,7 +54,7 @@ function mod_uc_latest($module_id){
 									echo '</a>';
 								echo '</td></tr>';
 								echo '<tr><td align="center" valign="middle">';
-									echo '<a class="uc_latest_link" href="/catalog/'.$menuid.'/item'.$item['id'].'.html">'.$item['title'].'</a>';								
+									echo '<a class="uc_latest_link" href="/catalog/item'.$item['id'].'.html">'.$item['title'].'</a>';								
 								echo '</td></tr>';	
 								if ($item['viewtype']=='shop'){
 									echo '<tr><td align="center" valign="middle">';
@@ -77,9 +72,9 @@ function mod_uc_latest($module_id){
 					while($item = $inDB->fetch_assoc($result)){
 						$fdata = unserialize($item['fieldsdata']);
 						echo '<tr>';
-							echo '<td width="" valign="top"><a class="uc_latest_link" href="/catalog/'.$menuid.'/item'.$item['id'].'.html">'.substr($item['title'], 0, 40).'...</a></td>';
+							echo '<td width="" valign="top"><a class="uc_latest_link" href="/catalog/item'.$item['id'].'.html">'.substr($item['title'], 0, 40).'...</a></td>';
 							for($f = 0; $f<$cfg['showf']; $f++){
-								echo '<td valign="top">'.$inCore->getUCSearchLink($item['category_id'], $menuid, $f, $fdata[$f]).'</td>';
+								echo '<td valign="top">'.$inCore->getUCSearchLink($item['category_id'], null, $f, $fdata[$f]).'</td>';
 							}							
 							echo '<td width="" align="right" valign="top">'.$item['fdate'].'</td>';
 								echo '<td align="right">';
@@ -92,7 +87,7 @@ function mod_uc_latest($module_id){
 					}				
 				echo '</table>';
 				if ($cfg['fulllink']){
-					echo '<div style="margin-top:5px; text-align:right; clear:both"><a href="/catalog/'.$menuid.'">Весь каталог</a> &rarr;</div>';
+					echo '<div style="margin-top:5px; text-align:right; clear:both"><a href="/catalog">Весь каталог</a> &rarr;</div>';
 				}
 			}
 		} else { echo '<p>Нет объектов для отображения.</p>'; }

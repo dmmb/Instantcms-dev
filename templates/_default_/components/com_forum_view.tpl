@@ -27,7 +27,7 @@
                     <img src="/components/forum/images/forum.gif" border="0" />
                 </td>
                 <td width="" class="{php}echo $class{/php}" align="left" valign="middle">
-                    <div class="forum_link"><a href="/forum/{$menuid}/{$subf.id}">{$subf.title}</a></div>
+                    <div class="forum_link"><a href="/forum/{$subf.id}">{$subf.title}</a></div>
                     <div class="forum_desc">{$subf.description}</div>
                     {if $subf.subforums}
                         <div class="forum_subs"><span class="forum_subs_title">{$LANG.SUBFORUMS}:</span> {$subf.subforums}</div>
@@ -51,7 +51,7 @@
                 <table cellspacing="2" cellpadding="2">
                     <tr>
                         <td width="16"><img src="/components/forum/images/toolbar/newthread.gif"/></td>
-                        <td><a href="/forum/{$menuid}/{$forum.id}/newthread.html"><strong>{$LANG.NEW_THREAD}</strong></a></td>
+                        <td><a href="/forum/{$forum.id}/newthread.html"><strong>{$LANG.NEW_THREAD}</strong></a></td>
                     </tr>
                 </table>
             </td>
@@ -91,12 +91,12 @@
                 {/if}
             {/if}
             <td width="" class="{php}echo $class{/php}" align="left">
-                <div class="thread_link"><a href="/forum/{$menuid}/thread{$thread.id}.html">{$thread.title}</a>
+                <div class="thread_link"><a href="/forum/thread{$thread.id}.html">{$thread.title}</a>
                     {if $pages>1}
                         <span class="thread_pagination"> (
                             {php}
                                 for ($tp=1; $tp<=$pages; $tp++){
-                                    echo '<a href="/forum/'.$menuid.'/thread'.$t['id'].'-'.$tp.'.html" title="'.$LANG['PAGE'].' '.$tp.'">'.$tp.'</a>';
+                                    echo '<a href="/forum/thread'.$t['id'].'-'.$tp.'.html" title="'.$LANG['PAGE'].' '.$tp.'">'.$tp.'</a>';
                                 }
                             {/php}
                         ) </span>

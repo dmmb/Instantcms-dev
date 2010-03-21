@@ -15,12 +15,6 @@ function mod_category($module_id){
 	
 		$cfg = $inCore->loadModuleConfig($module_id);
 
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
-
 		$sql = "SELECT cat.*, COUNT(con.id) as content_count 
 				FROM cms_category cat, cms_content con
 				WHERE (cat.parent_id = ".$cfg['category_id']." AND cat.id > 0) AND con.category_id = cat.id AND cat.published = 1
@@ -33,7 +27,7 @@ function mod_category($module_id){
 		if ($inDB->num_rows($result)){	
 			echo '<table cellspacing="2" border="0">';
 			while($con = $inDB->fetch_assoc($result)){
-				$link = '/content/'.$menuid.'/'.$con['id'];
+				$link = '/content/'.$con['id'];
 				if (strstr($_SERVER['REQUEST_URI'], $link)){ $is_current = true; } else { $is_current = false; }			
 				$is_icon = ($cfg['icon'] && file_exists($_SERVER['DOCUMENT_ROOT'].$cfg['icon']));
 				echo '<tr>';

@@ -15,7 +15,6 @@
         global $_LANG;
 
 		$cfg = $inCore->loadModuleConfig($module_id);
-		$menuid = $inCore->menuId();
 		
 		if (@$cfg['src'] == 'price'){
 			//SOURCE: Pricelist

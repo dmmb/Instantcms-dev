@@ -13,12 +13,6 @@
         $inDB = cmsDatabase::getInstance();
 		$cfg = $inCore->loadModuleConfig($module_id);
 
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
-
 		if ($cfg['album_id']>0){
 			$s = "AND f.album_id = ". $cfg['album_id'];			
 		} else {
@@ -37,7 +31,7 @@
 		if ($inDB->num_rows($result)){
 			while ($item=$inDB->fetch_assoc($result)){
 
-				echo '<a href="/photos/'.$menuid.'/photo'.$item['id'].'.html">
+				echo '<a href="/photos/photo'.$item['id'].'.html">
 					  <p align="center"><img src="/images/photos/small/'.$item['file'].'" border="0"/></p>';
 				if($cfg['showtitle']){
 					echo '<p align="center">'.$item['title'].'</p>';

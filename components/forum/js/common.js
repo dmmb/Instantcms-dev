@@ -4,9 +4,9 @@ function deleteThread(link){
 	}
 }
 
-function goForum(menuid){
+function goForum(){
 	var forum_id = $('#goforum').attr('value');
-	var link = '/forum/' + menuid + '/' + forum_id;
+	var link = '/forum/' + forum_id;
 	window.location.href = link;
 }
 

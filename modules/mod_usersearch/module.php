@@ -13,7 +13,6 @@ function mod_usersearch($module_id){
     $inDB       = cmsDatabase::getInstance();
     $inPage     = cmsPage::getInstance();
 
-    $menuid     = $inCore->menuId();
     $cfg        = $inCore->loadModuleConfig($module_id);
 
     if (!isset($cfg['menuid'])) { $cfg['menuid'] = 0; }

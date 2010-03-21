@@ -28,9 +28,9 @@ function search_forum($query, $look){ //query sends here already prepared and se
 		if ($found){
 			while($item = $inDB->fetch_assoc($result)){
 				//build params
-				$link = "/forum/0/thread".$item['id'].".html";
+				$link = "/forum/thread".$item['id'].".html";
 				$place = $item['forum'];
-				$placelink = "/forum/0/".$item['forum_id'];				
+				$placelink = "/forum/".$item['forum_id'];				
 				//include item to search results
 				if (!dbRowsCount('cms_search', "session_id='".session_id()."' AND link='$link'")){				
 					$sql = "INSERT INTO cms_search (`id`, `session_id`, `title`, `link`, `place`, `placelink`)
@@ -54,7 +54,7 @@ function search_forum($query, $look){ //query sends here already prepared and se
 			while($item = $inDB->fetch_assoc($result)){
 				//build params
                 $inCore->loadLanguage('components/forum');
-				$link = "/forum/0/thread".$item['thread_id'].".html";
+				$link = "/forum/thread".$item['thread_id'].".html";
 				$place = $_LANG['FORUM_POST'];
 				$placelink = $link;	
 				//include item to search results

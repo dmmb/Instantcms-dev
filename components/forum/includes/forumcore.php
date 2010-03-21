@@ -155,8 +155,7 @@ function forumAttachedPoll($thread_id){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
-	global $menuid;
-        global $_LANG;
+    global $_LANG;
 	$html = '';
 	
 	if (isset($_POST['votepoll'])){
@@ -200,7 +199,7 @@ function forumAttachedPoll($thread_id){
 			$html .= '<td class="forum_poll_data" width="30%" valign="top">';
 				if (!$uservote || ($uservote && $opt['result']==2)){
 					//show answers
-					$html .= '<form action="/forum/'.$menuid.'/thread'.$thread_id.'.html" method="post">';
+					$html .= '<form action="/forum/thread'.$thread_id.'.html" method="post">';
 					$html .= '<input type="hidden" name="poll_id" value="'.$poll['id'].'" />';
 					$html .= '<table class="forum_poll_answers">';
 					foreach($answers_title as $key=>$value){
@@ -258,13 +257,13 @@ function forumAttachedPoll($thread_id){
 					}
 					if (!$uservote && $opt['result'] == 0){
 						if (!isset($_REQUEST['viewpoll'])){										
-							$html .= '<div class="forum_poll_param">[<a href="/forum/'.$menuid.'/viewpoll'.$thread_id.'.html">'.$_LANG['RESULT_POOL'].'</a>]</div>';
+							$html .= '<div class="forum_poll_param">[<a href="/forum/viewpoll'.$thread_id.'.html">'.$_LANG['RESULT_POOL'].'</a>]</div>';
 						}					
 					} else {
 						 if (isset($_REQUEST['viewpoll'])) {
-							$html .= '<div class="forum_poll_param">[<a href="/forum/'.$menuid.'/thread'.$thread_id.'.html">'.$_LANG['DELETE_POOL'].'</a>]</div>';
+							$html .= '<div class="forum_poll_param">[<a href="/forum/thread'.$thread_id.'.html">'.$_LANG['DELETE_POOL'].'</a>]</div>';
 						} elseif ($opt['change'] && $uservote){
-							$html .= '<div class="forum_poll_param">[<a href="/forum/'.$menuid.'/revote'.$thread_id.'.html">'.$_LANG['CHANGE_VOTE'].'</a>]</div>';
+							$html .= '<div class="forum_poll_param">[<a href="/forum/revote'.$thread_id.'.html">'.$_LANG['CHANGE_VOTE'].'</a>]</div>';
 						}
 					}					
 				} else {
@@ -280,7 +279,7 @@ function forumAttachedPoll($thread_id){
 				}
 								
 				if (@$inUser->id){
-					$html .= '<div class="forum_poll_param">[<a href="/forum/'.$menuid.'/reply'.$thread_id.'.html">'.$_LANG['COMMENT_POOL'].'</a>]</div>';
+					$html .= '<div class="forum_poll_param">[<a href="/forum/reply'.$thread_id.'.html">'.$_LANG['COMMENT_POOL'].'</a>]</div>';
 				}
 			$html .= '</td>';
 		$html .= '</tr>';
@@ -293,7 +292,6 @@ function forumAttachedPoll($thread_id){
 function forumAttachedFiles($post_id, $mypost, $showimg=false){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
-	global $menuid;
 	$html = '';
 	
 	$graphic_ext[] = 'jpg';
@@ -321,23 +319,23 @@ function forumAttachedFiles($post_id, $mypost, $showimg=false){
 					if (!in_array($ext, $graphic_ext) || (in_array($ext, $graphic_ext) && !$showimg)){
 						$html .= '<td width="16">'.$inCore->fileIcon($filename).'</td>';
 						$html .= '<td>';
-							$html .= '<a class="fa_file_link" href="/forum/'.$menuid.'/download'.$file['id'].'.html">'.$filename.'</a> | 
+							$html .= '<a class="fa_file_link" href="/forum/download'.$file['id'].'.html">'.$filename.'</a> |
 									  <span class="fa_file_desc">'.round(($filesize/1024),2).' '.$_LANG['KBITE'].' | '.$_LANG['DOWNLOADED'].': '.$file['hits'].'</span>';
 									  
 							if ($mypost){
-								$html .= ' <a href="/forum/'.$menuid.'/reloadfile'.$file['id'].'.html" title="'.$_LANG['RELOAD_FILE'].'"><img src="/images/icons/reload.gif" border="0"/></a>';
-								$html .= ' <a href="/forum/'.$menuid.'/delfile'.$file['id'].'.html" title="'.$_LANG['DELETE_FILE'].'"><img src="/images/icons/delete.gif" border="0"/></a>';
+								$html .= ' <a href="/forum/reloadfile'.$file['id'].'.html" title="'.$_LANG['RELOAD_FILE'].'"><img src="/images/icons/reload.gif" border="0"/></a>';
+								$html .= ' <a href="/forum/delfile'.$file['id'].'.html" title="'.$_LANG['DELETE_FILE'].'"><img src="/images/icons/delete.gif" border="0"/></a>';
 							}								  
 						$html .= '</td>';
 					} else {
 						$html .= '<td><img src="/upload/forum/post'.$post_id.'/'.$filename.'" border="1" width="160" height="120" /></td>';
 						$html .= '<td>';
-							$html .= '<a class="fa_file_link" href="/forum/'.$menuid.'/download'.$file['id'].'.html">'.$filename.'</a> | 
+							$html .= '<a class="fa_file_link" href="/forum/download'.$file['id'].'.html">'.$filename.'</a> | 
 									  <span class="fa_file_desc">'.round(($filesize/1024),2).' '.$_LANG['KBITE'].' | '.$_LANG['DOWNLOADED'].': '.$file['hits'].'</span>';
 									  
 							if ($mypost){
-								$html .= ' <a href="/forum/'.$menuid.'/reloadfile'.$file['id'].'.html" title="'.$_LANG['RELOAD_FILE'].'"><img src="/images/icons/reload.gif" border="0"/></a>';
-								$html .= ' <a href="/forum/'.$menuid.'/delfile'.$file['id'].'.html" title="'.$_LANG['DELETE_FILE'].'"><img src="/images/icons/delete.gif" border="0"/></a>';
+								$html .= ' <a href="/forum/reloadfile'.$file['id'].'.html" title="'.$_LANG['RELOAD_FILE'].'"><img src="/images/icons/reload.gif" border="0"/></a>';
+								$html .= ' <a href="/forum/delfile'.$file['id'].'.html" title="'.$_LANG['DELETE_FILE'].'"><img src="/images/icons/delete.gif" border="0"/></a>';
 							}								  
 						$html .= '</td>';
 					}
@@ -488,8 +486,7 @@ function forumDate($datestr, $daysleft){
 function forumLastMessage($forum_id, $perpage_thread){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
-	global $menuid;
-        global $_LANG;
+	global $_LANG;
 	$html = '';
 	
 	$forumNS = dbGetFields('cms_forums', 'id='.$forum_id, 'NSLeft, NSRight');
@@ -514,9 +511,9 @@ function forumLastMessage($forum_id, $perpage_thread){
 		$lastpage = ceil($pcount / $perpage_thread);
 		
 		if ($lastpage==1) {
-			$link = '/forum/'.$menuid.'/thread'.$post['threadid'].'.html#new';
+			$link = '/forum/thread'.$post['threadid'].'.html#new';
 		} else {
-			$link = '/forum/'.$menuid.'/thread'.$post['threadid'].'-'.$lastpage.'.html#new';		
+			$link = '/forum/thread'.$post['threadid'].'-'.$lastpage.'.html#new';		
 		}
 	
 		$html .= '<strong>'.$_LANG['LAST_POST'].' <br/>';
@@ -531,7 +528,6 @@ function forumLastMessage($forum_id, $perpage_thread){
 function threadLastMessage($thread_id){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
-	global $menuid;
 	$html = '';
 	global $_LANG;
 	$sql = "SELECT DATE_FORMAT(p.pubdate, '%d-%m-%Y') as pubdate, DATE_FORMAT(p.pubdate, '%H:%i') as pubtime, 
@@ -555,7 +551,6 @@ function threadLastMessage($thread_id){
 function threadLastMessageData($thread_id){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
-	global $menuid;
 	$data = array();
 	
 	$sql = "SELECT DATE_FORMAT(p.pubdate, '%d-%m-%Y') as pubdate, DATE_FORMAT(p.pubdate, '%H:%i') as pubtime, p.content as msg,
@@ -588,7 +583,6 @@ function threadLastMessageData($thread_id){
 
 function forumUserMsgNum($user_id){
     $inDB   = cmsDatabase::getInstance();
-	global $menuid;
 	$html = '';
 	
 	$sql = "SELECT id FROM cms_forum_posts WHERE user_id = $user_id";
@@ -619,7 +613,7 @@ function forumThreadAuthor($thread_id){
 
 }
 
-function uploadDelete($menuid, $id){
+function uploadDelete($id){
 
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
@@ -643,7 +637,7 @@ function uploadDelete($menuid, $id){
 	return;
 }
 
-function uploadDeletePost($menuid, $postid){
+function uploadDeletePost($postid){
     $inDB   = cmsDatabase::getInstance();
 
 	$sql = "SELECT f.*, p.thread_id as tid, u.id as uid
@@ -660,7 +654,7 @@ function uploadDeletePost($menuid, $postid){
 	return;
 }
 
-function uploadDeleteThread($menuid, $threadid){
+function uploadDeleteThread($threadid){
     $inDB   = cmsDatabase::getInstance();
 	$sql = "SELECT f.*, p.thread_id as tid, u.id as uid
 			FROM cms_forum_files f, cms_users u, cms_forum_posts p

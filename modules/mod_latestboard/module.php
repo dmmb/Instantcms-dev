@@ -14,11 +14,6 @@ function mod_latestboard($module_id){
         global $_LANG;
 		$cfg = $inCore->loadModuleConfig($module_id);
 
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
 		if (!isset($cfg['showrss'])) { $cfg['showrss'] = 1;}
 		if (!isset($cfg['shownum'])){
 			echo '<p>'.$_LANG['LATESTBOARD_CONFIG_TEXT'].'</p>';
@@ -57,8 +52,7 @@ function mod_latestboard($module_id){
 	
 			$smarty = $inCore->initSmarty('modules', 'mod_latestboard.tpl');			
 			$smarty->assign('items', $items);
-			$smarty->assign('cfg', $cfg);	
-			$smarty->assign('menuid', $menuid);		
+			$smarty->assign('cfg', $cfg);
 			$smarty->display('mod_latestboard.tpl');
 			
 		} else { echo '<p>'.$_LANG['LATESTBOARD_NOT_ADV'].'</p>'; }
