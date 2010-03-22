@@ -1070,6 +1070,9 @@ class cmsCore {
         $uri    = $this->request('uri', 'str', '');
         $rules  = array();
 
+        //специальный хак для поиска по сайту, для совместимости со старыми шаблонами
+        if (strstr($_SERVER['QUERY_STRING'], 'view=search')){ $uri = 'search'; }
+
         if(file_exists(PATH.'/url_rewrite.php')) {
             //подключаем список rewrite-правил
             $this->includeFile('url_rewrite.php');
@@ -1249,12 +1252,12 @@ class cmsCore {
 
         ob_start();
 
-        echo '<div class="component">';
             require('components/'.$component.'/frontend.php');
             call_user_func($component);
-        echo '</div>';
 
-        $inPage->page_body = ob_get_clean();
+        $component_html = ob_get_clean();
+
+        $inPage->page_body = '<div class="component">' . $component_html . '</div>';
 
         if ($is_component) { $inPage->page_body = cmsCore::callEvent('AFTER_COMPONENT_'.mb_strtoupper($component), $inPage->page_body); }
 

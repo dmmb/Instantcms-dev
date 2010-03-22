@@ -37,20 +37,46 @@
                             'action'  => 'rewrite'
                          );
 
+        $rules[] = array(
+                            'source'  => '/^auth\/error.html$/i',
+                            'target'  => '/core/auth/autherror.html',
+                            'action'  => 'alias'
+                         );
+
         //
         // Регистрация / Активация
         //
 
         $rules[] = array(
-                            'source'  => '/^registration\/complete.html/i',
+                            'source'  => '/^registration\/complete.html$/i',
                             'target'  => '/core/auth/regcomplete.html',
                             'action'  => 'alias'
                          );
 
+        //
+        // RSS
+        //
+
         $rules[] = array(
-                            'source'  => '/^registration\/activation.html/i',
-                            'target'  => '/core/auth/regactivate.html',
-                            'action'  => 'alias'
+                            'source'  => '/^rss\/([a-z]+)\/(.+)\/feed.rss$/i',
+                            'target'  => 'rssfeed/{1}/{2}',
+                            'action'  => 'rewrite'
+                         );
+
+        //
+        // Внешние ссылки
+        //
+
+        $rules[] = array(
+                            'source'  => '/^go\/url=(.*)$/i',
+                            'target'  => 'files/go/{1}',
+                            'action'  => 'rewrite'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^load\/url=(.*)$/i',
+                            'target'  => 'files/load/{1}',
+                            'action'  => 'rewrite'
                          );
 
         //

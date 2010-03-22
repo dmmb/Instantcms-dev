@@ -19,7 +19,7 @@ function clubs(){
     $inUser = cmsUser::getInstance();
     global $_LANG;
 	$inCore->includeFile("components/users/includes/usercore.php");
-	$inCore->includeFile("components/blog/includes/blogcore.php");
+	$inCore->includeFile("components/blogs/includes/blogcore.php");
 
 	$inCore->loadLib("clubs");
 	$inCore->loadLib("users");
