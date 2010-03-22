@@ -409,10 +409,8 @@ if ($do=='view'){
 		if ($is_users){
 			while($usr = $inDB->fetch_assoc($result)){                
 					$rownum++;
-					$usr['avatar'] = usrLink(usrImage($usr['id'], 'small'), $usr['login'], $menuid);
+					$usr['avatar'] = usrLink(usrImageNOdb($usr['id'], 'small', $usr['imageurl'], $usr['is_deleted']), $usr['login'], $menuid);
 					$usr['nickname'] = cmsUser::getProfileLink($usr['login'], $usr['nickname']);
-					$usr['myfriend'] = usrIsFriends($usr['id'], $inUser->id, false);
-					$usr['karma'] = strip_tags(cmsUser::getKarmaFormat($usr['id'], false, false), '<span>');
 					$usr['status'] = usrStatus($usr['id'], $usr['flogdate'], false, $usr['gender']);
 					$usr['num'] = $rownum + ($page-1)*$perpage;
 
