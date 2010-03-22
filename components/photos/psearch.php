@@ -27,9 +27,9 @@ function search_photos($query, $look){ //query sends here already prepared and s
 		if ($found){
 			while($item = $inDB->fetch_assoc($result)){
 				//build params
-				$link = "/photos/0/photo".$item['id'].".html";
+				$link = "/photos/photo".$item['id'].".html";
 				$place = $item['cat'];
-				$placelink = '/photos/0/'.$item['cat_id'];				
+				$placelink = '/photos/'.$item['cat_id'];				
 				//include item to search results
 				if (!dbRowsCount('cms_search', "session_id='".session_id()."' AND link='$link'")){				
 					$sql = "INSERT INTO cms_search (`id`, `session_id`, `title`, `link`, `place`, `placelink`)

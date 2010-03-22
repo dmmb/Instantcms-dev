@@ -18,6 +18,9 @@ function rss_content($item_id, $cfg, &$rssdata){
 		global $_CFG;
 		global $_LANG;
 
+        $inCore->loadModel('content');
+        $model = new cms_model_content();
+
 		$maxitems   = $cfg['maxitems'];
 		$rooturl    = 'http://'.$_SERVER['HTTP_HOST'];
 
@@ -27,12 +30,12 @@ function rss_content($item_id, $cfg, &$rssdata){
 
 		//CHANNEL
 		if ($item_id){
-			$cat = dbGetFields('cms_category', 'id='.$item_id, 'id, title, description, NSLeft, NSRight');
+			$cat = dbGetFields('cms_category', 'id='.$item_id, 'id, title, description, seolink, NSLeft, NSRight');
 			$catsql = "AND c.category_id = cat.id AND cat.NSLeft >= {$cat['NSLeft']} AND cat.NSRight <= {$cat['NSRight']}";
 
 			$channel['title'] = $cat['title'] ;
 			$channel['description'] = $cat['description'];
-			$channel['link'] = $rooturl . '/content/0/'.$item_id;
+			$channel['link'] = $rooturl . $model->getCategoryURL(0, $cat['seolink']);
 		} else {
 			$catsql = '';
 		
@@ -53,9 +56,6 @@ function rss_content($item_id, $cfg, &$rssdata){
 		$items = array();
 
 		if ($inDB->num_rows($rs)){
-
-            $inCore->loadModel('content');
-            $model = new cms_model_content();
 
 			while ($item = $inDB->fetch_assoc($rs)){
 				$id = $item['id'];

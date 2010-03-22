@@ -30,9 +30,9 @@ function search_content($query, $look){ //query sends here already prepared and 
 			while($item = $inDB->fetch_assoc($result)){
 				//build params
                 $inCore->loadLanguage('components/content');
-				$link       = "/content/0/".$item['seolink'].".html";
+				$link       = "/content/".$item['seolink'].".html";
 				$place      = $_LANG['CATALOG_ARTICLES'];
-				$placelink  = $item['cat_parent_id']>0 ? "/content/0/".$item['cat_seolink'] : $link;
+				$placelink  = $item['cat_parent_id']>0 ? "/content/".$item['cat_seolink'] : $link;
 				//include item to search results
 				if (!dbRowsCount('cms_search', "session_id='".session_id()."' AND link='$link'")){				
 					$sql = "INSERT INTO cms_search (`id`, `session_id`, `title`, `link`, `place`, `placelink`)

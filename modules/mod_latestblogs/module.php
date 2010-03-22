@@ -94,7 +94,7 @@ function mod_latestblogs($module_id){
 			if ($cfg['showrss']){
 				echo '<table align="right" style="margin-top:5px"><tr>';
 					echo '<td width="16"><img src="/images/markers/rssfeed.png" /></td>';
-					echo '<td><a href="/rss/blog/all/feed.rss" style="text-decoration:underline;color:#333">'.$_LANG['LATESTBLOGS_RSS'].'</a></td>';
+					echo '<td><a href="/rss/blogs/all/feed.rss" style="text-decoration:underline;color:#333">'.$_LANG['LATESTBLOGS_RSS'].'</a></td>';
 				echo '</tr></table>';
 			}				
 		} else { echo '<p>'.$_LANG['LATESTBLOGS_NOT_POSTS'].'</p>'; }

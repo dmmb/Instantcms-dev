@@ -27,9 +27,9 @@ function search_catalog($query, $look){ //query sends here already prepared and 
 		if ($found){
 			while($item = $inDB->fetch_assoc($result)){
 				//build params
-				$link = "/catalog/0/item".$item['id'].".html";
+				$link = "/catalog/item".$item['id'].".html";
 				$place = $item['cat'];
-				$placelink = "/catalog/0/".$item['cat_id'];				
+				$placelink = "/catalog/".$item['cat_id'];				
 				//include item to search results
 				if (!dbRowsCount('cms_search', "session_id='".session_id()."' AND link='$link'")){				
 					$sql = "INSERT INTO cms_search (`id`, `session_id`, `title`, `link`, `place`, `placelink`)

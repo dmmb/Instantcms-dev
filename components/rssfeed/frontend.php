@@ -10,34 +10,19 @@
 //                                                                                           //
 /*********************************************************************************************/
 
-session_start();
-define("VALID_CMS", 1);	
-
-    define('PATH', $_SERVER['DOCUMENT_ROOT']);
-    define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
-
-    require(PATH."/core/cms.php");
+function rssfeed(){
 
     $inCore     = cmsCore::getInstance();
-
-    $inCore->loadClass('page');         //страница
-    $inCore->loadClass('config');       //конфигурация
-    $inCore->loadClass('db');           //база данных
-
     $inPage     = cmsPage::getInstance();
     $inDB       = cmsDatabase::getInstance();
-
     $inConf     = cmsConfig::getInstance();
 
-    cmsCore::loadLanguage('lang');
-    cmsCore::loadLanguage('components/rssfeed');
+    $menuid     = $inCore->menuId();
+	$cfg        = $inCore->loadComponentConfig('rssfeed');
 
-    $menuid = $inCore->menuId();
-	$cfg    = $inCore->loadComponentConfig('rssfeed');
-
-    $do      = $inCore->request('do', 'str', 'rss');
-    $target  = $inCore->request('target', 'str', 'rss');
-    $item_id = $inCore->request('item_id', 'str', 'all');
+    $do         = $inCore->request('do', 'str', 'rss');
+    $target     = $inCore->request('target', 'str', 'rss');
+    $item_id    = $inCore->request('item_id', 'str', 'all');
 
     if (strstr($target, '..') || strstr($target, '/')){ $inCore->halt(); }
 
@@ -48,17 +33,17 @@ define("VALID_CMS", 1);
 ////////////////////// RSS /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='rss'){
 	$rss = '';
-	
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].'/components/'.$target.'/prss.php')){
+
+	if (file_exists(PATH.'/components/'.$target.'/prss.php')){
 
         cmsCore::loadLanguage('components/'.$target);
 
 		$inCore->includeFile('components/'.$target.'/prss.php');
-		
+
 		eval('rss_'.$target.'($item_id, $cfg, $rssdata);');	
 		
 		$ready = sizeof($rssdata['items']);
-			
+
 		//BUILD RSS FEED		
 		if ($ready){
 			$channel = $rssdata['channel'];
@@ -110,11 +95,13 @@ if ($do=='rss'){
 		$rss = '<p>'.$_LANG['NOT_RSS_GENERATOR'].'</p>';
 	}
 	
-	echo $rss;
+	$inCore->halt($rss);
 
 }//RSS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	
+    
+
+}
 
 ?>

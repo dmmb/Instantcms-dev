@@ -28,7 +28,7 @@ function search_price($query, $look){ //query sends here already prepared and se
 		if ($found){
 			while($item = $inDB->fetch_assoc($result)){
 				//build params
-				$link = "/price/0/".$item['cat_id'];
+				$link = "/price/".$item['cat_id'];
 				$place = $item['cat'];
 				$placelink = $link;				
 				//include item to search results

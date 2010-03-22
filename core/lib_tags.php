@@ -89,8 +89,8 @@ function cmsTagItemLink($target, $item_id){
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
-							$link =  '<a href="/content/0/'.$item['cat_seolink'].'" class="tag_searchcat">'.$item['cat'].'</a> &rarr; ';
-							$link .= '<a href="/content/0/'.$item['seolink'].'.html" class="tag_searchitem">'.$item['title'].'</a>';
+							$link =  '<a href="/content/'.$item['cat_seolink'].'" class="tag_searchcat">'.$item['cat'].'</a> &rarr; ';
+							$link .= '<a href="/content/'.$item['seolink'].'.html" class="tag_searchitem">'.$item['title'].'</a>';
 						}
 						break; 
 		case 'blogpost': $sql = "SELECT i.title as title, i.id as item_id, c.title as cat, c.id as cat_id, c.owner as owner, c.user_id user_id, i.seolink as seolink, c.seolink as bloglink
@@ -100,8 +100,8 @@ function cmsTagItemLink($target, $item_id){
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
 							if ($item['owner'] == 'club') { $item['cat'] = dbGetField('cms_clubs','id='.$item['user_id'],'title'); }
-							$link =  '<a href="/blogs/0/'.$item['bloglink'].'" class="tag_searchcat">'.$item['cat'].'</a> &rarr; ';
-							$link .= '<a href="/blogs/0/'.$item['bloglink'].'/'.$item['seolink'].'.html" class="tag_searchitem">'.$item['title'].'</a>';
+							$link =  '<a href="/blogs/'.$item['bloglink'].'" class="tag_searchcat">'.$item['cat'].'</a> &rarr; ';
+							$link .= '<a href="/blogs/'.$item['bloglink'].'/'.$item['seolink'].'.html" class="tag_searchitem">'.$item['title'].'</a>';
 						}
 						break; 
 		case 'photo': $sql = "SELECT i.title as title, i.id as item_id, c.title as cat, c.id as cat_id
@@ -110,8 +110,8 @@ function cmsTagItemLink($target, $item_id){
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
-							$link =  '<a href="/photos/0/'.$item['cat_id'].'" class="tag_searchcat">'.$item['cat'].'</a> &rarr; ';
-							$link .= '<a href="/photos/0/photo'.$item['item_id'].'.html" class="tag_searchitem">'.$item['title'].'</a>';
+							$link =  '<a href="/photos/'.$item['cat_id'].'" class="tag_searchcat">'.$item['cat'].'</a> &rarr; ';
+							$link .= '<a href="/photos/photo'.$item['item_id'].'.html" class="tag_searchitem">'.$item['title'].'</a>';
 						}
 						break; 
 		case 'userphoto': $sql = "SELECT i.title as title, i.id as item_id, c.nickname as cat, c.id as cat_id, c.login as login
@@ -121,7 +121,7 @@ function cmsTagItemLink($target, $item_id){
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
 							$link =  '<a href="'.cmsUser::getProfileURL($item['login']).'" class="tag_searchcat">'.$item['cat'].'</a> &rarr; ';
-							$link .= '<a href="/users/0/'.$item['cat_id'].'/photo'.$item['item_id'].'.html" class="tag_searchitem">'.$item['title'].'</a>';
+							$link .= '<a href="/users/'.$item['cat_id'].'/photo'.$item['item_id'].'.html" class="tag_searchitem">'.$item['title'].'</a>';
 						}
 						break; 
 		case 'catalog': $sql = "SELECT i.title as title, i.id as item_id, c.title as cat, c.id as cat_id
@@ -130,8 +130,8 @@ function cmsTagItemLink($target, $item_id){
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
-							$link =  '<a href="/catalog/0/'.$item['cat_id'].'" class="tag_searchcat">'.$item['cat'].'</a> &rarr; ';
-							$link .= '<a href="/catalog/0/item'.$item['item_id'].'.html" class="tag_searchitem">'.$item['title'].'</a>';
+							$link =  '<a href="/catalog/'.$item['cat_id'].'" class="tag_searchcat">'.$item['cat'].'</a> &rarr; ';
+							$link .= '<a href="/catalog/item'.$item['item_id'].'.html" class="tag_searchitem">'.$item['title'].'</a>';
 						}
 						break; 	
 	}
