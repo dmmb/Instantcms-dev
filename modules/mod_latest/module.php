@@ -14,11 +14,6 @@ function mod_latest($module_id){
         $inDB = cmsDatabase::getInstance();
         global $_LANG;
 		$cfg = $inCore->loadModuleConfig($module_id);
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
 
 		if (!isset($cfg['showrss'])) { $cfg['showrss'] = 1; }
 		if (!isset($cfg['subs'])) { $cfg['subs'] = 1; }
@@ -55,7 +50,7 @@ function mod_latest($module_id){
 				$next = sizeof($articles);				
 				$articles[$next]['id']          = $con['id'];
 				$articles[$next]['title']       = $con['title'];
-				$articles[$next]['href']        = $model->getArticleURL($menuid, $con['seolink']);
+				$articles[$next]['href']        = $model->getArticleURL(null, $con['seolink']);
 				$articles[$next]['author']      = $con['author'];
 				$articles[$next]['authorhref']  = cmsUser::getProfileURL($con['author_login']);
 				$articles[$next]['comments']    = $inCore->getCommentsCount('article', $con['id']);

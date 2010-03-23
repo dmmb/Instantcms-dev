@@ -15,11 +15,14 @@ if (!defined('USER_MASSMAIL')) { define('USER_MASSMAIL', -2); }
 
 function setClubsRating($club_id){
 
+    $inDB = cmsDatabase::getInstance();
+
     $sql = "SELECT SUM( r.points ) AS rating
             FROM cms_user_clubs u, cms_clubs c, cms_ratings r
             LEFT JOIN cms_photo_files f ON r.item_id = f.id AND r.target = 'photo'
             LEFT JOIN cms_blog_posts p ON r.item_id = p.id AND r.target = 'blogpost'
             WHERE u.club_id = ".$club_id." AND (f.user_id = u.user_id OR p.user_id = u.user_id)";
+    
     $rs = $inDB->query($sql);
     
     if ($inDB->num_rows($rs)){

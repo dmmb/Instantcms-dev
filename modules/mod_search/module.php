@@ -11,7 +11,6 @@
 	function mod_search(){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
-		$menuid = $inCore->menuId();
 	
 		echo '<form action="/search" method="GET">';
 			echo '<input type="text" 

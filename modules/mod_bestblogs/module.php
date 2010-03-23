@@ -21,12 +21,6 @@ function mod_bestblogs($module_id){
         if (!isset($cfg['namemode'])) { $cfg['namemode'] = 'blog';}
         if (!isset($cfg['shownum'])) { $cfg['shownum'] = 10; }
         if (!isset($cfg['menuid'])) { $cfg['menuid'] = 0; }
-
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
 		
 		if (!isset($cfg['shownum'])){
 			echo '<p>'.$_LANG['BESTBLOGS_CONFIG_TEXT'].'</p>';
@@ -71,14 +65,14 @@ function mod_bestblogs($module_id){
 				if (strlen($text)>70) { $text = substr($text, 0, 70). '...'; }				
 
 				$posts[$next]['title'] = $text;
-                $posts[$next]['href'] = $model->getPostURL($menuid, $con['bloglink'], $con['seolink']);
+                $posts[$next]['href'] = $model->getPostURL(null, $con['bloglink'], $con['seolink']);
 
                 if ($con['owner']=='user' && $con['ownertype']=='single' && $cfg['namemode']=='user'){
                     $con['blog'] = $con['author'];
                 }
 
 				$posts[$next]['blog'] = $con['blog'];
-                $posts[$next]['bloghref'] = $model->getBlogURL($menuid, $con['bloglink']);
+                $posts[$next]['bloghref'] = $model->getBlogURL(null, $con['bloglink']);
 
 				$posts[$next]['karma'] = cmsKarmaFormat($con['points']);
 				$posts[$next]['date'] = $con['fpubdate'];								

@@ -12,11 +12,6 @@ function mod_tags($module_id){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
 		$cfg = $inCore->loadModuleConfig($module_id);
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
 
 		$targeting = sizeof($cfg['targets']);
 		

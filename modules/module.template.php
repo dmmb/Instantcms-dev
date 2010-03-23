@@ -11,7 +11,6 @@
 	function mod_/* MODULE NAME */($module_id){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
-		$menuid = $inCore->menuId();
 	
 		$sql = "SELECT * 
 				FROM 

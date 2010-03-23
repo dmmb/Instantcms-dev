@@ -15,7 +15,6 @@
         global $_LANG;
 
 		$cfg = $inCore->loadModuleConfig($module_id);
-		$menuid = 0;
 
 		if ($inUser->id){ return false; }
 		

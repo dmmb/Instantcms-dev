@@ -7,10 +7,10 @@
 
 <table class="" style="margin-top:15px;margin-bottom:15px;" cellpadding="5" width="100%" border="0">
     {assign var="col" value="1"}
-    {foreach key=tid item=avatar from=$avatars}
+    {foreach key=avatar_id item=avatar from=$avatars}
         {if $col==1} <tr> {/if}
             <td width="25%" valign="middle" align="center">
-                    <a href="/users/{$userid}/select-avatar/{$avatar|urlencode}" title="{$LANG.SELECT_AVATAR}">
+                    <a href="/users/{$userid}/select-avatar/{$avatar_id}" title="{$LANG.SELECT_AVATAR}">
                         <img src="{$avatars_dir}/{$avatar}" border="0" />
                     </a>
             </td>

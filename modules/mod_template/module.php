@@ -11,7 +11,6 @@
 function mod_template($module_id){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
-		$menuid = $inCore->menuId();
 		$cfg = $inCore->loadModuleConfig($module_id);
 	
 		if (isset($_SESSION['template'])) { $template = $_SESSION['template']; } else { $template = ''; }

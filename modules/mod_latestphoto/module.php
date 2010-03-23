@@ -43,11 +43,11 @@ function mod_latestphoto($module_id){
 				if ($col==1) { echo '<tr>'; } echo '<td align="center" valign="middle" class="mod_lp_photo" width="'.round(100/$maxcols, 0).'%">';
 				echo '<table width="100%" height="100" cellspacing="0" cellpadding="0">';
 				if ($cfg['showtype']=='full'){
-					echo '<tr><td align="center"><div class="mod_lp_titlelink"><a href="/photos/'.$menuid.'/photo'.$con['id'].'.html" title="'.$con['title'].'">'.$con['title'].'</a></div></td></tr>';
+					echo '<tr><td align="center"><div class="mod_lp_titlelink"><a href="/photos/photo'.$con['id'].'.html" title="'.$con['title'].'">'.$con['title'].'</a></div></td></tr>';
 				}
 				echo '<tr>
 					  <td valign="middle" align="center">';
-						echo '<a href="/photos/'.$menuid.'/photo'.$con['id'].'.html" title="'.$con['title'].'">';
+						echo '<a href="/photos/photo'.$con['id'].'.html" title="'.$con['title'].'">';
 							echo '<img class="photo_thumb_img" src="/images/photos/small/'.$con['file'].'" alt="'.$con['title'].'" border="0" />';
 						echo '</a>';
 				echo '</td></tr>';
@@ -55,7 +55,7 @@ function mod_latestphoto($module_id){
 					echo '<tr>';
 					echo '<td align="center">';
 						if($cfg['showalbum']){
-							echo '<div class="mod_lp_albumlink"><a href="/photos/'.$menuid.'/'.$con['album_id'].'" title="'.$con['album'].'">'.$con['album'].'</a></div>';
+							echo '<div class="mod_lp_albumlink"><a href="/photos/'.$con['album_id'].'" title="'.$con['album'].'">'.$con['album'].'</a></div>';
 						}
 						if($cfg['showcom'] || $cfg['showdate']){
 							echo '<div class="mod_lp_details">';
@@ -66,7 +66,7 @@ function mod_latestphoto($module_id){
 								}
 								if ($cfg['showcom']){
 									echo '<td><img src="/images/icons/comments.gif" border="0"/></td>';
-									echo '<td><a href="/photos/'.$menuid.'/photo'.$con['id'].'.html#c">'.$inCore->getCommentsCount('photo', $con['id']).'</td>';
+									echo '<td><a href="/photos/photo'.$con['id'].'.html#c">'.$inCore->getCommentsCount('photo', $con['id']).'</td>';
 								}
 							echo '</tr></table>';
 							echo '</div>';
@@ -82,7 +82,7 @@ function mod_latestphoto($module_id){
 			if ($col>1) { echo '<td colspan="'.($maxcols-$col+1).'">&nbsp;</td></tr>'; }
 			echo '</table>';
 			if ($cfg['showmore']){
-				echo '<div style="text-align:right"><a style="text-decoration:underline" href="/photos/'.$menuid.'/latest.html">Все новые фото</a> &rarr;</div>';
+				echo '<div style="text-align:right"><a style="text-decoration:underline" href="/photos/latest.html">Все новые фото</a> &rarr;</div>';
 			}
 		} else { echo '<p>Нет материалов для отображения.</p>'; }
 		

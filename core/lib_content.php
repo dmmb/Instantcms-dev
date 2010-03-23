@@ -22,7 +22,7 @@ function cmsAutoCreateThread($article, $content_cfg){
 
     $seolink    = $inDB->get_field('cms_content', "id={$article['id']}", 'seolink');
 
-    $link       = '[URL=http://'.$_SERVER['HTTP_HOST'].'/content/0/'.$article['seolink'].'.html]'.$article['title'].'[/URL]';
+    $link       = '[URL=http://'.$_SERVER['HTTP_HOST'].'/content/'.$article['seolink'].'.html]'.$article['title'].'[/URL]';
 
     $topic  = $article['title'];
     $post   = 'В этой теме форума обсуждаем статью &quot;'.$link.'&quot;';

@@ -34,7 +34,7 @@
 
         $blog       = $inDB->get_fields('cms_blogs', 'user_id = '.$inUser->id, 'id, seolink');
 
-        $blog_href  = ($blog['id']) ? '/blogs/0/'.$blog['seolink'] : '/blogs/0/createblog.html';
+        $blog_href  = ($blog['id']) ? '/blogs/'.$blog['seolink'] : '/blogs/createblog.html';
 
         $smarty = $inCore->initSmarty('modules', 'mod_usermenu.tpl');
         $smarty->assign('nickname', $inUser->nickname);

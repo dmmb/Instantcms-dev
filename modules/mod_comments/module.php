@@ -16,12 +16,6 @@ function mod_comments($module_id){
         
 		$cfg = $inCore->loadModuleConfig($module_id);
 
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
-
 		if (!isset($cfg['showrss'])) { $cfg['showrss'] = 1;}
 		if (!isset($cfg['minrate'])) { $cfg['minrate'] = 0;}
 		if (!isset($cfg['showguest'])) { $cfg['showguest'] = 0;}

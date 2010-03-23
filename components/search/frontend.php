@@ -125,7 +125,6 @@ function search(){
                     <option value="anyword" '.($look=='anyword'?'selected="selected"':'').'>'.$_LANG['ANY_WORD'].'</option>
 					<option value="phrase" '.($look=='phrase'?'selected="selected"':'').'>'.$_LANG['PHRASE'].'</option>
 				  </select> ';
-			echo '<input type="hidden" name="menuid" value="'.$menuid.'"/>';
 			echo '<input type="submit" value="'.$_LANG['FIND'].'"/>';
 			
 		echo '</form>';

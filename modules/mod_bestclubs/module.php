@@ -15,7 +15,6 @@ function mod_bestclubs($module_id){
 		$inCore->loadLib('clubs');
 	
 		$cfg = $inCore->loadModuleConfig($module_id);
-		if ($cfg['menuid']>0) {	$menuid = $cfg['menuid']; } else { $menuid = 0; }
 	
 		if (!isset($cfg['count'])) { $cfg['count'] = 5;}
 		if (!isset($cfg['menuid'])) { $cfg['menuid'] = 0;}
@@ -43,7 +42,6 @@ function mod_bestclubs($module_id){
 		
 			$smarty = $inCore->initSmarty('modules', 'mod_clubs.tpl');			
 			$smarty->assign('clubs', $clubs);
-			$smarty->assign('menuid', $menuid);			
 			$smarty->display('mod_clubs.tpl');
 						
 		} else { echo '<p>'.$_LANG['BESTCLUBS_NOT_CLUBS'].'</p>'; }

@@ -14,11 +14,6 @@
         global $_LANG;
 
 		$cfg = $inCore->loadModuleConfig($module_id);
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
 
 		$sql = "SELECT *, DATE_FORMAT(regdate, '%d-%m-%Y (%H:%i)') as fdate 
 				FROM cms_users

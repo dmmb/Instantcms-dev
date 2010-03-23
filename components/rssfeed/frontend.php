@@ -17,7 +17,6 @@ function rssfeed(){
     $inDB       = cmsDatabase::getInstance();
     $inConf     = cmsConfig::getInstance();
 
-    $menuid     = $inCore->menuId();
 	$cfg        = $inCore->loadComponentConfig('rssfeed');
 
     $do         = $inCore->request('do', 'str', 'rss');

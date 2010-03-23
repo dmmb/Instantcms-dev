@@ -53,7 +53,7 @@
 {* ============= —сылка на тему форума ======================== *}
 {if $cfg.af_showlink && $forum_thread_id}
     <div class="con_forum_link">
-        <a href="/forum/0/thread{$forum_thread_id}.html">{$LANG.DISCUSS_ON_FORUM}</a>
+        <a href="/forum/thread{$forum_thread_id}.html">{$LANG.DISCUSS_ON_FORUM}</a>
     </div>
 {/if}
 

@@ -75,7 +75,6 @@ function content(){
 	$inCore->loadLib('tags');
     $inCore->loadLib('content');
 
-	$menuid = $inCore->menuId();
 	$cfg = $inCore->loadComponentConfig('content');
 
     $inCore->loadModel('content');
@@ -132,7 +131,7 @@ if ($do=='view'){
     if ($path_list){
         foreach($path_list as $pcat){
             if ($pcat['id']!=1){
-                $inPage->addPathway($pcat['title'], $model->getCategoryURL($menuid, $pcat['seolink']));
+                $inPage->addPathway($pcat['title'], $model->getCategoryURL(null, $pcat['seolink']));
             }
         }
     }
@@ -149,7 +148,7 @@ if ($do=='view'){
 			$sub                = $model->getSubCatsCount($subcat['id']);
             $subtext            = $sub ? $subtext = '/'.$sub : '';
 			$subcat['subtext']  = $subtext;
-			$subcat['url']      = $model->getCategoryURL($menuid, $subcat['seolink']);
+			$subcat['url']      = $model->getCategoryURL(null, $subcat['seolink']);
             $subcats[]          = $subcat;
 		}
 	} else {
@@ -178,7 +177,7 @@ if ($do=='view'){
 			$con['tagline']		 = cmsTagLine('content', $con['id'], true);
 			$con['comments'] 	 = $inCore->getCommentsCount('article', $con['id']);
 			$con['user_access']  = $inCore->checkUserAccess('material', $con['id']);
-            $con['url']          = $model->getArticleURL($menuid, $con['seolink']);
+            $con['url']          = $model->getArticleURL(null, $con['seolink']);
             $con['image']       = (file_exists(PATH.'/images/photos/small/article'.$con['id'].'.jpg') ? 'article'.$con['id'].'.jpg' : '');
 			$cons[]              = $con;
 		}
@@ -188,7 +187,6 @@ if ($do=='view'){
 	}
 	
 	$smarty = $inCore->initSmarty('components', 'com_content_view.tpl');			
-	$smarty->assign('menuid', $menuid);
 	$smarty->assign('id', $cat['id']);
 	$smarty->assign('cat', $cat);
 	$smarty->assign('showdate', $showdate);
@@ -256,7 +254,7 @@ if ($do=='read'){
         if ($path_list){
             foreach($path_list as $pcat){
                 if ($pcat['id']!=1){
-                    $inPage->addPathway($pcat['title'], $model->getCategoryURL($menuid, $pcat['seolink']));
+                    $inPage->addPathway($pcat['title'], $model->getCategoryURL(null, $pcat['seolink']));
                 }
             }
         }
@@ -314,7 +312,6 @@ if ($do=='read'){
         if ($btns) { $smarty->assign('karma_buttons', $btns); }
     }
 
-    $smarty->assign('menuid', $menuid);
     $smarty->assign('id', $article['id']);
     if (@$cat) { $smarty->assign('cat', $cat); }
     $smarty->assign('article', $article);
@@ -322,7 +319,7 @@ if ($do=='read'){
 
     foreach($GLOBALS['pt'] as $num=>$page_title){
         $pt_pages[$num]['title']    = $page_title;
-        $pt_pages[$num]['url']      = $model->getArticleURL($menuid, $article['seolink'], $num+1);
+        $pt_pages[$num]['url']      = $model->getArticleURL(null, $article['seolink'], $num+1);
     }
 
     $page = $inCore->request('page', 'int', 1);
@@ -406,7 +403,6 @@ if ($do=='addarticle' || $do=='editarticle'){
         //display form
         $smarty->assign('do', $do);
         $smarty->assign('cfg', $cfg);
-        $smarty->assign('menuid', $menuid);
         $smarty->assign('pubcats', $pubcats);
         $smarty->assign('pagetitle', $pagetitle);
         $smarty->assign('add_notice', $add_notice);
@@ -595,7 +591,6 @@ if ($do=='my'){
     $messages = cmsCore::getSessionMessages();
 
     $smarty = $inCore->initSmarty('components', 'com_content_my.tpl');
-        $smarty->assign('menuid', $menuid);
         $smarty->assign('articles', $articles);
         $smarty->assign('messages', $messages);
         $smarty->assign('user_can_delete', $inCore->isUserCan('content/delete'));
@@ -616,7 +611,7 @@ if ($do=='best'){
 
     $sql = "SELECT c.*, IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'),	DATE_FORMAT(c.pubdate, '<strong>{$_LANG['TODAY']}</strong> {$_LANG['IN']} %H:%i'),
                     DATE_FORMAT(c.pubdate, '%d-%m-%Y'))  as pubdate, IFNULL(SUM(r.points), 0) as points, IFNULL(COUNT(r.points), 0) as votes,
-                    u.nickname as author, cat.title as category
+                    u.nickname as author, cat.title as category, cat.seolink as category_seolink
             FROM cms_users u, cms_category cat, cms_content c
             LEFT JOIN cms_ratings r ON r.item_id=c.id AND r.target='content'
             WHERE c.published = 1 AND c.canrate = 1 AND c.user_id = u.id AND c.category_id = cat.id
@@ -638,11 +633,10 @@ if ($do=='best'){
         if ($row%2) { $articles[$row]['class']="search_row1"; } else { $articles[$row]['class']="search_row2"; }
         $articles[$row]['comments'] = $inCore->getCommentsCount('content', $con['id']);
         $articles[$row]['karma'] 	= cmsKarmaFormat($con['points']);
-        $articles[$row]['url']      = $model->getArticleURL($menuid, $con['seolink']); 
+        $articles[$row]['url']      = $model->getArticleURL(null, $con['seolink']);
     }
 
     $smarty = $inCore->initSmarty('components', 'com_content_rating.tpl');
-        $smarty->assign('menuid', $menuid);
         $smarty->assign('articles', $articles);
     $smarty->display('com_content_rating.tpl');
 		

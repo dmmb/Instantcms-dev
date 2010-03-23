@@ -695,7 +695,7 @@ function cpPriceInput($id){
 		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
 
         if ($inCore->inRequest('on_moderate')){
-            $fields[1]['link'] = '/catalog/0/item%id%.html';
+            $fields[1]['link'] = '/catalog/item%id%.html';
         } else {
             $fields[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
         }

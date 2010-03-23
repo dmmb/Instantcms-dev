@@ -9,7 +9,7 @@
                     <a href="{profile_url login=$file.user_login}" title="{$file.user_nickname}">
                         <img src="/images/icons/users.gif" border="0" />
                     </a> 
-                    <a href="/users/0/{$file.user_id}/files.html" title="Все файлы пользователя">
+                    <a href="/users/{$file.user_id}/files.html" title="Все файлы пользователя">
                         <img src="/images/markers/folder.png" border="0" />
                     </a>
                 </td>
@@ -29,7 +29,7 @@
                     <a href="{profile_url login=$file.user_login}" title="{$file.user_nickname}">
                         <img src="/images/icons/users.gif" border="0" />
                     </a> 
-                    <a href="/users/0/{$file.user_id}/files.html" title="Все файлы пользователя">
+                    <a href="/users/{$file.user_id}/files.html" title="Все файлы пользователя">
                         <img src="/images/markers/folder.png" border="0" />
                     </a>
                 </td>

@@ -13,11 +13,6 @@ function mod_arhive($module_id){
         $inDB = cmsDatabase::getInstance();
 	global $_LANG;
 		$cfg = $inCore->loadModuleConfig($module_id);
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
 
 		$sql = "SELECT DATE_FORMAT( pubdate, '%M, %Y' ) fdate, DATE_FORMAT( pubdate, '%Y' ) year, DATE_FORMAT( pubdate, '%m' ) month, COUNT( id ) num
 				FROM cms_content"."\n";
@@ -43,7 +38,7 @@ function mod_arhive($module_id){
 		if ($inDB->num_rows($result)>0){		
 			while ($item = $inDB->fetch_assoc($result)){
 				$item['fdate'] = $inCore->getRusDate($item['fdate']);
-				echo '<div class="arhive_month"><a href="/arhive/'.$menuid.'/'.$item['year'].'/'.$item['month'].'">'.$item['fdate'].'</a> ('.$item['num'].')</div>';
+				echo '<div class="arhive_month"><a href="/arhive/'.$item['year'].'/'.$item['month'].'">'.$item['fdate'].'</a> ('.$item['num'].')</div>';
 			
 			}		
 		} else { echo '<p>'.$_LANG['ARHIVE_NOT_MATERIAL'].'</p>'; }

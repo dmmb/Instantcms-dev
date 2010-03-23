@@ -38,7 +38,7 @@
 					{if $is_user}
 						{if !$user_subscribed}
 							<div style="margin-top:5px;margin-bottom:5px">
-								<label style="padding:5px"><input name="subscribe" type="checkbox" value="1" /> {$LANG.NOTIFY_NEW_COMM} [<a href="/users/0/{$is_user}/editprofile.html#notices" target="_blank">{$LANG.CONFIG_NOTIFY}</a>]</label>
+								<label style="padding:5px"><input name="subscribe" type="checkbox" value="1" /> {$LANG.NOTIFY_NEW_COMM} [<a href="/users/{$is_user}/editprofile.html#notices" target="_blank">{$LANG.CONFIG_NOTIFY}</a>]</label>
 							</div>
 						{/if}
 					{/if}						
@@ -57,7 +57,7 @@
 					</div>
 					
 				{else}
-					<p>{$LANG.YOU_NEED} <a href="/users/0/{$is_user}/karma.html">{$LANG.KARMS}</a> {$LANG.TO_ADD_COMM}. {$LANG.NEED} &mdash; {$karma_need}, {$LANG.HAS} &mdash; {$karma_has}.</p>
+					<p>{$LANG.YOU_NEED} <a href="/users/{$is_user}/karma.html">{$LANG.KARMS}</a> {$LANG.TO_ADD_COMM}. {$LANG.NEED} &mdash; {$karma_need}, {$LANG.HAS} &mdash; {$karma_has}.</p>
 				{/if}
 
 			{else}

@@ -35,7 +35,7 @@
 				include $_SERVER['DOCUMENT_ROOT'].'/components/catalog/includes/shopcore.php';
 			}
 			$totalitems = shopIsInCart();
-			$cartlink = '/catalog/'.$cfg['menuid'].'/viewcart.html';
+			$cartlink = '/catalog/viewcart.html';
 
 			if ($user_id){ $user_sql = "(c.user_id=$user_id OR c.session_id='$sid')"; } else { $user_sql = "(c.user_id=0 AND c.session_id='$sid')"; }
 

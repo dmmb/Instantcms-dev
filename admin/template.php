@@ -47,7 +47,7 @@
 						<?php 
 							$new_messages =	cmsUser::isNewMessages($inUser->id);
 							if ($new_messages){
-								$msg_link = '<a href="/users/0/'.$inUser->id.'/messages.html" style="color:red">Новые сообщения</a> '.$new_messages.'';
+								$msg_link = '<a href="/users/'.$inUser->id.'/messages.html" style="color:red">Новые сообщения</a> '.$new_messages.'';
 							} else {
 								$msg_link = '<span style="color:#CCC">Нет новых сообщений</span>';
 							}

@@ -16,12 +16,6 @@ function mod_latestblogs($module_id){
         $inCore->loadModel('blogs');
         $model = new cms_model_blogs();
 
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
-
 		if (!isset($cfg['showrss'])) { $cfg['showrss'] = 1;}
 		if (!isset($cfg['minrate'])) { $cfg['minrate'] = 0;}
         if (!isset($cfg['namemode'])) { $cfg['namemode'] = 'blog';}
@@ -73,13 +67,13 @@ function mod_latestblogs($module_id){
                         $con['blog'] = dbGetField('cms_clubs', 'id='.$con['uid'], 'title');
                     }
 
-                    $link = $model->getPostURL($menuid, $con['bloglink'], $con['seolink']);
+                    $link = $model->getPostURL(null, $con['bloglink'], $con['seolink']);
                     $text = strip_tags($con['title']);
 
                     if (strlen($text)>70) { $text = substr($text, 0, 70). '...'; }
                     echo '<tr>';
                         echo '<td valign="top">';
-                        echo '<a class="mod_blog_userlink" href="'.$model->getBlogURL($menuid, $con['bloglink']).'">'.$con['blog'].'</a> &rarr; ';
+                        echo '<a class="mod_blog_userlink" href="'.$model->getBlogURL(null, $con['bloglink']).'">'.$con['blog'].'</a> &rarr; ';
                         echo '<a class="mod_blog_link" href="'.$link.'">'.$text.'</a> ('.$con['fpubdate'].')</td>';
                     echo '</tr>';
 

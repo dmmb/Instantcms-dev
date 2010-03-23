@@ -17,12 +17,6 @@ function mod_bestcontent($module_id){
 		}		
 		
 		$cfg = $inCore->loadModuleConfig($module_id);
-
-		if ($cfg['menuid']>0) {
-			$menuid = $cfg['menuid'];
-		} else {
-			$menuid = $inCore->menuId();
-		}
 		
 		if (!isset($cfg['shownum'])){
 			echo '<p>'.$_LANG['BESTCONTENT_CONFIG_TEXT'].'</p>';

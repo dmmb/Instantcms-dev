@@ -36,7 +36,7 @@
 			<td id=""><input name="pass" type="password" id="authinput" /></td>			
 		</tr>
     </table>
-    <div id="authoption"><input type="checkbox" value="1" name="remember"/>Запомнить меня | <a href="/0/passremind.html">Забыли пароль?</a></div>
+    <div id="authoption"><input type="checkbox" value="1" name="remember"/>Запомнить меня | <a href="/passremind.html">Забыли пароль?</a></div>
     <div id="authbutton"><input name="auth" type="submit" value="Войти" id="authbtn"/></div>
 </form>
 </div>
@@ -69,11 +69,11 @@
 							$uid    = $inUser->id;
 							$newmsg = usrNewMessages($inUser->id); 			  	
 			  ?>
-				<a href="/users/0/<?php echo $uid?>/profile.html" id="ht_profile">Мой профиль</a>
+				<a href="/users/<?php echo $uid?>/profile.html" id="ht_profile">Мой профиль</a>
 				<?php if (!$newmsg) { ?>	
-					<a href="/users/0/<?php echo $uid?>/messages.html" id="ht_messages">Cообщения</a>
+					<a href="/users/<?php echo $uid?>/messages.html" id="ht_messages">Cообщения</a>
 				<?php } else { ?>
-					<a style="color:#F60;" href="/users/0/<?php echo $uid?>/messages.html" id="ht_messages">Cообщения <?php echo strip_tags($newmsg)?></a>
+					<a style="color:#F60;" href="/users/<?php echo $uid?>/messages.html" id="ht_messages">Cообщения <?php echo strip_tags($newmsg)?></a>
 				<?php } ?>
 				<a href="/logout" id="ht_logout">Выход</a>
 			  <?php } ?>			</td>

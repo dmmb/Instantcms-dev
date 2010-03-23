@@ -11,7 +11,6 @@
 	function mod_polls($module_id){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
-        $menuid = $inCore->menuId();
 		$cfg = $inCore->loadModuleConfig($module_id);
 	
 		if ($cfg['poll_id']!=0){

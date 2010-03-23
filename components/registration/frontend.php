@@ -48,7 +48,6 @@ function registration(){
     global $_CFG;
     global $_LANG;
 
-    $menuid = $inCore->menuId();    
     $cfg = $inCore->loadComponentConfig('registration');
 
     //config defaults
@@ -237,7 +236,6 @@ function registration(){
             if (isset($msg)) { if($msg!='') { echo '<p><font color="red">'.$msg.'</font></p>'; } }           
 
             $smarty = $inCore->initSmarty('components', 'com_registration.tpl');
-                $smarty->assign('menuid', $menuid);
                 $smarty->assign('cfg', $cfg);
                 if(isset($login)){ $smarty->assign('login', $login); }
                 if(isset($nickname)){ $smarty->assign('nickname', $nickname); }
@@ -334,7 +332,7 @@ function registration(){
                             case 'none': $url = $back; break;
                             case 'index': $url = '/'; break;
                             case 'profile': $url = cmsUser::getProfileURL($user['login']); break;
-                            case 'editprofile': $url = '/users/0/'.$user['id'].'/editprofile.html'; break;
+                            case 'editprofile': $url = '/users/'.$user['id'].'/editprofile.html'; break;
                         }
                     } else { $url = $back; }
 

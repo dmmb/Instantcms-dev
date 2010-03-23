@@ -11,7 +11,6 @@
 	function mod_rss($module_id){	
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
-        $menuid = $inCore->menuId();
 		$cfg = $inCore->loadModuleConfig($module_id);
 	
 		include_once $_SERVER['DOCUMENT_ROOT'].'/includes/rss/lastRSS.php';

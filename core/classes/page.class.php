@@ -386,10 +386,10 @@ public function getUserLinks(){
         $newmsg = cmsUser::isNewMessages($uid);
         $html  .= '<a href="'.cmsUser::getProfileURL($inUser->login).'" id="ht_profile">Мой профиль</a>';
         if (!$newmsg){
-                $html .= '<a href="/users/0/'.$uid.'/messages.html" id="ht_messages">Cообщения</a>';
+                $html .= '<a href="/users/'.$uid.'/messages.html" id="ht_messages">Cообщения</a>';
         }
         else{
-                $html .= '<a href="/users/0/'.$uid.'/messages.html" id="ht_messages_new">Cообщения '.strip_tags($newmsg).'</a>';
+                $html .= '<a href="/users/'.$uid.'/messages.html" id="ht_messages_new">Cообщения '.strip_tags($newmsg).'</a>';
         }
         $html .= '<a href="/logout" id="ht_logout">Выход</a>';
     }

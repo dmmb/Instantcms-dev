@@ -142,7 +142,7 @@ function shopCart(){
 					}";									
 			echo '</script>'."\n";
 			//table
-			echo '<form action="/catalog/0/savecart.html" method="POST" name="cartform">';
+			echo '<form action="/catalog/savecart.html" method="POST" name="cartform">';
 			echo '<table width="100%" cellpadding="5" cellspacing="0" border="0">';
 			echo '<tr>';
 				echo '<td width="16">&nbsp;</td>';
@@ -247,7 +247,7 @@ function shopOrder($cfg){
 		if ($inDB->num_rows($rs)){
 			//BUILD LIST
 			//table
-			echo '<form action="/catalog/0/savecart.html" method="POST" name="cartform">';
+			echo '<form action="/catalog/savecart.html" method="POST" name="cartform">';
 			echo '<table width="100%" cellpadding="5" cellspacing="0" border="0">';
 			echo '<tr>';
 				echo '<td width="16">&nbsp;</td>';

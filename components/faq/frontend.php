@@ -44,7 +44,6 @@ function faq(){
     $inPage = cmsPage::getInstance();
     $inDB = cmsDatabase::getInstance();
     global $_LANG;
-	$menuid = $inCore->menuId();
 	$cfg = $inCore->loadComponentConfig('faq');
 	
 	$id 	= $inCore->request('id', 'int', 0);

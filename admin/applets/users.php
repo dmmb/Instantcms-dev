@@ -83,7 +83,7 @@ function applet_users(){
 		$actions = array();
 		$actions[0]['title'] = 'Профиль';
 		$actions[0]['icon']  = 'profile.gif';
-		$actions[0]['link']  = '/users/0/%id%/profile.html';
+		$actions[0]['link']  = '/users/%id%/profile.html';
 
 		$actions[1]['title'] = 'Личное сообщение';
 		$actions[1]['icon']  = 'message.gif';

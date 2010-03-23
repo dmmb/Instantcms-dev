@@ -18,7 +18,7 @@
                                 <input name="remember" type="checkbox" id="remember" value="1"  style="margin-right:0px"/> {$LANG.AUTH_REMEMBER}<br />
                             {/if}
                             {if $cfg.passrem}
-                                <a href="/0/passremind.html">{$LANG.AUTH_FORGOT}</a>
+                                <a href="/passremind.html">{$LANG.AUTH_FORGOT}</a>
                             {/if}
                         </td>
                     </tr>

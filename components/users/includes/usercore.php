@@ -134,7 +134,7 @@ function usrPublicAlbums($user_id){
 		while ($album = $inDB->fetch_assoc($rs)){
 			$html .= '<table border="0" cellpadding="2" cellspacing="0" style="float:left;margin-right:3px;"><tr>';
 			$html .= '<td><img src="/images/markers/photoalbum.png" border="0"/></td>';
-			$html .= '<td><a href="/photos/0/'.$album['id'].'/byuser'.$user_id.'.html">'.$album['album'].'</a> ('.$album['photos'].')</td>';
+			$html .= '<td><a href="/photos/'.$album['id'].'/byuser'.$user_id.'.html">'.$album['album'].'</a> ('.$album['photos'].')</td>';
 			$html .= '</tr></table>';
 			
 		}

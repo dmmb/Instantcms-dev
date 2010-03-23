@@ -17,7 +17,6 @@ function my_component(){
     $inPage = cmsPage::getInstance();       //ñòðàíèöà
     $inDB   = cmsDatabase::getInstance();   //áàçà äàííûõ
 
-	$menuid = $inCore->menuId();
 	$cfg    = ñmsLoadComponentConfig('my_component');
 	
 	$id = $inCore->request('id', 'int', 0);
@@ -35,7 +34,6 @@ function my_component(){
 		$inPage->printHeading('ÇÀÃÎËÎÂÎÊ ÊÎÌÏÎÍÅÍÒÀ');
 			
 		$smarty = $inCore->initSmarty('components', 'com_mycomponent_view.tpl');			
-		$smarty->assign('menuid', $menuid);
 		$smarty->display('com_mycomponent_view.tpl');
         
 	}
