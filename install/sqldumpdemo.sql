@@ -1113,21 +1113,23 @@ INSERT INTO `#__forums` (`id`, `category_id`, `title`, `description`, `auth_grou
  ('1002','1','Подфорум1','','0','3','1','1','5','6','','0','3'),
  ('1004','1','Подфорум2','','0','2','1','1','3','4','','0','3');
 
-INSERT INTO `#__menu` (`id`, `menu`, `title`, `link`, `linktype`, `linkid`, `target`, `component`, `ordering`, `published`, `template`, `allow_group`, `iconurl`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `parent_id`) VALUES ('1','root','-- Главная страница --','','link','-1','_self','','1','0','0','-1','','1','30','0','','0','0'),
- ('10','mainmenu','Новости','/content/10/novosti','category','2','_self','','1','1','0','-1','01.gif','2','3','1','','0','1'),
- ('13','mainmenu','Вопросы и ответы','/faq/13','component','faq','_self','','6','1','0','-1','27.gif','12','13','1','','0','1'),
- ('15','mainmenu','Пользователи','/users/15/all.html','component','users','_self','','11','1','0','-1','group.gif','22','23','1','','0','1'),
- ('16','mainmenu','Регистрация','/registration/16','component','registration','_self','','13','1','0','8','tag.gif','26','27','1','','0','1'),
- ('17','mainmenu','Блоги','/blogs/17','component','blog','_self','','4','1','0','-1','blog.gif','8','9','1','','0','1'),
- ('18','mainmenu','Форумы','/forum/18','component','forum','_self','','12','1','0','-1','29.gif','24','25','1','','0','1'),
- ('20','mainmenu','Фотогалерея','/photos/20','component','photos','_self','','3','1','0','-1','20.gif','6','7','1','','0','1'),
- ('21','mainmenu','Статьи','/content/21/stati','category','6','_self','','2','1','0','-1','22.gif','4','5','1','','0','1'),
- ('22','mainmenu','Прайс-лист','/price/22','component','price','_self','','7','1','0','-1','objects043.gif','14','15','1','','0','1'),
- ('23','mainmenu','Универсальный каталог','/catalog/23','component','catalog','_self','','8','1','0','-1','objects048.gif','16','17','1','','0','1'),
- ('25','mainmenu','Поиск по сайту','/search/25','component','search','_self','','10','1','0','-1','objects018.gif','20','21','1','','0','1'),
- ('27','mainmenu','Админка','/admin/','link','/admin/','_blank','','14','1','0','2','options.gif','28','29','1','','0','1'),
- ('37','mainmenu','Доска объявлений','/board/37','component','board','_self','','9','1','0','-1','objects038.gif','18','19','1','','0','1'),
- ('38','mainmenu','Клубы','/clubs/38','component','clubs','_self','','5','1','0','-1','45.gif','10','11','1','','0','1');
+INSERT INTO `#__menu` (`id`, `menu`, `title`, `link`, `linktype`, `linkid`, `target`, `component`, `ordering`, `published`, `template`, `allow_group`, `iconurl`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `parent_id`) VALUES
+(1, 'root', '-- Главная страница --', '-1', 'link', '-1', '_self', '', 1, 0, '0', -1, '', 1, 32, 0, '', 0, 0),
+(10, 'mainmenu', 'Новости', '/content/novosti', 'category', '2', '_self', '', 1, 1, '0', -1, '01.gif', 2, 3, 1, '', 0, 1),
+(13, 'mainmenu', 'Вопросы и ответы', '/faq', 'component', 'faq', '_self', '', 7, 1, '0', -1, '27.gif', 14, 15, 1, '', 0, 1),
+(15, 'mainmenu', 'Пользователи', '/users', 'component', 'users', '_self', '', 12, 1, '0', -1, 'group.gif', 24, 25, 1, '', 0, 1),
+(16, 'mainmenu', 'Регистрация', '/registration', 'component', 'registration', '_self', '', 14, 1, '0', 8, 'tag.gif', 28, 29, 1, '', 0, 1),
+(17, 'mainmenu', 'Блоги', '/blogs', 'component', 'blogs', '_self', '', 5, 1, '0', -1, 'blog.gif', 10, 11, 1, '', 0, 1),
+(18, 'mainmenu', 'Форумы', '/forum', 'component', 'forum', '_self', '', 13, 1, '0', -1, '29.gif', 26, 27, 1, '', 0, 1),
+(20, 'mainmenu', 'Фотогалерея', '/photos', 'component', 'photos', '_self', '', 4, 1, '0', -1, '20.gif', 8, 9, 1, '', 0, 1),
+(21, 'mainmenu', 'Статьи', '/content/stati', 'category', '6', '_self', '', 2, 1, '0', -1, '22.gif', 4, 5, 1, '', 0, 1),
+(22, 'mainmenu', 'Прайс-лист', '/price', 'component', 'price', '_self', '', 8, 1, '0', -1, 'objects043.gif', 16, 17, 1, '', 0, 1),
+(23, 'mainmenu', 'Универсальный каталог', '/catalog', 'component', 'catalog', '_self', '', 9, 1, '0', -1, 'objects048.gif', 18, 19, 1, '', 0, 1),
+(25, 'mainmenu', 'Поиск по сайту', '/search', 'component', 'search', '_self', '', 11, 1, '0', -1, 'objects018.gif', 22, 23, 1, '', 0, 1),
+(27, 'mainmenu', 'Админка', '/admin/', 'link', '/admin/', '_blank', '', 15, 1, '0', 2, 'options.gif', 30, 31, 1, '', 0, 1),
+(37, 'mainmenu', 'Доска объявлений', '/board', 'component', 'board', '_self', '', 10, 1, '0', -1, 'objects038.gif', 20, 21, 1, '', 0, 1),
+(38, 'mainmenu', 'Клубы', '/clubs', 'component', 'clubs', '_self', '', 6, 1, '0', -1, '45.gif', 12, 13, 1, '', 0, 1),
+(40, 'mainmenu', 'Геология', '/content/stati/geologija', 'category', '12', '_self', '', 3, 1, '0', -1, '', 6, 7, 1, '', 0, 1);
 
 INSERT INTO `#__modules` (`id`, `position`, `name`, `title`, `is_external`, `content`, `ordering`, `showtitle`, `published`, `user`, `config`, `original`, `css_prefix`, `allow_group`, `cache`, `cachetime`, `cacheint`, `template`) VALUES ('1','left','Меню','Меню','1','mod_menu','6','1','1','0','---\nmenu: mainmenu\njtree: 1\n','1','','-1','0','1','HOUR','module.tpl'),
  ('17','top','Главная страница','Добро пожаловать!','0','<table width="100%" cellspacing="5" cellpadding="0" border="0">\r\n    <tbody>\r\n        <tr>\r\n            <td width="216" valign="top"><a target="_blank" href="http://www.instantcms.ru"><img height="100" width="206" border="0" alt="" src="/images/content/instantcms.jpg" /></a></td>\r\n            <td valign="top">\r\n            <p>Теперь, когда InstantCMS установлена и готова к работе, вы можете приступить к наполнению вашего сайта каким-либо содержимым. Для наглядности изучения InstantCMS, база данных уже содержит демонстрационные данные.</p>\r\n            <div>Для перехода в панель управления нажмите <a href="/admin/">здесь</a>.\r\n            <div>Используйте логин и пароль, указанные при установке.</div>\r\n            <div>&nbsp;</div>\r\n            <div>Чтобы изменить этот текст, <a href="/admin/index.php?view=modules&amp;do=edit&amp;id=17">отредактируйте модуль &quot;Главная страница&quot;</a>.</div>\r\n            </div>\r\n            </td>\r\n        </tr>\r\n    </tbody>\r\n</table>','0','1','1','1','---\n','1','','-1','0','1','HOUR','module.tpl'),

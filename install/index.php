@@ -15,10 +15,7 @@
 
     include('../core/cms.php');
 
-    $inCore     = cmsCore::getInstance();
-
-    $inCore->loadClass('config');       //конфигурация
-
+    $inCore     = cmsCore::getInstance(true);
     $inConf     = cmsConfig::getInstance();
 
     //Минимальная версия PHP

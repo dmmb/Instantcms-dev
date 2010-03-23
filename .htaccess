@@ -4,6 +4,9 @@ RewriteEngine On
 RewriteBase /
 RewriteRule ^.htaccess$ - [F]
 
-RewriteCond $1 !^(index\.php|(.*)view=search(.*)|images(.*)|(components|modules|templates)(.*)images(.*)|robots\.txt|(.*)\.jpg|(.*)\.gif|(.*)\.xml|(.*)\.png|(.*)\.swf|(.*)\.js|(.*)\.css|admin|(.*)fckeditor(.*)|(.*).php)
+RewriteRule ^load/url=(.*)$ /index.php?uri=files&do=download&fileurl=$1
+RewriteRule ^go/url=(.*)$ /index.php?uri=files&do=redirect&url=$1
+
+RewriteCond $1 !^(index\.php|(.*)view=search(.*)|install(.*)|migrate(.*)|images(.*)|admin(.*)|upload(.*)|(components|modules|templates)(.*)images(.*)|robots\.txt|(.*)\.jpg|(.*)\.gif|(.*)\.xml|(.*)\.png|(.*)\.swf|(.*)\.js|(.*)\.css|admin|(.*)fckeditor(.*)|(.*).php)
 
 RewriteRule ^(.*)$ /index.php?uri=$1 [L]
