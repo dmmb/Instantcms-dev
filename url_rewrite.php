@@ -15,7 +15,7 @@
     //
     //      rewrite         : подменить URI перед определением компонента
     //      redirect        : редирект на target с кодом 303 See Other
-    //      redirect-303    : редирект на target с кодом 301 Moved Permanently
+    //      redirect-301    : редирект на target с кодом 301 Moved Permanently
     //      alias           : заинклудить файл target и остановить скрипт
     //
 
@@ -53,6 +53,24 @@
                             'action'  => 'alias'
                          );
 
+        $rules[] = array(
+                            'source'  => '/^registration\/activate.html$/i',
+                            'target'  => '/core/auth/regactivate.html',
+                            'action'  => 'alias'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^activate\/(.+)$/i',
+                            'target'  => 'registration/activate/{1}',
+                            'action'  => 'rewrite'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^passremind.html$/i',
+                            'target'  => 'registration/passremind',
+                            'action'  => 'rewrite'
+                         );
+
         //
         // RSS
         //
@@ -68,14 +86,24 @@
         //
 
         $rules[] = array(
-                            'source'  => '/^go\/url=(.*)$/i',
+                            'source'  => '/^go\/url=(.+)$/i',
                             'target'  => 'files/go/{1}',
                             'action'  => 'rewrite'
                          );
 
         $rules[] = array(
-                            'source'  => '/^load\/url=(.*)$/i',
+                            'source'  => '/^load\/url=(.+)$/i',
                             'target'  => 'files/load/{1}',
+                            'action'  => 'rewrite'
+                         );
+
+        //
+        // Баннеры
+        //
+
+        $rules[] = array(
+                            'source'  => '/^gobanner([0-9]+)$/i',
+                            'target'  => 'banners/{1}',
                             'action'  => 'rewrite'
                          );
 

@@ -152,7 +152,7 @@ if ($do=='view'){
 		$inPage->addPathway($album['title']);
 	}
 
-    if (!$can_view && $owner=='club') { $inCore->redirect('/clubs/0/'.$club['id']); }
+    if (!$can_view && $owner=='club') { $inCore->redirect('/clubs/'.$club['id']); }
 
 	//TITLE
 	echo '<h1 class="con_heading">'.$pagetitle.'</h1>';
@@ -216,7 +216,7 @@ if ($do=='view'){
 			if (isset($userid)){
 				$usersql = "AND f.user_id = ".$userid;
 				$user    = dbGetField('cms_users', 'id='.$userid, 'nickname, login');
-				echo '<div class="photo_userbar"><strong>'.$_LANG['USER_PHOTOS'].': </strong><a href="'.cmsUser::getProfileURL($user['login']).'">'.$user['nickname'].'</a> (<a href="/photos/'.$menuid.'/'.$id.'">'.$_LANG['SHOW_ALL'].'</a>)</div>';
+				echo '<div class="photo_userbar"><strong>'.$_LANG['USER_PHOTOS'].': </strong><a href="'.cmsUser::getProfileURL($user['login']).'">'.$user['nickname'].'</a> (<a href="/photos/'.$id.'">'.$_LANG['SHOW_ALL'].'</a>)</div>';
 			} else {
 				$usersql = '';
 			}
@@ -341,7 +341,7 @@ if ($do=='view'){
 							$inPage->addHeadJS('components/photos/js/photos.js');
 							echo '<tr id="moder'.$con['id'].'"><td align="center">
 								<div style="margin-top:4px">'.$_LANG['WAIT_MODERING'].'</div>
-								<div><a href="javascript:publishPhoto('.$con['id'].')" style="color:green">'.$_LANG['PUBLISH'].'</a> | <a href="/photos/'.$menuid.'/delphoto'.$con['id'].'.html" style="color:red">'.$_LANG['DELETE'].'</a></div>
+								<div><a href="javascript:publishPhoto('.$con['id'].')" style="color:green">'.$_LANG['PUBLISH'].'</a> | <a href="/photos/delphoto'.$con['id'].'.html" style="color:red">'.$_LANG['DELETE'].'</a></div>
 							</td></tr>';						
 						}
 						echo '</table>';
@@ -390,7 +390,7 @@ if($do=='viewphoto'){
 			$inPage->addPathway($_LANG['PHOTOALBUMS'], '/photos/'.clubRootAlbumId($club['id']));            
 		}
 
-        if (!$can_view && $owner=='club') { $inCore->redirect('/clubs/0/'.$club['id']); }
+        if (!$can_view && $owner=='club') { $inCore->redirect('/clubs/'.$club['id']); }
 
 		//PATHWAY ENTRY
 		$left_key = $photo['NSLeft'];

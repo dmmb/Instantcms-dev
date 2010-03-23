@@ -142,12 +142,12 @@ function comments($target='', $target_id=0){
 					case 'userphoto':
 						$table      = 'cms_user_photos';
 						$subj       = $_LANG['YOUR_PHOTO'];
-						$targetlink = 'http://'.$_SERVER['HTTP_HOST'].'/users/0/%author_id%/photo'.$target_id.'.html#c'.$comment_id;
+						$targetlink = 'http://'.$_SERVER['HTTP_HOST'].'/users/%author_id%/photo'.$target_id.'.html#c'.$comment_id;
 					break;
 					case 'photo':
 						$table      = 'cms_photo_files';
 						$subj       = $_LANG['YOUR_PHOTO'];
-						$targetlink = 'http://'.$_SERVER['HTTP_HOST'].'/photos/0/photo'.$target_id.'.html#c'.$comment_id;
+						$targetlink = 'http://'.$_SERVER['HTTP_HOST'].'/photos/photo'.$target_id.'.html#c'.$comment_id;
 					break;
 					case 'blog':
 						$table      = 'cms_blog_posts';

@@ -57,7 +57,7 @@
 
         //RewriteRule ^blogs/[0-9]*)/moderate.html$ /index.php?view=blog&do=moderate&id=$1
         $routes[] = array(
-                            '_uri'  => '/^blogs\/[0-9]+)\/moderate.html$/i',
+                            '_uri'  => '/^blogs\/([0-9]+)\/moderate.html$/i',
                             'do'    => 'moderate',
                             1       => 'id'
                          );

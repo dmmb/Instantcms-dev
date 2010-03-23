@@ -146,10 +146,10 @@
 
         //RewriteRule ^users/([0-9]*)/select-avatar/(.*)$ /index.php?view=users&do=select_avatar&id=$1&set_avatar=1&file=$2
         $routes[] = array(
-                            '_uri'  => '/^users\/([0-9]+)\/select\-avatar\/(.+)$/i',
+                            '_uri'  => '/^users\/([0-9]+)\/select\-avatar\/([0-9]+)$/i',
                             'do'    => 'select_avatar',
                             1       => 'id',
-                            2       => 'file',
+                            2       => 'avatar_id',
                             'set_avatar' => '1'
                          );
 

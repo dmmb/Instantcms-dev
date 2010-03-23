@@ -130,9 +130,9 @@ if ($do=='create'){
         if ($cfg['min_karma'] && !$inCore->userIsAdmin($inUser->id)){
             $user_karma = cmsUser::getKarma($inUser->id);
             if ($ownertype=='single' && ($user_karma < $cfg['min_karma_private']))
-                $error_msg = '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/0/'.$user_id.'/karma.html">'.$_LANG['BLOG_KARMS'].'</a> '.$_LANG['FOR_CREATE_PERSON_BLOG'].' &mdash; '.$cfg['min_karma_private'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
+                $error_msg = '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/'.$user_id.'/karma.html">'.$_LANG['BLOG_KARMS'].'</a> '.$_LANG['FOR_CREATE_PERSON_BLOG'].' &mdash; '.$cfg['min_karma_private'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
             if ($ownertype=='multi' && ($user_karma < $cfg['min_karma_public']))
-                $error_msg = '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/0/'.$user_id.'/karma.html">'.$_LANG['BLOG_KARMS'].'</a> '.$_LANG['FOR_CREATE_TEAM_BLOG'].' &mdash; '.$cfg['min_karma_public'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
+                $error_msg = '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/'.$user_id.'/karma.html">'.$_LANG['BLOG_KARMS'].'</a> '.$_LANG['FOR_CREATE_TEAM_BLOG'].' &mdash; '.$cfg['min_karma_public'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
         }
 
         //Если ошибки не были найдены
@@ -221,9 +221,9 @@ if ($do=='config'){
         if ($cfg['min_karma'] && !$inCore->userIsAdmin($inUser->id)){
             $user_karma = cmsUser::getKarma($inUser->id);
             if ($ownertype=='single' && ($user_karma < $cfg['min_karma_private']))
-                $error_msg = '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/0/'.$user_id.'/karma.html">'.$_LANG['KARMS'].'</a> '.$_LANG['FOR_CREATE_PERSON_BLOG'].' &mdash; '.$cfg['min_karma_private'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
+                $error_msg = '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/'.$user_id.'/karma.html">'.$_LANG['KARMS'].'</a> '.$_LANG['FOR_CREATE_PERSON_BLOG'].' &mdash; '.$cfg['min_karma_private'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
             if ($ownertype=='multi' && ($user_karma < $cfg['min_karma_public']))
-                $error_msg = '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/0/'.$user_id.'/karma.html">'.$_LANG['KARMS'].'</a> '.$_LANG['FOR_CREATE_TEAM_BLOG'].' &mdash; '.$cfg['min_karma_public'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
+                $error_msg = '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/'.$user_id.'/karma.html">'.$_LANG['KARMS'].'</a> '.$_LANG['FOR_CREATE_TEAM_BLOG'].' &mdash; '.$cfg['min_karma_public'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
         }
 
         //Если ошибки не найдены
@@ -342,7 +342,7 @@ if ($do=='blog'){
         $error = '<h1 class="con_heading">'.$_LANG['CLOSED_BLOG'].'</h1><p>'.$_LANG['CLOSED_BLOG_TEXT'] .'</p>';
     }
 	if ( !$can_view && $owner=='club' ) {
-        $error = '<h1 class="con_heading">'.$_LANG['CLOSED_BLOG'].'</h1><p>'.str_replace('%link%', '/clubs/0/'.$blog['user_id'], $_LANG['CLOSED_BLOG_CLUB_TEXT']).'</p>';
+        $error = '<h1 class="con_heading">'.$_LANG['CLOSED_BLOG'].'</h1><p>'.str_replace('%link%', '/clubs/'.$blog['user_id'], $_LANG['CLOSED_BLOG_CLUB_TEXT']).'</p>';
     }
 
     //Если есть ошибки - показываем и выходим
@@ -907,7 +907,7 @@ if($do=='post'){
     if (!$can_view){
         $inPage->printHeading($_LANG['CLOSED_POST']);
         if ($owner == 'user') { echo '<p>'.$_LANG['CLOSED_POST_TEXT'].'</p>'; }
-        if ($owner == 'club') { echo '<p>'.str_replace('%link%', '/clubs/0/'.$blog['user_id'], $_LANG['CLOSED_BLOG_CLUB_TEXT']).'</p>'; }
+        if ($owner == 'club') { echo '<p>'.str_replace('%link%', '/clubs/'.$blog['user_id'], $_LANG['CLOSED_BLOG_CLUB_TEXT']).'</p>'; }
         return;
     }
 

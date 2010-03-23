@@ -982,24 +982,26 @@ if ($do=='select_avatar'){
         $avatars_dir        = $_SERVER['DOCUMENT_ROOT']."/images/users/avatars/library";
         $avatars_dir_rel    = "/images/users/avatars/library";
 
+        //get avatars list from library directory
+        $avatars_dir_handle = opendir($avatars_dir);
+        $avatars            = array();
+
+        while ($nextfile = readdir($avatars_dir_handle))
+        {
+            if(($nextfile!='.')&&($nextfile!='..')&&( strstr($nextfile, '.gif') || strstr($nextfile, '.jpg') || strstr($nextfile, '.jpeg') || strstr($nextfile, '.png')  ) )
+            {
+                $avatars[] = $nextfile;
+            }
+        }
+
+        closedir($avatars_dir_handle);
+
         if (!$inCore->inRequest('set_avatar')){
 
             //SHOW AVATARS LIST
             $inPage->setTitle($_LANG['SELECT_AVATAR']);
 			$inPage->addPathway($inUser->nickname, cmsUser::getProfileURL($inUser->login));
 			$inPage->addPathway($_LANG['SELECT_AVATAR']);
-
-            //get avatars list from library directory
-            $avatars_dir_handle = opendir($avatars_dir);
-            $avatars            = array();
-            while ($nextfile = readdir($avatars_dir_handle))
-            {
-                if(($nextfile!='.')&&($nextfile!='..')&&( strstr($nextfile, '.gif') || strstr($nextfile, '.jpg') || strstr($nextfile, '.jpeg') || strstr($nextfile, '.png')  ) )
-                {
-                    $avatars[] = $nextfile;
-                }
-            }
-            closedir($avatars_dir_handle);
 
             //paging
             $maxcols = 4;
@@ -1022,12 +1024,13 @@ if ($do=='select_avatar'){
         } else {
 
             //SET AVATAR TO SELECTED
-            $file = $inCore->request('file', 'str', '');
+
+            $avatar_id  = $inCore->request('avatar_id', 'int', 0);
+            $file       = $avatars[$avatar_id];
+
             if (file_exists($avatars_dir.'/'.$file)){
 
                 $userid = $id;
-
-                echo($file);
 
                 $uploaddir 		= $_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/';
                 $realfile		= $file;
@@ -1040,15 +1043,17 @@ if ($do=='select_avatar'){
                 $result = $inDB->query($sql) ;
                 if ($inDB->num_rows($result)){
                     $old = $inDB->fetch_assoc($result);
-                    @unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/'.$old['imageurl']);
-                    @unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/small/'.$old['imageurl']);
+                    if ($old['imageurl'] && $old['imageurl']!='nopic.jpg'){
+                        @unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/'.$old['imageurl']);
+                        @unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/small/'.$old['imageurl']);
+                    }
                 }
                 //CREATE THUMBNAIL
                 if (isset($cfg['smallw'])) { $smallw = $cfg['smallw']; } else { $smallw = 64; }
                 if (isset($cfg['medw'])) { 	 $medw = $cfg['medw']; } else { $medw = 200; }
 
                 $inCore->includeGraphics();
-                @img_resize($uploadfile, $uploadavatar, $medw, $medw);
+                copy($uploadfile, $uploadavatar);
                 @img_resize($uploadfile, $uploadthumb, $smallw, $smallw);
 
                 //MODIFY PROFILE

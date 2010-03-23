@@ -2197,16 +2197,16 @@ class cmsCore {
                              if (mysql_num_rows($result)){
                                 $data = mysql_fetch_assoc($result);
                                 if ($short) { $data['title'] = substr($data['title'], 0, 30).'...'; }
-                                $html .= '<a href="/photos/0/photo'.$target_id.'.html#c">'.$data['title'].'</a>';
-                                if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].'/photos/0/photo'.$target_id.'.html#c'; }
+                                $html .= '<a href="/photos/photo'.$target_id.'.html#c">'.$data['title'].'</a>';
+                                if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].'/photos/photo'.$target_id.'.html#c'; }
                              }
                              break;
             case 'palbum':   $result = $inDB->query("SELECT title FROM cms_photo_albums WHERE id = $target_id LIMIT 1") ;
                              if (mysql_num_rows($result)){
                                 $data = mysql_fetch_assoc($result);
                                 if ($short) { $data['title'] = substr($data['title'], 0, 30).'...'; }
-                                $html .= '<a href="/photos/0/'.$target_id.'#c">'.$data['title'].'</a>';
-                                if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].'/photos/0/'.$target_id.'#c'; }
+                                $html .= '<a href="/photos/'.$target_id.'#c">'.$data['title'].'</a>';
+                                if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].'/photos/'.$target_id.'#c'; }
                              }
                              break;
             case 'blog':     $result = $inDB->query("SELECT p.title as title, b.seolink as bloglink, p.seolink as seolink FROM cms_blog_posts p, cms_blogs b WHERE p.id = $target_id AND p.blog_id = b.id LIMIT 1") ;
@@ -2223,24 +2223,24 @@ class cmsCore {
                              if (mysql_num_rows($result)){
                                 $data = mysql_fetch_assoc($result);
                                 if ($short) { $data['title'] = substr($data['title'], 0, 30).'...'; }
-                                $html .= '<a href="/catalog/0/item'.$target_id.'.html#c">'.$data['title'].'</a>';
-                                if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].'/catalog/0/item'.$target_id.'.html#c'; }
+                                $html .= '<a href="/catalog/item'.$target_id.'.html#c">'.$data['title'].'</a>';
+                                if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].'/catalog/item'.$target_id.'.html#c'; }
                              }
                              break;
             case 'userphoto':$result = $inDB->query("SELECT title, user_id FROM cms_user_photos WHERE id = $target_id LIMIT 1") ;
                              if (mysql_num_rows($result)){
                                 $data = mysql_fetch_assoc($result);
                                 if ($short) { $data['title'] = substr($data['title'], 0, 30).'...'; }
-                                $html .= '<a href="/users/0/'.$data['user_id'].'/photo'.$target_id.'.html">'.$data['title'].'</a>';
-                                if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].'/users/0/'.$data['user_id'].'/photo'.$target_id.'.html#c'; }
+                                $html .= '<a href="/users/'.$data['user_id'].'/photo'.$target_id.'.html">'.$data['title'].'</a>';
+                                if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].'/users/'.$data['user_id'].'/photo'.$target_id.'.html#c'; }
                              }
                              break;
             case 'forum': 	$result = $inDB->query("SELECT title FROM cms_forum_threads WHERE id = $target_id LIMIT 1") ;
                              if (mysql_num_rows($result)){
                                 $data = mysql_fetch_assoc($result);
                                 if ($short) { $data['title'] = substr($data['title'], 0, 30).'...'; }
-                                $html .= '<a href="/forum/0/thread'.$target_id.'.html">'.$data['title'].'</a>';
-                                if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].'/forum/0/thread'.$target_id.'.html'; }
+                                $html .= '<a href="/forum/thread'.$target_id.'.html">'.$data['title'].'</a>';
+                                if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].'/forum/thread'.$target_id.'.html'; }
                              }
                              break;
             case 'bug': 	$result = $inDB->query("SELECT title FROM bq_bugs WHERE id = $target_id LIMIT 1") ;

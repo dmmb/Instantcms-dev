@@ -35,7 +35,6 @@ function blogCats($blog_id, $bloglink, $cat_id){
 	$inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
 
-    global $menuid;
 	$html = '';
 	
 	$rootposts = dbRowsCount('cms_blog_posts', "blog_id = $blog_id AND published = 1");
@@ -59,7 +58,6 @@ function blogCats($blog_id, $bloglink, $cat_id){
 	
 	$smarty = $inCore->initSmarty('components', 'com_blog_catslist.tpl');			
 	
-	$smarty->assign('menuid', $menuid);
 	$smarty->assign('blog_id', $blog_id);
 	$smarty->assign('bloglink', $bloglink);
 	$smarty->assign('cat_id', $cat_id);
@@ -96,7 +94,6 @@ function blogPostNav($model, $post_pubdate, $blog_id, $bloglink){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
 
-    global $menuid;
     global $_LANG;
 
 	$html1 = '';
@@ -105,13 +102,13 @@ function blogPostNav($model, $post_pubdate, $blog_id, $bloglink){
 	$prevpost = $inDB->get_fields('cms_blog_posts', "pubdate < '$post_pubdate' AND blog_id = $blog_id", 'seolink, title', "pubdate DESC");
 
 	if ($prevpost['seolink']) {
-		$html1 .= '&larr; <a href="'.$model->getPostUrl($menuid, $bloglink, $prevpost['seolink']).'">'.$prevpost['title'].'</a>';
+		$html1 .= '&larr; <a href="'.$model->getPostUrl(null, $bloglink, $prevpost['seolink']).'">'.$prevpost['title'].'</a>';
 	}
 
 	$nextpost = $inDB->get_fields('cms_blog_posts', "pubdate > '$post_pubdate' AND blog_id = $blog_id", 'seolink, title', "pubdate ASC");
 
 	if ($nextpost['seolink']) {
-		$html2 = '<a href="'.$model->getPostUrl($menuid, $bloglink, $nextpost['seolink']).'">'.$nextpost['title'].'</a> &rarr;';
+		$html2 = '<a href="'.$model->getPostUrl(null, $bloglink, $nextpost['seolink']).'">'.$nextpost['title'].'</a> &rarr;';
 	}
 	
 	if ($html1 && $html2){

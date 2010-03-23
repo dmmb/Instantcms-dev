@@ -15,17 +15,16 @@
 
         //RewriteRule ^activate/(.*)$ /index.php?view=registration&do=activate&code=$1
         $routes[] = array(
-                            '_uri'  => '/^activate\/(.+)$/i',
+                            '_uri'  => '/^registration\/activate\/(.+)$/i',
                             'do'    => 'activate',
                             1       => 'code'
                          );
 
         //RewriteRule ^passremind.html$ /index.php?view=registration&do=passremind
         $routes[] = array(
-                            '_uri'  => '/^passremind$/i',
+                            '_uri'  => '/^registration\/passremind$/i',
                             'do'    => 'passremind'
                          );
-
 
         return $routes;
 
