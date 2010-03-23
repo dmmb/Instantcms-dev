@@ -40,6 +40,7 @@ function mod_comments($module_id){
 		$sql = "SELECT c.id as id,
                        c.target as target,
                        c.target_id as target_id,
+                       c.target_link as target_link, 
                        c.content as content,
                        c.guestname,
                        IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(c.pubdate, '<strong>{$_LANG['TODAY']}</strong> {$_LANG['IN']} %H:%i'),
@@ -68,7 +69,7 @@ function mod_comments($module_id){
 
                 if ($con['rating'] >= $cfg['minrate']){
 
-                    $link = $inCore->getCommentLink($con['target'], $con['target_id'], false, true) . $con['id'];
+                    $link = $con['target_link'] . '#c'.$con['id'];
                     $text = strip_tags($inCore->parseSmiles($con['content'], true));
 
                     if (strlen($text)>50) { $text = substr($text, 0, 50). '...'; }
