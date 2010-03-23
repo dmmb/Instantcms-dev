@@ -12,7 +12,7 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-define('CORE_VERSION', 		'1.5.3');
+define('CORE_VERSION', 		'1.5.4 beta2');
 define('CORE_BUILD', 		'1');
 define('CORE_VERSION_DATE', '2009-05-23');
 define('CORE_BUILD_DATE', 	'2008-08-31');
@@ -29,7 +29,9 @@ class cmsCore {
     private         $uri;
     private         $component;
 
-    private function __construct() {
+    private function __construct($install_mode=false) {
+
+        if ($install_mode){ return; }
 
         //подключим базу и конфиг
         $this->loadClass('db');
@@ -54,9 +56,9 @@ class cmsCore {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static function getInstance() {  
+    public static function getInstance($install_mode=false) {
         if (self::$instance === null) {  
-            self::$instance = new self;  
+            self::$instance = new self($install_mode);
         }  
         return self::$instance;
     }
@@ -1368,7 +1370,7 @@ class cmsCore {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public function redirect($url, $code){
+    public function redirect($url, $code='303'){
         if ($code == '301'){
             header('HTTP/1.1 301 Moved Permanently');
         } else {
