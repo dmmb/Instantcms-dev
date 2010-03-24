@@ -10,6 +10,27 @@ class cms_model_catalog{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
+    public function getCommentTarget($target, $target_id) {
+
+        $target = array();
+
+        switch($target){
+
+            case 'catalog': $item            = $this->inDB->get_fields('cms_uc_items', "id={$target_id}", 'title');
+                            if (!$item) { return false; }
+                            $target['link']  = '/catalog/item'.$target_id.'.html';
+                            $target['title'] = $item['title'];
+                            break;
+
+        }
+
+        return ($target ? $target : false);
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
 	public function deleteItem($id){
         $inCore = cmsCore::getInstance();
         $imageurl = $this->getItemImageUrl($id);

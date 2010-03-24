@@ -19,6 +19,33 @@ class cms_model_photos{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
+    public function getCommentTarget($target, $target_id) {
+
+        $target = array();
+
+        switch($target){
+
+            case 'palbum': $album           = $this->inDB->get_fields('cms_photo_albums', "id={$target_id}", 'title');
+                           if (!$album) { return false; }
+                           $target['link']  = '/photos/'.$target_id;
+                           $target['title'] = $album['title'];
+                           break;
+
+            case 'photo':  $photo           = $this->inDB->get_fields('cms_photo_files', "id={$target_id}", 'title');
+                           if (!$photo) { return false; }
+                           $target['link']  = '/photos/photo'.$target_id.'.html';
+                           $target['title'] = $photo['title'];
+                           break;
+
+        }
+
+        return ($target ? $target : false);
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
 	public function deletePhoto($id, $file=''){
         
         $inCore = cmsCore::getInstance();

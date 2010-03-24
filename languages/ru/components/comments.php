@@ -16,6 +16,7 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * e-mail: firs.yura@gmail.com
  * site: firs.org.ua
  */
+$_LANG['ERR_UNKNOWN_TARGET']      ='Ошибка определения объекта комментирования!';
 $_LANG['ERR_DEFINE_USER']         ='Ошибка определения пользователя!';
 $_LANG['ERR_USER_NAME']           ='Вы не указали свое имя!';
 $_LANG['ERR_COMMENT_TEXT']        ='Введите текст комментария!';

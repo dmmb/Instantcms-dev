@@ -27,7 +27,8 @@ class cms_model_comments{
 
         $sql = "INSERT INTO cms_comments (parent_id, user_id, target, target_id, guestname, content, pubdate, published)
                 VALUES ({$item['parent_id']}, {$item['user_id']}, '{$item['target']}', {$item['target_id']},
-                        '{$item['guestname']}', '{$item['content']}', NOW(), {$item['published']})";
+                        '{$item['guestname']}', '{$item['content']}', NOW(), {$item['published']},
+                        '{$item['target_title']}', '{$item['target_link']}')";
 
         $this->inDB->query($sql);
 
