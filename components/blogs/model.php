@@ -16,6 +16,34 @@ class cms_model_blogs{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
+   public function getCommentTarget($target, $target_id) {
+
+        $target = array();
+
+        switch($target){
+
+            case 'blog': $sql = "SELECT p.title as title,
+                                        p.seolink as seolink,
+                                        b.seolink as bloglink
+                                 FROM cms_blog_posts p, cms_blogs b
+                                 WHERE p.blog_id = b.id AND p.id={$target_id}
+                                 LIMIT 1";
+                         $res = $this->inDB->query($sql);
+                         if (!$this->inDB->num_rows($res)){ return false; }
+                         $post = $this->inDB->fetch_assoc($res);
+                         $target['link']  = $this->getPostURL(null, $post['bloglink'], $post['seolink']);
+                         $target['title'] = $post['title'];
+                         break;
+
+        }
+
+        return ($target ? $target : false);
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
     public function getBlog($id){
 
         $sql = "SELECT *

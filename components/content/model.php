@@ -19,6 +19,27 @@ class cms_model_content{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
+    public function getCommentTarget($target, $target_id) {
+
+        $target = array();
+
+        switch($target){
+
+            case 'article': $article            = $this->inDB->get_fields('cms_content', "id={$target_id}", 'seolink, title');
+                            if (!$article) { return false; }
+                            $target['link']     = $this->getArticleURL(null, $article['seolink']);
+                            $target['title']    = $article['title'];
+                            break;
+
+        }
+
+        return ($target ? $target : false);
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
     public function getCategory($category_id) {
 
         $sql = "SELECT *

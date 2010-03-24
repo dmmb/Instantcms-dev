@@ -84,6 +84,8 @@ function comments($target='', $target_id=0){
         $target         = $inCore->request('target', 'str', '');
         $target_id      = $inCore->request('target_id', 'int', 0);
 
+        if (!$target || !$target_id) { $error = $_LANG['ERR_UNKNOWN_TARGET']; }
+
         //Проверяем ошибки
         if ($user_id != $inUser->id) { $error = $_LANG['ERR_DEFINE_USER']; }
         if (!$guestname && !$user_id) { $error = $_LANG['ERR_USER_NAME']; }
@@ -95,6 +97,19 @@ function comments($target='', $target_id=0){
 		} else {
             $error  = $_LANG['ERR_COMMENT_ADD'];
         }
+
+        // получаем массив со ссылкой и заголовком цели комментария
+        // для этого:
+        //  1. узнаем ответственный компонент из cms_comment_targets
+        $target_component = $inDB->get_field('cms_comment_targets', "target='{$target}", 'component');        
+        if (!$target_component) { $error = $_LANG['ERR_UNKNOWN_TARGET']; }
+        //  2. подключим модель этого компонента
+        $inCore->loadModel($target_component);
+        eval('$target_model = new cms_model_'.$target_component.'();');
+        if (!$target_model) { $error = $_LANG['ERR_UNKNOWN_TARGET']; }
+        //  3. запросим массив $target[link, title] у метода getCommentTarget модели
+        $target_data = $target_model->getCommentTarget($target, $target_id);
+        if (!$target_data) { $error = $_LANG['ERR_UNKNOWN_TARGET']; }
 
 		if(!$error){ //Если ошибок не было, действуем
 
@@ -108,7 +123,9 @@ function comments($target='', $target_id=0){
                                                     'target_id'=>$target_id,
                                                     'guestname'=>$guestname,
                                                     'content'=>$content,
-                                                    'published'=>$cfg['publish']
+                                                    'published'=>$cfg['publish'],
+                                                    'target_title'=>$target_data['title'], 
+                                                    'target_link'=>$target_data['link']
                                                   ));
 
 			//подписываем пользователя на обновления, если нужно
