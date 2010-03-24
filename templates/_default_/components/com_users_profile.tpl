@@ -53,39 +53,39 @@
                             <div class="usr_profile_menu">
 							<table cellpadding="0" cellspacing="1" align="center" style="margin-left:auto;margin-right:auto"><tr>
 							{if !$myprofile}
-							<td><a href="/users/{$menuid}/{$usr.id}/sendmessage.html" title="{$LANG.WRITE_MESS}"><img src="/components/users/images/profilemenu/message.gif" border="0"/></a></td>
+							<td><a href="/users/{$usr.id}/sendmessage.html" title="{$LANG.WRITE_MESS}"><img src="/components/users/images/profilemenu/message.gif" border="0"/></a></td>
 							{/if}
                             {if !$myprofile && $cfg.sw_friends}
                             	{if !$usr.isfriend}
                                 	{if !$usr.isfriend_not_add}
-                                	<td><a href="/users/{$menuid}/{$usr.id}/friendship.html" title="{$LANG.ADD_TO_FRIEND}"><img src="/components/users/images/profilemenu/friends.gif" border="0"/></a></td>
+                                	<td><a href="/users/{$usr.id}/friendship.html" title="{$LANG.ADD_TO_FRIEND}"><img src="/components/users/images/profilemenu/friends.gif" border="0"/></a></td>
                                     {else}
-                                    <td><a href="/users/{$menuid}/{$usr.id}/nofriends.html" title="{$LANG.STOP_FRIENDLY}"><img src="/components/users/images/profilemenu/nofriends.gif" border="0"/></a></td>
+                                    <td><a href="/users/{$usr.id}/nofriends.html" title="{$LANG.STOP_FRIENDLY}"><img src="/components/users/images/profilemenu/nofriends.gif" border="0"/></a></td>
                                 	{/if}
                                 {else}
-                                <td><a href="/users/{$menuid}/{$usr.id}/nofriends.html" title="{$LANG.STOP_FRIENDLY}"><img src="/components/users/images/profilemenu/nofriends.gif" border="0"/></a>
+                                <td><a href="/users/{$usr.id}/nofriends.html" title="{$LANG.STOP_FRIENDLY}"><img src="/components/users/images/profilemenu/nofriends.gif" border="0"/></a>
                                 {/if}
                             {/if}
 							{if !$myprofile}
                             	{if $is_admin}
                                 	{if !$usr.banned}
-                                    <td><a href="/users/{$menuid}/{$usr.id}/giveaward.html" title="{$LANG.TO_AWARD}"><img src="/components/users/images/profilemenu/award.gif" border="0"/></a></td>
+                                    <td><a href="/users/{$usr.id}/giveaward.html" title="{$LANG.TO_AWARD}"><img src="/components/users/images/profilemenu/award.gif" border="0"/></a></td>
 									<td><a href="/admin/index.php?view=userbanlist&do=add&to={$usr.id}" title="{$LANG.TO_BANN}"><img src="/components/users/images/profilemenu/ban.gif" border="0"/></a></td>
                                     {/if}
-                         		<td><a href="/users/{$menuid}/{$usr.id}/delprofile.html" title="{$LANG.DEL_PROFILE}"><img src="/components/users/images/profilemenu/delprofile.gif" border="0"/></a></td>
+                         		<td><a href="/users/{$usr.id}/delprofile.html" title="{$LANG.DEL_PROFILE}"><img src="/components/users/images/profilemenu/delprofile.gif" border="0"/></a></td>
                                 {/if}
                          	{/if}
                          	{if $myprofile}
                             	{if $cfg.sw_msg}
-                                <td><a href="/users/{$menuid}/{$usr.id}/messages.html" title="{$LANG.MY_MESS}"><img src="/components/users/images/profilemenu/message.gif" border="0"/></a></td>
+                                <td><a href="/users/{$usr.id}/messages.html" title="{$LANG.MY_MESS}"><img src="/components/users/images/profilemenu/message.gif" border="0"/></a></td>
                                 {/if}
-                            <td><a href="/users/{$menuid}/{$usr.id}/editprofile.html" title="{$LANG.CONFIG_PROFILE}"><img src="/components/users/images/profilemenu/edit.gif" border="0"/></a></td>
-							<td><a href="/users/{$menuid}/{$usr.id}/avatar.html" title="{$LANG.SET_AVATAR}"><img src="/components/users/images/profilemenu/avatar.gif" border="0"/></a></td>
+                            <td><a href="/users/{$usr.id}/editprofile.html" title="{$LANG.CONFIG_PROFILE}"><img src="/components/users/images/profilemenu/edit.gif" border="0"/></a></td>
+							<td><a href="/users/{$usr.id}/avatar.html" title="{$LANG.SET_AVATAR}"><img src="/components/users/images/profilemenu/avatar.gif" border="0"/></a></td>
                             	{if $usr.can_add_foto}
-                                <td><a href="/users/{$menuid}/{$usr.id}/addphoto.html" title="{$LANG.ADD_PHOTO}"><img src="/components/users/images/profilemenu/addphoto.gif" border="0"/></a></td>
+                                <td><a href="/users/{$usr.id}/addphoto.html" title="{$LANG.ADD_PHOTO}"><img src="/components/users/images/profilemenu/addphoto.gif" border="0"/></a></td>
                                 {/if}
                             {/if}
-                            <td><a href="/users/{$menuid}/{$usr.id}/karma.html" title="{$LANG.KARMA_HISTORY}"><img src="/components/users/images/profilemenu/karma.gif" border="0"/></a></td>
+                            <td><a href="/users/{$usr.id}/karma.html" title="{$LANG.KARMA_HISTORY}"><img src="/components/users/images/profilemenu/karma.gif" border="0"/></a></td>
                             </tr></table></div>
                             </div>
 {* ================================================================================ *}
@@ -171,7 +171,7 @@
 						</div>
 						<div class="field">
 							<div class="title">{$LANG.CITY}:</div>
-                            <div class="value"><a href="/users/{$menuid}/city/{$usr.cityurl}">{$usr.city}</a></div>
+                            <div class="value"><a href="/users/city/{$usr.cityurl}">{$usr.city}</a></div>
 						</div>
 						
 						{if $usr.showbirth && $usr.birthdate}
@@ -212,7 +212,7 @@
 						<div class="field">
 							<div class="title">{$LANG.COMMENTS}:</div>
 							<div class="value">{$usr.comments_count}
-                                {if $usr.comments_count}<a href="/users/{$menuid}/{$usr.id}/comments.html" title="{$LANG.READ}">&rarr;</a>{/if}
+                                {if $usr.comments_count}<a href="/users/{$usr.id}/comments.html" title="{$LANG.READ}">&rarr;</a>{/if}
                             </div>
 						</div>
                         {/if}
@@ -221,7 +221,7 @@
 						<div class="field">
 							<div class="title">{$LANG.MESS_IN_FORUM}:</div>
 							<div class="value">{$usr.forum_count}
-                                {if $usr.forum_count}<a href="/users/{$menuid}/{$usr.id}/forumposts.html" title="{$LANG.READ}">&rarr;</a>{/if}
+                                {if $usr.forum_count}<a href="/users/{$usr.id}/forumposts.html" title="{$LANG.READ}">&rarr;</a>{/if}
                             </div>
 						</div>
                         {/if}
@@ -304,7 +304,7 @@
                                                 </td>
                                                 <td>
                                                     <a href="{profile_url login=$photo.login}" class="nickname">{$photo.nickname}</a> &rarr;
-                                                    <a href="/photos/0/photo{$photo.id}.html">{$photo.title}</a>
+                                                    <a href="/photos/photo{$photo.id}.html">{$photo.title}</a>
                                                 </td>                                                
                                             </tr>
                                         {/foreach}
@@ -334,22 +334,22 @@
                             {/if}
                             {if $cfg.sw_comm}
                                 <div id="usr_comments">
-                                    <a href="/users/{$menuid}/{$usr.id}/comments.html">{$LANG.USR_COMMENTS}</a> ({$usr.comments_count})
+                                    <a href="/users/{$usr.id}/comments.html">{$LANG.USR_COMMENTS}</a> ({$usr.comments_count})
                                 </div>
                             {/if}
                             {if $cfg.sw_photo}
                                 <div id="usr_photoalbum">
-                                    <a href="/users/{$menuid}/{$usr.id}/photoalbum.html">{$LANG.PHOTOALBUM}</a> ({$usr.photos_count})
+                                    <a href="/users/{$usr.id}/photoalbum.html">{$LANG.PHOTOALBUM}</a> ({$usr.photos_count})
                                 </div>
                             {/if}
                             {if $cfg.sw_files}
                                 <div id="usr_files">
-                                    <a href="/users/{$menuid}/{$usr.id}/files.html">{$LANG.FILES}</a> ({$usr.files_count})
+                                    <a href="/users/{$usr.id}/files.html">{$LANG.FILES}</a> ({$usr.files_count})
                                 </div>
                             {/if}
                             {if $cfg.sw_board}
                                 <div id="usr_board">
-                                    <a href="/users/{$menuid}/{$usr.id}/board.html">{$LANG.ADVS}</a> ({$usr.board_count})
+                                    <a href="/users/{$usr.id}/board.html">{$LANG.ADVS}</a> ({$usr.board_count})
                                 </div>
                             {/if}
                         </div>
@@ -379,7 +379,7 @@
 								<div class="usr_clubs">
 									<span class="label">{$LANG.CONSIST}:</span>
 									{foreach key=tid item=club from=$usr.clubs.member}
-										<a class="usr_club_link" href="/clubs/0/{$club.id}">{$club.title}</a>
+										<a class="usr_club_link" href="/clubs/{$club.id}">{$club.title}</a>
 									{/foreach}
 								</div>
 							{/if}
@@ -387,7 +387,7 @@
 								<div class="usr_clubs">
 									<span class="label">{$LANG.MODERATE}:</span>
 									{foreach key=tid item=club from=$usr.clubs.moder}
-										<a class="usr_club_link" href="/clubs/0/{$club.id}">{$club.title}</a>
+										<a class="usr_club_link" href="/clubs/{$club.id}">{$club.title}</a>
 									{/foreach}
 								</div>
 							{/if}
@@ -395,7 +395,7 @@
 								<div class="usr_clubs">
 									<span class="label">{$LANG.ADMINING}:</span>
 									{foreach key=tid item=club from=$usr.clubs.admin}
-										<a class="usr_club_link" href="/clubs/0/{$club.id}">{$club.title}</a>
+										<a class="usr_club_link" href="/clubs/{$club.id}">{$club.title}</a>
 									{/foreach}
 								</div>
 							{/if}													

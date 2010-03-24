@@ -2,7 +2,7 @@
 {* ========================= Редактирование фото ================================== *}
 {* ================================================================================ *}
 
-<form action="/users/{$menuid}/{$id}/editphoto{$photoid}.html" method="POST" enctype="multipart/form-data">
+<form action="/users/{$id}/editphoto{$photoid}.html" method="POST" enctype="multipart/form-data">
 <input type="hidden" name="imageurl" value="{$photo.imageurl}" />
 	<table border="0" cellspacing="0" cellpadding="0">
         <tr>
