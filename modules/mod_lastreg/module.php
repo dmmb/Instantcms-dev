@@ -20,10 +20,10 @@
 			$menuid = $inCore->menuId();
 		}
 
-		$sql = "SELECT *, DATE_FORMAT(regdate, '%d-%m-%Y (%H:%i)') as fdate 
-				FROM cms_users
-				WHERE is_deleted = 0 AND is_locked=0
-				ORDER BY regdate DESC
+		$sql = "SELECT u.*, p.imageurl, DATE_FORMAT(regdate, '%d-%m-%Y (%H:%i)') as fdate 
+				FROM cms_users u, cms_user_profiles p
+				WHERE u.is_deleted = 0 AND u.is_locked=0 AND p.user_id = u.id
+				ORDER BY u.regdate DESC
 				LIMIT ".$cfg['newscount']."
 				";		
 		
@@ -36,7 +36,7 @@
 				echo '<table cellspacing="5" border="0">';
 				while($usr = $inDB->fetch_assoc($result)){
 					echo '<tr>';
-						echo '<td width="20" class="new_user_avatar">'.usrImage($usr['id']).'</td>';
+						echo '<td width="20" class="new_user_avatar">'.usrImageNOdb($usr['id'], 'small', $usr['imageurl'], $usr['is_deleted']).'</td>';
 						echo '<td width="">';
 							echo '<a href="'.cmsUser::getProfileURL($usr['login']).'" class="new_user_link">'.$usr['nickname'].'</a>';
 						echo '</td>';				

@@ -48,8 +48,7 @@ function mod_comments($module_id){
                        c.target_id as target_id,
                        c.content as content,
                        c.guestname,
-                       IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(c.pubdate, '<strong>{$_LANG['TODAY']}</strong> {$_LANG['IN']} %H:%i'),
-                       DATE_FORMAT(c.pubdate, '%d-%m-%Y'))  as fpubdate,
+                       c.pubdate as fpubdate,
                        IFNULL(c.user_id, 0) as user_id,
                        IFNULL(u.nickname, '') as author,
                        IFNULL(u.login, '') as author_login,
@@ -87,7 +86,7 @@ function mod_comments($module_id){
                     echo '<tr>';
                         echo '<td valign="top">';
                             echo '<div><a class="mod_com_userlink" href="'.$user_url.'">'.$author.'</a> &rarr; ';
-                        echo '<a class="mod_com_link" href="'.$link.'">'.$text.'</a> ('.$con['fpubdate'].')</td>';
+                        echo '<a class="mod_com_link" href="'.$link.'">'.$text.'</a> ('.$inCore->dateFormat($con['fpubdate']).')</td>';
                     echo '</tr>';
 
                     $count++;

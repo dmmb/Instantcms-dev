@@ -199,7 +199,9 @@ if ($do=='view'){
 	$smarty->assign('photos_html', $photos_html);
 	$smarty->assign('is_articles', $is_articles);
 	if(@$cons) { $smarty->assign('articles', $cons); }
+	if ($content_list){
 	$smarty->assign('pagebar', pageBar($cat['id'], $cat['seolink'], $model, $page, $perpage));
+	}
 	$smarty->assign('maxcols', $cat['maxcols']);
 	$smarty->display('com_content_view.tpl');
 				
@@ -313,7 +315,7 @@ if ($do=='read'){
         $btns = cmsKarmaButtonsText('content', $article['id']);
         if ($btns) { $smarty->assign('karma_buttons', $btns); }
     }
-
+	$article['pubdate'] = $inCore->dateformat($article['pubdate']);
     $smarty->assign('menuid', $menuid);
     $smarty->assign('id', $article['id']);
     if (@$cat) { $smarty->assign('cat', $cat); }

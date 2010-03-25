@@ -37,11 +37,9 @@ function mod_latestboard($module_id){
 			$rssid = $cfg['cat_id'];
 		} else { $catsql = 'AND i.category_id = cat.id'; $rssid = 'all'; } 
 		
-		$sql = "SELECT i.title, i.id, i.city as city, u.id as user_id, u.nickname as nickname,
-					   IF(DATE_FORMAT(i.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(i.pubdate, '{$_LANG['TODAY']}'),
-					   IF(DATEDIFF(NOW(), i.pubdate)=1, DATE_FORMAT(i.pubdate, '{$_LANG['YESTERDAY']}'),DATE_FORMAT(i.pubdate, '%d.%m.%Y') ))  as pubdate
-				FROM cms_board_items i, cms_users u, cms_board_cats cat
-				WHERE i.user_id = u.id $catsql
+		$sql = "SELECT i.title, i.id, i.city as city, i.pubdate as pubdate
+				FROM cms_board_items i, cms_board_cats cat
+				WHERE i.published = 1 $catsql
 				ORDER BY i.pubdate DESC";
 		
 		$sql .= "\n" . "LIMIT ".$cfg['shownum'];
@@ -52,6 +50,7 @@ function mod_latestboard($module_id){
 		if ($inDB->num_rows($result)){	
 		
 			while($con = $inDB->fetch_assoc($result)){
+				$con['pubdate'] = $inCore->dateFormat($con['pubdate']);
 				$items[] = $con;
 			}
 	

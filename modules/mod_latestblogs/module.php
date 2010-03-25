@@ -38,8 +38,7 @@ function mod_latestblogs($module_id){
                         b.owner as owner,
                         b.id as blog_id,
                         b.seolink as bloglink,
-                        IF(DATE_FORMAT(p.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'),
-						DATE_FORMAT(p.pubdate, '<strong>{$_LANG['TODAY']}</strong> {$_LANG['IN']} %H:%i'), DATE_FORMAT(p.pubdate, '%d-%m-%Y'))  as fpubdate,
+                        p.pubdate as fpubdate,
 						b.user_id as uid,
                         IFNULL(SUM(r.points), 0) as rating,
                         b.owner as owner,
@@ -80,7 +79,7 @@ function mod_latestblogs($module_id){
                     echo '<tr>';
                         echo '<td valign="top">';
                         echo '<a class="mod_blog_userlink" href="'.$model->getBlogURL($menuid, $con['bloglink']).'">'.$con['blog'].'</a> &rarr; ';
-                        echo '<a class="mod_blog_link" href="'.$link.'">'.$text.'</a> ('.$con['fpubdate'].')</td>';
+                        echo '<a class="mod_blog_link" href="'.$link.'">'.$text.'</a> ('.$inCore->dateFormat($con['fpubdate']).')</td>';
                     echo '</tr>';
 
                     $count++;

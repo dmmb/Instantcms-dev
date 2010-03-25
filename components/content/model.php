@@ -136,15 +136,14 @@ class cms_model_content{
     public function getArticles($category_id, $page=1, $perpage=100, $orderby='title', $orderto='asc') {
 
         $articles = array();
-
+		$today = date("Y-m-d H:i:s");
         $sql = "SELECT con.*, 
-                       DATE_FORMAT(con.pubdate, '%d-%m-%Y') as fpubdate,
-                       DATE_FORMAT(con.pubdate, '%H:%i') as fpubtime,
+                       con.pubdate as fpubdate,
                        u.nickname as author,
                        u.login as user_login
                 FROM cms_content con, cms_users u
                 WHERE con.category_id = $category_id AND con.published = 1 AND con.is_arhive = 0 AND con.user_id = u.id
-                      AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= NOW() AND con.pubdate <= NOW()))
+                      AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today'))
                 ORDER BY con.".$orderby." ".$orderto."
                 LIMIT ".(($page-1)*$perpage).", $perpage";
 
@@ -153,6 +152,7 @@ class cms_model_content{
         if (!$this->inDB->num_rows($result)) { return false; }
 
         while($article = $this->inDB->fetch_assoc($result)){
+			$article['fpubdate'] = cmsCore::dateFormat($article['fpubdate']);
             $articles[] = $article;
         }
 
@@ -254,14 +254,14 @@ class cms_model_content{
 /* ==================================================================================================== */
 
     public function getArticle($article_id) {
-
+		$today = date("Y-m-d H:i:s");
 		$sql = "SELECT  con.*, DATE_FORMAT(con.pubdate, '%d-%m-%Y (%H:%i)') pubdate,
 						DATE_FORMAT(con.pubdate, '%d-%m-%Y') shortdate,
 						cat.title cat_title, cat.id cat_id, cat.NSLeft as leftkey, cat.NSRight as rightkey, cat.showtags as showtags,
 						u.nickname as author, con.user_id as user_id, u.login as user_login
 				FROM cms_content con, cms_category cat, cms_users u
 				WHERE con.id = $article_id AND con.category_id = cat.id AND con.user_id = u.id AND con.published = 1 
-                      AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= NOW() AND con.pubdate <= NOW()))";
+                      AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today'))";
 
 		$result = $this->inDB->query($sql);
 
@@ -280,7 +280,7 @@ class cms_model_content{
 
     public function getArticleByLink($seolink) {
 
-		$sql = "SELECT con.*, DATE_FORMAT(con.pubdate, '%d-%m-%Y (%H:%i)') pubdate,
+		$sql = "SELECT con.*, con.pubdate as pubdate,
 						DATE_FORMAT(con.pubdate, '%d-%m-%Y') shortdate,
 						cat.title cat_title, cat.id cat_id, cat.NSLeft as leftkey, cat.NSRight as rightkey, cat.showtags as showtags,
 						u.nickname as author, con.user_id as user_id, u.login as user_login

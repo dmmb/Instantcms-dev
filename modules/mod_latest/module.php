@@ -22,7 +22,7 @@ function mod_latest($module_id){
 
 		if (!isset($cfg['showrss'])) { $cfg['showrss'] = 1; }
 		if (!isset($cfg['subs'])) { $cfg['subs'] = 1; }
-
+		$today = date("Y-m-d H:i:s");
 		if ($cfg['cat_id'] != '-1') {
 			if (!$cfg['subs']){
 				//select from category
@@ -35,10 +35,10 @@ function mod_latest($module_id){
 			$rssid = $cfg['cat_id'];
 		} else { $catsql = 'AND con.category_id = cat.id'; $rssid = 'all'; } 
 
-		$sql = "SELECT DISTINCT con.*, DATE_FORMAT(con.pubdate, '%d-%m-%Y (%H:%i)') as fdate, u.nickname as author, u.login as author_login
+		$sql = "SELECT DISTINCT con.*, con.pubdate as fdate, u.nickname as author, u.login as author_login
 				FROM cms_content con, cms_category cat, cms_users u
 				WHERE con.published = 1 AND con.showlatest = 1 AND con.user_id = u.id 
-                      AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= NOW() AND con.pubdate <= NOW()))
+                      AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today'))
                       ".$catsql."
 				ORDER BY con.pubdate DESC
 				LIMIT ".$cfg['newscount'];
@@ -59,7 +59,7 @@ function mod_latest($module_id){
 				$articles[$next]['author']      = $con['author'];
 				$articles[$next]['authorhref']  = cmsUser::getProfileURL($con['author_login']);
 				$articles[$next]['comments']    = $inCore->getCommentsCount('article', $con['id']);
-				$articles[$next]['date']        = $con['fdate'];
+				$articles[$next]['date']        = $inCore->dateformat($con['fdate']);
 				$articles[$next]['description'] = $con['description'];
                 $articles[$next]['image']       = (file_exists(PATH.'/images/photos/small/article'.$con['id'].'.jpg') ? 'article'.$con['id'].'.jpg' : '');                
 			}
