@@ -28,6 +28,50 @@ class cms_model_banners{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
+    public function getBannerHTML($position) {
+
+        if (!$position) { return false; }
+
+        $html = '';
+
+        //get active banners with enough hits
+        $sql = "SELECT *
+                FROM cms_banners
+                WHERE position = '$position' AND published = 1 AND ((maxhits > hits) OR (maxhits = 0))
+                ORDER BY RAND()
+                LIMIT 1";
+
+        $rs = $this->inDB->query($sql);
+
+        if ($this->inDB->num_rows($rs)==1){
+
+            $banner = $this->inDB->fetch_assoc($rs);
+
+            if ($banner['typeimg']=='image'){
+                $html = '<a href="/gobanner'.$banner['id'].'" title="'.$banner['title'].'" target="_blank"><img src="/images/banners/'.$banner['fileurl'].'" border="0" alt="'.$banner['title'].'"/></a>';
+            }
+
+            if ($banner['typeimg']=='swf'){
+                $html = '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="468" height="60">'."\n".
+                            '<param name="movie" value="/images/banners/'.$banner['fileurl'].'?banner_id='.$banner['id'].'" />'."\n".
+                            '<param name="quality" value="high" />'."\n".
+                            '<param name="FlashVars" value="banner_id='.$banner['id'].'" />'."\n".
+                            '<embed src="/images/banners/'.$banner['fileurl'].'?banner_id='.$banner['id'].'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="468" height="60">'."\n".
+                            '</embed>'."\n".
+                        '</object>';
+            }
+
+            if ($html) { $this->inDB->query("UPDATE cms_banners SET hits = hits + 1 WHERE id=".$banner['id']);	}
+
+        }
+
+        return $html;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
 	public function clickBanner($id){
         $update_sql = "UPDATE cms_banners SET clicks = clicks + 1 WHERE id=$id";
         $this->inDB->query($update_sql);
