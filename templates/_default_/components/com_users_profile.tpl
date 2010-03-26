@@ -230,7 +230,7 @@
                                                 </td>
                                                 <td>
                                                     <a href="{profile_url login=$comment.login}" class="nickname">{$comment.nickname}</a> &rarr;
-                                                    <a href="{$comment.link}">{$comment.content}</a>
+                                                    <a href="{$comment.target_link}">{$comment.content}</a>
                                                 </td>
                                             </tr>
                                         {/foreach}

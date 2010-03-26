@@ -2,13 +2,15 @@ RewriteEngine On
 RewriteBase /
 RewriteRule ^.htaccess$ - [F]
 
-RewriteRule ^load/url=(.*)$ /index.php?uri=files&do=download&fileurl=$1
-RewriteRule ^go/url=(.*)$ /index.php?uri=files&do=redirect&url=$1
+RewriteRule ^load/url=(.+)$ /index.php?uri=files&do=download&fileurl=$1
+RewriteRule ^go/url=(.+)$ /index.php?uri=files&do=redirect&url=$1
 
 RewriteCond %{REQUEST_URI} !\.(jpg|jpeg|ico|gif|png|css|xml|js|pl|txt)$ [NC]
 RewriteCond %{REQUEST_URI} !^/admin
 RewriteCond %{REQUEST_URI} !^/install
 RewriteCond %{REQUEST_URI} !^/migrate
+RewriteCond %{REQUEST_URI} !^/go
+RewriteCond %{REQUEST_URI} !^/load
 RewriteCond %{REQUEST_FILENAME} !-f
 
 RewriteRule ^(.*)$ /index.php?uri=$1 [L]

@@ -19,6 +19,27 @@ class cms_model_users{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
+    public function getCommentTarget($target, $target_id) {
+
+        $result = array();
+
+        switch($target){
+
+            case 'userphoto': $photo = $this->inDB->get_fields('cms_user_photos', "id={$target_id}", 'user_id, title');
+                              if (!$photo) { return false; }
+                              $result['link']  = '/users/'.$photo['user_id'].'/photo'.$target_id.'.html';
+                              $result['title'] = $photo['title'];
+                              break;
+
+        }
+
+        return ($result ? $result : false);
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
     public function getUser($user_id){
         global $_LANG;
 

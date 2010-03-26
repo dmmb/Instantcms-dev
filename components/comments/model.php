@@ -25,7 +25,7 @@ class cms_model_comments{
 
         $item = cmsCore::callEvent('ADD_COMMENT', $item);
 
-        $sql = "INSERT INTO cms_comments (parent_id, user_id, target, target_id, guestname, content, pubdate, published)
+        $sql = "INSERT INTO cms_comments (parent_id, user_id, target, target_id, guestname, content, pubdate, published, target_title, target_link)
                 VALUES ({$item['parent_id']}, {$item['user_id']}, '{$item['target']}', {$item['target_id']},
                         '{$item['guestname']}', '{$item['content']}', NOW(), {$item['published']},
                         '{$item['target_title']}', '{$item['target_link']}')";

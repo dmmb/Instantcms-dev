@@ -77,7 +77,7 @@ function cpUpdates(){
 								<img src="images/updates/comment.gif" border="0"/>
 							</td>
 							<td valign="top">
-								<div>'.$inCore->getCommentLink($item['target'], $item['target_id']).':</div>
+								<div><a href="'.$item['target_link'].'">'.$item['target_title'].'</a>:</div>
 								<div style="color:silver">'.$item['fpubdate'].'</div>
 								<div>'.$text.'</div>
 							</td>
@@ -746,13 +746,13 @@ function cpCommentAuthor($comment_id){
 
 function cpCommentTarget($comment_id){
     $inCore = cmsCore::getInstance();
-	$sql = "SELECT target, target_id
+	$sql = "SELECT target_title, target_link
 			FROM cms_comments
 			WHERE id = $comment_id";
 	$result = dbQuery($sql) ;
 	$mod = mysql_fetch_assoc($result);
 
-	$target = $inCore->getCommentLink($mod['target'], $mod['target_id'], true);
+	$target = '<a target="_blank" href="'.$mod['target_link'].'#c'.$comment_id.'">'.$mod['target_title'].'</a>';
 	return $target;
 }
 

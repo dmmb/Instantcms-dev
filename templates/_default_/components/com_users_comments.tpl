@@ -9,7 +9,7 @@
         <table style="width:100%; margin-bottom:2px;" cellspacing="0" cellpadding="4">
             <tr>
                 <td colspan="2" class="usr_com_title">
-                    <div style="float:left">{$comment.link} &mdash; {$comment.fpubdate}</div>
+                    <div style="float:left"><a href="{$comment.target_link}">{$comment.target_title}</a> &mdash; {$comment.fpubdate}</div>
                     <div style="float:right">{$comment.votes}</div>
                 </td>
             </tr>

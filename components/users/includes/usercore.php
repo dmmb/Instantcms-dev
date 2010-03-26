@@ -232,7 +232,7 @@ function usrComments($user_id, $limit=5, $preview=true){
 			$html .= '<table style="width:100%; margin-bottom:2px;" cellspacing="0">';
 			$html .= '<tr>';
 				$html .= '<td class="usr_com_title">
-                            <div style="float:left">'.$inCore->getCommentLink($com['target'], $com['target_id']).' &mdash; '.$com['fpubdate'].'</div>
+                            <div style="float:left"><a href="'.$com['target_title'].'#c'.$com['id'].'">'.$com['target_link'].'</a> &mdash; '.$com['fpubdate'].'</div>
                             <div style="float:right">aa '.$com['votes'].'</div>
                           </td>';
 			$html .= '</tr>';

@@ -89,7 +89,7 @@ function albumDelete($album_id, $differ=''){
 		while($photo = $inDB->fetch_assoc($result)){
 			cmsClearTags('photo', $photo['id']);	
 			$inDB->query("DELETE FROM cms_photo_files WHERE id = ".$photo['id']) ;
-			$inDB->query("DELETE FROM cms_comments WHERE target='photo' AND target_id = ".$photo['id']) ;
+            $inCore->deleteComments('photo', $photo['id']);
 			$inDB->query("DELETE FROM cms_ratings WHERE target='photo' AND item_id = ".$photo['id']) ;
 			@unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/'.$photo['file']);	
 			@unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/thumb/'.$photo['file'].'.jpg');	
@@ -97,6 +97,7 @@ function albumDelete($album_id, $differ=''){
 	}
 	//DELETE ALBUM
 	$ns = $inCore->nestedSetsInit('cms_photo_albums');
+    $inCore->deleteComments('palbum', $album_id);
 	return $ns->DeleteNode($album_id, $differ);
 }
 

@@ -12,19 +12,19 @@ class cms_model_catalog{
 
     public function getCommentTarget($target, $target_id) {
 
-        $target = array();
+        $result = array();
 
         switch($target){
 
             case 'catalog': $item            = $this->inDB->get_fields('cms_uc_items', "id={$target_id}", 'title');
                             if (!$item) { return false; }
-                            $target['link']  = '/catalog/item'.$target_id.'.html';
-                            $target['title'] = $item['title'];
+                            $result['link']  = '/catalog/item'.$target_id.'.html';
+                            $result['title'] = $item['title'];
                             break;
 
         }
 
-        return ($target ? $target : false);
+        return ($result ? $result : false);
 
     }
 
@@ -45,8 +45,10 @@ class cms_model_catalog{
         
         $this->inDB->query("DELETE FROM cms_uc_items WHERE id={$id}");
         $this->inDB->query("DELETE FROM cms_tags WHERE target='catalog' AND item_id = {$id}");
-        $this->inDB->query("DELETE FROM cms_comments WHERE target = 'catalog' AND target_id = {$id}");
         $this->inDB->query("DELETE FROM cms_uc_ratings WHERE item_id = {$id}");
+
+        $inCore->deleteComments('catalog', $id);
+
     }
 
 /* ==================================================================================================== */

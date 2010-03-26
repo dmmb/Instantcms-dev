@@ -196,7 +196,6 @@ $_LANG['DELETING_FILES']            ='Удаление файлов';
 $_LANG['YOU_REALLY_DEL_FILES']      ='Вы действительно желаете удалить эти файлы';
 
 $_LANG['SITE_AWARDS']               ='Награды сайта';
-$_LANG['COMMENTS']                  ='комментариев';
 $_LANG['MESS_IN_FORUM']             ='Cообщений на форуме';
 $_LANG['PUBLISHED_ARTICLES']        ='опубликованных статей';
 $_LANG['POSTS_IN_BLOG']             ='записей в блоге';
