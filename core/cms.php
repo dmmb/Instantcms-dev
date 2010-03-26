@@ -3206,11 +3206,6 @@ function cmsUserId(){
    return $inUser->id;
 }
 
-function cmsGetBanner($position){
-   $inCore = cmsCore::getInstance();
-   return $inCore->getBanner($position);
-}
-
 function cmsLoadModuleConfig($module_id){
    $inCore = cmsCore::getInstance();
    return $inCore->loadModuleConfig($module_id);
