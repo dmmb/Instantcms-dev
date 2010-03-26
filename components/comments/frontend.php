@@ -92,26 +92,25 @@ function comments($target='', $target_id=0){
         if (!$content) { $error = $_LANG['ERR_COMMENT_TEXT']; }
         if ($need_captcha && !$inCore->checkCaptchaCode($_REQUEST['code'])) { $error = $_LANG['ERR_CAPTCHA']; }
 
-		if ($target && $target_id){
-			$t      = $inCore->getCommentLink($target, $target_id, false, true);
-		} else {
-            $error  = $_LANG['ERR_COMMENT_ADD'];
-        }
-
         // получаем массив со ссылкой и заголовком цели комментария
         // для этого:
+
         //  1. узнаем ответственный компонент из cms_comment_targets
-        $target_component = $inDB->get_field('cms_comment_targets', "target='{$target}", 'component');        
-        if (!$target_component) { $error = $_LANG['ERR_UNKNOWN_TARGET']; }
+        $target_component = $inDB->get_field('cms_comment_targets', "target='{$target}'", 'component');
+        if (!$target_component) { $error = $_LANG['ERR_UNKNOWN_TARGET'] . ' #1'; }
+
         //  2. подключим модель этого компонента
         $inCore->loadModel($target_component);
         eval('$target_model = new cms_model_'.$target_component.'();');
-        if (!$target_model) { $error = $_LANG['ERR_UNKNOWN_TARGET']; }
+        if (!$target_model) { $error = $_LANG['ERR_UNKNOWN_TARGET'] . ' #2'; }
+
         //  3. запросим массив $target[link, title] у метода getCommentTarget модели
         $target_data = $target_model->getCommentTarget($target, $target_id);
-        if (!$target_data) { $error = $_LANG['ERR_UNKNOWN_TARGET']; }
+        if (!$target_data) { $error = $_LANG['ERR_UNKNOWN_TARGET'] . ' #3'; }
 
-		if(!$error){ //Если ошибок не было, действуем
+		//Если ошибок не было,
+        //добавляем комментарий в базу
+        if(!$error){
 
             $parent_id = $inCore->request('parent_id', 'int', 0);
 
@@ -147,7 +146,8 @@ function comments($target='', $target_id=0){
 			//отправляем админу уведомление о комментарии на e-mail, если нужно
 			if($cfg['email']) {
 				$mailmsg = $_LANG['DATE'].": ".date('d m Y (H:i)')."\n";
-				$mailmsg .= $_LANG['NEW_COMMENT'].": $t\n-------------------------------------------------------\n";
+				$mailmsg .= $_LANG['NEW_COMMENT'].': http://'.$_SERVER['HTTP_HOST'].$target_data['link'].'#c'. $comment_id . "\n";
+                $mailmsg .= "-------------------------------------------------------\n";
 				$mailmsg .= strip_tags($content);
 				$mailmsg = wordwrap($mailmsg, 70);
 				$inCore->mailText($cfg['email'], $_LANG['EMAIL_SUDJECT_NEW_COMM'], $mailmsg);

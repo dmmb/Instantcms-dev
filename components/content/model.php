@@ -21,19 +21,19 @@ class cms_model_content{
 
     public function getCommentTarget($target, $target_id) {
 
-        $target = array();
+        $result = array();
 
         switch($target){
 
             case 'article': $article            = $this->inDB->get_fields('cms_content', "id={$target_id}", 'seolink, title');
                             if (!$article) { return false; }
-                            $target['link']     = $this->getArticleURL(null, $article['seolink']);
-                            $target['title']    = $article['title'];
+                            $result['link']     = $this->getArticleURL(null, $article['seolink']);
+                            $result['title']    = $article['title'];
                             break;
 
         }
 
-        return ($target ? $target : false);
+        return ($result ? $result : false);
 
     }
 
@@ -263,6 +263,15 @@ class cms_model_content{
 
                 $this->inDB->query("UPDATE cms_content SET seolink='{$article_seolink}' WHERE id={$article['id']}");
 
+                //обновляем ссылки на комментарии
+                $comments_sql = "UPDATE cms_comments c,
+                                        cms_content a
+                                 SET c.target_link = CONCAT('/content/', a.seolink, '.html')
+                                 WHERE a.id = {$article['id']} AND
+                                 c.target = 'article' AND c.target_id = a.id";
+                
+                $this->inDB->query($comments_sql);
+
             }
 
         }
@@ -368,14 +377,17 @@ class cms_model_content{
 /* ==================================================================================================== */
 
 	public function deleteArticle($id, $forum_delete=false){
-        
+
+        $inCore = cmsCore::getInstance();
+
         cmsCore::callEvent('DELETE_ARTICLE', $id);
 
         $this->inDB->query("DELETE FROM cms_content WHERE id={$id}");
         $this->inDB->query("DELETE FROM cms_content_access WHERE content_id={$id}");
-        $this->inDB->query("DELETE FROM cms_comments WHERE target='article' AND target_id={$id}");
         $this->inDB->query("DELETE FROM cms_ratings WHERE target='content' AND item_id={$id}");
         $this->inDB->query("DELETE FROM cms_tags WHERE target='content' AND item_id={$id}");
+
+        $inCore->deleteComments('article', $id);
 
         if ($forum_delete){
             $inCore = cmsCore::getInstance();
@@ -474,6 +486,15 @@ class cms_model_content{
             $menulink = $inCore->getMenuLink('content', $id, $menuid);
             $this->inDB->query("UPDATE cms_menu SET link='{$menulink}' WHERE id={$menuid}");
         }
+
+        //обновляем ссылки на комментарии
+        $comments_sql = "UPDATE cms_comments c,
+                                cms_content a
+                         SET c.target_link = CONCAT('/content/', a.seolink, '.html')
+                         WHERE a.id = {$id} AND
+                               c.target = 'article' AND c.target_id = a.id";
+
+        $this->inDB->query($comments_sql);
 
         return true;
         

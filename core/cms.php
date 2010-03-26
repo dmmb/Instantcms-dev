@@ -852,35 +852,6 @@ class cmsCore {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * Подключает комментарии
-     */
-    public function includeComments(){
-        include_once PATH."/components/comments/frontend.php";
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Регистрирует тип цели для комментариев в базе
-     * @param string $target
-     * @param string $component
-     */
-    public function registerCommentsTarget($target, $component) {
-        
-        $inDB = cmsDatabase::getInstance();
-
-        $sql  = "INSERT INTO cms_comment_targets (target, component)
-                 VALUES ('$target', '$component')";
-
-        $inDB->query($sql);
-
-        return true;
-        
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /**
      * Подключает функции для работы с графикой
      */
     public function includeGraphics(){
@@ -2002,10 +1973,10 @@ class cmsCore {
      * @param string $where
      * @return html
      */
-    public function getListItems($table, $selected=0, $order_by='id', $order_to='ASC', $where='', $id_field='id'){
+    public function getListItems($table, $selected=0, $order_by='id', $order_to='ASC', $where='', $id_field='id', $title_field='title'){
         $inDB = cmsDatabase::getInstance();
         $html = '';
-        $sql  = "SELECT {$id_field}, title FROM {$table} \n";
+        $sql  = "SELECT {$id_field}, {$title_field} FROM {$table} \n";
         if ($where){
             $sql .= "WHERE {$where} \n";
         }
@@ -2013,15 +1984,12 @@ class cmsCore {
         $result = $inDB->query($sql) ;
 
         while($item = mysql_fetch_assoc($result)){
-            if ($table == 'cms_users'){
-                $item['title'] = $item['nickname'];
-            }
             if (@$selected==$item[$id_field]){
                 $s = 'selected';
             } else {
                 $s = '';
             }
-            $html .= '<option value="'.$item[$id_field].'" '.$s.'>'.$item['title'].'</option>';
+            $html .= '<option value="'.$item[$id_field].'" '.$s.'>'.$item[$title_field].'</option>';
         }
         return $html;
     }
@@ -2190,93 +2158,53 @@ class cmsCore {
     // COMMENTS //////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * Формирует и возвращает ссылку на цель комментария
-     * @param string $target
-     * @param int $target_id
-     * @param bool $short
-     * @param bool $onlylink
-     * @return html or string
+     * Подключает комментарии
      */
-    public function getCommentLink($target, $target_id, $short=false, $onlylink=false){
-        $inDB = cmsDatabase::getInstance();
-        $inCore = cmsCore::getInstance();
-        $html = '';
-        switch($target){
-            case 'article':  $result = $inDB->query("SELECT title, seolink FROM cms_content WHERE id = $target_id LIMIT 1") ;
-                             if (mysql_num_rows($result)){
-                                $data = mysql_fetch_assoc($result);
-                                $inCore->loadModel('content');
-                                $model = new cms_model_content();
-                                if ($short) { $data['title'] = substr($data['title'], 0, 30).'...'; }
-                                $html .= '<a href="'.$model->getArticleURL(0, $data['seolink']).'">'.$data['title'].'</a>';
-                                if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].$model->getArticleURL(0, $data['seolink']).'#c'; }
-                             }
-                             break;
-            case 'photo':    $result = $inDB->query("SELECT title FROM cms_photo_files WHERE id = $target_id LIMIT 1") ;
-                             if (mysql_num_rows($result)){
-                                $data = mysql_fetch_assoc($result);
-                                if ($short) { $data['title'] = substr($data['title'], 0, 30).'...'; }
-                                $html .= '<a href="/photos/photo'.$target_id.'.html#c">'.$data['title'].'</a>';
-                                if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].'/photos/photo'.$target_id.'.html#c'; }
-                             }
-                             break;
-            case 'palbum':   $result = $inDB->query("SELECT title FROM cms_photo_albums WHERE id = $target_id LIMIT 1") ;
-                             if (mysql_num_rows($result)){
-                                $data = mysql_fetch_assoc($result);
-                                if ($short) { $data['title'] = substr($data['title'], 0, 30).'...'; }
-                                $html .= '<a href="/photos/'.$target_id.'#c">'.$data['title'].'</a>';
-                                if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].'/photos/'.$target_id.'#c'; }
-                             }
-                             break;
-            case 'blog':     $result = $inDB->query("SELECT p.title as title, b.seolink as bloglink, p.seolink as seolink FROM cms_blog_posts p, cms_blogs b WHERE p.id = $target_id AND p.blog_id = b.id LIMIT 1") ;
-                             if (mysql_num_rows($result)){
-                                $data = mysql_fetch_assoc($result);
-                                $inCore->loadModel('blogs');
-                                $model = new cms_model_blogs();
-                                if ($short) { $data['title'] = substr($data['title'], 0, 30).'...'; }
-                                $html .= '<a href="'.$model->getPostURL(0, $data['bloglink'], $data['seolink']).'#c">'.$data['title'].'</a>';
-                                if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].$model->getPostURL(0, $data['bloglink'], $data['seolink']).'#c'; }
-                             }
-                             break;
-            case 'catalog':    $result = $inDB->query("SELECT title FROM cms_uc_items WHERE id = $target_id LIMIT 1") ;
-                             if (mysql_num_rows($result)){
-                                $data = mysql_fetch_assoc($result);
-                                if ($short) { $data['title'] = substr($data['title'], 0, 30).'...'; }
-                                $html .= '<a href="/catalog/item'.$target_id.'.html#c">'.$data['title'].'</a>';
-                                if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].'/catalog/item'.$target_id.'.html#c'; }
-                             }
-                             break;
-            case 'userphoto':$result = $inDB->query("SELECT title, user_id FROM cms_user_photos WHERE id = $target_id LIMIT 1") ;
-                             if (mysql_num_rows($result)){
-                                $data = mysql_fetch_assoc($result);
-                                if ($short) { $data['title'] = substr($data['title'], 0, 30).'...'; }
-                                $html .= '<a href="/users/'.$data['user_id'].'/photo'.$target_id.'.html">'.$data['title'].'</a>';
-                                if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].'/users/'.$data['user_id'].'/photo'.$target_id.'.html#c'; }
-                             }
-                             break;
-            case 'forum': 	$result = $inDB->query("SELECT title FROM cms_forum_threads WHERE id = $target_id LIMIT 1") ;
-                             if (mysql_num_rows($result)){
-                                $data = mysql_fetch_assoc($result);
-                                if ($short) { $data['title'] = substr($data['title'], 0, 30).'...'; }
-                                $html .= '<a href="/forum/thread'.$target_id.'.html">'.$data['title'].'</a>';
-                                if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].'/forum/thread'.$target_id.'.html'; }
-                             }
-                             break;
-            case 'bug': 	$result = $inDB->query("SELECT title FROM bq_bugs WHERE id = $target_id LIMIT 1") ;
-                             if (mysql_num_rows($result)){
-                                $data = mysql_fetch_assoc($result);
-                                if ($short) { $data['title'] = substr($data['title'], 0, 30).'...'; }
-                                $html .= '<a href="/bugtraq/52/bug/'.$target_id.'">'.$data['title'].'</a>';
-                                if ($onlylink) { $html = 'http://'.$_SERVER['HTTP_HOST'].'/bugtraq/52/bug/'.$target_id; }
-                             }
-                             break;
-        }
-        return $html;
+    public function includeComments(){
+        include_once PATH."/components/comments/frontend.php";
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Регистрирует тип цели для комментариев в базе
+     * @param string $target
+     * @param string $component
+     */
+    public function registerCommentsTarget($target, $component) {
+
+        $inDB = cmsDatabase::getInstance();
+
+        $sql  = "INSERT INTO cms_comment_targets (target, component)
+                 VALUES ('$target', '$component')";
+
+        $inDB->query($sql);
+
+        return true;
+
+    }
+
+    /**
+     * Удаляет все комментарии для указанной цели
+     * @param string $target
+     * @param int $target_id
+     * @return boolean
+     */
+    public function deleteComments($target, $target_id){
+
+        $inDB = cmsDatabase::getInstance();
+
+        $sql  = "DELETE FROM cms_comments WHERE target='{$target}' AND target_id='{$target_id}'";
+
+        $inDB->query($sql);
+
+        return true;
+
+    }
+
     /**
      * Возвращает количество комментариев для указанной цели
      * @param string $target
@@ -2288,7 +2216,7 @@ class cmsCore {
         if ($this->isComponentInstalled('comments')){
             $sql = "SELECT id FROM cms_comments WHERE target = '$target' AND target_id = '$target_id'";
             $result = $inDB->query($sql) ;
-            return mysql_num_rows($result);
+            return $inDB->num_rows($result);
         } else { return 0; }
     }
 
@@ -3028,52 +2956,34 @@ class cmsCore {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    static public function strToURL($string){
-       
-        $string = str_replace(' ', '-', $string);        
+    static public function strToURL($str){
+
+        $str    = trim($str);
         $string = preg_replace ('/[^a-zA-Zа-яА-Я0-9\-]/i', '', $string);
+        $string = mb_strtolower($str, 'cp1251');
+        $string = str_replace(' ', '-', $string);
 
-        $string = ereg_replace("ж|Ж","zh",$string);
-        $string = ereg_replace("ё|Ё","yo",$string);
-        $string = ereg_replace("й|Й","i",$string);
-        $string = ereg_replace("ю|Ю","yu",$string);
-        $string = ereg_replace("ь|Ь","",$string);
-        $string = ereg_replace("ч|Ч","ch",$string);
-        $string = ereg_replace("щ|Щ","sh",$string);
-        $string = ereg_replace("ц|Ц","c",$string);
-        $string = ereg_replace("у|У","u",$string);
-        $string = ereg_replace("к|К","k",$string);
-        $string = ereg_replace("е|Е","e",$string);
-        $string = ereg_replace("н|Н","n",$string);
-        $string = ereg_replace("г|Г","g",$string);
-        $string = ereg_replace("ш|Ш","sh",$string);
-        $string = ereg_replace("з|З","z",$string);
-        $string = ereg_replace("х|Х","h",$string);
-        $string = ereg_replace("ъ|Ъ","",$string);
-        $string = ereg_replace("ф|Ф","f",$string);
-        $string = ereg_replace("ы|Ы","y",$string);
-        $string = ereg_replace("в|В","v",$string);
-        $string = ereg_replace("а|А","a",$string);
-        $string = ereg_replace("п|П","p",$string);
-        $string = ereg_replace("р|Р","r",$string);
-        $string = ereg_replace("о|О","o",$string);
-        $string = ereg_replace("л|Л","l",$string);
-        $string = ereg_replace("д|Д","d",$string);
-        $string = ereg_replace("э|Э","ye",$string);
-        $string = ereg_replace("я|Я","ja",$string);
-        $string = ereg_replace("с|С","s",$string);
-        $string = ereg_replace("м|М","m",$string);
-        $string = ereg_replace("и|И","i",$string);
-        $string = ereg_replace("т|Т","t",$string);
-        $string = ereg_replace("б|Б","b",$string);
+        while(strstr($string, '--')){ $string = str_replace('--', '-', $string); }
 
-        if (!$string){
-            $string = 'untitled';
+        $ru_en = array(
+                        'а'=>'a','б'=>'b','в'=>'v','г'=>'g','д'=>'d',
+                        'е'=>'e','ё'=>'yo','ж'=>'zh','з'=>'z',
+                        'и'=>'i','й'=>'i','к'=>'k','л'=>'l','м'=>'m',
+                        'н'=>'n','о'=>'o','п'=>'p','р'=>'r','с'=>'s',
+                        'т'=>'t','у'=>'u','ф'=>'f','х'=>'h','ц'=>'c',
+                        'ч'=>'ch','ш'=>'sh','щ'=>'sh','ъ'=>'','ы'=>'y',
+                        'ь'=>'','э'=>'ye','ю'=>'yu','я'=>'ja'
+                      );
+
+        foreach($ru_en as $ru=>$en){
+            $string = preg_replace('/(['.$ru.']+)/i', $en, $string);
         }
 
+        if (!$string){ $string = 'untitled'; }
+
         return $string;
-        
-    }
+
+}
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

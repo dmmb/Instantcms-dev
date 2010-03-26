@@ -18,7 +18,7 @@ class cms_model_blogs{
 
    public function getCommentTarget($target, $target_id) {
 
-        $target = array();
+        $result = array();
 
         switch($target){
 
@@ -31,13 +31,13 @@ class cms_model_blogs{
                          $res = $this->inDB->query($sql);
                          if (!$this->inDB->num_rows($res)){ return false; }
                          $post = $this->inDB->fetch_assoc($res);
-                         $target['link']  = $this->getPostURL(null, $post['bloglink'], $post['seolink']);
-                         $target['title'] = $post['title'];
+                         $result['link']  = $this->getPostURL(null, $post['bloglink'], $post['seolink']);
+                         $result['title'] = $post['title'];
                          break;
 
         }
 
-        return ($target ? $target : false);
+        return ($result ? $result : false);
 
     }
 
@@ -141,7 +141,7 @@ class cms_model_blogs{
 
             while($post = $this->inDB->fetch_assoc($result)){
 
-                $post_seolink = $this->getPostSeoLink(array('title'=>$post['title']));
+                $post_seolink = $this->getPostSeoLink(array('id'=>$post['id'], 'title'=>$post['title']));
 
                 $this->inDB->query("UPDATE cms_blog_posts SET seolink='{$post_seolink}' WHERE id={$post['id']}");
 
@@ -301,7 +301,18 @@ class cms_model_blogs{
             $this->inDB->query("UPDATE cms_menu SET link='{$menulink}' WHERE id={$menuid}");
         }
 
-        return true;
+        //обновл€ем ссылки на комментарии постов блога
+        $comments_sql = "UPDATE cms_comments c,
+                                cms_blog_posts p,
+                                cms_blogs b
+                         SET c.target_link = CONCAT('/blogs/', b.seolink, '/', p.seolink, '.html')
+                         WHERE b.id = {$id} AND
+                               p.blog_id = b.id AND
+                               c.target = 'blog' AND c.target_id = p.id";
+
+        $this->inDB->query($comments_sql);
+
+        return $item['seolink'];
         
     }
 
@@ -529,6 +540,7 @@ class cms_model_blogs{
 /* ==================================================================================================== */
 
     public function getModerationCount($blog_id){
+        if (!$blog_id) { return false; }
         return $this->inDB->rows_count('cms_blog_posts', 'blog_id='.$blog_id.' AND published = 0');
     }
 
@@ -736,9 +748,10 @@ class cms_model_blogs{
         $inCore->loadLib('tags');
 
         $this->inDB->query("DELETE FROM cms_blog_posts WHERE id = $post_id");
-        $this->inDB->query("DELETE FROM cms_comments WHERE target='blog' AND target_id = '$post_id'");
         $this->inDB->query("DELETE FROM cms_tags WHERE target='blogpost' AND item_id = '$post_id'");
         $this->inDB->query("DELETE FROM cms_ratings WHERE target='blogpost' AND item_id = '$post_id'");
+
+        $inCore->deleteComments('blog', $post_id);
 
         cmsClearTags('blogpost', $post_id);
 

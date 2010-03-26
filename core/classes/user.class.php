@@ -397,7 +397,7 @@ class cmsUser {
             if ($id < sizeof($friends)-1){ $friends_sql .= ' OR '; }
         }
 
-        $sql = "SELECT DISTINCT c.id, c.content, c.target as target, c.target_id as target_id, c.user_id, u.id as user_id, u.nickname as nickname, u.login as login, 
+        $sql = "SELECT DISTINCT c.id, c.content, c.target as target, c.target_id as target_id, c.user_id, c.target_link, u.id as user_id, u.nickname as nickname, u.login as login,
                        IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(c.pubdate, '<strong>Cегодня</strong> в %H:%i'),
                        IF(DATEDIFF(NOW(), c.pubdate)=1, DATE_FORMAT(c.pubdate, 'Вчера в %H:%i'),DATE_FORMAT(c.pubdate, '%d, %M') ))  as pubdate
                 FROM cms_comments c, cms_users u
@@ -415,7 +415,6 @@ class cmsUser {
 
         while ($comment = $inDB->fetch_assoc($result)){
             $comment['pubdate'] = $inCore->getRusDate($comment['pubdate']);
-            $comment['link']    = $inCore->getCommentLink($comment['target'], $comment['target_id'], true, true);
             if (sizeof($comment['content'])>50){
                 $comment['content'] = substr($comment['content'], 0, 50) . '...';
             }
@@ -1136,44 +1135,67 @@ class cmsUser {
      * @return bool
      */
     public static function alertUsers($target, $target_id){
+
         $inUser = cmsUser::getInstance();
         $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
-        $clink = $inCore->getCommentLink($target, $target_id);
-        $message = 'Произошло обновление: "'.$clink.'"';
-        $userlist = $inDB->get_table('cms_subscribe', "target = '$target' AND target_id = $target_id");
-        if (is_array($userlist)){
-            foreach ($userlist as $key=>$usr){
-                $uid = $inUser->id;
-                $subscribe_type = $inDB->get_field('cms_user_profiles', "user_id='{$usr['user_id']}'", 'cm_subscribe');
-                if($usr['user_id'] != $uid){
-                    if ($subscribe_type=='priv' || $subscribe_type=='both'){
-                        self::sendMessage(USER_UPDATER, $usr['user_id'], $message);
-                    }
-                    if ($subscribe_type=='mail'){
-                        $inConf = cmsConfig::getInstance();
+        $inDB   = cmsDatabase::getInstance();
+        $inConf = cmsConfig::getInstance();
 
-                        $postdate = date('d/m/Y H:i:s');
-                        $to_email = $inDB->get_field('cms_users', "id='{$usr['user_id']}'", 'email');
+        //получаем последний комментарий и автора
+        $comment_sql    = "SELECT   c.target_title as target_title,
+                                    c.target_link as target_link,
+                                    c.id as id, 
+                                    IFNULL(u.nickname, c.guestname) as author
+                           FROM cms_comments c
+                           LEFT JOIN cms_users u ON c.user_id = u.id
+                           WHERE c.target='{$target}' AND c.target_id='{$target_id}'
+                           ORDER BY c.pubdate DESC
+                           LIMIT 1";
 
-                        $author_nick = $inDB->get_field('cms_users u, cms_comments c', "c.user_id = u.id AND c.target = '$target' AND target_id = $target_id ORDER BY c.pubdate DESC LIMIT 1", 'u.nickname');
+        $comment_result = $inDB->query($comment_sql);
+        if (!$inDB->num_rows($comment_result)){ return false; }
+        $comment = $inDB->fetch_assoc($comment_result);
 
-                        $pagetitle = strip_tags($clink);
-                        $answerlink = $inCore->getCommentLink($target, $target_id, false, true);
+        //получаем список подписанных пользователей
+        $users_sql  = "SELECT   p.cm_subscribe as subscribe_type,
+                                u.email as email,
+                                u.id as id
+                       FROM cms_subscribe s, cms_users u, cms_user_profiles p
+                       WHERE p.user_id = u.id AND
+                             s.user_id = u.id AND
+                             s.target = '{$target}' AND
+                             s.target_id = '{$target_id}'";
 
-                        $letter_path = PATH.'/includes/letters/newcomment.txt';
-                        $letter = file_get_contents($letter_path);
+        $users_result = $inDB->query($users_sql);
+        if (!$inDB->num_rows($users_result)){ return false; }
 
-                        $letter= str_replace('{sitename}', $inConf->sitename, $letter);
-                        $letter= str_replace('{answerlink}', $answerlink, $letter);
-                        $letter= str_replace('{pagetitle}', $pagetitle, $letter);
-                        $letter= str_replace('{date}', $postdate, $letter);
-                        $letter= str_replace('{author}', $author_nick, $letter);
-                        $inCore->mailText($to_email, 'Новый комментарий! - '.$inConf->sitename, $letter);
-                    }
-                }
+        $postdate    = date('d/m/Y H:i:s');
+        $letter_path = PATH.'/includes/letters/newcomment.txt';
+        $letter      = file_get_contents($letter_path);
+
+        while ($user = $inDB->fetch_assoc($users_result)){
+
+            if ($user['id'] == $inUser->id) { continue; }
+            
+            if ($user['subscribe_type']=='priv' || $user['subscribe_type']=='both'){
+                $message = 'Произошло обновление: [url='.$comment['target_link'].'#c'.$comment['id'].']'.$comment['target_title'].'[/url]';
+                self::sendMessage(USER_UPDATER, $user['id'], $message);
             }
+
+            if ($user['subscribe_type']=='mail' || $user['subscribe_type']=='both'){
+                if (!$user['email']) { continue; }
+                $user_letter = $letter;
+                $user_letter = str_replace('{sitename}', $inConf->sitename, $user_letter);
+                $user_letter = str_replace('{answerlink}', 'http://'.$_SERVER['HTTP_HOST'].$comment['target_link'].'#c'.$comment['id'], $user_letter);
+                $user_letter = str_replace('{pagetitle}', $comment['target_title'], $user_letter);
+                $user_letter = str_replace('{date}', $postdate, $user_letter);
+                $user_letter = str_replace('{author}', $comment['author'], $user_letter);
+                $inCore->mailText($user['email'], 'Новый комментарий! - '.$inConf->sitename, $user_letter);
+                unset($user_letter);
+            }
+
         }
+
         return;
     }
 

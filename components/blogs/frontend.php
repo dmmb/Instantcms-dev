@@ -63,11 +63,16 @@ function blogs(){
     //Если нужно, загружаем данные об указанном во входных параметрах блоге
 	if ($do!='view'){
 
-        if ($bloglink){     $blog   = $model->getBlogByLink($bloglink);     }
-        if ($id){           $blog   = $model->getBlog($id);                 }
+        if ($bloglink){
+            $blog   = $model->getBlogByLink($bloglink);
+            if (!$blog) { cmsCore::error404(); }
+        }
+        
+        if ($id){
+            $blog   = $model->getBlog($id);
+            if (!$blog) { cmsCore::error404(); }
+        }
     
-        $error  = $blog ? '' : $_LANG['BLOG_NOT_FOUND'];
-
 		if ($blog){
 			$owner = $blog['owner'];
 			if ($owner=='user') { $blog['author'] = dbGetField('cms_users', 'id='.$blog['user_id'], 'nickname');	}
@@ -172,7 +177,7 @@ if ($do=='config'){
     $user_id = $inUser->id;
 
 	//Проверяем является пользователь хозяином блога или админом
-    if ( $blog['user_id']!=$user_id && !$inCore->userIsAdmin($user_id) ) { $inCore->redirectBack(); }
+    if ( $blog['user_id']!=$inUser->id && !$inUser->is_admin ) { $inCore->redirectBack(); }
 
     $inPage->addPathway($blog['title'], $model->getBlogURL(null, $blog['seolink']));
 	$inPage->addPathway($_LANG['CONFIG_BLOG']);
@@ -233,7 +238,7 @@ if ($do=='config'){
             //сохраняем авторов
             $model->updateBlogAuthors($blog['id'], $authors);
             //сохраняем настройки блога
-            $model->updateBlog($blog['id'], array('title'=>$title, 'allow_who'=>$allow_who, 'showcats'=>$showcats, 'ownertype'=>$ownertype, 'premod'=>$premod, 'forall'=>$forall));
+            $blog['seolink'] = $model->updateBlog($blog['id'], array('title'=>$title, 'allow_who'=>$allow_who, 'showcats'=>$showcats, 'ownertype'=>$ownertype, 'premod'=>$premod, 'forall'=>$forall));
             //Перенаправляем на главную страницу блога
             $inCore->redirect($model->getBlogURL(null, $blog['seolink']));
         }

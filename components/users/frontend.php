@@ -637,7 +637,6 @@ if ($do=='comments'){
 			$comments = array();
 			while ($com = $inDB->fetch_assoc($result)){
                 $com['content'] = nl2br($inCore->parseSmiles($com['content'], true));
-				$com['link'] = $inCore->getCommentLink($com['target'], $com['target_id']);
                 if ($com['votes']>0){
                     $com['votes'] = '<span class="cmm_good">+'.$com['votes'].'</span>';
                 } elseif ($com['votes']<0){
@@ -1236,7 +1235,7 @@ if ($do=='delphoto'){
 				@unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/small/'.$photo['imageurl']);
 				@unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/medium/'.$photo['imageurl']);								
 				$inDB->query("DELETE FROM cms_user_photos WHERE id = $photoid") ;
-				$inDB->query("DELETE FROM cms_comments WHERE target = 'userphoto' AND target_id = $photoid");
+                $inCore->deleteComments('userphoto', $photoid);
 				cmsClearTags('userphoto', $photoid);
 			}			
 			header('location:/users/'.$id.'/photoalbum.html');
