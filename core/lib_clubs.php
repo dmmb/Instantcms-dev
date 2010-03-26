@@ -108,10 +108,7 @@ function clubBlogContent($blog_id, $is_admin=false, $is_moder=false, $is_member=
     $model = new cms_model_blog();
 
 	$html = '';
-	$sql = "SELECT p.*,
-                   b.seolink as bloglink, 
-				   IF(DATE_FORMAT(p.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(p.pubdate, '<strong>Cегодня</strong> в %H:%i'),
-				   IF(DATEDIFF(NOW(), p.pubdate)=1, DATE_FORMAT(p.pubdate, 'Вчера в %H:%i'),DATE_FORMAT(p.pubdate, '%d/%m/%Y') ))  as fpubdate
+	$sql = "SELECT p.*, b.seolink as bloglink, p.pubdate as fpubdate
 			FROM cms_blog_posts p, cms_blogs b
 			WHERE p.blog_id = b.id AND p.blog_id = $blog_id AND p.published = 1
 			ORDER BY pubdate DESC
@@ -125,7 +122,7 @@ function clubBlogContent($blog_id, $is_admin=false, $is_moder=false, $is_member=
 		$html = '<ul>';
 		while ($post = $inDB->fetch_assoc($rs)){
             $bloglink = $post['bloglink'];
-			$html .= '<li><a href="'.$model->getPostURL($menuid, $post['bloglink'], $post['seolink']).'">'.$post['title'].'</a> &mdash; '.$post['fpubdate'].'</li>';
+			$html .= '<li><a href="'.$model->getPostURL($menuid, $post['bloglink'], $post['seolink']).'">'.$post['title'].'</a> &mdash; '.$inCore->dateFormat($post['fpubdate']).'</li>';
 		}
 		if ($is_member || $is_moder || $is_admin){
 			$html .= '<li class="service"><a href="/blogs/'.$menuid.'/'.$blog_id.'/newpost.html">Добавить новый пост</li>';
@@ -174,7 +171,8 @@ function clubPhotoAlbums($club_id, $is_admin=false, $is_moder=false, $is_member=
 						if ($unpub) { $on_moderate = ' <span class="on_moder">(На модерации &mdash; '.$unpub.')</span>'; }
 						$delete = ' <a class="delete" title="Удалить альбом" href="javascript:void(0)" onclick="javascript:deleteAlbum('.$album['id'].', \''.$album['title'].'\', '.$club_id.')">X</a>';
 					}
-					$today = dbRowsCount('cms_photo_files', 'published=1 AND DATE_FORMAT(NOW(), \'%d-%m-%Y\')=DATE_FORMAT(pubdate, \'%d-%m-%Y\') AND album_id='.$album['id']);
+					$tday = date("d-m-Y");
+					$today = dbRowsCount('cms_photo_files', 'published=1 AND \''.$tday.'\'=DATE_FORMAT(pubdate, \'%d-%m-%Y\') AND album_id='.$album['id']);
 					if ($today) { $new = ' <span class="new">+'.$today.'</span>'; } else { $new = ''; }
 					$html .= '<li class="club_album" id="'.$album['id'].'"><a href="/photos/'.$menuid.'/'.$album['id'].'">'.$album['title'].'</a> ('.$album['content_count'].$new.') '.$on_moderate.$delete;
 				}
@@ -226,8 +224,9 @@ function clubMembers($club_id){
 	if (!$club_id) { exit; }
 	$members = array();
 	$sql = "SELECT c.* 
-			FROM cms_user_clubs c, cms_users u
-			WHERE c.club_id = $club_id AND c.user_id = u.id AND u.is_deleted = 0 AND u.is_locked = 0 AND c.role = 'member'";
+			FROM cms_user_clubs c
+			LEFT JOIN cms_users u ON u.id=c.user_id AND u.is_deleted = 0 AND u.is_locked = 0
+			WHERE c.club_id = $club_id AND c.role = 'member'";
 	$rs = $inDB->query($sql);
 	if ($inDB->num_rows($rs)){
 		while ($u = $inDB->fetch_assoc($rs)){
@@ -244,8 +243,9 @@ function clubTotalMembers($club_id){
 	if (!$club_id) { exit; }
 	$members = array();
 	$sql = "SELECT c.* 
-			FROM cms_user_clubs c, cms_users u
-			WHERE c.club_id = $club_id AND c.user_id = u.id AND u.is_deleted = 0 AND u.is_locked = 0";
+			FROM cms_user_clubs c
+			LEFT JOIN cms_users u ON u.id=c.user_id AND u.is_deleted = 0 AND u.is_locked = 0
+			WHERE c.club_id = $club_id AND c.role = 'member'";
 	$rs = $inDB->query($sql);
 	if ($inDB->num_rows($rs)){
 		return $inDB->num_rows($rs) +1; //+1 потому что считаем еще и админа, не только юзеров

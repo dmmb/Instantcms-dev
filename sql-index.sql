@@ -29,3 +29,7 @@ ALTER TABLE `cms_tags` ADD INDEX ( `tag` );
 ALTER TABLE `cms_content` ADD INDEX ( `category_id` , `published` , `pubdate` );
 ALTER TABLE `cms_category` ADD INDEX ( `NSLeft` , `NSRight` );
 ALTER TABLE `cms_category` ADD INDEX ( `parent_id` , `published` , `id` );
+ALTER TABLE `cms_ratings` ADD INDEX  ( `item_id` , `target` );
+ALTER TABLE `cms_blog_posts` ADD INDEX ( `blog_id` , `published` );
+ALTER TABLE `cms_blogs` ADD INDEX ( `allow_who` );
+ALTER TABLE `cms_clubs` ADD INDEX ( `published` , `rating` );

@@ -36,7 +36,7 @@ function mod_uc_latest($module_id){
 		
 		$showtype = $cfg['showtype'];
 
-		$sql = "SELECT i.*, DATE_FORMAT(i.pubdate, '%d/%m/%Y') as fdate, c.view_type as viewtype
+		$sql = "SELECT i.*, i.pubdate as fdate, c.view_type as viewtype
 				FROM cms_uc_items i, cms_uc_cats c
 				WHERE i.published = 1 AND i.category_id = c.id ".$catsql."
 				ORDER BY i.pubdate DESC
@@ -81,7 +81,7 @@ function mod_uc_latest($module_id){
 							for($f = 0; $f<$cfg['showf']; $f++){
 								echo '<td valign="top">'.$inCore->getUCSearchLink($item['category_id'], $menuid, $f, $fdata[$f]).'</td>';
 							}							
-							echo '<td width="" align="right" valign="top">'.$item['fdate'].'</td>';
+							echo '<td width="" align="right" valign="top">'.$inCore->dateFormat($item['fdate']).'</td>';
 								echo '<td align="right">';
 							if ($item['viewtype']=='shop'){
 									$price = number_format($item['price'], 2, '.', ' ');

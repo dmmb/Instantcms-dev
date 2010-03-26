@@ -27,8 +27,7 @@ function mod_bestphoto($module_id){
 		
 		$col = 1; $maxcols = $cfg['maxcols'];
 
-		$sql = "SELECT f.*, f.id as fid,
-					   IF(DATE_FORMAT(f.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(f.pubdate, '<strong>{$_LANG['TODAY']}</strong>'), DATE_FORMAT(f.pubdate, '%d-%m-%Y'))  as fpubdate,
+		$sql = "SELECT f.*, f.id as fid, f.pubdate as fpubdate,
 					   a.id as album_id, a.title as album, 
 					   IFNULL(SUM(r.points), 0) as rating
 				FROM cms_photo_files f

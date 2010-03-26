@@ -28,14 +28,13 @@ function mod_bestcontent($module_id){
 			echo '<p>'.$_LANG['BESTCONTENT_CONFIG_TEXT'].'</p>';
 			return;
 		}
-
-		$sql = "SELECT c.*, IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'),	DATE_FORMAT(c.pubdate, '<strong>{$_LANG['TODAY']}</strong> â %H:%i'),
-						DATE_FORMAT(c.pubdate, '%d-%m-%Y'))  as fpubdate, IFNULL(SUM(r.points), 0) as points,
+		$today = date("Y-m-d H:i:s");
+		$sql = "SELECT c.*, c.pubdate as fpubdate, IFNULL(SUM(r.points), 0) as points,
 						u.nickname as author, u.login as author_login
 				FROM cms_users u, cms_content c
 				LEFT JOIN cms_ratings r ON r.item_id=c.id AND r.target='content'
 				WHERE c.published = 1 AND c.user_id = u.id AND c.canrate = 1
-                      AND (c.is_end=0 OR (c.is_end=1 AND c.enddate >= NOW() AND c.pubdate <= NOW()))
+                AND (c.is_end=0 OR (c.is_end=1 AND c.enddate >= '$today' AND c.pubdate <= '$today')) 
 				GROUP BY r.item_id
 				ORDER BY points DESC";
 		
@@ -58,7 +57,7 @@ function mod_bestcontent($module_id){
 				$articles[$next]['title'] = $text;
 				$articles[$next]['href'] = $model->getArticleURL($cfg['menuid'], $con['seolink']);
 				$articles[$next]['karma'] = cmsKarmaFormat($con['points']);
-				$articles[$next]['date'] = $con['fpubdate'];
+				$articles[$next]['date'] = cmsCore::dateFormat($con['fpubdate']);
 				$articles[$next]['author'] = $con['author'];
 				$articles[$next]['authorhref'] = cmsUser::getProfileURL($con['author_login']);
 				$articles[$next]['description'] = $con['description'];							

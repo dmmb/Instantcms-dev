@@ -34,7 +34,7 @@ function mod_latestphoto($module_id){
 		
 		$col = 1; $maxcols = $cfg['maxcols'];
 
-		$sql = "SELECT f.*, IF(DATE_FORMAT(f.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(f.pubdate, '<strong>Сегодня</strong>, %H:%i'), DATE_FORMAT(f.pubdate, '%d-%m-%Y'))  as fpubdate, a.id as album_id, a.title as album
+		$sql = "SELECT f.*, f.pubdate as fpubdate, a.id as album_id, a.title as album
 				FROM cms_photo_files f, cms_photo_albums a
 				WHERE f.published = 1 AND f.album_id = a.id ".$catsql."
 				ORDER BY pubdate DESC
@@ -68,7 +68,7 @@ function mod_latestphoto($module_id){
 							echo '<table cellpadding="2" cellspacing="2" align="center" border="0"><tr>';
 								if ($cfg['showdate']){
 									echo '<td><img src="/images/icons/date.gif" border="0"/></td>';
-									echo '<td>'.$con['fpubdate'].'</td>';
+									echo '<td>'.$inCore->dateFormat($con['fpubdate']).'</td>';
 								}
 								if ($cfg['showcom']){
 									echo '<td><img src="/images/icons/comments.gif" border="0"/></td>';
