@@ -39,6 +39,7 @@ function createMenuItem($menu, $id, $title){
 function applet_cats(){
 
     $inCore = cmsCore::getInstance();
+    $inDB = cmsDatabase::getInstance();
 
 	$GLOBALS['cp_page_title'] = 'Разделы сайта';
  	cpAddPathway('Разделы сайта', 'index.php?view=cats');	
@@ -185,6 +186,7 @@ function applet_cats(){
 
 			$category['id']				= (int)$_REQUEST['id'];
 			$category['title']			= $inCore->request('title', 'str');
+			$category['url']			= $inCore->request('url', 'str');
 			$category['parent_id']		= $inCore->request('parent_id', 'int');
 			$category['description']	= $inCore->request('description', 'html');
 			$category['published'] 		= $inCore->request('published', 'int', 0);
@@ -213,6 +215,9 @@ function applet_cats(){
 			$ns = $inCore->nestedSetsInit('cms_category');
 			$ns->MoveNode($category['id'], $category['parent_id']);
 
+            $old = $inDB->get_fields('cms_category', "id={$category['id']}", '*');
+
+            if ($category['url']) { $category['url'] = cmsCore::strToURL($category['url']); }
             $seolink    = $model->getCategorySeoLink($category);
 
 			$sql = "UPDATE cms_category 
@@ -231,12 +236,28 @@ function applet_cats(){
 						showdesc={$category['showdesc']},
 						is_public={$category['is_public']},
 						photoalbum='$photoalbum',
-                        seolink='$seolink'
+                        seolink='$seolink',
+                        url='{$category['url']}'
 					WHERE id = {$category['id']}
 					LIMIT 1";
 			dbQuery($sql) ;	
 			reorder();
             
+            //обновляем УРЛы всех вложенных разделов
+            if ($seolink != $old['seolink']){
+                $sql = "SELECT id, title, url, seolink
+                        FROM cms_category
+                        WHERE NSLeft > {$old['NSLeft']} AND NSRight < {$old['NSRight']}";
+                $res = $inDB->query($sql);
+                if ($inDB->num_rows($res)){
+                    while($subcat = $inDB->fetch_assoc($res)){
+                        if ($subcat['url']) { $subcat['url'] = cmsCore::strToURL($subcat['url']); }
+                        $sub_seolink = $model->getCategorySeoLink($subcat);
+                        $inDB->query("UPDATE cms_category SET seolink='{$sub_seolink}' WHERE id={$subcat['id']}");
+                    }
+                }
+            }
+
             //обновляем ссылки меню
             $inDB = cmsDatabase::getInstance();
             $menuid = $inDB->get_field('cms_menu', "linktype='category' AND linkid={$category['id']}", 'id');
@@ -256,6 +277,7 @@ function applet_cats(){
 	if ($do == 'submit'){
 
         $category['title']			= $inCore->request('title', 'str');
+        $category['url']			= $inCore->request('url', 'str');
         $category['parent_id']		= $inCore->request('parent_id', 'int');
         $category['description']	= $inCore->request('description', 'html');
         $category['published'] 		= $inCore->request('published', 'int', 0);
@@ -284,6 +306,7 @@ function applet_cats(){
 		$ns = $inCore->nestedSetsInit('cms_category');
 		$category['id'] = $ns->AddNode($category['parent_id']);
 
+        if ($category['url']) { $category['url'] = cmsCore::strToURL($category['url']); }
         $seolink    = $model->getCategorySeoLink($category);
 		
 		if ($category['id']){
@@ -303,7 +326,8 @@ function applet_cats(){
 						showdesc={$category['showdesc']},
 						is_public={$category['is_public']},
 						photoalbum='$photoalbum',
-                        seolink='$seolink'
+                        seolink='$seolink',
+                        url='{$category['url']}'
 					WHERE id = {$category['id']}
 					LIMIT 1";
 
@@ -420,6 +444,14 @@ function applet_cats(){
                             <td><label for="published"><strong>Публиковать раздел</strong></label></td>
                         </tr>
                     </table>
+
+                    <div style="margin-top:15px">
+                        <strong>URL раздела</strong><br/>
+                        <div style="color:gray">Если не указан, генерируется из заголовка</div>
+                    </div>
+                    <div>
+                        <input type="text" name="url" value="<?php echo $mod['url']; ?>" style="width:99%"/>
+                    </div>
 
                     <div style="margin-top:20px"><strong>Сортировка статей</strong></div>
                     <div>

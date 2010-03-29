@@ -25,9 +25,9 @@ function mod_bestphoto($module_id){
 		$sql = "SELECT f.*, f.id as fid,
 					   IF(DATE_FORMAT(f.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(f.pubdate, '<strong>{$_LANG['TODAY']}</strong>'), DATE_FORMAT(f.pubdate, '%d-%m-%Y'))  as fpubdate,
 					   a.id as album_id, a.title as album, 
-					   IFNULL(SUM(r.points), 0) as rating
+					   IFNULL(r.total_rating, 0) as rating
 				FROM cms_photo_files f
-				LEFT JOIN cms_ratings r ON r.item_id=f.id AND r.target = 'photo'		
+				LEFT JOIN cms_ratings_total r ON r.item_id=f.id AND r.target = 'photo'
 				LEFT JOIN cms_photo_albums a ON f.album_id = a.id
 				WHERE f.published = 1 ".$catsql."
 				GROUP BY f.id

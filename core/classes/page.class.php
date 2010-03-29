@@ -507,6 +507,9 @@ public function printModules($position){
                         $modulebody = $inCore->getCache('module', $mod['mid']);
                         $callback = true;
                     } else {
+                                $config = $inCore->yamlToArray($mod['config']);
+                                $inCore->cacheModuleConfig($mod['module_id'], $config);
+
                                 ob_start();
                                 $callback = $mod['content']($mod['module_id']);
                                 $modulebody = ob_get_clean();
@@ -520,6 +523,7 @@ public function printModules($position){
                 $mod['body']        = $modulebody;
                 $smarty             = $inCore->initSmartyModule();
                 $_CFG['fastcfg']    = isset($_CFG['fastcfg']) ? $_CFG['fastcfg'] : 0;
+                
                 if ($_CFG['fastcfg'] && $inCore->userIsAdmin($inUser->id)){
                     $smarty->assign('cfglink', '/admin/index.php?view=modules&do=edit&id='.$mod['mid']);
                 }

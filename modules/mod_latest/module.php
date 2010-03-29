@@ -30,11 +30,17 @@ function mod_latest($module_id){
 			$rssid = $cfg['cat_id'];
 		} else { $catsql = 'AND con.category_id = cat.id'; $rssid = 'all'; } 
 
-		$sql = "SELECT DISTINCT con.*, DATE_FORMAT(con.pubdate, '%d-%m-%Y (%H:%i)') as fdate, u.nickname as author, u.login as author_login
-				FROM cms_content con, cms_category cat, cms_users u
+		$sql = "SELECT con.*,
+                       DATE_FORMAT(con.pubdate, '%d-%m-%Y (%H:%i)') as fdate,
+                       u.nickname as author,
+                       u.login as author_login,
+                       IFNULL(COUNT(cm.id), 0) as comments
+				FROM cms_category cat, cms_users u, cms_content con
+                LEFT JOIN cms_comments cm ON cm.target='article' AND cm.target_id=con.id
 				WHERE con.published = 1 AND con.showlatest = 1 AND con.user_id = u.id 
                       AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= NOW() AND con.pubdate <= NOW()))
                       ".$catsql."
+                GROUP BY con.id
 				ORDER BY con.pubdate DESC
 				LIMIT ".$cfg['newscount'];
  	
@@ -53,7 +59,7 @@ function mod_latest($module_id){
 				$articles[$next]['href']        = $model->getArticleURL(null, $con['seolink']);
 				$articles[$next]['author']      = $con['author'];
 				$articles[$next]['authorhref']  = cmsUser::getProfileURL($con['author_login']);
-				$articles[$next]['comments']    = $inCore->getCommentsCount('article', $con['id']);
+				$articles[$next]['comments']    = $con['comments'];
 				$articles[$next]['date']        = $con['fdate'];
 				$articles[$next]['description'] = $con['description'];
                 $articles[$next]['image']       = (file_exists(PATH.'/images/photos/small/article'.$con['id'].'.jpg') ? 'article'.$con['id'].'.jpg' : '');                

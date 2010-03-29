@@ -89,20 +89,15 @@ function cmsClearKarma($target, $item_id){
 }
 
 function cmsKarma($target, $item_id){ //returns array with total votes and total points of karma
+    
     $inDB = cmsDatabase::getInstance();
-	$sql = "SELECT *, SUM(points) as points, COUNT(id) as votes
-			FROM cms_ratings 
-			WHERE item_id = $item_id AND target='$target'
-			GROUP BY item_id";
-	$result = $inDB->query($sql);
-	if ($inDB->num_rows($result)){
-		$data = $inDB->fetch_assoc($result);
-		$data['points'] = round($data['points'], 2);
-	} else {
-		$data['points'] = 0;
-		$data['votes'] = 0;
-	}	
-	return $data;
+
+    $item = $inDB->get_fields('cms_ratings_total', "item_id = $item_id AND target='$target'", 'total_rating, total_votes');
+
+	if (!$item){ return array('points'=>0, 'votes'=>0); }
+
+	return array('points'=>$item['total_rating'], 'votes'=>$item['total_votes']);
+
 }
 
 function cmsAlreadyKarmed($target, $item_id, $user_id){
@@ -126,16 +121,66 @@ function cmsAlreadyKarmedAnyIP($target, $ip){
 }
 
 function cmsSubmitKarma($target, $item_id, $points){
+
     $inUser = cmsUser::getInstance();
     $inDB   = cmsDatabase::getInstance();
 	$id     = $inUser->id;
 	$ip     = $_SERVER['REMOTE_ADDR'];
-	if(!cmsAlreadyKarmed($target, $item_id, $id)){
-		$sql = "INSERT INTO cms_ratings (item_id, points, ip, target, user_id, pubdate) VALUES ($item_id, $points, '$ip', '$target', $id, NOW())";
-		$inDB->query($sql);
-	}
+
+	if(cmsAlreadyKarmed($target, $item_id, $id)){ return false; }
+
+    //вставляем новый голос
+    $sql = "INSERT INTO cms_ratings (item_id, points, ip, target, user_id, pubdate)
+            VALUES ($item_id, $points, '$ip', '$target', $id, NOW())";
+    $inDB->query($sql);
+
+    //проверяем была ли сделана агрегация для этой цели ранее
+    $is_agr = $inDB->rows_count('cms_ratings_total', "target='$target' AND item_id = $item_id", 1);
+
+    //если была, то обновляем
+    if ($is_agr) { $agr_sql = "UPDATE cms_ratings_total
+                               SET  total_rating = total_rating + ({$points}),
+                                    total_votes  = total_votes + 1
+                               WHERE target='$target' AND item_id = $item_id"; }
+
+    //если не было, то вставляем
+    if (!$is_agr) { $agr_sql = "INSERT INTO cms_ratings_total (target, item_id, total_rating, total_votes)
+                                VALUES ('{$target}', '{$item_id}', '{$points}', '1')"; }
+
+    $inDB->query($agr_sql);
+
+    //получаем информацию о цели
+    $info = $inDB->get_fields('cms_rating_targets', "target='{$target}'", '*');
+
+    //если нужно, изменяем рейтинг автора цели
+    if ($info['is_user_affect'] && $info['user_weight'] && $info['target_table']){
+
+        $user_sql = "UPDATE cms_users u,
+                            {$info['target_table']} t
+                     SET u.rating = u.rating + ({$points}*{$info['user_weight']})
+                     WHERE t.user_id = u.id";
+
+        $inDB->query($user_sql);
+        
+    }
+
+    //проверяем наличие метода updateRatingHook(target, item_id, points) в модели
+    //компонента, ответственного за цель
+    if ($info['component']){
+        $inCore = cmsCore::getInstance();
+        $inCore->loadModel($info['component']);
+        if (class_exists('cms_model_'.$info['component'])){
+            eval('$model = new cms_model_'.$info['component'].'();');
+            if (method_exists($model, 'updateRatingHook')){
+                $model->updateRatingHook($target, $item_id, $points);
+            }
+        }
+    }
+
 	return true;
+
 }
+
 function cmsKarmaFormat($points){
     $inDB = cmsDatabase::getInstance();
 	if ($points==0) {
@@ -147,6 +192,7 @@ function cmsKarmaFormat($points){
 	}
 	return $html;
 }
+
 function cmsKarmaFormatSmall($points){
     $inDB = cmsDatabase::getInstance();
 	if ($points==0) {

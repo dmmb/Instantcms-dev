@@ -142,11 +142,10 @@ class cms_model_comments{
         $comments = array();
 
         $sql = "SELECT c.*, DATE_FORMAT(c.pubdate, '%d-%m-%Y') fpubdate, DATE_FORMAT(c.pubdate, '%H:%i') fpubtime,
-                       IFNULL(SUM(v.vote), 0) as votes
+                       IFNULL(v.total_rating, 0) as votes
                 FROM cms_comments c
-                LEFT JOIN cms_comments_votes v ON v.comment_id = c.id AND v.comment_type = 'com'
+                LEFT JOIN cms_ratings_total v ON v.item_id = c.id AND v.target = 'comment'
                 WHERE c.target='$target' AND c.target_id=$target_id AND c.published=1
-                GROUP BY c.id
                 ORDER BY c.pubdate ASC";
 
         $result = $this->inDB->query($sql);

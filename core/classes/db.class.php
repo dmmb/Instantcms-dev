@@ -95,7 +95,7 @@ protected function replacePrefix( $sql, $prefix='cms_' ) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public function query($sql){
+public function query($sql, $ignore_errors=false){
     $inConf = cmsConfig::getInstance();
 	$sql = $this->replacePrefix($sql);
     $result = mysql_query($sql, $this->db_link);
@@ -105,7 +105,7 @@ public function query($sql){
         $this->q_dump   .= '<pre>'.$sql.'</pre><hr/>';
     }
 
-    if (mysql_error() && $inConf->debug){
+    if (mysql_error() && $inConf->debug && !$ignore_errors){
         die('<div style="margin:2px;border:solid 1px gray;padding:10px">DATABASE ERROR: <pre>'.$sql.'</pre>'.mysql_error().'</div>');
     }
     
@@ -263,7 +263,7 @@ public function isFieldType($table, $field, $type){
 public function isTableExists($table){
 
     $sql    = "SELECT * FROM $table LIMIT 1";
-    $result = $this->query($sql);
+    $result = @$this->query($sql, true);
     
     if ($this->errno()){ return false; }
 

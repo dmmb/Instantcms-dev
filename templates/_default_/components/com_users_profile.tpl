@@ -129,10 +129,12 @@
 							<div class="title">{$LANG.DATE_REGISTRATION}:</div>
 							<div class="value">{$usr.fregdate}</div>
 						</div>
+                        {if $usr.city}
 						<div class="field">
 							<div class="title">{$LANG.CITY}:</div>
                             <div class="value"><a href="/users/city/{$usr.cityurl}">{$usr.city}</a></div>
 						</div>
+                        {/if}
 						
 						{if $usr.showbirth && $usr.birthdate}
 						<div class="field">

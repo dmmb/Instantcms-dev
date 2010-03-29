@@ -48,11 +48,10 @@ function mod_comments($module_id){
                        IFNULL(c.user_id, 0) as user_id,
                        IFNULL(u.nickname, '') as author,
                        IFNULL(u.login, '') as author_login,
-                       IFNULL(SUM(v.vote), 0) as rating
+                       IFNULL(v.total_rating, 0) as rating
 				FROM cms_users u, cms_comments c
-                LEFT JOIN cms_comments_votes v ON v.comment_id=c.id
+                LEFT JOIN cms_ratings_total v ON v.item_id=c.id AND v.target='comment'
 				WHERE (c.user_id=u.id {$guest_sql}) AND c.published=1 {$target_where}
-                GROUP BY c.id, v.comment_id
                 ORDER BY c.pubdate DESC
                 LIMIT 100";
 

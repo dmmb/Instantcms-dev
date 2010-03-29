@@ -16,9 +16,7 @@
 
     $inCore = cmsCore::getInstance();
 
-    $inCore->loadClass('page');         //страница
-    $inCore->loadClass('config');       //конфигурация
-    $inCore->loadClass('db');           //база данных
+    $inCore->loadClass('page');
     $inCore->loadClass('user');
 
     $inUser = cmsUser::getInstance();
@@ -33,11 +31,10 @@
 		cmsSubmitKarma($target, $item_id, -1);
 	}
 
-	$postkarma = cmsKarma($target, $item_id);
-	
-	setUsersRating();
+	$postkarma = cmsKarma($target, $item_id);	
 	
 	//PREPARE POINTS
 	$points = cmsKarmaFormat($postkarma['points']);
 	echo $points;
+    
 ?>

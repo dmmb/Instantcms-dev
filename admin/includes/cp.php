@@ -47,9 +47,9 @@ function cpWritable($file){ //relative path with starting "/"
 function cpCheckWritable($file, $type='file'){	
 	if (!cpWritable($file)){	
 		if ($type=='file'){
-			echo cpWarning('Файл "<strong>'.$file.'</strong>" не доступен для записи! Установите права 0777 на этот файл.');
+			echo cpWarning('Файл "<strong>'.$file.'</strong>" не доступен для записи! Установите права 755 на этот файл.');
 		} else {
-			echo cpWarning('Папка "<strong>'.$file.'</strong>" не доступна для записи! Установите права 0777 на эту папку.');		
+			echo cpWarning('Папка "<strong>'.$file.'</strong>" не доступна для записи! Установите права 755 на эту папку.');
 		}	
 	}
 }
@@ -234,7 +234,7 @@ function cpMenu(){
 				<a class="cats">Контент</a>
 				<ul>
 					<li><a class="cats" href="index.php?view=cats">Разделы</a></li>
-					<li><a class="content" href="index.php?view=content">Статьи</a></li>
+					<li><a class="content" href="index.php?view=content">Статьи / страницы</a></li>
 					<li><a class="add" href="index.php?view=cats&do=add">Создать раздел</a></li>
 					<li><a class="add" href="index.php?view=content&do=add">Создать статью</a></li>
 				</ul>
@@ -961,16 +961,17 @@ function dbHideList($table, $list){
 }
 
 function dbDelete($table, $id){
+    $inCore = cmsCore::getInstance();
 	$sql = "DELETE FROM $table WHERE id = $id LIMIT 1";
 	dbQuery($sql) ;
 	if ($table=='cms_content'){
 		cmsClearTags('content', $id);
-		dbQuery("DELETE FROM cms_comments WHERE target='article' AND target_id=$id");
-		dbQuery("DELETE FROM cms_ratings WHERE target='content' AND item_id=$value");
-		dbQuery("DELETE FROM cms_tags WHERE target='content' AND item_id=$value");
+        $inCore->deleteRatings('content', $id);
+        $inCore->deleteComments('article', $id);
+		dbQuery("DELETE FROM cms_tags WHERE target='content' AND item_id=$id");
 	}	
 	if ($table=='cms_modules'){
-		dbQuery("DELETE FROM cms_modules_bind WHERE module_id=$value");
+		dbQuery("DELETE FROM cms_modules_bind WHERE module_id=$id");
 	}
 }
 function dbDeleteList($table, $list){
@@ -1198,22 +1199,22 @@ function cpMenutypeById($id){
 	$html   = '';
 	$maxlen = 35;
 	
-	$item   = $inDB->get_fields('cms_menu', 'id='.$id, 'linktype, linkid');
+	$item   = $inDB->get_fields('cms_menu', 'id='.$id, 'linktype, linkid, link');
 
 	switch($item['linktype']){	
-		case 'link':  			$html = '<span id="menutype">Cсылка</span> - '.$item['linkid'];				
+		case 'link':  			$html = '<span id="menutype"><a href="'.$item['link'].'">Cсылка</a></span> - '.$item['linkid'];
 								break;
-		case 'component':		$html = '<span id="menutype">Компонент</span> - '.$inDB->get_field('cms_components', "link='".$item['linkid']."'", 'title');
+		case 'component':		$html = '<span id="menutype"><a href="'.$item['link'].'">Компонент</a></span> - '.$inDB->get_field('cms_components', "link='".$item['linkid']."'", 'title');
 					 			break;
-		case 'content':			$html = '<span id="menutype">Статья</span> - '.$inDB->get_field('cms_content', 'id='.$item['linkid'], 'title');
+		case 'content':			$html = '<span id="menutype"><a href="'.$item['link'].'">Статья</a></span> - '.$inDB->get_field('cms_content', 'id='.$item['linkid'], 'title');
 					 			break;
-		case 'category':		$html = '<span id="menutype">Раздел</span> - '.$inDB->get_field('cms_category', 'id='.$item['linkid'], 'title');
+		case 'category':		$html = '<span id="menutype"><a href="'.$item['link'].'">Раздел</a></span> - '.$inDB->get_field('cms_category', 'id='.$item['linkid'], 'title');
 					 			break;
-		case 'pricecat':		$html = '<span id="menutype">Прайс</span> - '.$inDB->get_field('cms_price_cats', 'id='.$item['linkid'], 'title');
+		case 'pricecat':		$html = '<span id="menutype"><a href="'.$item['link'].'">Прайс</a></span> - '.$inDB->get_field('cms_price_cats', 'id='.$item['linkid'], 'title');
 					 			break;
-		case 'uccat':			$html = '<span id="menutype">Каталог</span> - '.$inDB->get_field('cms_uc_cats', 'id='.$item['linkid'], 'title');
+		case 'uccat':			$html = '<span id="menutype"><a href="'.$item['link'].'">Каталог</a></span> - '.$inDB->get_field('cms_uc_cats', 'id='.$item['linkid'], 'title');
 					 			break;
-		case 'blog':			$html = '<span id="menutype">Блог</span> - '.$inDB->get_field('cms_blogs', 'id='.$item['linkid'], 'title');
+		case 'blog':			$html = '<span id="menutype"><a href="'.$item['link'].'">Блог</a></span> - '.$inDB->get_field('cms_blogs', 'id='.$item['linkid'], 'title');
 					 			break;
 	}	
 	$clear = strip_tags($html);

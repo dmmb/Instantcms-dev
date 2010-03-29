@@ -103,9 +103,11 @@ if ($do=='view'){
 
     $seolink = preg_replace ('/[^a-z0-9_\/\-]/i', '', $seolink);
 
-    if ($seolink) { $cat = $model->getCategoryByLink($seolink); }
-
-	if ($id) { $cat = $model->getCategory($id); }
+    if ($seolink) { 
+        $cat = $model->getCategoryByLink($seolink);
+    } else {
+        $cat = $model->getCategory($id); 
+    }
 
     if (!$cat) { return; }
 
@@ -610,12 +612,12 @@ if ($do=='best'){
     $inPage->printHeading($_LANG['ARTICLES_RATING']);
 
     $sql = "SELECT c.*, IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'),	DATE_FORMAT(c.pubdate, '<strong>{$_LANG['TODAY']}</strong> {$_LANG['IN']} %H:%i'),
-                    DATE_FORMAT(c.pubdate, '%d-%m-%Y'))  as pubdate, IFNULL(SUM(r.points), 0) as points, IFNULL(COUNT(r.points), 0) as votes,
+                    DATE_FORMAT(c.pubdate, '%d-%m-%Y'))  as pubdate, 
+                    IFNULL(r.total_rating, 0) as points, IFNULL(r.total_votes, 0) as votes,
                     u.nickname as author, cat.title as category, cat.seolink as category_seolink
             FROM cms_users u, cms_category cat, cms_content c
-            LEFT JOIN cms_ratings r ON r.item_id=c.id AND r.target='content'
+            LEFT JOIN cms_ratings_total r ON r.item_id=c.id AND r.target='content'
             WHERE c.published = 1 AND c.canrate = 1 AND c.user_id = u.id AND c.category_id = cat.id
-            GROUP BY r.item_id
             ORDER BY points DESC, votes ASC
             LIMIT 50";
     $rs = $inDB->query($sql);

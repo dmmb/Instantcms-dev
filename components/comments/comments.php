@@ -109,7 +109,7 @@
             }
 			$comments[$next]['is_my'] = ($inUser->id==$comments[$next]['user_id']);
             if ($inUser->id){
-                $comments[$next]['is_voted'] = ($inDB->rows_count('cms_comments_votes', 'comment_id='.$comments[$next]['id'].' AND comment_type=\'com\' AND user_id='.$inUser->id) || $comments[$next]['is_my']);
+                $comments[$next]['is_voted'] = ($comments[$next]['is_my'] || $inDB->rows_count('cms_ratings', 'item_id='.$comments[$next]['id'].' AND target=\'comment\' AND user_id='.$inUser->id, 1));
             }
         }
 

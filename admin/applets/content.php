@@ -229,6 +229,7 @@ function applet_content(){
 			$id                        = $inCore->request('id', 'int', 0);
 			$article['category_id']    = $inCore->request('category_id', 'int', 1);
 			$article['title']          = $inCore->request('title', 'str');
+			$article['url']            = $inCore->request('url', 'str');
 			$article['showtitle']      = $inCore->request('showtitle', 'int', 1);
 			$article['description']    = $inCore->request('description', 'html', '');
 			$article['content']        = $inCore->request('content', 'html', '');
@@ -318,6 +319,7 @@ function applet_content(){
 	if ($do == 'submit'){
         $article['category_id']     = $inCore->request('category_id', 'int', 1);
         $article['title']           = $inCore->request('title', 'str');
+        $article['url']             = $inCore->request('url', 'str');
         $article['showtitle']       = $inCore->request('showtitle', 'int', 1);
         $article['description']     = $_REQUEST['description'];
         $article['content']         = $_REQUEST['content'];
@@ -487,7 +489,7 @@ function applet_content(){
                                 </div>
                             </td>
                             <td width="16" valign="bottom" style="padding-bottom:10px">
-                                <input type="checkbox" name="showdate" id="showdate" title="Показывать дату" value="1" <?php if ($mod['showdate'] || $do=='add') { echo 'checked="checked"'; } ?>/>
+                                <input type="checkbox" name="showdate" id="showdate" title="Показывать дату и автора" value="1" <?php if ($mod['showdate'] || $do=='add') { echo 'checked="checked"'; } ?>/>
                             </td>
                         </tr>
                     </table>
@@ -572,7 +574,20 @@ function applet_content(){
                         </select>
                     </div>
 
-                    <div style="margin-top:25px">
+                    <div style="margin-top:15px">
+                        <strong>URL страницы</strong><br/>
+                        <div style="color:gray">Если не указан, генерируется из заголовка</div>
+                    </div>
+                    <div>
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td><input type="text" name="url" value="<?php echo $mod['url']; ?>" style="width:100%"/></td>
+                                <td width="40" align="center">.html</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div style="margin-top:10px">
                         <strong>Автор статьи</strong>
                     </div>
                     <div>

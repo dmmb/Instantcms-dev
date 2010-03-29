@@ -92,17 +92,17 @@ function applet_menu(){
 
 		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';		$fields[1]['link'] = '?view=menu&do=edit&id=%id%';
 		
-		$fields[2]['title'] = 'Показ';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';	
+		$fields[2]['title'] = 'Показ';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '40';
 		
 		$fields[3]['title'] = 'Порядок';	$fields[3]['field'] = 'ordering';	$fields[3]['width'] = '100';	
 				
-		$fields[4]['title'] = 'Ссылка';		$fields[4]['field'] = 'id';		$fields[4]['width'] = '300';	
+		$fields[4]['title'] = 'Ссылка';		$fields[4]['field'] = 'id';		$fields[4]['width'] = '240';
 		$fields[4]['prc'] = 'cpMenutypeById';
 
-		$fields[5]['title'] = 'Меню';		$fields[5]['field'] = 'menu';		$fields[5]['width'] = '100';	$fields[5]['filter'] = 10;
+		$fields[5]['title'] = 'Меню';		$fields[5]['field'] = 'menu';		$fields[5]['width'] = '70';	$fields[5]['filter'] = 10;
 		$fields[5]['filterlist'] = cpGetList('menu');
 
-		$fields[6]['title'] = 'Шаблон';		$fields[6]['field'] = 'template';	$fields[6]['width'] = '100';	
+		$fields[6]['title'] = 'Шаблон';		$fields[6]['field'] = 'template';	$fields[6]['width'] = '70';
 		$fields[6]['prc'] = 'cpTemplateById';
 		
 		//ACTIONS

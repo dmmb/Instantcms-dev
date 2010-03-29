@@ -90,7 +90,7 @@ function albumDelete($album_id, $differ=''){
 			cmsClearTags('photo', $photo['id']);	
 			$inDB->query("DELETE FROM cms_photo_files WHERE id = ".$photo['id']) ;
             $inCore->deleteComments('photo', $photo['id']);
-			$inDB->query("DELETE FROM cms_ratings WHERE target='photo' AND item_id = ".$photo['id']) ;
+            $inCore->deleteRatings('photo', $photo['id']);
 			@unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/'.$photo['file']);	
 			@unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/thumb/'.$photo['file'].'.jpg');	
 		}			
@@ -113,12 +113,11 @@ function cmsPhotoList($album){
 			$album_row = $inDB->fetch_assoc($result);
 																
 			//SQL BUILD			
-			$sql = "SELECT f.*, IFNULL(AVG(r.points), 0) as rating
+			$sql = "SELECT f.*, IFNULL(r.total_rating, 0) as rating
 					FROM cms_photo_files f
-					LEFT JOIN cms_ratings r ON r.item_id=f.id
+					LEFT JOIN cms_ratings_total r ON r.item_id=f.id AND r.target='photo' 
 					WHERE f.album_id = {$album['id']} AND f.published = 1
-					GROUP BY f.id
-					";		
+					";
 			
 			//ORDERING
 			if (isset($album['orderby'])) { 
