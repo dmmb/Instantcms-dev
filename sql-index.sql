@@ -33,3 +33,7 @@ ALTER TABLE `cms_ratings` ADD INDEX  ( `item_id` , `target` );
 ALTER TABLE `cms_blog_posts` ADD INDEX ( `blog_id` , `published` );
 ALTER TABLE `cms_blogs` ADD INDEX ( `allow_who` );
 ALTER TABLE `cms_clubs` ADD INDEX ( `published` , `rating` );
+ALTER TABLE `cms_photo_files` ADD INDEX ( `album_id` );
+ALTER TABLE `cms_photo_albums` ADD INDEX ( `parent_id` , `published` );
+ALTER TABLE `cms_photo_albums` ADD INDEX ( `NSLeft` , `NSRight` );
+ALTER TABLE `cms_ratings` ADD INDEX ( `item_id` );

@@ -1336,15 +1336,14 @@ if ($do=='editphoto'){
 									$photo_max_size = ($max_mb * 1024 * 1024);
 
 									$smarty = $inCore->initSmarty('components', 'com_photos_edit.tpl');
-									$smarty->assign('menuid', $menuid);
-									$smarty->assign('id', $id);
 									$smarty->assign('photo', $photo);
-									$smarty->assign('photoid', $photoid);
+									$smarty->assign('input_poto', '<input type="hidden" name="imageurl" value="'.$photo['imageurl'].'" />');
 									$smarty->assign('photo_tag', $photo_tag);
+									$smarty->assign('user_foto', true);
+									$smarty->assign('action', '/users/'.$id.'/editphoto'.$photoid.'.html');
+									$smarty->assign('images', '/images/users/photos/small/'.$photo['imageurl'].'');
 									$smarty->assign('photo_max_size', $photo_max_size);
-									$smarty->assign('_LANG', $_LANG);
 									$smarty->display('com_photos_edit.tpl');
-
 
 								}//photo exists
 								else { usrAccessDenied(); }

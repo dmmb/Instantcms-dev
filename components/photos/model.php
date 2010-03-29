@@ -247,19 +247,7 @@ class cms_model_photos{
         if (!$this->inDB->num_rows($result)) { return false; }
 
         while($subcat = $this->inDB->fetch_assoc($result)){
-
-            $count_sql = "SELECT f.id
-                          FROM cms_photo_files f, cms_photo_albums a
-                          WHERE f.album_id = a.id AND (a.NSLeft >= {$subcat['NSLeft']} 
-                                AND a.NSRight <= {$subcat['NSRight']}) AND a.NSDiffer = '{$differ}'
-                                AND f.published = 1";
-
-            $count_result = $this->inDB->query($count_sql);
-
-            $subcat['content_count'] = $this->inDB->num_rows($count_result);
-
-            $subcats[] = $subcat;
-
+           $subcats[] = $subcat;
         }
 
         $subcats = cmsCore::callEvent('GET_SUBALBUMS', $subcats);

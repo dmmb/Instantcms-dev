@@ -223,9 +223,7 @@ if ($do=='view'){
 			if(!$show_hidden) { $pubsql	= ' AND f.published = 1'; } else { $pubsql = ''; }
 
 			//SQL BUILD			
-			$sql = "SELECT f.*,
-							IF(DATE_FORMAT(f.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(f.pubdate, '<strong>{$_LANG['TODAY']}</strong> â %H:%i'),
-							DATE_FORMAT(f.pubdate, '%d-%m-%Y'))  as fpubdate, IFNULL(AVG(r.points), 0) as rating
+			$sql = "SELECT f.*, f.pubdate as fpubdate, IFNULL(AVG(r.points), 0) as rating
 					FROM cms_photo_files f
 					LEFT JOIN cms_ratings r ON r.item_id=f.id
 					WHERE f.album_id = $id $pubsql $usersql
@@ -294,7 +292,7 @@ if ($do=='view'){
 								echo '<td width="16" valign="top"><img src="/images/icons/comments.gif" alt="'.$_LANG['COMMENTS'].'" border="0"/></td>';
 								echo '<td width="25" valign="top"><a href="/photos/'.$menuid.'/photo'.$con['id'].'.html#c" title="'.$_LANG['COMMENTS'].'">'.$inCore->getCommentsCount('photo', $photo['id']).'</a></td>';
 								echo '<td width="16" valign="top" class="photo_date_td"><img src="/images/icons/date.gif" alt="'.$_LANG['PUB_DATE'].'" /></td>';
-								echo '<td width="70" align="center" valign="top" class="photo_date_td">'.$con['pubdate'].'</td>';			
+								echo '<td width="70" align="center" valign="top" class="photo_date_td">'.$inCore->dateformat($con['fpubdate']).'</td>';			
 							} else {
 								$fcols = 2;
 							}
@@ -368,7 +366,7 @@ if ($do=='view'){
 }
 /////////////////////////////// VIEW PHOTO ///////////////////////////////////////////////////////////////////////////////////////////
 if($do=='viewphoto'){
-	$sql = "SELECT f.*, DATE_FORMAT(f.pubdate, '%d-%m-%Y') pubdate, 
+	$sql = "SELECT f.*, f.pubdate, 
 					a.id cat_id, a.NSLeft as NSLeft, a.NSRight as NSRight, a.NSDiffer as NSDiffer, a.user_id as album_user_id, a.title cat_title, 
 					a.nav album_nav, a.public public, a.showtype a_type, a.showtags a_tags, a.bbcode a_bbcode
 			FROM cms_photo_files f, cms_photo_albums a
@@ -463,7 +461,7 @@ if($do=='viewphoto'){
 		if ($photo['a_type'] != 'simple'){
 			echo '<div class="photo_bar">';
 				echo '<table width="" cellspacing="0" cellpadding="4" align="center"><tr>';
-					echo '<td width=""><strong>'.$_LANG['ADDED'].':</strong> '.$photo['pubdate'].'</td>';
+					echo '<td width=""><strong>'.$_LANG['ADDED'].':</strong> '.$inCore->dateformat($photo['pubdate']).'</td>';
 					if ($photo['public']){
 						$usr = dbGetFields('cms_users', 'id='.$photo['user_id'], 'id, nickname, login');
 						if ($usr['id']){							
@@ -762,57 +760,17 @@ if ($do=='editphoto'){
 								$sql = "SELECT * FROM cms_photo_files WHERE id = $photoid";
 								$result = $inDB->query($sql) ;
 								if ($inDB->num_rows($result)){	
-									$photo = $inDB->fetch_assoc($result);		
-									ob_start(); ?>
+									$photo = $inDB->fetch_assoc($result);	
+									$photo_max_size = ($max_mb * 1024 * 1024);
 									
-									<form action="/photos/<?php echo $menuid?>/editphoto<?php echo $photoid?>.html" method="POST" enctype="multipart/form-data">
-									<input type="hidden" name="file" value="<?php echo $photo['file']?>" />
-									<table border="0" cellspacing="0" cellpadding="0">
-                                      <tr>
-                                        <td width="120" valign="top"><table width="110" border="0" cellspacing="0" cellpadding="0">
-                                          <tr>
-                                            <td width="110" align="center" valign="top" style="border:solid 1px gray; padding:5px; background-color:#FFFFFF;"><img src="/images/photos/small/<?php echo $photo['file']?>" border="0" style="border:solid 1px black" /></td>
-                                          </tr>
-                                        </table></td>
-                                        <td align="right" valign="top"><table width="409">
-                                          <tr>
-                                            <td width="401" valign="top"><strong><?php echo $_LANG['PHOTO_TITLE']; ?>: </strong></td>
-                                          </tr>
-                                          <tr>
-                                            <td valign="top"><input name="title" type="text" id="title" size="40" maxlength="250" value="<?php echo $photo['title']?>"/></td>
-                                          </tr>
-                                          <tr>
-                                            <td width="401" valign="top"><strong><?php echo $_LANG['PHOTO_DESCRIPTION']; ?>: </strong></td>
-                                          </tr>
-                                          <tr>
-                                            <td valign="top"><textarea name="description" cols="50" rows="8" id="description"><?php echo $photo['description']?></textarea></td>
-                                          </tr>
-                                          <tr>
-                                            <td><strong><?php echo $_LANG['TAGS']; ?>:</strong></td>
-                                          </tr>
-                                          <tr>
-                                            <td><input name="tags" type="text" id="music" size="40" value="<?php if (isset($photo['id'])) { echo cmsTagLine('photo', $photo['id'], false); } ?>"/>
-                                            <br />
-                                            <small><?php echo $_LANG['KEYWORDS']; ?></small></td>
-                                          </tr>
-                                          <tr>
-                                            <td valign="top"><strong><?php echo $_LANG['REPLACE_FILE']; ?>:</strong></td>
-                                          </tr>
-                                          <tr>
-                                            <td valign="top"><input name="MAX_FILE_SIZE" type="hidden" value="<?php echo ($max_mb * 1024 * 1024)?>"/>
-                                              <input name="picture" type="file" size="30" /></td>
-                                          </tr>
-                                          <tr>
-                                            <td valign="top"><input style="margin-top:10px;font-size:18px" type="submit" name="save" value="<?php echo $_LANG['SAVE']; ?>" />
-											<input style="margin-top:10px;font-size:18px" type="button" name="cancel" value="<?php echo $_LANG['CANCEL']; ?>" onclick="window.history.go(-1);"/></td>
-                                          </tr>
-                                        </table></td>
-                                      </tr>
-                                    </table>
-									</form>
-									
-									<?php 
-									echo ob_get_clean();
+									$smarty = $inCore->initSmarty('components', 'com_photos_edit.tpl');
+									$smarty->assign('photo', $photo);
+									$smarty->assign('input_poto', '<input type="hidden" name="file" value="'.$photo['file'].'" />');
+									$smarty->assign('action', '/photos/editphoto'.$photoid.'.html');
+									$smarty->assign('images', '/images/photos/small/'.$photo['file'].'');
+									$smarty->assign('photo_tag', cmsTagLine('photo', $photo['id'], false));
+									$smarty->assign('photo_max_size', $photo_max_size);
+									$smarty->display('com_photos_edit.tpl');
 								}//photo exists
 								else { usrAccessDenied(); }
 							} //isset photo id
@@ -943,7 +901,7 @@ if ($do=='delphoto'){
 if ($do=='latest'){
 	$col = 1; $maxcols = 4;
 
-	$sql = "SELECT f.*, IF(DATE_FORMAT(f.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(f.pubdate, '<strong>{$_LANG['TODAY']}</strong>, %H:%i'), DATE_FORMAT(f.pubdate, '%d-%m-%Y'))  as fpubdate, a.id as album_id, a.title as album
+	$sql = "SELECT f.*, f.pubdate as fpubdate, a.id as album_id, a.title as album
 			FROM cms_photo_files f, cms_photo_albums a
 			WHERE f.published = 1 AND f.album_id = a.id
 			ORDER BY pubdate DESC
@@ -973,7 +931,7 @@ if ($do=='latest'){
 					echo '<div class="mod_lp_details">';
 					echo '<table cellpadding="2" cellspacing="2" align="center" border="0"><tr>';
 						echo '<td><img src="/images/icons/date.gif" border="0"/></td>';
-						echo '<td>'.$con['fpubdate'].'</td>';
+						echo '<td>'.$inCore->dateformat($con['fpubdate']).'</td>';
 						echo '<td><img src="/images/icons/comments.gif" border="0"/></td>';
 						echo '<td><a href="/photos/'.$menuid.'/photo'.$con['id'].'.html#c">'.$inCore->getCommentsCount('photo', $con['id']).'</td>';
 					echo '</tr></table>';
@@ -992,8 +950,7 @@ if ($do=='latest'){
 if ($do=='best'){
 	$col = 1; $maxcols = 4;
 
-	$sql = "SELECT f.*, f.id as fid,
-				   IF(DATE_FORMAT(f.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(f.pubdate, '<strong>{$_LANG['TODAY']}</strong>, %H:%i'), DATE_FORMAT(f.pubdate, '%d-%m-%Y'))  as fpubdate,
+	$sql = "SELECT f.*, f.id as fid, f.pubdate as fpubdate,
 				   a.id as album_id, a.title as album, 
 				   IFNULL(SUM(r.points), 0) as rating
 			FROM cms_photo_files f

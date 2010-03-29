@@ -80,6 +80,11 @@ $_LANG['PHOTO_TITLE']             ='Название фото';
 $_LANG['PHOTO_DESCRIPTION']       ='Описание фото';
 $_LANG['REPLACE_FILE']            ='Заменить файлом';
 
+$_LANG['SHOW']                      ='Показывать';
+$_LANG['EVERYBODY']                 ='Всем';
+$_LANG['REGISTERED']                ='Зарегистрированным';
+$_LANG['MY_FRIENDS']                ='Моим друзьям';
+
 $_LANG['MOVE_PHOTO']              ='Перенести фото';
 $_LANG['PHOTO']                   ='Фото';
 $_LANG['MOVE_INTO_ALBUM']         ='Перенести в альбом';

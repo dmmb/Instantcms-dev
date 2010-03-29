@@ -85,6 +85,9 @@
                                 <td><a href="/users/{$usr.id}/addphoto.html" title="{$LANG.ADD_PHOTO}"><img src="/components/users/images/profilemenu/addphoto.gif" border="0"/></a></td>
                                 {/if}
                             {/if}
+                            {if $is_admin}
+                            <td><a href="/users/{$usr.id}/editprofile.html" title="{$LANG.CONFIG_PROFILE}"><img src="/components/users/images/profilemenu/edit.gif" border="0"/></a></td>
+                            {/if}
                             <td><a href="/users/{$usr.id}/karma.html" title="{$LANG.KARMA_HISTORY}"><img src="/components/users/images/profilemenu/karma.gif" border="0"/></a></td>
                             </tr></table></div>
                             </div>
