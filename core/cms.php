@@ -23,11 +23,17 @@ if (!defined('USER_MASSMAIL')) { define('USER_MASSMAIL', -2); }
 class cmsCore {
 
     private static  $instance;
+
     private         $menu_item;
     private         $menu_id = 0;
     private         $menu_struct;
+
     private         $uri;
     private         $component;
+    private         $is_content = false;
+
+    private         $module_configs = array();
+    private         $component_configs = array();
 
     private function __construct($install_mode=false) {
 
@@ -1137,6 +1143,8 @@ class cmsCore {
 
         $inConf     = cmsConfig::getInstance();
 
+        $component  = '';
+
         //компонент на главной
         if (!$this->uri && $inConf->homecom) { return $inConf->homecom; }
 
@@ -1145,10 +1153,18 @@ class cmsCore {
 
         if ($first_slash_pos){
             //если есть слэши, то компонент это сегмент до первого слэша
-            return substr($this->uri, 0, $first_slash_pos);
+            $component  = substr($this->uri, 0, $first_slash_pos);
         } else {
-            //если слэшей нет, то компонент совпадает с адресом
-            return $this->uri;
+            $component  = $this->uri;
+            //если слэшей нет, то компонент совпадает с адресом            
+        }
+
+        if (is_dir(PATH.'/components/'.$component)){
+            return $component;
+        } else {
+            $this->uri = 'content/'.$this->uri;
+            $this->is_content = true;
+            return 'content';
         }
         
     }
@@ -1509,9 +1525,17 @@ class cmsCore {
         
         $inDB = cmsDatabase::getInstance();
 
+        $config = array();
+
+        if (isset($this->module_configs[$module_id])) { return $this->module_configs[$module_id]; }
+
         $config_yaml = $inDB->get_field('cms_modules', "id='{$module_id}'", 'config');
 
-        return $this->yamlToArray($config_yaml);
+        $config = $this->yamlToArray($config_yaml);
+
+        $this->cacheModuleConfig($module_id, $config);
+
+        return $config;
 
     }
 
@@ -1542,6 +1566,17 @@ class cmsCore {
 
     }
 
+    /**
+     * Кэширует конфигурацию модуля на время выполнения скрипта
+     * @param int $module_id
+     * @param array $config
+     * @return boolean
+     */
+    public function cacheModuleConfig($module_id, $config){
+        $this->module_configs[$module_id] = $config;
+        return true;
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
@@ -1553,9 +1588,17 @@ class cmsCore {
 
         $inDB = cmsDatabase::getInstance();
 
+        $config = array();
+
+        if (isset($this->component_configs[$component])) { return $this->component_configs[$component]; }
+
         $config_yaml = $inDB->get_field('cms_components', "link='{$component}'", 'config');
 
-        return $this->yamlToArray($config_yaml);
+        $config = $this->yamlToArray($config_yaml);
+
+        $this->cacheComponentConfig($component, $config);
+
+        return $config;
 
     }
 
@@ -1585,6 +1628,18 @@ class cmsCore {
         return true;
 
     }
+
+    /**
+     * Кэширует конфигурацию компонента на время выполнения скрипта
+     * @param string $component
+     * @param array $config
+     * @return boolean
+     */
+    public function cacheComponentConfig($component, $config){
+        $this->component_configs[$component] = $config;
+        return true;
+    }
+
 
     // FILTERS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1784,7 +1839,14 @@ class cmsCore {
         if ($this->menu_id) { return $this->menu_id; }
 
         $view       = $this->request('view', 'str', '');
-        $uri        = '/'.$this->uri;
+        
+        if ($this->is_content){
+            $uri = substr($this->uri, strlen('content/'));
+        } else {
+            $uri = $this->uri;
+        }
+
+        $uri        = '/'.$uri;
         $menu       = array_reverse($this->menu_struct);
         $menuid     = ($uri == '/' ? 1 : 0);
 
@@ -2154,6 +2216,52 @@ class cmsCore {
                 }
             }
     }
+
+    // RATINGS  //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Регистрирует тип цели для рейтингов в базе
+     * @param string $target
+     * @param string $component
+     * @param boolean $is_user_affect
+     * @param int $user_weight
+     * @return boolean
+     */
+    public function registerRatingsTarget($target, $component, $target_title, $is_user_affect=true, $user_weight=1, $target_table='') {
+
+        $inDB = cmsDatabase::getInstance();
+
+        $is_user_affect = (int)$is_user_affect;
+
+        $sql  = "INSERT INTO cms_rating_targets (target, component, is_user_affect, user_weight, target_table, target_title)
+                 VALUES ('$target', '$component', '$is_user_affect', '$user_weight', '$target_table', '$target_title')";
+
+        $inDB->query($sql);
+
+        return true;
+
+    }
+
+    /**
+     * Удаляет все рейтинги для указанной цели
+     * @param string $target
+     * @param int $item_id
+     * @return boolean
+     */
+    public function deleteRatings($target, $item_id){
+
+        $inDB = cmsDatabase::getInstance();
+
+        $sql  = "DELETE FROM cms_ratings WHERE target='{$target}' AND item_id='{$item_id}'";
+        $inDB->query($sql);
+
+        $sql  = "DELETE FROM cms_ratings_total WHERE target='{$target}' AND item_id='{$item_id}'";
+        $inDB->query($sql);
+
+        return true;
+
+    }
+
 
     // COMMENTS //////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2958,10 +3066,11 @@ class cmsCore {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     static public function strToURL($str){
 
-        $str    = trim($str);
-        $string = preg_replace ('/[^a-zA-Zа-яА-Я0-9\-]/i', '', $string);
-        $string = mb_strtolower($str, 'cp1251');
+        $str    = trim($str);        
+        $str    = mb_strtolower($str, 'cp1251');
         $string = str_replace(' ', '-', $string);
+        $string = preg_replace ('/[^a-zA-Zа-яА-Я0-9\-]/i', '-', $str);
+        $string = rtrim($string, '-');
 
         while(strstr($string, '--')){ $string = str_replace('--', '-', $string); }
 
@@ -3126,26 +3235,6 @@ function dbDeleteListNS($table, $list){
             $ns->DeleteNode($value);
         }
     }
-}
-
-// DATA MODELS //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function dbDeleteBlog($id){
-    $inCore = cmsCore::getInstance();
-    $inDB = cmsDatabase::getInstance();
-    $inCore->loadLib('tags');
-    $inCore->loadLib('karma');
-    $posts = dbGetTable('cms_blog_posts', 'blog_id = '.$id);
-    foreach($posts as $key=>$data){
-        $inDB->query("DELETE FROM cms_comments WHERE target='blog' AND target_id = ".$data['id']);
-        $inDB->query("DELETE FROM cms_ratings WHERE target='blogpost' AND item_id = ".$data['id']);
-        cmsClearTags('blogpost', $data['id']);
-        cmsClearKarma('blogpost', $data['id']);
-        deleteUploadImages($data['id'], 'blog');
-    }
-    $inDB->query("DELETE FROM cms_blog_posts WHERE blog_id = $id") ;
-    $inDB->query("DELETE FROM cms_blogs WHERE id = $id") ;
-    return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

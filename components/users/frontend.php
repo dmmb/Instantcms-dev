@@ -624,11 +624,10 @@ if ($do=='comments'){
 		
 		if ($page>1) { echo '<div class="con_description"><strong>'.$_LANG['PAGE'].':</strong> '.$page.'</div>'; }
 
-		$sql = "SELECT c.*, DATE_FORMAT(c.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate,  IFNULL(SUM(v.vote), 0) as votes
+		$sql = "SELECT c.*, DATE_FORMAT(c.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate,  IFNULL(v.total_rating, 0) as votes
                 FROM cms_comments c
-                LEFT JOIN cms_comments_votes v ON v.comment_id = c.id AND v.comment_type = 'com'
+                LEFT JOIN cms_ratings_total v ON v.item_id = c.id AND v.target = 'comment'
                 WHERE c.user_id = $id AND c.published = 1
-				GROUP BY c.id 
                 ORDER BY c.pubdate DESC
 				LIMIT ".(($page-1)*$perpage).", $perpage";
 		$result = $inDB->query($sql) ;

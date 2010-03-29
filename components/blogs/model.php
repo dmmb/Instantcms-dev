@@ -16,6 +16,12 @@ class cms_model_blogs{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
+   //
+   // этот метод вызывается компонентом comments при создании нового комментария
+   //
+   // метод должен вернуть массив содержащий ссылку и заголовок поста, к которому
+   // добавляется комментарий
+   //
    public function getCommentTarget($target, $target_id) {
 
         $result = array();
@@ -38,6 +44,27 @@ class cms_model_blogs{
         }
 
         return ($result ? $result : false);
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    // 
+    // этот метод является хуком и вызывается при изменении рейтинга объекта blogpost
+    // см. таблицу cms_rating_targets
+    //
+    public function updateRatingHook($target, $item_id, $points) {
+
+        if ($target != 'blogpost' || !$item_id || abs($points)!=1) { return false; }
+
+        $sql = "UPDATE cms_blogs b, cms_blog_posts p
+                SET b.rating = b.rating + ({$points})
+                WHERE p.blog_id = b.id AND p.id = {$item_id}";
+
+        $this->inDB->query($sql);
+
+        return true;
 
     }
 
@@ -339,10 +366,9 @@ class cms_model_blogs{
         //Формируем запрос
         $sql = "SELECT u.id, b. * , u.id AS uid, u.nickname AS author, u.login as author_login, 
                        COUNT(p.id) as records,
-                       IFNULL( SUM( r.points ) , 0 ) AS points
+                       b.rating AS points
                 FROM cms_users u, cms_blogs b
                 LEFT JOIN cms_blog_posts p ON p.blog_id = b.id
-                LEFT JOIN cms_ratings r ON r.item_id = p.id AND r.target = 'blogpost'
                 WHERE b.user_id = u.id ";
 
         //Добавляем к запросу ограничение по типу хозяина (пользователи или клубы)
@@ -353,7 +379,7 @@ class cms_model_blogs{
         }
 
         $sql .= "GROUP BY b.id
-                 ORDER BY points DESC";
+                 ORDER BY rating DESC";
 
         $result = $this->inDB->query($sql);
 
@@ -396,9 +422,10 @@ class cms_model_blogs{
         }
 
         //Получаем записи, относящиеся к нужной странице блога
-        $sql = "SELECT p.*, DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate, IFNULL(SUM(r.points), 0) as points, u.nickname as author, u.id as author_id
+        $sql = "SELECT p.*, DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate, 
+                       IFNULL(r.total_rating, 0) as points, u.nickname as author, u.id as author_id
                 FROM cms_blogs b, cms_users u, cms_blog_posts p
-                LEFT JOIN cms_ratings r ON r.item_id=p.id AND r.target='blogpost'
+                LEFT JOIN cms_ratings_total r ON r.item_id=p.id AND r.target='blogpost'
                 WHERE p.blog_id = b.id AND b.id = $blog_id AND p.user_id = u.id AND p.published = 1 AND b.owner = '$owner' {$cat_sql}
                 GROUP BY p.id
                 ORDER BY p.pubdate DESC";
@@ -469,14 +496,14 @@ class cms_model_blogs{
 
         $sql = "SELECT p.*,
                        DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate,
-                       IFNULL(SUM(r.points), 0) as points,
+                       IFNULL(r.total_rating, 0) as points,
                        u.nickname as author, u.id as author_id,
                        b.allow_who blog_allow_who,
                        b.seolink bloglink,
                        b.title blog_title,
                        b.owner
                 FROM cms_blogs b, cms_users u, cms_blog_posts p
-                LEFT JOIN cms_ratings r ON r.item_id=p.id AND r.target='blogpost'
+                LEFT JOIN cms_ratings_total r ON r.item_id=p.id AND r.target='blogpost'
                 WHERE p.user_id = u.id AND p.published = 1 AND p.blog_id = b.id AND b.owner = 'user'
                 GROUP BY p.id
                 ORDER BY p.pubdate DESC
@@ -501,14 +528,14 @@ class cms_model_blogs{
 
         $sql = "SELECT  p.*,
                         DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate,
-                        IFNULL(SUM(r.points), 0) as points,
+                        IFNULL(r.total_rating, 0) as points,
                         u.nickname as author,
                         u.id as author_id,
                         b.allow_who blog_allow_who,
                         b.seolink bloglink,
                         b.owner
                 FROM cms_blogs b, cms_users u, cms_blog_posts p
-                LEFT JOIN cms_ratings r ON r.item_id=p.id AND r.target='blogpost'
+                LEFT JOIN cms_ratings_total r ON r.item_id=p.id AND r.target='blogpost'
                 WHERE p.user_id = u.id AND p.published = 1 AND p.blog_id = b.id AND DATEDIFF(NOW(), p.pubdate) <= 7 AND b.owner = 'user'
                 GROUP BY p.id
                 ORDER BY points DESC
@@ -548,11 +575,10 @@ class cms_model_blogs{
 /* ==================================================================================================== */
 
     public function getLatestCount(){
-        $sql = "SELECT p.id, p.published, p.blog_id, b.id, b.owner
+        $sql = "SELECT p.id
 				FROM cms_blogs b, cms_blog_posts p
-				LEFT JOIN cms_ratings r ON r.item_id=p.id AND r.target='blogpost'
 				WHERE p.published = 1 AND p.blog_id = b.id AND b.owner = 'user'
-				GROUP BY p.id";
+				";
 		$result = $this->inDB->query($sql);
 		$total  = $this->inDB->num_rows($result);
         return $total;
@@ -562,11 +588,10 @@ class cms_model_blogs{
 /* ==================================================================================================== */
 
     public function getBestCount(){
-		$sql = "SELECT p.id, p.published, p.blog_id, b.id, b.owner
+		$sql = "SELECT p.id
 				FROM cms_blogs b, cms_blog_posts p
-				LEFT JOIN cms_ratings r ON r.item_id=p.id AND r.target='blogpost'
 				WHERE p.published = 1 AND DATEDIFF(NOW(), p.pubdate) <= 7 AND p.blog_id = b.id AND b.owner = 'user'
-				GROUP BY p.id";
+				";
 		$result = $this->inDB->query($sql);
 		$total  = $this->inDB->num_rows($result);
         return $total;
@@ -742,15 +767,29 @@ class cms_model_blogs{
 /* ==================================================================================================== */
 
     public function deletePost($post_id){
-        cmsCore::callEvent('DELETE_POST', $post_id);
-        $inCore = cmsCore::getInstance();
 
+        cmsCore::callEvent('DELETE_POST', $post_id);
+
+        $inCore = cmsCore::getInstance();
         $inCore->loadLib('tags');
+        $inCore->loadLib('karma');
+
+        $sql = "SELECT p.blog_id as blog_id,
+                       r.total_rating as rating
+                FROM   cms_blog_posts p, cms_ratings_total r
+                WHERE  r.item_id = {$post_id} AND r.target='blogpost'
+                LIMIT 1";
+
+        $res = $this->inDB->query($sql);
+        if ($this->inDB->num_rows($res)){
+            $post = $this->inDB->fetch_assoc($res);
+            $this->inDB->query("UPDATE cms_blogs SET rating = rating - ({$post['rating']}) WHERE id = '{$post['blog_id']}'");
+        }
 
         $this->inDB->query("DELETE FROM cms_blog_posts WHERE id = $post_id");
         $this->inDB->query("DELETE FROM cms_tags WHERE target='blogpost' AND item_id = '$post_id'");
-        $this->inDB->query("DELETE FROM cms_ratings WHERE target='blogpost' AND item_id = '$post_id'");
 
+        $inCore->deleteRatings('blogpost', $post_id);
         $inCore->deleteComments('blog', $post_id);
 
         cmsClearTags('blogpost', $post_id);

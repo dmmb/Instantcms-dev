@@ -42,9 +42,15 @@ class cms_model_content{
 
     public function getCategory($category_id) {
 
+        if (!$category_id){
+            $where = 'NSLevel = 0';
+        } else {
+            $where = 'id = '.$category_id;
+        }
+
         $sql = "SELECT *
                 FROM cms_category
-                WHERE id = '$category_id'
+                WHERE {$where}
                 LIMIT 1";
 
         $result = $this->inDB->query($sql);
@@ -88,7 +94,7 @@ class cms_model_content{
         
         $path = array();
 
-        $sql = "SELECT id, title, NSLevel, seolink
+        $sql = "SELECT id, title, NSLevel, seolink, url
                 FROM cms_category
                 WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0
                 ORDER BY NSLeft";
@@ -204,12 +210,12 @@ class cms_model_content{
         if ($path_list){
             foreach($path_list as $pcat){
                 if ($pcat['id']!=1){
-                    $seolink .= cmsCore::strToURL($pcat['title']) . '/';
+                    $seolink .= cmsCore::strToURL(($pcat['url'] ? $pcat['url'] : $pcat['title'])) . '/';
                 }
             }
         }
 
-        $seolink .= cmsCore::strToURL($article['title']);
+        $seolink .= cmsCore::strToURL(($article['url'] ? $article['url'] : $article['title']));
 
         if ($article['id']){
             $where = ' AND id<>'.$article['id'];
@@ -243,15 +249,15 @@ class cms_model_content{
         if ($path_list){
             foreach($path_list as $pcat){
                 if ($pcat['id']!=1){
-                    $seolink .= cmsCore::strToURL($pcat['title']) . '/';
+                    $seolink .= cmsCore::strToURL(($pcat['url'] ? $pcat['url'] : $pcat['title'])) . '/';
                 }
             }
         }
 
-        $seolink .= cmsCore::strToURL($category['title']);
+        $seolink .= cmsCore::strToURL(($category['url'] ? $category['url'] : $category['title']));
 
         //Обновляем пути всех статей этого раздела
-        $sql = "SELECT id, title FROM cms_content WHERE category_id = {$category['id']}";
+        $sql = "SELECT id, title, url FROM cms_content WHERE category_id = {$category['id']}";
 
         $result = $this->inDB->query($sql);
 
@@ -259,7 +265,7 @@ class cms_model_content{
 
             while($article = $this->inDB->fetch_assoc($result)){
 
-                $article_seolink = $seolink . '/' . cmsCore::strToURL($article['title']);
+                $article_seolink = $seolink . '/' . cmsCore::strToURL(($article['url'] ? $article['url'] : $article['title']));
 
                 $this->inDB->query("UPDATE cms_content SET seolink='{$article_seolink}' WHERE id={$article['id']}");
 
@@ -336,7 +342,7 @@ class cms_model_content{
 
         $page_section = ($page>1 ? '/page-'.$page : '');
 
-        $url = '/content/'.$seolink.$page_section.'.html';
+        $url = '/'.$seolink.$page_section.'.html';
 
         return $url;
 
@@ -349,7 +355,7 @@ class cms_model_content{
 
         $page_section = ($page>1 ? '/page-'.$page : '');
 
-        $url = '/content/'.$seolink.$page_section;
+        $url = '/'.$seolink.$page_section;
 
         return $url;
 
@@ -384,9 +390,9 @@ class cms_model_content{
 
         $this->inDB->query("DELETE FROM cms_content WHERE id={$id}");
         $this->inDB->query("DELETE FROM cms_content_access WHERE content_id={$id}");
-        $this->inDB->query("DELETE FROM cms_ratings WHERE target='content' AND item_id={$id}");
         $this->inDB->query("DELETE FROM cms_tags WHERE target='content' AND item_id={$id}");
 
+        $inCore->deleteRatings('content', $id);
         $inCore->deleteComments('article', $id);
 
         if ($forum_delete){
@@ -417,11 +423,19 @@ class cms_model_content{
 
         $article = cmsCore::callEvent('ADD_ARTICLE', $article);
 
-        $sql = "INSERT INTO cms_content (category_id, user_id, pubdate, enddate, is_end, title, description, content, published, hits, meta_desc, meta_keys, showtitle, showdate, showlatest, showpath, ordering, comments, seolink, canrate, pagetitle)
+        if ($article['url']) { $article['url'] = cmsCore::strToURL($article['url']); }
+
+        $sql = "INSERT INTO cms_content (category_id, user_id, pubdate, enddate, 
+                                         is_end, title, description, content,
+                                         published, hits, meta_desc, meta_keys,
+                                         showtitle, showdate, showlatest,
+                                         showpath, ordering, comments, seolink,
+                                         canrate, pagetitle, url)
 				VALUES ({$article['category_id']}, {$article['user_id']}, '{$article['pubdate']}', '{$article['enddate']}',
                          {$article['is_end']}, '{$article['title']}', '{$article['description']}', '{$article['content']}', {$article['published']}, 0,
                         '{$article['meta_desc']}', '{$article['meta_keys']}', '{$article['showtitle']}', '{$article['showdate']}', '{$article['showlatest']}',
-                        '{$article['showpath']}', 1, {$article['comments']}, '', {$article['canrate']}, '{$article['pagetitle']}')";
+                        '{$article['showpath']}', 1, {$article['comments']}, '',
+                        {$article['canrate']}, '{$article['pagetitle']}', '{$article['url']}')";
 
 		$this->inDB->query($sql) ;
 
@@ -446,6 +460,7 @@ class cms_model_content{
 
         $article['id']      = $id;
 
+        if ($article['url']) { $article['url'] = cmsCore::strToURL($article['url']); }
         $article['seolink'] = $this->getSeoLink($article);
 
         if (!$article['user_id']) { $article['user_id'] = $inUser->id; }
@@ -471,7 +486,8 @@ class cms_model_content{
                     seolink='{$article['seolink']}',
                     canrate={$article['canrate']},
                     pagetitle='{$article['pagetitle']}',
-                    user_id='{$article['user_id']}'
+                    user_id='{$article['user_id']}',
+                    url='{$article['url']}'
                 WHERE id = $id
                 LIMIT 1";
 

@@ -127,6 +127,9 @@
         echo '</p>';
     }
 
+//   echo '<h3>query: '.$inDB->q_count.'</h3>';
+//   echo '<p>'.$inDB->q_dump.'</p>';
+
    $inCore->clearSessionTrash();
 
 ?>
