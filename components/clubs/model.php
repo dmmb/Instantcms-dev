@@ -25,9 +25,7 @@ class cms_model_clubs{
         
         global $_LANG;
 
-        $sql =  "SELECT c.*, (COUNT(uc.user_id)+1) as members, 
-                 IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(c.pubdate, '{$_LANG['TODAY']}'),
-                 IF(DATEDIFF(NOW(), c.pubdate)=1, DATE_FORMAT(c.pubdate, '{$_LANG['YESTERDAY']}'),DATE_FORMAT(c.pubdate, '%d/%m/%Y') )) as pubdate
+        $sql =  "SELECT c.*, (COUNT(uc.user_id)+1) as members, c.pubdate as pubdate
                  FROM cms_clubs c
                  LEFT JOIN cms_user_clubs uc ON uc.club_id = c.id
                  WHERE c.published = 1
@@ -54,9 +52,7 @@ class cms_model_clubs{
     public function getClub($club_id) {
 
         global $_LANG;
-        $sql =  "SELECT *,
-                        IF(DATE_FORMAT(pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(pubdate, '{$_LANG['TODAY']}'),
-                        IF(DATEDIFF(NOW(), pubdate)=1, DATE_FORMAT(pubdate, '{$_LANG['YESTERDAY']}'),DATE_FORMAT(pubdate, '%d/%m/%Y') ))  as pubdate
+        $sql =  "SELECT *
                  FROM cms_clubs
                  WHERE id = $club_id";
         $result = $this->inDB->query($sql);

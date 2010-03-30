@@ -24,10 +24,9 @@ class cms_model_users{
 
         $sql = "SELECT u.*, p.*, u.id as id, u.is_deleted as is_deleted, IFNULL(p.gender, 0) as gender, u.rating as user_rating,
                 g.title as grp,
-                IF(DATE_FORMAT(u.regdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(u.regdate, '{$_LANG['TODAY']}, %H:%i'), DATE_FORMAT(u.regdate, '%d, %M %Y')) as fregdate,
-                IF(DATE_FORMAT(u.birthdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(u.birthdate, '<strong>{$_LANG['TODAY']}!</strong>'), DATE_FORMAT(u.birthdate, '%d, %M %Y')) as birthdate,
-                IF(DATE_FORMAT(u.logdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(u.logdate, '{$_LANG['TODAY']} {$_LANG['IN']} %H:%i'),
-                IF(DATEDIFF(NOW(), u.logdate)=1, DATE_FORMAT(u.logdate, '{$_LANG['YESTERDAY']} {$_LANG['IN']} %H:%i'),DATE_FORMAT(u.logdate, '%d-%m-%Y %H:%i') ))  as flogdate,
+                u.regdate fregdate,
+                u.birthdate as birthdate,
+                u.logdate as flogdate,
                 p.gender as gender,
                 u.status as status_text,
                 DATE_FORMAT(u.status_date, '%d-%m-%Y %H:%i') as status_date

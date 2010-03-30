@@ -320,8 +320,9 @@ class cms_model_catalog{
         while($subcat = $this->inDB->fetch_assoc($result)){
 
             $count_sql = "SELECT con.id
-                          FROM cms_uc_items con, cms_uc_cats cat
-                          WHERE con.category_id = cat.id AND (cat.NSLeft >= {$subcat['NSLeft']} AND cat.NSRight <= {$subcat['NSRight']}) AND con.published = 1";
+                          FROM cms_uc_cats cat
+						  LEFT JOIN cms_uc_items con ON con.category_id = cat.id AND con.published = 1
+                          WHERE (cat.NSLeft >= {$subcat['NSLeft']} AND cat.NSRight <= {$subcat['NSRight']})";
 
             $count_result = $this->inDB->query($count_sql);
 

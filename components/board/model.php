@@ -103,7 +103,7 @@ class cms_model_board{
     public function getRecords($category_id, $page=1, $perpage=1000, $orderby='pubdate', $orderto='DESC') {
         
         $records = array();
-
+		$inCore = cmsCore::getInstance();
         $this->deleteOldRecords();
 
         $city_filter = isset($_SESSION['board_city']) ? "AND city = '".$_SESSION['board_city']."'" : '';
@@ -112,9 +112,7 @@ class cms_model_board{
         $rootcat = $this->inDB->get_fields('cms_board_cats', 'id='.$category_id, 'NSLeft, NSRight');
         $catsql  = "AND (i.category_id = cat.id AND (i.category_id=$category_id OR (cat.NSLeft >= {$rootcat['NSLeft']} AND cat.NSRight <= {$rootcat['NSRight']})))";
 
-        $sql = "SELECT i.*,
-                       IF(DATE_FORMAT(i.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(i.pubdate, '<strong>{$_LANG['TODAY']}</strong>'), DATE_FORMAT(i.pubdate, '%d-%m-%Y'))  as fpubdate,
-                       u.nickname as user, u.login as user_login
+        $sql = "SELECT i.*, i.pubdate as fpubdate, u.nickname as user, u.login as user_login
                 FROM cms_board_items i, cms_users u, cms_board_cats cat
                 WHERE i.user_id = u.id AND i.published = 1 $city_filter $type_filter $catsql
                 GROUP BY i.id
@@ -127,6 +125,7 @@ class cms_model_board{
 
         while($item = $this->inDB->fetch_assoc($result)){
             $item['content']    = nl2br($item['content']);
+			$item['fpubdate']   = $inCore->dateformat($item['fpubdate']);
             $records[]          = $item;
         }
 

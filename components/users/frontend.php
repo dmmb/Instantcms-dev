@@ -222,7 +222,7 @@ if ($do=='city'){
 
 	$city = htmlspecialchars(urldecode($_REQUEST['city']), ENT_QUOTES, 'cp1251');
 
-	$querysql = "SELECT u.*, p.*, u.id as id, DATE_FORMAT(u.regdate, '%d-%m-%Y') as fregdate, DATE_FORMAT(u.logdate, '%d-%m-%Y') as flogdate
+	$querysql = "SELECT u.*, p.*, u.id as id, u.regdate as fregdate, u.logdate as flogdate
 				FROM cms_users u, cms_user_profiles p
 				WHERE u.is_locked = 0 AND p.user_id = u.id AND p.city LIKE '%$city%' AND u.is_deleted = 0
 				ORDER BY city DESC";
@@ -241,7 +241,7 @@ if ($do=='hobby'){
 
     $hobby = strtolower($hobby);
 
-	$querysql = "SELECT u.*, p.*, u.id as id, DATE_FORMAT(u.regdate, '%d-%m-%Y') as fregdate, DATE_FORMAT(u.logdate, '%d-%m-%Y') as flogdate
+	$querysql = "SELECT u.*, p.*, u.id as id, u.regdate as fregdate, u.logdate as flogdate
 				FROM cms_users u, cms_user_profiles p
 				WHERE u.is_locked = 0 AND p.user_id = u.id AND (LOWER(p.description) LIKE '%$hobby%' OR LOWER(p.formsdata) LIKE '%$hobby%') AND u.is_deleted = 0
 				ORDER BY city DESC";
@@ -299,9 +299,8 @@ if ($do=='search'){
 	}
 
 	$querysql = "SELECT u.*, p.*, u.id as id, u.status as microstatus, 
-						DATE_FORMAT(u.regdate, '%d-%m-%Y') as fregdate, 
-                        IF(DATE_FORMAT(u.logdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(u.logdate, '{$_LANG['TODAY']} {$_LANG['IN']} %H:%i'),
-                        IF(DATEDIFF(NOW(), u.logdate)=1, DATE_FORMAT(u.logdate, '{$_LANG['YESTERDAY']} {$_LANG['IN']} %H:%i'),DATE_FORMAT(u.logdate, '%d-%m-%Y %H:%i') ))  as flogdate,
+						u.regdate as fregdate, 
+                        u.logdate as flogdate,
                         u.status as microstatus
 				FROM cms_users u, cms_user_profiles p
 				WHERE u.is_deleted = 0 AND u.is_locked = 0 AND p.user_id = u.id $s
@@ -348,18 +347,16 @@ if ($do=='view'){
 	
 	if (!isset($querysql)){
 		if (!@$_SESSION['usr_online']){
-			$sql = "SELECT u.*, p.*, u.id as id, u.is_deleted as is_deleted, DATE_FORMAT(u.regdate, '%d-%m-%Y') as fregdate,  p.karma as karma, 
-						   IF(DATE_FORMAT(u.logdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(u.logdate, '{$_LANG['TODAY']} {$_LANG['IN']} %H:%i'),
-						   IF(DATEDIFF(NOW(), u.logdate)=1, DATE_FORMAT(u.logdate, '{$_LANG['YESTERDAY']} {$_LANG['IN']} %H:%i'),DATE_FORMAT(u.logdate, '%d-%m-%Y %H:%i') ))  as flogdate,
+			$sql = "SELECT u.*, p.*, u.id as id, u.is_deleted as is_deleted, u.regdate as fregdate,  p.karma as karma, 
+						   u.logdate as flogdate,
                            p.gender as gender, u.status as microstatus
 					FROM cms_user_profiles p, cms_users u
 					WHERE u.is_locked = 0 AND u.is_deleted = 0 AND p.user_id = u.id
 					ORDER BY ".$orderby." ".$orderto."
 					LIMIT ".(($page-1)*$perpage).", $perpage";
 		} else {
-			$sql = "SELECT u.*, p.*, u.id as id, u.is_deleted as is_deleted, DATE_FORMAT(u.regdate, '%d-%m-%Y') as fregdate,  p.karma as karma,
-						   IF(DATE_FORMAT(u.logdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(u.logdate, '{$_LANG['TODAY']} {$_LANG['IN']} %H:%i'),
-						   IF(DATEDIFF(NOW(), u.logdate)=1, DATE_FORMAT(u.logdate, '{$_LANG['YESTERDAY']} {$_LANG['IN']} %H:%i'),DATE_FORMAT(u.logdate, '%d-%m-%Y %H:%i') ))  as flogdate,
+			$sql = "SELECT u.*, p.*, u.id as id, u.is_deleted as is_deleted, u.regdate as fregdate,  p.karma as karma,
+						   u.logdate as flogdate,
                            p.gender as gender, u.status as microstatus
 					FROM cms_users u, cms_user_profiles p, cms_online o
 					WHERE u.is_locked = 0 AND u.is_deleted = 0 AND p.user_id = u.id AND p.user_id = o.user_id
@@ -411,7 +408,8 @@ if ($do=='view'){
 					$rownum++;
 					$usr['avatar'] = usrLink(usrImageNOdb($usr['id'], 'small', $usr['imageurl'], $usr['is_deleted']), $usr['login'], $menuid);
 					$usr['nickname'] = cmsUser::getProfileLink($usr['login'], $usr['nickname']);
-					$usr['status'] = usrStatus($usr['id'], $usr['flogdate'], false, $usr['gender']);
+					$usr['flogdate'] = $inCore->dateFormat($usr['flogdate'], true, true);
+					$usr['status'] = usrStatusList($usr['id'], $usr['flogdate'], false, $usr['gender']);
 					$usr['num'] = $rownum + ($page-1)*$perpage;
 
                     if (($orderby!='karma' || $orderto!='asc') || strip_tags($usr['karma'])<0){
@@ -833,8 +831,8 @@ if ($do=='profile'){
     }
 
     $usr['flogdate']			= $inCore->getRusDate($usr['flogdate']);
-    $usr['fregdate'] 			= $inCore->getRusDate($usr['fregdate']);
-    $usr['birthdate'] 			= $inCore->getRusDate($usr['birthdate']);
+    $usr['fregdate'] 			= $inCore->dateFormat($usr['fregdate']);
+    $usr['birthdate'] 			= $inCore->dateFormat($usr['birthdate']);
 
     $usr['comments_count'] 		= usrMsg($usr['id'], 'cms_comments');
     $usr['forum_count']			= usrMsg($usr['id'], 'cms_forum_posts');

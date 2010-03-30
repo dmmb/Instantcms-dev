@@ -428,17 +428,18 @@ class cms_model_blog{
     public function getLatestPosts($page=1, $perpage=20){
         $list = array();
 
-        $sql = "SELECT p.*,
-                       DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate,
+        $sql = "SELECT p.*, p.pubdate as fpubdate,
                        IFNULL(SUM(r.points), 0) as points,
-                       u.nickname as author, u.id as author_id,
+                       u.nickname as author, u.id as author_id, u.login,
                        b.allow_who blog_allow_who,
                        b.seolink bloglink,
                        b.title blog_title,
                        b.owner
-                FROM cms_blogs b, cms_users u, cms_blog_posts p
+                FROM cms_blog_posts p
+				LEFT JOIN cms_users u ON u.id = p.user_id
+				LEFT JOIN cms_blogs b ON b.id = p.blog_id AND b.owner = 'user'
                 LEFT JOIN cms_ratings r ON r.item_id=p.id AND r.target='blogpost'
-                WHERE p.user_id = u.id AND p.published = 1 AND p.blog_id = b.id AND b.owner = 'user'
+                WHERE p.published = 1
                 GROUP BY p.id
                 ORDER BY p.pubdate DESC
                 LIMIT ".(($page-1)*$perpage).", $perpage";

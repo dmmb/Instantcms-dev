@@ -1209,7 +1209,7 @@ if ($do=='latest'){
                     $post['url']        = $model->getPostURL($menuid, $post['bloglink'], $post['seolink']);
                     $post['comments']   = $inDB->rows_count('cms_comments', "target='blog' AND target_id=".$post['id']);
                     $post['karma']      = cmsKarmaFormatSmall($post['points']);
-
+					$post['fpubdate']	= $inCore->dateFormat($post['fpubdate']);
                     $post['blog_url']   = $model->getBlogURL($menuid, $post['bloglink']);
 
                     $msg = $post['content'];
@@ -1223,7 +1223,7 @@ if ($do=='latest'){
 
                     $post['msg']        = $msg;
                     $post['tagline']    = cmsTagLine('blogpost', $post['id']);
-                    $post['author']     = cmsUser::getGenderLink($post['author_id'], $post['author']);
+                    $post['author']     = cmsUser::getProfileLink($post['login'], $post['author']);
                     $posts[]            = $post;
                 }
             }

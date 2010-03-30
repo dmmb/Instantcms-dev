@@ -455,6 +455,32 @@ function usrStatus($user_id, $logdate='', $online=false, $gender='m'){
 			}
 }
 
+function usrStatusList($user_id, $logdate='', $online=false, $gender='m'){
+
+    $inCore = cmsCore::getInstance();
+    $inDB = cmsDatabase::getInstance();
+    global $_LANG;
+    if ($online===false){
+        $sql = "SELECT *
+                FROM cms_online
+                WHERE user_id = '$user_id'";
+        $result     = $inDB->query($sql);
+        $is_online  = $inDB->num_rows($result);
+    } else {
+        $is_online  = $online;
+    }
+	
+	if ($is_online){
+		return '<span class="online">'.$_LANG['ONLINE'].'</span>';
+	} else {
+				if ($logdate){
+					return '<span class="offline">'.$logdate.'</span>';
+				} else {
+					return '<span class="offline">'.$_LANG['OFFLINE'].'</span>';
+				}
+			}
+}
+
 function usrCheckAuth(){
     $inUser = cmsUser::getInstance();
 	return (bool)$inUser->id;

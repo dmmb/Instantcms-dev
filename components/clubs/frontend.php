@@ -173,6 +173,7 @@ if ($do=='club'){
 
     $club['enabled_blogs']	= $club['enabled_blogs'] == 1 || ($club['enabled_blogs']==0 && $cfg['enabled_blogs']==1);
     $club['enabled_photos']	= $club['enabled_photos'] == 1 || ($club['enabled_photos']==0 && $cfg['enabled_photos']==1);
+	$club['pubdate'] = $inCore->dateformat($club['pubdate'], true, true);
 
     $smarty->assign('clubid', $id);
     $smarty->assign('club', $club);
