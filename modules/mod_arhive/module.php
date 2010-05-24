@@ -11,12 +11,10 @@
 function mod_arhive($module_id){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
-	global $_LANG;
+		global $_LANG;
 		$cfg = $inCore->loadModuleConfig($module_id);
-
 		$sql = "SELECT DATE_FORMAT( pubdate, '%M, %Y' ) fdate, DATE_FORMAT( pubdate, '%Y' ) year, DATE_FORMAT( pubdate, '%m' ) month, COUNT( id ) num
 				FROM cms_content"."\n";
-				
 		if($cfg['cat_id']>0){
 			$sql .= "WHERE category_id = ".$cfg['cat_id'];
 			if ($cfg['source']!='both'){
@@ -29,18 +27,16 @@ function mod_arhive($module_id){
 				$sql .= "\n";
 			}
 		}
-		
 		$sql .= "GROUP BY DATE_FORMAT(pubdate, '%M, %Y')"."\n";
 		$sql .= "ORDER BY pubdate DESC";
-		
 		$result = $inDB->query($sql) ;
-		
 		if ($inDB->num_rows($result)>0){		
 			while ($item = $inDB->fetch_assoc($result)){
 				$item['fdate'] = $inCore->getRusDate($item['fdate']);
-				echo '<div class="arhive_month"><a href="/arhive/'.$item['year'].'/'.$item['month'].'">'.$item['fdate'].'</a> ('.$item['num'].')</div>';
-			
-			}		
+			}
+			$smarty = $inCore->initSmarty('modules', 'mod_arhive.tpl');			
+			$smarty->assign('items', $item);
+			$smarty->display('mod_arhive.tpl');
 		} else { echo '<p>'.$_LANG['ARHIVE_NOT_MATERIAL'].'</p>'; }
 		return true;
 }
