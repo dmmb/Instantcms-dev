@@ -1,3 +1,0 @@
-function reloadCaptcha(img_id){
-    $("img#"+img_id).attr("src", "/includes/codegen/cms_codegen.php?"+Math.random());
-}
