@@ -17,7 +17,7 @@
 	
 	if (isset($_REQUEST['addtocart'])){
 	
-		if(!isset($_SESSION['cart'])) { session_register('cart'); $_SESSION['cart'] = array(); }
+		if(!isset($_SESSION['cart'])) {$_SESSION['cart'] = array(); }
 	
 		foreach($_REQUEST as $key=>$value){
 			if (strpos($key, 'item')===0){
@@ -33,7 +33,6 @@
 
 	if (isset($_REQUEST['clearcart'])){
 		$_SESSION['cart'] = '';
-		session_unregister('cart');
 		header('location:/price/cart.html');
 	}
 

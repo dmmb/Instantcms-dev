@@ -214,7 +214,7 @@ function applet_userbanlist(){
 
 	if(isset($mod['access'])){
 		$mod['access'] = str_replace(', ', ',', $mod['access']);
-		$mod['access'] = split(',', $mod['access']);
+		$mod['access'] = preg_split('/,/', $mod['access']);
 	}
 	
 	$GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="/includes/jquery/jquery.js"></script>';

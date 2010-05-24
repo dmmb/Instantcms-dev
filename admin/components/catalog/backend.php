@@ -302,7 +302,7 @@ function cpPriceInput($id){
 				
 		//get fields data
 		$item['fields']     = serialize($item['fdata']);
-		$item['fields']     = mysql_escape_string($item['fields']);
+		$item['fields']     = mysql_real_escape_string($item['fields']);
 
         $item['file']   = '';
 
@@ -353,7 +353,7 @@ function cpPriceInput($id){
 			$fdata              = $_REQUEST['fdata'];
 			foreach($fdata as $key=>$value) { $fdata[$key] = trim($value); }
 			$fields             = serialize($fdata);
-			$item['fields']     = mysql_escape_string($fields);
+			$item['fields']     = mysql_real_escape_string($fields);
 
 			$item['is_comments'] = $inCore->request('is_comments', 'int', 0);
 

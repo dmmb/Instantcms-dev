@@ -1274,7 +1274,7 @@ class cmsCore {
         if (!$component) { return false; }
 
         //проверяем что в названии только буквы и цифры
-        if (!eregi("^[a-z0-9]+$", $component)){ cmsCore::error404(); }
+        if (!preg_match("/^[a-z0-9]+$/i", $component)){ cmsCore::error404(); }
         
         $this->loadLanguage('components/'.$component);
 
@@ -1734,7 +1734,7 @@ class cmsCore {
     public function fileDownloadCount($fileurl){
         
         $inDB       = cmsDatabase::getInstance();
-        $fileurl    = mysql_escape_string($fileurl);
+        $fileurl    = mysql_real_escape_string($fileurl);
         
         $sql        = "SELECT hits FROM cms_downloads WHERE fileurl = '$fileurl'";
         $result     = $inDB->query($sql) ;
@@ -2562,7 +2562,7 @@ class cmsCore {
         $html = '';
 
         if(@$seldate){
-            $parts = split('-', $seldate);
+            $parts = preg_split('/-/', $seldate);
             if ($parts[2]){
                 $day_default = $parts[2];
             }
@@ -2723,7 +2723,7 @@ class cmsCore {
             $ac         = $inDB->fetch_assoc($result);
             $access_str = $ac['access'];
             $access     = str_replace(', ', ',', $access_str);
-            $access     = split(',', $access);
+            $access     = preg_split('/,/', $access);
             return $access;
         }
 
@@ -2781,7 +2781,7 @@ class cmsCore {
                 $access_str = $ac['access'];
 
                 $access = str_replace(', ', ',', $access_str);
-                $access = split(',', $access);
+                $access = preg_split('/,/', $access);
 
                 if (in_array($access_type, $access)){
                     $do_access = true;
@@ -3003,8 +3003,8 @@ class cmsCore {
     public function parseSmiles($text, $parse_bbcode=false){
         if (!$parse_bbcode){
             //convert URLs to links
-            $text = ereg_replace("/(?<!http:\\/\\/)(www)(\\S+)/si",'http://www\\2', $text);
-            $text = ereg_replace("/(http:\\/\\/)(\\S+)/si",'<a href="http://\\2" target=_new>http://\\2</a>',$text);
+            $text = preg_replace("/(?<!http:\\/\\/)(www)(\\S+)/si",'http://www\\2', $text);
+            $text = preg_replace("/(http:\\/\\/)(\\S+)/si",'<a href="http://\\2" target=_new>http://\\2</a>',$text);
         } else {
             //parse bbcode
             include_once PATH.'/includes/bbcode/bbcode.lib.php';

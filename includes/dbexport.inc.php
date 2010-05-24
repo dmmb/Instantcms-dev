@@ -155,7 +155,7 @@ class MySQLDump {
 				$structure .= ' '.$record['Extra'];
 			$structure .= ",\n";
 		}
-		$structure = @ereg_replace(",\n$", null, $structure);
+		$structure = @preg_replace(",\n$", null, $structure);
 
 		// Save all Column Indexes
 		$structure .= $this->getSqlKeysTable($table);
@@ -225,7 +225,7 @@ class MySQLDump {
 					if ( $hexField[$j] && (@strlen($record[$field_name]) > 0) )
 						$data .= "0x".$record[$field_name];
 					else
-						$data .= "'".@str_replace('\"','"',@mysql_escape_string($record[$field_name]))."'";
+						$data .= "'".@str_replace('\"','"',@mysql_real_escape_string($record[$field_name]))."'";
 					$data .= ',';
 				}
 				$data = @substr($data,0,-1).")";

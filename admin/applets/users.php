@@ -135,7 +135,7 @@ function applet_users(){
         if (!$email) { $error .= 'Нужно указать адрес e-mail!<br/>'; }
         if ($pass != $pass2) { $error .= 'Пароли не совпали!'; }
 
-        if (!eregi("^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$", $email)){ $error .= 'Некорректный адрес e-mail!<br/>'; }
+        if (!preg_match("/^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$/i", $email)){ $error .= 'Некорректный адрес e-mail!<br/>'; }
 
         if(!$error){
             $login_exists = $inDB->get_field('cms_users', "login='{$login}'", 'id');

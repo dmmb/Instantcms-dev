@@ -82,7 +82,7 @@ function registration(){
             //SEND NEW PASSWORD TO EMAIL
             $email = $_POST['email'];
 
-            if (!eregi("^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$", $email)){
+            if (!preg_match("/^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$/i", $email)){
                 echo '<p style="color:red">'.$_LANG['ERR_EMAIL'].'</p>';
             } else {
 
@@ -129,7 +129,7 @@ function registration(){
         if($inCore->request('pass')) { $pass = $inCore->request('pass', 'str', ''); } else { $msg .= $_LANG['TYPE_PASS'].'<br/>'; }
         if($inCore->request('pass2')) { $pass2 = $inCore->request('pass2', 'str', ''); } else { $msg .= $_LANG['TYPE_PASS_TWICE'].'<br/>'; }
 
-        if (!eregi("^[a-zA-Z0-9]+\$", $login)){
+        if (!preg_match("/^[a-zA-Z0-9]+\$/i", $login)){
             $msg  .= $_LANG['ERR_LOGIN'].'<br/>';
         }
 
@@ -152,7 +152,7 @@ function registration(){
 
         if($inCore->inRequest('email')) {
             $email = $inCore->request('email', 'str', '');
-            if (!eregi("^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$", $email)){
+            if (!preg_match("/^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$/i", $email)){
                 $msg  .= $_LANG['ERR_EMAIL'].'<br/>';
             }
         }
@@ -294,7 +294,6 @@ function registration(){
             $inDB->query("DELETE FROM cms_online WHERE user_id = ".$user_id);
             $inDB->query("DELETE FROM cms_search WHERE session_id = '".$sess_id."'");
 
-            session_unregister('user');
             session_destroy();
 
             $inUser->dropStatTimer();
@@ -309,7 +308,7 @@ function registration(){
 
                 $remember_pass = $inCore->inRequest('remember');
 
-                if (!eregi("^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$", $login)){
+                if (!preg_match("/^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$/i", $login)){
                     $where_login = "login = '{$login}'";
                 } else {
                     $where_login = "email = '{$login}'";
@@ -326,7 +325,7 @@ function registration(){
 
                     if (!cmsUser::isBanned($user['id'])) {
 
-                        session_register('user');
+                        
                         $_SESSION['user'] = cmsUser::createUser($user);
                         
                         cmsCore::callEvent('USER_LOGIN', $_SESSION['user']);
