@@ -830,7 +830,7 @@ class cmsCore {
      * @return bool
      */
     public function loadLib($lib){
-        $libfile = PATH.'/core/lib_'.$lib.'.php';
+        $libfile = PATH.'/core/libs/lib_'.$lib.'.php';
         if (file_exists($libfile)){
             include_once($libfile);
             return true;
