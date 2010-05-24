@@ -15,24 +15,10 @@ function orderForm($orderby, $orderto){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
     global $_LANG;
-	$html = '';
-	$html .= '<form action="" method="POST"><div class="photo_sortform"><table cellspacing="2" cellpadding="2" >' ."\n";
-	 	$html .= '<tr>' ."\n";
-			$html .= '<td>'.$_LANG['SORTING_PHOTOS'].': </td>' ."\n";
-			$html .= '<td valign="top"><select name="orderby" id="orderby">' ."\n";
-				$html .= '<option value="title" '; if($orderby=='title') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_TITLE'].'</option>' ."\n";
-				$html .= '<option value="pubdate" '; if($orderby=='pubdate') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_DATE'].'</option>' ."\n";
-				$html .= '<option value="rating" '; if($orderby=='rating') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_RATING'].'</option>' ."\n";
-				$html .= '<option value="hits" '; if($orderby=='hits') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_HITS'].'</option>' ."\n";
-			$html .= '</select> <select name="orderto" id="orderto">';
-				$html .= '<option value="desc" '; if($orderto=='desc') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_DESC'].'</option>' ."\n";
-				$html .= '<option value="asc" '; if($orderto=='asc') { $html .= 'selected'; } $html .= '>'.$_LANG['ORDERBY_ASC'].'</option>' ."\n";
-			$html .= '</select>';
-			$html .= ' <input type="submit" value=">>" />' ."\n";
-			$html .= '</td>' ."\n";
-		$html .= '</tr>' ."\n";
-	$html .= '</table></div></form>' ."\n";
-	return $html;
+	$smarty = $inCore->initSmarty('components', 'com_photos_order.tpl');
+	$smarty->assign('orderby', $orderby);
+	$smarty->assign('orderto', $orderto);
+	$smarty->display('com_photos_order.tpl');
 }
 
 function loadedByUser24h($user_id, $album_id){
@@ -42,35 +28,6 @@ function loadedByUser24h($user_id, $album_id){
 	$result = $inDB->query($sql) ;
 	$loaded = $inDB->num_rows($result);	
 	return $loaded;
-}
-
-function pageBar($cat_id, $current, $perpage){
-    $inCore = cmsCore::getInstance();
-    $inDB = cmsDatabase::getInstance();
-    $id = $inCore->request('id', 'int');
-    global $_LANG;
-	$html = '';
-	$result = $inDB->query("SELECT id FROM cms_photo_files WHERE album_id = $cat_id") ;
-	$records = $inDB->num_rows($result);
-	if ($records){
-		$pages = ceil($records / $perpage);
-		if($pages>1){
-			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
-			for ($p=1; $p<=$pages; $p++){
-				if ($p != $current) {			
-					
-					$link = '/photos/'.$id.'-'.$p;
-					
-					$html .= ' <a href="'.$link.'" class="pagebar_page">'.$p.'</a> ';		
-				} else {
-					$html .= '<span class="pagebar_current">'.$p.'</span>';
-				}
-			}
-			$html .= '</div>';
-		}
-	}
-	return $html;
 }
 
 function photos(){
@@ -209,7 +166,9 @@ if ($do=='view'){
 				
 		if ($inDB->num_rows($result)==1){	
 			$album = $inDB->fetch_assoc($result);
-																
+			if(!$show_hidden) { $totsql	= ' AND published = 1'; } else { $totsql = ''; }
+			$total_foto = $inDB->query("SELECT id FROM cms_photo_files WHERE album_id = $id $totsql") ;
+			$total = $inDB->num_rows($total_foto);	
 			$perpage = $album['perpage'];
 			if (isset($_REQUEST['page'])) { $page = abs((int)$_REQUEST['page']); } else { $page = 1; }
 
@@ -306,7 +265,7 @@ if ($do=='view'){
 					}					
 					if ($col>1) { echo '<td colspan="'.(($maxcols-$col+1)*$fcols).'">&nbsp;</td></tr>'; }
 					echo '</table>';
-					echo pageBar($id, $page, $perpage);					
+					echo cmsPage::getPagebar($total, $page, $perpage, '/photos/%catid%-%page%', array('catid'=>$id));				
 				}
 				
 				if ($album['showtype'] != 'list'){
@@ -355,7 +314,7 @@ if ($do=='view'){
 					if ($col>1) { echo '<td colspan="'.($maxcols-$col+1).'">&nbsp;</td></tr>'; }
 					echo '</table>';
 					echo '</div>';
-					echo pageBar($id, $page, $perpage);
+					echo cmsPage::getPagebar($total, $page, $perpage, '/photos/%catid%-%page%', array('catid'=>$id));
 
                     if($album['is_comments'] && $inCore->isComponentInstalled('comments')){
                         $inCore->includeComments();
