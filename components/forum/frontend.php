@@ -806,8 +806,8 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 
 				if ($do=='newthread'){
 					//NEW THREAD
-					$title          = htmlspecialchars($_POST['title'], ENT_QUOTES, 'cp1251');
-					$description    = htmlspecialchars($_POST['description'], ENT_QUOTES, 'cp1251');
+					$title          = $inCore->request('title', 'str');
+					$description    = $inCore->request('description');
 												
 					if($title && $message){	
 						$sql = "INSERT INTO cms_forum_threads (forum_id, user_id, title, description, icon, pubdate, hits)
