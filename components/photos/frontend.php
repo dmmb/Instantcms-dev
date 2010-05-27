@@ -466,7 +466,7 @@ if ($do=='addphoto'){
                             $photo['filename']      = $imageurl;
 							
 							if ($album['NSDiffer'] == ''){
-								if ($album['public']==2) { $published = 1; } else { $published = 0; }				
+								if ($album['public']==2 || $inCore->userIsAdmin($inUser->id)) { $published = 1; } else { $published = 0; }				
 							} elseif (strstr($album['NSDiffer'], 'club')){
 								if ($club['photo_premod'] && !clubUserIsAdmin($club['id'], $inUser->id) && !clubUserIsRole($club['id'], $inUser->id, 'moderator')) { 
 									$published = 0; 
@@ -518,15 +518,12 @@ if ($do=='addphoto'){
 if ($do=='uploaded'){
 	$id = $inCore->request('id', 'int', 0);
 	$photo = dbGetFields('cms_photo_files', 'id='.$id, 'album_id, published');
-	
-	if ($id && $photo['published']!==false){
-		echo '<p><strong>'.$_LANG['PHOTO_ADDED'].'</strong></p>';
-		if (!$photo['published']) { echo '<p>'.$_LANG['PHOTO_PREMODER_TEXT'].'</p>'; }
-		echo '<ul>';
-			echo '<li><a href="/photos/photo'.$id.'.html">'.$_LANG['GOTO_PHOTO'].'</a></li>';
-			echo '<li><a href="/photos/'.$photo['album_id'].'/addphoto.html">'.$_LANG['ADD_MORE_PHOTO'].'</a></li>';
-			echo '<li><a href="/photos/'.$photo['album_id'].'">'.$_LANG['BACK_TO_PHOTOALBUM'].'</a></li>';
-		echo '</ul>';
+
+	if ($id && $photo['published']!==false){	
+	$smarty = $inCore->initSmarty('components', 'com_photos_added_f.tpl');			
+	$smarty->assign('id', $id);
+	$smarty->assign('photo', $photo);
+	$smarty->display('com_photos_added_f.tpl');
 	}
 }
 
@@ -563,7 +560,6 @@ if ($do=='editphoto'){
 			$usr = $inDB->fetch_assoc($result);
 	
 			$inPage->addPathway($_LANG['EDIT_PHOTO']);
-			echo '<div class="con_heading">'.$_LANG['EDIT_PHOTO'].'</div>';
 			
             if ($inCore->inRequest('save')){
 					$photo['title']         = $inCore->request('title', 'str', $_LANG['PHOTO_WITHOUT_NAME']);
@@ -642,7 +638,7 @@ if ($do=='movephoto'){
 	
 	if ($photo){
 		$album = dbGetFields('cms_photo_albums', 'id='.$photo['album_id'], '*');	
-		if ($album['NSDiffer'] == 'club'){
+		if(preg_match('/club(.*)/i', $album['NSDiffer'])) { 
 			$club = dbGetFields('cms_clubs', 'id='.$album['user_id'], '*');
 			$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
 			$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');	
@@ -658,34 +654,24 @@ if ($do=='movephoto'){
 				$inPage->setTitle($_LANG['MOVE_PHOTO']);
 				$inPage->addPathway($_LANG['MOVE_PHOTO'], $_SERVER['REQUEST_URI']);
 
-				echo '<div class="con_heading">'.$_LANG['MOVE_PHOTO'].'</div>';
-					
-				echo '<div style="margin-top:10px; margin-bottom:15px;"><strong>'.$_LANG['PHOTO'].':</strong> <a href="/photos/photo'.$photo['id'].'.html">'.$photo['title'].'</a></div>';
-				
-				echo '<div><form action="" method="POST">';
-				
-				echo '<table border="0" cellspacing="10" style="background-color:#EBEBEB"><tr><td>'.$_LANG['MOVE_INTO_ALBUM'].':</td>';
-				
-					echo '<td><select name="album_id">';
-	
-						if ($album['NSDiffer'] == '') { 
-							$fsql = "SELECT * FROM cms_photo_albums WHERE NSDiffer='' ORDER BY title";
-						} elseif ($album['NSDiffer'] == 'club') {
-							$fsql = "SELECT * FROM cms_photo_albums WHERE NSDiffer='club' AND parent_id>0 AND user_id = ".$club['id']." ORDER BY title";
+				if ($album['NSDiffer'] == '') { 
+						$fsql = "SELECT * FROM cms_photo_albums WHERE NSDiffer='' ORDER BY title";
+				} elseif ($album['NSDiffer'] == 'club'.$club['id'].'') {
+						$fsql = "SELECT * FROM cms_photo_albums WHERE NSDiffer='club{$club['id']}' AND parent_id>0 AND user_id = ".$club['id']." ORDER BY title";
+				}
+				$fresult = $inDB->query($fsql) ;
+				if ($inDB->num_rows($fresult)){
+						$html = '';
+						while ($f = $inDB->fetch_assoc($fresult)){
+						$html .= '<option value="'.$f['id'].'" ';
+							if ($photo['album_id'] == $f['id']) { $html .= 'selected'; }
+						$html .= '>--- '.$f['title'].'</option>';
 						}
-						$fresult = $inDB->query($fsql) ;
-						if ($inDB->num_rows($fresult)){
-							while ($f = $inDB->fetch_assoc($fresult)){
-								echo '<option value="'.$f['id'].'" ';
-								if ($photo['album_id'] == $f['id']) { echo 'selected'; }
-								echo '>--- '.$f['title'].'</option>';
-							}
-						}
-					
-					echo '</select></td>';
-	
-				echo '<td><input type="submit" name="gomove" value="'.$_LANG['MOVING'].'"/></td></tr></table>';
-				echo '</form></div>';								
+				}
+				$smarty = $inCore->initSmarty('components', 'com_photos_move.tpl');
+				$smarty->assign('photo', $photo);
+				$smarty->assign('html', $html);
+				$smarty->display('com_photos_move.tpl');
 
 			} else { //DO MOVE
 			

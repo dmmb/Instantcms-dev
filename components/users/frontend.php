@@ -975,7 +975,6 @@ if ($do=='avatar'){
 			
 			} else {
 				$smarty = $inCore->initSmarty('components', 'com_users_avatar_upload.tpl');
-			    $smarty->assign('menuid', $menuid);
     			$smarty->assign('id', $id);
     			$smarty->display('com_users_avatar_upload.tpl');
 			}	
@@ -1182,7 +1181,6 @@ if ($do=='addphoto'){
 					
 					$smarty = $inCore->initSmarty('components', 'com_photos_added.tpl');			
 					$smarty->assign('id', $id);
-					$smarty->assign('menuid', $menuid);
 					$smarty->assign('photoid', $photoid);
 					$smarty->assign('url_profile', cmsUser::getProfileURL($inUser->login));
 					$smarty->display('com_photos_added.tpl');
@@ -1278,7 +1276,6 @@ if ($do=='editphoto'){
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 			$inPage->addPathway($_LANG['PHOTOALBUM'], '/users/'.$id.'/photoalbum.html');
 			$inPage->addPathway($_LANG['EDIT_PHOTO'], $_SERVER['REQUEST_URI']);
-			echo '<div class="con_heading">'.$_LANG['EDIT_PHOTO'].'</div>';
 			
 			if (isset($_POST['save'])){							
 					$title = strip_tags(htmlspecialchars($_POST['title'], ENT_QUOTES, 'cp1251'));

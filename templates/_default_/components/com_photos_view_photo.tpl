@@ -75,7 +75,7 @@
 						{if $is_can_operation}
 							{if $is_author || $is_admin}
 								<td><a href="/photos/editphoto{$photo.id}.html" title="{$LANG.EDIT}"><img src="/images/icons/edit.gif" border="0"/></a></td>
-							{if is_admin && !$photo.NSDiffer}
+							{if is_admin}
 								<td><a href="/photos/movephoto{$photo.id}.html" title="{$LANG.MOVE}"><img src="/images/icons/move.gif" border="0"/></a></td>
 							{/if}
 							<td><a href="/photos/delphoto{$photo.id}.html" title="{$LANG.DELETE}"><img src="/images/icons/delete.gif" border="0"/></a></td>
