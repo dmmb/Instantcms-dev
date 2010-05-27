@@ -57,7 +57,7 @@ function photos(){
 	$user_id    = $inCore->request('userid', 'int');
 	$do         = $inCore->request('do', 'str', 'view');
 	
-/////////////////////////////// VIEW ALBUM ///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// Просмотр альбома ///////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){ 
 
 	//SHOW ALBUMS LIST
@@ -71,12 +71,14 @@ if ($do=='view'){
         $owner = 'club';
 		$club = dbGetFields('cms_clubs', 'id='.$album['user_id'], '*');
 		$club['root_album_id'] = dbGetField('cms_photo_albums', "parent_id=0 AND NSDiffer='club".$club['id']."' AND user_id = ".$club['id'], 'id');
-		if (clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator')) { $show_hidden = 1; } //показывать скрытые фотки админам и модераторам клуба
+		if ($inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator')) { $show_hidden = 1; } //показывать скрытые фотки админам и модераторам клуба
+	} else {
+		if ($inCore->userIsAdmin($inUser->id)) { $show_hidden = 1; } //показывать скрытые фотки админам
 	}
 
     $can_view = true;
 
-	//PAGE HEADING
+	//Заголовки страницы
 	if ($album['parent_id']==0){
 		if($id == $root['id']){
 			$pagetitle = $inCore->menuTitle();
@@ -111,56 +113,29 @@ if ($do=='view'){
 
     if (!$can_view && $owner=='club') { $inCore->redirect('/clubs/'.$club['id']); }
 
-	//TITLE
-	echo '<h1 class="con_heading">'.$pagetitle.'</h1>';
-	
-	//LATEST AND TOP PHOTOS LINKS
-	if ($id == $root['id'] && $cfg['showlat']){
-		echo '<div class="photo_toolbar">';
-			echo '<table border="0" cellspacing="0" cellpadding="5">';
-			  echo '<tr>';
-				echo '<td><img src="/components/photos/images/latest.gif" /></td>';
-				echo '<td><a href="/photos/latest.html">'.$_LANG['LAST_UPLOADED'].'</a></td>';
-				echo '<td><img src="/components/photos/images/best.gif" /></td>';
-				echo '<td><a href="/photos/top.html">'.$_LANG['BEST_PHOTOS'].'</a></td>';
-			  echo '</tr>';
-			echo '</table>';
-		echo '</div>';
-	}
-	
 	if (!isset($cfg['orderto'])) { $albums_orderto = 'ASC'; } else { $albums_orderto = $cfg['orderto']; }
 	if (!isset($cfg['orderby'])) { $albums_orderby = 'title'; } else { $albums_orderby = $cfg['orderby']; }
-
-	//BUILD SUB-ALBUMS LIST
+	//Формируем подкатегории альбома
     $left_key   = $album['NSLeft'];
     $right_key  = $album['NSRight'];
-
     $subcats_list = $model->getSubAlbums($id, $left_key, $right_key, $albums_orderby, $albums_orderto);
 
 	$col = 1; if(isset($cfg['maxcols'])) { $maxcols = $cfg['maxcols']; } else { $maxcols = 1; }
 	if (strstr($album['NSDiffer'],'club') && $album['parent_id']==0) { $maxcols=1; }
-
+	// если есть список категорий, то у каждой считаем кол-во подкатегорий
     if ($subcats_list){
-        echo '<table class="categorylist" style="margin-bottom:10px" cellspacing="3" width="100%" border="0">';
+		$is_subcats = true;
+		$subcats    = array();
         foreach($subcats_list as $cat){
-            if ($col==1) { echo '<tr>'; }
-                echo '<td width="16" valign="top"><img src="/images/markers/photoalbum.png" border="0" /></td>';
-                echo '<td width="" valign="top">';
-                    //count subalbums
-                    $sub = dbRowsCount('cms_photo_albums', 'NSLeft > '.$cat['NSLeft'].' AND NSRight < '.$cat['NSRight']);
-                    if ($sub>1) { $subtext = '/'.$sub; } else { $subtext = ''; }
-                    //print album
-                    echo '<div><a href="/photos/'.$cat['id'].'">'.$cat['title'].'</a> ('.$cat['content_count'].$subtext.')</div>';
-                    if ($cat['description']) { echo '<div>'.$cat['description'].'</div>'; }
-                echo '</td>';
-            if ($col==$maxcols) { echo '</tr>'; $col=1; } else { $col++; }
-        }
-        if ($col>1) { echo '<td colspan="'.($maxcols-$col+1).'">&nbsp;</td></tr>'; }
-        echo '</table>';
-    }
-	//END - LIST OF ALBUMS
-	
-	//SHOW ALBUM CONTENT
+                $sub = dbRowsCount('cms_photo_albums', 'NSLeft > '.$cat['NSLeft'].' AND NSRight < '.$cat['NSRight']);
+                if ($sub>1) { $cat['subtext'] = '/'.$sub; } else { $cat['subtext'] = ''; }
+				$subcats[] = $cat;
+		}
+	} else {
+		$is_subcats = false;
+	}
+
+	//формируем содержимое альбома
 		$sql = "SELECT * FROM cms_photo_albums WHERE id = $id LIMIT 1";				
 		$result = $inDB->query($sql) ;
 				
@@ -170,7 +145,7 @@ if ($do=='view'){
 			$total_foto = $inDB->query("SELECT id FROM cms_photo_files WHERE album_id = $id $totsql") ;
 			$total = $inDB->num_rows($total_foto);	
 			$perpage = $album['perpage'];
-			if (isset($_REQUEST['page'])) { $page = abs((int)$_REQUEST['page']); } else { $page = 1; }
+			if (isset($_REQUEST['page'])) { $page = $inCore->request('page', 'int', 1); } else { $page = 1; }
 
 			if (isset($userid)){
 				$usersql = "AND f.user_id = ".$userid;
@@ -182,7 +157,7 @@ if ($do=='view'){
 
 			if(!$show_hidden) { $pubsql	= ' AND f.published = 1'; } else { $pubsql = ''; }
 
-			//SQL BUILD			
+			//SQL запрос			
 			$sql = "SELECT f.*,
 							f.pubdate as fpubdate, 
                             IFNULL(r.total_rating, 0) as rating
@@ -192,7 +167,7 @@ if ($do=='view'){
 					GROUP BY f.id
 					";		
 			
-			//ORDERING
+			//Сортировка
 			if (isset($_POST['orderby'])) { 
 				$orderby = $inCore->request('orderby', 'str');
 				$_SESSION['ph_orderby'] = $orderby;
@@ -221,11 +196,9 @@ if ($do=='view'){
 				$sql .= "LIMIT ".(($page-1)*$perpage).", $perpage";
 			}
 			
-			$result = $inDB->query($sql) or die(mysql_error().'<br/><br/>'.$sql);
+			$result = $inDB->query($sql) ;
 
-			$col = 1; $maxcols = $album['maxcols'];
-			
-			//check add photos permission
+			//проверяем права доступа на добавление фото
 			if (!$inUser->id) { $can_add = false; } 
 			else {			
 				if ($album['NSDiffer']=='') { $can_add = $inUser->id; } 
@@ -233,110 +206,73 @@ if ($do=='view'){
 					$can_add = clubUserIsMember($club['id'], $inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || $inUser->is_admin;
 				}				
 			}
-			
+			$can_add_photo = false;
 			if ($album['public'] && @$can_add){
-				echo '<table cellpadding="2" cellspacing="0" style="margin-bottom:10px">';
-					echo '<tr><td><img src="/components/photos/images/addphoto.gif" border="0"/></td>'."\n";
-					echo '<td><a style="text-decoration:underline" href="/photos/'.$album['id'].'/addphoto.html">'.$_LANG['ADD_PHOTO_TO_ALBUM'].'</a></td></tr>'."\n";
-				echo '</table>';
+				$can_add_photo = true;
 			}		
 			
 			if ($inDB->num_rows($result)){	
-			
-				if ($album['showtype'] == 'list'){
-				//VIEW AS TABLE (LIST)			
-					echo '<table width="100%" cellpadding="5" cellspacing="0" border="0">';
-					while($con = $inDB->fetch_assoc($result)){
-						if ($col==1) { echo '<tr>'; }
-							echo '<td width="20" valign="top"><img src="/images/markers/photo.png" border="0" /></td>';
-							echo '<td width="" valign="top">';
-									echo '<a href="/photos/photo'.$con['id'].'.html">'.$con['title'].'</a>';
-							echo '</td>';	
-							if($album['showdate']){
-								$fcols = 6;
-								echo '<td width="16" valign="top"><img src="/images/icons/comments.gif" alt="'.$_LANG['COMMENTS'].'" border="0"/></td>';
-								echo '<td width="25" valign="top"><a href="/photos/photo'.$con['id'].'.html#c" title="'.$_LANG['COMMENTS'].'">'.$inCore->getCommentsCount('photo', $photo['id']).'</a></td>';
-								echo '<td width="16" valign="top" class="photo_date_td"><img src="/images/icons/date.gif" alt="'.$_LANG['PUB_DATE'].'" /></td>';
-								echo '<td width="70" align="center" valign="top" class="photo_date_td">'.$inCore->dateformat($con['fpubdate']).'</td>';			
-							} else {
-								$fcols = 2;
-							}
-						if ($col==$maxcols) { echo '</tr>'; $col=1; } else { $col++; };
-					}					
-					if ($col>1) { echo '<td colspan="'.(($maxcols-$col+1)*$fcols).'">&nbsp;</td></tr>'; }
-					echo '</table>';
-					echo cmsPage::getPagebar($total, $page, $perpage, '/photos/%catid%-%page%', array('catid'=>$id));				
+				if ($album['showtype'] == 'lightbox'){
+					$inPage->addHeadJS('includes/jquery/lightbox/js/jquery.lightbox.js');
+					$inPage->addHeadCSS('includes/jquery/lightbox/css/jquery.lightbox.css');
 				}
-				
-				if ($album['showtype'] != 'list'){
-				//VIEW AS GALLERY (SIMPLE)			
+				if ($show_hidden){
+					$inPage->addHeadJS('components/photos/js/photos.js');
+				}	
+				$cons = array();
+				while($con = $inDB->fetch_assoc($result)){
+					$con['fpubdate'] 		= $inCore->dateformat($con['fpubdate']);
+					$con['commentscount'] 	= $inCore->getCommentsCount('photo', $con['id']);
 					if ($album['showtype'] == 'lightbox'){
-						$inPage->addHeadJS('includes/jquery/lightbox/js/jquery.lightbox.js');
-						$inPage->addHeadCSS('includes/jquery/lightbox/css/jquery.lightbox.css');
-					}
-					echo '<div class="photo_gallery">';
-					echo '<table cellpadding="5" cellspacing="0" border="0" width="100%"> ';
-					while($con = $inDB->fetch_assoc($result)){			
-						if ($album['showtype'] == 'lightbox'){
-							$photolink = '/images/photos/medium/'.$con['file'];
-							$photolink2 = '/photos/photo'.$con['id'].'.html';
+							$con['photolink'] 	= '/images/photos/medium/'.$con['file'];
+							$con['photolink2'] 	= '/photos/photo'.$con['id'].'.html';
+					} else {
+						if ($album['showtype']!='fast'){
+								$con['photolink'] 	= '/photos/photo'.$con['id'].'.html';
+								$con['photolink2'] 	= '/photos/photo'.$con['id'].'.html';
 						} else {
-							if ($album['showtype']!='fast'){
-								$photolink = '/photos/photo'.$con['id'].'.html';
-								$photolink2 = '/photos/photo'.$con['id'].'.html';
-							} else {
-								$photolink = '/images/photos/'.$con['file'];
-								$photolink2 = '/images/photos/'.$con['file'];
-							}
+								$con['photolink']	= '/images/photos/'.$con['file'];
+								$con['photolink2']	= '/images/photos/'.$con['file'];
 						}
-						if ($col==1) { echo '<tr>'; } echo '<td align="center" valign="middle">';
-						echo '<div class="'.$album['cssprefix'].'photo_thumb">';
-						echo '<table width="100%" height="100" cellspacing="0" cellpadding="4">
-							  <tr>
-							  <td valign="middle" align="center">';
-								echo '<a class="lightbox-enabled" rel="lightbox-galery" href="'.$photolink.'" title="'.$con['title'].'">';
-									echo '<img class="photo_thumb_img" src="/images/photos/small/'.$con['file'].'" alt="'.$con['title'].'" border="0" />';
-								echo '</a>';
-						echo '</td></tr>';
-						echo '<tr><td align="center"><a href="'.$photolink2.'" title="'.$con['title'].'">'.$con['title'].'</a></td></tr>';
-						if ($show_hidden && $con['published']==0){
-							$inPage->addHeadJS('components/photos/js/photos.js');
-							echo '<tr id="moder'.$con['id'].'"><td align="center">
-								<div style="margin-top:4px">'.$_LANG['WAIT_MODERING'].'</div>
-								<div><a href="javascript:publishPhoto('.$con['id'].')" style="color:green">'.$_LANG['PUBLISH'].'</a> | <a href="/photos/delphoto'.$con['id'].'.html" style="color:red">'.$_LANG['DELETE'].'</a></div>
-							</td></tr>';						
-						}
-						echo '</table>';
-						echo '</div>';
-						
-						echo '</td>'; if ($col==$maxcols) { echo '</tr>'; $col=1; } else { $col++; }
 					}
-					if ($col>1) { echo '<td colspan="'.($maxcols-$col+1).'">&nbsp;</td></tr>'; }
-					echo '</table>';
-					echo '</div>';
-					echo cmsPage::getPagebar($total, $page, $perpage, '/photos/%catid%-%page%', array('catid'=>$id));
-
-                    if($album['is_comments'] && $inCore->isComponentInstalled('comments')){
-                        $inCore->includeComments();
-                        comments('palbum', $album['id']);
-                    }
-
+					$cons[] = $con;
 				}
+				$is_poto_yes = true;
 			} else { 
-					 if($album['parent_id']>0) { echo '<p>'.$_LANG['NOT_PHOTOS_IN_ALBUM'].'</p>'; }
                      if(!$subcats_list && $owner == 'club' && $album['parent_id']==0){ echo '<p>'.$_LANG['NO_SUB_ALBUMS'].'</p>'; }
-					}
+					 $is_poto_yes = false;
+			}
 					
 		}//END - ALBUM CONTENT
+	// отдаем в шаблон
+	$smarty = $inCore->initSmarty('components', 'com_photos_view.tpl');
+	$smarty->assign('pagetitle', $pagetitle);
+	$smarty->assign('root', $root);
+	$smarty->assign('cfg', $cfg);
+	$smarty->assign('id', $id);
+	$smarty->assign('photolink', $photolink);
+	$smarty->assign('photolink2', $photolink2);
+	$smarty->assign('album', $album);
+	$smarty->assign('maxcols_foto', $album['maxcols']);
+	$smarty->assign('can_add_photo', $can_add_photo);
+	$smarty->assign('subcats', $subcats);
+	$smarty->assign('cons', $cons);
+	$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/photos/%catid%-%page%', array('catid'=>$id)));
+	$smarty->assign('is_subcats', $is_subcats);
+	$smarty->assign('maxcols', $maxcols);
+	$smarty->display('com_photos_view.tpl');
+	// если есть фотограйии в альбоме и включены комментарии в альбоме, то показываем их
+	if($album['is_comments'] && $is_poto_yes && $inCore->isComponentInstalled('comments')){
+          $inCore->includeComments();
+          comments('palbum', $album['id']);
+     }
 }
 /////////////////////////////// VIEW PHOTO ///////////////////////////////////////////////////////////////////////////////////////////
 if($do=='viewphoto'){
-	$sql = "SELECT f.*, f.pubdate, 
-					a.id cat_id, a.NSLeft as NSLeft, a.NSRight as NSRight, a.NSDiffer as NSDiffer, a.user_id as album_user_id, a.title cat_title, 
-					a.nav album_nav, a.public public, a.showtype a_type, a.showtags a_tags, a.bbcode a_bbcode
-			FROM cms_photo_files f, cms_photo_albums a
-			WHERE f.id = $id AND f.album_id = a.id
-			";
+	$sql = "SELECT f.*, f.pubdate, a.id cat_id, a.NSLeft as NSLeft, a.NSRight as NSRight, a.NSDiffer as NSDiffer, a.user_id as album_user_id, a.title cat_title, a.nav album_nav, a.public public, a.showtype a_type, a.showtags a_tags, a.bbcode a_bbcode
+			FROM cms_photo_files f
+			LEFT JOIN cms_photo_albums a ON a.id = f.album_id
+			WHERE f.id = $id";
 			
 	$result = $inDB->query($sql);
 
@@ -354,7 +290,7 @@ if($do=='viewphoto'){
 
         if (!$can_view && $owner=='club') { $inCore->redirect('/clubs/'.$club['id']); }
 
-		//PATHWAY ENTRY
+		// Формируем глубиномер, заголовок страницы, подключаем js
 		$left_key = $photo['NSLeft'];
 		$right_key = $photo['NSRight'];
 		$sql = "SELECT id, title, NSLevel FROM cms_photo_albums WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0 AND NSDiffer = '".$photo['NSDiffer']."' ORDER BY NSLeft";
@@ -363,12 +299,11 @@ if($do=='viewphoto'){
 				$inPage->addPathway($pcat['title'], '/photos/'.$pcat['id']);
 		}
 		$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
-		
-		$inDB->query("UPDATE cms_photo_files SET hits = hits + 1 WHERE id = $id");
-		
 		$inPage->setTitle($photo['title']);
         $inPage->addHeadJS('core/js/karma.js');
-								
+		// Обновляем количество просмотров фотографии
+		$inDB->query("UPDATE cms_photo_files SET hits = hits + 1 WHERE id = $id");
+
 		echo '<div class="con_heading">'.$photo['title'].'</div>';
 
 		//PREV AND NEXT IMAGES
@@ -648,7 +583,8 @@ if ($do=='editphoto'){
 	
 	$inCore->includeFile('components/users/includes/usercore.php');
 	
-	$photoid = @intval($_REQUEST['id']);	
+	$photoid = $inCore->request('id', 'int', '');
+		
 	$photo = dbGetFields('cms_photo_files', 'id='.$photoid, '*');
 	
 	if (!$photo) { $inCore->redirect('/photos'); }
@@ -819,7 +755,7 @@ if ($do=='delphoto'){
 	
 	$inCore->includeFile('components/users/includes/usercore.php');
 	
-	$photo_id = @intval($_REQUEST['id']);
+	$photo_id = $inCore->request('id', 'int', '');
 	
 	$photo = dbGetFields('cms_photo_files', 'id='.$photo_id, '*');
 	if (!$photo) { $inCore->redirect('/photos'); }	
@@ -867,8 +803,9 @@ if ($do=='latest'){
 	$col = 1; $maxcols = 4;
 
 	$sql = "SELECT f.*, f.pubdate as fpubdate, a.id as album_id, a.title as album
-			FROM cms_photo_files f, cms_photo_albums a
-			WHERE f.published = 1 AND f.album_id = a.id
+			FROM cms_photo_files f
+			LEFT JOIN cms_photo_albums a ON a.id = f.album_id
+			WHERE f.published = 1
 			ORDER BY pubdate DESC
 			LIMIT 24";		
 
@@ -915,12 +852,10 @@ if ($do=='latest'){
 if ($do=='best'){
 	$col = 1; $maxcols = 4;
 
-	$sql = "SELECT f.*, f.id as fid, f.pubdate as fpubdate,
-				   a.id as album_id, a.title as album, 
-				   IFNULL(r.total_rating, 0) as rating
+	$sql = "SELECT f.*, f.id as fid, f.pubdate as fpubdate, a.id as album_id, a.title as album, IFNULL(r.total_rating, 0) as rating
 			FROM cms_photo_files f
 			LEFT JOIN cms_ratings_total r ON r.item_id=f.id AND r.target = 'photo'
-			LEFT JOIN cms_photo_albums a ON f.album_id = a.id
+			LEFT JOIN cms_photo_albums a ON a.id = f.album_id
 			WHERE f.published = 1
 			ORDER BY rating DESC 
 			LIMIT 24";
@@ -928,42 +863,22 @@ if ($do=='best'){
 	$result = $inDB->query($sql) ;
 		
 	$inPage->addPathway($_LANG['BEST_PHOTOS'], $_SERVER['REQUEST_URI']);
-	echo '<div class="con_heading">'.$_LANG['BEST_PHOTOS'].'</div>';
 
-	if ($inDB->num_rows($result)){	
-		$num = 1;
-		echo '<table cellspacing="2" border="0" width="100%">';
+	if ($inDB->num_rows($result)){
+		$is_best_yes = true;
+		$inCore->loadLib('karma');
 		while($con = $inDB->fetch_assoc($result)){
-			if ($col==1) { echo '<tr>'; } echo '<td align="center" valign="middle" class="mod_lp_photo" width="'.round(100/$maxcols, 0).'%">';
-			echo '<table width="100%" height="100" cellspacing="0" cellpadding="0">';
-			  echo '<tr><td align="center"><div class="mod_lp_titlelink">'.$num.'. <a href="/photos/photo'.$con['id'].'.html" title="'.$con['title'].' ('.$con['rating'].')">'.$con['title'].'</a></div></td></tr>';
-			  echo '<tr>';
-			  echo '<td valign="middle" align="center">';
-			echo '<a href="/photos/photo'.$con['id'].'.html" title="'.$con['title'].'">';
-				echo '<img class="photo_thumb_img" src="/images/photos/small/'.$con['file'].'" alt="'.$con['title'].' ('.$con['rating'].')" border="0" />';
-			echo '</a>';
-			echo '</td></tr>';
-				echo '<tr>';
-				echo '<td align="center">';
-						echo '<div class="mod_lp_albumlink"><a href="/photos/'.$con['album_id'].'" title="'.$con['album'].'">'.$con['album'].'</a></div>';
-						echo '<div class="mod_lp_details">';
-						echo '<table cellpadding="2" cellspacing="2" align="center" border="0"><tr>';
-								$inCore->loadLib('karma');
-								echo '<td style="font-weight:bold">'.cmsKarmaFormat($con['rating']).'</td>';
-								echo '<td><img src="/images/icons/comments.gif" border="0"/></td>';
-								echo '<td><a href="/photos/photo'.$con['id'].'.html#c">'.$inCore->getCommentsCount('photo', $con['id']).'</td>';
-						echo '</tr></table>';
-						echo '</div>';
-				echo '</td>';
-				echo '</tr>';
-			echo '</table>';
-			echo '</div>';
-			echo '</td>'; if ($col==$maxcols) { echo '</tr>'; $col=1; } else { $col++; }
-			$num++;
+			$con['rating'] = cmsKarmaFormat($con['rating']);
+			$con['comcount'] = $inCore->getCommentsCount('photo', $con['id']);
+			$cons[] = $con;
 		}			
-		if ($col>1) { echo '<td colspan="'.($maxcols-$col+1).'">&nbsp;</td></tr>'; }
-		echo '</table>';
-	} else { echo '<p>'.$_LANG['NO_MATERIALS_TO_SHOW'].'</p>'; }
+	} else { $is_best_yes = false; }
+	
+	$smarty = $inCore->initSmarty('components', 'com_photos_best.tpl');
+	$smarty->assign('is_best_yes', $is_best_yes);
+	$smarty->assign('maxcols', $maxcols);
+	$smarty->assign('cons', $cons);
+	$smarty->display('com_photos_best.tpl');
 }
 /////////////////////////////// /////////////////////////////// /////////////////////////////// /////////////////////////////// //////
 } //function
