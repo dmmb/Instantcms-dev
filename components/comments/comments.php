@@ -101,7 +101,7 @@
                 $comments[$next]['votes'] = '<span class="cmm_bad">'.$comments[$next]['votes'].'</span>';
             }
 			if ($cfg['bbcode']){
-				$comments[$next]['content'] = nl2br($inCore->parseSmiles($comments[$next]['content'], true));
+				$comments[$next]['content'] = $inCore->parseSmiles($comments[$next]['content'], true);
 			} elseif ($cfg['smilies']) {
 				$comments[$next]['content'] = nl2br(strip_tags($inCore->parseSmiles($comments[$next]['content'])));
 			} else {
