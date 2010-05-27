@@ -22,7 +22,7 @@
     if (!$inUser->id) { return; }
 
     $status = $inCore->request('status', 'str', '');
-    if (strlen($status)>100){ $status = substr($status, 0, 100); }
+    if (strlen($status)>140){ $status = substr($status, 0, 140); }
 
     $status = @iconv('UTF-8', 'CP1251', $status);
 
