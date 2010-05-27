@@ -723,12 +723,16 @@ if ($do=='delphoto'){
 				if ($inDB->num_rows($result)){
 					$photo = $inDB->fetch_assoc($result);				
 					$inPage->addPathway($_LANG['DELETE_PHOTOGALLERY'], $_SERVER['REQUEST_URI']);
-					echo '<div class="con_heading">'.$_LANG['DELETING_PHOTO'].'</div>';
-					echo '<p>'.$_LANG['YOU_REALLY_DELETE_PHOTO'].' "'.$photo['title'].'"?</p>';
-					echo '<div><form action="'.$_SERVER['REQUEST_URI'].'" method="POST"><p>
-							<input style="font-size:24px; width:100px" type="button" name="cancel" value="'.$_LANG['NO'].'" onclick="window.history.go(-1)" />
-							<input style="font-size:24px; width:100px" type="submit" name="godelete" value="'.$_LANG['YES'].'" />
-						 </p></form>';
+					$confirm['title']                   = $_LANG['DELETING_PHOTO'];
+					$confirm['text']                    = ''.$_LANG['YOU_REALLY_DELETE_PHOTO'].' '.$photo['title'].'?';
+					$confirm['action']                  = $_SERVER['REQUEST_URI'];
+					$confirm['yes_button']              = array();
+					$confirm['yes_button']['type']      = 'submit';
+					$confirm['yes_button']['name']  	= 'godelete';
+					$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
+					$smarty->assign('confirm', $confirm);
+					$smarty->display('action_confirm.tpl');
+						 
 				} else { usrAccessDenied(); }
 			}
 		} else {
@@ -751,41 +755,21 @@ if ($do=='latest'){
 	$result = $inDB->query($sql) ;
 
 	$inPage->addPathway($_LANG['NEW_PHOTO_IN_GALLERY'], $_SERVER['REQUEST_URI']);
-	echo '<div class="con_heading">'.$_LANG['NEW_PHOTO_IN_GALLERY'].'</div>';
 		
 	if ($inDB->num_rows($result)){	
-		echo '<table cellspacing="2" border="0" width="100%">';
+		$is_latest_yes = true;
 		while($con = $inDB->fetch_assoc($result)){
-			if ($col==1) { echo '<tr>'; } 
-			echo '<td align="center" valign="middle" class="mod_lp_photo" width="'.round(100/$maxcols, 0).'%">';
-			echo '<table width="100%" height="100" cellspacing="0" cellpadding="0">';
-			echo '<tr><td align="center"><div class="mod_lp_titlelink"><a href="/photos/photo'.$con['id'].'.html" title="'.$con['title'].'">'.$con['title'].'</a></div></td></tr>';
-			echo '<tr>
-				  <td valign="middle" align="center">';
-					echo '<a href="/photos/photo'.$con['id'].'.html" title="'.$con['title'].'">';
-						echo '<img class="photo_thumb_img" src="/images/photos/small/'.$con['file'].'" alt="'.$con['title'].'" border="0" />';
-					echo '</a>';
-			echo '</td></tr>';
-				echo '<tr>';
-				echo '<td align="center">';
-					echo '<div class="mod_lp_albumlink"><a href="/photos/'.$con['album_id'].'" title="'.$con['album'].'">'.$con['album'].'</a></div>';
-					echo '<div class="mod_lp_details">';
-					echo '<table cellpadding="2" cellspacing="2" align="center" border="0"><tr>';
-						echo '<td><img src="/images/icons/date.gif" border="0"/></td>';
-						echo '<td>'.$inCore->dateformat($con['fpubdate']).'</td>';
-						echo '<td><img src="/images/icons/comments.gif" border="0"/></td>';
-						echo '<td><a href="/photos/photo'.$con['id'].'.html#c">'.$inCore->getCommentsCount('photo', $con['id']).'</td>';
-					echo '</tr></table>';
-					echo '</div>';
-				echo '</td>';
-			echo '</tr>';
-			echo '</table>';
-			echo '</div>';				
-			echo '</td>'; if ($col==$maxcols) { echo '</tr>'; $col=1; } else { $col++; }
+			$con['fpubdate'] = $inCore->dateformat($con['fpubdate']);
+			$con['comcount'] = $inCore->getCommentsCount('photo', $con['id']).'</td>';
+			$cons[] = $con;
 		}			
-		if ($col>1) { echo '<td colspan="'.($maxcols-$col+1).'">&nbsp;</td></tr>'; }
-		echo '</table>';
-	} else { echo '<p>'.$_LANG['NO_MATERIALS_TO_SHOW'].'</p>'; }
+	} else { $is_latest_yes = false; }
+	
+	$smarty = $inCore->initSmarty('components', 'com_photos_latest.tpl');
+	$smarty->assign('is_latest_yes', $is_latest_yes);
+	$smarty->assign('maxcols', $maxcols);
+	$smarty->assign('cons', $cons);
+	$smarty->display('com_photos_latest.tpl');
 }
 /////////////////////////////// VIEW BEST PHOTOS ///////////////////////////////////////////////////////////////////////////////////
 if ($do=='best'){
