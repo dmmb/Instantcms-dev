@@ -304,9 +304,7 @@ if($do=='viewphoto'){
 		// Обновляем количество просмотров фотографии
 		$inDB->query("UPDATE cms_photo_files SET hits = hits + 1 WHERE id = $id");
 
-		echo '<div class="con_heading">'.$photo['title'].'</div>';
-
-		//PREV AND NEXT IMAGES
+		//навигация
 		if($photo['album_nav']){
 			$previd = dbGetFields('cms_photo_files', 'id<'.$photo['id'].' AND album_id = '.$photo['cat_id'].' AND published=1', 'id, file', 'id DESC');
 			$nextid = dbGetFields('cms_photo_files', 'id>'.$photo['id'].' AND album_id = '.$photo['cat_id'].' AND published=1', 'id, file', 'id ASC');
@@ -314,72 +312,25 @@ if($do=='viewphoto'){
 			$previd = false;
 			$nextid = false;		
 		}
-
-		//DRAW IMAGE
-		echo '<table width="100%" cellpadding="5" cellspacing="0">';
-			echo '<tr><td colspan="3" align="center"><div class="photo_desc">'.$photo['description'].'</div></td></tr>';		
-			//BACK LINKS
-			echo '<tr><td colspan="3" align="center">
-						<div>&larr; '.$_LANG['BACK_TO'].' <a href="/photos/'.$photo['cat_id'].'">'.$_LANG['TO_ALBUM'].'</a>';
-			if ($photo['NSDiffer']==''){ echo '| <a href="/photos">'.$_LANG['TO_LIST_ALBUMS'].'</a></div>'; }
-			echo '</td></tr>';
-			//PHOTO		
-			echo '<tr>';
-				echo '<td style="text-align:center"><img src="/images/photos/medium/'.$photo['file'].'" border="0" /></td>';
-			echo '</tr>';
-			//BBCODE
-			if($photo['a_bbcode']){
-				echo '<tr><td style="text-align:center">';			
-					$bbcode = '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/photos/medium/'.$photo['file'].'[/IMG]';
-					echo '<label for="bbcode">'.$_LANG['CODE_INPUT_TO_FORUMS'].': </label><input type="text" id="bbcode" name="bbcode" class="photo_bbinput" value="'.$bbcode.'"/>';
-				echo '</td></tr>';
-			}
-			//Navigation
-			if($photo['album_nav']){
-				echo '<tr><td>';
-					echo '<div class="photo_nav">';
-						echo '<table cellpadding="5" cellspacing="0" border="0" align="center" style="margin-left:auto;margin-right:auto"><tr>';
-							if ($previd){
-								echo '<td align="right">';
-									echo '<div>&larr; <a href="/photos/photo'.$previd['id'].'.html">'.$_LANG['PREVIOUS'].'</a></div>';
-								echo '</td>';
-							}
-							if ($previd && $nextid) { echo '<td>|</td>'; }
-							if ($nextid){
-								echo '<td align="left">';
-									echo '<div><a href="/photos/photo'.$nextid['id'].'.html">'.$_LANG['NEXT'].'</a> &rarr;</div>';
-								echo '</td>';
-							}						
-						echo '</tr></table>';
-					echo '</div>';			
-				echo '</td></tr>';
-			}
-		echo '</table>';
-				
+		
 		$inCore->loadLib('karma');
 		
 		if ($photo['a_type'] != 'simple'){
-			echo '<div class="photo_bar">';
-				echo '<table width="" cellspacing="0" cellpadding="4" align="center"><tr>';
-					echo '<td width=""><strong>'.$_LANG['ADDED'].':</strong> '.$inCore->dateformat($photo['pubdate']).'</td>';
+			$photo['pubdate'] = $inCore->dateformat($photo['pubdate']);
 					if ($photo['public']){
 						$usr = dbGetFields('cms_users', 'id='.$photo['user_id'], 'id, nickname, login');
 						if ($usr['id']){							
-							echo '<td>'.cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, '', $usr['login']).'</td>';
+							$usr['genderlink'] = cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, '', $usr['login']);
 						}
 					}
-
-					$karma = cmsKarma('photo', $photo['id']);
-
-					echo '<td width=""><strong>'.$_LANG['HITS'].': </strong> '.$photo['hits'].'</td>';
-					echo '<td width=""><strong>'.$_LANG['RATING'].': </strong><span id="karmapoints">'.cmsKarmaFormatSmall($karma['points']).'</span></td>';
-					
-					echo '<td width="">'.cmsKarmaButtons('photo', $photo['id']).'</td>';
+					$karma 					= cmsKarma('photo', $photo['id']);
+					$photo['karma'] 		= cmsKarmaFormatSmall($karma['points']);
+					$photo['karma_buttons'] = cmsKarmaButtons('photo', $photo['id']).'</td>';
 		
 					if($cfg['link']){
 						$file = PATH.'/images/photos/'.$photo['file'];
 						if (file_exists($file)){
-							echo '<td><a href="/images/photos/'.$photo['file'].'" target="_blank">'.$_LANG['OPEN_ORIGINAL'].'</a></td>';
+							$photo['file_orig'] = '<a href="/images/photos/'.$photo['file'].'" target="_blank">'.$_LANG['OPEN_ORIGINAL'].'</a>';
 						}
 					}
 					
@@ -391,24 +342,26 @@ if($do=='viewphoto'){
 						$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');
 					}
 					
+					$is_can_operation = false;
 					if(($photo['public'] && $inUser->id) || $inUser->is_admin){
-						if ($is_author || $is_admin){
-							echo '<td><a href="/photos/editphoto'.$photo['id'].'.html" title="'.$_LANG['EDIT'].'"><img src="/images/icons/edit.gif" border="0"/></a></td>';
-							if ($is_admin){
-								echo '<td><a href="/photos/movephoto'.$photo['id'].'.html" title="'.$_LANG['MOVE'].'"><img src="/images/icons/move.gif" border="0"/></a></td>';
-							}
-							echo '<td><a href="/photos/delphoto'.$photo['id'].'.html" title="'.$_LANG['DELETE'].'"><img src="/images/icons/delete.gif" border="0"/></a></td>';
-						}
+						$is_can_operation = true;
 					}
-				echo '</tr></table>';
-			echo '</div>';
 			
+			$smarty = $inCore->initSmarty('components', 'com_photos_view_photo.tpl');
+			$smarty->assign('photo', $photo);
+			$smarty->assign('bbcode', '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/photos/medium/'.$photo['file'].'[/IMG]');
+			$smarty->assign('previd', $previd);
+			$smarty->assign('nextid', $nextid);
+			$smarty->assign('usr', $usr);
+			$smarty->assign('is_author', $is_author);
+			$smarty->assign('is_admin', $is_admin);
+			$smarty->assign('is_can_operation', $is_can_operation);
 			if($photo['a_tags']){
 				$inCore->loadLib('tags');
-				echo cmsTagBar('photo', $photo['id']);
+				$smarty->assign('tagbar', cmsTagBar('photo', $photo['id']));
 			}
-
-			//show user comments
+			$smarty->display('com_photos_view_photo.tpl');
+			//если есть, выводим комментарии
 			if($photo['comments'] && $inCore->isComponentInstalled('comments')){
 				$inCore->includeComments();
 				comments('photo', $photo['id']);
