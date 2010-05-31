@@ -1,58 +1,93 @@
 function addSmile(tag, field_id){
 	var txtarea = document.getElementById(field_id);
-	txtarea.value += ' :' + tag + ': ';
+	var tag     = ' :' + tag + ': ';
+    insertTagAtCursor(field_id, tag);
 	$('#smilespanel').hide();
 }
 
 function addTag(field_id, s_open, s_close){
-   var txtarea = document.getElementById(field_id);
-   var selStart = txtarea.selectionStart;
-   var selEnd = txtarea.selectionEnd;
-   var selLength = txtarea.textLength;
-  if (selLength>0){
-  var s1 = (txtarea.value).substring(0,selStart);
-   var s2 = (txtarea.value).substring(selStart, selEnd)
-   var s3 = (txtarea.value).substring(selEnd, selLength);
-   txtarea.value = s1 + s_open + s2 + s_close + s3;
-  } else {
-   txtarea.value += s_open + s_close;
-  }
-   return;
+
+    var txtarea = document.getElementById(field_id);
+    var selStart = txtarea.selectionStart;
+    var selEnd = txtarea.selectionEnd;
+    var selLength = txtarea.textLength;
+
+    if (selLength>0){
+        var s1 = (txtarea.value).substring(0,selStart);
+        var s2 = (txtarea.value).substring(selStart, selEnd)
+        var s3 = (txtarea.value).substring(selEnd, selLength);
+        txtarea.value = s1 + s_open + s2 + s_close + s3;
+    } else {
+        txtarea.value += s_open + s_close;
+    }
+
+    return;
+    
 } 
 
 function addTagUrl(field_id)
 {
-   var txtarea = document.getElementById(field_id);
-   var link_url = prompt('Адрес ссылки (URL):');
-   var link_name = prompt('Название ссылки (не обязательно):');   
-   if (link_url=='') { return; }   
-   if (link_name.length > 0){txtarea.value += '[url='+link_url+']' + link_name + '[/url]';} 
-   else {txtarea.value += '[url]' + link_url + '[/url]';}
-   return;
+
+    var link_name_def = '';
+
+    var txtarea = document.getElementById(field_id);
+
+    if (txtarea.textLength > 0){
+        link_name_def = (txtarea.value).substring(txtarea.selectionStart, txtarea.selectionEnd);
+    }
+
+    var tag         = '';
+    var link_url    = prompt('Адрес ссылки (URL):');
+    var link_name   = prompt('Название ссылки (не обязательно):', link_name_def);
+
+    if (link_url=='') { return; }
+   
+    if (link_name.length > 0){
+        tag = '[url='+link_url+']' + link_name + '[/url]';}
+    else {
+        tag = '[url]' + link_url + '[/url]';
+    }
+
+    insertTagAtCursor(field_id, tag);
+
+    return;
+
 } 
 
 function addTagEmail(field_id)
 {
-   var txtarea = document.getElementById(field_id);
-   var link_url = prompt('Адрес электронной почты:');  
-   if (link_url.length > 0){txtarea.value += '[email]' + link_url + '[/email]';}
+    var link_url = prompt('Адрес электронной почты:');
+    if (link_url.length > 0){
+        var tag = '[email]' + link_url + '[/email]';
+        insertTagAtCursor(field_id, tag);
+    }
 	return;
 }
 
 function addTagAudio(field_id)
 {
-   var txtarea = document.getElementById(field_id);
-   var link_url = prompt('Ссылка на mp3-файл:');
-   if (link_url.length > 0){txtarea.value += '[audio]' + link_url + '[/audio]';}
+    var link_url = prompt('Ссылка на mp3-файл:');
+    var tag = '';
+    if (link_url.length > 0){
+        tag = '[audio]' + link_url + '[/audio]';        
+    }
+    insertTagAtCursor(field_id, tag);
 	return;
 }
 
 function addTagVideo(field_id)
 {
-   var txtarea = document.getElementById(field_id);
-   var link_url = prompt('Код видео (Youtube/Rutube):');  
-   if (link_url.length > 0){txtarea.value += '[video]' + link_url + '[/video]';}
+    var txtarea     = document.getElementById(field_id);
+    var link_url    = prompt('Код видео (Youtube/Rutube):');
+    var tag         = '';
+
+    if (link_url.length > 0){
+        tag = '[video]' + link_url + '[/video]';
+        insertTagAtCursor(field_id, tag);
+    }    
+
 	return;
+
 }
 
 function addImage()
@@ -106,27 +141,65 @@ function loadImage(field_id, session_id, placekind)
 
 
 function imageLoaded(field_id, data, placekind){
-   var txtarea = document.getElementById(field_id);
-	txtarea.value += '[IMG]/upload/'+placekind+'/'+data+'[/IMG]';
-	return;
+    var tag = '[IMG]/upload/'+placekind+'/'+data+'[/IMG]';
+    insertTagAtCursor(field_id, tag);
+    return;
 }
 
 function addTagQuote(field_id)
 {
-   var txtarea = document.getElementById(field_id);
-   var q_text = '';
-   q_text = prompt('Текст цитаты:');
-   var q_user = prompt('Автор цитаты (не обязательно):');   
-   if (q_text=='') { return; }   
-   if (q_user.length > 0){txtarea.value += '[quote='+q_user+']' + q_text + '[/quote]';} 
-   else {txtarea.value += '[quote]' + q_text + '[/quote]';}
-   return;
+
+    var q_text_def = '';
+
+    var txtarea = document.getElementById(field_id);
+
+    if (txtarea.textLength > 0){
+        q_text_def = (txtarea.value).substring(txtarea.selectionStart, txtarea.selectionEnd);
+    }
+
+
+    var q_text = prompt('Текст цитаты:', q_text_def);
+    var q_user = prompt('Автор цитаты (не обязательно):');
+    var tag = '';
+
+    if (q_text=='') { return; }
+
+    if (q_user.length > 0){
+        tag = '[quote='+q_user+']' + q_text + '[/quote]';
+    } else {
+        tag = '[quote]' + q_text + '[/quote]';
+    }
+    
+    insertTagAtCursor(field_id, tag);
+
+    return;
+
 } 
 
 function insertAlbumImage(field_id){
-	var path = document.msgform.photolist.options[document.msgform.photolist.selectedIndex].value;
-	document.msgform.message.value += '[IMG]/images/users/photos/medium/'+path+'[/IMG]';
+
+    var path = document.msgform.photolist.options[document.msgform.photolist.selectedIndex].value;
+    var tag  = '[IMG]/images/users/photos/medium/'+path+'[/IMG]';
+
+    insertTagAtCursor(field_id, tag);
+
 	$('#albumimginsert').hide();
+
+}
+
+function insertTagAtCursor(field_id, tag){
+
+    if (tag == ''){ return; }
+
+    var txtarea     = document.getElementById(field_id);
+    var selStart    = txtarea.selectionStart;
+    var selEnd      = txtarea.selectionEnd;
+    var selLength   = txtarea.textLength;
+
+    var s1 = (txtarea.value).substring(0,selStart);
+    var s2 = (txtarea.value).substring(selEnd, selLength);
+    txtarea.value = s1 + tag + s2;
+    
 }
 
 function addAlbumImage(){
@@ -136,8 +209,9 @@ function addAlbumImage(){
 
 function addTagCut(field_id)
 {
-   var txtarea = document.getElementById(field_id);
-   var cut_text = prompt('Заголовок ссылки на полный текст поста:', 'Читать далее...');
-   if (cut_text.length > 0){ txtarea.value += '[cut=' + cut_text + ']'; }
-	return;
+    var txtarea = document.getElementById(field_id);
+    var cut_text = prompt('Заголовок ссылки на полный текст поста:', 'Читать далее...');
+    var tag = '[cut=' + cut_text + ']';
+    insertTagAtCursor(field_id, tag);
+    return;
 }
