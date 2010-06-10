@@ -1,57 +1,79 @@
+function getCaretPos(obj) {
+	obj.focus();
+	if (document.selection) { // IE
+    var sel = document.selection.createRange();
+    var clone = sel.duplicate();
+    sel.collapse(true);
+    clone.moveToElementText(obj);
+    clone.setEndPoint('EndToEnd', sel);
+    return clone.text.length;
+  } else if (obj.selectionStart!==false) return obj.selectionStart; // Gecko
+  else return 0;
+}
+
+function replaceSelectedText(obj,cbFunc,s_open, s_close){
+	obj.focus();
+	if (document.selection) {
+		var s = document.selection.createRange(); 
+		if (s.text) {
+			eval("s.text="+cbFunc+"(s.text,s_open, s_close);");
+			s.select();
+			return true;
+		}
+	} else if (typeof(obj.selectionStart)=="number") {
+		if (obj.selectionStart!=obj.selectionEnd) {
+			var start = obj.selectionStart;
+			var end = obj.selectionEnd;
+			eval("var rs = "+cbFunc+"(obj.value.substr(start,end-start),s_open, s_close);");
+			obj.value = obj.value.substr(0,start)+rs+obj.value.substr(end);
+			obj.setSelectionRange(end,end);
+		}
+		return true;
+	}
+	return false;
+}
+
+function insertTag(s,s_open, s_close){
+	return s_open + s + s_close;
+}
+
 function addSmile(tag, field_id){
 	var txtarea = document.getElementById(field_id);
-	txtarea.value += ' :' + tag + ': ';
+	var pos = getCaretPos(txtarea);
+	txtarea.value = txtarea.value.substring(0,pos) + ' :' + tag + ': ' + txtarea.value.substring(pos+1,txtarea.value.length);
 	$('#smilespanel').hide();
 }
 
 function addTag(field_id, s_open, s_close){
    var txtarea = document.getElementById(field_id);
-   var selStart = txtarea.selectionStart;
-   var selEnd = txtarea.selectionEnd;
-   var selLength = txtarea.textLength;
-  if (selLength>0){
-  var s1 = (txtarea.value).substring(0,selStart);
-   var s2 = (txtarea.value).substring(selStart, selEnd)
-   var s3 = (txtarea.value).substring(selEnd, selLength);
-   txtarea.value = s1 + s_open + s2 + s_close + s3;
-  } else {
-   txtarea.value += s_open + s_close;
-  }
+   replaceSelectedText(txtarea,'insertTag',s_open, s_close);
    return;
 } 
 
-function addTagUrl(field_id)
-{
+function addTagUrl(field_id){
    var txtarea = document.getElementById(field_id);
    var link_url = prompt('Адрес ссылки (URL):');
-   var link_name = prompt('Название ссылки (не обязательно):');   
+   var link_name = prompt('Название ссылки (не обязательно):'); 
+   var pos = getCaretPos(txtarea);
    if (link_url=='') { return; }   
-   if (link_name.length > 0){txtarea.value += '[url='+link_url+']' + link_name + '[/url]';} 
-   else {txtarea.value += '[url]' + link_url + '[/url]';}
+   if (link_name.length > 0){txtarea.value = txtarea.value.substring(0,pos) + '[url='+link_url+']' + link_name + '[/url]'+ txtarea.value.substring(pos+1,txtarea.value.length);} 
+   else {txtarea.value = txtarea.value.substring(0,pos) +  '[url]' + link_url + '[/url]'+ txtarea.value.substring(pos+1,txtarea.value.length);}
    return;
 } 
 
-function addTagEmail(field_id)
-{
+function addTagEmail(field_id){
    var txtarea = document.getElementById(field_id);
-   var link_url = prompt('Адрес электронной почты:');  
-   if (link_url.length > 0){txtarea.value += '[email]' + link_url + '[/email]';}
-	return;
+   var s_open = '[email]';
+   var s_close = '[/email]';
+   replaceSelectedText(txtarea,'insertTag',s_open, s_close);
+   return;
 }
 
-function addTagAudio(field_id)
-{
+function addTagVideo(field_id){
    var txtarea = document.getElementById(field_id);
-   var link_url = prompt('Ссылка на mp3-файл:');
-   if (link_url.length > 0){txtarea.value += '[audio]' + link_url + '[/audio]';}
-	return;
-}
-
-function addTagVideo(field_id)
-{
-   var txtarea = document.getElementById(field_id);
-   var link_url = prompt('Код видео (Youtube/Rutube):');  
-   if (link_url.length > 0){txtarea.value += '[video]' + link_url + '[/video]';}
+   var link_url = prompt('Код видео (Youtube/Rutube):'); 
+   var pos = getCaretPos(txtarea);  
+   if (link_url.length > 0){txtarea.value = txtarea.value.substring(0,pos) + '[video]' + link_url + '[/video]' + txtarea.value.substring(pos+1,txtarea.value.length);}
 	return;
 }
 
@@ -107,8 +129,10 @@ function loadImage(field_id, session_id, placekind)
 
 function imageLoaded(field_id, data, placekind){
    var txtarea = document.getElementById(field_id);
-	txtarea.value += '[IMG]/upload/'+placekind+'/'+data+'[/IMG]';
-	return;
+   var txtval = txtarea.value;
+   var pos = getCaretPos(txtarea);
+   txtarea.value = txtval.substring(0,pos) + ' [IMG]/upload/'+placekind+'/'+data+'[/IMG] ' + txtval.substring(pos+1,txtval.length);
+   return;
 }
 
 function addTagQuote(field_id)
@@ -116,16 +140,17 @@ function addTagQuote(field_id)
    var txtarea = document.getElementById(field_id);
    var q_text = '';
    q_text = prompt('Текст цитаты:');
-   var q_user = prompt('Автор цитаты (не обязательно):');   
+   var q_user = prompt('Автор цитаты (не обязательно):');
+   var pos = getCaretPos(txtarea);
    if (q_text=='') { return; }   
-   if (q_user.length > 0){txtarea.value += '[quote='+q_user+']' + q_text + '[/quote]';} 
-   else {txtarea.value += '[quote]' + q_text + '[/quote]';}
+   if (q_user.length > 0){txtarea.value = txtarea.value.substring(0,pos) + '[quote='+q_user+']' + q_text + '[/quote]' + txtarea.value.substring(pos+1,txtarea.value.length);} 
+   else {txtarea.value = txtarea.value.substring(0,pos) + '[quote]' + q_text + '[/quote]' + txtarea.value.substring(pos+1,txtarea.value.length);}
    return;
 } 
 
 function insertAlbumImage(field_id){
 	var path = document.msgform.photolist.options[document.msgform.photolist.selectedIndex].value;
-	document.msgform.message.value += '[IMG]/images/users/photos/medium/'+path+'[/IMG]';
+	document.msgform.message.value = '[IMG]/images/users/photos/medium/'+path+'[/IMG]';
 	$('#albumimginsert').hide();
 }
 
@@ -138,6 +163,7 @@ function addTagCut(field_id)
 {
    var txtarea = document.getElementById(field_id);
    var cut_text = prompt('Заголовок ссылки на полный текст поста:', 'Читать далее...');
-   if (cut_text.length > 0){ txtarea.value += '[cut=' + cut_text + ']'; }
+   var pos = getCaretPos(txtarea);
+   if (cut_text.length > 0){ txtarea.value = txtarea.value.substring(0,pos) + '[cut=' + cut_text + ']' + txtarea.value.substring(pos+1,txtarea.value.length);}
 	return;
 }
