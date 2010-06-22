@@ -49,34 +49,6 @@ function pageBar($current, $perpage, $orderby, $orderto, $records){
 	return $html;
 }
 
-function pageBarStatic($current, $perpage, $user_id, $page='entries', $table='cms_comment'){
-    $inDB   = cmsDatabase::getInstance();
-    global $_LANG;
-	$html = '';
-	
-	$result = $inDB->query("SELECT id FROM $table WHERE user_id = $user_id");
-	$records = $inDB->num_rows($result);
-	
-	if ($records){
-		$pages = ceil($records / $perpage);
-
-		if($pages>1){
-			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
-			for ($p=1; $p<=$pages; $p++){
-				if ($p != $current) {			
-					$link = '/users/'.$user_id.'/'.$page.$p.'.html';
-					$html .= ' <a href="'.$link.'" class="pagebar_page">'.$p.'</a> ';		
-				} else {
-					$html .= '<span class="pagebar_current">'.$p.'</span>';
-				}
-			}
-			$html .= '</div>';
-		}
-	}
-	return $html;
-}
-
 function pageSelectFiles($records, $current, $perpage){
     $inDB   = cmsDatabase::getInstance();
 	$html = '';
@@ -135,33 +107,6 @@ function pageBarBoard($user_id, $current, $perpage){
 					if ($p==1) { $pnum = ''; } else { $pnum = $p; }
 					$link = '/users/'.$user_id.'/board'.$pnum.'.html';					
 					$html .= ' <a href="'.$link.'" class="pagebar_page">'.$p.'</a> ';		
-				} else {
-					$html .= '<span class="pagebar_current">'.$p.'</span>';
-				}
-			}
-			$html .= '</div>';
-		}
-	}
-	return $html;
-}
-
-function pageBarAvatars($current, $perpage, $records, $userid){
-
-    global $_LANG;
-
-    $inDB   = cmsDatabase::getInstance();
-	$html = '';
-
-	if ($records){
-		$pages = ceil($records / $perpage);
-
-		if($pages>1){
-			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
-			for ($p=1; $p<=$pages; $p++){
-				if ($p != $current) {
-					$link = '/users/'.$userid.'/select-avatar-'.$p.'.html';
-					$html .= ' <a href="'.$link.'" class="pagebar_page">'.$p.'</a> ';
 				} else {
 					$html .= '<span class="pagebar_current">'.$p.'</span>';
 				}
@@ -609,17 +554,17 @@ if ($do=='editprofile'){
 					$smarty->display('com_users_edit_profile.tpl');
 				}
 				
-			} else { usrAccessDenied(); }
+			} else { echo usrAccessDenied(); }
 		
-		} else { usrAccessDenied(); }
+		} else { echo usrAccessDenied(); }
 	
-	} else { usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 
 }
 /////////////////////////////// VIEW USER COMMENTS /////////////////////////////////////////////////////////////////////////////////////
 if ($do=='comments'){
 
-	$sql = "SELECT * FROM cms_users WHERE id = $id";
+	$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
 	$result = $inDB->query($sql) ;
 
 	if ($inDB->num_rows($result)){
@@ -632,12 +577,10 @@ if ($do=='comments'){
 		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 		$inPage->addPathway($_LANG['COMMENTS'], $_SERVER['REQUEST_URI']);
 		
-		if ($page>1) { echo '<div class="con_description"><strong>'.$_LANG['PAGE'].':</strong> '.$page.'</div>'; }
-
-		$sql = "SELECT c.*, DATE_FORMAT(c.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate,  IFNULL(v.total_rating, 0) as votes
+		$sql = "SELECT c.*,  IFNULL(v.total_rating, 0) as votes
                 FROM cms_comments c
                 LEFT JOIN cms_ratings_total v ON v.item_id = c.id AND v.target = 'comment'
-                WHERE c.user_id = $id AND c.published = 1
+                WHERE c.user_id = '$id' AND c.published = 1
                 ORDER BY c.pubdate DESC
 				LIMIT ".(($page-1)*$perpage).", $perpage";
 		$result = $inDB->query($sql) ;
@@ -645,14 +588,18 @@ if ($do=='comments'){
 		if ($inDB->num_rows($result)>0){
 			$comments = array();
 			while ($com = $inDB->fetch_assoc($result)){
-                $com['content'] = nl2br($inCore->parseSmiles($com['content'], true));
+                $com['content'] = $inCore->parseSmiles($com['content'], true);
                 if ($com['votes']>0){
                     $com['votes'] = '<span class="cmm_good">+'.$com['votes'].'</span>';
                 } elseif ($com['votes']<0){
                     $com['votes'] = '<span class="cmm_bad">'.$com['votes'].'</span>';
                 }
+				$com['fpubdate'] = $inCore->dateFormat($com['pubdate']);
                 $comments[] = $com;
 			}
+			// —читаем общее число комментариев
+			$result_total = $inDB->query("SELECT id FROM cms_comments WHERE user_id = '$id' AND published = 1");
+			$records_total = $inDB->num_rows($result_total);
 			
 			$smarty = $inCore->initSmarty('components', 'com_users_comments.tpl');
             $smarty->assign('user_id', $id);
@@ -660,17 +607,17 @@ if ($do=='comments'){
 			$smarty->assign('login', $usr['login']);
 			$smarty->assign('comments', $comments);
             $smarty->assign('avatar', usrImage($id));
-			$smarty->assign('pagebar', pageBarStatic($page, $perpage, $id, 'comments', 'cms_comments'));
+			$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, '/users/%user_id%/comments%page%.html', array('user_id'=>$id)));
 			$smarty->display('com_users_comments.tpl');	
 
 		} else { echo '<p>'.$_LANG['NO_USER_COMMENT'].'</p>';	}
-	} else { echo '<p>'.$_LANG['USER_NOT_FOUND_TEXT'].'</p>'; }
+	} else { cmsCore::error404(); }
 		
 }
 /////////////////////////////// VIEW USER POSTS /////////////////////////////////////////////////////////////////////////////////////
 if ($do=='forumposts'){
 
-	$sql = "SELECT * FROM cms_users WHERE id = $id";
+	$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
 	$result = $inDB->query($sql) ;
     
 	if ($inDB->num_rows($result)){
@@ -683,11 +630,10 @@ if ($do=='forumposts'){
         $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
         $inPage->addPathway($_LANG['POSTS_IN_FORUM'], $_SERVER['REQUEST_URI']);
 
-		if ($page>1) { echo '<div class="con_description"><strong>'.$_LANG['PAGE'].':</strong> '.$page.'</div>'; }
-
-		$sql = "SELECT *, DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as date, t.title as topic, p.id as id, t.id as thread_id
-                FROM cms_forum_posts p, cms_forum_threads t
-                WHERE p.user_id = $id AND p.thread_id = t.id
+		$sql = "SELECT *, t.title as topic, p.id as id, t.id as thread_id
+                FROM cms_forum_posts p
+				LEFT JOIN cms_forum_threads t ON t.id = p.thread_id
+                WHERE p.user_id = '$id'
                 ORDER BY p.pubdate DESC
                 LIMIT ".(($page-1)*$perpage).", $perpage";
 				
@@ -699,20 +645,24 @@ if ($do=='forumposts'){
 				$post['link'] = '/forum/thread'.$post['thread_id'].'.html#'.$post['id'];
                 $post['content'] = $inCore->parseSmiles($post['content'], true);
 				$post['content'] = str_replace("&amp;", '&', $post['content']);
+				$post['date'] = $inCore->dateFormat($post['pubdate']);
 				$posts[] = $post;
 			}
-
+			// —читаем общее число постов на форуме
+			$result_total = $inDB->query("SELECT id FROM cms_forum_posts WHERE user_id = $id");
+			$records_total = $inDB->num_rows($result_total);
+			
 			$smarty = $inCore->initSmarty('components', 'com_users_forumposts.tpl');
             $smarty->assign('user_id', $id);
             $smarty->assign('user_login', $usr['login']);
 			$smarty->assign('nickname', $usr['nickname']);
 			$smarty->assign('posts', $posts);
             $smarty->assign('avatar', usrImage($id));
-			$smarty->assign('pagebar', pageBarStatic($page, $perpage, $id, 'forumposts', 'cms_forum_posts'));
+			$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, '/users/%user_id%/forumposts%page%.html', array('user_id'=>$id)));
 			$smarty->display('com_users_forumposts.tpl');
 
 		} else { echo '<p>'.$_LANG['NOT_USER_POSTS_IN_FORUM'].'</p>';	}
-	} else { echo '<p>'.$_LANG['USER_NOT_FOUND_TEXT'].'</p>'; }
+	} else { cmsCore::error404(); }
 
 }
 /////////////////////////////// VIEW PROFILE /////////////////////////////////////////////////////////////////////////////////////////
@@ -735,8 +685,7 @@ if ($do=='profile'){
 
 	if (!$inUser->id && !$cfg['sw_guest']) {
         $inPage->setTitle($_LANG['ACCESS_DENIED']);
-		$inPage->printHeading($_LANG['ACCESS_DENIED']);
-		echo '<p>'.$_LANG['ONLY_FOR_REGISTERED_USERS'].'</p>';
+		echo usrNeedReg();
         return;
 	}
 
@@ -744,7 +693,7 @@ if ($do=='profile'){
     $inPage->addPathway($usr['nickname']);
 
     if ( !(usrAllowed($usr['allow_who'], $id) || $inUser->is_admin) ){
-        usrNotAllowed();
+        echo usrNotAllowed();
         return;
     }
 
@@ -783,9 +732,9 @@ if ($do=='profile'){
     }
 
     $usr['awards_html']			= usrAwards($usr['id']);
-    $usr['comments_html'] 		= usrComments($usr['id'], 5);
-    $usr['forum_html'] 			= usrForumPosts($usr['id'], 5);
-    $usr['photos_html']			= usrPhotos($usr['id'], 4);
+//    $usr['comments_html'] 		= usrComments($usr['id'], 5);
+//    $usr['forum_html'] 			= usrForumPosts($usr['id'], 5);
+//    $usr['photos_html']			= usrPhotos($usr['id'], 4);
     $usr['wall_html']			= cmsUser::getUserWall($usr['id']);
     $usr['addwall_html'] 		= cmsUser::getUserAddWall($usr['id']);
     $usr['banned'] 				= cmsUser::isBanned($usr['id']);
@@ -894,16 +843,16 @@ if ($do=='messages'){
 				$inPage->setTitle($_LANG['MY_MESS']);
 				$inPage->addPathway($_LANG['MY_MESS'], '/users/'.$id.'/messages.html');
 				include 'components/users/messages.php';			
-			} else { usrAccessDenied(); }
-		} else { echo '<p>'.$_LANG['USER_NOT_FOUND_TEXT'].'</p>'; }
-	} else { usrAccessDenied(); }
+			} else { echo usrAccessDenied(); }
+		} else { cmsCore::error404(); }
+	} else { echo usrAccessDenied(); }
 	
 }
 /////////////////////////////// AVATAR UPLOAD /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='avatar'){
 
 	if (usrCheckAuth() && @$inUser->id==$id){
-		$sql = "SELECT * FROM cms_users WHERE id = $id";
+		$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
 		$result = $inDB->query($sql) ;
 
 		if ($inDB->num_rows($result)){
@@ -970,8 +919,8 @@ if ($do=='avatar'){
 						echo '<ul><li><a href="/users/'.$userid.'/avatar.html">'.$_LANG['REPEAT'].'</a></li>'."\n";
 						echo '<li><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$_LANG['BACK_TO_PROFILE'].'</a></li></ul>'."\n";
 						
-					} else { usrAccessDenied(); }
-				} else { usrAccessDenied(); }
+					} else { echo usrAccessDenied(); }
+				} else { echo usrAccessDenied(); }
 			
 			} else {
 				$smarty = $inCore->initSmarty('components', 'com_users_avatar_upload.tpl');
@@ -980,7 +929,7 @@ if ($do=='avatar'){
 			}	
 		}
 	}//auth
-	else { usrAccessDenied(); }
+	else { echo usrAccessDenied(); }
 }
 /////////////////////////////// AVATAR LIBRARY /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='select_avatar'){
@@ -1028,7 +977,7 @@ if ($do=='select_avatar'){
                 $smarty->assign('maxcols', $maxcols);
                 $smarty->assign('page', $page);
                 $smarty->assign('perpage', $perpage);
-                $smarty->assign('pagebar', pageBarAvatars($page, $perpage, $total, $id));
+				$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/users/%user_id%/select-avatar-%page%.html', array('user_id'=>$id)));
             $smarty->display('com_users_avatars.tpl');
 
         } else {
@@ -1081,7 +1030,7 @@ if ($do=='select_avatar'){
         }
 
 	}//auth
-	else { usrAccessDenied(); }
+	else { echo usrAccessDenied(); }
 }
 /////////////////////////////// PHOTO UPLOAD /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='addphoto'){
@@ -1090,7 +1039,7 @@ if ($do=='addphoto'){
     $inCore->loadLanguage('components/photos');
 
 	if ( $inUser->id==$id || $inCore->userIsAdmin($inUser->id) ){
-		$sql = "SELECT * FROM cms_users WHERE id = $id";
+		$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
 		$result = $inDB->query($sql) ;
 
 		if ($inDB->num_rows($result)){
@@ -1150,8 +1099,8 @@ if ($do=='addphoto'){
 							echo '<p><strong>'.$_LANG['ERROR'].':</strong> '.$inCore->uploadError().'!</p>';
 						}
 										
-					} else { usrAccessDenied(); }
-				} else { usrAccessDenied(); }
+					} else { echo usrAccessDenied(); }
+				} else { echo usrAccessDenied(); }
 			
 			} else {
 				if ($inCore->inRequest('submit')){		
@@ -1204,7 +1153,7 @@ if ($do=='addphoto'){
 				}
 			}	
 		}
-	} else { usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 }
 /////////////////////////////// PHOTO DELETE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delphoto'){
@@ -1215,7 +1164,7 @@ if ($do=='delphoto'){
 	
 	if (usrCheckAuth() && (@$inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
 		if (!isset($_POST['godelete'])){
-			$sql = "SELECT * FROM cms_users WHERE id = $id";
+			$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
 			$result = $inDB->query($sql);
 			if ($inDB->num_rows($result)){
 				$inPage->backButton(false);
@@ -1238,7 +1187,7 @@ if ($do=='delphoto'){
 					$smarty->assign('confirm', $confirm);
 					$smarty->display('action_confirm.tpl');
 
-				} else { usrAccessDenied(); }
+				} else { echo usrAccessDenied(); }
 			}
 		} else {
 			$sql = "SELECT imageurl FROM cms_user_photos WHERE id = $photoid AND user_id = $id";
@@ -1254,7 +1203,7 @@ if ($do=='delphoto'){
 			}			
 			header('location:/users/'.$id.'/photoalbum.html');
 		}
-	} else { usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 }
 /////////////////////////////// PHOTO EDIT /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='editphoto'){
@@ -1267,7 +1216,7 @@ if ($do=='editphoto'){
 	$photoid = @intval($_REQUEST['photoid']);	
 	
 	if (usrCheckAuth() && ($user_id==$id||$inCore->userIsAdmin($user_id))){
-		$sql = "SELECT * FROM cms_users WHERE id = $id";
+		$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
 		$result = $inDB->query($sql);
 
 		if ($inDB->num_rows($result)){
@@ -1352,21 +1301,21 @@ if ($do=='editphoto'){
 									$smarty->display('com_photos_edit.tpl');
 									
 								}//photo exists
-								else { usrAccessDenied(); }
+								else { echo usrAccessDenied(); }
 							} //isset photo id
-							else { usrAccessDenied(); }
+							else { echo usrAccessDenied(); }
 						}//print form
-		} else { usrAccessDenied(); } //user exists
+		} else { echo usrAccessDenied(); } //user exists
 	}//auth
-	else { usrAccessDenied(); }
+	else { echo usrAccessDenied(); }
 }
 /////////////////////////////// VIEW ALBUM /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='viewalbum'){
 
-    $sql = "SELECT * FROM cms_users WHERE id = $id";
+    $sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
 	$result = $inDB->query($sql);
 	
-	if (!$inDB->num_rows($result)){ echo '<p>'.$_LANG['USER_NOT_FOUND_TEXT'].'</p>'; return; }
+	if (!$inDB->num_rows($result)){ cmsCore::error404(); }
 
     $usr = $inDB->fetch_assoc($result);
     $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
@@ -1439,14 +1388,13 @@ if ($do=='viewalbum'){
 	$smarty->assign('user_id', $id);
 	$smarty->assign('my_profile', $my_profile);
 	$smarty->assign('pagebar', $pagination);
-	$smarty->assign('_LANG', $_LANG);
     $smarty->display('com_users_photos.tpl');
 
 }
 
 /////////////////////////////// VIEW BOARD ENTRIES ///////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='viewboard'){ 
-	$sql = "SELECT * FROM cms_users WHERE id = $id";
+	$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
 	$result = $inDB->query($sql);
 	
 	if ($inDB->num_rows($result)>0){
@@ -1548,7 +1496,7 @@ if ($do=='friendlist'){
 			echo usrFriends($usr['id'], false);
 		
 		} else { echo usrNeedReg(); }
-	} else { echo '<p>'.$_LANG['USER_NOT_FOUND_TEXT'].'</p>'; }
+	} else { cmsCore::error404(); }
 }
 
 /////////////////////////////// VIEW PHOTO /////////////////////////////////////////////////////////////////////////////////////////
@@ -1631,7 +1579,7 @@ if ($do=='viewphoto'){
 						comments('userphoto', $photo['id']);
 					}					
 				
-			//	} else { usrNotAllowed(); }
+			//	} else { echo usrNotAllowed(); }
 							
 			} else {
 				echo '<div class="con_heading">'.$_LANG['PHOTO_NOT_FOUND'].'</div>';
@@ -1690,7 +1638,7 @@ if ($do=='addfriend'){
 				$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 		}//!goadd
 		} else { $inCore->redirectBack(); }
-	} else { usrAccessDenied(); } //usrCheckAuth
+	} else { echo usrAccessDenied(); } //usrCheckAuth
 }//do
 /////////////////////////////// DEL FRIEND /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delfriend'){
@@ -1704,7 +1652,7 @@ if ($do=='delfriend'){
 
 		header('location:'.$_SERVER['HTTP_REFERER']);
 
-	} else { usrAccessDenied(); } //usrCheckAuth
+	} else { echo usrAccessDenied(); } //usrCheckAuth
 }//do
 /////////////////////////////// SEND MESSAGE ///////////////////////////////////////////////////////////////////////////////////////
 if ($do=='sendmessage'){
@@ -1829,7 +1777,7 @@ if ($do=='sendmessage'){
 			}
 		}
 	} else { 
-        usrAccessDenied();
+        echo usrAccessDenied();
         } //usrCheckAuth
 }//do
 /////////////////////////////// DEL MESSAGE /////////////////////////////////////////////////////////////////////////////////////
@@ -1955,7 +1903,7 @@ if ($do=='giveaward'){
 					$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 				}						
 		}
-	} else { usrAccessDenied(); } //usrCheckAuth
+	} else { echo usrAccessDenied(); } //usrCheckAuth
 }//do
 /////////////////////////////// DELETE AWARD ///////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delaward'){
@@ -2004,11 +1952,11 @@ if ($do == 'delprofile'){
 						echo '<div class="con_heading">'.$_LANG['DELETING_PROFILE'].'</div>';
 						echo '<p style="margin-bottom:30px">'.$_LANG['REALLY_DEL_PROFILE'].'<br/> '.$_LANG['REALLY_DEL_PROFILE_TEXT'].'</p>';
 						echo '<a href="/users/'.$id.'/delprofile-yes.html" class="usr_btnlink">'.$_LANG['YES'].'</a><a href="javascript:window.history.go(-1)" class="usr_btnlink">'.$_LANG['NO'].'</a>';
-					} else { usrAccessDenied(); }					
+					} else { echo usrAccessDenied(); }					
 				}	
 			}
 		}
-	} else { usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 }
 /////////////////////////////// RESTORE PROFILE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='restoreprofile'){
@@ -2350,8 +2298,8 @@ if ($do=='addfile'){
 				}
 			}
 		
-		} else { usrAccessDenied(); }	
-	} else { usrAccessDenied(); }
+		} else { echo usrAccessDenied(); }	
+	} else { echo usrAccessDenied(); }
 }
 
 /////////////////////////////// FILE DELETE /////////////////////////////////////////////////////////////////////////////////////////
@@ -2378,7 +2326,7 @@ if ($do=='delfile'){
 							<input style="font-size:24px; width:100px" type="button" name="cancel" value="'.$_LANG['NO'].'" onclick="window.history.go(-1)" />
 							<input style="font-size:24px; width:100px" type="submit" name="godelete" value="'.$_LANG['YES'].'" />
 						 </p></form></div>';
-				} else { usrAccessDenied(); }
+				} else { echo usrAccessDenied(); }
 			}
 		} else {
 			$sql = "SELECT filename FROM cms_user_files WHERE id = $fileid AND user_id = $id";
@@ -2390,7 +2338,7 @@ if ($do=='delfile'){
 			}			
 			header('location:/users/'.$id.'/files.html');
 		}
-	} else { usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 }
 
 /////////////////////////////// MULTIPLE FILES DELETE /////////////////////////////////////////////////////////////////////////////////////////
@@ -2436,7 +2384,7 @@ if ($do=='delfilelist'){
 							echo '<input style="font-size:24px; width:100px" type="submit" name="godelete" value="'.$_LANG['YES'].'" />';
 						echo '</div>';
 					echo '</form>';
-				} else { usrAccessDenied(); }
+				} else { echo usrAccessDenied(); }
 			}
 		} else {
 				//build file list sql
@@ -2457,7 +2405,7 @@ if ($do=='delfilelist'){
 				}			
 				header('location:/users/'.$id.'/files.html');
 		}
-	} else { usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 }
 
 /////////////////////////////// MULTIPLE FILES PUBLISHING /////////////////////////////////////////////////////////////////////////////////////////
@@ -2477,7 +2425,7 @@ if ($do=='pubfilelist'){
 				
 		$inDB->query("UPDATE cms_user_files SET allow_who = '$allow' WHERE $findsql") ;
 		header('location:/users/'.$id.'/files.html');
-	} else { usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 }
 
 /////////////////////////////// VIEW AWARDS LIST ///////////////////////////////////////////////////////////////////////////////////////	

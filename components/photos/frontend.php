@@ -622,13 +622,13 @@ if ($do=='editphoto'){
 									$smarty->assign('photo_max_size', $photo_max_size);
 									$smarty->display('com_photos_edit.tpl');
 								}//photo exists
-								else { usrAccessDenied(); }
+								else { echo usrAccessDenied(); }
 							} //isset photo id
-							else { usrAccessDenied(); }
+							else { echo usrAccessDenied(); }
 						}//print form
-		} else { usrAccessDenied(); } //user exists
+		} else { echo usrAccessDenied(); } //user exists
 	}//auth
-	else { usrAccessDenied(); }
+	else { echo usrAccessDenied(); }
 }
 /////////////////////////////// PHOTO MOVE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='movephoto'){
@@ -684,8 +684,8 @@ if ($do=='movephoto'){
 				header('location:/photos/'.$fid);
 			}
 			
-		} else { usrAccessDenied(); }
-	} else { usrAccessDenied(); }
+		} else { echo usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 	
 }
 /////////////////////////////// PHOTO DELETE /////////////////////////////////////////////////////////////////////////////////////////
@@ -733,13 +733,13 @@ if ($do=='delphoto'){
 					$smarty->assign('confirm', $confirm);
 					$smarty->display('action_confirm.tpl');
 						 
-				} else { usrAccessDenied(); }
+				} else { echo usrAccessDenied(); }
 			}
 		} else {
             $model->deletePhoto($photo_id);
 			header('location:/photos/'.$photo['album_id']);
 		}
-	} else { usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 }
 /////////////////////////////// VIEW LATEST PHOTOS ///////////////////////////////////////////////////////////////////////////////////
 if ($do=='latest'){

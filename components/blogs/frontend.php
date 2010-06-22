@@ -1150,7 +1150,7 @@ if ($do == 'delcat'){
                 $smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
                 $smarty->assign('confirm', $confirm);
                 $smarty->display('action_confirm.tpl');
-            } else { usrAccessDenied(); }
+            } else { echo usrAccessDenied(); }
         }
     }
 

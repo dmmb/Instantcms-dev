@@ -35,67 +35,6 @@ function usrFilesSize($user_id){
 
 }
 
-function usrMenu($user_id, $cfg, $is_banned=false){
-    $inCore = cmsCore::getInstance();
-    $inDB = cmsDatabase::getInstance();
-    $inUser = cmsUser::getInstance();
-	global $_LANG;
-	
-	if ($inUser->id) { $my_profile = ($inUser->id == $user_id ); } else { $my_profile = false; }
-	
-	//MENU FOR ALL
-	$html = '<div class="usr_profile_menu"><table cellpadding="0" cellspacing="1" align="center" style="margin-left:auto;margin-right:auto"><tr>';
-	if (!$is_banned){				
-		if(!$my_profile){
-			$html .= '<td><a href="/users/'.$user_id.'/sendmessage.html" title="'.$_LANG['WRITE_MESS'].'"><img src="/components/users/images/profilemenu/message.gif" border="0"/></a></td>';
-		}
-
-		if ($inUser->id && !$my_profile && $cfg['sw_friends']){
-			if (!usrIsFriends($user_id, $inUser->id)){
-				if (!usrIsFriends($user_id, $inUser->id, false)){				
-					$html .= '<td><a href="/users/'.$user_id.'/friendship.html" title="'.$_LANG['ADD_TO_FRIEND'].'"><img src="/components/users/images/profilemenu/friends.gif" border="0"/></a></td>';
-				} else {
-					$html .= '<td><a href="/users/'.$user_id.'/nofriends.html" title="'.$_LANG['STOP_FRIENDLY'].'"><img src="/components/users/images/profilemenu/nofriends.gif" border="0"/></a></td>';
-				}	
-			} else {
-				$html .= '<td><a href="/users/'.$user_id.'/nofriends.html" title="'.$_LANG['STOP_FRIENDLY'].'"><img src="/components/users/images/profilemenu/nofriends.gif" border="0"/></a></td>';
-			}
-		}
-		
-	}	
-		
-		if ($inUser->id && $inUser->id!=$user_id){
-			if ($inUser->is_admin && ($inUser->id==1 || $inCore->isAdminCan('admin/users'))){
-                if (!$is_banned){
-                    $html .= '<td><a href="/users/'.$user_id.'/giveaward.html" title="'.$_LANG['TO_AWARD'].'"><img src="/components/users/images/profilemenu/award.gif" border="0"/></a></td>';
-                    $html .= '<td><a href="/admin/index.php?view=userbanlist&do=add&to='.$user_id.'" title="'.$_LANG['TO_BANN'].'"><img src="/components/users/images/profilemenu/ban.gif" border="0"/></a></td>';
-                }
-                $html .= '<td><a href="/users/'.$user_id.'/delprofile.html" title="'.$_LANG['DEL_PROFILE'].'"><img src="/components/users/images/profilemenu/delprofile.gif" border="0"/></a></td>';
-			}
-		}
-
-	//PERSONAL MENU
-	if($my_profile){
-			if ($cfg['sw_msg']){
-				$html .= '<td><a href="/users/'.$user_id.'/messages.html" title="'.$_LANG['MY_MESS'].'"><img src="/components/users/images/profilemenu/message.gif" border="0"/></a></td>';
-			}
-			
-			$html .= '<td><a href="/users/'.$user_id.'/editprofile.html" title="'.$_LANG['CONFIG_PROFILE'].'"><img src="/components/users/images/profilemenu/edit.gif" border="0"/></a></td>';
-			$html .= '<td><a href="/users/'.$user_id.'/avatar.html" title="'.$_LANG['SET_AVATAR'].'"><img src="/components/users/images/profilemenu/avatar.gif" border="0"/></a></td>';
-			
-			if ((usrPhotoCount($user_id)<$cfg['photosize'] || $cfg['photosize']==0) && $cfg['sw_photo']){			
-				$html .= '<td><a href="/users/'.$user_id.'/addphoto.html" title="'.$_LANG['ADD_PHOTO'].'"><img src="/components/users/images/profilemenu/addphoto.gif" border="0"/></a></td>';
-			}
-						
-	}
-
-	$html .= '<td><a href="/users/'.$user_id.'/karma.html" title="'.$_LANG['KARMA_HISTORY'].'"><img src="/components/users/images/profilemenu/karma.gif" border="0"/></a></td>';
-	
-	$html .= '</tr></table></div>';
-	
-	return $html;
-}
-
 function usrPhotoCount($user_id, $with_public=true){
     $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
@@ -256,7 +195,7 @@ function usrAwards($user_id){
     $inUser = cmsUser::getInstance();
     global $_LANG;
 	$html = '';
-	$sql = "SELECT *, DATE_FORMAT(pubdate, '%d-%m-%Y') as fpubdate
+	$sql = "SELECT *
 			FROM cms_user_awards
 			WHERE user_id = $user_id
 			ORDER BY pubdate DESC
@@ -264,40 +203,24 @@ function usrAwards($user_id){
 	$result = $inDB->query($sql) ;
 	
 	if ($inDB->num_rows($result)>0){
-
+		$is_admin = false;
+		if ($inUser->id && ($inUser->id==$user_id || $inCore->userIsAdmin($inUser->id))){
+			$is_admin = true;
+		}
+		$aws = array();
 		while ($aw = $inDB->fetch_assoc($result)){
-			$html .= '<div class="usr_award_block">';
-			$html .= '<table style="width:100%; margin-bottom:2px;" cellspacing="2">';
-			$html .= '<tr>';
-				$html .= '<td class="usr_com_title"><strong>'.$aw['title'].'</strong> ';
-				if ($aw['award_id']>0){
-					$html .= '<td width="20" class="usr_awlist_link"><a href="/users/awardslist.html">?</a></td>';
-				} else {
-					if (isset($inUser->id)){
-						if ($inUser->id==$user_id || $inCore->userIsAdmin($inUser->id)){
-							$html .= '[<a href="/users/delaward'.$aw['id'].'.html">'.$_LANG['DELETE'].'</a>]';
-						}
-					}
-					$html .= '</td>';
-				}
-			$html .= '</tr>';
-			$html .= '<tr>';
-				if ($aw['award_id']>0){
-					$html .= '<td class="usr_com_body" colspan="2">';
-				} else {
-					$html .= '<td class="usr_com_body">';
-				}
-					$html .= '<table border="0" cellpadding="5" cellspacing="0"><tr>';
-						$html .= '<td valign="top"><img src="/images/users/awards/'.$aw['imageurl'].'" border="0" alt="'.$aw['title'].'"/></td>';											
-						$html .= '<td valign="top">'.$aw['description'].'<div class="usr_award_date">'.$aw['fpubdate'].'</div></td>';
-					$html .= '</tr></table>';
-				$html .= '</td>';
-			$html .= '</tr>';
-			$html .= '</table>';
-			$html .= '</div>';
+		$aw['pubdate'] = $inCore->dateFormat($aw['pubdate']);
+		$aws[] = $aw;
 		}
 	}
-	return $html;
+    ob_start();
+
+    $smarty = $inCore->initSmarty('components', 'com_users_awards.tpl');
+    $smarty->assign('aws', $aws);
+	$smarty->assign('is_admin', $is_admin);
+    $smarty->display('com_users_awards.tpl');
+
+	return ob_get_clean();
 }
 
 function usrForumPosts($user_id, $limit=5, $preview=true){
@@ -481,34 +404,42 @@ function usrCheckAuth(){
 
 function usrNeedReg(){
     global $_LANG;
-	echo '<h1 class="con_heading">'.$_LANG['ACCESS_DENIED'].'.</h1>';
-	echo '<p>'.$_LANG['ACCESS_ONLY_REGISTERED'].'</p>';
-	
-	return;
+    ob_start();
+	$smarty = cmsCore::initSmarty('components', 'com_error.tpl');
+	$smarty->assign('err_title', $_LANG['ACCESS_DENIED']);
+	$smarty->assign('err_content', $_LANG['ACCESS_ONLY_REGISTERED']);
+	$smarty->display('com_error.tpl');
+	return ob_get_clean();
 }
 
 function usrFriendOnly(){
     global $_LANG;
-	echo '<h1 class="con_heading">'.$_LANG['ACCESS_DENIED'].'.</h1>';
-	echo '<p>'.$_LANG['ACCESS_ONLY_FRIENDS'].'</p>';
-	
-	return;
+    ob_start();
+	$smarty = cmsCore::initSmarty('components', 'com_error.tpl');
+	$smarty->assign('err_title', $_LANG['ACCESS_DENIED']);
+	$smarty->assign('err_content', $_LANG['ACCESS_ONLY_FRIENDS']);
+	$smarty->display('com_error.tpl');
+	return ob_get_clean();
 }
 
 function usrAccessDenied(){
     global $_LANG;
-	echo '<h1 class="con_heading">'.$_LANG['ACCESS_DENIED'].'.</h1>';
-	echo '<p>'.$_LANG['ACCESS_NEED_AVTOR'].'</p>';
-	
-	return;
+    ob_start();
+	$smarty = cmsCore::initSmarty('components', 'com_error.tpl');
+	$smarty->assign('err_title', $_LANG['ACCESS_DENIED']);
+	$smarty->assign('err_content', $_LANG['ACCESS_NEED_AVTOR']);
+	$smarty->display('com_error.tpl');
+	return ob_get_clean();
 }
 
 function usrNotAllowed(){
     global $_LANG;
-	echo '<h1 class="con_heading">'.$_LANG['ACCESS_BLOCK'].'.</h1>';
-	echo '<p>'.$_LANG['ACCESS_SECURITY'].'</p>';
-	
-	return;
+    ob_start();
+	$smarty = cmsCore::initSmarty('components', 'com_error.tpl');
+	$smarty->assign('err_title', $_LANG['ACCESS_BLOCK']);
+	$smarty->assign('err_content', $_LANG['ACCESS_SECURITY']);
+	$smarty->display('com_error.tpl');
+	return ob_get_clean();
 }
 
 function usrIsFriends($first_id, $second_id, $strict=true){

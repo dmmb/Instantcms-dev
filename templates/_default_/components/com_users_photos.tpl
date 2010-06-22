@@ -27,8 +27,8 @@
                             <img border="0" src="{$photo.file}" alt="{$photo.title}"/>
                         </a>
                         <div style="padding:4px;">
-                            <span style="font-size:10px; display:block"><strong>{$_LANG.DATE}:</strong> {$photo.fpubdate}</span>
-                            <span style="font-size:10px; display:block"><strong>{$_LANG.HITS}:</strong> {$photo.hits}</span>
+                            <span style="font-size:10px; display:block"><strong>{$LANG.DATE}:</strong> {$photo.fpubdate}</span>
+                            <span style="font-size:10px; display:block"><strong>{$LANG.HITS}:</strong> {$photo.hits}</span>
                         </div>
                     </div>
 				</td> 

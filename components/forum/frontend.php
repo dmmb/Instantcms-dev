@@ -868,7 +868,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 			}
 		}
 		
-	} else { usrNeedReg(); } //usrCheckAuth
+	} else { echo usrNeedReg(); } //usrCheckAuth
 	
 }
 ///////////////////////////// DELETE POST /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -929,8 +929,8 @@ if ($do=='movethread'){
 				header('location:/forum/'.$fid);			
 			}
 			
-		} else { usrAccessDenied(); }
-	} else { usrAccessDenied(); }
+		} else { echo usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 
 }
 ///////////////////////////// RENAME THREAD /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -987,8 +987,8 @@ if ($do=='renamethread'){
 				header('location:/forum/thread'.$tid.'.html');			
 			}
 			
-		} else { usrAccessDenied(); }
-	} else { usrAccessDenied(); }
+		} else { echo usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 }
 ///////////////////////////// DELETE THREAD /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='deletethread'){
@@ -1136,11 +1136,11 @@ if ($do=='reloadfile'){
 					echo '</form></div>'. "\n";				
 				}
 			
-			} else 	{ usrAccessDenied(); }
+			} else 	{ echo usrAccessDenied(); }
 		} else { echo '<p>'.$_LANG['FILE_NOT_FOUND'].'!</p>'; }
 	
 	
-	} else { usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
