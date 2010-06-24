@@ -487,10 +487,10 @@ if ($do=='editprofile'){
 					$signature      = $inCore->request('signature', 'str');
 
 					$allow_who      = $inCore->request('allow_who', 'str');
-                    if (!preg_match('/^([a-zA-Z]+)$/i', $allow_who)) { $errors = true; }
+                                        if (!preg_match('/^([a-zA-Z]+)$/i', $allow_who)) { $errors = true; }
 
 					$icq            = $inCore->request('icq', 'str');
-                    $icq            = preg_replace('/([^0-9])/i', '', $icq);
+                                         $icq            = preg_replace('/([^0-9])/i', '', $icq);
                     
 					$showicq        = $inCore->request('showicq', 'int');
 					

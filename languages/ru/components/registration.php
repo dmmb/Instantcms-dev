@@ -19,20 +19,20 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 $_LANG['ERR_SEND_ACTIVATION_MAIL'] ='Ошибка отправки письма активации!';
 $_LANG['ACTIVATION_ACCOUNT']       ='Активация аккаунта';
 $_LANG['REMINDER_PASS']            ='Напоминание пароля';
+$_LANG['RECOVER_PASS']             ='Восстановление пароля';
 $_LANG['WRITE_REGISTRATION_EMAIL'] ='Введите e-mail, указанный при регистрации';
 $_LANG['ERR_EMAIL']                ='Введен не корректный адрес email!';
+$_LANG['CHANGE_PASS']              ='Сменить пароль';
+$_LANG['CHANGE_PASS_COMPLETED']    ='Пароль был успешно изменен.';
+$_LANG['LINK_EXPIRES']             ='Ссылка будет действительна до первой авторизации на сайте.';
 
 $_LANG['HELLO']                    ='Здравствуйте';
-$_LANG['REMINDER_TEXT']            ='Вы, либо кто-то еще запросили напоминание пароля по email на сайте';
-$_LANG['OUR_PASS_IS_MD5']          ='Пароли на нашем сайте хранятся в зашифрованном виде';
-$_LANG['OUR_PASS_IS_MD5_TEXT']     ='поэтому мы не можем напомнить вам старый пароль.';
+$_LANG['REMINDER_TEXT']            ='Вы, либо кто-то еще, запросили напоминание пароля по email на сайте';
 $_LANG['YOUR_LOGIN']               ='Ваш логин';
-$_LANG['YOUR_NEW_PASS']            ='Ваш новый пароль';
-$_LANG['YOU_CAN_CHANGE_PASS']      ='Вы всегда можете сменить этот пароль на более удобный';
-$_LANG['IN_CONFIG_PROFILE']        ='в настройках своего профиля';
+$_LANG['NEW_PASS_LINK']            ='Ссылка для восстановления пароля';
 $_LANG['SIGNATURE']                ='C уважением';
 
-$_LANG['NEW_PAS_SENDED']           ='Новый пароль был выслан на указанный e-mail.';
+$_LANG['NEW_PAS_SENDED']           ='Инструкции по восстановлению пароля высланы на указанный e-mail.';
 $_LANG['ADRESS']                   ='Адрес';
 $_LANG['NOT_IN_OUR_BASE']          ='не встречается в нашей базе данных.';
 

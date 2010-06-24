@@ -62,7 +62,7 @@ function registration(){
 
 //======================================================================================================================//
 
-    if ($do=='passremind'){
+    if ($do=='sendremind'){
 
         $inPage->setTitle($_LANG['REMINDER_PASS']);
         $inPage->addPathway($_LANG['REMINDER_PASS'], $_SERVER['REQUEST_URI']);
@@ -86,23 +86,21 @@ function registration(){
                 echo '<p style="color:red">'.$_LANG['ERR_EMAIL'].'</p>';
             } else {
 
-                $sql = "SELECT * FROM cms_users WHERE email = '$email' LIMIT 1";
+                $sql = "SELECT *, DATE_FORMAT(logdate, '%d-%m-%Y-%H-%i-%s') as logdate
+                        FROM cms_users WHERE email = '$email' LIMIT 1";
                 $result = $inDB->query($sql) ;
 
                 if ($inDB->num_rows($result)>0){
                     $usr = $inDB->fetch_assoc($result);
 
-                    $newpassword = substr(md5(microtime()) . md5(rand(0, 9999)), 0, 8);
-                    $inDB->query("UPDATE cms_users SET password = '".md5($newpassword)."' WHERE id = ".$usr['id']) ;
+                    $usercode = md5($usr['id'] . '-' . $usr['login'] . '-' . $usr['password'] . '-' . $usr['logdate']);
+                    $newpass_link = HOST.'/registration/remind/' . $usercode;
 
                     $mail_message = $_LANG['HELLO'].', ' . $usr['nickname'] . '!'. "\n\n";
                     $mail_message .= $_LANG['REMINDER_TEXT'].' "'.$inConf->sitename.'".' . "\n\n";
-                    $mail_message .= $_LANG['OUR_PASS_IS_MD5'] . "\n";
-                    $mail_message .= $_LANG['OUR_PASS_IS_MD5_TEXT'] . "\n\n";
-                    $mail_message .= '########## '.$_LANG['YOUR_LOGIN'].': ' .$usr['login']. "\n\n";
-                    $mail_message .= '########## '.$_LANG['YOUR_NEW_PASS'].': ' .$newpassword . "\n\n";
-                    $mail_message .= $_LANG['YOU_CAN_CHANGE_PASS']."\n";
-                    $mail_message .= $_LANG['IN_CONFIG_PROFILE'].': '. cmsUser::getProfileURL($usr['login']) . "\n\n";
+                    $mail_message .= $_LANG['YOUR_LOGIN'].': ' .$usr['login']. "\n\n";
+                    $mail_message .= $_LANG['NEW_PASS_LINK'].":\n" .$newpass_link . "\n\n";
+                    $mail_message .= $_LANG['LINK_EXPIRES']. "\n\n";
                     $mail_message .= $_LANG['SIGNATURE'].', '. $inConf->sitename . ' ('.HOST.').' . "\n";
                     $mail_message .= date('d-m-Y (H:i)');
 
@@ -408,6 +406,57 @@ function registration(){
 
         $inPage->includeTemplateFile('special/autherror.php');
         $inCore->halt();
+
+    }
+
+//======================================================================================================================//
+
+    if ($do=='remind'){
+
+        $usercode = $inCore->request('code', 'str', '');
+
+        //проверяем формат кода
+        if (!preg_match('/^([a-z0-9]{32})$/i', $usercode)) { $inCore->halt(); }
+
+        //ищем пользователя по коду
+        $sql = "SELECT * FROM cms_users
+                WHERE MD5(CONCAT(id,'-',login,'-',password,'-',DATE_FORMAT(logdate, '%d-%m-%Y-%H-%i-%s'))) = '{$usercode}'";
+        $result = $inDB->query($sql);
+
+        //если пользователь не найден, редирект на главную
+        if (!$inDB->num_rows($result)){ $inCore->redirect('/'); }
+
+        //получаем пользователя
+        $user = $inDB->fetch_assoc($result);
+
+        $errors = '';
+
+        $is_changed = false;
+
+        if ($inCore->inRequest('submit')){
+
+            $pass   = $inCore->request('pass', 'str', '');
+            $pass2  = $inCore->request('pass2', 'str', '');
+            if (!$pass) { $errors .= $_LANG['TYPE_PASS'].'<br/>'; }
+            if (!$pass2) { $errors .= $_LANG['TYPE_PASS_TWICE'].'<br/>'; }
+            if ($pass != $pass2) { $errors .= $_LANG['WRONG_PASS'].'<br/>'; }
+
+            if (!$errors){
+                $pass = md5($pass);
+                $inDB->query("UPDATE cms_users SET password = '{$pass}', logdate = NOW() WHERE id = {$user['id']}");
+                $is_changed = true;
+            }
+            
+        }
+
+        $inPage->backButton(false);
+        $inPage->setTitle($_LANG['RECOVER_PASS']);
+        $smarty = $inCore->initSmarty('components', 'com_registration_remind.tpl');
+        $smarty->assign('cfg', $cfg);
+        $smarty->assign('user', $user);
+        $smarty->assign('errors', $errors);
+        $smarty->assign('is_changed', $is_changed);
+        $smarty->display('com_registration_remind.tpl');
 
     }
 
