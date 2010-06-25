@@ -55,7 +55,7 @@
 		<tr>
 			<td width="16" valign="top"><img src="/components/faq/images/sendquest.gif" border="0" /></td>
 			<td width="" valign="middle">
-				<a href="/faq/sendquest.html">{$LANG.SET_QUESTION}</a>
+				<a href="/faq/sendquest{if $id>0}{$id}{/if}.html">{$LANG.SET_QUESTION}</a>
 			</td>	
 		</tr>
 	</table>
