@@ -20,35 +20,6 @@ function karmaPoints($points){
 	return;
 }
 
-function pageBar($current, $perpage, $orderby, $orderto, $records){
-    $inDB   = cmsDatabase::getInstance();
-    global $_LANG;
-	$html = '';
-	if (!@$_SESSION['usr_online']){
-		$result = $inDB->query("SELECT * FROM cms_users WHERE is_locked=0 AND is_deleted=0") ;
-	} else {
-		$result = $inDB->query("SELECT p.user_id FROM cms_user_profiles p, cms_online o, cms_users u WHERE p.user_id = o.user_id AND u.id=p.user_id AND u.is_deleted=0") ;
-	}
-	$records = $inDB->num_rows($result);
-	if ($records){
-		$pages = ceil($records / $perpage);
-		if($pages>1){
-			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
-			for ($p=1; $p<=$pages; $p++){
-				if ($p != $current) {			
-					$link = '/users/'.$p.'/'.$orderby.'-'.$orderto.'.html';
-					$html .= ' <a href="'.$link.'" class="pagebar_page">'.$p.'</a> ';		
-				} else {
-					$html .= '<span class="pagebar_current">'.$p.'</span>';
-				}
-			}
-			$html .= '</div>';
-		}
-	}
-	return $html;
-}
-
 function pageSelectFiles($records, $current, $perpage){
     $inDB   = cmsDatabase::getInstance();
 	$html = '';
@@ -1454,7 +1425,6 @@ if ($do=='viewphoto'){
 	
 
 	if ($inDB->num_rows($result)>0){
-//		if (usrCheckAuth()){
 			$usr = $inDB->fetch_assoc($result);
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 
@@ -1470,62 +1440,38 @@ if ($do=='viewphoto'){
 				$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
 
 				if (usrAllowed($photo['allow_who'], $id) || $inCore->userIsAdmin($inUser->id)){
-
-					echo '<div class="con_heading">'.$photo['title'].'</div>';				
-					if ($photo['description']){	echo '<div class="con_description">'.$photo['description'].'</div>'; }
-			
-					echo '<div class="con_description">'.cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, '', $usr['login']).' &mdash; <strong>'.$_LANG['HITS'].':</strong> '.$photo['hits'].' &mdash; <strong>'.$_LANG['SIZE'].':</strong> '.round(filesize($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/medium/'.$photo['imageurl'])/1024, 2).' '.$_LANG['KBITE'].'</div>';
-			
-					echo '<div class="usr_photo_view">
-							<a href="/images/users/photos/medium/'.$photo['imageurl'].'" target="_blank"><img border="0" src="/images/users/photos/medium/'.$photo['imageurl'].'" alt="'.$photo['title'].'" /></a>';
-
-					$bbcode = '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/users/photos/medium/'.$photo['imageurl'].'[/IMG]';
-					echo '<div style="margin-top:15px"><label for="bbcode">'.$_LANG['CODE_FOR_FORUM'].': </label><input type="text" id="bbcode" name="bbcode" size="50" value="'.$bbcode.'"/></div>';
-							
-					if ($myprofile || $inCore->userIsAdmin($user_id)) {
-						echo '<div style="margin-top:5px">';
-							echo '<a style="height:16px; line-height:16px; margin-right:5px; padding-left:20px; background:url(/components/users/images/edit.gif) no-repeat;" href="/users/'.$usr['id'].'/editphoto'.$photoid.'.html">'.$_LANG['EDIT'].'</a> ';
-							echo '<a style="height:16px; line-height:16px; padding-left:20px; background:url(/components/users/images/delete.gif) no-repeat;"  href="/users/'.$usr['id'].'/delphoto'.$photoid.'.html">'.$_LANG['DELETE'].'</a> ';
-						echo '</div>';
-					}
-					echo '</div>';
-					
-					//links to previous and next photos
+					$photo['pubdate'] = $inCore->dateFormat($photo['pubdate'], true, false, false);
+					$photo['genderlink'] = cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, '', $usr['login']);
+					$photo['filesize'] = round(filesize($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/medium/'.$photo['imageurl'])/1024, 2);
+					//ссылки на предыдущую и следующую фотографии
 					$previd = dbGetFields('cms_user_photos', 'id<'.$photo['id'].' AND user_id = '.$usr['id'], 'id, title, pubdate', 'id DESC');
 					$nextid = dbGetFields('cms_user_photos', 'id>'.$photo['id'].' AND user_id = '.$usr['id'], 'id, title, pubdate', 'id ASC');
 
-					echo '<div class="usr_photo_nav">';
-						echo '<table cellpadding="5" cellspacing="0" border="0" align="center" style="margin-left:auto;margin-right:auto"><tr>';
-							if ($previd){
-								echo '<td align="right">';
-									echo '<div>&larr; <a href="/users/'.$usr['id'].'/photo'.$previd['id'].'.html">'.$previd['title'].'</a></div>';
-								echo '</td>';
-							}
-							if ($previd && $nextid) { echo '<td>|</td>'; }
-							if ($nextid){
-								echo '<td align="left">';
-									echo '<div><a href="/users/'.$usr['id'].'/photo'.$nextid['id'].'.html">'.$nextid['title'].'</a> &rarr;</div>';
-								echo '</td>';
-							}						
-						echo '</tr></table>';
-					echo '</div>';
-					
-					$inCore->loadLib('tags');	
-					echo cmsTagBar('userphoto', $photo['id']);
-					
-					//show user comments
-					if($inCore->isComponentInstalled('comments')){
-						$inCore->includeComments();
-						comments('userphoto', $photo['id']);
-					}					
-				
-			//	} else { echo usrNotAllowed(); }
-							
-			} else {
-				echo '<div class="con_heading">'.$_LANG['PHOTO_NOT_FOUND'].'</div>';
-				echo '<p>'.$_LANG['PHOTO_NOT_FOUND_TEXT'].'</p>';
-			}						
-		} else { echo usrNeedReg(); }
+					$is_photo = true;	
+				} else { $is_photo = false; }
+			
+				$smarty = $inCore->initSmarty('components', 'com_users_photos_view.tpl');
+				$smarty->assign('photo', $photo);
+				$smarty->assign('bbcode', '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/users/photos/medium/'.$photo['imageurl'].'[/IMG]');
+				$smarty->assign('previd', $previd);
+				$smarty->assign('nextid', $nextid);
+				$smarty->assign('usr', $usr);
+				$smarty->assign('myprofile', $myprofile);
+				$smarty->assign('is_admin', $inCore->userIsAdmin($user_id));
+				$smarty->assign('is_photo', $is_photo);
+				if($is_photo){
+					$inCore->loadLib('tags');
+					$smarty->assign('tagbar', cmsTagBar('userphoto', $photo['id']));
+				}
+				$smarty->display('com_users_photos_view.tpl');	
+			
+				//show user comments
+				if($inCore->isComponentInstalled('comments') && $is_photo){
+					$inCore->includeComments();
+					comments('userphoto', $photo['id']);
+				}	
+								
+			} else { cmsCore::error404(); }
 	} else { cmsCore::error404(); }
 }
 /////////////////////////////// ADD FRIEND /////////////////////////////////////////////////////////////////////////////////////////
