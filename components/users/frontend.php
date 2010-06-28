@@ -2317,119 +2317,45 @@ if ($do=='awardslist'){
 	
 	$inPage->addPathway($_LANG['SITE_AWARDS']);
 
-	echo '<div class="con_heading">'.$_LANG['SITE_AWARDS'].'</div>';
-	
 	$sql = "SELECT * 
 			FROM cms_user_autoawards
 			WHERE published = 1
 			ORDER BY title";			
 	$result = $inDB->query($sql) ;
 
+	$is_yes_awards = false;
+	
 	if ($inDB->num_rows($result)){
-			
-		echo '<table width="100%" cellspacing="2" cellpadding="3" class="usr_aw_table">';
+		$is_yes_awards = true;
+		$aws = array();
 		while($aw = $inDB->fetch_assoc($result)){
-			echo '<tr>';
-			
-				//icon
-				echo '<td width="32" valign="top">';
-					echo '<img class="usr_aw_img" src="/images/users/awards/'.$aw['imageurl'].'" border="0"/>';
-				echo '</td>';
-				
-				//description
-				echo '<td width="30%" valign="top">';
-					
-					echo '<div class="usr_aw_title"><strong>'.$aw['title'].'</strong></div>';
-					echo '<div class="usr_aw_desc">'.$aw['description'].'</div>';
-									
-					echo '<table border="0" cellspacing="4" cellpadding="0" class="usr_aw_dettable">';                      
-						if ($aw['p_comment']>0){  
-							echo '<tr>'."\n";
-								echo '<td><img src="/admin/components/autoawards/images/p_comment.gif" width="16" height="16" /></td>'."\n";
-								echo '<td>'."\n";
-								  echo $aw['p_comment']."\n";
-								echo ' '.$_LANG['COMMENTS'].'</td>'."\n";
-							echo '</tr>'."\n";
-						}
-						if ($aw['p_forum']>0){  
-							echo '<tr>'."\n";
-								echo '<td><img src="/admin/components/autoawards/images/p_forum.gif" width="16" height="16" /></td>'."\n";
-								echo '<td>'."\n";
-								  echo $aw['p_forum']."\n";
-								echo ' '.$_LANG['MESS_IN_FORUM'].'</td>'."\n";
-							echo '</tr>'."\n";
-						}
-						if ($aw['p_content']>0){  
-							echo '<tr>'."\n";
-								echo '<td><img src="/admin/components/autoawards/images/p_forum.gif" width="16" height="16" /></td>'."\n";
-								echo '<td>'."\n";
-								  echo $aw['p_content']."\n";
-								echo ' '.$_LANG['PUBLISHED_ARTICLES'].'</td>'."\n";
-							echo '</tr>'."\n";
-						}
-						if ($aw['p_blog']>0){  
-							echo '<tr>'."\n";
-								echo '<td><img src="/admin/components/autoawards/images/p_blog.gif" width="16" height="16" /></td>'."\n";
-								echo '<td>'."\n";
-								  echo $aw['p_blog']."\n";
-								echo ' '.$_LANG['POSTS_IN_BLOG'].'</td>'."\n";
-							echo '</tr>'."\n";
-						}
-						if ($aw['p_karma']>0){  
-							echo '<tr>'."\n";
-								echo '<td><img src="/admin/components/autoawards/images/p_karma.gif" width="16" height="16" /></td>'."\n";
-								echo '<td>'."\n";
-								  echo $aw['p_karma']."\n";
-								echo ' '.$_LANG['KARMA_POINTS'].'</td>'."\n";
-							echo '</tr>'."\n";
-						}
-						if ($aw['p_photo']>0){  
-							echo '<tr>'."\n";
-								echo '<td><img src="/admin/components/autoawards/images/p_photo.gif" width="16" height="16" /></td>'."\n";
-								echo '<td>'."\n";
-								  echo $aw['p_photo']."\n";
-								echo ' '.$_LANG['PHOTOS_IN_ALBUMS'].'</td>'."\n";
-							echo '</tr>'."\n";
-						}
-						if ($aw['p_privphoto']>0){  
-							echo '<tr>'."\n";
-								echo '<td><img src="/admin/components/autoawards/images/p_privphoto.gif" width="16" height="16" /></td>'."\n";
-								echo '<td>'."\n";
-								  echo $aw['p_privphoto']."\n";
-								echo ' '.$_LANG['PHOTOS_IN_PRIVATE_ALBUM'].'</td>'."\n";
-							echo '</tr>'."\n";
-						}
-                    echo '</table>';
-				echo '</td>';
-				
-				//who have this award
-				echo '<td valign="top" class="usr_aw_who">';
+				//Перебираем все награды и ищем пользователей с текущей наградой
 					$sql =  "SELECT u.id as id, u.nickname as nickname, u.login as login, IFNULL(p.gender, 'm') as gender
 							 FROM cms_user_awards aw, cms_users u, cms_user_autoawards a, cms_user_profiles p
 							 WHERE aw.award_id = a.id AND aw.user_id = u.id AND p.user_id = u.id AND aw.award_id = ".$aw['id'];
 					$rs = $inDB->query($sql) ;
 					$total = $inDB->num_rows($rs);
-					$uhtml = '';
+					$aw['uhtml'] = '';
 					if ($total){
 						$row = 0;
 						while ($user = $inDB->fetch_assoc($rs)){
 							$row++;
-							$uhtml .= '<a href="'.cmsUser::getProfileURL($user['login']).'" id="'.$user['gender'].'">'.$user['nickname'].'</a>';
-							if ($row<$total){ $uhtml .= ', '; }
+							$aw['uhtml'] .= '<a href="'.cmsUser::getProfileURL($user['login']).'" id="'.$user['gender'].'">'.$user['nickname'].'</a>';
+							if ($row<$total){ $aw['uhtml'] .= ', '; }
 						}
 					} else {
-						$uhtml = $_LANG['NOT_USERS_WITH_THIS_AWARD'];
+						$aw['uhtml'] = $_LANG['NOT_USERS_WITH_THIS_AWARD'];
 					}
-								
-					echo '<div class="usr_aw_users"><strong>'.$_LANG['AWARD_HAVES'].':</strong></div>';
-					echo '<div class="usr_aw_userslist">'.$uhtml.'</div>';
-				echo '</td>';
-				
-			echo '</tr>';			
+			$aws[] = $aw;
 		}
-		echo '</table>';
-				
-	} else { echo '<p>'.$_LANG['NOT_AWARDS_ON_SITE'].'</p>'; }
+		
+	}
+	
+	$smarty = $inCore->initSmarty('components', 'com_users_awards_site.tpl');
+	$smarty->assign('is_yes_awards', $is_yes_awards);
+	$smarty->assign('uhtml', $uhtml);
+	$smarty->assign('aws', $aws);
+	$smarty->display('com_users_awards_site.tpl');	
 	
 }
 
