@@ -1807,7 +1807,7 @@ if ($do == 'delprofile'){
     $inPage->backButton(false);
 	if (usrCheckAuth()){
 		if ($id){	
-			$user_sql = "SELECT id FROM cms_users WHERE id = '$id' LIMIT 1";
+			$user_sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
 			$result = $inDB->query($user_sql) ;
 			
 			if ($inDB->num_rows($result)){
@@ -1828,6 +1828,9 @@ if ($do == 'delprofile'){
                     } else { $inCore->redirect(cmsUser::getProfileURL($data['login'])); }
 				} else {				
 					//MENU
+					$inPage->setTitle($_LANG['DELETING_PROFILE']);
+					$inPage->addPathway($data['nickname'], $inUser->getProfileURL($data['login']));
+					$inPage->addPathway($_LANG['DELETING_PROFILE'], $_SERVER['REQUEST_URI']);
 					if ($inUser->id == $data['id'] || $inCore->userIsAdmin($inUser->id)){
 						$GLOBALS['ed_menu'][0]['link'] = 'javascript:window.history.go(-1)';
 						$GLOBALS['ed_menu'][0]['title'] = $_LANG['CANCEL'];
