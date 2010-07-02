@@ -392,6 +392,8 @@ td{
 	background:url(/images/icons/rssitem.gif) no-repeat left center;
 	height:16px;
 	line-height:16px;
+	text-decoration:underline;
+	color:#333
 }
 
 .mod_latest_rss a{
@@ -601,7 +603,9 @@ td{
 	text-decoration:underline;
 	color:#666666;
 }
-
+.mod_com_line{
+margin:7px 0;
+}
 /*--------------------- MODULE "LATEST FORUM WEB2.0" -------------------------*/
 .mod_fweb2_userlink{
 	text-decoration:underline;

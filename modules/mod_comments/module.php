@@ -56,49 +56,40 @@ function mod_comments($module_id){
                 LIMIT 100";
 
         $result = $inDB->query($sql);
-
+		$is_com = false;
         if ($inDB->num_rows($result)){
-
+			$is_com = true;
             $count = 0;
-
-            echo '<table cellspacing="2" cellpadding="4" border="0">';
+			$comments = array();
             while($con = $inDB->fetch_assoc($result)){
 
                 if ($count >= $cfg['shownum']) { break; }
 
                 if ($con['rating'] >= $cfg['minrate']){
 
-                    $link = $con['target_link'] . '#c'.$con['id'];
-                    $text = strip_tags($inCore->parseSmiles($con['content'], true));
+                    $con['link'] = $con['target_link'] . '#c'.$con['id'];
+                    $con['text'] = strip_tags($inCore->parseSmiles($con['content'], true));
+                    if (strlen($con['text'])>60) { $con['text'] = substr($con['text'], 0, 60). '...'; }
+                    if (!$con['text']) { $con['text'] = '...'; }
 
-                    if (strlen($text)>50) { $text = substr($text, 0, 50). '...'; }
+                    $con['user_url'] = $con['user_id'] ? cmsUser::getProfileURL($con['author_login']) : $con['link'];
+                    $con['author']   = $con['user_id'] ? $con['author'] : $con['guestname'];
+                    $con['fpubdate'] = $inCore->dateFormat($con['fpubdate']);
 
-                    if (!$text) { $text = '...'; }
-
-                    $user_url = $con['user_id'] ? cmsUser::getProfileURL($con['author_login']) : $link;
-                    $author   = $con['user_id'] ? $con['author'] : $con['guestname'];
-
-                    echo '<tr>';
-                        echo '<td valign="top">';
-                            echo '<div><a class="mod_com_userlink" href="'.$user_url.'">'.$author.'</a> &rarr; ';
-                        echo '<a class="mod_com_link" href="'.$link.'">'.$text.'</a> ('.$inCore->dateFormat($con['fpubdate']).')</td>';
-                    echo '</tr>';
-
-                    $count++;
-
+					$comments[] = $con;
+					$count++;
                 }
 
             }
-            echo '</table>';
 
-            if ($cfg['showrss']){
-                echo '<table align="right" style="margin-top:5px"><tr>';
-                    echo '<td width="16"><img src="/images/markers/rssfeed.png" /></td>';
-                    echo '<td><a href="/rss/comments/all/feed.rss" style="text-decoration:underline;color:#333">'.$_LANG['COMMENTS_RSS'].'</a></td>';
-                echo '</tr></table>';
-            }
-        } else { echo '<p>'.$_LANG['COMMENTS_NOT_COMM'].'</p>'; }
-				
+        } 
+		
+		$smarty = $inCore->initSmarty('modules', 'mod_comments.tpl');			
+		$smarty->assign('comments', $comments);
+		$smarty->assign('cfg', $cfg);
+		$smarty->assign('is_com', $is_com);
+		$smarty->display('mod_comments.tpl');	
+			
 		return true;
 }
 ?>
