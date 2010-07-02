@@ -969,6 +969,14 @@ a.new_user_link { font-size:14px; font-weight:bold; margin-left:15px; }
 	width:100px;
 	float:left;
 }
+.faq_questuser{
+	padding:2px 2px 2px 20px;
+	font-size:10px;
+	text-align:center;
+	margin-top:2px;
+	float:left;
+	background:url(/images/icons/users.gif) no-repeat;
+}
 .faq_questcat{
 	padding:2px;
 	font-size:10px;

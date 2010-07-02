@@ -30,7 +30,7 @@ if ($do=='view'){
 	$sql = "SELECT *
 			FROM cms_faq_cats
 			WHERE id = '$id'
-			ORDER BY title ASC
+			ORDER BY title ASC LIMIT 1
 			";		
 	
 	$result = $inDB->query($sql) ;
@@ -70,21 +70,24 @@ if ($do=='view'){
 	}
 	
 	//CURRENT CATEGORY CONTENT
-	$perpage = 10;
+	$perpage = 15;
 	$page = $inCore->request('page', 'int', 1);	
 	
 	if ($id > 0){		
-		$sql = "SELECT *
-				FROM cms_faq_quests
-				WHERE category_id = $id AND published = 1
-				ORDER BY cms_faq_quests.pubdate DESC
+		$sql = "SELECT q.*, u.login, u.nickname
+				FROM cms_faq_quests q
+				LEFT JOIN cms_users u ON u.id = q.user_id
+				WHERE q.category_id = $id AND q.published = 1
+				ORDER BY q.pubdate DESC
 				LIMIT ".(($page-1)*$perpage).", $perpage";	
 		$result_total = $inDB->query("SELECT id FROM cms_faq_quests WHERE category_id = $id AND published = 1") ;
 		$records = $inDB->num_rows($result_total);	
 	} else {
-		$sql = "SELECT q.*, c.title cat_title, c.id cid
-				FROM cms_faq_quests q, cms_faq_cats c
-				WHERE q.published = 1 AND q.category_id = c.id
+		$sql = "SELECT q.*, c.title cat_title, c.id cid, u.login, u.nickname
+				FROM cms_faq_quests q
+				LEFT JOIN cms_faq_cats c ON c.id = q.category_id
+				LEFT JOIN cms_users u ON u.id = q.user_id
+				WHERE q.published = 1
 				ORDER BY q.pubdate DESC
 				LIMIT 10";			
 	}
@@ -117,10 +120,11 @@ if ($do=='view'){
 if ($do=='read'){
 		$sql = "SELECT con.*,
 						DATE_FORMAT(con.pubdate, '%d-%m-%Y') shortdate,
-						cat.title cat_title, cat.id cat_id
-				FROM cms_faq_quests con, cms_faq_cats cat
-				WHERE con.id = $id AND con.category_id = cat.id
-				";
+						cat.title cat_title, cat.id cat_id, u.login, u.nickname
+				FROM cms_faq_quests con
+				LEFT JOIN cms_faq_cats cat ON cat.id = con.category_id
+				LEFT JOIN cms_users u ON u.id = con.user_id
+				WHERE con.id = $id LIMIT 1";
 				
 		$result = $inDB->query($sql) ;
 	
