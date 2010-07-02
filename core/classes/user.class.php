@@ -403,9 +403,7 @@ class cmsUser {
             if ($id < sizeof($friends)-1){ $friends_sql .= ' OR '; }
         }
 
-        $sql = "SELECT DISTINCT c.id, c.content, c.target as target, c.target_id as target_id, c.user_id, c.target_link, u.id as user_id, u.nickname as nickname, u.login as login,
-                       IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(c.pubdate, '<strong>Cегодня</strong> в %H:%i'),
-                       IF(DATEDIFF(NOW(), c.pubdate)=1, DATE_FORMAT(c.pubdate, 'Вчера в %H:%i'),DATE_FORMAT(c.pubdate, '%d, %M') ))  as pubdate
+        $sql = "SELECT DISTINCT c.id, c.content, c.target as target, c.target_id as target_id, c.user_id, c.target_link, u.id as user_id, u.nickname as nickname, u.login as login, c.pubdate as pubdate
                 FROM cms_comments c, cms_users u
                 WHERE c.user_id = u.id AND ({$friends_sql})
                 ORDER BY c.pubdate DESC
@@ -420,7 +418,7 @@ class cmsUser {
         if (!$inDB->num_rows($result)){ return false; }
 
         while ($comment = $inDB->fetch_assoc($result)){
-            $comment['pubdate'] = $inCore->getRusDate($comment['pubdate']);
+            $comment['pubdate'] = $inCore->dateFormat($comment['pubdate']);
             if (sizeof($comment['content'])>50){
                 $comment['content'] = substr($comment['content'], 0, 50) . '...';
             }
@@ -465,8 +463,7 @@ class cmsUser {
                                 u.id as user_id,
                                 u.nickname as nickname,
                                 u.login as login,
-                       IF(DATE_FORMAT(p.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(p.pubdate, '<strong>Cегодня</strong> в %H:%i'),
-                       IF(DATEDIFF(NOW(), p.pubdate)=1, DATE_FORMAT(p.pubdate, 'Вчера в %H:%i'),DATE_FORMAT(p.pubdate, '%d, %M') ))  as pubdate
+                       			p.pubdate as pubdate
                 FROM cms_blog_posts p, cms_users u, cms_blogs b
                 WHERE p.blog_id = b.id AND p.user_id = u.id AND ({$friends_sql})
                 ORDER BY p.pubdate DESC
@@ -484,7 +481,7 @@ class cmsUser {
         $model = new cms_model_blogs();
 
         while ($post = $inDB->fetch_assoc($result)){
-            $post['pubdate']    = $inCore->getRusDate($post['pubdate']);
+            $post['pubdate']    = $inCore->dateFormat($post['pubdate']);
             $post['url']        = $model->getPostURL(0, $post['bloglink'], $post['seolink']);
             $posts[]            = $post;
         }
@@ -517,10 +514,8 @@ class cmsUser {
             $friends_sql .= 'u.id = '.$friend['id'];
             if ($id < sizeof($friends)-1){ $friends_sql .= ' OR '; }
         }
-
-        $sql = "SELECT DISTINCT p.id, p.title, p.user_id, u.id as user_id, u.nickname as nickname, u.login as login, 
-                       IF(DATE_FORMAT(p.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(p.pubdate, '<strong>Cегодня</strong> в %H:%i'),
-                       IF(DATEDIFF(NOW(), p.pubdate)=1, DATE_FORMAT(p.pubdate, 'Вчера в %H:%i'),DATE_FORMAT(p.pubdate, '%d, %M') ))  as pubdate
+		// Получаем фото из общей галереи
+        $sql = "SELECT p.id, p.title, u.nickname as nickname, u.login as login, p.pubdate as pubdate
                 FROM cms_photo_files p, cms_users u
                 WHERE p.user_id = u.id AND ({$friends_sql})
                 ORDER BY p.pubdate DESC
@@ -529,16 +524,42 @@ class cmsUser {
         if ($limit) { $sql .= 'LIMIT '.$limit; }
         
         $result = $inDB->query($sql);
+		//Получаем личные фотографии
+		$private_sql = "SELECT p.id, p.title, p.user_id, u.nickname as nickname, u.login as login, p.pubdate as pubdate
+						FROM cms_user_photos p, cms_users u
+						WHERE p.user_id = u.id AND ({$friends_sql})
+						ORDER BY p.pubdate DESC
+						";
+		if ($limit) { $private_sql .= 'LIMIT '.$limit; }
+		$private_res = $inDB->query($private_sql);
+		
+		$photos = array();
 
-        $photos = array();
-
-        if (!$inDB->num_rows($result)){ return false; }
+        if (!$inDB->num_rows($result) && !$inDB->num_rows($private_res)){ return false; }
+		
+		if ($inDB->num_rows($private_res)) {
+			while($photo = $inDB->fetch_assoc($private_res)){
+				$photo['pubdate'] = $inCore->dateFormat($photo['pubdate']);
+				$photos[]       = $photo;
+			}
+		}
 
         while ($photo = $inDB->fetch_assoc($result)){
-            $photo['pubdate'] = $inCore->getRusDate($photo['pubdate']);
+            $photo['pubdate'] = $inCore->dateFormat($photo['pubdate']);
             $photos[] = $photo;
         }
-
+		//Выбираем последние $limit фото из общего массива
+		$total      = sizeof($photos);
+	
+		if ($total){
+			$page_photos    = array();
+			for($p=0; $p<$limit; $p++){
+				if ($photos[$p]){
+					$page_photos[] = $photos[$p];
+				}
+			}
+			$photos = $page_photos; unset($page_photos);
+		}
         return $photos;
         
     }

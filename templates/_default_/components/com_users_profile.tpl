@@ -309,7 +309,11 @@
                                                 </td>
                                                 <td>
                                                     <a href="{profile_url login=$photo.login}" class="nickname">{$photo.nickname}</a> &rarr;
+                                                {if $photo.user_id}
+                                                	<a href="/users/{$photo.user_id}/photo{$photo.id}.html">{$photo.title}</a>
+                                                {else}
                                                     <a href="/photos/photo{$photo.id}.html">{$photo.title}</a>
+                                                {/if}    
                                                 </td>                                                
                                             </tr>
                                         {/foreach}
