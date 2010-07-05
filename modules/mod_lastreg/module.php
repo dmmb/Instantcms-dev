@@ -15,42 +15,49 @@
 
 		$cfg = $inCore->loadModuleConfig($module_id);
 
-		$sql = "SELECT u.*, p.imageurl, DATE_FORMAT(regdate, '%d-%m-%Y (%H:%i)') as fdate 
-				FROM cms_users u, cms_user_profiles p
-				WHERE u.is_deleted = 0 AND u.is_locked=0 AND p.user_id = u.id
+		$sql = "SELECT u.*, p.imageurl 
+				FROM cms_users u
+				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+				WHERE u.is_deleted = 0 AND u.is_locked=0
 				ORDER BY u.regdate DESC
 				LIMIT ".$cfg['newscount']."
 				";		
 		
-		$result = $inDB->query($sql) ;
+		$result = $inDB->query($sql);
+		
+		$is_last_reg = false;
 		
 		if ($inDB->num_rows($result)){	
+		
+			$is_last_reg = true;
+			$usrs = array();
+			
 			if ($cfg['view_type']=='table'){
 				include_once($_SERVER['DOCUMENT_ROOT'].'/components/users/includes/usercore.php');
-			
-				echo '<table cellspacing="5" border="0">';
 				while($usr = $inDB->fetch_assoc($result)){
-					echo '<tr>';
-						echo '<td width="20" class="new_user_avatar">'.usrImageNOdb($usr['id'], 'small', $usr['imageurl'], $usr['is_deleted']).'</td>';
-						echo '<td width="">';
-							echo '<a href="'.cmsUser::getProfileURL($usr['login']).'" class="new_user_link">'.$usr['nickname'].'</a>';
-						echo '</td>';				
-					echo '</tr>';
+					$usr['avatar'] = usrImageNOdb($usr['id'], 'small', $usr['imageurl'], $usr['is_deleted']);
+					$usrs[] = $usr;
 				}
-				echo '</table>';
 			}
+			
 			if ($cfg['view_type']=='list'){
 				$total = $inDB->num_rows($result);
-				$now = 0;
 				while($usr = $inDB->fetch_assoc($result)){				
-					echo '<a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a>';
-					if ($now < $total-1) { echo ', '; }
-					$now ++;
+					$usrs[] = $usr;
 				}
-				echo '<p><strong>'.$_LANG['LASTREG_TOTAL'].':</strong> '.dbRowsCount('cms_users', 'is_deleted=0 AND is_locked=0').'</p>';
+				$total_all = dbRowsCount('cms_users', 'is_deleted=0 AND is_locked=0');
 			}
-		} else { echo '<p>'.$_LANG['LASTREG_NOT_DATA'].'</p>'; }
+		} 
 		
+		$smarty = $inCore->initSmarty('modules', 'mod_lastreg.tpl');			
+		$smarty->assign('usrs', $usrs);
+		$smarty->assign('cfg', $cfg);
+		if ($cfg['view_type']=='list'){
+			$smarty->assign('total', $total);
+			$smarty->assign('total_all', $total_all);
+		}
+		$smarty->assign('is_last_reg', $is_last_reg);
+		$smarty->display('mod_lastreg.tpl');	
 				
 		return true;
 	
