@@ -419,9 +419,11 @@ class cmsUser {
 
         while ($comment = $inDB->fetch_assoc($result)){
             $comment['pubdate'] = $inCore->dateFormat($comment['pubdate']);
-            if (sizeof($comment['content'])>50){
-                $comment['content'] = substr($comment['content'], 0, 50) . '...';
-            }
+			$comment['content'] = strip_tags($inCore->parseSmiles($comment['content'], true));
+			if (strlen($comment['content'])>70) { 
+				$comment['content'] = substr($comment['content'], 0, 70). '...';
+			}
+			if (!$comment['content']) { $comment['content'] = '...'; }
             $comments[] = $comment;
         }
 
