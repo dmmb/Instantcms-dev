@@ -32,7 +32,7 @@
 			$is_last_reg = true;
 			$usrs = array();
 			
-			if ($cfg['view_type']=='table'){
+			if ($cfg['view_type']=='table' || $cfg['view_type']=='hr_table'){
 				include_once($_SERVER['DOCUMENT_ROOT'].'/components/users/includes/usercore.php');
 				while($usr = $inDB->fetch_assoc($result)){
 					$usr['avatar'] = usrImageNOdb($usr['id'], 'small', $usr['imageurl'], $usr['is_deleted']);

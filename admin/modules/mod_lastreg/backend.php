@@ -35,6 +35,7 @@
 		$cfg = array();
 		$cfg['newscount'] = $_REQUEST['newscount'];
 		$cfg['view_type'] = $_REQUEST['view_type'];
+		$cfg['maxcool']   = $_REQUEST['maxcool'];
 			
         $inCore->saveModuleConfig($_REQUEST['id'], $cfg);
 		$msg = 'Настройки сохранены.';
@@ -53,8 +54,13 @@
             <td><strong>Показывать как:</strong> </td>
             <td><select name="view_type" id="view_type">
               <option value="table" <?php if (@$cfg['view_type']=='table') {echo 'selected';} ?>>Таблица</option>
+              <option value="hr_table" <?php if (@$cfg['view_type']=='hr_table') {echo 'selected';} ?>>Горизонтальная таблица</option>
               <option value="list" <?php if (@$cfg['view_type']=='list') {echo 'selected';} ?>>Список</option>
             </select></td>
+          </tr>
+          <tr>
+            <td width="233"><strong>Количество колонок: </strong><br> только для опции "горизонтальная таблица"</td>
+            <td width="273"><input name="maxcool" type="text" id="maxcool" value="<?php if (@$cfg) { echo $cfg['maxcool']; } ?>" size="5" /></td>
           </tr>
         </table>
         <p>
