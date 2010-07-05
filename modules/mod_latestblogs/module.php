@@ -46,12 +46,13 @@ function mod_latestblogs($module_id){
                 LIMIT 50";
 		
 		$result = $inDB->query($sql);
-		
+		$is_blog = false;
 		if ($inDB->num_rows($result)){	
-			echo '<table cellspacing="2" cellpadding="4" border="0">';
-
+		
+			$is_blog = true;
             $count = 1;
-
+			$posts = array();
+			
 			while($con = $inDB->fetch_assoc($result)){
 
                 if ($count > $cfg['shownum']) { break; }
@@ -66,32 +67,25 @@ function mod_latestblogs($module_id){
                         $con['blog'] = dbGetField('cms_clubs', 'id='.$con['uid'], 'title');
                     }
 
-                    $link = $model->getPostURL(null, $con['bloglink'], $con['seolink']);
-                    $text = strip_tags($con['title']);
-
-                    if (strlen($text)>70) { $text = substr($text, 0, 70). '...'; }
-                    echo '<tr>';
-                        echo '<td valign="top">';
-                        echo '<a class="mod_blog_userlink" href="'.$model->getBlogURL(null, $con['bloglink']).'">'.$con['blog'].'</a> &rarr; ';
-
-                        echo '<a class="mod_blog_link" href="'.$link.'">'.$text.'</a> ('.$inCore->dateFormat($con['fpubdate']).')</td>';
-                    echo '</tr>';
+                    $con['href'] 	 = $model->getPostURL(null, $con['bloglink'], $con['seolink']);
+                    $con['title'] 	 = strip_tags($con['title']);
+					if (strlen($con['title'])>70) { $con['title'] = substr($con['title'], 0, 70). '...'; }
+					$con['fpubdate'] = $inCore->dateFormat($con['fpubdate']);
+					$con['bloghref'] = $model->getBlogURL(null, $con['bloglink']);
 
                     $count++;
 
                 }
-
+				$posts[] = $con;
 			}
-
-			echo '</table>';
-
-			if ($cfg['showrss']){
-				echo '<table align="right" style="margin-top:5px"><tr>';
-					echo '<td width="16"><img src="/images/markers/rssfeed.png" /></td>';
-					echo '<td><a href="/rss/blogs/all/feed.rss" style="text-decoration:underline;color:#333">'.$_LANG['LATESTBLOGS_RSS'].'</a></td>';
-				echo '</tr></table>';
-			}				
-		} else { echo '<p>'.$_LANG['LATESTBLOGS_NOT_POSTS'].'</p>'; }
+		
+		} 
+		
+		$smarty = $inCore->initSmarty('modules', 'mod_latestblogs.tpl');			
+		$smarty->assign('posts', $posts);
+		$smarty->assign('cfg', $cfg);
+		$smarty->assign('is_blog', $is_blog);
+		$smarty->display('mod_latestblogs.tpl');	
 		
 		return true;
 }
