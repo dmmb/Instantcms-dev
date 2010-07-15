@@ -125,7 +125,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if ($opt == 'show_forum'){
 		if (!isset($_REQUEST['item'])){
-			if (isset($_REQUEST['id'])){ dbShow('cms_forums', $id);  }
+			if (isset($_REQUEST['item_id'])){ dbShow('cms_forums', $_REQUEST['item_id']);  }
 		} else {
 			dbShowList('cms_forums', $_REQUEST['item']);				
 		}			
@@ -134,7 +134,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if ($opt == 'hide_forum'){
 		if (!isset($_REQUEST['item'])){
-			if (isset($_REQUEST['id'])){ dbHide('cms_forums', $id);  }
+			if (isset($_REQUEST['item_id'])){ dbHide('cms_forums', $_REQUEST['item_id']);  }
 		} else {
 			dbHideList('cms_forums', $_REQUEST['item']);				
 		}			
