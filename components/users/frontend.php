@@ -2246,7 +2246,7 @@ if ($do=='addfile'){
 						@mkdir(PATH.'/upload/userfiles/'.$id);
 					
 						$tmp_name   = $data_array["tmp_name"];
-						$name       = $data_array["name"];
+						$name       = strtolower($data_array["name"]);
 						$size       = $data_array["size"];
 						$size_mb    += round(($size/1024)/1024, 2);
 						
@@ -2257,7 +2257,8 @@ if ($do=='addfile'){
                                 !strstr($name, '.js') &&
                                 !strstr($name, '.htm') &&
                                 !strstr($name, '.html') &&
-                                !strstr($name, '.phtml')
+                                !strstr($name, '.phtml') &&
+                                !strstr($name, '.htaccess')
                               ){
 								if (move_uploaded_file($tmp_name, PATH."/upload/userfiles/$id/$name")){
 									$loaded_files[] = $name;
