@@ -694,7 +694,7 @@ if ($do=='profile'){
     $usr['cityurl']             = urlencode($usr['city']);
 
     $usr['photos_count']		= (int)usrPhotoCount($id);
-	$usr['can_add_foto']		= ((usrPhotoCount($usr['id'])<$cfg['photosize'] || $cfg['photosize']==0) && $cfg['sw_photo']);
+	$usr['can_add_foto']		= ((usrPhotoCount($usr['id'], false)<$cfg['photosize'] || $cfg['photosize']==0) && $cfg['sw_photo']);
     $usr['board_count']			= (int)$inDB->rows_count('cms_board_items', "user_id=$id AND published=1");
     $usr['comments_count']		= (int)$inDB->rows_count('cms_comments', "user_id=$id AND published=1");
 
