@@ -282,7 +282,15 @@
                             1       => 'id',
                             'opt'   => 'in'
                          );
-
+						 
+        $routes[] = array(
+                            '_uri'  => '/^users\/([0-9]+)\/messages([0-9]+).html$/i',
+                            'do'    => 'messages',
+                            1       => 'id',
+                            'opt'   => 'in',
+                            2       => 'cpage'
+                         );
+						 
         //RewriteRule ^users/([0-9]*)/messages-sent.html$ /index.php?view=users&do=messages&id=$1&opt=out
         $routes[] = array(
                             '_uri'  => '/^users\/([0-9]+)\/messages\-sent.html$/i',
@@ -290,7 +298,15 @@
                             1       => 'id',
                             'opt'   => 'out'
                          );
-
+						 
+        $routes[] = array(
+                            '_uri'  => '/^users\/([0-9]+)\/messages\-sent([0-9]+).html$/i',
+                            'do'    => 'messages',
+                            1       => 'id',
+                            'opt'   => 'out',
+                            2       => 'cpage'
+                         );
+						 
         //RewriteRule ^users/([0-9]*)/messages-new.html$ /index.php?view=users&do=messages&id=$1&opt=new
         $routes[] = array(
                             '_uri'  => '/^users\/([0-9]+)\/messages\-new.html$/i',
@@ -308,7 +324,16 @@
                             2       => 'with_id',
                             'opt'   => 'history'
                          );
-
+						 
+        $routes[] = array(
+                            '_uri'  => '/^users\/([0-9]+)\/messages\-history([0-9]+)\-([0-9]+).html$/i',
+                            'do'    => 'messages',
+                            1       => 'id',
+                            2       => 'with_id',
+                            'opt'   => 'history',
+                            3       => 'cpage'
+                         );
+						 
         //RewriteRule ^users/[0-9]*)/reply([0-9]*).html$ /index.php?view=users&do=sendmessage&id=$1&replyid=$2
         $routes[] = array(
                             '_uri'  => '/^users\/([0-9]+)\/reply([0-9]+).html$/i',
