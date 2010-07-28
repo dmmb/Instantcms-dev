@@ -36,12 +36,15 @@
 		$cfg['shownum'] = $_REQUEST['shownum'];
 		$cfg['showlink'] = $_REQUEST['showlink'];
 		$cfg['showdesc'] = $_REQUEST['showdesc'];
+		$cfg['cat_id'] = $_REQUEST['cat_id'];
 
+		if (!isset($_REQUEST['subs'])) { $cfg['subs'] = 0; } else { $cfg['subs'] = 1; }
+		
         $inCore->saveModuleConfig($_REQUEST['id'], $cfg);
 		$msg = 'Настройки сохранены.';
 
 	}
-	
+	if (!isset($cfg['subs'])) { $cfg['subs'] = 0;}
 	if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
 
 ?>
@@ -66,6 +69,27 @@
   <input name="showdesc" type="radio" value="0" <?php if (@!$cfg['showdesc']) { echo 'checked="checked"'; } ?>/>
 Нет</td>
     </tr>
+	<tr>
+            <td valign="top"><strong>Материалы из раздела:</strong> </td>
+            <td valign="top"><div><select name="cat_id" id="cat_id">
+              <option value="-1">-- Все разделы --</option>
+              <?php
+                  if (isset($cfg['cat_id'])) {
+                        echo $inCore->getListItemsNS('cms_category', $cfg['cat_id']);
+                    } else {
+                       echo $inCore->getListItemsNS('cms_category');
+                    }
+              ?>
+            </select></div>
+              <div style="margin-top:5px">
+                <table border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td><input name="subs" type="checkbox" value="1" <?php if (@$cfg['subs']) { echo 'checked'; } ?>/></td>
+                    <td>Вместе с подразделами </td>
+                  </tr>
+                </table>
+            </div></td>
+     </tr>
   </table>
   <p>
     <input name="opt" type="hidden" id="do" value="save" />
