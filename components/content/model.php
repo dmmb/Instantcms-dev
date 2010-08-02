@@ -396,6 +396,9 @@ class cms_model_content{
         $this->inDB->query("DELETE FROM cms_content_access WHERE content_id={$id}");
         $this->inDB->query("DELETE FROM cms_tags WHERE target='content' AND item_id={$id}");
 
+		@unlink(PATH.'/images/photos/small/article'.$id.'.jpg');
+		@unlink(PATH.'/images/photos/medium/article'.$id.'.jpg');
+	   
         $inCore->deleteRatings('content', $id);
         $inCore->deleteComments('article', $id);
 

@@ -589,6 +589,11 @@ if ($do=='edititem'){
             $uploadthumb2   = $uploaddir . 'medium/' . $filename;
 
             if (@move_uploaded_file($_FILES['picture']['tmp_name'], $uploadphoto)) {
+
+				if ($item['file'] && $item['file'] != 'nopic.jpg'){
+					@unlink($uploaddir . 'small/'.$item['file']);
+					@unlink($uploaddir . 'medium/'.$item['file']);
+				}
                 @img_resize($uploadphoto, $uploadthumb, $item['thumb1'], $item['thumb1'], $item['thumbsqr']);
                 @img_resize($uploadphoto, $uploadthumb2, $item['thumb2'], $item['thumb2'], false, $cfg['watermark']);
                 if ($cfg['watermark']) { @img_add_watermark($uploadphoto);	}
