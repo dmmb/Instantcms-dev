@@ -34,14 +34,15 @@
     $cfg = $inCore->loadModuleConfig($_REQUEST['id']);
 
     if (!$cfg['tpl']) { $cfg['tpl'] = 'mod_menu.tpl'; }
+    if (!isset($cfg['show_home'])) { $cfg['show_home'] = 1; }
 
 	if($opt=='save'){
 	
 		$cfg = array();
-		$cfg['menu']    = $inCore->request('menu', 'str', 'mainmenu');
-		$cfg['tpl']     = $inCore->request('tpl', 'str', 'tpl');
-		$cfg['jtree']   = $inCore->request('jtree', 'int', 1);
-
+		$cfg['menu']        = $inCore->request('menu', 'str', 'mainmenu');
+		$cfg['tpl']         = $inCore->request('tpl', 'str', 'tpl');
+		$cfg['show_home']   = $inCore->request('show_home', 'int', '1');
+		
         $inCore->saveModuleConfig($_REQUEST['id'], $cfg);
 		
 		$msg = 'Настройки сохранены.';
@@ -63,6 +64,13 @@
                     <option value="menu<?php echo $m; ?>" <?php if (@$cfg['menu']=='menu'.$m) { echo 'selected'; }?>>Дополнительное меню <?php echo $m; ?></option>
                 <?php } ?>
             </select>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Показывать пункт &laquo;Главная&raquo;:</strong></td>
+            <td>
+                <label><input type="radio" name="show_home" value="1" <?php if ($cfg['show_home']){ ?>checked="checked"<?php } ?>/> Да</label>
+                <label><input type="radio" name="show_home" value="0" <?php if (!$cfg['show_home']){ ?>checked="checked"<?php } ?>/> Нет</label>
             </td>
           </tr>
           <tr>

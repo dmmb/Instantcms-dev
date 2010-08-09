@@ -16,6 +16,7 @@
 		$cfg        = $inCore->loadModuleConfig($module_id);
 
 		if (!isset($cfg['menu'])) { $menu = 'mainmenu'; } else { $menu = $cfg['menu']; }
+		if (!isset($cfg['show_home'])) { $cfg['show_home'] = 1; }
 
 		$sql         = "SELECT NSLeft, NSRight, NSLevel FROM cms_menu WHERE id = $menuid";
 		$result      = $inDB->query($sql);
@@ -27,7 +28,7 @@
 		$rs_rows     = $nested_sets->SelectSubNodes($root_id);
 
         $items       = array();
-
+        
 		while ($row = $inDB->fetch_assoc($rs_rows)){
 			if ($row['menu'] == $menu){
                 $item               = $row;

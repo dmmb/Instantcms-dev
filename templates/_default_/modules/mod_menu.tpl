@@ -2,6 +2,21 @@
 
 <div>
     <ul id="{$menu}" class="filetree treeview-famfamfam">
+
+        {if $cfg.show_home}
+            {php}$padding = '0px';{/php}
+            {php}$fileicon   = '/includes/jquery/treeview/images/file.gif';{/php}
+            <li style="padding:{php}echo $padding;{/php}">
+                <span class="file" style="background: url({php}echo $fileicon;{/php}) 0 0 no-repeat;">
+                    {if $menuid==1}
+                        {$LANG.PATH_HOME}
+                    {else}
+                        <a href="/">{$LANG.PATH_HOME}</a>
+                    {/if}
+                </span>
+            </li>
+        {/if}
+
 {foreach key=key item=item from=$items}
     {if $item.allow_group == -1 || $item.allow_group == $user_group || $is_admin}
         {if $item.published}
