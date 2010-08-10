@@ -29,7 +29,7 @@
                 <td width="210">
                     <strong>{$LANG.TITLE}:</strong>
                 </td>
-                <td><input type="text" name="title" value="{$item.title}" style="width:250px"/></td>
+                <td><input type="text" name="title" value="{$item.title|escape:'html'}" style="width:250px"/></td>
             </tr>
             <tr>
                 <td width="">
@@ -62,7 +62,7 @@
                     <strong>{$LANG.PRICE}:</strong>
                 </td>
                 <td>
-                    <input type="text" name="price" value="{$item.price}" style="width:250px"/>
+                    <input type="text" name="price" value="{$item.price|escape:'html'}" style="width:250px"/>
                 </td>
             </tr>
             <tr>
@@ -81,7 +81,7 @@
                     <span class="hint">{$LANG.KEYWORDS}</span>
                 </td>
                 <td>
-                    <input type="text" name="tags" value="{$item.tags}" style="width:250px"/>
+                    <input type="text" name="tags" value="{$item.tags|escape:'html'}" style="width:250px"/>
                 </td>
             </tr>            
         </table>
@@ -95,7 +95,7 @@
                         {if $field.makelink} <br/><span class="hint">{$LANG.COMMA_SEPARATE}</span>{/if}
                     </td>
                     <td>
-                        <input style="width:250px" name="fdata[{$id}]" type="text" id="fdata" size="" value="{if $field.value}{$field.value}{/if}"/>
+                        <input style="width:250px" name="fdata[{$id}]" type="text" id="fdata" size="" value="{if $field.value}{$field.value|escape:'html'}{/if}"/>
                     </td>
                     {else}
                         <td width="214" valign="top"><strong>{$field.title}:</strong></td>

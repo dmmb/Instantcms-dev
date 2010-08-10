@@ -8,7 +8,7 @@
 				<select name="obtype" id="obtype" style="width:120px">
 					{$obtypes}
 				</select>
-				<input name="title" type="text" id="title" style="width:280px" maxlength="250"  value="{$title}"/>
+				<input name="title" type="text" id="title" style="width:280px" maxlength="250"  value="{$title|escape:'html'}"/>
 			</td>
 		</tr>
 		<tr class="proptable">
@@ -16,7 +16,7 @@
 				<span>{$LANG.CITY}:</span>
 			</td>
 			<td height="35" valign="top">
-				<input name="city_ed" type="text" id="city_ed" style="width:182px" value="{$city}"/> {$LANG.OR_SELECTING} {$cities}
+				<input name="city_ed" type="text" id="city_ed" style="width:182px" value="{$city|escape:'html'}"/> {$LANG.OR_SELECTING} {$cities}
 			</td>
 		</tr>
 		<tr>

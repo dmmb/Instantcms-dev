@@ -17,7 +17,7 @@
                       <td valign="top"><strong>{$LANG.PHOTO_TITLE}: </strong></td>
                   </tr>
                   <tr>
-                      <td valign="top"><input name="title" type="text" id="title" size="40" maxlength="250" value="{$photo.title}"/></td>
+                      <td valign="top"><input name="title" type="text" id="title" size="40" maxlength="250" value="{$photo.title|escape:'html'}"/></td>
                   </tr>
                   <tr>
                       <td valign="top"><strong>{$LANG.PHOTO_DESCRIPTION}:</strong> </td>
@@ -29,7 +29,7 @@
                       <td valign="top"><strong>{$LANG.TAGS}:</strong></td>
                   </tr>
                   <tr>
-                     <td valign="top"><input name="tags" type="text" id="tags" size="40" value="{$photo_tag}"/>
+                     <td valign="top"><input name="tags" type="text" id="tags" size="40" value="{$photo_tag|escape:'html'}"/>
                                               <br />
                                               <span><small>{$LANG.KEYWORDS}</small></span></td>
                   </tr>

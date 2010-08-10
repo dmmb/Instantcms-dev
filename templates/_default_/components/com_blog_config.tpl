@@ -6,7 +6,7 @@
   <table width="550" border="0" cellpadding="6" cellspacing="0" style="background-color:#EBEBEB">
 	<tr>
 	  <td width="160"><strong>{$LANG.BLOG_TITLE}: </strong></td>
-	  <td><input name="title" type="text" id="title" value="{$blog.title}" style="width:360px"/></td>
+	  <td><input name="title" type="text" id="title" value="{$blog.title|escape:'html'}" style="width:360px"/></td>
 	</tr>
 	<tr>
 	  <td><strong>{$LANG.SHOW_BLOG}:</strong></td>

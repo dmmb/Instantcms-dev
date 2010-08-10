@@ -2,7 +2,7 @@
 	<table style="background-color:#EBEBEB" border="0" cellspacing="0" cellpadding="6">
 		<tr>
 			<td width="192"><strong>{$LANG.CAT_NAME}: </strong></td>
-			<td width="363"><input name="title" type="text" id="title" size="40" value="{$mod.title}"/></td>
+			<td width="363"><input name="title" type="text" id="title" size="40" value="{$mod.title|escape:'html'}"/></td>
 		</tr>
 	</table>
 	<p>

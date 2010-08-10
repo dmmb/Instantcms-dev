@@ -626,7 +626,9 @@ if ($do=='newpost' || $do=='editpost'){
         echo '<p>'.$_LANG['WANT_SEE'].' <a href="/users/'.$user_id.'/karma.html">'.$_LANG['HISTORY_YOUR_KARMA'].'</a>?</p>';
         return;
     }
-
+	
+	$inPage->addPathway($blog['title'], $model->getBlogURL(null, $blog['seolink']));
+	
     //для нового поста
 	if ($do=='newpost'){
         //Проверяем доступ
@@ -642,16 +644,16 @@ if ($do=='newpost' || $do=='editpost'){
         //Проверяем доступ
         $is_post_author = $model->isUserPostAuthor($post_id, $user_id);
 		if (!$myblog && !$is_post_author && !$is_admin) { $inCore->redirectBack(); }
-        //Устанавливаем заголовки
-        $inPage->addPathway($_LANG['EDIT_POST']);
-		$inPage->setTitle($_LANG['EDIT_POST']);
-		$inPage->printHeading($_LANG['EDIT_POST']);
         //Получаем исходный пост из базы
         $post = $model->getPost($post_id);
-        if (!$post){ $inCore->redirectBack(); }
+        if (!$post){ $inCore->redirectBack(); }		
+        //Устанавливаем заголовки
+		$inPage->addPathway($post['title'], $model->getPostURL(null, $blog['seolink'], $post['postlink']));
+        $inPage->addPathway($_LANG['EDIT_POST'], $_SERVER['REQUEST_URI']);
+		$inPage->setTitle($_LANG['EDIT_POST']);
+		$inPage->printHeading($_LANG['EDIT_POST']);
 	}
 
-	$inPage->addPathway($blog['title'], $model->getBlogURL(null, $blog['seolink']));
 	$inPage->initAutocomplete();
 
     //Удаляем промежуточные данные о загруженных изображениях
@@ -832,9 +834,9 @@ if ($do=='newcat' || $do=='editcat'){
     //Редактирование рубрики
     if ($do=='editcat'){
         //Устанавливаем заголовки и глубиномер
-		$inPage->addPathway($_LANG['EDIT_CAT']);
-		$inPage->setTitle($_LANG['EDIT_CAT']);
-		$inPage->printHeading($_LANG['EDIT_CAT']);
+		$inPage->addPathway($_LANG['RENAME_CAT']);
+		$inPage->setTitle($_LANG['RENAME_CAT']);
+		$inPage->printHeading($_LANG['RENAME_CAT']);
         //Загружаем рубрику
         $cat    = $model->getBlogCategory($cat_id);
         if (!$cat) {

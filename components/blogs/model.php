@@ -454,7 +454,8 @@ class cms_model_blogs{
                    u.nickname as author,
                    u.login as author_login, 
                    u.id as author_id,
-                   b.seolink as bloglink
+                   b.seolink as bloglink,
+				   p.seolink as postlink
 			FROM cms_blog_posts p, cms_blogs b, cms_users u
 			WHERE p.id = $post_id AND p.blog_id = b.id AND p.user_id = u.id LIMIT 1";
 

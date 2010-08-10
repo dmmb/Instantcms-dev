@@ -5,7 +5,7 @@
 	<table width="100%" border="0" cellpadding="6" cellspacing="0">
 		<tr>
 			<td width="160"><strong>{$LANG.TITLE_POST}: </strong></td>
-		  	<td><input name="title" type="text" id="title" style="width:400px" value="{$mod.title}"/></td>
+		  	<td><input name="title" type="text" id="title" style="width:400px" value="{$mod.title|escape:'html'}"/></td>
 		</tr>
 
 		{if $blog.showcats}
@@ -37,11 +37,11 @@
 		
 		<tr>
 			<td><strong>{$LANG.YOUR_MOOD}:</strong></td>
-			<td><input name="feel" type="text" id="feel" style="width:400px" value="{$mod.feel}"/></td>
+			<td><input name="feel" type="text" id="feel" style="width:400px" value="{$mod.feel|escape:'html'}"/></td>
 		</tr>
 		<tr>
 			<td><strong>{$LANG.PLAY_MUSIC}:</strong></td>
-			<td><input name="music" type="text" id="music" style="width:400px" value="{$mod.music}"/></td>
+			<td><input name="music" type="text" id="music" style="width:400px" value="{$mod.music|escape:'html'}"/></td>
 		</tr>			
 		<tr>
 			<td colspan="2">
@@ -61,7 +61,7 @@
 				<span><small>{$LANG.KEYWORDS}</small></span>
 			</td>
 			<td>
-				<input name="tags" type="text" id="tags" style="width:400px" value="{$tagline}"/>
+				<input name="tags" type="text" id="tags" style="width:400px" value="{$tagline|escape:'html'}"/>
 				
 				<script type="text/javascript">
 					{$autocomplete_js}
