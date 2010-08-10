@@ -281,6 +281,10 @@ if ($do == 'config'){
             $uploadthumb    = $uploaddir . 'small/' . $filename;
 
             if ($inCore->moveUploadedFile($_FILES['picture']['tmp_name'], $uploadphoto, $_FILES['picture']['error'])) {
+					if ($club['imageurl'] && $club['imageurl']!='nopic.jpg'){
+						@unlink(PATH.'/images/clubs/'.$club['imageurl']);
+						@unlink(PATH.'/images/clubs/small/'.$club['imageurl']);
+					}
                     if(!isset($cfg['watermark'])) { $cfg['watermark'] = 0; }
                     @img_resize($uploadphoto, $uploadthumb, $cfg['thumb1'], $cfg['thumb1'], $cfg['thumbsqr']);
                     @img_resize($uploadphoto, $uploadphoto, $cfg['thumb2'], $cfg['thumb2'], $cfg['thumbsqr']);
