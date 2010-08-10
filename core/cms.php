@@ -2106,7 +2106,7 @@ class cmsCore {
             } else {
                 $s = '';
             }
-            $html .= '<option value="'.$item[$id_field].'" '.$s.'>'.$item[$title_field].'</option>';
+            $html .= '<option value="'.htmlspecialchars($item[$id_field]).'" '.$s.'>'.$item[$title_field].'</option>';
         }
         return $html;
     }
@@ -2148,7 +2148,7 @@ class cmsCore {
                     } else {
                         $padding = '';
                     }
-                    $html .= '<option value="'.$node['id'].'" '.$s.'>'.$padding.$node['title'].'</option>';
+                    $html .= '<option value="'.htmlspecialchars($node['id']).'" '.$s.'>'.$padding.$node['title'].'</option>';
                 }
             }
         }
