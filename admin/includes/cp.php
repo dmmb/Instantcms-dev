@@ -1220,6 +1220,8 @@ function cpMenutypeById($id){
 					 			break;
 		case 'blog':			$html = '<span id="menutype"><a href="'.$item['link'].'">ֱכמד</a></span> - '.$inDB->get_field('cms_blogs', 'id='.$item['linkid'], 'title');
 					 			break;
+		case 'photoalbum':		$html = '<span id="menutype"><a href="'.$item['link'].'">װמעמאכüבמל</a></span> - '.$inDB->get_field('cms_photo_albums', 'id='.$item['linkid'], 'title');
+					 			break;
 	}	
 	$clear = strip_tags($html);
 	$r = strlen($html) - strlen($clear);

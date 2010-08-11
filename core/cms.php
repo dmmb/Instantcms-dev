@@ -2073,6 +2073,9 @@ class cmsCore {
         if ($linktype=='pricecat'){
             $menulink = '/price/'.$linkid;
         }
+        if ($linktype=='photoalbum'){
+            $menulink = '/photos/'.$linkid;
+        }
 
         return $menulink;
 

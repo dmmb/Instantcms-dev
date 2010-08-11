@@ -549,6 +549,7 @@ function applet_menu(){
                             <option value="blog" <?php if (@$mod['linktype']=='blog') { echo 'selected'; }?>>Открыть блог</option>
                             <option value="uccat" <?php if (@$mod['linktype']=='uccat') { echo 'selected'; }?>>Открыть категорию каталога</option>
                             <option value="pricecat" <?php if (@$mod['linktype']=='pricecat') { echo 'selected'; }?>>Открыть категорию прайс-листа</option>
+                            <option value="photoalbum" <?php if (@$mod['linktype']=='photoalbum') { echo 'selected'; }?>>Открыть альбом фотогалереи</option>
                         </select>                        
                     </div>
 
@@ -657,6 +658,22 @@ function applet_menu(){
                                         echo $inCore->getListItems('cms_price_cats', $mod['linkid']);
                                     } else {
                                         echo $inCore->getListItems('cms_price_cats');
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="t_photoalbum" class="menu_target" style="display:<?php if ($mod['linktype']=='photoalbum') { echo  'block'; } else { echo 'none'; } ?>">
+                        <div>
+                            <strong>Выберите фотоальбом</strong>
+                        </div>
+                        <div>
+                           <select name="photoalbum" id="photoalbum" style="width:100%">
+                                <?php
+                                    if (@$mod['linktype']=='photoalbum') {
+                                        echo $inCore->getListItems('cms_photo_albums', $mod['linkid'], 'id', 'ASC', 'NSDiffer = ""');
+                                    } else {
+                                        echo $inCore->getListItems('cms_photo_albums', 0, 'id', 'ASC', 'NSDiffer = ""');
                                     }
                                 ?>
                             </select>
