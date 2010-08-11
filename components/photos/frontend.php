@@ -79,6 +79,7 @@ if ($do=='view'){
     $can_view = true;
 
 	//Заголовки страницы
+	$menu_item = $inCore->getMenuItem($inCore->menuId());
 	if ($album['parent_id']==0){
 		if($id == $root['id']){
 			$pagetitle = $inCore->menuTitle();
@@ -104,7 +105,9 @@ if ($do=='view'){
 			$sql     = "SELECT id, title, NSLevel FROM cms_photo_albums WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0 AND NSDiffer = '' ORDER BY NSLeft";
 			$rs_rows = $inDB->query($sql) or die('Error while building album path');
 			while($pcat=$inDB->fetch_assoc($rs_rows)){
-                $inPage->addPathway($pcat['title'], '/photos/'.$pcat['id']);
+				if (!($menu_item['linktype'] == 'photoalbum' && $menu_item['linkid'] == $album['id'])) {
+                	$inPage->addPathway($pcat['title'], '/photos/'.$pcat['id']);
+				}
 			}
 		}				
 		$inPage->setTitle($album['title']);
