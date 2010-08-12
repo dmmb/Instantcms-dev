@@ -1155,7 +1155,7 @@ class bbcode {
 					$size = getimagesize($_SERVER['DOCUMENT_ROOT'].$src);
 					$width = $size[0];
 					$height = $size[1];
-					while ($width > 640 || $height > 640){
+					while ($width > 400 || $height > 400){
 						$width  = round($width*0.9);
 						$height = round($height*0.9);
 						$zoom   = true;

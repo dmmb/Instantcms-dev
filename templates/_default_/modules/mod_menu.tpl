@@ -70,6 +70,9 @@
         {/if}
     {/if}
 {/foreach}
+    {section name=foo start=0 loop=$last_level step=1}
+        </ul></li>
+    {/section}
     </ul>
 </div>
 

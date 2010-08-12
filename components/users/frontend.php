@@ -1101,7 +1101,7 @@ if ($do=='addphoto'){
 			$inPage->addPathway($_LANG['ADD_PHOTO']);
 			
 			$inPage->printHeading($_LANG['ADD_PHOTO']);
-            $inPage->backButton(false);
+                        $inPage->backButton(false);
 	
 			if ($inCore->inRequest('upload')) {
 				//first upload step
@@ -1131,7 +1131,7 @@ if ($do=='addphoto'){
 							@img_resize($uploadphoto, $uploadthumb['small'], 96, 96, true);
 							@img_resize($uploadphoto, $uploadthumb['medium'], 600, 600, false, $cfg['watermark']);
 							if ($cfg['watermark']) { @img_add_watermark($uploadphoto);	}
-                            @unlink($uploadphoto);
+                                                        @unlink($uploadphoto);
 							//PREPARE FOR STEP 2
 							$inPage->setTitle($_LANG['ADD_PHOTO'].' - '.$_LANG['STEP'].' 2');
 													
@@ -1170,7 +1170,7 @@ if ($do=='addphoto'){
 												
 					//ADD TO ALBUM
 					$sql = "INSERT INTO cms_user_photos (user_id, pubdate, title, description, allow_who, hits, imageurl)
-							VALUES ($id, NOW(), '$title', '$description', '$allow_who', '0', '$imageurl')";	
+							VALUES ('$id', NOW(), '$title', '$description', '$allow_who', '0', '$imageurl')";
 					$inDB->query($sql);
 
 					cmsUser::checkAwards($id);

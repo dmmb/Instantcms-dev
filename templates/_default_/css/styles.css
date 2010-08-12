@@ -2270,7 +2270,7 @@ div.stat_block_bday { margin-left: 20px;    }
 div.stat_block_bday div.title { padding-left:18px; background:url(/components/users/images/birthday.gif) no-repeat left center; font-size:16px; color:#006699;; font-weight:bold; margin-bottom:5px; margin-top:20px;}
 div.stat_block_bday div.body { text-indent:30px; }
 
-div#user_ratings { padding:10px; }
+div#user_ratings { padding:10px; padding-bottom:0px; width:200px;}
 
 div#user_ratings div.karma, div#user_ratings div.rating { float:left; text-align:center; width: 50%; }
 
@@ -2289,7 +2289,9 @@ div#user_ratings .rating .value {  background-color:#006699; color:#FFF; padding
 div#user_profile_url{
     clear:both;
     display:block;
-    padding-top:15px;
+    padding:15px;
+    margin-top:15px;
+    border:dashed 1px silver;
     text-align:center;
 }
 
@@ -2297,10 +2299,7 @@ div.usr_clubs {padding: 15px; }
 div.usr_clubs span.label { margin-right:15px; font-weight:bold; }
 div.usr_clubs a.usr_club_link { padding-left:18px; background:url(/images/icons/club.gif) no-repeat left center; height:16px; line-height:16px; margin-right:5px; }
 
-div.usr_profile_menu{ margin-top:10px; clear:both; overflow:hidden; }
-
-div.usr_profile_menu a { padding:4px; height:24px; width:24px; border: solid 1px #FFF; overflow:hidden; float:left; }
-div.usr_profile_menu a:hover { padding:4px; height:24px; width:24px; background-color:#ebebeb; border:solid 1px gray; overflow:hidden; float:left; }
+div.usr_profile_menu{ margin-top:10px; clear:both; overflow:hidden; text-align:left; }
 
 a.select-avatar{
     height:16px;
