@@ -132,6 +132,11 @@ if ($do=='view'){
         foreach($subcats_list as $cat){
                 $sub = dbRowsCount('cms_photo_albums', 'NSLeft > '.$cat['NSLeft'].' AND NSRight < '.$cat['NSRight']);
                 if ($sub>1) { $cat['subtext'] = '/'.$sub; } else { $cat['subtext'] = ''; }
+				if ($cfg['tumb_view'] == 2 && $cfg['tumb_from'] == 2) {
+					$cat['iconurl'] = $model->randPhoto($cat['id'], true);
+				} elseif ($cfg['tumb_view'] == 2 && $cfg['tumb_from'] == 1) {
+					$cat['iconurl'] = $model->randPhoto($cat['id']);
+				}
 				$subcats[] = $cat;
 		}
 	} else {
@@ -139,11 +144,7 @@ if ($do=='view'){
 	}
 
 	//формируем содержимое альбома
-		$sql = "SELECT * FROM cms_photo_albums WHERE id = $id LIMIT 1";				
-		$result = $inDB->query($sql) ;
-				
-		if ($inDB->num_rows($result)==1){	
-			$album = $inDB->fetch_assoc($result);
+		if ($album){	
 			if(!$show_hidden) { $totsql	= ' AND published = 1'; } else { $totsql = ''; }
 			$total_foto = $inDB->query("SELECT id FROM cms_photo_files WHERE album_id = $id $totsql") ;
 			$total = $inDB->num_rows($total_foto);	

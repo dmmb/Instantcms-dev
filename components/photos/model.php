@@ -135,6 +135,37 @@ class cms_model_photos{
 
         return $photo_id;
     }
+	
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+	public function randPhoto($album_id, $is_sub=false){
+
+        $catsql = 'AND f.album_id = '.$album_id;
+
+		if ($is_sub && $album_id != '0') {
+            $rootcat = $this->inDB->get_fields('cms_photo_albums', 'id='.$album_id, 'NSLeft, NSRight, NSDiffer');
+			if ($rootcat['NSDiffer']){
+            $catsql = " AND a.NSLeft >= {$rootcat['NSLeft']} AND a.NSRight <= {$rootcat['NSRight']} AND a.NSDiffer = '{$rootcat['NSDiffer']}'";
+			} else {
+			$catsql = " AND a.NSLeft >= {$rootcat['NSLeft']} AND a.NSRight <= {$rootcat['NSRight']} AND a.NSDiffer = ''";
+			}
+        }
+
+		$sql = "SELECT f.file
+				FROM cms_photo_files f, cms_photo_albums a
+				WHERE f.published = 1 AND f.album_id = a.id ".$catsql."
+				ORDER BY RAND()
+				LIMIT 1";
+					
+        $result = $this->inDB->query($sql);
+
+		if ($this->inDB->num_rows($result)){
+			$photo_url = $this->inDB->fetch_assoc($result);
+		} else { return false; }
+
+        return $photo_url['file'];
+    }
 
 /* ==================================================================================================== */
 /* ==================================================================================================== */
@@ -181,6 +212,7 @@ class cms_model_photos{
                     description='{$album['description']}',
                     published='{$album['published']}',
                     showdate='{$album['showdate']}',
+					iconurl='{$album['iconurl']}',
                     orderby='{$album['orderby']}',
                     orderto='{$album['orderto']}',
                     public='{$album['public']}',

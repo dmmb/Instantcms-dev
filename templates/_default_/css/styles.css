@@ -546,6 +546,45 @@ td{
 	padding:5px;
 	background-color:#EBEBEB;
 }
+.photo_row{
+	height:auto !important;
+	overflow:hidden;
+	padding:0.8em 0;
+}
+.photo_album_tumb{
+height:100%;
+float:left;
+}
+.photo_container{
+text-align:center !important;
+}
+.photo_album_img{
+background-color:#FFFFFF;
+background-image:none;
+border:1px solid #C0C0C0;
+margin:0 0.3em 0.3em 0;
+padding:3px;
+vertical-align:bottom;
+}
+.photo_txt{
+text-align:center !important;
+}
+.photo_txt ul {
+margin:0 !important;
+padding:0 !important;
+list-style-image:none;
+list-style-position:outside;
+list-style-type:none;
+}
+.photo_txt li {
+background-image:none;
+line-height:115% !important;
+list-style-image:none;
+list-style-type:none;
+margin:0 !important;
+padding:0 !important;
+}
+
 /*---------------------------- ARTICLE CONTENTS ------------------------------*/
 .con_pt {
 	display:block;

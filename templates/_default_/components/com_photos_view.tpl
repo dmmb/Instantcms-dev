@@ -24,21 +24,49 @@
 {* ======================= список категорий ====================================== *}
 {* =============================================================================== *}
 	{if $is_subcats}
-    	{assign var="col" value="1"}
-        <table class="categorylist" style="margin-bottom:10px" cellspacing="3" width="100%" border="0">
-        {foreach key=tid item=cat from=$subcats}
-            {if $col==1} <tr> {/if}
-                <td width="16" valign="top"><img src="/images/markers/photoalbum.png" border="0" /></td>
-                <td width="" valign="top">
-                   <div><a href="/photos/{$cat.id}">{$cat.title}</a> ({$cat.content_count}{$cat.subtext})</div>
-                    {if $cat.description} <div>{$cat.description}</div>{/if}
-                </td>
-				{if $col==$maxcols} </tr> {assign var="col" value="1"} {else} {math equation="x + 1" x=$col assign="col"} {/if}
-		{/foreach}
-		{if $col>1} 
-			<td colspan="{math equation="x - y + 1" x=$col y=$maxcols}">&nbsp;</td></tr>
-		{/if}
-        </table>
+    	{if ($cfg.tumb_view == '2' ||  $cfg.tumb_view == '3') && (!$album.NSDiffer || !$cfg.tumb_club)}
+        {assign var="col" value="1"}
+        	{foreach key=tid item=cat from=$subcats}
+            {if $col==1}<div class="photo_row">{/if}
+            	<div class="photo_album_tumb" style="width:{math equation="100 / z" z=$maxcols}%">
+                	<div class="photo_container">
+                    	{if $cat.iconurl}
+                    	<a href="/photos/{$cat.id}"><img class="photo_album_img" src="/images/photos/small/{$cat.iconurl}" alt="{$cat.title}" border="0" /></a>
+                        {else}
+                        <a href="/photos/{$cat.id}"><img class="photo_album_img" src="/images/photos/no_image.png" alt="{$cat.title}" border="0" width="{$cat.thumb1}px" /></a>
+                        {/if}
+                    </div>
+                    <div class="photo_txt">
+                    	<ul>
+                        	<li><a href="/photos/{$cat.id}">{$cat.title}</a> ({$cat.content_count} {$cat.subtext})</li>
+                            {if $cat.description}<li>{$cat.description}</li>{/if}
+                        </ul>
+                    </div>
+                </div>
+             
+             {if $col==$maxcols}<div class="blog_desc"></div></div> {assign var="col" value="1"} {else} {math equation="z + 1" z=$col assign="col"}  {/if}
+             
+            {/foreach}
+            {if $col>1} 
+                <div class="blog_desc"></div></div>
+            {/if}
+        {else}
+            {assign var="col" value="1"}
+            <table class="categorylist" style="margin-bottom:10px" cellspacing="3" width="100%" border="0">
+            {foreach key=tid item=cat from=$subcats}
+                {if $col==1} <tr> {/if}
+                    <td width="16" valign="top"><img src="/images/markers/photoalbum.png" border="0" /></td>
+                    <td width="" valign="top">
+                       <div><a href="/photos/{$cat.id}">{$cat.title}</a> ({$cat.content_count}{$cat.subtext})</div>
+                        {if $cat.description} <div>{$cat.description}</div>{/if}
+                    </td>
+                    {if $col==$maxcols} </tr> {assign var="col" value="1"} {else} {math equation="x + 1" x=$col assign="col"} {/if}
+            {/foreach}
+            {if $col>1} 
+                <td colspan="{math equation="x - y + 1" x=$col y=$maxcols}">&nbsp;</td></tr>
+            {/if}
+            </table>
+    	{/if}
     {/if}
 {* =============================================================================== *}
 {* ======================= список фотографий ===================================== *}
@@ -80,6 +108,7 @@
 				</table>
        	{/if}
 		{if $album.showtype != 'list'}
+        	{assign var="col" value="1"}
 			<div class="photo_gallery">
 				<table cellpadding="5" cellspacing="0" border="0" width="100%"> 
 					{foreach key=tid item=con from=$cons}
