@@ -899,7 +899,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                     <input name="showdate" type="radio" value="0"  <?php if (@!$mod['showdate']) { echo 'checked="checked"'; } ?> />
             Нет</label></td>
         </tr>
-        <?php if ($do=='add_photo'){ ?>
+        <?php if ($opt=='add_photo'){ ?>
         <tr>
         <td>Cохранить оригинал: </td>
         <td><input name="saveorig" type="radio" value="1" checked="checked" />Да<input name="saveorig" type="radio" value="0"  />Нет</label></td>
