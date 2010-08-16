@@ -550,10 +550,12 @@ td{
 	height:auto !important;
 	overflow:hidden;
 	padding:0.8em 0;
+	width:99%;
 }
 .photo_album_tumb{
 height:100%;
 float:left;
+position:relative;
 }
 .photo_container{
 text-align:center !important;
@@ -568,6 +570,16 @@ vertical-align:bottom;
 }
 .photo_txt{
 text-align:center !important;
+}
+.photo_container_today{
+	color:#09F;
+	font-weight:bold;
+	position:absolute;
+	top: 40px;
+	left: 10px;
+	z-index: 1;
+	margin:0;
+	padding:0;
 }
 .photo_txt ul {
 margin:0 !important;

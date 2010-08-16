@@ -41,6 +41,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$cfg['tumb_view']   = $_REQUEST['tumb_view'];
 		$cfg['tumb_from']   = $_REQUEST['tumb_from'];
 		$cfg['tumb_club']   = $_REQUEST['tumb_club'];
+		$cfg['is_today']   	= $_REQUEST['is_today'];
 
 		$inCore->saveComponentConfig('photos', $cfg);
         
@@ -402,6 +403,13 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                         <option value="2" <?php if(@$cfg['tumb_from']=='2') { echo 'selected'; } ?>>Включая подкатегорию</option>
                   	</select>				  </td>
 			    </tr>
+                <tr>
+                    <td><strong>Показывать количество новых фото в альбомах за день?</strong></td>
+                        <td>
+                            <input name="is_today" type="radio" value="1" <?php if (@$cfg['is_today']) { echo 'checked="checked"'; } ?> /> Да
+                            <input name="is_today" type="radio" value="0"  <?php if (@!$cfg['is_today']) { echo 'checked="checked"'; } ?> /> Нет
+                        </td>
+                </tr>
 			  </table>
 			  <p>
 				<input name="opt" type="hidden" value="saveconfig" />
@@ -645,7 +653,13 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                if (!isset($mod['published'])) { $mod['published'] = 1; }
         
 		?>
-		
+<script type="text/javascript">
+function showMapMarker(){
+    var file = $('select[name=iconurl]').val();
+    $('img#marker_demo').attr('src', '/images/photos/small/'+file);
+}
+</script>
+
         <form id="addform" name="addform" method="post" action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>">
             <table width="610" border="0" cellspacing="5" class="proptable">
                 <tr>
@@ -811,10 +825,16 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 				<?php
                     if ($opt=='edit_album' && $cfg['tumb_view'] == 3){ ?>
                 <tr>
-                    <td valign="top">Мини-эскиз:</td>
+                    <td valign="top">Мини-эскиз:<br />
+                    <?php if ($mod['iconurl']){ ?>
+                    <img id="marker_demo" src="/images/photos/small/<?php echo $mod['iconurl']; ?>" border="0">
+                    <?php  } else { ?>
+                    <img id="marker_demo" src="/images/photos/no_image.png" border="0">
+                    <?php  } ?>
+                    </td>
                     <td valign="top">
                     <?php if (dbRowsCount('cms_photo_files', 'album_id = '.$id.'')) { ?>	
-                            <select name="iconurl" id="iconurl" style="width:285px">
+                            <select name="iconurl" id="iconurl" style="width:285px" onchange="showMapMarker()">
                                 <?php
                                     if ($mod['iconurl']){
                                         echo $inCore->getListItems('cms_photo_files', $mod['iconurl'], 'id', 'ASC', 'album_id = '.$id.' AND published = 1', 'file');

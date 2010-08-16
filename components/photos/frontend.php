@@ -129,9 +129,13 @@ if ($do=='view'){
     if ($subcats_list){
 		$is_subcats = true;
 		$subcats    = array();
+		$today1 = date("d-m-Y");
         foreach($subcats_list as $cat){
                 $sub = dbRowsCount('cms_photo_albums', 'NSLeft > '.$cat['NSLeft'].' AND NSRight < '.$cat['NSRight']);
                 if ($sub>1) { $cat['subtext'] = '/'.$sub; } else { $cat['subtext'] = ''; }
+				if ($cfg['is_today']) {
+					$cat['today_count'] = (int)dbGetField('cms_photo_files', "DATE_FORMAT(pubdate, '%d-%m-%Y') = '$today1' AND album_id={$cat['id']}", 'COUNT(id)');
+				}
 				if ($cfg['tumb_view'] == 2 && $cfg['tumb_from'] == 2) {
 					$cat['iconurl'] = $model->randPhoto($cat['id'], true);
 				} elseif ($cfg['tumb_view'] == 2 && $cfg['tumb_from'] == 1) {

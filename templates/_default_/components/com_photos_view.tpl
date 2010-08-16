@@ -28,7 +28,7 @@
         {assign var="col" value="1"}
         	{foreach key=tid item=cat from=$subcats}
             {if $col==1}<div class="photo_row">{/if}
-            	<div class="photo_album_tumb" style="width:{math equation="100 / z" z=$maxcols}%">
+            	<div class="photo_album_tumb" style="width:{math equation="100 / z" z=$cfg.maxcols}%">
                 	<div class="photo_container">
                     	{if $cat.iconurl}
                     	<a href="/photos/{$cat.id}"><img class="photo_album_img" src="/images/photos/small/{$cat.iconurl}" alt="{$cat.title}" border="0" /></a>
@@ -42,9 +42,10 @@
                             {if $cat.description}<li>{$cat.description}</li>{/if}
                         </ul>
                     </div>
+                    {if $cat.today_count}<div class="photo_container_today">+{$cat.today_count}</div>{/if}
                 </div>
              
-             {if $col==$maxcols}<div class="blog_desc"></div></div> {assign var="col" value="1"} {else} {math equation="z + 1" z=$col assign="col"}  {/if}
+             {if $col==$cfg.maxcols}<div class="blog_desc"></div></div> {assign var="col" value="1"} {else} {math equation="z + 1" z=$col assign="col"}  {/if}
              
             {/foreach}
             {if $col>1} 
