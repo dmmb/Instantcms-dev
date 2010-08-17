@@ -47,7 +47,7 @@ function loadedByUser24h($user_id, $album_id){
 function pageBar($cat_id, $current, $perpage){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
-    $id = $inCore->request('id', 'int');
+    $id = intval($cat_id);
     global $_LANG;
 	$html = '';
 	$result = $inDB->query("SELECT id FROM cms_photo_files WHERE album_id = $cat_id") ;
