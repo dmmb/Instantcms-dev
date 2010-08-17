@@ -790,7 +790,7 @@ class cmsUser {
      * @param array $exclude
      * @return html
      */
-    public static function getUserWall($user_id, $usertype='user', $page=1){
+    public static function getUserWall($user_id, $usertype='user', $page=1, $clubUserIsRole=0, $clubUserIsAdmin=0){
 
         $inDB       = cmsDatabase::getInstance();
         $inCore     = cmsCore::getInstance();
@@ -804,7 +804,7 @@ class cmsUser {
             $myprofile = ($inUser->id == $user_id || $inUser->is_admin);
         } else {
             $inCore->loadLib('clubs');
-            $myprofile = (clubUserIsRole($user_id, $inUser->id, 'moderator') || clubUserIsAdmin($user_id, $inUser->id) || $inUser->is_admin);
+            $myprofile = ($clubUserIsRole || $clubUserIsAdmin || $inUser->is_admin);
         }
 
         $records = array();

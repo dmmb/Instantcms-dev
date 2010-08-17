@@ -116,10 +116,11 @@ if ($do=='club'){
     $inPage->setTitle($pagetitle);
     $inPage->addPathway($club['title']);
 
-    $user_id    = $inUser->id;
-    $is_admin 	= $inUser->is_admin || ($user_id == $club['admin_id']);
-    $is_moder 	= clubUserIsRole($id, $user_id, 'moderator');
-    $is_member 	= clubUserIsRole($id, $user_id, 'member');
+    $user_id    	= $inUser->id;
+    $is_admin 		= $inUser->is_admin || ($user_id == $club['admin_id']);
+    $is_moder 		= clubUserIsRole($id, $user_id, 'moderator');
+    $is_member 		= clubUserIsRole($id, $user_id, 'member');
+	$is_member_club	= clubUserIsMember($club['id'], $user_id);
 
     $is_access = true;
 
@@ -130,7 +131,7 @@ if ($do=='club'){
     $is_karma_enabled = false;
 
     if ($user_id){
-        $is_karma_enabled = (cmsUser::getKarma($user_id) >= $club['album_min_karma']) && clubUserIsMember($club['id'], $user_id) ? true : false;
+        $is_karma_enabled = (cmsUser::getKarma($user_id) >= $club['album_min_karma']) && $is_member_club ? true : false;
     }
 
     //CHECK IMAGE
@@ -144,10 +145,10 @@ if ($do=='club'){
 
     //JOIN/LEAVE LINK
     $club['member_link'] = '';
-    if ( clubUserIsMember($id, $user_id) ){
+    if ( $is_member_club ){
         $club['member_link'] = '<a href="/clubs/'.$id.'/leave.html" class="leave">'.$_LANG['LEAVE_CLUB'].'</a>';;
     } 
-    if ($club['clubtype']=='public' && ($user_id != $club['admin_id']) && !clubUserIsMember($id, $user_id)){
+    if ($club['clubtype']=='public' && ($user_id != $club['admin_id']) && !$is_member_club){
         $club['member_link'] = '<a href="/clubs/'.$id.'/join.html" class="join">'.$_LANG['JOIN_CLUB'].'</a>';
     }
 
@@ -155,7 +156,7 @@ if ($do=='club'){
     $club['admin'] 			= clubAdminLink($id);
     $club['members'] 		= clubTotalMembers($id);
     $club['members_list'] 	= clubMembersList($id);
-    $club['wall_html']		= cmsUser::getUserWall($club['id'], 'club');
+    $club['wall_html']		= cmsUser::getUserWall($club['id'], 'club', 1, $is_moder, $is_admin);
     $club['addwall_html'] 	= cmsUser::getUserAddWall($club['id'], 'club');
     $club['blog_id']		= clubBlogId($club['id']);
     $club['blog_content']	= clubBlogContent($club['blog_id'], $is_admin, $is_moder, $is_member);
