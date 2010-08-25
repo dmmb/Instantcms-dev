@@ -57,7 +57,7 @@ class cmsFormGen {
     private function getParamValue($param_name, $default){
 
         $param_name = (string)$param_name;
-        $default    = (string)$default;        
+        $default    = (string)$default;
         $value      = '';
 
         if (isset($this->default_cfg[$param_name])){
@@ -70,8 +70,8 @@ class cmsFormGen {
 
         }
 
-        if ($value == 'on') { $value = 1; }
-        if ($value == 'off') { $value = 0; }
+        if ($value === 'on') { $value = 1; }
+        if ($value === 'off') { $value = 0; }
 
         return $value;
 
@@ -95,7 +95,7 @@ class cmsFormGen {
 
         $this->html = ob_get_clean();
 
-        return iconv('utf-8', 'cp1251', $this->html);
+        return iconv('utf-8//IGNORE', 'cp1251//IGNORE', $this->html);
 
     }
 
@@ -115,7 +115,7 @@ class cmsFormGen {
             case 'flag':    return $this->renderFlag($param);
                             break;
 
-            case 'list':    return $this->renderList($param);
+            case 'list_db': return $this->renderListDB($param);
                             break;
 
         }
@@ -147,12 +147,44 @@ class cmsFormGen {
 
     }
 
-    private function renderList($param) {
+    private function renderListDB($param) {
+
+        $inDB = cmsDatabase::getInstance();
+
+        $html       = '';
 
         $name       = (string)$param['name'];
         $value      = (string)$param['value'];
 
-        return '';
+        $src        = (string)$param['src'];
+        $src_title  = isset($param['src_title']) ? (string)$param['src_title'] : 'title';
+        $src_id     = isset($param['src_value']) ? (string)$param['src_value'] : 'id';
+
+        $tree       = isset($param['tree']) ? (int)$param['tree'] : 0;
+        $order_by   = ($tree ? 'NSLeft' : $src_title);
+        $select     = "{$src_id} as value, {$src_title} as title";
+
+        if ($tree) { $select .= ", NSLevel as level"; }
+        
+        $sql        = "SELECT {$select}
+                       FROM {$src}
+                       ORDER BY {$order_by}
+                       LIMIT 100";
+
+        $result = $inDB->query($sql);
+
+        $html = '<select id="'.$name.'" name="'.$name.'" class="param-list">' . "\n";
+
+        if ($inDB->num_rows($result)){
+            while($option = $inDB->fetch_assoc($result)){
+                $option['title'] = iconv('cp1251', 'utf-8', $option['title']);
+                $html .= "\t" . '<option value="'.$option['value'].'">'.$option['title'].'</option>' . "\n";
+            }
+        }
+
+        $html .= '</select>' . "\n";
+
+        return $html;
 
     }
 

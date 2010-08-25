@@ -12,7 +12,7 @@
         <tr>
             <td><strong><?php echo $field['title']; ?></strong></td>
             <td>
-                <?php echo $field['html']; ?> - <?php echo $field['value']; ?>
+                <?php echo $field['html']; ?>
             </td>
         </tr>
         <?php } ?>
