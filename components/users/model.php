@@ -214,4 +214,58 @@ class cms_model_users{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
+    public function addInvite($invite) {
+
+        $sql = "INSERT INTO cms_user_invites (code, owner_id, createdate, is_used)
+                VALUES ('{$invite['code']}', '{$invite['owner_id']}', NOW(), 0)";
+
+        $this->inDB->query($sql);
+
+        return true;
+
+    }
+
+    public function giveInvites($count, $has_karma) {
+
+        $sql = "SELECT  u.id as id,
+                        SUM(k.points) as karma
+                FROM cms_users u, cms_user_karma k
+                WHERE k.user_id = u.id
+                GROUP BY u.id";
+
+        $res = $this->inDB->query($sql);
+
+        if (!$this->inDB->num_rows($res)) { return false; }
+
+        while($user = $this->inDB->fetch_assoc($res)){
+
+            if ($user['karma'] < $has_karma){ continue; }
+
+            for($c=1; $c<=$count; $c++){
+
+                $invite['code'] = md5($user['id'] .'$'. rand(10000,65535) . '$' . time() . '$' . $c);
+                $invite['owner_id'] = $user['id'];
+                $this->addInvite($invite);
+                
+            }
+
+            $this->inDB->query("UPDATE cms_users SET invdate = NOW() WHERE id = '{$user['id']}'");
+
+        }
+
+        return true;
+
+    }
+
+    public function deleteInvites() {
+
+        $this->inDB->query('DELETE FROM cms_user_invites WHERE is_used = 0');
+
+        return true;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
 }

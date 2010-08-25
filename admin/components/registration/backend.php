@@ -31,6 +31,11 @@ cpToolMenu($toolmenu);
 $cfg = $inCore->loadComponentConfig('registration');
 
 //CONFIG DEFAULTS
+if (!isset($cfg['reg_type'])) { $cfg['reg_type'] = 'open'; }
+if (!isset($cfg['inv_count'])) { $cfg['inv_count'] = 5; }
+if (!isset($cfg['inv_karma'])) { $cfg['inv_karma'] = 50; }
+if (!isset($cfg['inv_period'])) { $cfg['inv_period'] = 'WEEK'; }
+
 if (!isset($cfg['is_on'])) { $cfg['is_on'] = 1; }
 if (!isset($cfg['auth_redirect'])) { $cfg['auth_redirect'] = 'none'; }
 if (!isset($cfg['name_mode'])) { $cfg['name_mode'] = 'nickname'; }
@@ -39,8 +44,14 @@ if (!isset($cfg['ask_icq'])) { $cfg['ask_icq'] = 1; }
 if (!isset($cfg['ask_birthdate'])) { $cfg['ask_birthdate'] = 1; }
 
 //SAVE CONFIG
-if($opt=='saveconfig'){	
+if($opt=='saveconfig'){
+    
     $cfg = array();
+
+    $cfg['reg_type']    = $_REQUEST['reg_type'];
+    $cfg['inv_count']   = $_REQUEST['inv_count'];
+    $cfg['inv_karma']   = $_REQUEST['inv_karma'];
+    $cfg['inv_period']  = $_REQUEST['inv_period'];
 
     $cfg['is_on'] = $_REQUEST['is_on'];
     $cfg['act'] = $_REQUEST['act'];
@@ -56,13 +67,81 @@ if($opt=='saveconfig'){
 
     $inCore->saveComponentConfig('registration', $cfg);
 
-    $msg = 'Настройки сохранены.';
+    if ($_REQUEST['inv_now']){
+
+        $inCore->loadModel('users');
+        $model = new cms_model_users();
+
+        $inv_count = $cfg['inv_count'];
+        $inv_karma = $cfg['inv_karma'];
+
+        if ($inv_count){
+            $model->giveInvites($inv_count, $karma);
+        }
+
+    }
+
+    if ($_REQUEST['inv_delete']){
+
+        $inCore->loadModel('users');
+        $model = new cms_model_users();
+
+        $model->deleteInvites();
+
+    }
+
+    $inCore->redirectBack();
+
 }
 
 //SHOW CONFIG FORM
 if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
 ?>
-<form action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
+<form action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="optform">
+    <table width="661" border="0" cellpadding="10" cellspacing="0" class="proptable">
+        <tr>
+            <td width="110"><strong>Тип регистрации:</strong></td>
+            <td>
+                <select name="reg_type" id="name_mode" style="width:300px" onchange="if($(this).val()=='invite'){ $('.inv').show(); } else { $('.inv').hide(); }">
+                    <option value="open" <?php if (@$cfg['reg_type']=='open') {echo 'selected';} ?>>открытая</option>
+                    <option value="invite" <?php if (@$cfg['reg_type']=='invite') {echo 'selected';} ?>>по инвайтам</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="inv" <?php if($cfg['reg_type']=='open'){ ?>style="display:none"<?php } ?>>
+            <td valign="top" style="padding-top:20px"><strong>Выдавать по:</strong></td>
+            <td>
+                <table cellpadding="4" cellspacing="0" border="0">
+                    <tr>
+                        <td style="padding-left:0px;">
+                            <input type="text" style="width:30px" name="inv_count" value="<?php echo $cfg['inv_count']; ?>">
+                        </td>
+                        <td> инвайтов пользователям с кармой &ge; </td>
+                        <td>
+                            <input type="text" style="width:30px" name="inv_karma" value="<?php echo $cfg['inv_karma']; ?>">
+                        </td>
+                        <td> один раз в </td>
+                        <td>
+                            <select name="inv_period">
+                                <option value="DAY" <?php if (@$cfg['inv_period']=='DAY') {echo 'selected';} ?>>день</option>
+                                <option value="WEEK" <?php if (@$cfg['inv_period']=='WEEK') {echo 'selected';} ?>>неделю</option>
+                                <option value="MONTH" <?php if (@$cfg['inv_period']=='MONTH') {echo 'selected';} ?>>месяц</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-left:0px;" colspan="5">
+                            <input type="hidden" id="inv_now" name="inv_now" value="0" />
+                            <input type="hidden" id="inv_delete" name="inv_delete" value="0" />
+                            <input type="button" value="Выдать сейчас" onclick="if(confirm('Выдать инвайты?')){ $('#inv_now').val('1'); $('#optform').submit(); }" />
+                            <input type="button" value="Удалить не использованные" onclick="if(confirm('Удалить инвайты?')){ $('#inv_delete').val('1'); $('#optform').submit(); }" />
+                        </td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+    </table>
     <table width="661" border="0" cellpadding="10" cellspacing="0" class="proptable">
         <tr>
             <td width="308"><strong>Регистрация включена: </strong></td>

@@ -2797,7 +2797,7 @@ class cmsCore {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public function strClear($string, $strip_tags=true){
         $string = trim($string);
-        $string = str_replace("'", '&#8217;', $string);
+        $string = mysql_real_escape_string($string);
         $string = rtrim($string, ' \\');
         if ($strip_tags) $string = strip_tags($string);
         return $string;

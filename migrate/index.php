@@ -56,32 +56,42 @@
 // ========================================================================== //
 // ========================================================================== //
 
-    if (!$inDB->isTableExists('', '')){
+    if (!$inDB->isTableExists('cms_user_invites')){
 
-        $inDB->query("");
-        echo '<p></p>';
+        $sql = "CREATE TABLE `cms_user_invites` (
+                    `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+                    `code` VARCHAR( 32 ) NOT NULL ,
+                    `owner_id` INT NOT NULL ,
+                    `createdate` DATETIME NOT NULL ,
+                    `is_used` SMALLINT NOT NULL DEFAULT '0',
+                    INDEX ( `code` , `owner_id` , `is_used` )
+                ) ENGINE = MYISAM";
 
+        $inDB->query($sql);
+        echo '<p>Таблица <strong>cms_user_invites</strong> создана</p>';
+
+    }
+
+// ========================================================================== //
+// ========================================================================== //
+
+    if (!$inDB->isFieldExists('cms_users', 'invited_by')){
+        $inDB->query("ALTER TABLE `cms_users` ADD `invited_by` INT NULL");
+    }
+
+    if (!$inDB->isFieldExists('cms_users', 'invdate')){
+        $inDB->query("ALTER TABLE `cms_users` ADD `invdate` DATETIME NULL");
     }
 
 // ========================================================================== //
 // ========================================================================== //
 
-    if (!$inDB->isFieldExists('', '')){
-
-        $inDB->query("");
-        echo '<p></p>';
-
-    }
-
-// ========================================================================== //
-// ========================================================================== //
-
-    if (!$inDB->isFieldExists('', '')){
-
-        $inDB->query("");
-        echo '<p></p>';
-
-    }
+//    if (!$inDB->isFieldExists('', '')){
+//
+//        $inDB->query("");
+//        echo '<p></p>';
+//
+//    }
 
 // ========================================================================== //
 // ========================================================================== //
