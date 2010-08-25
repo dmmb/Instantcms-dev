@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<backend>    
+    <module>
+        <id>mod_latest</id>
+        <title>Последние материалы</title>
+    </module>
+    <params>
+        <param type="number" name="newscount" title="Количество материалов" units="шт." default="5" />
+        <param type="flag" name="showdesc" title="Показывать анонсы" default="on" />
+        <param type="flag" name="showdate" title="Показывать даты и авторов" default="on" />
+        <param type="flag" name="showcom" title="Показывать число комментариев" default="on" />
+        <param type="flag" name="showrss" title="Показывать ссылку на RSS" default="on" />
+        <param type="list" name="cat_id" title="Материалы из раздела" tree="1" source="cms_category" />
+        <param type="flag" name="subs" title="Вместе с подразделами" default="off" />
+    </params>
+</backend>

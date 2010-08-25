@@ -27,22 +27,38 @@ function applet_modules(){
 	if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { $id = -1; }
 	if (isset($_REQUEST['co'])) { $co = $_REQUEST['co']; } else { $co = -1; } //current ordering, while resort
 
+
+//============================================================================//
+//============================================================================//
+
 	if ($do == 'config'){
 	
-		$mod = cpModuleById($id);
+		$module_name = cpModuleById($id);
 		
-		if ($mod) {
-			$file = 'modules/'.$mod.'/backend.php';
-			if (file_exists($file)){
-				include $file;
-			}
-		} else {
-			header('location:index.php?view=modules&do=edit&id='.$id);
-		}
-	
+		if (!$module_name) { header('location:index.php?view=modules&do=edit&id='.$id); }
+
+        $php_file = 'modules/'.$module_name.'/backend.php';
+        if (file_exists($php_file)){ include $php_file; return; }
+
+        $xml_file = PATH.'/admin/modules/'.$module_name.'/backend.xml';
+        if (!file_exists($xml_file)){ $inCore->halt(); }
+
+        $cfg = $inCore->loadModuleConfig($id);
+
+        $inCore->loadClass('formgen');
+
+        $formGen = new cmsFormGen($xml_file, $cfg);
+
+        echo $formGen->getHTML();
+
+        return;
+
 	}
 		
-	if ($do == 'list'){
+//============================================================================//
+//============================================================================//
+
+    if ($do == 'list'){
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'new.gif';
 		$toolmenu[0]['title'] = 'Добавить модуль';
@@ -153,6 +169,9 @@ function applet_modules(){
 
 	}
 
+//============================================================================//
+//============================================================================//
+
 	if ($do == 'autoorder'){
 		$sql = "SELECT * FROM cms_modules ORDER BY ordering";
 		$rs = dbQuery($sql) ;
@@ -166,7 +185,10 @@ function applet_modules(){
 		}
 		header('location:index.php?view=modules&sort=ordering');		
 	}
-	
+
+//============================================================================//
+//============================================================================//
+
 	if ($do == 'move_up'){
 		if ($id >= 0){ dbMoveUp('cms_modules', $id, $co); }
 		header('location:'.$_SERVER['HTTP_REFERER']);
@@ -176,6 +198,9 @@ function applet_modules(){
 		if ($id >= 0){ dbMoveDown('cms_modules', $id, $co); }
 		header('location:'.$_SERVER['HTTP_REFERER']);
 	}
+
+//============================================================================//
+//============================================================================//
 
 	if ($do == 'saveorder'){
 		if(isset($_REQUEST['ordering'])) { 
@@ -189,6 +214,9 @@ function applet_modules(){
 
 		}
 	}
+
+//============================================================================//
+//============================================================================//
 
 	if ($do == 'show'){
 		if (!isset($_REQUEST['item'])){
@@ -210,7 +238,10 @@ function applet_modules(){
 			$inCore->redirectBack();			
 		}		
 	}
-	
+
+//============================================================================//
+//============================================================================//
+
 	if ($do == 'delete'){
 		if (!isset($_REQUEST['item'])){
 			if ($id >= 0){ dbDelete('cms_modules', $id);  }
@@ -286,7 +317,10 @@ function applet_modules(){
 			}
 						
 	}
-	
+
+//============================================================================//
+//============================================================================//
+
 	if ($do == 'submit'){
 
 		$sql        = "SELECT ordering as max_o FROM cms_menu ORDER BY ordering DESC LIMIT 1";
@@ -368,6 +402,9 @@ function applet_modules(){
 		header('location:?view=modules');		
 	}	  
 
+//============================================================================//
+//============================================================================//
+
    if ($do == 'add' || $do == 'edit'){
 
     	require('../includes/jwtabs.php');
@@ -416,8 +453,9 @@ function applet_modules(){
 		$toolmenu[0]['link'] = 'javascript:document.addform.submit();';
 
 		if(@$mod['is_external']){
-			$file = 'modules/'.$mod['content'].'/backend.php';
-			if (file_exists($file)){
+			$php_file = 'modules/'.$mod['content'].'/backend.php';
+			$xml_file = 'modules/'.$mod['content'].'/backend.xml';
+			if (file_exists($php_file) || file_exists($xml_file)){
 				$toolmenu[1]['icon'] = 'config.gif';
 				$toolmenu[1]['title'] = 'Настроить модуль';
 				$toolmenu[1]['link'] = '?view=modules&do=config&id='.$mod['id'];				
@@ -708,6 +746,10 @@ function applet_modules(){
     </form>
 <?php
    }
+
+//============================================================================//
+//============================================================================//
+
 }
 
 ?>

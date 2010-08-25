@@ -886,17 +886,18 @@ function cpTemplateById($template_id){
 }
 
 function cpModuleHasConfig($id){
-	$has = false;
+
 	$mod = cpModuleById($id);
 	
 	if ($mod) {
 		$file = 'modules/'.$mod.'/backend.php';
-		if (file_exists($file)){
-			$has = true;
-		}
+		if (file_exists($file)){ return true; }
+		$file = 'modules/'.$mod.'/backend.xml';
+		if (file_exists($file)){ return true; }
 	}
 	
-	return $has;
+	return false;
+    
 }
 
 function cpUserNick($user_id=0){
