@@ -42,7 +42,9 @@ class cms_model_users{
 
     public function getUser($user_id){
         global $_LANG;
-
+		if (!$user_id){
+			$user_id = 0;
+		}
         $sql = "SELECT u.*, p.*, u.id as id, u.is_deleted as is_deleted, IFNULL(p.gender, 0) as gender, u.rating as user_rating,
                 g.title as grp,
                 u.regdate fregdate,
