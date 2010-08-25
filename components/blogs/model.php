@@ -735,12 +735,16 @@ class cms_model_blogs{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function updatePost($post_id, $item){
+    public function updatePost($post_id, $item, $update_seo_link = 0){
 
         $item = cmsCore::callEvent('UPDATE_POST', $item);
 
         $item['id']         = $post_id;
-        $item['seolink']    = $this->getPostSeoLink($item);
+		$seo_sql = '';
+		if ($update_seo_link){
+        	$item['seolink'] = $this->getPostSeoLink($item);
+			$seo_sql = ', seolink = "'.$item['seolink'].'"';
+		}
 
         $sql = "UPDATE cms_blog_posts
                 SET cat_id={$item['cat_id']},
@@ -750,7 +754,7 @@ class cms_model_blogs{
                     content='{$item['content']}',
                     allow_who='{$item['allow_who']}',
                     edit_times = edit_times+1,
-                    edit_date = NOW()
+                    edit_date = NOW(){$seo_sql}
                 WHERE id = $post_id";
         
         $result = $this->inDB->query($sql);

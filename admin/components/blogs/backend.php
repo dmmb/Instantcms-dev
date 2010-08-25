@@ -108,6 +108,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$cfg = array();
 		$cfg['perpage'] = $inCore->request('perpage', 'int');
 		$cfg['update_date'] = $inCore->request('update_date', 'int');
+		$cfg['update_seo_link'] = $inCore->request('update_seo_link', 'int');
 		
 		$cfg['min_karma_private'] 	= (int)$_REQUEST['min_karma_private'];
 		$cfg['min_karma_public'] 	= (int)$_REQUEST['min_karma_public'];	
@@ -127,6 +128,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if (!isset($cfg['min_karma_public'])) {	 $cfg['min_karma_public'] = 0; }
 	if (!isset($cfg['min_karma'])) { 		 $cfg['min_karma'] = 0; 		}
 	if (!isset($cfg['update_date'])) { 		 $cfg['update_date'] = 1; 		}
+	if (!isset($cfg['update_seo_link'])) { 	 $cfg['update_seo_link'] = 0; 		}
 
 	if (!isset($cfg['rss_all'])) { $cfg['rss_all'] = 1; }
 	if (!isset($cfg['rss_one'])) { $cfg['rss_one'] = 1; }
@@ -190,12 +192,24 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             <td valign="top">
                 <strong>Обновлять дату поста после редактирования:</strong><br />
                 <span class="hinttext">
-                    Если включено, после редактирования поста его дата будет устанавливаться в текущую
+                    Если включено, после редактирования поста его дата будет устанавливаться в текущую.
                 </span>
             </td>
             <td valign="top">
                 <input name="update_date" type="radio" value="1" <?php if (@$cfg['update_date']) { echo 'checked="checked"'; } ?> /> Да
                 <input name="update_date" type="radio" value="0" <?php if (@!$cfg['update_date']) { echo 'checked="checked"'; } ?>/> Нет
+            </td>
+        </tr>
+        <tr>
+            <td valign="top">
+                <strong>Обновлять ссылку поста после редактирования при смене заголовка:</strong><br />
+                <span class="hinttext">
+                    Если включено, после редактирования поста его ссылка будет изменена согласно нового заголовка.
+                </span>
+            </td>
+            <td valign="top">
+                <input name="update_seo_link" type="radio" value="1" <?php if (@$cfg['update_seo_link']) { echo 'checked="checked"'; } ?> /> Да
+                <input name="update_seo_link" type="radio" value="0" <?php if (@!$cfg['update_seo_link']) { echo 'checked="checked"'; } ?>/> Нет
             </td>
         </tr>
         <tr>

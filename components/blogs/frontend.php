@@ -787,7 +787,7 @@ if ($do=='newpost' || $do=='editpost'){
                                                     'allow_who'=>$allow_who,
                                                     'published'=>$published,
                                                     'tags'=>$tags
-                                                 ));
+                                                 ), $cfg['update_seo_link']);
 
                 if ($cfg['update_date']){
                     $inDB->query("UPDATE cms_blog_posts SET pubdate = NOW() WHERE id={$post_id}");
