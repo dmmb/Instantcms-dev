@@ -84,6 +84,13 @@ class cmsFormGen {
 
         $inPage = cmsPage::getInstance();
 
+        $this->xml->module->title = iconv('utf-8', 'cp1251', $this->xml->module->title);
+
+        foreach($this->params as $key=>$param){
+            $this->params[$key]['title']    = iconv('utf-8', 'cp1251', $param['title']);
+            $this->params[$key]['html']     = iconv('utf-8', 'cp1251', $param['html']);
+        }
+
         ob_start();
 
             global $tpl_data;
@@ -95,7 +102,7 @@ class cmsFormGen {
 
         $this->html = ob_get_clean();
 
-        return iconv('utf-8//IGNORE', 'cp1251//IGNORE', $this->html);
+        return $this->html;
 
     }
 
@@ -139,11 +146,18 @@ class cmsFormGen {
 
     private function renderFlag($param) {
 
+        $html       = '';
+
         $name       = (string)$param['name'];
         $value      = (string)$param['value'];
-        $checked    = ($value ? 'checked="checked"' : '');
 
-        return '<input type="checkbox" id="'.$name.'" name="'.$name.'" value="1" '.$checked.' />';
+//        $html  = '<label><input type="radio" name="'.$name.'" value="1" '.($value==1 ? 'checked="checked"' : '').' /> Да</label> ' . "\n" .
+//                 '<label><input type="radio" name="'.$name.'" value="0" '.($value==0 ? 'checked="checked"' : '').' /> Нет</label> ';
+
+        $html = '<input type="checkbox" '.($value==1 ? 'checked="checked"' : '').' onclick="$(\'#'.$name.'\').val(1-$(\'#'.$name.'\').val())" />' . "\n" .
+                '<input type="hidden" id="'.$name.'" name="'.$name.'" value="'.$value.'" />';
+
+        return iconv('cp1251', 'utf-8', $html);
 
     }
 
@@ -178,7 +192,10 @@ class cmsFormGen {
         if ($inDB->num_rows($result)){
             while($option = $inDB->fetch_assoc($result)){
                 $option['title'] = iconv('cp1251', 'utf-8', $option['title']);
-                $html .= "\t" . '<option value="'.$option['value'].'">'.$option['title'].'</option>' . "\n";
+                if ($option['level'] >= 1){
+                    $option['title'] = str_repeat('--', $option['level']-1) . ' ' . $option['title'];
+                }
+                $html .= "\t" . '<option value="'.$option['value'].'" '.($value == $option['value'] ? 'selected="selected"' : '').'>'.$option['title'].'</option>' . "\n";
             }
         }
 

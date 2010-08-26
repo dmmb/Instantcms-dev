@@ -58,6 +58,49 @@ function applet_modules(){
 //============================================================================//
 //============================================================================//
 
+    if ($do == 'save_auto_config'){
+
+        $module_name = cpModuleById($id);
+
+        $xml_file = PATH.'/admin/modules/'.$module_name.'/backend.xml';
+        if (!file_exists($xml_file)){ $inCore->halt(); }
+
+        $cfg = array();
+
+        $backend = simplexml_load_file($xml_file);
+
+        foreach($backend->params->param as $param){
+
+            $name       = (string)$param['name'];
+            $type       = (string)$param['type'];
+            $default    = iconv('utf-8', 'cp1251', (string)$param['default']);
+
+            if ($type == 'flag' && $default === 'on') { $default = 1; }
+            if ($type == 'flag' && $default === 'off') { $default = 0; }
+            
+            switch($param['type']){
+                
+                case 'number': $value = $inCore->request($name, 'int', $default); break;
+                case 'flag':   $value = $inCore->request($name, 'int', $default); break;
+                case 'list_db': $value = $inCore->request($name, 'int', $default); break;
+                
+            }
+
+            $cfg[$name] = $value;
+
+        }
+
+        $inCore->saveModuleConfig($id, $cfg);
+
+        $_SESSION['save_message'] = 'Настройки модуля сохранены';
+
+        $inCore->redirectBack();
+
+    }
+
+//============================================================================//
+//============================================================================//
+
     if ($do == 'list'){
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'new.gif';
