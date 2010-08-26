@@ -80,8 +80,9 @@ function applet_modules(){
             
             switch($param['type']){
                 
-                case 'number': $value = $inCore->request($name, 'int', $default); break;
-                case 'flag':   $value = $inCore->request($name, 'int', $default); break;
+                case 'number':  $value = $inCore->request($name, 'int', $default); break;
+                case 'flag':    $value = $inCore->request($name, 'int', $default); break;
+                case 'list':    $value = $inCore->request($name, 'str', $default); break;
                 case 'list_db': $value = $inCore->request($name, 'int', $default); break;
                 
             }

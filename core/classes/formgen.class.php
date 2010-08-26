@@ -39,6 +39,10 @@ class cmsFormGen {
 
         foreach($this->xml->params->param as $param){
 
+            if ($param['hint']) {
+                $param['hint'] = iconv('utf-8', 'cp1251', (string)$param['hint']);
+            }
+
             $param['value'] = $this->getParamValue($param['name'], (isset($param['default']) ? $param['default'] : ''));
 
             $param['html']  = $this->getParamHTML($param);
@@ -122,6 +126,9 @@ class cmsFormGen {
             case 'flag':    return $this->renderFlag($param);
                             break;
 
+            case 'list':    return $this->renderList($param);
+                            break;
+
             case 'list_db': return $this->renderListDB($param);
                             break;
 
@@ -151,15 +158,37 @@ class cmsFormGen {
         $name       = (string)$param['name'];
         $value      = (string)$param['value'];
 
-//        $html  = '<label><input type="radio" name="'.$name.'" value="1" '.($value==1 ? 'checked="checked"' : '').' /> Да</label> ' . "\n" .
-//                 '<label><input type="radio" name="'.$name.'" value="0" '.($value==0 ? 'checked="checked"' : '').' /> Нет</label> ';
-
         $html = '<input type="checkbox" '.($value==1 ? 'checked="checked"' : '').' onclick="$(\'#'.$name.'\').val(1-$(\'#'.$name.'\').val())" />' . "\n" .
                 '<input type="hidden" id="'.$name.'" name="'.$name.'" value="'.$value.'" />';
 
         return iconv('cp1251', 'utf-8', $html);
 
     }
+
+    private function renderList($param){
+        
+        $html       = '';
+        $name       = (string)$param['name'];
+        $value      = (string)$param['value'];
+
+        $html = '<select id="'.$name.'" name="'.$name.'" class="param-list">' . "\n";
+
+            foreach($param->option as $option){
+        
+                $option['title'] = (string)$option['title'];
+                $option['value'] = (string)$option['value'];
+
+                $html .= "\t" . '<option value="'.$option['value'].'" '.($value == $option['value'] ? 'selected="selected"' : '').'>'.$option['title'].'</option>' . "\n";
+                
+            }
+
+        $html .= '</select>' . "\n";
+
+        return $html;
+        
+        
+    }
+
 
     private function renderListDB($param) {
 

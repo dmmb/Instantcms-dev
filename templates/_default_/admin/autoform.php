@@ -40,7 +40,12 @@
         <table cellpadding="3" cellspacing="0" border="0">
             <?php foreach($fields as $field){ ?>
             <tr>
-                <td class="param-name"><strong><?php echo $field['title']; ?></strong></td>
+                <td class="param-name">
+                    <div class="label"><strong><?php echo $field['title']; ?></strong></div>
+                    <?php if ($field['hint']) { ?>
+                        <div class="hinttext"><?php echo $field['hint']; ?></div>
+                    <?php } ?>
+                </td>
                 <td class="param-value">
                     <?php echo $field['html']; ?>
                 </td>
