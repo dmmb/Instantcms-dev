@@ -5,6 +5,11 @@
 
     $module_id = (int)$_REQUEST['id'];
 
+?>
+
+<h3><?php echo $module->title; ?></h3>
+
+<?php
     cpAddPathway($module->title, '?view=modules&do=edit&id='.$module_id);
 	cpAddPathway('Настройки', '?view=modules&do=config&id='.$module_id);
 
@@ -24,8 +29,6 @@
     cpToolMenu($toolmenu);
     
 ?>
-
-<h3><?php echo $module->title; ?></h3>
 
 <?php if (isset($_SESSION['save_message'])){ ?>
     <p class="success"><?php echo $_SESSION['save_message']; ?></p>

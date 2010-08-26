@@ -43,7 +43,12 @@ class cmsFormGen {
                 $param['hint'] = iconv('utf-8', 'cp1251', (string)$param['hint']);
             }
 
-            $param['value'] = $this->getParamValue($param['name'], (isset($param['default']) ? $param['default'] : ''));
+            //получаем значение параметра
+            $value = $this->getParamValue($param['name'], (isset($param['default']) ? $param['default'] : ''));
+            //если это массив, склеиваем в строку
+            if (is_array($value)){ $value = implode('|', $value); }
+
+            $param['value'] = $value;
 
             $param['html']  = $this->getParamHTML($param);
 
@@ -123,6 +128,9 @@ class cmsFormGen {
             case 'number':  return $this->renderNumber($param);
                             break;
 
+            case 'string':  return $this->renderString($param);
+                            break;
+
             case 'flag':    return $this->renderFlag($param);
                             break;
 
@@ -148,6 +156,15 @@ class cmsFormGen {
         $units  = isset($param['units']) ? (string)$param['units'] : '';
 
         return '<input type="text" id="'.$name.'" name="'.$name.'" value="'.$value.'" class="param-number" /> '. $units;
+
+    }
+
+    private function renderString($param) {
+
+        $name   = (string)$param['name'];
+        $value  = (string)$param['value'];
+
+        return '<input type="text" id="'.$name.'" name="'.$name.'" value="'.$value.'" class="param-string" /> ';
 
     }
 
@@ -199,36 +216,88 @@ class cmsFormGen {
         $name       = (string)$param['name'];
         $value      = (string)$param['value'];
 
+        $multiple   = isset($param['multiple']) ? 1 : 0;
+
         $src        = (string)$param['src'];
         $src_title  = isset($param['src_title']) ? (string)$param['src_title'] : 'title';
         $src_id     = isset($param['src_value']) ? (string)$param['src_value'] : 'id';
+        $src_where  = isset($param['src_where']) ? (string)$param['src_where'] : '';
 
         $tree       = isset($param['tree']) ? (int)$param['tree'] : 0;
         $order_by   = ($tree ? 'NSLeft' : $src_title);
         $select     = "{$src_id} as value, {$src_title} as title";
 
         if ($tree) { $select .= ", NSLevel as level"; }
+
+        $where      = ($src_where) ? "WHERE {$src_where}" : '';
         
         $sql        = "SELECT {$select}
                        FROM {$src}
+                       {$where}
                        ORDER BY {$order_by}
                        LIMIT 100";
 
         $result = $inDB->query($sql);
 
-        $html = '<select id="'.$name.'" name="'.$name.'" class="param-list">' . "\n";
 
-        if ($inDB->num_rows($result)){
-            while($option = $inDB->fetch_assoc($result)){
-                $option['title'] = iconv('cp1251', 'utf-8', $option['title']);
-                if ($option['level'] >= 1){
-                    $option['title'] = str_repeat('--', $option['level']-1) . ' ' . $option['title'];
+        // ------------------------------------------------------------- //
+        // ------------------------------------------------------------- //
+
+        if (!$multiple){
+
+            $html = '<select id="'.$name.'" name="'.$name.'" class="param-list">' . "\n";
+
+            if (isset($param->option)){
+                foreach($param->option as $option){
+
+                    $option['title'] = (string)$option['title'];
+                    $option['value'] = (string)$option['value'];
+
+                    $html .= "\t" . '<option value="'.$option['value'].'" '.($value == $option['value'] ? 'selected="selected"' : '').'>'.$option['title'].'</option>' . "\n";
+
                 }
-                $html .= "\t" . '<option value="'.$option['value'].'" '.($value == $option['value'] ? 'selected="selected"' : '').'>'.$option['title'].'</option>' . "\n";
             }
+
+            if ($inDB->num_rows($result)){
+                while($option = $inDB->fetch_assoc($result)){
+                    $option['title'] = iconv('cp1251', 'utf-8', $option['title']);
+                    if ($option['level'] >= 1){
+                        $option['title'] = str_repeat('--', $option['level']-1) . ' ' . $option['title'];
+                    }
+                    $html .= "\t" . '<option value="'.$option['value'].'" '.($value == $option['value'] ? 'selected="selected"' : '').'>'.$option['title'].'</option>' . "\n";
+                }
+            }
+
+            $html .= '</select>' . "\n";
+
         }
 
-        $html .= '</select>' . "\n";
+        // ------------------------------------------------------------- //
+        // ------------------------------------------------------------- //
+
+        if ($multiple){
+
+            $values = explode('|', $value);
+
+            $html = '<table cellpadding="0" cellspacing="0">' . "\n";
+
+            if ($inDB->num_rows($result)){
+                while($option = $inDB->fetch_assoc($result)){
+                    $option['title'] = iconv('cp1251', 'utf-8', $option['title']);
+                    if ($option['level'] >= 1){
+                        $option['title'] = str_repeat('--', $option['level']-1) . ' ' . $option['title'];
+                    }
+                    
+                    $html .= '<tr>' . "\n" .
+                                "\t" . '<td><input type="checkbox" id="'.$name.'_'.$option['value'].'" name="'.$name.'['.$option['value'].']" value="'.$option['value'].'" '.(in_array($option['value'], $values) ? 'checked="checked"' : '').' />' . "\n" .
+                                "\t" . '<td><label for="'.$name.'_'.$option['value'].'">'.$option['title'].'</label></td>' . "\n" .
+                             '</tr>';
+                }
+            }
+
+            $html .= '</table>' . "\n";
+
+        }
 
         return $html;
 
