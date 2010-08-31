@@ -643,8 +643,6 @@ if ($do=='profile'){
     $deleted    = $usr['is_deleted'];
     $myprofile  = ($inUser->id == $id);
 
-    $usr['banned'] = dbRowsCount('cms_banlist', 'user_id='.$id);
-
     if ($deleted){
         $smarty = $inCore->initSmarty('components', 'com_users_deleted.tpl');
         $smarty->assign('is_user', $inUser->id);
@@ -665,7 +663,6 @@ if ($do=='profile'){
     if ($usr['is_new_friends']){
         $usr['new_friends'] 	= usrFriendQueriesList($usr['id'], $model);
     }
-    $usr['rating']				= cmsUser::getRating($id);
     $usr['friends']				= usrFriends($usr['id']);
 
     if ($usr['friends']){
@@ -675,9 +672,6 @@ if ($do=='profile'){
     }
 
     $usr['awards_html']			= usrAwards($usr['id']);
-//    $usr['comments_html'] 		= usrComments($usr['id'], 5);
-//    $usr['forum_html'] 			= usrForumPosts($usr['id'], 5);
-//    $usr['photos_html']			= usrPhotos($usr['id'], 4);
     $usr['wall_html']			= cmsUser::getUserWall($usr['id']);
     $usr['addwall_html'] 		= cmsUser::getUserAddWall($usr['id']);
     $usr['banned'] 				= cmsUser::isBanned($usr['id']);
@@ -689,25 +683,26 @@ if ($do=='profile'){
     $usr['flogdate']            = strip_tags(usrStatus($usr['id'], $usr['flogdate'], false, $usr['gender']));
     $usr['karma']				= strip_tags( cmsUser::getKarmaFormat($usr['id'], false), '<table><tr><td><img><a>' );
     $usr['karma_int']			= strip_tags($usr['karma']);
-    $usr['karma_link']			= '<a href="/users/'.$id.'/karma.html" title="'.$_LANG['KARMA_HISTORY'].'" id="karmalink">?</a>';
+    $usr['karma_link']			= '<a href="/users/'.$usr['id'].'/karma.html" title="'.$_LANG['KARMA_HISTORY'].'" id="karmalink">?</a>';
 
     $usr['cityurl']             = urlencode($usr['city']);
 
-    $usr['photos_count']		= (int)usrPhotoCount($id);
+    $usr['photos_count']		= (int)usrPhotoCount($usr['id']);
 	$usr['can_add_foto']		= ((usrPhotoCount($usr['id'], false)<$cfg['photosize'] || $cfg['photosize']==0) && $cfg['sw_photo']);
-    $usr['board_count']			= (int)$inDB->rows_count('cms_board_items', "user_id=$id AND published=1");
-    $usr['comments_count']		= (int)$inDB->rows_count('cms_comments', "user_id=$id AND published=1");
+    $usr['board_count']			= (int)$inDB->rows_count('cms_board_items', "user_id={$usr['id']} AND published=1");
+    $usr['comments_count']		= (int)$inDB->rows_count('cms_comments', "user_id={$usr['id']} AND published=1");
+    $usr['forum_count']			= usrMsg($usr['id'], 'cms_forum_posts');
 
     if($cfg['sw_files'])
         if ($inUser->id==$id){
-            $usr['files_count'] = $inDB->rows_count('cms_user_files', "user_id = ".$id." AND allow_who = 'all'");
+            $usr['files_count'] = $inDB->rows_count('cms_user_files', "user_id = ".$usr['id']." AND allow_who = 'all'");
         } else {
-            $usr['files_count'] = $inDB->rows_count('cms_user_files', 'user_id = '.$id);
+            $usr['files_count'] = $inDB->rows_count('cms_user_files', 'user_id = '.$usr['id']);
         }
 
     $usr['blog_link'] = '';
 
-    $usr['blog']            = usrBlog($id);
+    $usr['blog']            = usrBlog($usr['id']);
     $usr['blog_id']         = $usr['blog']['id'];
     $usr['blog_seolink']    = $usr['blog']['seolink'];
     
@@ -726,9 +721,6 @@ if ($do=='profile'){
     $usr['flogdate']			= $inCore->getRusDate($usr['flogdate']);
     $usr['fregdate'] 			= $inCore->dateFormat($usr['fregdate']);
     $usr['birthdate'] 			= $inCore->dateFormat($usr['birthdate']);
-
-    $usr['comments_count'] 		= usrMsg($usr['id'], 'cms_comments');
-    $usr['forum_count']			= usrMsg($usr['id'], 'cms_forum_posts');
 
     $usr['profile_link']        = cmsUser::getProfileURL($usr['login']);
 
