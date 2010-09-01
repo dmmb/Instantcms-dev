@@ -829,7 +829,7 @@ class cmsUser {
             $inCore->includeFile('components/users/includes/usercore.php');
 
             while($record = $inDB->fetch_assoc($result)){
-                $record['content']  = nl2br($inCore->parseSmiles($record['content'], true));
+                $record['content']  = $inCore->parseSmiles($record['content'], true);
                 $record['avatar']   = usrImage($record['author_id'], 'small');
                 $records[]          = $record;
             }

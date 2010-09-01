@@ -436,8 +436,8 @@ if ($do=='addphoto'){
 									@img_resize($destination, $uploadthumb['medium'], $album['thumb2'], $album['thumb2'], false, $cfg['watermark']);
 	
 									if ( !isset($cfg['watermark']) ) 	{ $cfg['watermark'] = 0; 			}
-									if ( $cfg['watermark'] ) 		 	{ @img_add_watermark($uploadphoto);	}
-									if ( @!$cfg['saveorig'] )			{ @unlink($uploadphoto);			}
+									if ( $cfg['watermark'] ) 		 	{ @img_add_watermark($destination);	}
+									if ( @!$cfg['saveorig'] )			{ @unlink($destination);			}
 									
 									$inPage->initAutocomplete();
 									$autocomplete_js = $inPage->getAutocompleteJS('tagsearch', 'tags');

@@ -174,7 +174,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                 @img_resize($uploadphoto, $uploadthumb, $album['thumb1'], $album['thumb1'], $album['thumbsqr']);
                 @img_resize($uploadphoto, $uploadthumb2, $album['thumb2'], $album['thumb2'], false, $cfg['watermark']);
                 if ($cfg['watermark']) { @img_add_watermark($uploadphoto);	}
-                if (@!$inCore->inRequest('saveorig')){ @unlink($uploadphoto); }	
+				if (@!$cfg['saveorig']){ @unlink($uploadphoto); }
                 
                 $model->addPhoto($photo);
 
