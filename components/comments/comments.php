@@ -26,7 +26,8 @@
 
 	define("VALID_CMS", 1);
     include(PATH.'/core/cms.php');
-
+	// Грузим конфиг
+	include(PATH.'/includes/config.inc.php');
     $inCore     = cmsCore::getInstance();
 
     $inCore->loadClass('config');           //конфигурация

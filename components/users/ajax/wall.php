@@ -7,7 +7,8 @@
     define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
 
 	include(PATH.'/core/cms.php');
-
+	// Грузим конфиг
+	include(PATH.'/includes/config.inc.php');
     $inCore = cmsCore::getInstance();
 
     $inCore->loadClass('config');       //конфигурация
