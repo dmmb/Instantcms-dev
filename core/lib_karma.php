@@ -164,7 +164,7 @@ function cmsSubmitKarma($target, $item_id, $points){
         $user_sql = "UPDATE cms_users u,
                             {$info['target_table']} t
                      SET u.rating = u.rating + ({$points}*{$info['user_weight']})
-                     WHERE t.user_id = u.id";
+                     WHERE t.user_id = u.id AND t.id = '$item_id'";
 
         $inDB->query($user_sql);
         
