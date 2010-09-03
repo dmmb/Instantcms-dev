@@ -84,7 +84,7 @@ function applet_modules(){
                 case 'string':  $value = $inCore->request($name, 'str', $default); break;
                 case 'flag':    $value = $inCore->request($name, 'int', $default); break;
                 case 'list':    $value = $inCore->request($name, 'str', $default); break;
-                case 'list_db': $value = $inCore->request($name, 'array', $default); break;
+                case 'list_db': $value = (is_array($_POST[$name]) ? $inCore->request($name, 'array', $default) : $inCore->request($name, 'str', $default)); break;
                 
             }
 
