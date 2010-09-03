@@ -141,10 +141,16 @@ class cms_model_comments{
 
         $comments = array();
 
-        $sql = "SELECT c.*, DATE_FORMAT(c.pubdate, '%d-%m-%Y') fpubdate, DATE_FORMAT(c.pubdate, '%H:%i') fpubtime,
-                       IFNULL(v.total_rating, 0) as votes
+        $sql = "SELECT c.*, c.pubdate as fpubdate,
+                       IFNULL(v.total_rating, 0) as votes,
+					   IFNULL(u.nickname, 0) as nickname,
+					   IFNULL(u.login, 0) as login,
+					   IFNULL(u.is_deleted, 0) as is_deleted,
+					   IFNULL(p.imageurl, 0) as imageurl
                 FROM cms_comments c
                 LEFT JOIN cms_ratings_total v ON v.item_id = c.id AND v.target = 'comment'
+				LEFT JOIN cms_users u ON u.id = c.user_id
+				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
                 WHERE c.target='$target' AND c.target_id=$target_id AND c.published=1
                 ORDER BY c.pubdate ASC";
 
@@ -153,6 +159,7 @@ class cms_model_comments{
         if (!$this->inDB->num_rows($result)) { return false; }
 
         while($comment = $this->inDB->fetch_assoc($result)){
+			$comment['fpubdate'] = cmsCore::dateFormat($comment['fpubdate'], true, true);
             $comments[] = $comment;
         }
 

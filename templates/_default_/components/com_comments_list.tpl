@@ -16,7 +16,6 @@
 						<span class="cmm_author"><a href="{profile_url login=$comment.author.login}">{$comment.author.nickname}</a></span>
 					{/if}
                         <a class="cmm_anchor" href="#c{$comment.id}" title="{$LANG.LINK_TO_COMMENT}">#</a>
-                        <span class="cmm_time">{$comment.fpubtime}</span>
 						<span class="cmm_date">{$comment.fpubdate}</span>
                         {if !$is_user || $comment.is_voted}
                             <span class="cmm_votes">{$comment.votes}</span>

@@ -68,8 +68,7 @@
     $target_id  = $inCore->request('target_id', 'int');
 
 	//LIST COMMENTS
-    $comments_count     = $model->getCommentsCount($target, $target_id);
-
+    
 	$is_admin           = $inCore->userIsAdmin($inUser->id);
 	$user_can_delete    = $inCore->isUserCan('comments/delete');
 	$user_can_moderate  = $inCore->isUserCan('comments/moderate');
@@ -77,11 +76,10 @@
 	$comments = array();
     $tree = array();
 
-	if ($comments_count){
-
-		//BUILD COMMENTS LIST
-        $comments_list  = $model->getComments($target, $target_id);
-
+	//BUILD COMMENTS LIST
+    $comments_list  = $model->getComments($target, $target_id);
+	if ($comments_list){
+		
 		foreach($comments_list as $comment){
 			$next = sizeof($comments);
 			$comments[$next] = $comment;
@@ -90,10 +88,10 @@
 				$comments[$next]['author']      = $comments[$next]['guestname'];
 				$comments[$next]['is_profile']  =false;
 			} else {
-				$comments[$next]['author'] 		= $inDB->get_fields('cms_users', 'id='.$comments[$next]['user_id'], 'nickname, login');
-				$comments[$next]['profile'] 	= $inDB->get_fields('cms_user_profiles', 'user_id='.$comments[$next]['user_id'], '*');
+				$comments[$next]['author']['nickname'] = $comments[$next]['nickname'];
+				$comments[$next]['author']['login'] = $comments[$next]['login'];
 				$comments[$next]['is_profile'] 	= true;
-				$comments[$next]['user_image'] 	= usrImage($comments[$next]['user_id']);
+				$comments[$next]['user_image'] 	= usrImageNOdb($comments[$next]['user_id'], 'small', $comments[$next]['imageurl'], $comments[$next]['is_deleted']);
 			}
             $comments[$next]['show'] 	   	= ((!$cfg['min_karma'] || $comments[$next]['votes']>=$cfg['min_karma_show']) || $inCore->userIsAdmin($comments[$next]['user_id']));
             if ($comments[$next]['votes']>0){
@@ -102,7 +100,7 @@
                 $comments[$next]['votes'] = '<span class="cmm_bad">'.$comments[$next]['votes'].'</span>';
             }
 			if ($cfg['bbcode']){
-				$comments[$next]['content'] = ($inCore->parseSmiles($comments[$next]['content'], true));
+				$comments[$next]['content'] = $inCore->parseSmiles($comments[$next]['content'], true);
 			} elseif ($cfg['smilies']) {
 				$comments[$next]['content'] = nl2br(strip_tags($inCore->parseSmiles($comments[$next]['content'])));
 			} else {
@@ -120,7 +118,7 @@
     ob_start();
 
 	$smarty = $inCore->initSmarty('components', 'com_comments_list.tpl');
-	$smarty->assign('comments_count', $comments_count);
+	$smarty->assign('comments_count', $comments_list );
 	$smarty->assign('comments', $tree);
 	$smarty->assign('user_can_moderate', $user_can_moderate);
 	$smarty->assign('user_can_delete', $user_can_delete);
@@ -140,5 +138,4 @@
 	}
 
     echo $html;
-
 ?>

@@ -50,10 +50,13 @@ function comments($target='', $target_id=0){
         if ($cfg['bbcode']){
             $inPage->addHeadJS('core/js/smiles.js');
         }
+		
+		$comments_count = $model->getCommentsCount($target, $target_id);
 
         $smarty = $inCore->initSmarty('components', 'com_comments_view.tpl');
         $smarty->assign('cm_message', $cm_message);
         $smarty->assign('cm_error', $cm_error);
+		$smarty->assign('comments_count', $comments_count);
         $smarty->assign('target', $target);
         $smarty->assign('target_id', $target_id);
         $smarty->assign('is_admin', $is_admin);
