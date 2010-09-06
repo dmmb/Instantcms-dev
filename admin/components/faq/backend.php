@@ -354,6 +354,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
           <tr>
             <td><strong>Автор вопроса:</strong></td>
             <td><select name="user_id" id="user_id" style="width:220px">
+                <option value="0" <?php if (!$mod['user_id']) { echo 'selected="selected"'; } ?>>-- Анонимный гость --</option>
               <?php
                   if (isset($mod['user_id'])) {
                         echo $inCore->getListItems('cms_users', $mod['user_id'], 'nickname', 'ASC', 'is_deleted=0 AND is_locked=0', 'id', 'nickname');
