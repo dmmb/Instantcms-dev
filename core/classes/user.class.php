@@ -522,34 +522,38 @@ class cmsUser {
                 WHERE p.user_id = u.id AND ({$friends_sql})
                 ORDER BY p.pubdate DESC
                 ";
-
-        if ($limit) { $sql .= 'LIMIT '.$limit; }
-        
+		if ($limit) { $sql .= 'LIMIT '.($limit*1.5); }
         $result = $inDB->query($sql);
+		
 		//Получаем личные фотографии
 		$private_sql = "SELECT p.id, p.title, p.user_id, u.nickname as nickname, u.login as login, p.pubdate as pubdate
 						FROM cms_user_photos p, cms_users u
 						WHERE p.user_id = u.id AND ({$friends_sql})
 						ORDER BY p.pubdate DESC
 						";
-		if ($limit) { $private_sql .= 'LIMIT '.$limit; }
+		if ($limit) { $private_sql .= 'LIMIT '.($limit*1.5); }
 		$private_res = $inDB->query($private_sql);
 		
 		$photos = array();
-
-        if (!$inDB->num_rows($result) && !$inDB->num_rows($private_res)){ return false; }
 		
-		if ($inDB->num_rows($private_res)) {
+		$count_private 	= $inDB->num_rows($private_res);
+		$count_pub 		= $inDB->num_rows($result);
+		
+        if (!$count_private && !$count_pub){ return false; }
+		
+		if ($count_private) {
 			while($photo = $inDB->fetch_assoc($private_res)){
-				$photo['pubdate'] = $inCore->dateFormat($photo['pubdate']);
-				$photos[]       = $photo;
+				$photos[$photo['id']]       = $photo;
 			}
 		}
 
-        while ($photo = $inDB->fetch_assoc($result)){
-            $photo['pubdate'] = $inCore->dateFormat($photo['pubdate']);
-            $photos[] = $photo;
-        }
+		if ($count_pub) {
+			while ($photo = $inDB->fetch_assoc($result)){
+				$photos[$photo['id']] = $photo;
+			}
+		}
+        function cmp($a,$b) { return strcmp($b['pubdate'], $a['pubdate']); }
+        usort($photos,'cmp');
 		//Выбираем последние $limit фото из общего массива
 		$total      = sizeof($photos);
 	
@@ -557,9 +561,11 @@ class cmsUser {
 			$page_photos    = array();
 			for($p=0; $p<$limit; $p++){
 				if ($photos[$p]){
+					$photos[$p]['pubdate'] = $inCore->dateFormat($photos[$p]['pubdate']);
 					$page_photos[] = $photos[$p];
 				}
 			}
+			
 			$photos = $page_photos; unset($page_photos);
 		}
         return $photos;
