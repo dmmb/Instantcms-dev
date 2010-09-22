@@ -405,6 +405,7 @@ function cpPriceInput($id){
 
 				if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/catalog/$file")){
                     //create image thumbnails
+					if ( $cfg['watermark'] ) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file"); }
                     @img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", $_SERVER['DOCUMENT_ROOT']."/images/catalog/small/$file.jpg", 100, 100);
                     @img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", $_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$file.jpg", 250, 250);
                     @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", 0644);
@@ -1540,6 +1541,7 @@ function cpPriceInput($id){
         $cfg['premod_msg']  = $inCore->request('premod_msg', 'int', 1);
         $cfg['is_comments'] = $inCore->request('is_comments', 'int', 0);
         $cfg['is_rss']      = $inCore->request('is_rss', 'int', 1);
+		$cfg['watermark']   = $inCore->request('watermark', 'int', 1);
 		$cfg['delivery']    = str_replace('\"', '&quot;', $cfg['delivery']);
 		$cfg['delivery']    = str_replace('"', '&quot;', $cfg['delivery']);
 		
@@ -1600,6 +1602,15 @@ function cpPriceInput($id){
                      <td width="260">
                          <input name="is_comments" type="radio" value="1" <?php if (@$cfg['is_comments']) { echo 'checked="checked"'; } ?> /> Да
                          <input name="is_comments" type="radio" value="0"  <?php if (@!$cfg['is_comments']) { echo 'checked="checked"'; } ?> /> Нет
+                     </td>
+                 </tr>
+                 <tr>
+                     <td><strong>Наносить водяной знак:</strong>  <br />Если включено, то на все загружаемые
+			      фотографии к записям каталога будет наносится изображение 
+			      из файла "<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>"</td>
+                     <td width="260">
+                         <input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?> /> Да
+                         <input name="watermark" type="radio" value="0"  <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?> /> Нет
                      </td>
                  </tr>
              </table>

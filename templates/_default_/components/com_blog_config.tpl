@@ -59,7 +59,7 @@
 	  </td>
 	</tr>
   </table>
-  <input type="hidden" name="uid" id="uid" value="<?php echo $blog['user_id']?>"/>
+  <input type="hidden" name="uid" id="uid" value="{$blog.user_id}"/>
   <table width="550" border="0" cellspacing="0" cellpadding="10" id="multiuserscfg" style="margin-top:5px;border:solid 1px silver;display: {if $blog.ownertype=='single' || $blog.forall}none;{else}table;{/if}">
 	  <td align="center" valign="top"><strong>{$LANG.CAN_WRITE_TO_BLOG}: </strong><br/>
 		<select name="authorslist[]" size="15" multiple id="authorslist" style="width:200px">

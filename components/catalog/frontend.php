@@ -1039,6 +1039,7 @@ function catalog(){
                         @unlink($_SERVER['DOCUMENT_ROOT']."/images/catalog/small/".$item['imageurl'].".jpg");
                         @unlink($_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/".$item['imageurl'].".jpg");
                     }
+					if ( $cfg['watermark'] ) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file"); }
                     @img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", $_SERVER['DOCUMENT_ROOT']."/images/catalog/small/$file.jpg", 100, 100);
                     @img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", $_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$file.jpg", 250, 250);
                     @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", 0744);
