@@ -39,6 +39,7 @@
 		$cfg['shownum']     = $_REQUEST['shownum'];
 		$cfg['showrss']     = $_REQUEST['showrss'];
 		$cfg['showguest']   = $_REQUEST['showguest'];
+		$cfg['showtarg']   = $_REQUEST['showtarg'];
 
         $cfg['minrate']     = $_REQUEST['minrate'];
         if ($cfg['minrate'] < 0) { $cfg['minrate'] = 0; }
@@ -72,6 +73,13 @@
               <span class="hinttext">Показывать комментарии с рейтингом выше указанного</span>
           </td>
           <td><input type="text" size="5" name="minrate" value="<?php echo @$cfg['minrate']?>"/></td>
+        </tr>
+        <tr>
+            <td><strong>Показывать цель и рейтинг комментария: </strong></td>
+            <td>
+                <input name="showtarg" type="radio" value="1" <?php if (@$cfg['showtarg']) { echo 'checked="checked"'; } ?>/> Да
+                <input name="showtarg" type="radio" value="0" <?php if (@!$cfg['showtarg']) { echo 'checked="checked"'; } ?>/> Нет
+            </td>
         </tr>
         <tr>
             <td><strong>Показывать комментарии гостей: </strong></td>

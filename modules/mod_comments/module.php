@@ -41,6 +41,7 @@ function mod_comments($module_id){
                        c.target as target,
                        c.target_id as target_id,
                        c.target_link as target_link, 
+					   c.target_title,
                        c.content as content,
                        c.guestname,
                        c.pubdate as fpubdate,
@@ -53,7 +54,7 @@ function mod_comments($module_id){
 				WHERE (c.user_id=u.id {$guest_sql}) AND c.published=1 {$target_where}
                 GROUP BY c.id
                 ORDER BY c.pubdate DESC
-                LIMIT 100";
+                LIMIT 70";
 
         $result = $inDB->query($sql);
 		$is_com = false;
