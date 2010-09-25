@@ -258,7 +258,9 @@ if ($do=='config'){
 ////////// СПИСОК БЛОГОВ ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){
 
-	$inPage->setTitle($_LANG['BLOGS']);
+    //Получаем номер страницы и число записей на одну страницу
+    $perpage    = isset($cfg['perpage']) ? $cfg['perpage'] : 15;
+    $page       = $inCore->request('page', 'int', 1);
 
     //Получаем ID пользователя
 	$user_id 		= $inUser->id;
@@ -266,9 +268,10 @@ if ($do=='view'){
     //Считаем количество персональных и коллективных блогов
 	$single_blogs	= $model->getSingleBlogsCount();
 	$multi_blogs 	= $model->getMultiBlogsCount();
+	$total_blogs 	= $single_blogs + $multi_blogs;
 
     //Получаем список блогов
-    $blogs_list     = $model->getBlogs($ownertype);
+    $blogs_list     = $model->getBlogs($ownertype, $page, $perpage);
   	
 	$blogs      = array();   //Массив блогов для вывода
     $is_blogs   = false;     //Флаг, показывающий есть ли блоги, которые можно видеть текущему пользователю
@@ -283,6 +286,8 @@ if ($do=='view'){
             $blog['url']        = $model->getBlogURL(null, $blog['seolink']);
             //Считаем число комментариев
             $blog['comments']   = blogComments($blog['id']);
+			//Нормализуем дату создания
+			$blog['pubdate']    = $inCore->dateFormat($blog['pubdate']);
             //Форматируем значение кармы блога
             $blog['karma']      = cmsKarmaFormatSmall($blog['points']);
             //Отмечаем флаг наличия видимых блогов
@@ -291,16 +296,32 @@ if ($do=='view'){
             $blogs[]            = $blog;
         }
 	}	
-
+    //Генерируем панель со страницами и устанавливаем заголовки страниц и глубиномера
+	switch ($ownertype){
+			case 'all': 	$inPage->setTitle($_LANG['ALL_BLOGS']);
+							$inPage->addPathway($_LANG['ALL_BLOGS']);
+							$pagination = cmsPage::getPagebar($total_blogs, $page, $perpage, '/blogs/all-%page%.html');
+							break;
+			case 'single':	$inPage->setTitle($_LANG['PERSONALS']);
+							$inPage->addPathway($_LANG['PERSONALS']);
+							$pagination = cmsPage::getPagebar($single_blogs, $page, $perpage, '/blogs/single-%page%.html');
+							break;
+			case 'multi':  	$inPage->setTitle($_LANG['COLLECTIVES']);
+							$inPage->addPathway($_LANG['COLLECTIVES']);
+							$pagination = cmsPage::getPagebar($multi_blogs, $page, $perpage, '/blogs/multi-%page%.html');
+							break;
+	}
     //Выводим список блогов
 	$smarty = $inCore->initSmarty('components', 'com_blog_view_all.tpl');				
 	$smarty->assign('cfg', $cfg);
 	$smarty->assign('single_blogs', $single_blogs);
 	$smarty->assign('multi_blogs', $multi_blogs);
+	$smarty->assign('total_blogs', $total_blogs);
 	$smarty->assign('ownertype', $ownertype);
 	$smarty->assign('is_admin', $inCore->userIsAdmin($user_id));
 	$smarty->assign('blogs', $blogs);
 	$smarty->assign('is_blogs', $is_blogs);	
+	$smarty->assign('pagination', $pagination);
 	$smarty->display('com_blog_view_all.tpl');
 
 }

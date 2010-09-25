@@ -360,27 +360,29 @@ class cms_model_blogs{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function getBlogs($ownertype){
+    public function getBlogs($ownertype, $page, $perpage){
         $list = array();
 
         //Формируем запрос
         $sql = "SELECT u.id, b. * , u.id AS uid, u.nickname AS author, u.login as author_login, 
                        COUNT(p.id) as records,
                        b.rating AS points
-                FROM cms_users u, cms_blogs b
-                LEFT JOIN cms_blog_posts p ON p.blog_id = b.id
-                WHERE b.user_id = u.id ";
+                FROM cms_blogs b
+				LEFT JOIN cms_users u ON u.id = b.user_id
+                LEFT JOIN cms_blog_posts p ON p.blog_id = b.id ";
 
         //Добавляем к запросу ограничение по типу хозяина (пользователи или клубы)
         if ($ownertype!='all') { 
-            $sql .= "AND ownertype='$ownertype' AND owner='user'\n";
+            $sql .= "WHERE ownertype='$ownertype' AND owner='user'\n";
         } else {
-            $sql .= "AND owner='user'";
+            $sql .= "WHERE owner='user'";
         }
 
         $sql .= "GROUP BY b.id
                  ORDER BY rating DESC";
-
+		// если передали страницу и кол-во страниц, то добавляем LIMIT
+		if ($page && $perpage) { $sql .= " LIMIT ".(($page-1)*$perpage).", $perpage"; }
+		
         $result = $this->inDB->query($sql);
 
         while($blog = $this->inDB->fetch_assoc($result)){

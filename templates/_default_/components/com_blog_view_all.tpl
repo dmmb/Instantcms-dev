@@ -15,9 +15,9 @@
         {/if}
 
          {if $ownertype == 'all'}
-            <span class="blog_type_active">{$LANG.ALL_BLOGS}</span>
+            <span class="blog_type_active">{$LANG.ALL_BLOGS} ({$total_blogs})</span>
          {else}
-            <a class="blog_type_link" href="/blogs/all.html">{$LANG.ALL_BLOGS}</a>
+            <a class="blog_type_link" href="/blogs/all.html">{$LANG.ALL_BLOGS} ({$total_blogs})</a>
          {/if}
 		 
 		{if $single_blogs && $multi_blogs} 
@@ -68,7 +68,7 @@
 			<a style="background:url(/images/markers/rssfeed.png) no-repeat left center; padding-left:25px" href="/rss/blogs/all/feed.rss">{$LANG.BLOGS_RSS}</a>
 		</div>
 	{/if}
-		
+	{$pagination}	
 {else}
 	<p>{$LANG.NOT_ACTIVE_BLOGS}</p>
 {/if}
