@@ -687,7 +687,7 @@ if ($do=='newpost' || $do=='editpost'){
         $cat_list   = blogCategoryList($post['cat_id'], $id);
 
         //получаем код панелей bbcode и смайлов
-        $bb_toolbar = cmsPage::getBBCodeToolbar('message',$cfg['img_on'], 'blog');
+        $bb_toolbar = cmsPage::getBBCodeToolbar('message',$cfg['img_on'], 'blogs');
         $smilies    = cmsPage::getSmilesPanel('message');
 
         //подготавливаем текст поста, если пост загружен

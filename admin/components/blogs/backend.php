@@ -114,6 +114,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$cfg['min_karma_public'] 	= (int)$_REQUEST['min_karma_public'];	
 		$cfg['min_karma'] 			= (int)$_REQUEST['min_karma'];	
 		
+		$cfg['watermark'] 			= (int)$_REQUEST['watermark'];	
+		$cfg['img_on'] 				= (int)$_REQUEST['img_on'];	
+		
 		$cfg['rss_all']             = $inCore->request('rss_all', 'int');
 		$cfg['rss_one']             = $inCore->request('rss_one', 'int');
 			
@@ -129,6 +132,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if (!isset($cfg['min_karma'])) { 		 $cfg['min_karma'] = 0; 		}
 	if (!isset($cfg['update_date'])) { 		 $cfg['update_date'] = 1; 		}
 	if (!isset($cfg['update_seo_link'])) { 	 $cfg['update_seo_link'] = 0; 		}
+	
+	if (!isset($cfg['watermark'])) { 	 	$cfg['watermark'] = 1; 		}
+	if (!isset($cfg['img_on'])) { 	 		$cfg['img_on'] = 1; 		}
 
 	if (!isset($cfg['rss_all'])) { $cfg['rss_all'] = 1; }
 	if (!isset($cfg['rss_one'])) { $cfg['rss_one'] = 1; }
@@ -185,6 +191,26 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                 <input name="perpage" type="text" id="perpage" value="<?php echo @$cfg['perpage'];?>" size="5" /> шт.
             </td>
         </tr>
+        <tr>
+            <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Опции фотографий</h4></td>
+        </tr>
+        <tr>
+            <td valign="top"><strong>Разрешить загрузку фотографий к постам в блоге:</strong></td>
+            <td width="100" valign="top">
+                <input name="img_on" type="radio" value="1" <?php if (@$cfg['img_on']) { echo 'checked="checked"'; } ?> /> Да
+                <input name="img_on" type="radio" value="0" <?php if (@!$cfg['img_on']) { echo 'checked="checked"'; } ?>/> Нет
+            </td>
+        </tr>
+        <tr>
+            <td valign="top"><strong>Наносить водяной знак:</strong>  <br />Если включено, то на все загружаемые
+			      фотографии к постам будет наносится изображение 
+			      из файла "<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>"</td>
+            <td width="100" valign="top">
+                <input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?> /> Да
+                <input name="watermark" type="radio" value="0" <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Нет
+            </td>
+        </tr>
+
         <tr>
             <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Настройки редактирования</h4></td>
         </tr>
