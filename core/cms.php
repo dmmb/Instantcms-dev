@@ -2391,7 +2391,7 @@ class cmsCore {
     public function getCommentsCount($target, $target_id){
         $inDB = cmsDatabase::getInstance();
         if ($this->isComponentInstalled('comments')){
-            $sql = "SELECT id FROM cms_comments WHERE target = '$target' AND target_id = '$target_id'";
+            $sql = "SELECT id FROM cms_comments WHERE target = '$target' AND target_id = '$target_id' AND published = 1";
             $result = $inDB->query($sql) ;
             return $inDB->num_rows($result);
         } else { return 0; }
