@@ -941,14 +941,12 @@ if($do=='post'){
     //Если авторизован, проверяем является ли он хозяином блога или его администратором
     if ($user_id){
         if ($owner=='user'){
-            $myblog     = ($inUser->id == $blog['user_id']) ;
             $is_author  = (((!$myblog) && $blog['ownertype']=='multi' && $inDB->get_field('cms_blog_authors', 'blog_id='.$blog['id'].' AND user_id='.$user_id, 'id')) || ($blog['ownertype']=='multi' && $blog['forall']));
             $is_admin   = $inCore->userIsAdmin($user_id);
         }
         if ($owner=='club'){
-            $myblog     = clubUserIsMember($blog['user_id'], $user_id);
             $is_moder   = clubUserIsRole($blog['user_id'], $user_id, 'moderator');
-            $is_author  = $myblog;
+            $is_author  = ($inUser->id == $post['user_id']);
             $is_admin   = clubUserIsAdmin($blog['user_id'], $user_id) || $inCore->userIsAdmin($user_id);
         }
     }
