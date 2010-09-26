@@ -472,9 +472,7 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 	if (isset($_REQUEST['filter'])) { 
 		$filter = $_REQUEST['filter'];
 		$_SESSION['filter'] = $filter;
-	} elseif (isset($_SESSION['filter'])) {
-		$filter = $_SESSION['filter']; 
-	}
+	} 
 	
 	if ($filter){
 		$f = 0;
@@ -485,7 +483,11 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 				if ($f > 1){
 					$sql .= ' AND ';
 				}
-				$sql .= $key . " LIKE '%" . $filter[$key] . "%'";
+				if ($key != 'category_id'){
+					$sql .= $key . " LIKE '%" . $filter[$key] . "%'";
+				} else {
+					$sql .= $key . " = '" . $filter[$key] . "'";
+				}
 			}				
 		}
 		if (!isset($_SESSION['filter'])) { $_SESSION['filter'] = $filter; }
