@@ -42,19 +42,33 @@ class cms_model_users{
 
     public function getUser($user_id){
         global $_LANG;
-		if (!$user_id){
-			$user_id = 0;
-		}
-        $sql = "SELECT u.*, p.*, u.id as id, u.is_deleted as is_deleted, IFNULL(p.gender, 0) as gender, u.rating as user_rating,
-                g.title as grp,
+				
+		$sql = "SELECT		        
+				u.id as id,
+				u.login,
+				u.nickname,
+				u.email,
+				u.icq,
+		        u.is_deleted as is_deleted,
                 u.regdate fregdate,
                 u.birthdate as birthdate,
+				u.status as status_text,
+				DATE_FORMAT(u.status_date, '%d-%m-%Y %H:%i') as status_date,
                 u.logdate as flogdate,
-                p.gender as gender,
-                u.status as status_text,
-                DATE_FORMAT(u.status_date, '%d-%m-%Y %H:%i') as status_date
-                FROM cms_users u, cms_user_profiles p, cms_user_groups g
-                WHERE u.is_locked = 0 AND p.user_id = u.id AND u.id = $user_id AND u.group_id = g.id
+				u.rating as user_rating,
+                p.city, p.description, p.showmail, p.showbirth, p.showicq,
+				p.karma, p.imageurl, p.allow_who,
+				p.gender as gender,	p.formsdata,			
+				u.group_id,
+				g.title as grp,
+				o.user_id as status,
+				b.user_id as banned
+                FROM cms_users u
+				LEFT JOIN cms_user_profiles p ON u.id = p.id
+				LEFT JOIN cms_user_groups g ON u.group_id = g.id
+				LEFT JOIN cms_online o ON u.id = o.user_id
+				LEFT JOIN cms_banlist b ON u.id = b.user_id
+                WHERE u.is_locked = 0 AND u.id = $user_id
                 LIMIT 1";
 
         $result = $this->inDB->query($sql);
@@ -93,10 +107,11 @@ class cms_model_users{
 
         $friends = array();
 
-        $sql = "SELECT f.*, u.*, u.nickname as sender, u.login as sender_login, p.imageurl as sender_img
-                FROM cms_user_friends f, cms_users u, cms_user_profiles p
-                WHERE f.to_id = $user_id AND f.is_accepted = 0 AND f.from_id = u.id AND p.user_id = u.id";
-
+		$sql = "SELECT f.*, u.nickname as sender, u.login as sender_login, p.imageurl as sender_img
+                FROM cms_user_friends f
+				LEFT JOIN cms_users u ON f.from_id = u.id
+				LEFT JOIN cms_user_profiles p ON p.id = u.id
+                WHERE f.to_id = $user_id AND f.is_accepted = 0";
         $result = $this->inDB->query($sql);
 
         if (!$this->inDB->num_rows($result)){ return false; }

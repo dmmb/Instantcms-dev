@@ -108,11 +108,21 @@ if ($do=='city'){
 
 	$city = urldecode($inCore->request('city', 'str', ''));
 
-	$querysql = "SELECT u.*, p.*, u.id as id, u.regdate as fregdate, u.logdate as flogdate
-				FROM cms_users u, cms_user_profiles p
-				WHERE u.is_locked = 0 AND p.user_id = u.id AND p.city LIKE '%$city%' AND u.is_deleted = 0
+	$querysql = "SELECT	        
+				u.id as id,
+				u.login,
+				u.nickname,
+				u.logdate as flogdate,
+		        u.is_deleted as is_deleted,
+                u.birthdate, u.rating,
+				u.status as microstatus,
+                p.city, p.karma as karma, p.imageurl, 
+				p.gender as gender, u.*, p.*
+                FROM cms_users u
+				LEFT JOIN cms_user_profiles p ON u.id = p.id
+				WHERE u.is_deleted = 0 AND u.is_locked = 0 AND p.city LIKE '%$city%'
 				ORDER BY city DESC";
-	
+				
 	$querymsg = '<div class="con_description"><strong>'.$_LANG['SEARCH_BY_CITY'].':</strong> '.$city.' (<a href="/users/all.html">'.$_LANG['CANCEL_SEARCH'].'</a>)</div>';
 	
 	$do = 'view';
@@ -127,9 +137,20 @@ if ($do=='hobby'){
 
     $hobby = strtolower($hobby);
 
-	$querysql = "SELECT u.*, p.*, u.id as id, u.regdate as fregdate, u.logdate as flogdate
-				FROM cms_users u, cms_user_profiles p
-				WHERE u.is_locked = 0 AND p.user_id = u.id AND (LOWER(p.description) LIKE '%$hobby%' OR LOWER(p.formsdata) LIKE '%$hobby%') AND u.is_deleted = 0
+	$querysql = "SELECT		        
+				u.id as id,
+				u.login,
+				u.nickname,
+				u.logdate as flogdate,
+		        u.is_deleted as is_deleted,
+                u.birthdate, u.rating,
+				u.status as microstatus,
+                p.city, p.karma as karma, p.imageurl, 
+				p.gender as gender
+                FROM cms_users u
+				LEFT JOIN cms_user_profiles p ON u.id = p.id
+				WHERE u.is_deleted = 0 AND u.is_locked = 0
+				AND (LOWER(p.description) LIKE '%$hobby%' OR LOWER(p.formsdata) LIKE '%$hobby%')
 				ORDER BY city DESC";
 	
 	$querymsg = '<div class="con_description"><strong>'.$_LANG['SEARCH_BY_HOBBY'].':</strong> '.$hobby.' (<a href="/users/all.html">'.$_LANG['CANCEL_SEARCH_SHOWALL'].'</a>)</div>';
@@ -184,14 +205,21 @@ if ($do=='search'){
 		$stext[] = $_LANG['HOBBY']." &mdash; ".$val;
 	}
 
-	$querysql = "SELECT u.*, p.*, u.id as id, u.status as microstatus, 
-						u.regdate as fregdate, 
-                        u.logdate as flogdate,
-                        u.status as microstatus
-				FROM cms_users u, cms_user_profiles p
-				WHERE u.is_deleted = 0 AND u.is_locked = 0 AND p.user_id = u.id $s
+	$querysql = "SELECT		        
+				u.id as id,
+				u.login,
+				u.nickname,
+				u.logdate as flogdate,
+		        u.is_deleted as is_deleted,
+                u.birthdate, u.rating,
+				u.status as microstatus,
+                p.city, p.karma as karma, p.imageurl, 
+				p.gender as gender
+                FROM cms_users u
+				LEFT JOIN cms_user_profiles p ON u.id = p.id
+				WHERE u.is_deleted = 0 AND u.is_locked = 0 $s
 				ORDER BY city DESC";
-
+				
     echo '<pre>'.$sql.'</pre>';
 	
 	$querymsg = '<h3>'.$_LANG['SEARCH_RESULT'].'</h3>';
@@ -233,22 +261,41 @@ if ($do=='view'){
 	
 	if (!isset($querysql)){
 		if (!@$_SESSION['usr_online']){
-			$sql = "SELECT u.*, p.*, u.id as id, u.is_deleted as is_deleted, u.regdate as fregdate,  p.karma as karma, 
-						   u.logdate as flogdate,
-                           p.gender as gender, u.status as microstatus
-					FROM cms_user_profiles p, cms_users u
-					WHERE u.is_locked = 0 AND u.is_deleted = 0 AND p.user_id = u.id
-					ORDER BY ".$orderby." ".$orderto."
-					LIMIT ".(($page-1)*$perpage).", $perpage";
+
+			$sql = "SELECT		        
+				u.id as id,
+				u.login,
+				u.nickname,
+				u.logdate as flogdate,
+		        u.is_deleted as is_deleted,
+                u.birthdate, u.rating,
+				u.status as microstatus,
+                p.city, p.karma as karma, p.imageurl, 
+				p.gender as gender
+                FROM cms_users u
+				LEFT JOIN cms_user_profiles p ON u.id = p.id
+				WHERE u.is_locked = 0 AND u.is_deleted = 0
+				ORDER BY ".$orderby." ".$orderto."
+				LIMIT ".(($page-1)*$perpage).", $perpage";		
 		} else {
-			$sql = "SELECT u.*, p.*, u.id as id, u.is_deleted as is_deleted, u.regdate as fregdate,  p.karma as karma,
-						   u.logdate as flogdate,
-                           p.gender as gender, u.status as microstatus
-					FROM cms_users u, cms_user_profiles p, cms_online o
-					WHERE u.is_locked = 0 AND u.is_deleted = 0 AND p.user_id = u.id AND p.user_id = o.user_id
-                    GROUP BY o.user_id
-					ORDER BY ".$orderby." ".$orderto."
-					LIMIT ".(($page-1)*$perpage).", $perpage";
+		
+		$sql = "SELECT		        
+				o.user_id as id,
+				u.login,
+				u.nickname,
+				u.logdate as flogdate,
+		        u.is_deleted as is_deleted,
+                u.birthdate, u.rating,
+				u.status as microstatus,
+                p.city, p.karma as karma, p.imageurl, 
+				p.gender as gender
+				FROM cms_online o
+                LEFT JOIN cms_users u ON  u.id = o.user_id
+				LEFT  JOIN cms_user_profiles p ON u.id = p.id
+				WHERE u.is_locked = 0 AND u.is_deleted = 0
+				GROUP BY o.user_id
+				ORDER BY ".$orderby." ".$orderto."
+				LIMIT ".(($page-1)*$perpage).", $perpage";
 		}
 	} else {
 		$sql = $querysql;
@@ -330,9 +377,9 @@ if ($do=='view'){
 		
 		if (!isset($querysql)){
             if (!@$_SESSION['usr_online']){
-                $result = $inDB->query("SELECT * FROM cms_users WHERE is_locked=0 AND is_deleted=0") ;
+                $result = $inDB->query("SELECT id FROM cms_users WHERE is_locked=0 AND is_deleted=0") ;
             } else {
-                $result = $inDB->query("SELECT p.user_id FROM cms_user_profiles p, cms_online o, cms_users u WHERE p.user_id = o.user_id AND u.id=p.user_id AND u.is_deleted=0") ;
+                $result = $inDB->query("SELECT o.user_id FROM cms_online o LEFT JOIN cms_users u ON  u.id = o.user_id WHERE u.is_locked = 0 AND u.is_deleted = 0 GROUP BY o.user_id") ;
             }
             $total = $inDB->num_rows($result);
 
@@ -451,9 +498,10 @@ if ($do=='editprofile'){
 							DATE_FORMAT(u.birthdate, '%d') as bday,
 							DATE_FORMAT(u.birthdate, '%m') as bmonth,
 							DATE_FORMAT(u.birthdate, '%Y') as byear,
-							IFNULL(p.gender, 0) as gender
-					FROM cms_users u, cms_user_profiles p
-					WHERE u.is_locked = 0 AND p.user_id = u.id AND u.id = $id
+							IFNULL(p.gender, 0) as gender	        
+				    FROM cms_users u
+					LEFT JOIN cms_user_profiles p ON u.id = p.id
+					WHERE u.id = '$id' AND u.is_locked = 0
 					LIMIT 1
 					";					
 			$result = $inDB->query($sql);
@@ -617,7 +665,7 @@ if ($do=='profile'){
         $login = $inCore->request('login', 'str', '');
         $login = urldecode($login);
         $id    = $inDB->get_fields('cms_users', "login='{$login}'", 'id', 'is_deleted ASC');
-		$id    = $id['id'];
+		$id    = ($id['id'] ? $id['id'] : 0);
     }
 
     $usr = $model->getUser($id);
@@ -643,12 +691,12 @@ if ($do=='profile'){
     $deleted    = $usr['is_deleted'];
     $myprofile  = ($inUser->id == $id);
 
-    if ($deleted){
+   	if ($deleted){
         $smarty = $inCore->initSmarty('components', 'com_users_deleted.tpl');
         $smarty->assign('is_user', $inUser->id);
         $smarty->assign('id', $id);
         $smarty->assign('nickname', $usr['nickname']);
-        $smarty->assign('avatar', usrImage($id, 'big'));
+        $smarty->assign('avatar', usrImageNOdb($usr['id'], 'big', $usr['imageurl'], $usr['is_deleted']));
         $smarty->assign('login', $usr['login']);
         $smarty->assign('is_admin', $inUser->is_admin);
         $smarty->assign('others_active', $inDB->rows_count('cms_users', "login='{$usr['login']}' AND is_deleted=0", 1));
@@ -656,16 +704,16 @@ if ($do=='profile'){
         return;
     }
 
-    $usr['avatar']				= usrImage($usr['id'], 'big');
-	$usr['isfriend']			= usrIsFriends($usr['id'], $inUser->id);
-	$usr['isfriend_not_add']	= usrIsFriends($usr['id'], $inUser->id, false);
+    $usr['avatar']				= usrImageNOdb($usr['id'], 'big', $usr['imageurl'], $usr['is_deleted']);
+	$usr['isfriend']			= (($inUser->id && !$myprofile) ? usrIsFriends($usr['id'], $inUser->id) : false);
+	$usr['isfriend_not_add']	= $usr['isfriend'];
     $usr['is_new_friends']		= ($inUser->id==$usr['id'] && $model->isNewFriends($usr['id']) && $cfg['sw_friends']);
     if ($usr['is_new_friends']){
         $usr['new_friends'] 	= usrFriendQueriesList($usr['id'], $model);
     }
     $usr['friends']				= usrFriends($usr['id']);
 
-    if ($usr['friends']){
+    if ($usr['friends'] && $inUser->id){
         $usr['friends_photos']	= cmsUser::getUserFriendsPhotos($usr['id']);
         $usr['friends_posts']	= cmsUser::getUserFriendsPosts($usr['id']);
         $usr['friends_comments']	= cmsUser::getUserFriendsComments($usr['id']);
@@ -674,11 +722,12 @@ if ($do=='profile'){
     $usr['awards_html']			= usrAwards($usr['id']);
     $usr['wall_html']			= cmsUser::getUserWall($usr['id']);
     $usr['addwall_html'] 		= cmsUser::getUserAddWall($usr['id']);
-    $usr['banned'] 				= cmsUser::isBanned($usr['id']);
+	$usr['banned']				= ($usr['banned'] == $usr['id'] ? 1 : 0);
 
     $usr['clubs'] 				= cmsUserClubs($usr['id']);
 
-    $usr['status']				= usrStatus($usr['id']);
+    $usr['status']				= ($usr['status'] == $usr['id'] ? '<span class="online">'.$_LANG['ONLINE'].'</span>' : '<span class="offline">'.$_LANG['OFFLINE'].'</span>');
+	
     $usr['status_date']         = cmsCore::dateDiffNow($usr['status_date']); 
     $usr['flogdate']            = strip_tags(usrStatus($usr['id'], $usr['flogdate'], false, $usr['gender']));
     $usr['karma']				= strip_tags( cmsUser::getKarmaFormat($usr['id'], false), '<table><tr><td><img><a>' );
@@ -688,7 +737,7 @@ if ($do=='profile'){
     $usr['cityurl']             = urlencode($usr['city']);
 
     $usr['photos_count']		= (int)usrPhotoCount($usr['id']);
-	$usr['can_add_foto']		= ((usrPhotoCount($usr['id'], false)<$cfg['photosize'] || $cfg['photosize']==0) && $cfg['sw_photo']);
+	$usr['can_add_foto']		= (($usr['photos_count']<$cfg['photosize'] || $cfg['photosize']==0) && $cfg['sw_photo']);
     $usr['board_count']			= (int)$inDB->rows_count('cms_board_items', "user_id={$usr['id']} AND published=1");
     $usr['comments_count']		= (int)$inDB->rows_count('cms_comments', "user_id={$usr['id']} AND published=1");
     $usr['forum_count']			= usrMsg($usr['id'], 'cms_forum_posts');
@@ -766,8 +815,9 @@ if ($do=='profile'){
 if ($do=='messages'){
 	if ($inUser->id){
 		$sql = "SELECT u.*, p.*, u.id as id, DATE_FORMAT(u.regdate, '%d-%m-%Y') as fregdate, DATE_FORMAT(u.logdate, '%d-%m-%Y') as flogdate
-				FROM cms_users u, cms_user_profiles p
-				WHERE u.is_locked = 0 AND p.user_id = u.id AND u.id = $id
+				FROM cms_users u
+				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+				WHERE u.id = '$id' AND u.is_locked = 0
 				LIMIT 1
 				";				
 		$result = $inDB->query($sql) ;
@@ -787,7 +837,7 @@ if ($do=='messages'){
 if ($do=='avatar'){
 
 	if (usrCheckAuth() && @$inUser->id==$id){
-		$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
+		$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
 		$result = $inDB->query($sql) ;
 
 		if ($inDB->num_rows($result)){
@@ -869,7 +919,7 @@ if ($do=='avatar'){
 /////////////////////////////// AVATAR LIBRARY /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='select_avatar'){
 
-	if (usrCheckAuth() && @$inUser->id==$id){
+	if (usrCheckAuth() && $inUser->id==$id){
 
         $avatars_dir        = $_SERVER['DOCUMENT_ROOT']."/images/users/avatars/library";
         $avatars_dir_rel    = "/images/users/avatars/library";
@@ -974,7 +1024,7 @@ if ($do=='addphoto'){
     $inCore->loadLanguage('components/photos');
 
 	if ( $inUser->id==$id || $inCore->userIsAdmin($inUser->id) ){
-		$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
+		$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
 		$result = $inDB->query($sql) ;
 
 		if ($inDB->num_rows($result)){
@@ -1099,7 +1149,7 @@ if ($do=='delphoto'){
 	
 	if (usrCheckAuth() && (@$inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
 		if (!isset($_POST['godelete'])){
-			$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
+			$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
 			$result = $inDB->query($sql);
 			if ($inDB->num_rows($result)){
 				$inPage->backButton(false);
@@ -1151,7 +1201,7 @@ if ($do=='editphoto'){
 	$photoid = $inCore->request('photoid', 'int', '');	
 	
 	if (usrCheckAuth() && ($user_id==$id||$inCore->userIsAdmin($user_id))){
-		$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
+		$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
 		$result = $inDB->query($sql);
 
 		if ($inDB->num_rows($result)){
@@ -1247,7 +1297,7 @@ if ($do=='editphoto'){
 /////////////////////////////// VIEW ALBUM /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='viewalbum'){
 
-    $sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
+    $sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
 	$result = $inDB->query($sql);
 	
 	if (!$inDB->num_rows($result)){ cmsCore::error404(); }
@@ -1329,7 +1379,7 @@ if ($do=='viewalbum'){
 
 /////////////////////////////// VIEW BOARD ENTRIES ///////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='viewboard'){ 
-	$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
+	$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
 	$result = $inDB->query($sql);
 	// если есть пользователь с таким id
 	if ($inDB->num_rows($result)>0){
@@ -1412,7 +1462,7 @@ if ($do=='viewphoto'){
 		$myprofile = ($user_id == $id);
 	} else { $myprofile = false; }
 
-	$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
+	$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
 	$result = $inDB->query($sql) ;
 	
 
@@ -1469,7 +1519,7 @@ if ($do=='viewphoto'){
 /////////////////////////////// ADD FRIEND /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='addfriend'){
 
-    $sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
+    $sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
 
     $result = $inDB->query($sql);
     if (!$inDB->num_rows($result)){ $inCore->redirectBack(); }
@@ -1484,20 +1534,18 @@ if ($do=='addfriend'){
 				$inDB->query($sql);
 				header('location:'.$_SERVER['HTTP_REFERER']);
 			}
-
-			$sql = "SELECT * FROM cms_users WHERE id = $id";
 			
-				$inPage->backButton(false);
-				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-				$inPage->addPathway($_LANG['ADD_TO_FRIEND']);
-                $inPage->backButton(false);
-				echo '<div class="con_heading">'.$_LANG['ADD_TO_FRIEND'].'</div>';
-				echo '<p><strong>'.$_LANG['SEND_TO_USER'].' '.ucfirst($usr['nickname']).' '.$_LANG['FRIENDSHIP_OFFER'].'?</strong></p>';
-				echo '<p>'.$_LANG['IF'].' '.ucfirst($usr['nickname']).' '.$_LANG['SUCCESS_TEXT'].'</p>';
-				echo '<div><form action="'.$_SERVER['REQUEST_URI'].'" method="POST"><p>
-						<input style="font-size:24px; width:100px" type="button" name="cancel" value="'.$_LANG['NO'].'" onclick="window.history.go(-1)" />
-						<input style="font-size:24px; width:100px" type="submit" name="goadd" value="'.$_LANG['YES'].'" />
-					 </p></form></div>';
+			$inPage->backButton(false);
+			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+			$inPage->addPathway($_LANG['ADD_TO_FRIEND']);
+            $inPage->backButton(false);
+			echo '<div class="con_heading">'.$_LANG['ADD_TO_FRIEND'].'</div>';
+			echo '<p><strong>'.$_LANG['SEND_TO_USER'].' '.ucfirst($usr['nickname']).' '.$_LANG['FRIENDSHIP_OFFER'].'?</strong></p>';
+			echo '<p>'.$_LANG['IF'].' '.ucfirst($usr['nickname']).' '.$_LANG['SUCCESS_TEXT'].'</p>';
+			echo '<div><form action="'.$_SERVER['REQUEST_URI'].'" method="POST"><p>
+					<input style="font-size:24px; width:100px" type="button" name="cancel" value="'.$_LANG['NO'].'" onclick="window.history.go(-1)" />
+					<input style="font-size:24px; width:100px" type="submit" name="goadd" value="'.$_LANG['YES'].'" />
+				 </p></form></div>';
 
 		} else {
 				$to_id      = $id;
@@ -1517,7 +1565,7 @@ if ($do=='addfriend'){
 }//do
 /////////////////////////////// DEL FRIEND /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delfriend'){
-	if (usrCheckAuth() && @$inUser->id!=$id){
+	if (usrCheckAuth() && $inUser->id!=$id){
 
 		$first_id = $inUser->id;
 		$second_id = $id;
@@ -1536,7 +1584,7 @@ if ($do=='sendmessage'){
 		$from_id    = $inUser->id;
 		$to_id      = $id;
 		
-		$sql        = "SELECT * FROM cms_users WHERE id = $id LIMIT 1";
+		$sql        = "SELECT id, nickname, login FROM cms_users WHERE id = $id LIMIT 1";
 		$result     = $inDB->query($sql) ;
         $usr        = $inDB->fetch_assoc($result);
 
@@ -1681,7 +1729,7 @@ if ($do=='delmessages'){
 }//do
 ///////////////////////////////////////////// KARMA LOG /////////////////////////////////////////////////////////////////////////
 if ($do=='karma'){
-		$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
+		$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
 		$result = $inDB->query($sql) ;
 	
 		if ($inDB->num_rows($result)>0){
@@ -1726,7 +1774,7 @@ if ($do=='giveaward'){
 		$from_id = $inUser->id;
 		$to_id = $id;
 		
-		$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
+		$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
 		$result = $inDB->query($sql) ;
 	
 		if ($inDB->num_rows($result)>0){
@@ -1839,12 +1887,11 @@ if ($do == 'delprofile'){
 /////////////////////////////// RESTORE PROFILE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='restoreprofile'){
 	if (usrCheckAuth()){
-		$sql = "SELECT *
+		$sql = "SELECT id
 				FROM cms_users
-				WHERE id = '$id'
+				WHERE id = $id
 				LIMIT 1
-				";
-				
+				";	
 		$result = $inDB->query($sql) ;
 		
 		if ($inDB->num_rows($result)){
@@ -1866,7 +1913,7 @@ if ($do=='restoreprofile'){
 /////////////////////////////// VIEW USER FILES ///////////////////////////////////////////////////////////////////////////////////////	
 if ($do=='files'){
 	//get user
-	$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
+	$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
 	$result = $inDB->query($sql) ;
 	//if user found
 	if ($inDB->num_rows($result)>0){
@@ -2186,7 +2233,7 @@ if ($do=='delfile'){
 	
 	if (usrCheckAuth() && (@$inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
 		if (!isset($_POST['godelete'])){
-			$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
+			$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
 			$result = $inDB->query($sql) ;
 			if ($inDB->num_rows($result)){
 				$inPage->backButton(false);
@@ -2226,7 +2273,7 @@ if ($do=='delfilelist'){
 	
 	if (usrCheckAuth() && (@$inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
 		if (!isset($_POST['godelete'])){
-			$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
+			$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
 			$result = $inDB->query($sql);
 			if ($inDB->num_rows($result)){
 				$inPage->backButton(false);
