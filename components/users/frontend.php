@@ -713,7 +713,7 @@ if ($do=='profile'){
     }
     $usr['friends']				= usrFriends($usr['id']);
 
-    if ($usr['friends'] && $inUser->id){
+    if ($usr['friends'] && $inUser->id && $myprofile){
         $usr['friends_photos']	= cmsUser::getUserFriendsPhotos($usr['id']);
         $usr['friends_posts']	= cmsUser::getUserFriendsPosts($usr['id']);
         $usr['friends_comments']	= cmsUser::getUserFriendsComments($usr['id']);
