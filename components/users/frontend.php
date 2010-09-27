@@ -555,11 +555,9 @@ if ($do=='editprofile'){
 /////////////////////////////// VIEW USER COMMENTS /////////////////////////////////////////////////////////////////////////////////////
 if ($do=='comments'){
 
-	$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
-	$result = $inDB->query($sql) ;
+	$usr = $model->getUserShort($id);
 
-	if ($inDB->num_rows($result)){
-		$usr        = $inDB->fetch_assoc($result);
+	if ($usr){
 
 		$page       = $inCore->request('page', 'int', 1);
 		$perpage    = 15;
@@ -608,11 +606,9 @@ if ($do=='comments'){
 /////////////////////////////// VIEW USER POSTS /////////////////////////////////////////////////////////////////////////////////////
 if ($do=='forumposts'){
 
-	$sql = "SELECT * FROM cms_users WHERE id = '$id' LIMIT 1";
-	$result = $inDB->query($sql) ;
+	$usr = $model->getUserShort($id);
     
-	if ($inDB->num_rows($result)){
-		$usr = $inDB->fetch_assoc($result);
+	if ($usr){
 
 		$page = $inCore->request('page', 'int', 1);
 		$perpage = 15;
@@ -836,12 +832,11 @@ if ($do=='messages'){
 /////////////////////////////// AVATAR UPLOAD /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='avatar'){
 
-	if (usrCheckAuth() && @$inUser->id==$id){
-		$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
-		$result = $inDB->query($sql) ;
+	if (usrCheckAuth() && $inUser->id==$id){
+		
+		$usr = $model->getUserShort($id);
 
-		if ($inDB->num_rows($result)){
-			$usr = $inDB->fetch_assoc($result);
+		if ($usr){
 	
 			$inPage->setTitle($_LANG['LOAD_AVATAR']);
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
@@ -1024,11 +1019,10 @@ if ($do=='addphoto'){
     $inCore->loadLanguage('components/photos');
 
 	if ( $inUser->id==$id || $inCore->userIsAdmin($inUser->id) ){
-		$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
-		$result = $inDB->query($sql) ;
+		
+		$usr = $model->getUserShort($id);
 
-		if ($inDB->num_rows($result)){
-			$usr = $inDB->fetch_assoc($result);
+		if ($usr){
 	
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($inUser->login));
 			$inPage->addPathway($_LANG['ADD_PHOTO']);
@@ -1149,11 +1143,9 @@ if ($do=='delphoto'){
 	
 	if (usrCheckAuth() && (@$inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
 		if (!isset($_POST['godelete'])){
-			$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
-			$result = $inDB->query($sql);
-			if ($inDB->num_rows($result)){
+			$usr = $model->getUserShort($id);
+			if ($usr){
 				$inPage->backButton(false);
-				$usr = $inDB->fetch_assoc($result);				
 				$sql = "SELECT * FROM cms_user_photos WHERE id = $photoid AND user_id = $id";
 				$result = $inDB->query($sql);
 				if ($inDB->num_rows($result)){
@@ -1201,11 +1193,10 @@ if ($do=='editphoto'){
 	$photoid = $inCore->request('photoid', 'int', '');	
 	
 	if (usrCheckAuth() && ($user_id==$id||$inCore->userIsAdmin($user_id))){
-		$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
-		$result = $inDB->query($sql);
+		
+		$usr = $model->getUserShort($id);
 
-		if ($inDB->num_rows($result)){
-			$usr = $inDB->fetch_assoc($result);
+		if ($usr){
 	
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 			$inPage->addPathway($_LANG['PHOTOALBUM'], '/users/'.$id.'/photoalbum.html');
@@ -1297,12 +1288,10 @@ if ($do=='editphoto'){
 /////////////////////////////// VIEW ALBUM /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='viewalbum'){
 
-    $sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
-	$result = $inDB->query($sql);
+	$usr = $model->getUserShort($id);
 	
-	if (!$inDB->num_rows($result)){ cmsCore::error404(); }
+	if (!$usr){ cmsCore::error404(); }
 
-    $usr = $inDB->fetch_assoc($result);
     $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
     $inPage->addPathway($_LANG['PHOTOALBUM'], $_SERVER['REQUEST_URI']);
 
@@ -1379,11 +1368,10 @@ if ($do=='viewalbum'){
 
 /////////////////////////////// VIEW BOARD ENTRIES ///////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='viewboard'){ 
-	$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
-	$result = $inDB->query($sql);
-	// если есть пользователь с таким id
-	if ($inDB->num_rows($result)>0){
-		$usr = $inDB->fetch_assoc($result);
+
+	$usr = $model->getUserShort($id);
+
+	if ($usr){
 		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 		$inPage->addPathway($_LANG['ADVS']);
         $inPage->setTitle($_LANG['ADVS'].' - '.$usr['nickname']);
@@ -1431,16 +1419,15 @@ if ($do=='viewboard'){
 
 /////////////////////////////// FRIENDS LIST /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='friendlist'){
-	$sql = "SELECT id, login, nickname FROM cms_users WHERE id = $id LIMIT 1";
-	$result = $inDB->query($sql) ;
 	
-	if ($inDB->num_rows($result)>0){
+	$usr = $model->getUserShort($id);
+	
+	if ($usr){
 		if (usrCheckAuth()){
 
             $page = $inCore->request('page', 'int', 1);
 			$perpage = 15;
-				
-			$usr = $inDB->fetch_assoc($result);
+
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 			$inPage->addPathway($_LANG['FRIENDS'], $_SERVER['REQUEST_URI']);
 
@@ -1462,12 +1449,10 @@ if ($do=='viewphoto'){
 		$myprofile = ($user_id == $id);
 	} else { $myprofile = false; }
 
-	$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
-	$result = $inDB->query($sql) ;
-	
+	$usr = $model->getUserShort($id);
 
-	if ($inDB->num_rows($result)>0){
-			$usr = $inDB->fetch_assoc($result);
+	if ($usr){
+
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 
 			$sql = "SELECT * FROM cms_user_photos WHERE id = '$photoid' AND user_id = '$id'";
@@ -1519,12 +1504,9 @@ if ($do=='viewphoto'){
 /////////////////////////////// ADD FRIEND /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='addfriend'){
 
-    $sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
-
-    $result = $inDB->query($sql);
-    if (!$inDB->num_rows($result)){ $inCore->redirectBack(); }
-
-    $usr = $inDB->fetch_assoc($result);
+    $usr = $model->getUserShort($id);
+	
+    if (!$usr){ $inCore->redirectBack(); }
 
 	if (usrCheckAuth() && $inUser->id!=$id){
 	if(!usrIsFriends($id, $inUser->id)){
@@ -1584,9 +1566,7 @@ if ($do=='sendmessage'){
 		$from_id    = $inUser->id;
 		$to_id      = $id;
 		
-		$sql        = "SELECT id, nickname, login FROM cms_users WHERE id = $id LIMIT 1";
-		$result     = $inDB->query($sql) ;
-        $usr        = $inDB->fetch_assoc($result);
+		$usr 		= $model->getUserShort($id);
 
 		if ($usr || isset($_POST['massmail'])){
 			if (usrCheckAuth()){
@@ -1729,12 +1709,11 @@ if ($do=='delmessages'){
 }//do
 ///////////////////////////////////////////// KARMA LOG /////////////////////////////////////////////////////////////////////////
 if ($do=='karma'){
-		$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
-		$result = $inDB->query($sql) ;
 	
-		if ($inDB->num_rows($result)>0){
-				$usr = $inDB->fetch_assoc($result);
-		
+		$usr = $model->getUserShort($id);
+	
+		if ($usr){
+
 				$inPage->setTitle($_LANG['KARMA_HISTORY']);
 		
 				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
@@ -1774,11 +1753,9 @@ if ($do=='giveaward'){
 		$from_id = $inUser->id;
 		$to_id = $id;
 		
-		$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
-		$result = $inDB->query($sql) ;
+		$usr = $model->getUserShort($id);
 	
-		if ($inDB->num_rows($result)>0){
-				$usr = $inDB->fetch_assoc($result);
+		if ($usr){
 		
 				$inPage->setTitle($_LANG['AWARD_USER']);
 				$inPage->addHeadJS('components/users/js/awards.js');
@@ -1847,11 +1824,10 @@ if ($do == 'delprofile'){
     $inPage->backButton(false);
 	if (usrCheckAuth()){
 		if ($id){	
-			$user_sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
-			$result = $inDB->query($user_sql) ;
+			$data = $model->getUserShort($id);
 			
-			if ($inDB->num_rows($result)){
-				$data = $inDB->fetch_assoc($result);				
+			if ($data){
+
 				if (isset($_REQUEST['confirm'])){
 					if ($inUser->id == $data['id'] || $inCore->userIsAdmin($inUser->id)){
 						$inDB->query("UPDATE cms_users SET is_deleted = 1 WHERE id = $id");	
@@ -1887,15 +1863,9 @@ if ($do == 'delprofile'){
 /////////////////////////////// RESTORE PROFILE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='restoreprofile'){
 	if (usrCheckAuth()){
-		$sql = "SELECT id
-				FROM cms_users
-				WHERE id = $id
-				LIMIT 1
-				";	
-		$result = $inDB->query($sql) ;
+		$usr = $model->getUserShort($id);
 		
-		if ($inDB->num_rows($result)){
-			$usr = $inDB->fetch_assoc($result);
+		if ($usr){
 			if ($inUser->id==$id || $inCore->userIsAdmin($inUser->id)){
 				$sql = "UPDATE cms_users SET is_deleted = 0 WHERE id = $id";
 				$inDB->query($sql) ;
@@ -1913,11 +1883,9 @@ if ($do=='restoreprofile'){
 /////////////////////////////// VIEW USER FILES ///////////////////////////////////////////////////////////////////////////////////////	
 if ($do=='files'){
 	//get user
-	$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
-	$result = $inDB->query($sql) ;
+	$usr = $model->getUserShort($id);
 	//if user found
-	if ($inDB->num_rows($result)>0){
-			$usr = $inDB->fetch_assoc($result);			
+	if ($usr){
 			//heading
 			echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; '.$_LANG['FILES'].'</div>';
 			$inPage->setTitle($usr['nickname'].' - '.$_LANG['FILES']);
@@ -2233,11 +2201,9 @@ if ($do=='delfile'){
 	
 	if (usrCheckAuth() && (@$inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
 		if (!isset($_POST['godelete'])){
-			$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
-			$result = $inDB->query($sql) ;
-			if ($inDB->num_rows($result)){
+			$usr = $model->getUserShort($id);
+			if ($usr){
 				$inPage->backButton(false);
-				$usr = $inDB->fetch_assoc($result);				
 				$sql = "SELECT * FROM cms_user_files WHERE id = $fileid AND user_id = $id";
 				$result = $inDB->query($sql);
 				if ($inDB->num_rows($result)){
@@ -2273,12 +2239,10 @@ if ($do=='delfilelist'){
 	
 	if (usrCheckAuth() && (@$inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
 		if (!isset($_POST['godelete'])){
-			$sql = "SELECT id, nickname, login FROM cms_users WHERE id = '$id' LIMIT 1";
-			$result = $inDB->query($sql);
-			if ($inDB->num_rows($result)){
+			$usr = $model->getUserShort($id);
+			if ($usr){
 				$inPage->backButton(false);
-				$usr = $inDB->fetch_assoc($result);				
-				
+
 				//build file list sql
 				$t = 0;
 				foreach($files as $key=>$value){

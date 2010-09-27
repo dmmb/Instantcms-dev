@@ -41,7 +41,6 @@ class cms_model_users{
 /* ==================================================================================================== */
 
     public function getUser($user_id){
-        global $_LANG;
 				
 		$sql = "SELECT		        
 				u.id as id,
@@ -78,6 +77,19 @@ class cms_model_users{
         $user = $this->inDB->fetch_assoc($result);
 
         $user = cmsCore::callEvent('GET_USER', $user);
+
+        return $user;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function getUserShort($user_id){
+				
+		$user = $this->inDB->get_fields('cms_users', "id = '$user_id'", 'id, nickname, login');
+        
+		if (!$user){ return false; }
 
         return $user;
 
