@@ -303,10 +303,7 @@ if ($do=='view'){
     
 	$result = $inDB->query($sql) ;
 
-	$tsql = "SELECT id FROM cms_users WHERE is_locked = 0 AND is_deleted = 0";
-	$tres = $inDB->query($tsql) ;
-	
-	$total_usr = $inDB->num_rows($tres);
+	$total_usr = $model->getUserTotal();
 	$is_users  = $inDB->num_rows($result);
 	
 	$smarty = $inCore->initSmarty('components', 'com_users_view.tpl');			
@@ -352,7 +349,7 @@ if ($do=='view'){
 		}
 
         $is_users   = (sizeof($users)>0);
-        $total_usr  = $inDB->rows_count('cms_users', 'is_deleted=0 AND is_locked=0');
+        $total_usr  = $model->getUserTotal();
 
         $smarty->assign('is_users', $is_users);
         $smarty->assign('total_usr', $total_usr);
@@ -376,12 +373,11 @@ if ($do=='view'){
 		$smarty->assign('online_link', $online_link);			
 		
 		if (!isset($querysql)){
-            if (!@$_SESSION['usr_online']){
-                $result = $inDB->query("SELECT id FROM cms_users WHERE is_locked=0 AND is_deleted=0") ;
+            if (!$_SESSION['usr_online']){
+                $total = $model->getUserTotal();
             } else {
-                $result = $inDB->query("SELECT o.user_id FROM cms_online o LEFT JOIN cms_users u ON  u.id = o.user_id WHERE u.is_locked = 0 AND u.is_deleted = 0 GROUP BY o.user_id") ;
+                $total = $model->getUserTotal(true);
             }
-            $total = $inDB->num_rows($result);
 
 			$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/users/%page%/'.$orderby.'-'.$orderto.'.html'));
 		}
@@ -587,8 +583,7 @@ if ($do=='comments'){
                 $comments[] = $com;
 			}
 			// —читаем общее число комментариев
-			$result_total = $inDB->query("SELECT id FROM cms_comments WHERE user_id = '$id' AND published = 1");
-			$records_total = $inDB->num_rows($result_total);
+			$records_total = $inDB->rows_count('cms_comments', 'user_id = '.$id.' AND published = 1');
 			
 			$smarty = $inCore->initSmarty('components', 'com_users_comments.tpl');
             $smarty->assign('user_id', $id);
@@ -636,8 +631,7 @@ if ($do=='forumposts'){
 				$posts[] = $post;
 			}
 			// —читаем общее число постов на форуме
-			$result_total = $inDB->query("SELECT id FROM cms_forum_posts WHERE user_id = $id");
-			$records_total = $inDB->num_rows($result_total);
+			$records_total = $inDB->rows_count('cms_forum_posts', 'user_id = '.$id.'');
 			
 			$smarty = $inCore->initSmarty('components', 'com_users_forumposts.tpl');
             $smarty->assign('user_id', $id);
@@ -1295,8 +1289,8 @@ if ($do=='viewalbum'){
     $my_profile = ($inUser->id == $id);
 	
     //ќпредел€ем, друзь€ мы или нет
-	$we_friends = ($inUser->id && !$my_profile) ? usrIsFriends($usr['id'], $inUser->id) : 0;
-	if ($we_friends == false) { $we_friends = 0; }
+	$we_friends = (int)($inUser->id && !$my_profile) ? usrIsFriends($usr['id'], $inUser->id) : 0;
+	if (!$we_friends) { $we_friends = 0; }
 	
     //‘ильтр приватности
     $filter = '';
@@ -1881,14 +1875,12 @@ if ($do=='files'){
 	//if user found
 	if ($usr){
 			//heading
-			echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; '.$_LANG['FILES'].'</div>';
 			$inPage->setTitle($usr['nickname'].' - '.$_LANG['FILES']);
 			$inPage->addHeadJS('components/users/js/pageselfiles.js');
 			//pathway			
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 			$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
 			//ordering & paging
-			//ordering
 			if (isset($_REQUEST['orderby'])) { 
 				$orderby = $inCore->request('orderby', 'str');
 				$_SESSION['uf_orderby'] = $orderby;
@@ -1897,10 +1889,9 @@ if ($do=='files'){
 			} else {
 				$orderby = 'pubdate'; 
 			}
-
 			if (isset($_REQUEST['orderto'])) { $orderto = $inCore->request('orderto', 'str', ''); } else { $orderto = 'desc'; }
 			if (isset($_REQUEST['page'])) { $page = $inCore->request('page', 'int', ''); } else { $page = 1; }	
-			$perpage = 25;
+			$perpage = 20;
 			//get files on page
 			if ($inUser->id!=$id){
 				$allowsql = "AND allow_who='all'";
@@ -1914,115 +1905,46 @@ if ($do=='files'){
 					LIMIT ".(($page-1)*$perpage).", $perpage";			
 			$result = $inDB->query($sql) ;
 			//get total files count
-			$tsql = "SELECT id FROM cms_user_files WHERE user_id = $id $allowsql";
-			$tres = $inDB->query($tsql) ;
-			$total_files = $inDB->num_rows($tres);
+			$total_files = $inDB->rows_count('cms_user_files', 'user_id = '.$id.' '.$allowsql.'');
 			//calculate free space
 			$max_mb = $cfg['filessize'];
 			$current_bytes = usrFilesSize($id);							
 			if ($current_bytes) { $current_mb = round(($current_bytes / 1024) / 1024, 2); } else { $current_mb = 0; }
 			$free_mb = round($max_mb - $current_mb, 2);
-			//upload link
-			if ($inUser->id == $id && $free_mb > 0){
-				echo '<div></div>';
-			}	
-			if ($inDB->num_rows($result)){ //if files exists
+			$is_files = false;
+			if ($inDB->num_rows($result)){ 
+				$is_files = true;
 				//page and ordering select table
-				echo '<div class="usr_files_orderbar">
-					  <table width="100%" cellspacing="0" cellpadding="2">';
-				echo '<tr>';
-					//page select
-					echo pageSelectFiles($total_files, $page, $perpage);
-					echo '<td width="15">&nbsp;</td>';
-					//file statistics
-					echo '<td width="80"><strong>'.$_LANG['FILE_COUNT'].': </strong>'.$total_files.'</td>';
-					if ($inUser->id==$id){
-						echo '<td width="130"><strong>'.$_LANG['FREE'].': </strong>'.$free_mb.' '.$_LANG['MBITE'].'</td>';
-						echo '<td width="16"><img src="/components/users/images/upload.gif" border="0" /></td>';
-						echo '<td width="100"><a href="addfile.html">'.$_LANG['UPLOAD_FILES'].'</a></td>';
-					}
-					//order buttons
-					if ($total_files>1){
-						echo '<td align="right">
-							   <form name="orderform" method="post" action="" style="margin:0px">
-								   <input type="button" class="usr_files_orderbtn" onclick="orderPage(\'pubdate\')" name="order_date" value="'.$_LANG['ORDER_BY_DATE'].'" '.($orderby=='pubdate'?'disabled':'').'/>
-								   <input type="button" class="usr_files_orderbtn" onclick="orderPage(\'filename\')" name="order_title" value="'.$_LANG['ORDER_BY_NAME'].'" '.($orderby=='filename'?'disabled':'').'/>
-								   <input type="button" class="usr_files_orderbtn" onclick="orderPage(\'filesize\')" name="order_size" value="'.$_LANG['ORDER_BY_SIZE'].'" '.($orderby=='filesize'?'disabled':'').'/>
-								   <input type="button" class="usr_files_orderbtn" onclick="orderPage(\'hits\')" name="order_hits" value="'.$_LANG['ORDER_BY_DOWNLOAD'].'" '.($orderby=='hits'?'disabled':'').'/>
-								   <input id="orderby" type="hidden" name="orderby" value="'.$orderby.'"/>
-								</form>
-							  </td>';
-					} else {
-						echo '<td>&nbsp;</td>';						
-					}
-				echo '</tr>';
-				echo '</table></div>';
-				//file list headers	
-				echo '<form name="listform" id="listform" action="" method="post">';		
-				echo '<table width="100%" cellspacing="0" cellpadding="5" style="border:solid 1px gray">';
-					echo '<tr>';
-						echo '<td class="usr_files_head" width="20" align="center">#</td>';
-						echo '<td class="usr_files_head" width="" colspan="2">'.$_LANG['FILE_NAME'].' '.($orderby=='filename'?'&darr;':'').'</td>';
-						if ($inUser->id==$id){
-							echo '<td class="usr_files_head" width="100" align="center">'.$_LANG['VISIBILITY'].'</td>';
-						}
-						echo '<td class="usr_files_head" width="100">'.$_LANG['SIZE'].' '.($orderby=='filesize'?'&darr;':'').'</td>';
-						echo '<td class="usr_files_head" width="120">'.$_LANG['CREATE_DATE'].' '.($orderby=='pubdate'?'&darr;':'').'</td>';
-						echo '<td class="usr_files_head" width="80" align="center">'.$_LANG['DOWNLOAD_HITS'].' '.($orderby=='hits'?'&darr;':'').'</td>';
-						if ($inUser->id==$id){
-							echo '<td class="usr_files_head" width="16">&nbsp;</td>';
-						}
-					echo '</tr>';
+				$pagination = pageSelectFiles($total_files, $page, $perpage);
+				$myprofile = ($inUser->id==$id);
+
 				$rownum = 0;
 				//build file list rows
+				$files = array();
 				while($file = $inDB->fetch_assoc($result)){
-						$filelink = 'http://'.$_SERVER['HTTP_HOST'].'/users/files/download'.$file['id'].'.html';
-						if ($rownum % 2) { $class = 'usr_list_row1'; } else { $class = 'usr_list_row2'; }
-						echo '<tr>';
-							if ($inUser->id==$id){
-								echo '<td class="'.$class.'" align="center" valign="top"><input id="fileid'.$rownum.'" type="checkbox" name="files[]" value="'.$file['id'].'"/></td>';
-							} else {
-								echo '<td class="'.$class.'" align="center" valign="top">'.$file['id'].'</td>';							
-							}
-							echo '<td class="'.$class.'" width="16" valign="top">'.$inCore->fileIcon($file['filename']).'</td>';
-							echo '<td class="'.$class.'" valign="top"><a href="'.$filelink.'">'.$file['filename'].'</a><div class="usr_files_link">'.$filelink.'</div></td>';
-							
-							if ($inUser->id==$id){
-								if ($file['allow_who'] == 'all'){
-									echo '<td class="'.$class.'" align="center"><img src="/components/users/images/yes.gif" border="0" title="'.$_LANG['FILE_VIS_ALL'].'"/></td>';
-								} else {
-									echo '<td class="'.$class.'" align="center"><img src="/components/users/images/no.gif" border="0" title="'.$_LANG['FILE_HIDEN'].'"/></td>';
-								}
-							}
-							
-							$mb = round(($file['filesize']/1024)/1024, 2);if ($mb == '0') { $mb = '~ 0'; }
-							echo '<td class="'.$class.'">'.$mb.' '.$_LANG['MBITE'].'</td>';
-
-							echo '<td class="'.$class.'">'.$file['pubdate'].'</td>';
-							echo '<td class="'.$class.'" align="center">'.$file['hits'].'</td>';							
-							if ($inUser->id==$id){
-								echo '<td class="'.$class.'" align="center">';
-								echo '<a href="/users/'.$id.'/delfile'.$file['id'].'.html"><img src="/components/users/images/delete.gif" border="0" alt="'.$_LANG['DELETE_FILE'].'"/></a>';
-								echo '</td>';
-							}
-						echo '</tr>';			
+						$file['filelink'] = 'http://'.$_SERVER['HTTP_HOST'].'/users/files/download'.$file['id'].'.html';
+						if ($rownum % 2) { $file['class'] = 'usr_list_row1'; } else { $file['class'] = 'usr_list_row2'; }
+						$file['fileicon'] 	= $inCore->fileIcon($file['filename']);
+						$file['mb'] 		= round(($file['filesize']/1024)/1024, 2);if ($mb == '0') { $mb = '~ 0'; }
+						$file['rownum'] 	= $rownum; 
+						$file['pubdate'] 	= $inCore->dateFormat($file['pubdate'], true, true);
 						$rownum++;
+						$files[] = $file;
 				}
-				echo '</table>';
-				if ($inUser->id==$id){
-					echo '<div style="margin-top:6px">
-							<input type="button" class="usr_files_orderbtn" name="delete_btn" id="delete_btn" onclick="delFiles()" value="'.$_LANG['DELETE'].'"/>
-							<input type="button" class="usr_files_orderbtn" name="hide_btn" id="delete_btn" onclick="pubFiles(0)" value="'.$_LANG['HIDE'].'"/>
-							<input type="button" class="usr_files_orderbtn" name="show_btn" id="delete_btn" onclick="pubFiles(1)" value="'.$_LANG['SHOW'].'"/>
-						  </div>';
-				}
-				echo '</form>';
-			} else { 
-				echo '<p>'.$_LANG['USER_NO_UPLOAD'].'</p>';
-				if ($inUser->id==$id){
-					echo '<a href="addfile.html">'.$_LANG['UPLOAD_FILE_IN_ARCHIVE'].'</a>';
-				}
-			} 
+
+			}
+			
+			$smarty = $inCore->initSmarty('components', 'com_users_file_view.tpl');
+			$smarty->assign('usr', $usr);
+			$smarty->assign('orderby', $orderby);
+			$smarty->assign('orderto', $orderto);
+			$smarty->assign('total_files', $total_files);
+			$smarty->assign('is_files', $is_files);
+			$smarty->assign('free_mb', $free_mb);
+			$smarty->assign('pagination', $pagination);
+			$smarty->assign('myprofile', $myprofile);
+			$smarty->assign('files', $files);
+			$smarty->display('com_users_file_view.tpl');
 	} else { cmsCore::error404(); }
 	
 }
@@ -2065,8 +1987,9 @@ if ($do=='addfile'){
 				//uploading files
 				$inPage->setTitle($_LANG['FILE_UPLOAD_FINISH']);
 				$inPage->backButton(false);
+
 				echo '<div class="con_heading">'.$_LANG['FILE_UPLOAD_FINISH'].'</div>';
-				
+
 				$e = false;
 				
 				$size_mb = 0; $size_limit = false;
@@ -2124,64 +2047,27 @@ if ($do=='addfile'){
 				echo '<div><a href="/users/'.$id.'/files.html">'.$_LANG['CONTINUE'].'</a> &rarr;</div>';
 							
 			} else {
-				$sql = "SELECT * FROM cms_users WHERE id = $id";
-				$result = $inDB->query($sql) ;
+				$usr = $model->getUserShort($id);
 				
-				if ($inDB->num_rows($result)>0){									
-					$usr = $inDB->fetch_assoc($result);
+				if ($usr){									
 		
 					//build upload form
 					$inPage->setTitle($_LANG['UPLOAD_FILES']);
 					$inPage->backButton(false);
                     $inPage->addHeadJS('includes/jquery/multifile/jquery.multifile.js');
-					
-					$multi_js = '<script type="text/javascript">
-												  function startUpload(){
-													$("#upload_btn").attr(\'disabled\', \'true\');
-													$("#upload_btn").attr(\'value\', \''.$_LANG['LOADING'].'...\');
-													$("#cancel_btn").css(\'display\', \'none\');
-													$("#loadergif").css(\'display\', \'block\');
-													document.uploadform.submit();													
-												  }
-											   </script>';
 
-                    $inPage->addHead($multi_js);
-				
 					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
 					$inPage->addPathway($_LANG['UPLOAD_FILES'], $_SERVER['REQUEST_URI']);
+				
+					$post_max_b = return_bytes(ini_get('upload_max_filesize'));
+					$post_max_mb = (round($post_max_b/1024)/1024) . ' '.$_LANG['MBITE'];
 					
-					echo '<div class="con_heading">'.$_LANG['UPLOAD_FILES'].'</div>';
-					
-					if ($free_mb>0){
-					
-						$post_max_b = return_bytes(ini_get('upload_max_filesize'));
-						$post_max_mb = (round($post_max_b/1024)/1024) . ' '.$_LANG['MBITE'];
-					
-						echo '<div>'.$_LANG['SELECT_FILE_TEXT'].'</div>';
-						echo '<div>'.$_LANG['ERR_FILE_NAME'].'</div>';
-						
-						echo '<div style="margin:10px 0px 0px 0px"><strong>'.$_LANG['YOUR_FILE_LIMIT'].':</strong> '.$free_mb.' '.$_LANG['MBITE'].'</div>';
-						echo '<div style="margin:0px 0px 10px 0px"><strong>'.$_LANG['MAX_FILE_SIZE'].':</strong> '.$post_max_mb.'</div>';
-						
-						echo '<form action="" method="post" enctype="multipart/form-data" name="uploadform">';
-
-						echo '<input name="MAX_FILE_SIZE" type="hidden" value="'.$post_max_b.'"/>'. "\n";
-						echo '<input type="file" class="multi" name="upfile" id="upfile"/>';														
-						echo '<div style="margin-top:20px;overflow:hidden">';
-							echo '<input style="float:left;margin-right:4px" type="button" name="upload_btn" id="upload_btn" value="'.$_LANG['UPLOAD_FILES'].'" onclick="startUpload()"/> ';
-							echo '<input style="float:left" type="button" name="cancel_btn" id="cancel_btn" value="'.$_LANG['CANCEL'].'" onclick="window.history.go(-1)" />';
-							echo '<div id="loadergif" style="display:none;float:left;margin:6px"><img src="/images/ajax-loader.gif" border="0"/></div>';					
-						echo '</div>';
-							echo '<input type="hidden" name="upload" value="1"/>';							
-						echo '</form>';
-					} else {
-						echo '<div style="color:#660000;margin-bottom:10px;font-weight:bold">'.$_LANG['YOUR_FILE_LIMIT'].' ('.$max_mb.' '.$_LANG['MBITE'].') '.$_LANG['IS_OVER_LIMIT'].'.</div>';
-						echo '<div style="color:#660000;font-weight:bold">'.$_LANG['FOR_NEW_FILE_DEL_OLD'].'</div>';
-						echo '<div style="margin-top:20px">';
-							echo '<input type="button" name="cancel" value="'.$_LANG['CANCEL'].'" onclick="window.history.go(-1)" />';
-						echo '</div>';
-					}
+					$smarty = $inCore->initSmarty('components', 'com_users_file_add.tpl');
+					$smarty->assign('free_mb', $free_mb);
+					$smarty->assign('post_max_b', $post_max_b);
+					$smarty->assign('post_max_mb', $post_max_mb);
+					$smarty->display('com_users_file_add.tpl');
 				}
 			}
 		
@@ -2205,12 +2091,17 @@ if ($do=='delfile'){
 					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
 					$inPage->addPathway($_LANG['DELETE_FILE'], $_SERVER['REQUEST_URI']);
-					echo '<div class="con_heading">'.$_LANG['DELETING_FILE'].'</div>';
-					echo '<p>'.$_LANG['YOU_REALLY_DEL_FILE'].' "'.$file['filename'].'"?</p>';
-					echo '<div><form action="'.$_SERVER['REQUEST_URI'].'" method="POST"><p>
-							<input style="font-size:24px; width:100px" type="button" name="cancel" value="'.$_LANG['NO'].'" onclick="window.history.go(-1)" />
-							<input style="font-size:24px; width:100px" type="submit" name="godelete" value="'.$_LANG['YES'].'" />
-						 </p></form></div>';
+					
+					$confirm['title']                   = $_LANG['DELETING_FILE'];
+					$confirm['text']                    = $_LANG['YOU_REALLY_DEL_FILE'].' "'.$file['filename'].'"?';
+					$confirm['action']                  = $_SERVER['REQUEST_URI'];
+					$confirm['yes_button']              = array();
+					$confirm['yes_button']['type']      = 'submit';
+					$confirm['yes_button']['name']  	= 'godelete';
+					$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
+					$smarty->assign('confirm', $confirm);
+					$smarty->display('action_confirm.tpl');
+
 				} else { echo usrAccessDenied(); }
 			} else { cmsCore::error404(); }
 		} else {
@@ -2251,22 +2142,25 @@ if ($do=='delfilelist'){
 					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
 					$inPage->addPathway($_LANG['DELETE_FILES'], $_SERVER['REQUEST_URI']);
-					echo '<div class="con_heading">'.$_LANG['DELETING_FILES'].'</div>';
-					echo '<p><strong>'.$_LANG['YOU_REALLY_DEL_FILES'].'?</strong></p>';
-
-					echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
-						echo '<ul>';
+					$html = '<ul>';
 						while ($file = $inDB->fetch_assoc($result)){ 
-							echo '<li>';
-								echo $file['filename'] . '<input type="hidden" name="files[]" value="'.$file['id'].'"/>';	
-							echo '</li>';
+							$html .= '<li>';
+								$html .=  $file['filename'] . '<input type="hidden" name="files[]" value="'.$file['id'].'"/>';	
+							$html .= '</li>';
 						}
-						echo '</ul>';
-						echo '<div style="margin-top:10px">';
-							echo '<input style="font-size:24px; width:100px" type="button" name="cancel" value="'.$_LANG['NO'].'" onclick="window.history.go(-1)" /> ';
-							echo '<input style="font-size:24px; width:100px" type="submit" name="godelete" value="'.$_LANG['YES'].'" />';
-						echo '</div>';
-					echo '</form>';
+					$html .= '</ul>';
+					
+					$confirm['title']                   = $_LANG['DELETING_FILES'];
+					$confirm['text']                    = $_LANG['YOU_REALLY_DEL_FILES'].'?';
+					$confirm['action']                  = $_SERVER['REQUEST_URI'];
+					$confirm['yes_button']              = array();
+					$confirm['yes_button']['type']      = 'submit';
+					$confirm['yes_button']['name']  	= 'godelete';
+					$confirm['other']  					= $html;
+					$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
+					$smarty->assign('confirm', $confirm);
+					$smarty->display('action_confirm.tpl');
+
 				} else { echo usrAccessDenied(); }
 			}
 		} else {

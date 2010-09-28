@@ -6,6 +6,7 @@
 <p>{$confirm.text}</p>
 <div>
 	<form action="{$confirm.action|default:''}" method="{$confirm.method|default:'POST'}">
+            {$confirm.other}
 			<input style="font-size:24px; width:100px" 				   
 				   type="{$confirm.yes_button.type|default:'submit'}" 
 				   name="{$confirm.yes_button.name|default:'go'}" 

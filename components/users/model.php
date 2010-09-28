@@ -98,6 +98,22 @@ class cms_model_users{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
+    public function getUserTotal($online = false){
+		
+		if (!$online) {
+			$total = $this->inDB->rows_count('cms_users', 'is_locked=0 AND is_deleted=0');
+		} else {
+			$total = $this->inDB->rows_count('cms_online o LEFT JOIN cms_users u ON  u.id = o.user_id', 'u.is_locked = 0 AND u.is_deleted = 0 GROUP BY o.user_id');
+		}
+		if (!$total ){ return false; }
+
+        return $total ;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
     public function isNewFriends($user_id, $from_id=0){
 
         if (!$from_id){
