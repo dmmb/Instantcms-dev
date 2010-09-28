@@ -807,21 +807,16 @@ if ($do=='profile'){
     $smarty->display('com_users_profile.tpl');
 
 }
-/////////////////////////////// VIEW PROFILE /////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// VIEW MESSAGES /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='messages'){
 	if ($inUser->id){
-		$sql = "SELECT u.*, p.*, u.id as id, DATE_FORMAT(u.regdate, '%d-%m-%Y') as fregdate, DATE_FORMAT(u.logdate, '%d-%m-%Y') as flogdate
-				FROM cms_users u
-				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
-				WHERE u.id = '$id' AND u.is_locked = 0
-				LIMIT 1
-				";				
-		$result = $inDB->query($sql) ;
 		
-		if ($inDB->num_rows($result)){
-			$usr = $inDB->fetch_assoc($result);
+		$usr = $model->getUserShort($id);
+		
+		if ($usr){
 			if ($inUser->id==$id || $inCore->userIsAdmin($inUser->id)) {
 				$inPage->setTitle($_LANG['MY_MESS']);
+				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 				$inPage->addPathway($_LANG['MY_MESS'], '/users/'.$id.'/messages.html');
 				include 'components/users/messages.php';			
 			} else { echo usrAccessDenied(); }
@@ -1203,10 +1198,9 @@ if ($do=='editphoto'){
 			$inPage->addPathway($_LANG['EDIT_PHOTO'], $_SERVER['REQUEST_URI']);
 			
 			if (isset($_POST['save'])){							
-					$title = strip_tags(htmlspecialchars($_POST['title'], ENT_QUOTES, 'cp1251'));
-					$description = strip_tags(htmlspecialchars($_POST['description'], ENT_QUOTES, 'cp1251'));
-					if ($title == '') { $title = $_LANG['PHOTO_WITHOUT_NAME']; }
-					$allow_who = strip_tags(htmlspecialchars($_POST['allow_who'], ENT_QUOTES, 'cp1251'));
+					$title = $inCore->request('title', 'str', $_LANG['PHOTO_WITHOUT_NAME']);
+					$description = $inCore->request('description', 'str');
+					$allow_who = $inCore->request('allow_who', 'str');
 					//replace file					
 					if (@$_FILES['picture']['name']){
 						$inCore->includeGraphics();
@@ -1242,7 +1236,7 @@ if ($do=='editphoto'){
 						}
 					}	
 					//INSERT PHOTO TAGS
-					$tags = $_POST['tags'];			
+					$tags = $inCore->request('tags', 'str');
 					cmsInsertTags($tags, 'userphoto', $photoid);
 									
 					//UPDATE ALBUM
@@ -1251,7 +1245,7 @@ if ($do=='editphoto'){
 								description='$description', 
 								allow_who='$allow_who' 
 							WHERE id = $photoid";	
-					$inDB->query($sql) or die(mysql_error()."<br/>".$sql);	
+					$inDB->query($sql);	
 					
 					echo '<p><strong>'.$_LANG['PHOTO_SAVED'].'</strong></p>';
 					echo '<p>&larr; <a href="/users/'.$id.'/photoalbum.html">'.$_LANG['BACK_TO_PHOTOALBUM'].'</a><br/>';
@@ -1295,16 +1289,15 @@ if ($do=='viewalbum'){
     $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
     $inPage->addPathway($_LANG['PHOTOALBUM'], $_SERVER['REQUEST_URI']);
 
-    echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; '.$_LANG['PHOTOALBUM'].'</div>';
-
     $photos     = array();
-
-    //ќпредел€ем, друзь€ мы или нет
-    $we_friends = $inDB->rows_count('cms_user_friends', "(to_id={$id} AND from_id={$inUser->id}) OR (to_id={$inUser->id} AND from_id={$id})", 1);
 
     //ћой профиль или нет
     $my_profile = ($inUser->id == $id);
-
+	
+    //ќпредел€ем, друзь€ мы или нет
+	$we_friends = ($inUser->id && !$my_profile) ? usrIsFriends($usr['id'], $inUser->id) : 0;
+	if ($we_friends == false) { $we_friends = 0; }
+	
     //‘ильтр приватности
     $filter = '';
     if (!$my_profile){ $filter = "AND ( allow_who='all' OR (allow_who='registered' AND ({$inUser->id}>0)) OR (allow_who='friends' AND ({$we_friends}=1)) )"; }
@@ -1360,6 +1353,7 @@ if ($do=='viewalbum'){
     $smarty = $inCore->initSmarty('components', 'com_users_photos.tpl');
 	$smarty->assign('photos', $photos);
 	$smarty->assign('user_id', $id);
+	$smarty->assign('usr', $usr);
 	$smarty->assign('my_profile', $my_profile);
 	$smarty->assign('pagebar', $pagination);
     $smarty->display('com_users_photos.tpl');
@@ -1402,15 +1396,15 @@ if ($do=='viewboard'){
 					$con['pubdate'] = $inCore->dateFormat($con['pubdate']);
 				$cons[] = $con;
 				}										
-		$is_con = true;
-		// —читаем общее число объ€влений
-		$result_total = $inDB->query("SELECT id FROM cms_board_items WHERE user_id = '$id'");
-		$records_total = $inDB->num_rows($result_total);
+				$is_con = true;
+				// —читаем общее число объ€влений
+				$records_total = $inDB->rows_count('cms_board_items', 'user_id = '.$id.'');
 		} 
 		// отдаем в шаблон
 		$smarty = $inCore->initSmarty('components', 'com_users_boards.tpl');
 		$smarty->assign('usr', $usr);
 		$smarty->assign('cons', $cons);
+		$smarty->assign('myprofile', ($inUser->id == $id));
         $smarty->assign('is_con', $is_con);
 		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, '/users/%user_id%/board%page%.html', array('user_id'=>$id)));
 		$smarty->display('com_users_boards.tpl');					
@@ -1591,7 +1585,7 @@ if ($do=='sendmessage'){
 							echo '<div>';
 								echo '<div class="con_heading">'.$_LANG['ORIGINAL_MESS'].'</div>';
 								echo '<div class="usr_msgreply_source">';
-									echo '<div class="usr_msgreply_sourcetext">'.$msg['message'].'</div>';
+									echo '<div class="usr_msgreply_sourcetext">'.$inCore->parseSmiles($msg['message'], true).'</div>';
 									echo '<div class="usr_msgreply_author"><a href="'.cmsUser::getProfileURL($msg['login']).'">'.$msg['nickname'].'</a>, '.$msg['senddate'].'</div>';
 								echo '</div>';
 							echo '</div>';

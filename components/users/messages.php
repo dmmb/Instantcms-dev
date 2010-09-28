@@ -13,76 +13,68 @@
 	
 	if (usrCheckAuth()){
         global $_LANG;
-		//current page
+
 		$perpage = 15;
 		$page = $inCore->request('cpage', 'int', 1);
 
-		if ($opt=='in'){
-			//how many records
-			$sql = "SELECT m.id	FROM cms_user_msg m WHERE m.to_id = $id";	
-			$result = $inDB->query($sql) ;
-			$msg_count = $inDB->num_rows($result);
-			//sql
-					$sql = "SELECT m.*, m.senddate as fpubdate, m.from_id as sender_id, u.nickname as author, u.login as author_login, u.is_deleted, p.imageurl
-					FROM cms_user_msg m
-					LEFT JOIN cms_users u ON m.from_id = u.id
-					LEFT JOIN cms_user_profiles p ON m.from_id = p.user_id
-					WHERE m.to_id = $id
-					ORDER BY senddate DESC
-					LIMIT ".(($page-1)*$perpage).", $perpage";	
-		} else {
-			if ($opt=='out'){
-				//how many records
-				$sql = "SELECT m.id	FROM cms_user_msg m, cms_users u WHERE m.from_id = $id AND m.to_id = u.id";	
-				$result = $inDB->query($sql) ;
-				$msg_count = $inDB->num_rows($result);
-				//sql
-				$sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.to_id as sender_id, u.is_deleted, p.imageurl
-						FROM cms_user_msg m, cms_users u, cms_user_profiles p
-						WHERE m.from_id = $id AND m.to_id = u.id AND m.to_id = p.user_id
-						ORDER BY senddate DESC
-						LIMIT ".(($page-1)*$perpage).", $perpage";							
-			}
-			if ($opt=='history'){
-				$with_name = dbGetField('cms_users', "id = $with_id", 'nickname');
-				//how many records
-				$sql = "SELECT m.id
-						FROM cms_user_msg m, cms_users u
-						WHERE ((m.from_id = $id AND m.to_id = $with_id) OR (m.from_id = $with_id AND m.to_id = $id)) AND m.from_id = u.id";
-				$result = $inDB->query($sql) ;
-				$msg_count = $inDB->num_rows($result);
-				//sql		
-				$sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.from_id as sender_id, u.is_deleted, p.imageurl
-						FROM cms_user_msg m, cms_users u, cms_user_profiles p
-						WHERE ((m.from_id = $id AND m.to_id = $with_id) OR (m.from_id = $with_id AND m.to_id = $id)) AND m.from_id = u.id AND m.from_id = p.user_id
-						ORDER BY senddate DESC
-						LIMIT ".(($page-1)*$perpage).", $perpage";							
-			}
-		}
+		switch ($opt){
+            case 'in': 		$inPage->addPathway($_LANG['INBOX']);
+							//Количество записей
+							$msg_count = $inDB->rows_count('cms_user_msg', 'to_id = '.$id.'');
+							// Пагинация
+							$pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, '/users/%user_id%/messages%page%.html', array('user_id'=>$id)) : '';
+							
+							$sql = "SELECT m.*, m.senddate as fpubdate, m.from_id as sender_id, u.nickname as author, u.login as author_login, u.is_deleted, p.imageurl
+							FROM cms_user_msg m
+							LEFT JOIN cms_users u ON m.from_id = u.id
+							LEFT JOIN cms_user_profiles p ON m.from_id = p.user_id
+							WHERE m.to_id = $id
+							ORDER BY senddate DESC
+							LIMIT ".(($page-1)*$perpage).", $perpage";	
+							
+							break;
+							
+            case 'out':		$inPage->addPathway($_LANG['SENT']);
+							//Количество записей
+							$msg_count = $inDB->rows_count('cms_user_msg m, cms_users u', 'm.from_id = '.$id.' AND m.to_id = u.id');
+							// Пагинация
+							$pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, '/users/%user_id%/messages-sent%page%.html', array('user_id'=>$id)) : '';
+							
+							$sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.to_id as sender_id, u.is_deleted, p.imageurl
+									FROM cms_user_msg m, cms_users u, cms_user_profiles p
+									WHERE m.from_id = $id AND m.to_id = u.id AND m.to_id = p.user_id
+									ORDER BY senddate DESC
+									LIMIT ".(($page-1)*$perpage).", $perpage";	
+								
+							break;
+							
+            case 'history':	$with_name = dbGetField('cms_users', "id = $with_id", 'nickname');
+							$inPage->addPathway($_LANG['MESSEN_WITH'].' '.$with_name, $_SERVER['REQUEST_URI']);
+							//Количество записей
+							$msg_count = $inDB->rows_count('cms_user_msg m, cms_users u', '((m.from_id = '.$id.' AND m.to_id = '.$with_id.') OR (m.from_id = '.$with_id.' AND m.to_id = '.$id.')) AND m.from_id = u.id');
+							// Пагинация
+							$pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, '/users/%user_id%/messages-history%to_id%-%page%.html', array('user_id'=>$id, 'to_id'=>$with_id)) : '';
 
-		$result = $inDB->query($sql);
+							$sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.from_id as sender_id, u.is_deleted, p.imageurl
+									FROM cms_user_msg m, cms_users u, cms_user_profiles p
+									WHERE ((m.from_id = $id AND m.to_id = $with_id) OR (m.from_id = $with_id AND m.to_id = $id)) AND m.from_id = u.id AND m.from_id = p.user_id
+									ORDER BY senddate DESC
+									LIMIT ".(($page-1)*$perpage).", $perpage";
+							
+							break;
+					
+            case 'new': 	$inPage->addPathway($_LANG['NEW_MESS']);
+							$inPage->addHeadJS('components/users/js/newmessage.js');
+							$user_opt = cmsUser::getFriendsList($inUser->id);
+							$bb_toolbar = cmsPage::getBBCodeToolbar('message');
+							$bb_smiles	= cmsPage::getSmilesPanel('message');
+							
+							break;
+        }
 
-			if ($opt=='in'){				
-				$inPage->addPathway($_LANG['INBOX']);
-			} elseif ($opt=='out') {
-				$inPage->addPathway($_LANG['SENT']);
-			} elseif ($opt=='new') {
-				$inPage->addPathway($_LANG['NEW_MESS']);
-			} elseif ($opt=='history') {
-				$inPage->addPathway($_LANG['MESSEN_WITH'].' '.$with_name, $_SERVER['REQUEST_URI']);
-			}
-		
 		if ($opt=='in' || $opt=='out' || $opt=='history'){
-				
-			if ($msg_count > $perpage){
-				if ($opt=='in'){
-				$pagebar = cmsPage::getPagebar($msg_count, $page, $perpage, '/users/%user_id%/messages%page%.html', array('user_id'=>$id));
-				} elseif ($opt=='out') {
-				$pagebar = cmsPage::getPagebar($msg_count, $page, $perpage, '/users/%user_id%/messages-sent%page%.html', array('user_id'=>$id));
-				} elseif ($opt=='history') {
-				$pagebar = cmsPage::getPagebar($msg_count, $page, $perpage, '/users/%user_id%/messages-history%to_id%-%page%.html', array('user_id'=>$id, 'to_id'=>$with_id));
-				}
-			}
+			
+			$result = $inDB->query($sql);
 			
 			$is_mes	= false;
 			if ($inDB->num_rows($result)){
@@ -125,12 +117,6 @@
 	
 		}
 
-		if ($opt=='new'){
-			$inPage->addHeadJS('components/users/js/newmessage.js');
-			$user_opt = cmsUser::getFriendsList($inUser->id);
-			$bb_toolbar = cmsPage::getBBCodeToolbar('message');
-			$bb_smiles	= cmsPage::getSmilesPanel('message');
-		}
 		$smarty = $inCore->initSmarty('components', 'com_users_messages.tpl');
 		$smarty->assign('opt', $opt);
 		$smarty->assign('is_mes', $is_mes);

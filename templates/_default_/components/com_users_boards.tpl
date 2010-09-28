@@ -7,6 +7,7 @@
 			<div class="board_gallery">
 				<table width="100%" cellpadding="0" cellspacing="0" border="0">
                 {foreach key=tid item=con from=$cons}	
+                {if $con.published || $myprofile}
 				 <tr>
                     <td valign="top" width="">
 						<table width="100%" height="" cellspacing="" cellpadding="0" class="bd_item">
@@ -37,6 +38,7 @@
 						</table>
                       </td>
                   </tr>
+                  {/if}
                 {/foreach}
 				</table>
 			</div>		

@@ -1,6 +1,7 @@
 {* ================================================================================ *}
 {* ======================== Ôמעמאכüבמל ןמכüחמגאעוכÿ =============================== *}
 {* ================================================================================ *}
+<div class="con_heading"><a href="{profile_url login=$usr.login}">{$usr.nickname}</a> &rarr; {$LANG.PHOTOALBUM}</div>
 
 {if $my_profile}
     <table cellspacing="0" cellpadding="2" style="margin-bottom: 10px;">
