@@ -115,17 +115,6 @@ class bbcode {
                     'children' => array('b','color','email','font','google','i','img', 'video', 
                     'nobb','s','size','sub','sup','tt','u','url', 'hide')
                 ),
-            'color' => array(
-                    'handler' => 'color_2html',
-                    'is_close' => false,
-                    'lbr' => 0,
-                    'rbr' => 0,
-                    'ends' => array('*','align','code','video', 'audio', 'hide','h1','h2','h3','hr',
-                        'list','php','quote','table','td','th','tr'),
-                    'permission_top_level' => true,
-                    'children' => array('b','color','email','font','google','i','img',
-                        'nobb','s','size','sub','sup','tt','u','url')
-                ),
             'email' => array(
                     'handler' => 'email_2html',
                     'is_close' => false,
@@ -136,17 +125,6 @@ class bbcode {
                     'permission_top_level' => true,
                     'children' => array('b','color','email','font','i','img',
                         'nobb','s','size','sub','sup','tt','u')
-                ),
-            'font' => array(
-                    'handler' => 'font_2html',
-                    'is_close' => false,
-                    'lbr' => 0,
-                    'rbr' => 0,
-                    'ends' => array('*','align','code','video', 'audio', 'hide','h1','h2','h3','hr',
-                        'list','php','quote','table','td','th','tr'),
-                    'permission_top_level' => true,
-                    'children' => array('b','color','email','font','font','google','i',
-                        'img','nobb','s','size','sub','sup','tt','u','url')
                 ),
             'h1' => array(
                     'handler' => 'h1_2html',
@@ -180,15 +158,6 @@ class bbcode {
                     'permission_top_level' => true,
                     'children' => array('b','color','email','font','google','i','img',
                         'nobb','s','size','sub','sup','tt','u','url')
-                ),
-            'hr' => array(
-                    'handler' => 'hr_2html',
-                    'is_close' => true,
-                    'lbr' => 0,
-                    'rbr' => 1,
-                    'ends' => array(),
-                    'permission_top_level' => true,
-                    'children' => array()
                 ),
             'i' => array(
                     'handler' => 'i_2html',
@@ -231,17 +200,6 @@ class bbcode {
                     'children' => array('*','align','b','code','video', 'audio', 'hide','color','email',
                         'font','google','h1','h2','h3','hr','i','img','list',
                         'nobb','php','quote','s','size','sub','sup','table','tt','u','url')
-                ),
-            'size' => array(
-                    'handler' => 'size_2html',
-                    'is_close' => false,
-                    'lbr' => 0,
-                    'rbr' => 0,
-                    'ends' => array('*','align','code','video', 'audio', 'hide','h1','h2','h3','hr',
-                        'list','php','quote','table','td','th','tr'),
-                    'permission_top_level' => true,
-                    'children' => array('b','color','email','font','google','i','img',
-                        'nobb','s','size','sub','sup','tt','u','url')
                 ),
             'u' => array(
                     'handler' => 'u_2html',
@@ -1092,22 +1050,6 @@ class bbcode {
         $str .= '</div>';
         return $str;
     }
-    // Функция - обработчик тега [color]
-    function color_2html($elem) {
-        $color = htmlspecialchars($elem['attrib']['color']);
-        return '<font color="'.$color.'">'.$this -> get_html($elem['val'])
-            .'</font>';
-    }
-    // Функция - обработчик тега [font]
-    function font_2html($elem) {
-        $face = $elem['attrib']['font'];
-        $attr = ' face="'.htmlspecialchars($face).'"';
-        $color = isset($elem['attrib']['color']) ? $elem['attrib']['color'] : '';
-        if ($color) { $attr .= ' color="'.htmlspecialchars($color).'"'; }
-        $size = isset($elem['attrib']['size']) ? $elem['attrib']['size'] : '';
-        if ($size) { $attr .= ' size="'.htmlspecialchars($size).'"'; }
-        return '<font'.$attr.'>'.$this -> get_html($elem['val']).'</font>';
-    }
     // Функция - обработчик тега [h1]
     function h1_2html($elem) {
         $attr = ' class="bb_tag_h1"';
@@ -1128,10 +1070,6 @@ class bbcode {
         $align = isset($elem['attrib']['align']) ? $elem['attrib']['align'] : '';
         if ( $align ) { $attr .= ' align="'.htmlspecialchars($align).'"'; }
         return '<h3'.$attr.'>'.$this -> get_html($elem['val']).'</h3>';
-    }
-    // Функция - обработчик тега [hr]
-    function hr_2html($elem) {
-        return '<hr class="bb" />';
     }
     // Функция - обработчик тега [i]
     function i_2html($elem) {
@@ -1191,15 +1129,14 @@ class bbcode {
     function s_2html($elem) {
         return '<s>'.$this -> get_html($elem['val']).'</s>';
     }
-    // Функция - обработчик тега [size]
-    function size_2html($elem) {
-        $size = isset($elem['attrib']['size']) ? (int) $elem['attrib']['size'] : 0;
-        return '<font size="'.$size.'">'.$this -> get_html($elem['val']).'</font>';
-    }
     // Функция - обработчик тега [u]
     function u_2html($elem) {
         return '<u>'.$this -> get_html($elem['val']).'</u>';
     }
+	// Функция - обработчик тега [email]
+	function email_2html($elem) {
+		return '<a href="mailto:'.$this -> get_html($elem['val']).'">'.$this -> get_html($elem['val']).'</a>';
+	}
     // Функция - обработчик тега [url]
     function url_2html($elem) {
         $attr = '';
