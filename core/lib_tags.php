@@ -44,7 +44,7 @@ function cmsClearTags($target, $item_id){
 
 function cmsTagLine($target, $item_id, $links=true, $selected=''){
     $inDB = cmsDatabase::getInstance();
-	$sql = "SELECT *
+	$sql = "SELECT tag
 			FROM cms_tags 
 			WHERE target='$target' AND item_id=$item_id
 			ORDER BY tag DESC";
@@ -84,8 +84,9 @@ function cmsTagItemLink($target, $item_id){
     $inDB = cmsDatabase::getInstance();
 	switch ($target){
 		case 'content': $sql = "SELECT i.title as title, c.title as cat, i.seolink as seolink, c.seolink as cat_seolink
-								FROM cms_content i, cms_category c
-								WHERE i.id = $item_id AND i.category_id = c.id";
+								FROM cms_content i
+								LEFT JOIN cms_category c ON c.id = i.category_id
+								WHERE i.id = $item_id AND i.published = 1";
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
@@ -94,8 +95,9 @@ function cmsTagItemLink($target, $item_id){
 						}
 						break; 
 		case 'blogpost': $sql = "SELECT i.title as title, i.id as item_id, c.title as cat, c.id as cat_id, c.owner as owner, c.user_id user_id, i.seolink as seolink, c.seolink as bloglink
-								FROM cms_blog_posts i, cms_blogs c
-								WHERE i.id = $item_id AND i.blog_id = c.id";
+								FROM cms_blog_posts i
+								LEFT JOIN cms_blogs c ON c.id = i.blog_id
+								WHERE i.id = $item_id";
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
@@ -105,8 +107,9 @@ function cmsTagItemLink($target, $item_id){
 						}
 						break; 
 		case 'photo': $sql = "SELECT i.title as title, i.id as item_id, c.title as cat, c.id as cat_id
-								FROM cms_photo_files i, cms_photo_albums c
-								WHERE i.id = $item_id AND i.album_id = c.id";
+								FROM cms_photo_files i
+								LEFT JOIN cms_photo_albums c ON c.id = i.album_id
+								WHERE i.id = $item_id";
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
@@ -115,8 +118,9 @@ function cmsTagItemLink($target, $item_id){
 						}
 						break; 
 		case 'userphoto': $sql = "SELECT i.title as title, i.id as item_id, c.nickname as cat, c.id as cat_id, c.login as login
-								FROM cms_user_photos i, cms_users c
-								WHERE i.id = $item_id AND i.user_id = c.id";
+								FROM cms_user_photos i
+								LEFT JOIN cms_users c ON c.id = i.user_id
+								WHERE i.id = $item_id";
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
@@ -125,8 +129,9 @@ function cmsTagItemLink($target, $item_id){
 						}
 						break; 
 		case 'catalog': $sql = "SELECT i.title as title, i.id as item_id, c.title as cat, c.id as cat_id
-								FROM cms_uc_items i, cms_uc_cats c
-								WHERE i.id = $item_id AND i.category_id = c.id";
+								FROM cms_uc_items i
+								LEFT JOIN cms_uc_cats c ON c.id = i.category_id
+								WHERE i.id = $item_id";
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
@@ -141,7 +146,7 @@ function cmsTagItemLink($target, $item_id){
 function cmsTagsList(){
     $inDB = cmsDatabase::getInstance();
 	$html = '';		
-	$sql = "SELECT t.*, COUNT(t.tag) as num
+	$sql = "SELECT t.tag, COUNT(t.tag) as num
 			FROM cms_tags t
 			GROUP BY t.tag
 			ORDER BY t.tag";	
