@@ -2797,6 +2797,8 @@ class cmsCore {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public function strClear($string, $strip_tags=true){
         $string = trim($string);
+        //Если magic_quotes_gpc = On, сначала убираем экранирование
+        $string = (@get_magic_quotes_gpc()) ? stripslashes($string) : $string;
         $string = mysql_real_escape_string($string);
         $string = rtrim($string, ' \\');
         if ($strip_tags) $string = strip_tags($string);
