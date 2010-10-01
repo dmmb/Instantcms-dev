@@ -1038,10 +1038,10 @@ class cmsCore {
 
         //собираем информацию о текущем пользователе
         $sess_id    = session_id();
-        $ip         = $_SERVER['REMOTE_ADDR'];
-        $useragent  = $_SERVER['HTTP_USER_AGENT'];
-        $page       = $_SERVER['REQUEST_URI'];
-        $refer      = @$_SERVER['HTTP_REFERER'];
+        $ip         = $this->strClear($_SERVER['REMOTE_ADDR']);
+        $useragent  = $this->strClear($_SERVER['HTTP_USER_AGENT']);
+        $page       = $this->strClear($_SERVER['REQUEST_URI']);
+        $refer      = $this->strClear($_SERVER['HTTP_REFERER']);
 
         $user_id    = $inUser->id;
 
@@ -1055,7 +1055,7 @@ class cmsCore {
         if (!$inDB->num_rows($result)){
             //Проверяем, пользователь это или поисковый бот
             $crawler = false;
-            foreach($bots as $bot=>$uagent){ if (strpos($_SERVER['HTTP_USER_AGENT'], $uagent)) { $crawler = true; }	}
+            foreach($bots as $bot=>$uagent){ if (strpos($useragent, $uagent)) { $crawler = true; }	}
             //Если не бот, вставляем запись в "кто онлайн"
             if (!$crawler){
                 $sql = "INSERT INTO cms_online (ip, sess_id, lastdate, user_id, viewurl) VALUES ('$ip', '$sess_id', NOW(), '$user_id', '$page')";
