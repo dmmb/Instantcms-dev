@@ -16,23 +16,21 @@ function forumMessages($forum_id){
 	$html = '';
 	global $_LANG;
 	
-	$sql = "SELECT * FROM cms_forum_threads WHERE forum_id = $forum_id";
-	$result = $inDB->query($sql) ;
+	$sql = "SELECT 1 FROM cms_forum_threads WHERE forum_id = $forum_id";
+	$result = $inDB->query($sql);
 	
 	if ($inDB->num_rows($result)){
 		$html .= '<strong>'.$_LANG['THREADS'].':</strong> '.$inDB->num_rows($result);
-		$tsql = "SELECT id FROM cms_forum_posts WHERE ";
-		$t = 0;
-		while ($thread= $inDB->fetch_assoc($result)){
-			if ($t > 0) { $tsql .= ' OR '; }
-			$tsql .= 'thread_id = '.$thread['id'];
-			$t++;
-		}
-		$tresult = $inDB->query($tsql) or die(mysql_error().'<br/><br/>'.$tsql);
-		if ($inDB->num_rows($tresult)){
-			$html .= '<br/><strong>'.$_LANG['MESSAGES'].':</strong> '.$inDB->num_rows($tresult);
-		} else { $html .= '<br/><strong>'.$_LANG['MESSAGES'].':</strong> 0'; }
 	} else { $html .= $_LANG['NOT_THREADS']; }
+	
+	$tsql = "SELECT p.id
+			 FROM cms_forum_threads t
+			 LEFT JOIN cms_forum_posts p ON p.thread_id = t.id
+			 WHERE t.forum_id = $forum_id";
+	$tresult = $inDB->query($tsql);
+	if ($inDB->num_rows($tresult)){
+		$html .= '<br/><strong>'.$_LANG['MESSAGES'].':</strong> '.$inDB->num_rows($tresult);
+	} else { $html .= '<br/><strong>'.$_LANG['MESSAGES'].':</strong> 0'; }
 	
 	return $html;
 }
@@ -507,9 +505,9 @@ function forumLastMessage($forum_id, $perpage_thread){
 				   u.id as uid, u.nickname as author,
                    u.login as author_login, 
 				   t.title as threadtitle, t.id as threadid
-			FROM cms_forums f
-			INNER JOIN cms_forum_threads t ON t.forum_id = f.id
-			LEFT JOIN cms_forum_posts p ON p.thread_id = t.id
+			FROM cms_forum_posts p
+			LEFT JOIN cms_forum_threads t ON t.id = p.thread_id
+			INNER JOIN cms_forums f ON f.id = t.forum_id
 			LEFT JOIN cms_users u ON u.id = p.user_id
 			WHERE (f.NSLeft >= {$forumNS['NSLeft']} AND f.NSRight <= {$forumNS['NSRight']}) $groupsql
 			ORDER BY p.id DESC
