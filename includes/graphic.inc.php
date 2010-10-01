@@ -60,7 +60,7 @@ function img_watermark(&$img, $w, $h){
   $rgb             - цвет фона, по умолчанию - белый
   $quality         - качество генерируемого JPEG, по умолчанию - максимальное (100)
 ***********************************************************************************/
-function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $watermark=false, $rgb=0xFFFFFF, $quality=75)
+function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $watermark=false, $rgb=0xFFFFFF, $quality=100)
 {
   if (!file_exists($src)) return false;
 
@@ -105,9 +105,11 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $w
   }
   
   if ($watermark) { img_watermark($idest, $new_width, $new_height); }         
-  
+
+  imageinterlace($idest,1);
+
   // вывод картинки и очистка памяти
-  imagejpeg($idest,$dest); 
+  imagejpeg($idest,$dest,$quality);
 
   imagedestroy($isrc);
   imagedestroy($idest);
