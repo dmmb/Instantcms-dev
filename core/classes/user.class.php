@@ -357,10 +357,13 @@ class cmsUser {
 
         $inDB = cmsDatabase::getInstance();
         $inCore = cmsCore::getInstance();
-
+		
+		$today = date("d-m");
+		
         $sql = "SELECT u.id as id, u.nickname as nickname, u.login as login, u.birthdate, p.gender as gender
-                FROM cms_users u, cms_user_profiles p
-                WHERE p.user_id = u.id AND u.is_locked = 0 AND u.is_deleted = 0 AND DATE_FORMAT(u.birthdate, '%d-%m')=DATE_FORMAT(NOW(), '%d-%m')";
+                FROM cms_users u
+				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+                WHERE u.is_locked = 0 AND u.is_deleted = 0 AND DATE_FORMAT(u.birthdate, '%d-%m')='$today'";
 
         $rs     = $inDB->query($sql);
         $total  = $inDB->num_rows($rs);
@@ -369,7 +372,7 @@ class cmsUser {
 
         if (!$total){ return false; }
         
-        while($usr = mysql_fetch_assoc($rs)){
+        while($usr = $inDB->fetch_assoc($rs)){
             $html .= self::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login']);
             if ($now < $total-1) { $html .= ', '; }
             $now ++;
@@ -403,9 +406,10 @@ class cmsUser {
             if ($id < sizeof($friends)-1){ $friends_sql .= ' OR '; }
         }
 
-        $sql = "SELECT DISTINCT c.id, c.content, c.target as target, c.target_id as target_id, c.user_id, c.target_link, u.id as user_id, u.nickname as nickname, u.login as login, c.pubdate as pubdate
-                FROM cms_comments c, cms_users u
-                WHERE c.user_id = u.id AND ({$friends_sql})
+        $sql = "SELECT c.id, c.content, c.target as target, c.target_id as target_id, c.user_id, c.target_link, u.id as user_id, u.nickname as nickname, u.login as login, c.pubdate as pubdate
+                FROM cms_comments c
+				LEFT JOIN cms_users u ON u.id = c.user_id
+                WHERE {$friends_sql}
                 ORDER BY c.pubdate DESC
                 ";
 
@@ -456,7 +460,7 @@ class cmsUser {
             if ($id < sizeof($friends)-1){ $friends_sql .= ' OR '; }
         }
 
-        $sql = "SELECT DISTINCT p.id,
+        $sql = "SELECT p.id,
                                 p.title,
                                 p.user_id,
                                 p.blog_id,
@@ -466,8 +470,10 @@ class cmsUser {
                                 u.nickname as nickname,
                                 u.login as login,
                        			p.pubdate as pubdate
-                FROM cms_blog_posts p, cms_users u, cms_blogs b
-                WHERE p.blog_id = b.id AND p.user_id = u.id AND ({$friends_sql})
+                FROM cms_blog_posts p
+				LEFT JOIN cms_blogs b ON b.id = p.blog_id
+				LEFT JOIN cms_users u ON u.id = p.user_id
+                WHERE {$friends_sql}
                 ORDER BY p.pubdate DESC
                 ";
 
@@ -518,8 +524,9 @@ class cmsUser {
         }
 		// Получаем фото из общей галереи
         $sql = "SELECT p.id, p.title, u.nickname as nickname, u.login as login, p.pubdate as pubdate
-                FROM cms_photo_files p, cms_users u
-                WHERE p.user_id = u.id AND ({$friends_sql})
+                FROM cms_photo_files p
+				LEFT JOIN cms_users u ON u.id = p.user_id
+                WHERE {$friends_sql}
                 ORDER BY p.pubdate DESC
                 ";
 		if ($limit) { $sql .= 'LIMIT '.($limit*1.5); }
@@ -527,8 +534,9 @@ class cmsUser {
 		
 		//Получаем личные фотографии
 		$private_sql = "SELECT p.id, p.title, p.user_id, u.nickname as nickname, u.login as login, p.pubdate as pubdate
-						FROM cms_user_photos p, cms_users u
-						WHERE p.user_id = u.id AND ({$friends_sql})
+						FROM cms_user_photos p
+						LEFT JOIN cms_users u ON u.id = p.user_id
+						WHERE {$friends_sql}
 						ORDER BY p.pubdate DESC
 						";
 		if ($limit) { $private_sql .= 'LIMIT '.($limit*1.5); }
@@ -587,7 +595,7 @@ class cmsUser {
 
         $html   = '';
 
-        $sql    = "SELECT * FROM cms_users WHERE is_locked = 0 AND is_deleted = 0 ORDER BY nickname";
+        $sql    = "SELECT id, nickname FROM cms_users WHERE is_locked = 0 AND is_deleted = 0 ORDER BY nickname";
         $rs     = $inDB->query($sql);
 
         if (!$inDB->num_rows($rs)){ return; }
@@ -626,7 +634,7 @@ class cmsUser {
         $inDB = cmsDatabase::getInstance();
         $html = '';
 
-        $sql = "SELECT * FROM cms_users WHERE ";
+        $sql = "SELECT id, nickname FROM cms_users WHERE ";
 
         $a = 1;
         foreach($authors as $key=>$id){
@@ -723,7 +731,7 @@ class cmsUser {
 
         $html = '';
 
-        $sql = "SELECT f.*
+        $sql = "SELECT f.from_id, f.to_id
                 FROM cms_user_friends f
                 WHERE (f.to_id = $user_id OR f.from_id = $user_id) AND f.is_accepted = 1
                 ORDER BY logdate ASC";
@@ -765,7 +773,7 @@ class cmsUser {
 
         $friends    = array();
 
-        $sql = "SELECT f.*
+        $sql = "SELECT f.from_id, f.to_id
                 FROM cms_user_friends f
                 WHERE (f.to_id = $user_id OR f.from_id = $user_id) AND f.is_accepted = 1
                 ORDER BY logdate ASC";
@@ -823,9 +831,11 @@ class cmsUser {
         
         if ($total){
             //получаем нужную страницу записей стены
-            $sql = "SELECT w.*, u.nickname as author, u.login as author_login, DATE_FORMAT(w.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate
-                    FROM cms_user_wall w, cms_users u
-                    WHERE w.user_id = $user_id AND w.author_id = u.id AND w.usertype = '$usertype'
+            $sql = "SELECT w.*, g.gender, g.imageurl, u.nickname as author, u.login as author_login, u.is_deleted, w.pubdate
+                    FROM cms_user_wall w
+					LEFT JOIN cms_users u ON u.id = w.author_id
+					LEFT JOIN cms_user_profiles g ON g.user_id = w.author_id
+                    WHERE w.user_id = $user_id AND w.usertype = '$usertype'
                     ORDER BY w.pubdate DESC
                     LIMIT ".(($page-1)*$perpage).", $perpage";
 
@@ -836,7 +846,8 @@ class cmsUser {
 
             while($record = $inDB->fetch_assoc($result)){
                 $record['content']  = $inCore->parseSmiles($record['content'], true);
-                $record['avatar']   = usrImage($record['author_id'], 'small');
+				$record['fpubdate'] = $inCore->dateFormat($record['pubdate'], true, true);
+                $record['avatar']   = usrImageNOdb($record['author_id'], 'small', $record['imageurl'], $record['is_deleted']);
                 $records[]          = $record;
             }
 
@@ -1046,7 +1057,7 @@ class cmsUser {
         $result = $inDB->query($sql);
 
         if($inDB->num_rows($result)) {
-            $html =	' (<a style="color:red" href="/users/'.$user_id.'/messages.html">'.$inDB->num_rows($result).'</a>)';
+            $html =	$inDB->num_rows($result);
             return $html;
         } else { return false; }
     }
@@ -1300,7 +1311,7 @@ class cmsUser {
         
         $inDB = cmsDatabase::getInstance();
 
-        $sql = "SELECT *
+        $sql = "SELECT imageurl, title
                 FROM cms_user_photos
                 WHERE user_id = $user_id
                 ORDER BY title ASC";

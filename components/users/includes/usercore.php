@@ -60,8 +60,9 @@ function usrPublicAlbums($user_id){
     global $_LANG;
 	$html = '';
 	$sql = "SELECT f.*, a.id as id, a.title as album, COUNT(f.id) as photos
-			FROM cms_photo_files f, cms_photo_albums a
-			WHERE f.user_id = $user_id AND f.album_id = a.id
+			FROM cms_photo_files f
+			LEFT JOIN cms_photo_albums a ON a.id = f.album_id
+			WHERE f.user_id = $user_id
 			GROUP BY f.album_id
 			ORDER BY f.pubdate DESC
 			";
@@ -150,45 +151,6 @@ function usrMsg($user_id, $table){
 	return $inDB->num_rows($result);
 }
 
-function usrComments($user_id, $limit=5, $preview=true){
-    $inCore = cmsCore::getInstance();
-    $inDB = cmsDatabase::getInstance();
-        global $_LANG;
-	$html = '';
-	$sql = "SELECT c.*, DATE_FORMAT(c.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate,  IFNULL(v.total_rating, 0) as votes
-			FROM cms_comments c
-            LEFT JOIN cms_ratings_total v ON v.item_id = c.id AND v.target = 'comment'
-			WHERE c.user_id = $user_id AND c.published = 1
-			ORDER BY c.pubdate DESC            
-			";
-	if ($preview) { $sql .= " LIMIT $limit"; }
-	$result = $inDB->query($sql) ;
-	
-	if ($inDB->num_rows($result)>0){
-
-		while ($com = $inDB->fetch_assoc($result)){
-			$html .= '<table style="width:100%; margin-bottom:2px;" cellspacing="0">';
-			$html .= '<tr>';
-				$html .= '<td class="usr_com_title">
-                            <div style="float:left"><a href="'.$com['target_title'].'#c'.$com['id'].'">'.$com['target_link'].'</a> &mdash; '.$com['fpubdate'].'</div>
-                            <div style="float:right">aa '.$com['votes'].'</div>
-                          </td>';
-			$html .= '</tr>';
-			$html .= '<tr>';
-				$html .= '<td class="usr_com_body">'.$inCore->parseSmiles($com['content'], true).'</td>';
-			$html .= '</tr>';
-			$html .= '</table>';
-		}
-		if ($preview){
-			$html .= '<div align="right"><a href="/users/'.$user_id.'/entries.html">'.$_LANG['ALL_COMMENTS'].'</a> &rarr;</div>';
-		}
-	} else {
-		$html .= $_LANG['USER_NOT_COMMENT'];
-	}
-	
-	return $html;
-}
-
 function usrAwards($user_id){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
@@ -221,42 +183,6 @@ function usrAwards($user_id){
     $smarty->display('com_users_awards.tpl');
 
 	return ob_get_clean();
-}
-
-function usrForumPosts($user_id, $limit=5, $preview=true){
-    $inCore = cmsCore::getInstance();
-    $inDB = cmsDatabase::getInstance();
-    global $_LANG;
-	$html = '';
-	$sql = "SELECT *, DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate, t.title as topic, p.id as pid
-			FROM cms_forum_posts p, cms_forum_threads t
-			WHERE p.user_id = $user_id AND p.thread_id = t.id
-			ORDER BY p.pubdate DESC
-			";
-	if ($preview) { $sql .= " LIMIT $limit"; }
-	$result = $inDB->query($sql) ;
-	
-	if ($inDB->num_rows($result)>0){
-
-		while ($com = $inDB->fetch_assoc($result)){
-			$html .= '<table style="width:100%; margin-bottom:2px;" cellspacing="0">';
-			$html .= '<tr>';
-				$html .= '<td class="usr_com_title">
-								<a href="/forum/thread'.$com['thread_id'].'.html#'.$com['pid'].'">'.$com['topic'].'</a> &mdash; '.$com['fpubdate'].'
-						  </td>';
-			$html .= '</tr>';		
-			$html .= '<tr>';
-				$html .= '<td class="usr_com_body">
-								'.$inCore->parseSmiles(substr(strip_tags($com['content']), 0, 100)).'...
-						  </td>';
-			$html .= '</tr>';						
-			$html .= '</table>';
-		}
-	} else {
-		$html .= $_LANG['NOT_POSTS_ON_FORUM'];
-	}
-	
-	return $html;
 }
 
 function usrImage($user_id, $small='small'){
@@ -347,7 +273,7 @@ function usrStatus($user_id, $logdate='', $online=false, $gender='m'){
     $inDB = cmsDatabase::getInstance();
     global $_LANG;
     if ($online===false){
-        $sql = "SELECT *
+        $sql = "SELECT id
                 FROM cms_online
                 WHERE user_id = '$user_id'";
         $result     = $inDB->query($sql);
@@ -377,7 +303,7 @@ function usrStatusList($user_id, $logdate='', $online=false, $gender='m'){
     $inDB = cmsDatabase::getInstance();
     global $_LANG;
     if ($online===false){
-        $sql = "SELECT *
+        $sql = "SELECT id
                 FROM cms_online
                 WHERE user_id = '$user_id'";
         $result     = $inDB->query($sql);
@@ -522,14 +448,12 @@ function usrFriends($user_id, $short=true){
             if ($id_count < $id_total){ $id_sql .= ' OR '; }
         }
 
-        $sql = "SELECT u.id as id, u.nickname as nickname, u.login as login, p.imageurl as avatar,
-                       IF(DATE_FORMAT(logdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(logdate, '{$_LANG['TODAY']} {$_LANG['IN']} %H:%i'),
-                       IF(DATEDIFF(NOW(), logdate)=1, DATE_FORMAT(logdate, '{$_LANG['YESTERDAY']} {$_LANG['IN']} %H:%i'),DATE_FORMAT(logdate, '%d-%m-%Y') ))  as flogdate,
-                       IFNULL(COUNT(o.id), 0) as online
-                FROM cms_users u, cms_user_profiles p
+        $sql = "SELECT u.id as id, u.nickname as nickname, u.login as login, p.imageurl as avatar, logdate as flogdate, IFNULL(COUNT(o.id), 0) as online
+                FROM cms_users u
+				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
                 LEFT JOIN cms_online o ON p.user_id = o.user_id
-                WHERE p.user_id = u.id AND ({$id_sql})
-                GROUP BY p.user_id";
+                WHERE {$id_sql}
+                GROUP BY u.id";
 
         $res = $inDB->query($sql);
         
@@ -619,13 +543,15 @@ function usrGenderStats($total_usr){
 	$stat = array();
 	//male
 	$sql = "SELECT u.id
-			FROM cms_users u, cms_user_profiles p
-			WHERE u.is_locked = 0 AND u.is_deleted = 0 AND p.user_id = u.id AND p.gender = 'm'";
+			FROM cms_users u
+			LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+			WHERE u.is_locked = 0 AND u.is_deleted = 0 AND p.gender = 'm'";
 	$rs = $inDB->query($sql); $stat['male'] = $inDB->num_rows($rs);
 	//female
 	$sql = "SELECT u.id 
-			FROM cms_users u, cms_user_profiles p
-			WHERE u.is_locked = 0 AND u.is_deleted = 0 AND p.user_id = u.id AND p.gender = 'f'";
+			FROM cms_users u
+			LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+			WHERE u.is_locked = 0 AND u.is_deleted = 0 AND p.gender = 'f'";
 	$rs = $inDB->query($sql); $stat['female'] = $inDB->num_rows($rs);
 	//unknown
 	$stat['unknown'] = $total_usr - $stat['male'] - $stat['female'];
@@ -640,8 +566,9 @@ function usrCityStats(){
 	$empty = $_LANG['NOT_DECIDE'];
 
 	$sql = "SELECT IF (p.city != '', p.city, '$empty') city, COUNT( p.user_id ) count
-			FROM cms_user_profiles p, cms_users u
-			WHERE p.user_id = u.id AND u.is_locked =0 AND u.is_deleted =0
+			FROM cms_users u
+			LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+			WHERE u.is_locked =0 AND u.is_deleted =0
 			GROUP BY p.city";
 	$rs = $inDB->query($sql); 
 	if ($inDB->num_rows($rs)){ 
