@@ -1165,6 +1165,7 @@ class cmsCore {
      * Определяет текущий компонент
      * Считается, что компонент указан в первом сегменте URI,
      * иначе подключается компонент для главной страницы
+	 * Критерий "включенности" компонента определяется в функции loadComponentConfig
      * @return string $component
      */
     private function detectComponent(){
@@ -1217,7 +1218,9 @@ class cmsCore {
         if (!$component || !$this->uri) { return false; }
 
         if(!file_exists('components/'.$component.'/router.php')){ return false; }
-
+		/**
+		 * Критерий "включенности" компонента определяется в функции loadComponentConfig
+		 */
         //подключаем список маршрутов компонента
         $this->includeFile('components/'.$component.'/router.php');
 
@@ -1272,7 +1275,9 @@ class cmsCore {
 
         //проверяем что компонент указан
         if (!$component) { return false; }
-
+		/**
+		 * Критерий "включенности" компонента определяется в функции loadComponentConfig
+		 */
         //проверяем что в названии только буквы и цифры
         if (!eregi("^[a-z0-9]+$", $component)){ cmsCore::error404(); }
         
@@ -1637,8 +1642,10 @@ class cmsCore {
 
         if (isset($this->component_configs[$component])) { return $this->component_configs[$component]; }
 
-        $config_yaml = $inDB->get_field('cms_components', "link='{$component}'", 'config');
+        $config_yaml = $inDB->get_field('cms_components', "link='{$component}' AND published = 1", 'config');
 
+		if (!$config_yaml) { $this->error404(); }
+		
         $config = $this->yamlToArray($config_yaml);
 
         $this->cacheComponentConfig($component, $config);
