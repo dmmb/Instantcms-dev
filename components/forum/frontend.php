@@ -855,14 +855,20 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 					}
 				} else { //edit post
 					if($message){
+						$posts_in_thread = dbRowsCount('cms_forum_posts', 'thread_id='.$msg['thread_id']);
+						$pages = ceil($posts_in_thread / $cfg['pp_thread']);
 						$sql = "UPDATE cms_forum_posts 
 								SET content = '$message',
 									editdate = NOW(),
 									edittimes = edittimes + 1
 								WHERE id = $id";
 						$inDB->query($sql) ;
-						$inCore->registerUploadImages(session_id(), $id, 'forum');						
-						header('location:/forum/thread'.$msg['thread_id'].'.html');
+						$inCore->registerUploadImages(session_id(), $id, 'forum');	
+						if ($pages==1){
+							header('location:/forum/thread'.$msg['thread_id'].'.html');
+						} else {
+							header('location:/forum/thread'.$msg['thread_id'].'-'.$pages.'.html');
+						}					
 					} else { echo '<p>'.$_LANG['NEED_TEXT_POST'].'</p>'; }
 				}
 			}
