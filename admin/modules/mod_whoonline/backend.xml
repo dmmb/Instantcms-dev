@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<backend>    
+    <module>
+        <id>mod_whoonline</id>
+        <title>Кто онлайн?</title>
+    </module>
+    <params>
+        <param type="flag" name="show_today" title="Показывать кто был сегодня" hint="Выводит дополнительно список всех посетителей за сегодня" default="on" />
+    </params>
+</backend>

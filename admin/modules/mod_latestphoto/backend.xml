@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <backend>    
     <module>
-        <id>mod_latest</id>
-        <title>Последние материалы</title>
+        <id>mod_latestphoto</id>
+        <title>Новинки фотогалереи</title>
     </module>
     <params>
-        <param type="number" name="newscount" title="Количество материалов" units="шт." default="5" />
-        <param type="flag" name="showdesc" title="Показывать анонсы" default="on" />
-        <param type="flag" name="showdate" title="Показывать даты и авторов" default="on" />
+        <param type="number" name="shownum" title="Количество фотографий" units="шт." default="5" />
+        <param type="number" name="maxcols" title="Число колонок для вывода" units="шт." default="5" />
+        <param type="flag" name="showclubs" title="Показывать фотографии из клубов" default="on" />
+        <param type="flag" name="showalbum" title="Показывать название альбома" default="on" />
+        <param type="flag" name="showdate" title="Показывать даты" default="on" />
         <param type="flag" name="showcom" title="Показывать число комментариев" default="on" />
-        <param type="flag" name="showrss" title="Показывать ссылку на RSS" default="on" />
-        <param type="list_db" name="cat_id" title="Материалы из раздела" src="cms_category" src_title="title" src_value="id" tree="1" />
-        <param type="flag" name="subs" title="Вместе с подразделами" default="off" />
+        <param type="list_db" name="album_id" title="Фотографии из альбома" src="cms_photo_albums" src_title="title" src_value="id" tree="1" />
+        <param type="list" name="showtype" title="Режим вывода">
+            <option title="Подробный" value="full" />
+            <option title="Только фото" value="short" />
+        </param>
+        <param type="flag" name="showmore" title="Показывать ссылку на галерею" default="on" />
     </params>
 </backend>
