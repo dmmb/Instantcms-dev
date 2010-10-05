@@ -71,7 +71,6 @@
 						{/if}
 					</div>
 					<div class="wall">
-                        {add_js file="components/users/js/wall.js"}
 						<div class="header">{$LANG.CLUB_WALL}</div>
 						<div class="body">
                             <div class="wall_body">{$club.wall_html}</div>
