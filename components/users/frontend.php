@@ -695,26 +695,32 @@ if ($do=='profile'){
     }
 
     $usr['avatar']				= usrImageNOdb($usr['id'], 'big', $usr['imageurl'], $usr['is_deleted']);
-	$usr['isfriend']			= (($inUser->id && !$myprofile) ? usrIsFriends($usr['id'], $inUser->id) : false);
-	$usr['isfriend_not_add']	= $usr['isfriend'];
-    $usr['is_new_friends']		= ($inUser->id==$usr['id'] && $model->isNewFriends($usr['id']) && $cfg['sw_friends']);
-    if ($usr['is_new_friends']){
-        $usr['new_friends'] 	= usrFriendQueriesList($usr['id'], $model);
-    }
-    $usr['friends']				= usrFriends($usr['id']);
+	
+	if($cfg['sw_friends']){
+		$usr['isfriend']			= (($inUser->id && !$myprofile) ? usrIsFriends($usr['id'], $inUser->id) : false);
+		$usr['isfriend_not_add']	= $usr['isfriend'];
+		$usr['is_new_friends']		= ($inUser->id==$usr['id'] && $model->isNewFriends($usr['id']) && $cfg['sw_friends']);
+		if ($usr['is_new_friends']){
+			$usr['new_friends'] 	= usrFriendQueriesList($usr['id'], $model);
+		}
+		$usr['friends']				= usrFriends($usr['id']);
+	}
 
-    if ($usr['friends'] && $inUser->id && $myprofile){
+    if ($usr['friends'] && $inUser->id && $myprofile && $cfg['sw_feed']){
         $usr['friends_photos']	= cmsUser::getUserFriendsPhotos($usr['id']);
         $usr['friends_posts']	= cmsUser::getUserFriendsPosts($usr['id']);
         $usr['friends_comments']	= cmsUser::getUserFriendsComments($usr['id']);
     }
 
-    $usr['awards_html']			= usrAwards($usr['id']);
-    $usr['wall_html']			= cmsUser::getUserWall($usr['id']);
-    $usr['addwall_html'] 		= cmsUser::getUserAddWall($usr['id']);
+    $usr['awards_html']			= $cfg['sw_awards'] ? usrAwards($usr['id']) : false;
+	
+	if($cfg['sw_wall']){
+		$usr['wall_html']			= cmsUser::getUserWall($usr['id']);
+		$usr['addwall_html'] 		= cmsUser::getUserAddWall($usr['id']);
+	}
 	$usr['banned']				= ($usr['banned'] == $usr['id'] ? 1 : 0);
 
-    $usr['clubs'] 				= cmsUserClubs($usr['id']);
+    $usr['clubs'] 				= $cfg['sw_clubs'] ? cmsUserClubs($usr['id']) : false;
 
     $usr['status']				= ($usr['status'] == $usr['id'] ? '<span class="online">'.$_LANG['ONLINE'].'</span>' : '<span class="offline">'.$_LANG['OFFLINE'].'</span>');
 	
@@ -726,11 +732,12 @@ if ($do=='profile'){
 
     $usr['cityurl']             = urlencode($usr['city']);
 
-    $usr['photos_count']		= (int)usrPhotoCount($usr['id']);
+    $usr['photos_count']		= $cfg['sw_photo'] ? (int)usrPhotoCount($usr['id']) : false;
 	$usr['can_add_foto']		= (($usr['photos_count']<$cfg['photosize'] || $cfg['photosize']==0) && $cfg['sw_photo']);
-    $usr['board_count']			= (int)$inDB->rows_count('cms_board_items', "user_id={$usr['id']} AND published=1");
-    $usr['comments_count']		= (int)$inDB->rows_count('cms_comments', "user_id={$usr['id']} AND published=1");
-    $usr['forum_count']			= usrMsg($usr['id'], 'cms_forum_posts');
+	
+    $usr['board_count']			= $cfg['sw_board'] ? (int)$inDB->rows_count('cms_board_items', "user_id={$usr['id']} AND published=1") : false;
+    $usr['comments_count']		= $cfg['sw_comm'] ? (int)$inDB->rows_count('cms_comments', "user_id={$usr['id']} AND published=1") : false;
+    $usr['forum_count']			= $cfg['sw_forum'] ? usrMsg($usr['id'], 'cms_forum_posts') : false;
 
     if($cfg['sw_files'])
         if ($inUser->id==$id){
@@ -740,16 +747,17 @@ if ($do=='profile'){
         }
 
     $usr['blog_link'] = '';
-
-    $usr['blog']            = usrBlog($usr['id']);
-    $usr['blog_id']         = $usr['blog']['id'];
-    $usr['blog_seolink']    = $usr['blog']['seolink'];
-    
-    if($usr['blog_id']){
-        $usr['blog_link'] 		= '<a href="/blogs/'.$usr['blog_seolink'].'">'.$_LANG['BLOG'].'</a>';
-    } elseif($myprofile) {
-        $usr['blog_link'] 		= '<a href="/blogs/createblog.html">'.$_LANG['CREATE_BLOG'].'</a>';
-    }
+	if($cfg['sw_blogs']){
+		$usr['blog']            = usrBlog($usr['id']);
+		$usr['blog_id']         = $usr['blog']['id'];
+		$usr['blog_seolink']    = $usr['blog']['seolink'];
+		
+		if($usr['blog_id']){
+			$usr['blog_link'] 		= '<a href="/blogs/'.$usr['blog_seolink'].'">'.$_LANG['BLOG'].'</a>';
+		} elseif($myprofile) {
+			$usr['blog_link'] 		= '<a href="/blogs/createblog.html">'.$_LANG['CREATE_BLOG'].'</a>';
+		}
+	}
 
     if (!$usr['description']) {
         $usr['description']		= '<span style="color:#999"><em>'.$_LANG['TAGS_NOT_SPEC'].'</em></span>';
@@ -803,6 +811,9 @@ if ($do=='profile'){
 }
 /////////////////////////////// VIEW MESSAGES /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='messages'){
+
+	if (!$cfg['sw_msg']) { cmsCore::error404(); }
+	
 	if ($inUser->id){
 		
 		$usr = $model->getUserShort($id);
@@ -1004,6 +1015,8 @@ if ($do=='select_avatar'){
 /////////////////////////////// PHOTO UPLOAD /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='addphoto'){
 
+	if (!$cfg['sw_photo']) { cmsCore::error404(); }
+
     $inCore->loadLib('tags');
     $inCore->loadLanguage('components/photos');
 
@@ -1125,6 +1138,9 @@ if ($do=='addphoto'){
 }
 /////////////////////////////// PHOTO DELETE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delphoto'){
+
+	if (!$cfg['sw_photo']) { cmsCore::error404(); }
+	
 	$inCore->loadLib('tags');
 	$max_mb = 2; //max filesize in Mb
 	$inCore->loadLanguage('components/photos');
@@ -1173,6 +1189,9 @@ if ($do=='delphoto'){
 }
 /////////////////////////////// PHOTO EDIT /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='editphoto'){
+
+	if (!$cfg['sw_photo']) { cmsCore::error404(); }
+	
 	$inCore->loadLib('tags');
     $inCore->loadLanguage('components/photos');
 	$max_mb = 2; //max filesize in Mb
@@ -1275,6 +1294,8 @@ if ($do=='editphoto'){
 }
 /////////////////////////////// VIEW ALBUM /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='viewalbum'){
+
+	if (!$cfg['sw_photo']) { cmsCore::error404(); }
 
 	$usr = $model->getUserShort($id);
 	
@@ -1429,6 +1450,9 @@ if ($do=='friendlist'){
 
 /////////////////////////////// VIEW PHOTO /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='viewphoto'){
+
+	if (!$cfg['sw_photo']) { cmsCore::error404(); }
+	
     $photoid = $inCore->request('photoid', 'int', 0);
 
 	$user_id = $inUser->id;
@@ -1549,6 +1573,9 @@ if ($do=='delfriend'){
 }//do
 /////////////////////////////// SEND MESSAGE ///////////////////////////////////////////////////////////////////////////////////////
 if ($do=='sendmessage'){
+
+	if (!$cfg['sw_msg']) { cmsCore::error404(); }
+
 	if (usrCheckAuth() && $inUser->id!=$id || isset($_POST['massmail'])){
 
 		$from_id    = $inUser->id;
@@ -1673,6 +1700,9 @@ if ($do=='sendmessage'){
 }//do
 /////////////////////////////// DEL MESSAGE /////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delmessage'){
+
+	if (!$cfg['sw_msg']) { cmsCore::error404(); }
+	
 	if (usrCheckAuth()){
 		$sql = "SELECT * FROM cms_user_msg WHERE id = $id LIMIT 1";
 		$result = $inDB->query($sql) ;
@@ -1687,6 +1717,9 @@ if ($do=='delmessage'){
 }//do
 /////////////////////////////// DELETE ALL INBOX MESSAGES ///////////////////////////////////////////////////////////////////////
 if ($do=='delmessages'){
+
+	if (!$cfg['sw_msg']) { cmsCore::error404(); }
+	
 	if (usrCheckAuth()){
 		if($inUser->id == $id || $inCore->userIsAdmin($inUser->id)){
 			$sql = "DELETE FROM cms_user_msg WHERE to_id = $id";
@@ -1870,6 +1903,9 @@ if ($do=='restoreprofile'){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// VIEW USER FILES ///////////////////////////////////////////////////////////////////////////////////////	
 if ($do=='files'){
+
+	if (!$cfg['sw_files']) { cmsCore::error404(); }
+	
 	//get user
 	$usr = $model->getUserShort($id);
 	//if user found
@@ -1951,11 +1987,14 @@ if ($do=='files'){
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='download'){
+
+	if (!$cfg['sw_files']) { cmsCore::error404(); }
+
     $file_id = $inCore->request('fileid', 'int', 0);
 
     if (!$file_id) { $inCore->redirectBack(); }
 
-	$sql = "SELECT * FROM cms_user_files WHERE id = $file_id LIMIT 1";
+	$sql = "SELECT user_id, filename FROM cms_user_files WHERE id = $file_id LIMIT 1";
 	$result = $inDB->query($sql);
 
 	if ($inDB->num_rows($result)){
@@ -1975,6 +2014,9 @@ if ($do=='download'){
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='addfile'){
+
+	if (!$cfg['sw_files']) { cmsCore::error404(); }
+	
 	if (usrCheckAuth()){
 		if ($inUser->id == $id){
 		
@@ -2077,6 +2119,9 @@ if ($do=='addfile'){
 
 /////////////////////////////// FILE DELETE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delfile'){
+
+	if (!$cfg['sw_files']) { cmsCore::error404(); }
+	
 	$fileid = $inCore->request('fileid', 'int', '');	
 	
 	if (usrCheckAuth() && (@$inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
@@ -2084,7 +2129,7 @@ if ($do=='delfile'){
 			$usr = $model->getUserShort($id);
 			if ($usr){
 				$inPage->backButton(false);
-				$sql = "SELECT * FROM cms_user_files WHERE id = $fileid AND user_id = $id";
+				$sql = "SELECT filename FROM cms_user_files WHERE id = $fileid AND user_id = $id";
 				$result = $inDB->query($sql);
 				if ($inDB->num_rows($result)){
 					$file = $inDB->fetch_assoc($result);				
@@ -2119,6 +2164,9 @@ if ($do=='delfile'){
 
 /////////////////////////////// MULTIPLE FILES DELETE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delfilelist'){
+
+	if (!$cfg['sw_files']) { cmsCore::error404(); }
+	
 	if (sizeof($_POST['files'])) { $files = $_POST['files']; }
 	else { die($_LANG['NOT_SELECTED_FILES']); }
 	
@@ -2131,12 +2179,12 @@ if ($do=='delfilelist'){
 				//build file list sql
 				$t = 0;
 				foreach($files as $key=>$value){
-					$findsql .= "id = ".$value; 
+					$findsql .= "id = ".intval($value); 
 					if ($t<sizeof($files)-1) { $findsql .= " OR "; }
 					$t++;
 				}				
 				
-				$sql = "SELECT * FROM cms_user_files WHERE user_id = $id AND ($findsql)";							
+				$sql = "SELECT id, filename FROM cms_user_files WHERE user_id = $id AND ($findsql)";							
 				$result = $inDB->query($sql);
 				if ($inDB->num_rows($result)){
 					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
@@ -2167,12 +2215,12 @@ if ($do=='delfilelist'){
 				//build file list sql
 				$t = 0;
 				foreach($files as $key=>$value){
-					$findsql .= "id = ".$value; 
+					$findsql .= "id = ".intval($value); 
 					if ($t<sizeof($files)-1) { $findsql .= " OR "; }
 					$t++;
 				}				
 				
-				$sql = "SELECT * FROM cms_user_files WHERE user_id = $id AND ($findsql)";							
+				$sql = "SELECT id, filename FROM cms_user_files WHERE user_id = $id AND ($findsql)";							
 				$result = $inDB->query($sql);
 				if ($inDB->num_rows($result)){
 					while ($file = $inDB->fetch_assoc($result)){
@@ -2187,6 +2235,8 @@ if ($do=='delfilelist'){
 
 /////////////////////////////// MULTIPLE FILES PUBLISHING /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='pubfilelist'){
+	if (!$cfg['sw_files']) { cmsCore::error404(); }
+	
 	if (sizeof($_POST['files'])) { $files = $_POST['files']; }
 	else { die($_LANG['NOT_SELECTED_FILES']); }
 	
@@ -2195,7 +2245,7 @@ if ($do=='pubfilelist'){
 	if (usrCheckAuth() && (@$inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
 		$t = 0;
 		foreach($files as $key=>$value){
-			$findsql .= "id = ".$value; 
+			$findsql .= "id = ".intval($value); 
 			if ($t<sizeof($files)-1) { $findsql .= " OR "; }
 			$t++;
 		}				
