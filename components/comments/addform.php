@@ -11,7 +11,8 @@
 	} else { die(); }
 
     include(PATH.'/core/cms.php');
-
+	// Грузим конфиг
+	include(PATH.'/includes/config.inc.php');
 	$inCore     = cmsCore::getInstance();
 
     $inCore->loadLanguage('lang');

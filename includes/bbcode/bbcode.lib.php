@@ -1155,7 +1155,7 @@ class bbcode {
 					$size = getimagesize($_SERVER['DOCUMENT_ROOT'].$src);
 					$width = $size[0];
 					$height = $size[1];
-					while ($width > 400 || $height > 400){
+					while ($width > 640 || $height > 640){
 						$width  = round($width*0.9);
 						$height = round($height*0.9);
 						$zoom   = true;
@@ -1191,15 +1191,14 @@ class bbcode {
     function s_2html($elem) {
         return '<s>'.$this -> get_html($elem['val']).'</s>';
     }
-    // Функция - обработчик тега [size]
-    function size_2html($elem) {
-        $size = isset($elem['attrib']['size']) ? (int) $elem['attrib']['size'] : 0;
-        return '<font size="'.$size.'">'.$this -> get_html($elem['val']).'</font>';
-    }
     // Функция - обработчик тега [u]
     function u_2html($elem) {
         return '<u>'.$this -> get_html($elem['val']).'</u>';
     }
+	// Функция - обработчик тега [email]
+	function email_2html($elem) {
+		return '<a href="mailto:'.$this -> get_html($elem['val']).'">'.$this -> get_html($elem['val']).'</a>';
+	}
     // Функция - обработчик тега [url]
     function url_2html($elem) {
         $attr = '';

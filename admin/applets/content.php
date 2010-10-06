@@ -411,6 +411,7 @@ function applet_content(){
 		if ($do=='add'){
 			 echo '<h3>Добавить статью</h3>';
  	 		 cpAddPathway('Добавить статью', 'index.php?view=content&do=add');
+			 $mod['category_id'] = $_REQUEST['to'];
 		} else {
 					 if(isset($_REQUEST['multiple'])){				 
 						if (isset($_REQUEST['item'])){					

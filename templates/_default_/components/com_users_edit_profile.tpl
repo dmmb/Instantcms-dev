@@ -59,7 +59,7 @@
                             <span class="usr_edithint">{$LANG.CITY_TEXT}</span>
                         </td>
                         <td valign="top">
-                            <input name="city" type="text" id="city" style="width:300px" value="{$usr.city}"/>
+                            <input name="city" type="text" id="city" style="width:300px" value="{$usr.city|escape:'html'}"/>
                             <script type="text/javascript">
                                 {$autocomplete_js}
                             </script>

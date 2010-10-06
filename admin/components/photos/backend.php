@@ -38,6 +38,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$cfg['orderto']     = $_REQUEST['orderto'];
 		$cfg['showlat']     = $_REQUEST['showlat'];
 		$cfg['watermark']   = $_REQUEST['watermark'];
+		$cfg['tumb_view']   = $_REQUEST['tumb_view'];
+		$cfg['tumb_from']   = $_REQUEST['tumb_from'];
+		$cfg['tumb_club']   = $_REQUEST['tumb_club'];
+		$cfg['is_today']   	= $_REQUEST['is_today'];
 
 		$inCore->saveComponentConfig('photos', $cfg);
         
@@ -170,7 +174,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                 @img_resize($uploadphoto, $uploadthumb, $album['thumb1'], $album['thumb1'], $album['thumbsqr']);
                 @img_resize($uploadphoto, $uploadthumb2, $album['thumb2'], $album['thumb2'], false, $cfg['watermark']);
                 if ($cfg['watermark']) { @img_add_watermark($uploadphoto);	}
-                if (@!$inCore->inRequest('saveorig')){ @unlink($uploadphoto); }	
+				if (@!$cfg['saveorig']){ @unlink($uploadphoto); }
                 
                 $model->addPhoto($photo);
 
@@ -323,6 +327,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		if (!isset($cfg['showlat'])) { $cfg['showlat'] = 1; }		
 		if (!isset($cfg['orderto'])) { $cfg['orderto'] = 'title'; }		
 		if (!isset($cfg['orderby'])) { $cfg['orderby'] = 'ASC'; }		
+		if (!isset($cfg['tumb_view'])) { $cfg['tumb_view'] = 1; }
+		if (!isset($cfg['tumb_from'])) { $cfg['tumb_from'] = 1; }	
 		
 		?>
 		<?php cpCheckWritable('/images/photos', 'folder'); ?>
@@ -376,6 +382,34 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					<input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Да
 					<input name="watermark" type="radio" value="0" <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Нет				  </td>
 			    </tr>
+				<tr>
+				  <td><strong>Показ мини-эскизов:</strong>  <br />Каждый альбом может быть показан мини-эскизом. Для этого существуют два способа: мини-эскиз может быть выбран вручную для каждого из альбомов, или каждый альбом будет показан при помощи случайно выбранного мини-эскиза, принадлежащего этому фотоальбому или любым из его подальбомов (см. настройки ниже). Во втором случае мини-эскизы меняются динамически каждый раз, когда перезагружается страница.<br /><strong>
+ВНИМАНИЕ !</strong> При большом числе категорий и подкатегорий использование случайного показа мини-эскизов может привести к замедленному показу страницы !</td>
+				  <td>
+					<select name="tumb_view" style="width:190px">
+                        <option value="1" <?php if(@$cfg['tumb_view']=='1') { echo 'selected'; } ?>>Не показывать</option>
+                        <option value="2" <?php if(@$cfg['tumb_view']=='2') { echo 'selected'; } ?>>Случайный</option>
+                        <option value="3" <?php if(@$cfg['tumb_view']=='3') { echo 'selected'; } ?>>По выбору</option>
+                  	</select><br /><br />
+                    <input name="tumb_club" type="checkbox" value="1" <?php if (@$cfg['tumb_club']) { echo 'checked'; } ?>/>
+                    Не применять к фотоальбомам клуба.				  
+                    </td>
+			    </tr>
+				<tr>
+				  <td><strong>Выбор случайных мини-эскизов:</strong> <br />Из каких категорий выбирать мини-эскизы, если выбран случайный их показ для категорий ?</td>
+				  <td>
+					<select name="tumb_from" style="width:190px">
+                        <option value="1" <?php if(@$cfg['tumb_from']=='1') { echo 'selected'; } ?>>Только из самой категории</option>
+                        <option value="2" <?php if(@$cfg['tumb_from']=='2') { echo 'selected'; } ?>>Включая подкатегорию</option>
+                  	</select>				  </td>
+			    </tr>
+                <tr>
+                    <td><strong>Показывать количество новых фото в альбомах за день?</strong></td>
+                        <td>
+                            <input name="is_today" type="radio" value="1" <?php if (@$cfg['is_today']) { echo 'checked="checked"'; } ?> /> Да
+                            <input name="is_today" type="radio" value="0"  <?php if (@!$cfg['is_today']) { echo 'checked="checked"'; } ?> /> Нет
+                        </td>
+                </tr>
 			  </table>
 			  <p>
 				<input name="opt" type="hidden" value="saveconfig" />
@@ -501,6 +535,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             $album['orderform']     = $inCore->request('orderform', 'int');
             $album['showtags']      = $inCore->request('showtags', 'int');
             $album['bbcode']        = $inCore->request('bbcode', 'int');
+			$album['iconurl']       = $inCore->request('iconurl', 'str');
 								
             $model->updateAlbum($id, $album);
 							
@@ -588,6 +623,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	
 	if ($opt == 'add_album' || $opt == 'edit_album'){
 		if ($opt=='add_album'){
+			 cpAddPathway('Фотоальбомы', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_albums');
+			 cpAddPathway('Добавить фотоальбом', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_album');
 			 echo '<h3>Добавить фотоальбом</h3>';
 		} else {
 					 if(isset($_REQUEST['item_id'])){
@@ -599,7 +636,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 							
 						 }
 					 }
-					
+					 cpAddPathway('Фотоальбомы', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_albums');
+					 cpAddPathway('Редактировать фотоальбом', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_album');
 					 echo '<h3>Редактировать фотоальбом</h3>';
 			   }
 
@@ -615,6 +653,12 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                if (!isset($mod['published'])) { $mod['published'] = 1; }
         
 		?>
+<script type="text/javascript">
+function showMapMarker(){
+    var file = $('select[name=iconurl]').val();
+    $('img#marker_demo').attr('src', '/images/photos/small/'+file);
+}
+</script>
 		
         <form id="addform" name="addform" method="post" action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>">
             <table width="610" border="0" cellspacing="5" class="proptable">
@@ -778,6 +822,36 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                         <input name="thumb2" type="text" id="thumb2" size="3" value="<?php echo @$mod['thumb2'];?>"/> пикс.
                     </td>
                 </tr>
+				<?php
+                    if ($opt=='edit_album' && $cfg['tumb_view'] == 3){ ?>
+                <tr>
+                    <td valign="top">Мини-эскиз:<br />
+                    <?php if ($mod['iconurl']){ ?>
+                    <img id="marker_demo" src="/images/photos/small/<?php echo $mod['iconurl']; ?>" border="0">
+                    <?php  } else { ?>
+                    <img id="marker_demo" src="/images/photos/no_image.png" border="0">
+                    <?php  } ?>
+                    </td>
+                    <td valign="top">
+                    <?php if (dbRowsCount('cms_photo_files', 'album_id = '.$id.'')) { ?>	
+                            <select name="iconurl" id="iconurl" style="width:285px" onchange="showMapMarker()">
+                                <?php
+                                    if ($mod['iconurl']){
+                                        echo $inCore->getListItems('cms_photo_files', $mod['iconurl'], 'id', 'ASC', 'album_id = '.$id.' AND published = 1', 'file');
+                                    } else {
+										echo '<option value="" selected>Выберите мини-эскиз</option>';
+                                        echo $inCore->getListItems('cms_photo_files', 0, 'id', 'ASC', 'album_id = '.$id.' AND published = 1', 'file');                                        
+                                    }
+                                ?>
+                            </select>
+                       <?php  } else { ?>
+                       		В альбоме нет еще фотографий, загрузите фотографии в альбом, после выберите мини-эскиз.
+                       <?php  } ?>
+                    </td>
+                </tr>
+            <?php
+                }
+            ?>
             </table>
             <table width="100%" border="0">
                 <tr>
@@ -899,7 +973,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                     <input name="showdate" type="radio" value="0"  <?php if (@!$mod['showdate']) { echo 'checked="checked"'; } ?> />
             Нет</label></td>
         </tr>
-        <?php if ($opt=='add_photo'){ ?>
+        <?php if ($do=='add_photo'){ ?>
         <tr>
         <td>Cохранить оригинал: </td>
         <td><input name="saveorig" type="radio" value="1" checked="checked" />Да<input name="saveorig" type="radio" value="0"  />Нет</label></td>

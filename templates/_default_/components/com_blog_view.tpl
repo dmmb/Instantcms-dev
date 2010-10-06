@@ -105,7 +105,7 @@
 							{if $post.tagline != false}
 								 <span class="tagline">{$post.tagline}</span>
 							{/if}
-							{if $myblog || $post.user_id == $uid || $is_admin}
+							{if ($myblog && $post.user_id == $uid) || $is_admin}
 								<span class="editlinks">
 									| <a href="/blogs/{$blog.id}/editpost{$post.id}.html" class="blog_entry_edit">{$LANG.EDIT}</a>
 									| <a href="/blogs/{$blog.id}/delpost{$post.id}.html" class="blog_entry_delete">{$LANG.DELETE}</a>

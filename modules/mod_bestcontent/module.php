@@ -22,21 +22,34 @@ function mod_bestcontent($module_id){
 			echo '<p>'.$_LANG['BESTCONTENT_CONFIG_TEXT'].'</p>';
 			return;
 		}
+		if (!isset($cfg['subs'])) { $cfg['subs'] = 1; }
 		$today = date("Y-m-d H:i:s");
+		if ($cfg['cat_id'] != '-1') {
+			if (!$cfg['subs']){
+				//выбираем из категории
+				$catsql = ' AND c.category_id = '.$cfg['cat_id'];
+			} else {
+				//выбираем из категории и подкатегорий
+				$rootcat = $inDB->get_fields('cms_category', 'id='.$cfg['cat_id'], 'NSLeft, NSRight');
+				$catsql = "AND (c.category_id = cat.id AND cat.NSLeft >= {$rootcat['NSLeft']} AND cat.NSRight <= {$rootcat['NSRight']})";
+			}		
+		} else { $catsql = 'AND c.category_id = cat.id'; } 
+
 
 		$sql = "SELECT c.*, c.pubdate as fpubdate, 
                         IFNULL(r.total_rating, 0) as points,
 						u.nickname as author, u.login as author_login
-				FROM cms_users u, cms_content c
+				FROM cms_category cat, cms_users u, cms_content c
 				LEFT JOIN cms_ratings_total r ON r.item_id=c.id AND r.target='content'
 				WHERE c.published = 1 AND c.user_id = u.id AND c.canrate = 1
                 AND (c.is_end=0 OR (c.is_end=1 AND c.enddate >= '$today' AND c.pubdate <= '$today')) 
+				".$catsql."
 				GROUP BY r.item_id
 				ORDER BY points DESC";
 		
 		$sql .= "\n" . "LIMIT ".$cfg['shownum'];
 	
-		$result = $inDB->query($sql) or die('<pre>'.$sql.'</pre>'.mysql_error());
+		$result = $inDB->query($sql);
 		
 		if ($inDB->num_rows($result)){
 

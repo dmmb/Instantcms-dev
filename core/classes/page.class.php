@@ -1051,51 +1051,6 @@ public static function getPagebar($total, $page, $perpage, $link, $params=array(
     return $html;
 }
 
-//public static function getPagebar($total, $page, $perpage, $link, $params=array()){
-//	$html = '';
-//	if ($total){
-//		$pages = ceil($total / $perpage);
-//		if($pages>1){
-//			$html .= '<div class="pagebar">';
-//			$html .= '<span class="pagebar_title"><strong>Страницы: </strong></span>';
-//            if ($page > 1){
-//                $href = $link;
-//                if (is_array($params)){
-//                    foreach($params as $param=>$value){
-//                        $href = str_replace('%'.$param.'%', $value, $href);
-//                    }
-//                }
-//                $html .= ' <a href="'.str_replace('%page%', ($page-1), $href).'" class="pagebar_page">&larr;</a> ';
-//            }
-//			for ($p=1; $p<=$pages; $p++){
-//				if ($p != $page) {
-//                    $href = $link;
-//                    if (is_array($params)){
-//                        foreach($params as $param=>$value){
-//                            $href = str_replace('%'.$param.'%', $value, $href);
-//                        }
-//                    }
-//                    $href = str_replace('%page%', $p, $href);
-//					$html .= ' <a href="'.$href.'" class="pagebar_page">'.$p.'</a> ';
-//				} else {
-//					$html .= '<span class="pagebar_current">'.$p.'</span>';
-//				}
-//			}
-//            if ($page < $pages){
-//                $href = $link;
-//                if (is_array($params)){
-//                    foreach($params as $param=>$value){
-//                        $href = str_replace('%'.$param.'%', $value, $href);
-//                    }
-//                }
-//                $html .= ' <a href="'.str_replace('%page%', ($page+1), $href).'" class="pagebar_page">&rarr;</a> ';
-//            }
-//			$html .= '</div>';
-//		}
-//	}
-//	return $html;
-//}
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public static function getModuleTemplates() {

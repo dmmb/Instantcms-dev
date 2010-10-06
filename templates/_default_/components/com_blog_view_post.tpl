@@ -4,7 +4,7 @@
 
 <h1 class="con_heading" style="margin-bottom:5px;">{$post.title}</h1>
 
-{if $myblog || $is_admin || $is_moder || $is_author}
+{if $is_author || $is_admin || $is_moder}
     <div class="editlinks" >
         <a style="color:gray" href="/blogs/{$post.blog_id}/editpost{$post.id}.html" class="blog_entry_edit">{$LANG.EDIT}</a>
         | <a style="color:gray" href="/blogs/{$post.blog_id}/delpost{$post.id}.html" class="blog_entry_delete">{$LANG.DELETE}</a>

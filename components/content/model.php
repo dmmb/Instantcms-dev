@@ -320,8 +320,10 @@ class cms_model_content{
 						DATE_FORMAT(con.pubdate, '%d-%m-%Y') shortdate,
 						cat.title cat_title, cat.id cat_id, cat.NSLeft as leftkey, cat.NSRight as rightkey, cat.showtags as showtags,
 						u.nickname as author, con.user_id as user_id, u.login as user_login
-				FROM cms_content con, cms_category cat, cms_users u
-				WHERE con.seolink = '$seolink' AND con.category_id = cat.id AND con.user_id = u.id AND con.published = 1";
+				FROM cms_content con
+				LEFT JOIN cms_users u ON u.id = con.user_id
+				LEFT JOIN cms_category cat ON cat.id = con.category_id
+				WHERE con.seolink = '$seolink' AND con.published = 1";
 
 		$result = $this->inDB->query($sql);
 
@@ -396,6 +398,9 @@ class cms_model_content{
         $this->inDB->query("DELETE FROM cms_content_access WHERE content_id={$id}");
         $this->inDB->query("DELETE FROM cms_tags WHERE target='content' AND item_id={$id}");
 
+		@unlink(PATH.'/images/photos/small/article'.$id.'.jpg');
+		@unlink(PATH.'/images/photos/medium/article'.$id.'.jpg');
+	   
         $inCore->deleteRatings('content', $id);
         $inCore->deleteComments('article', $id);
 

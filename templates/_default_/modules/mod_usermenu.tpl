@@ -18,7 +18,7 @@
             <tr>
                 {if $newmsg}
                     <td width="27"><img src="/components/users/images/menu/messages_new.gif" border="0"/></td>
-                    <td><a href="/users/{$id}/messages.html" class="new_messages_link">Сообщения</a>{$newmsg}</td>
+                    <td><a href="/users/{$id}/messages.html" class="new_messages_link">Сообщения</a> (<a style="color:red" href="/users/{$id}/messages.html">{$newmsg}</a>)</td>
                 {else}
                     <td width="27"><img src="/components/users/images/menu/messages.gif" border="0"/></td>
                     <td><a href="/users/{$id}/messages.html">Сообщения</a></td>

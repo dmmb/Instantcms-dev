@@ -16,23 +16,21 @@ function forumMessages($forum_id){
 	$html = '';
 	global $_LANG;
 	
-	$sql = "SELECT * FROM cms_forum_threads WHERE forum_id = $forum_id";
+	$sql = "SELECT 1 FROM cms_forum_threads WHERE forum_id = $forum_id";
 	$result = $inDB->query($sql) ;
 	
 	if ($inDB->num_rows($result)){
 		$html .= '<strong>'.$_LANG['THREADS'].':</strong> '.$inDB->num_rows($result);
-		$tsql = "SELECT id FROM cms_forum_posts WHERE ";
-		$t = 0;
-		while ($thread= $inDB->fetch_assoc($result)){
-			if ($t > 0) { $tsql .= ' OR '; }
-			$tsql .= 'thread_id = '.$thread['id'];
-			$t++;
-		}
-		$tresult = $inDB->query($tsql) or die(mysql_error().'<br/><br/>'.$tsql);
+	} else { $html .= $_LANG['NOT_THREADS']; }
+	
+	$tsql = "SELECT p.id
+			 FROM cms_forum_threads t
+			 LEFT JOIN cms_forum_posts p ON p.thread_id = t.id
+			 WHERE t.forum_id = $forum_id";
+	$tresult = $inDB->query($tsql);
 		if ($inDB->num_rows($tresult)){
 			$html .= '<br/><strong>'.$_LANG['MESSAGES'].':</strong> '.$inDB->num_rows($tresult);
 		} else { $html .= '<br/><strong>'.$_LANG['MESSAGES'].':</strong> 0'; }
-	} else { $html .= $_LANG['NOT_THREADS']; }
 	
 	return $html;
 }
@@ -503,13 +501,16 @@ function forumLastMessage($forum_id, $perpage_thread){
 
 	$groupsql = forumUserAuthSQL("f.");
 	
-	$sql = "SELECT DATE_FORMAT(p.pubdate, '%d-%m-%Y') as pubdate, DATE_FORMAT(p.pubdate, '%H:%i') as pubtime, 
-				   (TO_DAYS(CURDATE()) - TO_DAYS(p.pubdate)) as daysleft, u.id as uid, u.nickname as author,
+	$sql = "SELECT p.pubdate, 
+				   u.id as uid, u.nickname as author,
                    u.login as author_login, 
 				   t.title as threadtitle, t.id as threadid
-			FROM cms_forums f, cms_forum_threads t, cms_forum_posts p, cms_users u
-			WHERE (f.NSLeft >= {$forumNS['NSLeft']} AND f.NSRight <= {$forumNS['NSRight']}) AND t.forum_id = f.id AND p.thread_id = t.id AND p.user_id = u.id $groupsql
-			ORDER BY p.pubdate DESC
+			FROM cms_forum_posts p
+			LEFT JOIN cms_forum_threads t ON t.id = p.thread_id
+			INNER JOIN cms_forums f ON f.id = t.forum_id
+			LEFT JOIN cms_users u ON u.id = p.user_id
+			WHERE (f.NSLeft >= {$forumNS['NSLeft']} AND f.NSRight <= {$forumNS['NSRight']}) $groupsql
+			ORDER BY p.id DESC
 			LIMIT 1";
 			
 	$result = $inDB->query($sql) ;
@@ -528,7 +529,7 @@ function forumLastMessage($forum_id, $perpage_thread){
 	
 		$html .= '<strong>'.$_LANG['LAST_POST'].' <br/>';
 		$html .= $_LANG['IN THREAD'].': <a href="'.$link.'">'.$post['threadtitle'].'</a></strong><br/>';
-		$html .= forumDate($post['pubdate'], $post['daysleft']) . ' '.$_LANG['IN'].' ' .$post['pubtime'].' '.$_LANG['FROM'].' <a href="'.cmsUser::getProfileURL($post['author_login']).'">'.$post['author'].'</a>';
+		$html .= $inCore->dateFormat($post['pubdate'], true, true).' '.$_LANG['FROM'].' <a href="'.cmsUser::getProfileURL($post['author_login']).'">'.$post['author'].'</a>';
 	} else { $html .= $_LANG['NOT_POSTS']; }
 	
 	return $html;
@@ -540,19 +541,19 @@ function threadLastMessage($thread_id){
     $inDB   = cmsDatabase::getInstance();
 	$html = '';
 	global $_LANG;
-	$sql = "SELECT DATE_FORMAT(p.pubdate, '%d-%m-%Y') as pubdate, DATE_FORMAT(p.pubdate, '%H:%i') as pubtime, 
-				   (TO_DAYS(CURDATE()) - TO_DAYS(p.pubdate)) as daysleft, u.id as uid, u.nickname as author,
-                   u.login as author_login
-			FROM cms_forums f, cms_forum_threads t, cms_forum_posts p, cms_users u
-			WHERE t.id = $thread_id AND p.thread_id = t.id AND p.user_id = u.id
-			ORDER BY p.pubdate DESC
+	$sql = "SELECT p.pubdate, u.id as uid, u.nickname as author, u.login as author_login
+			FROM cms_forum_threads t
+			LEFT JOIN cms_forum_posts p ON p.thread_id = t.id
+			LEFT JOIN cms_users u ON u.id = p.user_id
+			WHERE t.id = $thread_id
+			ORDER BY p.id DESC
 			LIMIT 1";
 	$result = $inDB->query($sql) ;
 	
 	if ($inDB->num_rows($result)){
 		$post = $inDB->fetch_assoc($result);
 		$html .= '<strong>'.$_LANG['LAST_POST'].': </strong><br/>';
-		$html .= forumDate($post['pubdate'], $post['daysleft']) . ' '.$_LANG['IN'].' ' .$post['pubtime'].' '.$_LANG['FROM'].' <a href="'.cmsUser::getProfileURL($post['author_login']).'">'.$post['author'].'</a>';
+		$html .= $inCore->dateFormat($post['pubdate'], true, true).' '.$_LANG['FROM'].' <a href="'.cmsUser::getProfileURL($post['author_login']).'">'.$post['author'].'</a>';
 	} else { $html .= $_LANG['NOT_POSTS']; }
 	
 	return $html;
@@ -563,10 +564,11 @@ function threadLastMessageData($thread_id){
     $inDB   = cmsDatabase::getInstance();
 	$data = array();
 	
-	$sql = "SELECT DATE_FORMAT(p.pubdate, '%d-%m-%Y') as pubdate, DATE_FORMAT(p.pubdate, '%H:%i') as pubtime, p.content as msg,
-				   (TO_DAYS(CURDATE()) - TO_DAYS(p.pubdate)) as daysleft, u.id as uid, u.nickname as author, u.login as login
-			FROM cms_forums f, cms_forum_threads t, cms_forum_posts p, cms_users u
-			WHERE t.id = $thread_id AND p.thread_id = t.id AND p.user_id = u.id
+	$sql = "SELECT p.pubdate, p.content as msg, u.id as uid, u.nickname as author, u.login as login
+			FROM cms_forum_threads t
+			LEFT JOIN cms_forum_posts p ON p.thread_id = t.id
+			LEFT JOIN cms_users u ON u.id = p.user_id
+			WHERE t.id = $thread_id
 			ORDER BY p.pubdate DESC
 			LIMIT 1";
 	$result = $inDB->query($sql) ;
@@ -574,12 +576,7 @@ function threadLastMessageData($thread_id){
 	if ($inDB->num_rows($result)){
 		$post = $inDB->fetch_assoc($result);
 
-		if ($post['daysleft']==0){
-			$data['date'] = '<div style="text-align:center;font-weight:bold">'.$post['pubtime'].'</div>';
-		} else {
-			$data['date'] = '<div style="text-align:center">'.$post['pubdate'].'</div>';
-		}
-		
+		$data['date'] = '<div style="text-align:center">'.$inCore->dateFormat($post['pubdate']).'</div>';
 		$data['user']       = $post['author'];
         $data['login']      = $post['login'];
 		$data['user_id']    = $post['uid'];

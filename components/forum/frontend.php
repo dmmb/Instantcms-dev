@@ -806,8 +806,8 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 
 				if ($do=='newthread'){
 					//NEW THREAD
-					$title          = $inCore->request('title', 'str');
-					$description    = $inCore->request('description');
+					$title          = htmlspecialchars($_POST['title'], ENT_QUOTES, 'cp1251');
+					$description    = htmlspecialchars($_POST['description'], ENT_QUOTES, 'cp1251');
 												
 					if($title && $message){	
 						$sql = "INSERT INTO cms_forum_threads (forum_id, user_id, title, description, icon, pubdate, hits)
@@ -855,6 +855,8 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 					}
 				} else { //edit post
 					if($message){
+						$posts_in_thread = dbRowsCount('cms_forum_posts', 'thread_id='.$msg['thread_id']);
+						$pages = ceil($posts_in_thread / $cfg['pp_thread']);
 						$sql = "UPDATE cms_forum_posts 
 								SET content = '$message',
 									editdate = NOW(),
@@ -862,13 +864,17 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 								WHERE id = $id";
 						$inDB->query($sql) ;
 						$inCore->registerUploadImages(session_id(), $id, 'forum');						
+						if ($pages==1){
 						header('location:/forum/thread'.$msg['thread_id'].'.html');
+						} else {
+							header('location:/forum/thread'.$msg['thread_id'].'-'.$pages.'.html');
+						}					
 					} else { echo '<p>'.$_LANG['NEED_TEXT_POST'].'</p>'; }
 				}
 			}
 		}
 		
-	} else { usrNeedReg(); } //usrCheckAuth
+	} else { echo usrNeedReg(); } //usrCheckAuth
 	
 }
 ///////////////////////////// DELETE POST /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -929,8 +935,8 @@ if ($do=='movethread'){
 				header('location:/forum/'.$fid);			
 			}
 			
-		} else { usrAccessDenied(); }
-	} else { usrAccessDenied(); }
+		} else { echo usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 
 }
 ///////////////////////////// RENAME THREAD /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -987,8 +993,8 @@ if ($do=='renamethread'){
 				header('location:/forum/thread'.$tid.'.html');			
 			}
 			
-		} else { usrAccessDenied(); }
-	} else { usrAccessDenied(); }
+		} else { echo usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 }
 ///////////////////////////// DELETE THREAD /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='deletethread'){
@@ -1136,11 +1142,11 @@ if ($do=='reloadfile'){
 					echo '</form></div>'. "\n";				
 				}
 			
-			} else 	{ usrAccessDenied(); }
+			} else 	{ echo usrAccessDenied(); }
 		} else { echo '<p>'.$_LANG['FILE_NOT_FOUND'].'!</p>'; }
 	
 	
-	} else { usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

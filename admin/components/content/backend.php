@@ -52,6 +52,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         $cfg['img_big_w']   = $inCore->request('img_big_w', 'int', 200);
         $cfg['img_sqr']     = $inCore->request('img_sqr', 'int', 1);
         $cfg['img_users']   = $inCore->request('img_users', 'int', 1);
+		$cfg['watermark']   = $inCore->request('watermark', 'int', 0);
+		$cfg['watermark_only_big']   = $inCore->request('watermark_only_big', 'int', 0);
 
         $cfg['af_on']           = $inCore->request('af_on', 'int', 0);
         $cfg['af_delete']       = $inCore->request('af_delete', 'int', 1);
@@ -175,6 +177,23 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                 <input name="img_users" type="radio" value="1" <?php if (@$cfg['img_users']) { echo 'checked="checked"'; } ?>/> Да
                 <input name="img_users" type="radio" value="0" <?php if (@!$cfg['img_users']) { echo 'checked="checked"'; } ?>/> Нет
             </td>
+        </tr>
+        <tr>
+           <td><strong>Наносить водяной знак:</strong>  <br />Если включено, то на все загружаемые
+			      фотографии к статьям будет наносится изображение 
+			      из файла "<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>"</td>
+           <td width="260">
+               <input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?> /> Да
+               <input name="watermark" type="radio" value="0"  <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?> /> Нет
+           </td>
+        </tr>
+        <tr>
+           <td><strong>Наносить водяной знак только на большую копию:</strong><br />
+           Работает только с включенной опцией "Наносить водяной знак"</td>
+           <td width="260">
+               <input name="watermark_only_big" type="radio" value="1" <?php if (@$cfg['watermark_only_big']) { echo 'checked="checked"'; } ?> /> Да
+               <input name="watermark_only_big" type="radio" value="0"  <?php if (@!$cfg['watermark_only_big']) { echo 'checked="checked"'; } ?> /> Нет
+           </td>
         </tr>
     </table>
     {tab=Автофорум}

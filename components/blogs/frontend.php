@@ -258,7 +258,9 @@ if ($do=='config'){
 ////////// СПИСОК БЛОГОВ ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){
 
-	$inPage->setTitle($_LANG['BLOGS']);
+    //Получаем номер страницы и число записей на одну страницу
+    $perpage    = isset($cfg['perpage']) ? $cfg['perpage'] : 15;
+    $page       = $inCore->request('page', 'int', 1);
 
     //Получаем ID пользователя
 	$user_id 		= $inUser->id;
@@ -266,9 +268,10 @@ if ($do=='view'){
     //Считаем количество персональных и коллективных блогов
 	$single_blogs	= $model->getSingleBlogsCount();
 	$multi_blogs 	= $model->getMultiBlogsCount();
+	$total_blogs 	= $single_blogs + $multi_blogs;
 
     //Получаем список блогов
-    $blogs_list     = $model->getBlogs($ownertype);
+    $blogs_list     = $model->getBlogs($ownertype, $page, $perpage);
   	
 	$blogs      = array();   //Массив блогов для вывода
     $is_blogs   = false;     //Флаг, показывающий есть ли блоги, которые можно видеть текущему пользователю
@@ -283,6 +286,8 @@ if ($do=='view'){
             $blog['url']        = $model->getBlogURL(null, $blog['seolink']);
             //Считаем число комментариев
             $blog['comments']   = blogComments($blog['id']);
+			//Нормализуем дату создания
+			$blog['pubdate']    = $inCore->dateFormat($blog['pubdate']);
             //Форматируем значение кармы блога
             $blog['karma']      = cmsKarmaFormatSmall($blog['points']);
             //Отмечаем флаг наличия видимых блогов
@@ -291,16 +296,32 @@ if ($do=='view'){
             $blogs[]            = $blog;
         }
 	}	
-
+    //Генерируем панель со страницами и устанавливаем заголовки страниц и глубиномера
+	switch ($ownertype){
+			case 'all': 	$inPage->setTitle($_LANG['ALL_BLOGS']);
+							$inPage->addPathway($_LANG['ALL_BLOGS']);
+							$pagination = cmsPage::getPagebar($total_blogs, $page, $perpage, '/blogs/all-%page%.html');
+							break;
+			case 'single':	$inPage->setTitle($_LANG['PERSONALS']);
+							$inPage->addPathway($_LANG['PERSONALS']);
+							$pagination = cmsPage::getPagebar($single_blogs, $page, $perpage, '/blogs/single-%page%.html');
+							break;
+			case 'multi':  	$inPage->setTitle($_LANG['COLLECTIVES']);
+							$inPage->addPathway($_LANG['COLLECTIVES']);
+							$pagination = cmsPage::getPagebar($multi_blogs, $page, $perpage, '/blogs/multi-%page%.html');
+							break;
+	}
     //Выводим список блогов
 	$smarty = $inCore->initSmarty('components', 'com_blog_view_all.tpl');				
 	$smarty->assign('cfg', $cfg);
 	$smarty->assign('single_blogs', $single_blogs);
 	$smarty->assign('multi_blogs', $multi_blogs);
+	$smarty->assign('total_blogs', $total_blogs);
 	$smarty->assign('ownertype', $ownertype);
 	$smarty->assign('is_admin', $inCore->userIsAdmin($user_id));
 	$smarty->assign('blogs', $blogs);
 	$smarty->assign('is_blogs', $is_blogs);	
+	$smarty->assign('pagination', $pagination);
 	$smarty->display('com_blog_view_all.tpl');
 
 }
@@ -627,6 +648,8 @@ if ($do=='newpost' || $do=='editpost'){
         return;
     }
 
+	$inPage->addPathway($blog['title'], $model->getBlogURL(null, $blog['seolink']));
+	
     //для нового поста
 	if ($do=='newpost'){
         //Проверяем доступ
@@ -642,16 +665,16 @@ if ($do=='newpost' || $do=='editpost'){
         //Проверяем доступ
         $is_post_author = $model->isUserPostAuthor($post_id, $user_id);
 		if (!$myblog && !$is_post_author && !$is_admin) { $inCore->redirectBack(); }
-        //Устанавливаем заголовки
-        $inPage->addPathway($_LANG['EDIT_POST']);
-		$inPage->setTitle($_LANG['EDIT_POST']);
-		$inPage->printHeading($_LANG['EDIT_POST']);
         //Получаем исходный пост из базы
         $post = $model->getPost($post_id);
         if (!$post){ $inCore->redirectBack(); }
+        //Устанавливаем заголовки
+		$inPage->addPathway($post['title'], $model->getPostURL(null, $blog['seolink'], $post['postlink']));
+        $inPage->addPathway($_LANG['EDIT_POST'], $_SERVER['REQUEST_URI']);
+		$inPage->setTitle($_LANG['EDIT_POST']);
+		$inPage->printHeading($_LANG['EDIT_POST']);
 	}
 
-	$inPage->addPathway($blog['title'], $model->getBlogURL(null, $blog['seolink']));
 	$inPage->initAutocomplete();
 
     //Удаляем промежуточные данные о загруженных изображениях
@@ -664,7 +687,7 @@ if ($do=='newpost' || $do=='editpost'){
         $cat_list   = blogCategoryList($post['cat_id'], $id);
 
         //получаем код панелей bbcode и смайлов
-        $bb_toolbar = cmsPage::getBBCodeToolbar('message',$cfg['img_on'], 'blog');
+        $bb_toolbar = cmsPage::getBBCodeToolbar('message',$cfg['img_on'], 'blogs');
         $smilies    = cmsPage::getSmilesPanel('message');
 
         //подготавливаем текст поста, если пост загружен
@@ -785,7 +808,7 @@ if ($do=='newpost' || $do=='editpost'){
                                                     'allow_who'=>$allow_who,
                                                     'published'=>$published,
                                                     'tags'=>$tags
-                                                 ));
+                                                 ), $cfg['update_seo_link']);
 
                 if ($cfg['update_date']){
                     $inDB->query("UPDATE cms_blog_posts SET pubdate = NOW() WHERE id={$post_id}");
@@ -832,9 +855,9 @@ if ($do=='newcat' || $do=='editcat'){
     //Редактирование рубрики
     if ($do=='editcat'){
         //Устанавливаем заголовки и глубиномер
-		$inPage->addPathway($_LANG['EDIT_CAT']);
-		$inPage->setTitle($_LANG['EDIT_CAT']);
-		$inPage->printHeading($_LANG['EDIT_CAT']);
+		$inPage->addPathway($_LANG['RENAME_CAT']);
+		$inPage->setTitle($_LANG['RENAME_CAT']);
+		$inPage->printHeading($_LANG['RENAME_CAT']);
         //Загружаем рубрику
         $cat    = $model->getBlogCategory($cat_id);
         if (!$cat) {
@@ -918,14 +941,12 @@ if($do=='post'){
     //Если авторизован, проверяем является ли он хозяином блога или его администратором
     if ($user_id){
         if ($owner=='user'){
-            $myblog     = ($inUser->id == $blog['user_id']) ;
             $is_author  = (((!$myblog) && $blog['ownertype']=='multi' && $inDB->get_field('cms_blog_authors', 'blog_id='.$blog['id'].' AND user_id='.$user_id, 'id')) || ($blog['ownertype']=='multi' && $blog['forall']));
             $is_admin   = $inCore->userIsAdmin($user_id);
         }
         if ($owner=='club'){
-            $myblog     = clubUserIsMember($blog['user_id'], $user_id);
             $is_moder   = clubUserIsRole($blog['user_id'], $user_id, 'moderator');
-            $is_author  = $myblog;
+            $is_author  = ($inUser->id == $post['user_id']);
             $is_admin   = clubUserIsAdmin($blog['user_id'], $user_id) || $inCore->userIsAdmin($user_id);
         }
     }
@@ -1150,7 +1171,7 @@ if ($do == 'delcat'){
                 $smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
                 $smarty->assign('confirm', $confirm);
                 $smarty->display('action_confirm.tpl');
-            } else { usrAccessDenied(); }
+            } else { echo usrAccessDenied(); }
         }
     }
 

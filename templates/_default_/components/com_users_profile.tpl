@@ -134,7 +134,7 @@
 			<div id="profiletabs">
 				<ul id="tabs"> 
 					<li><a href="#upr_profile"><span>{$LANG.PROFILE}</span></a></li>
-					{if $myprofile && $cfg.sw_feed}
+					{if $myprofile && $cfg.sw_feed && $cfg.sw_friends}
 						<li><a href="#upr_feed"><span>{$LANG.FEED}</span></a></li>
 					{/if}
                     {if $cfg.sw_content}
@@ -260,7 +260,7 @@
 				</div>
 				
 				{* ============================== «¿ À¿ƒ ¿ π2 ============================================== *}
-				{if $myprofile && $cfg.sw_feed}
+				{if $myprofile && $cfg.sw_feed && $cfg.sw_friends}
 					<div id="upr_feed">
                         {if $usr.friends}
                             <div class="usr_friends_feed">
@@ -309,7 +309,11 @@
                                                 </td>
                                                 <td>
                                                     <a href="{profile_url login=$photo.login}" class="nickname">{$photo.nickname}</a> &rarr;
+                                                {if $photo.user_id}
+                                                	<a href="/users/{$photo.user_id}/photo{$photo.id}.html">{$photo.title}</a>
+                                                {else}
                                                     <a href="/photos/photo{$photo.id}.html">{$photo.title}</a>
+                                                {/if}    
                                                 </td>                                                
                                             </tr>
                                         {/foreach}

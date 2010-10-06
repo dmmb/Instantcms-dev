@@ -9,6 +9,7 @@
 		<td width="35" valign="top"><img src="/components/faq/images/quest.gif" border="0" /></td>
 		<td width="" valign="top">
 			<div class="faq_questtext">{$quest.quest}</div>
+            <div class="faq_questuser"><a href="{profile_url login=$quest.login}">{$quest.nickname}</a> &rarr; </div>
 			<div class="faq_questdate">{$quest.pubdate}</div>
 		</td>	
 	</tr>

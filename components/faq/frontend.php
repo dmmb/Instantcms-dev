@@ -11,33 +11,6 @@
 /*********************************************************************************************/
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-function pageBar($cat_id, $current, $perpage){
-    $inCore = cmsCore::getInstance();
-    $inDB = cmsDatabase::getInstance();
-    $id = $inCore->request('id', 'int');
-    global $_LANG;
-	$html = '';
-	$result = $inDB->query("SELECT id FROM cms_faq_quests WHERE category_id = $cat_id") ;
-	$records = $inDB->num_rows($result);
-	if ($records){
-		$pages = ceil($records / $perpage);
-		if($pages>1){
-			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
-			for ($p=1; $p<=$pages; $p++){
-				if ($p != $current) {			
-					$link = '/faq/'.$id.'-'.$p;
-					$html .= ' <a href="'.$link.'" class="pagebar_page">'.$p.'</a> ';		
-				} else {
-					$html .= '<span class="pagebar_current">'.$p.'</span>';
-				}
-			}
-			$html .= '</div>';
-		}
-	}
-	return $html;
-}
-
 function faq(){
 
     $inCore = cmsCore::getInstance();
@@ -57,7 +30,7 @@ if ($do=='view'){
 	$sql = "SELECT *
 			FROM cms_faq_cats
 			WHERE id = '$id'
-			ORDER BY title ASC
+			ORDER BY title ASC LIMIT 1
 			";		
 	
 	$result = $inDB->query($sql) ;
@@ -75,7 +48,7 @@ if ($do=='view'){
 	}
 	
 	//PATHWAY ENTRY
-	if (@$cat['title']) { $inPage->addPathway($cat['title']); }
+	if ($cat['title']) { $inPage->addPathway($cat['title']); }
 
 	//LIST OF SUBCATEGORIES
 	$sql = "SELECT *
@@ -97,22 +70,24 @@ if ($do=='view'){
 	}
 	
 	//CURRENT CATEGORY CONTENT
-	$perpage = 20;
+	$perpage = 15;
 	$page = $inCore->request('page', 'int', 1);	
 	
 	if ($id > 0){		
-		$perpage = 20;
-		if (isset($_REQUEST['page'])) { $page = abs((int)$_REQUEST['page']); } else { $page = 1; }
-
-		$sql = "SELECT *, DATE_FORMAT(pubdate, '%d-%m-%Y') pubdate
-				FROM cms_faq_quests
-				WHERE category_id = $id AND published = 1
-				ORDER BY cms_faq_quests.pubdate DESC
+		$sql = "SELECT q.*, u.login, u.nickname
+				FROM cms_faq_quests q
+				LEFT JOIN cms_users u ON u.id = q.user_id
+				WHERE q.category_id = $id AND q.published = 1
+				ORDER BY q.pubdate DESC
 				LIMIT ".(($page-1)*$perpage).", $perpage";		
+		$result_total = $inDB->query("SELECT id FROM cms_faq_quests WHERE category_id = $id AND published = 1") ;
+		$records = $inDB->num_rows($result_total);	
 	} else {
-		$sql = "SELECT q.*, DATE_FORMAT(q.pubdate, '%d-%m-%Y') pubdate, c.title cat_title, c.id cid
-				FROM cms_faq_quests q, cms_faq_cats c
-				WHERE q.published = 1 AND q.category_id = c.id
+		$sql = "SELECT q.*, c.title cat_title, c.id cid, u.login, u.nickname
+				FROM cms_faq_quests q
+				LEFT JOIN cms_faq_cats c ON c.id = q.category_id
+				LEFT JOIN cms_users u ON u.id = q.user_id
+				WHERE q.published = 1
 				ORDER BY q.pubdate DESC
 				LIMIT 10";			
 	}
@@ -121,6 +96,7 @@ if ($do=='view'){
 	if ($inDB->num_rows($result)){	
 		$quests = array();
 		while($con = $inDB->fetch_assoc($result)){
+			$con['pubdate'] = $inCore->dateFormat($con['pubdate'], true, false, false);
 			$quests[] = $con;	
 		}
 		$is_quests = true;		
@@ -135,20 +111,20 @@ if ($do=='view'){
 	$smarty->assign('is_subcats', $is_subcats);	
 	$smarty->assign('quests', $quests);
 	$smarty->assign('is_quests', $is_quests);	
-	$smarty->assign('pagebar', pageBar($id, $page, $perpage));		
+	$smarty->assign('pagebar', cmsPage::getPagebar($records, $page, $perpage, '/faq/%id%-%page%', array('id'=>$id)));		
 	$smarty->display('com_faq_view.tpl');		
 				
 }
 
 ///////////////////////////////////// READ QUESTION ////////////////////////////////////////////////////////////////////////////////
 if ($do=='read'){
-		$sql = "SELECT con.*, DATE_FORMAT(con.pubdate, '%d-%m-%Y') pubdate, 
-						DATE_FORMAT(con.answerdate, '%d-%m-%Y') answerdate, 
+		$sql = "SELECT con.*,
 						DATE_FORMAT(con.pubdate, '%d-%m-%Y') shortdate,
-						cat.title cat_title, cat.id cat_id
-				FROM cms_faq_quests con, cms_faq_cats cat
-				WHERE con.id = $id AND con.category_id = cat.id
-				";
+						cat.title cat_title, cat.id cat_id, u.login, u.nickname
+				FROM cms_faq_quests con
+				LEFT JOIN cms_faq_cats cat ON cat.id = con.category_id
+				LEFT JOIN cms_users u ON u.id = con.user_id
+				WHERE con.id = $id LIMIT 1";
 				
 		$result = $inDB->query($sql) ;
 	
@@ -156,7 +132,8 @@ if ($do=='read'){
 			$inDB->query("UPDATE cms_faq_quests SET hits = hits + 1 WHERE id = $id") ;
 		
 			$quest = $inDB->fetch_assoc($result);									
-			
+			$quest['pubdate'] = $inCore->dateFormat($quest['pubdate'], true, false, false);
+			$quest['answerdate'] = $inCore->dateFormat($quest['answerdate'], true, false, false);
 			if (strlen($quest['quest'])>40) { $shortquest = substr($quest['quest'], 0, 40).'...'; }
 			else { $shortquest = $quest['quest']; }
 			
@@ -184,7 +161,7 @@ if ($do=='sendquest'){
     $error          = '';
     $captha_code    = $inCore->request('code', 'str', '');
     $message        = $inCore->request('message', 'str', '');
-    $category_id    = $inCore->request('category_id', 'int', 0);
+    $category_id    = $inCore->request('category_id', 'int', '');
     $published      = ($inUser->is_admin ? 1 : 0);
     $is_submit      = $inCore->inRequest('message');
 

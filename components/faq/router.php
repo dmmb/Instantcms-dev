@@ -23,6 +23,11 @@
                             '_uri'  => '/^faq\/sendquest.html$/i',
                             'do'    => 'sendquest'
                          );
+        $routes[] = array(
+                            '_uri'  => '/^faq\/sendquest([0-9]+).html$/i',
+                            'do'    => 'sendquest',
+                            1       => 'category_id'
+                         );
 
         return $routes;
 

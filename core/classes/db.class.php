@@ -154,7 +154,7 @@ public function get_last_id($table){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public function rows_count($table, $where, $limit=0){
-    $sql = "SELECT * FROM $table WHERE $where";
+    $sql = "SELECT 1 FROM $table WHERE $where";
 
     if ($limit) { $sql .= " LIMIT ".$limit; }
 
@@ -262,7 +262,7 @@ public function isFieldType($table, $field, $type){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public function isTableExists($table){
 
-    $sql    = "SELECT * FROM $table LIMIT 1";
+    $sql    = "SELECT 1 FROM $table LIMIT 1";
     $result = @$this->query($sql, true);
     
     if ($this->errno()){ return false; }

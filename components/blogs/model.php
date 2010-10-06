@@ -360,26 +360,28 @@ class cms_model_blogs{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function getBlogs($ownertype){
+    public function getBlogs($ownertype, $page, $perpage){
         $list = array();
 
         //Формируем запрос
         $sql = "SELECT u.id, b. * , u.id AS uid, u.nickname AS author, u.login as author_login, 
                        COUNT(p.id) as records,
                        b.rating AS points
-                FROM cms_users u, cms_blogs b
-                LEFT JOIN cms_blog_posts p ON p.blog_id = b.id
-                WHERE b.user_id = u.id ";
+                FROM cms_blogs b
+				LEFT JOIN cms_users u ON u.id = b.user_id
+                LEFT JOIN cms_blog_posts p ON p.blog_id = b.id ";
 
         //Добавляем к запросу ограничение по типу хозяина (пользователи или клубы)
         if ($ownertype!='all') { 
-            $sql .= "AND ownertype='$ownertype' AND owner='user'\n";
+            $sql .= "WHERE ownertype='$ownertype' AND owner='user'\n";
         } else {
-            $sql .= "AND owner='user'";
+            $sql .= "WHERE owner='user'";
         }
 
         $sql .= "GROUP BY b.id
                  ORDER BY rating DESC";
+		// если передали страницу и кол-во страниц, то добавляем LIMIT
+		if ($page && $perpage) { $sql .= " LIMIT ".(($page-1)*$perpage).", $perpage"; }
 
         $result = $this->inDB->query($sql);
 
@@ -454,7 +456,8 @@ class cms_model_blogs{
                    u.nickname as author,
                    u.login as author_login, 
                    u.id as author_id,
-                   b.seolink as bloglink
+                   b.seolink as bloglink,
+				   p.seolink as postlink
 			FROM cms_blog_posts p, cms_blogs b, cms_users u
 			WHERE p.id = $post_id AND p.blog_id = b.id AND p.user_id = u.id LIMIT 1";
 
@@ -734,12 +737,16 @@ class cms_model_blogs{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function updatePost($post_id, $item){
+    public function updatePost($post_id, $item, $update_seo_link = 0){
 
         $item = cmsCore::callEvent('UPDATE_POST', $item);
 
         $item['id']         = $post_id;
+		$seo_sql = '';
+		if ($update_seo_link){
         $item['seolink']    = $this->getPostSeoLink($item);
+			$seo_sql = ', seolink = "'.$item['seolink'].'"';
+		}
 
         $sql = "UPDATE cms_blog_posts
                 SET cat_id={$item['cat_id']},
@@ -749,7 +756,7 @@ class cms_model_blogs{
                     content='{$item['content']}',
                     allow_who='{$item['allow_who']}',
                     edit_times = edit_times+1,
-                    edit_date = NOW()
+                    edit_date = NOW(){$seo_sql}
                 WHERE id = $post_id";
         
         $result = $this->inDB->query($sql);

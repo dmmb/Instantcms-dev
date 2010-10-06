@@ -472,8 +472,6 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 	if (isset($_REQUEST['filter'])) { 
 		$filter = $_REQUEST['filter'];
 		$_SESSION['filter'] = $filter;
-	} elseif (isset($_SESSION['filter'])) {
-		$filter = $_SESSION['filter']; 
 	}
 	
 	if ($filter){
@@ -485,7 +483,11 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 				if ($f > 1){
 					$sql .= ' AND ';
 				}
+				if ($key != 'category_id'){
 				$sql .= $key . " LIKE '%" . $filter[$key] . "%'";
+				} else {
+					$sql .= $key . " = '" . $filter[$key] . "'";
+				}
 			}				
 		}
 		if (!isset($_SESSION['filter'])) { $_SESSION['filter'] = $filter; }
@@ -1220,6 +1222,8 @@ function cpMenutypeById($id){
 		case 'uccat':			$html = '<span id="menutype"><a href="'.$item['link'].'">Каталог</a></span> - '.$inDB->get_field('cms_uc_cats', 'id='.$item['linkid'], 'title');
 					 			break;
 		case 'blog':			$html = '<span id="menutype"><a href="'.$item['link'].'">Блог</a></span> - '.$inDB->get_field('cms_blogs', 'id='.$item['linkid'], 'title');
+					 			break;
+		case 'photoalbum':		$html = '<span id="menutype"><a href="'.$item['link'].'">Фотоальбом</a></span> - '.$inDB->get_field('cms_photo_albums', 'id='.$item['linkid'], 'title');
 					 			break;
 	}	
 	$clear = strip_tags($html);

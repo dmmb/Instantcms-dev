@@ -89,10 +89,11 @@ function usrForm($user_id, $form_id, $formsdata){
 								if ($formsdata[$field['id']]){
 									$default = $formsdata[$field['id']];	
 									$default = nl2br($default);
+									$default = cmsPage::getMetaSearchLink('/users/hobby/', $default);
 								}
 							}                            
 						}
-						$html .= '<td valign="top" id="field">'.cmsPage::getMetaSearchLink('/users/hobby/', $default).'</td></tr>';
+						$html .= '<td valign="top" id="field">'.$default.'</td></tr>';
 					}					
 					$html .= '</table>';												
 				} else { $html .= '<p>'.$_LANG['IN_FORM'].' "'.$form['title'].'" '.$_LANG['NOT_FIELDS'].'.</p>'; }

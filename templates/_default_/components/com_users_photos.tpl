@@ -1,6 +1,7 @@
 {* ================================================================================ *}
 {* ======================== Ôמעמאכüבמל ןמכüחמגאעוכÿ =============================== *}
 {* ================================================================================ *}
+<div class="con_heading"><a href="{profile_url login=$usr.login}">{$usr.nickname}</a> &rarr; {$LANG.PHOTOALBUM}</div>
 
 {if $my_profile}
     <table cellspacing="0" cellpadding="2" style="margin-bottom: 10px;">
@@ -27,8 +28,8 @@
                             <img border="0" src="{$photo.file}" alt="{$photo.title}"/>
                         </a>
                         <div style="padding:4px;">
-                            <span style="font-size:10px; display:block"><strong>{$_LANG.DATE}:</strong> {$photo.fpubdate}</span>
-                            <span style="font-size:10px; display:block"><strong>{$_LANG.HITS}:</strong> {$photo.hits}</span>
+                            <span style="font-size:10px; display:block"><strong>{$LANG.DATE}:</strong> {$photo.fpubdate}</span>
+                            <span style="font-size:10px; display:block"><strong>{$LANG.HITS}:</strong> {$photo.hits}</span>
                         </div>
                     </div>
 				</td> 

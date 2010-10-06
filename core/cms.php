@@ -1165,6 +1165,7 @@ class cmsCore {
      * Определяет текущий компонент
      * Считается, что компонент указан в первом сегменте URI,
      * иначе подключается компонент для главной страницы
+	 * Критерий "включенности" компонента определяется в функции loadComponentConfig
      * @return string $component
      */
     private function detectComponent(){
@@ -1217,7 +1218,9 @@ class cmsCore {
         if (!$component || !$this->uri) { return false; }
 
         if(!file_exists('components/'.$component.'/router.php')){ return false; }
-
+		/**
+		 * Критерий "включенности" компонента определяется в функции loadComponentConfig
+		 */
         //подключаем список маршрутов компонента
         $this->includeFile('components/'.$component.'/router.php');
 
@@ -1272,7 +1275,9 @@ class cmsCore {
 
         //проверяем что компонент указан
         if (!$component) { return false; }
-
+		/**
+		 * Критерий "включенности" компонента определяется в функции loadComponentConfig
+		 */
         //проверяем что в названии только буквы и цифры
         if (!eregi("^[a-z0-9]+$", $component)){ cmsCore::error404(); }
         
@@ -1637,7 +1642,9 @@ class cmsCore {
 
         if (isset($this->component_configs[$component])) { return $this->component_configs[$component]; }
 
-        $config_yaml = $inDB->get_field('cms_components', "link='{$component}'", 'config');
+        $config_yaml = $inDB->get_field('cms_components', "link='{$component}' AND published = 1", 'config');
+
+		if (!$config_yaml) { $this->error404(); }
 
         $config = $this->yamlToArray($config_yaml);
 
@@ -2073,6 +2080,9 @@ class cmsCore {
         if ($linktype=='pricecat'){
             $menulink = '/price/'.$linkid;
         }
+        if ($linktype=='photoalbum'){
+            $menulink = '/photos/'.$linkid;
+        }
 
         return $menulink;
 
@@ -2106,7 +2116,7 @@ class cmsCore {
             } else {
                 $s = '';
             }
-            $html .= '<option value="'.$item[$id_field].'" '.$s.'>'.$item[$title_field].'</option>';
+            $html .= '<option value="'.htmlspecialchars($item[$id_field]).'" '.$s.'>'.$item[$title_field].'</option>';
         }
         return $html;
     }
@@ -2148,7 +2158,7 @@ class cmsCore {
                     } else {
                         $padding = '';
                     }
-                    $html .= '<option value="'.$node['id'].'" '.$s.'>'.$padding.$node['title'].'</option>';
+                    $html .= '<option value="'.htmlspecialchars($node['id']).'" '.$s.'>'.$padding.$node['title'].'</option>';
                 }
             }
         }
@@ -2388,7 +2398,7 @@ class cmsCore {
     public function getCommentsCount($target, $target_id){
         $inDB = cmsDatabase::getInstance();
         if ($this->isComponentInstalled('comments')){
-            $sql = "SELECT id FROM cms_comments WHERE target = '$target' AND target_id = '$target_id'";
+            $sql = "SELECT id FROM cms_comments WHERE target = '$target' AND target_id = '$target_id' AND published = 1";
             $result = $inDB->query($sql) ;
             return $inDB->num_rows($result);
         } else { return 0; }

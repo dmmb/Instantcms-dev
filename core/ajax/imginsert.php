@@ -34,6 +34,7 @@
 
 		if (!isset($cfg['img_max'])) { $cfg['img_max'] = 10; } 
 		if (!isset($cfg['img_on'])) { $cfg['img_on'] = 1; } 
+		if (!isset($cfg['watermark'])) { $cfg['watermark'] = 0; } 
 		
 		if ($cfg['img_on']){
 		
@@ -56,15 +57,15 @@
 					$uploadphoto    = $uploaddir . $filename;
 			
 					if (@move_uploaded_file($_FILES['attach_img']['tmp_name'], $uploadphoto)) {		
-					
+						$inCore->includeGraphics();
 						$sql = "INSERT INTO cms_upload_images (post_id, session_id, fileurl, target)
 								VALUES ('0', '".session_id()."', '/upload/".$place."/$filename', '$place')";
 						$inDB->query($sql);
 
 					    $filepath	= PATH."/upload/".$place."/".$filename;
 						$filedir 	= PATH."/upload/".$place;
+						if ($cfg['watermark']) { @img_add_watermark($filepath); }
 	                    @chmod(dirname($filedir), 0755);
-									
 						echo "{";
 						echo	"error: '',\n";
 						echo	"msg: '".$filename."'\n";

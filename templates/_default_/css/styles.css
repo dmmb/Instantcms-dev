@@ -392,6 +392,8 @@ td{
 	background:url(/images/icons/rssitem.gif) no-repeat left center;
 	height:16px;
 	line-height:16px;
+	text-decoration:underline;
+	color:#333
 }
 
 .mod_latest_rss a{
@@ -544,6 +546,57 @@ td{
 	padding:5px;
 	background-color:#EBEBEB;
 }
+.photo_row{
+	height:auto !important;
+	overflow:hidden;
+	padding:0.8em 0;
+	width:99%;
+}
+.photo_album_tumb{
+height:100%;
+float:left;
+position:relative;
+}
+.photo_container{
+text-align:center !important;
+}
+.photo_album_img{
+background-color:#FFFFFF;
+background-image:none;
+border:1px solid #C0C0C0;
+margin:0 0.3em 0.3em 0;
+padding:3px;
+vertical-align:bottom;
+}
+.photo_txt{
+text-align:center !important;
+}
+.photo_container_today{
+	color:#09F;
+	font-weight:bold;
+	position:absolute;
+	top: 40px;
+	left: 10px;
+	z-index: 1;
+	margin:0;
+	padding:0;
+}
+.photo_txt ul {
+margin:0 !important;
+padding:0 !important;
+list-style-image:none;
+list-style-position:outside;
+list-style-type:none;
+}
+.photo_txt li {
+background-image:none;
+line-height:115% !important;
+list-style-image:none;
+list-style-type:none;
+margin:0 !important;
+padding:0 !important;
+}
+
 /*---------------------------- ARTICLE CONTENTS ------------------------------*/
 .con_pt {
 	display:block;
@@ -601,7 +654,9 @@ td{
 	text-decoration:underline;
 	color:#666666;
 }
-
+.mod_com_line{
+margin:7px 0;
+}
 /*--------------------- MODULE "LATEST FORUM WEB2.0" -------------------------*/
 .mod_fweb2_userlink{
 	text-decoration:underline;
@@ -968,6 +1023,14 @@ a.new_user_link { font-size:14px; font-weight:bold; margin-left:15px; }
 	margin-top:2px;
 	width:100px;
 	float:left;
+}
+.faq_questuser{
+	padding:2px 2px 2px 20px;
+	font-size:10px;
+	text-align:center;
+	margin-top:2px;
+	float:left;
+	background:url(/images/icons/users.gif) no-repeat;
 }
 .faq_questcat{
 	padding:2px;
@@ -2270,7 +2333,7 @@ div.stat_block_bday { margin-left: 20px;    }
 div.stat_block_bday div.title { padding-left:18px; background:url(/components/users/images/birthday.gif) no-repeat left center; font-size:16px; color:#006699;; font-weight:bold; margin-bottom:5px; margin-top:20px;}
 div.stat_block_bday div.body { text-indent:30px; }
 
-div#user_ratings { padding:10px; padding-bottom:0px; width:200px;}
+div#user_ratings { padding:10px; }
 
 div#user_ratings div.karma, div#user_ratings div.rating { float:left; text-align:center; width: 50%; }
 
@@ -2289,9 +2352,7 @@ div#user_ratings .rating .value {  background-color:#006699; color:#FFF; padding
 div#user_profile_url{
     clear:both;
     display:block;
-    padding:15px;
-    margin-top:15px;
-    border:dashed 1px silver;
+    padding-top:15px;
     text-align:center;
 }
 
@@ -2299,7 +2360,10 @@ div.usr_clubs {padding: 15px; }
 div.usr_clubs span.label { margin-right:15px; font-weight:bold; }
 div.usr_clubs a.usr_club_link { padding-left:18px; background:url(/images/icons/club.gif) no-repeat left center; height:16px; line-height:16px; margin-right:5px; }
 
-div.usr_profile_menu{ margin-top:10px; clear:both; overflow:hidden; text-align:left; }
+div.usr_profile_menu{ margin-top:10px; clear:both; overflow:hidden; }
+
+div.usr_profile_menu a { padding:4px; height:24px; width:24px; border: solid 1px #FFF; overflow:hidden; float:left; }
+div.usr_profile_menu a:hover { padding:4px; height:24px; width:24px; background-color:#ebebeb; border:solid 1px gray; overflow:hidden; float:left; }
 
 a.select-avatar{
     height:16px;

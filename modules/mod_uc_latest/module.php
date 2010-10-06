@@ -29,8 +29,6 @@ function mod_uc_latest($module_id){
 			$catsql = '';
 		}
 		
-		$showtype = $cfg['showtype'];
-
 		$sql = "SELECT i.*, i.pubdate as fdate, c.view_type as viewtype
 				FROM cms_uc_items i, cms_uc_cats c
 				WHERE i.published = 1 AND i.category_id = c.id ".$catsql."
@@ -39,58 +37,48 @@ function mod_uc_latest($module_id){
 
 		$result = $inDB->query($sql);
 		
+		$items = array();
+		$is_uc = false;
+		
 		if ($inDB->num_rows($result)){	
-			if ($showtype=='thumb'){
+			$is_uc = true;
+			if ($cfg['showtype']=='thumb'){
 					while($item = $inDB->fetch_assoc($result)){
-						echo '<div class="uc_latest_item">';
-							echo '<table border="0" cellspacing="2" cellpadding="0" width="100%">';
-								echo '<tr><td height="110" align="center" valign="middle">';
-									echo '<a href="/catalog/item'.$item['id'].'.html">';
-									if (strlen($item['imageurl'])>4) {
-										echo '<img alt="'.$item['title'].'" src="/images/catalog/small/'.$item['imageurl'].'.jpg" border="0" />';
-									} else {
-										echo '<img alt="'.$item['title'].'" src="/images/catalog/small/nopic.jpg" border="0" />';								
-									}
-									echo '</a>';
-								echo '</td></tr>';
-								echo '<tr><td align="center" valign="middle">';
-									echo '<a class="uc_latest_link" href="/catalog/item'.$item['id'].'.html">'.$item['title'].'</a>';								
-								echo '</td></tr>';	
+						if (strlen($item['imageurl'])<4) {
+							$item['imageurl'] = 'nopic';
+						} elseif (!file_exists(PATH.'/images/catalog/small/'.$item['imageurl'].'.jpg')) {
+							$item['imageurl'] = 'nopic';
+						} 
 								if ($item['viewtype']=='shop'){
-									echo '<tr><td align="center" valign="middle">';
-										$price = number_format($item['price'], 2, '.', ' ');
-										echo '<div id="uc_latest_price">'.$price.' руб.</div>';								
-									echo '</td></tr>';	
+							$item['price'] = number_format($item['price'], 2, '.', ' ');
 								}													
-							echo '</table>';
-						echo '</div>';				
+						$items[] = 	$item;												
 					}
 			}
 			
-			if ($showtype='list'){
-				echo '<table width="100%" cellspacing="0" cellpadding="4" class="uc_latest_list">';
+			if ($cfg['showtype']=='list'){
 					while($item = $inDB->fetch_assoc($result)){
-						$fdata = unserialize($item['fieldsdata']);
-						echo '<tr>';
-							echo '<td width="" valign="top"><a class="uc_latest_link" href="/catalog/item'.$item['id'].'.html">'.substr($item['title'], 0, 40).'...</a></td>';
+							$item['fieldsdata'] = unserialize($item['fieldsdata']);
+							$item['title'] = substr($item['title'], 0, 40);
+							
 							for($f = 0; $f<$cfg['showf']; $f++){
-								echo '<td valign="top">'.$inCore->getUCSearchLink($item['category_id'], null, $f, $fdata[$f]).'</td>';
+								$item['fdata'][] = $inCore->getUCSearchLink($item['category_id'], null, $f, $item['fieldsdata'][$f]);
 							}							
-							echo '<td width="" align="right" valign="top">'.$inCore->dateFormat($item['fdate']).'</td>';
-								echo '<td align="right">';
+													
+							$item['fdate'] = $inCore->dateFormat($item['fdate']);
 							if ($item['viewtype']=='shop'){
-									$price = number_format($item['price'], 2, '.', ' ');
-									echo '<div id="uc_latest_price">'.$price.' руб.</div>';	
+								$item['price'] = number_format($item['price'], 2, '.', ' ');
 							}	
-								echo '</td>';
-						echo '</tr>';
+							$items[] = 	$item;	
 					}				
-				echo '</table>';
-				if ($cfg['fulllink']){
-					echo '<div style="margin-top:5px; text-align:right; clear:both"><a href="/catalog">Весь каталог</a> &rarr;</div>';
 				}
 			}
-		} else { echo '<p>Нет объектов для отображения.</p>'; }
+		
+		$smarty = $inCore->initSmarty('modules', 'mod_latest_uc.tpl');			
+		$smarty->assign('items', $items);
+		$smarty->assign('cfg', $cfg);
+		$smarty->assign('is_uc', $is_uc);			
+		$smarty->display('mod_latest_uc.tpl');
 		
 		return true;
 }

@@ -15,7 +15,7 @@
 							<span class="hinttext">{$LANG.SHOW_ON_SITE}</span>
 						</td>
 						<td width="350" valign="top">
-						 	<input name="title" type="text" id="title" style="width:350px" value="{$mod.title}" />
+						 	<input name="title" type="text" id="title" style="width:350px" value="{$mod.title|escape:'html'}" />
 						</td>
 					</tr>
 					<tr>
@@ -24,7 +24,7 @@
 							<span class="hinttext">{$LANG.KEYWORDS_TEXT}</span>
 						</td>
 						<td valign="top">
-							<input name="tags" type="text" id="tags" style="width:350px" value="{$mod.tags}" />
+							<input name="tags" type="text" id="tags" style="width:350px" value="{$mod.tags|escape:'html'}" />
 							<script type="text/javascript">
 								{$autocomplete_js}
 							</script>
