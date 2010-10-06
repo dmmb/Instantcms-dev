@@ -12,8 +12,11 @@
 
         <param type="list" name="view_type" title="Показывать как">
             <option title="Таблица" value="table" />
+			<option title="Горизонтальная таблица" value="hr_table" />
             <option title="Список" value="list" />
         </param>
+		
+		<param type="number" name="maxcool" title="Количество колонок" default="2" />
 
     </params>
 

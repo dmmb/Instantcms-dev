@@ -13,6 +13,8 @@
         <param type="flag" name="showdesc" title="Показывать комментарии гостей" default="on" />
 
         <param type="flag" name="showrss" title="Ссылка на RSS" default="on" />
+		
+		<param type="flag" name="showtarg" title="Показывать цель и рейтинг" default="on" />
 
         <param type="list_db" multiple="1" name="targets" title="Показывать комментарии для" src="cms_comment_targets" src_title="title" src_value="target" />
 
