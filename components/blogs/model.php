@@ -714,7 +714,11 @@ class cms_model_blogs{
             $item['seolink'] = $this->getPostSeoLink($item);            
 
             $this->inDB->query("UPDATE cms_blog_posts SET seolink='{$item['seolink']}' WHERE id = {$post_id}");
+
+            cmsCore::callEvent('ADD_POST_DONE', $item);
+
         }
+
 
         return $post_id ? $post_id : false;
     }

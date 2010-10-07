@@ -450,13 +450,19 @@ class cms_model_content{
 
 		$article['id'] = $this->inDB->get_last_id('cms_content');
 
-        $article['seolink'] = $this->getSeoLink($article);
-        $this->inDB->query("UPDATE cms_content SET seolink='{$article['seolink']}' WHERE id = {$article['id']}");
+        if ($article['id']){
 
-        $inCore->loadLib('tags');
-		cmsInsertTags($article['tags'], 'content', $article['id']);
+            $article['seolink'] = $this->getSeoLink($article);
+            $this->inDB->query("UPDATE cms_content SET seolink='{$article['seolink']}' WHERE id = {$article['id']}");
 
-        return $article['id'];
+            $inCore->loadLib('tags');
+            cmsInsertTags($article['tags'], 'content', $article['id']);
+
+            cmsCore::callEvent('ADD_ARTICLE_DONE', $article);
+            
+        }
+
+        return $article['id'] ? $article['id'] : false;
     }
 
 /* ==================================================================================================== */

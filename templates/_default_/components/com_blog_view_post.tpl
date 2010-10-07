@@ -11,6 +11,14 @@
     </div>
 {/if}
 
+{if $ping_result}
+    <p>
+        {foreach key=tid item=result from=$ping_result}
+            <div style="color:gray">{$result}</div>
+        {/foreach}
+    </p>
+{/if}
+
 <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:15px">
 	<tr>
 		<td>
