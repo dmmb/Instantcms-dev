@@ -99,9 +99,8 @@
 
         while($post = $inDB->fetch_assoc($result)){
 
-            $html = $post['content'];
-            $html = $inCore->parseSmiles($html, true);
-            $html = str_replace("&amp;", '&', $html);
+            $html = $inCore->parseSmiles($post['content'], true);
+            $html = mysql_escape_string($html);
 
             $inDB->query("UPDATE cms_blog_posts SET content_html = '{$html}' WHERE id = '{$post['id']}'");
 

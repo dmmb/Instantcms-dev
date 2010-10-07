@@ -698,9 +698,9 @@ class cms_model_blogs{
 
         //парсим bb-код перед записью в базу
         $inCore                 = cmsCore::getInstance();
-        $item['content_html']   = $item['content'];
-        $item['content_html']   = $inCore->parseSmiles($item['content_html'], true);
-        $item['content_html']   = str_replace("&amp;", '&', $item['content_html']);
+        $item['content_html']   = $inCore->parseSmiles($item['content'], true);
+        $item['content']        = mysql_escape_string($item['content']);
+        $item['content_html']   = mysql_escape_string($item['content_html']);
 
         $sql = "INSERT INTO cms_blog_posts (user_id, cat_id, blog_id, pubdate, title, feel, music,
                             content, content_html, allow_who, edit_times, edit_date, published, seolink)
@@ -759,11 +759,11 @@ class cms_model_blogs{
 		}
 
         //парсим bb-код перед записью в базу
-        $inCore                 = cmsCore::getInstance();
-        $item['content_html']   = $item['content'];
-        $item['content_html']   = $inCore->parseSmiles($item['content_html'], true);
-        $item['content_html']   = str_replace("&amp;", '&', $item['content_html']);
-        
+        $inCore                 = cmsCore::getInstance();        
+        $item['content_html']   = $inCore->parseSmiles($item['content'], true);
+        $item['content']        = mysql_escape_string($item['content']);
+        $item['content_html']   = mysql_escape_string($item['content_html']);
+
         $sql = "UPDATE cms_blog_posts
                 SET cat_id={$item['cat_id']},
                     title='{$item['title']}',

@@ -3023,7 +3023,7 @@ class cmsCore {
             //parse bbcode
             include_once PATH.'/includes/bbcode/bbcode.lib.php';
             $bb = new bbcode($text);
-            $text = $bb->get_html();
+            $text = $bb->get_html();            
         }
 
         //convert emoticons to smileys

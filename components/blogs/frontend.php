@@ -1232,9 +1232,7 @@ if ($do=='latest'){
 
                     $post['blog_url']   = $model->getBlogURL(null, $post['bloglink']);
 
-                    $msg = $post['content'];
-                    $msg = $inCore->parseSmiles($msg, true);
-                    $msg = str_replace("&amp;", '&', $msg);
+                    $msg = $post['content_html'];
 
                     //Разбиваем текст поста на 2 части по тегу [cut=...] и оставляем только первую из них
                     if (strstr($msg, '[cut')){
@@ -1318,9 +1316,7 @@ if ($do=='best'){
                     $post['comments']   = $inDB->rows_count('cms_comments', "target='blog' AND target_id=".$post['id']);
                     $post['karma']      = cmsKarmaFormatSmall($post['points']);
 
-                    $msg = $post['content'];
-                    $msg = $inCore->parseSmiles($msg, true);
-                    $msg = str_replace("&amp;", '&', $msg);
+                    $msg = $post['content_html'];
 
                     //Разбиваем текст поста на 2 части по тегу [cut=...] и оставляем только первую из них
                     if (strstr($msg, '[cut')){
