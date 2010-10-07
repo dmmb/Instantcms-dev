@@ -806,8 +806,8 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 
 				if ($do=='newthread'){
 					//NEW THREAD
-					$title          = htmlspecialchars($_POST['title'], ENT_QUOTES, 'cp1251');
-					$description    = htmlspecialchars($_POST['description'], ENT_QUOTES, 'cp1251');
+					$title          = $inCore->request('title', 'str');
+                    $description    = $inCore->request('description');
 												
 					if($title && $message){	
 						$sql = "INSERT INTO cms_forum_threads (forum_id, user_id, title, description, icon, pubdate, hits)
@@ -983,8 +983,8 @@ if ($do=='renamethread'){
 			} else { //DO RENAME
 			
 				if (@$_POST['title']){				
-					$title = htmlspecialchars($_POST['title']);
-					$description = htmlspecialchars($_POST['description']);
+					$title          = $inCore->request('title', 'str');
+                    $description    = $inCore->request('description');
 					$tid = intval($_POST['tid']);
 					if (usrCheckAuth() && $inCore->userIsAdmin(@$inUser->id) || $inCore->isUserCan('forum/moderate')){		
 						$inDB->query("UPDATE cms_forum_threads SET title = '$title', description = '$description' WHERE id = $id") 	;
