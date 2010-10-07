@@ -86,6 +86,35 @@
 // ========================================================================== //
 // ========================================================================== //
 
+    if (!$inDB->isFieldExists('cms_blog_posts', 'content_html')){
+        $inDB->query("ALTER TABLE `cms_blog_posts` ADD `content_html` TEXT NOT NULL AFTER `content`");
+    }
+
+    $sql = "SELECT id, content
+            FROM cms_blog_posts";
+
+    $result = $inDB->query($sql);
+
+    if($inDB->num_rows($result)){
+
+        while($post = $inDB->fetch_assoc($result)){
+
+            $html = $post['content'];
+            $html = $inCore->parseSmiles($html, true);
+            $html = str_replace("&amp;", '&', $html);
+
+            $inDB->query("UPDATE cms_blog_posts SET content_html = '{$html}' WHERE id = '{$post['id']}'");
+
+        }
+
+        echo '<p>Записи блогов оптимизированы</p>';
+
+    }
+    
+
+// ========================================================================== //
+// ========================================================================== //
+
 //    if (!$inDB->isFieldExists('', '')){
 //
 //        $inDB->query("");

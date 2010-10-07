@@ -453,9 +453,7 @@ if ($do=='blog'){
                     $post['comments']   = dbRowsCount('cms_comments', "target='blog' AND target_id=".$post['id']);
                     $post['karma']      = cmsKarmaFormatSmall($post['points']);
                     
-                    $msg                = $post['content'];
-                    $msg                = $inCore->parseSmiles($msg, true);
-                    $msg                = str_replace("&amp;", '&', $msg);                                      
+                    $msg                = $post['content_html'];
 
                     //Разбиваем текст поста на 2 части по тегу [cut=...] и оставляем только первую из них
                     if (strstr($msg, '[cut')){
@@ -965,9 +963,7 @@ if($do=='post'){
     $inPage->addPathway($post['title']);
 
     //Парсим bb-код
-    $msg = $post['content'];
-    $msg = $inCore->parseSmiles($msg, true);
-    $msg = str_replace("&amp;", '&', $msg);
+    $msg = $post['content_html'];
 
     //Убираем тег [cut]
     $regex  = '/\[(cut=)\s*(.*?)\]/i';

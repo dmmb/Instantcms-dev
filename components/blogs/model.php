@@ -696,10 +696,16 @@ class cms_model_blogs{
 
         $item['seolink'] = '';
 
+        //парсим bb-код перед записью в базу
+        $inCore                 = cmsCore::getInstance();
+        $item['content_html']   = $item['content'];
+        $item['content_html']   = $inCore->parseSmiles($item['content_html'], true);
+        $item['content_html']   = str_replace("&amp;", '&', $item['content_html']);
+
         $sql = "INSERT INTO cms_blog_posts (user_id, cat_id, blog_id, pubdate, title, feel, music,
-                            content, allow_who, edit_times, edit_date, published, seolink)
+                            content, content_html, allow_who, edit_times, edit_date, published, seolink)
                 VALUES ('{$item['user_id']}', '{$item['cat_id']}', '{$item['id']}', NOW(),
-                        '{$item['title']}', '{$item['feel']}', '{$item['music']}', '{$item['content']}',
+                        '{$item['title']}', '{$item['feel']}', '{$item['music']}', '{$item['content']}', '{$item['content_html']}'
                         '{$item['allow_who']}', 0, NOW(), {$item['published']}, '{$item['seolink']}')";
         
         $result = $this->inDB->query($sql);
@@ -752,12 +758,19 @@ class cms_model_blogs{
 			$seo_sql = ', seolink = "'.$item['seolink'].'"';
 		}
 
+        //парсим bb-код перед записью в базу
+        $inCore                 = cmsCore::getInstance();
+        $item['content_html']   = $item['content'];
+        $item['content_html']   = $inCore->parseSmiles($item['content_html'], true);
+        $item['content_html']   = str_replace("&amp;", '&', $item['content_html']);
+        
         $sql = "UPDATE cms_blog_posts
                 SET cat_id={$item['cat_id']},
                     title='{$item['title']}',
                     feel='{$item['feel']}',
                     music='{$item['music']}',
                     content='{$item['content']}',
+                    content_html='{$item['content_html']}',
                     allow_who='{$item['allow_who']}',
                     edit_times = edit_times+1,
                     edit_date = NOW(){$seo_sql}
