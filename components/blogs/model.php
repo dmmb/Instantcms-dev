@@ -725,8 +725,8 @@ class cms_model_blogs{
 
         }
 
-
         return $post_id ? $post_id : false;
+        
     }
 
 /* ==================================================================================================== */
@@ -759,10 +759,11 @@ class cms_model_blogs{
 		}
 
         //парсим bb-код перед записью в базу
-        $inCore                 = cmsCore::getInstance();        
+        $inCore                 = cmsCore::getInstance();
+
         $item['content_html']   = $inCore->parseSmiles($item['content'], true);
-        $item['content']        = mysql_escape_string($item['content']);
-        $item['content_html']   = mysql_escape_string($item['content_html']);
+        $item['content']        = $this->inDB->escape_string($item['content']);
+        $item['content_html']   = $this->inDB->escape_string($item['content_html']);
 
         $sql = "UPDATE cms_blog_posts
                 SET cat_id={$item['cat_id']},

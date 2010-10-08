@@ -378,6 +378,9 @@ if ($do=='addarticle' || $do=='editarticle'){
         $article['description']         = $inCore->request('description', 'html', '');
         $article['content']             = $inCore->request('content', 'html', '');
 
+        $article['description']         = $inDB->escape_string($article['description']);
+        $article['content']             = $inDB->escape_string($article['content']);
+
         $article['published']           = $inCore->isUserCan('content/autoadd') ? 1 : 0;
         $article['pubdate']             = date('Y-m-d H:i');
         $article['enddate']             = $article['pubdate'];

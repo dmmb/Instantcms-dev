@@ -2811,8 +2811,8 @@ class cmsCore {
         $string = (@get_magic_quotes_gpc()) ? stripslashes($string) : $string;        
         $string = rtrim($string, ' \\');
         if ($strip_tags) {
-            $string = mysql_real_escape_string($string);
             $string = strip_tags($string);
+            $string = mysql_real_escape_string($string);
         }
         return $string;
     }

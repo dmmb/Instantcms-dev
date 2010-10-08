@@ -131,6 +131,7 @@ if ($opt == 'hide_club'){
 if ($opt == 'submit'){	
     $title 			= $inCore->request('title', 'str');
     $description 	= $inCore->request('description', 'html');
+    $description    = $inDB->escape_string($description);
     $published 		= $inCore->request('published', 'int');
     $admin_id 		= $inCore->request('admin_id', 'int');
     $clubtype		= $inCore->request('clubtype', 'str');
@@ -196,6 +197,7 @@ if ($opt == 'update'){
         $id 			= (int)$_REQUEST['item_id'];
         $title 			= $inCore->request('title', 'str');
         $description 	= $inCore->request('description', 'html');
+        $description    = $inDB->escape_string($description);
         $published 		= $inCore->request('published', 'int');
         $admin_id 		= (int)$_REQUEST['admin_id'];
         $clubtype		= $inCore->request('clubtype', 'str');

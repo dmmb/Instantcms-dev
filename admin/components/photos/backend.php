@@ -154,6 +154,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			$photo['album_id']      = $inCore->request('album_id', 'int', 1);
             $photo['title']         = $inCore->request('title', 'str', DEFAULT_PHOTO_TITLE);
 			$photo['description']   = $inCore->request('description', 'html');
+            $photo['description']   = $inDB->escape_string($photo['description']);
 			$photo['published']     = $inCore->request('published', 'int', 1);
 			$photo['showdate']      = $inCore->request('showdate', 'int', 1);
 			$photo['tags']          = $inCore->request('tags', 'str');
@@ -191,6 +192,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
             $photo['album_id']     = $inCore->request('album_id', 'int');			
 			$photo['description']  = $inCore->request('description', 'html');
+            $photo['description']  = $inDB->escape_string($photo['description']);
 			$photo['published']    = $inCore->request('published', 'int');
 			$photo['showdate']     = $inCore->request('showdate', 'int');
             $photo['tags']         = $inCore->request('tags', 'str');
@@ -266,6 +268,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             $photo['album_id']     = $inCore->request('album_id', 'int');
             $photo['title']        = $inCore->request('title', 'str');
 			$photo['description']  = $inCore->request('description', 'html');
+            $photo['description']  = $inDB->escape_string($photo['description']);
 			$photo['published']    = $inCore->request('published', 'int');
 			$photo['showdate']     = $inCore->request('showdate', 'int');
             $photo['tags']         = $inCore->request('tags', 'str');
@@ -470,6 +473,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
         $album['title']         = $inCore->request('title', 'str');
 		$album['description']   = $inCore->request('description', 'html');
+        $album['description']   = $inDB->escape_string($album['description']);
 		$album['published']     = $inCore->request('published', 'int');
 		$album['showdate']      = $inCore->request('showdate', 'int');
 		$album['parent_id']     = $inCore->request('parent_id', 'int');
@@ -516,6 +520,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			
             $album['title']         = $inCore->request('title', 'str');
             $album['description']   = $inCore->request('description', 'html');
+            $album['description']   = $inDB->escape_string($album['description']);
             $album['published']     = $inCore->request('published', 'int');
             $album['showdate']      = $inCore->request('showdate', 'int');
             $album['parent_id']     = $inCore->request('parent_id', 'int');

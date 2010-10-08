@@ -765,6 +765,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 			
 		} else {
 			$message = $inCore->request('message', 'html');
+            $message = $inDB->escape_string($message);
 			
 			if($do=='newpost'){												
 				//NEW POST

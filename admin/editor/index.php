@@ -296,6 +296,7 @@ if ($do == 'updatecat'){
         $category['title']			= $inCore->request('title', 'str');
         $category['parent_id']		= $inCore->request('parent', 'int');
         $category['description']	= $inCore->request('description', 'html');
+        $category['description']	= $inDB->escape_string($category['description']);
         $category['published'] 		= (int)$_REQUEST['published'];
         $category['showdate'] 		= (int)$_REQUEST['showdate'];
         $category['showcomm'] 		= (int)$_REQUEST['showcomm'];
@@ -336,6 +337,7 @@ if ($do == 'submitcat'){
     $category['title']			= $inCore->request('title', 'str');
     $category['parent_id']		= $inCore->request('parent', 'int');
     $category['description']	= $inCore->request('description', 'html');
+    $category['description']	= $inDB->escape_string($category['description']);
     $category['published'] 		= (int)$_REQUEST['published'];
     $category['showdate'] 		= (int)$_REQUEST['showdate'];
     $category['showcomm'] 		= (int)$_REQUEST['showcomm'];

@@ -189,6 +189,7 @@ function applet_cats(){
 			$category['url']			= $inCore->request('url', 'str');
 			$category['parent_id']		= $inCore->request('parent_id', 'int');
 			$category['description']	= $inCore->request('description', 'html');
+            $category['description']    = $inDB->escape_string($category['description']);
 			$category['published'] 		= $inCore->request('published', 'int', 0);
 			$category['showdate'] 		= $inCore->request('showdate', 'int', 0);
 			$category['showcomm'] 		= $inCore->request('showcomm', 'int', 0);
@@ -280,6 +281,7 @@ function applet_cats(){
         $category['url']			= $inCore->request('url', 'str');
         $category['parent_id']		= $inCore->request('parent_id', 'int');
         $category['description']	= $inCore->request('description', 'html');
+        $category['description']    = $inDB->escape_string($category['description']);
         $category['published'] 		= $inCore->request('published', 'int', 0);
         $category['showdate'] 		= $inCore->request('showdate', 'int', 0);
         $category['showcomm'] 		= $inCore->request('showcomm', 'int', 0);

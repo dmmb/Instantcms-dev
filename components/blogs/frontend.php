@@ -729,6 +729,7 @@ if ($do=='newpost' || $do=='editpost'){
         //Получаем параметры
         $title 		= $inCore->request('title', 'str');
         $content 	= $inCore->request('content', 'html');
+        $content    = $inDB->escape_string($content);
         $feel 		= $inCore->request('feel', 'str', '');
         $music 		= $inCore->request('music', 'str', '');
         $cat_id 	= $inCore->request('cat_id', 'int');

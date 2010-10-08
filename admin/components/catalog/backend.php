@@ -511,6 +511,7 @@ function cpPriceInput($id){
 		$cat['parent_id']      = $inCore->request('parent_id', 'int');
 		$cat['title']          = $inCore->request('title', 'str');
 		$cat['description']    = $inCore->request('description', 'html');
+        $cat['description']    = $inDB->escape_string($cat['description']);
 		$cat['published']      = $inCore->request('published', 'int');
 		$cat['view_type']      = $inCore->request('view_type', 'str');
 		$cat['fields_show']    = $inCore->request('fieldsshow', 'int');
@@ -578,6 +579,7 @@ function cpPriceInput($id){
 			$cat['parent_id']      = $inCore->request('parent_id', 'int');
             $cat['title']          = $inCore->request('title', 'str');
             $cat['description']    = $inCore->request('description', 'html');
+            $cat['description']    = $inDB->escape_string($cat['description']);
             $cat['published']      = $inCore->request('published', 'int');
             $cat['view_type']      = $inCore->request('view_type', 'str');
             $cat['fields_show']    = $inCore->request('fieldsshow', 'int');
