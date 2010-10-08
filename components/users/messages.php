@@ -24,13 +24,13 @@
 							// Пагинация
 							$pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, '/users/%user_id%/messages%page%.html', array('user_id'=>$id)) : '';
 
-					$sql = "SELECT m.*, m.senddate as fpubdate, m.from_id as sender_id, u.nickname as author, u.login as author_login, u.is_deleted, p.imageurl
-					FROM cms_user_msg m
-					LEFT JOIN cms_users u ON m.from_id = u.id
-					LEFT JOIN cms_user_profiles p ON m.from_id = p.user_id
-					WHERE m.to_id = $id
-					ORDER BY senddate DESC
-					LIMIT ".(($page-1)*$perpage).", $perpage";	
+							$sql = "SELECT m.*, m.senddate as fpubdate, m.from_id as sender_id, u.nickname as author, u.login as author_login, u.is_deleted, p.imageurl
+							FROM cms_user_msg m
+							LEFT JOIN cms_users u ON m.from_id = u.id
+							LEFT JOIN cms_user_profiles p ON m.from_id = p.user_id
+							WHERE m.to_id = $id
+							ORDER BY senddate DESC
+							LIMIT ".(($page-1)*$perpage).", $perpage";	
 							
 							break;
 							
@@ -40,11 +40,11 @@
 							// Пагинация
 							$pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, '/users/%user_id%/messages-sent%page%.html', array('user_id'=>$id)) : '';
 							
-				$sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.to_id as sender_id, u.is_deleted, p.imageurl
-						FROM cms_user_msg m, cms_users u, cms_user_profiles p
-						WHERE m.from_id = $id AND m.to_id = u.id AND m.to_id = p.user_id
-						ORDER BY senddate DESC
-						LIMIT ".(($page-1)*$perpage).", $perpage";							
+							$sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.to_id as sender_id, u.is_deleted, p.imageurl
+									FROM cms_user_msg m, cms_users u, cms_user_profiles p
+									WHERE m.from_id = $id AND m.to_id = u.id AND m.to_id = p.user_id
+									ORDER BY senddate DESC
+									LIMIT ".(($page-1)*$perpage).", $perpage";							
 								
 							break;
 							
@@ -55,11 +55,11 @@
 							// Пагинация
 							$pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, '/users/%user_id%/messages-history%to_id%-%page%.html', array('user_id'=>$id, 'to_id'=>$with_id)) : '';
 
-				$sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.from_id as sender_id, u.is_deleted, p.imageurl
-						FROM cms_user_msg m, cms_users u, cms_user_profiles p
-						WHERE ((m.from_id = $id AND m.to_id = $with_id) OR (m.from_id = $with_id AND m.to_id = $id)) AND m.from_id = u.id AND m.from_id = p.user_id
-						ORDER BY senddate DESC
-						LIMIT ".(($page-1)*$perpage).", $perpage";							
+							$sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.from_id as sender_id, u.is_deleted, p.imageurl
+									FROM cms_user_msg m, cms_users u, cms_user_profiles p
+									WHERE ((m.from_id = $id AND m.to_id = $with_id) OR (m.from_id = $with_id AND m.to_id = $id)) AND m.from_id = u.id AND m.from_id = p.user_id
+									ORDER BY senddate DESC
+									LIMIT ".(($page-1)*$perpage).", $perpage";							
 
 							break;
 
@@ -119,6 +119,7 @@
 		$smarty->assign('id', $id);
 		$smarty->assign('with_name', $with_name);
 		$smarty->assign('msg_count', $msg_count);
+		$smarty->assign('messages', cmsCore::getSessionMessages());
 		$smarty->assign('pagebar', $pagebar);
 		$smarty->assign('perpage', $perpage);
 		$smarty->assign('user_opt', $user_opt);

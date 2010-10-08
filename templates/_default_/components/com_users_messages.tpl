@@ -1,6 +1,13 @@
 {* ================================================================================ *}
 {* ======================== Личные сообщения ====================================== *}
 {* ================================================================================ *}
+{if $messages}
+    <div class="sess_messages">
+        {foreach key=tid item=message from=$messages}
+            {$message}
+        {/foreach}
+    </div>
+{/if}
 	<div class="con_heading" style="margin-bottom:25px">{$LANG.MY_MESS}</div>
 		<div style="margin-bottom:10px">				
 			{if $opt == 'in'}				

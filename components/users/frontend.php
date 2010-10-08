@@ -98,6 +98,9 @@ function users(){
     if (!isset($cfg['sw_search'])) { $cfg['sw_search'] = 1;  }
     if (!isset($cfg['sw_guest']))  { $cfg['sw_guest'] = 1; }
 	
+    //Определяем адрес для редиректа назад
+    $back   = $inCore->getBackURL();
+	
 	$id     =   $inCore->request('id', 'int', 0);
 	$do     =   $inCore->request('do', 'str', 'view');
 
@@ -1565,7 +1568,7 @@ if ($do=='delfriend'){
 		$second_id = $id;
 		
 		$sql = "DELETE FROM cms_user_friends WHERE ((to_id = $first_id AND from_id = $second_id) OR (to_id = $second_id AND from_id = $first_id))";
-		$inDB->query($sql) ;
+		$inDB->query($sql);
 
 		header('location:'.$_SERVER['HTTP_REFERER']);
 
@@ -1576,7 +1579,7 @@ if ($do=='sendmessage'){
 
 	if (!$cfg['sw_msg']) { cmsCore::error404(); }
 
-	if (usrCheckAuth() && $inUser->id!=$id || isset($_POST['massmail'])){
+	if (usrCheckAuth() && $inUser->id != $id || isset($_POST['massmail'])){
 
 		$from_id    = $inUser->id;
 		$to_id      = $id;
@@ -1584,71 +1587,62 @@ if ($do=='sendmessage'){
 		$usr 		= $model->getUserShort($id);
 
 		if ($usr || isset($_POST['massmail'])){
+			
 			if (usrCheckAuth()){
 
 				$inPage->setTitle($_LANG['SEND_MESS']);
-		
 				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 				$inPage->addPathway($_LANG['SEND_MESS'], $_SERVER['REQUEST_URI']);
 					
-				if(!isset($_POST['gosend'])){		
-					$replyid = $inCore->request('replyid', 'int', '');
-
-					if ($replyid){
-						$sql = "SELECT m.*, u.* 
-								FROM cms_user_msg m, cms_users u
-								WHERE m.id = $replyid AND m.from_id = u.id AND m.to_id = $from_id";
-						$result = $inDB->query($sql) ;
+				if(!isset($_POST['gosend'])){
+							
+					$replyid = $inCore->request('replyid', 'int', 0);
+					$is_reply_user = false;
 					
+					if ($replyid){
+						
+						$sql = "SELECT m.senddate, m.message, u.login, u.nickname
+								FROM cms_user_msg m
+								LEFT JOIN cms_users u ON u.id = m.from_id
+								WHERE m.id = '$replyid' AND m.to_id = '$from_id'";
+
+						$result = $inDB->query($sql) ;
+
 						if ($inDB->num_rows($result)>0){
+							
+							$is_reply_user = true;
 							$msg = $inDB->fetch_assoc($result);
-							echo '<div>';
-								echo '<div class="con_heading">'.$_LANG['ORIGINAL_MESS'].'</div>';
-								echo '<div class="usr_msgreply_source">';
-									echo '<div class="usr_msgreply_sourcetext">'.$inCore->parseSmiles($msg['message'], true).'</div>';
-									echo '<div class="usr_msgreply_author"><a href="'.cmsUser::getProfileURL($msg['login']).'">'.$msg['nickname'].'</a>, '.$msg['senddate'].'</div>';
-								echo '</div>';
-							echo '</div>';
+							$msg['senddate'] = $inCore->dateFormat($msg['senddate'], true, true);
+
 						} else {
+							
 							die();
+							
 						}
 					}
 
-					echo '<div class="con_heading">'.$_LANG['SEND_MESS'].'</div>';
-
-					echo '<table width="100%" cellpadding="0" cellspacing="5"><tr>';
+					$usr['avatar'] = usrImage($usr['id'], 'big');
 					
-					echo '<td width="200" height="200" valign="top">
-							<div style="background-color:#FFFFFF;padding:5px;border:solid 1px gray;text-align:center">
-								'.usrLink(usrImage($usr['id'], 'big'), $usr['login']).'
-							</div>
-							<div style="padding:5px;width:100%">
-								Кому: '.usrLink($usr['nickname'], $usr['login']).'
-							</div>
-						 </td>';						 
-					echo '<td valign="top">';
-						echo '<form action="" method="POST" name="msgform">';
-							echo '<div class="usr_msg_bbcodebox">';
-								echo cmsPage::getBBCodeToolbar('message');
-							echo '</div>';							
-							echo cmsPage::getSmilesPanel('message');
-							echo '<textarea style="font-size:18px;border:solid 1px gray;width:100%;height:200px;" name="message" id="message"></textarea>';
-							if ($inCore->userIsAdmin($inUser->id)){
-								echo '<input name="massmail" type="checkbox" value="1" /> '.$_LANG['SEND_TO_ALL'];
-							}
-							echo '<div style="margin-top:6px;"><input type="submit" name="gosend" value="'.$_LANG['SEND'].'" style="font-size:18px"/> ';
-							echo '<input type="button" name="gosend" value="'.$_LANG['CANCEL'].'" style="font-size:18px" onclick="window.history.go(-1)"/></div>';
-						echo '</form>';
-					echo '</td>';					
-					echo '</tr></table>';
+					$smarty = $inCore->initSmarty('components', 'com_users_messages_add.tpl');
+					$smarty->assign('msg', $msg);
+					$smarty->assign('usr', $usr);
+					$smarty->assign('is_reply_user', $is_reply_user);
+					$smarty->assign('bbcodetoolbar', cmsPage::getBBCodeToolbar('message'));
+					$smarty->assign('smilestoolbar', cmsPage::getSmilesPanel('message'));
+					$smarty->assign('messages', cmsCore::getSessionMessages());
+					$smarty->assign('id_admin', $inCore->userIsAdmin($inUser->id));
+					$smarty->display('com_users_messages_add.tpl');
+	
 				} else {
-				
+					$errors = false;
 					$message = $inCore->request('message', 'html', '');
 					$message = strip_tags($message);
 					$message = $inCore->parseSmiles($message, true);
 					$message = $inDB->escape_string($message);
+					if (strlen($message)<2) { $inCore->addSessionMessage($_LANG['ERR_SEND_MESS'], 'error'); $errors = true; }
+					if ($errors) { $inCore->redirect($back); }
 
-					if (!isset($_POST['massmail'])){
+					if (!isset($_POST['massmail']) && !$errors){
 						//send private message
 						$sql = "INSERT INTO cms_user_msg (to_id, from_id, senddate, is_new, message)
 								VALUES ('$to_id', '$from_id', NOW(), 1, '$message')";																
@@ -1660,15 +1654,14 @@ if ($do=='sendmessage'){
 						$needmail = dbGetField('cms_user_profiles', "user_id='{$to_id}'", 'email_newmsg');
 						//Проверяем, если юзер онлайн, то уведомление на почту не отправляем.
 						$isonline = dbGetField('cms_online', "user_id='{$to_id}'", 'id');
-						if (!$isonline){
-						if ($needmail){
+						if (!$isonline && $needmail){
 								$inConf     = cmsConfig::getInstance();
-														
+
 								$postdate   = date('d/m/Y H:i:s');
 								$to_email   = dbGetField('cms_users', "id='{$to_id}'", 'email');
 								$from_nick  = dbGetField('cms_users', "id='{$from_id}'", 'nickname');
 								$answerlink = HOST.'/users/'.$from_id.'/reply'.$msg_id.'.html';
-						
+
 								$letter_path    = PATH.'/includes/letters/newmessage.txt';
 								$letter         = file_get_contents($letter_path);
 								
@@ -1678,8 +1671,9 @@ if ($do=='sendmessage'){
 								$letter= str_replace('{from}', $from_nick, $letter);	
 								$inCore->mailText($to_email, $_LANG['YOU_HAVE_NEW_MESS'].'! - '.$inConf->sitename, $letter);
 						}
-						}
-					} else {
+						$inCore->addSessionMessage($_LANG['SEND_MESS_OK'], 'info');	
+						
+					} elseif (isset($_POST['massmail']) && !$errors) {
 						if ($inUser->is_admin){
 							$userlist = dbGetTable('cms_users', ' id > 0 AND is_locked = 0 AND is_deleted = 0');
 							foreach ($userlist as $key=>$usr){
@@ -1688,8 +1682,9 @@ if ($do=='sendmessage'){
 								$inDB->query($sql) ;
 							}
 						}
+						$inCore->addSessionMessage($_LANG['SEND_MESS_ALL_OK'], 'info');	
 					}
-											
+			
 					$inCore->redirect('/users/'.$inUser->id.'/messages-sent.html');
 				}
 			
@@ -1705,12 +1700,17 @@ if ($do=='delmessage'){
 	if (!$cfg['sw_msg']) { cmsCore::error404(); }
 	
 	if (usrCheckAuth()){
-		$sql = "SELECT * FROM cms_user_msg WHERE id = $id LIMIT 1";
+		$sql = "SELECT to_id, from_id, is_new FROM cms_user_msg WHERE id = '$id' LIMIT 1";
 		$result = $inDB->query($sql) ;
 		if ($inDB->num_rows($result)){
 			$msg = $inDB->fetch_assoc($result);
 			if ($msg['to_id']==$inUser->id || ($msg['from_id']==$inUser->id && $msg['is_new'])){
-				$inDB->query("DELETE FROM cms_user_msg WHERE id = $id LIMIT 1") ;
+				$inDB->query("DELETE FROM cms_user_msg WHERE id = '$id' LIMIT 1") ;
+				if ($msg['is_new']) { 
+					$inCore->addSessionMessage($_LANG['MESS_BACK_OK'], 'info');
+				} else {
+					$inCore->addSessionMessage($_LANG['MESS_DEL_OK'], 'info');
+				}
 			}
 		}
 	}
@@ -1723,8 +1723,9 @@ if ($do=='delmessages'){
 	
 	if (usrCheckAuth()){
 		if($inUser->id == $id || $inCore->userIsAdmin($inUser->id)){
-			$sql = "DELETE FROM cms_user_msg WHERE to_id = $id";
+			$sql = "DELETE FROM cms_user_msg WHERE to_id = '$id'";
 			$inDB->query($sql) ;
+			$inCore->addSessionMessage($_LANG['MESS_ALL_DEL_OK'], 'info');
 		}
 	}
 	header('location:'.$_SERVER['HTTP_REFERER']);

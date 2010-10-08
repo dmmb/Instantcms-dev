@@ -2651,11 +2651,12 @@ class cmsCore {
             return $inUser->is_admin;
         } else {
             $sql = "SELECT g.is_admin is_admin
-                    FROM cms_user_groups g, cms_users u
-                    WHERE u.group_id = g.id AND u.id = $userid";
+                    FROM cms_users u
+					LEFT JOIN cms_user_groups g ON g.id = u.group_id
+                    WHERE u.id = '$userid' LIMIT 1";
             $result = $inDB->query($sql) ;
-            if (mysql_num_rows($result)){
-                $data = mysql_fetch_assoc($result);
+            if ($inDB->num_rows($result)){
+                $data = $inDB->fetch_assoc($result);
                 return $data['is_admin'];
             } else { return false; }
         }
@@ -2673,8 +2674,10 @@ class cmsCore {
         if (!$userid) { return false; }
 
         $sql = "SELECT c.id as id
-                FROM cms_user_groups g, cms_users u, cms_category c
-                WHERE u.id = $userid AND u.group_id = g.id AND c.modgrp_id = g.id
+                FROM cms_users u
+				LEFT JOIN cms_user_groups g ON g.id = u.group_id
+				LEFT JOIN cms_category c ON c.modgrp_id = g.id
+                WHERE u.id = '$userid'
                 LIMIT 1";
         $result = $inDB->query($sql) ;
 
