@@ -86,6 +86,29 @@
 // ========================================================================== //
 // ========================================================================== //
 
+    $sql = "SELECT id, message
+            FROM cms_user_msg";
+
+    $result = $inDB->query($sql);
+
+    if($inDB->num_rows($result)){
+
+        while($msg = $inDB->fetch_assoc($result)){
+		
+			$html = $inCore->parseSmiles($msg['message'], true);
+			$html = mysql_escape_string($html);
+			
+            $inDB->query("UPDATE cms_user_msg SET message = '{$html}' WHERE id = '{$msg['id']}'");
+
+        }
+
+        echo '<p>Записи личных сообщений оптимизированы</p>';
+
+    }
+
+// ========================================================================== //
+// ========================================================================== //
+
 //    if (!$inDB->isFieldExists('', '')){
 //
 //        $inDB->query("");

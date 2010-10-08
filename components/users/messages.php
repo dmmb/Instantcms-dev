@@ -100,11 +100,7 @@
 									$inDB->query("UPDATE cms_user_msg SET is_new = 0 WHERE id = ".$record['id']);
 							}
 							}
-						$record['message'] = $inCore->parseSmiles($record['message'], true);
-						$record['message'] = str_replace('&gt;', '>', $record['message']);
-						$record['message'] = str_replace('&lt;', '<', $record['message']);					
-						$record['message'] = str_replace('&amp;', '&', $record['message']);					
-						$record['message'] = strip_tags($record['message'], '<img><br><a><b><u><i><table><tr><td><th><h1><h2><h3><div><span><pre>');
+						$record['message'] = $record['message'];
 						
 						if ($record['sender_id']>0){
 							$record['user_img'] = '<a href="'.cmsUser::getProfileURL($record['author_login']).'">'.usrImageNOdb($record['sender_id'], 'small', $record['imageurl'], $record['is_deleted'], $record['author_login']).'</a>';

@@ -1592,9 +1592,8 @@ if ($do=='sendmessage'){
 				$inPage->addPathway($_LANG['SEND_MESS'], $_SERVER['REQUEST_URI']);
 					
 				if(!isset($_POST['gosend'])){		
-					if (isset($_REQUEST['replyid'])) { $replyid = $inCore->request('replyid', 'int', ''); }
-					else { $replyid = 0; }
-					
+					$replyid = $inCore->request('replyid', 'int', '');
+
 					if ($replyid){
 						$sql = "SELECT m.*, u.* 
 								FROM cms_user_msg m, cms_users u
@@ -1644,9 +1643,11 @@ if ($do=='sendmessage'){
 					echo '</tr></table>';
 				} else {
 				
-					$message = strip_tags($_POST['message'], '<a><img><b><u><i><table><tr><td>');
-					$message = htmlspecialchars($message, ENT_QUOTES, 'cp1251');							
-				
+					$message = $inCore->request('message', 'html', '');
+					$message = strip_tags($message);
+					$message = $inCore->parseSmiles($message, true);
+					$message = $inDB->escape_string($message);
+
 					if (!isset($_POST['massmail'])){
 						//send private message
 						$sql = "INSERT INTO cms_user_msg (to_id, from_id, senddate, is_new, message)
