@@ -102,7 +102,30 @@
 
         }
 
-        echo '<p>Записи личных сообщений оптимизированы</p>';
+        echo '<p>Записи личных сообщений оптимизированы.</p>';
+
+    }
+	
+// ========================================================================== //
+// ========================================================================== //
+
+    $sql = "SELECT id, content
+            FROM cms_user_wall";
+
+    $result = $inDB->query($sql);
+
+    if($inDB->num_rows($result)){
+
+        while($msg = $inDB->fetch_assoc($result)){
+		
+			$html = $inCore->parseSmiles($msg['content'], true);
+			$html = mysql_escape_string($html);
+			
+            $inDB->query("UPDATE cms_user_wall SET content = '{$html}' WHERE id = '{$msg['id']}'");
+
+        }
+
+        echo '<p>Записи на стенах пользователей оптимизированы.</p>';
 
     }
 

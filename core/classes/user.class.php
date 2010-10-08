@@ -88,8 +88,9 @@ class cmsUser {
         $inCore     = cmsCore::getInstance();
 
         $sql    = "SELECT u.*, g.is_admin is_admin
-                   FROM cms_users u, cms_user_groups g
-                   WHERE u.id={$user_id} AND u.is_deleted = 0 AND u.is_locked = 0 AND u.group_id = g.id";
+                   FROM cms_users u
+				   INNER JOIN cms_user_groups g ON g.id = u.group_id
+                   WHERE u.id='$user_id' AND u.is_deleted = 0 AND u.is_locked = 0 LIMIT 1";
 
         $result = $inDB->query($sql);
 
@@ -845,7 +846,6 @@ class cmsUser {
             $inCore->includeFile('components/users/includes/usercore.php');
 
             while($record = $inDB->fetch_assoc($result)){
-                $record['content']  = $inCore->parseSmiles($record['content'], true);
 				$record['fpubdate'] = $inCore->dateFormat($record['pubdate'], true, true);
                 $record['avatar']   = usrImageNOdb($record['author_id'], 'small', $record['imageurl'], $record['is_deleted']);
                 $records[]          = $record;

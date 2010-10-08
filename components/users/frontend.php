@@ -2352,7 +2352,7 @@ if ($do=='votekarma'){
 				if ($can_delete || $inCore->userIsAdmin( $my_id )){
 					$inDB->query("DELETE FROM cms_user_wall WHERE id = $record_id LIMIT 1") ;
 				}
-
+				$inCore->addSessionMessage($_LANG['WALL_MESG_DEL'], 'info');
 		}
         $inCore->redirectBack();
 	}
@@ -2361,10 +2361,15 @@ if ($do=='votekarma'){
 	if ($do=='wall_add'){
         $usertype   = $inCore->request('usertype', 'str', 'user');
         $user_id    = $inCore->request('user_id', 'int');
-        $message    = $inCore->request('message', 'str');
         $author_id  = $inUser->id;
-
-		if ($message && $user_id && $author_id){
+		$message 	= $inCore->request('message', 'html', ''); 
+		$message 	= strip_tags($message); 
+		$message 	= $inCore->parseSmiles($message, true); 
+		$message 	= $inDB->escape_string($message); 
+		$errors 	= false;
+		if (strlen($message)<2) { $inCore->addSessionMessage($_LANG['ERR_SEND_WALL'], 'error'); $errors = true; }
+		
+		if ($message && $user_id && $author_id && !$errors){
 
             $result = $inDB->query("SELECT id FROM cms_users WHERE id = '$user_id' LIMIT 1");
 
