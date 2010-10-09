@@ -1056,7 +1056,7 @@ function catalog(){
         if ($inUser->id != 1 && $cfg['premod'] && $cfg['premod_msg']){
 
             $link = '<a href="/catalog/item'.$item_id.'.html">'.$item['title'].'</a>';
-            $user = '<a href="'.cmsUser::getProfileURL($inUser->login).'">'.{$inUser->nickname}.'</a>';
+            $user = '<a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a>';
 
             if ($opt=='add')  { $message = $_LANG['MSG_ITEM_SUBMIT']; }
             if ($opt=='edit') { $message = $_LANG['MSG_ITEM_EDITED']; }
