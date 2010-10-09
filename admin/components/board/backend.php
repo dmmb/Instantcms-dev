@@ -395,11 +395,12 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$published = $_REQUEST['published'];
 		$showdate = $_REQUEST['showdate'];		
 		$parent_id = $_REQUEST['parent_id'];
-
+		
 		$public = $_REQUEST['public'];
 		$orderby = $_REQUEST['orderby'];
 		$orderto = $_REQUEST['orderto'];
 		$perpage = $_REQUEST['perpage'];
+		$is_photos = $_REQUEST['is_photos'];
 		$thumb1 = intval($_REQUEST['thumb1']);
 		$thumb2 = intval($_REQUEST['thumb2']);
 		$thumbsqr = $_REQUEST['thumbsqr'];
@@ -427,6 +428,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 						thumb2=$thumb2, 
 						thumbsqr=$thumbsqr,
 						uplimit='$uplimit', 
+						is_photos='$is_photos',
 						maxcols='$maxcols', 
 						orderform=$orderform,
                         obtypes='$obtypes'
@@ -472,6 +474,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			$orderby = $_REQUEST['orderby'];
 			$orderto = $_REQUEST['orderto'];
 			$perpage = $_REQUEST['perpage'];
+			$is_photos = $_REQUEST['is_photos'];
 			$thumb1 = intval($_REQUEST['thumb1']);
 			$thumb2 = intval($_REQUEST['thumb2']);
 			$thumbsqr = $_REQUEST['thumbsqr'];
@@ -497,6 +500,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 						thumb2='$thumb2',
 						thumbsqr=$thumbsqr,
 						uplimit=$uplimit,
+						is_photos='$is_photos',
 						maxcols=$maxcols,
 						orderform=$orderform,
                         obtypes='$obtypes'
@@ -717,7 +721,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			    <td><strong>Ширина средней копии фото: </strong><br/><span class="hinttext">В пикселях</span></td>
 			    <td><input name="thumb2" type="text" id="thumb2" size="5" value="<?php echo @$mod['thumb2'];?>"/></td>
 		      </tr
-              <tr>
+              ><tr>
                     <td valign="top">
                         <div><strong>Типы объявлений:</strong></div>
                         <div class="hinttext">Каждый тип с новой строки</div>

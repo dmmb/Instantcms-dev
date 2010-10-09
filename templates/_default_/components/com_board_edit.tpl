@@ -46,7 +46,7 @@
 				</td>
 			</tr>
 		{/if}
-		{if $cfg.photos}
+		{if $cfg.photos && $cat.is_photos}
 			<tr>
 				<td><span>{$LANG.PHOTO}:</span></td>
 				<td><input name="picture" type="file" id="picture" style="width:400px;" /></td>

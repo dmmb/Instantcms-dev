@@ -381,6 +381,7 @@ if ($do=='additem'){
         $smarty->assign('action', "/board/{$cat['id']}/add.html");
         $smarty->assign('form_do', 'add');
         $smarty->assign('cfg', $cfg);
+		$smarty->assign('cat', $cat);
         $smarty->assign('obtypes', obTypesOptions($cat['obtypes']));
         $smarty->assign('title', '');
         $smarty->assign('city', $inDB->get_field('cms_user_profiles', 'id='.$inUser->id, 'city'));
