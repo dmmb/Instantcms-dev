@@ -278,7 +278,7 @@ function clubSaveUsers($club_id, $list, $role, $clubtype='public', $cfg=false){
                 //send notice
                 if($cfg['notify_out'] && ($user_id != $inUser->id)){
                     $club_title = dbGetField('cms_clubs', 'id='.$club_id, 'title');
-                    cmsUser::sendMessage(USER_UPDATER, $user_id, 'Пользователь [url='.cmsUser::getProfileURL($inUser->login).']'.$inUser->nickname.'[/url] исключил Вас из числа участников клуба [URL=http://'.$_SERVER['HTTP_HOST'].'/clubs/'.$club_id.']'.$club_title.'[/URL].');
+                    cmsUser::sendMessage(USER_UPDATER, $user_id, 'Пользователь <a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a> исключил Вас из числа участников клуба <a href="http://'.$_SERVER['HTTP_HOST'].'/clubs/'.$club_id.'">'.$club_title.'</a>.');
                 }
             }
         }
@@ -296,7 +296,7 @@ function clubSaveUsers($club_id, $list, $role, $clubtype='public', $cfg=false){
                 //send notice
                 if($cfg['notify_in'] && ($user_id != $inUser->id)){
                     $club_title = dbGetField('cms_clubs', 'id='.$club_id, 'title');
-                    cmsUser::sendMessage(USER_UPDATER, $user_id, '[b]Получено приглашение в клуб.[/b] Пользователь [url='.cmsUser::getProfileURL($inUser->login).']'.$inUser->nickname.'[/url] добавил Вас в число участников клуба [URL=http://'.$_SERVER['HTTP_HOST'].'/clubs/'.$club_id.']'.$club_title.'[/URL].');
+                    cmsUser::sendMessage(USER_UPDATER, $user_id, '<b>Получено приглашение в клуб.</b> Пользователь <a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a> добавил Вас в число участников клуба <a href="http://'.$_SERVER['HTTP_HOST'].'/clubs/'.$club_id.'">'.$club_title.'</a>.');
                 }
             } else {
                 //user already in club, update his role if necessary

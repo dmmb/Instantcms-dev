@@ -1055,8 +1055,8 @@ function catalog(){
 
         if ($inUser->id != 1 && $cfg['premod'] && $cfg['premod_msg']){
 
-            $link = "[url=/catalog/item{$item_id}.html]{$item['title']}[/url]";
-            $user = "[url=".cmsUser::getProfileURL($inUser->login)."]{$inUser->nickname}[/url]";
+            $link = '<a href="/catalog/item'.$item_id.'.html">'.$item['title'].'</a>';
+            $user = '<a href="'.cmsUser::getProfileURL($inUser->login).'">'.{$inUser->nickname}.'</a>';
 
             if ($opt=='add')  { $message = $_LANG['MSG_ITEM_SUBMIT']; }
             if ($opt=='edit') { $message = $_LANG['MSG_ITEM_EDITED']; }
@@ -1083,7 +1083,7 @@ function catalog(){
 
         $item = $inDB->get_fields('cms_uc_items', "id={$item_id}", 'title, user_id');
         
-        $item_link  = '[url=/catalog/item'.$item_id.'.html]'.$item['title'].'[/url]';
+        $item_link  = '<a href="/catalog/item'.$item_id.'.html">'.$item['title'].'</a>';
 
         $message = str_replace('%link%', $item_link, $_LANG['MSG_ITEM_ACCEPTED']);
 

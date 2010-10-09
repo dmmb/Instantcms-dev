@@ -1102,7 +1102,7 @@ class cmsUser {
                             $sql = "INSERT INTO cms_user_awards (user_id, pubdate, title, description, imageurl, from_id, award_id)
                                     VALUES ('$user_id', NOW(), '$title', '$description', '$imageurl', '0', '$award_id')";
                             $inDB->query($sql) ;
-                            self::sendMessage(USER_UPDATER, $user_id, '[b]Получена награда:[/b] [url='.cmsUser::getProfileURL($user['login']).']'.$award['title'].'[/url]');
+                            self::sendMessage(USER_UPDATER, $user_id, '<b>Получена награда:</b> <a href="'.cmsUser::getProfileURL($user['login']).'">'.$award['title'].'</a>');
                         }
                     }
                 }
@@ -1245,7 +1245,7 @@ class cmsUser {
             if ($user['id'] == $inUser->id) { continue; }
             
             if ($user['subscribe_type']=='priv' || $user['subscribe_type']=='both'){
-                $message = 'Произошло обновление: [url='.$comment['target_link'].']'.$comment['target_title'].'[/url]';
+                $message = 'Произошло обновление: <a href="'.$comment['target_link'].'">'.$comment['target_title'].'</a>';
                 self::sendMessage(USER_UPDATER, $user['id'], $message);
             }
 

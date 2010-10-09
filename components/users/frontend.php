@@ -1553,7 +1553,7 @@ if ($do=='addfriend'){
 					$inDB->query($sql) ;
 				}
 				
-				cmsUser::sendMessage(USER_UPDATER, $to_id, '[b]'.$_LANG['RECEIVED_F_O'].'[/b]. '.$_LANG['YOU_CAN_SEE'].' [url='.cmsUser::getProfileURL($usr['login']).']'.$_LANG['INPROFILE'].'[/url].');
+				cmsUser::sendMessage(USER_UPDATER, $to_id, '<b>'.$_LANG['RECEIVED_F_O'].'</b>. '.$_LANG['YOU_CAN_SEE'].' <a href="'.cmsUser::getProfileURL($usr['login']).'">'.$_LANG['INPROFILE'].'</a>.');
 				
 				$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 		}//!goadd
@@ -1821,7 +1821,7 @@ if ($do=='giveaward'){
 						$sql = "INSERT INTO cms_user_awards (user_id, pubdate, title, description, imageurl, from_id, award_id)
 								VALUES ('$to_id', NOW(), '$title', '$description', '$imageurl', '$from_id', '$award_id')";
 						$inDB->query($sql) ;
-						cmsUser::sendMessage(USER_UPDATER, $to_id, '[b]'.$_LANG['RECEIVED_AWARD'].':[/b] [url='.cmsUser::getProfileURL($usr['login']).']'.$title.'[/url]');
+						cmsUser::sendMessage(USER_UPDATER, $to_id, '<b>'.$_LANG['RECEIVED_AWARD'].':</b> <a href="'.cmsUser::getProfileURL($usr['login']).'">'.$title.'</a>');
 					}
 					$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 				}						
