@@ -77,37 +77,6 @@ function loadedByUser24h($user_id, $album_id){
 	return $loaded;
 }
 
-function pageBar($cat_id, $current, $perpage){
-    $inCore = cmsCore::getInstance();
-    $inDB   = cmsDatabase::getInstance();
-    $inUser     = cmsUser::getInstance();
-    global $_LANG;
-	$html   = '';
-
-    $id = $inCore->request('id', 'int');
-
-	$result = $inDB->query("SELECT id FROM cms_board_items WHERE category_id = $cat_id") ;
-	$records = $inDB->num_rows($result);
-	
-	if ($records){
-		$pages = ceil($records / $perpage);
-		if($pages>1){
-			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
-			for ($p=1; $p<=$pages; $p++){
-				if ($p != $current) {			
-					$link = '/board/'.$id.'-'.$p;
-					$html .= ' <a href="'.$link.'" class="pagebar_page">'.$p.'</a> ';		
-				} else {
-					$html .= '<span class="pagebar_current">'.$p.'</span>';
-				}
-			}
-			$html .= '</div>';
-		}
-	}
-	return $html;
-}
-
 function board(){
 
     $inCore     = cmsCore::getInstance();
@@ -153,12 +122,11 @@ if ($do=='view'){
 
    	$col        = 1;
     $maxcols    = isset($cfg['maxcols']) ? $cfg['maxcols'] : 1;
-    $perpage    = $category['perpage'] ? $category['perpage'] : 20;
-    $page       = $inCore->request('page', 'int', 1);
 
 	//SHOW CATEGORY LIST
 	$category   = $model->getCategory($id);
-
+    $perpage    = $category['perpage'] ? $category['perpage'] : 20;
+    $page       = $inCore->request('page', 'int', 1);	
     if ( $category['public'] == -1 ) { $category['public'] = $cfg['public']; }
 
 	//PAGE HEADING		
@@ -271,7 +239,7 @@ if ($do=='view'){
     }
 
     $col = 1; $maxcols = $category['maxcols']; $colwidth = round(100/$maxcols);
-    
+    $total = $inDB->rows_count('cms_board_items', 'category_id = '.$id.' AND published = 1');
     //DISPLAY
     $smarty = $inCore->initSmarty('components', 'com_board_items.tpl');
         $smarty->assign('is_items', $is_items);
@@ -281,7 +249,7 @@ if ($do=='view'){
         $smarty->assign('items', $items);
         $smarty->assign('maxcols', $maxcols);
         $smarty->assign('colwidth', $colwidth);
-        $smarty->assign('pagebar', pageBar($id, $page, $perpage));
+        $smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/board/%catid%-%page%', array('catid'=>$id)));
         $smarty->assign('is_user', $inUser->id);
     $smarty->display('com_board_items.tpl');
 						

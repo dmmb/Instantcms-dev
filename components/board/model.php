@@ -52,6 +52,7 @@ class cms_model_board{
         $this->deleteOldRecords();
 
         $category   = $this->inDB->get_fields('cms_board_cats', 'id='.$category_id, '*');
+		if (!$category['id']) { cmsCore::error404(); }
         $category   = cmsCore::callEvent('GET_BOARD_CAT', $category);
 
         if (!$category['obtypes']){
@@ -164,7 +165,6 @@ class cms_model_board{
         $this->deleteOldRecords();
 
         $sql = "SELECT i.*, 
-                       DATE_FORMAT(i.pubdate, '%d-%m-%Y') as pubdate,
                        a.id as cat_id,
                        a.NSLeft as NSLeft,
                        a.NSRight as NSRight,
@@ -176,16 +176,19 @@ class cms_model_board{
                        a.thumbsqr as thumbsqr,
                        u.nickname as user,
                        u.login as user_login
-                FROM cms_board_items i, cms_board_cats a, cms_users u
-                WHERE i.id = $item_id AND i.category_id = a.id AND i.user_id = u.id";
+                FROM cms_board_items i
+				LEFT JOIN cms_board_cats a ON a.id = i.category_id
+				LEFT JOIN cms_users u ON u.id = i.user_id
+                WHERE i.id = '$item_id'";
 
         $result = $this->inDB->query($sql);
 
-        if (!$this->inDB->num_rows($result)){ return false; }
+        if (!$this->inDB->num_rows($result)){ cmsCore::error404(); }
 
         $record = $this->inDB->fetch_assoc($result);
 
         $record['content'] = nl2br($record['content']);
+		$record['pubdate'] = cmsCore::dateFormat($record['pubdate']);
 
         $record = cmsCore::callEvent('GET_BOARD_RECORD', $record);
 
