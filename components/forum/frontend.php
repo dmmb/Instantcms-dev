@@ -49,11 +49,10 @@ function createPoll($thread_id, $poll, $cfg){
 	
 	$poll_error = '';
 	//title
-	$title = $poll['title'];
-	$title = htmlspecialchars($title, ENT_QUOTES, 'cp1251');
+	$title = $inCore->strClear($poll['title']);
 	//description
 	$desc = $poll['desc'];
-	if ($desc) { $desc = htmlspecialchars($desc, ENT_QUOTES, 'cp1251');	}
+	if ($desc) { $desc = $inCore->strClear($desc);	}
 	//days
 	$days = intval($poll['days']);
 	if ($days) { $days = abs(intval($days)); }
@@ -67,7 +66,7 @@ function createPoll($thread_id, $poll, $cfg){
 	$answers = array();
 	foreach($answers_title as $key=>$value){
 		if ($value!='') { 
-			$value = htmlspecialchars($value, ENT_QUOTES, 'cp1251');
+			$value = urlencode($inCore->strClear($value));
 			$answers[$value] = 0; 
 		}
 	}
@@ -765,7 +764,8 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 			
 		} else {
 			$message = $inCore->request('message', 'html');
-			
+			$message = $inDB->escape_string($message);
+
 			if($do=='newpost'){												
 				//NEW POST
 				//insert new post
@@ -806,8 +806,8 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 
 				if ($do=='newthread'){
 					//NEW THREAD
-					$title          = htmlspecialchars($_POST['title'], ENT_QUOTES, 'cp1251');
-					$description    = htmlspecialchars($_POST['description'], ENT_QUOTES, 'cp1251');
+					$title          = $inCore->request('title', 'str');
+					$description    = $inCore->request('description', 'str');
 												
 					if($title && $message){	
 						$sql = "INSERT INTO cms_forum_threads (forum_id, user_id, title, description, icon, pubdate, hits)
@@ -982,10 +982,10 @@ if ($do=='renamethread'){
 				} else { echo $_LANG['THREAD_NOT_FOUND']; }
 			} else { //DO RENAME
 			
-				if (@$_POST['title']){				
-					$title = htmlspecialchars($_POST['title']);
-					$description = htmlspecialchars($_POST['description']);
-					$tid = intval($_POST['tid']);
+				if (@$_POST['title']){	
+					$title          = $inCore->request('title', 'str');
+					$description    = $inCore->request('description', 'str');
+					$tid 			= $inCore->request('tid', 'int');
 					if (usrCheckAuth() && $inCore->userIsAdmin(@$inUser->id) || $inCore->isUserCan('forum/moderate')){		
 						$inDB->query("UPDATE cms_forum_threads SET title = '$title', description = '$description' WHERE id = $id") 	;
 					}									

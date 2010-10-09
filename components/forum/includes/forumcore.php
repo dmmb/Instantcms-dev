@@ -40,12 +40,11 @@ function forumPollVote(){
     $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
 	if (isset($_REQUEST['answer'])){
-		$answer = $inCore->request('answer', 'str');
+		$answer = $inCore->request('answer', 'html');
 		if (isset($_REQUEST['poll_id'])){
 			$poll_id = $inCore->request('poll_id', 'int');
 		} else { die(); }
 	} else { die();  }
-	
 	if(is_numeric($poll_id)){
 		$sql = "SELECT *
 				FROM cms_forum_polls
@@ -53,16 +52,16 @@ function forumPollVote(){
 				";
 		$result = $inDB->query($sql) ;
 	} else { die("HACKING ATTEMPT BLOCKED!"); }
-		
+
 	if ($inDB->num_rows($result)){
 		$poll=$inDB->fetch_assoc($result);		
 		$answers = unserialize($poll['answers']);
-		
+
 		//SUBMIT NEW VOTE
 		$answer_id = 0;
 		foreach($answers as $key=>$value){
 			$answer_id ++;
-			if ($key == $answer){
+			if (stripslashes(urldecode($key)) == $answer){
 				$answers[$key] += 1;
 				break;
 			}
@@ -171,14 +170,14 @@ function forumAttachedPoll($thread_id){
 	
 	if ($inDB->num_rows($result)){
 		$poll = $inDB->fetch_assoc($result);
-		
+
 		$answers = unserialize($poll['answers']);
 				 
 		$answers_title = array();
 		$answers_num = array();
 		$item = 1;
 		foreach($answers as $key=>$value){
-			$answers_title[$item] = $key;
+			$answers_title[$item] = stripslashes(urldecode($key));
 			$answers_num[$item] = $value;
 			$item++;
 		}
