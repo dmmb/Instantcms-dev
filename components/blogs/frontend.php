@@ -1026,7 +1026,7 @@ if ($do == 'delpost'){
 
     if ( !$inCore->inRequest('confirm') ) {
         //MENU
-        if ($myblog || $is_author || $post['user_id']==$user_id || $inUser->is_admin){
+        if ($myblog || ($is_author && $post['user_id'] == $user_id) || $inUser->is_admin){
             $inPage->setTitle($_LANG['DELETE_POST']);
             $inPage->backButton(false);
             $confirm['title'] = $_LANG['DELETE_POST'];
@@ -1044,7 +1044,7 @@ if ($do == 'delpost'){
     }
 
     if ( $inCore->inRequest('confirm') ){
-        if ($myblog || $is_author || $post['user_id']==$user_id || $inUser->is_admin){
+        if ($myblog || ($is_author && $post['user_id'] == $user_id) || $inUser->is_admin){
             
             $model->deletePost($post_id);
 
