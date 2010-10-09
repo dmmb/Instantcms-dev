@@ -699,30 +699,32 @@ function forumUserAuthSQL($tablepreffix=''){
 function forumUserRank($uid, $messages, $ranks, $modrank=true){
     $inDB   = cmsDatabase::getInstance();
     $inCore = cmsCore::getInstance();
+	$inUser = cmsUser::getInstance();
     global $_LANG;
 	$userrank = '';
-	
-	//check is admin
-	if ($inCore->userIsAdmin($uid)){
-		$userrank = '<span id="admin">'.$_LANG['ADMINISTRATOR'].'</span>';
-	} else {
-		//rank by messages
-		if(is_array($ranks)){
-			foreach($ranks as $k=>$rank){
-				if ($messages >= $rank['msg'] && $rank['msg'] != ''){
-					$userrank = '<span id="rank">'.$rank['title'].'</span>';
-				}
-			}
+	if ($inUser->id) {
+		//check is admin
+		if ($inCore->userIsAdmin($uid)){
+			$userrank = '<span id="admin">'.$_LANG['ADMINISTRATOR'].'</span>';
 		} else {
-			$userrank = '<span id="rank">'.$_LANG['USER'].'</span>';
-		}
-		//check is moderator
-		$rights = dbGetFields('cms_user_groups g, cms_users u', "u.group_id = g.id AND u.id = $uid", 'g.id, g.access as access');
-		if (strstr($rights['access'], 'forum/moderate')){
-			if ($modrank){
-				$userrank .= '<span id="moder">'.$_LANG['MODER'].'</span>';
+			//rank by messages
+			if(is_array($ranks)){
+				foreach($ranks as $k=>$rank){
+					if ($messages >= $rank['msg'] && $rank['msg'] != ''){
+						$userrank = '<span id="rank">'.$rank['title'].'</span>';
+					}
+				}
 			} else {
-				$userrank = '<span id="moder">'.$_LANG['MODER'].'</span>';
+				$userrank = '<span id="rank">'.$_LANG['USER'].'</span>';
+			}
+			//check is moderator
+			$rights = dbGetFields('cms_user_groups g, cms_users u', "u.group_id = g.id AND u.id = $uid", 'g.id, g.access as access');
+			if (strstr($rights['access'], 'forum/moderate')){
+				if ($modrank){
+					$userrank .= '<span id="moder">'.$_LANG['MODER'].'</span>';
+				} else {
+					$userrank = '<span id="moder">'.$_LANG['MODER'].'</span>';
+				}
 			}
 		}
 	}

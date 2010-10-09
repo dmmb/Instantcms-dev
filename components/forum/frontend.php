@@ -380,6 +380,7 @@ if ($do=='thread'){
 		
 		$mythread = ($inUser->id==$t['user_id']);
 		$is_admin = $inUser->is_admin;
+		$is_adm   = $inCore->userIsAdmin($inUser->id);
 		$is_moder = $inCore->isUserCan('forum/moderate');
 		
 		$inDB->query("UPDATE cms_forum_threads SET hits = hits + 1 WHERE id = ".$t['id']) ;
@@ -456,7 +457,7 @@ if ($do=='thread'){
 					echo '<td width="16"><img src="/components/forum/images/toolbar/edit.gif"/></td>
 						  <td><a href="/forum/renamethread'.$t['id'].'.html">'.$_LANG['RENAME'].'</a></td>';
 				}
-				if ($inCore->userIsAdmin($inUser->id) || $mythread){
+				if ($is_adm || $mythread){
 					echo '<td width="16"><img src="/components/forum/images/toolbar/delete.gif"/></td>
 						  <td><a href="javascript:deleteThread(\'/forum/deletethread'.$t['id'].'.html\')">'.$_LANG['DELETE'].'</a></td>';
 				}
@@ -482,12 +483,11 @@ if ($do=='thread'){
 	
 		$inPage->addPathway($t['title'], '/forum/thread'.$t['id'].'.html');
 		
-			$psql = "SELECT p.*, u.id uid, u.nickname author, u.login author_login, u.is_deleted deleted, up.imageurl imageurl, up.signature signature,
-							DATE_FORMAT(p.pubdate, '%d-%m-%Y') as pubdate, DATE_FORMAT(p.pubdate, '%H:%i') as pubtime, 
-						   (TO_DAYS(CURDATE()) - TO_DAYS(p.pubdate)) as daysleft,
-						   DATE_FORMAT(p.editdate, '%d-%m-%Y') as editdate, DATE_FORMAT(p.editdate, '%H:%i') as edittime
-					 FROM cms_forum_posts p, cms_users u, cms_user_profiles up
-					 WHERE p.thread_id = $id AND p.user_id = u.id AND up.user_id = u.id
+			$psql = "SELECT p.*, u.id as uid, u.nickname author, u.login author_login, u.is_deleted deleted, up.imageurl imageurl, up.signature signature
+					 FROM cms_forum_posts p
+					 INNER JOIN cms_users u ON u.id = p.user_id
+					 LEFT JOIN cms_user_profiles up ON up.user_id = u.id
+					 WHERE p.thread_id = $id 
 					 ORDER BY p.pubdate ASC
 					 LIMIT ".(($page-1)*$perpage).", $perpage";
 					 
@@ -499,11 +499,11 @@ if ($do=='thread'){
 
 				//ATTACHED POLL
 				echo forumAttachedPoll($id);
-	
+
 				//THREAD MESSAGES LIST
 				echo '<table class="posts_table" width="100%" cellspacing="2" cellpadding="5" border="0" bordercolor="#999999" >';
 				while ($p = $inDB->fetch_assoc($presult)){
-					$mypost = (@$inUser->id==$p['user_id'] || @$inCore->userIsAdmin($inUser->id));
+					$mypost = $inUser->id ? (@$inUser->id==$p['user_id'] || $is_adm) : false;
 					$user_messages = forumUserMsgNum($p['uid']);
 					echo '<tr>';
 						//user column
@@ -513,7 +513,7 @@ if ($do=='thread'){
 							echo '<div class="post_userrank">'.forumUserRank($p['uid'], $user_messages, $cfg['ranks'], $cfg['modrank']).'</div>';
 						
 							echo '<div class="post_userimg">';
-								echo '<a href="'.cmsUser::getProfileURL($p['author_login']).'" title="'.$_LANG['GOTO_PROFILE'].'">'.usrImage($p['uid'], 'small').'</a>';
+								echo '<a href="'.cmsUser::getProfileURL($p['author_login']).'" title="'.$_LANG['GOTO_PROFILE'].'">'.usrImageNOdb($p['uid'], 'small', $p['imageurl'], $p['is_deleted']).'</a>';
 								
 								$awards = cmsUser::getAwardsList($p['uid']);
 								if ($awards){
@@ -533,7 +533,7 @@ if ($do=='thread'){
 							echo '<a name="'.$p['id'].'"></a>';
 							//date & actions
 							echo '<table width="100%" class="post_date"><tr>';								
-							echo '<td><strong>#'.$num.'</strong> - '.forumDate($p['pubdate'], $p['daysleft']) . ' â ' .$p['pubtime'].'</td>';
+							echo '<td><strong>#'.$num.'</strong> - '.$inCore->dateFormat($p['pubdate'], true, true).'</td>';
 							echo '<td align="right">';
 							if (usrCheckAuth() && !$t['closed']){ 
 								echo '<table cellpadding="1" cellspacing="2" border="0">
@@ -570,7 +570,7 @@ if ($do=='thread'){
 							}
 							//edit details
 							if ($p['edittimes']){
-								echo '<div class="post_editdate">'.$_LANG['EDITED'].': '.$p['edittimes'].' '.$_LANG['COUNT'].' ('.$_LANG['LAST_EDIT'].': '.$p['editdate'].' '.$_LANG['IN'].' '.$p['edittime'].')</div>';
+								echo '<div class="post_editdate">'.$_LANG['EDITED'].': '.$p['edittimes'].' '.$_LANG['COUNT'].' ('.$_LANG['LAST_EDIT'].': '.$inCore->dateFormat($p['editdate'], true, true).')</div>';
 							}
 							//user signature
 							if ($p['signature']){
