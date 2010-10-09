@@ -228,7 +228,9 @@ function applet_content(){
 			$article['url']            = $inCore->request('url', 'str');
 			$article['showtitle']      = $inCore->request('showtitle', 'int', 0);
 			$article['description']    = $inCore->request('description', 'html', '');
+			$article['description']    = $inDB->escape_string($article['description']); 
 			$article['content']        = $inCore->request('content', 'html', '');
+			$article['content']    	   = $inDB->escape_string($article['content']); 
 			$article['published']      = $inCore->request('published', 'int', 0);
 			
 			$article['showdate']       = $inCore->request('showdate', 'int', 0);
@@ -317,8 +319,11 @@ function applet_content(){
         $article['title']           = $inCore->request('title', 'str');
         $article['url']             = $inCore->request('url', 'str');
         $article['showtitle']       = $inCore->request('showtitle', 'int', 0);
-        $article['description']     = $_REQUEST['description'];
-        $article['content']         = $_REQUEST['content'];
+		$article['description']     = $inCore->request('description', 'html', '');
+		$article['description']     = $inDB->escape_string($article['description']); 
+		$article['content']         = $inCore->request('content', 'html', '');
+		$article['content']    	    = $inDB->escape_string($article['content']); 
+
         $article['published']       = $inCore->request('published', 'int', 0);
 
         $article['showdate']        = $inCore->request('showdate', 'int', 0);

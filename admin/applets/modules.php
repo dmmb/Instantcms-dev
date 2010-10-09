@@ -305,6 +305,7 @@ function applet_modules(){
 			$position       = $inCore->request('position', 'str', '');
 			$showtitle      = $inCore->request('showtitle', 'int', 0);
 			$content        = $inCore->request('content', 'html', '');
+			$content    	= $inDB->escape_string($content); 
 			$published      = $inCore->request('published', 'int', 0);
 			$css_prefix     = $inCore->request('css_prefix', 'str', '');
 			$allow_group    = $inCore->request('allow_group', 'int', 0);
@@ -378,6 +379,7 @@ function applet_modules(){
         $position       = $inCore->request('position', 'str', '');
         $showtitle      = $inCore->request('showtitle', 'int', 0);
         $content        = $inCore->request('content', 'html', '');
+		$content    	= $inDB->escape_string($content); 
         $published      = $inCore->request('published', 'int', 0);
         $css_prefix     = $inCore->request('css_prefix', 'str', '');
         $allow_group    = $inCore->request('allow_group', 'int', 0);
