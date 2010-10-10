@@ -1001,10 +1001,10 @@ class cmsUser {
         $inDB = cmsDatabase::getInstance();
         $people = array();
 
-        $sql = "SELECT DISTINCT user_id, id FROM cms_online WHERE user_id = '0' OR user_id = '' GROUP BY user_id";
+        $sql = "SELECT user_id, id FROM cms_online WHERE user_id = '0' OR user_id = ''";
         $result = $inDB->query($sql);
         $people['guests'] = $inDB->num_rows($result);
-        $sql = "SELECT DISTINCT user_id, id FROM cms_online WHERE user_id > 0 GROUP BY user_id";
+        $sql = "SELECT user_id, id FROM cms_online WHERE user_id > 0 GROUP BY user_id";
         $result = $inDB->query($sql);
         $people['users'] = $inDB->num_rows($result);
 

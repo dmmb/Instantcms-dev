@@ -6,5 +6,6 @@
     </module>
     <params>
         <param type="flag" name="show_today" title="ѕоказывать кто был сегодн€" hint="¬ыводит дополнительно список всех посетителей за сегодн€" default="on" />
+		<param type="flag" name="admin_editor" title="ѕодсвечивать администраторов и редакторов?" hint="јдминистраторы и редакторы будут подсвечены соответственно красным и зеленым" default="on" />
     </params>
 </backend>
