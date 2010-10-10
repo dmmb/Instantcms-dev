@@ -95,7 +95,7 @@ function ratingForm($ratingdata, $item_id){
     $inDB = cmsDatabase::getInstance();
     global $_LANG;
     $html = '';
-    $html .= '<form name="rateform" action="?'.$_SERVER['QUERY_STRING'].'" method="POST"><div class="uc_detailrating"><table><tr>' ."\n";
+    $html .= '<form name="rateform" action="" method="POST"><div class="uc_detailrating"><table><tr>' ."\n";
     $html .= '<td width="90">'."\n";
     $html .= '<strong>'.$_LANG['RATING'].':</strong> '.round($ratingdata['rating'], 2)."\n";
     $html .= '</td>'."\n";
