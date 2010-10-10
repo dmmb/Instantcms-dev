@@ -81,11 +81,11 @@ function alreadyVoted($item_id){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
     $ip     = $_SERVER['REMOTE_ADDR'];
-    $sql    = "SELECT points FROM cms_uc_ratings WHERE item_id = $item_id AND ip = '$ip'";
+    $sql    = "SELECT points FROM cms_uc_ratings WHERE item_id = $item_id AND ip = '$ip' LIMIT 1";
     $result = $inDB->query($sql) ;
     if ($inDB->num_rows($result)){
         $data = $inDB->fetch_assoc($result);
-        return $data['points'];
+        return (int)$data['points'];
     }    
     return false;
 }
@@ -118,7 +118,7 @@ function ratingForm($ratingdata, $item_id){
         $html .= '<input type="hidden" name="item_id" value="'.$item_id.'"/>'."\n";
         $html .= '<select name="points" style="width:50px" onchange="document.rateform.submit();">'."\n";
         $html .= '<option value="-1"> -- </option>'."\n";
-        for($p=0; $p<=5; $p++) { $html .= '<option value="'.$p.'">'.$p.'</option>'."\n"; }
+        for($p=1; $p<=5; $p++) { $html .= '<option value="'.$p.'">'.$p.'</option>'."\n"; }
         $html .= '</select>'."\n";
     } else {
         $html .= $myvote;
