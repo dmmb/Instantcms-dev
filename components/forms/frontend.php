@@ -15,6 +15,7 @@ function forms(){
 
     $inCore     = cmsCore::getInstance();
     $inDB       = cmsDatabase::getInstance();
+	$inConf 	= cmsConfig::getInstance();
 
     //Определяем адрес для редиректа назад
     $back   = $inCore->getBackURL();
@@ -91,7 +92,7 @@ function forms(){
 			unset ($_SESSION['form_last'.$form_id]);
 
 			if ($form['sendto']=='mail'){
-				$inCore->mailText($form['email'], $_LANG['INSTANT_CMS'].': '.$form['title'], $mail_message);
+				$inCore->mailText($form['email'], $inConf->sitename.': '.$form['title'], $mail_message);
 			} else {
 				$mail_message = nl2br($mail_message);
 				$mail_message = str_replace('<br /><br /><br /><br />', '<br/>', $mail_message);

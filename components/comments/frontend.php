@@ -145,7 +145,7 @@ function comments($target='', $target_id=0){
 			if (!$cfg['publish']){
 				$_SESSION['cm_message'] = $_LANG['COMM_PREMODER_TEXT'];
 			}
-
+			$inConf = cmsConfig::getInstance();
 			//отправляем админу уведомление о комментарии на e-mail, если нужно
 			if($cfg['email']) {
 				$mailmsg = $_LANG['DATE'].": ".date('d m Y (H:i)')."\n";
@@ -153,11 +153,13 @@ function comments($target='', $target_id=0){
                 $mailmsg .= "-------------------------------------------------------\n";
 				$mailmsg .= strip_tags($content);
 				$mailmsg = wordwrap($mailmsg, 70);
-				$inCore->mailText($cfg['email'], $_LANG['EMAIL_SUDJECT_NEW_COMM'], $mailmsg);
+				$email_subj = str_replace('{sitename}', $inConf->sitename, $_LANG['EMAIL_SUDJECT_NEW_COMM']);
+				$inCore->mailText($cfg['email'], $email_subj, $mailmsg);
 			}
 
 			//если коммент для блога или фотографии, отправляем автору уведомление на e-mail
 			if($target=='userphoto' || $target=='blog' || $target=='photo'){
+				
 				switch($target){
 					case 'userphoto':
 						$table      = 'cms_user_photos';
@@ -182,7 +184,6 @@ function comments($target='', $target_id=0){
 				if ($author){
 					$needmail   = $model->isAuthorNeedMail($author['id']);
 					if ($needmail && $user_id != $author['id']){
-							$inConf = cmsConfig::getInstance();
 
 							$postdate   = date('d/m/Y H:i:s');
 							$to_email   = $author['email'];

@@ -20,5 +20,4 @@ $_LANG['FORM']               ='ФОРМА';
 $_LANG['FIELD']              ='Поле';
 $_LANG['MUST_BE_FILLED']     ='обязательно для заполнения!';
 $_LANG['ERR_CAPTCHA']        ='Неверно указан код с картинки!';
-$_LANG['INSTANT_CMS']        ='InstantCMS';
 ?>

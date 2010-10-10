@@ -464,7 +464,8 @@ function shopFinishOrder($cfg){
 				$total = number_format($total, 2, '.', '');
                 
 				$mail_message .= "\n" . $_LANG['TOTAL_ORDER_PRICE'].': '.$total.' '.$_LANG['RUB'] . "\n";
-				$inCore->mailText($cfg['email'], $_LANG['EMAIL_SUBJECT'], $mail_message);
+				$email_subj = str_replace('{sitename}', $inConf->sitename, $_LANG['EMAIL_SUBJECT']);
+				$inCore->mailText($cfg['email'], $email_subj, $mail_message);
 
                 if ($cfg['notice'] && $customer['email']){
                     $inCore->mailText($customer['email'], $_LANG['CUSTOMER_EMAIL_SUBJECT'], $mail_message);

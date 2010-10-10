@@ -1636,7 +1636,6 @@ if ($do=='sendmessage'){
 				} else {
 					$errors = false;
 					$message = $inCore->request('message', 'html', '');
-					$message = strip_tags($message);
 					$message = $inCore->parseSmiles($message, true);
 					$message = $inDB->escape_string($message);
 					if (strlen($message)<2) { $inCore->addSessionMessage($_LANG['ERR_SEND_MESS'], 'error'); $errors = true; }
