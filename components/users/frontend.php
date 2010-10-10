@@ -1949,11 +1949,11 @@ if ($do=='files'){
 			if ($current_bytes) { $current_mb = round(($current_bytes / 1024) / 1024, 2); } else { $current_mb = 0; }
 			$free_mb = round($max_mb - $current_mb, 2);
 			$is_files = false;
+			$myprofile = ($inUser->id==$id);
 			if ($inDB->num_rows($result)){ 
 				$is_files = true;
 				//page and ordering select table
 				$pagination = pageSelectFiles($total_files, $page, $perpage);
-				$myprofile = ($inUser->id==$id);
 
 				$rownum = 0;
 				//build file list rows
@@ -2044,26 +2044,30 @@ if ($do=='addfile'){
 						@mkdir(PATH.'/upload/userfiles/'.$id);
 					
 						$tmp_name   = $data_array["tmp_name"];
-						$name       = $data_array["name"];
-						$size       = $data_array["size"];
+						$name       = $inCore->strClear($data_array["name"]);
+						$size       = $inCore->strClear($data_array["size"]);
 						$size_mb    += round(($size/1024)/1024, 2);
 						
+						$types 		= $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar';
+						$maytypes 	= explode(',', str_replace(' ', '', $types));  
+						foreach($maytypes as $maytype){  
+							if(stristr($data_array['type'], $maytype)){  
+							   $may = 1;  
+							   break;  
+							}else{  
+							   $may = 0;  
+							}  
+						} 
+						
 						if ($size_mb <= $free_mb){
-							if( !strstr($name, '.php') &&
-                                !strstr($name, '.asp') &&
-                                !strstr($name, '.aspx') &&
-                                !strstr($name, '.js') &&
-                                !strstr($name, '.htm') &&
-                                !strstr($name, '.html') &&
-                                !strstr($name, '.phtml')
-                              ){
+							if ($may){
 								if (move_uploaded_file($tmp_name, PATH."/upload/userfiles/$id/$name")){
 									$loaded_files[] = $name;
 									$sql = "INSERT INTO cms_user_files(user_id, filename, pubdate, allow_who, filesize, hits)
 											VALUES ($id, '$name', NOW(), 'all', '$size', 0)";
 									$inDB->query($sql) ;
 								}						
-							}
+							} else { $type_error = true; }
 						} else { $size_limit = true; }
 					}
 				}
@@ -2072,7 +2076,10 @@ if ($do=='addfile'){
 					echo '<div style="color:#660000;margin-bottom:10px;font-weight:bold">'.$_LANG['YOUR_FILE_LIMIT'].' ('.$max_mb.' '.$_LANG['MBITE'].') '.$_LANG['IS_OVER_LIMIT'].'.</div>';
 					echo '<div style="color:#660000;font-weight:bold">'.$_LANG['FOR_NEW_FILE_DEL_OLD'].'</div>';
 				}
-										
+				if ($type_error) { 
+					echo '<div style="color:red">'.$_LANG['ERROR_TYPE_FILE'].': '.$types.'</div>';
+				}
+						
 				if (sizeof($loaded_files)){
 					echo '<div><strong>'.$_LANG['UPLOADED_FILES'].':</strong></div>';
 					echo '<ul>';
@@ -2110,6 +2117,7 @@ if ($do=='addfile'){
 					$smarty->assign('free_mb', $free_mb);
 					$smarty->assign('post_max_b', $post_max_b);
 					$smarty->assign('post_max_mb', $post_max_mb);
+					$smarty->assign('types', $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar');
 					$smarty->display('com_users_file_add.tpl');
 				}
 			}

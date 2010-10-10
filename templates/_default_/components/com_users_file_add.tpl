@@ -6,7 +6,7 @@
 <script type="text/javascript">
 				  function startUpload(){
 						$("#upload_btn").attr('disabled', 'true');
-						$("#upload_btn").attr('value', '{$LANG.LOADING}...');
+						$("#upload_btn").attr('value', '{/literal}{$LANG.LOADING}{literal} ...');
 						$("#cancel_btn").css('display', 'none');
 						$("#loadergif").css('display', 'block');
 						document.uploadform.submit();													
@@ -19,6 +19,7 @@
 <div>{$LANG.ERR_FILE_NAME}</div>
 <div style="margin:10px 0px 0px 0px"><strong>{$LANG.YOUR_FILE_LIMIT}:</strong> {$free_mb} {$LANG.MBITE}</div>
 <div style="margin:0px 0px 10px 0px"><strong>{$LANG.MAX_FILE_SIZE}:</strong> {$post_max_mb}</div>
+<div style="margin:0px 0px 10px 0px"><strong>{$LANG.TYPE_FILE}:</strong> {$types}</div>
 <form action="" method="post" enctype="multipart/form-data" name="uploadform">
   <input name="MAX_FILE_SIZE" type="hidden" value="{$post_max_b}"/>
   <input type="file" class="multi" name="upfile" id="upfile"/>

@@ -81,6 +81,7 @@ if($opt=='saveconfig'){
 
     $cfg['sw_files']    = $_REQUEST['sw_files'];
     $cfg['filessize']   = $_REQUEST['filessize'];
+	$cfg['filestype']   = $_REQUEST['filestype'];
 
     $cfg['privforms']   = $_REQUEST['privforms'];
 
@@ -331,6 +332,13 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
                         <span class="hinttext">Установите &quot;0&quot; для бесконечного размера</span>
                     </td>
                     <td><input name="filessize" type="text" id="filessize" size="5" value="<?php echo @$cfg['filessize'];?>"/> Мб</td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Доступные типы файлов:</strong><br />
+                        <span class="hinttext">Введите через запятую расширения для доступных типов файлов</span>
+                    </td>
+                    <td><input name="filestype" type="text" id="filestype" size="60" value="<?php echo $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar';?>"/></td>
                 </tr>
             </table>
         </div>
