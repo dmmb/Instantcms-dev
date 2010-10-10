@@ -2,7 +2,7 @@
     <table class="authtable" width="100%" border="0" cellspacing="0" cellpadding="2">
         <tr>
             <td width="86">{$LANG.AUTH_LOGIN}:</td>
-            <td width="917"><input name="login" type="text" id="login" size="15" /></td>
+            <td valign="top"><input name="login" type="text" id="login" size="15" /></td>
         </tr>
         <tr>
             <td height="30" valign="top">{$LANG.AUTH_PASS}:</td>
