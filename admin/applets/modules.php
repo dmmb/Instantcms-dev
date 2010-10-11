@@ -192,7 +192,7 @@ function applet_modules(){
                             <a href="javascript:" onclick="$('input#_filterText3').val('коммент|Коммент').trigger('keyup');">комментарии</a> |
                             <a href="javascript:" onclick="$('input#_filterText3').val('блог|Блог').trigger('keyup');">блоги</a> |
                             <a href="javascript:" onclick="$('input#_filterText3').val('клуб|Клуб').trigger('keyup');">клубы</a> |
-                            <a href="javascript:" onclick="$('input#_filterText3').val('пользовател|авторизация').trigger('keyup');">пользователи</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('пользовател|авторизация|регистр').trigger('keyup');">пользователи</a> |
                             <a href="javascript:" onclick="$('input#_filterText3').val('каталог|корзина').trigger('keyup');">каталог</a> |
                             <a href="javascript:" onclick="$('input#_filterText3').val('фото|изображен').trigger('keyup');">фотографии</a> |
                             <a href="javascript:" onclick="$('input#_filterText3').val('форум').trigger('keyup');">форум</a> |
@@ -308,6 +308,7 @@ function applet_modules(){
 			$published      = $inCore->request('published', 'int', 0);
 			$css_prefix     = $inCore->request('css_prefix', 'str', '');
 			$allow_group    = $inCore->request('allow_group', 'int', 0);
+			$is_strict_bind = $inCore->request('is_strict_bind', 'int', 0);
 
             $template       = $inCore->request('template', 'str', '');
 
@@ -332,7 +333,8 @@ function applet_modules(){
 						allow_group='$allow_group',
 						cachetime = '$cachetime',
 						cacheint = '$cacheint',
-						cache = $cache
+						cache = '$cache',
+                        is_strict_bind = '$is_strict_bind'
 					WHERE id = $id
 					LIMIT 1";
 			dbQuery($sql) ;
@@ -389,10 +391,12 @@ function applet_modules(){
         $cacheint       = $inCore->request('cacheint', 'str', '');
 
 		$operate        = $inCore->request('operate', 'str', '');
+
+        $is_strict_bind = $inCore->request('is_strict_bind', 'int', 0);
 		
 		if ($operate == 'user'){ //USER MODULE
-			$sql = "INSERT INTO cms_modules (id, position, name, title, is_external, content, ordering, showtitle, published, original, css_prefix, allow_group, cache, cachetime, cacheint, template)
-					VALUES ('', '$position', '$name', '$title', 0, '$content', $maxorder, $showtitle, $published, 1, '$css_prefix', '$allow_group', 0, 24, 'HOUR', '$template')";
+			$sql = "INSERT INTO cms_modules (id, position, name, title, is_external, content, ordering, showtitle, published, original, css_prefix, allow_group, cache, cachetime, cacheint, template, is_strict_bind)
+					VALUES ('', '$position', '$name', '$title', 0, '$content', $maxorder, $showtitle, $published, 1, '$css_prefix', '$allow_group', 0, 24, 'HOUR', '$template', '$is_strict_bind')";
 			dbQuery($sql) ;			
 		}
 		
@@ -701,6 +705,13 @@ function applet_modules(){
                         }
                         echo '</select></div>';
                     ?>
+
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
+                        <tr>
+                            <td width="20"><input type="checkbox" name="is_strict_bind" id="is_strict_bind" value="1" <?php if ($mod['is_strict_bind']) { echo 'checked="checked"'; } ?>/></td>
+                            <td><label for="is_strict_bind"><strong>Не показывать на вложенных страницах</strong></label></td>
+                        </tr>
+                    </table>
 
                     {tab=Кеширование}
 

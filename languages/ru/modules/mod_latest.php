@@ -18,8 +18,5 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  */
 $_LANG['LATEST_NOT_MATERIAL']     ='Нет материалов для отображения.';
 // Template
-$_LANG['LATEST_COMMENT']          ='комментарий';
-$_LANG['LATEST_COMMENT2']         ='комментария';
-$_LANG['LATEST_COMMENT10']        ='комментариев';
-$_LANG['LATEST_RSS']              ='Лента материалов';
+$_LANG['LATEST_RSS']              ='RSS-лента статей';
 ?>

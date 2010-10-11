@@ -448,11 +448,20 @@ public function countModules($position){
     //if not admin, add access check to sql
     if ($gid !== false) { $group_sql = "AND ((m.allow_group=-1) OR (m.allow_group=$gid))"; } else { $group_sql = ""; }
 
+    if (!$inCore->isMenuIdStrict()){ $strict_sql = "AND (m.is_strict_bind = 0)"; } else { $strict_sql = ""; }
+
 	$menuid = $inCore->menuId();
     $sql = "SELECT m.id
             FROM cms_modules m, cms_modules_bind mb
-            WHERE m.position = '$position' AND m.published = 1 AND m.id = mb.module_id AND (mb.menu_id = $menuid OR mb.menu_id = 0) $group_sql
+            WHERE m.position = '$position' AND
+                  m.published = 1 AND
+                  m.id = mb.module_id AND
+                  (mb.menu_id = $menuid OR mb.menu_id = 0)
+                  $strict_sql
+                  $group_sql
             ";
+
+
     $result = $inDB->query($sql) ;
     return $inDB->num_rows($result);
 }
@@ -483,10 +492,17 @@ public function printModules($position){
     //if not admin, add access check to sql
     if ($gid !== false) { $group_sql = "AND ((m.allow_group=-1) OR (m.allow_group=$gid))"; } else { $group_sql = ""; }
 
+    if (!$inCore->isMenuIdStrict()){ $strict_sql = "AND (m.is_strict_bind = 0)"; } else { $strict_sql = ""; }
+
     //get modules info
     $sql = "SELECT *, m.id as mid, m.template as tpl
             FROM cms_modules m, cms_modules_bind mb
-            WHERE m.position = '$position' AND m.published = 1 AND m.id = mb.module_id AND (mb.menu_id = $menuid OR mb.menu_id = 0) $group_sql
+            WHERE m.position = '$position' AND 
+                  m.published = 1 AND
+                  m.id = mb.module_id AND
+                  (mb.menu_id = $menuid OR mb.menu_id = 0)
+                  $strict_sql
+                  $group_sql
             ORDER BY m.ordering ASC
             ";
 

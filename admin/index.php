@@ -41,6 +41,7 @@
     if ( !$inUser->update() ) { $inCore->redirect('/404'); }
 
     define('TEMPLATE_DIR', PATH.'/templates/'.$inConf->template.'/');
+    define('DEFAULT_TEMPLATE_DIR', PATH.'/templates/_default_/');
 
 	//-------CHECK AUTHENTICATION--------------------------------------//
 	if (!$inUser->id ) {

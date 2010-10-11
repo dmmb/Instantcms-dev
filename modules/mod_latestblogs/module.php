@@ -37,10 +37,19 @@ function mod_latestblogs($module_id){
                         IFNULL(r.total_rating, 0) as rating,
                         b.owner as owner,
                         b.ownertype as ownertype,
-                        u.nickname as author
-				FROM cms_users u, cms_blogs b, cms_blog_posts p
+                        u.id as author_id,
+                        u.nickname as author,
+                        up.imageurl as author_image,
+                        u.is_deleted as author_deleted,
+                        IFNULL(COUNT(cm.id), 0) as comments
+				FROM cms_users u, cms_user_profiles up, cms_blogs b, cms_blog_posts p
                 LEFT JOIN cms_ratings_total r ON r.item_id=p.id AND r.target='blogpost'
-				WHERE p.blog_id = b.id AND b.allow_who = 'all' AND p.published = 1
+                LEFT JOIN cms_comments cm ON cm.target='blog' AND cm.target_id=p.id
+				WHERE p.blog_id = b.id AND
+                      b.allow_who = 'all' AND
+                      p.published = 1 AND
+                      p.user_id = u.id AND
+                      p.user_id = up.user_id
                 GROUP BY p.id
 				ORDER BY p.pubdate DESC
                 LIMIT 50";
@@ -54,6 +63,8 @@ function mod_latestblogs($module_id){
 			$posts = array();
 
 			while($con = $inDB->fetch_assoc($result)){
+
+                include_once($_SERVER['DOCUMENT_ROOT'].'/components/users/includes/usercore.php');
 
                 if ($count > $cfg['shownum']) { break; }
 
@@ -72,6 +83,8 @@ function mod_latestblogs($module_id){
 					if (strlen($con['title'])>70) { $con['title'] = substr($con['title'], 0, 70). '...'; }
 					$con['fpubdate'] = $inCore->dateFormat($con['fpubdate']);
 					$con['bloghref'] = $model->getBlogURL(null, $con['bloglink']);
+
+                    $con['image'] = usrImageNOdb($con['author_id'], 'small', $con['author_image'], $con['author_deleted']);
 
                     $count++;
 

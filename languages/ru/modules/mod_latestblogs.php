@@ -17,6 +17,7 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * site: firs.org.ua
  */
 $_LANG['LATESTBLOGS_CONFIG_TEXT']     ='Задайте настройки модуля в панели управления.';
-$_LANG['LATESTBLOGS_RSS']             ='Лента блогов';
+$_LANG['LATESTBLOGS_RSS']             ='RSS-лента блогов';
 $_LANG['LATESTBLOGS_NOT_POSTS']       ='Нет записей в блогах для отображения.';
+
 ?>

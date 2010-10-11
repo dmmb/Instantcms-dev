@@ -16,8 +16,12 @@ function checkGroupList(){
 
 	if(document.addform.show_all.checked){
 		$('select#showin').attr('disabled', 'disabled');
+		$('#is_strict_bind').attr('checked', '').attr('disabled', 'disabled');
+		$('label[for=is_strict_bind] strong').css('color', '#999');
 	} else {
 		$('select#showin').attr('disabled', '');
+        $('#is_strict_bind').attr('disabled', '');
+        $('label[for=is_strict_bind] strong').css('color', '');
 	}
 
 }

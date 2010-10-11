@@ -29,6 +29,7 @@ class cmsCore {
     private         $menu_item;
     private         $menu_id = 0;
     private         $menu_struct;
+    private         $is_menu_id_strict;
 
     private         $uri;
     private         $component;
@@ -1885,6 +1886,18 @@ class cmsCore {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
+     * Возвращает true если URI страницы и ссылка активного пункта меню совпали полностью
+     * @return boolean
+     */
+    public function isMenuIdStrict() {
+        
+        return $this->is_menu_id_strict;
+        
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
      * Возвращает ID текущего пункта меню
      * @return int
      */
@@ -1903,9 +1916,16 @@ class cmsCore {
 
         $uri        = '/'.$uri;
 
+        //флаг, показывающий было совпадение URI и ссылки пунта меню
+        //полным или частичным
+        $is_strict  = false;
+
         //главная страница?
         $menuid     = ($uri == '/' ? 1 : 0);
-        if ($menuid == 1) { return $menuid; }
+        if ($menuid == 1) {
+            $this->is_menu_id_strict = 1;
+            return $menuid;
+        }
 
         //перевернем массив меню чтобы перебирать от последнего пункта к первому
         $menu       = array_reverse($this->menu_struct);
@@ -1918,6 +1938,7 @@ class cmsCore {
             //полное совпадение ссылки и адреса?
             if ($uri == $item['link']){
                 $menuid = $item['id'];
+                $is_strict = true; //полное совпадение
                 break;
             }
 
@@ -1930,7 +1951,8 @@ class cmsCore {
             
         }
 
-        $this->menu_id = $menuid;
+        $this->menu_id              = $menuid;
+        $this->is_menu_id_strict    = $is_strict;
 
         return $menuid;
 

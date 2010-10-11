@@ -98,4 +98,9 @@ $_LANG['MONTH_12_SHORT']               	='дек';
 $_LANG['SHOW']                      = 'Показать';
 $_LANG['HIDE']                      = 'Скрыть';
 $_LANG['SPOILER']                   = 'Спойлер';
+
+$_LANG['COMMENT1']          ='комментарий';
+$_LANG['COMMENT2']         ='комментария';
+$_LANG['COMMENT10']        ='комментариев';
+
 ?>
