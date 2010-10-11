@@ -57,8 +57,8 @@ function registration(){
     if (!isset($cfg['ask_birthdate'])) { $cfg['ask_birthdate'] = 1; }
 
     //request params
-    if (isset($_REQUEST['id'])){ if(is_numeric($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { die('HACKING ATTEMPT BLOCKED'); } } else { $id = 0; }
-    if (isset($_REQUEST['do'])){ $do = htmlentities($_REQUEST['do'], ENT_QUOTES); } else { $do = 'view'; 	}
+	$id     =   $inCore->request('id', 'int', 0);
+	$do     =   $inCore->request('do', 'str', 'view');
 
 //======================================================================================================================//
 
@@ -80,7 +80,7 @@ function registration(){
             echo '</form>';
         } else {
             //SEND NEW PASSWORD TO EMAIL
-            $email = $_POST['email'];
+            $email = $inCore->request('email', 'str');
 
             if (!eregi("^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$", $email)){
                 echo '<p style="color:red">'.$_LANG['ERR_EMAIL'].'</p>';
@@ -167,7 +167,7 @@ function registration(){
             $icq = '';
         }
 
-        if($_REQUEST['code']) { $code = $_REQUEST['code']; } else { $msg .= $_LANG['TYPE_CAPTCHA'].'<br/>'; }
+        if($_REQUEST['code']) { $code = $inCore->request('code', 'str'); } else { $msg .= $_LANG['TYPE_CAPTCHA'].'<br/>'; }
         if(@$pass != @$pass2) { $msg .= $_LANG['WRONG_PASS'].'<br/>'; }
 
         if($inDB->rows_count('cms_users', 'LOWER(nickname) LIKE "'.strtolower($nickname).'"', 1)){

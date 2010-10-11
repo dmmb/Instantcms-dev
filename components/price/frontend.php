@@ -49,7 +49,7 @@ function pageBar($cat_id, $current, $perpage){
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {			
 					
-					$link = '/price/'.@$_REQUEST['id'].'-'.$p;
+					$link = '/price/'.(int)$_REQUEST['id'].'-'.$p;
 					
 					$html .= ' <a href="'.$link.'" class="pagebar_page">'.$p.'</a> ';		
 				} else {
@@ -70,8 +70,8 @@ function price(){
     global $_LANG;
 	$cfg    = $inCore->loadComponentConfig('price');
 	
-	if (isset($_REQUEST['id'])){ if(is_numeric($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { die('HACKING ATTEMPT BLOCKED'); } } else { $id = 0; }
-	if (isset($_REQUEST['do'])){ $do = htmlentities($_REQUEST['do'], ENT_QUOTES); } else { $do = 'view'; 	}
+	$id     =   $inCore->request('id', 'int', 0);
+	$do     =   $inCore->request('do', 'str', 'view');
 	
 	if ($inCore->inRequest('query')){ 
 		//PREPARE QUERY
@@ -102,7 +102,7 @@ function price(){
 		$customer['company'] = $inCore->request('customer_company', 'str', '');
 		$customer['comment'] = $inCore->request('customer_comment', 'str', '');
 		
-		if(!$inCore->checkCaptchaCode($_REQUEST['code'])) { $error .= $_LANG['ERR_CAPTCHA'].'<br/>'; }
+		if(!$inCore->checkCaptchaCode($inCore->request('code', 'str'))) { $error .= $_LANG['ERR_CAPTCHA'].'<br/>'; }
 				
 		if($error==''){
 		
@@ -174,6 +174,7 @@ function price(){
 		$match = ""; $n=0;				
 		foreach($_REQUEST['kolvo'] as $key=>$val){ 
 			if ($val) { 
+				$key = (int)$key;
 				if($n==0) { $match .= "id = $key"; $n++; } 
 				else { $match .= " OR id = $key"; } 
 				$_SESSION['cart'][$key] = $val;

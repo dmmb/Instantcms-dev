@@ -1222,7 +1222,7 @@ if ($do=='editphoto'){
 						$inCore->includeGraphics();
 
 						//delete old
-						$imageurl = $_POST['imageurl'];
+						$imageurl = $inCore->request('imageurl', 'str', '');
 						$result = $inDB->query("SELECT id FROM cms_user_photos WHERE user_id = $id AND imageurl = '$imageurl'");
 						if ($inDB->num_rows($result)){ //delete only if user is owner
 							@unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/'.$imageurl);
@@ -1394,7 +1394,7 @@ if ($do=='viewboard'){
 				ORDER BY pubdate DESC
 				";
 		$perpage = 10; // объ€влений на странице
-		if (isset($_REQUEST['page'])) { $page = $inCore->request('page', 'int', ''); } else { $page = 1; }
+		$page = $inCore->request('page', 'int', 1);
 		$sql .= "LIMIT ".($page-1)*$perpage.", $perpage";
 
 		$result = $inDB->query($sql);

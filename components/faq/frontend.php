@@ -165,7 +165,7 @@ if ($do=='sendquest'){
     $published      = ($inUser->is_admin ? 1 : 0);
     $is_submit      = $inCore->inRequest('message');
 
-    if ($is_submit && !$inUser->id && !$inCore->checkCaptchaCode($_REQUEST['code'])) { $error = $_LANG['ERR_CAPTCHA']; }
+    if ($is_submit && !$inUser->id && !$inCore->checkCaptchaCode($inCore->request('code', 'str'))) { $error = $_LANG['ERR_CAPTCHA']; }
 
 	if (!$is_submit || $error){
 		//FORM								

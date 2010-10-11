@@ -232,7 +232,7 @@ function search(){
 		} else {
 		
 			if (isset($cfg['perpage'])) { $perpage = $cfg['perpage']; } else { $perpage = 20; }				
-			if (isset($_REQUEST['page'])) { $page = abs((int)$_REQUEST['page']); } else { $page = 1; }		
+			if (isset($_REQUEST['page'])) { $page = $inCore->request('page', 'int'); } else { $page = 1; }		
 		
 			echo '<p style="padding:5px;padding-bottom:0px"><strong>'.$_LANG['SEARCH_BY_TAG'].':</strong> &laquo;'.$query.'&raquo;</p>';
 		

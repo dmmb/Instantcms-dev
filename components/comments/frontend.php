@@ -93,7 +93,7 @@ function comments($target='', $target_id=0){
         if ($user_id != $inUser->id) { $error = $_LANG['ERR_DEFINE_USER']; }
         if (!$guestname && !$user_id) { $error = $_LANG['ERR_USER_NAME']; }
         if (!$content) { $error = $_LANG['ERR_COMMENT_TEXT']; }
-        if ($need_captcha && !$inCore->checkCaptchaCode($_REQUEST['code'])) { $error = $_LANG['ERR_CAPTCHA']; }
+        if ($need_captcha && !$inCore->checkCaptchaCode($inCore->request('code', 'str'))) { $error = $_LANG['ERR_CAPTCHA']; }
 
         // получаем массив со ссылкой и заголовком цели комментария
         // для этого:

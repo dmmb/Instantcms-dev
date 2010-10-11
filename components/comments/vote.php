@@ -20,7 +20,7 @@
     $inUser->update();
 
     $comment_id     = $inCore->request('comment_id', 'int');
-    $vote           = intval($_REQUEST['vote']);
+    $vote           = $inCore->request('vote', 'int');
     $user_id        = $inUser->id;
 
     $inCore->loadLib('karma');

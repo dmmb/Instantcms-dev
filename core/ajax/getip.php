@@ -4,7 +4,7 @@
 
 	session_start();
 
-	if (!isset($_REQUEST['user_id'])) { die(1); } else { $user_id = $_REQUEST['user_id']; }
+	if (!isset($_REQUEST['user_id'])) { die(1); } else { $user_id = intval($_REQUEST['user_id']); }
 
 	define("VALID_CMS", 1);	
 	include($_SERVER['DOCUMENT_ROOT'].'/includes/config.inc.php');

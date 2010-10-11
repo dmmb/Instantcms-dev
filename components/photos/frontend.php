@@ -415,7 +415,7 @@ if ($do=='addphoto'){
 					if ($inCore->inRequest('upload')) {
 						//first upload step
 						if (isset($_POST['userid'])){
-							$userid = $_POST['userid'];
+							$userid = $inCore->request('userid', 'int');
 							if ($userid == $inUser->id){
 								$uploaddir = $_SERVER['DOCUMENT_ROOT'].'/images/photos/';		
 								$realfile = $_FILES['picture']['name'];
@@ -595,7 +595,7 @@ if ($do=='editphoto'){
                                 $photo['filename'] = $filename;
 
                                 //delete old
-                                $file = $_POST['file'];
+                                $file = $photo['filename'];
                                 $result = $inDB->query("SELECT id FROM cms_photo_files WHERE user_id = ".$inUser->id." AND file = '$file'") ;
                                 if ($inDB->num_rows($result)){ //delete only if user is owner
                                     @unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/'.$file);
@@ -684,7 +684,7 @@ if ($do=='movephoto'){
 			} else { //DO MOVE
 			
 				if (@$_POST['album_id']){				
-					$fid = intval($_POST['album_id']);
+					$fid = $inCore->request('album_id', 'int');
 					if ($is_admin){		
 						$inDB->query("UPDATE cms_photo_files SET album_id = $fid WHERE id = $id") ;
 					}									
