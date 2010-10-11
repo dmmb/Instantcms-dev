@@ -409,95 +409,52 @@ function usrFriendQueriesList($user_id, $model){
 }
 
 function usrFriends($user_id, $short=true){
+    $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
-    global $_LANG;
-	$sql = "SELECT *
+	
+	$sql = "SELECT
+			CASE
+			WHEN f.from_id = $user_id
+			THEN f.to_id
+			WHEN f.to_id = $user_id
+			THEN f.from_id
+			END AS id_friends, u.id as id, u.nickname as nickname, u.login as login, u.is_deleted as is_deleted, p.imageurl as avatar, u.logdate as flogdate, o.id as online
 			FROM cms_user_friends f
-			WHERE ((f.to_id = $user_id AND f.from_id <> $user_id) OR (f.to_id <> $user_id AND f.from_id = $user_id)) AND f.is_accepted = 1
-			";
-
-    if ($short) { $sql .= "LIMIT 9"; }
+			LEFT JOIN cms_users u ON u.id = CASE WHEN f.from_id = $user_id THEN f.to_id WHEN f.to_id = $user_id THEN f.from_id END
+			LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+            LEFT JOIN cms_online o ON p.user_id = o.user_id
+			WHERE (from_id = $user_id OR to_id = $user_id) AND is_accepted =1 ";
+			
+    if ($short) { $sql .= " LIMIT 9"; }
 			
 	if ($short) { $maxcols = 3; } else { $maxcols = 5; }
 
 	$result = $inDB->query($sql) ;
 	
 	if ($inDB->num_rows($result)){
-
-		$friends    = array();
-		$friends_id = array();
-		$not_all    = false;
-
-		while ($friend = $inDB->fetch_assoc($result)){
-			if ($friend['from_id']==$user_id) { 
-                $friends_id[] = $friend['to_id'];
-            } else {
-                $friends_id[] = $friend['from_id'];
-            }
-            if ($short && sizeof($friends_id)>=8){
-                $not_all = true;
-                break;
-            }
-		}
-
-        $id_sql = ''; $id_count = 0; $id_total = sizeof($friends_id);
-
-        foreach($friends_id as $key=>$friend_id){
-            $id_count   += 1;
-            $id_sql     .= "u.id = {$friend_id}";
-            if ($id_count < $id_total){ $id_sql .= ' OR '; }
-        }
-
-        $sql = "SELECT u.id as id, u.nickname as nickname, u.login as login, p.imageurl as avatar, logdate as flogdate, IFNULL(COUNT(o.id), 0) as online
-                FROM cms_users u
-				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
-                LEFT JOIN cms_online o ON p.user_id = o.user_id
-                WHERE {$id_sql}
-                GROUP BY u.id";
-
-        $res = $inDB->query($sql);
-        
-        if ($inDB->num_rows($res)){
-            while($usr = $inDB->fetch_assoc($res)){
-                $friends[$usr['id']]    = $usr;
-            }
-        }
 		
-		if (sizeof($friends)){	
-			$col = 1; $html = '';
-			$html .= '<table width="" cellpadding="10" cellspacing="0" border="0" class="usr_friends_list" align="left">';
-				foreach($friends as $friend){
-                    
-					$id         = $friend['id'];
-					$nickname   = $friend['nickname'];
-					$logdate    = $friend['flogdate'];
-                    $login      = $friend['login'];					
-					$avatar     = $friend['avatar'];
-                    $online     = (int)$friend['online'];
-					
-					if (!$avatar || !file_exists(PATH.'/images/users/avatars/small/'.$avatar)) { $avatar = 'nopic.jpg'; }
-				
-					if ($col==1) { $html .= '<tr>'; } $html .= '<td align="center" valign="top">';
-					$html .= '<table width="" cellpadding="1" cellspacing="0" border="0" align="center" class="usr_friends_entry">';
-						$html .= '<tr><td align="center"><div><a href="'.cmsUser::getProfileURL($login).'">'.$nickname.'</a></div></td></tr>';
-						$html .= '<tr><td align="center"><a href="'.cmsUser::getProfileURL($login).'"><img src="/images/users/avatars/small/'.$avatar.'" border="0" /></a></td></tr>';
-						$html .= '<tr>
-									<td align="center">										
-										'.usrStatus($id, $logdate, $online).'
-									</td>
-								  </tr>';						
-					$html .= '</table>';		
-					$html .= '</td>'; if ($col==$maxcols) { $html .= '</tr>'; $col=1; } else { $col++; }
-                    
-				}
-			if ($col>1) { $html .=  '<td colspan="'.($maxcols-$col+1).'">&nbsp;</td></tr>'; }			
-			$html .= '</table>';
-			if ($not_all && $short){
-				$html .= '<div style="text-align:right"><a href="/users/'.$user_id.'/friendlist.html" class="usr_friendslink">'.$_LANG['ALL_FRIENDS'].'</a> &rarr;</div>';
-			}
+		$friends = array();
+		
+		while ($friend = $inDB->fetch_assoc($result)){
+	
+				$friend['flogdate'] = usrStatus($friend['id'], $friend['flogdate'], (int)$friend['online']);
+				$friend['avatar']   = usrImageNOdb($friend['id'], 'small', $friend['avatar'], $friend['is_deleted']);
+				$friends[] = $friend;
+	
 		}
-	} else { $html = ''; }
-	return $html;
+		
+	} 
+	
+    ob_start();
+
+    $smarty = $inCore->initSmarty('components', 'com_users_friends.tpl');
+
+    $smarty->assign('friends', $friends);
+	$smarty->assign('maxcols', $maxcols);
+
+    $smarty->display('com_users_friends.tpl');
+
+	return ob_get_clean();
 }
 
 function usrAllowed($allow_who, $owner_id){

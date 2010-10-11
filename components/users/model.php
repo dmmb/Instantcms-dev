@@ -86,8 +86,20 @@ class cms_model_users{
 /* ==================================================================================================== */
 
     public function getUserShort($user_id){
+		
+		$inUser = cmsUser::getInstance();
 				
-		$user = $this->inDB->get_fields('cms_users', "id = '$user_id'", 'id, nickname, login');
+		if ($inUser->id == $user_id) { 
+		
+			$user['id'] 		= $user_id;
+			$user['login'] 		= $inUser->login;
+			$user['nickname'] 	= $inUser->nickname;
+		
+		} else {
+		
+			$user = $this->inDB->get_fields('cms_users', "id = '$user_id'", 'id, nickname, login');
+		
+		}
         
 		if (!$user){ return false; }
 
@@ -117,9 +129,9 @@ class cms_model_users{
     public function isNewFriends($user_id, $from_id=0){
 
         if (!$from_id){
-            $sql = "SELECT * FROM cms_user_friends WHERE to_id = $user_id AND is_accepted = 0";
+            $sql = "SELECT 1 FROM cms_user_friends WHERE to_id = $user_id AND is_accepted = 0";
         } else {
-            $sql = "SELECT * FROM cms_user_friends WHERE to_id = $user_id AND from_id = $from_id AND is_accepted = 0";
+            $sql = "SELECT 1 FROM cms_user_friends WHERE to_id = $user_id AND from_id = $from_id AND is_accepted = 0";
         }
 
         $result = $this->inDB->query($sql);
@@ -127,7 +139,7 @@ class cms_model_users{
         return (bool)$this->inDB->num_rows($result);
         
     }
-
+	
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 

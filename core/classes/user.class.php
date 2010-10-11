@@ -731,27 +731,31 @@ class cmsUser {
         $inDB = cmsDatabase::getInstance();
 
         $html = '';
-
-        $sql = "SELECT f.from_id, f.to_id
-                FROM cms_user_friends f
-                WHERE (f.to_id = $user_id OR f.from_id = $user_id) AND f.is_accepted = 1
-                ORDER BY logdate ASC";
+		
+		$sql = "SELECT
+				CASE
+				WHEN f.from_id = $user_id
+				THEN f.to_id
+				WHEN f.to_id = $user_id
+				THEN f.from_id
+				END AS id, u.nickname as nickname
+				FROM cms_user_friends f
+				LEFT JOIN cms_users u ON u.id = CASE WHEN f.from_id = $user_id THEN f.to_id WHEN f.to_id = $user_id THEN f.from_id END
+				WHERE (from_id = $user_id OR to_id = $user_id) AND is_accepted =1";
+			
         $result = $inDB->query($sql);
 
         if ($inDB->num_rows($result)){
+		
             while($friend = $inDB->fetch_assoc($result)){
 
-                if ($friend['from_id']==$user_id) { $friend_id = $friend['to_id']; } else { $friend_id = $friend['from_id']; }
-
-                $friend_nickname = $inDB->get_field('cms_users', 'id='.$friend_id, 'nickname');
-
-                if (@$selected==$cat['id']){
+                if (@$selected==$friend['id']){
                     $s = 'selected';
                 } else {
                     $s = '';
                 }
                 
-                $html .= '<option value="'.$friend_id.'" '.$s.'>'.$friend_nickname.'</option>';
+                $html .= '<option value="'.$friend['id'].'" '.$s.'>'.$friend['nickname'].'</option>';
             }
         } else {
             $html = '<option value="0" selected>-- Ќет друзей --</option>';
@@ -765,33 +769,43 @@ class cmsUser {
 
     /**
      * ¬озвращает список друзей пользовател€
+	 * и помещает в текущую сессию
      * @param int $user_id
      * @return array
      */
     public static function getFriends($user_id){
 
+		//≈сли не авторизован или не €, то выходим
+		if (!isset($_SESSION['user']['id']) || $_SESSION['user']['id'] != $user_id) { return false; }
+
+		//≈сли список уже в сессии, возвращаем
+		if (isset($_SESSION['user']['friends'])) { return $_SESSION['user']['friends']; }
+
+		//иначе получаем список из базы, кладем в сессию и возвращаем
         $inDB       = cmsDatabase::getInstance();
 
         $friends    = array();
 
-        $sql = "SELECT f.from_id, f.to_id
-                FROM cms_user_friends f
-                WHERE (f.to_id = $user_id OR f.from_id = $user_id) AND f.is_accepted = 1
-                ORDER BY logdate ASC";
+		$sql = "SELECT
+				CASE
+				WHEN f.from_id = $user_id
+				THEN f.to_id
+				WHEN f.to_id = $user_id
+				THEN f.from_id
+				END AS id, u.nickname as nickname, u.login as login
+				FROM cms_user_friends f
+				LEFT JOIN cms_users u ON u.id = CASE WHEN f.from_id = $user_id THEN f.to_id WHEN f.to_id = $user_id THEN f.from_id END
+				WHERE (from_id = $user_id OR to_id = $user_id) AND is_accepted =1";
+				
         $result = $inDB->query($sql);
 
         if ($inDB->num_rows($result)){
             while($friend = $inDB->fetch_assoc($result)){
-
-                $f = array();
-
-                $f['id']        = ($friend['from_id']==$user_id) ? $friend['to_id'] : $friend['from_id'];
-                $f['nickname']  = $inDB->get_field('cms_users', 'id='.$f['id'], 'nickname');
-
-                $friends[] = $f;
-
+				$friends[] = $friend;
             }
         }
+		$_SESSION['user']['friends'] = $friends;
+		
         return $friends;
 
     }
