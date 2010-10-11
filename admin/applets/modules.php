@@ -343,15 +343,16 @@ function applet_modules(){
 			dbQuery($sql) ;
 			
 			if ($inCore->request('show_all', 'int', 0)){
-				$sql = "INSERT INTO cms_modules_bind (module_id, menu_id) 
-						VALUES ($id, 0)";
+				$sql = "INSERT INTO cms_modules_bind (module_id, menu_id, position)
+						VALUES ($id, 0, '{$position}')";
 				dbQuery($sql) ;	
 			} else {		
 				$showin = $_REQUEST['showin'];
+				$showpos = $_REQUEST['showpos'];
 				if (sizeof($showin)>0){
 					foreach ($showin as $key=>$value){
-						$sql = "INSERT INTO cms_modules_bind (module_id, menu_id) 
-								VALUES ($id, $value)";
+						$sql = "INSERT INTO cms_modules_bind (module_id, menu_id, position)
+								VALUES ($id, $value, '{$showpos[$value]}')";
 						dbQuery($sql) ;
 					}
 				}	
@@ -434,15 +435,16 @@ function applet_modules(){
 		$lastid  = $row['lastid'];
 		
 		if (isset($_REQUEST['show_all'])){
-			$sql = "INSERT INTO cms_modules_bind (id, module_id, menu_id) 
-					VALUES ('', $lastid, 0)";
+			$sql = "INSERT INTO cms_modules_bind (module_id, menu_id, position)
+					VALUES ($lastid, 0, '{$position}')";
 			dbQuery($sql) ;	
 		} else {		
 			$showin = $_REQUEST['showin'];
+            $showpos = $_REQUEST['showpos'];
 			if (sizeof($showin)>0){
 				foreach ($showin as $key=>$value){
-					$sql = "INSERT INTO cms_modules_bind (id, module_id, menu_id) 
-							VALUES ('', $lastid, $value)";
+					$sql = "INSERT INTO cms_modules_bind (module_id, menu_id, position)
+							VALUES ($lastid, $value, '{$showpos[$value]}')";
 					dbQuery($sql) ;
 				}			
 			}	
@@ -566,7 +568,7 @@ function applet_modules(){
                     </table>
 
                     <div style="margin-top:8px">
-                        <strong>Позиция показа</strong> <span class="hinttext">&mdash; должна присутствовать в шаблоне</span>
+                        <strong>Позиция показа по-умолчанию</strong> <span class="hinttext">&mdash; должна присутствовать в шаблоне</span>
                     </div>
                     <div>
                         <?php
@@ -671,40 +673,69 @@ function applet_modules(){
                     </table>
 
                     <?php
-                        $sql = "SELECT * FROM cms_menu";
-                        $result = dbQuery($sql) ;
-
                         if ($do=='edit'){
-                            $sql2 = "SELECT * FROM cms_modules_bind WHERE module_id = ".$mod['id'];
-                            $result2 = dbQuery($sql2);
-                            $ord = array();
-                            while ($r = mysql_fetch_assoc($result2)){
-                                $ord[] = $r['menu_id'];
+                            $bind_sql       = "SELECT * FROM cms_modules_bind WHERE module_id = ".$mod['id'];
+                            $bind_res       = dbQuery($bind_sql);
+                            $bind           = array();
+                            $bind_pos       = array();
+                            while ($r = mysql_fetch_assoc($bind_res)){
+                                $bind[]             = $r['menu_id'];
+                                $bind_pos[$r['menu_id']] = $r['position'];
                             }
                         }
-                        
-                        echo '<div id="grp">';
 
-                        echo '<div style="margin-top:13px">
-                                <strong>Где показывать модуль?</strong>
-                              </div>';
+                        $menu_sql = "SELECT * FROM cms_menu";
+                        $menu_res = dbQuery($menu_sql) ;
 
-                        echo '<select style="width: 100%" id="showin" name="showin[]" size="9" multiple="multiple" '.(@$show_all ? 'disabled="disabled"' : '').'>';
+                        $menu_items = array();
 
-                        if (mysql_num_rows($result)){
-                            while ($item=mysql_fetch_assoc($result)){
-                                echo '<option value="'.$item['id'].'"';
+                        if (mysql_num_rows($menu_res)){
+                            while ($item=mysql_fetch_assoc($menu_res)){
                                 if ($do=='edit'){
-                                    if (inArray($ord, $item['id'])){
-                                        echo 'selected';
+                                    if (in_array($item['id'], $bind)){
+                                        $item['selected'] = true;
+                                        $item['position'] = $bind_pos[$item['id']];
                                     }
                                 }
-                                echo '>';
-                                echo $item['title'].'</option>';
+                                $item['title'] = ltrim($item['title'], '- ');
+                                $item['title'] = rtrim($item['title'], '- ');
+                                $menu_items[] = $item;
                             }
                         }
-                        echo '</select></div>';
+
                     ?>
+
+                    <div id="grp">
+
+                        <div style="margin-top:13px">
+                            <strong>Где показывать модуль?</strong>
+                        </div>
+
+                        <div style="height:300px;overflow: auto;border: solid 1px #666; padding:5px 10px; background: #FFF;">
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%" align="center">
+                            <tr>
+                                <td colspan="2" height="25"><strong>Раздел сайта</strong></td>
+                                <td align="center" width="50"><strong>Позиция</strong></td>
+                            </tr>
+                            <?php foreach($menu_items as $i){ ?>
+                            <tr>
+                                <td width="20" height="25">
+                                    <input type="checkbox" name="showin[]" value="<?php echo $i['id']; ?>" <?php if ($i['selected']){ ?>checked="checked"<?php } ?> onclick="$('#p<?php echo $i['id']; ?>').toggle()"/>
+                                </td>
+                                <td><?php echo $i['title']; ?></td>
+                                <td align="center">
+                                    <select id="p<?php echo $i['id']; ?>" name="showpos[<?php echo $i['id']; ?>]" style="<?php if (!$i['selected']) { ?>display:none<?php } ?>">
+                                        <?php foreach($pos as $position){ ?>
+                                            <option value="<?php echo $position; ?>" <?php if ($i['position']==$position){ ?>selected="selected"<?php } ?>><?php echo $position; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                        </table>
+                        </div>
+
+                    </div>
 
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
                         <tr>

@@ -453,7 +453,7 @@ public function countModules($position){
 	$menuid = $inCore->menuId();
     $sql = "SELECT m.id
             FROM cms_modules m, cms_modules_bind mb
-            WHERE m.position = '$position' AND
+            WHERE mb.position = '$position' AND
                   m.published = 1 AND
                   m.id = mb.module_id AND
                   (mb.menu_id = $menuid OR mb.menu_id = 0)
@@ -497,7 +497,7 @@ public function printModules($position){
     //get modules info
     $sql = "SELECT *, m.id as mid, m.template as tpl
             FROM cms_modules m, cms_modules_bind mb
-            WHERE m.position = '$position' AND 
+            WHERE (mb.position = '$position') AND
                   m.published = 1 AND
                   m.id = mb.module_id AND
                   (mb.menu_id = $menuid OR mb.menu_id = 0)

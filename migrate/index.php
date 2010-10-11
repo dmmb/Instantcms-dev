@@ -120,6 +120,31 @@
 // ========================================================================== //
 // ========================================================================== //
 
+    if (!$inDB->isFieldExists('cms_modules_bind', 'position')){
+
+        $inDB->query("ALTER TABLE `cms_modules_bind` ADD `position` VARCHAR( 20 ) NOT NULL, ADD INDEX ( position )");
+
+        $sql = "SELECT id, position
+                FROM cms_modules";
+
+        $result = $inDB->query($sql);
+
+        if($inDB->num_rows($result)){
+
+            while($mod = $inDB->fetch_assoc($result)){
+
+                $inDB->query("UPDATE cms_modules_bind SET position = '{$mod['position']}' WHERE module_id = '{$mod['id']}'");
+
+            }
+
+        }
+
+    }
+
+
+// ========================================================================== //
+// ========================================================================== //
+
 //    if (!$inDB->isFieldExists('', '')){
 //
 //        $inDB->query("");
