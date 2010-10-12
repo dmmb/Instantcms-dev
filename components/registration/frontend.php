@@ -45,7 +45,10 @@ function registration(){
     $inDB       = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
     $inConf     = cmsConfig::getInstance();
-    
+	
+    $inCore->loadModel('registration');
+    $model = new cms_model_registration();
+	
     global $_LANG;
 
     $cfg = $inCore->loadComponentConfig('registration');
@@ -123,56 +126,61 @@ function registration(){
         $inPage->setTitle($_LANG['REGISTRATION']);
 
         $msg = '';
-        if(strlen($inCore->request('login'))>=2) { $login = $inCore->request('login', 'str', ''); } else { $msg .= $_LANG['TYPE_LOGIN'].'<br/>'; }
-        if($inCore->request('pass')) { $pass = $inCore->request('pass', 'str', ''); } else { $msg .= $_LANG['TYPE_PASS'].'<br/>'; }
-        if($inCore->request('pass2')) { $pass2 = $inCore->request('pass2', 'str', ''); } else { $msg .= $_LANG['TYPE_PASS_TWICE'].'<br/>'; }
+		// Проверяем логин и пароль
+		$login 	= $inCore->request('login', 'str', '');
+		$pass 	= $inCore->request('pass', 'str', '');
+		$pass2	= $inCore->request('pass2', 'str', '');
+		
+        if(strlen($login)<2) 					{ $msg .= $_LANG['TYPE_LOGIN'].'<br/>'; }
+		if ((!eregi("^[a-zA-Z0-9]+\$", $login)) && strlen($login)>=2)	{$msg  .= $_LANG['ERR_LOGIN'].'<br/>'; }
+        if(!$pass) 								{ $msg .= $_LANG['TYPE_PASS'].'<br/>'; }
+        if(!$pass2) 							{ $msg .= $_LANG['TYPE_PASS_TWICE'].'<br/>'; }
+		if($pass != $pass2) 					{ $msg .= $_LANG['WRONG_PASS'].'<br/>'; }
 
-        if (!eregi("^[a-zA-Z0-9]+\$", $login)){
-            $msg  .= $_LANG['ERR_LOGIN'].'<br/>';
-        }
-
+		// Проверяем nickname или имя и фамилию
         if($cfg['name_mode']=='nickname'){
-            if($inCore->request('nickname', 'str', '')) { $nickname = $inCore->request('nickname', 'str', ''); } else { $msg .= $_LANG['TYPE_NICKNAME'].'<br/>'; }
+			$nickname = $inCore->request('nickname', 'str', '');
+            if(!$nickname) 						{ $msg .= $_LANG['TYPE_NICKNAME'].'<br/>'; }
         } else {
             $namemsg = '';
-            if($inCore->request('realname1', 'str', '')) { $realname1 = $inCore->request('realname1', 'str', ''); } else { $namemsg .= $_LANG['TYPE_NAME'].'<br/>'; }
-            if($inCore->request('realname2', 'str', '')) { $realname2 = $inCore->request('realname2', 'str', ''); } else { $namemsg .= $_LANG['TYPE_SONAME'].'<br/>'; }
+			$realname1 = $inCore->request('realname1', 'str', '');
+			$realname2 = $inCore->request('realname2', 'str', '');
+            if(!$realname1) { $namemsg .= $_LANG['TYPE_NAME'].'<br/>'; }
+            if(!$realname2) { $namemsg .= $_LANG['TYPE_SONAME'].'<br/>'; }
             if (!$namemsg){
                 $nickname = trim($realname1) . ' ' . trim($realname2);
             } else {
                 $msg .= $namemsg;
             }
         }
-
-        if(!$inCore->inRequest('email')) {
-            $msg .= $_LANG['TYPE_EMAIL'].'<br/>';
+		if($model->getBadNickname($nickname)){
+            $msg .= $_LANG['ERR_NICK_EXISTS'].'<br/>';
         }
-
-        if($inCore->inRequest('email')) {
-            $email = $inCore->request('email', 'str', '');
+		// Проверяем email
+		$email = $inCore->request('email', 'str', '');
+        if(!$email) {
+            $msg .= $_LANG['TYPE_EMAIL'].'<br/>';
+        } else {
             if (!eregi("^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$", $email)){
                 $msg  .= $_LANG['ERR_EMAIL'].'<br/>';
             }
         }
-
+		// Если есть опция показывать ДР при регистрации, то проверяем
         if ($cfg['ask_birthdate']){
             $birthdate = (int)$_REQUEST['birthdate']['year'].'-'.(int)$_REQUEST['birthdate']['month'].'-'.(int)$_REQUEST['birthdate']['day'];
         } else { 
             $birthdate = '1980-01-01';
         }
-
+		// Если есть опция показывать icq при регистрации, то проверяем
         if ($cfg['ask_icq']){
             $icq = $inCore->request('icq', 'str', '');
+			$icq = preg_replace('/([^0-9])/i', '', $icq);
         } else {
             $icq = '';
         }
-
-        if($_REQUEST['code']) { $code = $inCore->request('code', 'str'); } else { $msg .= $_LANG['TYPE_CAPTCHA'].'<br/>'; }
-        if(@$pass != @$pass2) { $msg .= $_LANG['WRONG_PASS'].'<br/>'; }
-
-        if($inDB->rows_count('cms_users', 'LOWER(nickname) LIKE "'.strtolower($nickname).'"', 1)){
-            $msg .= $_LANG['ERR_NICK_EXISTS'].'<br/>';
-        }
+		// Проверяем каптчу
+		$code = $inCore->request('code', 'str');
+        if(!$code) { $msg .= $_LANG['TYPE_CAPTCHA'].'<br/>'; }
 
         if($msg==''){
 
@@ -227,7 +235,7 @@ function registration(){
                 } else {
                     $u = $inDB->fetch_assoc($result);
                     if ($login == $u['login']) { $msg .= $_LANG['LOGIN'].' "'.$login.'" '.$_LANG['IS_BUSY']; }
-                    else { $msg .= $_LANG['EMAIL_IS_BUSY']; }
+                    elseif ($email == $u['email']) { $msg .= $_LANG['EMAIL_IS_BUSY']; }
                 }
             } else {
                 $msg = $_LANG['ERR_CAPTCHA'];

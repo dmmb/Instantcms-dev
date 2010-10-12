@@ -42,6 +42,7 @@ if (!isset($cfg['name_mode'])) { $cfg['name_mode'] = 'nickname'; }
 if (!isset($cfg['first_auth_redirect'])) { $cfg['first_auth_redirect'] = 'profile'; }
 if (!isset($cfg['ask_icq'])) { $cfg['ask_icq'] = 1; }
 if (!isset($cfg['ask_birthdate'])) { $cfg['ask_birthdate'] = 1; }
+if (!isset($cfg['badnickname'])) { $cfg['badnickname'] = "администратор\nадмин\nqwert\nqwerty\n123\nadmin\nвася пупкин"; }
 
 //SAVE CONFIG
 if($opt=='saveconfig'){
@@ -62,6 +63,7 @@ if($opt=='saveconfig'){
     $cfg['auth_redirect'] = $_REQUEST['auth_redirect'];
 
     $cfg['name_mode'] = $_REQUEST['name_mode'];
+	$cfg['badnickname'] = trim(mb_strtolower($_REQUEST['badnickname']));
     $cfg['ask_icq'] = $_REQUEST['ask_icq'];
     $cfg['ask_birthdate'] = $_REQUEST['ask_birthdate'];
 
@@ -197,6 +199,10 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
                     <option value="realname" <?php if (@$cfg['name_mode']=='realname') {echo 'selected';} ?>>имя и фамилия</option>
                 </select>
             </td>
+        </tr>
+        <tr>
+            <td valign="top"><strong>Запрещенные никнеймы или имена и фамилии:</strong><br />Введите запрещенные никнеймы или имена и фамилии, каждое слово или словосочетание с новой строки.</td>
+            <td valign="top"><textarea  name="badnickname" type="text" id="badnickname" rows="5" style="border: solid 1px gray;width:300px;"><?php echo @$cfg['badnickname'];?></textarea></td>
         </tr>
         <tr>
             <td><strong>Запрашивать ICQ при регистрации:</strong> </td>

@@ -15,12 +15,12 @@
 
 <div class="con_heading">{$LANG.CONFIG_PROFILE}</div>
 
-{if $emsg && $opt=='save'} 
-	<div style="color:red">{$emsg}</div>
-{/if}
-
-{if $msg && $opt=='save'}
-	<div style="color:green">{$msg}</div>
+{if $messages && ($opt=='save' || $opt=='changepass')}
+    <div class="sess_messages">
+        {foreach key=id item=message from=$messages}
+            {$message}
+        {/foreach}
+    </div>
 {/if}
 
 <form id="editform" name="editform" method="post" action="">

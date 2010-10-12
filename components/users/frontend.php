@@ -402,11 +402,16 @@ if ($do=='editprofile'){
 					
 					$nickname = $inCore->request('nickname', 'str');
                     if (strlen($nickname)<2) { cmsCore::addSessionMessage($_LANG['SHORT_NICKNAME'], 'error'); $errors = true; }
+					$inCore->loadModel('registration');
+					$modreg = new cms_model_registration();
+					if (!$inCore->userIsAdmin($inUser->id)){
+						if($modreg->getBadNickname($nickname)) { cmsCore::addSessionMessage($_LANG['ERR_NICK_EXISTS'], 'error'); $errors = true; }
+					}
 
 					$gender = $inCore->request('gender', 'str');
 					
 					$city = $inCore->request('city', 'str');
-					if (strlen($city)>20) { cmsCore::addSessionMessage($_LANG['LONG_CITY_NAME'], 'error'); $errors = true; }
+					if (strlen($city)>25) { cmsCore::addSessionMessage($_LANG['LONG_CITY_NAME'], 'error'); $errors = true; }
 
 					$email = $inCore->request('email', 'str');
 					if (!preg_match('/^([a-z0-9\._-]+)@([a-z0-9\._-]+)\.([a-z]{2,4})$/i', $email)) { cmsCore::addSessionMessage($_LANG['REALY_ADRESS_EMAIL'], 'error'); $errors = true; }
@@ -421,22 +426,19 @@ if ($do=='editprofile'){
 					$signature      = $inCore->request('signature', 'str');
 
 					$allow_who      = $inCore->request('allow_who', 'str');
-                                        if (!preg_match('/^([a-zA-Z]+)$/i', $allow_who)) { $errors = true; }
+                    if (!preg_match('/^([a-zA-Z]+)$/i', $allow_who)) { $errors = true; }
 
 					$icq            = $inCore->request('icq', 'str');
-                                         $icq            = preg_replace('/([^0-9])/i', '', $icq);
+                    $icq            = preg_replace('/([^0-9])/i', '', $icq);
                     
 					$showicq        = $inCore->request('showicq', 'int');
 					
 					$cm_subscribe   = $inCore->request('cm_subscribe', 'str');
+					if (!preg_match('/^([a-zA-Z]+)$/i', $cm_subscribe)) { $errors = true; }
 					
 					if ($inCore->inRequest('field')){
 						foreach($_POST['field'] as $k=>$val){
-							$_POST['field'][$k] = str_replace('\"', '&quot;', $_POST['field'][$k]);
-							$_POST['field'][$k] = str_replace('"', '&quot;', $_POST['field'][$k]);
-							$_POST['field'][$k] = str_replace("\'", '&#8217;', $_POST['field'][$k]);
-							$_POST['field'][$k] = str_replace("'", '&#8217;', $_POST['field'][$k]);
-							$_POST['field'][$k] = strip_tags($_POST['field'][$k]);
+							$_POST['field'][$k] = $inCore->strClear($_POST['field'][$k]);
 						}					
 						$formsdata = $inCore->arrayToYaml($_POST['field']);
 						$forms_sql = ", formsdata='$formsdata'";
@@ -469,25 +471,27 @@ if ($do=='editprofile'){
 						$inDB->query($sql) ;
 
                         cmsCore::addSessionMessage($_LANG['PROFILE_SAVED'], 'info');
-
+						$inCore->redirect(cmsUser::getProfileURL($inUser->login));
 					}
-
-					$inCore->redirect(cmsUser::getProfileURL($inUser->login));
                     
 				}				
 				
 				if ($opt == 'changepass'){
-					$emsg = '';
-					$msg = '';
-					if ($inUser->password==md5($_POST['oldpass'])){ $oldpass = $inCore->request('oldpass', 'str'); } else { $emsg .= $_LANG['OLD_PASS_WRONG'].'<br/>'; }
-					if ($_POST['newpass']==$_POST['newpass2']){ $newpass = $inCore->request('newpass', 'str'); } else { $emsg .= $_LANG['WRONG_PASS'].'<br/>'; }
+					$errors = false;
+					
+					$oldpass 	= $inCore->request('oldpass', 'str');
+					$newpass 	= $inCore->request('newpass', 'str');
+					$newpass2 	= $inCore->request('newpass2', 'str');
+					
+					if ($inUser->password != md5($oldpass)) { cmsCore::addSessionMessage($_LANG['OLD_PASS_WRONG'], 'error'); $errors = true;}
+					if ($newpass != $newpass2) { cmsCore::addSessionMessage($_LANG['WRONG_PASS'], 'error'); $errors = true; }
 
-					if (strlen($emsg)==0){
+					if (!$errors){
 						$sql = "UPDATE cms_users SET password='".md5($newpass)."' WHERE id = $id AND password='".md5($oldpass)."'";
 						$inDB->query($sql);
-						$msg = $_LANG['PASS_CHANGED'];
+						cmsCore::addSessionMessage($_LANG['PASS_CHANGED'], 'info');
+						$inCore->redirect(cmsUser::getProfileURL($inUser->login));
 					}
-					$inCore->redirect(cmsUser::getProfileURL($inUser->login));
 				}
 		
 		
@@ -534,8 +538,7 @@ if ($do=='editprofile'){
 					$smarty = $inCore->initSmarty('components', 'com_users_edit_profile.tpl');
 				
 					$smarty->assign('opt', $opt);
-					$smarty->assign('msg', $msg);
-					$smarty->assign('emsg', $emsg);
+					$smarty->assign('messages', cmsCore::getSessionMessages());
 					$smarty->assign('usr', $usr);			
 					$smarty->assign('dateform', $inCore->getDateForm('birthdate', false, $usr['bday'], $usr['bmonth'], $usr['byear']));
 					$smarty->assign('private_forms', $private_forms);		
