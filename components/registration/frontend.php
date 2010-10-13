@@ -134,8 +134,9 @@ function registration(){
         if(strlen($login)<2) 					{ $msg .= $_LANG['TYPE_LOGIN'].'<br/>'; }
 		if ((!eregi("^[a-zA-Z0-9]+\$", $login)) && strlen($login)>=2)	{$msg  .= $_LANG['ERR_LOGIN'].'<br/>'; }
         if(!$pass) 								{ $msg .= $_LANG['TYPE_PASS'].'<br/>'; }
-        if(!$pass2) 							{ $msg .= $_LANG['TYPE_PASS_TWICE'].'<br/>'; }
-		if($pass != $pass2) 					{ $msg .= $_LANG['WRONG_PASS'].'<br/>'; }
+        if($pass && !$pass2) 					{ $msg .= $_LANG['TYPE_PASS_TWICE'].'<br/>'; }
+		if($pass && $pass2 && strlen($pass)<6) 	{ $msg .= $_LANG['PASS_SHORT'].'<br/>'; }
+		if($pass && $pass2 && $pass != $pass2) 	{ $msg .= $_LANG['WRONG_PASS'].'<br/>'; }
 
 		// Проверяем nickname или имя и фамилию
         if($cfg['name_mode']=='nickname'){
