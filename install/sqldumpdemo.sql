@@ -422,7 +422,8 @@ CREATE TABLE `#__event_hooks` (
 INSERT INTO `#__event_hooks` (`id`, `event`, `plugin_id`) VALUES
 (6, 'GET_ARTICLE', '5'),
 (3, 'INSERT_WYSIWYG', '3'),
-(7, 'USER_PROFILE', '6');
+(7, 'USER_PROFILE', '6'),
+(8, 'GET_ARTICLE', '7');
 
 DROP TABLE IF EXISTS `#__faq_cats`;
 CREATE TABLE `#__faq_cats` (
@@ -925,6 +926,7 @@ CREATE TABLE `#__plugins` (
 INSERT INTO `#__plugins` (`id`, `plugin`, `title`, `description`, `author`, `version`, `plugin_type`, `published`, `config`) VALUES
 (6, 'p_usertab', 'Demo Profile Plugin', 'Пример плагина - Добавляет вкладку "Статьи" в профили всех пользователей', 'InstantCMS Team', '1.0', 'plugin', 0, '---\nКоличество статей: 10\n'),
 (3, 'p_fckeditor', 'FCKEditor', 'Визуальный редактор', 'F. C. Knabben', '2.63', 'wysiwyg', 1, '---\n'),
+(7, 'p_morecontent', 'Plugin More Content', 'Добавляет в конец каждой статьи список похожих статей. ВНИМАНИЕ: при большом количестве тегов статьи, производительность упадет', 'Maximov & InstantCMS Team', '1.0', 'plugin', 1, '---\n limit: 5\n unsort: 1'),
 (5, 'p_demo', 'Demo Plugin', 'Пример плагина - Добавляет текст в конец каждой статьи на сайте', 'InstantCMS Team', '1.0', 'plugin', 0, '---\ntext: Added By Plugin From Parameter\ncolor: blue\ncounter: 1\n');
 
 DROP TABLE IF EXISTS `#__polls`;
