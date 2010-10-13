@@ -39,6 +39,7 @@ function applet_content(){
 
     $inCore = cmsCore::getInstance();
     $inUser = cmsUser::getInstance();
+	$inDB 	= cmsDatabase::getInstance();
 
 	//check access
 	global $adminAccess;
@@ -289,15 +290,13 @@ function applet_content(){
                 if (isset($_FILES["picture"]["name"]) && @$_FILES["picture"]["name"]!=''){
                     //generate image file
                     $tmp_name   = $_FILES["picture"]["tmp_name"];                   
-                    if (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/photos/'.$file)){
-                        @unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/small/'.$file);
-                        @unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/'.$file);
-                    }
                     //upload image and insert record in db
                     if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/photos/$file")){
                         $inCore->includeGraphics();
+						if ($cfg['watermark'] && !$cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/$file"); }
                         @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
                         @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
+						if ($cfg['watermark'] && $cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file"); }
                         @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/$file");
                         @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", 0777);
                         @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", 0777);
@@ -386,8 +385,10 @@ function applet_content(){
             //upload image and insert record in db
             if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/photos/$file")){
                 $inCore->includeGraphics();
+				if ($cfg['watermark'] && !$cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/$file"); }
                 @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
                 @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
+				if ($cfg['watermark'] && $cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file"); }
                 @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/$file");
                 @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", 0755);
                 @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", 0755);

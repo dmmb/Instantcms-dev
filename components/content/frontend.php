@@ -455,7 +455,6 @@ if ($do=='addarticle' || $do=='editarticle'){
                         @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
                         @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
 						if ($cfg['watermark'] && $cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file"); }
-						
                         @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/$file");
                         @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", 0755);
                         @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", 0755);
