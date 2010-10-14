@@ -578,9 +578,15 @@ if ($do=='comments'){
 		$result = $inDB->query($sql) ;
 	
 		if ($inDB->num_rows($result)>0){
+			$cfg_comm = $inCore->loadComponentConfig('comments');
+			if ($cfg_comm['bbcode'] && $cfg_comm['j_code']) {
+				$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
+				$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
+				$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
+				$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
+			}
 			$comments = array();
 			while ($com = $inDB->fetch_assoc($result)){
-                $com['content'] = $inCore->parseSmiles($com['content'], true);
                 if ($com['votes']>0){
                     $com['votes'] = '<span class="cmm_good">+'.$com['votes'].'</span>';
                 } elseif ($com['votes']<0){

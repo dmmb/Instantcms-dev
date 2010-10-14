@@ -5,7 +5,7 @@
 {if $comments_count}
 	{foreach key=cid item=comment from=$comments}
         {math equation="x+1" x=$cid assign="next"}
-		<a name="c{$comment.id}"/>
+		<a name="c{$comment.id}"></a>
         <div style="margin-left:{math equation="x*35" x=$comment.level}px;">
         <table class="cmm_entry">
 			<tr>

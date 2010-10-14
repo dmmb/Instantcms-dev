@@ -52,6 +52,9 @@ function cpStripComment($text){
 		$cfg['min_karma'] 		= (int)$_REQUEST['min_karma'];
 		$cfg['min_karma_show'] 	= (int)$_REQUEST['min_karma_show'];
 		$cfg['min_karma_add'] 	= (int)$_REQUEST['min_karma_add'];
+		$cfg['perpage'] 		= (int)$_REQUEST['perpage'];
+		$cfg['j_code'] 			= (int)$_REQUEST['j_code'];
+		$cfg['cmm_ajax'] 		= (int)$_REQUEST['cmm_ajax'];
 			
 		$inCore->saveComponentConfig('comments', $cfg);
         
@@ -226,6 +229,9 @@ function cpStripComment($text){
 	if(!isset($cfg['min_karma_add'])) { 	$cfg['min_karma_add']=0; 	}
 	if(!isset($cfg['min_karma_show'])) { 	$cfg['min_karma_show']=0;	}
 	if(!isset($cfg['regcap'])) { 			$cfg['regcap']=1;	}
+	if(!isset($cfg['perpage'])) { 			$cfg['perpage']=20;	}
+	if(!isset($cfg['j_code'])) { 			$cfg['j_code']=1;	}
+	if(!isset($cfg['cmm_ajax'])) { 			$cfg['cmm_ajax']=0;	}
 
 	cpAddPathway('Настройки', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config');	
 	echo '<h3>Настройки комментариев</h3>';
@@ -254,6 +260,14 @@ function cpStripComment($text){
             <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Формат вывода  </h4></td>
           </tr>
           <tr>
+            <td valign="top"><strong>Загружать комментарии, используя ajax?</strong> </td>
+            <td valign="top"><input name="cmm_ajax" type="radio" value="1" <?php if (@$cfg['cmm_ajax']) { echo 'checked="checked"'; } ?> />
+              Да
+              <label>
+      <input name="cmm_ajax" type="radio" value="0"  <?php if (!$cfg['cmm_ajax']) { echo 'checked="checked"'; } ?> />
+              Нет</label></td>
+          </tr>
+          <tr>
             <td valign="top"><strong>Смайлы в комментариях:</strong> </td>
             <td valign="top"><input name="smiles" type="radio" value="1" <?php if (@$cfg['smiles']) { echo 'checked="checked"'; } ?> />
               Да
@@ -272,6 +286,19 @@ function cpStripComment($text){
           <tr>
             <td valign="top"><strong>Текст уведомления о новых комментариях:</strong></td>
             <td valign="top"><a href="/includes/letters/newcomment.txt">/includes/letters/newcomment.txt</a></td>
+          </tr>
+          <tr>
+            <td valign="top"><strong>Количество комментариев на страницы при просмотре всех комментариев сайта:</strong></td>
+            <td valign="top"><input name="perpage" type="text" id="perpage" value="<?php echo @$cfg['perpage'];?>" size="3" /></td>
+          </tr>
+          <tr>
+            <td valign="top"><strong>Включать подсветку синтаксиса кода:</strong></td>
+            <td valign="top"><input name="j_code" type="radio" value="1" <?php if (@$cfg['j_code']) { echo 'checked="checked"'; } ?> />
+              Да
+              <label>
+      <input name="j_code" type="radio" value="0"  <?php if (!$cfg['j_code']) { echo 'checked="checked"'; } ?> />
+              Нет</label>
+			</td>
           </tr>
           <tr>
             <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Доступность комментариев  </h4></td>

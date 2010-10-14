@@ -30,6 +30,11 @@ $_LANG['YOUR_POST']               ='вашей записи';
 $_LANG['COMM_SUC_DELETE']         ='Комментарий успешно удален';
 $_LANG['COMMENTS']                ='Комментарии';
 $_LANG['COMMENTS_ON_SITE']        ='Комментарии на сайте';
+
+$_LANG['COMMENTS_MALE']           ='прокомментировал';
+$_LANG['COMMENTS_FEMALE']         ='прокомментировала';
+$_LANG['COMMENTS_GENDER']         ='комментирует';
+
 // Template
 $_LANG['COMMENTS_CAN_ADD_ONLY']   ='Комментарии могут добавлять только';
 $_LANG['REGISTERED']              ='зарегистрированные';

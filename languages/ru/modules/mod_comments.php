@@ -19,4 +19,5 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 $_LANG['COMMENTS_RSS']         ='Лента комментариев';
 $_LANG['COMMENTS_NOT_COMM']    ='Нет комментариев для отображения.';
 $_LANG['COMMENTS_NOT_SHOWTYPE']='Не выбран тип комментариев для показа.';
+$_LANG['COMMENTS_ALL']         ='Все комментарии';
 ?>

@@ -25,6 +25,11 @@ function comments($target='', $target_id=0){
 	$cfg = $inCore->loadComponentConfig('comments');
     if (!isset($cfg['bbcode'])) { $cfg['bbcode'] = 1; }
     if (!isset($cfg['regcap'])) { $cfg['regcap'] = 1; }
+	if (!isset($cfg['min_karma'])) { $cfg['min_karma'] = 0; }
+	if (!isset($cfg['min_karma_add'])) { $cfg['min_karma_add'] = 0; }
+	if (!isset($cfg['min_karma_show'])) { $cfg['min_karma_show'] = 0; }
+	if(!isset($cfg['j_code'])) { $cfg['j_code']=1;	}
+	if(!isset($cfg['cmm_ajax'])) { $cfg['cmm_ajax']=0;	}
 
     //Определяем адрес для редиректа назад
     $back   = $inCore->getBackURL();
@@ -36,10 +41,91 @@ function comments($target='', $target_id=0){
 
 //========================================================================================================================//
 //========================================================================================================================//
-    if ($do!='add' && $do!='delete'){
+    if ($do == 'view'){
+		
+		// Загружаем функции профиля
+		$inCore->includeFile('components/users/includes/usercore.php');
+
+		//  Заголовки и глубиномер
+		$inPage->setTitle($_LANG['COMMENTS']);
+		$inPage->addPathway($_LANG['COMMENTS']);
+		$inPage->backButton(false);
+		if ($cfg['bbcode'] && $cfg['j_code']) {
+			$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
+			$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
+			$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
+			$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
+		}
+		// Пагинация
+		$perpage = $cfg['perpage'] ? $cfg['perpage'] : 20;
+		$page    = $inCore->request('page', 'int', 1);
+
+		//Загружаем комментарии
+		$comments = array();
+		// Считаем общее число количество комментариев
+		$total = $inDB->rows_count('cms_comments', 'published=1');
+		// Если есть комментарии, выбираем и обрабатываем
+		if ($total){
+
+			$comments_list  = $model->getCommentsAll($page, $perpage);
+			
+			foreach($comments_list as $comment){
+				$next = sizeof($comments);
+				$comments[$next] = $comment;
+				if ($comments[$next]['guestname']) {
+					$comments[$next]['author']      = $comments[$next]['guestname'];
+					$comments[$next]['is_profile']  =false;
+				} else {
+					$comments[$next]['author']['nickname'] = $comments[$next]['nickname'];
+					$comments[$next]['author']['login'] = $comments[$next]['login'];
+					$comments[$next]['is_profile'] 	= true;
+					$comments[$next]['user_image'] 	= usrImageNOdb($comments[$next]['user_id'], 'small', $comments[$next]['imageurl'], $comments[$next]['is_deleted']);
+				}
+				$comments[$next]['show'] 	   	= ((!$cfg['min_karma'] || $comments[$next]['votes']>=$cfg['min_karma_show']) || $inCore->userIsAdmin($comments[$next]['user_id']));
+				if ($comments[$next]['votes']>0){
+					$comments[$next]['votes'] = '<span class="cmm_good">+'.$comments[$next]['votes'].'</span>';
+				} elseif ($comments[$next]['votes']<0){
+					$comments[$next]['votes'] = '<span class="cmm_bad">'.$comments[$next]['votes'].'</span>';
+				}
+				if ($cfg['bbcode']){
+					$comments[$next]['content'] = $comments[$next]['content'];
+				} elseif ($cfg['smilies']) {
+					$comments[$next]['content'] = nl2br(strip_tags($comments[$next]['content']));
+				} else {
+					$comments[$next]['content'] = nl2br(strip_tags($comments[$next]['content']));
+				}
+			}
+		}
+		
+		// Отдаем в шаблон
+		$smarty = $inCore->initSmarty('components', 'com_comments_list_all.tpl');
+
+		$smarty->assign('comments_count', $total);
+		$smarty->assign('comments', $comments);
+		$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/comments/page-%page%'));
+		$smarty->assign('is_user', $inUser->id);
+		$smarty->assign('cfg', $cfg);
+		$smarty->assign('url', $_SERVER['REQUEST_URI']);
+
+		$smarty->display('com_comments_list_all.tpl');
+
+    }
+
+//========================================================================================================================//
+//========================================================================================================================//
+    if ($do!='add' && $do!='delete' && $do!='view'){
 
         $inPage->addHeadJS('includes/jquery/autogrow/jquery.autogrow.js');
         $inPage->addHeadJS('components/comments/js/comments.js');
+		if ($cfg['bbcode'] && $cfg['j_code']) {
+			$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
+			$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
+			$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
+			$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
+		}
+        if ($cfg['bbcode']){
+            $inPage->addHeadJS('core/js/smiles.js');
+        }
 
         $cm_message     = isset($_SESSION['cm_message']) ? $_SESSION['cm_message'] : '';
         $cm_error       = isset($_SESSION['cm_error']) ? $_SESSION['cm_error'] : '';
@@ -47,11 +133,76 @@ function comments($target='', $target_id=0){
         unset($_SESSION['cm_message']);
         unset($_SESSION['cm_error']);
 
-        if ($cfg['bbcode']){
-            $inPage->addHeadJS('core/js/smiles.js');
-        }
-
 		$comments_count = $model->getCommentsCount($target, $target_id);
+		
+		if ($comments_count && !$cfg['cmm_ajax']){
+			
+			//activate profiles support
+			$inCore->includeFile('components/users/includes/usercore.php');	
+			
+			//LIST COMMENTS
+	
+			$is_admin           = $inCore->userIsAdmin($inUser->id);
+			$user_can_delete    = $inCore->isUserCan('comments/delete');
+			$user_can_moderate  = $inCore->isUserCan('comments/moderate');
+	
+			$comments = array();
+			$tree     = array();			
+			
+			$comments_list  = $model->getComments($target, $target_id);
+			
+			foreach($comments_list as $comment){
+				$next = sizeof($comments);
+				$comments[$next] = $comment;
+				$comments[$next]['level'] = 0;        
+				if ($comments[$next]['guestname']) {
+					$comments[$next]['author']      = $comments[$next]['guestname'];
+					$comments[$next]['is_profile']  =false;
+				} else {
+					$comments[$next]['author']['nickname'] = $comments[$next]['nickname'];
+					$comments[$next]['author']['login'] = $comments[$next]['login'];
+					$comments[$next]['is_profile'] 	= true;
+					$comments[$next]['user_image'] 	= usrImageNOdb($comments[$next]['user_id'], 'small', $comments[$next]['imageurl'], $comments[$next]['is_deleted']);
+				}
+				$comments[$next]['show'] 	   	= ((!$cfg['min_karma'] || $comments[$next]['votes']>=$cfg['min_karma_show']) || $inCore->userIsAdmin($comments[$next]['user_id']));
+				if ($comments[$next]['votes']>0){
+					$comments[$next]['votes'] = '<span class="cmm_good">+'.$comments[$next]['votes'].'</span>';
+				} elseif ($comments[$next]['votes']<0){
+					$comments[$next]['votes'] = '<span class="cmm_bad">'.$comments[$next]['votes'].'</span>';
+				}
+				if ($cfg['bbcode']){
+					$comments[$next]['content'] = $comments[$next]['content'];
+				} elseif ($cfg['smilies']) {
+					$comments[$next]['content'] = nl2br(strip_tags($comments[$next]['content']));
+				} else {
+					$comments[$next]['content'] = nl2br(strip_tags($comments[$next]['content']));
+				}
+				$comments[$next]['is_my'] = ($inUser->id==$comments[$next]['user_id']);
+				if ($inUser->id){
+					$comments[$next]['is_voted'] = ($comments[$next]['is_my'] || $inDB->rows_count('cms_ratings', 'item_id='.$comments[$next]['id'].' AND target=\'comment\' AND user_id='.$inUser->id, 1));
+				}
+			}
+	
+			$model->buildTree(0, 0, $comments, $tree);
+			
+			ob_start();
+		
+			$smarty = $inCore->initSmarty('components', 'com_comments_list.tpl');
+			$smarty->assign('comments_count', $comments_list );
+			$smarty->assign('comments', $tree);
+			$smarty->assign('user_can_moderate', $user_can_moderate);
+			$smarty->assign('user_can_delete', $user_can_delete);
+			$smarty->assign('is_admin', $is_admin);
+			$smarty->assign('is_user', $inUser->id);
+			$smarty->assign('cfg', $cfg);
+			$smarty->assign('target', $target);
+			$smarty->assign('target_id', $target_id);
+			$smarty->assign('url', $_SERVER['REQUEST_URI']);
+		
+			$smarty->display('com_comments_list.tpl');
+		
+			$html = ob_get_clean();
+		}
 
         $smarty = $inCore->initSmarty('components', 'com_comments_view.tpl');
         $smarty->assign('cm_message', $cm_message);
@@ -62,6 +213,7 @@ function comments($target='', $target_id=0){
         $smarty->assign('is_admin', $is_admin);
         $smarty->assign('is_user', $inUser->id);
         $smarty->assign('cfg', $cfg);
+		$smarty->assign('html', $html);
         $smarty->assign('add_comment_js', "addComment('".md5(session_id())."', '".$target."', '".$target_id."', 0)");
         $smarty->assign('user_subscribed', cmsUser::isSubscribed($inUser->id, $target, $target_id));
         $smarty->display('com_comments_view.tpl');
@@ -78,9 +230,12 @@ function comments($target='', $target_id=0){
         $error          = '';
 
         $captha_code    = $inCore->request('code', 'str', '');
-        $content        = $inCore->request('content', 'str', '');
         $guestname      = $inCore->request('guestname', 'str', '');
-        $user_id        = $inCore->request('user_id', 'int', 0);
+        $user_id        = $inCore->request('user_id', 'int', 0);		
+        $content        = $inCore->request('content', 'html', '');
+		
+		$content        = $inCore->parseSmiles($content, true);
+		$content        = $inDB->escape_string($content);
 
         $need_captcha   = (!$inUser->id || ($inUser->id && $cfg['regcap']==1));
 

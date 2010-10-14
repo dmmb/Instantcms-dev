@@ -69,7 +69,7 @@ function mod_comments($module_id){
                 if ($con['rating'] >= $cfg['minrate']){
 
                     $con['link'] = $con['target_link'] . '#c'.$con['id'];
-                    $con['text'] = strip_tags($inCore->parseSmiles($con['content'], true));
+                    $con['text'] = strip_tags($con['content']);
                     if (strlen($con['text'])>60) { $con['text'] = substr($con['text'], 0, 60). '...'; }
                     if (!$con['text']) { $con['text'] = '...'; }
 

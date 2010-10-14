@@ -168,6 +168,63 @@ class cms_model_comments{
         return $comments;
 
     }
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function getCommentsAll($page=1, $perpage=10){
+		global $_LANG;
+        $comments = array();
+
+        $sql = "SELECT c.id, c.guestname, c.content, c.pubdate as fpubdate, c.target_title, c.target_link,
+                       IFNULL(v.total_rating, 0) as votes,
+					   IFNULL(u.nickname, 0) as nickname,
+					   IFNULL(u.login, 0) as login,
+					   IFNULL(u.is_deleted, 0) as is_deleted,
+					   IFNULL(p.imageurl, 0) as imageurl,
+					   IFNULL(p.gender, 0) as gender
+                FROM cms_comments c
+                LEFT JOIN cms_ratings_total v ON v.item_id = c.id AND v.target = 'comment'
+				LEFT JOIN cms_users u ON u.id = c.user_id
+				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+                WHERE c.published=1
+                ORDER BY c.id DESC
+				LIMIT ".(($page-1)*$perpage).", $perpage";
+
+        $result = $this->inDB->query($sql);
+
+        if (!$this->inDB->num_rows($result)) { return false; }
+		
+        while($comment = $this->inDB->fetch_assoc($result)){
+			$comment['fpubdate'] = cmsCore::dateFormat($comment['fpubdate'], true, true);
+			switch ($comment['gender']){
+            			case 'm': 	$comment['gender'] = $_LANG['COMMENTS_MALE'];
+									break;
+            			case 'f':	$comment['gender'] = $_LANG['COMMENTS_FEMALE'];
+									break;
+						default:	$comment['gender'] = $_LANG['COMMENTS_GENDER'];
+			}
+            $comments[] = $comment;
+        }
+
+        $comments = cmsCore::callEvent('GET_COMMENTS', $comments);
+
+        return $comments;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function buildTree($parent_id, $level, $comments, &$tree){
+        $level++;
+        foreach($comments as $num=>$comment){
+            if ($comment['parent_id']==$parent_id){
+                $comment['level'] = $level-1;
+                $tree[] = $comment;
+                $this->buildTree($comment['id'], $level, $comments, $tree);
+            }
+        }
+    }
 
 /* ==================================================================================================== */
 /* ==================================================================================================== */

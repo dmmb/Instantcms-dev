@@ -23,8 +23,7 @@
 	</div>
 
     <div class="cm_ajax_list">
-        <p style="margin:30px; margin-left:0px; padding-left:50px;background:url(/images/ajax-loader.gif) no-repeat">{$LANG.LOADING_COMM}...</p>
-    </div>
+    {if $cfg.cmm_ajax}
     <script type="text/javascript">
         {literal}
             var anc = '';
@@ -34,6 +33,10 @@
         {/literal}
         loadComments('{$target}', {$target_id}, anc);
     </script>
+	{else}
+    {$html}
+    {/if}
+    </div>
 
 {* ========================= Сообщение об ошибке добавления коммента ========================== *}
 {if $cm_error}

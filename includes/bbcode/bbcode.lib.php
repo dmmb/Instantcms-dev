@@ -999,17 +999,6 @@ class bbcode {
         $str = '<div class="bb_tag_code">';
 		$str .= '<b>Код '.strtoupper($lang).':</b><br/>';
 		$str .= '<pre class="brush: '.strtolower($lang).';">';
-        $inPage = cmsPage::getInstance();
-        if (!isset($_SESSION['bbcode']['code_js_added']['main'])){
-            $inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
-            $inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
-            $inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
-            $_SESSION['bbcode']['code_js_added']['main'] = 1;
-        }
-        if (!isset($_SESSION['bbcode']['code_js_added'][$lang])){
-            $inPage->addHeadJS('includes/jquery/syntax/scripts/shBrush'.ucfirst(strtolower($lang)).'.js');
-            $_SESSION['bbcode']['code_js_added'][$lang] = 1;
-        }
         foreach ($elem['val'] as $item) {
             if ('item'==$item['type']) { continue; }
             $item['str'] = str_replace('&#8217;', "'", $item['str']);

@@ -386,7 +386,7 @@ class cmsUser {
 // ============================================================================ //
 
     /**
-     * Возвращает последние посты в блогах друзей
+     * Возвращает последние комментарии друзей
      * @param int $user_id
      * @param int $limit
      * @return array
@@ -424,7 +424,7 @@ class cmsUser {
 
         while ($comment = $inDB->fetch_assoc($result)){
             $comment['pubdate'] = $inCore->dateFormat($comment['pubdate']);
-			$comment['content'] = strip_tags($inCore->parseSmiles($comment['content'], true));
+			$comment['content'] = strip_tags($comment['content']);
 			if (strlen($comment['content'])>70) { 
 				$comment['content'] = substr($comment['content'], 0, 70). '...';
             }

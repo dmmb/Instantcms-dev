@@ -14,6 +14,12 @@
                             'do'    => 'delete',
                             1       => 'id'
                          );
+						 
+        $routes[] = array(
+                            '_uri'  => '/^comments\/page\-([0-9]+)$/i',
+                            'do'    => 'view',
+                            1       => 'page'
+                         );
 
         return $routes;
 

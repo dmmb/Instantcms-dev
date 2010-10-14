@@ -26,7 +26,7 @@ function addSmile(tag, field_id){
 
 function loadComments(target, target_id, anchor){
 
-    $('td.loading').html('<img src="/images/ajax-loader.gif" border="0"/>');
+    $('div.cm_ajax_list').html('<p style="margin:30px; margin-left:0px; padding-left:50px; background:url(/images/ajax-loader.gif) no-repeat">загрузка комментариев...</p>');
 
     $.ajax({
 			type: "POST",

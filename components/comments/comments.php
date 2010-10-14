@@ -11,17 +11,6 @@
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
     define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
     
-    function buildTree($parent_id, $level, $comments, &$tree){
-        $level++;
-        foreach($comments as $num=>$comment){
-            if ($comment['parent_id']==$parent_id){
-                $comment['level'] = $level-1;
-                $tree[] = $comment;
-                buildTree($comment['id'], $level, $comments, $tree);
-            }
-        }
-    }
-
 	session_start();
 
 	define("VALID_CMS", 1);
@@ -100,9 +89,9 @@
                 $comments[$next]['votes'] = '<span class="cmm_bad">'.$comments[$next]['votes'].'</span>';
             }
 			if ($cfg['bbcode']){
-				$comments[$next]['content'] = $inCore->parseSmiles($comments[$next]['content'], true);
+				$comments[$next]['content'] = $comments[$next]['content'];
 			} elseif ($cfg['smilies']) {
-				$comments[$next]['content'] = nl2br(strip_tags($inCore->parseSmiles($comments[$next]['content'])));
+				$comments[$next]['content'] = nl2br(strip_tags($comments[$next]['content']));
 			} else {
                 $comments[$next]['content'] = nl2br(strip_tags($comments[$next]['content']));
             }
@@ -112,7 +101,7 @@
             }
         }
 
-        buildTree(0, 0, $comments, $tree);
+        $model->buildTree(0, 0, $comments, $tree);
 	}
 
     ob_start();
