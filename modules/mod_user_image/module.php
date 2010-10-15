@@ -22,19 +22,28 @@
 		
 		$result = $inDB->query($sql) ;
 		
+		$users = array();
+		$is_usr = false;
+		
 		if ($inDB->num_rows($result)){
-			while ($item=$inDB->fetch_assoc($result)){
+			$is_usr=true;
 
-				echo '<a href="/users/'.$item['uid'].'/photo'.$item['id'].'.html">
-					  <div align="center"><img src="/images/users/photos/small/'.$item['imageurl'].'" border="0"/></div></a>';
-				if($cfg['showtitle']){
-					echo '<div style="margin-top:5px" align="center"><strong>'.$item['title'].'</strong></div>';
-					echo '<div align="center">'.cmsUser::getGenderLink($item['uid'], $item['author'], null, $item['gender'], $item['login']).'</a></div>';
-				}
+			while ($usr = $inDB->fetch_assoc($result)){
+				
+				$usr['genderlink'] = cmsUser::getGenderLink($usr['uid'], $usr['author'], null, $usr['gender'], $usr['login']);
+				
+				$users[] = $usr;
 			
 			}
 		}
 
+		$smarty = $inCore->initSmarty('modules', 'mod_user_image.tpl');			
+		$smarty->assign('users', $users);
+		$smarty->assign('cfg', $cfg);
+		$smarty->assign('is_usr', $is_usr);
+		$smarty->display('mod_user_image.tpl');
+				
 		return true;	
+		
 	}
 ?>

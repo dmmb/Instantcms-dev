@@ -21,7 +21,7 @@ $_LANG['UC_POPULAR_RATING']         = 'Рейтинг: ';
 $_LANG['UC_POPULAR_VIEWS']          = 'Просмотры';
 $_LANG['UC_POPULAR_CATALOG']        = 'Весь каталог';
 $_LANG['UC_POPULAR_ARR']            = ' &rarr;';
-$_LANG['UC_POPULAR_NO_ITEMS']            = 'Нет объектов для отображения.';
+$_LANG['UC_POPULAR_NO_ITEMS']       = 'Нет объектов для отображения.';
 
 
 ?>

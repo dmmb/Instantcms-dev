@@ -17,6 +17,7 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * site: firs.org.ua
  */
 $_LANG['UC_RANDOM_RUB']       = ' руб.';
-$_LANG['UC_RANDOM_RUBRIC']       = 'Рубрика: ';
+$_LANG['UC_RANDOM_RUBRIC']    = 'Рубрика: ';
+$_LANG['UC_RANDOM_NO_ITEMS']  = 'Нет объектов для отображения.';
 
 ?>

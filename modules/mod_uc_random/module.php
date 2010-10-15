@@ -36,21 +36,32 @@
 		
 		$result = $inDB->query($sql) ;
 		
+		$items = array();
+		$is_uc = false;
+		
 		if ($inDB->num_rows($result)){
-			while ($item=$inDB->fetch_assoc($result)){
-				echo '<div align="center" id="uc_random_img"><a href="/catalog/item'.$item['id'].'.html"><img src="/images/catalog/small/'.$item['imageurl'].'.jpg" border="0"/></a></div>';
-				if($cfg['showtitle']){
-					echo '<div style="margin-top:10px" id="uc_random_title" align="center"><a href="/catalog/item'.$item['id'].'.html"><strong>'.$item['title'].'</strong></a></div>';
-					if ($item['viewtype'] == 'shop'){
-						$price = number_format($item['price'], 2, '.', ' ');
-						echo '<div style="margin-bottom:10px" align="center" id="uc_random_price">'.$price.' руб.</div>';
+			$is_uc = true;
+			while($item = $inDB->fetch_assoc($result)){
+				if (strlen($item['imageurl'])<4) {
+					$item['imageurl'] = 'nopic';
+				} elseif (!file_exists(PATH.'/images/catalog/small/'.$item['imageurl'].'.jpg')) {
+					$item['imageurl'] = 'nopic';
 					}
+						
+				if ($item['viewtype']=='shop'){
+					$item['price'] = number_format($item['price'], 2, '.', ' ');
 				}
-				if($cfg['showcat']){
-					echo '<div align="center" id="uc_random_cat">Рубрика: <a href="/catalog/'.$item['category_id'].'">'.$item['category'].'</a></div>';
-				}
+						
+				$items[] = 	$item;												
 			}
 		}
+		
+		$smarty = $inCore->initSmarty('modules', 'mod_uc_random.tpl');			
+		$smarty->assign('items', $items);
+		$smarty->assign('cfg', $cfg);
+		$smarty->assign('is_uc', $is_uc);
+		$smarty->display('mod_uc_random.tpl');
+		
 
 		return true;	
 	}

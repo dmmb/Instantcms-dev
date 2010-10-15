@@ -6,7 +6,7 @@
     </module>
     <params>
         <param type="number" name="num" title="Количество популярных" units="шт." default="5" />
-        <param type="list" name="showtype" title="Критерий популярности">
+        <param type="list" name="sort" title="Критерий популярности">
             <option title="Рейтинг" value="rating" />
             <option title="Просмотры" value="hits" />
         </param>
