@@ -755,7 +755,8 @@ INSERT INTO `#__modules` (`id`, `position`, `name`, `title`, `is_external`, `con
 (73, 'top', 'Новые клубы', 'Новые клубы', 1, 'mod_latestclubs', 3, 1, 0, 0, '---\ncount: 2\nmenuid: 38\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl'),
 (74, 'top', 'Популярные клубы', 'Популярные клубы', 1, 'mod_bestclubs', 4, 1, 0, 0, '---\ncount: 2\nmenuid: 38\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl'),
 (75, 'left', 'Доска почета', 'Доска почета', 1, 'mod_respect', 1, 1, 0, 0, '---\nview: all\nshow_awards: 0\norder: desc\nlimit: 5\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl'),
-(76, 'right', 'Файлы пользователей', 'Файлы пользователей', 1, 'mod_userfiles', 1, 1, 0, 0, '---\nmenuid: 0\nsw_stats: 1\nsw_latest: 1\nsw_popular: 1\nnum_latest: 5\nnum_popular: 5\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl');
+(76, 'right', 'Файлы пользователей', 'Файлы пользователей', 1, 'mod_userfiles', 1, 1, 0, 0, '---\nmenuid: 0\nsw_stats: 1\nsw_latest: 1\nsw_popular: 1\nnum_latest: 5\nnum_popular: 5\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl'),
+(77, 'left', 'Друзья онлайн', 'Друзья онлайн', 1, 'mod_user_friend', 5, 1, 0, 0, '---\nlimit: 5\nview_type: table\n', 1, '', -1, 0, 1, 'HOUR', 'module_simple.tpl');
 
 DROP TABLE IF EXISTS `#__modules_bind`;
 CREATE TABLE `#__modules_bind` (
@@ -829,7 +830,7 @@ INSERT INTO `#__modules_bind` (`id`, `module_id`, `menu_id`) VALUES
 (523, 25, 1),
 (535, 75, 1),
 (531, 76, 1),
-(541, 77, 1);
+(541, 77, 0);
 
 DROP TABLE IF EXISTS `#__online`;
 CREATE TABLE `#__online` (
