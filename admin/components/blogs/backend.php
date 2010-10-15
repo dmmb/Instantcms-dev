@@ -106,19 +106,21 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if($opt=='saveconfig'){	
 		$cfg = array();
-		$cfg['perpage'] = $inCore->request('perpage', 'int');
-		$cfg['update_date'] = $inCore->request('update_date', 'int');
-		$cfg['update_seo_link'] = $inCore->request('update_seo_link', 'int');
+		$cfg['perpage'] 			= $inCore->request('perpage', 'int');
+		$cfg['perpage_blog'] 		= $inCore->request('perpage_blog', 'int');
+		$cfg['update_date'] 		= $inCore->request('update_date', 'int');
+		$cfg['update_seo_link'] 	= $inCore->request('update_seo_link', 'int');
 		
-		$cfg['min_karma_private'] 	= (int)$_REQUEST['min_karma_private'];
-		$cfg['min_karma_public'] 	= (int)$_REQUEST['min_karma_public'];	
-		$cfg['min_karma'] 			= (int)$_REQUEST['min_karma'];	
+		$cfg['min_karma_private'] 	= $inCore->request('min_karma_private', 'int');
+		$cfg['min_karma_public'] 	= $inCore->request('min_karma_public', 'int');
+		$cfg['min_karma'] 			= $inCore->request('min_karma', 'int');
 		
-		$cfg['watermark'] 			= (int)$_REQUEST['watermark'];	
-		$cfg['img_on'] 				= (int)$_REQUEST['img_on'];	
+		$cfg['watermark'] 			= $inCore->request('watermark', 'int');
+		$cfg['img_on'] 				= $inCore->request('img_on', 'int');
 		
 		$cfg['rss_all']             = $inCore->request('rss_all', 'int');
 		$cfg['rss_one']             = $inCore->request('rss_one', 'int');
+		$cfg['j_code']              = $inCore->request('j_code', 'int');
 			
 		$inCore->saveComponentConfig('blogs', $cfg);
 		
@@ -127,6 +129,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         $opt = 'config';
 	}
 
+	if(!isset($cfg['j_code'])) { $cfg['j_code']=1;	}
+	if(!isset($cfg['perpage_blog'])) { $cfg['perpage_blog']=15;	}
 	if (!isset($cfg['min_karma_private'])) { $cfg['min_karma_private'] = 0; }
 	if (!isset($cfg['min_karma_public'])) {	 $cfg['min_karma_public'] = 0; }
 	if (!isset($cfg['min_karma'])) { 		 $cfg['min_karma'] = 0; 		}
@@ -190,6 +194,20 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             <td width="100" valign="top">
                 <input name="perpage" type="text" id="perpage" value="<?php echo @$cfg['perpage'];?>" size="5" /> шт.
             </td>
+        </tr>
+        <tr>
+            <td valign="top"><strong>Количество блогов на странице в списке блогов: </strong></td>
+            <td width="100" valign="top">
+                <input name="perpage_blog" type="text" id="perpage_blog" value="<?php echo @$cfg['perpage_blog'];?>" size="5" /> шт.
+            </td>
+        </tr>
+        <tr>
+            <td valign="top"><strong>Включать подсветку синтаксиса кода: </strong></td>
+            <td width="100" valign="top"><input name="j_code" type="radio" value="1" <?php if (@$cfg['j_code']) { echo 'checked="checked"'; } ?> />
+              Да
+              <label>
+      <input name="j_code" type="radio" value="0"  <?php if (!$cfg['j_code']) { echo 'checked="checked"'; } ?> />
+              Нет</label></td>
         </tr>
         <tr>
             <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Опции фотографий</h4></td>

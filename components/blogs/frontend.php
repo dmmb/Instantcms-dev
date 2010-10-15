@@ -43,6 +43,7 @@ function blogs(){
 	if (!isset($cfg['rss_one'])) { $cfg['rss_one'] = 1; }
     if (!isset($cfg['img_on'])) { $cfg['img_on'] = 1; }
     if (!isset($cfg['update_date'])) { $cfg['update_date'] = 1; }
+	if (!isset($cfg['j_code'])) { $cfg['j_code'] = 1; }
 	
 	//Получаем параметры
 	$id 		= $inCore->request('id', 'int', 0);	
@@ -259,7 +260,7 @@ if ($do=='config'){
 if ($do=='view'){
 
     //Получаем номер страницы и число записей на одну страницу
-    $perpage    = isset($cfg['perpage']) ? $cfg['perpage'] : 15;
+    $perpage    = isset($cfg['perpage_blog']) ? $cfg['perpage_blog'] : 15;
     $page       = $inCore->request('page', 'int', 1);
 
     //Получаем ID пользователя
@@ -311,6 +312,7 @@ if ($do=='view'){
 							$pagination = cmsPage::getPagebar($multi_blogs, $page, $perpage, '/blogs/multi-%page%.html');
 							break;
 	}
+	$inPage->setDescription($_LANG['BLOGS'].' - '.$_LANG['PERSONALS'].', '.$_LANG['COLLECTIVES']);
     //Выводим список блогов
 	$smarty = $inCore->initSmarty('components', 'com_blog_view_all.tpl');				
 	$smarty->assign('cfg', $cfg);
@@ -327,8 +329,15 @@ if ($do=='view'){
 }
 ////////// ПРОСМОТР БЛОГА ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='blog'){
-
-    $error = '';
+	
+	if ($cfg['j_code']) {
+		$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
+		$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
+		$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
+		$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
+	}
+    
+	$error = '';
 
     //Получаем ID пользователя
     $user_id = $inUser->id;
@@ -346,7 +355,8 @@ if ($do=='blog'){
 		$blog['author'] = cmsUser::getGenderLink($blog['user_id'], $blog['author'], null);
         //Устанавливаем заголовок страницы и глубиномер
 		$inPage->setTitle($blog['title']);
-		$inPage->addPathway($blog['title']);	
+		$inPage->addPathway($blog['title']);
+		$inPage->setDescription($blog['title']);
 	}
 
     //Если хозяин блога - клуб
@@ -361,6 +371,7 @@ if ($do=='blog'){
 	    $inPage->setTitle($_LANG['BLOG'].' - '.$blog['club']['title']);
         $inPage->addPathway($blog['club']['title'], '/clubs/'.$blog['user_id']);
 		$inPage->addPathway($_LANG['BLOG']);
+		$inPage->setDescription($_LANG['BLOG'].' - '.$blog['club']['title']);
 	}
 
     //Если доступа нет, добавляем сообщение об ошибке
@@ -973,10 +984,8 @@ if($do=='post'){
     $regex  = '/\[(cut=)\s*(.*?)\]/i';
     $msg    = preg_replace($regex, '', $msg);
 
-    if (sizeof($inCore->strClear($msg))>30){
-        $keywords = $inCore->getKeywords($inCore->strClear($msg));
-        $inPage->setKeywords($keywords);
-    }
+	// meta descriptions
+	$inPage->setDescription($post['title']);
 
     $post['author'] = cmsUser::getGenderLink($post['author_id'], $post['author']);
 
@@ -1179,7 +1188,14 @@ if ($do == 'delcat'){
 
 ////////// VIEW LATEST POSTS ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='latest'){
-
+	
+	if ($cfg['j_code']) {
+		$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
+		$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
+		$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
+		$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
+	}
+	
 	$smarty     = $inCore->initSmarty('components', 'com_blog_view_posts.tpl');
 	$error      = '';
 				
@@ -1204,6 +1220,7 @@ if ($do=='latest'){
 		//TITLES
 		$inPage->setTitle($_LANG['RSS_BLOGS']);
 		$inPage->addPathway($_LANG['RSS_BLOGS']);
+		$inPage->setDescription($_LANG['RSS_BLOGS']);
 
 		//PAGINATION
 		$perpage = isset($cfg['perpage']) ? $cfg['perpage'] : 10;
@@ -1271,6 +1288,13 @@ if ($do=='latest'){
 }
 ////////// VIEW POPULAR POSTS ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='best'){
+	
+	if ($cfg['j_code']) {
+		$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
+		$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
+		$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
+		$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
+	}
 
 	$smarty = $inCore->initSmarty('components', 'com_blog_view_posts.tpl');
 	$error = '';
@@ -1292,6 +1316,7 @@ if ($do=='best'){
 		//TITLES
 		$inPage->setTitle($_LANG['POPULAR_IN_BLOGS']);
 		$inPage->addPathway($_LANG['POPULAR_IN_BLOGS']);
+		$inPage->setDescription($_LANG['POPULAR_IN_BLOGS']);
 
 		//PAGINATION
 		$perpage    = isset($cfg['perpage']) ? $cfg['perpage'] : 20;
