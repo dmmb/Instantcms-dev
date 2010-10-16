@@ -30,7 +30,7 @@
 		{if $form_do == 'edit'}
 			<tr>
 				<td height="35"><span>{$LANG.PERIOD_PUBL}:</span></td>
-				<td height="35">{$pubdays} {$LANG.DAYS}</td>
+				<td height="35">{$pubdays} {$LANG.DAYS}, {$LANG.DAYS_TO} {$pubdate}.</td>
 			</tr>
 		{elseif $cfg.srok}
 			<tr>
@@ -46,6 +46,26 @@
 				</td>
 			</tr>
 		{/if}
+        {if $cfg.extend && $form_do == 'edit' && !$published && $is_overdue}
+        	{if $cfg.srok}
+                <tr>
+                    <td height="35"><span>{$LANG.ADV_EXTEND}:</span></td>
+                    <td height="35">
+                        <select name="pubdays" id="pubdays">
+                            <option value="5">5</option>
+                            <option value="10" selected="selected">10</option>
+                            <option value="14">14</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                        </select>  {$LANG.DAYS}</td>
+                </tr>
+            {else}
+                <tr>
+                    <td height="35"><span>{$LANG.ADV_EXTEND}:</span></td>
+                    <td height="35">{$LANG.ADV_EXTEND_SROK} {$pubdays} {$LANG.DAYS}</td>
+                </tr>
+            {/if}
+        {/if}
 		{if $cfg.photos && $cat.is_photos}
 			<tr>
 				<td><span>{$LANG.PHOTO}:</span></td>

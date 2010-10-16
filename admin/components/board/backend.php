@@ -33,6 +33,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$cfg['watermark'] = $_REQUEST['watermark'];
 		$cfg['aftertime'] = $_REQUEST['aftertime'];
 		$cfg['comments'] = $_REQUEST['comments'];
+		$cfg['extend'] = $_REQUEST['extend'];
 
 		$inCore->saveComponentConfig('board', $cfg);
 		
@@ -264,6 +265,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		if (!isset($cfg['pubdays'])) { $cfg['pubdays'] = 14; }
 		if (!isset($cfg['watermark'])) { $cfg['watermark'] = 0; }
 		if (!isset($cfg['aftertime'])) { $cfg['aftertime'] = ''; }
+		if (!isset($cfg['extend'])) { $cfg['extend'] = 0; }
         
 		?>
 		<?php cpCheckWritable('/images/board', 'folder'); ?>
@@ -333,6 +335,16 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                                 <option value="hide" <?php if(@$cfg['aftertime']=='hide') { echo 'selected'; } ?>>Скрывать</option>
                                 <option value="" <?php if(@$cfg['aftertime']=='') { echo 'selected'; } ?>>Ничего не делать</option>
                         </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Разрешать пользователям продлевать объявления: </strong><br/>
+                        <span class="hinttext">Работает, если выбрана опция "скрывать" для просроченных объявлений.</span>
+                    </td>
+                    <td valign="top">
+                        <input name="extend" type="radio" value="1" <?php if (@$cfg['extend']) { echo 'checked="checked"'; } ?>/> Да
+                        <input name="extend" type="radio" value="0" <?php if (@!$cfg['extend']) { echo 'checked="checked"'; } ?>/> Нет
                     </td>
                 </tr>
                 <tr>

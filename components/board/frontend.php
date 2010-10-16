@@ -99,6 +99,7 @@ function board(){
     if(!isset($cfg['watermark'])) { $cfg['watermark'] = 0; }
     if(!isset($cfg['comments'])) { $cfg['comments'] = 1; }
     if (!isset($cfg['aftertime'])) { $cfg['aftertime'] = ''; }
+	if (!isset($cfg['extend'])) { $cfg['extend'] = 0; }
     
     $inCore->loadModel('board');
     $model      = new cms_model_board();
@@ -280,6 +281,8 @@ if($do=='read'){
 
         //encode city
         $item['enc_city']   = urlencode($item['city']);
+		
+		$item['content'] 	= nl2br($item['content']);
 
 		//Check user access
 		if ($inUser->id){
@@ -388,7 +391,7 @@ if ($do=='additem'){
         if ($cat['public']==-1) { $cat['public'] = $cfg['public']; }
         $published  = ($cat['public']==2) ? 1 : 0;
         if ($inUser->is_admin || $inCore->isUserCan('board/autoadd')) { $published = 1; }
-        if ($cfg['srok']){  $pubdays = $inCore->request('pubdays', 'int'); }
+        if ($cfg['srok']){  $pubdays = ($inCore->request('pubdays', 'int') <= 50) ? $inCore->request('pubdays', 'int') : 50; }
         if (!$cfg['srok']){ $pubdays = isset($cfg['pubdays']) ? $cfg['pubdays'] : 14; }
 
         if (empty($title)) 	 { $errors .= '<div style="color:red">'.$_LANG['NEED_TITLE'].'</div>'; }
@@ -499,6 +502,9 @@ if ($do=='edititem'){
         $smarty->assign('cities', $inCore->boardCities('', '-- '.$_LANG['NOT_SELECT'].' --'));
         $smarty->assign('content', $item['content']);
         $smarty->assign('pubdays', $item['pubdays']);
+		$smarty->assign('published', $item['published']);
+		$smarty->assign('pubdate', $item['pubdate']);
+		$smarty->assign('is_overdue', $item['is_overdue']);
         $smarty->assign('file', $item['file']);
         $smarty->assign('category_id', $item['cat_id']);
         $smarty->assign('is_admin', $inUser->is_admin);
@@ -514,7 +520,6 @@ if ($do=='edititem'){
         $title 		= $inCore->request('title', 'str', '');
         $title      = $obtype .' '. $title;
         $content 	= $inCore->request('content', 'str', '');
-
         $captcha    = $inCore->request('code', 'str', '');
 
         $new_cat_id     = $inCore->request('category_id', 'int', 0);
@@ -527,9 +532,15 @@ if ($do=='edititem'){
         if ($cat['public']==-1) { $cat['public'] = $cfg['public']; }
         $published  = ($cat['public']==2) ? 1 : 0;
         if ($inUser->is_admin || $inCore->isUserCan('board/autoadd')) { $published = 1; }
-
-        if ($cfg['srok']){  $pubdays = $inCore->request('pubdays', 'int'); }
-        if (!$cfg['srok']){ $pubdays = isset($cfg['pubdays']) ? $cfg['pubdays'] : 14; }
+		
+		if ($item['is_overdue'] && !$item['published']) {
+			if ($cfg['srok']){  $pubdays = ($inCore->request('pubdays', 'int') <= 50) ? $inCore->request('pubdays', 'int') : 50; }
+			if (!$cfg['srok']){ $pubdays = isset($cfg['pubdays']) ? $cfg['pubdays'] : 14; }
+			$pubdate = date("Y-m-d H:i:s");
+		} else {
+			$pubdays = $item['pubdays'];
+			$pubdate = $item['fpubdate'];
+		}
 
         if (empty($title)) 	 { $errors .= '<div style="color:red">'.$_LANG['NEED_TITLE'].'</div>'; }
         if (empty($content)) { $errors .= '<div style="color:red">'.$_LANG['NEED_TEXT_ADV'].'</div>'; }
@@ -584,6 +595,8 @@ if ($do=='edititem'){
                                     'title'=>$title,
                                     'content'=>$content,
                                     'city'=>$city,
+									'pubdate'=>$pubdate,
+									'pubdays'=>$pubdays,
                                     'published'=>$published,
                                     'file'=>$filename
                                 ));

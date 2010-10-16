@@ -7,7 +7,6 @@
 			<div class="board_gallery">
 				<table width="100%" cellpadding="0" cellspacing="0" border="0">
                 {foreach key=tid item=con from=$cons}	
-                {if $con.published || $myprofile}
 				 <tr>
                     <td valign="top" width="">
 						<table width="100%" height="" cellspacing="" cellpadding="0" class="bd_item">
@@ -21,8 +20,10 @@
 									<div class="bd_item_details">
 											{if $con.published}
 												<span class="bd_item_status_ok">{$LANG.PUBLISHED}</span>
-											{else}
-												<span class="bd_item_status_bad">{$LANG.WAIT_MODER}</span>
+											{elseif !$con.published && $con.is_overdue}
+												<span class="bd_item_status_bad">{$LANG.ADV_EXTEND}</span>
+                                            {else}
+                                            	<span class="bd_item_status_bad">{$LANG.WAIT_MODER}</span>
 											{/if}											
 											<span class="bd_item_date">{$con.pubdate}</span>
 											{if $con.city}
@@ -38,7 +39,6 @@
 						</table>
                       </td>
                   </tr>
-                  {/if}
                 {/foreach}
 				</table>
 			</div>		

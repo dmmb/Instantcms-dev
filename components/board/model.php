@@ -187,8 +187,10 @@ class cms_model_board{
 
         $record = $this->inDB->fetch_assoc($result);
 
-        $record['content'] = nl2br($record['content']);
-		$record['pubdate'] = cmsCore::dateFormat($record['pubdate']);
+		$timedifference 	  = strtotime("now") - strtotime($record['pubdate']);
+		$record['is_overdue'] = bcdiv($timedifference,86400) > $record['pubdays'] && $record['pubdays'] > 0;
+		$record['fpubdate']   = $record['pubdate'];
+		$record['pubdate'] 	  = cmsCore::dateFormat($record['pubdate']);
 
         $record = cmsCore::callEvent('GET_BOARD_RECORD', $record);
 
@@ -229,6 +231,8 @@ class cms_model_board{
                     title = '{$item['title']}',
                     content = '{$item['content']}',
                     city = '{$item['city']}',
+					pubdate = '{$item['pubdate']}',
+					pubdays = '{$item['pubdays']}',
                     published = '{$item['published']}',
                     file = '{$item['file']}'
                 WHERE id = $id";
