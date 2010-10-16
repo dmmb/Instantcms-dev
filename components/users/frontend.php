@@ -1557,7 +1557,7 @@ if ($do=='addfriend'){
 		} else {
 				$to_id      = $id;
 				$from_id    = $inUser->id;
-				if (!usrIsFriends($to_id, $from_id, false)){
+				if (!usrIsFriendsOld($to_id, $from_id, false)){
 					$sql = "INSERT INTO cms_user_friends (to_id, from_id, logdate, is_accepted) 
 							VALUES ('$to_id', '$from_id', NOW(), '0')";
 					$inDB->query($sql) ;

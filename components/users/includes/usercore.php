@@ -275,7 +275,7 @@ function usrStatus($user_id, $logdate='', $online=false, $gender='m'){
     if ($online===false){
         $sql = "SELECT id
                 FROM cms_online
-                WHERE user_id = '$user_id'";
+                WHERE user_id = '$user_id' LIMIT 1";
         $result     = $inDB->query($sql);
         $is_online  = $inDB->num_rows($result);
     } else {
@@ -368,7 +368,24 @@ function usrNotAllowed(){
 	return ob_get_clean();
 }
 
-function usrIsFriends($first_id, $second_id, $strict=true){
+function usrIsFriends($to_id, $my_id){
+
+	$my_friends = cmsUser::getFriends($my_id);
+	if (!$my_friends) { return false; }
+	
+    foreach($my_friends as $friend){  
+        if($friend['id'] == $to_id){  
+           $is_friend = true;  
+           break;  
+        }else{  
+           $is_friend = false;  
+        }  
+    } 
+	
+	return $is_friend;
+}
+
+function usrIsFriendsOld ($first_id, $second_id, $strict=true){
     $inDB = cmsDatabase::getInstance();
 	if ($strict) { $is_accepted = 'is_accepted = 1'; } else { $is_accepted = '(is_accepted = 0 OR is_accepted = 1)'; }
 	$sql = "SELECT * FROM cms_user_friends WHERE ((to_id = $first_id AND from_id = $second_id) OR (to_id = $second_id AND from_id = $first_id)) AND $is_accepted";
