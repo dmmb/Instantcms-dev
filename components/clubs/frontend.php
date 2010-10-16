@@ -36,6 +36,7 @@ function clubs(){
 	$cfg = $inCore->loadComponentConfig('clubs');
 	
 	//SOME DEFAULT CONFIG VALUES
+	if(!isset($cfg['seo_club'])) { $cfg['seo_club'] = 'title'; }
 	if(!isset($cfg['enabled_blogs'])) { $cfg['enabled_blogs'] = 1; }
 	if(!isset($cfg['enabled_photos'])) { $cfg['enabled_photos'] = 1; }	
 	if(!isset($cfg['thumb1'])) { $cfg['thumb1'] = 48; }	
@@ -102,19 +103,22 @@ if ($do=='club'){
 
 	$smarty = $inCore->initSmarty('components', 'com_clubs_view_club.tpl');			
 				
-	if(!$club){
-		//CLUB NOT FOuND
-		$pagetitle = $_LANG['CLUB_NOT_FOUND'];
-        $inPage->setTitle($_LANG['CLUB_NOT_FOUND']);
-		$inPage->addPathway($_LANG['CLUB_NOT_FOUND']);
-        $inPage->printHeading($_LANG['CLUB_NOT_FOUND']);
-        return;
-	}
+	if(!$club){	cmsCore::error404(); }
     
     //TITLES
     $pagetitle = $club['title'];
     $inPage->setTitle($pagetitle);
     $inPage->addPathway($club['title']);
+	
+	// description
+	switch ($cfg['seo_club']){
+		case 'deskr': 	$inPage->setDescription($inCore->strClear($club['description']));
+						break;
+		
+		case 'title': 	$inPage->setDescription($club['title']);
+		
+						break;
+	}
 
     $user_id    = $inUser->id;
     $is_admin 	= $inUser->is_admin || ($user_id == $club['admin_id']);

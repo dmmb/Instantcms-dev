@@ -31,6 +31,7 @@ $cfg = $inCore->loadComponentConfig('clubs');
     if(!isset($cfg['create_min_rating'])) { $cfg['create_min_rating'] = 0; }
     if(!isset($cfg['notify_in'])) { $cfg['notify_in'] = 1; }
     if(!isset($cfg['notify_out'])) { $cfg['notify_out'] = 1; }
+	if(!isset($cfg['seo_club'])) { $cfg['seo_club'] = 'title'; }
 
 if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; }
 
@@ -90,6 +91,7 @@ if ($opt=='list' || $opt=='config'){
 
 if($opt=='saveconfig'){	
     $cfg = array();
+	$cfg['seo_club'] = $_REQUEST['seo_club'];
     $cfg['enabled_blogs'] = $_REQUEST['enabled_blogs'];
     $cfg['enabled_photos'] = $_REQUEST['enabled_photos'];
 
@@ -553,6 +555,16 @@ if ($opt=='config') {
 
 <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
     <table width="680" border="0" cellpadding="10" cellspacing="0" class="proptable">
+        <tr>
+            <td><strong>SEO для клубов:</strong><br />
+            <span class="hinttext">Чем заполнять тег meta description при просмотре клуба?</span></td>
+            <td width="300">
+                <select name="seo_club" id="seo_club" style="width:300px">
+                    <option value="deskr" <?php if (@$cfg['seo_club']=='deskr') { echo 'selected="selected"'; } ?>>Из описания клуба</option>
+                    <option value="title" <?php if (@$cfg['seo_club']=='title') { echo 'selected="selected"'; } ?>>Из заголовка клуба</option>
+                    <option value="def" <?php if (@$cfg['seo_club']=='def') { echo 'selected="selected"'; } ?>>По умолчанию для сайта</option>
+            </select>			</td>
+        </tr>
         <tr>
             <td><strong>Блоги клубов:</strong><br />
             <span class="hinttext">Включить/выключить блоги</span></td>
