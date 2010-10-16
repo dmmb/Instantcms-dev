@@ -364,7 +364,7 @@ class cmsUser {
         $sql = "SELECT u.id as id, u.nickname as nickname, u.login as login, u.birthdate, p.gender as gender
                 FROM cms_users u
 				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
-                WHERE u.is_locked = 0 AND u.is_deleted = 0 AND DATE_FORMAT(u.birthdate, '%d-%m')='$today'";
+                WHERE u.is_locked = 0 AND u.is_deleted = 0 AND p.showbirth = 1 AND DATE_FORMAT(u.birthdate, '%d-%m')='$today'";
 
         $rs     = $inDB->query($sql);
         $total  = $inDB->num_rows($rs);
