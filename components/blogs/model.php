@@ -31,8 +31,9 @@ class cms_model_blogs{
             case 'blog': $sql = "SELECT p.title as title,
                                         p.seolink as seolink,
                                         b.seolink as bloglink
-                                 FROM cms_blog_posts p, cms_blogs b
-                                 WHERE p.blog_id = b.id AND p.id={$target_id}
+                                 FROM cms_blog_posts p
+								 LEFT JOIN cms_blogs b ON b.id = p.blog_id
+                                 WHERE p.id={$target_id}
                                  LIMIT 1";
                          $res = $this->inDB->query($sql);
                          if (!$this->inDB->num_rows($res)){ return false; }
@@ -403,10 +404,11 @@ class cms_model_blogs{
             $cat_sql = '';
         }
 
-        $sql = "SELECT p.*, DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate
-                FROM cms_blogs b, cms_blog_posts p
-                WHERE p.blog_id = b.id AND b.id = $blog_id AND p.published = 1 AND b.owner = '$owner' {$cat_sql}
-                GROUP BY p.id";
+        $sql = "SELECT p.id
+                FROM cms_blogs b
+				LEFT JOIN cms_blog_posts p ON p.blog_id = b.id
+                WHERE b.id = $blog_id AND p.published = 1 AND b.owner = '$owner' {$cat_sql}
+                ";
         $result = $this->inDB->query($sql);
         return $this->inDB->num_rows($result);
     }
@@ -424,12 +426,13 @@ class cms_model_blogs{
         }
 
         //Получаем записи, относящиеся к нужной странице блога
-        $sql = "SELECT p.*, DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate, 
+        $sql = "SELECT p.*, p.pubdate as fpubdate, 
                        IFNULL(r.total_rating, 0) as points, u.nickname as author, u.id as author_id
-                FROM cms_blogs b, cms_users u, cms_blog_posts p
+                FROM cms_blogs b
+				LEFT JOIN cms_blog_posts p ON p.blog_id = b.id
                 LEFT JOIN cms_ratings_total r ON r.item_id=p.id AND r.target='blogpost'
-                WHERE p.blog_id = b.id AND b.id = $blog_id AND p.user_id = u.id AND p.published = 1 AND b.owner = '$owner' {$cat_sql}
-                GROUP BY p.id
+				LEFT JOIN cms_users u ON u.id = p.user_id
+                WHERE b.id = $blog_id AND p.published = 1 AND b.owner = '$owner' {$cat_sql}
                 ORDER BY p.pubdate DESC";
 
         if ($page && $perpage) { $sql .= " LIMIT ".(($page-1)*$perpage).", $perpage"; }
@@ -458,8 +461,10 @@ class cms_model_blogs{
                    u.id as author_id,
                    b.seolink as bloglink,
 				   p.seolink as postlink
-			FROM cms_blog_posts p, cms_blogs b, cms_users u
-			WHERE p.id = $post_id AND p.blog_id = b.id AND p.user_id = u.id LIMIT 1";
+			FROM cms_blog_posts p
+			LEFT JOIN cms_blogs b ON b.id = p.blog_id
+			LEFT JOIN cms_users u ON u.id = p.user_id
+			WHERE p.id = $post_id LIMIT 1";
 
 		$result = $this->inDB->query($sql);
 		$post   = $this->inDB->num_rows($result) ? $this->inDB->fetch_assoc($result) : false;
@@ -479,8 +484,10 @@ class cms_model_blogs{
                    DATE_FORMAT(p.edit_date, '%d-%m-%Y %H:%i') feditdate,
                    u.nickname as author,
                    u.id as author_id
-			FROM cms_blog_posts p, cms_blogs b, cms_users u
-			WHERE p.blog_id = b.id AND p.seolink = '$seolink' AND b.seolink = '$bloglink' AND p.user_id = u.id
+			FROM cms_blog_posts p
+			LEFT JOIN cms_users u ON u.id = p.user_id
+			LEFT JOIN cms_blogs b ON b.id = p.blog_id AND b.seolink = '$bloglink'
+			WHERE p.seolink = '$seolink'
             LIMIT 1";
 
 		$result = $this->inDB->query($sql);
@@ -512,7 +519,6 @@ class cms_model_blogs{
                 LEFT JOIN cms_clubs c ON c.id = b.user_id
                 LEFT JOIN cms_ratings_total r ON r.item_id=p.id AND r.target='blogpost'
                 WHERE p.published = 1
-                GROUP BY p.id
                 ORDER BY p.pubdate DESC
                 LIMIT ".(($page-1)*$perpage).", $perpage";
 
@@ -587,9 +593,9 @@ class cms_model_blogs{
 
     public function getLatestCount(){
         $sql = "SELECT p.id
-				FROM cms_blogs b, cms_blog_posts p
-				WHERE p.published = 1 AND p.blog_id = b.id AND b.owner = 'user'
-                GROUP BY p.id
+				FROM cms_blog_posts p
+				LEFT JOIN cms_blogs b ON b.id = p.blog_id AND b.owner = 'user'
+				WHERE p.published = 1
 				";
 		$result = $this->inDB->query($sql);
 		$total  = $this->inDB->num_rows($result);
@@ -603,7 +609,6 @@ class cms_model_blogs{
 		$sql = "SELECT p.id
 				FROM cms_blogs b, cms_blog_posts p
 				WHERE p.published = 1 AND DATEDIFF(NOW(), p.pubdate) <= 7 AND p.blog_id = b.id AND b.owner = 'user'
-                GROUP BY p.id
 				";
 		$result = $this->inDB->query($sql);
 		$total  = $this->inDB->num_rows($result);

@@ -463,6 +463,7 @@ if ($do=='blog'){
                     $post['url']        = $model->getPostURL(null, $blog['seolink'], $post['seolink']);
                     $post['comments']   = dbRowsCount('cms_comments', "target='blog' AND target_id=".$post['id']);
                     $post['karma']      = cmsKarmaFormatSmall($post['points']);
+					$post['fpubdate']	= $inCore->dateFormat($post['fpubdate']);
                     
                     $msg                = $post['content'];
                     $msg                = $inCore->parseSmiles($msg, true);
@@ -933,14 +934,12 @@ if($do=='post'){
         $blog['club']   = $inDB->get_fields('cms_clubs', "id={$blog['user_id']}", 'title, clubtype');
         $can_view = $blog['club']['clubtype'] == 'public' || ($blog['club']['clubtype'] == 'private' && (clubUserIsMember($blog['user_id'], $user_id) || $inUser->is_admin || clubUserIsAdmin($blog['user_id'], $user_id)));
 		$inPage->addPathway($blog['author'], '/clubs/'.$blog['user_id']);	
-		$inPage->addPathway('Блог', $model->getBlogURL(null, $blog['seolink']));
+		$inPage->addPathway($_LANG['BLOG'], $model->getBlogURL(null, $blog['seolink']));
 		$blog['title'] 		= $blog['author'];
 		$blog['author'] 	= clubAdminLink($blog['user_id']);
 	}
 
-    if (!$post){
-		cmsCore::error404();
-	}
+    if (!$post){ cmsCore::error404(); }
 
     if (!$can_view){
         $inPage->printHeading($_LANG['CLOSED_POST']);
@@ -1022,8 +1021,8 @@ if ($do == 'delpost'){
 
     $post = $model->getPost($post_id);
 
-    if (!$post){ $inCore->redirectBack(); }
-
+    if (!$post){ cmsCore::error404(); }
+	
     if ($owner=='user'){
         $myblog     = ($user_id == $blog['user_id']);
         $is_author  = (((!$myblog) && $inDB->get_field('cms_blog_authors', 'blog_id='.$id.' AND user_id='.$user_id, 'id')) || $blog['forall']);
@@ -1037,6 +1036,7 @@ if ($do == 'delpost'){
         //MENU
         if ($myblog || ($is_author && $post['user_id'] == $user_id) || $inUser->is_admin){
             $inPage->setTitle($_LANG['DELETE_POST']);
+			$inPage->addPathway($_LANG['DELETE_POST']);
             $inPage->backButton(false);
             $confirm['title'] = $_LANG['DELETE_POST'];
             $confirm['text'] = $_LANG['YOU_REALY_DELETE_POST'].' "<a href="'.$model->getPostURL(null, $post['bloglink'], $post['seolink']).'">'.$post['title'].'</a>" '.$_LANG['FROM_BLOG'];
