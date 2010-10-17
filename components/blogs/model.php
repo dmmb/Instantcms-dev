@@ -184,7 +184,7 @@ class cms_model_blogs{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function getPostShort($post_content, $post_url){
+    public function getPostShort($post_content, $post_url = false, $is_after = false){
 
         $regex      = '/\[(cut=)\s*(.*?)\]/i';
         $matches    = array();
@@ -202,11 +202,15 @@ class cms_model_blogs{
 
             $pages  = preg_split( $regex, $post_content );
 
-            if ($pages) { $post_content = $pages[0]; }
-
-            $post_content .= '<div class="blog_cut_link">
-                                    <a href="'.$post_url.'">'.$cut_title.'</a>
-                              </div>';
+            if ($pages) { $post_content = $is_after ? $pages[1] : $pages[0]; }
+			
+			if ($post_url && !$is_after) {
+				$post_content .= '<div class="blog_cut_link">
+										<a href="'.$post_url.'">'.$cut_title.'</a>
+								  </div>';
+			} elseif (!$post_url && !$is_after) {
+				$post_content .= '[cut='.$cut_title.'...]';
+			}
 
         }
 
@@ -701,10 +705,26 @@ class cms_model_blogs{
 
         $item['seolink'] = '';
 
+        // парсим bb-код перед записью в базу
+        $inCore = cmsCore::getInstance();
+		// ѕарсим по отдельности части текста, если есть тег [cut
+        if (strstr($item['content'], '[cut')){
+            $msg_to 	= $this->getPostShort($item['content']);
+			$msg_to 	= $inCore->parseSmiles($msg_to, true);
+			$msg_after 	= $this->getPostShort($item['content'], false, true);
+			$msg_after 	= $inCore->parseSmiles($msg_after, true);
+			$item['content_html'] = $msg_to.' '.$msg_after;
+        } else {
+        	$item['content_html']   = $inCore->parseSmiles($item['content'], true);
+		}
+		// Ёкранируем специальные символы
+        $item['content']        = $this->inDB->escape_string($item['content']);
+        $item['content_html']   = $this->inDB->escape_string($item['content_html']);
+
         $sql = "INSERT INTO cms_blog_posts (user_id, cat_id, blog_id, pubdate, title, feel, music,
-                            content, allow_who, edit_times, edit_date, published, seolink)
+                            content, content_html, allow_who, edit_times, edit_date, published, seolink)
                 VALUES ('{$item['user_id']}', '{$item['cat_id']}', '{$item['id']}', NOW(),
-                        '{$item['title']}', '{$item['feel']}', '{$item['music']}', '{$item['content']}',
+                        '{$item['title']}', '{$item['feel']}', '{$item['music']}', '{$item['content']}', '{$item['content_html']}',
                         '{$item['allow_who']}', 0, NOW(), {$item['published']}, '{$item['seolink']}')";
         
         $result = $this->inDB->query($sql);
@@ -719,9 +739,13 @@ class cms_model_blogs{
             $item['seolink'] = $this->getPostSeoLink($item);            
 
             $this->inDB->query("UPDATE cms_blog_posts SET seolink='{$item['seolink']}' WHERE id = {$post_id}");
+
+            cmsCore::callEvent('ADD_POST_DONE', $item);
+
         }
 
         return $post_id ? $post_id : false;
+        
     }
 
 /* ==================================================================================================== */
@@ -753,12 +777,29 @@ class cms_model_blogs{
 			$seo_sql = ', seolink = "'.$item['seolink'].'"';
 		}
 
+        //парсим bb-код перед записью в базу
+        $inCore = cmsCore::getInstance();
+		// ѕарсим по отдельности части текста, если есть тег [cut
+        if (strstr($item['content'], '[cut')){
+            $msg_to 	= $this->getPostShort($item['content']);
+			$msg_to 	= $inCore->parseSmiles($msg_to, true);
+			$msg_after 	= $this->getPostShort($item['content'], false, true);
+			$msg_after 	= $inCore->parseSmiles($msg_after, true);
+			$item['content_html'] = $msg_to.' '.$msg_after;
+        } else {
+        	$item['content_html']   = $inCore->parseSmiles($item['content'], true);
+		}
+		// Ёкранируем специальные символы
+        $item['content']        = $this->inDB->escape_string($item['content']);
+        $item['content_html']   = $this->inDB->escape_string($item['content_html']);
+
         $sql = "UPDATE cms_blog_posts
                 SET cat_id={$item['cat_id']},
                     title='{$item['title']}',
                     feel='{$item['feel']}',
                     music='{$item['music']}',
                     content='{$item['content']}',
+                    content_html='{$item['content_html']}',
                     allow_who='{$item['allow_who']}',
                     edit_times = edit_times+1,
                     edit_date = NOW(){$seo_sql}

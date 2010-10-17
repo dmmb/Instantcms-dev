@@ -465,9 +465,7 @@ if ($do=='blog'){
                     $post['karma']      = cmsKarmaFormatSmall($post['points']);
 					$post['fpubdate']	= $inCore->dateFormat($post['fpubdate']);
                     
-                    $msg                = $post['content'];
-                    $msg                = $inCore->parseSmiles($msg, true);
-                    $msg                = str_replace("&amp;", '&', $msg);                                      
+                    $msg                = $post['content_html'];
 
                     //–азбиваем текст поста на 2 части по тегу [cut=...] и оставл€ем только первую из них
                     if (strstr($msg, '[cut')){
@@ -566,10 +564,7 @@ if ($do=='moderate'){
     //»звлекаем записи
     $posts = array();
     foreach($posts_list as $post){
-        $msg                = $post['content'];
-        $msg                = $inCore->parseSmiles($msg, true);
-        $msg                = str_replace("&amp;", '&', $msg);
-        $post['msg']        = $msg;
+        $post['msg']        = $post['content_html'];
         $post['tagline']    = cmsTagLine('blogpost', $post['id']);
         $post['url']        = $model->getPostURL(null, $post['bloglink'], $post['seolink']);
         $posts[]            = $post;
@@ -975,9 +970,7 @@ if($do=='post'){
     $inPage->addPathway($post['title']);
 
     //ѕарсим bb-код
-    $msg = $post['content'];
-    $msg = $inCore->parseSmiles($msg, true);
-    $msg = str_replace("&amp;", '&', $msg);
+    $msg = $post['content_html'];
 
     //”бираем тег [cut]
     $regex  = '/\[(cut=)\s*(.*?)\]/i';
@@ -988,7 +981,7 @@ if($do=='post'){
 
     $post['author'] = cmsUser::getGenderLink($post['author_id'], $post['author']);
 
-    //display post
+    //выводим пост
     $smarty = $inCore->initSmarty('components', 'com_blog_view_post.tpl');
         $smarty->assign('post', $post);
         $smarty->assign('blog', $blog);
@@ -1001,6 +994,12 @@ if($do=='post'){
         $smarty->assign('msg', $msg);
         $smarty->assign('nav', blogPostNav($model, $post['pubdate'], $blog['id'], $blog['seolink']));
         $smarty->assign('tag_bar', cmsTagBar('blogpost', $post['id']));
+        //если есть результаты пинга поисковиков, выводим их тоже
+        if ($_SESSION['ping_result']){
+            $ping_result = $_SESSION['ping_result'];
+            $smarty->assign('ping_result', $ping_result);
+            unset($_SESSION['ping_result']);
+        }
     $smarty->display('com_blog_view_post.tpl');
 
     //show user comments
@@ -1247,9 +1246,7 @@ if ($do=='latest'){
 
                     $post['blog_url']   = $model->getBlogURL(null, $post['bloglink']);
 
-                    $msg = $post['content'];
-                    $msg = $inCore->parseSmiles($msg, true);
-                    $msg = str_replace("&amp;", '&', $msg);
+                    $msg = $post['content_html'];
 
                     //–азбиваем текст поста на 2 части по тегу [cut=...] и оставл€ем только первую из них
                     if (strstr($msg, '[cut')){
@@ -1341,9 +1338,7 @@ if ($do=='best'){
                     $post['comments']   = $inDB->rows_count('cms_comments', "target='blog' AND target_id=".$post['id']);
                     $post['karma']      = cmsKarmaFormatSmall($post['points']);
 
-                    $msg = $post['content'];
-                    $msg = $inCore->parseSmiles($msg, true);
-                    $msg = str_replace("&amp;", '&', $msg);
+                    $msg = $post['content_html'];
 
                     //–азбиваем текст поста на 2 части по тегу [cut=...] и оставл€ем только первую из них
                     if (strstr($msg, '[cut')){

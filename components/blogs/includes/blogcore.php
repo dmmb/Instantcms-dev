@@ -75,7 +75,7 @@ function blogCategoryList($selected=0, $blog_id){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
 
-	$sql = "SELECT * FROM cms_blog_cats WHERE blog_id = $blog_id ORDER BY id ASC";
+	$sql = "SELECT id, title FROM cms_blog_cats WHERE blog_id = $blog_id ORDER BY id ASC";
 	$result = $inDB->query($sql) ;
 	$html = '';
 	while($cat = $inDB->fetch_assoc($result)){

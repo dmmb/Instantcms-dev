@@ -86,6 +86,76 @@
 // ========================================================================== //
 // ========================================================================== //
 
+    if (!$inDB->isFieldExists('cms_blog_posts', 'content_html')){
+        $inDB->query("ALTER TABLE `cms_blog_posts` ADD `content_html` TEXT NOT NULL AFTER `content`");
+    }
+
+    $sql = "SELECT id, content
+            FROM cms_blog_posts";
+
+    $result = $inDB->query($sql);
+
+    if($inDB->num_rows($result)){
+		
+		$inCore->loadModel('blogs');
+		$model = new cms_model_blogs();
+	
+        while($post = $inDB->fetch_assoc($result)){
+			// Парсим по отдельности части текста, если есть тег [cut
+			if (strstr($post['content'], '[cut')){
+				$msg_to 	= $model->getPostShort($post['content']);
+				$msg_to 	= $inCore->parseSmiles($msg_to, true);
+				$msg_after 	= $model->getPostShort($post['content'], false, true);
+				$msg_after 	= $inCore->parseSmiles($msg_after, true);
+				$html = $msg_to.' '.$msg_after;
+			} else {
+				$html = $inCore->parseSmiles($post['content'], true);
+			}
+            
+            $html = $inDB->escape_string($html);
+
+            $inDB->query("UPDATE cms_blog_posts SET content_html = '{$html}' WHERE id = '{$post['id']}'");
+
+        }
+
+        echo '<p>Записи блогов оптимизированы</p>';
+
+    }
+
+// ========================================================================== //
+// ========================================================================== //
+
+    if (!$inDB->isFieldExists('cms_modules', 'is_strict_bind')){
+        $inDB->query("ALTER TABLE `cms_modules` ADD `is_strict_bind` TINYINT NOT NULL DEFAULT '0'");
+    }
+
+// ========================================================================== //
+// ========================================================================== //
+
+    if (!$inDB->isFieldExists('cms_modules_bind', 'position')){
+
+        $inDB->query("ALTER TABLE `cms_modules_bind` ADD `position` VARCHAR( 20 ) NOT NULL, ADD INDEX ( position )");
+
+        $sql = "SELECT id, position
+                FROM cms_modules";
+
+        $result = $inDB->query($sql);
+
+        if($inDB->num_rows($result)){
+
+            while($mod = $inDB->fetch_assoc($result)){
+
+                $inDB->query("UPDATE cms_modules_bind SET position = '{$mod['position']}' WHERE module_id = '{$mod['id']}'");
+
+            }
+
+        }
+
+    }
+
+// ========================================================================== //
+// ========================================================================== //
+
     $sql = "SELECT id, message
             FROM cms_user_msg";
 
