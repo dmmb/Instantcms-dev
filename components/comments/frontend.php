@@ -113,7 +113,7 @@ function comments($target='', $target_id=0){
 
 //========================================================================================================================//
 //========================================================================================================================//
-    if ($do!='add' && $do!='delete'){
+    if ($do!='add' && $do!='delete' && $target && $target_id){
 
         $inPage->addHeadJS('includes/jquery/autogrow/jquery.autogrow.js');
         $inPage->addHeadJS('components/comments/js/comments.js');
