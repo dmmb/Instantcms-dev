@@ -1,0 +1,103 @@
+<?php
+if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
+/*
+ * Created by Firs Yuriy
+ * e-mail: firs.yura@gmail.com
+ * site: firs.org.ua
+ */
+$_LANG = array();
+$_LANG['PATH_HOME']             ='Главная';
+
+$_LANG['DEBUG_TIME_GEN_PAGE']   ='Время генерации страницы:';
+$_LANG['DEBUG_QUERY_DB']        ='Запросы к базе:';
+$_LANG['DEBUG_SEC']             ='сек.';
+$_LANG['ACCESS_DENIED']         ='Доступ запрещен';
+$_LANG['YOU_HAVENT_ACCESS']     ='Вы не имеете доступа к этой странице.';
+$_LANG['CONTINUE']              ='Продолжить';
+$_LANG['BACK']                  ='назад';
+$_LANG['PAGE']                  ='Страница';
+$_LANG['PAGES']                 ='Страницы';
+$_LANG['FIRST']                 ='Первая';
+$_LANG['PREVIOUS']              ='Предыдущая';
+$_LANG['NEXT']                  ='Следующая';
+$_LANG['LAST']                  ='Последняя';
+$_LANG['PAGE_NOT_FOUND']        ='Страница не найдена';
+$_LANG['PAGE_NOT_FOUND_TEXT']   ='Возможно она была удалена, перемещена или ожидает проверки администрацией.';
+$_LANG['NOT_SELECT']            ='не выбран';
+$_LANG['SEARCH']                ='Поиск';
+$_LANG['ADD']                   ='Добавить';
+$_LANG['EDIT']                  ='Редактировать';
+$_LANG['MOVE']                  ='Переместить';
+$_LANG['DELETE']                ='Удалить';
+$_LANG['CANCEL']                ='Отмена';
+$_LANG['SAVE']                  ='Сохранить';
+$_LANG['THANK']                 ='Спасибо';
+$_LANG['ERROR']                 ='Ошибка';
+$_LANG['ATTENTION']             ='Внимание';
+$_LANG['IN']                    ='в';
+$_LANG['FROM']                  ='от';
+$_LANG['STEP']                  ='Шаг';
+$_LANG['SEND']                  ='Отправить';
+$_LANG['ACCESS_DENIED']         ='Доступ запрещен';
+$_LANG['ONLY_FOR_REGISTERED_USERS'] ='Страница доступна только для зарегистрированных пользователей.';
+$_LANG['TODAY']                 ='Сегодня';
+$_LANG['YESTERDAY']             ='Вчера';
+$_LANG['DATE']                  ='Дата';
+
+$_LANG['NO']                    ='Нет';
+$_LANG['YES']                   ='Да';
+
+$_LANG['TAGS']                  ='Теги';
+$_LANG['KEYWORDS']              ='ключевые слова, через запятую';
+
+$_LANG['TITLE']                 ='Название';
+$_LANG['IMAGE']                 ='Изображение';
+
+// For All Modules
+$_LANG['CONFIG_MODULE']         ='Настроить модуль';
+$_LANG['NOT_RESPECT']           ='Нет достойных.';
+// Template
+$_LANG['TEMPLATE_AUTH']         ='Авторизация';
+$_LANG['TEMPLATE_LOGIN']        ='Логин';
+$_LANG['TEMPLATE_PASS']         ='Пароль';
+$_LANG['TEMPLATE_SAVE_PASS']    ='Запомнить пароль';
+$_LANG['TEMPLATE_ENTER']        ='Войти';
+$_LANG['TEMPLATE_REGISTRATION'] ='Регистрация';
+$_LANG['TEMPLATE_IN_FAVORITE']  ='В избранное';
+$_LANG['TEMPLATE_MY_PROFILE']   ='Мой профиль';
+$_LANG['TEMPLATE_MESS']         ='Cообщения';
+$_LANG['MONTH_01']              ='января';
+$_LANG['MONTH_02']              ='февраля';
+$_LANG['MONTH_03']              ='марта';
+$_LANG['MONTH_04']              ='апреля';
+$_LANG['MONTH_05']              ='мая';
+$_LANG['MONTH_06']              ='июня';
+$_LANG['MONTH_07']              ='июля';
+$_LANG['MONTH_08']              ='августа';
+$_LANG['MONTH_09']              ='сентября';
+$_LANG['MONTH_10']              ='октября';
+$_LANG['MONTH_11']              ='ноября';
+$_LANG['MONTH_12']              ='декабря';
+$_LANG['MONTH_01_SHORT']        ='янв';
+$_LANG['MONTH_02_SHORT']        ='фев';
+$_LANG['MONTH_03_SHORT']        ='мар';
+$_LANG['MONTH_04_SHORT']        ='апр';
+$_LANG['MONTH_05_SHORT']        ='мая';
+$_LANG['MONTH_06_SHORT']        ='июн';
+$_LANG['MONTH_07_SHORT']        ='июл';
+$_LANG['MONTH_08_SHORT']        ='авг';
+$_LANG['MONTH_09_SHORT']        ='сен';
+$_LANG['MONTH_10_SHORT']        ='окт';
+$_LANG['MONTH_11_SHORT']        ='ноя';
+$_LANG['MONTH_12_SHORT']        ='дек';
+$_LANG['SHOW']                  = 'Показать';
+$_LANG['HIDE']                  = 'Скрыть';
+$_LANG['SPOILER']               = 'Спойлер';
+$_LANG['COMMENT1']              ='комментарий';
+$_LANG['COMMENT2']              ='комментария';
+$_LANG['COMMENT10']             ='комментариев';
+$_LANG['LIKE']                  = 'Нравится';
+$_LANG['UNLIKE']                = 'Не нравится';
+$_LANG['OR']                    ='или';
+
+?>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<backend>    
+    <module>
+        <id>mod_bestcontent</id>
+        <title>Популярные статьи</title>
+    </module>
+    <params>        
+        <param type="number" name="shownum" title="Количество популярных статей" units="шт." default="5" />
+        <param type="flag" name="showlink" title="Показывать ссылку на полный рейтинг" default="on" />
+        <param type="flag" name="showdesc" title="Показывать анонсы статей" default="on" />
+        <param type="list_db" name="cat_id" title="Статьи из раздела" src="cms_category" src_title="title" src_value="id" tree="1" />
+        <param type="flag" name="subs" title="Вместе с подразделами" default="off" />
+    </params>
+</backend>
