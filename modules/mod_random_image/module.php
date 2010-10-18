@@ -28,19 +28,20 @@
 		
 		$result = $inDB->query($sql) ;
 		
+		$is_img = false;
 		if ($inDB->num_rows($result)){
-			while ($item=$inDB->fetch_assoc($result)){
+			$is_img = true;
+			
+			$item=$inDB->fetch_assoc($result);
 
-				echo '<a href="/photos/photo'.$item['id'].'.html">
-					  <p align="center"><img src="/images/photos/small/'.$item['file'].'" border="0"/></p>';
-				if($cfg['showtitle']){
-					echo '<p align="center">'.$item['title'].'</p>';
 				}
-				echo '</a>';				
 
 			
-			}
-		}
+		$smarty = $inCore->initSmarty('modules', 'mod_random_image.tpl');			
+		$smarty->assign('item', $item);
+		$smarty->assign('is_img', $is_img);
+		$smarty->assign('cfg', $cfg);
+		$smarty->display('mod_random_image.tpl');
 
 		return true;	
 	}
