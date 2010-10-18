@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<backend>    
+    <module>
+        <id>mod_arhive</id>
+        <title>Популярные клубы</title>
+    </module>
+    <params>        
+        <param type="number" name="count" title="Количество клубов" units="шт." default="5" />
+    </params>
+</backend>
