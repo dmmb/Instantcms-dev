@@ -25,14 +25,18 @@
 
         <div id="header">
             <div class="container_12">
-                <div class="grid_8">
+                <div class="grid_3">
                     <div id="sitename"><a href="/"></a></div>
                 </div>
-                <div class="grid_4">
-                    <div id="authblock">
-                        <a href="/registration">Регистрация</a>
-                        <a href="/login">Вход</a>
-                    </div>
+                <div class="grid_9">
+                    <?php if (!$inUser->id){ ?>
+                        <div class="mod_user_menu">
+                            <span class="register"><a href="/registration">Регистрация</a></span>
+                            <span class="login"><a href="/login">Вход</a></span>
+                        </div>
+                    <?php } else { ?>
+                        <?php cmsModule('header'); ?>
+                    <?php } ?>
                 </div>
             </div>
         </div>

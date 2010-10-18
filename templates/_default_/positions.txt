@@ -7,8 +7,9 @@
 #  Затем в нужном месте шаблона вставьте код: <?php echo cmsModule("название_позиции");?>
 #
 #
-topmenu
-top
 sidebar
 maintop
 mainbottom
+top
+topmenu
+header

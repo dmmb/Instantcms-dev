@@ -46,9 +46,6 @@ a:hover { color:#375E93; }
     background:url(../images/logo.png) no-repeat left center;
 }
 
-#authblock{ text-align:right; }
-#authblock a{ color:#FFF; margin-left: 15px; }
-
 #page{
     padding-bottom:20px;
 
@@ -1020,12 +1017,37 @@ a.tag:hover{
 }
 
 /*---------------------------PERSONAL MENU -----------------------------------*/
-.pmenu{ }
-.pmenu_avatar img{
-	margin:0px;
-	padding:2px;
-	border:solid 1px #ccc;
+.mod_user_menu { text-align:right; }
+
+.mod_user_menu span{    
+    margin-right:0px;
 }
+.mod_user_menu span a{
+    padding:6px;
+    padding-left:26px;
+    color:#BFDEFF;
+    text-decoration:none;
+}
+
+.mod_user_menu span a:hover{
+    color:#FFF;
+    background-color:#5D90D1;
+    border-radius:8px;
+    -moz-border-radius:8px;
+}
+
+.mod_user_menu .my_profile a{ background:url(../images/icons/user.png) no-repeat 6px center; }
+.mod_user_menu .my_messages a{ background:url(../images/icons/comments.png) no-repeat 6px center; }
+.mod_user_menu .my_messages a.has_new { color:#FFE900; }
+.mod_user_menu .my_blog a{ background:url(../images/icons/blog.png) no-repeat 6px center; }
+.mod_user_menu .my_photos a{ background:url(../images/icons/folder_picture.png) no-repeat 6px center; }
+.mod_user_menu .my_content a{ background:url(../images/icons/folder_page.png) no-repeat 6px center; }
+.mod_user_menu .add_content a{ background:url(../images/icons/add.png) no-repeat 6px center; }
+.mod_user_menu .admin a{ background:url(../images/icons/settings.png) no-repeat 6px center; }
+.mod_user_menu .logout a{ background:url(../images/icons/logout.png) no-repeat 6px center; }
+.mod_user_menu .register a{ background:url(../images/icons/add.png) no-repeat 6px center; }
+.mod_user_menu .login a{ background:url(../images/icons/key.png) no-repeat 6px center; }
+
 .usr_msgmenu_bar{
 	background-color:#EBEBEB;
 	margin-bottom:10px;
