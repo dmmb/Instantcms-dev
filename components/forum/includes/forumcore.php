@@ -563,13 +563,14 @@ function threadLastMessageData($thread_id){
     $inDB   = cmsDatabase::getInstance();
 	$data = array();
 	
-	$sql = "SELECT p.pubdate, p.content as msg, u.id as uid, u.nickname as author, u.login as login
-			FROM cms_forum_threads t
-			LEFT JOIN cms_forum_posts p ON p.thread_id = t.id
-			LEFT JOIN cms_users u ON u.id = p.user_id
-			WHERE t.id = $thread_id
-			ORDER BY p.pubdate DESC
-			LIMIT 1";
+     $sql = "SELECT p.pubdate, p.content as msg, u.id as uid, u.nickname as author, u.login as login
+               FROM cms_forum_threads t
+               INNER JOIN cms_forum_posts p ON p.thread_id = t.id
+               INNER JOIN cms_users u ON u.id = p.user_id
+               WHERE t.id = $thread_id
+               ORDER BY p.pubdate DESC
+               LIMIT 1";
+
 	$result = $inDB->query($sql) ;
 	
 	if ($inDB->num_rows($result)){
