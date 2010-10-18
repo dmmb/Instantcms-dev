@@ -13,6 +13,7 @@
     $inCore->loadClass('config');       //конфигурация
     $inCore->loadClass('db');           //база данных
     $inCore->loadClass('user');
+    $inCore->loadClass('actions');
 
     $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
@@ -32,6 +33,17 @@
             LIMIT 1";
 
     $inDB->query($sql);
+
+    //регистрируем событие
+    cmsActions::log('set_status', array(
+        'object' => '',
+        'object_url' => '',
+        'object_id' => 0,
+        'target' => '',
+        'target_url' => '',
+        'target_id' => 0,
+        'description' => $status
+    ));
 
     return;
     
