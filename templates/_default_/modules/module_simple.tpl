@@ -1,3 +1,0 @@
-<div>
-    {$mod.body}
-</div>
