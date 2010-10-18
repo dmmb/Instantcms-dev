@@ -46,7 +46,7 @@ class cmsActions {
         $is_tracked = 1;
         $is_visible = 1;
 
-        $sql = "INSERT INTO cms_actions (component, name, title,message, is_tracked, is_visible)
+        $sql = "INSERT INTO cms_actions (component, name, title, message, is_tracked, is_visible)
                 VALUES ('{$component}', '{$action['name']}', '{$action['title']}',
                         '{$action['message']}', '{$is_tracked}', '{$is_visible}')";
 
@@ -96,7 +96,9 @@ class cmsActions {
         $action = self::getAction($action_name);
 
         if (!$action) { return false; }
-
+		
+		$params['target'] 		=  $inDB->escape_string($params['target']);
+		
         $sql = "INSERT INTO cms_actions_log (action_id, pubdate, user_id, 
                                              object, object_url, object_id,
                                              target, target_url, target_id,

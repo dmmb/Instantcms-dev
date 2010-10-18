@@ -42,16 +42,15 @@ function mod_latestblogs($module_id){
                         up.imageurl as author_image,
                         u.is_deleted as author_deleted,
                         IFNULL(COUNT(cm.id), 0) as comments
-				FROM cms_users u, cms_user_profiles up, cms_blogs b, cms_blog_posts p
+				FROM cms_blog_posts p
+				LEFT JOIN cms_blogs b ON b.id = p.blog_id
+				LEFT JOIN cms_users u ON u.id = p.user_id				
+				LEFT JOIN cms_user_profiles up ON up.user_id = p.user_id
                 LEFT JOIN cms_ratings_total r ON r.item_id=p.id AND r.target='blogpost'
                 LEFT JOIN cms_comments cm ON cm.target='blog' AND cm.target_id=p.id
-				WHERE p.blog_id = b.id AND
-                      b.allow_who = 'all' AND
-                      p.published = 1 AND
-                      p.user_id = u.id AND
-                      p.user_id = up.user_id
+				WHERE p.published = 1 AND b.allow_who = 'all'
                 GROUP BY p.id
-				ORDER BY p.pubdate DESC
+				ORDER BY p.id DESC
                 LIMIT 50";
 		
 		$result = $inDB->query($sql);
