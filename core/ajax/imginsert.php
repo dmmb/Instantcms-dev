@@ -1,7 +1,5 @@
 <?php
 
-//    if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
-
     session_start();
 
 	define("VALID_CMS", 1);
@@ -14,14 +12,29 @@
 
     $inCore->loadClass('config');       //конфигурация
     $inCore->loadClass('db');           //база данных
-
-    $inDB  = cmsDatabase::getInstance();
+    $inCore->loadClass('user');			//юзер
+	
+    $inUser = cmsUser::getInstance();
+    $inDB  	= cmsDatabase::getInstance();
 
 	$place = $inCore->request('place', 'str');
 	
+	// если место не определено, выводим ошибку и выходим
 	if (!$place) { 
 			echo "{";
 			echo		"error: 'Файл не загружен!',\n";
+			echo		"msg: ''\n";
+			echo "}";
+			die();
+	}
+	
+	// если в имени компонента запрещенные сиволы, выходим
+	if (!preg_match('/^([a-zA-Z0-9\_]+)$/i', $place)) { die(); }
+	
+	// если не авторизованы, выводим ошибку и выходим
+    if (!$inUser->update()) {
+			echo "{";
+			echo		"error: 'Загрузка файлов только для зарегистрированных!',\n";
 			echo		"msg: ''\n";
 			echo "}";
 			die();
@@ -34,7 +47,7 @@
 
 		if (!isset($cfg['img_max'])) { $cfg['img_max'] = 10; } 
 		if (!isset($cfg['img_on'])) { $cfg['img_on'] = 1; } 
-		if (!isset($cfg['watermark'])) { $cfg['watermark'] = 0; } 
+		if (!isset($cfg['watermark'])) { $cfg['watermark'] = 1; } 
 		
 		if ($cfg['img_on']){
 		

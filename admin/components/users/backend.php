@@ -50,6 +50,8 @@ if (!isset($cfg['smallw'])) { $cfg['smallw'] = 64; }
 if (!isset($cfg['medw'])) { $cfg['medw'] = 200; }
 if (!isset($cfg['medh'])) { $cfg['medh'] = 200; }
 
+if(!isset($cfg['j_code'])) { $cfg['j_code']=0;	}
+
 if($opt=='saveconfig'){	
     $cfg = array();
     $cfg['showgroup']   = $_REQUEST['showgroup'];
@@ -84,6 +86,8 @@ if($opt=='saveconfig'){
 	$cfg['filestype']   = $_REQUEST['filestype'];
 
     $cfg['privforms']   = $_REQUEST['privforms'];
+	
+	$cfg['j_code']   = $_REQUEST['j_code'];
 
     $inCore->saveComponentConfig('users', $cfg);
 
@@ -181,6 +185,13 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
                 <tr>
                     <td><strong>Текст уведомления о новых сообщениях: </strong></td>
                     <td><a href="/includes/letters/newmessage.txt">/includes/letters/newmessage.txt</a></td>
+                </tr>
+                <tr>
+                    <td><strong>Подсветка синтаксиса кода для личных сообщений и стены:</strong> </td>
+                    <td>
+                        <input name="j_code" type="radio" value="1" <?php if (@$cfg['j_code']) { echo 'checked="checked"'; } ?>/> Вкл
+                        <input name="j_code" type="radio" value="0" <?php if (@!$cfg['j_code']) { echo 'checked="checked"'; } ?>/> Выкл
+                    </td>
                 </tr>
                 <tr>
                     <td>

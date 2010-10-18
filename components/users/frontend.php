@@ -706,6 +706,13 @@ if ($do=='profile'){
         $smarty->display('com_users_deleted.tpl');
         return;
     }
+	
+	if ($cfg['j_code']) {
+		$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
+		$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
+		$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
+		$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
+	}
 
     $usr['avatar']				= usrImageNOdb($usr['id'], 'big', $usr['imageurl'], $usr['is_deleted']);
 	
@@ -836,6 +843,12 @@ if ($do=='messages'){
 				$inPage->setTitle($_LANG['MY_MESS']);
 				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 				$inPage->addPathway($_LANG['MY_MESS'], '/users/'.$id.'/messages.html');
+				if ($cfg['j_code']) {
+					$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
+					$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
+					$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
+					$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
+				}
 				include 'components/users/messages.php';			
 			} else { echo usrAccessDenied(); }
 		} else { cmsCore::error404(); }
@@ -1639,6 +1652,13 @@ if ($do=='sendmessage'){
 						$result = $inDB->query($sql) ;
 					
 						if ($inDB->num_rows($result)>0){
+							
+							if ($cfg['j_code']) {
+								$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
+								$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
+								$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
+								$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
+							}
 							
 							$is_reply_user = true;
 							$msg = $inDB->fetch_assoc($result);

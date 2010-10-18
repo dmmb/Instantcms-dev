@@ -97,7 +97,7 @@ class cmsActions {
 
         if (!$action) { return false; }
 		
-		$params['target'] 		=  $inDB->escape_string($params['target']);
+		$params['target'] =  $inDB->escape_string($params['target']);
 		
         $sql = "INSERT INTO cms_actions_log (action_id, pubdate, user_id, 
                                              object, object_url, object_id,
