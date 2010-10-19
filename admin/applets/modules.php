@@ -33,7 +33,8 @@ function applet_modules(){
 
 	if ($do == 'config'){
 	
-		$module_name = cpModuleById($id);
+		$module_name    = cpModuleById($id);
+		$module_title   = cpModuleTitleById($id);
 		
 		if (!$module_name) { header('location:index.php?view=modules&do=edit&id='.$id); }
 
@@ -49,7 +50,34 @@ function applet_modules(){
 
         $formGen = new cmsFormGen($xml_file, $cfg);       
 
+        cpAddPathway($module_title, '?view=modules&do=edit&id='.$module_id);
+    	cpAddPathway('Настройки', '?view=modules&do=config&id='.$module_id);
+
+        echo '<h3>'.$module_title.'</h3>';
+
+        if (isset($_SESSION['save_message'])){
+            echo '<p class="success">'.$_SESSION['save_message'].'</p>';
+            unset ($_SESSION['save_message']);
+        }
+
+        $toolmenu = array();
+        $toolmenu[0]['icon'] = 'save.gif';
+        $toolmenu[0]['title'] = 'Сохранить';
+        $toolmenu[0]['link'] = 'javascript:submitModuleConfig()';
+
+        $toolmenu[1]['icon'] = 'edit.gif';
+        $toolmenu[1]['title'] = 'Редактировать отображение модуля';
+        $toolmenu[1]['link'] = '?view=modules&do=edit&id='.$module_id;
+
+        $toolmenu[2]['icon'] = 'cancel.gif';
+        $toolmenu[2]['title'] = 'Отмена';
+        $toolmenu[2]['link'] = '?view=modules';
+
+        cpToolMenu($toolmenu);
+
+        echo '<form action="index.php?view=modules&do=save_auto_config&id='.$id.'" method="post" name="optform" target="_self" id="optform">';
         echo $formGen->getHTML();
+        echo '</form>';
 
         return;
 
@@ -61,6 +89,21 @@ function applet_modules(){
     if ($do == 'save_auto_config'){
 
         $module_name = cpModuleById($id);
+
+        $is_ajax = $inCore->inRequest('ajax');
+
+        if ($is_ajax){
+            $title = $inCore->request('title', 'str');
+            $inDB->query("UPDATE cms_modules SET title='{$title}' WHERE id={$id}");
+            if($inCore->inRequest('content')){
+                $content = $inDB->escape_string($inCore->request('content', 'html'));
+                $inDB->query("UPDATE cms_modules SET content='{$content}' WHERE id={$id}");
+            }
+        }
+
+        if ($inCore->inRequest('title_only')){
+            $inCore->redirectBack();
+        }
 
         $xml_file = PATH.'/admin/modules/'.$module_name.'/backend.xml';
         if (!file_exists($xml_file)){ $inCore->halt(); }
@@ -94,7 +137,9 @@ function applet_modules(){
 
         $inCore->saveModuleConfig($id, $cfg);
 
-        $_SESSION['save_message'] = 'Настройки модуля сохранены';
+        if (!$is_ajax){
+            $_SESSION['save_message'] = 'Настройки модуля сохранены';
+        }
 
         $inCore->redirectBack();
 

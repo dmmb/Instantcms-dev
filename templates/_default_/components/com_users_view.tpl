@@ -6,8 +6,8 @@
 
     {if $cfg.sw_search}
     <div style="margin-bottom:15px;">
-        <div id="slink">
-            <a href="javascript:void(0)" style="background:url(/components/catalog/images/icons/search.png) no-repeat;padding-left:18px;" onclick="{literal}$('#sbar').slideToggle();$('#slink').slideToggle();{/literal}">{$LANG.USERS_SEARCH}</a>
+        <div id="users_search_link">
+            <a href="javascript:void(0)" onclick="{literal}$('#sbar').slideToggle();$('#slink').slideToggle();{/literal}">{$LANG.USERS_SEARCH}</a>
         </div>
         <div id="sbar" style="padding:6px;background:#ECECEC;display:none;">
             <form name="usr_search_form" method="post" action="/users/search.html">
@@ -75,9 +75,9 @@
 			<td width="50%" valign="top">
 			{* ========================= —œ»—Œ  œŒÀ‹«Œ¬¿“≈À≈… ============================*}				
 				<div class="users_list_buttons">
-					<div class="button {if $link.selected=='positive'}selected_positive{/if}"><a rel=înofollowî href="{$link.positive}">{$LANG.POSITIVE}</a></div>
-					<div class="button {if $link.selected=='rating'}selected_rating{/if}"><a rel=înofollowî href="{$link.rating}">{$LANG.RATING}</a></div>
-					<div class="button {if $link.selected=='negative'}selected_negative{/if}"><a rel=înofollowî href="{$link.negative}">{$LANG.NEGATIVE}</a></div>
+					<div class="button {if $link.selected=='positive'}selected{/if}"><a rel=înofollowî href="{$link.positive}">{$LANG.POSITIVE}</a></div>
+					<div class="button {if $link.selected=='rating'}selected{/if}"><a rel=înofollowî href="{$link.rating}">{$LANG.RATING}</a></div>
+					<div class="button {if $link.selected=='negative'}selected{/if}"><a rel=înofollowî href="{$link.negative}">{$LANG.NEGATIVE}</a></div>
 				</div>
 				<div class="users_list">
 					<table width="100%" cellspacing="5" cellpadding="5" class="users_list">

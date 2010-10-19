@@ -881,6 +881,13 @@ function cpModuleById($id){
 	else { return false; }
 }
 
+function cpModuleTitleById($id){
+	$sql = "SELECT name FROM cms_modules WHERE id = $id";
+	$result = dbQuery($sql);
+	if (mysql_num_rows($result)) { $mod = mysql_fetch_assoc($result); return $mod['name']; }
+	else { return false; }
+}
+
 function cpTemplateById($template_id){
 
 	if ($template_id) { return $template_id; } else { return '<span style="color:silver">Как на сайте</span>'; }

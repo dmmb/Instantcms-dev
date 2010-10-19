@@ -109,7 +109,7 @@ a:hover { color:#375E93; }
     position: absolute;
     top: 115px;
 	width: 200px;
-	background: #E0EAEF;
+	background: #E9E9E9;
 	color: #000;
     padding:0px;
     z-index:1000;
@@ -191,16 +191,6 @@ a:hover { color:#375E93; }
     border-radius: 0px 0px 8px 8px;
     -moz-border-radius: 0px 0px 8px 8px;
     display:block;
-/*    font-size:18px;
-    height:45px;
-    background:url(../images/modtop.png) no-repeat left;
-    margin-left:-30px;
-    margin-top:0px;
-    margin-bottom:10px;
-    padding-left:30px;
-    padding-top:5px;
-    text-shadow:0 1px 0 #1F3147;
-    color:#FFF; */
 }
 
 #main div:last{
@@ -211,7 +201,6 @@ a:hover { color:#375E93; }
 #sidebar .module{
     padding:15px;
     background:#E0EAEF;
-    /* border:solid 1px #A8C3CF; */
     display:block;
     overflow:hidden;
     border-radius:10px;
@@ -224,6 +213,10 @@ a:hover { color:#375E93; }
     margin-bottom:10px;
     color:#1873AA;
     text-shadow:0 2px 0 #FFFFFF;
+}
+
+#sidebar .modulebody p{
+    margin-bottom:10px;
 }
 
 /********************************** Футер *************************************/
@@ -1081,7 +1074,7 @@ a.tag:hover{
 .mod_user_menu .my_photos a{ background:url(../images/icons/folder_picture.png) no-repeat 6px center; }
 .mod_user_menu .my_content a{ background:url(../images/icons/folder_page.png) no-repeat 6px center; }
 .mod_user_menu .add_content a{ background:url(../images/icons/add.png) no-repeat 6px center; }
-.mod_user_menu .admin a{ background:url(../images/icons/settings.png) no-repeat 6px center; }
+.mod_user_menu .admin a{ background:url(../images/icons/cpanel.png) no-repeat 6px center; }
 .mod_user_menu .logout a{ background:url(../images/icons/logout.png) no-repeat 6px center; }
 .mod_user_menu .register a{ background:url(../images/icons/add.png) no-repeat 6px center; }
 .mod_user_menu .login a{ background:url(../images/icons/key.png) no-repeat 6px center; }
