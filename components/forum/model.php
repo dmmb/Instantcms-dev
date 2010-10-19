@@ -18,9 +18,12 @@ class cms_model_forum{
 // ========================================================================================================= //
 
     public function getForum($id){
+
         $inDB       = cmsDatabase::getInstance();
 
-        $sql = "SELECT * FROM cms_forums WHERE id = $id";
+		$groupsql = forumUserAuthSQL();
+
+        $sql = "SELECT * FROM cms_forums WHERE id = $id $groupsql LIMIT 1";
         $result = $inDB->query($sql);
 
         if (!$inDB->num_rows($result)){ return false; }

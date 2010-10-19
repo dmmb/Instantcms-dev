@@ -625,12 +625,25 @@ if ($do=='forumposts'){
         $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
         $inPage->addPathway($_LANG['POSTS_IN_FORUM'], $_SERVER['REQUEST_URI']);
 
-		$sql = "SELECT *, t.title as topic, p.id as id, t.id as thread_id
-                FROM cms_forum_posts p
-				LEFT JOIN cms_forum_threads t ON t.id = p.thread_id
-                WHERE p.user_id = '$id'
-                ORDER BY p.pubdate DESC
-                LIMIT ".(($page-1)*$perpage).", $perpage";
+		if ($inUser->id == $id) {
+			$sql = "SELECT *, t.title as topic, p.id as id, t.id as thread_id
+					FROM cms_forum_posts p
+					LEFT JOIN cms_forum_threads t ON t.id = p.thread_id
+					WHERE p.user_id = '$id'
+					ORDER BY p.pubdate DESC
+					LIMIT ".(($page-1)*$perpage).", $perpage";
+					// —читаем общее число постов на форуме
+					$records_total = $inDB->rows_count('cms_forum_posts', 'user_id = '.$id.'');
+		} else {
+			$sql = "SELECT *, t.title as topic, p.id as id, t.id as thread_id
+					FROM cms_forum_posts p
+					LEFT JOIN cms_forum_threads t ON t.id = p.thread_id
+					WHERE p.user_id = '$id' AND t.is_hidden = 0
+					ORDER BY p.pubdate DESC
+					LIMIT ".(($page-1)*$perpage).", $perpage";
+					// —читаем общее число постов на форуме
+					$records_total = $inDB->rows_count('cms_forum_posts p LEFT JOIN cms_forum_threads t ON t.id = p.thread_id', 'p.user_id = '.$id.' AND t.is_hidden = 0');
+		}
 				
 		$result = $inDB->query($sql) ;
 
@@ -643,8 +656,6 @@ if ($do=='forumposts'){
 				$post['date'] = $inCore->dateFormat($post['pubdate']);
 				$posts[] = $post;
 			}
-			// —читаем общее число постов на форуме
-			$records_total = $inDB->rows_count('cms_forum_posts', 'user_id = '.$id.'');
 
 			$smarty = $inCore->initSmarty('components', 'com_users_forumposts.tpl');
             $smarty->assign('user_id', $id);
@@ -757,7 +768,13 @@ if ($do=='profile'){
 	
     $usr['board_count']			= $cfg['sw_board'] ? (int)$inDB->rows_count('cms_board_items', "user_id={$usr['id']} AND published=1") : false;
     $usr['comments_count']		= $cfg['sw_comm'] ? (int)$inDB->rows_count('cms_comments', "user_id={$usr['id']} AND published=1") : false;
-    $usr['forum_count']			= $cfg['sw_forum'] ? usrMsg($usr['id'], 'cms_forum_posts') : false;
+	
+    if($cfg['sw_forum'])
+        if ($inUser->id==$id){
+            $usr['forum_count'] = $inDB->rows_count('cms_forum_posts', 'user_id = '.$usr['id'].'');
+        } else {
+            $usr['forum_count'] = $inDB->rows_count('cms_forum_posts p LEFT JOIN cms_forum_threads t ON t.id = p.thread_id', 'p.user_id = '.$usr['id'].' AND t.is_hidden = 0');
+        }
 
     if($cfg['sw_files'])
         if ($inUser->id==$id){

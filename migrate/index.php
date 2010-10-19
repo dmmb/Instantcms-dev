@@ -328,6 +328,30 @@ view_type: table', 1, '', -1, 0, 1, 'HOUR','module_simple.tpl', 0)";
 // ========================================================================== //
 // ========================================================================== //
 
+    if (!$inDB->isFieldExists('cms_forum_threads', 'is_hidden')){
+        $inDB->query("ALTER TABLE `cms_forum_threads` ADD `is_hidden` INT( 11 ) NOT NULL DEFAULT '0' AFTER `pinned`");
+    }
+	
+	$sql = "SELECT t.id
+			FROM cms_forum_threads t, cms_forums f
+			WHERE t.forum_id = f.id AND f.auth_group<>0";
+	$result = $inDB->query($sql);
+	
+    if($inDB->num_rows($result)){
+
+        while($msg = $inDB->fetch_assoc($result)){
+		
+            $inDB->query("UPDATE cms_forum_threads SET is_hidden = 1 WHERE id = '{$msg['id']}'");
+
+        }
+
+        echo '<p>Права доступа тем к закрытым разделам форума установлены.</p>';
+
+    }
+	
+// ========================================================================== //
+// ========================================================================== //
+
 //    if (!$inDB->isFieldExists('', '')){
 //
 //        $inDB->query("");

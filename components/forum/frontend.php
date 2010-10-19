@@ -368,10 +368,12 @@ if ($do=='forum'){
 if ($do=='thread'){
 
 	$inPage->addPathway($_LANG['FORUMS'], '/forum');
+	
+	$groupsql = forumUserAuthSQL("f.");
 
 	$sql = "SELECT t.*, f.title as forum, f.id as fid, f.NSLeft as forum_left, f.NSRight as forum_right
 			FROM cms_forum_threads t, cms_forums f
-			WHERE t.id = $id AND t.forum_id = f.id";
+			WHERE t.id = $id AND t.forum_id = f.id $groupsql";
 	$result = $inDB->query($sql);
 	
 	if ($inDB->num_rows($result)){
@@ -656,7 +658,9 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 	if (usrCheckAuth()){
 
 		$inPage->addHeadJS('core/js/smiles.js');
-
+		
+		$forum = $model->getForum($id);
+		
 		if ($do == 'newthread') { 
 			$inPage->setTitle($_LANG['NEW_THREAD']);
 			$inPage->addPathway($_LANG['NEW_THREAD'], $_SERVER['REQUEST_URI']);
@@ -808,10 +812,13 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 					//NEW THREAD
 					$title          = $inCore->request('title', 'str');
 					$description    = $inCore->request('description', 'str');
-												
+
 					if($title && $message){	
-						$sql = "INSERT INTO cms_forum_threads (forum_id, user_id, title, description, icon, pubdate, hits)
-								VALUES ('$id', '".$inUser->id."', '$title', '$description', '', NOW(), 0)";
+					
+						$is_hidden = $forum['auth_group'] ? 1 : 0;
+						
+						$sql = "INSERT INTO cms_forum_threads (forum_id, user_id, title, description, icon, pubdate, hits, is_hidden)
+								VALUES ('$id', '".$inUser->id."', '$title', '$description', '', NOW(), 0, '$is_hidden')";
 						$inDB->query($sql);
 
 						$threadlastid = dbLastId('cms_forum_threads');

@@ -31,7 +31,7 @@ $_LANG['SUBFORUMS']                  ='Подфорумы';
 $_LANG['NOT_FORUMS_IN_CAT']          ='Нет форумов в этой категории.';
 $_LANG['NOT_CATS_OF_FORUM']          ='Нет категорий форумов.';
 $_LANG['FORUM_NOT_FOUND']            ='Форум не найден';
-$_LANG['FORUM_NOT_FOUND_TEXT']       ='Форум не найден. Возможно он был удален.';
+$_LANG['FORUM_NOT_FOUND_TEXT']       ='Форум не найден. Возможно он был удален или у Вас нет к нему доступа.';
 
 $_LANG['NEW_MESSAGE']                ='Написать';
 $_LANG['CLOSE']                      ='Закрыть';
@@ -65,7 +65,7 @@ $_LANG['FOR_WRITE_ON_FORUM']         ='Чтобы писать на форуме';
 $_LANG['REGISTER']                   ='зарегистрируйтесь';
 $_LANG['OR_LOGIN']                   ='или авторизуйтесь';
 $_LANG['NO_MESS_IN_THREAD']          ='Нет сообщений в этой теме.';
-$_LANG['THREAD_NOT_FOUND_TEXT']      ='Тема не найдена. Возможно она была удалена.';
+$_LANG['THREAD_NOT_FOUND_TEXT']      ='Тема не найдена. Возможно она была удалена или у Вас нет доступа к ней.';
 
 $_LANG['NEW_THREAD']                 ='Новая тема';
 $_LANG['NEW_POST']                   ='Новое сообщение';
