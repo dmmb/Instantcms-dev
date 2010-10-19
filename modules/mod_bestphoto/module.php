@@ -9,10 +9,13 @@
 /*********************************************************************************************/
 
 function mod_bestphoto($module_id){
-        $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
+
+        $inCore  = cmsCore::getInstance();
+        $inDB    = cmsDatabase::getInstance();
+		
+		$cfg     = $inCore->loadModuleConfig($module_id);
+		
     	global $_LANG;
-		$cfg = $inCore->loadModuleConfig($module_id);
 
 		if (!isset($cfg['showtype'])) { $cfg['showtype'] = 'full'; }
 		if (!isset($cfg['showmore'])) { $cfg['showmore'] = 1; }
@@ -32,7 +35,13 @@ function mod_bestphoto($module_id){
 				LIMIT ".$cfg['shownum'];		
  	
 		$result = $inDB->query($sql) ;
-		$is_best = false;	
+
+		$is_best = false;
+
+		if (!function_exists('cmsKarmaFormat') && $cfg['showdate']){ //if not included earlier
+			include_once($_SERVER['DOCUMENT_ROOT'].'/core/lib_karma.php');
+		}
+
 		if ($inDB->num_rows($result)){	
 			$is_best = true;
 			$cons = array();
@@ -40,7 +49,6 @@ function mod_bestphoto($module_id){
 				if ($cfg['showtype']=='full'){
 						if($cfg['showcom'] || $cfg['showdate']){
 								if ($cfg['showdate']){
-									include_once($_SERVER['DOCUMENT_ROOT'].'/core/lib_karma.php');
 									if ($cfg['sort'] == 'rating'){
 										$con['votes'] = cmsKarmaFormat($con['rating']);
 									} else {
@@ -54,7 +62,8 @@ function mod_bestphoto($module_id){
 				}
 				$cons[] = $con;
 			}			
-			}
+		}
+
 		$smarty = $inCore->initSmarty('modules', 'mod_bestphoto.tpl');			
 		$smarty->assign('cons', $cons);
 		$smarty->assign('cfg', $cfg);

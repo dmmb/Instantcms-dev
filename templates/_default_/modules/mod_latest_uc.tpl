@@ -19,6 +19,7 @@
 							</table>
 						</div>				
 					{/foreach}
+                    <div class="blog_desc"></div>
 			{/if}
 			
 			{if $cfg.showtype == 'list'}

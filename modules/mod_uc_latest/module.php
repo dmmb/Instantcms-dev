@@ -9,29 +9,30 @@
 /*********************************************************************************************/
 
 function mod_uc_latest($module_id){
+
         $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
-	
-		$cfg = $inCore->loadModuleConfig($module_id);
+        $inDB   = cmsDatabase::getInstance();
+		$cfg    = $inCore->loadModuleConfig($module_id);
 		
 		if ($cfg['cat_id']>0){
 
-            if (!$cfg['subs']){
+			if (!$cfg['subs']){
 				//select from category
 				$catsql = ' AND i.category_id = '.$cfg['cat_id'];
 			} else {
 				//select from category and subcategories
 				$rootcat  = $inDB->get_fields('cms_uc_cats', 'id='.$cfg['cat_id'], 'NSLeft, NSRight');
-				$catsql   = "AND (i.category_id = c.id AND c.NSLeft >= {$rootcat['NSLeft']} AND c.NSRight <= {$rootcat['NSRight']})";
+				$catsql   = "AND (c.NSLeft >= {$rootcat['NSLeft']} AND c.NSRight <= {$rootcat['NSRight']})";
 			}
 
 		} else {
 			$catsql = '';
 		}
-		
+
 		$sql = "SELECT i.*, i.pubdate as fdate, c.view_type as viewtype
-				FROM cms_uc_items i, cms_uc_cats c
-				WHERE i.published = 1 AND i.category_id = c.id ".$catsql."
+				FROM cms_uc_items i
+				LEFT JOIN cms_uc_cats c ON c.id = i.category_id
+				WHERE i.published = 1 ".$catsql."
 				ORDER BY i.pubdate DESC
 				LIMIT ".$cfg['newscount'];		
 

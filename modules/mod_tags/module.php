@@ -9,18 +9,19 @@
 /*********************************************************************************************/
 
 function mod_tags($module_id){
+
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
 		$cfg = $inCore->loadModuleConfig($module_id);
 
 		$targeting = sizeof($cfg['targets']);
-		
+
 		if(!isset($cfg['minfreq'])) { $cfg['minfreq']=0; }	
 		if(!isset($cfg['minlen'])) { $cfg['minlen'] = 3; }
         if(!isset($cfg['maxtags'])) { $cfg['maxtags'] = 20; }
 
 		$is_targeting = false;
-		
+
 		if ($targeting){
 		
 			$is_targeting = true;

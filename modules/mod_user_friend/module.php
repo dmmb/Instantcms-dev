@@ -7,20 +7,23 @@
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
 //                                                                                           //
 /*********************************************************************************************/
-	function mod_user_friend($module_id){
-        $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
-        $inUser = cmsUser::getInstance();
-		if (!$inUser->id){ return false; }
+function mod_user_friend($module_id){
+
+        $inCore  = cmsCore::getInstance();
+        $inDB    = cmsDatabase::getInstance();
+        $inUser  = cmsUser::getInstance();
 		
 		$cfg = $inCore->loadModuleConfig($module_id);
 		
 		$user_id = $inUser->id;
-		
+
+		if (!$user_id){ return false; }
+
 		if ($cfg['view_type'] == 'table') {
-		
-			$inCore->includeFile('components/users/includes/usercore.php');
-			
+			if (!function_exists('usrLink') && !function_exists('usrImageNOdb')){ //if not included earlier
+				$inCore->includeFile('components/users/includes/usercore.php');
+			}
+
 			$sql = "SELECT
 					CASE
 					WHEN f.from_id = $user_id

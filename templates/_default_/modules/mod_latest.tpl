@@ -1,3 +1,4 @@
+{if $is_con}
 {foreach key=aid item=article from=$articles}
 	<div class="mod_latest_entry">
         {if $article.image}
@@ -8,7 +9,7 @@
 	    <a class="mod_latest_title" href="{$article.href}">{$article.title}</a>
 		{if $cfg.showdate}
             <div class="mod_latest_date">
-                {$article.date} - <a href="{$article.authorhref}">{$article.author}</a> - <a href="{$article.href}" title="{$article.comments|spellcount:$LANG.COMMENT1:$LANG.COMMENT2:$LANG.COMMENT10}" class="mod_latest_comments">{$article.comments}</a>
+                {$article.date} - <a href="{$article.authorhref}">{$article.author}</a>{if $cfg.showcom} - <a href="{$article.href}" title="{$article.comments|spellcount:$LANG.COMMENT1:$LANG.COMMENT2:$LANG.COMMENT10}" class="mod_latest_comments">{$article.comments}</a>{/if}
             </div>
         {/if}
 
@@ -26,4 +27,7 @@
 	<div class="mod_latest_rss">
 		<a href="/rss/content/{$rssid}/feed.rss">{$LANG.LATEST_RSS}</a>
 	</div>
+{/if}
+{else}
+<p>{$LANG.LATEST_NOT_MATERIAL}</p>
 {/if}

@@ -8,11 +8,11 @@
 //                                                                                           //
 /*********************************************************************************************/
 
-	function mod_whoonline($module_id){
+function mod_whoonline($module_id){
 
         $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
-		$cfg = $inCore->loadModuleConfig($module_id);
+        $inDB   = cmsDatabase::getInstance();
+		$cfg    = $inCore->loadModuleConfig($module_id);
 
         global $_LANG;
 
@@ -26,21 +26,21 @@
 				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
 				WHERE u.is_locked = 0 AND u.is_deleted = 0
                 GROUP BY o.user_id";
-		
+
 		$result = $inDB->query($sql) ;
-				$total = $inDB->num_rows($result);
-		
+		$total = $inDB->num_rows($result);
+
 		if ($total){	
 				$now = 0;
 				while($usr = $inDB->fetch_assoc($result)){
 					if($cfg['admin_editor']){
-					if ($inCore->userIsAdmin($usr['id'])){
-						echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login'], "color:red");
-					} elseif ($inCore->userIsEditor($usr['id'])) {	
-						echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login'], "color:green");
-					} else {
-						echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login']);
-					}
+						if ($inCore->userIsAdmin($usr['id'])){
+							echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login'], "color:red");
+						} elseif ($inCore->userIsEditor($usr['id'])) {	
+							echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login'], "color:green");
+						} else {
+							echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login']);
+						}
 					} else {
 						echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login']);
 					}

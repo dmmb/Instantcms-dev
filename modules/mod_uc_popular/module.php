@@ -23,15 +23,15 @@ if (!function_exists('buildRating')){
 }
 
 function mod_uc_popular($module_id){
-        $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
 
-		$cfg = $inCore->loadModuleConfig($module_id);
-			
+        $inCore = cmsCore::getInstance();
+        $inDB   = cmsDatabase::getInstance();
+		$cfg    = $inCore->loadModuleConfig($module_id);
+
 		global $_LANG;
-		
+
 		$showtype = $cfg['showtype'];
-		
+
 		if($cfg['sort']=='rating') { $orderby = 'rating DESC'; }
 		else { $orderby = 'hits DESC'; }
 		
@@ -43,7 +43,7 @@ function mod_uc_popular($module_id){
 			} else {
 				//select from category and subcategories
 				$rootcat  = $inDB->get_fields('cms_uc_cats', 'id='.$cfg['cat_id'], 'NSLeft, NSRight');
-				$catsql   = "AND (i.category_id = c.id AND c.NSLeft >= {$rootcat['NSLeft']} AND c.NSRight <= {$rootcat['NSRight']})";
+				$catsql   = "AND (c.NSLeft >= {$rootcat['NSLeft']} AND c.NSRight <= {$rootcat['NSRight']})";
 			}
 
 		} else {
@@ -51,21 +51,23 @@ function mod_uc_popular($module_id){
 		}
 
 		$sql = "SELECT i.* , IFNULL(AVG( r.points ), 0) AS rating, c.view_type as viewtype
-				FROM cms_uc_cats c, cms_uc_items i
+				FROM cms_uc_items i
+				LEFT JOIN cms_uc_cats c ON c.id = i.category_id
                 LEFT JOIN cms_uc_ratings r ON r.item_id = i.id
-				WHERE i.category_id = c.id AND i.published = 1 $catsql
+				WHERE i.published = 1 $catsql
 				GROUP BY i.id
 				ORDER BY $orderby 
 				LIMIT ".$cfg['num'];
 
-		$result = $inDB->query($sql) or die(mysql_error()."<br><br>".$sql);
+		$result = $inDB->query($sql);
 		
 		$items = array();
 		$is_uc = false;
-		
-		
-		if ($inDB->num_rows($result)){	
+
+		if ($inDB->num_rows($result)){
+
 			$is_uc = true;
+
 			if ($cfg['showtype']=='thumb'){
 					while($item = $inDB->fetch_assoc($result)){
 						if (strlen($item['imageurl'])<4) {
@@ -79,7 +81,7 @@ function mod_uc_popular($module_id){
 						$items[] = 	$item;												
 					}
 			}
-			
+
 			if ($cfg['showtype']=='list'){
 					while($item = $inDB->fetch_assoc($result)){
 							$item['fieldsdata'] = unserialize($item['fieldsdata']);
@@ -102,16 +104,16 @@ function mod_uc_popular($module_id){
 							}			
 							$items[] = 	$item;	
 					}				
-				}
 			}
-		
+		}
+
 		$smarty = $inCore->initSmarty('modules', 'mod_uc_popular.tpl');			
 		$smarty->assign('items', $items);
 		$smarty->assign('cfg', $cfg);
 		$smarty->assign('is_uc', $is_uc);			
 		$smarty->display('mod_uc_popular.tpl');
-		
+
 		return true;
-		
+
 }
 ?>

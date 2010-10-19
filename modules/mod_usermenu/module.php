@@ -24,15 +24,13 @@
         if (!isset($cfg['showtype'])){ $cfg['showtype'] = 'text';	}
 
         //activate profiles support
-        if(file_exists(PATH.'/components/users/includes/usercore.php')){
-            if (!function_exists('usrComments')){ //if not included earlier
-                $inCore->includeFile('components/users/includes/usercore.php');
-            }
-        }
+         if (!function_exists('usrImage') && !function_exists('usrBlog')){ //if not included earlier
+             $inCore->includeFile('components/users/includes/usercore.php');
+         }
 
         $newmsg     = cmsUser::isNewMessages($inUser->id);
 
-        $blog       = $inDB->get_fields('cms_blogs', 'owner = "user" AND user_id = '.$inUser->id, 'id, seolink');
+        $blog       = usrBlog($inUser->id);
 
         $blog_href  = ($blog['id']) ? '/blogs/'.$blog['seolink'] : '/blogs/createblog.html';
 

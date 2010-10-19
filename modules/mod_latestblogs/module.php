@@ -1,18 +1,21 @@
 <?php
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
 //                                                                                           //
 /*********************************************************************************************/
 
-function mod_latestblogs($module_id){	
+function mod_latestblogs($module_id){
+
         $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
-        $cfg = $inCore->loadModuleConfig($module_id);
+        $inDB   = cmsDatabase::getInstance();
+        $cfg    = $inCore->loadModuleConfig($module_id);
+
         global $_LANG;
+
         $inCore->loadModel('blogs');
         $model = new cms_model_blogs();
 
@@ -50,11 +53,13 @@ function mod_latestblogs($module_id){
                 LEFT JOIN cms_comments cm ON cm.target='blog' AND cm.target_id=p.id
 				WHERE p.published = 1 AND b.allow_who = 'all'
                 GROUP BY p.id
-				ORDER BY p.id DESC
-                LIMIT 50";
-		
+				ORDER BY p.pubdate DESC
+                LIMIT 30";
+
 		$result = $inDB->query($sql);
+
 		$is_blog = false;
+
 		if ($inDB->num_rows($result)){	
 
 			$is_blog = true;
@@ -63,7 +68,9 @@ function mod_latestblogs($module_id){
 
 			while($con = $inDB->fetch_assoc($result)){
 
-                include_once($_SERVER['DOCUMENT_ROOT'].'/components/users/includes/usercore.php');
+				if (!function_exists('usrImageNOdb')){ //if not included earlier
+					include_once($_SERVER['DOCUMENT_ROOT'].'/components/users/includes/usercore.php');
+				}
 
                 if ($count > $cfg['shownum']) { break; }
 

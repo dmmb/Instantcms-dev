@@ -8,10 +8,11 @@
 //                                                                                           //
 /*********************************************************************************************/
 
-	function mod_uc_random($module_id){
+function mod_uc_random($module_id){
+
         $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
-		$cfg = $inCore->loadModuleConfig($module_id);
+        $inDB   = cmsDatabase::getInstance();
+		$cfg    = $inCore->loadModuleConfig($module_id);
 
 		if ($cfg['cat_id']>0){
 
@@ -21,7 +22,7 @@
 			} else {
 				//select from category and subcategories
 				$rootcat  = $inDB->get_fields('cms_uc_cats', 'id='.$cfg['cat_id'], 'NSLeft, NSRight');
-				$catsql   = "AND (i.category_id = c.id AND c.NSLeft >= {$rootcat['NSLeft']} AND c.NSRight <= {$rootcat['NSRight']})";
+				$catsql   = "AND (c.NSLeft >= {$rootcat['NSLeft']} AND c.NSRight <= {$rootcat['NSRight']})";
 			}
 
 		} else {
@@ -29,8 +30,9 @@
 		}
 
 		$sql = "SELECT i.*, c.title as category, c.view_type as viewtype
-				FROM cms_uc_items i, cms_uc_cats c
-				WHERE i.category_id = c.id AND i.imageurl != '' AND i.published = 1 ".$catsql."
+				FROM cms_uc_items i
+				LEFT JOIN cms_uc_cats c ON c.id = i.category_id
+				WHERE i.imageurl != '' AND i.published = 1 ".$catsql."
 				ORDER BY RAND()
 				LIMIT ".$cfg['count'];
 		
@@ -40,7 +42,9 @@
 		$is_uc = false;
 		
 		if ($inDB->num_rows($result)){
+
 			$is_uc = true;
+
 			while ($item=$inDB->fetch_assoc($result)){
 				if (strlen($item['imageurl'])<4) {
 					$item['imageurl'] = 'nopic';
@@ -61,8 +65,7 @@
 		$smarty->assign('cfg', $cfg);
 		$smarty->assign('is_uc', $is_uc);
 		$smarty->display('mod_uc_random.tpl');
-		
 
 		return true;	
-	}
+}
 ?>

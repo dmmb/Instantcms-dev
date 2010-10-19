@@ -1,3 +1,4 @@
+{if $is_faq}
 <table cellspacing="4" border="0" width="100%">
 {foreach key=aid item=quest from=$faq}	
 	<tr>
@@ -8,7 +9,10 @@
 	</tr>
 	<tr>
 		<td>&nbsp;</td>
-		<td><span class="mod_faq_date">{$quest.date}</span> &mdash; <a href="{$quest.href}">Подробнее...</a></td>
+		<td><span class="mod_faq_date">{$quest.date}</span> &mdash; <a href="{$quest.href}">{$LANG.LATEST_FAQ_DETAIL}...</a></td>
 	</tr>
 {/foreach}
 </table>
+{else}
+<p>{$LANG.LATEST_FAQ_NOT_QUES}</p>
+{/if}

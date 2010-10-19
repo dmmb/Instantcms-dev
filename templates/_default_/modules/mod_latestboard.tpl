@@ -1,3 +1,4 @@
+{if $is_items}
 <ul class="new_board_items">
 	{foreach key=tid item=item from=$items}
 		<li>
@@ -5,3 +6,6 @@
 		</li>
 	{/foreach}
 </ul>
+{else}
+<p>{$LANG.LATESTBOARD_NOT_ADV}</p>
+{/if}
