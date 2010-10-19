@@ -74,7 +74,7 @@ if ($do=='view'){
 	$page = $inCore->request('page', 'int', 1);	
 	
 	if ($id > 0){		
-		$sql = "SELECT q.*, u.login, u.nickname
+		$sql = "SELECT q.*, u.login as login, u.nickname as nickname
 				FROM cms_faq_quests q
 				LEFT JOIN cms_users u ON u.id = q.user_id
 				WHERE q.category_id = $id AND q.published = 1

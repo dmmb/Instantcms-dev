@@ -982,6 +982,9 @@ if($do=='post'){
 
     $post['author'] = cmsUser::getGenderLink($post['author_id'], $post['author']);
 
+    include_once($_SERVER['DOCUMENT_ROOT'].'/components/users/includes/usercore.php');
+    $post['image'] = usrImageNOdb($post['author_id'], 'small', $post['author_image'], $post['author_deleted']);
+    
     //выводим пост
     $smarty = $inCore->initSmarty('components', 'com_blog_view_post.tpl');
         $smarty->assign('post', $post);

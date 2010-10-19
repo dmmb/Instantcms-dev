@@ -31,6 +31,9 @@ a:hover { color:#375E93; }
   height: 100%;
 }
 
+.text-input{ border:1px solid #4DA4CF; padding:2px; }
+.text-input:focus{ border:1px solid #FFD100; padding:2px; }
+
 /***************************** Шапка страницы *********************************/
 
 #header{
@@ -406,6 +409,15 @@ span.fast_cfg_link img{ border:none; }
 .regstar{
 	font-size:18px;
 	color:#FF0000;
+}
+
+#regform strong{
+    font-size:16px;
+    color:#375E93;
+}
+
+#regform small{
+    color:#5F98BF;
 }
 
 /*------------------------------- LOGIN FORM ---------------------------------*/
@@ -876,7 +888,7 @@ span.fast_cfg_link img{ border:none; }
 	font-size:14px;
 }
 .uc_itemlink{
-	font-size:18px;
+	font-size:20px;
 }
 .uc_list_itempic{
 	background-color: #FFFFFF;
@@ -927,10 +939,13 @@ span.fast_cfg_link img{ border:none; }
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
-.uc_detailimg{
-	border: solid 1px gray;
-	padding: 4px;
-	background-color:#FFFFFF;
+.uc_detailimg div{
+    border-radius:8px;
+    -moz-border-radius:8px;
+    border:1px solid #C3D6DF;
+    padding:4px;
+}
+.uc_detailimg{	
 }
 .uc_detailrating{
 	margin:0px;
@@ -943,7 +958,7 @@ span.fast_cfg_link img{ border:none; }
 	color: gray;
 }
 .uc_tagline{
-	border-top:dashed 1px silver;
+	border-top:dashed 1px #C3D6DF;
 	margin-top: 6px;
 	padding-top:2px;
 	padding-bottom:8px;
@@ -974,10 +989,31 @@ span.fast_cfg_link img{ border:none; }
     float:right;
 }
 .uc_item_edit_link{
-    color:gray;
+    color:#375E93;
     padding:2px;
     padding-left:20px;
-    background:url(/images/icons/edit.gif) no-repeat left center;    
+    background:url(../images/icons/edit.png) no-repeat left center;
+}
+.uc_cat_search{
+    margin:15px 0px;
+}
+.uc_cat_search table{
+    margin-bottom:3px;
+}
+
+.uc_cat_search table input{
+    border:solid 1px #4DA4CF;
+    padding:2px;
+}
+
+.uc_search_in_cat{
+    margin-bottom:10px;
+}
+
+.uc_search_in_cat a{
+    padding:1px;
+    padding-left:20px;
+    background:url(../images/icons/folder.png) no-repeat;
 }
 
 /*----------------------MODULE "LATEST FROM CATALOG"--------------------------*/
@@ -1000,9 +1036,11 @@ span.fast_cfg_link img{ border:none; }
 	list-style:square;
 }
 .uc_alpha_list{
-	margin-bottom:5px;
-	border-bottom:solid 1px gray;
-	padding-bottom:6px;
+    border-radius:8px;
+    -moz-border-radius:8px;
+    background-color:#E0EAEF;
+    padding:5px 10px;
+    margin-bottom: 5px;
 }
 .uc_alpha_link{
 	font-size:18px;
@@ -1170,62 +1208,105 @@ a.new_messages_link:hover{ color:#F00; background:#Fff; font-weight:bold; paddin
 }
 
 /*----------------------------- COMPONENT "FAQ" ------------------------------*/
-.faq_subcats{
+.faq_subcats, .faq_cats{
 	padding:10px;
-	background-color:#EBEBEB;
+    padding-bottom:5px;
+	background-color:#E0EAEF;
 	margin-bottom:10px;
+    border-radius:8px;
+    -moz-border-radius:8px;
 }
-.faq_cats{
-	padding:10px;
-	background-color:#EBEBEB;
-	margin-bottom:10px;
+.faq_cat_link{
+    font-size:18px;
 }
+.faq_cat_desc{
+    margin-bottom:5px;
+}
+
 .faq_questtext{
-	font-weight:bold;
+	font-size:18px;
+    margin-bottom:10px;
+
+}
+.faq_quest_link {
+    margin-bottom:5px;
+}
+.faq_quest_link a{
+    font-size:14px;
+    text-decoration:none;
 }
 
 .faq_answertext{
-	color:gray;
+    font-size:16px;
+    margin-bottom:10px;
+}
+
+.faq_answertext p{
+    margin-bottom:10px;
 }
 
 .faq_questdate{
 	padding:2px;
-	font-size:10px;
+	font-size:11px;
 	text-align:center;
-	background-color:#EBEBEB;
-	margin-top:2px;
+	background-color:#EBEBEB;    
 	width:100px;
-	float:left;
+	float:right;
+}
+.faq_questuser a{
+    color:#375E93;
 }
 .faq_questuser{
-	padding:2px 2px 2px 20px;
-	font-size:10px;
+	padding-left:20px;
+	font-size:11px;
 	text-align:center;
 	margin-top:2px;
-	float:left;
-	background:url(/images/icons/users.gif) no-repeat;
+    margin-right:4px;
+	float:right;
+	background:url(../images/icons/user.png) no-repeat;
 }
 .faq_questcat{
 	padding:2px;
-	font-size:10px;
+	font-size:11px;
 	text-align:center;
-	margin-top:2px;
 	margin-left:4px;
-	float:left;
+	float:right;
 }
 .faq_questcat a{
 	color:#333333;
 }
 .faq_quest{
-	margin-bottom:8px;
-	padding-bottom:8px;
-	border-bottom:solid 1px silver;
+	margin-bottom:4px;
+	border-radius:8px 8px 8px 8px;
+	-moz-border-radius:8px 8px 8px 8px;
+    border:1px solid #C3D6DF;
+    padding:8px;
+}
+.faq_send_quest{
+    border-radius:8px 8px 8px 8px;
+    -moz-border-radius:8px 8px 8px 8px;
+    background-color:#E0EAEF;
+    float:right;
+    padding:5px 8px;
 }
 .faq_send_quest a{
+    padding:1px;
+    padding-left:20px;
+    background:url(../images/icons/add.png) no-repeat;
 	text-decoration:underline;
-	color:#666666;
+	color:#375E93;
 }
 
+#faq_message{
+    width:100%;
+    height:200px;
+    margin-bottom:10px;
+    border:solid 1px #203047;
+}
+.faq_add_cat{
+    margin-bottom:10px;
+    color:#375E93;
+}
 /*------------------------------- KARMA --------------------------------------*/
 .karma_form{
 	text-align:center;
@@ -1379,13 +1460,18 @@ span.user_karma_point{
     margin-top:10px;
     margin-bottom:20px;
 }
-.blog_post_data{
-	padding:4px;
-	background-color:#fff;
-}
+.blog_post_data{}
+
 .blog_post_data strong{
     color:#375E93;
 }
+
+.blog_post_avatar{
+    padding:2px;
+    border:solid 1px #375E93;
+    margin-right:10px;
+}
+
 .blog_post_body{
 	padding:4px;
 	margin-top:15px;
@@ -1779,34 +1865,36 @@ div.bd_cat_main_obtypes a{
 /* ========================================================================== */
 
 #shop_toollink_div{
-	height:20px;
-	line-height:20px;
-	margin-top:0px;
-	margin-bottom:5px;
-	color:#666666;
-	display:table;
+    border-radius:8px;
+    -moz-border-radius:8px;
+    background-color:#E0EAEF;
+    float:right;
+    padding:8px 8px;
 	clear:both;
 	overflow:hidden;
 }
 
+#shop_toollink_div a{
+    color:#375E93;
+}
+
 #shop_cartlink{
 	float:left;
-	background:url(/components/catalog/images/icons/cart.png) no-repeat 2px 2px;
-	font-weight:bold;
+	background:url(../images/icons/cart.png) no-repeat 2px 2px;
+    font-weight:bold;
 	padding-left:25px;
 	padding-right:5px;
 }
 
 #shop_searchlink{
 	float:left;
-	background:url(/components/catalog/images/icons/search.png) no-repeat 2px 2px;
-	font-weight:bold;
+	background:url(../images/icons/search.png) no-repeat 2px 2px;
 	padding-left:25px;
 	padding-right:5px;
 }
 #shop_addlink{
 	float:left;
-	background:url(/images/icons/add.gif) no-repeat 2px 2px;
+	background:url(../images/icons/add.png) no-repeat 2px 2px;	
 	padding-left:22px;
 	padding-right:5px;
 }
@@ -1882,12 +1970,15 @@ div.bd_cat_main_obtypes a{
 }
 .catalog_sortform table{
 	float:right;
+    margin:10px 0px;
 }
 
 .catalog_list_item{
-	margin-bottom:4px;
-	border:solid 1px #ccc;
-	padding:10px;
+    border-radius:8px;
+    -moz-border-radius:8px;
+    border:1px solid #C3D6DF;
+    margin-bottom:4px;
+    padding:8px;
 }
 
 #catalog_item_table{
@@ -1896,6 +1987,7 @@ div.bd_cat_main_obtypes a{
 #shop_list_buttons{
 	float:right;
 	clear:both;
+    margin-top:15px;
 }
 
 div.uc_subcats{
@@ -1913,8 +2005,13 @@ ul.uc_cat_list{
 }
 
 ul.uc_cat_list li.uc_cat_item{
-	background:url(/images/markers/folder.png) no-repeat;
-	padding-left:20px;
+    font-size:18px;
+    padding-left:23px;
+    background: url(../images/icons/folder.png) no-repeat left center;
+    height:18px;
+    line-height:18px;
+    margin:0px;
+    margin-bottom:10px;
 }
 .hint{
     color:gray;

@@ -10,7 +10,7 @@
                 <div><small>{$LANG.USED_FOR_AUTH}<br/>{$LANG.ONLY_LAT_SYMBOLS}</small></div>
             </td>
             <td  valign="top" class="">
-                <input name="login" id="logininput" type="text" size="30" value="{$login}" onchange="checkLogin()" autocomplete="off"/>
+                <input name="login" id="logininput" class="text-input" type="text" size="30" value="{$login}" onchange="checkLogin()" autocomplete="off"/>
                 <span class="regstar">*</span>
                 <div id="logincheck"></div>
             </td>
@@ -22,7 +22,7 @@
                     <small>{$LANG.NICKNAME_TEXT}</small>
                 </td>
                 <td valign="top" class="">
-                    <input name="nickname" id="nickinput" type="text" size="30" value="{$nickname}" />
+                    <input name="nickname" id="nickinput" class="text-input" type="text" size="30" value="{$nickname}" />
                     <span class="regstar">*</span>
                 </td>
             </tr>
@@ -32,7 +32,7 @@
                     <div><strong>{$LANG.NAME}:</strong></div>
                 </td>
                 <td valign="top" class="">
-                    <input name="realname1" id="realname1" type="text" size="30" value="{$realname1}" />
+                    <input name="realname1" id="realname1" class="text-input" type="text" size="30" value="{$realname1}" />
                     <span class="regstar">*</span>
                 </td>
             </tr>
@@ -41,7 +41,7 @@
                     <div><strong>{$LANG.SURNAME}:</strong></div>
                 </td>
                 <td valign="top" class="">
-                    <input name="realname2" id="realname2" type="text" size="30" value="{$realname2}" />
+                    <input name="realname2" id="realname2" class="text-input" type="text" size="30" value="{$realname2}" />
                     <span class="regstar">*</span>
                 </td>
             </tr>
@@ -49,14 +49,14 @@
         <tr>
             <td valign="top" class=""><strong>{$LANG.PASS}:</strong></td>
             <td valign="top" class="">
-                <input name="pass" id="pass1input" type="password" size="30" onchange="{literal}$('#passcheck').html('');{/literal}"/>
+                <input name="pass" id="pass1input" class="text-input" type="password" size="30" onchange="{literal}$('#passcheck').html('');{/literal}"/>
                 <span class="regstar">*</span>
             </td>
         </tr>
         <tr>
             <td valign="top" class=""><strong>{$LANG.REPEAT_PASS}: </strong></td>
             <td valign="top" class="">
-                <input name="pass2" id="pass2input" type="password" size="30" onchange="checkPasswords()" />
+                <input name="pass2" id="pass2input" class="text-input" type="password" size="30" onchange="checkPasswords()" />
                 <span class="regstar">*</span>
                 <div id="passcheck"></div>
             </td>
@@ -67,7 +67,7 @@
                 <div><small>{$LANG.NOPUBLISH_TEXT}</small></div>
             </td>
             <td valign="top" class="">
-                <input name="email" type="text" size="30" value="{$email}"/>
+                <input name="email" type="text" class="text-input" size="30" value="{$email}"/>
                 <span class="regstar">*</span>
             </td>
         </tr>
@@ -75,7 +75,7 @@
             <tr>
                 <td valign="top" class=""><strong>ICQ:</strong></td>
                 <td valign="top" class="">
-                    <input name="icq" type="text" id="icq" value="{$icq}" size="30"/>
+                    <input name="icq" type="text" class="text-input" id="icq" value="{$icq}" size="30"/>
                 </td>
             </tr>
         {/if}

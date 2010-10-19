@@ -94,11 +94,11 @@
         $(document).ready(function(){
             $('#topmenu .menu li').hover(
                 function() {
-                    $(this).find('ul:first').slideDown(200);
+                    $(this).find('ul:first').show();
                     $(this).find('a:first').addClass("hover");
                 },
                 function() {
-                    $(this).find('ul:first').slideUp(200);
+                    $(this).find('ul:first').hide();
                     $(this).find('a:first').removeClass("hover");
                 }
             );

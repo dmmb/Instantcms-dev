@@ -14,7 +14,7 @@
             <form method="post" action="">
                 <div class="lf_title">{$LANG.LOGIN} {$LANG.OR} {$LANG.EMAIL}</div>
                 <div class="lf_field">
-                    <input type="text" name="login" id="login_field" tabindex="1" /> <a href="/registration.html" class="lf_link">{$LANG.REGISTRATION}</a>
+                    <input type="text" name="login" id="login_field" tabindex="1" /> <a href="/registration" class="lf_link">{$LANG.REGISTRATION}</a>
                 </div>
                 <div class="lf_title">{$LANG.PASS}</div>
                 <div class="lf_field">
