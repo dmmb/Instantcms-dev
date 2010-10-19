@@ -37,7 +37,6 @@ function mod_bestblogs($module_id){
                         b.owner as owner,
                         b.user_id as uid, 
                         p.pubdate as fpubdate,
-
                         IFNULL(r.total_rating, 0) as points,
                         b.owner as owner,
                         b.ownertype as ownertype,
@@ -47,7 +46,6 @@ function mod_bestblogs($module_id){
 				LEFT JOIN cms_ratings_total r ON r.item_id=p.id AND r.target='blogpost'
 				LEFT JOIN cms_users u ON u.id=b.user_id
 				WHERE b.allow_who = 'all'
-				GROUP BY p.id
 				ORDER BY points DESC";
 		
 		$sql .= "\n" . "LIMIT ".$cfg['shownum'];

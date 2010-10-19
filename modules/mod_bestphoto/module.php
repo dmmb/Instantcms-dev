@@ -13,12 +13,13 @@ function mod_bestphoto($module_id){
         $inDB = cmsDatabase::getInstance();
     	global $_LANG;
 		$cfg = $inCore->loadModuleConfig($module_id);
-		
-		if ($cfg['album_id'] != '0') { $catsql = ' AND album_id = '.$cfg['album_id']; }
-		else { $catsql = ''; }
-		
+
 		if (!isset($cfg['showtype'])) { $cfg['showtype'] = 'full'; }
 		if (!isset($cfg['showmore'])) { $cfg['showmore'] = 1; }
+		if (!isset($cfg['album_id'])) { $cfg['album_id'] = 0; }
+		
+		if ($cfg['album_id']) { $catsql = ' AND album_id = '.$cfg['album_id']; }
+		else { $catsql = ''; }
 		
 		$sql = "SELECT f.*, f.id as fid, f.pubdate as fpubdate,
 					   a.id as album_id, a.title as album, 
@@ -27,7 +28,6 @@ function mod_bestphoto($module_id){
 				LEFT JOIN cms_ratings_total r ON r.item_id=f.id AND r.target = 'photo'
 				LEFT JOIN cms_photo_albums a ON f.album_id = a.id
 				WHERE f.published = 1 ".$catsql."
-				GROUP BY f.id
 				ORDER BY ".$cfg['sort']." DESC 
 				LIMIT ".$cfg['shownum'];		
  	

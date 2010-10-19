@@ -25,23 +25,25 @@ function mod_latest($module_id){
 			} else {
 				//select from category and subcategories
 				$rootcat = $inDB->get_fields('cms_category', 'id='.$cfg['cat_id'], 'NSLeft, NSRight');
-				$catsql = "AND (con.category_id = cat.id AND cat.NSLeft >= {$rootcat['NSLeft']} AND cat.NSRight <= {$rootcat['NSRight']})";
+				$catsql = "AND (cat.NSLeft >= {$rootcat['NSLeft']} AND cat.NSRight <= {$rootcat['NSRight']})";
 			}		
 			$rssid = $cfg['cat_id'];
-		} else { $catsql = 'AND con.category_id = cat.id'; $rssid = 'all'; } 
+		} else { $catsql = ''; $rssid = 'all'; } 
 
 		$sql = "SELECT con.*,
                        con.pubdate as fdate,
                        u.nickname as author,
                        u.login as author_login,
                        IFNULL(COUNT(cm.id), 0) as comments
-				FROM cms_category cat, cms_users u, cms_content con
-                LEFT JOIN cms_comments cm ON cm.target='article' AND cm.target_id=con.id
-				WHERE con.published = 1 AND con.showlatest = 1 AND con.user_id = u.id 
-                      AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today'))
+                       FROM cms_content con
+				       LEFT JOIN cms_category cat ON cat.id = con.category_id
+				       LEFT JOIN cms_users u ON u.id = con.user_id
+                       LEFT JOIN cms_comments cm ON cm.target='article' AND cm.target_id=con.id
+                       WHERE con.published = 1 AND con.showlatest = 1
+                       AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today'))
                       ".$catsql."
                 GROUP BY con.id
-				ORDER BY con.pubdate DESC
+				ORDER BY con.id DESC
 				LIMIT ".$cfg['newscount'];
  	
 		$result = $inDB->query($sql) ;
