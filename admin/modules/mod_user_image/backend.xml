@@ -2,7 +2,7 @@
 <backend>    
     <module>
         <id>mod_uc_random</id>
-        <title>Случайное в каталоге</title>
+        <title>Случайное фото</title>
     </module>
     <params>
      
