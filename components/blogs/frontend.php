@@ -148,6 +148,16 @@ if ($do=='create'){
             //ƒобавл€ем блог в базу
             $blog_id = $model->addBlog(array('user_id'=>$user_id, 'title'=>$title, 'allow_who'=>$allow_who, 'ownertype'=>$ownertype));
             $blog_link = $inDB->get_field('cms_blogs', "id={$blog_id}", 'seolink');
+            //регистрируем событие
+            cmsActions::log('add_blog', array(
+                'object' => $title,
+                'object_url' => $model->getBlogURL(null, $blog_link),
+                'object_id' => $blog_id,
+                'target' => '',
+                'target_url' => '',
+                'target_id' => 0, 
+                'description' => ''
+            ));
             //¬ыводим сообщение о том что блог создан
             $smarty  = $inCore->initSmarty('components', 'com_blog_create_ok.tpl');
             $smarty->assign('blogid', $blog_id);
@@ -260,8 +270,8 @@ if ($do=='config'){
 if ($do=='view'){
 
     //ѕолучаем номер страницы и число записей на одну страницу
-    $perpage    = isset($cfg['perpage_blog']) ? $cfg['perpage_blog'] : 15;
-    $page       = $inCore->request('page', 'int', 1);
+    $perpage        = isset($cfg['perpage_blog']) ? $cfg['perpage_blog'] : 15;
+    $page           = $inCore->request('page', 'int', 1);
 
     //ѕолучаем ID пользовател€
 	$user_id 		= $inUser->id;
@@ -273,16 +283,12 @@ if ($do=='view'){
 
     //ѕолучаем список блогов
     $blogs_list     = $model->getBlogs($ownertype, $page, $perpage);
-  	
-	$blogs      = array();   //ћассив блогов дл€ вывода
-    $is_blogs   = false;     //‘лаг, показывающий есть ли блоги, которые можно видеть текущему пользователю
 
-    //ѕолучаем блоги
+	$blogs          = array();                        //ћассив блогов дл€ вывода
+    $is_blogs       = $blogs_list ? true : false;     //‘лаг, показывающий есть ли блоги
+
+    //ѕолучаем блоги и показываем все вне зависимости от прав доступа
     foreach($blogs_list as $blog){
-        //ќпредел€ем можно ли показывать этот блог пользователю
-		$blog['can_view']   = ($blog['allow_who']=='all' || ($blog['allow_who']=='friends' && usrIsFriends($blog['user_id'], $user_id)) || $blog['user_id']==$user_id);
-		//≈сли блог доступен дл€ пользовател€
-		if ($blog['can_view']) { 
             //ѕолучаем ссылку на блог
             $blog['url']        = $model->getBlogURL(null, $blog['seolink']);
             //—читаем число комментариев
@@ -291,11 +297,8 @@ if ($do=='view'){
 			$blog['pubdate']    = $inCore->dateFormat($blog['pubdate']);
             //‘орматируем значение кармы блога
             $blog['karma']      = cmsKarmaFormatSmall($blog['points']);
-            //ќтмечаем флаг наличи€ видимых блогов
-            $is_blogs           = true;
             //добавл€ем блог в список
             $blogs[]            = $blog;
-        }
 	}	
     //√енерируем панель со страницами и устанавливаем заголовки страниц и глубиномера
 	switch ($ownertype){
@@ -791,6 +794,16 @@ if ($do=='newpost' || $do=='editpost'){
 
                 if ($published) {
                     $post_seolink = $inDB->get_field('cms_blog_posts', "id={$post_id}", 'seolink');
+					//регистрируем событие
+					cmsActions::log('add_post', array(
+						'object' => $title,
+						'object_url' => $model->getPostURL(null, $blog['seolink'], $post_seolink),
+						'object_id' => $post_id,
+						'target' => $blog['title'],
+						'target_url' => $model->getBlogURL(null, $blog['seolink']),
+						'target_id' => $blog['id'], 
+						'description' => ''
+					));
                     $inCore->redirect($model->getPostURL(null, $blog['seolink'], $post_seolink));
                 }
 
@@ -1052,9 +1065,12 @@ if ($do == 'delpost'){
     }
 
     if ( $inCore->inRequest('confirm') ){
+
         if ($myblog || ($is_author && $post['user_id'] == $user_id) || $inUser->is_admin){
             
             $model->deletePost($post_id);
+
+            cmsActions::removeObjectLog('add_post', $post_id);
 
             if ($user_id != $post['user_id']){
                 if ($blog['owner']=='club') { $blog['title'] = dbGetField('cms_clubs', 'id='.$blog['user_id'], 'title'); }
@@ -1080,6 +1096,16 @@ if ($do == 'publishpost'){
         if ($post){
             $model->publishPost($post_id);
             if ($blog['owner']=='club') { $blog['title'] = $inDB->get_field('cms_clubs', 'id='.$blog['user_id'], 'title'); }
+			//регистрируем событие
+			cmsActions::log('add_post', array(
+					'object' => $post['title'],
+					'object_url' => $model->getPostURL(0, $post['bloglink'], $post['seolink']),
+					'object_id' => $post['id'],
+					'target' => $blog['title'],
+					'target_url' => $model->getBlogURL(0, $blog['seolink']),
+					'target_id' => $blog['id'], 
+					'description' => ''
+			));
             cmsUser::sendMessage(-1, $post['author_id'], $_LANG['YOUR_POST'].' <b>&laquo;<a href="'.$model->getPostURL(0, $post['bloglink'], $post['seolink']).'">'.$post['title'].'</a>&raquo;</b> '.$_LANG['PUBLISHED_IN_BLOG'].' <b>&laquo;<a href="'.$model->getBlogURL(0, $blog['seolink']).'">'.$blog['title'].'</a>&raquo;</b>');
         }
     }
@@ -1103,6 +1129,7 @@ if ($do == 'delblog'){
     if ( $inCore->inRequest('confirm') ){
         if ($user_id == $blog['user_id'] || $inUser->is_admin){
             $model->deleteBlog($id);
+			cmsActions::removeObjectLog('add_blog', $id);
             $inCore->redirect('/blogs');
         }        
     }
@@ -1199,7 +1226,8 @@ if ($do=='latest'){
 	$error      = '';
 				
 	$user_id    = $inUser->id;
-	$can_view   = true;
+	$is_admin   = $inCore->userIsAdmin($user_id);
+	$can_view   = false;
 
     $posts      = array();
 
@@ -1213,8 +1241,6 @@ if ($do=='latest'){
         //—читаем количество персональных и коллективных блогов
         $single_blogs	= $model->getSingleBlogsCount();
         $multi_blogs 	= $model->getMultiBlogsCount();
-
-		$is_admin = $inCore->userIsAdmin($user_id);
 	
 		//TITLES
 		$inPage->setTitle($_LANG['RSS_BLOGS']);
@@ -1225,7 +1251,7 @@ if ($do=='latest'){
 		$perpage = isset($cfg['perpage']) ? $cfg['perpage'] : 10;
 		$page = $inCore->request('page', 'int', 1);
 							
-        $total = $model->getLatestCount();
+        $total = $model->getLatestCount($user_id, $is_admin);
 					
         //GET ENTRIES
         $posts_list = $model->getLatestPosts($page, $perpage);
@@ -1236,7 +1262,7 @@ if ($do=='latest'){
         //FETCH ENTRIES
         if ($posts_list){
             foreach($posts_list as $post){
-                $can_view = ($post['blog_allow_who']=='all' || ($post['blog_allow_who']=='friends' && usrIsFriends($post['user_id'], $user_id)) || $post['user_id']==$user_id || $inCore->userIsAdmin($user_id));
+                $can_view = ($post['blog_allow_who']=='all' || ($post['blog_allow_who']=='friends' && usrIsFriends($post['user_id'], $user_id)) || $post['user_id']==$user_id || $is_admin);
                 if ($can_view){
 
                     $post['url']        = $model->getPostURL(null, $post['bloglink'], $post['seolink']);
@@ -1293,13 +1319,15 @@ if ($do=='best'){
 		$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
 	}
 
-	$smarty = $inCore->initSmarty('components', 'com_blog_view_posts.tpl');
-	$error = '';
+	$smarty   = $inCore->initSmarty('components', 'com_blog_view_posts.tpl');
+	$error    = '';
 				
-	$user_id = $inUser->id;
-	$can_view = true;
+	$user_id  = $inUser->id;
+	$is_admin = $inCore->userIsAdmin($user_id);
+	
+	$can_view = false;
 
-    $posts = array();
+    $posts    = array();
 
     if ($error) {
         echo '<p style="color:red">'.$error.'</p>';
@@ -1308,8 +1336,6 @@ if ($do=='best'){
 	
 	if (!$error){
 
-		$is_admin = $inCore->userIsAdmin($user_id);
-	
 		//TITLES
 		$inPage->setTitle($_LANG['POPULAR_IN_BLOGS']);
 		$inPage->addPathway($_LANG['POPULAR_IN_BLOGS']);
@@ -1320,7 +1346,7 @@ if ($do=='best'){
 		$page       = $inCore->request('page', 'int', 1);
 							
 		//COUNT ENTRIES
-        $total = $model->getBestCount();
+        $total      = $model->getBestCount($user_id, $is_admin);
         
         //GET ENTRIES
         $posts_list = $model->getBestPosts($page, $perpage);
@@ -1331,7 +1357,9 @@ if ($do=='best'){
         //FETCH ENTRIES
         if ($posts_list){
             foreach($posts_list as $post){
+
                 $can_view = ($post['blog_allow_who']=='all' || ($post['blog_allow_who']=='friends' && usrIsFriends($post['user_id'], $user_id)) || $post['user_id']==$user_id || $inCore->userIsAdmin($user_id));
+
                 if ($can_view){
                     $post['url']        = $model->getPostURL(null, $post['bloglink'], $post['seolink']);
 

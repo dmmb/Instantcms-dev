@@ -97,7 +97,9 @@ class cmsActions {
 
         if (!$action) { return false; }
 		
-		$params['target'] =  $inDB->escape_string(stripslashes($params['target']));
+		$params['object']      =  $inDB->escape_string(stripslashes($params['object']));
+		$params['target']      =  $inDB->escape_string(stripslashes($params['target']));
+		$params['description'] =  $inDB->escape_string(stripslashes($params['description']));
 		
         $sql = "INSERT INTO cms_actions_log (action_id, pubdate, user_id, 
                                              object, object_url, object_id,
@@ -197,11 +199,18 @@ class cmsActions {
                 $action['message'] = substr($action['message'], 0, strpos($action['message'], '|'));
             }
 
-            $action['object_link']  = '<a href="'.$action['object_url'].'" class="act_obj_'.$action['name'].'">'.$action['object'].'</a>';
-            $action['target_link']  = '<a href="'.$action['target_url'].'" class="act_tgt_'.$action['name'].'">'.$action['target'].'</a>';
-            $action['message']      = sprintf($action['message'], $action['object_link'], $action['target_link']);
+            if ($action['object']){
+                $action['object_link']  = '<a href="'.$action['object_url'].'" class="act_obj_'.$action['name'].'">'.$action['object'].'</a>';
+            }
+            if ($action['target']){
+                $action['target_link']  = '<a href="'.$action['target_url'].'" class="act_tgt_'.$action['name'].'">'.$action['target'].'</a>';
+            }
+            if ($action['message']){
+                $action['message']      = sprintf($action['message'], $action['object_link'], $action['target_link']);
+            }
+
             $action['user_url']     = cmsUser::getProfileURL($action['user_login']);
-            $action['pubdate']      = cmsCore::dateFormat($action['pubdate']);
+            $action['pubdate']      = cmsCore::dateDiffNow($action['pubdate']);
 
             $actions[] = $action;
 

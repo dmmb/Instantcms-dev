@@ -39,7 +39,6 @@
 
 	<table width="100%" cellspacing="0" cellpadding="5" class="blog_full_list">
 		{foreach key=tid item=blog from=$blogs}
-			{if $blog.can_view || $is_admin}
 				<tr>
 					<td style="{$blog.style}" class="blog_title_td"><a class="blog_title" href="/blogs/{$blog.seolink}">{$blog.title}</a></td>
 					{if $blog.ownertype =='single'}						
@@ -56,7 +55,6 @@
 					{/if}
 					<td width="20" style="{$blog.style}; text-align:center;">{$blog.karma}</td>
 				</tr>
-			{/if}
 		{/foreach}
 	</table>
 	

@@ -44,10 +44,10 @@ function mod_bestblogs($module_id){
                         IFNULL(r.total_rating, 0) as points,
                         u.nickname as author
 				FROM cms_blog_posts p
-				LEFT JOIN cms_blogs b ON b.id = p.blog_id AND b.allow_who = 'all'		
+				LEFT JOIN cms_blogs b ON b.id = p.blog_id		
 				LEFT JOIN cms_ratings_total r ON r.item_id=p.id AND r.target='blogpost'
 				LEFT JOIN cms_users u ON u.id=b.user_id
-				WHERE p.published = 1
+				WHERE p.published = 1 AND b.allow_who = 'all'
 				ORDER BY points DESC";
 		
 		$sql .= "\n" . "LIMIT ".$cfg['shownum'];

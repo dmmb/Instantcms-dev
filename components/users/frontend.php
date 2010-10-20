@@ -2437,7 +2437,6 @@ if ($do=='votekarma'){
         $user_id    = $inCore->request('user_id', 'int');
         $author_id  = $inUser->id;
 		$message 	= $inCore->request('message', 'html', ''); 
-		$message 	= strip_tags($message); 
 		$message 	= $inCore->parseSmiles($message, true); 
 		$message 	= $inDB->escape_string($message); 
 		$errors 	= false;

@@ -595,28 +595,57 @@ class cms_model_blogs{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function getLatestCount(){
-        $sql = "SELECT p.id
+    public function getLatestCount($user_id = 0, $is_admin = 0){
+
+        $sql = "SELECT p.user_id, p.allow_who
 				FROM cms_blog_posts p
-				LEFT JOIN cms_blogs b ON b.id = p.blog_id AND b.owner = 'user'
-				WHERE p.published = 1
-				";
+				LEFT JOIN cms_blogs b ON b.id = p.blog_id
+				WHERE p.published = 1";
+
 		$result = $this->inDB->query($sql);
-		$total  = $this->inDB->num_rows($result);
-        return $total;
+
+        if ($this->inDB->num_rows($result)){
+
+            while($post = $this->inDB->fetch_assoc($result)){
+
+                $can_view = ($post['allow_who'] == 'all' || ($post['allow_who'] == 'friends' && usrIsFriends($post['user_id'], $user_id)) || $post['user_id']==$user_id || $is_admin);
+
+                if ($can_view){
+                    $posts[] = $post;
+                }
+
+            }
+        }
+
+        return sizeof($posts);
     }
 
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function getBestCount(){
-		$sql = "SELECT p.id
-				FROM cms_blogs b, cms_blog_posts p
-				WHERE p.published = 1 AND DATEDIFF(NOW(), p.pubdate) <= 7 AND p.blog_id = b.id AND b.owner = 'user'
+    public function getBestCount($user_id = 0, $is_admin = 0){
+
+		$sql = "SELECT p.user_id, p.allow_who
+				FROM cms_blog_posts p
+				LEFT JOIN cms_blogs b ON b.id = p.blog_id
+				WHERE p.published = 1 AND DATEDIFF(NOW(), p.pubdate) <= 7
 				";
 		$result = $this->inDB->query($sql);
-		$total  = $this->inDB->num_rows($result);
-        return $total;
+
+        if ($this->inDB->num_rows($result)){
+
+            while($post = $this->inDB->fetch_assoc($result)){
+
+                $can_view = ($post['allow_who'] == 'all' || ($post['allow_who'] == 'friends' && usrIsFriends($post['user_id'], $user_id)) || $post['user_id']==$user_id || $is_admin);
+
+                if ($can_view){
+                    $posts[] = $post;
+                }
+
+            }
+        }
+
+        return sizeof($posts);
     }
 
 /* ==================================================================================================== */

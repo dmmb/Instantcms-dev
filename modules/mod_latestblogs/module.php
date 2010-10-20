@@ -50,7 +50,7 @@ function mod_latestblogs($module_id){
 				LEFT JOIN cms_users u ON u.id = p.user_id				
 				LEFT JOIN cms_user_profiles up ON up.user_id = p.user_id
                 LEFT JOIN cms_ratings_total r ON r.item_id=p.id AND r.target='blogpost'
-                LEFT JOIN cms_comments cm ON cm.target='blog' AND cm.target_id=p.id
+                LEFT JOIN cms_comments cm ON cm.target_id=p.id AND cm.target='blog'
 				WHERE p.published = 1 AND b.allow_who = 'all'
                 GROUP BY p.id
 				ORDER BY p.pubdate DESC
