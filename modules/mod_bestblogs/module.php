@@ -30,22 +30,24 @@ function mod_bestblogs($module_id){
         $inCore->loadModel('blogs');
         $model = new cms_model_blogs();
 
-		$sql = "SELECT  p.*,
+		$sql = "SELECT  p.id,
+		                p.title,
+						p.seolink,
+						p.pubdate,
                         b.title as blog,
                         b.id as blog_id,
                         b.seolink as bloglink,
                         b.owner as owner,
                         b.user_id as uid, 
-                        p.pubdate as fpubdate,
-                        IFNULL(r.total_rating, 0) as points,
                         b.owner as owner,
-                        b.ownertype as ownertype,
+                        b.ownertype as ownertype,                        
+                        IFNULL(r.total_rating, 0) as points,
                         u.nickname as author
-				FROM cms_blogs b
-				LEFT JOIN cms_blog_posts p ON p.blog_id = b.id AND p.published = 1				
+				FROM cms_blog_posts p
+				LEFT JOIN cms_blogs b ON b.id = p.blog_id AND b.allow_who = 'all'		
 				LEFT JOIN cms_ratings_total r ON r.item_id=p.id AND r.target='blogpost'
 				LEFT JOIN cms_users u ON u.id=b.user_id
-				WHERE b.allow_who = 'all'
+				WHERE p.published = 1
 				ORDER BY points DESC";
 		
 		$sql .= "\n" . "LIMIT ".$cfg['shownum'];
@@ -75,7 +77,7 @@ function mod_bestblogs($module_id){
                 $posts[$next]['bloghref'] = $model->getBlogURL(null, $con['bloglink']);
 
 				$posts[$next]['karma'] = cmsKarmaFormat($con['points']);
-				$posts[$next]['date'] = $inCore->dateFormat($con['fpubdate']);								
+				$posts[$next]['date'] = $inCore->dateFormat($con['pubdate']);								
 			
 			}
 			
