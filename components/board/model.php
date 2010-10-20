@@ -209,6 +209,7 @@ class cms_model_board{
 /* ==================================================================================================== */
 
     public function addRecord($item){
+
         $item = cmsCore::callEvent('ADD_BOARD_RECORD', $item);
 
         $sql = "INSERT INTO cms_board_items (category_id, user_id, obtype, title , content, city, pubdate, pubdays, published, file, hits) 
@@ -216,7 +217,10 @@ class cms_model_board{
                         '{$item['city']}', NOW(), {$item['pubdays']}, {$item['published']}, '{$item['file']}', 0)";
 
         $this->inDB->query($sql);
-        return true;
+		
+		$item_id = $this->inDB->get_last_id('cms_board_items');
+
+        return $item_id ? $item_id : false;
     }
 
 /* ==================================================================================================== */

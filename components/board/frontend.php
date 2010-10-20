@@ -433,7 +433,7 @@ if ($do=='additem'){
             }
         }
 
-        $model->addRecord(array(
+        $item_id = $model->addRecord(array(
                                     'category_id'=>$id,
                                     'user_id'=>$user_id,
                                     'obtype'=>$obtype,
@@ -444,8 +444,16 @@ if ($do=='additem'){
                                     'published'=>$published,
                                     'file'=>$filename
                                 ));
-
-
+		//регистрируем событие
+		cmsActions::log('add_board', array(
+					'object' => $title,
+					'object_url' => '/board/read'.$item_id.'.html',
+					'object_id' => $item_id,
+					'target' => $cat['title'],
+					'target_url' => '/board/'.$cat['id'],
+					'target_id' => $cat['id'], 
+					'description' => ''
+		));
 
         //finish
         echo '<p><strong>'.$_LANG['ADV_NOT_ADDED'].'</strong></p>';
@@ -646,6 +654,7 @@ if ($do == 'delete'){
         if ($inCore->inRequest('godelete')){
 			//deleting
             $model->deleteRecord($id);
+			cmsActions::removeObjectLog('add_board', $id);
             $inCore->redirect('/board/'.$item['cat_id']);
 		}
 
