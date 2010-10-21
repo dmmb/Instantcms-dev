@@ -36,6 +36,8 @@ function cpStripComment($text){
 
 	//LOAD CURRENT CONFIG
 	$cfg = $inCore->loadComponentConfig('comments');
+    $inCore->loadModel('comments');
+    $model = new cms_model_comments();
 
 	if($opt=='saveconfig'){	
 		$cfg = array();
@@ -80,15 +82,16 @@ function cpStripComment($text){
 	}
 
 	if ($opt == 'update'){
-		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];
-			
-			if (isset($_REQUEST['guestname']) && @!empty($_REQUEST['guestname'])) { $guestname = $inCore->strClear($_REQUEST['guestname']); }
+		if(isset($_REQUEST['item_id'])) {
+
+			$id = $inCore->request('item_id', 'int');
+
+			if (isset($_REQUEST['guestname']) && @!empty($_REQUEST['guestname'])) { $guestname = $inCore->request('guestname', 'str'); }
 			else { $guestname = ''; }
-			
-			$pubdate = $_REQUEST['pubdate'];
-			$published = $_REQUEST['published'];
-			$content = $inCore->strClear($_REQUEST['content']);
+
+			$pubdate   = $inCore->request('pubdate', 'str');
+			$published = $inCore->request('published', 'int');
+			$content   = $inCore->request('content', 'html');
 						
 			$sql = "UPDATE cms_comments
 					SET guestname = '$guestname',
@@ -98,15 +101,14 @@ function cpStripComment($text){
 					WHERE id = $id
 					LIMIT 1";
 			dbQuery($sql) ;
-			header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');				
+			header('location:index.php?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list');				
 		}
 	}
 
 	if($opt == 'delete'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];		
-			$sql = "DELETE FROM cms_comments WHERE id = $id";
-			dbQuery($sql) ;			
+			$id = (int)$_REQUEST['item_id'];		
+            $model->deleteComment($id);
 			header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');	
 		}
 	}
