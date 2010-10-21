@@ -32,6 +32,7 @@
     $inCore->loadClass('db');           //база данных
     $inCore->loadClass('plugin');       //плагины
     $inCore->loadClass('user');       //плагины
+	$inCore->loadClass('actions');    //лента событий
 
     $inPage     = cmsPage::getInstance();
     $inConf     = cmsConfig::getInstance();

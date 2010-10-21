@@ -11,10 +11,12 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	//LOAD CURRENT CONFIG
 	$cfg = $inCore->loadComponentConfig('board');
+    $inCore->loadModel('board');
+    $model = new cms_model_board();
 
 	cpAddPathway('Доска объявлений', '?view=components&do=config&id='.$_REQUEST['id']);
 	echo '<h3>Доска объявлений</h3>';
-	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'config'; }
+	if (isset($_REQUEST['opt'])) { $opt = $inCore->request('opt', 'str'); } else { $opt = 'config'; }
 
     $inUser = cmsUser::getInstance();
 
@@ -23,17 +25,17 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if($opt=='saveconfig'){	
 
         $cfg = array();
-		$cfg['maxcols'] = $_REQUEST['maxcols'];
-		$cfg['obtypes'] = $_REQUEST['obtypes'];
-		$cfg['showlat'] = $_REQUEST['showlat'];
-		$cfg['public'] = $_REQUEST['public'];
-		$cfg['photos'] = $_REQUEST['photos'];
-		$cfg['srok'] = $_REQUEST['srok'];
-		$cfg['pubdays'] = $_REQUEST['pubdays'];
-		$cfg['watermark'] = $_REQUEST['watermark'];
-		$cfg['aftertime'] = $_REQUEST['aftertime'];
-		$cfg['comments'] = $_REQUEST['comments'];
-		$cfg['extend'] = $_REQUEST['extend'];
+		$cfg['maxcols']   = $inCore->request('maxcols', 'int');
+		$cfg['obtypes']   = $inCore->request('obtypes', 'str');
+		$cfg['showlat']   = $inCore->request('showlat', 'str');
+		$cfg['public']    = $inCore->request('public', 'int');
+		$cfg['photos']    = $inCore->request('photos', 'int');
+		$cfg['srok']      = $inCore->request('srok', 'int');
+		$cfg['pubdays']   = $inCore->request('pubdays', 'int');
+		$cfg['watermark'] = $inCore->request('watermark', 'int');
+		$cfg['aftertime'] = $inCore->request('aftertime', 'str');
+		$cfg['comments']  = $inCore->request('comments', 'int');
+		$cfg['extend']    = $inCore->request('extend', 'int');
 
 		$inCore->saveComponentConfig('board', $cfg);
 		
@@ -43,37 +45,37 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	}
 
 	if ($opt=='list_items' || $opt=='list_cats' || $opt=='config'){
-	
+		
 		$toolmenu[0]['icon'] = 'newfolder.gif';
 		$toolmenu[0]['title'] = 'Новая рубрика';
-		$toolmenu[0]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_cat';
+		$toolmenu[0]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_cat';
 	
 		$toolmenu[1]['icon'] = 'newform.gif';
 		$toolmenu[1]['title'] = 'Новое объявление';
-		$toolmenu[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_item';
+		$toolmenu[1]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_item';
 
 		$toolmenu[3]['icon'] = 'folders.gif';
 		$toolmenu[3]['title'] = 'Все рубрики';
-		$toolmenu[3]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats';
+		$toolmenu[3]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats';
 	
 		$toolmenu[4]['icon'] = 'listforms.gif';
 		$toolmenu[4]['title'] = 'Все объявления';
-		$toolmenu[4]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items';
+		$toolmenu[4]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items';
 
 	}
 	if($opt=='list_items'){
 
 		$toolmenu[11]['icon'] = 'edit.gif';
 		$toolmenu[11]['title'] = 'Редактировать выбранные';
-		$toolmenu[11]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=edit_item&multiple=1');";
+		$toolmenu[11]['link'] = "javascript:checkSel('?view=components&do=config&id=".(int)$_REQUEST['id']."&opt=edit_item&multiple=1');";
 
 		$toolmenu[12]['icon'] = 'show.gif';
 		$toolmenu[12]['title'] = 'Публиковать выбранные';
-		$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=show_item&multiple=1');";
+		$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".(int)$_REQUEST['id']."&opt=show_item&multiple=1');";
 
 		$toolmenu[13]['icon'] = 'hide.gif';
 		$toolmenu[13]['title'] = 'Скрыть выбранные';
-		$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=hide_item&multiple=1');";
+		$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".(int)$_REQUEST['id']."&opt=hide_item&multiple=1');";
 
 	}
 
@@ -99,7 +101,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if ($opt == 'show_item'){
 		if (!isset($_REQUEST['item'])){
-			if (isset($_REQUEST['item_id'])){ dbShow('cms_board_items', $_REQUEST['item_id']);  }
+			if (isset($_REQUEST['item_id'])){ dbShow('cms_board_items', (int)$_REQUEST['item_id']);  }
 		} else {
 			dbShowList('cms_board_items', $_REQUEST['item']);				
 		}			
@@ -108,7 +110,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if ($opt == 'hide_item'){
 		if (!isset($_REQUEST['item'])){
-			if (isset($_REQUEST['item_id'])){ dbHide('cms_board_items', $_REQUEST['item_id']);  }
+			if (isset($_REQUEST['item_id'])){ dbHide('cms_board_items', (int)$_REQUEST['item_id']);  }
 		} else {
 			dbHideList('cms_board_items', $_REQUEST['item']);				
 		}			
@@ -117,20 +119,20 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if ($opt == 'submit_item'){	
 	
-			if (!empty($_REQUEST['category_id'])) { $category_id = $_REQUEST['category_id']; } else { $category_id = 1; }
-			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { $title = 'Объявление'; }
-			$content = $_REQUEST['content'];
-			$published = $_REQUEST['published'];
-			$city = $_REQUEST['city'];
-			$obtype = $_REQUEST['obtype'];
+			if (!empty($_REQUEST['category_id'])) { $category_id = $inCore->request('category_id', 'int'); } else { $category_id = 1; }
+			if (!empty($_REQUEST['title'])) { $title = $inCore->request('title', 'str'); } else { $title = 'Объявление'; }
+			$content   = $inCore->request('content', 'str');
+			$published = $inCore->request('published', 'int');
+			$city      = $inCore->request('city', 'str');
+			$obtype    = $inCore->request('obtype', 'str');
 
-			$pubdays = $_REQUEST['pubdays'];	
+			$pubdays   = $inCore->request('pubdays', 'int');	
 			
-			$title = $obtype .' '. $title;
+			$title     = $obtype .' '. $title;
 
-			$pubdate = $_REQUEST['pubdate'];			
-			$pubdate = explode('.', $pubdate);
-			$pubdate = $pubdate[2] . '-' . $pubdate[1] . '-' . $pubdate[0];
+			$pubdate   = $inCore->request('pubdate', 'str');
+			$pubdate   = explode('.', $pubdate);
+			$pubdate   = $pubdate[2] . '-' . $pubdate[1] . '-' . $pubdate[0];
 					
 			$user_id = $inUser->id;
 												
@@ -165,25 +167,26 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					VALUES ('$category_id', '$user_id', '$obtype', '$title', '$content', '$city', '$pubdate', '$pubdays', '$published', '$filename')";	
 			dbQuery($sql) or die(mysql_error().'<pre>'.$sql.'</pre>');
 										
-			header('location:?view=components&do=config&opt=list_items&id='.$_REQUEST['id']);		
+			header('location:?view=components&do=config&opt=list_items&id='.(int)$_REQUEST['id']);		
 	}	  
 
 	if ($opt == 'update_item'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];
-			
-			if (!empty($_REQUEST['category_id'])) { $category_id = $_REQUEST['category_id']; } else { $category_id = 1; }
-			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { $title = 'Объявление'; }
-			$content = $_REQUEST['content'];
-			$published = $_REQUEST['published'];
-			$city = $_REQUEST['city'];
-			$obtype = $_REQUEST['obtype'];
 
-			$pubdays = $_REQUEST['pubdays'];
+			$id = (int)$_REQUEST['item_id'];
+
+			if (!empty($_REQUEST['category_id'])) { $category_id = $inCore->request('category_id', 'int'); } else { $category_id = 1; }
+			if (!empty($_REQUEST['title'])) { $title = $inCore->request('title', 'str'); } else { $title = 'Объявление'; }
+			$content   = $inCore->request('content', 'str');
+			$published = $inCore->request('published', 'int');
+			$city      = $inCore->request('city', 'str');
+			$obtype    = $inCore->request('obtype', 'str');
+
+			$pubdays   = $inCore->request('pubdays', 'int');
 			
 			$title = $obtype .' '. $title;	
 			
-			$pubdate = $_REQUEST['pubdate'];			
+			$pubdate = $inCore->request('pubdate', 'str');
 			if(!strstr($pubdate, '-')){
 				$pubdate = explode('.', $pubdate);
 				$pubdate = $pubdate[2] . '-' . $pubdate[1] . '-' . $pubdate[0];
@@ -203,26 +206,17 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			dbQuery($sql);		
 		}
 		if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
-			header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
+			header('location:?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items');
 		} else {
-			header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_item');
+			header('location:?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_item');
 		}
 	}
 
 	if($opt == 'delete_item'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];		
-			$sql = "SELECT * FROM cms_board_items WHERE id = $id LIMIT 1";
-			$result = dbQuery($sql) ;			
-			if (mysql_num_rows($result)){			
-				$f = mysql_fetch_assoc($result);
-				@unlink($_SERVER['DOCUMENT_ROOT'].'/images/board/'.$f['file']);	
-				@unlink($_SERVER['DOCUMENT_ROOT'].'/images/board/small/'.$f['file']);	
-				@unlink($_SERVER['DOCUMENT_ROOT'].'/images/board/medium/'.$f['file']);					
-				$sql = "DELETE FROM cms_board_items WHERE id = $id";
-				dbQuery($sql) ;		
-				header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
-			}
+			$id = (int)$_REQUEST['item_id'];		
+			$model->deleteRecord($id);				
+			header('location:?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items');
 		}
 	}
 
@@ -237,20 +231,20 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			echo '<td width="200" valign="top">';
 				$cats_total = dbRowsCount('cms_board_cats', 'id>0');
 				$cats_pub = dbRowsCount('cms_board_cats', 'published=1');
-				echo '<div><strong><a href="index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats">Рубрик:</a></strong> '.$cats_total.'</div>';
+				echo '<div><strong><a href="index.php?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats">Рубрик:</a></strong> '.$cats_total.'</div>';
 				echo '<div>Публикуемых рубрик: '.$cats_pub.'</div>';		
 			echo '</td>';
 			echo '<td width="200"  valign="top">';
 				$items_total = dbRowsCount('cms_board_items', 'id>0');
 				$items_pub = dbRowsCount('cms_board_items', 'published=1');
 				$items_unpub = $items_total - $items_pub;
-				echo '<div><strong><a href="index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items">Объявлений:</a></strong> '.$items_total.'</div>';
+				echo '<div><strong><a href="index.php?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items">Объявлений:</a></strong> '.$items_total.'</div>';
 				echo '<div>Публикуемых объявлений: '.$items_pub.'</div>';	
 			echo '</td>';	
 		echo '</tr></table>';	
 		
 		if ($items_unpub) {
-			echo '<div style="margin-top:10px;color:#FF3333" ><strong>Неопубликованных объявлений:</strong> '.$items_unpub.' - <a href="index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items">Показать</a></div>';
+			echo '<div style="margin-top:10px;color:#FF3333" ><strong>Неопубликованных объявлений:</strong> '.$items_unpub.' - <a href="index.php?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items">Показать</a></div>';
 		}
 		
 		echo '</div>';
@@ -272,7 +266,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		<?php cpCheckWritable('/images/board/medium', 'folder'); ?>
 		<?php cpCheckWritable('/images/board/small', 'folder'); ?>				
 
-        <form action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
+        <form action="index.php?view=components&amp;do=config&amp;id=<?php echo (int)$_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
             <table width="600" border="0" cellpadding="0" cellspacing="10" class="proptable">
                 <tr>
                     <td><strong>Фотографии:</strong></td>
@@ -369,7 +363,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	
 	if ($opt == 'show_cat'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];
+			$id = (int)$_REQUEST['item_id'];
 			$sql = "UPDATE cms_board_cats SET published = 1 WHERE id = $id";
 			dbQuery($sql) ;
 			echo '1'; exit;
@@ -378,7 +372,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if ($opt == 'hide_cat'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];
+			$id = (int)$_REQUEST['item_id'];
 			$sql = "UPDATE cms_board_cats SET published = 0 WHERE id = $id";
 			dbQuery($sql) ;
 			echo '1'; exit;
@@ -402,25 +396,25 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	}
 	
 	if ($opt == 'submit_cat'){	
-		if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; }
-		$description = $_REQUEST['description'];
-		$published = $_REQUEST['published'];
-		$showdate = $_REQUEST['showdate'];		
-		$parent_id = $_REQUEST['parent_id'];
+		if (!empty($_REQUEST['title'])) { $title = $inCore->request('title', 'str'); }
+		$description = $inCore->request('description', 'str');
+		$published   = $inCore->request('published', 'int');
+		$showdate    = $inCore->request('showdate', 'int');
+		$parent_id   = $inCore->request('parent_id', 'int');
 
-		$public = $_REQUEST['public'];
-		$orderby = $_REQUEST['orderby'];
-		$orderto = $_REQUEST['orderto'];
-		$perpage = $_REQUEST['perpage'];
-		$is_photos = $_REQUEST['is_photos'];
-		$thumb1 = intval($_REQUEST['thumb1']);
-		$thumb2 = intval($_REQUEST['thumb2']);
-		$thumbsqr = $_REQUEST['thumbsqr'];
-		$uplimit = $_REQUEST['uplimit'];
-		$maxcols = $_REQUEST['maxcols'];
-		$orderform = $_REQUEST['orderform'];		
+		$public      = $inCore->request('public', 'str');
+		$orderby     = $inCore->request('orderby', 'str');
+		$orderto     = $inCore->request('orderto', 'str');
+		$perpage     = $inCore->request('perpage', 'int');
+		$is_photos   = $inCore->request('is_photos', 'int');
+		$thumb1      = $inCore->request('thumb1', 'int');
+		$thumb2      = $inCore->request('thumb2', 'int');
+		$thumbsqr    = $inCore->request('thumbsqr', 'int');
+		$uplimit     = $inCore->request('uplimit', 'int');
+		$maxcols     = $inCore->request('maxcols', 'int');
+		$orderform   = $inCore->request('orderform', 'int');	
 	
-        $obtypes = $_REQUEST['obtypes'];
+        $obtypes     = $inCore->request('obtypes', 'str');
 	
 		$ns = $inCore->nestedSetsInit('cms_board_cats');
 		$myid = $ns->AddNode($parent_id);
@@ -449,52 +443,49 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		}
 		reorder();
 				
-		header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
+		header('location:?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats');
 	}	  
 	
 	if($opt == 'delete_cat'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];
+			$id = (int)$_REQUEST['item_id'];
 			$sql = "SELECT id, file FROM cms_board_items WHERE category_id = $id";
 			$result = dbQuery($sql) ;
 			//DELETE ALL PHOTOS IN ALBUM
 			if (mysql_num_rows($result)){
 				while($photo = mysql_fetch_assoc($result)){
-					dbQuery("DELETE FROM cms_board_items WHERE id = ".$photo['id']) ;			
-					@unlink($_SERVER['DOCUMENT_ROOT'].'/images/board/'.$photo['file']);	
-					@unlink($_SERVER['DOCUMENT_ROOT'].'/images/board/medium/'.$photo['file']);	
-					@unlink($_SERVER['DOCUMENT_ROOT'].'/images/board/small/'.$photo['file']);	
+					$model->deleteRecord($photo['id']);
 				}			
 			}
 			//DELETE ALBUM
 			dbDeleteNS('cms_board_cats', $id);	
 		}
-		header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
+		header('location:?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats');
 	}
 	
 	if ($opt == 'update_cat'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];
-			
-			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("Заголовок рубрикиа не может быть пустым!"); }
-			$description = $_REQUEST['description'];
-			$published = $_REQUEST['published'];
-			$showdate = $_REQUEST['showdate'];		
-			$parent_id = $_REQUEST['parent_id'];	
-				
-			$public = $_REQUEST['public'];
-			$orderby = $_REQUEST['orderby'];
-			$orderto = $_REQUEST['orderto'];
-			$perpage = $_REQUEST['perpage'];
-			$is_photos = $_REQUEST['is_photos'];
-			$thumb1 = intval($_REQUEST['thumb1']);
-			$thumb2 = intval($_REQUEST['thumb2']);
-			$thumbsqr = $_REQUEST['thumbsqr'];
-			$uplimit = $_REQUEST['uplimit'];
-			$maxcols = $_REQUEST['maxcols'];
-			$orderform = $_REQUEST['orderform'];		
-								
-            $obtypes = $_REQUEST['obtypes'];
+			$id = (int)$_REQUEST['item_id'];
+
+			if (!empty($_REQUEST['title'])) { $title = $inCore->request('title', 'str'); } else { error("Заголовок рубрикиа не может быть пустым!"); }
+			$description = $inCore->request('description', 'str');
+			$published   = $inCore->request('published', 'int');
+			$showdate    = $inCore->request('showdate', 'int');
+			$parent_id   = $inCore->request('parent_id', 'int');
+	
+			$public      = $inCore->request('public', 'str');
+			$orderby     = $inCore->request('orderby', 'str');
+			$orderto     = $inCore->request('orderto', 'str');
+			$perpage     = $inCore->request('perpage', 'int');
+			$is_photos   = $inCore->request('is_photos', 'int');
+			$thumb1      = $inCore->request('thumb1', 'int');
+			$thumb2      = $inCore->request('thumb2', 'int');
+			$thumbsqr    = $inCore->request('thumbsqr', 'int');
+			$uplimit     = $inCore->request('uplimit', 'int');
+			$maxcols     = $inCore->request('maxcols', 'int');
+			$orderform   = $inCore->request('orderform', 'int');	
+		
+			$obtypes     = $inCore->request('obtypes', 'str');
 								
 			$ns = $inCore->nestedSetsInit('cms_board_cats');
 			$ns->MoveNode($id, $parent_id);									
@@ -519,12 +510,12 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					WHERE id = $id
 					LIMIT 1";
 			dbQuery($sql);							
-			header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
+			header('location:?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats');
 		}
 	}
 	
 	if ($opt == 'list_cats'){
-		cpAddPathway('Рубрики', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
+		cpAddPathway('Рубрики', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats');
 		echo '<h3>Рубрики</h3>';
 
 		//TABLE COLUMNS
@@ -533,7 +524,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$fields[0]['title'] = 'Lt';			$fields[0]['field'] = 'NSLeft';			$fields[0]['width'] = '30';
 		
 		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
-		$fields[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id=%id%';
+		$fields[1]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_cat&item_id=%id%';
 
 		$fields[2]['title'] = 'Показ';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
 		$fields[2]['do'] = 'opt'; $fields[2]['do_suffix'] = '_cat'; //Чтобы вместо 'do=hide&id=1' было 'opt=hide_cat&item_id=1'
@@ -542,19 +533,19 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$actions = array();
 		$actions[0]['title'] = 'Редактировать';
 		$actions[0]['icon']  = 'edit.gif';
-		$actions[0]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id=%id%';
+		$actions[0]['link']  = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_cat&item_id=%id%';
 
 		$actions[1]['title'] = 'Удалить';
 		$actions[1]['icon']  = 'delete.gif';
 		$actions[1]['confirm'] = 'Вместе с рубрикой будут удалены все объявления. Удалить рубрику?';
-		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete_cat&item_id=%id%';
+		$actions[1]['link']  = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=delete_cat&item_id=%id%';
 				
 		//Print table
 		cpListTable('cms_board_cats', $fields, $actions, 'parent_id>0', 'NSLeft');		
 	}
 
 	if ($opt == 'list_items'){
-		cpAddPathway('Объявления', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
+		cpAddPathway('Объявления', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items');
 		echo '<h3>Объявления</h3>';
 		
 		//TABLE COLUMNS
@@ -567,7 +558,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 		$fields[2]['title'] = 'Заголовок';	$fields[2]['field'] = 'title';		$fields[2]['width'] = '';
 		$fields[2]['filter'] = 15;
-		$fields[2]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
+		$fields[2]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
 
 		$fields[3]['title'] = 'Показ';		$fields[3]['field'] = 'published';	$fields[3]['width'] = '100';
 		$fields[3]['do'] = 'opt'; $fields[3]['do_suffix'] = '_item';
@@ -581,12 +572,12 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$actions = array();
 		$actions[0]['title'] = 'Редактировать';
 		$actions[0]['icon']  = 'edit.gif';
-		$actions[0]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
+		$actions[0]['link']  = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
 
 		$actions[1]['title'] = 'Удалить';
 		$actions[1]['icon']  = 'delete.gif';
 		$actions[1]['confirm'] = 'Удалить объявление?';
-		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete_item&item_id=%id%';
+		$actions[1]['link']  = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=delete_item&item_id=%id%';
 				
 		//Print table
 		cpListTable('cms_board_items', $fields, $actions, '', 'pubdate DESC');		
@@ -597,7 +588,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			 echo '<h3>Добавить рубрику</h3>';
 		} else {
 					 if(isset($_REQUEST['item_id'])){
-						 $id = $_REQUEST['item_id'];
+						 $id = (int)$_REQUEST['item_id'];
 						 $sql = "SELECT * FROM cms_board_cats WHERE id = $id LIMIT 1";
 						 $result = dbQuery($sql) ;
 						 if (mysql_num_rows($result)){
@@ -624,7 +615,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		if (!isset($mod['orderto'])) { $mod['orderto'] = 'desc'; }				
 		?>
 		
-		<form id="addform" name="addform" method="post" action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id'];?>">
+		<form id="addform" name="addform" method="post" action="index.php?view=components&amp;do=config&amp;id=<?php echo (int)$_REQUEST['id'];?>">
 			<table width="610" border="0" cellpadding="0" cellspacing="10" class="proptable">
 			  <tr>
 				<td><strong>Название рубрики: </strong></td>
@@ -788,7 +779,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 						$id = array_shift($_SESSION['editlist']);
 						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
 						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
-					 } else { $id = $_REQUEST['item_id']; }
+					 } else { $id = (int)$_REQUEST['item_id']; }
 		
 		
 					 $sql = "SELECT * FROM cms_board_items WHERE id = $id LIMIT 1";
@@ -798,8 +789,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					 }
 
 					 echo '<h3>'.$mod['title'].' '.$ostatok.'</h3>';
-					 cpAddPathway('Объявления', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
-					 cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_item&item_id='.$id);		
+					 cpAddPathway('Объявления', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items');
+					 cpAddPathway($mod['title'], '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_item&item_id='.$id);		
 						
 					 $mod['title'] = str_replace($mod['obtype'].' ', '', $mod['title']); 
 					
@@ -815,7 +806,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		<?php cpCheckWritable('/images/board/medium', 'folder'); ?>
 		<?php cpCheckWritable('/images/board/small', 'folder'); ?>			
 			
-		<form action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id'];?>" method="post" enctype="multipart/form-data" name="addform" id="addform">
+		<form action="index.php?view=components&amp;do=config&amp;id=<?php echo (int)$_REQUEST['id'];?>" method="post" enctype="multipart/form-data" name="addform" id="addform">
 				<table width="600" border="0" cellspacing="5" class="proptable">
 				  <tr>
 					<td width="177"><strong>Заголовок объявления: </strong></td>

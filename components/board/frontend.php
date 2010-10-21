@@ -654,7 +654,6 @@ if ($do == 'delete'){
         if ($inCore->inRequest('godelete')){
 			//deleting
             $model->deleteRecord($id);
-			cmsActions::removeObjectLog('add_board', $id);
             $inCore->redirect('/board/'.$item['cat_id']);
 		}
 

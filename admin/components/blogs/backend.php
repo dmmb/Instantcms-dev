@@ -26,7 +26,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         return $link;
     }
 
-	cpAddPathway('Блоги', '?view=components&do=config&id='.$_REQUEST['id']);
+	cpAddPathway('Блоги', '?view=components&do=config&id='.(int)$_REQUEST['id']);
 	
 	echo '<h3>Блоги</h3>';
 
@@ -106,10 +106,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if($opt=='saveconfig'){	
 		$cfg = array();
-		$cfg['perpage'] = $inCore->request('perpage', 'int');
+		$cfg['perpage']             = $inCore->request('perpage', 'int');
 		$cfg['perpage_blog'] 		= $inCore->request('perpage_blog', 'int');
-		$cfg['update_date'] = $inCore->request('update_date', 'int');
-		$cfg['update_seo_link'] = $inCore->request('update_seo_link', 'int');
+		$cfg['update_date']         = $inCore->request('update_date', 'int');
+		$cfg['update_seo_link']     = $inCore->request('update_seo_link', 'int');
 		
 		$cfg['min_karma_private'] 	= $inCore->request('min_karma_private', 'int');
 		$cfg['min_karma_public'] 	= $inCore->request('min_karma_public', 'int');
@@ -132,13 +132,13 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if(!isset($cfg['j_code'])) { $cfg['j_code']=1;	}
 	if(!isset($cfg['perpage_blog'])) { $cfg['perpage_blog']=15;	}
 	if (!isset($cfg['min_karma_private'])) { $cfg['min_karma_private'] = 0; }
-	if (!isset($cfg['min_karma_public'])) {	 $cfg['min_karma_public'] = 0; }
-	if (!isset($cfg['min_karma'])) { 		 $cfg['min_karma'] = 0; 		}
-	if (!isset($cfg['update_date'])) { 		 $cfg['update_date'] = 1; 		}
-	if (!isset($cfg['update_seo_link'])) { 	 $cfg['update_seo_link'] = 0; 		}
+	if (!isset($cfg['min_karma_public'])) {	$cfg['min_karma_public'] = 0; }
+	if (!isset($cfg['min_karma'])) { $cfg['min_karma'] = 0; 		}
+	if (!isset($cfg['update_date'])) { $cfg['update_date'] = 1; 		}
+	if (!isset($cfg['update_seo_link'])) { $cfg['update_seo_link'] = 0; 		}
 	
-	if (!isset($cfg['watermark'])) { 	 	$cfg['watermark'] = 1; 		}
-	if (!isset($cfg['img_on'])) { 	 		$cfg['img_on'] = 1; 		}
+	if (!isset($cfg['watermark'])) { $cfg['watermark'] = 1; 		}
+	if (!isset($cfg['img_on'])) { $cfg['img_on'] = 1; 		}
 
 	if (!isset($cfg['rss_all'])) { $cfg['rss_all'] = 1; }
 	if (!isset($cfg['rss_one'])) { $cfg['rss_one'] = 1; }
@@ -184,7 +184,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 <?php
     if ($opt=='config'){
 ?>
-<form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
+<form action="index.php?view=components&do=config&id=<?php echo (int)$_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
     <table width="609" border="0" cellpadding="10" cellspacing="0" class="proptable">
         <tr>
             <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Просмотр блога </h4></td>

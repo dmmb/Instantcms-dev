@@ -1070,8 +1070,6 @@ if ($do == 'delpost'){
             
             $model->deletePost($post_id);
 
-            cmsActions::removeObjectLog('add_post', $post_id);
-
             if ($user_id != $post['user_id']){
                 if ($blog['owner']=='club') { $blog['title'] = dbGetField('cms_clubs', 'id='.$blog['user_id'], 'title'); }
                 cmsUser::sendMessage(-1, $post['user_id'], $_LANG['YOUR_POST'].' <b>&laquo;'.$post['title'].'&raquo;</b> '.$_LANG['WAS_DELETED_FROM_BLOG'].' <b>&laquo;<a href="'.$model->getBlogURL(0, $blog['seolink']).'">'.$blog['title'].'</a>&raquo;</b>');
@@ -1129,7 +1127,6 @@ if ($do == 'delblog'){
     if ( $inCore->inRequest('confirm') ){
         if ($user_id == $blog['user_id'] || $inUser->is_admin){
             $model->deleteBlog($id);
-			cmsActions::removeObjectLog('add_blog', $id);
             $inCore->redirect('/blogs');
         }        
     }

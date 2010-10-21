@@ -887,6 +887,7 @@ class cms_model_blogs{
         cmsClearTags('blogpost', $post_id);
 
         $inCore->deleteUploadImages($post_id, 'blog');
+		cmsActions::removeObjectLog('add_post', $post_id);
 
     }
 
@@ -914,6 +915,7 @@ class cms_model_blogs{
 
         $this->inDB->query("DELETE FROM cms_blog_posts WHERE blog_id = $blog_id");
         $this->inDB->query("DELETE FROM cms_blogs WHERE id = $blog_id");
+		cmsActions::removeObjectLog('add_blog', $blog_id);
 
         return true;
     }

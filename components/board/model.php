@@ -256,6 +256,7 @@ class cms_model_board{
         @unlink(PATH.'/images/board/medium/'.$item['file']);
         $sql = "DELETE FROM cms_board_items WHERE id = $item_id";
         $this->inDB->query($sql);
+		cmsActions::removeObjectLog('add_board', $item_id);
         return true;
     }
 
