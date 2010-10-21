@@ -15,9 +15,19 @@ function faq(){
 
     $inCore = cmsCore::getInstance();
     $inPage = cmsPage::getInstance();
-    $inDB = cmsDatabase::getInstance();
-    global $_LANG;
+    $inDB   = cmsDatabase::getInstance();
+	$inUser = cmsUser::getInstance();
+
+    $inCore->loadModel('faq');
+    $model = new cms_model_faq();
+
+	global $_LANG;
+	
 	$cfg = $inCore->loadComponentConfig('faq');
+
+    if(!isset($cfg['user_link'])) { $cfg['user_link'] = 1; }
+    if(!isset($cfg['publish'])) { $cfg['publish'] = 0; }
+	if(!isset($cfg['is_comment'])) { $cfg['is_comment'] = 1; }
 	
 	$id 	= $inCore->request('id', 'int', 0);
 	$do		= $inCore->request('do', 'str', 'view');
@@ -35,7 +45,7 @@ if ($do=='view'){
 	
 	$result = $inDB->query($sql) ;
 
-	if ($inDB->num_rows($result)==0) { die('Category not found.'); }
+	if (!$inDB->num_rows($result)) { cmsCore::error404(); }
 
 	$cat = $inDB->fetch_assoc($result);	
 
@@ -110,6 +120,7 @@ if ($do=='view'){
 	$smarty->assign('subcats', $subcats);
 	$smarty->assign('is_subcats', $is_subcats);	
 	$smarty->assign('quests', $quests);
+	$smarty->assign('cfg', $cfg);
 	$smarty->assign('is_quests', $is_quests);	
 	$smarty->assign('pagebar', cmsPage::getPagebar($records, $page, $perpage, '/faq/%id%-%page%', array('id'=>$id)));		
 	$smarty->display('com_faq_view.tpl');		
@@ -119,20 +130,21 @@ if ($do=='view'){
 ///////////////////////////////////// READ QUESTION ////////////////////////////////////////////////////////////////////////////////
 if ($do=='read'){
 		$sql = "SELECT con.*,
-						DATE_FORMAT(con.pubdate, '%d-%m-%Y') shortdate,
-						cat.title cat_title, cat.id cat_id, u.login, u.nickname
+				cat.title cat_title, cat.id cat_id, u.login, u.nickname
 				FROM cms_faq_quests con
 				LEFT JOIN cms_faq_cats cat ON cat.id = con.category_id
 				LEFT JOIN cms_users u ON u.id = con.user_id
 				WHERE con.id = $id LIMIT 1";
 				
-		$result = $inDB->query($sql) ;
+		$result = $inDB->query($sql);
 	
 		if ($inDB->num_rows($result)){
+			
 			$inDB->query("UPDATE cms_faq_quests SET hits = hits + 1 WHERE id = $id") ;
 		
 			$quest = $inDB->fetch_assoc($result);									
-			$quest['pubdate'] = $inCore->dateFormat($quest['pubdate'], true, false, false);
+			
+			$quest['pubdate']    = $inCore->dateFormat($quest['pubdate'], true, false, false);
 			$quest['answerdate'] = $inCore->dateFormat($quest['answerdate'], true, false, false);
 			if (strlen($quest['quest'])>40) { $shortquest = substr($quest['quest'], 0, 40).'...'; }
 			else { $shortquest = $quest['quest']; }
@@ -144,13 +156,14 @@ if ($do=='read'){
 							
 			$smarty = $inCore->initSmarty('components', 'com_faq_read.tpl');			
 			$smarty->assign('quest', $quest);
-			$smarty->display('com_faq_read.tpl');														
-		}
+			$smarty->assign('cfg', $cfg);
+			$smarty->assign('is_admin', $inUser->is_admin);
+			$smarty->display('com_faq_read.tpl');	
+													
+		} else { cmsCore::error404(); }
 }
 ///////////////////////////////////// SEND QUEST ////////////////////////////////////////////////////////////////////////////////
 if ($do=='sendquest'){
-
-    $inUser = cmsUser::getInstance();
 
 	$inPage->setTitle($_LANG['ASK_QUES']);
 	$inPage->addPathway($_LANG['ASK_QUES']);
@@ -162,7 +175,7 @@ if ($do=='sendquest'){
     $captha_code    = $inCore->request('code', 'str', '');
     $message        = $inCore->request('message', 'str', '');
     $category_id    = $inCore->request('category_id', 'int', '');
-    $published      = ($inUser->is_admin ? 1 : 0);
+    $published      = ($inUser->is_admin || $cfg['publish']) ? 1 : 0;
     $is_submit      = $inCore->inRequest('message');
 
     if ($is_submit && !$inUser->id && !$inCore->checkCaptchaCode($inCore->request('code', 'str'))) { $error = $_LANG['ERR_CAPTCHA']; }
@@ -182,19 +195,80 @@ if ($do=='sendquest'){
 				VALUES ('$category_id', NOW(), '$published', '$message', '', '{$inUser->id}', 0, NOW(), 0)";
 		$inDB->query($sql);
 		
+		$quest_id = $inDB->get_last_id('cms_faq_quests');
+		
 		$inPage->setTitle($_LANG['QUESTION_SEND']);
 		$inPage->addPathway($_LANG['QUESTION_SEND'], $_SERVER['REQUEST_URI']);
 		$inPage->backButton(false);
 
-        echo '<div class="con_heading">'.$_LANG['QUESTION_SEND'].'</div>';
-
         if (!$published){
+			echo '<div class="con_heading">'.$_LANG['QUESTION_SEND'].'</div>';
             echo '<div style="margin-top:10px">'.$_LANG['QUESTION_PREMODER'].'</div>';
-        }
-
-        echo '<div style="margin-top:10px"><a href="/faq">'.$_LANG['CONTINUE'].'</a></div>';
+			echo '<div style="margin-top:10px"><a href="/faq">'.$_LANG['CONTINUE'].'</a></div>';
+        } elseif ($published && $cfg['publish']) {
+			$category = $inDB->get_field('cms_faq_cats', "id={$category_id}", 'title');
+            //регистрируем событие
+            cmsActions::log('add_quest', array(
+                'object' => 'вопрос',
+                'object_url' => '/faq/quest'.$quest_id.'.html',
+                'object_id' => $quest_id,
+                'target' => $category,
+                'target_url' => '/faq/'.$category_id,
+                'target_id' => $category_id, 
+                'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
+            ));
+            $inCore->redirect('/faq/quest'.$quest_id.'.html');
+		} else { $inCore->redirect('/faq/quest'.$quest_id.'.html'); }
 
 	}
+}
+
+///////////////////////////////////// DELETE QUEST ////////////////////////////////////////////////////////////////////////////////
+
+if ($do=='delquest'){
+	
+    $quest_id 	= $inCore->request('quest_id', 'int', 0);
+    $user_id    = $inUser->id;
+
+	$sql    = "SELECT con.id, con.quest, con.category_id
+				FROM cms_faq_quests con
+				WHERE con.id = '$quest_id' LIMIT 1";
+				
+	$result = $inDB->query($sql);
+	$quest  = $inDB->fetch_assoc($result);
+	
+    if (!$user_id || !$quest_id || !$quest) { $inCore->redirectBack(); }	
+		
+    if ( !$inCore->inRequest('confirm') ) {
+
+        if ($inUser->is_admin){
+			$inPage->setTitle($_LANG['DEL_QUES']);
+			$inPage->addPathway($_LANG['DEL_QUES']);
+            $inPage->backButton(false);
+            $confirm['title'] = $_LANG['DELETE_QUES'];
+            $confirm['text']  = $_LANG['YOU_REALY_DELETE_QUES'].':<br> "<a href="/faq/quest'.$quest['id'].'.html">'.$quest['quest'].'</a>"<br><br>';
+			$confirm['action']                  = $_SERVER['REQUEST_URI'];
+			$confirm['yes_button']              = array();
+			$confirm['yes_button']['type']      = 'submit';
+			$confirm['yes_button']['name']  	= 'confirm';
+            $smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
+            $smarty->assign('confirm', $confirm);
+            $smarty->display('action_confirm.tpl');
+        } else {
+            $inCore->redirectBack();
+        }
+    }
+
+    if ( $inCore->inRequest('confirm') ){
+
+        if ($inUser->is_admin){
+            
+            $model->deleteQuest($quest_id);
+
+        }
+        $inCore->redirect('/faq/'.$quest['category_id']);
+    }
+
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 } //function

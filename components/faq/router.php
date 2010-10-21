@@ -18,6 +18,12 @@
                             'do'    => 'read',
                             1       => 'id'
                          );
+						 
+        $routes[] = array(
+                            '_uri'  => '/^faq\/delquest([0-9]+).html$/i',
+                            'do'    => 'delquest',
+                            1       => 'quest_id'
+                         );
 
         $routes[] = array(
                             '_uri'  => '/^faq\/sendquest.html$/i',
