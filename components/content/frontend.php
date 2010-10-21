@@ -400,7 +400,7 @@ if ($do=='addarticle' || $do=='editarticle'){
 
         if ($do=='addarticle' && !$errors){
 
-            //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ <meta http-equiv="refresh">
+            //Убираем <meta http-equiv="refresh">
             $article['description'] = str_replace('http-equiv=', '', $article['description']);
             $article['content']     = str_replace('http-equiv=', '', $article['content']);
 
@@ -420,8 +420,10 @@ if ($do=='addarticle' || $do=='editarticle'){
             $inPage->backButton(false);
             $inPage->addPathway($_LANG['ARTICLE_SEND']);
             $inPage->printHeading($_LANG['ARTICLE_SEND']);
-
-            if (!$inCore->isUserCan('content/autoadd')){
+			
+            $is_published = $inCore->isUserCan('content/autoadd');
+			
+            if (!$is_published){
                 echo '<p>'.$_LANG['ARTICLE_PREMODER_TEXT'].'</p>';
             } else {
 
@@ -486,6 +488,8 @@ if ($do=='addarticle' || $do=='editarticle'){
         }
 
         if ($do=='editarticle' || $errors){
+			$mess = $is_published ? $_LANG['ARTICLE_SAVE'] : $_LANG['ARTICLE_SAVE'].' '.$_LANG['ARTICLE_PREMODER_TEXT'];
+			cmsCore::addSessionMessage($mess, 'info');
             $inCore->redirect('/content/my.html');
         }
 
@@ -500,6 +504,7 @@ if ($do=='deletearticle'){
 		if ($ismy){
             $inCore->includeFile('components/forum/includes/forumcore.php'); //needs for auto-thread deleting
 			$model->deleteArticle($id, $cfg['af_delete']);
+			cmsCore::addSessionMessage($_LANG['ARTICLE_DELETED'], 'info');
 		}
 	}
 	$inCore->redirectBack();
@@ -531,16 +536,12 @@ if ($do=='my'){
     //current page
     $sql = "SELECT  con.*,
                     cat.title as category,
-                    cat.seolink as category_seolink, 
-                    DATE_FORMAT(con.pubdate, '%d-%m-%Y') as pubdate,
-                    IF(con.published=1, '<span style=\"color:green\">".$_LANG['PUBLISHED']."</span>', '<span style=\"color:#CC0000\">".$_LANG['NO_PUBLISHED']."</span>') as status,
-                    IFNULL(COUNT(com.id), 0) as comments
-            FROM cms_category cat, cms_content con
-            LEFT JOIN cms_comments com ON com.target = 'article' AND com.target_id = con.id
-            WHERE con.user_id = $user_id AND con.category_id = cat.id
-            GROUP BY con.id
+                    cat.seolink as category_seolink
+            FROM cms_content con
+			LEFT JOIN cms_category cat ON cat.id = con.category_id
+            WHERE con.user_id = $user_id
             ORDER BY con.pubdate DESC
-            ";
+			";
 
     $perpage = 10;
     $page = $inCore->request('page', 'int', 1);
@@ -562,6 +563,9 @@ if ($do=='my'){
         if ($row %2) { $articles[$row]['class']="search_row1"; } else { $articles[$row]['class']="search_row2"; }
         $articles[$row]['category_href']    = $model->getCategoryURL(0, $con['category_seolink']);
         $articles[$row]['href']             = $model->getArticleURL(0, $con['seolink']);
+		$articles[$row]['comments']         = $inCore->getCommentsCount('article', $articles[$row]['id']);
+		$articles[$row]['pubdate'] 	        = $inCore->dateFormat($articles[$row]['pubdate']);
+		$articles[$row]['status']           = $articles[$row]['published'] ? '<span style="color:green">'.$_LANG['PUBLISHED'].'</span>' : '<span style="color:#CC0000">'.$_LANG['NO_PUBLISHED'].'</span>';
     }
 
     $messages = cmsCore::getSessionMessages();
@@ -585,15 +589,15 @@ if ($do=='best'){
 
     $inPage->printHeading($_LANG['ARTICLES_RATING']);
 
-    $sql = "SELECT c.*, IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'),	DATE_FORMAT(c.pubdate, '<strong>{$_LANG['TODAY']}</strong> {$_LANG['IN']} %H:%i'),
-                    DATE_FORMAT(c.pubdate, '%d-%m-%Y'))  as pubdate, 
+    $sql = "SELECT c.*, 
                     IFNULL(r.total_rating, 0) as points, IFNULL(r.total_votes, 0) as votes,
-                    u.nickname as author, cat.title as category, cat.seolink as category_seolink
-            FROM cms_users u, cms_category cat, cms_content c
+                   cat.title as category, cat.seolink as category_seolink
+            FROM cms_content c
+			LEFT JOIN cms_category cat ON cat.id = c.category_id
             LEFT JOIN cms_ratings_total r ON r.item_id=c.id AND r.target='content'
-            WHERE c.published = 1 AND c.canrate = 1 AND c.user_id = u.id AND c.category_id = cat.id
+            WHERE c.published = 1 AND c.canrate = 1
             ORDER BY points DESC, votes ASC
-            LIMIT 50";
+            LIMIT 30";
     $rs = $inDB->query($sql);
 
     if (!$inDB->num_rows($rs)){
@@ -607,13 +611,14 @@ if ($do=='best'){
         $row++;
         $articles[$row] = $con;
         if ($row%2) { $articles[$row]['class']="search_row1"; } else { $articles[$row]['class']="search_row2"; }
-        $articles[$row]['comments'] = $inCore->getCommentsCount('content', $con['id']);
+        $articles[$row]['comments'] = $inCore->getCommentsCount('article', $con['id']);
         $articles[$row]['karma'] 	= cmsKarmaFormat($con['points']);
+		$articles[$row]['pubdate'] 	= $inCore->dateFormat($articles[$row]['pubdate']);
         $articles[$row]['url']      = $model->getArticleURL(null, $con['seolink']);
     }
 
     $smarty = $inCore->initSmarty('components', 'com_content_rating.tpl');
-        $smarty->assign('articles', $articles);
+    $smarty->assign('articles', $articles);
     $smarty->display('com_content_rating.tpl');
 		
 		

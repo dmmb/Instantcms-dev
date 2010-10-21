@@ -9,11 +9,11 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //                                                                                           //
 /*********************************************************************************************/
 
-	cpAddPathway('Каталог статей', '?view=components&do=config&id='.$_REQUEST['id']);
+	cpAddPathway('Каталог статей', '?view=components&do=config&id='.(int)$_REQUEST['id']);
 	
 	echo '<h3>Каталог статей</h3>';
 	
-	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; }
+	$opt = $inCore->request('opt', 'srt', 'list');
 	
 	$toolmenu = array();
 
@@ -92,7 +92,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 ?>
 
 
-<form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
+<form action="index.php?view=components&do=config&id=<?php echo (int)$_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
     <?php ob_start(); ?>
     {tab=Внешний вид}
     <table width="550" border="0" cellpadding="10" cellspacing="0" class="proptable">

@@ -13,7 +13,7 @@
 <table width="100%" cellpadding="5" cellspacing="0" border="0">
 	<thead>
 		<tr>
-			<td width="60"><strong>{$LANG.DATE}</strong></td>
+			<td width="110"><strong>{$LANG.DATE}</strong></td>
 			<td width="16">&nbsp;</td>
 			<td><strong>{$LANG.ARTICLE}</strong></td>
 			<td width="100"><strong>{$LANG.STATUS}</strong></td>
