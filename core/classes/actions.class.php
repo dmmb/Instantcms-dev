@@ -100,12 +100,13 @@ class cmsActions {
 		$params['object']      =  $inDB->escape_string(stripslashes($params['object']));
 		$params['target']      =  $inDB->escape_string(stripslashes($params['target']));
 		$params['description'] =  $inDB->escape_string(stripslashes($params['description']));
+		$params['user_id']     =  $params['user_id'] ? $params['user_id'] : $inUser->id;
 		
         $sql = "INSERT INTO cms_actions_log (action_id, pubdate, user_id, 
                                              object, object_url, object_id,
                                              target, target_url, target_id,
                                              description)
-                VALUES ('{$action['id']}', NOW(), '{$inUser->id}',
+                VALUES ('{$action['id']}', NOW(), '{$params['user_id']}',
                         '{$params['object']}', '{$params['object_url']}', '{$params['object_id']}',
                         '{$params['target']}', '{$params['target_url']}', '{$params['target_id']}',
                         '{$params['description']}')";

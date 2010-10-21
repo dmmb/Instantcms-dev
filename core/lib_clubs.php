@@ -113,7 +113,7 @@ function clubBlogContent($blog_id, $is_admin=false, $is_moder=false, $is_member=
 
 	$rs = $inDB->query($sql);
 
-	if ($inDB->num_rows($rs)){
+	if ($inDB->num_rows($rs) || $blog_id){
 
 		$on_moderate = dbRowsCount('cms_blog_posts', 'blog_id='.$blog_id.' AND published = 0');
 		$html = '<ul>';

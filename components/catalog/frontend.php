@@ -963,8 +963,8 @@ function catalog(){
         $item['canmany']        = 1;
 
         //get fields data
-        $item['fields'] = serialize($item['fdata']);
-        $item['fields'] = $inDB->escape_string($item['fields']);
+        $item['fields']         = serialize($item['fdata']);
+        $item['fields']         = $inDB->escape_string($item['fields']);
 
         $item['price']          = 0;
         $item['canmany']        = 1;
@@ -1017,7 +1017,22 @@ function catalog(){
 
         }
 
-        if ($opt=='add'){ $item_id = $model->addItem($item); }
+        if ($opt=='add'){ 
+		
+				$item_id = $model->addItem($item);
+				if (!$cfg['premod'] && !$cfg['premod_msg']) {
+					//регистрируем событие
+					cmsActions::log('add_catalog', array(
+						'object' => $item['title'],
+						'object_url' => '/catalog/item'.$item_id.'.html',
+						'object_id' => $item_id,
+						'target' => $cat['title'],
+						'target_url' => '/catalog/'.$cat['id'],
+						'target_id' => $cat['id'], 
+						'description' => ''
+					));
+				}
+		}
         if ($opt=='edit'){ $model->updateItem($item_id, $item); }
 
         if ($inUser->id != 1 && $cfg['premod'] && $cfg['premod_msg']){
@@ -1048,7 +1063,21 @@ function catalog(){
 
         $inDB->query("UPDATE cms_uc_items SET published=1, on_moderate=0 WHERE id={$item_id}");
 
-        $item = $inDB->get_fields('cms_uc_items', "id={$item_id}", 'title, user_id');
+        $item = $inDB->get_fields('cms_uc_items', "id={$item_id}", 'title, user_id, category_id');
+		
+		$cat  = $inDB->get_fields('cms_uc_cats', 'id='.$item['category_id'], 'id, title');
+		
+		//регистрируем событие
+		cmsActions::log('add_catalog', array(
+				'object' => $item['title'],
+				'user_id' => $item['user_id'],
+				'object_url' => '/catalog/item'.$item_id.'.html',
+				'object_id' => $item_id,
+				'target' => $cat['title'],
+				'target_url' => '/catalog/'.$cat['id'],
+				'target_id' => $cat['id'], 
+				'description' => ''
+		));
         
         $item_link  = '<a href="/catalog/item'.$item_id.'.html">'.$item['title'].'</a>';
 

@@ -47,7 +47,7 @@
     
 		<table cellspacing="0" cellpadding="5">
 			<tr>
-				{if $on_moderate && $myblog}
+				{if $on_moderate && ($is_admin || $is_moder || $myblog)}
 					<td width="16"><img src="/components/blogs/images/moderate.gif" border="0"/></td>
 					<td width=""><a class="blog_moderate_link" href="/blogs/{$blog.id}/moderate.html">{$LANG.MODERATING}</a> ({$on_moderate})</td>
 				{/if}						
@@ -111,7 +111,7 @@
 							{if $post.tagline != false}
 								 <span class="tagline">{$post.tagline}</span>
 							{/if}
-							{if ($myblog && $post.user_id == $uid) || $is_admin}
+							{if $post.user_id == $uid || $is_admin || $is_moder}
 								<span class="editlinks">
 									| <a href="/blogs/{$blog.id}/editpost{$post.id}.html" class="blog_entry_edit">{$LANG.EDIT}</a>
 									| <a href="/blogs/{$blog.id}/delpost{$post.id}.html" class="blog_entry_delete">{$LANG.DELETE}</a>

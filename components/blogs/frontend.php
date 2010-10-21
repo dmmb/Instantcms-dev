@@ -401,15 +401,16 @@ if ($do=='blog'){
     //≈сли авторизован, провер€ем €вл€етс€ ли он хоз€ином блога или его администратором
     if ($user_id){
         if ($owner=='user'){
-            $myblog     = ($inUser->id == $blog['user_id']) ;
+            $myblog     = ($inUser->id == $blog['user_id']);
+			$is_moder   = false;
             $is_author  = (((!$myblog) && $blog['ownertype']=='multi' && $inDB->get_field('cms_blog_authors', 'blog_id='.$blog['id'].' AND user_id='.$user_id, 'id')) || ($blog['ownertype']=='multi' && $blog['forall']));
             $is_admin   = $inCore->userIsAdmin($user_id);
             $is_config  = $myblog || $is_admin;
         }
         if ($owner=='club'){
-            $myblog     = clubUserIsMember($blog['user_id'], $user_id);
+            $myblog     = false;
             $is_moder   = clubUserIsRole($blog['user_id'], $user_id, 'moderator');
-            $is_author  = $myblog;
+            $is_author  = clubUserIsRole($blog['user_id'], $user_id);
             $is_admin   = clubUserIsAdmin($blog['user_id'], $user_id) || $inCore->userIsAdmin($user_id);
             $is_config  = false;
         }
@@ -430,7 +431,7 @@ if ($do=='blog'){
     }
 
     //—читаем количество постов, ожидающих модерации
-    $on_moderate = dbRowsCount('cms_blog_posts', 'blog_id='.$blog['id'].' AND published = 0');
+    $on_moderate = ($is_moder || $is_admin) ? dbRowsCount('cms_blog_posts', 'blog_id='.$blog['id'].' AND published = 0') : false;
 
     //≈сли нужно, получаем список рубрик (категорий) этого блога
     $blogcats   = $blog['showcats'] ? blogCats($blog['id'], $blog['seolink'], $cat_id) : false;
@@ -523,8 +524,8 @@ if ($do=='moderate'){
 			$myblog     = ($user_id == $blog['user_id']);
 			$is_admin   = $inCore->userIsAdmin($user_id);
 		} elseif ($owner=='club') {
-			$myblog     = clubUserIsRole($blog['user_id'], $user_id, 'member') || clubUserIsRole($blog['user_id'], $user_id, 'moderator') || clubUserIsAdmin($blog['user_id'], $user_id);
-			$is_admin   = $inCore->userIsAdmin($user_id) || clubUserIsAdmin($blog['user_id'], $user_id);
+			$myblog     = clubUserIsRole($blog['user_id'], $user_id, 'moderator') || clubUserIsAdmin($blog['user_id'], $user_id);
+			$is_admin   = $inCore->userIsAdmin($user_id);
 		}
 	}
 
@@ -534,17 +535,17 @@ if ($do=='moderate'){
 		$is_admin   = false;
 	}
 
-    //ѕровер€ем отсутствие доступа
-    if (!$myblog && !$is_admin){
-		echo '<p style="color:red">'.$_LANG['ACCESS_DENIED'].'</p>';
-        return;
-	}
-
     //”станавливаем глубиномер и заголовок страницы
     if ($owner=='club') { $inPage->addPathway($blog['author'], '/clubs/'.$blog['user_id']); }
     $inPage->addPathway($blog['title'], $model->getBlogURL(null, $blog['seolink']));
     $inPage->addPathway($_LANG['POSTS_ON_MODERATE'], $_SERVER['REQUEST_URI']);
     $inPage->setTitle($_LANG['MODERATING'].' - '.$blog['title']);
+
+    //ѕровер€ем отсутствие доступа
+    if (!$myblog && !$is_admin){
+		echo '<p style="color:red">'.$_LANG['ACCESS_DENIED'].'</p>';
+        return;
+	}
 
     //—читаем число записей, ожидающих модерации
     $total = $model->getModerationCount($blog['id']);
@@ -959,7 +960,7 @@ if($do=='post'){
     //≈сли авторизован, провер€ем €вл€етс€ ли он хоз€ином блога или его администратором
     if ($user_id){
         if ($owner=='user'){
-            $is_author  = (((!$myblog) && $blog['ownertype']=='multi' && $inDB->get_field('cms_blog_authors', 'blog_id='.$blog['id'].' AND user_id='.$user_id, 'id')) || ($blog['ownertype']=='multi' && $blog['forall']));
+            $is_author  = (($inUser->id == $blog['user_id']) || ((!$myblog) && $blog['ownertype']=='multi' && $inDB->get_field('cms_blog_authors', 'blog_id='.$blog['id'].' AND user_id='.$user_id, 'id')) || ($blog['ownertype']=='multi' && $blog['forall']));
             $is_admin   = $inCore->userIsAdmin($user_id);
         }
         if ($owner=='club'){
@@ -1087,9 +1088,18 @@ if ($do == 'publishpost'){
     $post_id 	= $inCore->request('post_id', 'int', 0);
     $user_id    = $inUser->id;
 
-	if (!$user_id){ $inCore->halt(); }
-
-    if ($post_id){
+	if (!$user_id || !$post_id){ $inCore->halt(); }
+    //≈сли пользователь авторизован, провер€ем €вл€етс€ ли он хоз€ином блога, модератором или админом
+	if ($user_id){
+		if ($owner=='user'){
+			$myblog     = ($user_id == $blog['user_id']);
+			$is_admin   = $inCore->userIsAdmin($user_id);
+		} elseif ($owner=='club') {
+			$myblog     = clubUserIsRole($blog['user_id'], $user_id, 'moderator') || clubUserIsAdmin($blog['user_id'], $user_id);
+			$is_admin   = $inCore->userIsAdmin($user_id);
+		}
+	}
+    if ($myblog || $is_admin){
         $post   = $model->getPost($post_id);
         if ($post){
             $model->publishPost($post_id);
@@ -1097,6 +1107,7 @@ if ($do == 'publishpost'){
 			//регистрируем событие
 			cmsActions::log('add_post', array(
 					'object' => $post['title'],
+					'user_id' => $post['user_id'],
 					'object_url' => $model->getPostURL(0, $post['bloglink'], $post['seolink']),
 					'object_id' => $post['id'],
 					'target' => $blog['title'],
@@ -1106,7 +1117,9 @@ if ($do == 'publishpost'){
 			));
             cmsUser::sendMessage(-1, $post['author_id'], $_LANG['YOUR_POST'].' <b>&laquo;<a href="'.$model->getPostURL(0, $post['bloglink'], $post['seolink']).'">'.$post['title'].'</a>&raquo;</b> '.$_LANG['PUBLISHED_IN_BLOG'].' <b>&laquo;<a href="'.$model->getBlogURL(0, $blog['seolink']).'">'.$blog['title'].'</a>&raquo;</b>');
         }
-    }
+    } else {
+		echo '<p style="color:red">'.$_LANG['ACCESS_DENIED'].'</p>';
+	}
     
     $inCore->redirect('/blogs/'.$blog['id'].'/moderate.html');
     

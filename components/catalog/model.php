@@ -46,7 +46,9 @@ class cms_model_catalog{
         $this->inDB->query("DELETE FROM cms_uc_items WHERE id={$id}");
         $this->inDB->query("DELETE FROM cms_tags WHERE target='catalog' AND item_id = {$id}");
         $this->inDB->query("DELETE FROM cms_uc_ratings WHERE item_id = {$id}");
-
+		
+		cmsActions::removeObjectLog('add_catalog', $id);
+		
         $inCore->deleteComments('catalog', $id);
 
     }
