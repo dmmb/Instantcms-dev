@@ -123,15 +123,17 @@ class cmsActions {
      * @param int $object_id Идентификатор объекта
      * @return bool
      */
-    public static function removeObjectLog($action_name, $object_id){
+    public static function removeObjectLog($action_name, $object_id, $user_id = false){
         
-        $inDB = cmsDatabase::getInstance();
+        $inDB    = cmsDatabase::getInstance();
         
-        $action = self::getAction($action_name);
+        $action  = self::getAction($action_name);
+
+        $usr_sql = $user_id ? "AND user_id = {$user_id}" : '';
         
         $sql = "DELETE 
                 FROM cms_actions_log 
-                WHERE action_id = '{$action['id']}' AND object_id = '{$object_id}'";
+                WHERE action_id = '{$action['id']}' AND object_id = '{$object_id}' $usr_sql";
 
         $inDB->query($sql);
 

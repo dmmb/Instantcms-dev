@@ -3,10 +3,16 @@
 {* ================================================================================ *}
 
 <div class="con_heading">{$LANG.CREATE_CLUB}</div>
-
+{if $messages}
+    <div class="sess_messages">
+        {foreach key=id item=message from=$messages}
+            {$message}
+        {/foreach}
+    </div>
+{/if}
 <p>
 	<strong>{$LANG.CLUBS}</strong> {$LANG.CLUBS_DESC}
-
+</p>
 <form style="margin-top:15px" action="" method="post" name="addform">
   <table style="background-color:#EBEBEB" border="0" cellspacing="0" cellpadding="10">
 	<tr>

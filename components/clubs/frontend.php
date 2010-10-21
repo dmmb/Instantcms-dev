@@ -124,7 +124,7 @@ if ($do=='club'){
     $is_admin 	= $inUser->is_admin || ($user_id == $club['admin_id']);
     $is_moder 	= clubUserIsRole($id, $user_id, 'moderator');
     $is_member 	= clubUserIsRole($id, $user_id, 'member');
-	$is_member_club	= clubUserIsMember($club['id'], $user_id);
+	$is_member_club	= $is_member || $is_moder;
 
     $is_access = true;
 
@@ -145,8 +145,6 @@ if ($do=='club'){
         }
     }
 
-    if (!clubRootAlbumId($id)) { albumCreateRoot($id, 'club'.$id); }
-
     //JOIN/LEAVE LINK
     $club['member_link'] = '';
     if ( $is_member_club ){
@@ -162,19 +160,24 @@ if ($do=='club'){
     $club['members_list'] 	= clubMembersList($id);
     $club['wall_html']		= cmsUser::getUserWall($club['id'], 'club', 1, $is_moder, $is_admin);
     $club['addwall_html'] 	= cmsUser::getUserAddWall($club['id'], 'club');
-    $club['blog_id']		= clubBlogId($club['id']);
-    $club['blog_content']	= clubBlogContent($club['blog_id'], $is_admin, $is_moder, $is_member);
-
-    $inCore->loadModel('blogs');
-    $blog_model = new cms_model_blogs();
-
-    $club['blog_url']       = $blog_model->getBlogURL(null, $inDB->get_field('cms_blogs', "id={$club['blog_id']}", 'seolink'));
-
-    $club['photo_albums']	= clubPhotoAlbums($club['id'],  $is_admin, $is_moder, $is_member);
-    $club['root_album_id']	= clubRootAlbumId($club['id']);
 
     $club['enabled_blogs']	= $club['enabled_blogs'] == 1 || ($club['enabled_blogs']==0 && $cfg['enabled_blogs']==1);
     $club['enabled_photos']	= $club['enabled_photos'] == 1 || ($club['enabled_photos']==0 && $cfg['enabled_photos']==1);
+
+	if ($club['enabled_blogs']) {
+		$club['blog_id']		= clubBlogId($club['id']);
+		$club['blog_content']	= clubBlogContent($club['blog_id'], $is_admin, $is_moder, $is_member);
+		$inCore->loadModel('blogs');
+		$blog_model = new cms_model_blogs();
+		$club['blog_url']       = $blog_model->getBlogURL(null, $inDB->get_field('cms_blogs', "id={$club['blog_id']}", 'seolink'));
+	}
+
+	if ($club['enabled_photos']) {
+		$club['root_album_id']	= clubRootAlbumId($club['id']);
+		if (!$club['root_album_id']) { albumCreateRoot($id, 'club'.$id); }
+		$club['photo_albums']	= clubPhotoAlbums($club['id'],  $is_admin, $is_moder, $is_member);
+	}
+
 	$club['pubdate'] = $inCore->dateformat($club['pubdate'], true, true);
 
     $smarty->assign('clubid', $id);
@@ -185,7 +188,6 @@ if ($do=='club'){
     $smarty->assign('is_moder', $is_moder);
     $smarty->assign('is_member', $is_member);
     $smarty->assign('is_karma_enabled', $is_karma_enabled);
-
 	$smarty->assign('pagetitle', $pagetitle);
 	$smarty->display('com_clubs_view_club.tpl');
 	
@@ -201,7 +203,7 @@ if ($do == 'create'){
 
     $inPage->addPathway($_LANG['CREATE_CLUB']);
 
-    $can_create = $user_id && ( $inUser->is_admin || ($cfg['cancreate'] && !$inDB->get_field('cms_clubs', 'admin_id='.$user_id, 'id') && cmsUser::getKarma($user_id)>=$cfg['create_min_karma'] && cmsUser::getRating($user_id)>=$cfg['create_min_rating']));
+    $can_create = $user_id && ( $inUser->is_admin || ($cfg['cancreate'] && !$inDB->get_field('cms_clubs', 'admin_id='.$user_id, 'id') && cmsUser::getKarma($user_id)>=$cfg['create_min_karma'] && $inUser->rating>=$cfg['create_min_rating']));
 
     if (!$can_create){ $inCore->redirect('/'); }
 
@@ -209,6 +211,7 @@ if ($do == 'create'){
         $inPage->setTitle($_LANG['CREATE_CLUB']);
         $smarty = $inCore->initSmarty('components', 'com_clubs_create.tpl');
         $smarty->assign('confirm', $confirm);
+		$smarty->assign('messages', cmsCore::getSessionMessages());
         $smarty->display('com_clubs_create.tpl');
     }
 
@@ -218,7 +221,7 @@ if ($do == 'create'){
         $title      = $inCore->request('title', 'str');
         $clubtype   = $inCore->request('clubtype', 'str');
 
-        if (!$title){
+        if (!$title || !$clubtype){
             cmsCore::addSessionMessage($_LANG['CLUB_REQ_TITLE'], 'error');
             $errors = true;
         } else {
@@ -235,9 +238,19 @@ if ($do == 'create'){
         if(!$errors){
             $created_id = $model->addClub(array('user_id'=>$user_id, 'title'=>$title, 'clubtype'=>$clubtype));
             if($created_id){ setClubRating($created_id); }
+			//регистрируем событие
+			cmsActions::log('add_club', array(
+						'object' => $title,
+						'object_url' => '/clubs/'.$created_id,
+						'object_id' => $created_id,
+						'target' => '',
+						'target_url' => '',
+						'target_id' => 0, 
+						'description' => ''
+			));
             $inCore->redirect('/clubs/'.$created_id);
         } else {
-            $inCore->redirect('/clubs');
+            $inCore->redirect('/clubs/create.html');
         }
         
     }
@@ -382,13 +395,14 @@ if ($do == 'leave'){
     $inPage->addPathway($_LANG['EXIT_FROM_CLUB']);
 
     if ( $inCore->inRequest('confirm') ){
-        clubRemoveUser($id, $inUser->id);
+        clubRemoveUser($id, $user_id);
         setClubsRating($id);
+		cmsActions::removeObjectLog('add_club_user', $id, $user_id);
         $inCore->redirect('/clubs/'.$id);
     }
 
     if ( !$inCore->inRequest('confirm') ){
-        if (!clubUserIsMember($id, $inUser->id)){ return; }
+        if (!clubUserIsMember($id, $user_id)){ return; }
 
         $inPage->setTitle($_LANG['EXIT_FROM_CLUB']);
 
@@ -416,11 +430,21 @@ if ($do == 'join'){
     $inPage->addPathway($club['title'], '/clubs/'.$id);
     $inPage->addPathway($_LANG['JOINING_CLUB']);
 
-    if (clubUserIsMember($id, $inUser->id)){ return; }
+    if (clubUserIsMember($id, $user_id)){ return; }
 
     if ( $inCore->inRequest('confirm') ){        
-        clubAddUser($id, $inUser->id);
+        clubAddUser($id, $user_id);
         setClubsRating($id);
+		//регистрируем событие
+		cmsActions::log('add_club_user', array(
+						'object' => $club['title'],
+						'object_url' => '/clubs/'.$id,
+						'object_id' => $id,
+						'target' => '',
+						'target_url' => '',
+						'target_id' => 0, 
+						'description' => ''
+		));
         $inCore->redirect('/clubs/'.$id);
     }
 
@@ -429,7 +453,7 @@ if ($do == 'join'){
         $inPage->setTitle($_LANG['JOINING_CLUB']);
 
         $min_karma = $club['join_min_karma'];
-        $user_karma = cmsUser::getKarma($inUser->id);
+        $user_karma = cmsUser::getKarma($user_id);
 
         if(($user_karma >= $min_karma) || !$club['join_karma_limit']){
 

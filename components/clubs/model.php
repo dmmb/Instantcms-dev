@@ -193,7 +193,7 @@ class cms_model_clubs{
         //Удаляем фотоальбомы клуба
         $photos_model->deleteAlbum( $this->getClubRootAlbumId($club_id) );
         $this->inDB->query("DELETE FROM cms_photo_albums WHERE NSDiffer = 'club{$club_id}'");
-
+		cmsActions::removeObjectLog('add_club', $club_id);
         return true;
 
     }
