@@ -13,21 +13,10 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 function orderForm($orderby, $orderto){
     $inCore = cmsCore::getInstance();
-    $inDB = cmsDatabase::getInstance();
-    global $_LANG;
 	$smarty = $inCore->initSmarty('components', 'com_photos_order.tpl');
 	$smarty->assign('orderby', $orderby);
 	$smarty->assign('orderto', $orderto);
 	$smarty->display('com_photos_order.tpl');
-}
-
-function loadedByUser24h($user_id, $album_id){
-    $inCore = cmsCore::getInstance();
-    $inDB = cmsDatabase::getInstance();
-	$sql = "SELECT id FROM cms_photo_files WHERE user_id = $user_id AND album_id = $album_id AND pubdate >= DATE_SUB(NOW(), INTERVAL 1 DAY)";
-	$result = $inDB->query($sql) ;
-	$loaded = $inDB->num_rows($result);	
-	return $loaded;
 }
 
 function photos(){
@@ -409,7 +398,7 @@ if ($do=='addphoto'){
 	$inPage->addPathway($_LANG['ADD_PHOTO']);
 	
 	if ($uid){
-		if (loadedByUser24h($uid, $album['id'])<$album['uplimit'] || $album['uplimit'] == 0){	
+		if ($model->loadedByUser24h($uid, $album['id'])<$album['uplimit'] || $album['uplimit'] == 0){	
 			if ($album['public'] && $can_add){
 			if ($min_karma === false || $user_karma>=$min_karma || clubUserIsAdmin($club['id'], $uid) || clubUserIsRole($club['id'], $uid, 'moderator')){
 				$inPage->printHeading($_LANG['ADD_PHOTO']);
@@ -786,7 +775,7 @@ if ($do=='best'){
 		$is_best_yes = true;
 		$inCore->loadLib('karma');
 		while($con = $inDB->fetch_assoc($result)){
-			$con['rating'] = cmsKarmaFormat($con['rating']);
+			$con['rating']   = cmsKarmaFormat($con['rating']);
 			$con['comcount'] = $inCore->getCommentsCount('photo', $con['id']);
 			$cons[] = $con;
 		}			
