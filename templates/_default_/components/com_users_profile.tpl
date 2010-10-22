@@ -368,15 +368,7 @@
 				{* ============================== «¿ À¿ƒ ¿ π4 ============================================== *}
 				{if $cfg.sw_friends}
                     <div id="upr_friends">
-                        {if $usr.friends}
                             {$usr.friends}
-                        {else}
-                            {if !$myprofile}
-                                <p>{$LANG.NOT_FRIENDS_IN_USER}</p>
-                            {else}
-                                <p>{$LANG.NOT_FRIENDS_IN_YOUR}</p>
-                            {/if}
-                        {/if}
                     </div>
 				{/if}
 				

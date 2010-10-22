@@ -293,7 +293,7 @@ function registration(){
             $user_id = $inUser->id;
             $sess_id = session_id();
 
-            cmsUser::updateStats($user_id);
+//            cmsUser::updateStats($user_id);
 
             cmsCore::callEvent('USER_LOGOUT', $user_id);
 

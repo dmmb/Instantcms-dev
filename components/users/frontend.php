@@ -725,69 +725,69 @@ if ($do=='profile'){
 		$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
 	}
 
-    $usr['avatar']				= usrImageNOdb($usr['id'], 'big', $usr['imageurl'], $usr['is_deleted']);
+    $usr['avatar']				 = usrImageNOdb($usr['id'], 'big', $usr['imageurl'], $usr['is_deleted']);
 	
 	if($cfg['sw_friends']){
-		$usr['isfriend']			= (($inUser->id && !$myprofile) ? usrIsFriends($usr['id'], $inUser->id) : false);
-		$usr['isfriend_not_add']	= $usr['isfriend'];
-    $usr['is_new_friends']		= ($inUser->id==$usr['id'] && $model->isNewFriends($usr['id']) && $cfg['sw_friends']);
+		$usr['isfriend']		 = (($inUser->id && !$myprofile) ? usrIsFriends($usr['id'], $inUser->id) : false);
+		$usr['isfriend_not_add'] = $usr['isfriend'];
+    $usr['is_new_friends']		 = ($inUser->id==$usr['id'] && $model->isNewFriends($usr['id']) && $cfg['sw_friends']);
     if ($usr['is_new_friends']){
-        $usr['new_friends'] 	= usrFriendQueriesList($usr['id'], $model);
+        $usr['new_friends'] 	 = usrFriendQueriesList($usr['id'], $model);
     }
-    $usr['friends']				= usrFriends($usr['id']);
+    $usr['friends']				 = usrFriends($usr['id']);
 	}
 
     if ($usr['friends'] && $inUser->id && $myprofile && $cfg['sw_feed']){
-        $usr['friends_photos']	= cmsUser::getUserFriendsPhotos($usr['id']);
-        $usr['friends_posts']	= cmsUser::getUserFriendsPosts($usr['id']);
-        $usr['friends_comments']	= cmsUser::getUserFriendsComments($usr['id']);
+        $usr['friends_photos']	 = cmsUser::getUserFriendsPhotos($usr['id']);
+        $usr['friends_posts']	 = cmsUser::getUserFriendsPosts($usr['id']);
+        $usr['friends_comments'] = cmsUser::getUserFriendsComments($usr['id']);
     }
 
-    $usr['awards_html']			= $cfg['sw_awards'] ? usrAwards($usr['id']) : false;
+    $usr['awards_html']			 = $cfg['sw_awards'] ? usrAwards($usr['id']) : false;
 	
 	if($cfg['sw_wall']){
-    $usr['wall_html']			= cmsUser::getUserWall($usr['id']);
-    $usr['addwall_html'] 		= cmsUser::getUserAddWall($usr['id']);
+    $usr['wall_html']			 = cmsUser::getUserWall($usr['id']);
+    $usr['addwall_html'] 		 = cmsUser::getUserAddWall($usr['id']);
 	}
-	$usr['banned']				= ($usr['banned'] == $usr['id'] ? 1 : 0);
+	$usr['banned']				 = ($usr['banned'] == $usr['id'] ? 1 : 0);
 
-    $usr['clubs'] 				= $cfg['sw_clubs'] ? cmsUserClubs($usr['id']) : false;
+    $usr['clubs'] 				 = $cfg['sw_clubs'] ? cmsUserClubs($usr['id']) : false;
 
-    $usr['status']				= ($usr['status'] == $usr['id'] ? '<span class="online">'.$_LANG['ONLINE'].'</span>' : '<span class="offline">'.$_LANG['OFFLINE'].'</span>');
+    $usr['status']				 = ($usr['status'] == $usr['id'] ? '<span class="online">'.$_LANG['ONLINE'].'</span>' : '<span class="offline">'.$_LANG['OFFLINE'].'</span>');
 
-    $usr['status_date']         = cmsCore::dateDiffNow($usr['status_date']); 
-    $usr['flogdate']            = strip_tags(usrStatus($usr['id'], $usr['flogdate'], false, $usr['gender']));
-    $usr['karma']				= strip_tags( cmsUser::getKarmaFormat($usr['id'], false), '<table><tr><td><img><a>' );
-    $usr['karma_int']			= strip_tags($usr['karma']);
-    $usr['karma_link']			= '<a href="/users/'.$usr['id'].'/karma.html" title="'.$_LANG['KARMA_HISTORY'].'" id="karmalink">?</a>';
+    $usr['status_date']          = cmsCore::dateDiffNow($usr['status_date']); 
+    $usr['flogdate']             = strip_tags(usrStatus($usr['id'], $usr['flogdate'], false, $usr['gender']));
+    $usr['karma']				 = strip_tags( cmsUser::getKarmaFormat($usr['id'], false), '<table><tr><td><img><a>' );
+    $usr['karma_int']			 = strip_tags($usr['karma']);
+    $usr['karma_link']			 = '<a href="/users/'.$usr['id'].'/karma.html" title="'.$_LANG['KARMA_HISTORY'].'" id="karmalink">?</a>';
 
-    $usr['cityurl']             = urlencode($usr['city']);
+    $usr['cityurl']              = urlencode($usr['city']);
 
-    $usr['photos_count']		= $cfg['sw_photo'] ? (int)usrPhotoCount($usr['id']) : false;
-	$usr['can_add_foto']		= (($usr['photos_count']<$cfg['photosize'] || $cfg['photosize']==0) && $cfg['sw_photo']);
+    $usr['photos_count']		 = $cfg['sw_photo'] ? (int)usrPhotoCount($usr['id']) : false;
+	$usr['can_add_foto']		 = (($usr['photos_count']<$cfg['photosize'] || $cfg['photosize']==0) && $cfg['sw_photo']);
 	
-    $usr['board_count']			= $cfg['sw_board'] ? (int)$inDB->rows_count('cms_board_items', "user_id={$usr['id']} AND published=1") : false;
-    $usr['comments_count']		= $cfg['sw_comm'] ? (int)$inDB->rows_count('cms_comments', "user_id={$usr['id']} AND published=1") : false;
+    $usr['board_count']			 = $cfg['sw_board'] ? (int)$inDB->rows_count('cms_board_items', "user_id={$usr['id']} AND published=1") : false;
+    $usr['comments_count']		 = $cfg['sw_comm'] ? (int)$inDB->rows_count('cms_comments', "user_id={$usr['id']} AND published=1") : false;
 	
     if($cfg['sw_forum'])
         if ($inUser->id==$id){
-            $usr['forum_count'] = $inDB->rows_count('cms_forum_posts', 'user_id = '.$usr['id'].'');
+            $usr['forum_count']  = $inDB->rows_count('cms_forum_posts', 'user_id = '.$usr['id'].'');
         } else {
-            $usr['forum_count'] = $inDB->rows_count('cms_forum_posts p LEFT JOIN cms_forum_threads t ON t.id = p.thread_id', 'p.user_id = '.$usr['id'].' AND t.is_hidden = 0');
+            $usr['forum_count']  = $inDB->rows_count('cms_forum_posts p LEFT JOIN cms_forum_threads t ON t.id = p.thread_id', 'p.user_id = '.$usr['id'].' AND t.is_hidden = 0');
         }
 
     if($cfg['sw_files'])
         if ($inUser->id==$id){
-            $usr['files_count'] = $inDB->rows_count('cms_user_files', "user_id = ".$usr['id']." AND allow_who = 'all'");
+            $usr['files_count']  = $inDB->rows_count('cms_user_files', "user_id = ".$usr['id']." AND allow_who = 'all'");
         } else {
-            $usr['files_count'] = $inDB->rows_count('cms_user_files', 'user_id = '.$usr['id']);
+            $usr['files_count']  = $inDB->rows_count('cms_user_files', 'user_id = '.$usr['id']);
         }
 
     $usr['blog_link'] = '';
 	if($cfg['sw_blogs']){
 		$usr['blog']            = usrBlog($usr['id']);
-    $usr['blog_id']         = $usr['blog']['id'];
-    $usr['blog_seolink']    = $usr['blog']['seolink'];
+    $usr['blog_id']             = $usr['blog']['id'];
+    $usr['blog_seolink']        = $usr['blog']['seolink'];
     
     if($usr['blog_id']){
         $usr['blog_link'] 		= '<a href="/blogs/'.$usr['blog_seolink'].'">'.$_LANG['BLOG'].'</a>';
@@ -1353,7 +1353,7 @@ if ($do=='viewalbum'){
     $my_profile = ($inUser->id == $id);
 
     //Определяем, друзья мы или нет
-	$we_friends = (int)($inUser->id && !$my_profile) ? usrIsFriends($usr['id'], $inUser->id) : 0;
+	$we_friends = ($inUser->id && !$my_profile) ? (int)usrIsFriends($usr['id'], $inUser->id) : 0;
 	if (!$we_friends) { $we_friends = 0; }
 	
     //Фильтр приватности
@@ -1583,53 +1583,62 @@ if ($do=='addfriend'){
 
     if (!$usr){ $inCore->redirectBack(); }
 
+    cmsUser::clearSessionFriends();
+
 	if (usrCheckAuth() && $inUser->id!=$id){
-	if(!usrIsFriends($id, $inUser->id)){
-		if (!isset($_POST['goadd'])){
-			if ($model->isNewFriends($inUser->id, $id)){
-				$sql = "UPDATE cms_user_friends SET is_accepted = 1 WHERE to_id = ".$inUser->id." AND from_id = $id";
-				$inDB->query($sql);
-				header('location:'.$_SERVER['HTTP_REFERER']);
-			}
 
-				$inPage->backButton(false);
-				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-				$inPage->addPathway($_LANG['ADD_TO_FRIEND']);
-                $inPage->backButton(false);
-				echo '<div class="con_heading">'.$_LANG['ADD_TO_FRIEND'].'</div>';
-				echo '<p><strong>'.$_LANG['SEND_TO_USER'].' '.ucfirst($usr['nickname']).' '.$_LANG['FRIENDSHIP_OFFER'].'?</strong></p>';
-				echo '<p>'.$_LANG['IF'].' '.ucfirst($usr['nickname']).' '.$_LANG['SUCCESS_TEXT'].'</p>';
-				echo '<div><form action="'.$_SERVER['REQUEST_URI'].'" method="POST"><p>
-						<input style="font-size:24px; width:100px" type="button" name="cancel" value="'.$_LANG['NO'].'" onclick="window.history.go(-1)" />
-						<input style="font-size:24px; width:100px" type="submit" name="goadd" value="'.$_LANG['YES'].'" />
-					 </p></form></div>';
-
-		} else {
-				$to_id      = $id;
-				$from_id    = $inUser->id;
-				if (!usrIsFriendsOld($to_id, $from_id, false)){
-					$sql = "INSERT INTO cms_user_friends (to_id, from_id, logdate, is_accepted) 
-							VALUES ('$to_id', '$from_id', NOW(), '0')";
-					$inDB->query($sql) ;
+		if(!usrIsFriends($id, $inUser->id)){
+			if (!isset($_POST['goadd'])){
+				if ($model->isNewFriends($inUser->id, $id)){
+					$sql = "UPDATE cms_user_friends SET is_accepted = 1 WHERE to_id = ".$inUser->id." AND from_id = $id";
+					$inDB->query($sql);
+					cmsCore::addSessionMessage($_LANG['ADD_FRIEND_OK'] . $usr['nickname'], 'info');
+					header('location:'.$_SERVER['HTTP_REFERER']);
 				}
-				
-				cmsUser::sendMessage(USER_UPDATER, $to_id, '<b>'.$_LANG['RECEIVED_F_O'].'</b>. '.$_LANG['YOU_CAN_SEE'].' <a href="'.cmsUser::getProfileURL($usr['login']).'">'.$_LANG['INPROFILE'].'</a>.');
-				
-				$inCore->redirect(cmsUser::getProfileURL($usr['login']));
-		}//!goadd
+	
+					$inPage->backButton(false);
+					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+					$inPage->addPathway($_LANG['ADD_TO_FRIEND']);
+					$inPage->backButton(false);
+					echo '<div class="con_heading">'.$_LANG['ADD_TO_FRIEND'].'</div>';
+					echo '<p><strong>'.$_LANG['SEND_TO_USER'].' '.ucfirst($usr['nickname']).' '.$_LANG['FRIENDSHIP_OFFER'].'?</strong></p>';
+					echo '<p>'.$_LANG['IF'].' '.ucfirst($usr['nickname']).' '.$_LANG['SUCCESS_TEXT'].'</p>';
+					echo '<div><form action="'.$_SERVER['REQUEST_URI'].'" method="POST"><p>
+							<input style="font-size:24px; width:100px" type="button" name="cancel" value="'.$_LANG['NO'].'" onclick="window.history.go(-1)" />
+							<input style="font-size:24px; width:100px" type="submit" name="goadd" value="'.$_LANG['YES'].'" />
+						 </p></form></div>';
+	
+			} else {
+					$to_id      = $id;
+					$from_id    = $inUser->id;
+					if (!usrIsFriendsOld($to_id, $from_id, false)){
+						$sql = "INSERT INTO cms_user_friends (to_id, from_id, logdate, is_accepted) 
+								VALUES ('$to_id', '$from_id', NOW(), '0')";
+						$inDB->query($sql) ;
+					}
+					
+					cmsUser::sendMessage(USER_UPDATER, $to_id, '<b>'.$_LANG['RECEIVED_F_O'].'</b>. '.$_LANG['YOU_CAN_SEE'].' <a href="'.cmsUser::getProfileURL($usr['login']).'">'.$_LANG['INPROFILE'].'</a>.');
+					cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND'], 'info');
+					
+					$inCore->redirect(cmsUser::getProfileURL($usr['login']));
+			}//!goadd
 		} else { $inCore->redirectBack(); }
+
 	} else { echo usrAccessDenied(); } //usrCheckAuth
 }//do
 /////////////////////////////// DEL FRIEND /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delfriend'){
 	if (usrCheckAuth() && $inUser->id!=$id){
 
-		$first_id = $inUser->id;
+		$first_id  = $inUser->id;
 		$second_id = $id;
+		$usr       = $model->getUserShort($id);
 		
 		$sql = "DELETE FROM cms_user_friends WHERE ((to_id = $first_id AND from_id = $second_id) OR (to_id = $second_id AND from_id = $first_id))";
 		$inDB->query($sql) ;
 
+		cmsUser::clearSessionFriends();
+		cmsCore::addSessionMessage($usr['nickname'] . $_LANG['DEL_FRIEND'], 'info');
 		header('location:'.$_SERVER['HTTP_REFERER']);
 
 	} else { echo usrAccessDenied(); } //usrCheckAuth

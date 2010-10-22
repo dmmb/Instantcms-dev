@@ -1,7 +1,11 @@
 {* ================================================================================ *}
 {* ============================ Äðóçüÿ ============================================ *}
 {* ================================================================================ *}
+                        
+                        
 
+                        
+{if $friends}                        
 {assign var="col" value="1"}
 <table width="" cellpadding="10" cellspacing="0" border="0" class="usr_friends_list" align="left">
   {foreach key=tid item=friend from=$friends}
@@ -16,6 +20,13 @@
   {/foreach}
   {if $col>1}<td colspan="{math equation="x - y + 1" x=$col y=$maxcols}">&nbsp;</td></tr>{/if}
 </table>
-        {if $not_all && $short}
+{if $not_all && $short}
         <div style="text-align:right"><a href="/users/{$user_id}/friendlist.html" class="usr_friendslink">{$LANG.ALL_FRIENDS}</a> &rarr;</div>
-        {/if}
+{/if}
+{else}
+   {if !$myprofile}
+           <p>{$LANG.NOT_FRIENDS_IN_USER}</p>
+   {else}
+           <p>{$LANG.NOT_FRIENDS_IN_YOUR}</p>
+   {/if}
+{/if}

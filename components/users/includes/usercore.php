@@ -45,7 +45,7 @@ function usrPhotoCount($user_id, $with_public=true){
     $filter = '';
 
     if (!$my_profile){ 
-		$we_friends = usrIsFriends($user_id, $inUser->id);
+		$we_friends = (int)usrIsFriends($user_id, $inUser->id);
 		$filter = "AND ( allow_who='all' OR (allow_who='registered' AND ({$inUser->id}>0)) OR (allow_who='friends' AND ({$we_friends}=1)) )";
 	}
 
@@ -428,8 +428,10 @@ function usrFriendQueriesList($user_id, $model){
 }
 
 function usrFriends($user_id, $short=true){
+
     $inCore = cmsCore::getInstance();
-    $inDB = cmsDatabase::getInstance();
+    $inDB   = cmsDatabase::getInstance();
+	$inUser = cmsUser::getInstance();
 	
 	$sql = "SELECT
 			CASE
@@ -470,6 +472,7 @@ function usrFriends($user_id, $short=true){
 					
     $smarty->assign('friends', $friends);
 	$smarty->assign('maxcols', $maxcols);
+	$smarty->assign('myprofile', ($user_id == $inUser->id));
 				
     $smarty->display('com_users_friends.tpl');
                     

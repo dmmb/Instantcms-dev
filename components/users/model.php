@@ -97,7 +97,7 @@ class cms_model_users{
 		
 		} else {
 		
-		$user = $this->inDB->get_fields('cms_users', "id = '$user_id'", 'id, nickname, login');
+			$user = $this->inDB->get_fields('cms_users', "id = '$user_id'", 'id, nickname, login');
         
 		}
         
@@ -282,6 +282,9 @@ class cms_model_users{
 
     }
 
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
     public function giveInvites($count, $has_karma) {
 
         $sql = "SELECT  u.id as id,
@@ -313,6 +316,9 @@ class cms_model_users{
         return true;
 
     }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
 
     public function deleteInvites() {
 

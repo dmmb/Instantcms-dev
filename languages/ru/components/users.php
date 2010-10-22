@@ -125,6 +125,9 @@ $_LANG['PHOTO_NOT_FOUND']           ='Фотография не найдена';
 $_LANG['PHOTO_NOT_FOUND_TEXT']      ='Возможно она была удалена или пользователь ограничил ее просмотр.';
 
 $_LANG['ADD_TO_FRIEND']             ='Добавить в друзья';
+$_LANG['ADD_TO_FRIEND_SEND']        ='Предложение дружбы отправлено';
+$_LANG['DEL_FRIEND']                =' и Вы больше не друзья';
+$_LANG['ADD_FRIEND_OK']             ='У Вас новый друг: ';
 $_LANG['SEND_TO_USER']              ='Отправить пользователю';
 $_LANG['FRIENDSHIP_OFFER']          ='предложение дружбы';
 $_LANG['IF']                        ='Если';

@@ -779,7 +779,7 @@ class cmsUser {
 		if (!isset($_SESSION['user']['id']) || $_SESSION['user']['id'] != $user_id) { return false; }
 
 		//Если список уже в сессии, возвращаем
-		if (isset($_SESSION['user']['friends'])) { return $_SESSION['user']['friends']; }
+		if ($_SESSION['user']['friends']) { return $_SESSION['user']['friends']; }
 
 		//иначе получаем список из базы, кладем в сессию и возвращаем
         $inDB       = cmsDatabase::getInstance();
@@ -808,6 +808,15 @@ class cmsUser {
 		
         return $friends;
 
+    }
+
+// ============================================================================ //
+// ============================================================================ //
+    /*
+     * Очищает список друзей в сессии
+     */
+    public static function clearSessionFriends(){
+        unset($_SESSION['user']['friends']);
     }
 
 // ============================================================================ //
