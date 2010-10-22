@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //																							 //
-//                                   InstantCMS v1.0.2 (c) 2008                              //
+//                                   InstantCMS v1.7 (c) 2010                              //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -99,7 +99,7 @@ if ($do=='view'){
 				LEFT JOIN cms_users u ON u.id = q.user_id
 				WHERE q.published = 1
 				ORDER BY q.pubdate DESC
-				LIMIT 10";			
+				LIMIT 15";			
 	}
 	$result = $inDB->query($sql) ;
 	

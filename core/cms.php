@@ -2403,9 +2403,19 @@ class cmsCore {
 
         $inDB = cmsDatabase::getInstance();
 
-        $sql  = "DELETE FROM cms_comments WHERE target='{$target}' AND target_id='{$target_id}'";
+		$comments = $inDB->get_table('cms_comments', "target='{$target}' AND target_id='{$target_id}'", 'id');
 
-        $inDB->query($sql);
+        if ($comments){
+
+            foreach($comments as $comment){
+                cmsActions::removeObjectLog('add_comment', $comment['id']);
+            }
+			
+			$sql  = "DELETE FROM cms_comments WHERE target='{$target}' AND target_id='{$target_id}'";
+	
+			$inDB->query($sql);			
+			
+        }
 
         return true;
 
