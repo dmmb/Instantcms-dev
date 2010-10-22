@@ -10,7 +10,9 @@
     $inCore->loadClass('config');       // конфигурация
     $inCore->loadClass('db');           // база данных
     $inCore->loadClass('user');			// пользователь
-    $inDB       = cmsDatabase::getInstance();
+	$inCore->loadClass('actions');
+    
+	$inDB       = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
 	if (!$inUser->update()) { $inCore->halt(); }
 	$inUser->update();
@@ -30,6 +32,17 @@
 	}
     if($ok){
 		$inDB->query("UPDATE cms_photo_files SET published = 1 WHERE id = '$id'");
+		cmsActions::log('add_photo', array(
+			  'object' => $photo['title'],
+			  'user_id' => $photo['user_id'],
+			  'object_url' => '/photos/photo'.$photo['id'].'.html',
+			  'object_id' => $photo['id'],
+			  'target' => $album['title'],
+			  'target_url' => '/photos/'.$photo['album_id'],
+			  'description' => '<a href="/photos/photo'.$photo['id'].'.html" class="act_photo">
+									<img border="0" src="/images/photos/small/'.$photo['file'].'" />
+								  </a>'
+		));
 		echo 'ok';
 	} else {
 		echo 'error';

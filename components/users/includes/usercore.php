@@ -36,19 +36,21 @@ function usrFilesSize($user_id){
 }
 
 function usrPhotoCount($user_id, $with_public=true){
+
     $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
-
-    $we_friends = $inDB->rows_count('cms_user_friends', "(to_id={$user_id} AND from_id={$inUser->id}) OR (to_id={$inUser->id} AND from_id={$user_id})", 1);
 
     $my_profile = ($inUser->id == $user_id);
 
     $filter = '';
 
-    if (!$my_profile){ $filter = "AND ( allow_who='all' OR (allow_who='registered' AND ({$inUser->id}>0)) OR (allow_who='friends' AND ({$we_friends}=1)) )"; }
+    if (!$my_profile){ 
+		$we_friends = usrIsFriends($user_id, $inUser->id);
+		$filter = "AND ( allow_who='all' OR (allow_who='registered' AND ({$inUser->id}>0)) OR (allow_who='friends' AND ({$we_friends}=1)) )";
+	}
 
     $private_count  = $inDB->rows_count('cms_user_photos', "user_id={$user_id} $filter");
-    $public_count   = $inDB->rows_count('cms_photo_files', "user_id={$user_id}");
+    $public_count   = $inDB->rows_count('cms_photo_files', "user_id={$user_id} AND published = 1");
 
     $total_count    = $with_public ? ($private_count + $public_count) : $private_count;
 

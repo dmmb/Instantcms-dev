@@ -65,6 +65,8 @@ class cms_model_photos{
         @unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/small/'.$file);
         @unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/medium/'.$file);
 
+		$inCore->deleteComments('photo', $id);
+
         cmsActions::removeObjectLog('add_photo', $id);
 
         $sql = "DELETE FROM cms_photo_files WHERE id = $id";
@@ -107,8 +109,8 @@ class cms_model_photos{
                     showdate={$photo['showdate']}
                 WHERE id = $id
                 LIMIT 1";
-        $this->inDB->query($sql)
-        ;
+        $this->inDB->query($sql);
+
         cmsInsertTags($photo['tags'], 'photo', $id);
     }
 
@@ -116,6 +118,7 @@ class cms_model_photos{
 /* ==================================================================================================== */
 
 	public function addPhoto($photo){
+
         $inCore     = cmsCore::getInstance();
         $inUser     = cmsUser::getInstance();
 
@@ -136,16 +139,19 @@ class cms_model_photos{
         cmsUser::checkAwards($inUser->id);
 
         $album_title = $this->inDB->get_field('cms_photo_albums', "id={$photo['album_id']}", 'title');
-
-        cmsActions::log('add_photo', array(
-                'object' => $photo['title'],
-                'object_url' => '/photos/photo'.$photo_id.'.html',
-                'target' => $album_title,
-                'target_url' => '/photos/'.$photo['album_id'],
-                'description' => '<a href="/photos/photo'.$photo_id.'.html" class="act_photo">
-                                    <img border="0" src="/images/photos/small/'.$photo['filename'].'" />
-                                  </a>'
-        ));
+		
+		if ($photo['published']) {
+			cmsActions::log('add_photo', array(
+				  'object' => $photo['title'],
+				  'object_url' => '/photos/photo'.$photo_id.'.html',
+				  'object_id' => $photo_id,
+				  'target' => $album_title,
+				  'target_url' => '/photos/'.$photo['album_id'],
+				  'description' => '<a href="/photos/photo'.$photo_id.'.html" class="act_photo">
+										<img border="0" src="/images/photos/small/'.$photo['filename'].'" />
+									  </a>'
+			));
+		}
 
         return $photo_id;
     }
@@ -205,6 +211,8 @@ class cms_model_photos{
                 $this->deletePhoto($photo['id'], $photo['file']);
             }
         }
+		
+		$inCore->deleteComments('palbum', $id);
 
         dbDeleteNS('cms_photo_albums', $id);
         
@@ -326,6 +334,32 @@ class cms_model_photos{
         $subcats = cmsCore::callEvent('GET_SUBALBUMS', $subcats);
 
         return $subcats;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function getAlbum($id) {
+
+		$album = $this->inDB->get_fields('cms_photo_albums', 'id='.$id, '*');
+
+		if (!$album) { cmsCore::error404(); }
+
+		return $album;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function getPhoto($id) {
+
+		$photo = $this->inDB->get_fields('cms_photo_files', 'id='.$id, '*');
+
+		if (!$photo) { cmsCore::error404(); }
+
+		return $photo;
 
     }
 

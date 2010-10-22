@@ -241,7 +241,7 @@ if ($do=='delquest'){
 		
     if ( !$inCore->inRequest('confirm') ) {
 
-        if ($inUser->is_admin){
+        if ($inCore->userIsAdmin($user_id)){
 			$inPage->setTitle($_LANG['DEL_QUES']);
 			$inPage->addPathway($_LANG['DEL_QUES']);
             $inPage->backButton(false);
@@ -261,7 +261,7 @@ if ($do=='delquest'){
 
     if ( $inCore->inRequest('confirm') ){
 
-        if ($inUser->is_admin){
+        if ($inCore->userIsAdmin($user_id)){
             
             $model->deleteQuest($quest_id);
 
