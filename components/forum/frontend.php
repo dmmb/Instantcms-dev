@@ -179,7 +179,7 @@ if ($do=='view'){
         while ($cat = $inDB->fetch_assoc($result)){
             echo '<div class="forum_cattitle">'.$cat['title'].'</div>';
             //FORUMS LIST IN CATEGORY
-            $rootid = dbGetField('cms_forums', 'parent_id=0', 'id');
+            $rootid = $inDB->get_field('cms_forums', 'parent_id=0', 'id');
             $fsql = "SELECT *
                      FROM cms_forums
                      WHERE published = 1 AND category_id = '".$cat['id']."' AND parent_id = $rootid $groupsql
@@ -588,8 +588,8 @@ if ($do=='thread'){
 				echo '<table width="100%" cellspacing="0" cellpadding="5"  class="forum_toolbar"><tr><td><a href="#">'.$_LANG['GOTO_BEGIN_PAGE'].'</a></td>'. $toolbar;
 				
 				//NAV BAR
-				$previd = dbGetFields('cms_forum_threads', 'id<'.$t['id'].' AND forum_id = '.$t['forum_id'], 'id, title', 'id DESC');
-				$nextid = dbGetFields('cms_forum_threads', 'id>'.$t['id'].' AND forum_id = '.$t['forum_id'], 'id, title', 'id ASC');			
+				$previd = $inDB->get_fields('cms_forum_threads', 'id<'.$t['id'].' AND forum_id = '.$t['forum_id'], 'id, title', 'id DESC');
+				$nextid = $inDB->get_fields('cms_forum_threads', 'id>'.$t['id'].' AND forum_id = '.$t['forum_id'], 'id, title', 'id ASC');			
 				
 				echo '<div class="forum_navbar">';
 					echo '<table width="100%"><tr>';
@@ -778,7 +778,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 				$inDB->query($sql);
 				
 				cmsUser::checkAwards($inUser->id);
-				$lastid = dbLastId('cms_forum_posts');
+				$lastid = $inDB->get_last_id('cms_forum_posts');
 				$inCore->registerUploadImages(session_id(), $lastid, 'forum');
 											
 				//refresh forum thread
@@ -795,8 +795,19 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 				}
 				cmsUser::sendUpdateNotify('forum', $id);
 				//redirect to last page of thread
-				if (!$file_error){			
-					$posts_in_thread = dbRowsCount('cms_forum_posts', 'thread_id='.$id);
+				if (!$file_error){
+					$title = $inDB->get_field('cms_forum_threads', "id = '$id'", 'title');	
+					//регистрируем событие
+					cmsActions::log('add_fpost', array(
+						'object' => 'пост',
+						'object_url' => '/forum/thread'.$id.'.html#'.$lastid,
+						'object_id' => $lastid,
+						'target' => $title,
+						'target_url' => '/forum/thread'.$id.'.html',
+						'target_id' => $id, 
+						'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
+					));		
+					$posts_in_thread = $inDB->rows_count('cms_forum_posts', 'thread_id='.$id);
 					$pages = ceil($posts_in_thread / $cfg['pp_thread']);
 					if ($pages==1){
 						header('location:/forum/thread'.$id.'.html#new');				
@@ -821,7 +832,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 								VALUES ('$id', '".$inUser->id."', '$title', '$description', '', NOW(), 0, '$is_hidden')";
 						$inDB->query($sql);
 
-						$threadlastid = dbLastId('cms_forum_threads');
+						$threadlastid = $inDB->get_last_id('cms_forum_threads');
 						
 						$sql = "INSERT INTO cms_forum_posts (thread_id, user_id, pubdate, editdate, edittimes, content)
 								VALUES ('$threadlastid', '".$inUser->id."', NOW(), NOW(), 0, '$message')";
@@ -829,7 +840,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 						
 						cmsUser::checkAwards($inUser->id);
 						
-						$lastid = dbLastId('cms_forum_posts');
+						$lastid = $inDB->get_last_id('cms_forum_posts');
 						$inCore->registerUploadImages(session_id(), $lastid, 'forum');
 						
 						//subscribe thread
@@ -852,6 +863,16 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
                             $file_error = uploadFiles($lastid, $cfg);
                         }
                         if (!$file_error){
+							//регистрируем событие
+							cmsActions::log('add_thread', array(
+								'object' => $title,
+								'object_url' => '/forum/thread'.$threadlastid.'.html',
+								'object_id' => $threadlastid,
+								'target' => $forum['title'],
+								'target_url' => '/forum/'.$forum['id'],
+								'target_id' => $forum['id'], 
+								'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
+							));	
                             header('location:/forum/thread'.$threadlastid.'.html');
                         } else {
                             uploadError($threadlastid, $post_id, $cfg['fa_size'], $cfg['fa_ext']);
@@ -862,7 +883,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 					}
 				} else { //edit post
 					if($message){
-						$posts_in_thread = dbRowsCount('cms_forum_posts', 'thread_id='.$msg['thread_id']);
+						$posts_in_thread = $inDB->rows_count('cms_forum_posts', 'thread_id='.$msg['thread_id']);
 						$pages = ceil($posts_in_thread / $cfg['pp_thread']);
 						$sql = "UPDATE cms_forum_posts 
 								SET content = '$message',
@@ -1006,7 +1027,7 @@ if ($do=='renamethread'){
 ///////////////////////////// DELETE THREAD /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='deletethread'){
 	if (usrCheckAuth()){
-		$forum_id = dbGetField('cms_forum_threads', 'id='.$id, 'forum_id');
+		$forum_id = $inDB->get_field('cms_forum_threads', 'id='.$id, 'forum_id');
         $model->deleteThread($id, $inUser->id);
 	}	
 	header('location:/forum/'.$forum_id);
@@ -1016,7 +1037,7 @@ if ($do=='pin'){
 	$pinned = $inCore->request('pinned', 'int', 0);
 	
 	if (usrCheckAuth()){
-		$sql = "SELECT * FROM cms_forum_threads WHERE id = $id LIMIT 1";
+		$sql = "SELECT user_id FROM cms_forum_threads WHERE id = $id LIMIT 1";
 		$result = $inDB->query($sql) ;
 	
 		if ($inDB->num_rows($result)>0){
@@ -1036,7 +1057,7 @@ if ($do=='close'){
 	$closed = $inCore->request('closed', 'int', 0);
 	
 	if (usrCheckAuth()){
-		$sql = "SELECT * FROM cms_forum_threads WHERE id = $id LIMIT 1";
+		$sql = "SELECT user_id FROM cms_forum_threads WHERE id = $id LIMIT 1";
 		$result = $inDB->query($sql) ;
 	
 		if ($inDB->num_rows($result)>0){
