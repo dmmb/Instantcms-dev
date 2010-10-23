@@ -1,7 +1,14 @@
 {* ================================================================================ *}
 {* ==================== Загрузка ававтара ========================================= *}
 {* ================================================================================ *}
-
+<div class="con_heading">{$LANG.LOAD_AVATAR}</div>
+{if $messages}
+    <div class="sess_messages">
+        {foreach key=id item=message from=$messages}
+            {$message}
+        {/foreach}
+    </div>
+{/if}
 <form enctype="multipart/form-data" action="/users/{$id}/avatar.html" method="POST">
 <p>{$LANG.SELECT_UPLOAD_FILE}: </p>
 <input name="upload" type="hidden" value="1"/>		

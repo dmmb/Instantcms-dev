@@ -101,7 +101,7 @@ class cms_model_users{
         
 		}
         
-		if (!$user){ return false; }
+		if (!$user){ cmsCore::error404(); }
 
         return $user;
 

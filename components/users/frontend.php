@@ -875,84 +875,96 @@ if ($do=='messages'){
 /////////////////////////////// AVATAR UPLOAD /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='avatar'){
 
-	if (usrCheckAuth() && $inUser->id==$id){
+	if (usrCheckAuth() && $inUser->id == $id){
 
 		$usr = $model->getUserShort($id);
 
-		if ($usr){
-	
-			$inPage->setTitle($_LANG['LOAD_AVATAR']);
-			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-			$inPage->addPathway($_LANG['LOAD_AVATAR'], $_SERVER['REQUEST_URI']);
-			echo '<div class="con_heading">'.$_LANG['LOAD_AVATAR'].'</div>';
-	
-			if ($inCore->inRequest('upload')) {
-				$inCore->includeGraphics();
-		
-				if ($inCore->inRequest('userid')){
-					$userid = $inCore->request('userid');
-					if ($userid == $inUser->id){
-						$uploaddir 		= $_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/';		
-						$realfile		= $_FILES['picture']['name'];
-						$filename 		= md5($realfile . '-' . $userid . '-' . time()).'.jpg';
-						$uploadfile		= $uploaddir . $realfile;
-						$uploadavatar 	= $uploaddir . $filename;
-						$uploadthumb 	= $uploaddir . 'small/' . $filename;
-						
-						$source			= $_FILES['picture']['tmp_name'];
-					 	$errorCode 		= $_FILES['picture']['error'];
-						
-						if ($inCore->moveUploadedFile($source, $uploadfile, $errorCode)) {
+		$inPage->setTitle($_LANG['LOAD_AVATAR']);
+		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+		$inPage->addPathway($_LANG['LOAD_AVATAR'], $_SERVER['REQUEST_URI']);
 
-                            //DELETE OLD AVATAR
-							$sql = "SELECT imageurl FROM cms_user_profiles WHERE id = $userid";
-							$result = $inDB->query($sql) ;
-							if ($inDB->num_rows($result)){
-								$old = $inDB->fetch_assoc($result);
-                                if ($old['imageurl'] && $old['imageurl']!='nopic.jpg'){
-                                    @unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/'.$old['imageurl']);
-                                    @unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/small/'.$old['imageurl']);
-                                }
-							}
+		if ($inCore->inRequest('upload')) {
+			$inCore->includeGraphics();
 
-							//CREATE THUMBNAIL
-							if (isset($cfg['smallw'])) { $smallw = $cfg['smallw']; } else { $smallw = 64; }
-							if (isset($cfg['medw'])) { 	 $medw = $cfg['medw']; } else { $medw = 200; }
-							if (isset($cfg['medh'])) { 	 $medh = $cfg['medh']; } else { $medh = 200; }
-							
-							@img_resize($uploadfile, $uploadavatar, $medw, $medh);
-							@img_resize($uploadfile, $uploadthumb, $smallw, $smallw);
-							
-							//DELETE ORIGINAL							
-							@unlink($uploadfile);
-							//MODIFY PROFILE
-							$sql = "UPDATE cms_user_profiles 
-									SET imageurl = '$filename'
-									WHERE user_id = '$userid'
-									LIMIT 1";	
-							$inDB->query($sql);
-							
-							//GO BACK TO PROFILE VIEW			
-							$inCore->redirect(cmsUser::getProfileURL($usr['login']));
-                            
-						} else {
-							echo '<p><strong>'.$_LANG['ERROR'].':</strong> '.$inCore->uploadError().'!</p>';
-						}
-						
-						echo '<ul><li><a href="/users/'.$userid.'/avatar.html">'.$_LANG['REPEAT'].'</a></li>'."\n";
-						echo '<li><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$_LANG['BACK_TO_PROFILE'].'</a></li></ul>'."\n";
-						
-					} else { echo usrAccessDenied(); }
-				} else { echo usrAccessDenied(); }
-			
+			$uploaddir 		= $_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/';		
+			$realfile		= $_FILES['picture']['name'];
+			$path_parts     = pathinfo($realfile);
+            $ext            = strtolower($path_parts['extension']);
+			if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'bmp' || $ext == 'png'){
+				
+				$filename 		= md5($realfile . '-' . $userid . '-' . time()).'.jpg';
+				$uploadfile		= $uploaddir . $realfile;
+				$uploadavatar 	= $uploaddir . $filename;
+				$uploadthumb 	= $uploaddir . 'small/' . $filename;
+	
+				$source			= $_FILES['picture']['tmp_name'];
+				$errorCode 		= $_FILES['picture']['error'];
+
 			} else {
-				$smarty = $inCore->initSmarty('components', 'com_users_avatar_upload.tpl');
-    			$smarty->assign('id', $id);
-    			$smarty->display('com_users_avatar_upload.tpl');
-			}	
-		}
-	}//auth
-	else { echo usrAccessDenied(); }
+				cmsCore::addSessionMessage($_LANG['ERROR_TYPE_FILE'].' jpg, jpeg, gif, bmp, png', 'error');	
+				$inCore->redirect(cmsUser::getProfileURL($usr['login']));
+			}
+
+			if ($inCore->moveUploadedFile($source, $uploadfile, $errorCode)) {
+
+                    //DELETE OLD AVATAR
+					$sql = "SELECT imageurl FROM cms_user_profiles WHERE id = $id";
+					$result = $inDB->query($sql) ;
+					if ($inDB->num_rows($result)){
+						$old = $inDB->fetch_assoc($result);
+                        if ($old['imageurl'] && $old['imageurl']!='nopic.jpg'){
+                                @unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/'.$old['imageurl']);
+                                @unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/small/'.$old['imageurl']);
+                        }
+					}
+
+					//CREATE THUMBNAIL
+					if (isset($cfg['smallw'])) { $smallw = $cfg['smallw']; } else { $smallw = 64; }
+					if (isset($cfg['medw'])) { 	 $medw = $cfg['medw']; } else { $medw = 200; }
+					if (isset($cfg['medh'])) { 	 $medh = $cfg['medh']; } else { $medh = 200; }
+							
+					@img_resize($uploadfile, $uploadavatar, $medw, $medh);
+					@img_resize($uploadfile, $uploadthumb, $smallw, $smallw);
+							
+					//DELETE ORIGINAL							
+					@unlink($uploadfile);
+					//MODIFY PROFILE
+					$sql = "UPDATE cms_user_profiles 
+							SET imageurl = '$filename'
+							WHERE user_id = '$id'
+							LIMIT 1";	
+					$inDB->query($sql);
+					// очищаем предыдущую запись о смене аватара
+					cmsActions::removeObjectLog('add_avatar', $id);
+					// выводим сообщение в ленту
+					cmsActions::log('add_avatar', array(
+						  'object' => '',
+						  'object_url' => '',
+						  'object_id' => $id,
+						  'target' => '',
+						  'target_url' => '',
+						  'description' => '<a href="'.cmsUser::getProfileURL($usr['login']).'" class="act_usr_ava">
+                                               <img border="0" src="/images/users/avatars/small/'.$filename.'">
+                                            </a>'
+					));
+					//GO BACK TO PROFILE VIEW
+					$inCore->redirect(cmsUser::getProfileURL($usr['login']));
+                            
+			} else {
+				cmsCore::addSessionMessage('<strong>'.$_LANG['ERROR'].':</strong> '.$inCore->uploadError().'!', 'error');
+			}			
+			
+			$smarty = $inCore->initSmarty('components', 'com_users_avatar_upload.tpl');
+    		$smarty->assign('id', $id);
+			$smarty->assign('messages', cmsCore::getSessionMessages());
+    		$smarty->display('com_users_avatar_upload.tpl');
+			
+		} else {
+			$smarty = $inCore->initSmarty('components', 'com_users_avatar_upload.tpl');
+    		$smarty->assign('id', $id);
+    		$smarty->display('com_users_avatar_upload.tpl');
+		}	
+	} else { echo usrAccessDenied(); }
 }
 /////////////////////////////// AVATAR LIBRARY /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='select_avatar'){
@@ -1043,7 +1055,21 @@ if ($do=='select_avatar'){
                         SET imageurl = '$filename'
                         WHERE user_id = '$userid'
                         LIMIT 1";
-                $inDB->query($sql) ;
+                $inDB->query($sql);
+				
+				// очищаем предыдущую запись о смене аватара
+				cmsActions::removeObjectLog('add_avatar', $id);
+				// выводим сообщение в ленту
+				cmsActions::log('add_avatar', array(
+					  'object' => '',
+					  'object_url' => '',
+					  'object_id' => $id,
+					  'target' => '',
+					  'target_url' => '',
+					  'description' => '<a href="'.cmsUser::getProfileURL($inUser->login).'" class="act_usr_ava">
+                                            <img border="0" src="/images/users/avatars/small/'.$filename.'">
+                                        </a>'
+				));
 
             }
 
