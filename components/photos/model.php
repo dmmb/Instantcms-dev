@@ -66,6 +66,7 @@ class cms_model_photos{
         @unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/medium/'.$file);
 
 		$inCore->deleteComments('photo', $id);
+		$inCore->deleteRatings('photo', $id);
 
         cmsActions::removeObjectLog('add_photo', $id);
 

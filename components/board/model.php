@@ -248,6 +248,9 @@ class cms_model_board{
 /* ==================================================================================================== */
 
     public function deleteRecord($item_id) {
+
+		$inCore = cmsCore::getInstance();
+
         cmsCore::callEvent('DELETE_BOARD_RECORD', $item_id);
 
         $item = $this->getRecord($item_id);
@@ -256,6 +259,9 @@ class cms_model_board{
         @unlink(PATH.'/images/board/medium/'.$item['file']);
         $sql = "DELETE FROM cms_board_items WHERE id = $item_id";
         $this->inDB->query($sql);
+
+		$inCore->deleteComments('boarditem', $item_id);
+
 		cmsActions::removeObjectLog('add_board', $item_id);
         return true;
     }

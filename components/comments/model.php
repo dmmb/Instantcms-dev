@@ -110,12 +110,15 @@ class cms_model_comments{
         $sql = "DELETE FROM cms_comments WHERE id = $comment_id LIMIT 1";
         $this->inDB->query($sql);
 
+		$inCore->deleteRatings('comment', $comment_id);
+
         cmsActions::removeObjectLog('add_comment', $comment_id);
 
         if ($this->childs){
             foreach($this->childs as $child){
                 $sql = "DELETE FROM cms_comments WHERE id = {$child['id']} LIMIT 1";
                 $this->inDB->query($sql);
+				$inCore->deleteRatings('comment', $child['id']);
                 cmsActions::removeObjectLog('add_comment', $child['id']);
             }
         }
