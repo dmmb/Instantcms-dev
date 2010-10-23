@@ -25,7 +25,7 @@
 	$sql 	= "SELECT city FROM cms_user_profiles WHERE LOWER(city) LIKE '{$q}%' GROUP BY city LIMIT 10";
 	$rs 	= $inDB->query($sql);
 
-	while ($item = mysql_fetch_assoc($rs)){
+	while ($item = $inDB->fetch_assoc($rs)){
         echo $item['city']."\n";
 	}
 

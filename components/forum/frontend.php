@@ -769,16 +769,19 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 		} else {
 			$message = $inCore->request('message', 'html');
             $message = $inDB->escape_string($message);
-			
+			if (!$message) { echo '<p>'.$_LANG['NEED_TEXT_POST'].'</p>'; return; }
+
 			if($do=='newpost'){												
 				//NEW POST
 				//insert new post
-				$sql = "INSERT INTO cms_forum_posts (thread_id, user_id, pubdate, editdate, edittimes, content)
-						VALUES ('$id', '".$inUser->id."', NOW(), NOW(), 0, '$message')";
-				$inDB->query($sql);
-				
+				$lastid = $model->addPost(array(
+						'thread_id' => $id,
+						'user_id' => $inUser->id,
+						'message' => $message
+					));
+
 				cmsUser::checkAwards($inUser->id);
-				$lastid = $inDB->get_last_id('cms_forum_posts');
+
 				$inCore->registerUploadImages(session_id(), $lastid, 'forum');
 											
 				//refresh forum thread
@@ -828,19 +831,22 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 					
 						$is_hidden = $forum['auth_group'] ? 1 : 0;
 						
-						$sql = "INSERT INTO cms_forum_threads (forum_id, user_id, title, description, icon, pubdate, hits, is_hidden)
-								VALUES ('$id', '".$inUser->id."', '$title', '$description', '', NOW(), 0, '$is_hidden')";
-						$inDB->query($sql);
-
-						$threadlastid = $inDB->get_last_id('cms_forum_threads');
+						$threadlastid = $model->addThread(array(
+								'forum_id' => $id,
+								'user_id' => $inUser->id,
+								'title' => $title,
+								'description' => $description,
+								'is_hidden' => $is_hidden
+							));
 						
-						$sql = "INSERT INTO cms_forum_posts (thread_id, user_id, pubdate, editdate, edittimes, content)
-								VALUES ('$threadlastid', '".$inUser->id."', NOW(), NOW(), 0, '$message')";
-						$inDB->query($sql);
+						$lastid = $model->addPost(array(
+								'thread_id' => $threadlastid,
+								'user_id' => $inUser->id,
+								'message' => $message
+							));
 						
 						cmsUser::checkAwards($inUser->id);
-						
-						$lastid = $inDB->get_last_id('cms_forum_posts');
+
 						$inCore->registerUploadImages(session_id(), $lastid, 'forum');
 						
 						//subscribe thread

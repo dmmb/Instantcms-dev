@@ -13,7 +13,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	
 	echo '<h3>Каталог статей</h3>';
 	
-	$opt = $inCore->request('opt', 'srt', 'list');
+	$opt = $inCore->request('opt', 'str', 'list');
 	
 	$toolmenu = array();
 
@@ -26,17 +26,6 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	$toolmenu[1]['link'] = '?view=components';
 
 	cpToolMenu($toolmenu);
-
-	//LOAD CURRENT CONFIG
-	$sql = "SELECT config FROM cms_components WHERE link = 'content'";
-	$result = dbQuery($sql) ;
-		
-	if (mysql_num_rows($result)){	
-		$conf = mysql_fetch_assoc($result);
-		if ($conf){
-			$cfg = unserialize($conf['config']);
-		}
-	}
 
 	if($opt=='saveconfig'){	
 		$cfg = array();

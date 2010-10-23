@@ -3,7 +3,9 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 class cms_model_forum{
 
-	function __construct(){}
+	function __construct(){
+        $this->inDB = cmsDatabase::getInstance();
+    }
 
 /* ==================================================================================================== */
 /* ==================================================================================================== */
@@ -19,16 +21,15 @@ class cms_model_forum{
 
     public function getForum($id){
 
-        $inDB       = cmsDatabase::getInstance();
+		$groupsql = forumUserAuthSQL();
 
-		$groupsql   = forumUserAuthSQL();
+        $sql      = "SELECT * FROM cms_forums WHERE id = $id $groupsql LIMIT 1";
 
-        $sql = "SELECT * FROM cms_forums WHERE id = $id $groupsql LIMIT 1";
-        $result = $inDB->query($sql);
+        $result   = $this->inDB->query($sql);
 
-        if (!$inDB->num_rows($result)){ return false; }
+        if (!$this->inDB->num_rows($result)){ return false; }
 
-        $forum = $inDB->fetch_assoc($result);
+        $forum    = $this->inDB->fetch_assoc($result);
 
         return $forum;
     }
@@ -39,9 +40,8 @@ class cms_model_forum{
     public function deleteThread($id, $user_id=false){
 
         $inCore     = cmsCore::getInstance();
-        $inDB       = cmsDatabase::getInstance();
 
-        $thread_uid = $inDB->get_field('cms_forum_threads', "id = '$id'", 'user_id');
+        $thread_uid = $this->inDB->get_field('cms_forum_threads', "id = '$id'", 'user_id');
 
 		if ($thread_uid){
 
@@ -53,19 +53,19 @@ class cms_model_forum{
 				uploadDeleteThread($id); //forumcore.php
 
 				$sql = "SELECT * FROM cms_forum_posts WHERE thread_id = $id";
-				$rs  = $inDB->query($sql);
+				$rs  = $this->inDB->query($sql);
 
-				if ($inDB->num_rows($rs)){
-					while ($post = $inDB->fetch_assoc($rs)){
+				if ($this->inDB->num_rows($rs)){
+					while ($post = $this->inDB->fetch_assoc($rs)){
                         uploadDeletePost($id);
 						$inCore->deleteUploadImages($post['id'], 'forum'); //forumcore.php
 						cmsActions::removeObjectLog('add_fpost', $post['id']);
 					}
 				}
 
-				$inDB->query("DELETE FROM cms_forum_posts WHERE thread_id = $id") ;
-				$inDB->query("DELETE FROM cms_forum_polls WHERE thread_id = $id") ;
-				$inDB->query("DELETE FROM cms_forum_threads WHERE id = $id") ;
+				$this->inDB->query("DELETE FROM cms_forum_posts WHERE thread_id = $id") ;
+				$this->inDB->query("DELETE FROM cms_forum_polls WHERE thread_id = $id") ;
+				$this->inDB->query("DELETE FROM cms_forum_threads WHERE id = $id") ;
 			}
 		}
     }
@@ -75,9 +75,7 @@ class cms_model_forum{
 
     public function deleteAutoThread($rel_to, $rel_id){
 
-        $inDB       = cmsDatabase::getInstance();
-
-        $thread_id  = $inDB->get_field('cms_forum_threads', "rel_to='{$rel_to}' AND rel_id={$rel_id}", 'id');
+        $thread_id  = $this->inDB->get_field('cms_forum_threads', "rel_to='{$rel_to}' AND rel_id={$rel_id}", 'id');
 
         if ($thread_id){
             $this->deleteThread($thread_id);
@@ -92,9 +90,8 @@ class cms_model_forum{
     public function deletePost($id, $user_id=false){
 
         $inCore     = cmsCore::getInstance();
-        $inDB       = cmsDatabase::getInstance();
 
-        $post_uid  = $inDB->get_field('cms_forum_posts', "id = '$id'", 'user_id');
+        $post_uid   = $this->inDB->get_field('cms_forum_posts', "id = '$id'", 'user_id');
 
 		if ($post_uid){
 
@@ -103,10 +100,38 @@ class cms_model_forum{
 			if ($can_delete){
 				uploadDeletePost($id); //forumcore.php
 				$inCore->deleteUploadImages($id, 'forum'); //forumcore.php
-				$inDB->query("DELETE FROM cms_forum_posts WHERE id = $id");
+				$this->inDB->query("DELETE FROM cms_forum_posts WHERE id = $id");
 				cmsActions::removeObjectLog('add_fpost', $id);
 			}
 		}
+    }
+
+// ========================================================================================================= //
+// ========================================================================================================= //
+
+    public function addPost($post){
+
+		$sql = "INSERT INTO cms_forum_posts (thread_id, user_id, pubdate, editdate, edittimes, content)
+						VALUES ({$post['thread_id']}, '{$post['user_id']}', NOW(), NOW(), 0, '{$post['message']}')";
+		$this->inDB->query($sql);
+				
+		$lastid = $this->inDB->get_last_id('cms_forum_posts');
+
+        return $lastid;
+    }
+
+// ========================================================================================================= //
+// ========================================================================================================= //
+
+    public function addThread($msg){
+
+		$sql = "INSERT INTO cms_forum_threads (forum_id, user_id, title, description, icon, pubdate, hits, is_hidden, rel_to, rel_id)
+								VALUES ('{$msg['forum_id']}', '{$msg['user_id']}', '{$msg['title']}', '{$msg['description']}', '', NOW(), 0, '{$msg['is_hidden']}', '{$msg['rel_to']}', '{$msg['rel_id']}')";
+		$this->inDB->query($sql);
+
+		$threadlastid = $this->inDB->get_last_id('cms_forum_threads');
+
+        return $threadlastid;
     }
 
 // ========================================================================================================= //

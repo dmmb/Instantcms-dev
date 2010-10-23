@@ -165,7 +165,6 @@ $_LANG['ORDER_BY_SIZE']             ='По размеру';
 $_LANG['ORDER_BY_DOWNLOAD']         ='По загрузкам';
 $_LANG['FILE_NAME']                 ='Название файла';
 $_LANG['VISIBILITY']                ='Видимость';
-$_LANG['SIZE']                      ='Размер';
 $_LANG['CREATE_DATE']               ='Дата создания';
 $_LANG['DOWNLOAD_HITS']             ='Загрузок';
 $_LANG['FILE_VIS_ALL']              ='Файл виден всем';

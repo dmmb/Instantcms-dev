@@ -248,9 +248,7 @@ if ($do=='read'){
     
     //if thread not found, create it again, only if author is not admin
     if (!$forum_thread_id && $cfg['af_on'] && $category_id != $cfg['af_hidecat_id'] && !$inCore->userIsAdmin($article['user_id'])){
-        cmsAutoCreateThread($article, $cfg);
-        //get related thread id again
-        $forum_thread_id = $model->getRelatedThread($article['id']);
+        $forum_thread_id = cmsAutoCreateThread($article, $cfg);
     }
 
     $smarty = $inCore->initSmarty('components', 'com_content_read.tpl');
