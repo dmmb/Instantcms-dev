@@ -1519,22 +1519,18 @@ if ($do=='viewboard'){
 if ($do=='friendlist'){
 	
 	$usr = $model->getUserShort($id);
-	
-	if ($usr){
-		if (usrCheckAuth()){
 
-            $page = $inCore->request('page', 'int', 1);
-			$perpage = 15;
-				
-			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-			$inPage->addPathway($_LANG['FRIENDS'], $_SERVER['REQUEST_URI']);
+	if (usrCheckAuth()){
 
-			echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; '.$_LANG['FRIENDS'].'</div>';
-	
-			echo usrFriends($usr['id'], false);
+		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+		$inPage->addPathway($_LANG['FRIENDS'], $_SERVER['REQUEST_URI']);
+
+		echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; '.$_LANG['FRIENDS'].'</div>';
+
+		echo usrFriends($usr['id'], false);
 		
-		} else { echo usrNeedReg(); }
-	} else { cmsCore::error404(); }
+	} else { echo usrNeedReg(); }
+
 }
 
 /////////////////////////////// VIEW PHOTO /////////////////////////////////////////////////////////////////////////////////////////
@@ -1552,54 +1548,53 @@ if ($do=='viewphoto'){
 
 	$usr = $model->getUserShort($id);
 	
-	if ($usr){
+	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 
-			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+	$sql = "SELECT * FROM cms_user_photos WHERE id = '$photoid' AND user_id = '$id'";
+	$result = $inDB->query($sql) ;
 
-			$sql = "SELECT * FROM cms_user_photos WHERE id = '$photoid' AND user_id = '$id'";
-			$result = $inDB->query($sql) ;
+	if ($inDB->num_rows($result)>0){
 
-			if ($inDB->num_rows($result)>0){
-				$photo = $inDB->fetch_assoc($result);
+		$photo = $inDB->fetch_assoc($result);
 				
-				$inDB->query("UPDATE cms_user_photos SET hits = hits + 1 WHERE id = ".$photo['id']) ;
+		$inDB->query("UPDATE cms_user_photos SET hits = hits + 1 WHERE id = ".$photo['id']) ;
 	
-				$inPage->addPathway($_LANG['PHOTOALBUM'], '/users/'.$id.'/photoalbum.html');
-				$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
+		$inPage->addPathway($_LANG['PHOTOALBUM'], '/users/'.$id.'/photoalbum.html');
+		$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
 
-				if (usrAllowed($photo['allow_who'], $id) || $inCore->userIsAdmin($inUser->id)){
-					$photo['pubdate'] = $inCore->dateFormat($photo['pubdate'], true, false, false);
-					$photo['genderlink'] = cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, '', $usr['login']);
-					$photo['filesize'] = round(filesize($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/medium/'.$photo['imageurl'])/1024, 2);
-					//ссылки на предыдущую и следующую фотографии
-					$previd = dbGetFields('cms_user_photos', 'id<'.$photo['id'].' AND user_id = '.$usr['id'], 'id, title, pubdate', 'id DESC');
-					$nextid = dbGetFields('cms_user_photos', 'id>'.$photo['id'].' AND user_id = '.$usr['id'], 'id, title, pubdate', 'id ASC');
+		if (usrAllowed($photo['allow_who'], $id) || $inCore->userIsAdmin($inUser->id)){
 
-					$is_photo = true;	
-				} else { $is_photo = false; }
+				$photo['pubdate'] = $inCore->dateFormat($photo['pubdate'], true, false, false);
+				$photo['genderlink'] = cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, '', $usr['login']);
+				$photo['filesize'] = round(filesize($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/medium/'.$photo['imageurl'])/1024, 2);
+				//ссылки на предыдущую и следующую фотографии
+				$previd = $inDB->get_fields('cms_user_photos', 'id<'.$photo['id'].' AND user_id = '.$usr['id'], 'id, title, pubdate', 'id DESC');
+				$nextid = $inDB->get_fields('cms_user_photos', 'id>'.$photo['id'].' AND user_id = '.$usr['id'], 'id, title, pubdate', 'id ASC');
+
+				$is_photo = true;	
+		} else { $is_photo = false; }
+
+		$smarty = $inCore->initSmarty('components', 'com_users_photos_view.tpl');
+		$smarty->assign('photo', $photo);
+		$smarty->assign('bbcode', '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/users/photos/medium/'.$photo['imageurl'].'[/IMG]');
+		$smarty->assign('previd', $previd);
+		$smarty->assign('nextid', $nextid);
+		$smarty->assign('usr', $usr);
+		$smarty->assign('myprofile', $myprofile);
+		$smarty->assign('is_admin', $inCore->userIsAdmin($user_id));
+		$smarty->assign('is_photo', $is_photo);
+		if($is_photo){
+			$inCore->loadLib('tags');	
+			$smarty->assign('tagbar', cmsTagBar('userphoto', $photo['id']));
+		}
+		$smarty->display('com_users_photos_view.tpl');	
 					
-				$smarty = $inCore->initSmarty('components', 'com_users_photos_view.tpl');
-				$smarty->assign('photo', $photo);
-				$smarty->assign('bbcode', '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/users/photos/medium/'.$photo['imageurl'].'[/IMG]');
-				$smarty->assign('previd', $previd);
-				$smarty->assign('nextid', $nextid);
-				$smarty->assign('usr', $usr);
-				$smarty->assign('myprofile', $myprofile);
-				$smarty->assign('is_admin', $inCore->userIsAdmin($user_id));
-				$smarty->assign('is_photo', $is_photo);
-				if($is_photo){
-					$inCore->loadLib('tags');	
-					$smarty->assign('tagbar', cmsTagBar('userphoto', $photo['id']));
-				}
-				$smarty->display('com_users_photos_view.tpl');	
-					
-					//show user comments
-				if($inCore->isComponentInstalled('comments') && $is_photo){
-						$inCore->includeComments();
-						comments('userphoto', $photo['id']);
-					}					
+		//show user comments
+		if($inCore->isComponentInstalled('comments') && $is_photo){
+			$inCore->includeComments();
+			comments('userphoto', $photo['id']);
+		}					
 				
-			} else { cmsCore::error404(); }
 	} else { cmsCore::error404(); }
 }
 /////////////////////////////// ADD FRIEND /////////////////////////////////////////////////////////////////////////////////////////
@@ -1607,46 +1602,58 @@ if ($do=='addfriend'){
 
     $usr = $model->getUserShort($id);
 
-    if (!$usr){ $inCore->redirectBack(); }
-
     cmsUser::clearSessionFriends();
 
 	if (usrCheckAuth() && $inUser->id!=$id){
 
 		if(!usrIsFriends($id, $inUser->id)){
 			if (!isset($_POST['goadd'])){
+
 				if ($model->isNewFriends($inUser->id, $id)){
 					$sql = "UPDATE cms_user_friends SET is_accepted = 1 WHERE to_id = ".$inUser->id." AND from_id = $id";
 					$inDB->query($sql);
 					cmsCore::addSessionMessage($_LANG['ADD_FRIEND_OK'] . $usr['nickname'], 'info');
+					//регистрируем событие
+					cmsActions::log('add_friend', array(
+						'object' => $usr['nickname'],
+						'object_url' => cmsUser::getProfileURL($usr['login']),
+						'object_id' => $usr['id'],
+						'target' => '',
+						'target_url' => '',
+						'target_id' => 0, 
+						'description' => ''
+					));
 					header('location:'.$_SERVER['HTTP_REFERER']);
 				}
-	
-					$inPage->backButton(false);
-					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-					$inPage->addPathway($_LANG['ADD_TO_FRIEND']);
-					$inPage->backButton(false);
-					echo '<div class="con_heading">'.$_LANG['ADD_TO_FRIEND'].'</div>';
-					echo '<p><strong>'.$_LANG['SEND_TO_USER'].' '.ucfirst($usr['nickname']).' '.$_LANG['FRIENDSHIP_OFFER'].'?</strong></p>';
-					echo '<p>'.$_LANG['IF'].' '.ucfirst($usr['nickname']).' '.$_LANG['SUCCESS_TEXT'].'</p>';
-					echo '<div><form action="'.$_SERVER['REQUEST_URI'].'" method="POST"><p>
-							<input style="font-size:24px; width:100px" type="button" name="cancel" value="'.$_LANG['NO'].'" onclick="window.history.go(-1)" />
-							<input style="font-size:24px; width:100px" type="submit" name="goadd" value="'.$_LANG['YES'].'" />
-						 </p></form></div>';
+
+				$inPage->backButton(false);
+				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+				$inPage->addPathway($_LANG['ADD_TO_FRIEND']);
+				$inPage->backButton(false);
+
+				$confirm['title']                   = $_LANG['ADD_TO_FRIEND'];
+				$confirm['text']                    = $_LANG['SEND_TO_USER'].' '.ucfirst($usr['nickname']).' '.$_LANG['FRIENDSHIP_OFFER'].'?<br>'.$_LANG['IF'].' '.ucfirst($usr['nickname']).' '.$_LANG['SUCCESS_TEXT'];
+				$confirm['action']                  = $_SERVER['REQUEST_URI'];
+				$confirm['yes_button']              = array();
+				$confirm['yes_button']['type']      = 'submit';
+				$confirm['yes_button']['name']  	= 'goadd';
+				$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
+				$smarty->assign('confirm', $confirm);
+				$smarty->display('action_confirm.tpl');
 	
 			} else {
-					$to_id      = $id;
-					$from_id    = $inUser->id;
-					if (!usrIsFriendsOld($to_id, $from_id, false)){
-						$sql = "INSERT INTO cms_user_friends (to_id, from_id, logdate, is_accepted) 
-								VALUES ('$to_id', '$from_id', NOW(), '0')";
-						$inDB->query($sql) ;
-					}
+				$to_id      = $id;
+				$from_id    = $inUser->id;
+				if (!usrIsFriendsOld($to_id, $from_id, false)){
+					$sql = "INSERT INTO cms_user_friends (to_id, from_id, logdate, is_accepted) 
+							VALUES ('$to_id', '$from_id', NOW(), '0')";
+					$inDB->query($sql);
+				}
+
+				cmsUser::sendMessage(USER_UPDATER, $to_id, '<b>'.$_LANG['RECEIVED_F_O'].'</b>. '.$_LANG['YOU_CAN_SEE'].' <a href="'.cmsUser::getProfileURL($usr['login']).'">'.$_LANG['INPROFILE'].'</a>.');
+				cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND'], 'info');
 					
-					cmsUser::sendMessage(USER_UPDATER, $to_id, '<b>'.$_LANG['RECEIVED_F_O'].'</b>. '.$_LANG['YOU_CAN_SEE'].' <a href="'.cmsUser::getProfileURL($usr['login']).'">'.$_LANG['INPROFILE'].'</a>.');
-					cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND'], 'info');
-					
-					$inCore->redirect(cmsUser::getProfileURL($usr['login']));
+				$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 			}//!goadd
 		} else { $inCore->redirectBack(); }
 
@@ -1654,17 +1661,19 @@ if ($do=='addfriend'){
 }//do
 /////////////////////////////// DEL FRIEND /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delfriend'){
+
 	if (usrCheckAuth() && $inUser->id!=$id){
 
 		$first_id  = $inUser->id;
 		$second_id = $id;
 		$usr       = $model->getUserShort($id);
-		
+
 		$sql = "DELETE FROM cms_user_friends WHERE ((to_id = $first_id AND from_id = $second_id) OR (to_id = $second_id AND from_id = $first_id))";
 		$inDB->query($sql) ;
 
 		cmsUser::clearSessionFriends();
 		cmsCore::addSessionMessage($usr['nickname'] . $_LANG['DEL_FRIEND'], 'info');
+
 		header('location:'.$_SERVER['HTTP_REFERER']);
 
 	} else { echo usrAccessDenied(); } //usrCheckAuth
@@ -1680,103 +1689,97 @@ if ($do=='sendmessage'){
 		$to_id      = $id;
 		
 		$usr 		= $model->getUserShort($id);
-
-		if ($usr || isset($_POST['massmail'])){
 			
-			if (usrCheckAuth()){
+		if (usrCheckAuth()){
 
-				$inPage->setTitle($_LANG['SEND_MESS']);
-				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-				$inPage->addPathway($_LANG['SEND_MESS'], $_SERVER['REQUEST_URI']);
+			$inPage->setTitle($_LANG['SEND_MESS']);
+			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+			$inPage->addPathway($_LANG['SEND_MESS'], $_SERVER['REQUEST_URI']);
 					
-				if(!isset($_POST['gosend'])){		
+			if(!isset($_POST['gosend'])){		
 							
-					$replyid = $inCore->request('replyid', 'int', 0);
-					$is_reply_user = false;
-					
-					if ($replyid){
+				$replyid = $inCore->request('replyid', 'int', 0);
+				$is_reply_user = false;
+	
+				if ($replyid){
 						
-						$sql = "SELECT m.senddate, m.message, u.login, u.nickname
-								FROM cms_user_msg m
-								LEFT JOIN cms_users u ON u.id = m.from_id
-								WHERE m.id = '$replyid' AND m.to_id = '$from_id'";
+					$sql = "SELECT m.senddate, m.message, u.login, u.nickname
+							FROM cms_user_msg m
+							LEFT JOIN cms_users u ON u.id = m.from_id
+							WHERE m.id = '$replyid' AND m.to_id = '$from_id'";
 
-						$result = $inDB->query($sql) ;
-					
-						if ($inDB->num_rows($result)>0){
-							
-							if ($cfg['j_code']) {
-								$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
-								$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
-								$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
-								$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
-							}
-							
-							$is_reply_user = true;
-							$msg = $inDB->fetch_assoc($result);
-							$msg['senddate'] = $inCore->dateFormat($msg['senddate'], true, true);
-
-						} else {
-							
-							die();
-							
-						}
-					}
-
-					$usr['avatar'] = usrImage($usr['id'], 'big');
-
-					$smarty = $inCore->initSmarty('components', 'com_users_messages_add.tpl');
-					$smarty->assign('msg', $msg);
-					$smarty->assign('usr', $usr);
-					$smarty->assign('is_reply_user', $is_reply_user);
-					$smarty->assign('bbcodetoolbar', cmsPage::getBBCodeToolbar('message'));
-					$smarty->assign('smilestoolbar', cmsPage::getSmilesPanel('message'));
-					$smarty->assign('messages', cmsCore::getSessionMessages());
-					$smarty->assign('id_admin', $inCore->userIsAdmin($inUser->id));
-					$smarty->display('com_users_messages_add.tpl');
-					
-				} else {
-					$errors = false;
-					$message = $inCore->request('message', 'html', '');
-					$message = $inCore->parseSmiles($message, true);
-					$message = $inDB->escape_string($message);
-					if (strlen($message)<2) { $inCore->addSessionMessage($_LANG['ERR_SEND_MESS'], 'error'); $errors = true; }
-					if ($errors) { $inCore->redirect($back); }
+					$result = $inDB->query($sql) ;
 				
-					if (!isset($_POST['massmail']) && !$errors){
-						//send private message
-						$sql = "INSERT INTO cms_user_msg (to_id, from_id, senddate, is_new, message)
-								VALUES ('$to_id', '$from_id', NOW(), 1, '$message')";																
-						$inDB->query($sql) ;
-						
-						$msg_id = dbLastId('cms_user_msg'); 
-						
-						//send email notification, if user want it
-						$needmail = dbGetField('cms_user_profiles', "user_id='{$to_id}'", 'email_newmsg');
-						//Проверяем, если юзер онлайн, то уведомление на почту не отправляем.
-						$isonline = dbGetField('cms_online', "user_id='{$to_id}'", 'id');
-						if (!$isonline && $needmail){
-								$inConf     = cmsConfig::getInstance();
-														
-								$postdate   = date('d/m/Y H:i:s');
-								$to_email   = dbGetField('cms_users', "id='{$to_id}'", 'email');
-								$from_nick  = dbGetField('cms_users', "id='{$from_id}'", 'nickname');
-								$answerlink = HOST.'/users/'.$from_id.'/reply'.$msg_id.'.html';
-						
-								$letter_path    = PATH.'/includes/letters/newmessage.txt';
-								$letter         = file_get_contents($letter_path);
-								
-								$letter= str_replace('{sitename}', $inConf->sitename, $letter);
-								$letter= str_replace('{answerlink}', $answerlink, $letter);
-								$letter= str_replace('{date}', $postdate, $letter);
-								$letter= str_replace('{from}', $from_nick, $letter);	
-								$inCore->mailText($to_email, $_LANG['YOU_HAVE_NEW_MESS'].'! - '.$inConf->sitename, $letter);
+					if ($inDB->num_rows($result)>0){
+							
+						if ($cfg['j_code']) {
+							$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
+							$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
+							$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
+							$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
 						}
-						$inCore->addSessionMessage($_LANG['SEND_MESS_OK'], 'info');	
+							
+						$is_reply_user = true;
+						$msg = $inDB->fetch_assoc($result);
+						$msg['senddate'] = $inCore->dateFormat($msg['senddate'], true, true);
+
+					} else { die();	}
+				}
+
+				$usr['avatar'] = usrImage($usr['id'], 'big');
+
+				$smarty = $inCore->initSmarty('components', 'com_users_messages_add.tpl');
+				$smarty->assign('msg', $msg);
+				$smarty->assign('usr', $usr);
+				$smarty->assign('is_reply_user', $is_reply_user);
+				$smarty->assign('bbcodetoolbar', cmsPage::getBBCodeToolbar('message'));
+				$smarty->assign('smilestoolbar', cmsPage::getSmilesPanel('message'));
+				$smarty->assign('messages', cmsCore::getSessionMessages());
+				$smarty->assign('id_admin', $inCore->userIsAdmin($inUser->id));
+				$smarty->display('com_users_messages_add.tpl');
+					
+			} else {
+				$errors = false;
+				$message = $inCore->request('message', 'html', '');
+				$message = $inCore->parseSmiles($message, true);
+				$message = $inDB->escape_string($message);
+				if (strlen($message)<2) { $inCore->addSessionMessage($_LANG['ERR_SEND_MESS'], 'error'); $errors = true; }
+				if ($errors) { $inCore->redirect($back); }
+				
+				if (!isset($_POST['massmail']) && !$errors){
+					//send private message
+					$sql = "INSERT INTO cms_user_msg (to_id, from_id, senddate, is_new, message)
+							VALUES ('$to_id', '$from_id', NOW(), 1, '$message')";																
+					$inDB->query($sql) ;
+					
+					$msg_id = $inDB->get_last_id('cms_user_msg'); 
+					
+					//send email notification, if user want it
+					$needmail = $inDB->get_field('cms_user_profiles', "user_id='{$to_id}'", 'email_newmsg');
+					//Проверяем, если юзер онлайн, то уведомление на почту не отправляем.
+					$isonline = $inDB->get_field('cms_online', "user_id='{$to_id}'", 'id');
+					if (!$isonline && $needmail){
+							$inConf     = cmsConfig::getInstance();
+													
+							$postdate   = date('d/m/Y H:i:s');
+							$to_email   = $inDB->get_field('cms_users', "id='{$to_id}'", 'email');
+							$from_nick  = $inUser->nickname;
+							$answerlink = HOST.'/users/'.$from_id.'/reply'.$msg_id.'.html';
+					
+							$letter_path    = PATH.'/includes/letters/newmessage.txt';
+							$letter         = file_get_contents($letter_path);
+							
+							$letter= str_replace('{sitename}', $inConf->sitename, $letter);
+							$letter= str_replace('{answerlink}', $answerlink, $letter);
+							$letter= str_replace('{date}', $postdate, $letter);
+							$letter= str_replace('{from}', $from_nick, $letter);	
+							$inCore->mailText($to_email, $_LANG['YOU_HAVE_NEW_MESS'].'! - '.$inConf->sitename, $letter);
+					}
+					$inCore->addSessionMessage($_LANG['SEND_MESS_OK'], 'info');	
 						
-					} elseif (isset($_POST['massmail']) && !$errors) {
+				} elseif (isset($_POST['massmail']) && !$errors) {
 						if ($inUser->is_admin){
-							$userlist = dbGetTable('cms_users', ' id > 0 AND is_locked = 0 AND is_deleted = 0');
+							$userlist = $inDB->get_table('cms_users', ' id > 0 AND is_locked = 0 AND is_deleted = 0');
 							foreach ($userlist as $key=>$usr){
 								$sql = "INSERT INTO cms_user_msg (to_id, from_id, senddate, is_new, message)
 										VALUES ('".$usr['id']."', '-2', NOW(), 1, '$message')";
@@ -1784,16 +1787,16 @@ if ($do=='sendmessage'){
 							}
 						}
 						$inCore->addSessionMessage($_LANG['SEND_MESS_ALL_OK'], 'info');	
-					}
+				}
 											
 					$inCore->redirect('/users/'.$inUser->id.'/messages-sent.html');
-				}
-			
 			}
+			
 		}
+
 	} else { 
         echo usrAccessDenied();
-        } //usrCheckAuth
+    } //usrCheckAuth
 }//do
 /////////////////////////////// DEL MESSAGE /////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delmessage'){
@@ -1801,9 +1804,12 @@ if ($do=='delmessage'){
 	if (!$cfg['sw_msg']) { cmsCore::error404(); }
 	
 	if (usrCheckAuth()){
+
 		$sql = "SELECT to_id, from_id, is_new FROM cms_user_msg WHERE id = '$id' LIMIT 1";
 		$result = $inDB->query($sql) ;
+
 		if ($inDB->num_rows($result)){
+
 			$msg = $inDB->fetch_assoc($result);
 			if ($msg['to_id']==$inUser->id || ($msg['from_id']==$inUser->id && $msg['is_new'])){
 				$inDB->query("DELETE FROM cms_user_msg WHERE id = '$id' LIMIT 1") ;
@@ -1813,6 +1819,7 @@ if ($do=='delmessage'){
 					$inCore->addSessionMessage($_LANG['MESS_DEL_OK'], 'info');
 				}
 			}
+
 		}
 	}
 	header('location:'.$_SERVER['HTTP_REFERER']);
@@ -1833,39 +1840,35 @@ if ($do=='delmessages'){
 }//do
 ///////////////////////////////////////////// KARMA LOG /////////////////////////////////////////////////////////////////////////
 if ($do=='karma'){
-	
-		$usr = $model->getUserShort($id);
-	
-		if ($usr){
-		
-				$inPage->setTitle($_LANG['KARMA_HISTORY']);
-		
-				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-				$inPage->addPathway($_LANG['KARMA_HISTORY'], $_SERVER['REQUEST_URI']);
-				
-				echo '<div class="con_heading">'.$_LANG['KARMA_HISTORY'].' - '.$usr['nickname'].'</div>';
-				
-				$ksql = "SELECT k.*, k.points as kpoints, DATE_FORMAT(k.senddate, '%d-%m-%Y {$_LANG['IN']} %H:%i') fsenddate, u.*
-						 FROM cms_user_karma k, cms_users u
-						 WHERE k.user_id = $id AND k.sender_id = u.id
-						 ORDER BY k.senddate DESC
-						 LIMIT 50";
-				$kresult = $inDB->query($ksql) ;
-				
-				if ($inDB->num_rows($kresult)>0){
-					echo '<table width="">';
-					while($k = $inDB->fetch_assoc($kresult)){
-						echo '<tr>';
-							echo '<td style="border-bottom:solid 1px silver" width="150" valign="middle">'.$k['fsenddate'].'</td>';
-							echo '<td style="border-bottom:solid 1px silver" width="200" valign="middle"><a href="'.cmsUser::getProfileURL($k['login']).'">'.$k['nickname'].'</a></td>';
-							echo '<td style="border-bottom:solid 1px silver" width="100" valign="middle" align="center">'.karmaPoints($k['kpoints']).'</td>';														
-						echo '</tr>';
-					}
-					echo '</table>';
-				
-				} else { echo '<p>'.$_LANG['KARMA_NOT_MODIFY'].'</p><p>'.$_LANG['KARMA_NOT_MODIFY_TEXT'].'</p><p>'.$_LANG['KARMA_DESCRIPTION'].'</p>'; }
 
-		} else { cmsCore::error404(); }
+		$usr = $model->getUserShort($id);
+
+		$inPage->setTitle($_LANG['KARMA_HISTORY']);
+		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+		$inPage->addPathway($_LANG['KARMA_HISTORY'], $_SERVER['REQUEST_URI']);
+
+		$ksql = "SELECT k.*, k.points as kpoints, u.nickname, u.login
+					 FROM cms_user_karma k
+					 LEFT JOIN cms_users u ON u.id = k.sender_id
+					 WHERE k.user_id = $id
+					 ORDER BY k.senddate DESC
+					 LIMIT 50";
+		$kresult = $inDB->query($ksql);
+
+		$karma = array();
+
+		if ($inDB->num_rows($kresult)>0){
+			while($k = $inDB->fetch_assoc($kresult)){
+				$k['fsenddate'] = $inCore->dateFormat($k['senddate'], true, true);
+				$k['kpoints']   = karmaPoints($k['kpoints']);
+				$karma[]        = $k;
+			}
+
+		}
+		$smarty = $inCore->initSmarty('components', 'com_users_karma.tpl');
+		$smarty->assign('karma', $karma);
+		$smarty->assign('usr', $usr);
+		$smarty->display('com_users_karma.tpl');
 }
 /////////////////////////////// GIVE AWARD ///////////////////////////////////////////////////////////////////////////////////////
 if ($do=='giveaward'){
@@ -1875,69 +1878,63 @@ if ($do=='giveaward'){
 	if (usrCheckAuth()){
 
 		$from_id = $inUser->id;
-		$to_id = $id;
-		
+		$to_id   = $id;
+
 		$usr = $model->getUserShort($id);
-	
-		if ($usr){
-		
-				$inPage->setTitle($_LANG['AWARD_USER']);
-				$inPage->addHeadJS('components/users/js/awards.js');
-		
-				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-				$inPage->addPathway($_LANG['AWARD'], $_SERVER['REQUEST_URI']);
+
+		$inPage->setTitle($_LANG['AWARD_USER']);
+		$inPage->addHeadJS('components/users/js/awards.js');
+		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+		$inPage->addPathway($_LANG['AWARD'], $_SERVER['REQUEST_URI']);
 					
-				if(!isset($_POST['gosend'])){		
-					
-					echo '<div class="con_heading">'.$_LANG['AWARD_USER'].'</div>';
-					echo '<form action="" method="POST" name="addform" id="addform">';
-						echo '<table width="100%" cellpadding="0" cellspacing="5">';				
-							echo '<tr>';
-								echo '<td width="150" valign="middle">'.$_LANG['AWARD_IMG'].':</td>';
-								echo '<td valign="middle">';
-									echo '<div style="overflow:hidden;_height:1%">'.usrAwardsList('aw.gif').'</div>';
-								echo '</td>';												
-							echo '</tr>';
-							echo '<tr>';
-								echo '<td width="150">'.$_LANG['AWARD_NAME'].':</td>';
-								echo '<td><input type="text" name="title" size="35" /></td>';												
-							echo '</tr>';
-							echo '<tr>';
-								echo '<td width="150">'.$_LANG['AWARD_DESC'].':</td>';
-								echo '<td><textarea name="description" cols="35" rows="4"></textarea></td>';												
-							echo '</tr>';
-						echo '</table>';
+		if(!isset($_POST['gosend'])){		
 
-						echo '<div style="margin-top:6px;"><input type="submit" name="gosend" value="'.$_LANG['TO_AWARD'].'" style="font-size:18px"/> ';
-						echo '<input type="button" name="gosend" value="'.$_LANG['CANCEL'].'" style="font-size:18px" onclick="window.history.go(-1)"/></div>';
+			$smarty = $inCore->initSmarty('components', 'com_users_awards_give.tpl');
+			$smarty->assign('usr', $usr);
+			$smarty->assign('awardslist', usrAwardsList('aw.gif'));
+			$smarty->display('com_users_awards_give.tpl');
 
-					echo '</form>';
+		} else {
 
-				} else {
-					$title = $inCore->request('title', 'str', $_LANG['AWRD']);
-					$description = $inCore->request('description', 'str', '');
-					$imageurl = $inCore->request('imageurl', 'str', $_LANG['AWRD']);
-					$award_id = 0;					
-					if (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/users/awards/'.$imageurl)){							
-						$sql = "INSERT INTO cms_user_awards (user_id, pubdate, title, description, imageurl, from_id, award_id)
-								VALUES ('$to_id', NOW(), '$title', '$description', '$imageurl', '$from_id', '$award_id')";
-						$inDB->query($sql) ;
-						cmsUser::sendMessage(USER_UPDATER, $to_id, '<b>'.$_LANG['RECEIVED_AWARD'].':</b> <a href="'.cmsUser::getProfileURL($usr['login']).'">'.$title.'</a>');
-					}
-					$inCore->redirect(cmsUser::getProfileURL($usr['login']));
-				}						
-		}
+			$title       = $inCore->request('title', 'str', $_LANG['AWRD']);
+			$description = $inCore->request('description', 'str', '');
+			$imageurl    = $inCore->request('imageurl', 'str', $_LANG['AWRD']);
+			$award_id    = 0;					
+
+			if (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/users/awards/'.$imageurl)){							
+				$sql = "INSERT INTO cms_user_awards (user_id, pubdate, title, description, imageurl, from_id, award_id)
+						VALUES ('$to_id', NOW(), '$title', '$description', '$imageurl', '$from_id', '$award_id')";
+				$inDB->query($sql);
+				$award_id = $inDB->get_last_id('cms_user_awards');
+				//регистрируем событие
+				cmsActions::log('add_award', array(
+						'object' => '"'.$title.'"',
+						'user_id' => $to_id,
+						'object_url' => '',
+						'object_id' => $award_id,
+						'target' => '',
+						'target_url' => '',
+						'target_id' => 0, 
+						'description' => '<img src="/images/users/awards/'.$imageurl.'" border="0" alt="'.$description.'">'
+				));
+				cmsUser::sendMessage(USER_UPDATER, $to_id, '<b>'.$_LANG['RECEIVED_AWARD'].':</b> <a href="'.cmsUser::getProfileURL($usr['login']).'">'.$title.'</a>');
+			}
+			$inCore->redirect(cmsUser::getProfileURL($usr['login']));
+		}						
+
 	} else { echo usrAccessDenied(); } //usrCheckAuth
 }//do
 /////////////////////////////// DELETE AWARD ///////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delaward'){
 	if (usrCheckAuth()){
-		$sql = "SELECT * FROM cms_user_awards WHERE id = $id LIMIT 1";
+
+		$sql = "SELECT user_id FROM cms_user_awards WHERE id = $id LIMIT 1";
 		$result = $inDB->query($sql) ;
 		if ($inDB->num_rows($result)){
 			$aw = $inDB->fetch_assoc($result);
 			if ($aw['user_id']==$inUser->id || $inCore->userIsAdmin($inUser->id)){
-				$inDB->query("DELETE FROM cms_user_awards WHERE id = $id LIMIT 1") ;
+				$inDB->query("DELETE FROM cms_user_awards WHERE id = $id LIMIT 1");
+				cmsActions::removeObjectLog('add_award', $id);
 			}
 		}
 	}

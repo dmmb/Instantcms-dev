@@ -1099,17 +1099,19 @@ class cmsUser {
             $user = $inDB->get_fields('cms_users', "id={$user_id}", 'login');
 
             $sql = "SELECT * FROM cms_user_autoawards WHERE published = 1";
-            $rs = $inDB->query($sql) or die('Error processing autoawards');
-            if (mysql_num_rows($rs)) {
-                $p_content = dbRowsCount('cms_content', "user_id=$user_id AND published = 1");
-                $p_comment = dbRowsCount('cms_comments', "user_id=$user_id");
-                $p_blog = dbRowsCount('cms_blog_posts', "user_id=$user_id AND published = 1");
-                $p_forum = dbRowsCount('cms_forum_posts', "user_id=$user_id");
-                $p_photo = dbRowsCount('cms_photo_files', "user_id=$user_id AND published = 1");
-                $p_privphoto = dbRowsCount('cms_user_photos', "user_id=$user_id");
-                $p_karma = dbGetField('cms_user_profiles', "user_id=$user_id", 'karma');
-                while ($award = mysql_fetch_assoc($rs)){
-                    if (!dbRowsCount('cms_user_awards', "user_id=$user_id AND award_id={$award['id']}")) {
+            $rs = $inDB->query($sql);
+            if ($inDB->num_rows($rs)) {
+
+                $p_content   = $inDB->rows_count('cms_content', "user_id=$user_id AND published = 1");
+                $p_comment   = $inDB->rows_count('cms_comments', "user_id=$user_id AND published = 1");
+                $p_blog      = $inDB->rows_count('cms_blog_posts', "user_id=$user_id AND published = 1");
+                $p_forum     = $inDB->rows_count('cms_forum_posts', "user_id=$user_id");
+                $p_photo     = $inDB->rows_count('cms_photo_files', "user_id=$user_id AND published = 1");
+                $p_privphoto = $inDB->rows_count('cms_user_photos', "user_id=$user_id");
+                $p_karma     = $inDB->get_field('cms_user_profiles', "user_id=$user_id", 'karma');
+
+                while ($award = $inDB->fetch_assoc($rs)){
+                    if (!$inDB->rows_count('cms_user_awards', "user_id=$user_id AND award_id={$award['id']}")) {
                         $granted = ($award['p_content'] <= $p_content) &&
                                    ($award['p_comment'] <= $p_comment) &&
                                    ($award['p_blog'] <= $p_blog) &&
@@ -1118,13 +1120,26 @@ class cmsUser {
                                    ($award['p_privphoto'] <= $p_privphoto) &&
                                    ($award['p_karma'] <= $p_karma);
                         if ($granted){
-                            $title = $award['title'];
+                            $title       = $award['title'];
                             $description = $award['description'];
-                            $imageurl = $award['imageurl'];
-                            $award_id = $award['id'];
+                            $imageurl    = $award['imageurl'];
+                            $award_id    = $award['id'];
+
                             $sql = "INSERT INTO cms_user_awards (user_id, pubdate, title, description, imageurl, from_id, award_id)
                                     VALUES ('$user_id', NOW(), '$title', '$description', '$imageurl', '0', '$award_id')";
-                            $inDB->query($sql) ;
+                            $inDB->query($sql);
+							$award_id = $inDB->get_last_id('cms_user_awards');
+							//регистрируем событие
+							cmsActions::log('add_award', array(
+									'object' => '"'.$title.'"',
+									'user_id' => $user_id,
+									'object_url' => '',
+									'object_id' => $award_id,
+									'target' => '',
+									'target_url' => '',
+									'target_id' => 0, 
+									'description' => '<img src="/images/users/awards/'.$imageurl.'" border="0" alt="'.$description.'">'
+							));
                             self::sendMessage(USER_UPDATER, $user_id, '<b>ѕолучена награда:</b> <a href="'.cmsUser::getProfileURL($user['login']).'">'.$award['title'].'</a>');
                         }
                     }
@@ -1181,7 +1196,7 @@ class cmsUser {
     public static function subscribe($user_id, $target, $target_id, $subscribe=true){
         $inDB = cmsDatabase::getInstance();
         if ($subscribe){
-            if (!dbRowsCount('cms_subscribe', "user_id = $user_id AND target = '$target' AND target_id = $target_id")){
+            if (!$inDB->rows_count('cms_subscribe', "user_id = $user_id AND target = '$target' AND target_id = $target_id")){
                 $sql = "INSERT INTO cms_subscribe (user_id, target, target_id, pubdate)
                         VALUES ('{$user_id}', '{$target}', '{$target_id}', NOW())";
                 $inDB->query($sql) ;

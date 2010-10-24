@@ -203,7 +203,7 @@ class cmsActions {
             }
 
             if ($action['object']){
-                $action['object_link']  = '<a href="'.$action['object_url'].'" class="act_obj_'.$action['name'].'">'.$action['object'].'</a>';
+                $action['object_link']  = $action['object_url'] ? '<a href="'.$action['object_url'].'" class="act_obj_'.$action['name'].'">'.$action['object'].'</a>' : $action['object'];
             }
             if ($action['target']){
                 $action['target_link']  = '<a href="'.$action['target_url'].'" class="act_tgt_'.$action['name'].'">'.$action['target'].'</a>';
