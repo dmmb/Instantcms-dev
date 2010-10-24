@@ -85,7 +85,7 @@ class cms_model_users{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function getUserShort($user_id){
+    public function getUserShort($user_id = 0){
 				
 		$inUser = cmsUser::getInstance();
 				
