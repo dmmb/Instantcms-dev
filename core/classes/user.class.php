@@ -915,7 +915,7 @@ class cmsUser {
 
         $my_id      = self::getInstance()->id;
 
-        $bb_toolbar = cmsPage::getBBCodeToolbar('message', true);
+        $bb_toolbar = cmsPage::getBBCodeToolbar('message', true, 'users');
         $smilies    = cmsPage::getSmilesPanel('message');
 
         ob_start();
