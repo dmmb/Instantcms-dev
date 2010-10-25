@@ -9,11 +9,15 @@
 /*********************************************************************************************/
 
 function mod_bestclubs($module_id){
+
         $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
+        $inDB   = cmsDatabase::getInstance();
         global $_LANG;
-		$inCore->loadLib('clubs');
-	
+		
+		if (!function_exists('clubTotalMembers')){ //if not included earlier
+			$inCore->loadLib('clubs');
+		}
+
 		$cfg = $inCore->loadModuleConfig($module_id);
 	
 		if (!isset($cfg['count'])) { $cfg['count'] = 5;}
@@ -27,7 +31,7 @@ function mod_bestclubs($module_id){
  	
 		$result = $inDB->query($sql);
 						
-		if (@$inDB->num_rows($result)){	
+		if ($inDB->num_rows($result)){	
 			while ($club = $inDB->fetch_assoc($result)){
 				if (!$club['imageurl']) { $club['imageurl'] = 'nopic.jpg'; } else {
 					if (!file_exists($_SERVER['DOCUMENT_ROOT'].'/images/clubs/small/'.$club['imageurl'])){

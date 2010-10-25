@@ -796,15 +796,27 @@ if ($do=='newpost' || $do=='editpost'){
                 if ($published) {
                     $post_seolink = $inDB->get_field('cms_blog_posts', "id={$post_id}", 'seolink');
 					//регистрируем событие
-					cmsActions::log('add_post', array(
-						'object' => $title,
-						'object_url' => $model->getPostURL(null, $blog['seolink'], $post_seolink),
-						'object_id' => $post_id,
-						'target' => $blog['title'],
-						'target_url' => $model->getBlogURL(null, $blog['seolink']),
-						'target_id' => $blog['id'], 
-						'description' => ''
-					));
+					if ($blog['owner']=='user'){
+						cmsActions::log('add_post', array(
+							'object' => $title,
+							'object_url' => $model->getPostURL(null, $blog['seolink'], $post_seolink),
+							'object_id' => $post_id,
+							'target' => $blog['title'],
+							'target_url' => $model->getBlogURL(null, $blog['seolink']),
+							'target_id' => $blog['id'], 
+							'description' => ''
+						));
+					} elseif ($blog['owner']=='club'){
+						cmsActions::log('add_post_club', array(
+							'object' => $title,
+							'object_url' => $model->getPostURL(null, $blog['seolink'], $post_seolink),
+							'object_id' => $post_id,
+							'target' => $blog['author'],
+							'target_url' => '/clubs/'.$blog['user_id'],
+							'target_id' => $blog['id'], 
+							'description' => ''
+						));
+					}
                     $inCore->redirect($model->getPostURL(null, $blog['seolink'], $post_seolink));
                 }
 
@@ -1103,18 +1115,32 @@ if ($do == 'publishpost'){
         $post   = $model->getPost($post_id);
         if ($post){
             $model->publishPost($post_id);
-            if ($blog['owner']=='club') { $blog['title'] = $inDB->get_field('cms_clubs', 'id='.$blog['user_id'], 'title'); }
-			//регистрируем событие
-			cmsActions::log('add_post', array(
-					'object' => $post['title'],
-					'user_id' => $post['user_id'],
-					'object_url' => $model->getPostURL(0, $post['bloglink'], $post['seolink']),
-					'object_id' => $post['id'],
-					'target' => $blog['title'],
-					'target_url' => $model->getBlogURL(0, $blog['seolink']),
-					'target_id' => $blog['id'], 
-					'description' => ''
-			));
+
+			if ($blog['owner']=='user'){
+				//регистрируем событие
+				cmsActions::log('add_post', array(
+						'object' => $post['title'],
+						'user_id' => $post['user_id'],
+						'object_url' => $model->getPostURL(0, $post['bloglink'], $post['seolink']),
+						'object_id' => $post['id'],
+						'target' => $blog['title'],
+						'target_url' => $model->getBlogURL(0, $blog['seolink']),
+						'target_id' => $blog['id'], 
+						'description' => ''
+				));
+			} elseif ($blog['owner']=='club'){
+				cmsActions::log('add_post_club', array(
+						'object' => $post['title'],
+						'user_id' => $post['user_id'],
+						'object_url' => $model->getPostURL(0, $post['bloglink'], $post['seolink']),
+						'object_id' => $post['id'],
+						'target' => $blog['author'],
+						'target_url' => '/clubs/'.$blog['user_id'],
+						'target_id' => $blog['id'], 
+						'description' => ''
+				));
+			}
+
             cmsUser::sendMessage(-1, $post['author_id'], $_LANG['YOUR_POST'].' <b>&laquo;<a href="'.$model->getPostURL(0, $post['bloglink'], $post['seolink']).'">'.$post['title'].'</a>&raquo;</b> '.$_LANG['PUBLISHED_IN_BLOG'].' <b>&laquo;<a href="'.$model->getBlogURL(0, $blog['seolink']).'">'.$blog['title'].'</a>&raquo;</b>');
         }
     } else {

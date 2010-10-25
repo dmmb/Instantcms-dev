@@ -11,12 +11,14 @@
 function mod_latestclubs($module_id){
 
         $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
-		$cfg = $inCore->loadModuleConfig($module_id);
+        $inDB   = cmsDatabase::getInstance();
+		$cfg    = $inCore->loadModuleConfig($module_id);
 
         global $_LANG;
 
-		$inCore->loadLib('clubs');
+        if (!function_exists('clubTotalMembers')){ //if not included earlier
+             $inCore->loadLib('clubs');
+        }
 
 		if (!isset($cfg['count'])) { $cfg['count'] = 5;}
 

@@ -1591,14 +1591,15 @@ if ($do=='addfriend'){
 			if (!isset($_POST['goadd'])){
 
 				if ($model->isNewFriends($inUser->id, $id)){
-					$sql = "UPDATE cms_user_friends SET is_accepted = 1 WHERE to_id = ".$inUser->id." AND from_id = $id";
+					$fr_id = $inDB->get_field('cms_user_friends', "to_id = ".$inUser->id." AND from_id = $id", 'id');
+					$sql   = "UPDATE cms_user_friends SET is_accepted = 1 WHERE id = $fr_id";
 					$inDB->query($sql);
 					cmsCore::addSessionMessage($_LANG['ADD_FRIEND_OK'] . $usr['nickname'], 'info');
 					//регистрируем событие
 					cmsActions::log('add_friend', array(
 						'object' => $usr['nickname'],
 						'object_url' => cmsUser::getProfileURL($usr['login']),
-						'object_id' => $usr['id'],
+						'object_id' => $fr_id,
 						'target' => '',
 						'target_url' => '',
 						'target_id' => 0, 
@@ -1648,12 +1649,16 @@ if ($do=='delfriend'){
 		$first_id  = $inUser->id;
 		$second_id = $id;
 		$usr       = $model->getUserShort($id);
+		
+		$fr_id = $inDB->get_field('cms_user_friends', "(to_id = $first_id AND from_id = $second_id) OR (to_id = $second_id AND from_id = $first_id)", 'id');
 
-		$sql = "DELETE FROM cms_user_friends WHERE ((to_id = $first_id AND from_id = $second_id) OR (to_id = $second_id AND from_id = $first_id))";
-		$inDB->query($sql) ;
-
-		cmsUser::clearSessionFriends();
-		cmsCore::addSessionMessage($usr['nickname'] . $_LANG['DEL_FRIEND'], 'info');
+		if ($fr_id) {
+			$sql   = "DELETE FROM cms_user_friends WHERE id = $fr_id";
+			$inDB->query($sql);
+			cmsActions::removeObjectLog('add_friend', $fr_id);
+			cmsUser::clearSessionFriends();
+			cmsCore::addSessionMessage($usr['nickname'] . $_LANG['DEL_FRIEND'], 'info');
+		}
 
 		header('location:'.$_SERVER['HTTP_REFERER']);
 

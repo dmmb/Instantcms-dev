@@ -15,8 +15,10 @@ function mod_forum($module_id){
 		$cfg = $inCore->loadModuleConfig($module_id);
 		
         $forumcfg = $inCore->loadComponentConfig('forum');
-	
-		include_once(PATH.'/components/forum/includes/forumcore.php');
+
+		if (!function_exists('forumUserAuthSQL') && !function_exists('threadLastMessageData')){ //if not included earlier
+			include_once(PATH.'/components/forum/includes/forumcore.php');
+		}
 		
 		$groupsql = forumUserAuthSQL('f.');
 		
