@@ -27,7 +27,6 @@ function blogs(){
 	$inCore->loadLib('karma');
 	
 	$inPage->addHeadJS('includes/jquery/jquery.jcorners.js');
-    $inPage->addHeadJS('core/js/karma.js');
 
     global $_LANG;
 

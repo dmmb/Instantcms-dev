@@ -1,4 +1,5 @@
 <?php
+
 	session_start();
 
     define("VALID_CMS", 1);
@@ -47,7 +48,8 @@
 
 
     if ($cfg['bbcode']){
-        $bb_toolbar = cmsPage::getBBCodeToolbar('content', false);
+        $bb_toolbar = cmsPage::getBBCodeToolbar('content', true, 'comments');
+		echo '<script language="JavaScript" type="text/javascript" src="/includes/jquery/upload/ajaxfileupload.js"></script>';
     }
 
 	//smilies toolbar
@@ -62,8 +64,6 @@
 	$can_by_karma   = (($cfg['min_karma'] && $karma_has>=$karma_need) || $inCore->userIsAdmin($inUser->id));
 	
 	$need_captcha = (!$inUser->id || ($inUser->id && $cfg['regcap']==1));
-
-	$inPage->addHeadJS('components/comments/js/comments.js');
 
 	$smarty = $inCore->initSmarty('components', 'com_comments_add.tpl');			
 	$smarty->assign('no_guests', (!$inUser->id && !$cfg['canguests']));

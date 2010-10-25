@@ -20,7 +20,8 @@
     $inCore->loadClass('user');
 
     $inUser = cmsUser::getInstance();
-    if (!$inUser->update()) { $inCore->halt(); }
+	$inUser->update();
+    if (!$inUser->id) { $inCore->halt(); }
 
 	$target  = $inCore->request('target', 'str');
 	$item_id = $inCore->request('item_id', 'int');

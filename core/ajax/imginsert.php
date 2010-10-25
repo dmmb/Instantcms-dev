@@ -32,7 +32,8 @@
 	if (!preg_match('/^([a-zA-Z0-9\_]+)$/i', $place)) { die(); }
 	
 	// если не авторизованы, выводим ошибку и выходим
-    if (!$inUser->update()) {
+	$inUser->update();
+    if (!$inUser->id) {
 			echo "{";
 			echo		"error: 'Загрузка файлов только для зарегистрированных!',\n";
 			echo		"msg: ''\n";

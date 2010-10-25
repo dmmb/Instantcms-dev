@@ -879,24 +879,26 @@ public static function getBBCodeToolbar($field_id, $images=0, $placekind='forum'
                  </a>
                  <a class="usr_bb_button" href="javascript:addTagAudio(\''.$field_id.'\')" title="Вставить mp3">
                     <img src="/includes/bbcode/images/audio.gif" border="0" alt="Вставить mp3" />
-                 </a>
-                 <a class="usr_bb_button" href="javascript:addImage(\''.$field_id.'\')" title="Загрузить и вставить фото">
-                    <img src="/includes/bbcode/images/image.gif" border="0" alt="Загрузить и вставить фото" />
-                 </a>
-                 <a class="usr_bb_button" href="javascript:addAlbumImage()" title="Вставить фото из альбома">
-                    <img src="/includes/bbcode/images/albumimage.gif" border="0" alt="Вставить фото из альбома" />
-                 </a>
-                <div class="usr_bb_button" id="imginsert" style="padding:3px;display:none">
-                    <strong>Загрузить фото:</strong> <input type="file" id="attach_img" name="attach_img"/>
-                     <input type="button" name="goinsert" value="Вставить" onclick="loadImage(\''.$field_id.'\', \''.session_id().'\', \''.$placekind.'\')" />
-                 </div>
-                 <div class="usr_bb_button" id="imgloading" style="padding:5px;display:none">
-                    Загрузка изображения...
-                 </div>
-                <div class="usr_bb_button" id="albumimginsert" style="padding:3px;display:none">
-                    <strong>Вставить фото:</strong> '.cmsUser::getPhotosList($inUser->id).'
-                     <input type="button" name="goinsert" value="Вставить" onclick="insertAlbumImage(\''.$field_id.'\')" />
-                 </div>';
+                 </a>';
+		if ($inUser->id) {
+			$html .= '<a class="usr_bb_button" href="javascript:addImage(\''.$field_id.'\')" title="Загрузить и вставить фото">
+						<img src="/includes/bbcode/images/image.gif" border="0" alt="Загрузить и вставить фото" />
+					 </a>
+					 <a class="usr_bb_button" href="javascript:addAlbumImage()" title="Вставить фото из альбома">
+						<img src="/includes/bbcode/images/albumimage.gif" border="0" alt="Вставить фото из альбома" />
+					 </a>
+					<div class="usr_bb_button" id="imginsert" style="padding:3px;display:none">
+						<strong>Загрузить фото:</strong> <input type="file" id="attach_img" name="attach_img"/>
+						 <input type="button" name="goinsert" value="Вставить" onclick="loadImage(\''.$field_id.'\', \''.session_id().'\', \''.$placekind.'\')" />
+					 </div>
+					 <div class="usr_bb_button" id="imgloading" style="padding:5px;display:none">
+						Загрузка изображения...
+					 </div>
+					<div class="usr_bb_button" id="albumimginsert" style="padding:3px;display:none">
+						<strong>Вставить фото:</strong> '.cmsUser::getPhotosList($inUser->id).'
+						 <input type="button" name="goinsert" value="Вставить" onclick="insertAlbumImage(\''.$field_id.'\')" />
+					 </div>';
+		}
     }
 
     return $html;
