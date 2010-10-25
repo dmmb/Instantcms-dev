@@ -178,7 +178,7 @@ function addTagQuote(field_id)
 
 function insertAlbumImage(field_id){
 
-    var path = document.msgform.photolist.options[document.msgform.photolist.selectedIndex].value;
+	var path = $("#photolist option:selected").val()
     var tag  = '[IMG]/images/users/photos/medium/'+path+'[/IMG]';
 
     insertTagAtCursor(field_id, tag);
