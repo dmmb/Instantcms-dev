@@ -460,7 +460,7 @@ class cms_model_content{
             $inCore->loadLib('tags');
             cmsInsertTags($article['tags'], 'content', $article['id']);
 
-            cmsCore::callEvent('ADD_ARTICLE_DONE', $article);
+            if ($article['published']) { cmsCore::callEvent('ADD_ARTICLE_DONE', $article); }
             
         }
 

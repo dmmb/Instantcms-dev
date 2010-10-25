@@ -75,8 +75,8 @@ function blogs(){
     
 		if ($blog){
 			$owner = $blog['owner'];
-			if ($owner=='user') { $blog['author'] = dbGetField('cms_users', 'id='.$blog['user_id'], 'nickname');	}
-			if ($owner=='club') { $blog['author'] = dbGetField('cms_clubs', 'id='.$blog['user_id'], 'title');       }
+			if ($owner=='user') { $blog['author'] = $inDB->get_field('cms_users', 'id='.$blog['user_id'], 'nickname');	}
+			if ($owner=='club') { $blog['author'] = $inDB->get_field('cms_clubs', 'id='.$blog['user_id'], 'title');       }
 		}
 
 	}
@@ -744,7 +744,7 @@ if ($do=='newpost' || $do=='editpost'){
         $feel 		= $inCore->request('feel', 'str', '');
         $music 		= $inCore->request('music', 'str', '');
         $cat_id 	= $inCore->request('cat_id', 'int');
-        $allow_who 	= $inCore->request('allow_who', 'int');
+        $allow_who 	= $inCore->request('allow_who', 'str', $blog['allow_who']);
         $tags 		= $inCore->request('tags', 'str', '');
 
         //Проверяем их
@@ -769,7 +769,7 @@ if ($do=='newpost' || $do=='editpost'){
                 }
 
                 if ($blog['owner']=='club'){
-                    $club_premod = dbGetField('cms_clubs', 'id='.$blog['user_id'], 'blog_premod');
+                    $club_premod = $inDB->get_field('cms_clubs', 'id='.$blog['user_id'], 'blog_premod');
                     $published = 0;
                     if ($inCore->userIsAdmin($inUser->id) || clubUserIsRole($blog['user_id'], $inUser->id, 'moderator') || clubUserIsAdmin($blog['user_id'], $inUser->id) || (!$club_premod)){
                         $published = 1;
@@ -784,6 +784,7 @@ if ($do=='newpost' || $do=='editpost'){
                                                     'feel'=>$feel,
                                                     'music'=>$music,
                                                     'content'=>$content,
+													'ballow_who'=>$blog['allow_who'],
                                                     'allow_who'=>$allow_who,
                                                     'published'=>$published,
                                                     'tags'=>$tags
@@ -1083,7 +1084,7 @@ if ($do == 'delpost'){
             $model->deletePost($post_id);
 
             if ($user_id != $post['user_id']){
-                if ($blog['owner']=='club') { $blog['title'] = dbGetField('cms_clubs', 'id='.$blog['user_id'], 'title'); }
+                if ($blog['owner']=='club') { $blog['title'] = $inDB->get_field('cms_clubs', 'id='.$blog['user_id'], 'title'); }
                 cmsUser::sendMessage(-1, $post['user_id'], $_LANG['YOUR_POST'].' <b>&laquo;'.$post['title'].'&raquo;</b> '.$_LANG['WAS_DELETED_FROM_BLOG'].' <b>&laquo;<a href="'.$model->getBlogURL(0, $blog['seolink']).'">'.$blog['title'].'</a>&raquo;</b>');
             }
         }
@@ -1114,13 +1115,14 @@ if ($do == 'publishpost'){
         $post   = $model->getPost($post_id);
         if ($post){
             $model->publishPost($post_id);
-
+			$post['seolink'] = $model->getPostURL(0, $post['bloglink'], $post['seolink']);
+			if ($blog['allow_who'] == 'all') { cmsCore::callEvent('ADD_POST_DONE', $post); }
 			if ($blog['owner']=='user'){
 				//регистрируем событие
 				cmsActions::log('add_post', array(
 						'object' => $post['title'],
 						'user_id' => $post['user_id'],
-						'object_url' => $model->getPostURL(0, $post['bloglink'], $post['seolink']),
+						'object_url' => $post['seolink'],
 						'object_id' => $post['id'],
 						'target' => $blog['title'],
 						'target_url' => $model->getBlogURL(0, $blog['seolink']),
@@ -1131,7 +1133,7 @@ if ($do == 'publishpost'){
 				cmsActions::log('add_post_club', array(
 						'object' => $post['title'],
 						'user_id' => $post['user_id'],
-						'object_url' => $model->getPostURL(0, $post['bloglink'], $post['seolink']),
+						'object_url' => $post['seolink'],
 						'object_id' => $post['id'],
 						'target' => $blog['author'],
 						'target_url' => '/clubs/'.$blog['user_id'],
