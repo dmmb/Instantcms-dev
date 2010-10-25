@@ -13,7 +13,7 @@
 				{if $can_by_karma || !$cfg.min_karma}
 
 					{if !$is_user}
-						<div style="margin-bottom:10px"><label>{$LANG.YOUR_NAME}: <input type="text" maxchars="20" size="30" name="guestname"/></label></div>
+						<div class="cm_guest_name"><label>{$LANG.YOUR_NAME}: <input type="text" maxchars="20" size="30" name="guestname"/></label></div>
 					{else}
 						<input type="hidden" name="user_id" value="{$is_user}"/>
 					{/if}
@@ -44,7 +44,7 @@
 					{/if}						
 			
 					<div class="cm_codebar">
-						<table width="100%">
+						<table width="100%" cellpadding="0" cellspacing="0">
 							<tr>
 								{if $need_captcha}
 									<td width="">{php}echo cmsPage::getCaptcha();{/php}</td>

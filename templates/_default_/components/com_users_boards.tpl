@@ -9,7 +9,8 @@
                 {foreach key=tid item=con from=$cons}	
 				 <tr>
                     <td valign="top" width="">
-						<table width="100%" height="" cellspacing="" cellpadding="0" class="bd_item">
+                        <div class="bd_item">
+						<table width="100%" height="" cellspacing="" cellpadding="0">
 							<tr>
 								<td width="64" valign="top">
 										<img class="bd_image_small" src="/images/board/small/{$con.file}" border="0" alt="{$con.title}'"/>
@@ -37,6 +38,7 @@
 								</td>
 							</tr>
 						</table>
+                        </div>
                       </td>
                   </tr>
                 {/foreach}

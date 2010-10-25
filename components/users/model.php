@@ -325,4 +325,261 @@ class cms_model_users{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
+    public function addPhotoAlbum($album) {
+
+        $inCore     = cmsCore::getInstance();
+
+        $album      = cmsCore::callEvent('ADD_USER_PHOTO_ALBUM', $album);
+
+        if (!$album['allow_who']) { $album['allow_who'] = 'all'; }
+
+        $sql = "INSERT INTO cms_user_albums (user_id, title, pubdate, allow_who)
+                VALUES ({$album['user_id']}, '{$album['title']}', NOW(), '{$album['allow_who']}')";
+
+        $this->inDB->query($sql);
+
+        $album_id = $this->inDB->get_last_id('cms_photo_files');
+
+        return $album_id;
+        
+    }
+
+    public function getPhotoAlbum($type, $id) {
+
+        $album = array();
+
+        if ($type == 'private'){
+            $album = $this->inDB->get_fields('cms_user_albums', "id='{$id}'", 'id, user_id, title');
+        }
+
+        if ($type == 'public'){
+            $album = $this->inDB->get_fields('cms_photo_albums', "id='{$id}'", 'id, user_id, title');
+        }
+
+        return $album ? $album : false;
+
+    }
+
+    public function getPhoto($id) {
+
+        $photo = $this->inDB->get_fields('cms_user_photos', "id='{$id}'", 'id, user_id, title');
+
+        return $photo ? $photo : false;
+
+    }
+
+    public function getAlbumPhotos($user_id, $album_type, $album_id, $is_friends=false) {
+
+        $inUser     = cmsUser::getInstance();
+        $is_my      = $inUser->id == $user_id;
+        $is_friends = (int)$is_friends;
+        $filter     = '';
+        $photos     = array();
+
+        if ($album_type == 'private'){
+
+            if (!$is_my){
+                $filter = "AND (
+                                    allow_who='all'
+                                    OR
+                                    (allow_who='registered' AND ({$inUser->id}>0))
+                                    OR
+                                    (allow_who='friends' AND ({$is_friends}=1))
+                                )";
+            }
+
+            //Получаем личные фотографии
+            $private_sql = "SELECT id, pubdate, imageurl as file, hits, title
+                            FROM cms_user_photos
+                            WHERE user_id = {$user_id} AND album_id = '{$album_id}' $filter
+                            ORDER BY id DESC";
+
+            $private_res = $this->inDB->query($private_sql);
+
+            if ($this->inDB->num_rows($private_res)) {
+                while($photo = $this->inDB->fetch_assoc($private_res)){
+                    $photo['file']  = '/images/users/photos/small/'.$photo['file'];
+                    $photo['url']   = '/users/'.$user_id.'/photo'.$photo['id'].'.html';
+                    $photo['fpubdate'] = cmsCore::dateFormat($photo['pubdate']);
+                    $photos[]       = $photo;
+                }
+            }
+
+        }
+
+        if ($album_type == 'public'){
+
+            //Получаем фотографии из галереи
+            $public_sql = "SELECT id, pubdate, file, hits, title
+                            FROM cms_photo_files
+                            WHERE user_id = {$user_id} AND album_id = {$album_id} AND published = 1";
+
+            $public_res = $this->inDB->query($public_sql);
+
+            if ($this->inDB->num_rows($public_res)) {
+                while($photo = $this->inDB->fetch_assoc($public_res)){
+                    $photo['file']  = '/images/photos/small/'.$photo['file'];
+                    $photo['url']   = '/photos/photo'.$photo['id'].'.html';
+                    $photo['fpubdate'] = cmsCore::dateFormat($photo['pubdate']);
+                    $photos[]       = $photo;
+                }
+            }
+
+        }
+
+        return $photos;
+
+    }
+
+    public function getPhotoAlbums($user_id, $is_friends=false, $only_private=false) {
+
+        $inUser     = cmsUser::getInstance();
+        $is_my      = $inUser->id == $user_id;
+        $is_friends = (int)$is_friends;
+        $filter     = '';
+        $albums     = array();
+        
+        if (!$is_my){
+            $filter = "AND (
+                                a.allow_who='all'
+                                OR
+                                (a.allow_who='registered' AND ({$inUser->id}>0))
+                                OR
+                                (a.allow_who='friends' AND ({$is_friends}=1))
+                            )";
+        }
+
+        $sql = "SELECT a.id as id,
+                       a.title as title,
+                       a.pubdate as pubdate,
+                       a.allow_who as allow_who,
+                       'private' as type,
+                       p.imageurl as imageurl,
+                       COUNT(p.id) as photos_count
+                FROM cms_user_albums a, cms_user_photos p
+                WHERE p.user_id='{$user_id}' AND p.album_id = a.id {$filter}
+                GROUP BY p.album_id
+                ORDER BY a.pubdate DESC";
+
+        $result = $this->inDB->query($sql);
+
+        if ($this->inDB->num_rows($result)) { 
+            while($album = $this->inDB->fetch_assoc($result)){
+                $album['imageurl'] = "/images/users/photos/small/{$album['imageurl']}";
+                $album['pubdate']  = cmsCore::dateFormat($album['pubdate']);
+                $albums[] = $album;
+            }
+        }
+
+        if ($only_private){
+            $albums = cmsCore::callEvent('GET_USER_ALBUMS', $albums);
+            return $albums;
+        }
+
+        $sql = "SELECT  a.id as id,
+                        a.title as title,
+                        a.pubdate as pubdate,
+                        'all' as allow_who,
+                        'public' as type,
+                        f.file as imageurl,
+                        COUNT(f.id) as photos_count
+                FROM cms_photo_files f, cms_photo_albums a
+                WHERE f.user_id='{$user_id}' AND f.album_id = a.id AND f.published = 1
+                GROUP BY f.album_id
+                ORDER BY a.pubdate DESC";
+
+        $result = $this->inDB->query($sql);
+
+        if ($this->inDB->num_rows($result)) {
+            while($album = $this->inDB->fetch_assoc($result)){
+                $album['imageurl'] = "/images/photos/small/{$album['imageurl']}";
+                $album['pubdate']  = cmsCore::dateFormat($album['pubdate']);
+                $albums[] = $album;
+            }
+        }
+
+        $albums = cmsCore::callEvent('GET_USER_ALBUMS', $albums);
+
+        return $albums;
+
+    }
+
+    public function addUploadedPhoto($user_id, $photo) {
+
+        $sql = "INSERT INTO cms_user_photos (user_id, album_id, pubdate, title, description, allow_who, hits, imageurl)
+                VALUES('{$user_id}', '0', NOW(), '{$photo['filename']}', '', 'none', 0, '{$photo['imageurl']}')";
+
+        $this->inDB->query($sql);
+
+        return true;
+
+    }
+
+    public function getUploadedPhotos($user_id) {
+
+        $photos = array();
+
+        $sql = "SELECT id, user_id, album_id, title, description, allow_who, imageurl
+                FROM cms_user_photos
+                WHERE user_id='{$user_id}' AND album_id = 0
+                ORDER BY id ASC";
+
+        $result = $this->inDB->query($sql);
+
+        if ($this->inDB->num_rows($result)) {
+            while($photo = $this->inDB->fetch_assoc($result)){
+                $photos[] = $photo;
+            }
+        }
+
+        $photos = cmsCore::callEvent('GET_USER_UPLOADED_PHOTOS', $photos);
+
+        return $photos ? $photos : false;
+
+    }
+
+    public function deletePhoto($photo_id) {
+
+        $inCore = cmsCore::getInstance();
+
+        $inCore->loadLib('tags');
+
+        $sql = "SELECT imageurl FROM cms_user_photos WHERE id = '{$photo_id}'";
+        $result = $this->inDB->query($sql);
+        
+        if ($this->inDB->num_rows($result)){
+            $photo = $this->inDB->fetch_assoc($result);
+            @unlink(PATH.'/images/users/photos/'.$photo['imageurl']);
+            @unlink(PATH.'/images/users/photos/small/'.$photo['imageurl']);
+            @unlink(PATH.'/images/users/photos/medium/'.$photo['imageurl']);
+            $this->inDB->query("DELETE FROM cms_user_photos WHERE id = $photo_id") ;
+            $inCore->deleteComments('userphoto', $photo_id);
+            cmsClearTags('userphoto', $photo_id);
+        }
+
+        return true;
+
+    }
+
+    public function deletePhotoAlbum($album_id) {
+
+        $inUser = cmsUser::getInstance();
+
+        $photos = $this->getAlbumPhotos($inUser->id, 'private', $album_id);
+
+        if ($photos){
+            foreach($photos as $photo){
+                $this->deletePhoto($photo['id']);
+            }
+        }
+
+        $this->inDB->query("DELETE FROM cms_user_albums WHERE id = $album_id") ;
+
+        return true;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
 }

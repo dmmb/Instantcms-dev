@@ -25,6 +25,7 @@
 
     if (!$inCore->isAdminCan('admin/modules', $adminAccess)) {
         echo '¬ы не имеете доступа к управлению модул€ми';
+        return;
     }
 
     $inCore->loadClass('page');

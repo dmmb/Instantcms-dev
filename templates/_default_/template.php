@@ -88,10 +88,13 @@
 
     <div id="footer">
         <div class="container_12">
-            <div class="grid_12">
+            <div class="grid_8">
                 <div id="copyright"><?php cmsPrintSitename(); ?> &copy; <?php echo date('Y'); ?></div>
             </div>
-            <div class="grid_4">
+            <div class="grid_4 foot_right">
+                <a href="http://www.instantcms.ru/" title="Работает на InstantCMS">
+                    <img src="/templates/_default_/images/b88x31.gif" border="0"/>
+                </a>
             </div>
         </div>
     </div>

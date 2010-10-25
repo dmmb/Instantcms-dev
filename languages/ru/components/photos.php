@@ -59,7 +59,6 @@ $_LANG['HAVE_ONLY']               ='а имеется только';
 $_LANG['WANT_SEE']                ='Хотите посмотреть';
 $_LANG['HISTORY_YOUR_KARMA']      ='историю своей кармы';
 $_LANG['YOU_CANT_ADD_PHOTO']      ='Вы не можете добавлять фото в этот альбом.';
-$_LANG['ADD_PHOTO']               ='Добавить фотографию';
 $_LANG['MAX_UPLOAD_IN_DAY']       ='Достигнут предел загрузок в сутки.';
 $_LANG['CAN_UPLOAD_TOMORROW']     ='Вы сможете добавить фотографии в этот альбом завтра.';
 $_LANG['NEED_REGISTRATION']       ='Требуется регистрация';

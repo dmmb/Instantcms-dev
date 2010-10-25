@@ -34,6 +34,24 @@ a:hover { color:#375E93; }
 .text-input{ border:1px solid #4DA4CF; padding:2px; }
 .text-input:focus{ border:1px solid #FFD100; padding:2px; }
 
+.float_bar a{ color:#375E93; }
+.float_bar a:hover{ color:#09C; text-decoration:none; }
+.float_bar{
+    border-radius:8px;
+    -moz-border-radius:8px;
+    background-color: #E0EAEF;
+    float:right;
+    margin-top:6px;
+    padding:5px 8px;
+}
+
+.bar{
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    background-color: #E0EAEF;
+    padding:5px 10px;
+}
+
 /***************************** Шапка страницы *********************************/
 
 #header{
@@ -92,8 +110,8 @@ a:hover { color:#375E93; }
 #topmenu .menu li a:hover,
 #topmenu .menu li a.hover{
     background:url(../images/menubg-hover.jpg) repeat-x center top #375E93;
-    color:#000;
-    text-shadow:0 1px 0px #FFF;
+    color:#000 !important;
+    text-shadow:0 1px 0px #FFF !important;
 }
 
 #topmenu .menu li a{
@@ -134,14 +152,13 @@ a:hover { color:#375E93; }
 }
 
 .pathway{
-    padding:10px;
-    padding-top:0px;
+    padding:0 20px 10px;
     color:#FFFFFF;
+
 }
 
-.pathway a{
-    color:#FFF;
-}
+.pathway a{ color:#FFF; }
+.pathway a:hover{ color:#BFEAFF; text-decoration:none; }
 
 /*************************** Верхний широкий модуль ***************************/
 #topwide{
@@ -176,6 +193,8 @@ a:hover { color:#375E93; }
     background:#FFF;
     border-radius:8px;
     -moz-border-radius:8px;
+    -moz-box-shadow:0 2px 0 #000;
+    box-shadow:0 2px 0 #000;
 }
 
 #main .moduletitle{
@@ -205,7 +224,9 @@ a:hover { color:#375E93; }
     overflow:hidden;
     border-radius:10px;
     -moz-border-radius:10px;
-    margin-bottom:5px;
+    margin-bottom:7px;
+    -moz-box-shadow:0 2px 0 #000;
+    box-shadow:0 2px 0 #000;
 }
 
 #sidebar .moduletitle{
@@ -236,6 +257,16 @@ a:hover { color:#375E93; }
     font-size:16px;
 }
 
+#footer .foot_right a{
+    height:40px;
+    display:block;
+    padding-top:10px;
+}
+
+#footer .foot_right{
+    text-align:right;
+}
+
 /************************* Кнопки настройки модулей ***************************/
 
 span.fast_cfg_link { padding:4px; }
@@ -245,10 +276,12 @@ span.fast_cfg_link img{ border:none; }
 
 .sess_messages {
     padding:10px;
-    background:#ECECEC;
+    background:#E0EAEF;
     margin-bottom:15px;
     display:block;
     clear:both;
+    border-radius:8px;
+    -moz-border-radius:8px;
 }
 
 .sess_messages div{
@@ -258,14 +291,14 @@ span.fast_cfg_link img{ border:none; }
 }
 
 .sess_messages .message_info {
-    background:url(/images/icons/message_info.png) no-repeat left center;
+    background:url(../images/icons/info.png) no-repeat left center;
 }
 .sess_messages .message_success {
-    background:url(/images/icons/message_success.png) no-repeat left center;
+    background:url(../images/icons/yes.png) no-repeat left center;
     color: green;
 }
 .sess_messages .message_error {
-    background:url(/images/icons/message_error.png) no-repeat left center;
+    background:url(../images/icons/no.png) no-repeat left center;
     color: red;
 }
 
@@ -493,6 +526,8 @@ span.fast_cfg_link img{ border:none; }
     background: #FFF;
     border-radius:8px;
     -moz-border-radius:8px;
+    -moz-box-shadow:0 2px 0 #000;
+    box-shadow:0 2px 0 #000;
 }
 .con_heading {
 	font-size: 28px;
@@ -1613,7 +1648,7 @@ span.user_karma_point{
 	margin-bottom:20px;
 	font-size:12px;
 	padding:5px 10px;
-	border:solid 1px #CCC;
+	border:solid 1px #C3D6DF;
 	display:inline-block;
     border-radius:8px;
     -moz-border-radius:8px;
@@ -2119,7 +2154,7 @@ table.club_full_entry .wall .usr_wall_addlink{
 }
 
 table.club_full_entry .wall .usr_wall_entry { padding: 5px; border: dashed 1px #CCC; margin-bottom:2px; }
-table.club_full_entry .wall .usr_wall_title{ padding: 5px; font-weight:bold; float:left; }
+table.club_full_entry .wall .usr_wall_title{ padding: 5px; float:left; }
 table.club_full_entry .wall .usr_wall_delete { float:right; padding:5px; }
 table.club_full_entry .wall .usr_wall_delete a { background:url(/components/users/images/delete.gif) no-repeat left center; padding-left:18px; height:16px; line-height:16px; }
 
@@ -2252,6 +2287,18 @@ border:thin dashed #999999;
 }
 #addcommentlink{
 	margin-top:15px;
+}
+.cm_guest_name{
+    margin:10px 0px;
+    color:#375E93;
+    font-weight:bold;
+}
+.cm_codebar{
+    margin-top:10px;
+    width:100%;
+}
+.cm_submit{
+    font-size:18px;
 }
 
 div.cm_smiles{    
@@ -2666,61 +2713,165 @@ div.con_forum_link a{
     color:red;
 }
 
+#users_search_link a{
+    padding:1px;
+    padding-left:20px;
+    background:url(../images/icons/search.png) no-repeat;
+    text-decoration:none;    
+}
+
+#users_search_link a span{
+    border-bottom:dashed 1px #375E93;
+}
+
+#users_sbar{
+    padding:15px;
+    border-radius:8px;
+    -moz-border-radius:8px;
+    border:1px solid #C3D6DF;
+    color:#375E93;
+    background:#E0EAEF;
+    margin-bottom:10px;
+}
+
+#users_sbar input[type=text] { border:1px solid #4DA4CF; padding:2px;}
+#users_sbar .field{ width:150px; }
+#users_sbar .longfield{ width:408px; }
+#users_sbar p{ margin-top:10px; }
+
+.users_search_results{
+    padding:15px;
+    border-radius:8px;
+    -moz-border-radius:8px;
+    border:1px solid #C3D6DF;
+    color:#375E93;
+    background:#E0EAEF;
+    margin-bottom:15px;
+}
+
+.users_search_results h3{ font-size:18px; font-weight:normal; }
+.users_search_results ul,
+.users_search_results li{ margin-left:0px;}
+
 div.users_list_buttons{ overflow: hidden; }
-div.users_list_buttons .button{ width:130px; text-align:center; height:30px; line-height:30px; float:left; background:url(/components/users/images/button.jpg) no-repeat; }
-div.users_list_buttons .button a { color:#666666; }
+div.users_list_buttons .button{ 
+    border-radius:8px;
+    -moz-border-radius:8px;    
+    display:block;
+    float:left;
+    font-size:18px;
+    margin-right:15px;
+    padding:5px 0px;
+}
 
-div.users_list_buttons .selected_positive{ font-weight: bold; background:url(/components/users/images/button_selected_pos.jpg) no-repeat; }
-div.users_list_buttons .selected_positive a{ color: #FFF; }
-div.users_list_buttons .selected_negative{ font-weight: bold; background:url(/components/users/images/button_selected_neg.jpg) no-repeat; }
-div.users_list_buttons .selected_negative a{ color: #FFF; }
-div.users_list_buttons .selected_rating{ font-weight: bold; background:url(/components/users/images/button_selected_rat.jpg) no-repeat; }
-div.users_list_buttons .selected_rating a{ color: #FFF; }
+div.users_list_buttons .button a { color:#375E93; }
 
-div.users_list { border: solid 1px #999; padding:10px; margin-bottom:10px; }
+div.users_list_buttons .selected{
+    background:#E0EAEF;
+    padding:5px 10px;
+    margin-right:15px;
+}
 
+div.users_list_buttons .selected a{
+    text-decoration:none;
+    color:#000000;
+}
+
+div.users_list { 
+    margin:15px 0px; padding:15px; border:1px solid #C3D6DF;
+    border-radius:8px;
+    -moz-border-radius:8px;
+}
+
+table.users_list div.avatar{ border:1px solid #C3D6DF; padding:2px; width:63px; height:63px; margin-bottom:10px; }
 table.users_list div.number{ color:#999; }
-table.users_list div.nickname { font-size:18px; margin-bottom:4px; float:left;}
-table.users_list div.karma { float:right; clear:right; overflow:hidden; padding-top:4px; }
-table.users_list div.karma span { font-size:16px; padding:2px;  padding-left:17px; }
-table.users_list div.karma span.rating { color:#006699; font-size:16px; padding:2px; padding-left:20px; background:url(/components/users/images/rating.gif) no-repeat left center; }
+table.users_list div.nickname { font-size:18px; }
+table.users_list div.microstatus {
+    color:#5F98BF; font-size:11px;
+    padding:1px;
+    padding-left:20px;
+    background:url(../images/icons/comment-small.png) no-repeat left top;
+    clear:both;
+    margin-top:3px;
+}
+table.users_list div.karma,
+table.users_list div.rating{
+    font-size:12px;
+    float:right;
+    overflow:hidden;
+    padding:2px 5px;
+    border-radius:8px;
+    -moz-border-radius:8px;
+    background:#E0EAEF;
+}
+table.users_list div.karma{
+    margin-right:5px;    
+}
+table.users_list .pos{
+    color: green;
+}
+table.users_list .neg{
+    color: red;
+}
 
 table.users_list div.city { clear:both; }
 table.users_list div.city a{ color:#666; }
-table.users_list div.status { clear:both; margin-top:2px; }
-table.users_list div.status .online{ padding:0px 2px 0px 2px; background-color:#00CC00; color:#FFF; font-size:10px;}
-table.users_list div.status .offline{ color:#999999; font-size:10px; background:none; padding:0px;}
+table.users_list div.status { float:right; padding:2px; margin-right:5px; }
+table.users_list div.status .online{ 
+    padding:1px 5px; background-color:#00CC00; color:#FFF; font-size:11px;
+    border-radius:4px;
+    -moz-border-radius:4px;
+}
+table.users_list div.status .offline{ color:#999999; font-size:11px; background:none; padding:0px;}
 
-div.stat_block { margin-left: 20px; }
-div.stat_block div.title { font-size:24px; color:#006699; }
-div.stat_block div.body li { list-style:none; margin-bottom:3px; }
+#mod_user_stats div.stat_block { margin-left:15px; }
+#mod_user_stats div.stat_block div.title {
+    color:#1873AA;
+    font-size:16px;
+    margin-bottom:0px;
+    text-shadow:0 2px 0 #FFFFFF;
+    font-weight:bold;
+}
+#mod_user_stats div.stat_block div.body ul { list-style:none; margin:0px; margin-left:20px; padding:0px; }
+#mod_user_stats div.stat_block div.body li { list-style:none; margin:0px; margin-bottom:3px; }
 
-div.stat_block_bday { margin-left: 20px;    }
-div.stat_block_bday div.title { padding-left:18px; background:url(/components/users/images/birthday.gif) no-repeat left center; font-size:16px; color:#006699;; font-weight:bold; margin-bottom:5px; margin-top:20px;}
-div.stat_block_bday div.body { text-indent:30px; }
+#mod_user_stats div.stat_block_bday { margin-left: 20px;    }
+#mod_user_stats div.stat_block_bday div.title { text-shadow:0 2px 0 #FFFFFF; padding-left:18px; background:url(../images/icons/cake.png) no-repeat left center; font-size:16px; color:#1873AA;; font-weight:bold; margin-bottom:5px; margin-top:20px;}
+#mod_user_stats div.stat_block_bday div.body {  }
 
-div#user_ratings { padding:10px; }
+div#user_ratings { float:right; }
 
-div#user_ratings div.karma, div#user_ratings div.rating { float:left; text-align:center; width: 50%; }
+div#user_ratings div.karma, div#user_ratings div.rating { 
+    float:left; text-align:center;
+}
 
-div#user_ratings .karma .title, div#user_ratings .rating .title { color:#666; }
+div#user_ratings .value,  div#user_ratings .value-positive, div#user_ratings .value-negative{ 
+    font-size:14px; padding: 4px; margin: 2px;
+    border-radius:18px;
+    -moz-border-radius:18px;
+    cursor:pointer;
+}
 
-div#user_ratings .value,  div#user_ratings .value-positive, div#user_ratings .value-negative{ font-size:16px; padding: 4px; margin: 2px; }
+div#user_ratings .karma .value-positive { background-color:#427F00; color:#FFF; }
+div#user_ratings .karma .value-negative { background-color:#BF2F17; color:#FFF; }
 
-div#user_ratings .karma .value-positive { background-color:#00AA00; color:#FFF; }
-div#user_ratings .karma .value-negative { background-color:#AA0000; color:#FFF; }
+div#user_ratings .karma table { }
+div#user_ratings .karma table td { font-size:14px; }
 
-div#user_ratings .karma table { margin-left:auto; margin-right:auto; }
-div#user_ratings .karma table td { font-size:16px; }
-
-div#user_ratings .rating .value {  background-color:#006699; color:#FFF; padding:6px; }
+div#user_ratings .rating .value {  background-color:#4A73A7; color:#FFF; padding:6px 10px; }
 
 div#user_profile_url{
     clear:both;
     display:block;
-    padding-top:15px;
+    padding:5px;
+    margin-top:15px;
     text-align:center;
+    border-radius:8px;
+    -moz-border-radius:8px;
+    background:none repeat scroll 0 0 #E0EAEF;
 }
+#user_profile_url div{ color:#375E93; }
+#user_profile_url a{ color:#5F98BF; }
 
 div.usr_clubs {padding: 15px; }
 div.usr_clubs span.label { margin-right:15px; font-weight:bold; }
@@ -2728,8 +2879,8 @@ div.usr_clubs a.usr_club_link { padding-left:18px; background:url(/images/icons/
 
 div.usr_profile_menu{ margin-top:10px; clear:both; overflow:hidden; }
 
-div.usr_profile_menu a { padding:4px; height:24px; width:24px; border: solid 1px #FFF; overflow:hidden; float:left; }
-div.usr_profile_menu a:hover { padding:4px; height:24px; width:24px; background-color:#ebebeb; border:solid 1px gray; overflow:hidden; float:left; }
+div.usr_profile_menu a { padding:4px; border: solid 1px #FFF; overflow:hidden; float:left; }
+
 
 a.select-avatar{
     height:16px;
@@ -2765,9 +2916,20 @@ div.user_profile_data .field .value {  }
 #usr_blog{ background:url(/components/users/images/profile/blog.png) no-repeat; }
 #usr_comments{ background:url(/components/users/images/profile/comments.png) no-repeat; }
 
+
+
 .usr_friends_query{
-	padding:10px; margin-top:10px; border:solid 1px silver;
+	-moz-border-radius:8px 8px 8px 8px;
+    background-color:#FFFFFF;
+    border:1px solid #65A1C2;
+    padding:10px;
+    margin-top:10px;
 }
+.usr_friends_query_one{ margin-bottom:5px; }
+.usr_friends_query_yes{ height:16px; line-height:16px; padding-left:20px; background:url(../images/icons/yes.png) no-repeat; }
+.usr_friends_query_no{ height:16px; line-height:16px; padding-left:20px; background:url(../images/icons/no.png) no-repeat; }
+
+
 
 .content_title { font-size:14px; font-weight:bold; }
 
@@ -2777,16 +2939,144 @@ div.user_profile_data .field .value {  }
 .usr_com_title{	padding: 5px; background-color:#EBEBEB; border-top:solid 1px #666;	border-bottom:none; }
 .usr_com_body{	padding-top: 15px; }
 
-.usr_wall_entry { padding: 5px; border: dashed 1px #CCC; margin-bottom:2px; }
-.usr_wall_title{ padding: 5px; font-weight:bold; float:left; }
+.usr_wall_entry {
+    border-radius:8px;
+    -moz-border-radius:8px;
+    
+    margin:5px 0;
+    padding:5px 0px;
+}
+.usr_wall_avatar {
+    border-radius:8px;
+    -moz-border-radius:8px;
+    border:1px solid #C3D6DF;
+    padding:4px;
+    background:#FFF;
+}
+.usr_wall_text{
+    padding-left:10px;
+    padding-top:10px;
+}
+.usr_wall_title{ float:left; color:#5F98BF; margin-bottom:10px; }
 .usr_wall_delete { float:right; padding:5px; }
-.usr_wall_delete a { background:url(/components/users/images/delete.gif) no-repeat left center; padding-left:18px; height:16px; line-height:16px; }
+.usr_wall_delete a { 
+    background:url(../images/icons/delete.png) no-repeat left center;
+    padding:1px;
+    padding-left:20px;
+    height:16px;
+    line-height:16px;
+    text-decoration: none;
+    color:#375E93;
+}
+
+.usr_profile_block{
+    clear:both;
+    margin-top:10px;
+    padding-top:10px;
+    border-top:1px solid #C3D6DF;
+    margin-left:10px;
+}
 
 .usr_msg_title{	padding: 10px; }
 .usr_msg_body{ padding: 10px; }
 
 .usr_publ_albums{ overflow:hidden;	background-color:#EBEBEB; padding:6px; margin-bottom:10px; }
-.usr_photo_thumb{ padding:1px; float:left; height:140px;	width:120px;	display:block;	margin:4px;	padding:1px; padding-top:10px;border:dotted 1px silver;	background-color:#FFFFFF; text-align:center; }
+
+.usr_photo_add{
+    padding:1px;
+    padding-left:20px;
+    background:url(../images/icons/addphoto.png) no-repeat left center;
+}
+.usr_del_album{
+    padding:1px;
+    padding-left:20px;
+    background:url(../images/icons/deletecat.png) no-repeat left center;
+    margin-left:6px;
+}
+
+#usr_photos_upload_album{
+    background:#E0EAEF;
+    border-radius:8px;
+    -moz-border-radius:8px;
+    padding:10px;
+    margin-bottom:5px;
+}
+
+#usr_photos_upload_album .text-input{
+    width:250px;
+}
+#usr_photos_upload_album .select-input{
+    width:257px;
+}
+
+.usr_photos_add_limit{
+    margin-bottom: 20px; color:#5F98BF;;
+}
+
+.usr_photos_submit_one{
+    padding:10px;
+    border:solid 1px #C3D6DF;
+    border-radius:8px;
+    -moz-border-radius:8px;
+    margin-bottom:2px;
+}
+.usr_photos_submit_one .ph_thumb{
+    border: solid 3px #E0EAEF;
+    -moz-border-radius:5px;
+    width:96px;
+    padding:2px;
+}
+.usr_photos_submit_one .text-input{
+    width:300px;
+}
+#usr_photos_submit_btn{
+    margin-top:15px;
+    color:#5F98BF;
+}
+#usr_photos_submit_btn input{
+    font-size:18px;
+}
+
+.usr_photo_thumb{
+    padding:1px;
+    padding-top:10px;
+    float:left;
+
+    width:120px;
+    display:block;
+    margin:4px;
+    margin-left:0px;
+    border-radius:8px;
+    -moz-border-radius:8px;
+    border:1px solid #C3D6DF;
+    text-align:center;
+}
+.usr_photo_date{ font-size:11px; color:#5F98BF; display:block; }
+.usr_photo_hits{ font-size:10px; color:#999; display:block; }
+
+.usr_photos_notice{
+    margin:10px 0px;
+    padding:1px;
+    padding-left:20px;
+    background:url(../images/icons/info.png) no-repeat left center;
+}
+
+.usr_photo_sel_bar{
+    margin:10px 0px;
+    display:inline-block;
+}
+
+.usr_photo_prev_link,
+.usr_photo_next_link{
+    display:inline-block;
+    width:32px;
+    height:32px;
+    margin:0px 15px;
+}
+
+.usr_photo_prev_link { background:url(../images/icons/big/prev.png) no-repeat; float:right; }
+.usr_photo_next_link { background:url(../images/icons/big/next.png) no-repeat; float:left; }
+
 .usr_photo_view{ text-align:center; padding:10px; background-color:#FFFFFF; }
 .usr_editprof{	background-color:#FFFFFF; border:solid 1px gray; padding:8px; width:100%; }
 .usr_edithint{	color:#666666;	font-size:10px; }
@@ -2809,26 +3099,35 @@ div.user_profile_data .field .value {  }
 .usr_files_orderbtn{ font-size:9px;	background-color:#CCCCCC; border:solid 1px gray; height:20px; }
 .usr_files_link{ font-size:10px; color:#999999; }
 
-.usr_wall{ margin-top:5px; padding:2px;	overflow:hidden; }
+.usr_wall{
+    margin-top:5px; overflow:hidden; clear:both;
+}
 .usr_wall #addwall{	padding-right: 10px;}
 
-.usr_wall_header{ font-size:18px; padding:2px; color:#7192A6;}
-.usr_wall_body{	padding:2px; }
-.usr_wall_addlink{
-	margin-top:10px;
-	padding:3px;
-	padding-left:20px;
-	line-height:12px;
-	background-image:url(/components/users/images/writewall.gif);
-	background-repeat:no-repeat;
+.usr_wall_header{ font-size:18px; color:#375E93; margin-bottom:5px; }
+.usr_wall_body{ margin-bottom:10px;	}
+.usr_wall_body p{
+    padding:2px;
+    margin:5px 0px;
+    color:#5F98BF;
+    font-size:14px;
 }
-.usr_wall_addlink a{ text-decoration:underline;	color:gray;}
+.usr_wall_addlink{
+    border-radius:8px;
+    -moz-border-radius:8px;
+    margin-top:6px;
+    padding:5px 8px;
+	padding-left:25px;
+    display:inline-block;
+	background:url(../images/icons/add.png) no-repeat 6px center #E0EAEF;
+}
+.usr_wall_addlink a{ color:#375E93; text-decoration:none; }
 .usr_friendslink{ text-decoration:underline; color:#999999; }
 
 textarea.wall_message{ width:100%; height:100px; }
 
 #karmalink{	font-size:16px;	font-weight:bold; padding:4px; background-color:#EBEBEB; margin:2px; margin-left:8px; }
-#usertitle{	margin-bottom:4px;	overflow:hidden;}
+#usertitle{	overflow:hidden;}
 #nickname{	margin:0px; }
 
 .usr_group{
@@ -2923,23 +3222,84 @@ table.feed td.date strong { color:green; }
 }
 
 .usr_status_text{
-    font-style:italic;
-    background:url(/components/users/images/messages.gif) no-repeat left center;
-    padding-left:19px;
+    color:#5F98BF;
+    background:url(../images/icons/comment.png) no-repeat left center;
+    padding-left:20px;
     float:left;
 }
 
 .usr_status_date{
-    font-size:9px;
+    font-size:10px;
     color:gray;
     font-style:normal;
-    margin-left:14px;
+    margin-left:10px;
     margin-right:14px;
 }
 
 .usr_status_link{
     float:left;
 }
+
+.usr_status_link a{
+    padding:1px;
+    padding-left:20px;
+    background:url(../images/icons/edit.png) no-repeat left center;
+}
+
+.usr_avatar{
+    padding:10px;
+    border:solid 1px #65A1C2;
+    background-color:#FFFFFF;
+    border-radius:8px;
+    -moz-border-radius:8px;
+}
+
+.usr_friends_block{
+    overflow:hidden;
+    margin-bottom:15px;
+}
+
+.usr_friend_cell{
+    padding-right:10px;
+    margin-right:5px;
+    margin-bottom:5px;
+}
+
+.usr_friend_cell span{
+    font-size:10px;
+}
+
+.usr_albums_list{
+    margin:10px 0;
+    padding:0;
+    clear:both;
+    overflow:hidden;
+}
+
+.usr_albums_list li{
+    margin:0; padding:0;
+    margin-right:10px;
+    margin-bottom:10px;
+    display: block;
+    float:left;
+    width:210px;
+}
+
+.usr_album_thumb{
+    display:block;
+    float:left;
+    width:64px;
+    height:64px;
+    margin-right:10px;
+    padding:2px;
+    border:1px solid #65A1C2;
+}
+
+.usr_album .link{ font-size:14px; }
+.usr_album .count { color:#5F98BF; }
+.usr_album .date { color:#AAA; font-size:11px; }
+
+
 
 /* ========================================================================== */
 /* ======================= ЛЕНТА АКТИВНОСТИ ================================= */

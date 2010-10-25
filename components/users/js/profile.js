@@ -1,9 +1,9 @@
 function setStatus(){
 
-    var new_status = prompt('Введите ваше статусное сообщение (максимум 100 символов):');
+    var new_status = prompt('Введите ваше статусное сообщение (максимум 140 символов):');
 
-    if (new_status.length > 100) {
-        new_status = new_status.substr(0, 100);
+    if (new_status.length > 140) {
+        new_status = new_status.substr(0, 140);
     }
 
     if (new_status) {

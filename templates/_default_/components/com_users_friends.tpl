@@ -3,13 +3,15 @@
 {* ================================================================================ *}
 
 {assign var="col" value="1"}
-<table width="" cellpadding="10" cellspacing="0" border="0" class="usr_friends_list" align="left">
+<table width="" cellpadding="0" cellspacing="0" border="0" class="usr_friends_list" align="left">
   {foreach key=tid item=friend from=$friends}
   {if $col==1}<tr>{/if}
             <td align="center" valign="top">
-				<div align="center"><a href="{profile_url login=$friend.login}">{$friend.nickname}</a></div>
-				<div align="center"><a href="{profile_url login=$friend.login}">{$friend.avatar}</a></div>
-				<div align="center">{$friend.flogdate}</div>
+                <div class="usr_friend_cell">
+                    <div align="center"><a href="{profile_url login=$friend.login}">{$friend.nickname}</a></div>
+                    <div align="center"><a href="{profile_url login=$friend.login}">{$friend.avatar}</a></div>
+                    <div align="center">{$friend.flogdate}</div>
+                </div>
             </td>
               
       {if $col==$maxcols} </tr> {assign var="col" value="1"} {else} {math equation="x + 1" x=$col assign="col"} {/if}
