@@ -796,7 +796,8 @@ if ($do=='newpost' || $do=='editpost'){
                 if ($published) {
                     $post_seolink = $inDB->get_field('cms_blog_posts', "id={$post_id}", 'seolink');
 					//регистрируем событие
-					if ($blog['owner']=='user'){
+					if ($blog['owner']=='user' && $blog['allow_who'] != 'nobody'){
+						$is_friends_only = $blog['allow_who'] == 'friends' ? 1 : 0;
 						cmsActions::log('add_post', array(
 							'object' => $title,
 							'object_url' => $model->getPostURL(null, $blog['seolink'], $post_seolink),
@@ -804,7 +805,8 @@ if ($do=='newpost' || $do=='editpost'){
 							'target' => $blog['title'],
 							'target_url' => $model->getBlogURL(null, $blog['seolink']),
 							'target_id' => $blog['id'], 
-							'description' => ''
+							'description' => '', 
+							'is_friends_only' => $is_friends_only
 						));
 					} elseif ($blog['owner']=='club'){
 						cmsActions::log('add_post_club', array(
@@ -1118,6 +1120,7 @@ if ($do == 'publishpost'){
 			$post['seolink'] = $model->getPostURL(0, $post['bloglink'], $post['seolink']);
 			if ($blog['allow_who'] == 'all') { cmsCore::callEvent('ADD_POST_DONE', $post); }
 			if ($blog['owner']=='user'){
+				$is_friends_only = $blog['allow_who'] == 'friends' ? 1 : 0;
 				//регистрируем событие
 				cmsActions::log('add_post', array(
 						'object' => $post['title'],
@@ -1127,7 +1130,8 @@ if ($do == 'publishpost'){
 						'target' => $blog['title'],
 						'target_url' => $model->getBlogURL(0, $blog['seolink']),
 						'target_id' => $blog['id'], 
-						'description' => ''
+						'description' => '', 
+						'is_friends_only' => $is_friends_only
 				));
 			} elseif ($blog['owner']=='club'){
 				cmsActions::log('add_post_club', array(
