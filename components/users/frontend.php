@@ -552,6 +552,7 @@ if ($do=='editprofile'){
 if ($do=='comments'){
 
 	$usr = $model->getUserShort($id);
+	if (!$usr) { cmsCore::error404(); }
 
 	$page       = $inCore->request('page', 'int', 1);
 	$perpage    = 15;
@@ -605,6 +606,7 @@ if ($do=='comments'){
 if ($do=='forumposts'){
 
 	$usr = $model->getUserShort($id);
+	if (!$usr) { cmsCore::error404(); }
 
 	$page = $inCore->request('page', 'int', 1);
 	$perpage = 15;
@@ -670,10 +672,7 @@ if ($do=='profile'){
     }
 
     $usr = $model->getUser($id);
-    
-    if (!$usr){
-        cmsCore::error404();
-	}
+    if (!$usr) { cmsCore::error404(); }
 
 	if (!$inUser->id && !$cfg['sw_guest']) {
         $inPage->setTitle($_LANG['ACCESS_DENIED']);
@@ -841,6 +840,7 @@ if ($do=='messages'){
 	if (usrCheckAuth() && ($inUser->id == $id  || $inCore->userIsAdmin($inUser->id))){
 
 		$usr = $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
 
 		$inPage->setTitle($_LANG['MY_MESS']);
 		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
@@ -862,6 +862,7 @@ if ($do=='avatar'){
 	if (usrCheckAuth() && $inUser->id == $id){
 
 		$usr = $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
 
 		$inPage->setTitle($_LANG['LOAD_AVATAR']);
 		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
@@ -1076,6 +1077,7 @@ if ($do=='addphoto'){
 	if ( $inUser->id==$id || $inCore->userIsAdmin($inUser->id) ){
 
 		$usr = $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
 
 		if ($usr){
 	
@@ -1203,6 +1205,7 @@ if ($do=='delphoto'){
 		if (!isset($_POST['godelete'])){
 
 			$usr = $model->getUserShort($id);
+			if (!$usr) { cmsCore::error404(); }
 			$inPage->backButton(false);
 			$sql = "SELECT title FROM cms_user_photos WHERE id = $photoid AND user_id = $id";
 			$result = $inDB->query($sql);
@@ -1256,6 +1259,7 @@ if ($do=='editphoto'){
 	if (usrCheckAuth() && ($user_id==$id||$inCore->userIsAdmin($user_id))){
 
 		$usr = $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
 
 		if ($usr){
 	
@@ -1351,6 +1355,7 @@ if ($do=='viewalbum'){
 	if (!$cfg['sw_photo']) { cmsCore::error404(); }
 	
 	$usr = $model->getUserShort($id);
+	if (!$usr) { cmsCore::error404(); }
 	
 	if (!$usr){ cmsCore::error404(); }
 
@@ -1432,6 +1437,7 @@ if ($do=='viewalbum'){
 if ($do=='viewboard'){ 
 	
 	$usr = $model->getUserShort($id);
+	if (!$usr) { cmsCore::error404(); }
 	
 	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 	$inPage->addPathway($_LANG['ADVS']);
@@ -1502,6 +1508,7 @@ if ($do=='viewboard'){
 if ($do=='friendlist'){
 	
 	$usr = $model->getUserShort($id);
+	if (!$usr) { cmsCore::error404(); }
 
 	if (usrCheckAuth()){
 
@@ -1528,6 +1535,7 @@ if ($do=='viewphoto'){
 	$myprofile = ($user_id == $id) ? true : false;
 
 	$usr = $model->getUserShort($id);
+	if (!$usr) { cmsCore::error404(); }
 	
 	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 
@@ -1582,6 +1590,7 @@ if ($do=='viewphoto'){
 if ($do=='addfriend'){
 
     $usr = $model->getUserShort($id);
+	if (!$usr) { cmsCore::error404(); }
 
     cmsUser::clearSessionFriends();
 
@@ -1649,6 +1658,7 @@ if ($do=='delfriend'){
 		$first_id  = $inUser->id;
 		$second_id = $id;
 		$usr       = $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
 		
 		$fr_id = $inDB->get_field('cms_user_friends', "(to_id = $first_id AND from_id = $second_id) OR (to_id = $second_id AND from_id = $first_id)", 'id');
 
@@ -1675,6 +1685,7 @@ if ($do=='sendmessage'){
 		$to_id      = $id;
 		
 		$usr 		= $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
 			
 		if (usrCheckAuth()){
 
@@ -1826,6 +1837,7 @@ if ($do=='delmessages'){
 if ($do=='karma'){
 
 		$usr = $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
 
 		$inPage->setTitle($_LANG['KARMA_HISTORY']);
 		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
@@ -1865,6 +1877,7 @@ if ($do=='giveaward'){
 		$to_id   = $id;
 
 		$usr = $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
 
 		$inPage->setTitle($_LANG['AWARD_USER']);
 		$inPage->addHeadJS('components/users/js/awards.js');
@@ -1932,6 +1945,7 @@ if ($do == 'delprofile'){
 	if (usrCheckAuth()){
 
 		$data = $model->getUserShort($id);
+		if (!$data) { cmsCore::error404(); }
 
 		if (isset($_REQUEST['confirm'])){
 			if ($inUser->id == $data['id'] || $inCore->userIsAdmin($inUser->id)){
@@ -1971,6 +1985,7 @@ if ($do=='restoreprofile'){
 	if (usrCheckAuth()){
 
 		$usr = $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
 
 		if ($inUser->id==$id || $inCore->userIsAdmin($inUser->id)){
 			$sql = "UPDATE cms_users SET is_deleted = 0 WHERE id = $id";
@@ -1993,6 +2008,7 @@ if ($do=='files'){
 
 	//get user
 	$usr = $model->getUserShort($id);
+	if (!$usr) { cmsCore::error404(); }
 
 	//heading
 	$inPage->setTitle($usr['nickname'].' - '.$_LANG['FILES']);
@@ -2192,6 +2208,7 @@ if ($do=='addfile'){
 							
 			} else {
 				$usr = $model->getUserShort($id);
+				if (!$usr) { cmsCore::error404(); }
 
 				//build upload form
 				$inPage->setTitle($_LANG['UPLOAD_FILES']);
@@ -2227,6 +2244,7 @@ if ($do=='delfile'){
 	if (usrCheckAuth() && ($inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
 		if (!isset($_POST['godelete'])){
 			$usr = $model->getUserShort($id);
+			if (!$usr) { cmsCore::error404(); }
 
 			$inPage->backButton(false);
 			$sql = "SELECT filename FROM cms_user_files WHERE id = $fileid AND user_id = $id";
@@ -2273,6 +2291,7 @@ if ($do=='delfilelist'){
 	if (usrCheckAuth() && ($inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
 		if (!isset($_POST['godelete'])){
 			$usr = $model->getUserShort($id);
+			if (!$usr) { cmsCore::error404(); }
 
 			$inPage->backButton(false);
 
@@ -2477,6 +2496,7 @@ if ($do=='votekarma'){
 		if ($message && $user_id && $author_id && !$errors){
 			switch ($usertype){
 				case 'user': 	$usr  = $model->getUserShort($user_id);
+								if (!$usr) { cmsCore::error404(); }
 								$sql = "INSERT INTO cms_user_wall (user_id, author_id, pubdate, content, usertype)
 										VALUES ('$user_id', '$author_id', NOW(), '$message', '$usertype')";
 								$inDB->query($sql);
