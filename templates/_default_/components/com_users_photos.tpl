@@ -23,7 +23,7 @@
 
 {if $photos}
 
-        {if $is_admin || ($my_profile && $album_type == 'private')}
+        {if ($is_admin || $my_profile) && $album_type == 'private'}
         <form action="/users/{$user_id}/photos/editlist" method="post">
             <input type="hidden" name="album_id" value="{$album.id}" />
         {/if}
@@ -44,7 +44,7 @@
                             <span class="usr_photo_date">{$photo.fpubdate}</span>
                             <span class="usr_photo_hits"><strong>{$LANG.HITS}:</strong> {$photo.hits}</span>
                         </div>
-                        {if $is_admin || ($my_profile && $album_type == 'private')}
+                        {if ($is_admin || $my_profile) && $album_type == 'private'}
                             <input type="checkbox" name="photos[]" class="photo_id" value="{$photo.id}" />
                         {/if}                        
                     </div>
@@ -58,7 +58,7 @@
 
 		</table>
 
-        {if $is_admin || ($my_profile && $album_type == 'private')}
+        {if ($is_admin || $my_profile) && $album_type == 'private'}
             <div class="usr_photo_sel_bar bar">
                 {$LANG.SELECTED_ITEMS}:
                 <input type="submit" name="edit" value="{$LANG.EDIT}" />

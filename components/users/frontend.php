@@ -1194,6 +1194,8 @@ if ($do=='submitphotos'){
 
     if ($inCore->inRequest('submit')){
 
+        cmsUser::sessionDel('photos_list');
+
         $new_album  = $inCore->request('new_album', 'int', 0);
         
         $delete = $inCore->request('delete', 'array');
@@ -1360,8 +1362,10 @@ if ($do=='editphotolist'){
 
         foreach($photo_ids as $photo_id){
             $photo_id   = intval($photo_id);
-            $inDB->query("UPDATE cms_user_photos SET album_id = 0 WHERE id = '{$photo_id}'");
+            $photos[] = $photo_id;
         }
+
+        if ($photos){ cmsUser::sessionPut('photos_list', $photos); }
 
         $inCore->redirect('/users/'.$usr['login'].'/photos/submit');
 
