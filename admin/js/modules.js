@@ -1,3 +1,7 @@
+$(document).ready(function(){
+    checkGroupList();
+});
+
 // JavaScript Document
 function checkDiv(){
 	
@@ -15,13 +19,13 @@ function checkDiv(){
 function checkGroupList(){
 
 	if(document.addform.show_all.checked){
-		$('select#showin').attr('disabled', 'disabled');
-		$('#is_strict_bind').attr('checked', '').attr('disabled', 'disabled');
-		$('label[for=is_strict_bind] strong').css('color', '#999');
+		$('#grp *').css('color', '#999');
+		$('#grp input[type=checkbox]').attr('checked', '').attr('disabled', 'disabled');
+		$('#grp select').attr('disabled', 'disabled');
 	} else {
-		$('select#showin').attr('disabled', '');
-        $('#is_strict_bind').attr('disabled', '');
-        $('label[for=is_strict_bind] strong').css('color', '');
+        $('#grp *').css('color', '');
+		$('#grp input[type=checkbox]').attr('disabled', '');
+		$('#grp select').attr('disabled', '');
 	}
 
 }

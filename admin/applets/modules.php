@@ -757,7 +757,7 @@ function applet_modules(){
                             <strong>Где показывать модуль?</strong>
                         </div>
 
-                        <div style="height:300px;overflow: auto;border: solid 1px #666; padding:5px 10px; background: #FFF;">
+                        <div style="height:300px;overflow: auto;border: solid 1px #999; padding:5px 10px; background: #FFF;">
                         <table cellpadding="0" cellspacing="0" border="0" width="100%" align="center">
                             <tr>
                                 <td colspan="2" height="25"><strong>Раздел сайта</strong></td>
@@ -766,9 +766,9 @@ function applet_modules(){
                             <?php foreach($menu_items as $i){ ?>
                             <tr>
                                 <td width="20" height="25">
-                                    <input type="checkbox" name="showin[]" value="<?php echo $i['id']; ?>" <?php if ($i['selected']){ ?>checked="checked"<?php } ?> onclick="$('#p<?php echo $i['id']; ?>').toggle()"/>
+                                    <input type="checkbox" name="showin[]" id="mid<?php echo $i['id']; ?>" value="<?php echo $i['id']; ?>" <?php if ($i['selected']){ ?>checked="checked"<?php } ?> onclick="$('#p<?php echo $i['id']; ?>').toggle()"/>
                                 </td>
-                                <td><?php echo $i['title']; ?></td>
+                                <td><label for="mid<?php echo $i['id']; ?>"><?php echo $i['title']; ?></label></td>
                                 <td align="center">
                                     <select id="p<?php echo $i['id']; ?>" name="showpos[<?php echo $i['id']; ?>]" style="<?php if (!$i['selected']) { ?>display:none<?php } ?>">
                                         <?php foreach($pos as $position){ ?>
@@ -781,14 +781,16 @@ function applet_modules(){
                         </table>
                         </div>
 
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
+                            <tr>
+                                <td width="20"><input type="checkbox" name="is_strict_bind" id="is_strict_bind" value="1" <?php if ($mod['is_strict_bind']) { echo 'checked="checked"'; } ?>/></td>
+                                <td><label for="is_strict_bind"><strong>Не показывать на вложенных страницах</strong></label></td>
+                            </tr>
+                        </table>
+
                     </div>
 
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
-                        <tr>
-                            <td width="20"><input type="checkbox" name="is_strict_bind" id="is_strict_bind" value="1" <?php if ($mod['is_strict_bind']) { echo 'checked="checked"'; } ?>/></td>
-                            <td><label for="is_strict_bind"><strong>Не показывать на вложенных страницах</strong></label></td>
-                        </tr>
-                    </table>
+                    
 
                     {tab=Кеширование}
 

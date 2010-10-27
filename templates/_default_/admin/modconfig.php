@@ -22,11 +22,18 @@
             <div class="params-buttons">
                 <input type="submit" name="save" value="Сохранить" />
             </div>
+        <?php } elseif($mode == 'none') { ?>
+            <div class="params-form">
+                Этот модуль можно настроить только в <a href="/admin/index.php?view=modules&do=edit&id=<?php echo $mod['id']; ?>" target="blank">панели управления</a>.
+            </div>
+            <div class="params-buttons">
+                <input type="submit" name="save" value="Сохранить" />
+            </div>
         <?php } else { ?>
             <?php $inCore->insertEditor('content', $mod['content'], '450', '100%'); ?>
             <div class="params-buttons">
                <input type="submit" name="save" value="Сохранить" />
             </div>
-        <?php } ?>        
+        <?php } ?>
     </div>
 </form>
