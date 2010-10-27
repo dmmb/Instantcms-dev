@@ -43,7 +43,7 @@
                                     </a>
                                 </td>
                                 <td width="180">
-                                    <div class="jdate"><?php echo $inCore->getRusDate(date('d F, Y')); ?></div>
+                                    <div class="jdate"><?php echo date('d') .' '. $_LANG['MONTH_'.date('m')]; ?></div>
                                     <div class="jclock">00:00:00</div>
                                 </td>
                                 <td width="200">

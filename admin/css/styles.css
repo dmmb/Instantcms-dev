@@ -1,4 +1,4 @@
-html{
+{
 	height:100%;
 }
 body {
@@ -439,4 +439,57 @@ div.filter {
 #catalog_advert{
     padding-left:20px;
     background:url(../images/components/shop.png) no-repeat left top;
+}
+
+.pagebar{
+    margin-top:10px;
+    margin-bottom: 15px;
+    font-size:12px;
+    clear:both;
+}
+.pagebar_title{
+    margin:5px;
+    padding:4px;
+}
+.pagebar_page{
+    margin:3px;
+    padding:6px;
+}
+.pagebar_current{
+    margin:3px;
+    padding:6px;
+    border:solid 1px silver;
+    background-color: white;
+}
+.cat_link div{
+    height:17px;
+    line-height:17px;
+    padding: 1px 1px 1px 18px;
+    background: url(/admin/images/icons/hmenu/cats.png) no-repeat;
+    overflow:hidden;
+}
+.cat_link div span{
+    float:right;
+}
+.cat_add_link{
+    margin-bottom:10px;
+    padding-bottom:10px;
+    border-bottom: dotted 1px silver;
+}
+.cat_add_link div{
+    padding: 2px 2px 2px 18px;
+    background: url(/admin/images/icons/hmenu/add.png) no-repeat;
+}
+#slide_cell{
+    width:14px;
+    background:url(/admin/images/tree/slide.gif) no-repeat center center #EEE;
+    cursor:pointer;
+}
+.unslided{
+    background:url(/admin/images/tree/unslide.gif) no-repeat center center #EEE !important;
+}
+#cats_cell{
+    padding:12px;
+    background:url(/admin/images/tree/tree_bg.jpg) repeat-y right top #EEE;
+    width:240px;
 }

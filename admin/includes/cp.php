@@ -231,7 +231,7 @@ function cpMenu(){
 			<?php } ?>
 			<?php if ($inCore->isAdminCan('admin/content', $adminAccess)){ ?>
 			<li>
-				<a class="cats">Контент</a>
+				<a class="cats" href="index.php?view=tree">Контент</a>
 				<ul>
 					<li><a class="cats" href="index.php?view=cats">Разделы</a></li>
 					<li><a class="content" href="index.php?view=content">Статьи / страницы</a></li>

@@ -80,6 +80,8 @@
 	
 	$GLOBALS['mainmenu'] = array();
 
+    $inCore->loadLanguage('lang');
+
 	cpGenerateMenu();
 
 	cpProceedBody();
