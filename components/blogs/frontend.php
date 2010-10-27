@@ -974,12 +974,12 @@ if($do=='post'){
     //Если авторизован, проверяем является ли он хозяином блога или его администратором
     if ($user_id){
         if ($owner=='user'){
-            $is_author  = (($inUser->id == $blog['user_id']) || ((!$myblog) && $blog['ownertype']=='multi' && $inDB->get_field('cms_blog_authors', 'blog_id='.$blog['id'].' AND user_id='.$user_id, 'id')) || ($blog['ownertype']=='multi' && $blog['forall']));
+            $is_author  = (($user_id == $blog['user_id']) || ((!$myblog) && $blog['ownertype']=='multi' && $inDB->get_field('cms_blog_authors', 'blog_id='.$blog['id'].' AND user_id='.$user_id, 'id')) || ($blog['ownertype']=='multi' && $blog['forall'] && $user_id == $post['user_id']));
             $is_admin   = $inCore->userIsAdmin($user_id);
         }
         if ($owner=='club'){
             $is_moder   = clubUserIsRole($blog['user_id'], $user_id, 'moderator');
-            $is_author  = ($inUser->id == $post['user_id']);
+            $is_author  = ($user_id == $post['user_id']);
             $is_admin   = clubUserIsAdmin($blog['user_id'], $user_id) || $inCore->userIsAdmin($user_id);
         }
     }
@@ -1054,11 +1054,11 @@ if ($do == 'delpost'){
 
     if ($owner=='user'){
         $myblog     = ($user_id == $blog['user_id']);
-        $is_author  = (((!$myblog) && $inDB->get_field('cms_blog_authors', 'blog_id='.$id.' AND user_id='.$user_id, 'id')) || $blog['forall']);
+        $is_author  = (((!$myblog) && $inDB->get_field('cms_blog_authors', 'blog_id='.$id.' AND user_id='.$user_id, 'id')) || ($blog['forall'] && $post['user_id'] == $user_id));
     }
     if($owner=='club') {
         $myblog     = clubUserIsRole($blog['user_id'], $user_id, 'moderator');
-        $is_author  = clubUserIsRole($blog['user_id'], $user_id, 'member');
+        $is_author  = (clubUserIsRole($blog['user_id'], $user_id, 'member') && $post['user_id'] == $user_id);
     }
 
     if ( !$inCore->inRequest('confirm') ) {
