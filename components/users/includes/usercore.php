@@ -426,7 +426,7 @@ function usrFriendQueriesList($user_id, $model){
 	return ob_get_clean();
 }
 
-function usrFriends($user_id, $total, $limit=8, $max_cols=4){
+function usrFriends($user_id, &$total, $limit=8, $max_cols=4){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
 	
