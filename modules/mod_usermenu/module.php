@@ -25,8 +25,8 @@
 
         //activate profiles support
          if (!function_exists('usrImage') && !function_exists('usrBlog')){ //if not included earlier
-             $inCore->includeFile('components/users/includes/usercore.php');
-         }
+                $inCore->includeFile('components/users/includes/usercore.php');
+            }
 
         $newmsg     = cmsUser::isNewMessages($inUser->id);
 

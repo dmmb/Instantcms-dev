@@ -13,6 +13,12 @@
     <!-- HEAD !-->
     <?php cmsPrintHead(); ?>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1251"/>
+    <?php if($inUser->is_admin){ ?>
+        <script src="/admin/js/modconfig.js" type="text/javascript"></script>
+        <script src="/templates/_default_/js/nyromodal.js" type="text/javascript"></script>
+        <link href="/templates/_default_/css/modconfig.css" rel="stylesheet" type="text/css" />
+        <link href="/templates/_default_/css/nyromodal.css" rel="stylesheet" type="text/css" />
+    <?php } ?>
     <link href="/templates/_default_/css/reset.css" rel="stylesheet" type="text/css" />
     <link href="/templates/_default_/css/text.css" rel="stylesheet" type="text/css" />
     <link href="/templates/_default_/css/960.css" rel="stylesheet" type="text/css" />
@@ -25,14 +31,18 @@
 
         <div id="header">
             <div class="container_12">
-                <div class="grid_8">
+                <div class="grid_3">
                     <div id="sitename"><a href="/"></a></div>
                 </div>
-                <div class="grid_4">
-                    <div id="authblock">
-                        <a href="/registration">Регистрация</a>
-                        <a href="/login">Вход</a>
-                    </div>
+                <div class="grid_9">
+                    <?php if (!$inUser->id){ ?>
+                        <div class="mod_user_menu">
+                            <span class="register"><a href="/registration">Регистрация</a></span>
+                            <span class="login"><a href="/login">Вход</a></span>
+                        </div>
+                    <?php } else { ?>
+                        <?php cmsModule('header'); ?>
+                    <?php } ?>
                 </div>
             </div>
         </div>
@@ -78,10 +88,13 @@
 
     <div id="footer">
         <div class="container_12">
-            <div class="grid_12">
+            <div class="grid_8">
                 <div id="copyright"><?php cmsPrintSitename(); ?> &copy; <?php echo date('Y'); ?></div>
             </div>
-            <div class="grid_4">
+            <div class="grid_4 foot_right">
+                <a href="http://www.instantcms.ru/" title="Работает на InstantCMS">
+                    <img src="/templates/_default_/images/b88x31.gif" border="0"/>
+                </a>
             </div>
         </div>
     </div>
@@ -90,11 +103,11 @@
         $(document).ready(function(){
             $('#topmenu .menu li').hover(
                 function() {
-                    $(this).find('ul:first').slideDown(200);
+                    $(this).find('ul:first').show();
                     $(this).find('a:first').addClass("hover");
                 },
                 function() {
-                    $(this).find('ul:first').slideUp(200);
+                    $(this).find('ul:first').hide();
                     $(this).find('a:first').removeClass("hover");
                 }
             );

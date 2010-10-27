@@ -13,9 +13,9 @@
     $inCore->loadClass('config');       //конфигурация
     $inCore->loadClass('db');           //база данных
     $inCore->loadClass('user');			//юзер
-	
+
     $inUser = cmsUser::getInstance();
-    $inDB  	= cmsDatabase::getInstance();
+    $inDB  = cmsDatabase::getInstance();
 
 	$place = $inCore->request('place', 'str');
 	

@@ -6,21 +6,22 @@
 				
 <table cellspacing="5" cellpadding="0" border="0" width="100%">
 	<tr>
-		<td width="35" valign="top"><img src="/components/faq/images/quest.gif" border="0" /></td>
+		<td width="35" valign="top"><img src="/templates/_default_/images/icons/big/faq_quest.png" border="0" /></td>
 		<td width="" valign="top">
 			<div class="faq_questtext">{$quest.quest}</div>
-            {if $cfg.user_link}
-            <div class="faq_questuser"><a href="{profile_url login=$quest.login}">{$quest.nickname}</a> &rarr; </div>
-            {/if}
+			{if $cfg.user_link}
+            <div class="faq_questuser"><a href="{profile_url login=$quest.login}">{$quest.nickname}</a></div>
+			{/if}
 			<div class="faq_questdate">{$quest.pubdate}</div>
 		</td>	
 	</tr>
 </table>
+
 {if $quest.answer}
-<table cellspacing="5" cellpadding="0" border="0" width="100%" style="margin-bottom:15px;">
+<table cellspacing="5" cellpadding="0" border="0" width="100%" style="margin:15px 0px;">
 	<tr>
 		<td width="35" valign="top">
-			<img src="/components/faq/images/answer.gif" border="0" />
+			<img src="/templates/_default_/images/icons/big/faq_answer.png" border="0" />
 		</td>
 		<td width="" valign="top">
 			<div class="faq_answertext">{$quest.answer}</div>
@@ -31,5 +32,5 @@
 {/if}
 
 {if $cfg.is_comment}
-	{comments target='faq' target_id=$quest.id}
+{comments target='faq' target_id=$quest.id}
 {/if}

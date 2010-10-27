@@ -18,7 +18,7 @@ function cmsAutoCreateThread($article, $content_cfg){
     if (!$content_cfg['af_on']){ return false; }
     if (!$content_cfg['af_forum_id']){ return false; }
     if ($article['category_id'] == $content_cfg['af_hidecat_id']) { return false; }
-	
+
     $inCore->loadModel('forum');
     $model_forum = new cms_model_forum();
 

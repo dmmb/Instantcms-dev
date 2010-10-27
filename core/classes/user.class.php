@@ -327,8 +327,8 @@ class cmsUser {
 
         if ($inUser->id && $controls){
             if(usrCanKarma($user_id, $inUser->id)){
-                $plus = '<a href="/users/karma/plus/'.$user_id.'/'.$inUser->id.'" title="Карма +"><img src="/components/users/images/karma_up.gif" border="0" alt="Карма +"/></a>';
-                $minus = '<a href="/users/karma/minus/'.$user_id.'/'.$inUser->id.'" title="Карма -"><img src="/components/users/images/karma_down.gif" border="0" alt="Карма -"/></a>';
+                $plus = '<a href="/users/karma/plus/'.$user_id.'/'.$inUser->id.'" title="Карма +"><img src="/components/users/images/karma_up.png" border="0" alt="Карма +"/></a>';
+                $minus = '<a href="/users/karma/minus/'.$user_id.'/'.$inUser->id.'" title="Карма -"><img src="/components/users/images/karma_down.png" border="0" alt="Карма -"/></a>';
             }
         }
 
@@ -775,11 +775,10 @@ class cmsUser {
      */
     public static function getFriends($user_id){
 
-		//Если не авторизован или не я, то выходим
-		if (!isset($_SESSION['user']['id']) || $_SESSION['user']['id'] != $user_id) { return false; }
+        $is_me = ($_SESSION['user']['id'] == $user_id);
 
 		//Если список уже в сессии, возвращаем
-		if ($_SESSION['user']['friends']) { return $_SESSION['user']['friends']; }
+		if ($is_me && $_SESSION['user']['friends']) { return $_SESSION['user']['friends']; }
 
 		//иначе получаем список из базы, кладем в сессию и возвращаем
         $inDB       = cmsDatabase::getInstance();
@@ -804,7 +803,8 @@ class cmsUser {
 				$friends[] = $friend;
             }
         }
-		$_SESSION['user']['friends'] = $friends;
+
+		if ($is_me) { $_SESSION['user']['friends'] = $friends; }
 		
         return $friends;
 
@@ -869,7 +869,7 @@ class cmsUser {
             $inCore->includeFile('components/users/includes/usercore.php');
 
             while($record = $inDB->fetch_assoc($result)){
-				$record['fpubdate'] = $inCore->dateFormat($record['pubdate'], true, true);
+				$record['fpubdate'] = $inCore->dateDiffNow($record['pubdate']);
                 $record['avatar']   = usrImageNOdb($record['author_id'], 'small', $record['imageurl'], $record['is_deleted']);
                 $records[]          = $record;
             }
@@ -1120,11 +1120,10 @@ class cmsUser {
                                    ($award['p_privphoto'] <= $p_privphoto) &&
                                    ($award['p_karma'] <= $p_karma);
                         if ($granted){
-                            $title       = $award['title'];
+                            $title = $award['title'];
                             $description = $award['description'];
-                            $imageurl    = $award['imageurl'];
-                            $award_id    = $award['id'];
-
+                            $imageurl = $award['imageurl'];
+                            $award_id = $award['id'];
                             $sql = "INSERT INTO cms_user_awards (user_id, pubdate, title, description, imageurl, from_id, award_id)
                                     VALUES ('$user_id', NOW(), '$title', '$description', '$imageurl', '0', '$award_id')";
                             $inDB->query($sql);

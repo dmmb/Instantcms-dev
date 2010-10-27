@@ -4,8 +4,8 @@
             {$mod.title}
             {if $cfglink}
                 <span class="fast_cfg_link">
-                    <a href="{$cfglink}" target="_blank" title="Настроить модуль">
-                        <img src="/images/icons/configure.gif"/>
+                    <a href="javascript:moduleConfig({$mod.module_id})" title="Настроить модуль">
+                        <img src="/templates/_default_/images/icons/settings.png"/>
                     </a>
                 </span>
             {/if}

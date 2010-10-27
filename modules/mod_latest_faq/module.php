@@ -11,10 +11,10 @@
 function mod_latest_faq($module_id){
 
         $inCore = cmsCore::getInstance();
-        $inDB   = cmsDatabase::getInstance();
+        $inDB = cmsDatabase::getInstance();
 
-		$cfg    = $inCore->loadModuleConfig($module_id);
-        
+		$cfg = $inCore->loadModuleConfig($module_id);
+
 		global $_LANG;
 
 		if (!isset($cfg['newscount'])) { $cfg['newscount'] = 2;}
@@ -33,7 +33,7 @@ function mod_latest_faq($module_id){
 				LIMIT ".$cfg['newscount'];
  	
 		$result = $inDB->query($sql) ;
-		
+				
 		$is_faq = false;
 				
 		if ($inDB->num_rows($result)){	
@@ -48,16 +48,16 @@ function mod_latest_faq($module_id){
 				}
 				$faq[$next]['quest'] = $con['quest'];
 				$faq[$next]['date']  = $inCore->dateformat($con['pubdate']);
-				$faq[$next]['href']  = '/faq/quest'.$con['id'].'.html';
+				$faq[$next]['href'] = '/faq/quest'.$con['id'].'.html';
 			}
-		
+			
 		}
 		
-		$smarty = $inCore->initSmarty('modules', 'mod_latest_faq.tpl');			
-		$smarty->assign('faq', $faq);
+			$smarty = $inCore->initSmarty('modules', 'mod_latest_faq.tpl');			
+			$smarty->assign('faq', $faq);
 		$smarty->assign('is_faq', $is_faq);
-		$smarty->display('mod_latest_faq.tpl');
-		
+			$smarty->display('mod_latest_faq.tpl');
+						
 		return true;
 	
 }

@@ -45,53 +45,10 @@ protected function replacePrefix( $sql, $prefix='cms_' ) {
 
     $inConf = cmsConfig::getInstance();
     
-    $sql = trim( $sql );
-    $escaped = false;
-    $quoteChar = '';
-    $n = strlen($sql);
-    $startPos = 0;
-    $literal = '';
+    $sql = trim(str_replace($prefix, $inConf->db_prefix.'_', $sql));
 
-    while ($startPos < $n) {
-        $ip = strpos($sql, $prefix, $startPos);
-        if ($ip === false) { break; }
-        $j = strpos( $sql, "'", $startPos );
-        $k = strpos( $sql, '"', $startPos );
-        if (($k !== FALSE) && (($k < $j) || ($j === FALSE))) {
-            $quoteChar = '"';
-            $j = $k;
-        } else {
-            $quoteChar = "'";
-        }
-
-        if ($j === false) { $j = $n; }
-
-        $literal .= str_replace( $prefix, $inConf->db_prefix.'_', substr( $sql, $startPos, $j - $startPos ) );
-        $startPos = $j;
-
-        $j = $startPos + 1;
-        if ($j >= $n) { break; }
-
-        // quote comes first, find end of quote
-        while (TRUE) {
-            $k = strpos( $sql, $quoteChar, $j );
-            $escaped = false;
-            if ($k === false) { break; }
-            $l = $k - 1;
-            while ($l >= 0 && $sql{$l} == '\\') { $l--; $escaped = !$escaped; }
-            if ($escaped) { $j = $k+1; continue; }
-            break;
-        }
-        if ($k === FALSE) { //error in the query - no end quote; ignore it
-            break;
-        }
-        $literal .= substr( $sql, $startPos, $k - $startPos + 1 );
-        $startPos = $k+1;
-    }
-    if ($startPos < $n) {
-        $literal .= substr( $sql, $startPos, $n - $startPos );
-    }
-    return $literal;
+    return $sql;
+    
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

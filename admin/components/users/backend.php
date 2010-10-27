@@ -86,7 +86,7 @@ if($opt=='saveconfig'){
 	$cfg['filestype']   = $_REQUEST['filestype'];
 
     $cfg['privforms']   = $_REQUEST['privforms'];
-	
+
 	$cfg['j_code']   = $_REQUEST['j_code'];
 
     $inCore->saveComponentConfig('users', $cfg);

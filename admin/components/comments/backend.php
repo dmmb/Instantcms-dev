@@ -82,13 +82,13 @@ function cpStripComment($text){
 	}
 
 	if ($opt == 'update'){
-		if(isset($_REQUEST['item_id'])) {
-
+		if(isset($_REQUEST['item_id'])) { 
+			
 			$id = $inCore->request('item_id', 'int');
 
 			if (isset($_REQUEST['guestname']) && @!empty($_REQUEST['guestname'])) { $guestname = $inCore->request('guestname', 'str'); }
 			else { $guestname = ''; }
-
+			
 			$pubdate   = $inCore->request('pubdate', 'str');
 			$published = $inCore->request('published', 'int');
 			$content   = $inCore->request('content', 'html');

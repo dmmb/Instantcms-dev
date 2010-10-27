@@ -45,7 +45,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	}
 
 	if ($opt=='list_items' || $opt=='list_cats' || $opt=='config'){
-		
+	
 		$toolmenu[0]['icon'] = 'newfolder.gif';
 		$toolmenu[0]['title'] = 'Новая рубрика';
 		$toolmenu[0]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_cat';
@@ -172,7 +172,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if ($opt == 'update_item'){
 		if(isset($_REQUEST['item_id'])) { 
-
+			
 			$id = (int)$_REQUEST['item_id'];
 
 			if (!empty($_REQUEST['category_id'])) { $category_id = $inCore->request('category_id', 'int'); } else { $category_id = 1; }

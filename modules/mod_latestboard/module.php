@@ -8,11 +8,11 @@
 //                                                                                           //
 /*********************************************************************************************/
 
-function mod_latestboard($module_id){
+function mod_latestboard($module_id){	
 
         $inCore = cmsCore::getInstance();
-        $inDB   = cmsDatabase::getInstance();
-		$cfg    = $inCore->loadModuleConfig($module_id);
+        $inDB = cmsDatabase::getInstance();
+		$cfg = $inCore->loadModuleConfig($module_id);
 
         global $_LANG;
 
@@ -20,7 +20,7 @@ function mod_latestboard($module_id){
 			echo '<p>'.$_LANG['LATESTBOARD_CONFIG_TEXT'].'</p>';
 			return true;
 		}
-
+		
 		if ($cfg['cat_id'] != '-1') {
 			if (!$cfg['subs']){
 				//select from category
@@ -29,9 +29,9 @@ function mod_latestboard($module_id){
 				//select from category and subcategories
 				$rootcat = dbGetFields('cms_board_cats', 'id='.$cfg['cat_id'], 'NSLeft, NSRight');
 				$catsql  = "AND (cat.NSLeft >= {$rootcat['NSLeft']} AND cat.NSRight <= {$rootcat['NSRight']})";
-			}
+			}		
 		} else { $catsql = ''; }
-
+		
 		$sql = "SELECT i.title, i.id, i.city as city, u.id as user_id, u.nickname as nickname,
 					   i.pubdate as pubdate
 				FROM cms_board_items i
@@ -39,31 +39,31 @@ function mod_latestboard($module_id){
 				LEFT JOIN cms_users u ON u.id = i.user_id
 				WHERE i.published=1 $catsql
 				ORDER BY i.id DESC";
-
+		
 		$sql .= "\n" . "LIMIT ".$cfg['shownum'];
-
+	
 		$result = $inDB->query($sql);
-
-		$items    = array();
+		
+		$items = array();
 		$is_items = false;
 
 		if ($inDB->num_rows($result)){	
-
+		
 			$is_items = true;
 
 			while($con = $inDB->fetch_assoc($result)){
 				$con['pubdate'] = $inCore->dateFormat($con['pubdate']);
 				$items[] = $con;
 			}
-
+	
 		}
 
-		$smarty = $inCore->initSmarty('modules', 'mod_latestboard.tpl');			
-		$smarty->assign('items', $items);
-		$smarty->assign('cfg', $cfg);
+			$smarty = $inCore->initSmarty('modules', 'mod_latestboard.tpl');			
+			$smarty->assign('items', $items);
+			$smarty->assign('cfg', $cfg);
 		$smarty->assign('is_items', $is_items);
-		$smarty->display('mod_latestboard.tpl');		
-
+			$smarty->display('mod_latestboard.tpl');
+			
 		return true;				
 }
 ?>

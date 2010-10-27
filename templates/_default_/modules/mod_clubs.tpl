@@ -23,5 +23,5 @@
 {/foreach}
 </div>
 {else}
-<p>{$LANG.LATESTCLUBS_NOT_CLUBS}</p>
+    <p>{$LANG.LATESTCLUBS_NOT_CLUBS}</p>
 {/if}

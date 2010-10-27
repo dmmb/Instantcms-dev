@@ -11,10 +11,10 @@
 function mod_latest($module_id){
 
         $inCore = cmsCore::getInstance();
-        $inDB   = cmsDatabase::getInstance();
+        $inDB = cmsDatabase::getInstance();
 		
 		$cfg = $inCore->loadModuleConfig($module_id);
-		
+
         global $_LANG;
 		
 		if (!isset($cfg['showrss'])) { $cfg['showrss'] = 1; }
@@ -44,17 +44,17 @@ function mod_latest($module_id){
 				       LEFT JOIN cms_category cat ON cat.id = con.category_id
 				       LEFT JOIN cms_users u ON u.id = con.user_id
                        WHERE con.published = 1 AND con.showlatest = 1
-                       AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today'))
+                      AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today'))
                       ".$catsql."
 				ORDER BY con.id DESC
 				LIMIT ".$cfg['newscount'];
  	
 		$result = $inDB->query($sql);
-
+			
 		$is_con = false;
 	
 		if ($inDB->num_rows($result)){
-			
+
 			$is_con = true;
 
             $inCore->loadModel('content');
@@ -76,13 +76,13 @@ function mod_latest($module_id){
 
 		}
 		
-		$smarty = $inCore->initSmarty('modules', 'mod_latest.tpl');			
-		$smarty->assign('articles', $articles);
-		$smarty->assign('rssid', $rssid);
+			$smarty = $inCore->initSmarty('modules', 'mod_latest.tpl');			
+			$smarty->assign('articles', $articles);
+			$smarty->assign('rssid', $rssid);
 		$smarty->assign('is_con', $is_con);
-		$smarty->assign('cfg', $cfg);
-		$smarty->display('mod_latest.tpl');	
-
+			$smarty->assign('cfg', $cfg);
+			$smarty->display('mod_latest.tpl');			
+			
 		return true;
 }
 ?>

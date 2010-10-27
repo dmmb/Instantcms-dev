@@ -29,5 +29,5 @@
 	</div>
 {/if}
 {else}
-<p>{$LANG.LATEST_NOT_MATERIAL}</p>
+    <p>{$LANG.LATEST_NOT_MATERIAL}</p>
 {/if}

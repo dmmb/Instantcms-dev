@@ -317,12 +317,12 @@ function clubSaveUsers($club_id, $list, $role, $clubtype='public', $cfg=false){
 
 function clubAdminLink($club_id){
     $inCore = cmsCore::getInstance();
-    $inDB   = cmsDatabase::getInstance();
-	$sql    = "SELECT u.id as id, u.nickname as nickname, u.login as login, p.gender as gender
-			   FROM cms_clubs c, cms_users u, cms_user_profiles p
-			   WHERE c.id = $club_id AND c.admin_id = u.id AND p.user_id = u.id";
+    $inDB = cmsDatabase::getInstance();
+	$sql = "SELECT u.id as id, u.nickname as nickname, u.login as login, p.gender as gender
+			FROM cms_clubs c, cms_users u, cms_user_profiles p
+			WHERE c.id = $club_id AND c.admin_id = u.id AND p.user_id = u.id";
 	$rs     = $inDB->query($sql);
-	$html   = '';
+	$html = '';
 	if ($inDB->num_rows($rs) == 1){
 		$usr = $inDB->fetch_assoc($rs);
 		$html .= cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login']);

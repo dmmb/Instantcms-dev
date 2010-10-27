@@ -96,7 +96,7 @@ class cmsActions {
         $action = self::getAction($action_name);
 
         if (!$action) { return false; }
-		
+
 		$params['object']      =  $inDB->escape_string(stripslashes($params['object']));
 		$params['target']      =  $inDB->escape_string(stripslashes($params['target']));
 		$params['description'] =  $inDB->escape_string(stripslashes($params['description']));
@@ -123,10 +123,10 @@ class cmsActions {
      */
     public static function removeObjectLog($action_name, $object_id, $user_id = false){
         
-        $inDB    = cmsDatabase::getInstance();
+        $inDB = cmsDatabase::getInstance();
         
-        $action  = self::getAction($action_name);
-
+        $action = self::getAction($action_name);
+        
         $usr_sql = $user_id ? "AND user_id = {$user_id}" : '';
         
         $sql = "DELETE 

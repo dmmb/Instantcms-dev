@@ -257,7 +257,7 @@ if ($do=='delquest'){
         } else {
             $inCore->redirectBack();
         }
-    }
+	}
 
     if ( $inCore->inRequest('confirm') ){
 

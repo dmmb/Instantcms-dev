@@ -39,9 +39,9 @@ function mod_pricecat($module_id){
 				
 				$items[]=$item;
 
-					}
-			
 				}
+			
+			}
 		
 		$smarty = $inCore->initSmarty('modules', 'mod_pricecat.tpl');			
 		$smarty->assign('items', $items);

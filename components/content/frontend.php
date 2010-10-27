@@ -539,7 +539,7 @@ if ($do=='my'){
 			LEFT JOIN cms_category cat ON cat.id = con.category_id
             WHERE con.user_id = $user_id
             ORDER BY con.pubdate DESC
-			";
+            ";
 
     $perpage = 10;
     $page = $inCore->request('page', 'int', 1);

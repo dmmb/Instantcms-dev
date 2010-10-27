@@ -13,7 +13,7 @@
     $inCore->loadClass('config');       //конфигурация
     $inCore->loadClass('db');           //база данных
 
-    $opt  = $inCore->request('opt', 'str', '');
+    $opt = $inCore->request('opt', 'str', '');
     $data = $inCore->request('data', 'str', '');
 
     if (!$opt) { return; }

@@ -10,13 +10,13 @@
 
 function mod_bestphoto($module_id){
 
-        $inCore  = cmsCore::getInstance();
-        $inDB    = cmsDatabase::getInstance();
+        $inCore = cmsCore::getInstance();
+        $inDB = cmsDatabase::getInstance();
 		
-		$cfg     = $inCore->loadModuleConfig($module_id);
+		$cfg = $inCore->loadModuleConfig($module_id);
 		
     	global $_LANG;
-
+		
 		if (!isset($cfg['showtype'])) { $cfg['showtype'] = 'full'; }
 		if (!isset($cfg['showmore'])) { $cfg['showmore'] = 1; }
 		if (!isset($cfg['album_id'])) { $cfg['album_id'] = 0; }
@@ -36,7 +36,7 @@ function mod_bestphoto($module_id){
  	
 		$result = $inDB->query($sql) ;
 
-		$is_best = false;
+		$is_best = false;	
 
 		if (!function_exists('cmsKarmaFormat') && $cfg['showdate']){ //if not included earlier
 			include_once($_SERVER['DOCUMENT_ROOT'].'/core/lib_karma.php');
@@ -62,8 +62,7 @@ function mod_bestphoto($module_id){
 				}
 				$cons[] = $con;
 			}			
-		}
-
+			}
 		$smarty = $inCore->initSmarty('modules', 'mod_bestphoto.tpl');			
 		$smarty->assign('cons', $cons);
 		$smarty->assign('cfg', $cfg);

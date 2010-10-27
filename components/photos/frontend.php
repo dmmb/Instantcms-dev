@@ -235,9 +235,9 @@ if ($do=='view'){
 				}
 				$is_poto_yes = true;
 			} else { 
-               if(!$subcats_list && $owner == 'club' && $album['parent_id']==0){ echo '<p>'.$_LANG['NO_SUB_ALBUMS'].'</p>'; }
-			   $is_poto_yes = false;
-			}
+                     if(!$subcats_list && $owner == 'club' && $album['parent_id']==0){ echo '<p>'.$_LANG['NO_SUB_ALBUMS'].'</p>'; }
+					 $is_poto_yes = false;
+					}
 					
 		}//END - ALBUM CONTENT
 	// מעהאול ג ראבכמם

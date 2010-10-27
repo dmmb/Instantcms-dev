@@ -16,7 +16,7 @@
 				FROM 
 				WHERE 
 				ORDER BY ordering ASC";
-		$result = $inDB->query($sql) 
+		$result = $inDB->query($sql);
 		
 		if ($inDB->num_rows($result)){
 			while ($item=$inDB->fetch_assoc($result)){

@@ -40,7 +40,7 @@ function mod_bestblogs($module_id){
                         b.owner as owner,
                         b.user_id as uid, 
                         b.owner as owner,
-                        b.ownertype as ownertype,                        
+                        b.ownertype as ownertype,
                         IFNULL(r.total_rating, 0) as points,
                         u.nickname as author
 				FROM cms_blog_posts p

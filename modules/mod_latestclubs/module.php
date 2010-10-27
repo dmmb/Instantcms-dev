@@ -11,15 +11,15 @@
 function mod_latestclubs($module_id){
 
         $inCore = cmsCore::getInstance();
-        $inDB   = cmsDatabase::getInstance();
+        $inDB = cmsDatabase::getInstance();
 		$cfg    = $inCore->loadModuleConfig($module_id);
 
         global $_LANG;
-
+        
         if (!function_exists('clubTotalMembers')){ //if not included earlier
-             $inCore->loadLib('clubs');
+		$inCore->loadLib('clubs');
         }
-
+	
 		if (!isset($cfg['count'])) { $cfg['count'] = 5;}
 
 		$sql =  "SELECT c.*
@@ -27,9 +27,9 @@ function mod_latestclubs($module_id){
 				 WHERE c.published = 1
 				 ORDER BY c.id DESC
 				 LIMIT ".$cfg['count'];
- 
+ 	
 		$result = $inDB->query($sql);
-		
+						
         $is_clubs = false;
 		
 		if ($inDB->num_rows($result)){	
@@ -45,15 +45,15 @@ function mod_latestclubs($module_id){
 				$club['members'] = clubTotalMembers($club['id']);
 				$clubs[] = $club;
 			}
-	
+		
 		}
 
-		$smarty = $inCore->initSmarty('modules', 'mod_clubs.tpl');			
-		$smarty->assign('clubs', $clubs);
+			$smarty = $inCore->initSmarty('modules', 'mod_clubs.tpl');			
+			$smarty->assign('clubs', $clubs);
 		$smarty->assign('is_clubs', $is_clubs);
-		$smarty->display('mod_clubs.tpl');		
-
+			$smarty->display('mod_clubs.tpl');
+						
 		return true;
-
+	
 }
 ?>

@@ -14,5 +14,5 @@
 {/foreach}
 </table>
 {else}
-<p>{$LANG.LATEST_FAQ_NOT_QUES}</p>
+    <p>{$LANG.LATEST_FAQ_NOT_QUES}</p>
 {/if}

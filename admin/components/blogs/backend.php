@@ -132,13 +132,13 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if(!isset($cfg['j_code'])) { $cfg['j_code']=1;	}
 	if(!isset($cfg['perpage_blog'])) { $cfg['perpage_blog']=15;	}
 	if (!isset($cfg['min_karma_private'])) { $cfg['min_karma_private'] = 0; }
-	if (!isset($cfg['min_karma_public'])) {	$cfg['min_karma_public'] = 0; }
-	if (!isset($cfg['min_karma'])) { $cfg['min_karma'] = 0; 		}
-	if (!isset($cfg['update_date'])) { $cfg['update_date'] = 1; 		}
-	if (!isset($cfg['update_seo_link'])) { $cfg['update_seo_link'] = 0; 		}
+	if (!isset($cfg['min_karma_public'])) {	 $cfg['min_karma_public'] = 0; }
+	if (!isset($cfg['min_karma'])) { 		 $cfg['min_karma'] = 0; 		}
+	if (!isset($cfg['update_date'])) { 		 $cfg['update_date'] = 1; 		}
+	if (!isset($cfg['update_seo_link'])) { 	 $cfg['update_seo_link'] = 0; 		}
 	
-	if (!isset($cfg['watermark'])) { $cfg['watermark'] = 1; 		}
-	if (!isset($cfg['img_on'])) { $cfg['img_on'] = 1; 		}
+	if (!isset($cfg['watermark'])) { 	 	$cfg['watermark'] = 1; 		}
+	if (!isset($cfg['img_on'])) { 	 		$cfg['img_on'] = 1; 		}
 
 	if (!isset($cfg['rss_all'])) { $cfg['rss_all'] = 1; }
 	if (!isset($cfg['rss_one'])) { $cfg['rss_one'] = 1; }

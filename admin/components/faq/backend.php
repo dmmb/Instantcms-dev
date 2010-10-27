@@ -57,7 +57,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$toolmenu[16]['title'] = 'Сохранить';
 		$toolmenu[16]['link'] = 'javascript:document.optform.submit();';
 	}
-	
+
 	$toolmenu[17]['icon'] = 'cancel.gif';
 	$toolmenu[17]['title'] = 'Отмена';
 	$toolmenu[17]['link'] = '?view=components';
@@ -217,10 +217,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			if (isset($_REQUEST['item_id'])){ $model->deleteQuest((int)$_REQUEST['item_id']); }
 		} else {
 			$model->deleteQuests($_REQUEST['item']);			
-		}
+	}
 		header('location:?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items');
 	}
-
+	
 	if ($opt == 'show_cat'){
 		if(isset($_REQUEST['item_id'])) { 
 			$id = (int)$_REQUEST['item_id'];

@@ -35,16 +35,18 @@
     $inDB->query($sql);
 
     //регистрируем событие
-    cmsActions::log('set_status', array(
-        'object' => '',
-        'object_url' => '',
-        'object_id' => 0,
-        'target' => '',
-        'target_url' => '',
-        'target_id' => 0,
-        'description' => $status
-    ));
-
+    if ($status){
+        cmsActions::log('set_status', array(
+            'object' => '',
+            'object_url' => '',
+            'object_id' => 0,
+            'target' => '',
+            'target_url' => '',
+            'target_id' => 0,
+            'description' => $status
+        ));
+    }
+    
     return;
     
 ?>

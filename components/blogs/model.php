@@ -487,9 +487,12 @@ class cms_model_blogs{
                    DATE_FORMAT(p.pubdate, '%d-%m-%Y %H:%i') fpubdate,
                    DATE_FORMAT(p.edit_date, '%d-%m-%Y %H:%i') feditdate,
                    u.nickname as author,
-                   u.id as author_id
+                   u.id as author_id, 
+                   up.imageurl as author_image,
+                   u.is_deleted as author_deleted
 			FROM cms_blog_posts p
 			LEFT JOIN cms_users u ON u.id = p.user_id
+            LEFT JOIN cms_user_profiles up ON up.user_id = p.user_id
 			LEFT JOIN cms_blogs b ON b.id = p.blog_id AND b.seolink = '$bloglink'
 			WHERE p.seolink = '$seolink'
             LIMIT 1";

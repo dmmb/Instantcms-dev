@@ -2411,10 +2411,10 @@ class cmsCore {
                 cmsActions::removeObjectLog('add_comment', $comment['id']);
             }
 			
-			$sql  = "DELETE FROM cms_comments WHERE target='{$target}' AND target_id='{$target_id}'";
-	
-			$inDB->query($sql);			
-			
+        $sql  = "DELETE FROM cms_comments WHERE target='{$target}' AND target_id='{$target_id}'";
+
+        $inDB->query($sql);
+
         }
 
         return true;
@@ -2520,7 +2520,7 @@ class cmsCore {
 		// Если дата совпадает с сегодняшней
 		case date('Y-m-d'):
 					$result = ''.$_LANG['TODAY'].'';
-					if ($is_now_time) {
+					if ($is_now_time && $time) {
 						list($h, $m, $s)  = explode(':', $time);
 						$result .= ' '.$_LANG['IN'].' '.$h.':'.$m;
 					}
@@ -2528,7 +2528,7 @@ class cmsCore {
 		//Если дата совпадает со вчерашней
 		case date( 'Y-m-d', mktime(0, 0, 0, date("m")  , date("d")-1, date("Y")) ):
 					$result = ''.$_LANG['YESTERDAY'].'';
-					if ($is_now_time) {
+					if ($is_now_time && $time) {
 						list($h, $m, $s)  = explode(':', $time);
 						$result .= ' '.$_LANG['IN'].' '.$h.':'.$m;
 					}
@@ -2574,7 +2574,7 @@ class cmsCore {
 				$d = str_replace($day_int, $day_norm, $d);
 				// Формирование окончательного результата
 				$result = $d.' '.$m.' '.$y;
-				if( $is_time )   {
+				if( $is_time && $time)   {
 					// Получаем отдельные составляющие времени
 					// Секунды нас не интересуют
 					list($h, $m, $s)  = explode(':', $time);
@@ -3363,7 +3363,7 @@ class cmsCore {
             } elseif ($diff_min[strlen($diff_min)-1] == "2" || $diff_min[strlen($diff_min)-1] == "3" || $diff_min[strlen($diff_min)-1] == "4") {
                 $diff_str = $diff_min." минуты";
             } elseif($diff_min[strlen($diff_min)-1] == "1") {
-                $diff_str = $diff_min. " минута";
+                $diff_str = $diff_min. " минуту";
             } else {
                 $diff_str = $diff_min. " минут";
             }

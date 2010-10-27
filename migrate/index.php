@@ -56,6 +56,27 @@
 // ========================================================================== //
 // ========================================================================== //
 
+    $mod_stats_installed = $inDB->get_field('cms_modules', "content='mod_user_stats'", 'id');
+
+    if (!$mod_stats_installed){
+
+        $sql = "INSERT INTO cms_modules (`position`, `name`, `title`, `is_external`,
+                                          `content`, `ordering`, `showtitle`, `published`,
+                                          `user`, `config`, `original`, `css_prefix`,
+                                          `allow_group`, `cache`, `cachetime`, `cacheint`,
+                                           `template`, `is_strict_bind`)
+                VALUES ('sidebar', 'Статистика пользователей', 'Статистика пользователей', '1', 'mod_user_stats',
+                        '1', '1', '0', '0', '', '1', '', '-1', '0', '1', 'HOUR', 'module.tpl', '0')";
+
+        $inDB->query($sql);
+
+        echo '<p>Модуль &laquo;<strong>Статистика пользователей</strong>&raquo; установлен</p>';
+
+    }
+
+// ========================================================================== //
+// ========================================================================== //
+
     $mod_actions_installed = $inDB->get_field('cms_modules', "content='mod_actions'", 'id');
 
     if (!$mod_actions_installed){
@@ -163,6 +184,54 @@
 
     if (!$inDB->isFieldExists('cms_users', 'invdate')){
         $inDB->query("ALTER TABLE `cms_users` ADD `invdate` DATETIME NULL");
+    }
+
+// ========================================================================== //
+// ========================================================================== //
+
+    if (!$inDB->isFieldExists('cms_user_photos', 'album_id')){
+        $inDB->query("ALTER TABLE `cms_user_photos` ADD `album_id` INT NOT NULL AFTER `user_id`, ADD INDEX (album_id)");
+    }
+
+    if (!$inDB->isTableExists('cms_user_albums')){
+
+        $sql = "CREATE TABLE `cms_user_albums` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `user_id` int(11) NOT NULL,
+                  `title` varchar(100) NOT NULL,
+                  `pubdate` datetime NOT NULL,
+                  `allow_who` varchar(10) NOT NULL,
+                  PRIMARY KEY (`id`),
+                  KEY `user_id` (`user_id`),
+                  KEY `allow_who` (`allow_who`)
+                ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251";
+
+        $inDB->query($sql);
+        echo '<p>Таблица <strong>cms_user_albums</strong> создана</p>';
+
+        $sql = "SELECT user_id as id
+            FROM cms_user_photos
+            GROUP BY user_id";
+
+        $result = $inDB->query($sql);
+
+        if($inDB->num_rows($result)){
+
+            $inCore->loadModel('users');
+            $model = new cms_model_users();
+
+            while($user = $inDB->fetch_assoc($result)){
+
+                $album_id = $model->addPhotoAlbum(array('user_id'=>$user['id'], 'title'=>'Мой фотоальбом'));
+
+                $inDB->query("UPDATE cms_user_photos SET album_id = '{$album_id}' WHERE user_id = '{$user['id']}'");
+
+            }
+
+            echo '<p>Личные фотоальбомы созданы</p>';
+
+        }
+
     }
 
 // ========================================================================== //
@@ -307,14 +376,20 @@
 // ========================================================================== //
 // ========================================================================== //
 
-    $sql = "INSERT INTO `cms_modules` VALUES ('', 'left', 'Друзья онлайн', 'Друзья онлайн', 1, 'mod_user_friend', 5, 1, 0, 0, 
-'---
-limit: 5
-view_type: table', 1, '', -1, 0, 1, 'HOUR','module_simple.tpl', 0)";
+    $mod_friends_installed = $inDB->get_field('cms_modules', "content='mod_user_friend'", 'id');
 
-    $result = $inDB->query($sql);
+    if (!$mod_friends_installed){
 
-    echo '<p>Модуль "Друзья онлайн" установлен</p>';
+        $sql = "INSERT INTO `cms_modules` VALUES ('', 'left', 'Друзья онлайн', 'Друзья онлайн', 1, 'mod_user_friend', 5, 1, 0, 0,
+    '---
+    limit: 5
+    view_type: table', 1, '', -1, 0, 1, 'HOUR','module_simple.tpl', 0)";
+
+        $result = $inDB->query($sql);
+
+        echo '<p>Модуль &laquo;<strong>Друзья онлайн</strong>&raquo; установлен</p>';
+
+    }
 
 // ========================================================================== //
 // ========================================================================== //

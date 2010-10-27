@@ -31,7 +31,7 @@
                 {if $ownertype == 'multi' && $multi_blogs}
                     <span class="blog_type_active">{$LANG.COLLECTIVES}</span>
                 {else}
-                    <a class="blog_type_link" href="/blogs/multi.html">{$LANG.COLLECTIVES}s</a>
+                    <a class="blog_type_link" href="/blogs/multi.html">{$LANG.COLLECTIVES}</a>
                 {/if}
             {/if}
 

@@ -43,7 +43,6 @@
 	
 	//PREPARE POINTS
 	$points = cmsKarmaFormat($postkarma['points']);
-
 	echo $points;
     
 ?>

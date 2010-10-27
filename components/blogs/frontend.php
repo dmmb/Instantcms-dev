@@ -1009,6 +1009,8 @@ if($do=='post'){
 
     $post['author'] = cmsUser::getGenderLink($post['author_id'], $post['author']);
 
+    $post['image'] = usrImageNOdb($post['author_id'], 'small', $post['author_image'], $post['author_deleted']);
+    
     //выводим пост
     $smarty = $inCore->initSmarty('components', 'com_blog_view_post.tpl');
         $smarty->assign('post', $post);
@@ -1150,7 +1152,7 @@ if ($do == 'publishpost'){
         }
     } else {
 		echo '<p style="color:red">'.$_LANG['ACCESS_DENIED'].'</p>';
-	}
+    }
     
     $inCore->redirect('/blogs/'.$blog['id'].'/moderate.html');
     
@@ -1282,7 +1284,7 @@ if ($do=='latest'){
         //Считаем количество персональных и коллективных блогов
         $single_blogs	= $model->getSingleBlogsCount();
         $multi_blogs 	= $model->getMultiBlogsCount();
-	
+
 		//TITLES
 		$inPage->setTitle($_LANG['RSS_BLOGS']);
 		$inPage->addPathway($_LANG['RSS_BLOGS']);

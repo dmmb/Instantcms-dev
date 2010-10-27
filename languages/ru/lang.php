@@ -23,6 +23,7 @@ $_LANG['NEXT']                  ='Следующая';
 $_LANG['LAST']                  ='Последняя';
 $_LANG['PAGE_NOT_FOUND']        ='Страница не найдена';
 $_LANG['PAGE_NOT_FOUND_TEXT']   ='Возможно она была удалена, перемещена или ожидает проверки администрацией.';
+$_LANG['SELECTED_ITEMS']        ='Отмеченные';
 $_LANG['NOT_SELECT']            ='не выбран';
 $_LANG['SEARCH']                ='Поиск';
 $_LANG['ADD']                   ='Добавить';
@@ -51,6 +52,7 @@ $_LANG['TAGS']                  ='Теги';
 $_LANG['KEYWORDS']              ='ключевые слова, через запятую';
 
 $_LANG['TITLE']                 ='Название';
+$_LANG['DESCRIPTION']           ='Описание';
 $_LANG['IMAGE']                 ='Изображение';
 
 // For All Modules
@@ -99,5 +101,6 @@ $_LANG['COMMENT10']             ='комментариев';
 $_LANG['LIKE']                  = 'Нравится';
 $_LANG['UNLIKE']                = 'Не нравится';
 $_LANG['OR']                    ='или';
+$_LANG['WROTE']                 ='написал';
 
 ?>

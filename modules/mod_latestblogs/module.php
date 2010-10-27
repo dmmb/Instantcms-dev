@@ -8,14 +8,11 @@
 //                                                                                           //
 /*********************************************************************************************/
 
-function mod_latestblogs($module_id){
-
+function mod_latestblogs($module_id){	
         $inCore = cmsCore::getInstance();
-        $inDB   = cmsDatabase::getInstance();
-        $cfg    = $inCore->loadModuleConfig($module_id);
-
+        $inDB = cmsDatabase::getInstance();
+        $cfg = $inCore->loadModuleConfig($module_id);
         global $_LANG;
-
         $inCore->loadModel('blogs');
         $model = new cms_model_blogs();
 
@@ -55,7 +52,7 @@ function mod_latestblogs($module_id){
                 GROUP BY p.id
 				ORDER BY p.pubdate DESC
                 LIMIT 30";
-
+		
 		$result = $inDB->query($sql);
 
 		$is_blog = false;
@@ -69,7 +66,7 @@ function mod_latestblogs($module_id){
 			while($con = $inDB->fetch_assoc($result)){
 
 				if (!function_exists('usrImageNOdb')){ //if not included earlier
-					include_once($_SERVER['DOCUMENT_ROOT'].'/components/users/includes/usercore.php');
+                include_once($_SERVER['DOCUMENT_ROOT'].'/components/users/includes/usercore.php');
 				}
 
                 if ($count > $cfg['shownum']) { break; }

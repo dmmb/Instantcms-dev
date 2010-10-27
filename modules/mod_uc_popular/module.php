@@ -23,15 +23,15 @@ if (!function_exists('buildRating')){
 }
 
 function mod_uc_popular($module_id){
-
         $inCore = cmsCore::getInstance();
-        $inDB   = cmsDatabase::getInstance();
-		$cfg    = $inCore->loadModuleConfig($module_id);
+        $inDB = cmsDatabase::getInstance();
 
+		$cfg = $inCore->loadModuleConfig($module_id);
+			
 		global $_LANG;
-
+		
 		$showtype = $cfg['showtype'];
-
+		
 		if($cfg['sort']=='rating') { $orderby = 'rating DESC'; }
 		else { $orderby = 'hits DESC'; }
 		
@@ -63,11 +63,9 @@ function mod_uc_popular($module_id){
 		
 		$items = array();
 		$is_uc = false;
-
-		if ($inDB->num_rows($result)){
-
+		
+		if ($inDB->num_rows($result)){	
 			$is_uc = true;
-
 			if ($cfg['showtype']=='thumb'){
 					while($item = $inDB->fetch_assoc($result)){
 						if (strlen($item['imageurl'])<4) {
@@ -81,7 +79,7 @@ function mod_uc_popular($module_id){
 						$items[] = 	$item;												
 					}
 			}
-
+			
 			if ($cfg['showtype']=='list'){
 					while($item = $inDB->fetch_assoc($result)){
 							$item['fieldsdata'] = unserialize($item['fieldsdata']);
@@ -104,16 +102,16 @@ function mod_uc_popular($module_id){
 							}			
 							$items[] = 	$item;	
 					}				
+				}
 			}
-		}
-
+		
 		$smarty = $inCore->initSmarty('modules', 'mod_uc_popular.tpl');			
 		$smarty->assign('items', $items);
 		$smarty->assign('cfg', $cfg);
 		$smarty->assign('is_uc', $is_uc);			
 		$smarty->display('mod_uc_popular.tpl');
-
+		
 		return true;
-
+		
 }
 ?>

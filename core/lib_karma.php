@@ -237,8 +237,8 @@ function cmsKarmaForm($target, $target_id){
 		if(!cmsAlreadyKarmed($target, $target_id, $inUser->id)){
 			$inPage->addHeadJS('core/js/karma.js');
 			$control .= '<div style="text-align:center;margin-top:10px;">';
-				$control .= '<a href="javascript:void(0);" onclick="plusKarma(\''.$target.'\', \''.$target_id.'\')" title="'.$_LANG['LIKE'].'"><img src="/components/users/images/karma_up.gif" border="0" alt="Карма+"/></a> ';
-				$control .= '<a href="javascript:void(0);" onclick="minusKarma(\''.$target.'\', \''.$target_id.'\')" title="'.$_LANG['UNLIKE'].'"><img src="/components/users/images/karma_down.gif" border="0" alt="Карма-"/></a>';
+				$control .= '<a href="javascript:void(0);" onclick="plusKarma(\''.$target.'\', \''.$target_id.'\')" title="'.$_LANG['LIKE'].'"><img src="/components/users/images/karma_up.png" border="0" alt="Карма+"/></a> ';
+				$control .= '<a href="javascript:void(0);" onclick="minusKarma(\''.$target.'\', \''.$target_id.'\')" title="'.$_LANG['UNLIKE'].'"><img src="/components/users/images/karma_down.png" border="0" alt="Карма-"/></a>';
 			$control .= '</div>'; 
 		}
 	}
@@ -271,8 +271,8 @@ function cmsKarmaButtons($target, $target_id){
 			$inPage->addHeadJS('core/js/karma.js');
 			
 			$control .= '<div style="text-align:center">';
-				$control .= '<a href="javascript:void(0);" onclick="plusKarma(\''.$target.'\', '.$target_id.');" title="'.$_LANG['LIKE'].'"><img src="/components/users/images/karma_up.gif" border="0" alt="Карма+"/></a> ';
-				$control .= '<a href="javascript:void(0);" onclick="minusKarma(\''.$target.'\', '.$target_id.');" title="'.$_LANG['UNLIKE'].'"><img src="/components/users/images/karma_down.gif" border="0" alt="Карма-"/></a>';
+				$control .= '<a href="javascript:void(0);" onclick="plusKarma(\''.$target.'\', '.$target_id.');" title="'.$_LANG['LIKE'].'"><img src="/components/users/images/karma_up.png" border="0" alt="Карма+"/></a> ';
+				$control .= '<a href="javascript:void(0);" onclick="minusKarma(\''.$target.'\', '.$target_id.');" title="'.$_LANG['UNLIKE'].'"><img src="/components/users/images/karma_down.png" border="0" alt="Карма-"/></a>';
 			$control .= '</div>'; 
 		}
 	}

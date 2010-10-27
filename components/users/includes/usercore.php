@@ -36,7 +36,6 @@ function usrFilesSize($user_id){
 }
 
 function usrPhotoCount($user_id, $with_public=true){
-
     $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
 
@@ -427,11 +426,9 @@ function usrFriendQueriesList($user_id, $model){
 	return ob_get_clean();
 }
 
-function usrFriends($user_id, $short=true){
-
+function usrFriends($user_id, $total, $limit=8, $max_cols=4){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
-	$inUser = cmsUser::getInstance();
 	
 	$sql = "SELECT
 			CASE
@@ -446,25 +443,25 @@ function usrFriends($user_id, $short=true){
             LEFT JOIN cms_online o ON p.user_id = o.user_id
 			WHERE (from_id = $user_id OR to_id = $user_id) AND is_accepted =1 ";
 
-    if ($short) { $sql .= "LIMIT 9"; }
-			
-	if ($short) { $maxcols = 3; } else { $maxcols = 5; }
-
 	$result = $inDB->query($sql) ;
-	
-	if ($inDB->num_rows($result)){
+
+    $total = $inDB->num_rows($result);
+
+	if ($total){
 
 		$friends    = array();
 
 		while ($friend = $inDB->fetch_assoc($result)){
 
-				$friend['flogdate'] = usrStatus($friend['id'], $friend['flogdate'], (int)$friend['online']);
-				$friend['avatar']   = usrImageNOdb($friend['id'], 'small', $friend['avatar'], $friend['is_deleted']);
-				$friends[] = $friend;
+            $friend['flogdate'] = usrStatus($friend['id'], $friend['flogdate'], (int)$friend['online']);
+            $friend['avatar']   = usrImageNOdb($friend['id'], 'small', $friend['avatar'], $friend['is_deleted']);
+            $friends[] = $friend;
+
+            if ($limit && sizeof($friends) == $limit){ break; }
 
         }
 
-        }
+    }
 		
     ob_start();
                     
@@ -472,7 +469,6 @@ function usrFriends($user_id, $short=true){
 					
     $smarty->assign('friends', $friends);
 	$smarty->assign('maxcols', $maxcols);
-	$smarty->assign('myprofile', ($user_id == $inUser->id));
 				
     $smarty->display('com_users_friends.tpl');
                     

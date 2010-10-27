@@ -8,11 +8,10 @@
 //                                                                                           //
 /*********************************************************************************************/
 
-function mod_uc_random($module_id){
-
+	function mod_uc_random($module_id){
         $inCore = cmsCore::getInstance();
-        $inDB   = cmsDatabase::getInstance();
-		$cfg    = $inCore->loadModuleConfig($module_id);
+        $inDB = cmsDatabase::getInstance();
+		$cfg = $inCore->loadModuleConfig($module_id);
 
 		if ($cfg['cat_id']>0){
 
@@ -42,9 +41,7 @@ function mod_uc_random($module_id){
 		$is_uc = false;
 		
 		if ($inDB->num_rows($result)){
-
 			$is_uc = true;
-
 			while ($item=$inDB->fetch_assoc($result)){
 				if (strlen($item['imageurl'])<4) {
 					$item['imageurl'] = 'nopic';
@@ -65,7 +62,8 @@ function mod_uc_random($module_id){
 		$smarty->assign('cfg', $cfg);
 		$smarty->assign('is_uc', $is_uc);
 		$smarty->display('mod_uc_random.tpl');
+		
 
 		return true;	
-}
+	}
 ?>

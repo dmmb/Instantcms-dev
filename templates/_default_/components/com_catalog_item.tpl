@@ -2,10 +2,6 @@
 {* ==================== Вывод записи универсального каталога =============== *}
 {* ========================================================================= *}
 
-{* =============================== Заголовок =============================== *}
-<div class="con_heading">{$item.title}</div>
-
-
 {* =========================== Ссылка на корзину =========================== *}
 {if $cat.view_type=='shop'}
 	<div id="shop_toollink_div">
@@ -13,17 +9,21 @@
     </div>
 {/if}
 			
+{* =============================== Заголовок =============================== *}
+<div class="con_heading">{$item.title}</div>
 
 <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:10px"><tr>
 	<td align="left" valign="top" width="10" class="uc_detailimg">
-    
+
+        <div>
 		{if strlen($item.imageurl)>4}
                 <a class="lightbox-enabled" rel="lightbox" href="/images/catalog/{$item.imageurl}" target="_blank">
-                <img alt="{$item.title}" src="/images/catalog/medium/{$item.imageurl}.jpg" border="0" />
+                    <img alt="{$item.title}" src="/images/catalog/medium/{$item.imageurl}.jpg" border="0" />
                 </a>
         {else}
                 <img src="/images/catalog/medium/nopic.jpg" border="0" />
         {/if}
+        </div>
 		
 		
     </td>

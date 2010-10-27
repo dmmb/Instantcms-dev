@@ -78,7 +78,11 @@ $_LANG['SELECT_AVATAR']             ='Выбор аватара';
 
 $_LANG['USR_COMMENTS']              ='Комментарии';
 
-$_LANG['ADD_PHOTO']                 ='Добавить фотографию';
+$_LANG['ADD_PHOTO']                 ='Добавить фото';
+$_LANG['ADD_PHOTOS']                ='Добавить фотографии';
+$_LANG['PHOTOS_CONFIG']             ='Настройки фотографий';
+$_LANG['DELETE_ALBUM']              ='Удалить альбом';
+$_LANG['DELETE_ALBUM_CONFIRM']      ='Удалить фотоальбом со всеми фотографиями?';
 $_LANG['PHOTO_WITHOUT_NAME']        ='Фото без названия';
 $_LANG['PHOTO_ADDED']               ='Фотография успешно добавлена.';
 $_LANG['PHOTO_LIMIT']               ='Достигнут предел количества личных фотографий';
@@ -90,6 +94,8 @@ $_LANG['ADD_PHOTO_MORE']            ='Добавить еще фотографию';
 $_LANG['GOTO_PHOTOALBUM']           ='Перейти к фотоальбому';
 
 $_LANG['PHOTOALBUM']                ='Фотоальбом';
+$_LANG['PHOTOALBUMS']               ='Фотоальбомы';
+$_LANG['ALL_ALBUMS']                ='Все альбомы';
 $_LANG['DELETE_PHOTO']              ='Удалить фотографию';
 $_LANG['DELETING_PHOTO']            ='Удаление фотографии';
 $_LANG['REALLY_DELETE_PHOTO']       ='Вы действительно желаете удалить фото';
@@ -106,7 +112,7 @@ $_LANG['REPLACE_FILE']              ='Заменить файлом';
 $_LANG['SHOW']                      ='Показывать';
 $_LANG['EVERYBODY']                 ='Всем';
 $_LANG['REGISTERED']                ='Зарегистрированным';
-$_LANG['MY_FRIENDS']                ='Моим друзьям';
+$_LANG['MY_FRIENDS']                ='Мои друзья';
 
 $_LANG['ADVS']                      ='Объявления';
 $_LANG['PUBLISHED']                 ='Опубликовано';
@@ -115,9 +121,13 @@ $_LANG['ADV_EXTEND']                ='Просрочено';
 $_LANG['NOT_ADVS']                  ='Нет объявлений.';
 
 $_LANG['FRIENDS']                   ='Друзья';
+$_LANG['ALL_FRIENDS']               ='Все друзья';
+$_LANG['USER_FRIENDS']              ='Друзья пользователя';
+
+$_LANG['USER_PHOTOS']               ='Фотографии пользователя';
+$_LANG['MY_PHOTOS']                 ='Мои фотографии';
 
 $_LANG['HITS']                      ='Просмотров';
-$_LANG['SIZE']                      ='Размер';
 $_LANG['KBITE']                     ='кб';
 $_LANG['CODE_FOR_FORUM']            ='Код для вставки на форумы';
 
@@ -165,6 +175,7 @@ $_LANG['ORDER_BY_SIZE']             ='По размеру';
 $_LANG['ORDER_BY_DOWNLOAD']         ='По загрузкам';
 $_LANG['FILE_NAME']                 ='Название файла';
 $_LANG['VISIBILITY']                ='Видимость';
+$_LANG['SIZE']                      ='Размер';
 $_LANG['CREATE_DATE']               ='Дата создания';
 $_LANG['DOWNLOAD_HITS']             ='Загрузок';
 $_LANG['FILE_VIS_ALL']              ='Файл виден всем';
@@ -204,6 +215,18 @@ $_LANG['POSTS_IN_BLOG']             ='записей в блоге';
 $_LANG['KARMA_POINTS']              ='баллов личной кармы';
 $_LANG['PHOTOS_IN_ALBUMS']          ='фотографий в общих альбомах';
 $_LANG['PHOTOS_IN_PRIVATE_ALBUM']   ='фотографий в личном альбоме';
+$_LANG['PHOTO_SHORT']               ='фото';
+$_LANG['PHOTO']                     ='фотография';
+$_LANG['PHOTO2']                    ='фотографии';
+$_LANG['PHOTO10']                   ='фотографий';
+$_LANG['IS_PUBLIC_ALBUM']           ='Вы смотрите фотографии одного пользователя из общего альбома.';
+$_LANG['ALL_PUBLIC_PHOTOS']         ='Посмотреть весь альбом';
+$_LANG['YOU_CAN_UPLOAD']            ='Вы можете загрузить максимум';
+$_LANG['UPLOAD_QUEUE']              ='Очередь загрузки';
+$_LANG['UPLOADED']                  ='Загружено';
+$_LANG['SAVE_TO_ALBUM']             ='Сохранить в фотоальбом';
+$_LANG['CREATE_NEW_ALBUM']          ='Создать новый фотоальбом';
+$_LANG['AND_GO_TO_ALBUM']           ='и перейти в альбом';
 
 $_LANG['NOT_USERS_WITH_THIS_AWARD'] ='Нет пользователей с этой наградой';
 $_LANG['AWARD_HAVES']               ='Наградой обладают';
@@ -360,6 +383,7 @@ $_LANG['AGE_FROM']                  ='возраст от';
 $_LANG['TO']                        ='до';
 $_LANG['SEND_TO']                   ='Кому';
 $_LANG['SEARCH']                    ='Поиск';
+$_LANG['LATEST']                    ='Новые';
 $_LANG['POSITIVE']                  ='Позитивные';
 $_LANG['NEGATIVE']                  ='Негативные';
 $_LANG['HOW_MUCH_US']               ='Сколько нас?';

@@ -9,14 +9,14 @@
 /*********************************************************************************************/
 
 function mod_uc_latest($module_id){
-
         $inCore = cmsCore::getInstance();
-        $inDB   = cmsDatabase::getInstance();
-		$cfg    = $inCore->loadModuleConfig($module_id);
+        $inDB = cmsDatabase::getInstance();
+	
+		$cfg = $inCore->loadModuleConfig($module_id);
 		
 		if ($cfg['cat_id']>0){
 
-			if (!$cfg['subs']){
+            if (!$cfg['subs']){
 				//select from category
 				$catsql = ' AND i.category_id = '.$cfg['cat_id'];
 			} else {
@@ -28,7 +28,7 @@ function mod_uc_latest($module_id){
 		} else {
 			$catsql = '';
 		}
-
+		
 		$sql = "SELECT i.*, i.pubdate as fdate, c.view_type as viewtype
 				FROM cms_uc_items i
 				LEFT JOIN cms_uc_cats c ON c.id = i.category_id

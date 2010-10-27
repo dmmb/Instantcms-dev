@@ -21,8 +21,11 @@
 
 <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:15px">
 	<tr>
+        <td width="70" valign="top">
+            <div class="blog_post_avatar">{$post.image}</div>
+        </td>
 		<td>
-			<div class="blog_post_data">
+			<div class="blog_post_data" valign="top">
 				<div><strong>{$LANG.AVTOR}:</strong> {$post.author}</div>
 				<div><strong>{$LANG.PUBLISHED}:</strong> {$post.fpubdate}</div>
 				<div><strong>{$LANG.BLOG}:</strong> <a href="/blogs/{$blog.seolink}">{$blog.title}</a></div>
