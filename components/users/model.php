@@ -522,9 +522,15 @@ class cms_model_users{
 
         $photos = array();
 
+        if (cmsUser::sessionGet('photos_list')){
+            $sess_ids = 'id IN ('.rtrim(implode(',', cmsUser::sessionGet('photos_list')), ',').')';
+        } else {
+            $sess_ids = '1=0';
+        }
+
         $sql = "SELECT id, user_id, album_id, title, description, allow_who, imageurl
                 FROM cms_user_photos
-                WHERE user_id='{$user_id}' AND album_id = 0
+                WHERE user_id='{$user_id}' AND (album_id = 0 OR ({$sess_ids}))
                 ORDER BY id ASC";
 
         $result = $this->inDB->query($sql);

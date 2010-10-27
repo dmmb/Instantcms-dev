@@ -13,6 +13,7 @@
 <script type="text/javascript">
     {literal}
     var swfu;
+    var uploadedCount = 0;
 
     window.onload = function() {
         var settings = {
@@ -55,9 +56,10 @@
 
     function queueComplete(numFilesUploaded) {
         if (numFilesUploaded>0){
+            uploadedCount += numFilesUploaded;
             $('#divStatus').show();
             $('#continue').show();
-            $("#files_count").html(numFilesUploaded);
+            $("#files_count").html(uploadedCount);
         }
     }
 
