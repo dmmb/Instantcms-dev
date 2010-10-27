@@ -1259,7 +1259,7 @@ if ($do=='delphoto'){
         if (!$usr) { cmsCore::error404(); }
 
         $inPage->backButton(false);
-        $sql = "SELECT title FROM cms_user_photos WHERE id = $photo_id AND user_id = $id";
+        $sql = "SELECT title, album_id FROM cms_user_photos WHERE id = $photo_id AND user_id = $id";
         $result = $inDB->query($sql);
         
         if (!$inDB->num_rows($result)){ cmsCore::error404(); }
@@ -1286,7 +1286,14 @@ if ($do=='delphoto'){
 
             $model->deletePhoto($photo_id);
 
-            $inCore->redirect('/users/'.$usr['login'].'/photos/private'.$photo['album_id'].'.html');
+            $album_has_photos = $inDB->rows_count('cms_user_photos', "album_id = {$photo['album_id']}", 1);
+
+            if ($album_has_photos){
+                $inCore->redirect('/users/'.$usr['login'].'/photos/private'.$photo['album_id'].'.html');
+            } else {
+                $model->deletePhotoAlbum($id, $photo['album_id']);
+                $inCore->redirect(cmsUser::getProfileURL($usr['login']));
+            }
 
 		}
 
@@ -1308,7 +1315,7 @@ if ($do=='editphoto'){
 
     if ($photo['user_id'] != $id && !$inUser->is_admin){ cmsCore::error404(); }
 
-	$inDB->query("UPDATE cms_user_photos SET album_id = 0 WHERE id = '{$photo_id}'");
+	cmsUser::sessionPut('photos_list', array($photo['id']));
 
     $inCore->redirect('/users/'.$usr['login'].'/photos/submit');
 
