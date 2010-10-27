@@ -46,7 +46,7 @@
 		//LOAD CURRENT CONFIG
         $cfg = $inCore->loadComponentConfig($place);
 
-		if (!isset($cfg['img_max'])) { $cfg['img_max'] = 10; } 
+		if (!isset($cfg['img_max'])) { $cfg['img_max'] = 50; }
 		if (!isset($cfg['img_on'])) { $cfg['img_on'] = 1; } 
 		if (!isset($cfg['watermark'])) { $cfg['watermark'] = 1; } 
 		
