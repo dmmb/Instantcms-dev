@@ -650,8 +650,7 @@ if ($do=='profile'){
     if (!$id){
         $login = $inCore->request('login', 'str', '');
         $login = urldecode($login);
-        $id    = $inDB->get_fields('cms_users', "login='{$login}'", 'id', 'is_deleted ASC');
-		$id    = ($id['id'] ? $id['id'] : 0);
+        $id    = $inDB->get_field('cms_users', "login='{$login}' AND is_deleted=0", 'id');
     }
 
     $usr = $model->getUser($id);
@@ -1119,7 +1118,7 @@ if ($do=='uploadphotos'){
     $inCore->includeGraphics();
 
     $uploaddir 				= PATH.'/images/users/photos/';
-    $realfile 				= $_FILES['Filedata']['name'];
+    $realfile 				= $inDB->escape_string($_FILES['Filedata']['name']);
 
     $lid 					= $inDB->get_fields('cms_user_photos', 'id>0', 'id', 'id DESC');
     $lastid 				= $lid['id']+1;	
@@ -1162,8 +1161,7 @@ if ($do=='submitphotos'){
     if (!$id){
         $login = $inCore->request('login', 'str', '');
         $login = urldecode($login);
-        $id    = $inDB->get_fields('cms_users', "login='{$login}' AND is_deleted=0", 'id');
-		$id    = ($id['id'] ? $id['id'] : 0);
+        $id    = $inDB->get_field('cms_users', "login='{$login}' AND is_deleted=0", 'id');
     }
 
     $usr = $model->getUserShort($id);
@@ -1198,10 +1196,10 @@ if ($do=='submitphotos'){
 
         $new_album  = $inCore->request('new_album', 'int', 0);
         
-        $delete = $inCore->request('delete', 'array');
-        $titles = $inCore->request('title', 'array');
-        $allow  = $inCore->request('allow', 'array');
-        $desc   = $inCore->request('desc', 'array');
+        $delete = $inCore->request('delete', 'array_int');
+        $titles = $inCore->request('title', 'array_str');
+        $allow  = $inCore->request('allow', 'array_str');
+        $desc   = $inCore->request('desc', 'array_str');
 
         foreach($delete as $photo_id){
             $model->deletePhoto($photo_id);
@@ -1215,13 +1213,19 @@ if ($do=='submitphotos'){
         } else {
             $album_id = $inCore->request('album_id', 'int');
         }
+		
+		$total_foto = sizeof($titles);
+
+		$album = !$album ? $model->getPhotoAlbum('private', $album_id) : $album;
+
+		$descr_next = 1;
 
         foreach($titles as $photo_id => $title){
 
             $description = isset($desc[$photo_id]) ? $desc[$photo_id] : '';
-            $allow_who   = isset($allow[$photo_id]) ? $allow[$photo_id] : 'all';
-
-            if (!$title) { $title = $_LANG['PHOTO_WITHOUT_NAME']; }
+			$allow_who   = isset($allow[$photo_id]) ? $allow[$photo_id] : 'all';
+			$imageurl    = $photos[$photo_id]['imageurl'];
+			$title       = $title ? $title : $_LANG['PHOTO_WITHOUT_NAME'];
 
             $photo_sql = "UPDATE cms_user_photos
                           SET title='{$title}',
@@ -1235,7 +1239,39 @@ if ($do=='submitphotos'){
 
             $inDB->query($photo_sql);
 
+			if ($total_foto == 1) {
+				cmsActions::log('add_user_photo', array(
+					  'object' => $title,
+					  'object_url' => '/users/'.$id.'/photo'.$photo_id.'.html',
+					  'object_id' => $photo_id,
+					  'target' => $album['title'],
+					  'target_id' => $album_id,
+					  'target_url' => '/users/'.$usr['login'].'/photos/private'.$album_id.'.html',
+					  'description' => '<a href="/users/'.$id.'/photo'.$photo_id.'.html" class="act_photo">
+											<img border="0" src="/images/users/photos/small/'.$imageurl.'" />
+										  </a>'
+				));
+
+			} elseif ($descr_next < 4) {
+
+					$photo_descr .= ' <a href="/users/'.$id.'/photo'.$photo_id.'.html" class="act_photo">
+											<img border="0" src="/images/users/photos/small/'.$imageurl.'" />
+									</a> ';
+			}
+			$descr_next++;
+
         }
+		if ($total_foto > 1) {
+			cmsActions::log('add_user_photo_multi', array(
+				  'object' => $total_foto,
+				  'object_url' => '',
+				  'object_id' => '',
+				  'target' => $album['title'],
+				  'target_id' => $album_id, 
+				  'target_url' => '/users/'.$usr['login'].'/photos/private'.$album_id.'.html',
+				  'description' => $photo_descr
+			));
+		}
 
         $inCore->redirect("/users/{$usr['login']}/photos/private{$album_id}.html");
 
@@ -1516,7 +1552,7 @@ if ($do=='viewboard'){
 			
         // выбираем объ€влени€ пользовател€ по его id
 		if (($inUser->id == $id && $cfg_board['aftertime'] == 'hide' && $cfg_board['extend']) || ($inUser->id == $id && $cfg_board['public'] == 1 && !$cfg_board['extend'] && $cfg_board['aftertime'] != 'hide')) {
-		$sql = "SELECT *
+			$sql = "SELECT *
 				FROM cms_board_items
 				WHERE user_id = $id
 				ORDER BY pubdate DESC

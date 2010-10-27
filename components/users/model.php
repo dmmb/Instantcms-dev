@@ -25,7 +25,7 @@ class cms_model_users{
 
         switch($target){
 
-            case 'userphoto': $photo = $this->inDB->get_fields('cms_user_photos', "id={$target_id}", 'user_id, title');
+            case 'userphoto': $photo = $this->inDB->get_fields('cms_user_photos', "id='{$target_id}'", 'user_id, title');
                               if (!$photo) { return false; }
                               $result['link']  = '/users/'.$photo['user_id'].'/photo'.$target_id.'.html';
                               $result['title'] = $photo['title'];
@@ -67,7 +67,7 @@ class cms_model_users{
 				LEFT JOIN cms_user_groups g ON u.group_id = g.id
 				LEFT JOIN cms_online o ON u.id = o.user_id
 				LEFT JOIN cms_banlist b ON u.id = b.user_id
-                WHERE u.is_locked = 0 AND u.id = $user_id
+                WHERE u.is_locked = 0 AND u.id = '$user_id'
                 LIMIT 1";
 
         $result = $this->inDB->query($sql);
@@ -97,7 +97,7 @@ class cms_model_users{
 		
 		} else {
 		
-		$user = $this->inDB->get_fields('cms_users', "id = '$user_id'", 'id, nickname, login');
+			$user = $this->inDB->get_fields('cms_users', "id = '$user_id'", 'id, nickname, login');
         
 		}
         
@@ -129,9 +129,9 @@ class cms_model_users{
     public function isNewFriends($user_id, $from_id=0){
 
         if (!$from_id){
-            $sql = "SELECT 1 FROM cms_user_friends WHERE to_id = $user_id AND is_accepted = 0";
+            $sql = "SELECT 1 FROM cms_user_friends WHERE to_id = '$user_id' AND is_accepted = 0";
         } else {
-            $sql = "SELECT 1 FROM cms_user_friends WHERE to_id = $user_id AND from_id = $from_id AND is_accepted = 0";
+            $sql = "SELECT 1 FROM cms_user_friends WHERE to_id = '$user_id' AND from_id = '$from_id' AND is_accepted = 0";
         }
 
         $result = $this->inDB->query($sql);
@@ -151,7 +151,7 @@ class cms_model_users{
                 FROM cms_user_friends f
 				LEFT JOIN cms_users u ON f.from_id = u.id
 				LEFT JOIN cms_user_profiles p ON p.id = u.id
-                WHERE f.to_id = $user_id AND f.is_accepted = 0";
+                WHERE f.to_id = '$user_id' AND f.is_accepted = 0";
         $result = $this->inDB->query($sql);
 
         if (!$this->inDB->num_rows($result)){ return false; }
@@ -175,8 +175,8 @@ class cms_model_users{
 
         if ($user_id == 1) { return false; }
 
-        $this->inDB->query("UPDATE cms_users SET is_deleted = 1 WHERE id=$user_id");
-        $this->inDB->query("DELETE FROM cms_user_friends WHERE to_id = $user_id OR from_id = $user_id");
+        $this->inDB->query("UPDATE cms_users SET is_deleted = 1 WHERE id='$user_id'");
+        $this->inDB->query("DELETE FROM cms_user_friends WHERE to_id = '$user_id' OR from_id = '$user_id'");
         
     }
 
@@ -200,7 +200,7 @@ class cms_model_users{
 
         cmsCore::callEvent('DELETE_USER_GROUP', $group_id);
 
-        $sql = "SELECT id FROM cms_users WHERE group_id = {$group_id}";
+        $sql = "SELECT id FROM cms_users WHERE group_id = '$group_id'";
 
         $result = $this->inDB->query($sql);
 
@@ -210,7 +210,7 @@ class cms_model_users{
             }
         }
 
-        $this->inDB->query("DELETE FROM cms_user_groups WHERE id = {$group_id}");
+        $this->inDB->query("DELETE FROM cms_user_groups WHERE id = '$group_id'");
 
         return true;
         
@@ -394,7 +394,7 @@ class cms_model_users{
             //Получаем личные фотографии
             $private_sql = "SELECT id, pubdate, imageurl as file, hits, title
                             FROM cms_user_photos
-                            WHERE user_id = {$user_id} AND album_id = '{$album_id}' $filter
+                            WHERE user_id = '{$user_id}' AND album_id = '{$album_id}' $filter
                             ORDER BY id DESC";
 
             $private_res = $this->inDB->query($private_sql);
@@ -415,7 +415,7 @@ class cms_model_users{
             //Получаем фотографии из галереи
             $public_sql = "SELECT id, pubdate, file, hits, title
                             FROM cms_photo_files
-                            WHERE user_id = {$user_id} AND album_id = {$album_id} AND published = 1";
+                            WHERE user_id = '{$user_id}' AND album_id = '{$album_id}' AND published = 1";
 
             $public_res = $this->inDB->query($public_sql);
 
@@ -537,7 +537,7 @@ class cms_model_users{
 
         if ($this->inDB->num_rows($result)) {
             while($photo = $this->inDB->fetch_assoc($result)){
-                $photos[] = $photo;
+                $photos[$photo['id']] = $photo;
             }
         }
 
@@ -563,6 +563,7 @@ class cms_model_users{
             @unlink(PATH.'/images/users/photos/medium/'.$photo['imageurl']);
             $this->inDB->query("DELETE FROM cms_user_photos WHERE id = $photo_id") ;
             $inCore->deleteComments('userphoto', $photo_id);
+			cmsActions::removeObjectLog('add_user_photo', $photo_id);
             cmsClearTags('userphoto', $photo_id);
         }
 
@@ -582,7 +583,7 @@ class cms_model_users{
             }
         }
 
-        $this->inDB->query("DELETE FROM cms_user_albums WHERE id = $album_id") ;
+        $this->inDB->query("DELETE FROM cms_user_albums WHERE id = '$album_id'") ;
 
         return true;
 
