@@ -1423,6 +1423,28 @@ class cmsUser {
 // ============================================================================ //
 // ============================================================================ //
 
+    public static function sessionPut($param, $value){
+        $_SESSION['icms'][$param] = $value;
+        return true;
+    }
+
+    public static function sessionGet($param){
+        if (isset($_SESSION['icms'][$param])){
+            return $_SESSION['icms'][$param];
+        } else {
+            return false;
+        }
+    }
+
+    public static function sessionDel($param){
+        unset($_SESSION['icms'][$param]);
+    }
+
+
+
+// ============================================================================ //
+// ============================================================================ //
+
 }
 
 ?>
