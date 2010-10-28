@@ -289,8 +289,8 @@ class cms_model_users{
 
         $sql = "SELECT  u.id as id,
                         SUM(k.points) as karma
-                FROM cms_users u, cms_user_karma k
-                WHERE k.user_id = u.id
+                FROM cms_user_karma k
+				LEFT JOIN cms_users u ON u.id = k.user_id
                 GROUP BY u.id";
 
         $res = $this->inDB->query($sql);
@@ -459,10 +459,10 @@ class cms_model_users{
                        'private' as type,
                        p.imageurl as imageurl,
                        COUNT(p.id) as photos_count
-                FROM cms_user_albums a, cms_user_photos p
-                WHERE p.user_id='{$user_id}' AND p.album_id = a.id {$filter}
-                GROUP BY p.album_id
-                ORDER BY a.pubdate DESC";
+                FROM cms_user_photos p
+				LEFT JOIN cms_user_albums a ON a.id = p.album_id
+                WHERE p.user_id='{$user_id}' {$filter}
+                GROUP BY p.album_id";
 
         $result = $this->inDB->query($sql);
 
@@ -486,10 +486,10 @@ class cms_model_users{
                         'public' as type,
                         f.file as imageurl,
                         COUNT(f.id) as photos_count
-                FROM cms_photo_files f, cms_photo_albums a
-                WHERE f.user_id='{$user_id}' AND f.album_id = a.id AND f.published = 1
-                GROUP BY f.album_id
-                ORDER BY a.pubdate DESC";
+                FROM cms_photo_files f
+				LEFT JOIN cms_photo_albums a ON a.id = f.album_id
+                WHERE f.user_id='{$user_id}' AND f.published = 1
+                GROUP BY f.album_id";
 
         $result = $this->inDB->query($sql);
 

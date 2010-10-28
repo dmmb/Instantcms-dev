@@ -1077,13 +1077,17 @@ if ($do=='addphoto'){
     $inCore->loadLanguage('components/photos');
 
     $albums = $model->getPhotoAlbums($id, true, true);
+	
+	$photo_count = usrPhotoCount($id, false);
 
     if($cfg['photosize']>0) {
-        $max_limit = true;
-        $max_files = $cfg['photosize'] - usrPhotoCount($id, false);
+        $max_limit  = true;
+        $max_files  = $cfg['photosize'] - $photo_count;
+		$stop_photo = $photo_count >= $cfg['photosize'];
     } else {
-        $max_limit = false;
-        $max_files = 0;
+        $max_limit  = false;
+        $max_files  = 0;
+		$stop_photo = false;
     }
 
     $inPage->setTitle($_LANG['ADD_PHOTOS']);
@@ -1097,6 +1101,7 @@ if ($do=='addphoto'){
     $smarty->assign('sess_id', session_id());
     $smarty->assign('max_limit', $max_limit);
     $smarty->assign('max_files', $max_files);
+	$smarty->assign('stop_photo', $stop_photo);
     $smarty->display('com_users_photo_add.tpl');
 
 }
@@ -1114,6 +1119,7 @@ if ($do=='uploadphotos'){
     $user_id = $_SESSION['user']['id'];
 
     if (!$user_id) { exit(0); }
+	if (($cfg['photosize']>0) && (usrPhotoCount($user_id, false) >= $cfg['photosize'])) { exit(0); }
 
     $inCore->includeGraphics();
 
@@ -1289,18 +1295,16 @@ if ($do=='delphoto'){
 	$inCore->loadLanguage('components/photos');
 	$photo_id = $inCore->request('photoid', 'int', '');
 	
-	if (usrCheckAuth() && (@$inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
+	if (usrCheckAuth() && ($inUser->id == $id || $inCore->userIsAdmin($inUser->id))){
         
         $usr = $model->getUserShort($id);
         if (!$usr) { cmsCore::error404(); }
 
         $inPage->backButton(false);
-        $sql = "SELECT title FROM cms_user_photos WHERE id = $photo_id AND user_id = $id";
-        $result = $inDB->query($sql);
-        
-        if (!$inDB->num_rows($result)){ cmsCore::error404(); }
 
-        $photo = $inDB->fetch_assoc($result);
+		$photo = $inDB->get_field('cms_user_photos', "id = '{$photo_id}' AND user_id = '{$id}'", 'title');
+
+        if (!$photo){ cmsCore::error404(); }
         
 		if (!isset($_POST['godelete'])){
 			
@@ -1360,7 +1364,7 @@ if ($do=='editphotolist'){
 
     if (!$inCore->inRequest('photos')) { cmsCore::error404(); }
 
-    $photo_ids  = $inCore->request('photos', 'array');
+    $photo_ids  = $inCore->request('photos', 'array_int');
     $album_id   = $inCore->request('album_id', 'int');
     $photos     = array();
 
@@ -1370,7 +1374,6 @@ if ($do=='editphotolist'){
     //проверяем доступ
     foreach($photo_ids as $photo_id){
 
-        $photo_id   = intval($photo_id);
         $photo      = $model->getPhoto($photo_id);
 
         if ($photo['user_id'] != $id && !$inUser->is_admin){ cmsCore::error404(); exit; }
@@ -1397,7 +1400,6 @@ if ($do=='editphotolist'){
     if ($inCore->inRequest('edit')){
 
         foreach($photo_ids as $photo_id){
-            $photo_id   = intval($photo_id);
             $photos[] = $photo_id;
         }
 
