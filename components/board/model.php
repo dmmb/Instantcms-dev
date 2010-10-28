@@ -183,7 +183,7 @@ class cms_model_board{
 
         $result = $this->inDB->query($sql);
 
-        if (!$this->inDB->num_rows($result)){ cmsCore::error404(); }
+        if (!$this->inDB->num_rows($result)){ return false; }
 
         $record = $this->inDB->fetch_assoc($result);
 

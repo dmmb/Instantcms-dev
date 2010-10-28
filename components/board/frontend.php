@@ -259,7 +259,11 @@ if ($do=='view'){
 if($do=='read'){
 	$item   = $model->getRecord($id);
 
-	if ($item){
+	if (!$item){ cmsCore::error404(); }
+	if ($item['published'] != 1) {
+		$inPage->printHeading($_LANG['ADV_IS_MODER']);
+        return;
+	}
 		
 		//PATHWAY ENTRY
 		$pagetitle =  $item['title'];
@@ -306,8 +310,7 @@ if($do=='read'){
 			$smarty->assign('is_user', $inUser->id);
 			$smarty->assign('user_id', $inUser->id);
 		$smarty->display('com_board_item.tpl');
-        
-	}
+
 }
 /////////////////////////////// NEW BOARD ITEM /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='additem'){
@@ -389,8 +392,10 @@ if ($do=='additem'){
         $published  = 0;
 
         if ($cat['public']==-1) { $cat['public'] = $cfg['public']; }
-        $published  = ($cat['public']==2) ? 1 : 0;
-        if ($inUser->is_admin || $inCore->isUserCan('board/autoadd')) { $published = 1; }
+
+        $published  = ($cat['public']==2 && $inCore->isUserCan('board/autoadd')) ? 1 : 0;
+        if ($inUser->is_admin || $inCore->isUserCan('board/moderate')) { $published = 1; }
+
         if ($cfg['srok']){  $pubdays = ($inCore->request('pubdays', 'int') <= 50) ? $inCore->request('pubdays', 'int') : 50; }
         if (!$cfg['srok']){ $pubdays = isset($cfg['pubdays']) ? $cfg['pubdays'] : 14; }
 
@@ -444,16 +449,18 @@ if ($do=='additem'){
                                     'published'=>$published,
                                     'file'=>$filename
                                 ));
-		//регистрируем событие
-		cmsActions::log('add_board', array(
-					'object' => $title,
-					'object_url' => '/board/read'.$item_id.'.html',
-					'object_id' => $item_id,
-					'target' => $cat['title'],
-					'target_url' => '/board/'.$cat['id'],
-					'target_id' => $cat['id'], 
-					'description' => ''
-		));
+		if ($published == 1) {
+			//регистрируем событие
+			cmsActions::log('add_board', array(
+						'object' => $title,
+						'object_url' => '/board/read'.$item_id.'.html',
+						'object_id' => $item_id,
+						'target' => $cat['title'],
+						'target_url' => '/board/'.$cat['id'],
+						'target_id' => $cat['id'], 
+						'description' => ''
+			));
+		}
 
         //finish
         echo '<p><strong>'.$_LANG['ADV_NOT_ADDED'].'</strong></p>';
@@ -538,8 +545,9 @@ if ($do=='edititem'){
         $city       = $city ? $city : $city_ed;
 
         if ($cat['public']==-1) { $cat['public'] = $cfg['public']; }
-        $published  = ($cat['public']==2) ? 1 : 0;
-        if ($inUser->is_admin || $inCore->isUserCan('board/autoadd')) { $published = 1; }
+
+        $published  = ($cat['public']==2 && $inCore->isUserCan('board/autoadd')) ? 1 : 0;
+        if ($inUser->is_admin || $inCore->isUserCan('board/moderate')) { $published = 1; }
 
 		if ($item['is_overdue'] && !$item['published']) {
 			if ($cfg['srok']){  $pubdays = ($inCore->request('pubdays', 'int') <= 50) ? $inCore->request('pubdays', 'int') : 50; }
