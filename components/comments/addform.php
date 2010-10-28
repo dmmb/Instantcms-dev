@@ -47,13 +47,12 @@
 	if (!isset($cfg['img_on'])) { $cfg['img_on'] = 1; }
 
 
-    if ($cfg['bbcode']){
+    if ($cfg['bbcode'] && $inCore->isUserCan('comments/bbcode')){
         $bb_toolbar = cmsPage::getBBCodeToolbar('content', true, 'comments');
+		//smilies toolbar
+		$smilies = cmsPage::getSmilesPanel('content');
 		echo '<script language="JavaScript" type="text/javascript" src="/includes/jquery/upload/ajaxfileupload.js"></script>';
     }
-
-	//smilies toolbar
-	$smilies = cmsPage::getSmilesPanel('content');
 
 	//LOAD SMARTY
 	$inCore->loadSmarty();

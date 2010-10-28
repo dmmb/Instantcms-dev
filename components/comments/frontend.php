@@ -134,18 +134,18 @@ function comments($target='', $target_id=0){
         unset($_SESSION['cm_error']);
 
 		$comments_count = $model->getCommentsCount($target, $target_id);
-		
+
+		$is_admin           = $inCore->userIsAdmin($inUser->id);
+		$user_can_delete    = $inCore->isUserCan('comments/delete');
+		$user_can_moderate  = $inCore->isUserCan('comments/moderate');
+
 		if ($comments_count && !$cfg['cmm_ajax']){
 			
 			//activate profiles support
 			$inCore->includeFile('components/users/includes/usercore.php');	
 			
 			//LIST COMMENTS
-	
-			$is_admin           = $inCore->userIsAdmin($inUser->id);
-			$user_can_delete    = $inCore->isUserCan('comments/delete');
-			$user_can_moderate  = $inCore->isUserCan('comments/moderate');
-	
+
 			$comments = array();
 			$tree     = array();			
 			
@@ -232,10 +232,14 @@ function comments($target='', $target_id=0){
         $captha_code    = $inCore->request('code', 'str', '');
         $guestname      = $inCore->request('guestname', 'str', '');
         $user_id        = $inCore->request('user_id', 'int', 0);
-        $content        = $inCore->request('content', 'html', '');
-		
-		$content        = $inCore->parseSmiles($content, true);
-		$content        = $inDB->escape_string($content);
+
+		if ($inCore->isUserCan('comments/bbcode')) {	
+			$content        = $inCore->request('content', 'html', '');
+			$content        = $inCore->parseSmiles($content, true);
+			$content        = $inDB->escape_string($content);
+		} else {
+			$content        = $inCore->request('content', 'str', '');
+		}
 
         $need_captcha   = (!$inUser->id || ($inUser->id && $cfg['regcap']==1));
 
