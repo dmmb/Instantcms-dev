@@ -1,4 +1,7 @@
 {if $is_con}
+{if $cfg.is_pag}<script type="text/javascript" src="/modules/mod_latest/js/latest.js" ></script>{/if}
+{if !$is_ajax}<div id="module_ajax_{$module_id}">{/if}
+
 {foreach key=aid item=article from=$articles}
 	<div class="mod_latest_entry">
         {if $article.image}
@@ -28,6 +31,8 @@
 		<a href="/rss/content/{$rssid}/feed.rss">{$LANG.LATEST_RSS}</a>
 	</div>
 {/if}
+{$pagebar}
+{if !$is_ajax}</div>{/if}
 {else}
     <p>{$LANG.LATEST_NOT_MATERIAL}</p>
 {/if}

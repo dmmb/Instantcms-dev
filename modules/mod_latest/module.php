@@ -21,6 +21,10 @@ function mod_latest($module_id){
 		if (!isset($cfg['subs'])) { $cfg['subs'] = 1; }
 		if (!isset($cfg['cat_id'])) { $cfg['cat_id'] = 1; }
 		
+		// опции постраничной разбивки
+		$page    = 1;
+		$perpage = $cfg['newscount'];
+		
 		$today = date("Y-m-d H:i:s");
 		
 		if ($cfg['cat_id'] != '-1') {
@@ -52,6 +56,16 @@ function mod_latest($module_id){
 		$result = $inDB->query($sql);
 			
 		$is_con = false;
+		
+		if ($cfg['is_pag']) {
+			// Считаем общее количество материалов если опция пагинация включена
+			$sql_total = "SELECT 1
+					FROM cms_content con
+					LEFT JOIN cms_category cat ON cat.id = con.category_id
+					WHERE con.published = 1 AND con.showlatest = 1 AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today')) ".$catsql."";
+			$result_total = $inDB->query($sql_total) ;
+			$total_page = $inDB->num_rows($result_total);
+		}
 	
 		if ($inDB->num_rows($result)){
 
@@ -76,12 +90,17 @@ function mod_latest($module_id){
 
 		}
 		
-			$smarty = $inCore->initSmarty('modules', 'mod_latest.tpl');			
-			$smarty->assign('articles', $articles);
-			$smarty->assign('rssid', $rssid);
+		$smarty = $inCore->initSmarty('modules', 'mod_latest.tpl');			
+		$smarty->assign('articles', $articles);
+		$smarty->assign('rssid', $rssid);
+		if ($cfg['is_pag']) {
+			$smarty->assign('pagebar', cmsPage::getPagebar($total_page, $page, $perpage, 'javascript:conPage(%page%, '.$module_id.')'));
+		}
+		$smarty->assign('is_ajax', false);
 		$smarty->assign('is_con', $is_con);
-			$smarty->assign('cfg', $cfg);
-			$smarty->display('mod_latest.tpl');			
+		$smarty->assign('module_id', $module_id);
+		$smarty->assign('cfg', $cfg);
+		$smarty->display('mod_latest.tpl');			
 			
 		return true;
 }
