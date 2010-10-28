@@ -913,7 +913,8 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 }
 ///////////////////////////// DELETE POST /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='deletepost'){
-	if (usrCheckAuth()){
+	$post_user_id = $inDB->get_field('cms_forum_posts', "id = '$id'", 'user_id');
+	if (usrCheckAuth() && ($inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('forum/moderate') || $inUser->id == $post_user_id)){
 		$model->deletePost($id, $inUser->id);
 	}	
 	header('location:'.$_SERVER['HTTP_REFERER']);	
@@ -1032,7 +1033,8 @@ if ($do=='renamethread'){
 }
 ///////////////////////////// DELETE THREAD /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='deletethread'){
-	if (usrCheckAuth()){
+	$thread_user_id = $inDB->get_field('cms_forum_threads', "id = '$id'", 'user_id');
+	if (usrCheckAuth() && ($inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('forum/moderate') || $inUser->id == $thread_user_id)){
 		$forum_id = $inDB->get_field('cms_forum_threads', 'id='.$id, 'forum_id');
         $model->deleteThread($id, $inUser->id);
 	}	
