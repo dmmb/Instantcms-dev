@@ -2134,7 +2134,7 @@ class cmsCore {
         $sql .= "ORDER BY {$order_by} {$order_to}";
         $result = $inDB->query($sql) ;
 
-        while($item = mysql_fetch_assoc($result)){
+        while($item = $inDB->fetch_assoc($result)){
             if (@$selected==$item[$id_field]){
                 $s = 'selected';
             } else {
@@ -2249,7 +2249,7 @@ class cmsCore {
         $result = $inDB->query($sql) ;
         $html = '<select name="city">';
         $html .= '<option value="">'.$none_label.'</option>';
-        while($c = mysql_fetch_assoc($result)){
+        while($c = $inDB->fetch_assoc($result)){
             if (strtolower($selected)==strtolower($c['city'])){
                 $s = 'selected';
             } else {
@@ -2741,8 +2741,8 @@ class cmsCore {
         $sql = "SELECT group_id FROM cms_content_access WHERE content_type='$content_type' AND content_id = $content_id";
         $result = $inDB->query($sql) ;
 
-        if (mysql_num_rows($result)){
-            while($ac = mysql_fetch_assoc($result)){
+        if ($inDB->num_rows($result)){
+            while($ac = $inDB->fetch_assoc($result)){
                 if ($ac['group_id']==$group_id) { $access = true; }
             }
         } else { $access = true; }
@@ -2801,7 +2801,7 @@ class cmsCore {
      * @return bool
      */
     public function isUserCan($access_type){ //$access_type like "comments/delete" or "photo/edit"
-        $inDB = cmsDatabase::getInstance();
+        $inDB   = cmsDatabase::getInstance();
         $inUser = cmsUser::getInstance();
         $do_access = false;
 
@@ -2823,8 +2823,8 @@ class cmsCore {
 
             $result = $inDB->query($sql) ;
 
-            if (mysql_num_rows($result)){
-                $ac = mysql_fetch_assoc($result);
+            if ($inDB->num_rows($result)){
+                $ac = $inDB->fetch_assoc($result);
                 $access_str = $ac['access'];
 
                 $access = str_replace(', ', ',', $access_str);
@@ -2853,7 +2853,20 @@ class cmsCore {
         }
         return $string;
     }
-
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Удаляет теги script iframe style
+     * @param string $string
+     * @return bool
+     */
+    public static function badTagClear($string){
+		$bad_teg = array ("'<script[^>]*?>.*?</script>'si",
+						 "'<iframe[^>]*?>.*?</iframe>'si",
+						 "'<style[^>]*?>.*?</style>'si");
+		$string = preg_replace($bad_teg, '', $string);
+        return $string;
+    }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
@@ -3039,8 +3052,8 @@ class cmsCore {
         $inDB = cmsDatabase::getInstance();
         $sql = "SELECT * FROM cms_upload_images WHERE post_id = '$post_id' AND target='$target'";
         $rs = $inDB->query($sql);
-        if (mysql_num_rows($rs)){
-            while($file = mysql_fetch_assoc($rs)){
+        if ($inDB->num_rows($rs)){
+            while($file = $inDB->fetch_assoc($rs)){
                 $filename = PATH.$file['fileurl'];
                 if (file_exists($filename)){ @unlink($filename); }
                 $inDB->query("DELETE FROM cms_upload_images WHERE id=".$file['id']);
@@ -3202,8 +3215,8 @@ class cmsCore {
                 LIMIT 1";
         $rs = $inDB->query($sql);
 
-        if (mysql_num_rows($rs)==1){
-            $banner = mysql_fetch_assoc($rs);
+        if ($inDB->num_rows($rs)==1){
+            $banner = $inDB->fetch_assoc($rs);
             if ($banner['typeimg']=='image'){
                 $html = '<a href="/gobanner'.$banner['id'].'" title="'.$banner['title'].'" target="_blank"><img src="/images/banners/'.$banner['fileurl'].'" border="0" alt="'.$banner['title'].'"/></a>';
             }
@@ -3238,8 +3251,8 @@ class cmsCore {
                 LIMIT 1";
         $rs = $inDB->query($sql);
 
-        if (mysql_num_rows($rs)==1){
-            $banner = mysql_fetch_assoc($rs);
+        if ($inDB->num_rows($rs)==1){
+            $banner = $inDB->fetch_assoc($rs);
             if ($banner['typeimg']=='image'){
                 $html = '<a href="/gobanner'.$banner['id'].'" title="'.$banner['title'].'"><img src="/images/banners/'.$banner['fileurl'].'" border="0" alt="'.$banner['title'].'"/></a>';
             }

@@ -373,11 +373,15 @@ if ($do=='addarticle' || $do=='editarticle'){
         $article['user_id']             = $inUser->id;
         $article['title']               = $inCore->request('title', 'str', '');
         $article['tags']                = $inCore->request('tags', 'str', '');
+
         $article['description']         = $inCore->request('description', 'html', '');
         $article['content']             = $inCore->request('content', 'html', '');
 
         $article['description']         = $inDB->escape_string($article['description']);
         $article['content']             = $inDB->escape_string($article['content']);
+		
+        $article['description']         = $inCore->badTagClear($article['description']);
+        $article['content']             = $inCore->badTagClear($article['content']);
 
         $article['published']           = $inCore->isUserCan('content/autoadd') ? 1 : 0;
         $article['pubdate']             = date('Y-m-d H:i');
