@@ -203,9 +203,10 @@
                          );
 
         $routes[] = array(
-                            '_uri'  => '/^users\/([0-9]+)\/addphoto.html$/i',
+                            '_uri'  => '/^users\/([0-9]+)\/addphoto(|single).html$/i',
                             'do'    => 'addphoto',
-                            1       => 'id'
+                            1       => 'id',
+							2       => 'uload_type'
                          );
 
         $routes[] = array(

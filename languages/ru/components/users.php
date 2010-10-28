@@ -92,6 +92,7 @@ $_LANG['FOR_ADD_PHOTO_TEXT']        ='Чтобы добавить новое личное фото, удалите 
 $_LANG['GOTO_PHOTO']                ='Перейти к фотографии';
 $_LANG['ADD_PHOTO_MORE']            ='Добавить еще фотографию';
 $_LANG['GOTO_PHOTOALBUM']           ='Перейти к фотоальбому';
+$_LANG['NO_PUBLISHED_PHOTO']        ='Ранее загружено, но не опубликовано';
 
 $_LANG['PHOTOALBUM']                ='Фотоальбом';
 $_LANG['PHOTOALBUMS']               ='Фотоальбомы';

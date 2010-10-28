@@ -1073,14 +1073,18 @@ if ($do=='addphoto'){
 
     $usr = $model->getUserShort($id);
     if (!$usr){ cmsCore::error404(); }
-
-    $inCore->loadLanguage('components/photos');
+	
+	$inPage->backButton(false);
+	$uload_type = $inCore->request('uload_type', 'str', 'multi');
 
     $albums = $model->getPhotoAlbums($id, true, true);
 	
+	$photos = $model->getUploadedPhotos($id);
+	$total_no_pub = $photos ? sizeof($photos) : 0; unset($photos);
+	
 	$photo_count = usrPhotoCount($id, false);
 
-    if($cfg['photosize']>0) {
+    if($cfg['photosize']>0 && !$inCore->userIsAdmin($inUser->id)) {
         $max_limit  = true;
         $max_files  = $cfg['photosize'] - $photo_count;
 		$stop_photo = $photo_count >= $cfg['photosize'];
@@ -1097,10 +1101,12 @@ if ($do=='addphoto'){
     $smarty = $inCore->initSmarty('components', 'com_users_photo_add.tpl');
     $smarty->assign('user_id', $id);
     $smarty->assign('user', $usr);
+	$smarty->assign('total_no_pub', $total_no_pub);
     $smarty->assign('albums', $albums);
     $smarty->assign('sess_id', session_id());
     $smarty->assign('max_limit', $max_limit);
     $smarty->assign('max_files', $max_files);
+	$smarty->assign('uload_type', $uload_type);
 	$smarty->assign('stop_photo', $stop_photo);
     $smarty->display('com_users_photo_add.tpl');
 
@@ -1119,7 +1125,7 @@ if ($do=='uploadphotos'){
     $user_id = $_SESSION['user']['id'];
 
     if (!$user_id) { exit(0); }
-	if (($cfg['photosize']>0) && (usrPhotoCount($user_id, false) >= $cfg['photosize'])) { exit(0); }
+	if (($cfg['photosize']>0) && (usrPhotoCount($user_id, false) >= $cfg['photosize']) && !$inCore->userIsAdmin($inUser->id)) { exit(0); }
 
     $inCore->includeGraphics();
 
@@ -1146,6 +1152,7 @@ if ($do=='uploadphotos'){
         @img_resize($uploadphoto, $uploadthumb['medium'], 600, 600, false, $cfg['watermark']);
 
         $model->addUploadedPhoto($user_id, array('filename'=>$realfile, 'imageurl'=>$filename));
+		if ($inCore->inRequest('upload')) { $inCore->redirect('/users/'.$inUser->login.'/photos/submit'); }
 
     } else {
 

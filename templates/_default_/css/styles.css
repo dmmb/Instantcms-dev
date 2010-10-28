@@ -3013,7 +3013,9 @@ div.user_profile_data .field .value {  }
 .usr_photos_add_limit{
     margin-bottom: 20px; color:#5F98BF;;
 }
-
+.usr_photos_add_st{
+    margin: 20px 0; color:#5F98BF;;
+}
 .usr_photos_submit_one{
     padding:10px;
     border:solid 1px #C3D6DF;

@@ -460,7 +460,7 @@ class cms_model_users{
                        p.imageurl as imageurl,
                        COUNT(p.id) as photos_count
                 FROM cms_user_photos p
-				LEFT JOIN cms_user_albums a ON a.id = p.album_id
+				INNER JOIN cms_user_albums a ON a.id = p.album_id
                 WHERE p.user_id='{$user_id}' {$filter}
                 GROUP BY p.album_id";
 
@@ -530,8 +530,7 @@ class cms_model_users{
 
         $sql = "SELECT id, user_id, album_id, title, description, allow_who, imageurl
                 FROM cms_user_photos
-                WHERE user_id='{$user_id}' AND (album_id = 0 OR ({$sess_ids}))
-                ORDER BY id ASC";
+                WHERE user_id='{$user_id}' AND (album_id = 0 OR ({$sess_ids}))";
 
         $result = $this->inDB->query($sql);
 
