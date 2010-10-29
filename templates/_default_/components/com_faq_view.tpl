@@ -44,9 +44,13 @@
 					<td width="30" valign="top"><img src="/templates/_default_/images/icons/big/faq_quest.png" border="0" /></td>
 					<td width="" valign="middle">
 						<div class="faq_quest_link"><a href="/faq/quest{$quest.id}.html">{$quest.quest}</a></div>
+                        {if $id==0}
                         <div class="faq_questcat">&rarr;  <a href="/faq/{$quest.cid}">{$quest.cat_title}</a></div>
+                        {/if}
 						<div class="faq_questdate">{$quest.pubdate}</div>
+                        {if $cfg.user_link}
                         <div class="faq_questuser"><a href="{profile_url login=$quest.login}">{$quest.nickname}</a></div>
+                        {/if}
 						
 					</td>	
 				</tr>
