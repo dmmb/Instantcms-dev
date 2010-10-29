@@ -3,6 +3,11 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 class cms_model_content{
 
+    private $where      = '';
+    private $group_by   = '';
+    private $order_by   = '';
+    private $limit      = '100';
+    
 	function __construct(){
         $this->inDB = cmsDatabase::getInstance();
     }
@@ -114,6 +119,39 @@ class cms_model_content{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
+    public function getCatsTree() {
+
+        $subcats=array();
+
+        $sql = "SELECT  cat.id as id,
+                        cat.title as title,
+                        cat.NSLeft as NSLeft,
+                        cat.NSRight as NSRight,
+                        cat.NSLevel as NSLevel,
+                        IFNULL(COUNT(con.id), 0) as content_count,
+                        cat.seolink as seolink
+                FROM cms_category cat
+                LEFT JOIN cms_content con ON con.category_id = cat.id
+                WHERE cat.NSLevel>0
+                GROUP BY cat.id
+                ORDER BY cat.NSLeft";
+
+        $result = $this->inDB->query($sql);
+
+        if (!$this->inDB->num_rows($result)) { return false; }
+
+        while($subcat = $this->inDB->fetch_assoc($result)){
+
+            $subcats[] = $subcat;
+
+        }
+
+        $subcats = cmsCore::callEvent('GET_CONTENT_CATS_TREE', $subcats);
+
+        return $subcats;
+
+    }
+
     public function getSubCats($parent_id, $left_key, $right_key) {
 
         $subcats=array();
@@ -155,6 +193,146 @@ class cms_model_content{
 
         return $this->inDB->rows_count('cms_category', 'parent_id='.$parent_id);
         
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    private function resetConditions(){
+
+        $this->where        = '';
+        $this->group_by     = '';
+        $this->order_by     = '';
+        $this->limit        = '';
+
+    }
+
+    public function where($condition){
+        $this->where .= ' AND ('.$condition.')' . "\n";
+    }
+
+    public function whereCatIs($category_id) {
+        $this->where("con.category_id = {$category_id}");
+    }
+
+    public function groupBy($field){
+        $this->group_by = "GROUP BY {$field}";
+    }
+
+    public function orderBy($field, $direction='ASC'){
+        $this->order_by = "ORDER BY {$field} {$direction}";
+    }
+
+    public function limitIs($from, $howmany='') {
+        $this->limit = (int)$from;
+        if ($howmany){
+            $this->limit .= ', '.$howmany;
+        }
+    }
+
+    public function limitPage($page, $perpage) {
+        $this->limitIs(($page-1)*$perpage, $perpage);
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function getArticlesList($only_published=true) {
+
+        $this->reorder();
+
+        $articles = array();
+
+		$today    = date("Y-m-d H:i:s");
+
+        if ($only_published){
+            $this->where("con.published = 1 AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today'))");
+        }
+
+        $sql = "SELECT con.*,
+                       con.pubdate as fpubdate,
+                       u.nickname as author,
+                       u.login as user_login
+
+                FROM cms_content con
+
+				LEFT JOIN cms_users u ON u.id = con.user_id
+
+                WHERE con.is_arhive = 0
+                      {$this->where}
+
+                {$this->group_by}                      
+                
+                {$this->order_by}\n";
+
+        if ($this->limit){
+            $sql .= "LIMIT {$this->limit}";
+        }
+
+        $result = $this->inDB->query($sql);
+
+        if (!$this->inDB->num_rows($result)) { return false; }
+
+        while($article = $this->inDB->fetch_assoc($result)){
+			$article['fpubdate'] = date('d.m.Y', strtotime($article['fpubdate']));
+            $articles[] = $article;
+        }
+
+        $articles = cmsCore::callEvent('GET_ARTICLES', $articles);
+
+        $this->resetConditions();
+
+        return $articles;
+
+    }
+
+    public function getArticlesCount($only_published=true) {
+
+        $this->reorder();
+
+        $articles = array();
+
+		$today    = date("Y-m-d H:i:s");
+
+        if ($only_published){
+            $this->where("con.published = 1 AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today'))");
+        }
+
+        $sql = "SELECT con.*,
+                       con.pubdate as fpubdate,
+                       u.nickname as author,
+                       u.login as user_login
+
+                FROM cms_content con
+
+				LEFT JOIN cms_users u ON u.id = con.user_id
+
+                WHERE con.is_arhive = 0
+                      {$this->where}
+
+                {$this->group_by}
+
+                {$this->order_by}\n";
+
+        $result = $this->inDB->query($sql);
+
+        return $this->inDB->num_rows($result);
+
+    }
+
+    public function reorder() {
+
+        $sql    = "SELECT id FROM cms_content ORDER BY ordering ASC";
+		$rs     = $this->inDB->query($sql);
+
+		if ($this->inDB->num_rows($rs)){
+			$ordering = 1;
+			while ($item = $this->inDB->fetch_assoc($rs)){
+				$this->inDB->query("UPDATE cms_content SET ordering = ".$ordering." WHERE id=".$item['id']) ;
+				$ordering += 1;
+			}
+		}
+
     }
 
 /* ==================================================================================================== */
@@ -293,12 +471,12 @@ class cms_model_content{
     public function getArticle($article_id) {
 		$today = date("Y-m-d H:i:s");
 		$sql = "SELECT  con.*,
-						cat.title cat_title, cat.id cat_id, cat.NSLeft as leftkey, cat.NSRight as rightkey, cat.showtags as showtags,
-						u.nickname as author, con.user_id as user_id, u.login as user_login
+						cat.title cat_title, cat.id cat_id, cat.NSLeft as leftkey, cat.NSRight as rightkey,
+						cat.showtags as showtags, cat.seolink as catseolink, u.nickname as author, u.login as user_login
 				FROM cms_content con
 				LEFT JOIN cms_category cat ON cat.id = con.category_id
 				LEFT JOIN cms_users u ON u.id = con.user_id
-				WHERE con.id = $article_id AND con.published = 1 AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today'))";
+				WHERE con.id = $article_id LIMIT 1";
 
 		$result = $this->inDB->query($sql);
 
@@ -319,11 +497,11 @@ class cms_model_content{
 
 		$sql = "SELECT con.*,
 						cat.title cat_title, cat.id cat_id, cat.NSLeft as leftkey, cat.NSRight as rightkey, cat.showtags as showtags,
-						u.nickname as author, con.user_id as user_id, u.login as user_login
+						cat.modgrp_id, u.nickname as author, con.user_id as user_id, u.login as user_login
 				FROM cms_content con
 				LEFT JOIN cms_category cat ON cat.id = con.category_id
 				LEFT JOIN cms_users u ON u.id = con.user_id
-				WHERE con.seolink = '$seolink' AND con.published = 1";
+				WHERE con.seolink = '$seolink' AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today')) LIMIT 1";
 
 		$result = $this->inDB->query($sql);
 
@@ -529,6 +707,16 @@ class cms_model_content{
 
         $this->inDB->query($comments_sql);
 
+        return true;
+        
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function publishArticle($article_id, $flag=1){
+
+        $this->inDB->query("UPDATE cms_content SET published = $flag WHERE id = $article_id");
         return true;
         
     }

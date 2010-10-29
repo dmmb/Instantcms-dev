@@ -172,9 +172,9 @@ if ($do=='read'){
 
     if ($id) { $article = $model->getArticle($id); }
 
-    if ( !$article ) {
-        cmsCore::error404();
-    }
+	if (!$article['published'] && !$inCore->userIsAdmin($inUser->id) && $article['modgrp_id'] != $inUser->group_id) { cmsCore::error404(); } 	
+
+    if ( !$article ) { cmsCore::error404(); }
 
 	if( !$inCore->checkUserAccess('material', $article['id']) ){
 		$inPage->setTitle($_LANG['NO_PERM_FOR_VIEW']);
@@ -425,14 +425,22 @@ if ($do=='addarticle' || $do=='editarticle'){
 			
             $is_published = $inCore->isUserCan('content/autoadd');
 			
-            if (!$is_published){
+            $article['seolink']     = $inDB->get_field('cms_content', "id={$id}", 'seolink');
+            $article['category']    = $inDB->get_fields('cms_category', "id={$article['category_id']}", 'title, seolink');
+            
+			if (!$is_published){
+
                 echo '<p>'.$_LANG['ARTICLE_PREMODER_TEXT'].'</p>';
+
+				$link = '<a href="/'.$article['seolink'].'.html">'.$article['title'].'</a>';
+				$user = '<a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a>';
+				$message = str_replace('%user%', $user, $_LANG['MSG_ARTICLE_SUBMIT']);
+				$message = str_replace('%link%', $link, $message);
+                cmsUser::sendMessage(USER_UPDATER, 1, $message);
+
             } else {
 
                 //регистрируем событие
-                $article['seolink']     = $inDB->get_field('cms_content', "id={$id}", 'seolink');
-                $article['category']    = $inDB->get_fields('cms_category', "id={$article['category_id']}", 'title, seolink');
-
                 cmsActions::log('add_article', array(
                     'object' => $article['title'],
                     'object_url' =>  "/{$article['seolink']}.html",
@@ -454,6 +462,16 @@ if ($do=='addarticle' || $do=='editarticle'){
             $article['pubdate'] = $mod['pubdate'];
 
             $model->updateArticle($id, $article);
+
+			if (!$is_published){
+                $article['seolink']  = $inDB->get_field('cms_content', "id={$id}", 'seolink');
+                $article['category'] = $inDB->get_fields('cms_category', "id={$article['category_id']}", 'title, seolink');
+				$link = '<a href="/'.$article['seolink'].'.html">'.$article['title'].'</a>';
+				$user = '<a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a>';
+				$message = str_replace('%user%', $user, $_LANG['MSG_ARTICLE_EDITED']);
+				$message = str_replace('%link%', $link, $message);
+                cmsUser::sendMessage(USER_UPDATER, 1, $message);
+			}
 
             cmsInsertTags($article['tags'], 'content', $id);
 
@@ -495,14 +513,52 @@ if ($do=='addarticle' || $do=='editarticle'){
             $inCore->redirect('/content/my.html');
         }
 
-
     }
+}
+///////////////////////// PUBLISH ARTICLE /////////////////////////////////////////////////////////////////////////////
+if ($do == 'publisharticle'){
 
+    $inPage->backButton(false);
+
+    $user_id = $inUser->id;
+
+	if (!$user_id || !$id){ $inCore->halt(); }
+    //Если пользователь авторизован, проверяем является ли он админом или редактором
+	$is_editor  = $inCore->userIsEditor($user_id);
+	$is_admin   = $inCore->userIsAdmin($user_id);
+
+    if (!$is_editor && !$is_admin) { $inCore->halt(); }
+	
+    $article = $model->getArticle($id);
+	if (!$article) { $inCore->halt(); }
+
+    $model->publishArticle($id);
+
+	cmsCore::callEvent('ADD_ARTICLE_DONE', $article);
+
+    //регистрируем событие
+    cmsActions::log('add_article', array(
+           'object' => $article['title'],
+		   'user_id' => $article['user_id'],
+           'object_url' =>  "/{$article['seolink']}.html",
+           'object_id' =>  $article['id'],
+           'target' => $article['cat_title'],
+           'target_url' => "/{$article['catseolink']}",
+           'target_id' =>  $article['cat_id'],
+           'description' => ''
+    ));
+
+	$link = '<a href="/'.$article['seolink'].'.html">'.$article['title'].'</a>';
+	$message = str_replace('%link%', $user, $_LANG['MSG_ARTICLE_ACCEPTED']);
+    cmsUser::sendMessage(USER_UPDATER, $article['user_id'], $message);
+
+    $inCore->redirectBack();
+    
 }
 ///////////////////////////////////// DELETE ARTICLE ///////////////////////////////////////////////////////////////////////////////////
 if ($do=='deletearticle'){
 	if ($inCore->isUserCan('content/delete')){	
-		$ismy = dbRowsCount('cms_content', 'id='.$id.' AND user_id='.$inUser->id);		
+		$ismy = $inDB->rows_count('cms_content', 'id='.$id.' AND user_id='.$inUser->id);		
 		if ($ismy){
             $inCore->includeFile('components/forum/includes/forumcore.php'); //needs for auto-thread deleting
 			$model->deleteArticle($id, $cfg['af_delete']);
