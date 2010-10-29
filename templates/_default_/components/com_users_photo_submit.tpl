@@ -99,6 +99,7 @@
         {/foreach}
     </div>
     <div id="usr_photos_submit_btn">
+    	<input type="hidden" name="is_edit" value="{$is_edit}" />
         <input type="submit" name="submit" value="{$LANG.SAVE}" /> {$LANG.AND_GO_TO_ALBUM}
     </div>
 </form>

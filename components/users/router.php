@@ -176,9 +176,15 @@
                          );
 
         $routes[] = array(
-                            '_uri'  => '/^users\/([a-zA-z0-9\.]+)\/photos\/submit/i',
+                            '_uri'  => '/^users\/([a-zA-z0-9\.]+)\/photos\/submit$/i',
                             'do'    => 'submitphotos',
                             1       => 'login'
+                         );
+		$routes[] = array(
+                            '_uri'  => '/^users\/([a-zA-z0-9\.]+)\/photos\/submit\-edit$/i',
+                            'do'    => 'submitphotos',
+                            1       => 'login',
+       						'is_edit' => 1
                          );
 
         $routes[] = array(
