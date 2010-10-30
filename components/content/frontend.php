@@ -95,9 +95,6 @@ if ($do=='view'){
 		$is_subcats = true;
 		$subcats    = array();
 		foreach($subcats_list as $subcat){
-			$sub                = $model->getSubCatsCount($subcat['id']);
-            $subtext            = $sub ? $subtext = '/'.$sub : '';
-			$subcat['subtext']  = $subtext;
 			$subcat['url']      = $model->getCategoryURL(null, $subcat['seolink']);
             $subcats[]          = $subcat;
 		}
@@ -167,12 +164,21 @@ if ($do=='read'){
     $seolink = $inCore->request('seolink', 'str', '');
 
     $seolink = preg_replace ('/[^a-z0-9_\/\-]/i', '', $seolink);
+	
+    if ($seolink) { 
+        $article = $model->getArticleByLink($seolink);
+    } elseif($id) {
+        $article = $model->getArticle($id);
+    }
 
-    if ($seolink) { $article = $model->getArticleByLink($seolink); }
+	if ($inUser->id) {
+		$is_admin      = $inUser->is_admin;
+		$is_author     = $inUser->id == $article['user_id'];
+		$is_author_del = $inCore->isUserCan('content/delete');
+		$is_editor     = ($article['modgrp_id'] == $inUser->group_id && $inCore->isUserCan('content/autoadd'));
+	}
 
-    if ($id) { $article = $model->getArticle($id); }
-
-	if (!$article['published'] && !$inCore->userIsAdmin($inUser->id) && $article['modgrp_id'] != $inUser->group_id) { cmsCore::error404(); } 	
+	if (!$article['published'] && !$is_admin && !$is_editor && !$is_author) { cmsCore::error404(); } 	
 
     if ( !$article ) { cmsCore::error404(); }
 
@@ -247,7 +253,7 @@ if ($do=='read'){
     $forum_thread_id = $model->getRelatedThread($article['id']);
     
     //if thread not found, create it again, only if author is not admin
-    if (!$forum_thread_id && $cfg['af_on'] && $category_id != $cfg['af_hidecat_id'] && !$inCore->userIsAdmin($article['user_id'])){
+    if (!$forum_thread_id && $cfg['af_on'] && $category_id != $cfg['af_hidecat_id'] && !$inCore->userIsAdmin($article['user_id']) && $article['published']){
         $forum_thread_id = cmsAutoCreateThread($article, $cfg);
     }
 
@@ -284,6 +290,11 @@ if ($do=='read'){
 
     $article_image = (file_exists(PATH.'/images/photos/medium/article'.$article['id'].'.jpg') ? 'article'.$article['id'].'.jpg' : '');
     $smarty->assign('article_image', $article_image);
+	
+	$smarty->assign('is_admin', $is_admin);
+	$smarty->assign('is_editor', $is_editor);
+	$smarty->assign('is_author', $is_author);
+	$smarty->assign('is_author_del', $is_author_del);
 
     $smarty->assign('article_content', $article_content);
     $smarty->assign('forum_thread_id', $forum_thread_id);
@@ -301,22 +312,30 @@ if ($do=='read'){
 ///////////////////////////////////// ADD ARTICLE //////////////////////////////////////////////////////////////////////////////////
 if ($do=='addarticle' || $do=='editarticle'){
 
-	if (!$inCore->isUserCan('content/add')){
+	$is_add      = $inCore->isUserCan('content/add');     // может добавлять статьи
+	$is_auto_add = $inCore->isUserCan('content/autoadd'); // добавлять статьи без модерации
+	$is_admin    = $inUser->is_admin;                     // админ
+	$user_id     = $inUser->id;                           // id текущего юзера
+	
+	if (!$is_add && !$is_auto_add){
         $inPage->printHeading($_LANG['ACCESS_DENIED']);
         echo '<p>'.$_LANG['ACCESS_DENIED'].'</p>';
         return;
     }
 
-    $user_id    = $inUser->id;
     $smarty     = $inCore->initSmarty('components', 'com_content_edit.tpl');
 
     //Moderation notice
     $add_notice = '';
 
     if ($do=='editarticle'){
-        $sql = "SELECT * FROM cms_content WHERE id = $id AND user_id = $user_id LIMIT 1";
-        $rs = $inDB->query($sql);
-        $mod = $inDB->fetch_assoc($rs);
+		$is_autoadd = $is_auto_add ? '' : "AND con.user_id = '$user_id'";
+		$mod = $inDB->get_fields('cms_content con LEFT JOIN cms_category cat ON cat.id = con.category_id', "con.id = '$id' $is_autoadd", 'con.*, cat.modgrp_id', 'con.id ASC');
+		if (!$mod) { cmsCore::error404(); }
+
+		$is_editor = $mod['modgrp_id'] == $inUser->group_id && $is_auto_add; // редактор если id группы редакторов раздела совпадает с id группы текущего пользователя
+		$is_author = $user_id == $mod['user_id'];                            // автор, если текущий id пользователя совпадает с id автора статьи
+		if (!$is_editor && !$is_author && !$is_admin) { cmsCore::error404(); };
     }
 
     if ( !$inCore->inRequest('add_mod') ){
@@ -324,6 +343,7 @@ if ($do=='addarticle' || $do=='editarticle'){
         $inPage->addPathway($_LANG['MY_ARTICLES'], '/content/my.html');
         if ($do=='addarticle'){
             $inPage->setTitle($_LANG['ADD_ARTICLE']);
+			$inPage->addPathway($inUser->nickname, cmsUser::getProfileURL($inUser->login));
             $inPage->addPathway($_LANG['ADD_ARTICLE']);
             $pagetitle = $_LANG['ADD_ARTICLE'];
         }
@@ -338,7 +358,7 @@ if ($do=='addarticle' || $do=='editarticle'){
 
             $smarty->assign('mod', $mod);
 
-            if (!$inCore->isUserCan('content/autoadd')){
+            if (!$is_auto_add){
                 $add_notice = '<p><strong>'.$_LANG['ATTENTION'].':</strong> '.$_LANG['EDIT_ARTICLE_PREMODER'].'</p>';
             }
         }
@@ -358,7 +378,7 @@ if ($do=='addarticle' || $do=='editarticle'){
         $smarty->assign('pubcats', $pubcats);
         $smarty->assign('pagetitle', $pagetitle);
         $smarty->assign('add_notice', $add_notice);
-        $smarty->assign('is_admin', $inCore->userIsAdmin($inUser->id));
+        $smarty->assign('is_admin', $is_admin);
         $smarty->assign('autocomplete_js', $autocomplete_js);
         $smarty->display('com_content_edit.tpl');
 
@@ -370,7 +390,7 @@ if ($do=='addarticle' || $do=='editarticle'){
 
         //SUBMIT & UPDATE
         $article['category_id']         = $inCore->request('category_id', 'int', 1);
-        $article['user_id']             = $inUser->id;
+        $article['user_id']             = $mod['user_id'] ? $mod['user_id'] : $user_id;
         $article['title']               = $inCore->request('title', 'str', '');
         $article['tags']                = $inCore->request('tags', 'str', '');
 
@@ -383,8 +403,11 @@ if ($do=='addarticle' || $do=='editarticle'){
         $article['description']         = $inCore->badTagClear($article['description']);
         $article['content']             = $inCore->badTagClear($article['content']);
 
-        $article['published']           = $inCore->isUserCan('content/autoadd') ? 1 : 0;
-        $article['pubdate']             = date('Y-m-d H:i');
+        $article['published']           = $is_auto_add ? 1 : 0;
+		if ($do=='editarticle'){
+			$article['published']           = ($mod['published'] == 0) ? $mod['published'] : $article['published'];
+		}
+        $article['pubdate']             = $mod['pubdate'] ? $mod['pubdate'] : date('Y-m-d H:i');
         $article['enddate']             = $article['pubdate'];
         $article['is_end']              = 0;
         $article['showtitle']           = 1;
@@ -402,10 +425,6 @@ if ($do=='addarticle' || $do=='editarticle'){
 
         if ($do=='addarticle' && !$errors){
 
-            //Убираем <meta http-equiv="refresh">
-            $article['description'] = str_replace('http-equiv=', '', $article['description']);
-            $article['content']     = str_replace('http-equiv=', '', $article['content']);
-
             $article['id'] = $model->addArticle($article);
 
             $id = $article['id'];
@@ -422,13 +441,11 @@ if ($do=='addarticle' || $do=='editarticle'){
             $inPage->backButton(false);
             $inPage->addPathway($_LANG['ARTICLE_SEND']);
             $inPage->printHeading($_LANG['ARTICLE_SEND']);
-			
-            $is_published = $inCore->isUserCan('content/autoadd');
-			
-            $article['seolink']     = $inDB->get_field('cms_content', "id={$id}", 'seolink');
-            $article['category']    = $inDB->get_fields('cms_category', "id={$article['category_id']}", 'title, seolink');
+
+            $article['seolink']     = $inDB->get_field('cms_content', "id='$id'", 'seolink');
+            $article['category']    = $inDB->get_fields('cms_category', "id='{$article['category_id']}'", 'title, seolink');
             
-			if (!$is_published){
+			if (!$article['published']){
 
                 echo '<p>'.$_LANG['ARTICLE_PREMODER_TEXT'].'</p>';
 
@@ -459,13 +476,11 @@ if ($do=='addarticle' || $do=='editarticle'){
 
         if ($do=='editarticle' && !$errors){
 
-            $article['pubdate'] = $mod['pubdate'];
-
             $model->updateArticle($id, $article);
 
-			if (!$is_published){
-                $article['seolink']  = $inDB->get_field('cms_content', "id={$id}", 'seolink');
-                $article['category'] = $inDB->get_fields('cms_category', "id={$article['category_id']}", 'title, seolink');
+			if (!$article['published'] && !$is_auto_add){
+                $article['seolink']  = $inDB->get_field('cms_content', "id='$id'", 'seolink');
+                $article['category'] = $inDB->get_fields('cms_category', "id='{$article['category_id']}'", 'title, seolink');
 				$link = '<a href="/'.$article['seolink'].'.html">'.$article['title'].'</a>';
 				$user = '<a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a>';
 				$message = str_replace('%user%', $user, $_LANG['MSG_ARTICLE_EDITED']);
@@ -482,24 +497,24 @@ if ($do=='addarticle' || $do=='editarticle'){
             $file       = 'article'.$id.'.jpg';
 
             if ($inCore->request('delete_image', 'int', 0)){
-                @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file");
-                @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file");
+                @unlink(PATH."/images/photos/small/$file");
+                @unlink(PATH."/images/photos/medium/$file");
             } else {
 
                 if (isset($_FILES["picture"]["name"]) && @$_FILES["picture"]["name"]!=''){
                     //generate image file
                     $tmp_name   = $_FILES["picture"]["tmp_name"];
                     //upload image and insert record in db
-                    if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/photos/$file")){
+                    if (@move_uploaded_file($tmp_name, PATH."/images/photos/$file")){
                         $inCore->includeGraphics();
-						if ($cfg['watermark'] && !$cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/$file"); }
-                        @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
-                        @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
-						if ($cfg['watermark'] && $cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file"); }
+						if ($cfg['watermark'] && !$cfg['watermark_only_big']) { @img_add_watermark(PATH."/images/photos/$file"); }
+                        @img_resize(PATH."/images/photos/$file", PATH."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
+                        @img_resize(PATH."/images/photos/$file", PATH."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
+						if ($cfg['watermark'] && $cfg['watermark_only_big']) { @img_add_watermark(PATH."/images/photos/medium/$file"); }
 						
-                        @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/$file");
-                        @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", 0755);
-                        @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", 0755);
+                        @unlink(PATH."/images/photos/$file");
+                        @chmod(PATH."/images/photos/small/$file", 0755);
+                        @chmod(PATH."/images/photos/medium/$file", 0755);
                     }
                 }
 
@@ -508,7 +523,7 @@ if ($do=='addarticle' || $do=='editarticle'){
         }
 
         if ($do=='editarticle' || $errors){
-			$mess = $is_published ? $_LANG['ARTICLE_SAVE'] : $_LANG['ARTICLE_SAVE'].' '.$_LANG['ARTICLE_PREMODER_TEXT'];
+			$mess = ($article['published'] || $is_auto_add) ? $_LANG['ARTICLE_SAVE'] : $_LANG['ARTICLE_SAVE'].' '.$_LANG['ARTICLE_PREMODER_TEXT'];
 			cmsCore::addSessionMessage($mess, 'info');
             $inCore->redirect('/content/my.html');
         }
@@ -518,19 +533,18 @@ if ($do=='addarticle' || $do=='editarticle'){
 ///////////////////////// PUBLISH ARTICLE /////////////////////////////////////////////////////////////////////////////
 if ($do == 'publisharticle'){
 
-    $inPage->backButton(false);
-
     $user_id = $inUser->id;
 
 	if (!$user_id || !$id){ $inCore->halt(); }
-    //Если пользователь авторизован, проверяем является ли он админом или редактором
-	$is_editor  = $inCore->userIsEditor($user_id);
-	$is_admin   = $inCore->userIsAdmin($user_id);
-
-    if (!$is_editor && !$is_admin) { $inCore->halt(); }
 	
     $article = $model->getArticle($id);
 	if (!$article) { $inCore->halt(); }
+
+    //Если пользователь авторизован, проверяем является ли он админом или редактором
+	$is_editor  = ($article['modgrp_id'] == $inUser->group_id && $inCore->isUserCan('content/autoadd'));
+	$is_admin   = $inUser->is_admin;
+
+    if (!$is_editor && !$is_admin) { $inCore->halt(); }
 
     $model->publishArticle($id);
 
@@ -549,7 +563,7 @@ if ($do == 'publisharticle'){
     ));
 
 	$link = '<a href="/'.$article['seolink'].'.html">'.$article['title'].'</a>';
-	$message = str_replace('%link%', $user, $_LANG['MSG_ARTICLE_ACCEPTED']);
+	$message = str_replace('%link%', $link, $_LANG['MSG_ARTICLE_ACCEPTED']);
     cmsUser::sendMessage(USER_UPDATER, $article['user_id'], $message);
 
     $inCore->redirectBack();
@@ -557,15 +571,55 @@ if ($do == 'publisharticle'){
 }
 ///////////////////////////////////// DELETE ARTICLE ///////////////////////////////////////////////////////////////////////////////////
 if ($do=='deletearticle'){
-	if ($inCore->isUserCan('content/delete')){	
-		$ismy = $inDB->rows_count('cms_content', 'id='.$id.' AND user_id='.$inUser->id);		
-		if ($ismy){
-            $inCore->includeFile('components/forum/includes/forumcore.php'); //needs for auto-thread deleting
-			$model->deleteArticle($id, $cfg['af_delete']);
+	
+	$user_id = $inUser->id;
+	if (!$user_id || !$id){ $inCore->halt(); }
+
+	// получаем id редактора и ссылку категории удаляемой статьи
+	$article = $inDB->get_fields('cms_content con LEFT JOIN cms_category cat ON cat.id = con.category_id', "con.id = '$id'", 'con.seolink as con_seolink, con.title, cat.modgrp_id, cat.seolink', 'con.id ASC');
+	if (!$article) { $inCore->halt(); }
+
+	// Определяем права доступа
+	$is_admin  = $inUser->is_admin;
+	$is_author = $inCore->isUserCan('content/delete') && $inDB->rows_count('cms_content', "id='$id' AND user_id='{$user_id}'");
+	$is_editor = ($article['modgrp_id'] == $inUser->group_id && $inCore->isUserCan('content/autoadd'));
+	
+	if (!$is_author && !$is_editor && !$is_admin){	$inCore->halt(); }
+
+	if (!isset($_POST['goadd'])){
+
+		$inPage->setTitle($_LANG['ARTICLE_REMOVAL']);
+		$inPage->addPathway($_LANG['ARTICLE_REMOVAL']);
+
+		$confirm['title']              = $_LANG['ARTICLE_REMOVAL'];
+		$confirm['text']               = $_LANG['ARTICLE_REMOVAL_TEXT'].' <a href="/'.$article['con_seolink'].'.html">'.$article['title'].'</a>?';
+		$confirm['action']             = $_SERVER['REQUEST_URI'];
+		$confirm['yes_button']         = array();
+		$confirm['yes_button']['type'] = 'submit';
+		$confirm['yes_button']['name'] = 'goadd';
+		$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
+		$smarty->assign('confirm', $confirm);
+		$smarty->display('action_confirm.tpl');
+		$inPage->backButton(false);
+
+	} else {
+
+       	$inCore->includeFile('components/forum/includes/forumcore.php'); //needs for auto-thread deleting
+		$model->deleteArticle($id, $cfg['af_delete']);
+		if ($_SERVER['HTTP_REFERER'] == '/my.html' ) { 
+			$inCore->redirectBack();
 			cmsCore::addSessionMessage($_LANG['ARTICLE_DELETED'], 'info');
-		}
+		} else { 
+			if ($is_editor || $is_admin) {
+				$link = '<a href="/'.$article['con_seolink'].'.html">'.$article['title'].'</a>';
+				$message = str_replace('%link%', $link, $_LANG['MSG_ARTICLE_REJECTED']);
+				cmsUser::sendMessage(USER_UPDATER, $article['user_id'], $message);
+			}
+			$inCore->redirect('/'.$article['seolink']);
+		}			
+
 	}
-	$inCore->redirectBack();
+
 }
 ///////////////////////////////////// MY ARTICLES ///////////////////////////////////////////////////////////////////////////////////
 if ($do=='my'){
@@ -579,6 +633,7 @@ if ($do=='my'){
     $user_id = $inUser->id;
 	
     $inPage->setTitle($_LANG['MY_ARTICLES']);
+	$inPage->addPathway($inUser->nickname, cmsUser::getProfileURL($inUser->login));
     $inPage->addPathway($_LANG['MY_ARTICLES']);
 
     $inPage->printHeading($_LANG['MY_ARTICLES']);

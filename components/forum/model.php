@@ -75,10 +75,10 @@ class cms_model_forum{
 
     public function deleteAutoThread($rel_to, $rel_id){
 
-        $thread_id  = $this->inDB->get_field('cms_forum_threads', "rel_to='{$rel_to}' AND rel_id={$rel_id}", 'id');
+        $thread = $this->inDB->get_fields('cms_forum_threads', "rel_to='{$rel_to}' AND rel_id={$rel_id}", 'id, user_id');
 
-        if ($thread_id){
-            $this->deleteThread($thread_id);
+        if ($thread['id']){
+            $this->deleteThread($thread['id'], $thread['user_id']);
         }
 
         return true;

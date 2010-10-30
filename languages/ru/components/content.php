@@ -36,8 +36,12 @@ $_LANG['ARTICLES_RATING']         ='Рейтинг статей';
 $_LANG['NO_ARTICLES_PUBL_ON_SITE']='На сайте нет оцененных статей.';
 $_LANG['MSG_ARTICLE_SUBMIT']      ='Пользователь %user% добавил статью "<b>%link%</b>".'."\n".'Необходима модерация.';
 $_LANG['MSG_ARTICLE_EDITED']      ='Пользователь %user% изменил статью "<b>%link%</b>".'."\n".'Необходима модерация.';
-$_LANG['MSG_ARTICLE_REJECTED']    ='Ваша статья "%item%" не прошла модерацию и удалена';
+$_LANG['MSG_ARTICLE_REJECTED']    ='Ваша статья "%link%" не прошла модерацию и удалена';
 $_LANG['MSG_ARTICLE_ACCEPTED']    ='Ваша статья "%link%" прошла модерацию и была опубликована';
+$_LANG['ARTICLE_ALLOW']           ='Разрешить';
+
+$_LANG['ARTICLE_REMOVAL']         ='Удаление статьи';
+$_LANG['ARTICLE_REMOVAL_TEXT']    ='Вы действительно хотите удалить статью';
 
 $_LANG['REQ_TITLE']               ='Нельзя создать статью без заголовка';
 $_LANG['REQ_CONTENT']             ='Нельзя создать статью без текста';

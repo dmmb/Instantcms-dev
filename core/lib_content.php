@@ -47,6 +47,7 @@ function cmsAutoCreateThread($article, $content_cfg){
 	$forum_title = $inDB->get_field('cms_forums', "id={$content_cfg['af_forum_id']}", 'title');
 	cmsActions::log('add_thread', array(
 				'object' => $article['title'],
+				'user_id' => $article['user_id'],
 				'object_url' => '/forum/thread'.$threadlastid.'.html',
 				'object_id' => $threadlastid,
 				'target' => $forum_title,

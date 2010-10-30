@@ -2856,14 +2856,15 @@ class cmsCore {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * Удаляет теги script iframe style
+     * Удаляет теги script iframe style meta
      * @param string $string
      * @return bool
      */
     public static function badTagClear($string){
 		$bad_teg = array ("'<script[^>]*?>.*?</script>'si",
 						 "'<iframe[^>]*?>.*?</iframe>'si",
-						 "'<style[^>]*?>.*?</style>'si");
+						 "'<style[^>]*?>.*?</style>'si",
+						 "'<meta[^>]*?>'si");
 		$string = preg_replace($bad_teg, '', $string);
         return $string;
     }

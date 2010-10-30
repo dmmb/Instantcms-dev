@@ -30,7 +30,7 @@ class cms_model_content{
 
         switch($target){
 
-            case 'article': $article            = $this->inDB->get_fields('cms_content', "id={$target_id}", 'seolink, title');
+            case 'article': $article            = $this->inDB->get_fields('cms_content', "id='{$target_id}'", 'seolink, title');
                             if (!$article) { return false; }
                             $result['link']     = $this->getArticleURL(null, $article['seolink']);
                             $result['title']    = $article['title'];
@@ -156,11 +156,9 @@ class cms_model_content{
 
         $subcats=array();
 
-        $sql = "SELECT cat.*, IFNULL(COUNT(con.id), 0) as content_count, cat.seolink as seolink
+        $sql = "SELECT cat.*
                 FROM cms_category cat
-                LEFT JOIN cms_content con ON con.category_id = cat.id AND con.published = 1
-                WHERE (cat.parent_id=$parent_id) AND cat.published = 1
-                GROUP BY cat.id";
+                WHERE cat.parent_id = '$parent_id' AND cat.published = 1";
 
         $result = $this->inDB->query($sql);
 
@@ -436,7 +434,7 @@ class cms_model_content{
         $seolink .= cmsCore::strToURL(($category['url'] ? $category['url'] : $category['title']));
 
         //Обновляем пути всех статей этого раздела
-        $sql = "SELECT id, title, url FROM cms_content WHERE category_id = {$category['id']}";
+        $sql = "SELECT id, title, url FROM cms_content WHERE category_id = '{$category['id']}'";
 
         $result = $this->inDB->query($sql);
 
@@ -446,13 +444,13 @@ class cms_model_content{
 
                 $article_seolink = $seolink . '/' . cmsCore::strToURL(($article['url'] ? $article['url'] : $article['title']));
 
-                $this->inDB->query("UPDATE cms_content SET seolink='{$article_seolink}' WHERE id={$article['id']}");
+                $this->inDB->query("UPDATE cms_content SET seolink='{$article_seolink}' WHERE id='{$article['id']}'");
 
                 //обновляем ссылки на комментарии
                 $comments_sql = "UPDATE cms_comments c,
                                         cms_content a
                                  SET c.target_link = CONCAT('/content/', a.seolink, '.html')
-                                 WHERE a.id = {$article['id']} AND
+                                 WHERE a.id = '{$article['id']}' AND
                                  c.target = 'article' AND c.target_id = a.id";
                 
                 $this->inDB->query($comments_sql);
@@ -471,12 +469,12 @@ class cms_model_content{
     public function getArticle($article_id) {
 		$today = date("Y-m-d H:i:s");
 		$sql = "SELECT  con.*,
-						cat.title cat_title, cat.id cat_id, cat.NSLeft as leftkey, cat.NSRight as rightkey,
+						cat.title cat_title, cat.id cat_id, cat.NSLeft as leftkey, cat.NSRight as rightkey, cat.modgrp_id,
 						cat.showtags as showtags, cat.seolink as catseolink, u.nickname as author, u.login as user_login
 				FROM cms_content con
 				LEFT JOIN cms_category cat ON cat.id = con.category_id
 				LEFT JOIN cms_users u ON u.id = con.user_id
-				WHERE con.id = $article_id LIMIT 1";
+				WHERE con.id = '$article_id' LIMIT 1";
 
 		$result = $this->inDB->query($sql);
 
@@ -550,7 +548,7 @@ class cms_model_content{
 
     public function increaseHits($article_id) {
 
-        $this->inDB->query("UPDATE cms_content SET hits = hits + 1 WHERE id = $article_id");
+        $this->inDB->query("UPDATE cms_content SET hits = hits + 1 WHERE id = '$article_id'");
 
         return true;
 
@@ -560,7 +558,7 @@ class cms_model_content{
 /* ==================================================================================================== */
 
     public function getRelatedThread($article_id) {
-        return $this->inDB->get_field('cms_forum_threads', "rel_to='content' AND rel_id={$article_id}", 'id');
+        return $this->inDB->get_field('cms_forum_threads', "rel_to='content' AND rel_id='$article_id'", 'id');
     }
 
 /* ==================================================================================================== */
@@ -572,9 +570,9 @@ class cms_model_content{
 
         cmsCore::callEvent('DELETE_ARTICLE', $id);
 
-        $this->inDB->query("DELETE FROM cms_content WHERE id={$id}");
-        $this->inDB->query("DELETE FROM cms_content_access WHERE content_id={$id}");
-        $this->inDB->query("DELETE FROM cms_tags WHERE target='content' AND item_id={$id}");
+        $this->inDB->query("DELETE FROM cms_content WHERE id='$id'");
+        $this->inDB->query("DELETE FROM cms_content_access WHERE content_id='$id'");
+        $this->inDB->query("DELETE FROM cms_tags WHERE target='content' AND item_id='$id'");
 
         cmsActions::removeObjectLog('add_article', $id);
 
@@ -620,11 +618,11 @@ class cms_model_content{
                                          showtitle, showdate, showlatest,
                                          showpath, ordering, comments, seolink,
                                          canrate, pagetitle, url)
-				VALUES ({$article['category_id']}, {$article['user_id']}, '{$article['pubdate']}', '{$article['enddate']}',
-                         {$article['is_end']}, '{$article['title']}', '{$article['description']}', '{$article['content']}', {$article['published']}, 0,
+				VALUES ('{$article['category_id']}', '{$article['user_id']}', '{$article['pubdate']}', '{$article['enddate']}',
+                         '{$article['is_end']}', '{$article['title']}', '{$article['description']}', '{$article['content']}', '{$article['published']}', 0,
                         '{$article['meta_desc']}', '{$article['meta_keys']}', '{$article['showtitle']}', '{$article['showdate']}', '{$article['showlatest']}',
-                        '{$article['showpath']}', 1, {$article['comments']}, '',
-                        {$article['canrate']}, '{$article['pagetitle']}', '{$article['url']}')";
+                        '{$article['showpath']}', 1, '{$article['comments']}', '',
+                        '{$article['canrate']}', '{$article['pagetitle']}', '{$article['url']}')";
 
 		$this->inDB->query($sql) ;
 
@@ -633,7 +631,7 @@ class cms_model_content{
         if ($article['id']){
 
             $article['seolink'] = $this->getSeoLink($article);
-            $this->inDB->query("UPDATE cms_content SET seolink='{$article['seolink']}' WHERE id = {$article['id']}");
+            $this->inDB->query("UPDATE cms_content SET seolink='{$article['seolink']}' WHERE id = '{$article['id']}'");
 
             $inCore->loadLib('tags');
             cmsInsertTags($article['tags'], 'content', $article['id']);
@@ -666,24 +664,24 @@ class cms_model_content{
                 SET category_id = {$article['category_id']},
                     pubdate = '{$article['pubdate']}',
                     enddate = '{$article['enddate']}',
-                    is_end = {$article['is_end']},
+                    is_end = '{$article['is_end']}',
                     title='{$article['title']}',
                     description='{$article['description']}',
                     content='{$article['content']}',
-                    published={$article['published']},
+                    published='{$article['published']}',
                     meta_desc='{$article['meta_desc']}',
                     meta_keys='{$article['meta_keys']}',
-                    showtitle={$article['showtitle']},
-                    showdate={$article['showdate']},
-                    showlatest={$article['showlatest']},
-                    showpath={$article['showpath']},
-                    comments={$article['comments']},
+                    showtitle='{$article['showtitle']}',
+                    showdate='{$article['showdate']}',
+                    showlatest='{$article['showlatest']}',
+                    showpath='{$article['showpath']}',
+                    comments='{$article['comments']}',
                     seolink='{$article['seolink']}',
-                    canrate={$article['canrate']},
+                    canrate='{$article['canrate']}',
                     pagetitle='{$article['pagetitle']}',
                     user_id='{$article['user_id']}',
                     url='{$article['url']}'
-                WHERE id = $id
+                WHERE id = '$id'
                 LIMIT 1";
 
         $this->inDB->query($sql);
@@ -695,14 +693,14 @@ class cms_model_content{
         $menuid = $this->inDB->get_field('cms_menu', "linktype='content' AND linkid={$id}", 'id');
         if ($menuid){
             $menulink = $inCore->getMenuLink('content', $id, $menuid);
-            $this->inDB->query("UPDATE cms_menu SET link='{$menulink}' WHERE id={$menuid}");
+            $this->inDB->query("UPDATE cms_menu SET link='{$menulink}' WHERE id='{$menuid}'");
         }
 
         //обновляем ссылки на комментарии
         $comments_sql = "UPDATE cms_comments c,
                                 cms_content a
                          SET c.target_link = CONCAT('/content/', a.seolink, '.html')
-                         WHERE a.id = {$id} AND
+                         WHERE a.id = '$id' AND
                                c.target = 'article' AND c.target_id = a.id";
 
         $this->inDB->query($comments_sql);
@@ -716,7 +714,7 @@ class cms_model_content{
 
     public function publishArticle($article_id, $flag=1){
 
-        $this->inDB->query("UPDATE cms_content SET published = $flag WHERE id = $article_id");
+        $this->inDB->query("UPDATE cms_content SET published = '$flag' WHERE id = '$article_id'");
         return true;
         
     }
@@ -732,7 +730,7 @@ class cms_model_content{
 
         foreach ($showfor_list as $key=>$value){
             $sql = "INSERT INTO cms_content_access (content_id, content_type, group_id)
-                    VALUES ($id, 'material', $value)";
+                    VALUES ('$id', 'material', '$value')";
             $this->inDB->query($sql);
         }
         
@@ -744,7 +742,7 @@ class cms_model_content{
 
     public function clearArticleAccess($id){
 
-        $sql = "DELETE FROM cms_content_access WHERE content_id = $id AND content_type = 'material'";
+        $sql = "DELETE FROM cms_content_access WHERE content_id = '$id' AND content_type = 'material'";
 
         $this->inDB->query($sql);
 
