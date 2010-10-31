@@ -561,8 +561,7 @@ class cmsUser {
 				$photos[$photo['id']] = $photo;
 			}
         }
-        function cmp($a,$b) { return strcmp($b['pubdate'], $a['pubdate']); }
-        usort($photos,'cmp');
+        $photos = cmsCore::sortArray($photos, 'pubdate');
 		//¬ыбираем последние $limit фото из общего массива
 		$total      = sizeof($photos);
 
