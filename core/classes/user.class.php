@@ -53,6 +53,7 @@ class cmsUser {
 
         if (!$user_id){
             $this->id   = 0;
+			$this->ip   = $_SERVER['REMOTE_ADDR'];
             $this->is_admin = 0;
             $this->group_id = self::getGuestGroupId();
             return true;

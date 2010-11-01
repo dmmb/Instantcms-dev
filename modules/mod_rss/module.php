@@ -19,6 +19,7 @@
 		
 		$rss->cache_dir = $_SERVER['DOCUMENT_ROOT'].'/includes/rss/cache';
 		$rss->cache_time = 3600; // one hour
+		$rss->cp = 'cp1251';
 
 		$items_limit = $cfg['itemslimit'];
 		$icount = 0; $i = 1;
