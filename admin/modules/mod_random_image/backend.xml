@@ -9,5 +9,6 @@
         <param type="list_db" name="album_id" title="Фотографии из альбома" src="cms_photo_albums" src_title="title" src_value="id" tree="1">
             <option title="-- Все альбомы --" value="0" />
         </param>
+		<param type="flag" name="subs" title="Вместе с подальбомами" default="off" />
     </params>
 </backend>

@@ -258,7 +258,8 @@
 				$msg_to 	= $inCore->parseSmiles($msg_to, true);
 				$msg_after 	= $model->getPostShort($post['content'], false, true);
 				$msg_after 	= $inCore->parseSmiles($msg_after, true);
-				$html = $msg_to.' '.$msg_after;
+				$cut        = $model->getPostCut($post['content']);
+				$html		= $msg_to . $cut . $msg_after;
 			} else {
             $html = $inCore->parseSmiles($post['content'], true);
 			}

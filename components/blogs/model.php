@@ -208,13 +208,36 @@ class cms_model_blogs{
             $post_content .= '<div class="blog_cut_link">
                                     <a href="'.$post_url.'">'.$cut_title.'</a>
                               </div>';
-			} elseif (!$post_url && !$is_after) {
-				$post_content .= '[cut='.$cut_title.'...]';
 			}
 
         }
 
         return $post_content;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function getPostCut($post_content){
+
+        $regex      = '/\[(cut=)\s*(.*?)\]/i';
+        $matches    = array();
+        preg_match_all( $regex, $post_content, $matches, PREG_SET_ORDER );
+
+        if (is_array($matches)){
+
+            $elm        = $matches[0];
+            $elm[0]     = str_replace('[', '', $elm[0]);
+            $elm[0]     = str_replace(']', '', $elm[0]);
+
+            parse_str( $elm[0], $args );
+			
+			$cut .= '[cut='.$args['cut'].'...]';
+
+        }
+
+        return $cut;
 
     }
 
@@ -745,7 +768,8 @@ class cms_model_blogs{
 			$msg_to 	= $inCore->parseSmiles($msg_to, true);
 			$msg_after 	= $this->getPostShort($item['content'], false, true);
 			$msg_after 	= $inCore->parseSmiles($msg_after, true);
-			$item['content_html'] = $msg_to.' '.$msg_after;
+			$cut        = $this->getPostCut($item['content']);
+			$item['content_html'] = $msg_to . $cut . $msg_after;
         } else {
         $item['content_html']   = $inCore->parseSmiles($item['content'], true);
 		}
@@ -757,7 +781,7 @@ class cms_model_blogs{
                             content, content_html, allow_who, edit_times, edit_date, published, seolink)
                 VALUES ('{$item['user_id']}', '{$item['cat_id']}', '{$item['id']}', NOW(),
                         '{$item['title']}', '{$item['feel']}', '{$item['music']}', '{$item['content']}', '{$item['content_html']}',
-                        '{$item['allow_who']}', 0, NOW(), {$item['published']}, '{$item['seolink']}')";
+                        '{$item['allow_who']}', 0, NOW(), '{$item['published']}', '{$item['seolink']}')";
         
         $result = $this->inDB->query($sql);
 
@@ -770,7 +794,7 @@ class cms_model_blogs{
             $item['id']      = $post_id;
             $item['seolink'] = $this->getPostSeoLink($item);            
 
-            $this->inDB->query("UPDATE cms_blog_posts SET seolink='{$item['seolink']}' WHERE id = {$post_id}");
+            $this->inDB->query("UPDATE cms_blog_posts SET seolink='{$item['seolink']}' WHERE id = '{$post_id}'");
 			
 			if ($item['published'] && $item['ballow_who'] == 'all') {
             	cmsCore::callEvent('ADD_POST_DONE', $item);
@@ -818,7 +842,8 @@ class cms_model_blogs{
 			$msg_to 	= $inCore->parseSmiles($msg_to, true);
 			$msg_after 	= $this->getPostShort($item['content'], false, true);
 			$msg_after 	= $inCore->parseSmiles($msg_after, true);
-			$item['content_html'] = $msg_to.' '.$msg_after;
+			$cut        = $this->getPostCut($item['content']);
+			$item['content_html'] = $msg_to . $cut . $msg_after;
         } else {
         $item['content_html']   = $inCore->parseSmiles($item['content'], true);
 		}
