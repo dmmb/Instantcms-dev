@@ -91,7 +91,7 @@
                     </div>
             
             </form>
-        <p class="usr_photos_add_st">Подсказка: если у Вас возникли какие-либо проблемы с загрузкой фотографий, Вы также можете воспользоваться <a href="/users/{$user.id}/addphotosingle.html">стандартным загрузчиком фотографий.</a></p>
+        <p class="usr_photos_add_st">{$LANG.TEXT_TO_NO_FLASH} <a href="/users/{$user.id}/addphotosingle.html">{$LANG.PHOTO_ST_UPLOAD}.</a></p>
     {elseif $uload_type == 'single'}
         {if $max_limit}
          <p class="usr_photos_add_limit">{$LANG.YOU_CAN_UPLOAD} <strong>{$max_files}</strong> {$LANG.PHOTO_SHORT}</p>
@@ -110,7 +110,7 @@
                 <input type="button" onclick="window.history.go(-1);" value="{$LANG.CANCEL}"/>
             </p>
         </form>
-		<p class="usr_photos_add_st">Вы можете вернуться и воспользоваться <a href="/users/{$user.id}/addphoto.html">flash загрузчиком фотографий.</a></p>
+		<p class="usr_photos_add_st">{$LANG.TEXT_TO_TO_FLASH} <a href="/users/{$user.id}/addphoto.html">{$LANG.PHOTO_FL_UPLOAD}.</a></p>
     {/if}
 {else}
 <p class="usr_photos_add_limit">{$LANG.FOR_ADD_PHOTO_TEXT}</p>
