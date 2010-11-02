@@ -100,6 +100,8 @@ class cms_model_comments{
 /* ==================================================================================================== */
 
     public function deleteComment($comment_id) {
+		
+		$inCore     = cmsCore::getInstance();
 
         cmsCore::callEvent('DELETE_COMMENT', $comment_id);
 

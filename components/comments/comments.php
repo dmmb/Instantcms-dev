@@ -88,13 +88,6 @@
             } elseif ($comments[$next]['votes']<0){
                 $comments[$next]['votes'] = '<span class="cmm_bad">'.$comments[$next]['votes'].'</span>';
             }
-			if ($cfg['bbcode']){
-				$comments[$next]['content'] = $comments[$next]['content'];
-			} elseif ($cfg['smilies']) {
-				$comments[$next]['content'] = nl2br(strip_tags($comments[$next]['content']));
-			} else {
-                $comments[$next]['content'] = nl2br(strip_tags($comments[$next]['content']));
-            }
 			$comments[$next]['is_my'] = ($inUser->id==$comments[$next]['user_id']);
             if ($inUser->id){
                 $comments[$next]['is_voted'] = ($comments[$next]['is_my'] || $inDB->rows_count('cms_ratings', 'item_id='.$comments[$next]['id'].' AND target=\'comment\' AND user_id='.$inUser->id, 1));

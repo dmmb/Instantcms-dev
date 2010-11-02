@@ -25,7 +25,7 @@
                         <div class="usr_msg_bbcodebox">{$bb_toolbar}</div>
                     {/if}
 
-					{if $cfg.smiles}
+					{if $cfg.smiles && $smilies}
 						<div class="cm_smiles">{if !$cfg.bbcode}<a href="javascript:void(0);" onclick="$('#smilespanel').toggle()">{$LANG.INSERT_SMILE}</a> &darr;{/if}
 							{$smilies}
 						</div>

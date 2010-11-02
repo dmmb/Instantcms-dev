@@ -87,13 +87,6 @@ function comments($target='', $target_id=0){
 				} elseif ($comments[$next]['votes']<0){
 					$comments[$next]['votes'] = '<span class="cmm_bad">'.$comments[$next]['votes'].'</span>';
 				}
-				if ($cfg['bbcode']){
-					$comments[$next]['content'] = $comments[$next]['content'];
-				} elseif ($cfg['smilies']) {
-					$comments[$next]['content'] = nl2br(strip_tags($comments[$next]['content']));
-				} else {
-					$comments[$next]['content'] = nl2br(strip_tags($comments[$next]['content']));
-				}
 			}
 		}
 		
@@ -123,7 +116,7 @@ function comments($target='', $target_id=0){
 			$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
 			$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
 		}
-        if ($cfg['bbcode']){
+        if ($cfg['bbcode'] || $cfg['smiles']){
             $inPage->addHeadJS('core/js/smiles.js');
         }
 
@@ -169,13 +162,6 @@ function comments($target='', $target_id=0){
 					$comments[$next]['votes'] = '<span class="cmm_good">+'.$comments[$next]['votes'].'</span>';
 				} elseif ($comments[$next]['votes']<0){
 					$comments[$next]['votes'] = '<span class="cmm_bad">'.$comments[$next]['votes'].'</span>';
-				}
-        if ($cfg['bbcode']){
-					$comments[$next]['content'] = $comments[$next]['content'];
-				} elseif ($cfg['smilies']) {
-					$comments[$next]['content'] = nl2br(strip_tags($comments[$next]['content']));
-				} else {
-					$comments[$next]['content'] = nl2br(strip_tags($comments[$next]['content']));
 				}
 				$comments[$next]['is_my'] = ($inUser->id==$comments[$next]['user_id']);
 				if ($inUser->id){
@@ -233,7 +219,7 @@ function comments($target='', $target_id=0){
         $guestname      = $inCore->request('guestname', 'str', '');
         $user_id        = $inCore->request('user_id', 'int', 0);
 
-		if ($inCore->isUserCan('comments/bbcode')) {	
+		if ($inCore->isUserCan('comments/bbcode') && ($cfg['bbcode'] || $cfg['smiles'])) {	
 			$content        = $inCore->request('content', 'html', '');
 			$content        = $inCore->parseSmiles($content, true);
 			$content        = $inDB->escape_string($content);

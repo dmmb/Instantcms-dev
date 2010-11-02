@@ -46,12 +46,17 @@
 	//bb code toolbar
 	if (!isset($cfg['img_on'])) { $cfg['img_on'] = 1; }
 
+	$is_user_add_bb = $inCore->isUserCan('comments/bbcode');
 
-    if ($cfg['bbcode'] && $inCore->isUserCan('comments/bbcode')){
+    if ($cfg['bbcode'] && $is_user_add_bb){
         $bb_toolbar = cmsPage::getBBCodeToolbar('content', true, 'comments');
 		//smilies toolbar
 		$smilies = cmsPage::getSmilesPanel('content');
 		echo '<script language="JavaScript" type="text/javascript" src="/includes/jquery/upload/ajaxfileupload.js"></script>';
+    }
+    if ($cfg['smiles'] && $is_user_add_bb){
+		//smilies toolbar
+		$smilies = cmsPage::getSmilesPanel('content');
     }
 
 	//LOAD SMARTY
@@ -80,12 +85,12 @@
 	
 	$smarty->assign('need_captcha', $need_captcha);
 
-    if ($cfg['bbcode']){
+    if ($cfg['bbcode'] && $is_user_add_bb){
         $smarty->assign('bb_toolbar', $bb_toolbar);
     }
-
-	$smarty->assign('smilies', $smilies);
-
+    if ($cfg['smiles'] && $is_user_add_bb){
+		$smarty->assign('smilies', $smilies);
+    }
 	ob_start();
 		$smarty->display('com_comments_add.tpl');
 	$html = ob_get_clean();
