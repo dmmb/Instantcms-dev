@@ -1680,6 +1680,7 @@ if ($do=='viewphoto'){
 
 	$inPage->setTitle($photo['title']);
 	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+	$inPage->addPathway($_LANG['PHOTOALBUMS'], '/users/'.$usr['id'].'/photoalbum.html');
 	$inPage->addPathway($photo['album'], '/users/'.$usr['login'].'/photos/private'.$photo['album_id'].'.html');
 	$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
 

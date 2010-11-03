@@ -26,7 +26,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
         $cfg = array();
 		$cfg['maxcols']   = $inCore->request('maxcols', 'int');
-		$cfg['obtypes']   = $inCore->request('obtypes', 'str');
+		$cfg['obtypes']   = $inCore->request('obtypes', 'html');
 		$cfg['showlat']   = $inCore->request('showlat', 'str');
 		$cfg['public']    = $inCore->request('public', 'int');
 		$cfg['photos']    = $inCore->request('photos', 'int');
