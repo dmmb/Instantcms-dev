@@ -140,17 +140,10 @@ if ($do=='view'){
 		if ($album){	
 			if(!$show_hidden) { $totsql	= ' AND published = 1'; } else { $totsql = ''; }
 			$total_foto = $inDB->query("SELECT id FROM cms_photo_files WHERE album_id = $id $totsql") ;
-			$total = $inDB->num_rows($total_foto);	
-			$perpage = $album['perpage'];
-			if (isset($_REQUEST['page'])) { $page = $inCore->request('page', 'int', 1); } else { $page = 1; }
+			$total = $inDB->num_rows($total_foto);
 
-			if (isset($userid)){
-				$usersql = "AND f.user_id = ".$userid;
-				$user    = $inDB->get_field('cms_users', 'id='.$userid, 'nickname, login');
-				echo '<div class="photo_userbar"><strong>'.$_LANG['USER_PHOTOS'].': </strong><a href="'.cmsUser::getProfileURL($user['login']).'">'.$user['nickname'].'</a> (<a href="/photos/'.$id.'">'.$_LANG['SHOW_ALL'].'</a>)</div>';
-			} else {
-				$usersql = '';
-			}
+			$perpage = $album['perpage'];
+			$page    = $inCore->request('page', 'int', 1);
 
 			if(!$show_hidden) { $pubsql	= ' AND f.published = 1'; } else { $pubsql = ''; }
 
@@ -160,7 +153,7 @@ if ($do=='view'){
                             IFNULL(r.total_rating, 0) as rating
 					FROM cms_photo_files f
 					LEFT JOIN cms_ratings_total r ON r.item_id=f.id AND r.target='photo'
-					WHERE f.album_id = $id $pubsql $usersql
+					WHERE f.album_id = $id $pubsql
 					";		
 			
 			//Сортировка
@@ -187,10 +180,8 @@ if ($do=='view'){
 
 			if ($album['orderform'] && $root['id']!=$id){ echo orderForm($orderby, $orderto); }			
 			$sql .=  " ORDER BY ".$orderby." ".$orderto." \n";
-			
-			if (!isset($userid)){
-				$sql .= "LIMIT ".(($page-1)*$perpage).", $perpage";
-			}
+
+			$sql .= "LIMIT ".(($page-1)*$perpage).", $perpage";
 			
 			$result = $inDB->query($sql) ;
 			
@@ -218,7 +209,7 @@ if ($do=='view'){
 				$cons = array();
 					while($con = $inDB->fetch_assoc($result)){			
 					$con['fpubdate'] 		= $inCore->dateformat($con['fpubdate']);
-					$con['commentscount'] 	= $inCore->getCommentsCount('photo', $con['id']);
+					$con['commentscount'] 	= $album['showdate'] ? $inCore->getCommentsCount('photo', $con['id']) : '';
 						if ($album['showtype'] == 'lightbox'){
 							$con['photolink'] 	= '/images/photos/medium/'.$con['file'];
 							$con['photolink2'] 	= '/photos/photo'.$con['id'].'.html';
