@@ -138,9 +138,6 @@ if ($do=='view'){
 																
 	//формируем содержимое альбома
 		if ($album){	
-			if(!$show_hidden) { $totsql	= ' AND published = 1'; } else { $totsql = ''; }
-			$total_foto = $inDB->query("SELECT id FROM cms_photo_files WHERE album_id = $id $totsql") ;
-			$total = $inDB->num_rows($total_foto);
 
 			$perpage = $album['perpage'];
 			$page    = $inCore->request('page', 'int', 1);
@@ -194,15 +191,19 @@ if ($do=='view'){
 				}				
 			}
 			$can_add_photo = false;
-			if ($album['public'] && @$can_add){
+			if ($album['public'] && $can_add){
 				$can_add_photo = true;
 			}		
 			
-			if ($inDB->num_rows($result)){	
-					if ($album['showtype'] == 'lightbox'){
-						$inPage->addHeadJS('includes/jquery/lightbox/js/jquery.lightbox.js');
-						$inPage->addHeadCSS('includes/jquery/lightbox/css/jquery.lightbox.css');
-					}
+			if ($inDB->num_rows($result)){
+
+				if(!$show_hidden) { $totsql	= ' AND published = 1'; } else { $totsql = ''; }
+				$total = $records_total = $inDB->rows_count('cms_photo_files', "album_id = $id $totsq");
+
+				if ($album['showtype'] == 'lightbox'){
+					$inPage->addHeadJS('includes/jquery/lightbox/js/jquery.lightbox.js');
+					$inPage->addHeadCSS('includes/jquery/lightbox/css/jquery.lightbox.css');
+				}
 				if ($show_hidden){
 					$inPage->addHeadJS('components/photos/js/photos.js');
 				}	
@@ -226,9 +227,9 @@ if ($do=='view'){
 				}
 				$is_poto_yes = true;
 			} else { 
-                     if(!$subcats_list && $owner == 'club' && $album['parent_id']==0){ echo '<p>'.$_LANG['NO_SUB_ALBUMS'].'</p>'; }
+                if(!$subcats_list && $owner == 'club' && $album['parent_id']==0){ echo '<p>'.$_LANG['NO_SUB_ALBUMS'].'</p>'; }
 					 $is_poto_yes = false;
-					}
+				}
 					
 		}//END - ALBUM CONTENT
 	// отдаем в шаблон
@@ -260,7 +261,7 @@ if($do=='viewphoto'){
 	$sql = "SELECT f.*, f.pubdate, a.id cat_id, a.NSLeft as NSLeft, a.NSRight as NSRight, a.NSDiffer as NSDiffer, a.user_id as album_user_id, a.title cat_title, a.nav album_nav, a.public public, a.showtype a_type, a.showtags a_tags, a.bbcode a_bbcode
 			FROM cms_photo_files f
 			LEFT JOIN cms_photo_albums a ON a.id = f.album_id
-			WHERE f.id = $id";
+			WHERE f.id = '$id'";
 			
 	$result = $inDB->query($sql);
 
