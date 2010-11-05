@@ -1020,7 +1020,7 @@ if($do=='post'){
         $smarty->assign('is_author', $is_author);
         $smarty->assign('is_admin', $is_admin);
         $smarty->assign('is_moder', $is_moder);
-        $smarty->assign('karma_form', cmsKarmaForm('blogpost', $post['id']));
+        $smarty->assign('karma_form', cmsKarmaForm('blogpost', $post['id'], 0, $is_author));
         $smarty->assign('msg', $msg);
         $smarty->assign('nav', blogPostNav($model, $post['pubdate'], $blog['id'], $blog['seolink']));
         $smarty->assign('tag_bar', cmsTagBar('blogpost', $post['id']));

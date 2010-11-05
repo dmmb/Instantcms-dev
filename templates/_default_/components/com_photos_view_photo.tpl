@@ -36,8 +36,8 @@
 			{/if}
         </td>
         {if $photo.a_type != 'simple'}
-            <td width="7" class="photo_larr">
-                &nbsp;
+            <td width="7" class="photo_larr">&nbsp;
+                
             </td>
             <td width="250" valign="top">
                 <div class="photo_details">
@@ -48,7 +48,7 @@
                                 <p><strong>{$LANG.RATING}: </strong><span id="karmapoints">{$photo.karma}</span></p>
                                 <p><strong>{$LANG.HITS}: </strong> {$photo.hits}</p>
                             </td>
-                            {if $usr.id && $photo.karma_buttons}
+                            {if $photo.karma_buttons}
                                 <td width="25">{$photo.karma_buttons}</td>
                             {/if}
                         </tr>
@@ -57,9 +57,7 @@
                     <div class="photo_date_details">
                         <p>{$photo.pubdate}</p>
                         {if $photo.public}
-                            {if $usr.id}
-                                 <p>{$usr.genderlink}</p>
-                            {/if}
+                                 <p>{$photo.genderlink}</p>
                         {/if}
                     </div>
 

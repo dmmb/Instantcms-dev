@@ -19,7 +19,7 @@
 		</div>
 	{/if}
 
-<h1 class="con_heading">{$pagetitle}</h1>
+<h1 class="con_heading">{$pagetitle} {if $total_foto}({$total_foto}){/if}</h1>
 
 <div class="clear"></div>
 

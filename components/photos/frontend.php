@@ -146,7 +146,6 @@ if ($do=='view'){
 
 			//SQL запрос			
 			$sql = "SELECT f.*,
-							f.pubdate as fpubdate, 
                             IFNULL(r.total_rating, 0) as rating
 					FROM cms_photo_files f
 					LEFT JOIN cms_ratings_total r ON r.item_id=f.id AND r.target='photo'
@@ -198,7 +197,7 @@ if ($do=='view'){
 			if ($inDB->num_rows($result)){
 
 				if(!$show_hidden) { $totsql	= ' AND published = 1'; } else { $totsql = ''; }
-				$total = $records_total = $inDB->rows_count('cms_photo_files', "album_id = $id $totsq");
+				$total = $inDB->rows_count('cms_photo_files', "album_id = $id $totsq");
 
 				if ($album['showtype'] == 'lightbox'){
 					$inPage->addHeadJS('includes/jquery/lightbox/js/jquery.lightbox.js');
@@ -208,9 +207,10 @@ if ($do=='view'){
 					$inPage->addHeadJS('components/photos/js/photos.js');
 				}	
 				$cons = array();
+				$is_poto_yes = false;
 					while($con = $inDB->fetch_assoc($result)){			
-					$con['fpubdate'] 		= $inCore->dateformat($con['fpubdate']);
-					$con['commentscount'] 	= $album['showdate'] ? $inCore->getCommentsCount('photo', $con['id']) : '';
+					$con['fpubdate'] 		= $inCore->dateformat($con['pubdate']);
+					$con['commentscount'] 	= $album['showdate'] ? $inCore->getCommentsCount('photo', $con['id']) : 0;
 						if ($album['showtype'] == 'lightbox'){
 							$con['photolink'] 	= '/images/photos/medium/'.$con['file'];
 							$con['photolink2'] 	= '/photos/photo'.$con['id'].'.html';
@@ -245,9 +245,11 @@ if ($do=='view'){
 	$smarty->assign('can_add_photo', $can_add_photo);
 	$smarty->assign('subcats', $subcats);
 	$smarty->assign('cons', $cons);
+	$smarty->assign('is_poto_yes', $is_poto_yes);
 	$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/photos/%catid%-%page%', array('catid'=>$id)));
 	$smarty->assign('is_subcats', $is_subcats);
 	$smarty->assign('maxcols', $maxcols);
+	$smarty->assign('total_foto', $total);
 	$smarty->display('com_photos_view.tpl');
 	// если есть фотограйии в альбоме и включены комментарии в альбоме, то показываем их
 	if($album['is_comments'] && $is_poto_yes && $inCore->isComponentInstalled('comments')){
@@ -258,14 +260,19 @@ if ($do=='view'){
 /////////////////////////////// VIEW PHOTO ///////////////////////////////////////////////////////////////////////////////////////////
 if($do=='viewphoto'){
 
-	$sql = "SELECT f.*, f.pubdate, a.id cat_id, a.NSLeft as NSLeft, a.NSRight as NSRight, a.NSDiffer as NSDiffer, a.user_id as album_user_id, a.title cat_title, a.nav album_nav, a.public public, a.showtype a_type, a.showtags a_tags, a.bbcode a_bbcode
+	$sql = "SELECT f.id, f.album_id, f.title, f.description, f.pubdate, f.file, f.published, f.hits, f.comments, f.user_id,
+			a.id cat_id, a.NSLeft as NSLeft, a.NSRight as NSRight, a.NSDiffer as NSDiffer, a.user_id as album_user_id, a.title cat_title, a.nav album_nav, a.public public, a.showtype a_type, a.showtags a_tags, a.bbcode a_bbcode,
+			u.nickname, u.login,
+			IFNULL(r.total_rating, 0) as rating
 			FROM cms_photo_files f
 			LEFT JOIN cms_photo_albums a ON a.id = f.album_id
+			LEFT JOIN cms_ratings_total r ON r.item_id = f.id AND r.target = 'photo'
+			LEFT JOIN cms_users u ON u.id = f.user_id
 			WHERE f.id = '$id'";
 			
 	$result = $inDB->query($sql);
 
-	if ($inDB->num_rows($result)){
+	if (!$inDB->num_rows($result)) { cmsCore::error404(); }
 
 		$photo = $inDB->fetch_assoc($result);
 
@@ -282,7 +289,7 @@ if($do=='viewphoto'){
 
         if (!$can_view && $owner=='club') { $inCore->redirect('/clubs/'.$club['id']); }
 
-		// Формируем глубиномер, заголовок страницы, подключаем js
+	// Формируем глубиномер, заголовок страницы
 		$left_key = $photo['NSLeft'];
 		$right_key = $photo['NSRight'];
 		$sql = "SELECT id, title, NSLevel FROM cms_photo_albums WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0 AND NSDiffer = '".$photo['NSDiffer']."' ORDER BY NSLeft";
@@ -292,14 +299,13 @@ if($do=='viewphoto'){
 		}
 		$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
 		$inPage->setTitle($photo['title']);
-        $inPage->addHeadJS('core/js/karma.js');
 		// Обновляем количество просмотров фотографии
 		$inDB->query("UPDATE cms_photo_files SET hits = hits + 1 WHERE id = $id");
 								
 		//навигация
 		if($photo['album_nav']){
-			$previd = $inDB->get_fields('cms_photo_files', 'id<'.$photo['id'].' AND album_id = '.$photo['cat_id'].' AND published=1', 'id, file', 'id DESC');
-			$nextid = $inDB->get_fields('cms_photo_files', 'id>'.$photo['id'].' AND album_id = '.$photo['cat_id'].' AND published=1', 'id, file', 'id ASC');
+		$nextid = $inDB->get_fields('cms_photo_files', 'id<'.$photo['id'].' AND album_id = '.$photo['cat_id'].' AND published=1', 'id, file', 'id DESC');
+		$previd = $inDB->get_fields('cms_photo_files', 'id>'.$photo['id'].' AND album_id = '.$photo['cat_id'].' AND published=1', 'id, file', 'id ASC');
 		} else {
 			$previd = false;
 			$nextid = false;		
@@ -308,25 +314,24 @@ if($do=='viewphoto'){
 		$inCore->loadLib('karma');
 		
 		if ($photo['a_type'] != 'simple'){
+
+		$is_author = $photo['user_id'] == $inUser->id;
+
 			$photo['pubdate'] = $inCore->dateformat($photo['pubdate']);
 					if ($photo['public']){
-						$usr = $inDB->get_fields('cms_users', 'id='.$photo['user_id'], 'id, nickname, login');
-						if ($usr['id']){							
-							$usr['genderlink'] = cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, '', $usr['login']);
-						}
+						$photo['genderlink'] = cmsUser::getGenderLink($photo['user_id'], $photo['nickname'], 0, '', $photo['login']);
 					}
-					$karma = cmsKarma('photo', $photo['id']);
-					$photo['karma'] 		= cmsKarmaFormatSmall($karma['points']);
-					$photo['karma_buttons'] = cmsKarmaButtons('photo', $photo['id']).'</td>';
 		
-					if($cfg['link']){
+		$photo['karma'] 		= cmsKarmaFormatSmall($photo['rating']);
+		$photo['karma_buttons'] = cmsKarmaButtons('photo', $photo['id'], $photo['rating'], $is_author);
+
+		if($cfg['link']){
 						$file = PATH.'/images/photos/'.$photo['file'];
 						if (file_exists($file)){
 							$photo['file_orig'] = '<a href="/images/photos/'.$photo['file'].'" target="_blank">'.$_LANG['OPEN_ORIGINAL'].'</a>';
 						}
 					}
 					
-					$is_author = $usr['id']==$inUser->id;
 					if($photo['NSDiffer'] == ''){
 						$is_admin = $inCore->userIsAdmin($inUser->id);
 					}				
@@ -344,12 +349,10 @@ if($do=='viewphoto'){
 			$smarty->assign('bbcode', '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/photos/medium/'.$photo['file'].'[/IMG]');
 			$smarty->assign('previd', $previd);
 			$smarty->assign('nextid', $nextid);
-			$smarty->assign('usr', $usr);
 			$smarty->assign('is_author', $is_author);
 			$smarty->assign('is_admin', $is_admin);
 			$smarty->assign('is_can_operation', $is_can_operation);
 			if($photo['a_tags']){
-				$inCore->loadLib('tags');
 				$smarty->assign('tagbar', cmsTagBar('photo', $photo['id']));
 			}
 			$smarty->display('com_photos_view_photo.tpl');
@@ -360,7 +363,6 @@ if($do=='viewphoto'){
 			}
 			
 		}			
-	} else { cmsCore::error404(); }
 }
 /////////////////////////////// PHOTO UPLOAD /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='addphoto'){

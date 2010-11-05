@@ -266,7 +266,7 @@ if ($do=='read'){
         $smarty->assign('karma_points', cmsKarmaFormatSmall($karma['points']));
         $smarty->assign('karma_votes', $karma['votes']);
 
-        $btns = cmsKarmaButtonsText('content', $article['id']);
+        $btns = cmsKarmaButtonsText('content', $article['id'], $karma['points'], $is_author);
         if ($btns) { $smarty->assign('karma_buttons', $btns); }
     }
 	$article['pubdate'] = $inCore->dateformat($article['pubdate']);
