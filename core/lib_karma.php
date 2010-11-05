@@ -187,7 +187,6 @@ function cmsSubmitKarma($target, $item_id, $points){
 }
 
 function cmsKarmaFormat($points){
-    $inDB = cmsDatabase::getInstance();
 	if ($points==0) {
 		$html = '<span style="color:silver;">0</span>';
 	} elseif ($points>0){
@@ -199,7 +198,6 @@ function cmsKarmaFormat($points){
 }
 
 function cmsKarmaFormatSmall($points){
-    $inDB = cmsDatabase::getInstance();
 	if ($points==0) {
 		$html = '<span style="color:gray;">0</span>';
 	} elseif ($points>0){
@@ -210,30 +208,25 @@ function cmsKarmaFormatSmall($points){
 	return $html;
 }
 
-function cmsKarmaForm($target, $target_id){
+function cmsKarmaForm($target, $target_id, $points = 0, $is_author = false){
     $inDB       = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
     $inPage     = cmsPage::getInstance();
 	$html       = '';
-	$postkarma  = cmsKarma($target, $target_id);
 
-    global $_LANG;
-
-    //PREPARE POINTS
+	global $_LANG;
+	
+	if (!$points) {
+		$postkarma = cmsKarma($target, $target_id);
 	$points     = cmsKarmaFormat($postkarma['points']);
-	$control    = '';
-
-    //Определяем является ли текущий пользователь автором материала
-    switch($target){
-        case 'photo':       $target_table = 'cms_photo_files';  break;
-        case 'blogpost':    $target_table = 'cms_blog_posts';   break;
-        case 'content':     $target_table = 'cms_content';      break;
+	} else {
+		$points    = $points;
     }
     
-    $is_target_author = $inDB->rows_count($target_table, "id={$target_id} AND user_id={$inUser->id}", 1);
+	$control    = '';
 
 	//PREPARE RATING FORM
-	if ($inUser->id && !$is_target_author){
+	if ($inUser->id && !$is_author){
 		if(!cmsAlreadyKarmed($target, $target_id, $inUser->id)){
 			$inPage->addHeadJS('core/js/karma.js');
 			$control .= '<div style="text-align:center;margin-top:10px;">';
@@ -250,23 +243,23 @@ function cmsKarmaForm($target, $target_id){
 	return $html;
 }
 
-function cmsKarmaButtons($target, $target_id){
+function cmsKarmaButtons($target, $target_id, $points = 0, $is_author = false){
     
-    $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
     $inPage = cmsPage::getInstance();
 	$html   = '';
     $control = '';
+	global $_LANG;
 
-    global $_LANG;
-
+	if (!$points) {
 	$postkarma = cmsKarma($target, $target_id);
-
-	//PREPARE POINTS
 	$points = cmsKarmaFormat($postkarma['points']);
+	} else {
+		$points    = $points;
+	}
 
 	//PREPARE RATING FORM
-	if ($inUser->id){
+	if ($inUser->id && !$is_author){
 		if(!cmsAlreadyKarmed($target, $target_id, $inUser->id)){
 			$inPage->addHeadJS('core/js/karma.js');
 			
@@ -286,18 +279,22 @@ function cmsKarmaButtons($target, $target_id){
 	return $html;
     
 }
+function cmsKarmaButtonsText($target, $target_id, $points = 0, $is_author = false){
 
-function cmsKarmaButtonsText($target, $target_id){
-    $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
     $inPage = cmsPage::getInstance();
 	$html = '';
+
+	if (!$points) {
 	$postkarma = cmsKarma($target, $target_id);
-	//PREPARE POINTS
 	$points = cmsKarmaFormat($postkarma['points']);
+	} else {
+		$points    = $points;
+	}
+
 	$control = '';
 	//PREPARE RATING FORM
-	if ($inUser->id){
+	if ($inUser->id && !$is_author){
 		if(!cmsAlreadyKarmed($target, $target_id, $inUser->id)){
 			$inPage->addHeadJS('core/js/karma.js');
 			$control .= '<span>';
