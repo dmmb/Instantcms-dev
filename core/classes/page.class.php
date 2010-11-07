@@ -268,7 +268,7 @@ public function addPathway($title, $link=''){
     //ѕровер€ем, есть ли уже в глубиномере такое звено
     $already = false;
     foreach($this->pathway as $key => $val){
-        if ($this->pathway[$key]['title'] == $title || $this->pathway[$key]['link'] == $link){
+        if ($this->pathway[$key]['title'] == $title && $this->pathway[$key]['link'] == $link){
             $already = true;
         }
     }

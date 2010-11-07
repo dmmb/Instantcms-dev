@@ -14,18 +14,20 @@
     
 	$inDB       = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
-	if (!$inUser->update()) { $inCore->halt(); }
+
 	$inUser->update();
+	if (!$inUser->id) { $inCore->halt(); }
 
 	$inCore->loadLib('clubs');
 	$inCore->loadLib('photos');
 
 	$id = $inCore->request('id', 'int');
 
-	$photo = dbGetFields('cms_photo_files', 'id='.$id, '*');
-	$album = dbGetFields('cms_photo_albums', 'id='.$photo['album_id'], '*');
+	$photo = $model->getPhoto($id);
 	
-	if ($album['NSDiffer'] == 'club'){
+	$album = $model->getAlbum($photo['album_id']);
+	
+	if (strstr($album['NSDiffer'],'club')){
 		$ok = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($album['user_id'], $inUser->id) || clubUserIsRole($album['user_id'], $inUser->id, 'moderator');	
 	} else {
 		$ok = $inCore->userIsAdmin($inUser->id);

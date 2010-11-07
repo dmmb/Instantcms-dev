@@ -281,7 +281,7 @@ if($do=='viewphoto'){
         $can_view = true;
 		if (strstr($photo['NSDiffer'],'club')){
             $owner = 'club';
-			$club = $inDB->get_fields('cms_clubs', 'id='.$photo['album_user_id'], '*');
+		$club = $inDB->get_fields('cms_clubs', 'id='.$photo['album_user_id'], 'id, title, clubtype');
             $can_view = $club['clubtype'] == 'public' || ($club['clubtype'] == 'private' && (clubUserIsMember($club['id'], $inUser->id) || $inUser->is_admin || clubUserIsAdmin($club['id'], $inUser->id)));
 			$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
 			$inPage->addPathway($_LANG['PHOTOALBUMS'], '/photos/'.clubRootAlbumId($club['id']));            
@@ -511,14 +511,13 @@ if ($do=='uploaded'){
 
 	$photo = $model->getPhoto($id);
 
-	if ($id && $photo['published']!==false){
+	$inPage->addPathway($_LANG['PHOTO_ADDED']);
 
 		$smarty = $inCore->initSmarty('components', 'com_photos_added_f.tpl');			
 		$smarty->assign('id', $id);
 		$smarty->assign('photo', $photo);
 		$smarty->display('com_photos_added_f.tpl');
 
-	}
 }
 
 /////////////////////////////// PHOTO EDIT ///////////////////////////////////////////////////////////////////////////////////////////
@@ -533,8 +532,8 @@ if ($do=='editphoto'){
 	
 	$album = $model->getAlbum($photo['album_id']);
 	
-	if ($album['NSDiffer'] == 'club'){
-		$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], '*');
+	if (strstr($album['NSDiffer'],'club')){
+		$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], 'id, title');
 		$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
 		$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');	
 	} else {
@@ -622,14 +621,12 @@ if ($do=='editphoto'){
 /////////////////////////////// PHOTO MOVE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='movephoto'){
 
-	$inCore->includeFile('components/users/includes/usercore.php');
-	
 	$photo = $model->getPhoto($id);
 	
 	$album = $model->getAlbum($photo['album_id']);
 
-	if(preg_match('/club(.*)/i', $album['NSDiffer'])) { 
-		$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], '*');
+		if(strstr($album['NSDiffer'],'club')) { 
+			$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], 'id, title');
 		$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
 		$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');	
 	} else {
@@ -646,9 +643,9 @@ if ($do=='movephoto'){
 			$inPage->addPathway($_LANG['MOVE_PHOTO'], $_SERVER['REQUEST_URI']);
 
 			if ($album['NSDiffer'] == '') { 
-				$fsql = "SELECT * FROM cms_photo_albums WHERE NSDiffer='' ORDER BY title";
+						$fsql = "SELECT id, title FROM cms_photo_albums WHERE NSDiffer='' ORDER BY title";
 			} elseif ($album['NSDiffer'] == 'club'.$club['id'].'') {
-				$fsql = "SELECT * FROM cms_photo_albums WHERE NSDiffer='club{$club['id']}' AND parent_id>0 AND user_id = ".$club['id']." ORDER BY title";
+						$fsql = "SELECT id, title FROM cms_photo_albums WHERE NSDiffer='club{$club['id']}' AND parent_id>0 AND user_id = ".$club['id']." ORDER BY title";
 			}
 			$fresult = $inDB->query($fsql) ;
 			if ($inDB->num_rows($fresult)){
@@ -669,19 +666,17 @@ if ($do=='movephoto'){
 				if (@$_POST['album_id']){				
 					$fid = $inCore->request('album_id', 'int');
 					if ($is_admin){		
-						$inDB->query("UPDATE cms_photo_files SET album_id = $fid WHERE id = $id") ;
+						$inDB->query("UPDATE cms_photo_files SET album_id = $fid WHERE id = '$id'") ;
 					}									
 				}
 				header('location:/photos/'.$fid);
 		}
 			
-	} else { echo usrAccessDenied(); }
+		}
 	
 }
 /////////////////////////////// PHOTO DELETE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delphoto'){
-
-	$inCore->includeFile('components/users/includes/usercore.php');
 
 	$photo_id = $inCore->request('id', 'int', '');
 
@@ -689,8 +684,8 @@ if ($do=='delphoto'){
 
 	$album = $model->getAlbum($photo['album_id']);
 	
-	if ($album['NSDiffer'] == 'club'){
-		$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], '*');
+	if (strstr($album['NSDiffer'],'club')){
+		$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], 'id, title');
 		$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
 		$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');	
 	} else {
@@ -699,13 +694,13 @@ if ($do=='delphoto'){
 	
 	$is_author = ($inUser->id == $photo['user_id']);
 	
-	if ($inUser->id && ($is_admin||$is_author)){
+	if ($inUser->id && ($is_admin || $is_author)){
 
 		if (!isset($_POST['godelete'])){
 
 			$inPage->addPathway($_LANG['DELETE_PHOTOGALLERY'], $_SERVER['REQUEST_URI']);
 			$confirm['title']                   = $_LANG['DELETING_PHOTO'];
-			$confirm['text']                    = ''.$_LANG['YOU_REALLY_DELETE_PHOTO'].' '.$photo['title'].'?';
+					$confirm['text']                    = ''.$_LANG['YOU_REALLY_DELETE_PHOTO'].' "'.$photo['title'].'"?';
 			$confirm['action']                  = $_SERVER['REQUEST_URI'];
 			$confirm['yes_button']              = array();
 			$confirm['yes_button']['type']      = 'submit';
@@ -718,8 +713,7 @@ if ($do=='delphoto'){
             $model->deletePhoto($photo_id);
 			header('location:/photos/'.$photo['album_id']);
 		}
-
-	} else { echo usrAccessDenied(); }
+	}
 }
 /////////////////////////////// VIEW LATEST PHOTOS ///////////////////////////////////////////////////////////////////////////////////
 if ($do=='latest'){
@@ -734,6 +728,7 @@ if ($do=='latest'){
 	$result = $inDB->query($sql) ;
 
 	$inPage->addPathway($_LANG['NEW_PHOTO_IN_GALLERY'], $_SERVER['REQUEST_URI']);
+	$inPage->setTitle($_LANG['NEW_PHOTO_IN_GALLERY']);
 		
 	if ($inDB->num_rows($result)){	
 		$is_latest_yes = true;
@@ -764,6 +759,7 @@ if ($do=='best'){
 	$result = $inDB->query($sql) ;
 		
 	$inPage->addPathway($_LANG['BEST_PHOTOS'], $_SERVER['REQUEST_URI']);
+	$inPage->setTitle($_LANG['BEST_PHOTOS']);
 
 	if ($inDB->num_rows($result)){	
 		$is_best_yes = true;

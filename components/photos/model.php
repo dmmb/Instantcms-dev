@@ -25,13 +25,13 @@ class cms_model_photos{
 
         switch($target){
 
-            case 'palbum': $album           = $this->inDB->get_fields('cms_photo_albums', "id={$target_id}", 'title');
+            case 'palbum': $album           = $this->inDB->get_fields('cms_photo_albums', "id='{$target_id}'", 'title');
                            if (!$album) { return false; }
                            $result['link']  = '/photos/'.$target_id;
                            $result['title'] = $album['title'];
                            break;
 
-            case 'photo':  $photo           = $this->inDB->get_fields('cms_photo_files', "id={$target_id}", 'title');
+            case 'photo':  $photo           = $this->inDB->get_fields('cms_photo_files', "id='{$target_id}'", 'title');
                            if (!$photo) { return false; }
                            $result['link']  = '/photos/photo'.$target_id.'.html';
                            $result['title'] = $photo['title'];
@@ -53,7 +53,7 @@ class cms_model_photos{
         cmsCore::callEvent('DELETE_PHOTO', $id);
 
         if (!$file){
-            $file = $this->inDB->get_field('cms_photo_files', "id={$id}", 'file');
+            $file = $this->inDB->get_field('cms_photo_files', "id='{$id}'", 'file');
         }
         if (!$file){ return false; }
 
@@ -70,7 +70,7 @@ class cms_model_photos{
 
         cmsActions::removeObjectLog('add_photo', $id);
 
-        $sql = "DELETE FROM cms_photo_files WHERE id = $id";
+        $sql = "DELETE FROM cms_photo_files WHERE id = '$id'";
         $this->inDB->query($sql) ;
 
         cmsClearTags('photo', $id);
@@ -102,13 +102,13 @@ class cms_model_photos{
         $photo      = cmsCore::callEvent('UPDATE_PHOTO', $photo);
 
         $sql = "UPDATE cms_photo_files
-                SET album_id = {$photo['album_id']},
+                SET album_id = '{$photo['album_id']}',
                     title='{$photo['title']}',
                     file='{$photo['filename']}',
                     description='{$photo['description']}',
-                    published={$photo['published']},
-                    showdate={$photo['showdate']}
-                WHERE id = $id
+                    published='{$photo['published']}',
+                    showdate='{$photo['showdate']}'
+                WHERE id = '$id'
                 LIMIT 1";
         $this->inDB->query($sql);
 
@@ -128,8 +128,8 @@ class cms_model_photos{
         $user_id    = $inUser->id;
 
         $sql = "INSERT INTO cms_photo_files (album_id, title, description, pubdate, file, published, showdate, comments, user_id)
-                VALUES ({$photo['album_id']}, '{$photo['title']}', '{$photo['description']}', NOW(),
-                        '{$photo['filename']}', '{$photo['published']}', {$photo['showdate']}, 1, {$user_id})";
+                VALUES ('{$photo['album_id']}', '{$photo['title']}', '{$photo['description']}', NOW(),
+                        '{$photo['filename']}', '{$photo['published']}', '{$photo['showdate']}', 1, '{$user_id}')";
         
         $this->inDB->query($sql);
 
@@ -139,7 +139,7 @@ class cms_model_photos{
 
         cmsUser::checkAwards($inUser->id);
 
-        $album_title = $this->inDB->get_field('cms_photo_albums', "id={$photo['album_id']}", 'title');
+        $album_title = $this->inDB->get_field('cms_photo_albums', "id='{$photo['album_id']}'", 'title');
 		
 		if ($photo['published']) {
 			cmsActions::log('add_photo', array(
@@ -197,7 +197,7 @@ class cms_model_photos{
 
         cmsCore::callEvent('DELETE_ALBUM', $id);
 
-        $album  = $this->inDB->get_fields('cms_photo_albums', "id=$id", 'NSDiffer, NSLeft, NSRight');
+        $album  = $this->inDB->get_fields('cms_photo_albums', "id = '$id'", 'NSDiffer, NSLeft, NSRight');
 
         if (!$album) { return false; }
 
@@ -252,7 +252,7 @@ class cms_model_photos{
                     showtags='{$album['showtags']}',
                     bbcode='{$album['bbcode']}',
                     is_comments='{$album['is_comments']}'
-                WHERE id = $id";
+                WHERE id = '$id'";
         
         $this->inDB->query($sql);
     }
@@ -261,7 +261,7 @@ class cms_model_photos{
 /* ==================================================================================================== */
 
     public function getAlbumThumbsData($album_id){
-        return $this->inDB->get_fields('cms_photo_albums', "id={$album_id}", 'thumb1, thumb2, thumbsqr');
+        return $this->inDB->get_fields('cms_photo_albums', "id = '{$album_id}'", 'thumb1, thumb2, thumbsqr');
     }
 
 /* ==================================================================================================== */
@@ -299,7 +299,7 @@ class cms_model_photos{
 						showtags='{$album['showtags']}',
 						bbcode='{$album['bbcode']}',
                         is_comments='{$album['is_comments']}'
-					WHERE id = $id";
+					WHERE id = '$id'";
 			$this->inDB->query($sql);
 		}
 
@@ -343,7 +343,7 @@ class cms_model_photos{
 
     public function getAlbum($id) {
 
-		$album = $this->inDB->get_fields('cms_photo_albums', 'id='.$id, '*');
+		$album = $this->inDB->get_fields('cms_photo_albums', "id = '$id'", '*');
 
 		if (!$album) { cmsCore::error404(); }
 
@@ -356,7 +356,7 @@ class cms_model_photos{
 
     public function getPhoto($id) {
 
-		$photo = $this->inDB->get_fields('cms_photo_files', 'id='.$id, '*');
+		$photo = $this->inDB->get_fields('cms_photo_files', "id = '$id'", '*');
 
 		if (!$photo) { cmsCore::error404(); }
 
@@ -369,7 +369,7 @@ class cms_model_photos{
 
     public function loadedByUser24h($user_id, $album_id) {
 
-		$loaded = $this->inDB->rows_count('cms_photo_files', "user_id = $user_id AND album_id = $album_id AND pubdate >= DATE_SUB(NOW(), INTERVAL 1 DAY)");
+		$loaded = $this->inDB->rows_count('cms_photo_files', "user_id = '$user_id' AND album_id = '$album_id' AND pubdate >= DATE_SUB(NOW(), INTERVAL 1 DAY)");
 
 		return $loaded;
 
