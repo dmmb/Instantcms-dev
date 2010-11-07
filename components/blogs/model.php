@@ -623,7 +623,7 @@ class cms_model_blogs{
 
     public function getLatestCount($user_id = 0, $is_admin = 0){
 
-        $sql = "SELECT p.user_id, p.allow_who
+        $sql = "SELECT p.user_id, b.allow_who
 				FROM cms_blog_posts p
 				LEFT JOIN cms_blogs b ON b.id = p.blog_id
 				WHERE p.published = 1";
@@ -651,7 +651,7 @@ class cms_model_blogs{
 
     public function getBestCount($user_id = 0, $is_admin = 0){
 
-		$sql = "SELECT p.user_id, p.allow_who
+		$sql = "SELECT p.user_id, b.allow_who
 				FROM cms_blog_posts p
 				LEFT JOIN cms_blogs b ON b.id = p.blog_id
 				WHERE p.published = 1 AND DATEDIFF(NOW(), p.pubdate) <= 7
