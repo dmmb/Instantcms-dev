@@ -51,11 +51,6 @@ function clubs(){
 	$id 		= $inCore->request('id', 'int', 0);
 	$do 		= $inCore->request('do', 'str', 'view');
 
-	$pagetitle = $inCore->menuTitle();
-	if ($pagetitle){
-		$inPage->addPathway($pagetitle);
-	}
-		
 ////////// VIEW ALL CLUBS ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){
 

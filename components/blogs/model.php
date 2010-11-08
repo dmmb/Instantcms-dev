@@ -684,8 +684,10 @@ class cms_model_blogs{
         $sql = "SELECT p.*, DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate, u.nickname as author, u.id as author_id,
                        b.seolink as bloglink,
                        u.login as author_login
-                FROM cms_blogs b, cms_users u, cms_blog_posts p
-                WHERE p.blog_id = b.id AND b.id = $blog_id AND p.user_id = u.id AND p.published = 0
+                FROM cms_blog_posts p
+				INNER JOIN cms_blogs b ON b.id = p.blog_id AND b.id = '$blog_id'
+				LEFT JOIN cms_users u ON u.id = p.user_id
+                WHERE p.published = 0
                 ORDER BY p.pubdate DESC";
         $result  = $this->inDB->query($sql);
 

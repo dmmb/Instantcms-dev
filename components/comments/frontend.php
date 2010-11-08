@@ -132,7 +132,7 @@ function comments($target='', $target_id=0){
 		$user_can_delete    = $inCore->isUserCan('comments/delete');
 		$user_can_moderate  = $inCore->isUserCan('comments/moderate');
 
-		if ($comments_count && !$cfg['cmm_ajax']){
+		if (!$cfg['cmm_ajax']){
 			
 			//activate profiles support
 			$inCore->includeFile('components/users/includes/usercore.php');	
@@ -174,7 +174,7 @@ function comments($target='', $target_id=0){
 			ob_start();
 		
 			$smarty = $inCore->initSmarty('components', 'com_comments_list.tpl');
-			$smarty->assign('comments_count', $comments_list );
+			$smarty->assign('comments_count', $comments_count);
 			$smarty->assign('comments', $tree);
 			$smarty->assign('user_can_moderate', $user_can_moderate);
 			$smarty->assign('user_can_delete', $user_can_delete);
