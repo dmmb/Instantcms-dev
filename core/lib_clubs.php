@@ -317,7 +317,7 @@ function clubAdminLink($club_id){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
 	$sql = "SELECT u.id as id, u.nickname as nickname, u.login as login, p.gender as gender
-			FROM cms_clubs c, , 
+			FROM cms_clubs c
 			LEFT JOIN cms_users u ON u.id = c.admin_id
 			LEFT JOIN cms_user_profiles p ON p.user_id = u.id
 			WHERE c.id = '$club_id'";
