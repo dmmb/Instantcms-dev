@@ -50,7 +50,7 @@
 									<td width="">{php}echo cmsPage::getCaptcha();{/php}</td>
 								{/if}
 								<td width="" align="right">
-									<input class="cm_submit" type="submit" value="{$LANG.SEND}"/>
+									<input class="cm_submit" type="submit" value="{$LANG.SEND}"/> <input class="cm_submit" type="button" onclick="cancelComment({$parent_id})" value="{$LANG.CANCEL}"/>
 								</td>
 							</tr>
 						</table>
