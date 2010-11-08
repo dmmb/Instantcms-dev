@@ -177,6 +177,7 @@ class cms_model_users{
 
         $this->inDB->query("UPDATE cms_users SET is_deleted = 1 WHERE id='$user_id'");
         $this->inDB->query("DELETE FROM cms_user_friends WHERE to_id = '$user_id' OR from_id = '$user_id'");
+		$this->inDB->query("DELETE FROM cms_user_clubs WHERE user_id = '$user_id'");
         
     }
 

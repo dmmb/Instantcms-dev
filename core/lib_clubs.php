@@ -157,7 +157,7 @@ function clubPhotoAlbums($club_id, $is_admin=false, $is_moder=false, $is_member=
 			LEFT JOIN cms_photo_files f ON f.album_id = a.id AND f.published = 1
 			WHERE a.NSDiffer='club$club_id' AND a.user_id=$club_id AND a.parent_id > 0
 			GROUP BY a.id
-			ORDER BY f.pubdate DESC";
+			ORDER BY a.id DESC";
 					
 	$rs = $inDB->query($sql);
 	$html = '<ul id="albums_list">';
@@ -184,19 +184,19 @@ function clubPhotoAlbums($club_id, $is_admin=false, $is_moder=false, $is_member=
 function clubUserIsRole($club_id, $user_id, $role='member'){
     $inDB = cmsDatabase::getInstance();
 	if (!$club_id) { return; }
-	return $inDB->rows_count('cms_user_clubs', "club_id=$club_id AND user_id=$user_id AND role='$role'")? true: false;
+	return $inDB->rows_count('cms_user_clubs', "club_id = '$club_id' AND user_id = '$user_id' AND role='$role'")? true: false;
 }
 
 function clubUserIsMember($club_id, $user_id){
     $inDB = cmsDatabase::getInstance();
 	if (!$club_id) { return; }
-	return $inDB->rows_count('cms_user_clubs', "club_id=$club_id AND user_id=$user_id")? true: false;
+	return $inDB->rows_count('cms_user_clubs', "club_id = '$club_id' AND user_id = '$user_id'")? true: false;
 }
 
 function clubUserIsAdmin($club_id, $user_id){
     $inDB = cmsDatabase::getInstance();
 	if (!$club_id) { return; }
-	return $inDB->rows_count('cms_clubs', "id=$club_id AND admin_id=$user_id")? true: false;
+	return $inDB->rows_count('cms_clubs', "id = '$club_id' AND admin_id = '$user_id'")? true: false;
 }
 
 function clubModerators($club_id){
@@ -204,8 +204,8 @@ function clubModerators($club_id){
 	if (!$club_id) { exit; }
 	$moders = array();
 	$sql = "SELECT c.* 
-			FROM cms_user_clubs c, cms_users u
-			WHERE c.club_id = $club_id AND c.user_id = u.id AND u.is_deleted = 0 AND u.is_locked = 0 AND c.role = 'moderator'";
+			FROM cms_user_clubs c
+			WHERE c.club_id = '$club_id' AND c.role = 'moderator'";
 	$rs = $inDB->query($sql);
 	if ($inDB->num_rows($rs)){
 		while ($u = $inDB->fetch_assoc($rs)){
@@ -223,8 +223,7 @@ function clubMembers($club_id){
 	$members = array();
 	$sql = "SELECT c.* 
 			FROM cms_user_clubs c
-			LEFT JOIN cms_users u ON u.id=c.user_id AND u.is_deleted = 0 AND u.is_locked = 0
-			WHERE c.club_id = $club_id AND c.role = 'member'";
+			WHERE c.club_id = '$club_id' AND c.role = 'member'";
 	$rs = $inDB->query($sql);
 	if ($inDB->num_rows($rs)){
 		while ($u = $inDB->fetch_assoc($rs)){
@@ -242,8 +241,7 @@ function clubTotalMembers($club_id){
 	$members = array();
 	$sql = "SELECT 1
 			FROM cms_user_clubs c
-			LEFT JOIN cms_users u ON u.id=c.user_id AND u.is_deleted = 0 AND u.is_locked = 0
-			WHERE c.club_id = $club_id AND c.role = 'member'";
+			WHERE c.club_id = '$club_id' AND c.role = 'member'";
 	$rs = $inDB->query($sql);
 	if ($inDB->num_rows($rs)){
 		return $inDB->num_rows($rs) +1; //+1 потому что считаем еще и админа, не только юзеров
@@ -319,8 +317,10 @@ function clubAdminLink($club_id){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
 	$sql = "SELECT u.id as id, u.nickname as nickname, u.login as login, p.gender as gender
-			FROM cms_clubs c, cms_users u, cms_user_profiles p
-			WHERE c.id = $club_id AND c.admin_id = u.id AND p.user_id = u.id";
+			FROM cms_clubs c, , 
+			LEFT JOIN cms_users u ON u.id = c.admin_id
+			LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+			WHERE c.id = '$club_id'";
 	$rs     = $inDB->query($sql);
 	$html = '';
 	if ($inDB->num_rows($rs) == 1){
@@ -335,8 +335,10 @@ function clubMembersList($club_id){
     $inDB       = cmsDatabase::getInstance();
 	
 	$sql = "SELECT u.id as id, u.nickname as nickname, u.login as login, p.gender as gender
-			FROM cms_user_clubs c, cms_users u, cms_user_profiles p
-			WHERE c.club_id = $club_id AND c.user_id = u.id AND p.user_id = u.id AND u.is_locked = 0 AND u.is_deleted = 0";
+			FROM cms_user_clubs c
+			LEFT JOIN cms_users u ON u.id = c.user_id
+			LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+			WHERE c.club_id = '$club_id'";
 
 	$rs     = $inDB->query($sql);
 	$total  = $inDB->num_rows($rs);
