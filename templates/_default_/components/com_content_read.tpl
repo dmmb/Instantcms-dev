@@ -10,7 +10,7 @@
 {* ======================= Дата публикации =============================== *}
 {if $article.showdate} 
 	<div class="con_pubdate">
-		{if !$article.published}<span style="color:#CC0000">{$LANG.NO_PUBLISHED}</span>{else}{$article.pubdate}{/if} - <a href="{profile_url login=$article.user_login}">{$article.author}</a>
+		{if !$article.published}<span style="color:#CC0000">{$LANG.NO_PUBLISHED}</span>{else}{$article.pubdate}{/if} - <a href="{profile_url login=$article.user_login}">{$article.author}</a> - {$article.hits|spellcount:$LANG.HIT:$LANG.HIT2:$LANG.HIT10}
 	</div>
 {/if}
 
