@@ -192,6 +192,13 @@
     if (!$inDB->isFieldExists('cms_comments', 'ip')){
         $inDB->query("ALTER TABLE `cms_comments` ADD `ip` VARCHAR( 15 ) NOT NULL AFTER `target_link`");
     }
+	
+// ========================================================================== //
+// ========================================================================== //
+
+    if (!$inDB->isFieldExists('cms_blog_posts', 'comments')){
+        $inDB->query("ALTER TABLE `cms_blog_posts` ADD `comments` TINYINT( 4 ) NOT NULL DEFAULT '1' AFTER `seolink`");
+    }
 
 // ========================================================================== //
 // ========================================================================== //

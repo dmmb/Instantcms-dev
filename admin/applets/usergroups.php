@@ -303,6 +303,10 @@ function applet_usergroups(){
 							<td>Удаление чужих комментариев </td>
 						</tr>
 						<tr>
+							<td><input type="checkbox" name="access[]" value="comments/iscomments" <?php if (isset($mod['access'])) { if (in_array('comments/iscomments', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
+							<td>Выбор возможности комментирования </td>
+						</tr>
+						<tr>
 							<td><input type="checkbox" name="access[]" value="forum/moderate" <?php if (isset($mod['access'])) { if (in_array('forum/moderate', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
 							<td>Модерация форума </td>
 						</tr>
