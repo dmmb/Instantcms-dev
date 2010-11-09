@@ -19,7 +19,8 @@
 	if (!$inUser->id) { $inCore->halt(); }
 
 	$inCore->loadLib('clubs');
-	$inCore->loadLib('photos');
+    $inCore->loadModel('photos');
+    $model = new cms_model_photos();
 
 	$id = $inCore->request('id', 'int');
 

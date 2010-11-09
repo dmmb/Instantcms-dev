@@ -49,6 +49,7 @@ class cms_model_photos{
 	public function deletePhoto($id, $file=''){
         
         $inCore = cmsCore::getInstance();
+		$inCore->loadLib('tags');
 
         cmsCore::callEvent('DELETE_PHOTO', $id);
 
@@ -191,7 +192,7 @@ class cms_model_photos{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-	public function deleteAlbum($id){
+	public function deleteAlbum($id, $differ = ''){
         
         $inCore = cmsCore::getInstance();
 
@@ -215,7 +216,9 @@ class cms_model_photos{
 		
 		$inCore->deleteComments('palbum', $id);
 
-        dbDeleteNS('cms_photo_albums', $id);
+		$ns = $inCore->nestedSetsInit('cms_photo_albums');
+
+		return $ns->DeleteNode($id, $differ);
         
     }
 

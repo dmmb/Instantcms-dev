@@ -14,25 +14,30 @@
     $inCore->loadClass('config');       //конфигурация
     $inCore->loadClass('db');           //база данных
     $inCore->loadClass('user');
+	$inCore->loadClass('actions');
 
     $inDB = cmsDatabase::getInstance();
 
     $inUser = cmsUser::getInstance();
     $inUser->update();
+	if(!$inUser->id) { return; }
 
 	$inCore->loadLib('clubs');
 	$inCore->loadLib('photos');
 	$inCore->loadLib('tags');
 
-	$id = $inCore->request('id', 'int');
+	$id     = $inCore->request('id', 'int');
 	$clubid = $inCore->request('clubid', 'int');
 
-	if (!$id || !$clubid) return;
+	if (!$id || !$clubid) { return; }
 
-	$club = dbGetFields('cms_clubs', 'id='.$clubid, '*');
+	$club = $inDB->get_fields('cms_clubs', 'id='.$clubid, '1');
+	if(!$club) { return; }
+    $inCore->loadModel('photos');
+    $model = new cms_model_photos();
 	
 	if ($inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($clubid, $inUser->id) || clubUserIsRole($clubid, $inUser->id, 'moderator')){
-		$ok = albumDelete($id, 'club'.$clubid);
+		$ok = $model->deleteAlbum($id, 'club'.$clubid);
 	} else {
 		$ok = false;
 	}

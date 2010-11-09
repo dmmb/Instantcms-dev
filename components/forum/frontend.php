@@ -166,8 +166,6 @@ if ($do=='view'){
     $inPage->printHeading($_LANG['FORUMS']);
     $inPage->setTitle($_LANG['FORUMS']);
 
-    $inPage->addPathway($_LANG['FORUMS'], '/forum');
-
     $groupsql = forumUserAuthSQL();
     $sql = "SELECT *
             FROM cms_forum_cats
@@ -238,8 +236,6 @@ if ($do=='view'){
 }	
 ///////////////////////////// VIEW THREADS /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='forum'){
-
-	$inPage->addPathway($_LANG['FORUMS'], '/forum');
 
     $f = $model->getForum($id);
 
@@ -366,8 +362,6 @@ if ($do=='forum'){
 }
 ///////////////////////////// READ THREAD /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='thread'){
-
-	$inPage->addPathway($_LANG['FORUMS'], '/forum');
 	
 	$groupsql = forumUserAuthSQL("f.");
 
