@@ -68,6 +68,21 @@
 				</script>
 			</td>
 		</tr>
+        {if $is_admin || $user_can_iscomments}
+		<tr>
+			<td>
+				<strong>{$LANG.COMMENTS}:</strong><br />
+				<span><small>{$LANG.IS_COMMENTS}</small></span>
+			</td>
+			<td>
+					<select name="comments" id="comments" style="width:400px">
+						<option value="0" >{$LANG.NO}</option>
+						<option value="1" selected >{$LANG.YES}</option>
+					</select>
+
+			</td>
+		</tr>
+        {/if}
 	</table>
 	<p>
 		<input name="goadd" type="submit" id="goadd" value="{$LANG.SAVE_POST}" />

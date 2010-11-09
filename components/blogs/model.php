@@ -780,10 +780,10 @@ class cms_model_blogs{
         $item['content_html']   = $this->inDB->escape_string($item['content_html']);
 
         $sql = "INSERT INTO cms_blog_posts (user_id, cat_id, blog_id, pubdate, title, feel, music,
-                            content, content_html, allow_who, edit_times, edit_date, published, seolink)
+                            content, content_html, allow_who, edit_times, edit_date, published, seolink, comments)
                 VALUES ('{$item['user_id']}', '{$item['cat_id']}', '{$item['id']}', NOW(),
                         '{$item['title']}', '{$item['feel']}', '{$item['music']}', '{$item['content']}', '{$item['content_html']}',
-                        '{$item['allow_who']}', 0, NOW(), '{$item['published']}', '{$item['seolink']}')";
+                        '{$item['allow_who']}', 0, NOW(), '{$item['published']}', '{$item['seolink']}', '{$item['comments']}')";
         
         $result = $this->inDB->query($sql);
 
@@ -862,7 +862,8 @@ class cms_model_blogs{
                     content_html='{$item['content_html']}',
                     allow_who='{$item['allow_who']}',
                     edit_times = edit_times+1,
-                    edit_date = NOW(){$seo_sql}
+                    edit_date = NOW(){$seo_sql},
+					comments = '{$item['comments']}'
                 WHERE id = $post_id";
         
         $result = $this->inDB->query($sql);

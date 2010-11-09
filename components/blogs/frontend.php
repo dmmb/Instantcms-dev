@@ -464,7 +464,7 @@ if ($do=='blog'){
                 if ($can_view){
 
                     $post['url']        = $model->getPostURL(null, $blog['seolink'], $post['seolink']);
-                    $post['comments']   = dbRowsCount('cms_comments', "target='blog' AND target_id=".$post['id']);
+                    $post['comments']   = $post['comments'] ? $inCore->getCommentsCount('blog', $post['id']) : false;
                     $post['karma']      = cmsKarmaFormatSmall($post['points']);
 					$post['fpubdate']	= $inCore->dateFormat($post['fpubdate']);
                     
@@ -631,6 +631,8 @@ if ($do=='newpost' || $do=='editpost'){
 
     //Получаем карму пользователя
 	$user_karma = cmsUser::getKarma($user_id);
+	// Может ли пользователь выбирать возможность комментировать
+	$user_can_iscomments = $inCore->isUserCan('comments/iscomments');
 
     $post = array();
 
@@ -728,6 +730,8 @@ if ($do=='newpost' || $do=='editpost'){
             $smarty->assign('smilies', $smilies);
             $smarty->assign('autogrow', $autogrow);
             $smarty->assign('msg', $msg);
+			$smarty->assign('is_admin', $is_admin);
+			$smarty->assign('user_can_iscomments', $user_can_iscomments);
             $smarty->assign('tagline', $tagline);
             $smarty->assign('autocomplete_js', $autocomplete_js);
         $smarty->display('com_blog_edit_post.tpl');
@@ -746,6 +750,7 @@ if ($do=='newpost' || $do=='editpost'){
         $cat_id 	= $inCore->request('cat_id', 'int');
         $allow_who 	= $inCore->request('allow_who', 'str', $blog['allow_who']);
         $tags 		= $inCore->request('tags', 'str', '');
+		$comments   = $inCore->request('comments', 'int', 1);
 
         //Проверяем их
         if (strlen($title)<2) { $error_msg .= $_LANG['POST_ERR_TITLE'].'<br/>'; }
@@ -787,7 +792,8 @@ if ($do=='newpost' || $do=='editpost'){
 													'ballow_who'=>$blog['allow_who'],
                                                     'allow_who'=>$allow_who,
                                                     'published'=>$published,
-                                                    'tags'=>$tags
+                                                    'tags'=>$tags,
+                                                    'comments'=>$comments
                                                  ));
 
                 $inCore->registerUploadImages(session_id(), $post_id, 'blog');
@@ -842,7 +848,8 @@ if ($do=='newpost' || $do=='editpost'){
                                                     'content'=>$content,
                                                     'allow_who'=>$allow_who,
                                                     'published'=>$published,
-                                                    'tags'=>$tags
+                                                    'tags'=>$tags,
+                                                    'comments'=>$comments
                                                  ), $cfg['update_seo_link']);
 
                 if ($cfg['update_date']){
@@ -1033,7 +1040,7 @@ if($do=='post'){
     $smarty->display('com_blog_view_post.tpl');
 
     //show user comments
-    if($inCore->isComponentInstalled('comments')){
+    if($inCore->isComponentInstalled('comments') && $post['comments']){
         $inCore->includeComments();
         comments('blog', $post['id']);
     }
@@ -1309,7 +1316,7 @@ if ($do=='latest'){
                 if ($can_view){
 
                     $post['url']        = $model->getPostURL(null, $post['bloglink'], $post['seolink']);
-                    $post['comments']   = $inDB->rows_count('cms_comments', "target='blog' AND target_id=".$post['id']);
+                    $post['comments']   = $post['comments'] ? $inCore->getCommentsCount('blog', $post['id']) : false;
                     $post['karma']      = cmsKarmaFormatSmall($post['points']);
 					$post['fpubdate']	= $inCore->dateFormat($post['fpubdate']);
 
@@ -1406,7 +1413,7 @@ if ($do=='best'){
                 if ($can_view){
                     $post['url']        = $model->getPostURL(null, $post['bloglink'], $post['seolink']);
 
-                    $post['comments']   = $inDB->rows_count('cms_comments', "target='blog' AND target_id=".$post['id']);
+                    $post['comments']   = $post['comments'] ? $inCore->getCommentsCount('blog', $post['id']) : false;
                     $post['karma']      = cmsKarmaFormatSmall($post['points']);
 
                     $msg = $post['content_html'];
