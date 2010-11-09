@@ -57,6 +57,7 @@ function cpStripComment($text){
 		$cfg['perpage'] 		= (int)$_REQUEST['perpage'];
 		$cfg['j_code'] 			= (int)$_REQUEST['j_code'];
 		$cfg['cmm_ajax'] 		= (int)$_REQUEST['cmm_ajax'];
+		$cfg['cmm_ip'] 		    = (int)$_REQUEST['cmm_ip'];
 			
 		$inCore->saveComponentConfig('comments', $cfg);
         
@@ -127,11 +128,13 @@ function cpStripComment($text){
 		$fields[2]['title'] = 'Текст';		$fields[2]['field'] = 'content';	$fields[2]['width'] = ''; 
         $fields[2]['prc'] = 'cpStripComment';
 
-		$fields[3]['title'] = 'Автор';		$fields[3]['field'] = 'id';			$fields[3]['width'] = '200'; 
-		$fields[3]['prc'] = 'cpCommentAuthor';
+		$fields[3]['title'] = 'IP';			$fields[3]['field'] = 'ip';			$fields[3]['width'] = '80'; 
 
-		$fields[4]['title'] = 'Цель';		$fields[4]['field'] = 'id';			$fields[4]['width'] = '250'; 
-		$fields[4]['prc'] = 'cpCommentTarget';
+		$fields[4]['title'] = 'Автор';		$fields[4]['field'] = 'id';			$fields[4]['width'] = '180'; 
+		$fields[4]['prc'] = 'cpCommentAuthor';
+
+		$fields[5]['title'] = 'Цель';		$fields[5]['field'] = 'id';			$fields[5]['width'] = '220'; 
+		$fields[5]['prc'] = 'cpCommentTarget';
 
 		//ACTIONS
 		$actions = array();
@@ -234,6 +237,7 @@ function cpStripComment($text){
 	if(!isset($cfg['perpage'])) { 			$cfg['perpage']=20;	}
 	if(!isset($cfg['j_code'])) { 			$cfg['j_code']=1;	}
 	if(!isset($cfg['cmm_ajax'])) { 			$cfg['cmm_ajax']=0;	}
+	if(!isset($cfg['cmm_ip'])) { 			$cfg['cmm_ip']=1;	}
 
 	cpAddPathway('Настройки', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config');	
 	echo '<h3>Настройки комментариев</h3>';
@@ -300,6 +304,16 @@ function cpStripComment($text){
               <label>
       <input name="j_code" type="radio" value="0"  <?php if (!$cfg['j_code']) { echo 'checked="checked"'; } ?> />
               Нет</label>
+			</td>
+          </tr>
+          <tr>
+            <td valign="middle"><strong>Показывать ip комментаторов администраторам: </strong></td>
+            <td>
+				<select name="cmm_ip" id="cmm_ip" style="width:220px">
+					<option value="0" <?php if($cfg['cmm_ip']==0) { echo 'selected'; } ?>>не показывать</option>
+					<option value="1" <?php if($cfg['cmm_ip']==1) { echo 'selected'; } ?>>только гостей</option>
+                    <option value="2" <?php if($cfg['cmm_ip']==2) { echo 'selected'; } ?>>всех</option>
+				</select>
 			</td>
           </tr>
           <tr>

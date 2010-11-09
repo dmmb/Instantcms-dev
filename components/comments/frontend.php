@@ -60,6 +60,8 @@ function comments($target='', $target_id=0){
 		$perpage = $cfg['perpage'] ? $cfg['perpage'] : 20;
 		$page    = $inCore->request('page', 'int', 1);
 
+		$is_admin = $inCore->userIsAdmin($inUser->id);
+
 		//Загружаем комментарии
 		$comments = array();
 		// Считаем общее число количество комментариев
@@ -75,11 +77,13 @@ function comments($target='', $target_id=0){
 				if ($comments[$next]['guestname']) {
 					$comments[$next]['author']      = $comments[$next]['guestname'];
 					$comments[$next]['is_profile']  =false;
+					$comments[$next]['ip']  		= (($cfg['cmm_ip'] == 1 || $cfg['cmm_ip'] == 2) && $comments[$next]['ip']) ? '('.$comments[$next]['ip'].')' : false;
 				} else {
 					$comments[$next]['author']['nickname'] = $comments[$next]['nickname'];
 					$comments[$next]['author']['login'] = $comments[$next]['login'];
 					$comments[$next]['is_profile'] 	= true;
 					$comments[$next]['user_image'] 	= usrImageNOdb($comments[$next]['user_id'], 'small', $comments[$next]['imageurl'], $comments[$next]['is_deleted']);
+					$comments[$next]['ip']  		= ($cfg['cmm_ip'] == 2 && $comments[$next]['ip']) ? '('.$comments[$next]['ip'].')' : false;
 				}
 				$comments[$next]['show'] 	   	= ((!$cfg['min_karma'] || $comments[$next]['votes']>=$cfg['min_karma_show']) || $inCore->userIsAdmin($comments[$next]['user_id']));
 				if ($comments[$next]['votes']>0){
@@ -98,6 +102,7 @@ function comments($target='', $target_id=0){
 		$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/comments/page-%page%'));
 		$smarty->assign('is_user', $inUser->id);
 		$smarty->assign('cfg', $cfg);
+		$smarty->assign('is_admin', $is_admin);
 		$smarty->assign('url', $_SERVER['REQUEST_URI']);
 
 		$smarty->display('com_comments_list_all.tpl');
@@ -150,12 +155,14 @@ function comments($target='', $target_id=0){
 				$comments[$next]['level'] = 0;        
 				if ($comments[$next]['guestname']) {
 					$comments[$next]['author']      = $comments[$next]['guestname'];
-					$comments[$next]['is_profile']  =false;
+					$comments[$next]['is_profile']  = false;
+					$comments[$next]['ip']  		= (($cfg['cmm_ip'] == 1 || $cfg['cmm_ip'] == 2) && $comments[$next]['ip']) ? '('.$comments[$next]['ip'].')' : false;
 				} else {
 					$comments[$next]['author']['nickname'] = $comments[$next]['nickname'];
 					$comments[$next]['author']['login'] = $comments[$next]['login'];
 					$comments[$next]['is_profile'] 	= true;
 					$comments[$next]['user_image'] 	= usrImageNOdb($comments[$next]['user_id'], 'small', $comments[$next]['imageurl'], $comments[$next]['is_deleted']);
+					$comments[$next]['ip']  		= ($cfg['cmm_ip'] == 2 && $comments[$next]['ip']) ? '('.$comments[$next]['ip'].')' : false;
 				}
 				$comments[$next]['show'] 	   	= ((!$cfg['min_karma'] || $comments[$next]['votes']>=$cfg['min_karma_show']) || $inCore->userIsAdmin($comments[$next]['user_id']));
 				if ($comments[$next]['votes']>0){
@@ -231,6 +238,7 @@ function comments($target='', $target_id=0){
 
         $target         = $inCore->request('target', 'str', '');
         $target_id      = $inCore->request('target_id', 'int', 0);
+		$ip             = $_SERVER['REMOTE_ADDR'];
 
         if (!$target || !$target_id) { $error = $_LANG['ERR_UNKNOWN_TARGET']; }
 
@@ -272,7 +280,8 @@ function comments($target='', $target_id=0){
                                                     'content'=>$content,
                                                     'published'=>$cfg['publish'],
                                                     'target_title'=>$target_data['title'], 
-                                                    'target_link'=>$target_data['link']
+                                                    'target_link'=>$target_data['link'], 
+                                                    'ip'=>$ip
                                                   ));
 
             //регистрируем событие

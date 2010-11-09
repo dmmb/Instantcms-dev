@@ -4,7 +4,7 @@
 <h1 class="con_heading">{$LANG.COMMENTS_ON_SITE}</h1>
 {if $comments_count}
 	{foreach key=cid item=comment from=$comments}
-    	<h3 class="cmm_all_title"><span class="cmm_all_author">{if !$comment.is_profile}{$comment.author}{else}<a href="{profile_url login=$comment.author.login}">{$comment.author.nickname}</a>{/if}</span> <span class="cmm_all_gender"> {$comment.gender}</span>  &rarr; <a class="cmm_all_target" href="{$comment.target_link}#c{$comment.id}" title="{$LANG.LINK_TO_COMMENT}">{$comment.target_title}</a> <span class="cmm_date">{$comment.fpubdate}</span></h3>
+    	<h3 class="cmm_all_title"><span class="cmm_all_author">{if !$comment.is_profile}{$comment.author}{else}<a href="{profile_url login=$comment.author.login}">{$comment.author.nickname}</a>{/if} {if $is_admin}{$comment.ip}{/if}</span> <span class="cmm_all_gender"> {$comment.gender}</span>  &rarr; <a class="cmm_all_target" href="{$comment.target_link}#c{$comment.id}" title="{$LANG.LINK_TO_COMMENT}">{$comment.target_title}</a> <span class="cmm_date">{$comment.fpubdate}</span></h3>
         <table class="cmm_entry">
 			<tr>
 				{if $comment.is_profile}

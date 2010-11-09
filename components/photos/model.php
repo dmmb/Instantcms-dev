@@ -119,7 +119,7 @@ class cms_model_photos{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-	public function addPhoto($photo){
+	public function addPhoto($photo, $differ = ''){
 
         $inCore     = cmsCore::getInstance();
         $inUser     = cmsUser::getInstance();
@@ -128,9 +128,9 @@ class cms_model_photos{
 
         $user_id    = $inUser->id;
 
-        $sql = "INSERT INTO cms_photo_files (album_id, title, description, pubdate, file, published, showdate, comments, user_id)
+        $sql = "INSERT INTO cms_photo_files (album_id, title, description, pubdate, file, published, showdate, comments, user_id, owner)
                 VALUES ('{$photo['album_id']}', '{$photo['title']}', '{$photo['description']}', NOW(),
-                        '{$photo['filename']}', '{$photo['published']}', '{$photo['showdate']}', 1, '{$user_id}')";
+                        '{$photo['filename']}', '{$photo['published']}', '{$photo['showdate']}', 1, '{$user_id}', '{$differ}')";
         
         $this->inDB->query($sql);
 

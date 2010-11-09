@@ -376,12 +376,14 @@ if ($do=='addphoto'){
 	if (!$uid) { $can_add = false; } 
 	else {		
 		if ($album['NSDiffer']=='') { 
-			$can_add = $uid; 
-			$min_karma = false; 
+			$can_add    = $uid; 
+			$min_karma  = false; 
 			$club['id'] = false;
+			$differ     = '';
 		} elseif (strstr($album['NSDiffer'],'club')){
-			$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], '*');
+			$club    = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], '*');
 			$can_add = clubUserIsMember($club['id'], $uid) || clubUserIsAdmin($club['id'], $uid) || $inUser->is_admin;
+			$differ  = 'club'.$club['id'];
 			$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
 			$inPage->addPathway($_LANG['PHOTOALBUMS']);
 			$min_karma = $club['photo_min_karma'];
@@ -469,7 +471,7 @@ if ($do=='addphoto'){
                             $photo['showdate']      = 1;
 																															
 							//ADD TO ALBUM
-							$photo_id = $model->addPhoto($photo);
+							$photo_id = $model->addPhoto($photo, $differ);
 							
 							$inCore->redirect('/photos/'.$photo_id.'/uploaded.html');
 								
@@ -496,11 +498,8 @@ if ($do=='addphoto'){
 			echo '<div class="con_heading">'.$_LANG['ADD_PHOTO'].'</div>';
 			echo '<div><strong>'.$_LANG['MAX_UPLOAD_IN_DAY'].'</strong> '.$_LANG['CAN_UPLOAD_TOMORROW'].'</div>';
 		}
-	}//auth 
-	else { 
-		echo '<div class="con_heading">'.$_LANG['NEED_REGISTRATION'].'</div>';
-		echo '<div>'.$_LANG['NEED_REGISTRATION_TEXT'].'</div>';
-		echo '<p><a href="/registration">'.$_LANG['GOTO_REGISTRATION'].'</a></p>';
+	} else { 
+		cmsUser::goToLogin();
 	}
 }
 
@@ -542,7 +541,7 @@ if ($do=='editphoto'){
 	
 	$is_author = ($inUser->id == $photo['user_id']);
 	
-	if ($inUser->id && ($is_admin||$is_author)){
+	if ($inUser->id && ($is_admin || $is_author)){
 	
 		$sql = "SELECT * FROM cms_users WHERE id = ".$photo['user_id'];
 		$result = $inDB->query($sql) ;
@@ -615,8 +614,7 @@ if ($do=='editphoto'){
 							else { echo usrAccessDenied(); }
 						}//print form
 		} else { echo usrAccessDenied(); } //user exists
-	}//auth
-	else { echo usrAccessDenied(); }
+	} else { cmsUser::goToLogin(); }
 }
 /////////////////////////////// PHOTO MOVE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='movephoto'){
@@ -625,7 +623,7 @@ if ($do=='movephoto'){
 	
 	$album = $model->getAlbum($photo['album_id']);
 
-		if(strstr($album['NSDiffer'],'club')) { 
+	if(strstr($album['NSDiffer'],'club')) { 
 			$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], 'id, title');
 		$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
 		$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');	
@@ -672,7 +670,7 @@ if ($do=='movephoto'){
 				header('location:/photos/'.$fid);
 		}
 			
-		}
+		} else { cmsUser::goToLogin(); }
 	
 }
 /////////////////////////////// PHOTO DELETE /////////////////////////////////////////////////////////////////////////////////////////
@@ -713,7 +711,7 @@ if ($do=='delphoto'){
             $model->deletePhoto($photo_id);
 			header('location:/photos/'.$photo['album_id']);
 		}
-	}
+	} else { cmsUser::goToLogin(); }
 }
 /////////////////////////////// VIEW LATEST PHOTOS ///////////////////////////////////////////////////////////////////////////////////
 if ($do=='latest'){

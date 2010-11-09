@@ -27,10 +27,10 @@ class cms_model_comments{
 		
 		$item['target_title'] =  $this->inDB->escape_string($item['target_title']);
 		
-        $sql = "INSERT INTO cms_comments (parent_id, user_id, target, target_id, guestname, content, pubdate, published, target_title, target_link)
+        $sql = "INSERT INTO cms_comments (parent_id, user_id, target, target_id, guestname, content, pubdate, published, target_title, target_link, ip)
                 VALUES ({$item['parent_id']}, {$item['user_id']}, '{$item['target']}', {$item['target_id']},
                         '{$item['guestname']}', '{$item['content']}', NOW(), {$item['published']},
-                        '{$item['target_title']}', '{$item['target_link']}')";
+                        '{$item['target_title']}', '{$item['target_link']}', '{$item['ip']}')";
 
         $this->inDB->query($sql);
 
@@ -151,7 +151,7 @@ class cms_model_comments{
 
         $comments = array();
 
-        $sql = "SELECT c.*, c.pubdate as fpubdate,
+        $sql = "SELECT c.*,
                        IFNULL(v.total_rating, 0) as votes,
 					   IFNULL(u.nickname, 0) as nickname,
 					   IFNULL(u.login, 0) as login,
@@ -169,7 +169,7 @@ class cms_model_comments{
         if (!$this->inDB->num_rows($result)) { return false; }
 
         while($comment = $this->inDB->fetch_assoc($result)){
-			$comment['fpubdate'] = cmsCore::dateFormat($comment['fpubdate'], true, true);
+			$comment['fpubdate'] = cmsCore::dateFormat($comment['pubdate'], true, true);
             $comments[] = $comment;
         }
 
@@ -185,7 +185,7 @@ class cms_model_comments{
 		global $_LANG;
         $comments = array();
 
-        $sql = "SELECT c.id, c.guestname, c.content, c.pubdate as fpubdate, c.target_title, c.target_link,
+        $sql = "SELECT c.id, c.guestname, c.content, c.pubdate as fpubdate, c.target_title, c.target_link, c.ip,
                        IFNULL(v.total_rating, 0) as votes,
 					   IFNULL(u.nickname, 0) as nickname,
 					   IFNULL(u.login, 0) as login,

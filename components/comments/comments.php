@@ -75,12 +75,14 @@
             $comments[$next]['level'] = 0;        
 			if ($comments[$next]['guestname']) {
 				$comments[$next]['author']      = $comments[$next]['guestname'];
-				$comments[$next]['is_profile']  =false;
+				$comments[$next]['is_profile']  = false;
+				$comments[$next]['ip']  		= (($cfg['cmm_ip'] == 1 || $cfg['cmm_ip'] == 2) && $comments[$next]['ip']) ? '('.$comments[$next]['ip'].')' : false;
 			} else {
 				$comments[$next]['author']['nickname'] = $comments[$next]['nickname'];
 				$comments[$next]['author']['login'] = $comments[$next]['login'];
 				$comments[$next]['is_profile'] 	= true;
 				$comments[$next]['user_image'] 	= usrImageNOdb($comments[$next]['user_id'], 'small', $comments[$next]['imageurl'], $comments[$next]['is_deleted']);
+				$comments[$next]['ip']  		= ($cfg['cmm_ip'] == 2 && $comments[$next]['ip']) ? '('.$comments[$next]['ip'].')' : false;
 			}
             $comments[$next]['show'] 	   	= ((!$cfg['min_karma'] || $comments[$next]['votes']>=$cfg['min_karma_show']) || $inCore->userIsAdmin($comments[$next]['user_id']));
             if ($comments[$next]['votes']>0){

@@ -189,6 +189,13 @@
 // ========================================================================== //
 // ========================================================================== //
 
+    if (!$inDB->isFieldExists('cms_comments', 'ip')){
+        $inDB->query("ALTER TABLE `cms_comments` ADD `ip` VARCHAR( 15 ) NOT NULL AFTER `target_link`");
+    }
+
+// ========================================================================== //
+// ========================================================================== //
+
     if (!$inDB->isFieldExists('cms_user_photos', 'album_id')){
         $inDB->query("ALTER TABLE `cms_user_photos` ADD `album_id` INT NOT NULL AFTER `user_id`, ADD INDEX (album_id)");
     }

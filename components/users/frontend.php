@@ -2633,6 +2633,16 @@ if ($do=='votekarma'){
 											'target_id' => 0, 
 											'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
 									));
+								} elseif($author_id == $user_id) {
+									cmsActions::log('add_wall_my', array(
+											'object' => '',
+											'object_url' => '',
+											'object_id' => $wall_id,
+											'target' => '',
+											'target_url' => '',
+											'target_id' => 0, 
+											'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
+									));
 								}
                     //send email notification, if user want it
                     $user['email_newmsg']   = $inDB->get_field('cms_user_profiles', "user_id='{$user_id}'", 'email_newmsg');

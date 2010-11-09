@@ -11,10 +11,11 @@
 			<tr>
 				<td class="cmm_title" valign="middle">
 					{if !$comment.is_profile}
-						<span class="cmm_author">{$comment.author}</span>
+						<span class="cmm_author">{$comment.author} {if $is_admin}{$comment.ip}{/if}</span>
 					{else}
-						<span class="cmm_author"><a href="{profile_url login=$comment.author.login}">{$comment.author.nickname}</a></span>
+						<span class="cmm_author"><a href="{profile_url login=$comment.author.login}">{$comment.author.nickname}</a> {if $is_admin}{$comment.ip}{/if}</span>
 					{/if}
+
                         <a class="cmm_anchor" href="#c{$comment.id}" title="{$LANG.LINK_TO_COMMENT}">#</a>
 						<span class="cmm_date">{$comment.fpubdate}</span>
                         {if !$is_user || $comment.is_voted}
