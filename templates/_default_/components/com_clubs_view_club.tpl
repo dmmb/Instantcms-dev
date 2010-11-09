@@ -58,10 +58,14 @@
 								{$club.photo_albums}
 								{if $is_admin || $is_moder || $is_karma_enabled}
 									<p>
+                                    	{if $club.all_albums >= 6}
+                                    	<span><a href="/photos/{$club.root_album_id}">{$LANG.ALL_ALBUMS} (<strong id="count_photo">{$club.all_albums}</strong>)</a></span>
+                                        {/if}
 										<span id="add_album_link"><a class="service" href="javascript:void(0)" onclick="{literal}$('#add_album_link').toggle();$('#add_album_form').toggle();$('#add_album_form input.text').focus();{/literal}">{$LANG.ADD_PHOTOALBUM}</a></span>
 										<span id="add_album_form" style="display:none">
 											<input type="text" class="text" name="album_title" id="album_title"/> 
-											<input type="button" value="{$LANG.CREATE}" onclick="javascript:createAlbum({$club.id});"/>
+											<input type="button" value="{$LANG.CREATE}" onclick="javascript:createAlbum({$club.id}, {$club.root_album_id});"/>
+                                            <input type="button" value="{$LANG.CANCEL}" onclick="{literal}$('#add_album_link').toggle();$('#add_album_form').toggle();{/literal}"/>
 										</span>
 										<span id="add_album_wait" style="display:none">{$LANG.LOADING}...</span>
 									</p>

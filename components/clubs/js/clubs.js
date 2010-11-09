@@ -1,5 +1,6 @@
-function createAlbum(clubid){
+function createAlbum(clubid, root_album_id){
 	var title = $('input#album_title').val();
+	var count_photo = $('#count_photo').html();
 
 	if (title){
 		
@@ -12,8 +13,18 @@ function createAlbum(clubid){
 		  data: "title="+title+"&clubid="+clubid,
 		  success: function(msg){
 				if (msg!='error'){
-					$('ul#albums_list').prepend('<li id="'+msg+'" class="club_album"><a href="/photos/'+msg+'">'+title+'</a> (0) <a class="delete" onclick="deleteAlbum('+msg+', \''+title+'\', '+clubid+')" href="javascript:void(0)" title="Удалить альбом">X</a></li>');
-                    $('ul#albums_list li.no_albums').remove();
+                    if ($('ul.usr_albums_list li').length==5){
+                        $('.content p').prepend('<span><a href="/photos/'+root_album_id+'">Все альбомы (<strong id="count_photo">6</strong>)</a></span>');
+                    }					
+                    if ($('ul.usr_albums_list li').length==6){
+                        $('ul.usr_albums_list li:last').remove();
+                    }
+                    if (count_photo){
+						var new_count = Number(count_photo) + 1;
+                        $('#count_photo').html(new_count);
+                    }
+					$('ul.usr_albums_list').prepend('<li id="'+msg+'"><div class="usr_album_thumb"><a href="/photos/'+msg+'" title="'+title+'"><img src="/images/photos/small/no_image.png" width="64" height="64" border="0" alt="'+title+'" /></a></div><div class="usr_album"><div class="link"><a href="/photos/'+msg+'">'+title+'</a>&nbsp;<a class="delete" title="Удалить альбом" href="javascript:void(0)" onclick="deleteAlbum('+msg+', \''+title+'\', '+clubid+')">X</a></div><div class="count">нет фотографий</div><div class="date">только что</div></div></li>');
+                    $('ul.usr_albums_list li.no_albums').remove();
 				} else {
 					alert('Ошибка! Альбом не создан.');	
 				}
@@ -27,6 +38,7 @@ function createAlbum(clubid){
 }
 
 function deleteAlbum(id, title, clubid){
+	var count_photo = $('#count_photo').html();
 
 	if (confirm('Удалить фотоальбом "'+title+'"?')){			
 		$('#add_album_wait').show();
@@ -36,9 +48,12 @@ function deleteAlbum(id, title, clubid){
 		  data: "id="+id+"&clubid="+clubid,
 		  success: function(msg){
 				if (msg=='ok'){
-					$('ul#albums_list li#'+id).remove();
-                    if ($('ul#albums_list li.club_album').length==0){
-                        $('ul#albums_list').prepend('<li class="no_albums">В клубе нет фотоальбомов.</li>');
+					$('ul.usr_albums_list li#'+id).remove();
+                    if (count_photo){
+                        $('#count_photo').html(count_photo-1);
+                    }
+                    if ($('ul.usr_albums_list li').length==0){
+                        $('ul.usr_albums_list').prepend('<li class="no_albums">В клубе нет фотоальбомов.</li>');
                     }
 				} else {
 					alert('Ошибка! Альбом не удален.');	

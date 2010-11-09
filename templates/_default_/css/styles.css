@@ -2126,7 +2126,7 @@ table.club_full_entry .clubcontent div.album a.delete { color:#FF0000; }
 table.club_full_entry .clubcontent span.new{ color:#009900; font-weight:bold; }
 
 table.club_full_entry .clubcontent ul { margin-top:10px; margin-left:9px; margin-bottom:15px; }
-table.club_full_entry .clubcontent ul li { margin-bottom:3px; }
+table.club_full_entry .clubcontent ul li { margin:3px 0; }
 table.club_full_entry .clubcontent ul li.all a{ color:#999999; }
 table.club_full_entry .clubcontent ul li.service a{ color:#009900; }
 
@@ -3293,12 +3293,15 @@ table.feed td.date strong { color:green; }
 }
 
 .usr_albums_list li{
-    margin:0; padding:0;
-    margin-right:10px;
-    margin-bottom:10px;
+    margin:0 10px 10px 0;
+	padding:0;
     display: block;
     float:left;
     width:210px;
+	height:85px;
+}
+.usr_albums_list li.no_albums{
+	height:auto;
 }
 
 .usr_album_thumb{

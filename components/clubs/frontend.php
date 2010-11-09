@@ -78,7 +78,7 @@ if ($do=='view'){
         $pagination = cmsPage::getPagebar($total, $page, $perpage, '/clubs/page-%page%', array());
 	}
 
-	$can_create = $user_id && ( $inUser->is_admin || ($cfg['cancreate'] && !$inDB->get_field('cms_clubs', 'admin_id='.$user_id, 'id') && cmsUser::getKarma($user_id)>=$cfg['create_min_karma'] && cmsUser::getRating($user_id)>=$cfg['create_min_rating']));
+	$can_create = $user_id ? $user_id && ( $inUser->is_admin || ($cfg['cancreate'] && !$inDB->get_field('cms_clubs', 'admin_id='.$user_id, 'id') && cmsUser::getKarma($user_id)>=$cfg['create_min_karma'] && $inUser->rating >= $cfg['create_min_rating'])): false;
 
 	$smarty = $inCore->initSmarty('components', 'com_clubs_view.tpl');
 	$smarty->assign('pagetitle', $pagetitle);
@@ -171,6 +171,7 @@ if ($do=='club'){
 		$club['root_album_id']	= clubRootAlbumId($club['id']);
 		if (!$club['root_album_id']) { albumCreateRoot($id, 'club'.$id); }
 		$club['photo_albums']	= clubPhotoAlbums($club['id'],  $is_admin, $is_moder, $is_member);
+		$club['all_albums']	    = $inDB->rows_count('cms_photo_albums', "NSDiffer = 'club{$club['id']}' AND user_id = '{$club['id']}' AND parent_id > 0");
 	}
 
 	$club['pubdate'] = $inCore->dateformat($club['pubdate'], true, true);

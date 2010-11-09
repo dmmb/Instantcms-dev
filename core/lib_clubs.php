@@ -148,37 +148,49 @@ function clubBlogContent($blog_id, $is_admin=false, $is_moder=false, $is_member=
 }
 
 function clubPhotoAlbums($club_id, $is_admin=false, $is_moder=false, $is_member=false){
+    $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
 	if (!$club_id) { exit; }	
 
-	$html = '';
-	$sql = "SELECT a.id, a.title, IFNULL(COUNT(f.id), 0) as content_count
+	$sql = "SELECT a.id, a.title, a.pubdate, f.file, IFNULL(COUNT(f.id), 0) as content_count
 			FROM cms_photo_albums a
 			LEFT JOIN cms_photo_files f ON f.album_id = a.id AND f.published = 1
-			WHERE a.NSDiffer='club$club_id' AND a.user_id=$club_id AND a.parent_id > 0
+			WHERE a.NSDiffer='club$club_id' AND a.user_id = '$club_id' AND a.parent_id > 0
 			GROUP BY a.id
-			ORDER BY a.id DESC";
+			ORDER BY a.id DESC LIMIT 6";
 					
 	$rs = $inDB->query($sql);
-	$html = '<ul id="albums_list">';
-		if ($inDB->num_rows($rs)){
-				while ($album = $inDB->fetch_assoc($rs)){
-					$on_moderate = ''; $delete='';
+
+	$albums = array();
+
+	if ($inDB->num_rows($rs)){
+		while ($album = $inDB->fetch_assoc($rs)){
+				$on_moderate  = '';
+				$delete       = '';
+				$add_to_album = '';
 					if ($is_admin || $is_moder){
 						$unpub = $inDB->rows_count('cms_photo_files', 'album_id='.$album['id'].' AND published = 0');
-						if ($unpub) { $on_moderate = ' <span class="on_moder">(На модерации &mdash; '.$unpub.')</span>'; }
-						$delete = ' <a class="delete" title="Удалить альбом" href="javascript:void(0)" onclick="javascript:deleteAlbum('.$album['id'].', \''.$album['title'].'\', '.$club_id.')">X</a>';
+					if ($unpub) { 
+						$album['on_moderate'] = $unpub;
 					}
-					$tday = date("d-m-Y");
-					$today = $inDB->rows_count('cms_photo_files', 'published=1 AND \''.$tday.'\'=DATE_FORMAT(pubdate, \'%d-%m-%Y\') AND album_id='.$album['id']);
-					if ($today) { $new = ' <span class="new">+'.$today.'</span>'; } else { $new = ''; }
-					$html .= '<li class="club_album" id="'.$album['id'].'"><a href="/photos/'.$album['id'].'">'.$album['title'].'</a> ('.$album['content_count'].$new.') '.$on_moderate.$delete;
 				}
-		} else {
-			$html .= '<li class="no_albums">В клубе нет фотоальбомов.</li>';
+				$album['file']    = $album['file'] ? $album['file'] : 'no_image.png';
+				$album['pubdate'] = $inCore->dateFormat($album['pubdate']);
+				$albums[] = $album;
 		}
-	$html .= '</ul>';	
-	return $html;
+	}
+
+    ob_start();
+
+    $smarty = $inCore->initSmarty('components', 'com_clubs_albums.tpl');
+    $smarty->assign('albums', $albums);
+	$smarty->assign('club_id', $club_id);
+    $smarty->assign('is_admin', $is_admin);
+	$smarty->assign('is_moder', $is_moder);
+	$smarty->assign('is_member', $is_member);
+    $smarty->display('com_clubs_albums.tpl');
+
+    return ob_get_clean();
 }
 
 function clubUserIsRole($club_id, $user_id, $role='member'){
