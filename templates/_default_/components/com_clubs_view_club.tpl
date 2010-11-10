@@ -20,6 +20,9 @@
 						<div class="members_list">
 							<div class="title">{$LANG.CLUB_MEMBERS} ({math equation="x - 1" x=$club.members}):</div>
 							<div class="list">{$club.members_list}</div>
+                            {if $is_admin}
+                            <div class="title"><a href="/clubs/{$club.id}/message-members.html" title="{$LANG.SEND_MESSAGE_TO_MEMBERS}">{$LANG.SEND_MESSAGE}</a></div>
+                            {/if}
 						</div>
 					{/if}		
 				</td>

@@ -46,6 +46,9 @@ function clubs(){
 	if(!isset($cfg['perpage'])) { $cfg['perpage'] = 10; }
     if(!isset($cfg['notify_in'])) { $cfg['notify_in'] = 1; }
     if(!isset($cfg['notify_out'])) { $cfg['notify_out'] = 1; }
+
+    //Определяем адрес для редиректа назад
+    $back   = $inCore->getBackURL();
 	
 	//INPUT PARAMETERS
 	$id 		= $inCore->request('id', 'int', 0);
@@ -390,6 +393,7 @@ if ($do == 'leave'){
 
     $inPage->addPathway($club['title'], '/clubs/'.$id);
     $inPage->addPathway($_LANG['EXIT_FROM_CLUB']);
+	$inPage->setTitle($_LANG['EXIT_FROM_CLUB']);
 
     if ( $inCore->inRequest('confirm') ){
         clubRemoveUser($id, $user_id);
@@ -402,6 +406,7 @@ if ($do == 'leave'){
         if (!clubUserIsMember($id, $user_id)){ return; }
 
         $inPage->setTitle($_LANG['EXIT_FROM_CLUB']);
+		$inPage->backButton(false);
 
         $confirm['title']               = $_LANG['EXIT_FROM_CLUB'];
         $confirm['text']                = $_LANG['REALY_EXIT_FROM_CLUB'];
@@ -426,6 +431,7 @@ if ($do == 'join'){
 
     $inPage->addPathway($club['title'], '/clubs/'.$id);
     $inPage->addPathway($_LANG['JOINING_CLUB']);
+	$inPage->setTitle($_LANG['JOINING_CLUB']);
 
     if (clubUserIsMember($id, $user_id)){ return; }
 
@@ -475,6 +481,50 @@ if ($do == 'join'){
             
         }
     }
+
+}
+///////////////////// Рассылка сообщения членам клуба /////////////////////////////////////////////////////////
+if ($do == 'send_message'){
+
+    $user_id    = $inUser->id;
+    $club       = $model->getClub($id);
+	$is_admin 	= $inUser->is_admin || ($user_id == $club['admin_id']);
+
+
+	if (!$user_id || !$club || !$is_admin){ cmsCore::error404(); }
+
+    $inPage->addPathway($club['title'], '/clubs/'.$id);
+    $inPage->addPathway($_LANG['SEND_MESSAGE']);
+	$inPage->setTitle($_LANG['SEND_MESSAGE'].' - '.$club['title']);
+	$inPage->backButton(false);
+
+	if(!isset($_POST['gosend'])){
+		$smarty = $inCore->initSmarty('components', 'com_clubs_messages_member.tpl');
+		$smarty->assign('club', $club);
+		$smarty->assign('bbcodetoolbar', cmsPage::getBBCodeToolbar('message'));
+		$smarty->assign('smilestoolbar', cmsPage::getSmilesPanel('message'));
+		$smarty->assign('messages', cmsCore::getSessionMessages());
+		$smarty->display('com_clubs_messages_member.tpl');
+	} else {
+		$errors = false;
+		$message = $inCore->request('message', 'html', '');
+		$message = $inCore->parseSmiles($message, true);
+		$message = $inDB->escape_string($message);
+
+		$total_list      = array();
+		$moderators_list = clubModerators($id);
+		$members_list    = clubMembers($id);
+		$total_list 	 = $_POST['only_mod'] ? $moderators_list : array_merge ($moderators_list, $members_list);
+
+		if (strlen($message)<3) { $inCore->addSessionMessage($_LANG['ERR_SEND_MESS'], 'error'); $errors = true; }
+		if (!$total_list) { $inCore->addSessionMessage($_LANG['ERR_SEND_MESS'], 'error'); $errors = true; }
+		if ($errors) { $inCore->redirect($back); }
+
+		foreach ($total_list as $usr){
+			cmsUser::sendMessage(USER_UPDATER, $usr['id'], '<b>Сообщение от <a href="'.cmsUser::getProfileURL($inUser->login).'">Администратора</a> клуба "<a href="/clubs/'.$id.'">'.$club['title'].'</a>":</b><br><br> '.$message);
+		}		
+
+	}
 
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////

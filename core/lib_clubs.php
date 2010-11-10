@@ -215,7 +215,7 @@ function clubModerators($club_id){
     $inDB = cmsDatabase::getInstance();
 	if (!$club_id) { exit; }
 	$moders = array();
-	$sql = "SELECT c.* 
+	$sql = "SELECT c.user_id
 			FROM cms_user_clubs c
 			WHERE c.club_id = '$club_id' AND c.role = 'moderator'";
 	$rs = $inDB->query($sql);
@@ -233,7 +233,7 @@ function clubMembers($club_id){
     $inDB = cmsDatabase::getInstance();
 	if (!$club_id) { exit; }
 	$members = array();
-	$sql = "SELECT c.* 
+	$sql = "SELECT c.user_id 
 			FROM cms_user_clubs c
 			WHERE c.club_id = '$club_id' AND c.role = 'member'";
 	$rs = $inDB->query($sql);

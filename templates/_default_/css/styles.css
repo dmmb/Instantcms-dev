@@ -20,7 +20,7 @@ body {
     background:url(../images/bg.jpg) no-repeat center top #1F3147;
 }
 
-a { color:#09c; }
+a { color:#09c; outline:none; }
 a:hover { color:#375E93; }
 
 #wrapper {
