@@ -201,6 +201,7 @@ function applet_cats(){
 			$category['showrss'] 		= $inCore->request('showrss', 'int', 0);
 			$category['showdesc'] 		= $inCore->request('showdesc', 'int', 0);
 			$category['is_public'] 		= $inCore->request('is_public', 'int', 0);
+			$category['tpl'] 			= $inCore->request('tpl', 'str', 'com_content_view.tpl');
 			
 			$album = array();
 			$album['id']       = $inCore->request('album_id', 'int', 0);
@@ -238,7 +239,8 @@ function applet_cats(){
 						is_public={$category['is_public']},
 						photoalbum='$photoalbum',
                         seolink='$seolink',
-                        url='{$category['url']}'
+                        url='{$category['url']}',
+                        tpl='{$category['tpl']}'
 					WHERE id = {$category['id']}
 					LIMIT 1";
 			dbQuery($sql) ;	
@@ -293,6 +295,7 @@ function applet_cats(){
         $category['showrss'] 		= $inCore->request('showrss', 'int', 0);
         $category['showdesc'] 		= $inCore->request('showdesc', 'int', 0);
         $category['is_public'] 		= $inCore->request('is_public', 'int', 0);
+		$category['tpl'] 			= $inCore->request('tpl', 'str', 'com_content_view.tpl');
 
         $album = array();
         $album['id']       = $inCore->request('album_id', 'int', 0);
@@ -329,7 +332,8 @@ function applet_cats(){
 						is_public={$category['is_public']},
 						photoalbum='$photoalbum',
                         seolink='$seolink',
-                        url='{$category['url']}'
+                        url='{$category['url']}',
+                        tpl='{$category['tpl']}'
 					WHERE id = {$category['id']}
 					LIMIT 1";
 
@@ -405,12 +409,26 @@ function applet_cats(){
 
                 <!-- главная ячейка -->
                 <td valign="top">
-
-                    <div><strong>Название раздела</strong></div>
-                    <div>
-                        <input name="title" type="text" id="title" style="width:100%" value="<?php echo @$mod['title'];?>" />
-                    </div>
-                    
+                    <table border="0" cellpadding="0" cellspacing="5" width="100%">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <strong>Название раздела</strong>
+                          </td>
+                          <td width="190" style="padding-left:6px">
+                            <strong>Шаблон раздела</strong>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <input name="title" type="text" id="title" style="width:100%" value="<?php echo @$mod['title'];?>" />
+                          </td>
+                          <td style="padding-left:6px">
+                            <input name="tpl" type="text" style="width:98%" value="<?php echo @$mod['tpl'];?>">
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                     <div><strong>Родительский раздел</strong></div>
                     <div>
                         <select name="parent_id" size="12" id="parent_id" style="width:100%">

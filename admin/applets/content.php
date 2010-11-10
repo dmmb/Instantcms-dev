@@ -250,6 +250,8 @@ function applet_content(){
 			$pubdate                   = $inCore->request('pubdate', 'str', '');
 
             $article['user_id']         = $inCore->request('user_id', 'int', $inUser->id);
+			
+			$article['tpl'] 			= $inCore->request('tpl', 'str', 'com_content_read.tpl');
 
             $date = explode('.', $pubdate);
             $article['pubdate'] = $date[2] . '-' . $date[1] . '-' . $date[0] . ' ' .date('H:i');
@@ -342,6 +344,8 @@ function applet_content(){
 		$article['pubdate']         = $date[2] . '-' . $date[1] . '-' . $date[0] . ' ' .date('H:i');
 		
 		$article['user_id']         = $inCore->request('user_id', 'int', $inUser->id);
+		
+		$article['tpl'] 			= $inCore->request('tpl', 'str', 'com_content_read.tpl');
 
         $autokeys                   = $inCore->request('autokeys', 'int');
 
@@ -445,7 +449,7 @@ function applet_content(){
 					 }
 					
 					 echo '<h3>Редактировать статью '.$ostatok.'</h3>';
- 					 cpAddPathway($mod['title'], 'index.php?view=menu&do=edit&id='.$mod['id']);
+ 					 cpAddPathway($mod['title'], 'index.php?view=content&do=edit&id='.$mod['id']);
 			}   
 	?>
     <form id="addform" name="addform" method="post" action="index.php" enctype="multipart/form-data">
@@ -457,7 +461,7 @@ function applet_content(){
                 <!-- главная ячейка -->
                 <td valign="top">
 
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <table width="100%" cellpadding="0" cellspacing="4" border="0">
                         <tr>
                             <td valign="top">
                                 <div><strong>Название статьи</strong></div>
@@ -494,6 +498,11 @@ function applet_content(){
                             <td width="16" valign="bottom" style="padding-bottom:10px">
                                 <input type="checkbox" name="showdate" id="showdate" title="Показывать дату и автора" value="1" <?php if ($mod['showdate'] || $do=='add') { echo 'checked="checked"'; } ?>/>
                             </td>
+                            <td width="160" valign="top">
+                                <div><strong>Шаблон статьи</strong></div>
+                                <div><input name="tpl" type="text" style="width:160px" value="<?php echo @$mod['tpl'];?>"></div>
+                            </td>
+
                         </tr>
                     </table>
 

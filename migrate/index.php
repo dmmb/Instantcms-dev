@@ -203,6 +203,20 @@
 // ========================================================================== //
 // ========================================================================== //
 
+    if (!$inDB->isFieldExists('cms_category', 'tpl')){
+        $inDB->query("ALTER TABLE `cms_category` ADD `tpl` VARCHAR( 50 ) NOT NULL DEFAULT 'com_content_view.tpl' AFTER `url`");
+    }
+
+// ========================================================================== //
+// ========================================================================== //
+
+    if (!$inDB->isFieldExists('cms_content', 'tpl')){
+        $inDB->query("ALTER TABLE `cms_content` ADD `tpl` VARCHAR( 50 ) NOT NULL DEFAULT 'com_content_read.tpl' AFTER `url`");
+    }
+
+// ========================================================================== //
+// ========================================================================== //
+
     if (!$inDB->isFieldExists('cms_user_photos', 'album_id')){
         $inDB->query("ALTER TABLE `cms_user_photos` ADD `album_id` INT NOT NULL AFTER `user_id`, ADD INDEX (album_id)");
     }

@@ -617,12 +617,12 @@ class cms_model_content{
                                          published, hits, meta_desc, meta_keys,
                                          showtitle, showdate, showlatest,
                                          showpath, ordering, comments, seolink,
-                                         canrate, pagetitle, url)
+                                         canrate, pagetitle, url, tpl)
 				VALUES ('{$article['category_id']}', '{$article['user_id']}', '{$article['pubdate']}', '{$article['enddate']}',
                          '{$article['is_end']}', '{$article['title']}', '{$article['description']}', '{$article['content']}', '{$article['published']}', 0,
                         '{$article['meta_desc']}', '{$article['meta_keys']}', '{$article['showtitle']}', '{$article['showdate']}', '{$article['showlatest']}',
                         '{$article['showpath']}', 1, '{$article['comments']}', '',
-                        '{$article['canrate']}', '{$article['pagetitle']}', '{$article['url']}')";
+                        '{$article['canrate']}', '{$article['pagetitle']}', '{$article['url']}', '{$article['tpl']}')";
 
 		$this->inDB->query($sql) ;
 
@@ -680,7 +680,8 @@ class cms_model_content{
                     canrate='{$article['canrate']}',
                     pagetitle='{$article['pagetitle']}',
                     user_id='{$article['user_id']}',
-                    url='{$article['url']}'
+                    url='{$article['url']}',
+                    tpl='{$article['tpl']}'
                 WHERE id = '$id'
                 LIMIT 1";
 

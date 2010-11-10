@@ -137,7 +137,9 @@ if ($do=='view'){
     $pagelink   = $model->getCategoryURL($inCore->menuId(), $cat['seolink'], 0, true);
     $pagebar    = cmsPage::getPagebar($total, $page, $perpage, $pagelink);
 
-	$smarty = $inCore->initSmarty('components', 'com_content_view.tpl');			
+	$template = ($cat['tpl'] ? $cat['tpl'] : 'com_content_view.tpl');
+
+	$smarty = $inCore->initSmarty('components', $template);			
 	$smarty->assign('id', $cat['id']);
 	$smarty->assign('cat', $cat);
     $smarty->assign('is_homepage', (bool)($inCore->menuId()==1));
@@ -153,7 +155,7 @@ if ($do=='view'){
         $smarty->assign('pagebar', $pagebar);
 	}
 	$smarty->assign('maxcols', $cat['maxcols']);
-	$smarty->display('com_content_view.tpl');
+	$smarty->display($template);
 				
 }
 ///////////////////////////////////// READ ARTICLE ////////////////////////////////////////////////////////////////////////////////
@@ -257,7 +259,9 @@ if ($do=='read'){
         $forum_thread_id = cmsAutoCreateThread($article, $cfg);
     }
 
-    $smarty = $inCore->initSmarty('components', 'com_content_read.tpl');
+	$template = ($article['tpl'] ? $article['tpl'] : 'com_content_read.tpl');
+
+    $smarty = $inCore->initSmarty('components', $template);
 
     if($cfg['rating'] && $article['canrate']){
         $inCore->loadLib('karma');
@@ -300,7 +304,7 @@ if ($do=='read'){
     $smarty->assign('forum_thread_id', $forum_thread_id);
     $smarty->assign('tagbar', cmsTagBar('content', $article['id']));
 
-    $smarty->display('com_content_read.tpl');
+    $smarty->display($template);
 
     //show user comments
     if($article['comments'] && $inCore->isComponentInstalled('comments')){
