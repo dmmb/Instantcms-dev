@@ -230,6 +230,37 @@ public function isTableExists($table){
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+static function OptimizeTable($tlist=''){
+
+	$inDB = self::getInstance();
+
+    if(is_array($tlist)) {
+
+		foreach($tlist as $tname) {
+		  	$inDB->query("OPTIMIZE TABLE $tname", true);
+		  	$inDB->query("ANALYZE TABLE $tname", true);
+		}
+
+	} else {
+
+		$inConf = cmsConfig::getInstance();
+
+		$tlist  = $inDB->get_table('information_schema.tables', "table_schema = '{$inConf->db_base}'", 'table_name');
+
+		if (!is_array($tlist)) { return false; }
+
+		foreach($tlist as $tname) {
+			$inDB->query("OPTIMIZE TABLE {$tname['table_name']}", true);
+			$inDB->query("ANALYZE TABLE {$tname['table_name']}", true);
+		}
+
+    }
+    
+    if ($inDB->errno()){ return false; }
+
+    return true;
+
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
