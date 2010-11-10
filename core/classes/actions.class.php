@@ -172,15 +172,11 @@ class cmsActions {
                        u.nickname as user_nickname,
                        u.login as user_login
 
-                FROM cms_actions_log log,
-                     cms_actions a,
-                     cms_users u
-                     
-                WHERE   log.user_id = u.id AND 
-                        log.action_id = a.id AND
-                        a.is_visible = 1
+                FROM cms_actions_log log
+				INNER JOIN cms_actions a ON a.id = log.action_id AND a.is_visible = 1
+				LEFT JOIN cms_users u ON u.id = log.user_id
 
-                ORDER BY log.pubdate DESC
+                ORDER BY log.id DESC
 
                 LIMIT 100
                 
@@ -221,6 +217,25 @@ class cmsActions {
 
     }
 
+// ============================================================================ //
+// ============================================================================ //
+
+    /**
+     * Удаляет старые записи ленты
+     * @param int $pubdays
+     * @return bool
+     */
+    static function removeOldLog($pubdays = 30){
+
+        $inDB   = cmsDatabase::getInstance();
+		
+        $sql = "DELETE FROM cms_actions_log WHERE DATEDIFF(NOW(), pubdate) > pubdays";
+
+        $inDB->query($sql);
+
+        return true;
+
+    }
     
     
 }
