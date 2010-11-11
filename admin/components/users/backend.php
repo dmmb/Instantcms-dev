@@ -51,6 +51,7 @@ if (!isset($cfg['medw'])) { $cfg['medw'] = 200; }
 if (!isset($cfg['medh'])) { $cfg['medh'] = 200; }
 
 if(!isset($cfg['j_code'])) { $cfg['j_code']=0;	}
+if(!isset($cfg['deltime'])) { $cfg['deltime']=6;	}
 
 if($opt=='saveconfig'){	
     $cfg = array();
@@ -87,7 +88,8 @@ if($opt=='saveconfig'){
 
     $cfg['privforms']   = $_REQUEST['privforms'];
 
-	$cfg['j_code']   = $_REQUEST['j_code'];
+	$cfg['j_code']      = $_REQUEST['j_code'];
+	$cfg['deltime']     = $_REQUEST['deltime'];
 
     $inCore->saveComponentConfig('users', $cfg);
 
@@ -206,6 +208,15 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
                             <option value="DAY" <?php if(@strstr($cfg['karmaint'], 'DAY')) { echo 'selected'; } ?>>дней</option>
                             <option value="MONTH" <?php if(@strstr($cfg['karmaint'], 'MONTH')) { echo 'selected'; } ?>>мес€цев</option>
                         </select>
+                    </td>
+                </tr>
+				<tr>
+                    <td>
+                        <strong>ѕериод удалени€ неактивных аккаунтов:</strong><br />
+                        <span class="hinttext">–аботает, если включен CRON и существует активна€ задача</span>
+                    </td>
+                    <td valign="top">
+                        <input name="deltime" type="text" id="deltime" size="5" value="<?php echo @(int)$cfg['deltime']?>"/> мес€цев
                     </td>
                 </tr>
             </table>

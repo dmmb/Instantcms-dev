@@ -169,15 +169,21 @@ class cms_model_users{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function deleteUser($user_id){
+    public function deleteUser($user_id, $is_delete = false){
 
         cmsCore::callEvent('DELETE_USER', $user_id);
 
         if ($user_id == 1) { return false; }
 
-        $this->inDB->query("UPDATE cms_users SET is_deleted = 1 WHERE id='$user_id'");
+		if ($is_delete) {
+			$this->inDB->query("DELETE FROM cms_users WHERE id = '$user_id' LIMIT 1");
+			$this->inDB->query("DELETE FROM cms_user_profiles WHERE user_id = '$user_id' LIMIT 1");
+		} else {
+        	$this->inDB->query("UPDATE cms_users SET is_deleted = 1 WHERE id = '$user_id'");
+		}
         $this->inDB->query("DELETE FROM cms_user_friends WHERE to_id = '$user_id' OR from_id = '$user_id'");
 		$this->inDB->query("DELETE FROM cms_user_clubs WHERE user_id = '$user_id'");
+		cmsActions::removeUserLog($user_id);
         
     }
 
@@ -584,6 +590,27 @@ class cms_model_users{
         }
 
         $this->inDB->query("DELETE FROM cms_user_albums WHERE id = '$album_id'") ;
+
+        return true;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function deleteInactiveUsers() {
+
+		$inCore = cmsCore::getInstance();
+
+		$cfg    = $inCore->loadComponentConfig('users');
+
+		$month  = $cfg['deltime'] ? $cfg['deltime'] : 6;
+
+        $users_list = $this->inDB->get_table('cms_users', "DATE_SUB(NOW(), INTERVAL $month MONTH) > logdate", 'id');
+
+        foreach($users_list as $usr){
+            $this->deleteUser($usr['id'], true);
+        }
 
         return true;
 

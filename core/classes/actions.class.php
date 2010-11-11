@@ -236,6 +236,25 @@ class cmsActions {
         return true;
 
     }
+	
+    /**
+     * Удаляет из ленты записи одного пользователя
+     * @param int $user_id
+     * @return bool
+     */
+    static function removeUserLog($user_id){
+		
+		if (!$user_id) { return false; }
+
+        $inDB = cmsDatabase::getInstance();
+		
+        $sql  = "DELETE FROM cms_actions_log WHERE user_id = '$user_id'";
+
+        $inDB->query($sql);
+
+        return true;
+
+    }
     
     
 }
