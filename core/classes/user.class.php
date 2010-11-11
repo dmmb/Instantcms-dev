@@ -1159,10 +1159,13 @@ class cmsUser {
      * @return bool
      */
     public static function sendMessage($sender_id, $receiver_id, $message){
-        $inDB = cmsDatabase::getInstance();
+        $inDB    = cmsDatabase::getInstance();
+		$message = $inDB->escape_string(stripslashes($message));
+
         $sql = "INSERT INTO cms_user_msg (to_id, from_id, senddate, is_new, message)
                 VALUES ('$receiver_id', '$sender_id', NOW(), 1, '$message')";
         $inDB->query($sql);
+
         return true;
     }
 

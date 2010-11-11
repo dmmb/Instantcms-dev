@@ -45,7 +45,10 @@
 						{if $is_member || $is_admin || $is_moder || $club.member_link}
 							<div class="clubmenu">
                                 {if $uid}
-								<div>{$club.member_link}</div>
+                                	{if $is_member || $is_admin || $is_moder} 
+                                    <div><a href="/clubs/{$club.id}/join_member.html">Пригласить в клуб</a></div>  
+                                    {/if}                             
+                                    <div>{$club.member_link}</div>
                                 {/if}
 								{if $is_admin}
 									<div><a class="config" href="/clubs/{$club.id}/config.html">{$LANG.CONFIG_CLUB}</a></div>

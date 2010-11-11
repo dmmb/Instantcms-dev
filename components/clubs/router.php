@@ -20,6 +20,12 @@
                          );
 
         $routes[] = array(
+                            '_uri'  => '/^clubs\/([0-9]+)\/join_member.html$/i',
+                            'do'    => 'join_member',
+                            1       => 'id'
+                         );
+
+        $routes[] = array(
                             '_uri'  => '/^clubs\/([0-9]+)$/i',
                             'do'    => 'club',
                             1       => 'id'

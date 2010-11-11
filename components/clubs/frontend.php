@@ -525,11 +525,73 @@ if ($do == 'send_message'){
 			cmsUser::sendMessage(USER_UPDATER, $user_id, '<b>Сообщение от <a href="'.cmsUser::getProfileURL($inUser->login).'">Администратора</a> клуба "<a href="/clubs/'.$id.'">'.$club['title'].'</a>":</b><br><br> '.$message);
 		}
 		$_POST['only_mod'] ? $inCore->addSessionMessage($_LANG['SEND_MESS_TO_MODERS_OK'], 'info') : $inCore->addSessionMessage($_LANG['SEND_MESS_TO_MEMBERS_OK'], 'info');
-		$inCore->redirect('/clubs/'.$id);	
+		$inCore->redirect('/clubs/'.$id);
 
 	}
 
 }
+
+///////////////////////// Пригласить друзей в группу /////////////////////////////////////////
+if ($do=='join_member'){
+
+    $user_id    = $inUser->id;
+    $club       = $model->getClub($id);
+
+	if (!$user_id || !$club){ cmsCore::error404(); }
+
+	if ( !$inCore->inRequest('join') ){
+
+		// Получаем список друзей
+		$friends     	= cmsUser::getFriends($user_id);
+		// Получаем участников клуба
+        $moderators     = clubModerators($id);
+        $members        = clubMembers($id);
+        $userslist      = array_merge($moderators, $members);
+		// Проверяем наличие друга в списке участников клуба или является ли он администратором
+		foreach($friends as $key=>$friend){ 
+			if (in_array($friend['id'], $userslist) || $friend['id'] == $club['admin_id']) { unset($friends[$key]); }
+		}
+		// Если нет друзей или все друзья уже в этом клубе, то выводим ошибку и возвращаемся назад
+		if (!$_SESSION['user']['friends'] || !$friends) { $inCore->addSessionMessage($_LANG['SEND_INVITE_ERROR'], 'error'); $inCore->redirect($back); }
+		// Формируем список option друзей
+		foreach($friends as $friend){ 
+			$friends_opt .= '<option value="'.$friend['id'].'">'.$friend['nickname'].'</option>';
+		}
+		// Заголовок страницы и пафвей
+		$inPage->setTitle($_LANG['SEND_INVITE_CLUB'].' '.$club['title']);
+		$inPage->addPathway($club['title'], '/clubs/'.$id);
+		$inPage->addPathway($_LANG['SEND_INVITE_CLUB']);
+		$inPage->backButton(false);
+		// Выводим шаблон
+		$smarty = $inCore->initSmarty('components', 'com_clubs_join_member.tpl');			
+		$smarty->assign('club', $club);
+		$smarty->assign('friends', $friends_opt);
+		$smarty->display('com_clubs_join_member.tpl');
+
+	}
+
+	if ( $inCore->inRequest('join') ){
+
+		$usr_to_id = $inCore->request('usr_to_id', 'int');
+		if (!$usr_to_id){ cmsCore::error404(); }
+
+		$club      = '<a href="/clubs/'.$id.'">'.$club['title'].'</a>';
+        $user      = '<a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a>';
+		$link_join = '<a href="/clubs/'.$id.'/join.html">'.$_LANG['JOIN_CLUB'] .'</a>';
+
+        $message   = $_LANG['INVITE_CLUB_TEXT'];
+        $message   = str_replace('%user%', $user, $message);
+        $message   = str_replace('%club%', $club, $message);
+		$message   = str_replace('%link_join%', $link_join, $message);
+
+		cmsUser::sendMessage(USER_UPDATER, $usr_to_id, $message);
+
+		$inCore->addSessionMessage($_LANG['SEND_INVITE_OK'], 'info');
+		$inCore->redirect('/clubs/'.$id);
+
+	}
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 ?>
