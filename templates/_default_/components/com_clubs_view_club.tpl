@@ -3,7 +3,13 @@
 {* ================================================================================ *}
 
 <div class="con_heading">{$pagetitle}</div>
-
+{if $messages}
+    <div class="sess_messages">
+        {foreach key=id item=message from=$messages}
+            {$message}
+        {/foreach}
+    </div>
+{/if}
 {if $club}
 
     {if $is_access}

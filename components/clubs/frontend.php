@@ -187,6 +187,7 @@ if ($do=='club'){
     $smarty->assign('is_moder', $is_moder);
     $smarty->assign('is_member', $is_member);
     $smarty->assign('is_karma_enabled', $is_karma_enabled);
+	$smarty->assign('messages', cmsCore::getSessionMessages());
 	$smarty->assign('pagetitle', $pagetitle);
 	$smarty->display('com_clubs_view_club.tpl');
 	
@@ -517,12 +518,14 @@ if ($do == 'send_message'){
 		$total_list 	 = $_POST['only_mod'] ? $moderators_list : array_merge ($moderators_list, $members_list);
 
 		if (strlen($message)<3) { $inCore->addSessionMessage($_LANG['ERR_SEND_MESS'], 'error'); $errors = true; }
-		if (!$total_list) { $inCore->addSessionMessage($_LANG['ERR_SEND_MESS'], 'error'); $errors = true; }
+		if (!$total_list) { $inCore->addSessionMessage($_LANG['ERR_SEND_MESS_NO_MEMBERS'], 'error'); $errors = true; }
 		if ($errors) { $inCore->redirect($back); }
 
-		foreach ($total_list as $usr){
-			cmsUser::sendMessage(USER_UPDATER, $usr['id'], '<b>Сообщение от <a href="'.cmsUser::getProfileURL($inUser->login).'">Администратора</a> клуба "<a href="/clubs/'.$id.'">'.$club['title'].'</a>":</b><br><br> '.$message);
-		}		
+		foreach ($total_list as $user_id){
+			cmsUser::sendMessage(USER_UPDATER, $user_id, '<b>Сообщение от <a href="'.cmsUser::getProfileURL($inUser->login).'">Администратора</a> клуба "<a href="/clubs/'.$id.'">'.$club['title'].'</a>":</b><br><br> '.$message);
+		}
+		$_POST['only_mod'] ? $inCore->addSessionMessage($_LANG['SEND_MESS_TO_MODERS_OK'], 'info') : $inCore->addSessionMessage($_LANG['SEND_MESS_TO_MEMBERS_OK'], 'info');
+		$inCore->redirect('/clubs/'.$id);	
 
 	}
 
