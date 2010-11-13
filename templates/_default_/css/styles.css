@@ -3175,7 +3175,7 @@ div.user_profile_data .field .value {  }
 .usr_deleted{ font-size:18px; color:#990000; }
 .usr_restore{ margin-top:10px; }
 
-.usr_btnlink{ padding:10px;	margin:2px;	border:solid 1px silver; width:120px; }
+.usr_btnlink{ margin-right:20px; font-size:24px;	 }
 
 .usr_files_orderbar{ background-color:#EBEBEB;	margin-bottom:4px;	padding:5px; }
 .usr_files_orderbtn{ font-size:9px;	background-color:#CCCCCC; border:solid 1px gray; height:20px; }

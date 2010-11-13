@@ -2119,7 +2119,7 @@ if ($do == 'delprofile'){
 					if ($inUser->id == $data['id'] || $inCore->userIsAdmin($inUser->id)){
 						$inDB->query("UPDATE cms_users SET is_deleted = 1 WHERE id = $id");	
 						$inDB->query("DELETE FROM cms_user_friends WHERE to_id = $id OR from_id = $id");
-				$user_blog_id = $inDB->get_field('cms_blogs', 'user_id='.$id, 'id');
+                        $user_blog_id = $inDB->get_field('cms_blogs', 'user_id='.$id, 'id');
 						if ($user_blog_id) {
                             $inCore->loadModel('blogs');
                             $blog_model = new cms_model_blogs();
@@ -2128,7 +2128,7 @@ if ($do == 'delprofile'){
 					}
 					if ($inUser->id == $data['id']){
                         $inCore->redirect('/logout');
-                    } else { $inCore->redirect(cmsUser::getProfileURL($data['login'])); }
+                    } else { $inCore->redirect('/users'); }
 				} else {				
 					//MENU
 					$inPage->setTitle($_LANG['DELETING_PROFILE']);
