@@ -5,9 +5,9 @@
             <td align="left" class="mod_fweb2_date" width="70"><div style="text-align:center">{$thread.date}</div></td>
             <td width="13">
                 {if !$thread.secret}
-                    <img src="/modules/mod_forum/user.gif" border="0" />
+                    <img src="/templates/_default_/images/icons/user_comment.png" border="0" />
                 {else}
-                    <img src="/modules/mod_forum/hidden.gif" border="0" title="Скрытая тема - видна только вашей группе"/>
+                    <img src="/templates/_default_/images/icons/user_silhouette.png" border="0" title="Скрытая тема - видна только вашей группе"/>
                 {/if}
             </td>
             <td style="padding-left:0px"><a href="{$thread.authorhref}" class="mod_fweb2_userlink">{$thread.author}</a> {$thread.act} &laquo;<a href="{$thread.topichref}" class="mod_fweb2_topiclink">{$thread.topic}</a>&raquo;

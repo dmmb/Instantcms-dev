@@ -847,6 +847,7 @@ span.fast_cfg_link img{ border:none; }
 }
 .mod_fweb2_date{
 	background-color:#EBEBEB;
+    width:100px;
 }
 .mod_fweb2_topiclink{
 	text-decoration:underline;
@@ -1273,7 +1274,7 @@ a.new_messages_link:hover{ color:#F00; background:#Fff; font-weight:bold; paddin
 .faq_questtext{
 	font-size:18px;
     margin-bottom:10px;
-
+    color:#375E93;
 }
 .faq_quest_link {
     margin-bottom:5px;
@@ -3082,6 +3083,11 @@ div.user_profile_data .field .value {  }
     width:257px;
 }
 
+.photo_desc{
+    text-align:center;
+    color:#5F98BF;
+}
+
 .usr_photos_add_limit{
     margin-bottom: 20px; color:#5F98BF;;
 }
@@ -3132,6 +3138,12 @@ div.user_profile_data .field .value {  }
     padding:1px;
     padding-left:20px;
     background:url(../images/icons/info.png) no-repeat left center;
+}
+
+.usr_photos_add_st{
+    margin-top:20px;
+    width:500px;
+    color:#5F98BF;
 }
 
 .usr_photo_sel_bar{
@@ -3470,3 +3482,6 @@ table.feed td.date strong { color:green; }
 .act_add_wall_club{ background:url(../images/icons/actions/add_wall_club.png) no-repeat left 3px; }
 .act_add_post_club{ background:url(../images/icons/actions/add_post_club.png) no-repeat left 3px; }
 .act_add_user_photo{ background:url(../images/icons/actions/add_user_photo.png) no-repeat left 3px; }
+.act_add_user_photo_multi{ background:url(../images/icons/actions/add_user_photo_multi.png) no-repeat left 3px; }
+.add_user{ background:url(../images/icons/actions/add_user.png) no-repeat left 3px; }
+.add_wall_my{ background:url(../images/icons/actions/add_wall_my.png) no-repeat left 3px; }
