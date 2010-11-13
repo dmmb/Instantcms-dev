@@ -1,0 +1,16 @@
+AddDefaultCharset windows-1251
+
+RewriteEngine On
+RewriteBase /
+RewriteRule ^.htaccess$ - [F]
+
+RewriteRule ^load/url=(.+)$ /index.php?uri=files&do=download&fileurl=$1
+RewriteRule ^go/url=(.+)$ /index.php?uri=files&do=redirect&url=$1
+
+RewriteCond %{REQUEST_URI} !\.(jpg|jpeg|ico|gif|png|css|xml|js|pl|txt)$ [NC]
+RewriteCond %{REQUEST_URI} !^/go/url=
+RewriteCond %{REQUEST_URI} !^/load/url=
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule ^(.*)$ /index.php?uri=$1 [L]

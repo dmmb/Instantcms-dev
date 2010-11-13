@@ -1,0 +1,51 @@
+<div class="mod_user_menu">
+
+    <span class="my_profile">
+        <a href="{profile_url login=$login}">{$LANG.USERMENU_MY_PROFILE}</a>
+    </span>
+
+    {if $users_cfg.sw_msg}
+    <span class="my_messages">
+        {if $newmsg}
+            <a class="has_new" href="/users/{$id}/messages.html">{$LANG.USERMENU_MESS} ({$newmsg})</a>
+        {else}
+            <a href="/users/{$id}/messages.html">{$LANG.USERMENU_MESS}</a>
+        {/if}
+    </span>
+    {/if}
+
+    {if $users_cfg.sw_blogs}
+    <span class="my_blog">
+        <a href="{$blog_href}">{$LANG.USERMENU_MY_BLOG}</a>
+    </span>
+    {/if}
+
+    {if $users_cfg.sw_photo}
+    <span class="my_photos">
+        <a href="/users/{$id}/photoalbum.html">{$LANG.USERMENU_PHOTOALBUM}</a>
+    </span>
+    {/if}
+
+    {if $is_can_add}
+    <span class="my_content">
+        <a href="/content/my.html">{$LANG.USERMENU_ARTICLES}</a>
+    </span>
+    {/if}
+
+    {if $is_admin || $is_editor}
+    <span class="admin">
+        <a href="/admin" target="_blank">{$LANG.USERMENU_ADMININTER}</a>
+    </span>
+    {/if}
+
+    <span class="logout">
+        <a href="/logout">{$LANG.USERMENU_EXIT}</a>
+    </span>
+
+</div>
+
+{*
+{if $cfg.avatar}
+    <a href="/users/{$id}/avatar.html">{$avatar}</a>
+{/if}
+*}

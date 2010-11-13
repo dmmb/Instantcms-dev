@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<backend>    
+    <module>
+        <id>mod_bestphoto</id>
+        <title>Популярные фотографии</title>
+    </module>
+    <params>
+
+        <param type="number" name="shownum" title="Количество фотографий" units="шт." default="4" />
+
+        <param type="number" name="maxcols" title="Число колонок для вывода" units="шт." default="4" />
+
+        <param type="list_db" name="album_id" title="Фотографии из альбома" src="cms_photo_albums" src_title="title" src_value="id" src_where="NSDiffer='' AND NSLevel>0" tree="1">
+            <option title="Все альбомы" value="0" />
+        </param>
+
+        <param type="list" name="showtype" title="Режим вывода">
+            <option title="Подробный" value="full" />
+            <option title="Только фото" value="short" />
+        </param>
+
+        <param type="list" name="sort" title="Критерий популярности">
+            <option title="Рейтинг" value="rating" />
+            <option title="Просмотры" value="hits" />
+        </param>
+        <param type="list" name="whatphoto" title="Какие фото выводить">
+            <option title="Все" value="all" />
+            <option title="За день" value="day" />
+			<option title="За неделю" value="week" />
+			<option title="За месяц" value="month" />
+        </param>
+
+        <param type="flag" name="showalbum" title="Показывать название альбома" default="on" />
+
+        <param type="flag" name="showcom" title="Показывать число комментариев" default="on" />
+		
+		<param type="flag" name="showdate" title="Показывать даты" default="off" />
+
+        <param type="flag" name="showrating" title="Показывать рейтинг (просмотры)" default="on" />
+
+        <param type="flag" name="showmore" title="Показывать ссылку на галерею" default="on" />
+
+    </params>
+</backend>
