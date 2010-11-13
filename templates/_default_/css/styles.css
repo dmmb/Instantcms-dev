@@ -20,7 +20,7 @@ body {
     background:url(../images/bg.jpg) no-repeat center top #1F3147;
 }
 
-a { color:#09c; outline:none; }
+a { color:#09c; }
 a:hover { color:#375E93; }
 
 #wrapper {
@@ -50,6 +50,13 @@ a:hover { color:#375E93; }
     -moz-border-radius: 8px;
     background-color: #E0EAEF;
     padding:5px 10px;
+}
+
+.ajaxlink:hover{ color:#0099CC; border-bottom:dashed 1px #0099CC; }
+.ajaxlink{
+    text-decoration:none;
+    border-bottom:dashed 1px #375E93;
+    color:#375E93;
 }
 
 /***************************** ÿ‡ÔÍ‡ ÒÚ‡ÌËˆ˚ *********************************/
@@ -94,6 +101,8 @@ a:hover { color:#375E93; }
     height:40px;
     line-height:40px;
     display:inline-block;
+	_display: inline;
+	zoom: 1;
     font-size:18px;
 }
 
@@ -131,6 +140,8 @@ a:hover { color:#375E93; }
 	color: #000;
     padding:0px;
     z-index:1000;
+    box-shadow:1px 1px 3px #000;
+    -moz-box-shadow:1px 1px 3px #000;
 }
 
 #topmenu ul li ul li,  #topmenu ul li ul li a{
@@ -1104,7 +1115,7 @@ a.tag:hover{
 }
 
 .mod_user_menu .my_profile a{ background:url(../images/icons/user.png) no-repeat 6px center; }
-.mod_user_menu .my_messages a{ background:url(../images/icons/comments.png) no-repeat 6px center; }
+.mod_user_menu .my_messages a{ background:url(../images/icons/message.png) no-repeat 6px 6px; }
 .mod_user_menu .my_messages a.has_new { color:#FFE900; }
 .mod_user_menu .my_blog a{ background:url(../images/icons/blog.png) no-repeat 6px center; }
 .mod_user_menu .my_photos a{ background:url(../images/icons/folder_picture.png) no-repeat 6px center; }
@@ -1116,13 +1127,20 @@ a.tag:hover{
 .mod_user_menu .login a{ background:url(../images/icons/key.png) no-repeat 6px center; }
 
 .usr_msgmenu_bar{
-	background-color:#EBEBEB;
+	background-color:#E0EAEF;
 	margin-bottom:10px;
+    border-radius:0px 0px 8px 8px;
+    -moz-border-radius:0px 0px 8px 8px;
+    color:#375E93;
+}
+.usr_msgmenu_bar a{
+    color:#375E93;
 }
 .usr_msgreply_source{
 	padding:15px;
-	background-color:#FFFFFF;
-	border:dashed 1px gray;
+    border-radius:8px;
+    -moz-border-radius:8px;
+    border:1px solid #C3D6DF;
 	margin-bottom:10px;
 }
 .usr_msgreply_sourcetext{
@@ -1592,7 +1610,7 @@ span.user_karma_point{
     clear:both;
 }
 .blog_entry_title{
-	font-size:22px;
+	font-size:24px;
 	padding:0px;
 	float:left;
 }
@@ -1603,9 +1621,14 @@ span.user_karma_point{
 	margin-top:5px;
 	clear:both;
 }
+.blog_entry_info a{
+	color:#375E93;
+}
 .blog_entry_date{
-	background:url(/images/icons/date.gif) no-repeat left center;
+	background:url(../images/icons/calendar.png) no-repeat left center;
+    padding:1px;
 	padding-left:20px;
+    margin-left:10px;
 }
 .blog_entry_title a{
 
@@ -2102,7 +2125,7 @@ table.club_full_entry .image{ width:200px; height:200px; padding: 2px; backgroun
 
 table.club_full_entry .data{  }
 
-table.club_full_entry .data .details { margin-bottom:10px; border-bottom:solid 1px silver; padding-bottom:8px; background:#ECECEC; padding:8px;}
+table.club_full_entry .data .details { margin-bottom:10px; border-bottom:solid 1px #789DAF; padding-bottom:8px; background:#E0EAEF; padding:8px;}
 table.club_full_entry .data .details span{ color: #333; padding:1px; padding-left:20px; margin-right:4px; height:18px; }
 table.club_full_entry .data .details span.rating{ background:url(../images/icons/rating.png) no-repeat left center; }
 table.club_full_entry .data .details span.date{ background:url(../images/icons/calendar.png) no-repeat left center; }
@@ -2115,18 +2138,18 @@ table.club_full_entry .members_list .title { margin-bottom:10px; padding-top:8px
 table.club_full_entry .members_list .list { padding:8px; padding-top:0px; padding-left:16px; }
 
 table.club_full_entry .clubcontent { clear:both; margin-bottom:15px; }
-table.club_full_entry .clubcontent p { padding:0px; padding-left:25px; margin-top:0px; }
-table.club_full_entry .clubcontent div.title { padding:5px; padding-left:9px; background:#ECECEC; border-top:solid 1px silver; margin-bottom:5px; }
-table.club_full_entry .clubcontent div.title a{ line-height:32px; height:32px; padding-left: 40px; margin-bottom:4px; margin-right:15px; display:block; font-size:16px; }
-table.club_full_entry .clubcontent div.blog .title a{ background:url(/components/users/images/profile/blog.png) 0px center no-repeat; text-decoration:underline; }
-table.club_full_entry .clubcontent div.album .title a{ background:url(/components/users/images/profile/photoalbum.png) 0px center no-repeat; text-decoration:underline; }
+table.club_full_entry .clubcontent p { padding:0px; padding-left:5px; margin-top:0px; }
+table.club_full_entry .clubcontent div.title { padding:10px; padding-left:9px; background:#E0EAEF; margin-bottom:5px; border-top:solid 1px #789DAF; }
+table.club_full_entry .clubcontent div.title a{ color:#375E93; line-height:32px; height:32px; padding-left: 40px; margin-bottom:0px; margin-right:15px; display:block; font-size:16px; }
+table.club_full_entry .clubcontent div.blog .title a{ background:url(../images/icons/big/blog.png) 0px center no-repeat; text-decoration:underline; }
+table.club_full_entry .clubcontent div.album .title a{ background:url(../images/icons/big/images.png) 0px center no-repeat; text-decoration:underline; }
 table.club_full_entry .clubcontent ul li a.on_moder { color:#FF6600; }
 table.club_full_entry .clubcontent div.album a.delete { color:#FF0000; }
 
 table.club_full_entry .clubcontent span.new{ color:#009900; font-weight:bold; }
 
-table.club_full_entry .clubcontent ul { margin-top:10px; margin-left:9px; margin-bottom:15px; }
-table.club_full_entry .clubcontent ul li { margin:3px 0; }
+table.club_full_entry .clubcontent ul { margin-top:10px; margin-left:30px; padding-left:0; margin-bottom:15px; }
+table.club_full_entry .clubcontent ul li { margin-bottom:3px; margin-left:0; padding-left:0; }
 table.club_full_entry .clubcontent ul li.all a{ color:#999999; }
 table.club_full_entry .clubcontent ul li.service a{ color:#009900; }
 
@@ -2140,24 +2163,16 @@ table.club_full_entry .clubmenu div a.join{ padding-left: 44px; background:url(/
 table.club_full_entry .clubmenu div a.leave{ padding-left: 44px; background:url(/components/clubs/images/leave.gif) 0px center no-repeat; text-decoration:underline; }
 table.club_full_entry .clubmenu div a.config{ padding-left: 32px; background:url(/components/clubs/images/config.gif) 0px center no-repeat; text-decoration:underline; }
 
-table.club_full_entry .wall .header{ background:#ECECEC; padding:10px; border-top:solid 1px silver; font-size:16px; }
+table.club_full_entry .wall .header{ background:#E0EAEF; padding:10px; border-top:solid 1px #789DAF; font-size:16px; color:#375E93; }
 table.club_full_entry .wall .body{ padding:10px; }
-table.club_full_entry .wall #addwall{ padding:10px; padding-top:0px;}
-table.club_full_entry .wall #addwall textarea{ width:100%; display:table; height:100px; }
-
-table.club_full_entry .wall .usr_wall_addlink{
-	margin-top:10px;
-	padding:3px;
-	padding-left:20px;
-	line-height:12px;
-	background-image:url(/components/users/images/writewall.gif);
-	background-repeat:no-repeat;
+table.club_full_entry .wall #addwall{ padding:0px; padding-right:10px;}
+table.club_full_entry .wall #addwall textarea{ 
+    border:1px solid gray;
+    font-size:18px;
+    height:150px;
+    width:100%;
 }
 
-table.club_full_entry .wall .usr_wall_entry { padding: 5px; border: dashed 1px #CCC; margin-bottom:2px; }
-table.club_full_entry .wall .usr_wall_title{ padding: 5px; float:left; }
-table.club_full_entry .wall .usr_wall_delete { float:right; padding:5px; }
-table.club_full_entry .wall .usr_wall_delete a { background:url(/components/users/images/delete.gif) no-repeat left center; padding-left:18px; height:16px; line-height:16px; }
 
 /* ========================================================================== */
 /* ===========================  ŒÃÃ≈Õ“¿–»» ================================== */
@@ -2218,9 +2233,9 @@ table.club_full_entry .wall .usr_wall_delete a { background:url(/components/user
 	display: block;
 	float: right;
 	margin-right:6px;
-	padding: 2px;
+	padding: 1px;
 	padding-left:20px;
-	background:url(/components/comments/images/date.gif) no-repeat #FFF;
+	background:url(../images/icons/calendar.png) no-repeat left center;
 }
 .cmm_pagebar {
 	background-color:#EBEBEB;
@@ -2229,12 +2244,25 @@ table.club_full_entry .wall .usr_wall_delete a { background:url(/components/user
 .cmm_entry {
 	width: 100%;
 	margin:0;
-	margin-bottom:2px;
+	margin-bottom:5px;
 	padding:2px;
+}
+.cmm_sublinks{
+    display:block;
+    margin-top:10px;
+}
+.cmm_sublinks a:hover{
+    color:#375E93;
+}
+.cmm_sublinks a{
+    color:#5F98BF;
+    margin-right:6px;
 }
 .cmm_avatar {
 	padding: 5px;
 	background:#EBEBEB;
+    border-radius:8px;
+    -moz-border-radius:8px;
 }
 .cmm_content_av {
 	padding: 10px;
@@ -2281,6 +2309,11 @@ border:thin dashed #999999;
 .cmm_submit{
 	font-size:12px;
 }
+.cmm_all_title{
+    margin-bottom:5px;
+    color:#5F98BF;
+}
+
 #addcomment {
 	border: solid 1px gray;
 	background-color:#E5E5E5;
@@ -2366,7 +2399,7 @@ div.con_forum_link a{
 }
 
 .forums_table{
-	border:solid 1px gray;
+    border:solid 1px #A8C2CF;
 }
 
 .forum_link{
@@ -2378,7 +2411,7 @@ div.con_forum_link a{
 }
 
 .threads_table{
-	border:solid 1px gray;
+	border:solid 1px #A8C2CF;
 }
 .thread_link{
 	font-weight:bold;
@@ -2400,11 +2433,11 @@ div.con_forum_link a{
 }
 
 .row1{
-	background-color:#FFFFFF;
+	background-color:#E0EAEF;
 }
 
 .row2{
-	background-color:#EBEBEB;
+	background-color:#FFF;
 }
 
 .forum_poll_table{
@@ -2449,14 +2482,18 @@ div.con_forum_link a{
 }
 
 .post_usercell{
-	background-color:#EBEBEB;
-	border:solid 1px gray;
+	background-color:#EFFAFF;
+/*	border:solid 1px #A8C2CF;*/
+	border-top:solid 2px #A8C2CF;
 }
 .post_userimg{
-	margin:4px;
-	border:solid 1px gray;
-	padding:2px;
+	margin:4px auto;
+ 	border:solid 1px #A8C2CF;
+	padding:5px;
 	background-color:white;
+    border-radius:8px;
+    -moz-border-radius:8px;
+    width:64px;
 }
 .post_userawards{
 	margin-top:3px;
@@ -2492,10 +2529,13 @@ div.con_forum_link a{
 	margin:2px;
 	font-size:10px;
 }
+.posts_table{
+}
 
 .post_msgcell{
 	background-color:#FFFFFF;
-	border:solid 1px gray;
+/*	border:solid 1px #A8C2CF;*/
+    border-top:solid 2px #A8C2CF;
 	padding:6px;
 }
 .post_userlink{
@@ -2503,9 +2543,9 @@ div.con_forum_link a{
 	font-weight:bold;
 }
 .post_date{
-	color:#999999;
+	color:#5F98BF;
 	margin-bottom:10px;
-	border-bottom:solid 1px silver;
+	border-bottom:dotted 1px #A8C2CF;
 }
 .post_content{
 
@@ -2546,18 +2586,25 @@ div.con_forum_link a{
 	text-align:right;
 }
 .forum_toolbar{
-	margin-bottom:4px;
-	margin-top:4px;
-	background-color:#ECECEC;
+	background-color:#E0EAEF;
+    margin:5px 0px;
+    border:solid 1px #A8C2CF;
+}
+.forum_toolbar a:hover{
+    color:#5F98BF;
+}
+.forum_toolbar a{
+	color:#375E93;
+	text-decoration:none;
 }
 .forum_navbar{
 	margin-bottom:4px;
-	margin-top:1px;
-	background-color:#ECECEC;
+    border-top:2px solid #A8C2CF;
+	background-color:#E0EAEF;
 	padding:5px;
 }
 .forum_navbar a{
-	color:#666666;
+	color:#375E93;
 	text-decoration:underline;
 }
 .forum_fa{
@@ -2589,7 +2636,7 @@ div.con_forum_link a{
 }
 .fa_attach{
 	margin-top:30px;
-	border-top: solid 1px gray;
+	border-top: 1px dotted #A8C2CF;
 	display:block;
 }
 .fa_attach_title{
@@ -2597,6 +2644,7 @@ div.con_forum_link a{
 	margin-bottom:6px;
 	font-weight:bold;
 	font-size:10px;
+    color:#5F98BF;
 }
 .fa_filebox{
 
@@ -2631,16 +2679,14 @@ div.con_forum_link a{
 
 .forum_fast{
 	margin-top:2px;
-	padding:8px;
-	border:solid 1px gray;
 }
 .forum_fast_header{
-	background-color:#EBEBEB;
-	padding:4px;
-	font-size:14px;
-	font-weight:bold;
-	margin-bottom:4px;
-	border:solid 1px silver;
+    color:#375E93;
+    font-size:18px;
+    margin-bottom:4px;
+    padding:10px 0;
+    padding-left:20px;
+    background:url(../images/icons/edit.png) no-repeat left center;
 }
 .forum_fast_submit{
 	text-align:right;
@@ -2648,7 +2694,7 @@ div.con_forum_link a{
 }
 .forum_fast_form #message{
 	width:100%;
-	border:solid 1px silver;
+	border:solid 1px gray;
 }
 
 .forum_subs{
@@ -2665,10 +2711,7 @@ div.con_forum_link a{
 	font-weight:bold;
 	color:#333333;
 }
-.forum_toolbar a{
-	color:#666666;
-	text-decoration:underline;
-}
+
 
 /* ========================================================================== */
 /* ========================== œŒÀ‹«Œ¬¿“≈À» ================================== */
@@ -2679,18 +2722,23 @@ div.con_forum_link a{
 	margin-bottom:10px;
 	overflow:hidden;
 	clear:both;
-	padding:10px;
 }
 
-#usr_photoalbum, #usr_files, #usr_blog, #usr_board, #usr_comments{
-	display: block;
+#usr_links sup{
+    font-size:12px;
+    color:#729CCC;
+}
+
+#usr_files, #usr_blog, #usr_board{
+	display: inline-block;
 	height:32px;
 	line-height:32px;
-	padding-left:46px;
+	padding-left:40px;
 	padding-right:15px;
-	font-size:14px;
-	font-weight:bold;
+	font-size:18px;
 	margin:5px;
+    margin-left:0px;
+    float:left;
 }
 
 .online{
@@ -2874,7 +2922,7 @@ div#user_profile_url{
 #user_profile_url div{ color:#375E93; }
 #user_profile_url a{ color:#5F98BF; }
 
-div.usr_clubs {padding: 15px; }
+div.usr_clubs {padding: 10px 0px; }
 div.usr_clubs span.label { margin-right:15px; font-weight:bold; }
 div.usr_clubs a.usr_club_link { padding-left:18px; background:url(/images/icons/club.gif) no-repeat left center; height:16px; line-height:16px; margin-right:5px; }
 
@@ -2911,13 +2959,23 @@ div.user_profile_data .field .value { float:left; line-height:24px; }
 div.user_profile_data .field .title { width:170px; font-weight:bold; }
 div.user_profile_data .field .value {  }
 
-#usr_photoalbum{ background:url(/components/users/images/profile/photoalbum.png) no-repeat; }
-#usr_board{	background:url(/components/users/images/profile/board.png) no-repeat; }
-#usr_files{	background:url(/components/users/images/profile/files.png) no-repeat; }
-#usr_blog{ background:url(/components/users/images/profile/blog.png) no-repeat; }
-#usr_comments{ background:url(/components/users/images/profile/comments.png) no-repeat; }
+#usr_board{	background:url(../images/icons/big/board.png) no-repeat; }
+#usr_files{	background:url(../images/icons/big/folder_ftp.png) no-repeat; }
+#usr_blog{ background:url(../images/icons/big/blog.png) no-repeat; }
 
+#upr_feed .action_entry {
+	border-bottom:1px solid #BFE5FF;
+	margin-bottom:10px;
+	overflow:hidden;
+	padding-bottom:10px;
+	padding-left:22px;
+}
 
+#upr_feed .action_title {
+    font-size:12px;
+    overflow:hidden;
+    padding:2px 0;
+}
 
 .usr_friends_query{
 	-moz-border-radius:8px 8px 8px 8px;
@@ -2978,8 +3036,22 @@ div.user_profile_data .field .value {  }
     margin-left:10px;
 }
 
-.usr_msg_title{	padding: 10px; }
+.usr_msg_entry{
+    padding:10px;
+    border-radius:8px;
+    -moz-border-radius:8px;
+    margin-bottom:4px;
+    border:solid 1px #C3D6DF;
+}
+
+.usr_msg_title{	padding: 4px 0; }
+.usr_msg_title strong{ color:#375E93; }
+
 .usr_msg_body{ padding: 10px; }
+
+.usr_msg_date{
+    color:#5F98BF;
+}
 
 .usr_publ_albums{ overflow:hidden;	background-color:#EBEBEB; padding:6px; margin-bottom:10px; }
 
@@ -3013,9 +3085,7 @@ div.user_profile_data .field .value {  }
 .usr_photos_add_limit{
     margin-bottom: 20px; color:#5F98BF;;
 }
-.usr_photos_add_st{
-    margin: 20px 0; color:#5F98BF;;
-}
+
 .usr_photos_submit_one{
     padding:10px;
     border:solid 1px #C3D6DF;
@@ -3105,7 +3175,7 @@ div.user_profile_data .field .value {  }
 .usr_deleted{ font-size:18px; color:#990000; }
 .usr_restore{ margin-top:10px; }
 
-.usr_btnlink{ padding:10px;	margin:2px;	border:solid 1px silver; width:120px; }
+.usr_btnlink{ margin-right:20px; font-size:24px;	 }
 
 .usr_files_orderbar{ background-color:#EBEBEB;	margin-bottom:4px;	padding:5px; }
 .usr_files_orderbtn{ font-size:9px;	background-color:#CCCCCC; border:solid 1px gray; height:20px; }
@@ -3163,15 +3233,15 @@ textarea.wall_message{ width:100%; height:100px; }
 .usr_awlist_link a{	text-decoration:none; }
 .usr_aw_dettable{ margin:5px;	margin-bottom:20px; }
 .usr_aw_img{ padding:5px; border:solid 1px #ccc; }
-.usr_aw_title{ font-size:18px; }
-.usr_aw_desc{ font-size:14px; color:#666666; }
-.usr_aw_who{ padding:10px;	background:#EBEBEB; }
+.usr_aw_title{ font-size:18px; color:#375E93; }
+.usr_aw_desc{ font-size:14px; color:#5F98BF; }
+.usr_aw_who{ padding:10px; }
 .usr_aw_who #m{	background:url(/images/markers/usermale.png) no-repeat 0px 2px;	padding-left:20px;	line-height:18px; }
 .usr_aw_who #f{	background:url(/images/markers/userfemale.png) no-repeat 0px 2px; padding-left:20px; line-height:18px; }
-.usr_aw_users{ margin-bottom:4px; }
+.usr_aw_users{ margin-bottom:4px; color:#375E93; }
 
-div.awards_list_link { padding:5px; }
-div.awards_list_link a{ padding-left:18px;  background:url(/images/icons/help.gif) no-repeat left center; }
+div.awards_list_link { padding:5px 0px; }
+div.awards_list_link a{ padding:1px; padding-left:20px;  background:url(../images/icons/info.png) no-repeat left center; }
 
 #usr_profparams{ width:750px; border:dashed 1px silver;	padding:10px; }
 
@@ -3186,35 +3256,52 @@ div.awards_list_link a{ padding-left:18px;  background:url(/images/icons/help.gi
 
 #usr_prof_form table{ width:100%; }
 
-.usr_msgmenu_active{ margin-right:0px;	background-color:#EBEBEB; padding:10px;	font-weight:bold; }
-.usr_msgmenu_link{	margin-right:0px;	padding:10px;	}
+.usr_msgmenu_tabs{ display:block; height:26px; }
+
+.usr_msgmenu_active{
+    margin-right:0px;	background-color:#E0EAEF; padding:10px;	font-weight:bold;
+    border-radius:8px 8px 0 0; -moz-border-radius:8px 8px 0 0;
+}
+.usr_msgmenu_link{	margin-right:0px;	padding:10px;  }
 
 .in_link{ padding-left:26px; background:url(/components/users/images/messages/message-in.gif) no-repeat 8px center #FFF; }
-.in_span{ padding-left:26px; background:url(/components/users/images/messages/message-in.gif) no-repeat 8px center #EBEBEB; }
+.in_span{ padding-left:26px; background:url(/components/users/images/messages/message-in.gif) no-repeat 8px center #E0EAEF; }
 
 .out_link{ padding-left:26px; background:url(/components/users/images/messages/message-out.gif) no-repeat 8px center #FFF; }
-.out_span{ padding-left:26px; background:url(/components/users/images/messages/message-out.gif) no-repeat 8px center #EBEBEB; }
+.out_span{ padding-left:26px; background:url(/components/users/images/messages/message-out.gif) no-repeat 8px center #E0EAEF; }
 
 .new_link{ padding-left:26px; background:url(/components/users/images/messages/message-new.gif) no-repeat 8px center #FFF; }
-.new_span{ padding-left:26px; background:url(/components/users/images/messages/message-new.gif) no-repeat 8px center #EBEBEB; }
+.new_span{ padding-left:26px; background:url(/components/users/images/messages/message-new.gif) no-repeat 8px center #E0EAEF; }
 
-.history_span{ padding-left:26px; background:url(/components/users/images/msghistory.gif) no-repeat 5px center #EBEBEB; }
+.history_span{ padding-left:26px; background:url(../images/icons/folder_user.png) no-repeat 5px center #E0EAEF; }
 
-a.msg_delete{
-	background:url(/components/users/images/delete.gif) no-repeat 3px 5px;
-	padding:2px;
-	padding-left:24px;
+a.msg_delete:hover,
+a.msg_reply:hover,
+a.msg_history:hover{
+    color:#5F98BF;
 }
-a.msg_reply{
-	background:url(/components/users/images/messages.gif) no-repeat 3px 5px;
-	padding:2px;
-	padding-left:24px;
+
+a.msg_delete,
+a.msg_reply,
+a.msg_history,
+span.msg_new{
+    color:#375E93;
+    height:16px;
+    line-height:16px;
+    padding:1px 1px 1px 20px;
+    text-decoration:none;
 }
-a.msg_history{
-	background:url(/components/users/images/msghistory.gif) no-repeat 3px 5px;
-	padding:2px;
-	padding-left:24px;
+
+a.msg_reply,
+a.msg_history,
+span.msg_new{
+    margin-right:10px;
 }
+
+a.msg_delete{ background:url("../images/icons/delete.png") no-repeat left center; }
+a.msg_reply{ background:url(../images/icons/comment.png) no-repeat left center; }
+a.msg_history{ background:url(../images/icons/folder_user.png) no-repeat left center; }
+span.msg_new{ background:url(../images/icons/new.png) no-repeat left center; color:red; }
 
 table.feed { margin-top:10px; margin-bottom:10px; }
 table.feed td { font-size:14px; }
@@ -3264,6 +3351,12 @@ table.feed td.date strong { color:green; }
     background-color:#FFFFFF;
     border-radius:8px;
     -moz-border-radius:8px;
+}
+
+.usr_avatars_lib_link{
+    padding:1px;
+    padding-left:20px;
+    background:url(../images/icons/images.png) no-repeat left center;
 }
 
 .usr_friends_block{
@@ -3356,8 +3449,24 @@ table.feed td.date strong { color:green; }
     display:inline-block;
 }
 
-
 .act_add_comment{ background:url(../images/icons/actions/add_comment.png) no-repeat left 3px; }
 .act_add_photo{ background:url(../images/icons/actions/add_photo.png) no-repeat left 3px; }
 .act_add_article{ background:url(../images/icons/actions/add_article.png) no-repeat left 3px; }
 .act_set_status{ background:url(../images/icons/actions/set_status.png) no-repeat left 3px; }
+.act_add_friend{ background:url(../images/icons/actions/add_friend.png) no-repeat left 3px; }
+.act_add_blog{ background:url(../images/icons/actions/add_blog.png) no-repeat left 3px; }
+.act_add_post{ background:url(../images/icons/actions/add_post.png) no-repeat left 3px; }
+.act_add_board{ background:url(../images/icons/actions/add_board.png) no-repeat left 3px; }
+.act_add_catalog{ background:url(../images/icons/actions/add_catalog.png) no-repeat left 3px; }
+.act_add_club{ background:url(../images/icons/actions/add_club.png) no-repeat left 3px; }
+.act_add_club_user{ background:url(../images/icons/actions/add_club_user.png) no-repeat left 3px; }
+.act_add_quest{ background:url(../images/icons/actions/add_quest.png) no-repeat left 3px; }
+.act_add_fpost{ background:url(../images/icons/actions/add_fpost.png) no-repeat left 3px; }
+.act_add_thread{ background:url(../images/icons/actions/add_thread.png) no-repeat left 3px; }
+.act_add_avatar{ background:url(../images/icons/actions/add_avatar.png) no-repeat left 3px; }
+.act_add_award{ background:url(../images/icons/actions/add_award.png) no-repeat left 3px; }
+.act_add_file{ background:url(../images/icons/actions/add_file.png) no-repeat left 3px; }
+.act_add_wall{ background:url(../images/icons/actions/add_wall.png) no-repeat left 3px; }
+.act_add_wall_club{ background:url(../images/icons/actions/add_wall_club.png) no-repeat left 3px; }
+.act_add_post_club{ background:url(../images/icons/actions/add_post_club.png) no-repeat left 3px; }
+.act_add_user_photo{ background:url(../images/icons/actions/add_user_photo.png) no-repeat left 3px; }

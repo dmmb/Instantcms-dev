@@ -166,23 +166,23 @@ if ($do=='read'){
     $seolink = $inCore->request('seolink', 'str', '');
 
     $seolink = preg_replace ('/[^a-z0-9_\/\-]/i', '', $seolink);
-	
+
     if ($seolink) { 
         $article = $model->getArticleByLink($seolink);
     } elseif($id) {
         $article = $model->getArticle($id);
     }
 
+    if ( !$article ) { cmsCore::error404(); }
+
 	if ($inUser->id) {
 		$is_admin      = $inUser->is_admin;
 		$is_author     = $inUser->id == $article['user_id'];
 		$is_author_del = $inCore->isUserCan('content/delete');
 		$is_editor     = ($article['modgrp_id'] == $inUser->group_id && $inCore->isUserCan('content/autoadd'));
-	}
+    }
 
 	if (!$article['published'] && !$is_admin && !$is_editor && !$is_author) { cmsCore::error404(); } 	
-
-    if ( !$article ) { cmsCore::error404(); }
 
 	if( !$inCore->checkUserAccess('material', $article['id']) ){
 		$inPage->setTitle($_LANG['NO_PERM_FOR_VIEW']);
@@ -294,7 +294,7 @@ if ($do=='read'){
 
     $article_image = (file_exists(PATH.'/images/photos/medium/article'.$article['id'].'.jpg') ? 'article'.$article['id'].'.jpg' : '');
     $smarty->assign('article_image', $article_image);
-	
+
 	$smarty->assign('is_admin', $is_admin);
 	$smarty->assign('is_editor', $is_editor);
 	$smarty->assign('is_author', $is_author);
@@ -403,7 +403,7 @@ if ($do=='addarticle' || $do=='editarticle'){
 
         $article['description']         = $inDB->escape_string($article['description']);
         $article['content']             = $inDB->escape_string($article['content']);
-		
+
         $article['description']         = $inCore->badTagClear($article['description']);
         $article['content']             = $inCore->badTagClear($article['content']);
 
@@ -445,12 +445,12 @@ if ($do=='addarticle' || $do=='editarticle'){
             $inPage->backButton(false);
             $inPage->addPathway($_LANG['ARTICLE_SEND']);
             $inPage->printHeading($_LANG['ARTICLE_SEND']);
-
+			
             $article['seolink']     = $inDB->get_field('cms_content', "id='$id'", 'seolink');
             $article['category']    = $inDB->get_fields('cms_category', "id='{$article['category_id']}'", 'title, seolink');
             
 			if (!$article['published']){
-
+			
                 echo '<p>'.$_LANG['ARTICLE_PREMODER_TEXT'].'</p>';
 
 				$link = '<a href="/'.$article['seolink'].'.html">'.$article['title'].'</a>';
@@ -571,7 +571,7 @@ if ($do == 'publisharticle'){
     cmsUser::sendMessage(USER_UPDATER, $article['user_id'], $message);
 
     $inCore->redirectBack();
-    
+
 }
 ///////////////////////////////////// DELETE ARTICLE ///////////////////////////////////////////////////////////////////////////////////
 if ($do=='deletearticle'){
@@ -608,8 +608,8 @@ if ($do=='deletearticle'){
 
 	} else {
 
-       	$inCore->includeFile('components/forum/includes/forumcore.php'); //needs for auto-thread deleting
-		$model->deleteArticle($id, $cfg['af_delete']);
+            $inCore->includeFile('components/forum/includes/forumcore.php'); //needs for auto-thread deleting
+			$model->deleteArticle($id, $cfg['af_delete']);
 		if ($_SERVER['HTTP_REFERER'] == '/my.html' ) { 
 			$inCore->redirectBack();
 			cmsCore::addSessionMessage($_LANG['ARTICLE_DELETED'], 'info');
@@ -618,9 +618,9 @@ if ($do=='deletearticle'){
 				$link = '<a href="/'.$article['con_seolink'].'.html">'.$article['title'].'</a>';
 				$message = str_replace('%link%', $link, $_LANG['MSG_ARTICLE_REJECTED']);
 				cmsUser::sendMessage(USER_UPDATER, $article['user_id'], $message);
-			}
+		}
 			$inCore->redirect('/'.$article['seolink']);
-		}			
+	}
 
 	}
 

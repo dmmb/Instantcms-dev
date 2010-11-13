@@ -220,7 +220,7 @@ public function isFieldType($table, $field, $type){
 public function isTableExists($table){
 
     $sql    = "SELECT 1 FROM $table LIMIT 1";
-    $result = @$this->query($sql, true);
+    $result = $this->query($sql, true);
     
     if ($this->errno()){ return false; }
 
@@ -233,18 +233,18 @@ public function isTableExists($table){
 static function optimizeTable($tlist=''){
 
 	$inDB = self::getInstance();
-
+    
     if(is_array($tlist)) {
-
+    
 		foreach($tlist as $tname) {
 		  	$inDB->query("OPTIMIZE TABLE $tname", true);
 		  	$inDB->query("ANALYZE TABLE $tname", true);
 		}
-
+    
 	} else {
 
 		$inConf = cmsConfig::getInstance();
-
+    
 		$tlist  = $inDB->get_table('information_schema.tables', "table_schema = '{$inConf->db_base}'", 'table_name');
 
 		if (!is_array($tlist)) { return false; }
@@ -255,8 +255,36 @@ static function optimizeTable($tlist=''){
 		}
 
     }
-    
+
     if ($inDB->errno()){ return false; }
+
+    return true;
+    
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+public function delete($table, $where='', $limit=0) {
+
+    $sql = "DELETE FROM {$table} WHERE {$where}";
+
+    if ($limit) { $sql .= " LIMIT {$limit}"; }
+
+    $result = $this->query($sql, true);
+
+    if ($this->errno()){ return false; }
+
+    return true;
+
+}
+
+public function deleteNS($table, $id) {
+
+    $inCore = cmsCore::getInstance();
+
+    $ns = $inCore->nestedSetsInit($table);
+
+    $ns->DeleteNode($id);
 
     return true;
 

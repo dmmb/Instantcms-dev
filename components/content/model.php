@@ -320,16 +320,76 @@ class cms_model_content{
 
     public function reorder() {
 
-        $sql    = "SELECT id FROM cms_content ORDER BY ordering ASC";
-		$rs     = $this->inDB->query($sql);
+        $table      = 'cms_content';
+        $cat_field  = 'category_id';
+        $item_field = 'id';
 
-		if ($this->inDB->num_rows($rs)){
-			$ordering = 1;
-			while ($item = $this->inDB->fetch_assoc($rs)){
-				$this->inDB->query("UPDATE cms_content SET ordering = ".$ordering." WHERE id=".$item['id']) ;
-				$ordering += 1;
-			}
-		}
+        $sql = "SELECT {$cat_field} FROM {$table} GROUP BY {$cat_field}";
+        $res = $this->inDB->query($sql);
+
+        while($r = $this->inDB->fetch_assoc($res)){
+
+            $ord = 1;
+
+            $sql2 = "SELECT {$item_field}
+                     FROM {$table}
+                     WHERE {$cat_field} = {$r[$cat_field]}
+                     ORDER BY ordering";
+
+            $res2 = $this->inDB->query($sql2);
+
+            while($r2 = $this->inDB->fetch_assoc($res2)){
+                $this->inDB->query("UPDATE {$table} SET ordering = {$ord} WHERE {$item_field}={$r2[$item_field]} AND {$cat_field}={$r[$cat_field]}");
+                $ord++;
+            }
+
+        }
+
+        return true;
+
+    }
+
+    public function moveItem($item_id, $cat_id, $dir, $step=1) {
+
+        $sign   = $dir>0 ? '+' : '-';
+
+        $current = $this->inDB->get_field('cms_content', "id={$item_id}", 'ordering');
+
+        if ($dir>0){
+            //движение вверх
+            //у элемента следующего за текущим нужно уменьшить порядковый номер
+            $sql = "UPDATE cms_content
+                    SET ordering = ordering-1
+                    WHERE category_id={$cat_id} AND ordering = ({$current}+1)
+                    LIMIT 1";
+            $this->inDB->query($sql);
+        }
+        if ($dir<0){
+            //движение вниз
+            //у элемента предшествующего текущему нужно увеличить порядковый номер
+            $sql = "UPDATE cms_content
+                    SET ordering = ordering+1
+                    WHERE category_id={$cat_id} AND ordering = ({$current}-1)
+                    LIMIT 1";
+            $this->inDB->query($sql);
+        }
+
+        $sql    = "UPDATE cms_content
+                   SET ordering = ordering {$sign} {$step}
+                   WHERE id={$item_id}";
+        $this->inDB->query($sql);
+
+        return true;
+
+    }
+
+    public function moveArticlesToCat($articles, $to_cat_id) {
+
+        $ids = rtrim(implode(',', $articles), ',');
+
+        $this->inDB->query("UPDATE cms_content SET category_id = {$to_cat_id} WHERE id IN ({$ids})");
+
+        return true;
 
     }
 
@@ -748,6 +808,52 @@ class cms_model_content{
         $this->inDB->query($sql);
 
         return true;
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function getNestedArticles($category_id) {
+
+        $cat = $this->getCategory($category_id);
+
+        $sql = "SELECT  con.id as id, con.title as title
+				FROM    cms_content con
+				JOIN cms_category cat ON cat.id = con.category_id AND
+                                         cat.NSLeft >= {$cat['NSLeft']} AND
+                                         cat.NSRight <= {$cat['NSRight']}
+				";
+
+		$result = $this->inDB->query($sql);
+
+        if (!$this->inDB->num_rows($result)) { return false; }
+
+        $articles = array();
+
+        while($article = $this->inDB->fetch_assoc($result)){
+            $articles[] = $article['id'];
+        }
+
+        return $articles ? $articles : false;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function deleteCategory($id, $is_with_content = false) {
+
+        if ($is_with_content){
+            $articles = $this->getNestedArticles($id);
+            foreach($articles as $article_id){
+                $this->deleteArticle($article_id);
+            }
+        }
+
+        $this->inDB->deleteNS('cms_category', $id);
+
+        return true;
+
     }
 
 /* ==================================================================================================== */

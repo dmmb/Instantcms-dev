@@ -61,13 +61,19 @@ class cms_model_users{
 				u.group_id,
 				g.title as grp,
 				o.user_id as status,
-				b.user_id as banned
+				b.user_id as banned,
+                IFNULL(ui.login, '') as inv_login,
+                IFNULL(ui.nickname, '') as inv_nickname,
+                IFNULL(COUNT(i.id), 0) as invites_count
                 FROM cms_users u
 				LEFT JOIN cms_user_profiles p ON u.id = p.id
 				LEFT JOIN cms_user_groups g ON u.group_id = g.id
 				LEFT JOIN cms_online o ON u.id = o.user_id
 				LEFT JOIN cms_banlist b ON u.id = b.user_id
+                LEFT JOIN cms_users ui ON u.invited_by = ui.id
+                LEFT JOIN cms_user_invites i ON u.id = i.owner_id AND i.is_used = 0 AND i.is_sended = 0
                 WHERE u.is_locked = 0 AND u.id = '$user_id'
+				GROUP BY u.id
                 LIMIT 1";
 
         $result = $this->inDB->query($sql);
@@ -97,7 +103,7 @@ class cms_model_users{
 		
 		} else {
 		
-			$user = $this->inDB->get_fields('cms_users', "id = '$user_id'", 'id, nickname, login');
+		$user = $this->inDB->get_fields('cms_users', "id = '$user_id'", 'id, nickname, login');
         
 		}
         
@@ -280,8 +286,8 @@ class cms_model_users{
 
     public function addInvite($invite) {
 
-        $sql = "INSERT INTO cms_user_invites (code, owner_id, createdate, is_used)
-                VALUES ('{$invite['code']}', '{$invite['owner_id']}', NOW(), 0)";
+        $sql = "INSERT INTO cms_user_invites (code, owner_id, createdate, is_used, is_sended)
+                VALUES ('{$invite['code']}', '{$invite['owner_id']}', NOW(), 0, 0)";
 
         $this->inDB->query($sql);
 
@@ -292,41 +298,155 @@ class cms_model_users{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function giveInvites($count, $has_karma) {
+    public function giveInvites($count, $has_karma, $inv_period=false) {
+
+        if (!$inv_period) { $sql_period = 'DAY'; } else { $sql_period = $inv_period; }
 
         $sql = "SELECT  u.id as id,
-                        SUM(k.points) as karma
-                FROM cms_user_karma k
-				LEFT JOIN cms_users u ON u.id = k.user_id
-                GROUP BY u.id";
+                        IFNULL((u.invdate < DATE_SUB(NOW(), INTERVAL 1 {$sql_period})) OR u.invdate is NULL, 0) as is_time,
+                        IFNULL(SUM(k.points), 0) as karma
+                FROM cms_users u
+                LEFT JOIN cms_user_karma k ON k.user_id = u.id
+                GROUP BY u.id
+                ";
 
         $res = $this->inDB->query($sql);
 
         if (!$this->inDB->num_rows($res)) { return false; }
 
+        $given = 0;
+
         while($user = $this->inDB->fetch_assoc($res)){
 
             if ($user['karma'] < $has_karma){ continue; }
+            if ($inv_period && !$user['is_time']){ continue; }
 
             for($c=1; $c<=$count; $c++){
 
-                $invite['code'] = md5($user['id'] .'$'. rand(10000,65535) . '$' . time() . '$' . $c);
+                $invite['code']     = md5($user['id'] .'$'. rand(10000,65535) . '$' . time() . '$' . $c);
                 $invite['owner_id'] = $user['id'];
-                $this->addInvite($invite);
                 
+                $this->addInvite($invite);
+
+                $given++;
+
             }
 
             $this->inDB->query("UPDATE cms_users SET invdate = NOW() WHERE id = '{$user['id']}'");
 
         }
 
+        return $given;
+
+    }
+
+    public function giveInvitesCron() {
+
+        $inCore = cmsCore::getInstance();
+
+        $cfg = $inCore->loadComponentConfig('registration');
+
+        if (!isset($cfg['reg_type'])) { $cfg['reg_type'] = 'open'; }
+        if (!isset($cfg['inv_count'])) { $cfg['inv_count'] = 5; }
+        if (!isset($cfg['inv_karma'])) { $cfg['inv_karma'] = 50; }
+        if (!isset($cfg['inv_period'])) { $cfg['inv_period'] = 'WEEK'; }
+
+        if ($cfg['reg_type'] != 'invite') { return false; }
+
+        $this->giveInvites($cfg['inv_count'], $cfg['inv_karma'], $cfg['inv_period']);
+
         return true;
 
+    }
+
+    public function checkInvite($code) {
+
+        if (!preg_match('/^([a-z0-9]{32})$/i', $code)) { return false; }
+
+        $correct = $this->inDB->get_field('cms_user_invites', "code='{$code}' AND is_used = 0", 'id');
+
+        return (bool)$correct;
+
+    }
+
+    public function getInviteOwner($code) {
+
+        if (!preg_match('/^([a-z0-9]{32})$/i', $code)) { return false; }
+
+        $owner_id = $this->inDB->get_field('cms_user_invites', "code='{$code}' AND is_used = 0", 'owner_id');
+
+        return $owner_id;
+
+    }
+
+    public function getInvite($owner_id) {
+
+        $invite = $this->inDB->get_fields('cms_user_invites', "owner_id='{$owner_id}' AND is_used = 0 AND is_sended=0", '*');
+
+        return $invite;
+
+    }
+
+    public function getUserInvitesCount($owner_id) {
+
+        $count = $this->inDB->rows_count('cms_user_invites', "owner_id='{$owner_id}'");
+
+        return $count;
+
+    }
+
+    public function sendInvite($owner_id, $email) {
+
+        $inCore = cmsCore::getInstance();
+        $inConf = cmsConfig::getInstance();
+
+        global $_LANG;
+
+        $user = $this->getUserShort($owner_id);
+
+        if (!$user) { return false; }
+
+        $invite = $this->getInvite($owner_id);
+
+        if (!$invite) { return false; }
+
+        $letter_path    = PATH.'/includes/letters/invite.txt';
+        $letter         = file_get_contents($letter_path);
+
+        $letter = str_replace('{sitename}', $inConf->sitename, $letter);
+        $letter = str_replace('{site_url}', HOST, $letter);
+        $letter = str_replace('{invite_code}', $invite['code'], $letter);
+        $letter = str_replace('{username}', $user['nickname'], $letter);
+
+        $inCore->mailText($email, sprintf($_LANG['INVITE_SUBJECT'], $user['nickname']), $letter);
+
+        $this->inDB->query("UPDATE cms_user_invites SET is_sended=1 WHERE id='{$invite['id']}'");
+
+        return true;
+
+    }
+
+    public function closeInvite($code){
+
+        if (!preg_match('/^([a-z0-9]{32})$/i', $code)) { return false; }
+
+        $this->inDB->query("UPDATE cms_user_invites SET is_used = 1 WHERE code='{$code}'");
+
+        return true;
+       
     }
 
     public function deleteInvites() {
 
         $this->inDB->query('DELETE FROM cms_user_invites WHERE is_used = 0');
+
+        return true;
+
+    }
+
+    public function clearInvites() {
+
+        $this->inDB->query('DELETE FROM cms_user_invites WHERE is_used = 1 AND is_sended = 1');
 
         return true;
 
@@ -610,6 +730,30 @@ class cms_model_users{
 
         foreach($users_list as $usr){
             $this->deleteUser($usr['id'], true);
+        }
+
+        return true;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function clearUploadedPhotos() {
+
+        $photos = array();
+
+        $sql = "SELECT id
+                FROM cms_user_photos
+                WHERE album_id = 0 OR allow_who = 'none'
+                ORDER BY id ASC";
+
+        $result = $this->inDB->query($sql);
+
+        if ($this->inDB->num_rows($result)) {
+            while($photo = $this->inDB->fetch_assoc($result)){
+                $this->deletePhoto($photo['id']);
+            }
         }
 
         return true;

@@ -56,7 +56,7 @@ function mod_latest($module_id){
 		$result = $inDB->query($sql);
 			
 		$is_con = false;
-		
+	
 		if ($cfg['is_pag']) {
 			// Считаем общее количество материалов если опция пагинация включена
 			$sql_total = "SELECT 1
@@ -90,17 +90,17 @@ function mod_latest($module_id){
 
 		}
 		
-		$smarty = $inCore->initSmarty('modules', 'mod_latest.tpl');			
-		$smarty->assign('articles', $articles);
-		$smarty->assign('rssid', $rssid);
+			$smarty = $inCore->initSmarty('modules', 'mod_latest.tpl');			
+			$smarty->assign('articles', $articles);
+			$smarty->assign('rssid', $rssid);
 		if ($cfg['is_pag']) {
 			$smarty->assign('pagebar', cmsPage::getPagebar($total_page, $page, $perpage, 'javascript:conPage(%page%, '.$module_id.')'));
 		}
 		$smarty->assign('is_ajax', false);
 		$smarty->assign('is_con', $is_con);
 		$smarty->assign('module_id', $module_id);
-		$smarty->assign('cfg', $cfg);
-		$smarty->display('mod_latest.tpl');			
+			$smarty->assign('cfg', $cfg);
+			$smarty->display('mod_latest.tpl');			
 			
 		return true;
 }

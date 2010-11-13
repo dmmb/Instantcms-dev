@@ -163,8 +163,8 @@ function clubPhotoAlbums($club_id, $is_admin=false, $is_moder=false, $is_member=
 
 	$albums = array();
 
-	if ($inDB->num_rows($rs)){
-		while ($album = $inDB->fetch_assoc($rs)){
+		if ($inDB->num_rows($rs)){
+				while ($album = $inDB->fetch_assoc($rs)){
 				$on_moderate  = '';
 				$delete       = '';
 				$add_to_album = '';

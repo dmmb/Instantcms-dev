@@ -56,6 +56,17 @@
 // ========================================================================== //
 // ========================================================================== //
 
+    if (!$inDB->isFieldExists('cms_modules', 'is_strict_bind')){
+        $inDB->query("ALTER TABLE `cms_modules` ADD `is_strict_bind` TINYINT NOT NULL DEFAULT '0'");
+    }
+
+    if (!$inDB->isFieldExists('cms_modules', 'version')){
+        $inDB->query("ALTER TABLE `cms_modules` ADD `version` VARCHAR(6) NOT NULL DEFAULT '1.0'");
+    }
+
+// ========================================================================== //
+// ========================================================================== //
+
     $mod_stats_installed = $inDB->get_field('cms_modules', "content='mod_user_stats'", 'id');
 
     if (!$mod_stats_installed){
@@ -77,6 +88,27 @@
 // ========================================================================== //
 // ========================================================================== //
 
+    $mod_invite_installed = $inDB->get_field('cms_modules', "content='mod_invite'", 'id');
+
+    if (!$mod_invite_installed){
+
+        $sql = "INSERT INTO cms_modules (`position`, `name`, `title`, `is_external`,
+                                          `content`, `ordering`, `showtitle`, `published`,
+                                          `user`, `config`, `original`, `css_prefix`,
+                                          `allow_group`, `cache`, `cachetime`, `cacheint`,
+                                           `template`, `is_strict_bind`)
+                VALUES ('sidebar', 'Пригласить друга', 'Пригласить друга', '1', 'mod_invite',
+                        '1', '1', '0', '0', '', '1', '', '-1', '0', '1', 'HOUR', 'module.tpl', '0')";
+
+        $inDB->query($sql);
+
+        echo '<p>Модуль &laquo;<strong>Пригласить друга</strong>&raquo; установлен</p>';
+
+    }
+
+// ========================================================================== //
+// ========================================================================== //
+
     $mod_actions_installed = $inDB->get_field('cms_modules', "content='mod_actions'", 'id');
 
     if (!$mod_actions_installed){
@@ -92,6 +124,25 @@
         $inDB->query($sql);
 
         echo '<p>Модуль &laquo;<strong>Лента активности</strong>&raquo; установлен</p>';
+
+    }
+
+// ========================================================================== //
+// ========================================================================== //
+
+    if (!$inDB->isTableExists('cms_ns_transactions')){
+
+        $sql = "CREATE TABLE cms_ns_transactions (
+                  IDTransaction INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+                  TableName TINYTEXT NULL,
+                  Differ TINYTEXT NULL,
+                  InTransaction BIT NULL,
+                  TStamp TIMESTAMP NULL,
+                  PRIMARY KEY(IDTransaction)
+                )";
+
+        $inDB->query($sql);
+        echo '<p>Таблица <strong>cms_ns_transactions</strong> создана</p>';
 
     }
 
@@ -144,12 +195,14 @@
                   `target` varchar(100) NOT NULL,
                   `target_url` varchar(255) NOT NULL,
                   `target_id` int(11) NOT NULL,
-                  `description` varchar(500) DEFAULT NULL,
+                  `description` varchar(650) DEFAULT NULL,
+                  `is_friends_only` tinyint(4) NOT NULL DEFAULT '0',
+                  `is_users_only` tinyint(4) NOT NULL DEFAULT '0',
                   PRIMARY KEY (`id`),
                   KEY `action_id` (`action_id`,`user_id`),
                   KEY `object_id` (`object_id`),
                   KEY `target_id` (`target_id`)
-                ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251";
+                ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;";
 
         $inDB->query($sql);
         echo '<p>Таблица <strong>cms_actions_log</strong> создана</p>';
@@ -159,16 +212,68 @@
 // ========================================================================== //
 // ========================================================================== //
 
+    if (!$inDB->isTableExists('cms_cron_jobs')){
+
+        $sql = "CREATE TABLE `cms_cron_jobs` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `job_name` varchar(50) NOT NULL,
+                  `job_interval` smallint(6) NOT NULL DEFAULT '1',
+                  `job_run_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                  `component` varchar(20) NOT NULL,
+                  `model_method` varchar(100) NOT NULL,
+                  `custom_file` varchar(250) NOT NULL,
+                  `is_enabled` tinyint(4) NOT NULL DEFAULT '1',
+                  `is_new` smallint(6) NOT NULL DEFAULT '1',
+                  `comment` varchar(200) NOT NULL,
+                  `class_name` varchar(50) NOT NULL,
+                  `class_method` varchar(50) NOT NULL,
+                  PRIMARY KEY (`id`),
+                  KEY `job_name` (`job_name`,`is_enabled`)
+                ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;";
+
+        $inDB->query($sql);
+        echo '<p>Таблица <strong>cms_cron_jobs</strong> создана</p>';
+
+        $inCore->loadClass('cron');
+
+        cmsCron::registerJob('photos_clear', array(
+                                                        'interval' => 24,
+                                                        'component' => 'users',
+                                                        'model_method' => 'clearUploadedPhotos',
+                                                        'comment' => 'Удаление неиспользуемых личных фотографий'
+                                                  ));
+
+        cmsCron::registerJob('give_invites', array(
+                                                        'interval' => 24,
+                                                        'component' => 'users',
+                                                        'model_method' => 'giveInvitesCron',
+                                                        'comment' => 'Выдача инвайтов пользователям'
+                                                  ));
+
+        cmsCron::registerJob('clear_invites', array(
+                                                        'interval' => 24,
+                                                        'component' => 'users',
+                                                        'model_method' => 'clearInvites',
+                                                        'comment' => 'Удаление использованных инвайтов'
+                                                  ));
+
+    }
+
+// ========================================================================== //
+// ========================================================================== //
+
     if (!$inDB->isTableExists('cms_user_invites')){
 
         $sql = "CREATE TABLE `cms_user_invites` (
-                    `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-                    `code` VARCHAR( 32 ) NOT NULL ,
-                    `owner_id` INT NOT NULL ,
-                    `createdate` DATETIME NOT NULL ,
-                    `is_used` SMALLINT NOT NULL DEFAULT '0',
-                    INDEX ( `code` , `owner_id` , `is_used` )
-                ) ENGINE = MYISAM";
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `code` varchar(32) NOT NULL,
+                  `owner_id` int(11) NOT NULL,
+                  `createdate` datetime NOT NULL,
+                  `is_used` tinyint(4) NOT NULL DEFAULT '0',
+                  `is_sended` tinyint(4) NOT NULL DEFAULT '0',
+                  PRIMARY KEY (`id`),
+                  KEY `code` (`code`,`owner_id`,`is_used`)
+                ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251";
 
         $inDB->query($sql);
         echo '<p>Таблица <strong>cms_user_invites</strong> создана</p>';
@@ -266,47 +371,42 @@
 // ========================================================================== //
 
     if (!$inDB->isFieldExists('cms_blog_posts', 'content_html')){
+
         $inDB->query("ALTER TABLE `cms_blog_posts` ADD `content_html` TEXT NOT NULL AFTER `content`");
-    }
 
-    $sql = "SELECT id, content
-            FROM cms_blog_posts";
+        $sql = "SELECT id, content
+                FROM cms_blog_posts";
 
-    $result = $inDB->query($sql);
+        $result = $inDB->query($sql);
 
-    if($inDB->num_rows($result)){
+        if($inDB->num_rows($result)){
 
-		$inCore->loadModel('blogs');
-		$model = new cms_model_blogs();
+            $inCore->loadModel('blogs');
+            $model = new cms_model_blogs();
 
-        while($post = $inDB->fetch_assoc($result)){
-			// Парсим по отдельности части текста, если есть тег [cut
-			if (strstr($post['content'], '[cut')){
-				$msg_to 	= $model->getPostShort($post['content']);
-				$msg_to 	= $inCore->parseSmiles($msg_to, true);
-				$msg_after 	= $model->getPostShort($post['content'], false, true);
-				$msg_after 	= $inCore->parseSmiles($msg_after, true);
+            while($post = $inDB->fetch_assoc($result)){
+                // Парсим по отдельности части текста, если есть тег [cut
+                if (strstr($post['content'], '[cut')){
+                    $msg_to 	= $model->getPostShort($post['content']);
+                    $msg_to 	= $inCore->parseSmiles($msg_to, true);
+                    $msg_after 	= $model->getPostShort($post['content'], false, true);
+                    $msg_after 	= $inCore->parseSmiles($msg_after, true);
 				$cut        = $model->getPostCut($post['content']);
 				$html		= $msg_to . $cut . $msg_after;
-			} else {
-            $html = $inCore->parseSmiles($post['content'], true);
-			}
-            
-            $html = $inDB->escape_string($html);
+                } else {
+                $html = $inCore->parseSmiles($post['content'], true);
+                }
 
-            $inDB->query("UPDATE cms_blog_posts SET content_html = '{$html}' WHERE id = '{$post['id']}'");
+                $html = $inDB->escape_string($html);
+
+                $inDB->query("UPDATE cms_blog_posts SET content_html = '{$html}' WHERE id = '{$post['id']}'");
+
+            }
+
+            echo '<p>Записи блогов оптимизированы</p>';
 
         }
 
-        echo '<p>Записи блогов оптимизированы</p>';
-
-    }
-
-// ========================================================================== //
-// ========================================================================== //
-
-    if (!$inDB->isFieldExists('cms_modules', 'is_strict_bind')){
-        $inDB->query("ALTER TABLE `cms_modules` ADD `is_strict_bind` TINYINT NOT NULL DEFAULT '0'");
     }
 
 // ========================================================================== //
@@ -336,71 +436,71 @@
 // ========================================================================== //
 // ========================================================================== //
 
-    $sql = "SELECT id, message
-            FROM cms_user_msg";
-
-    $result = $inDB->query($sql);
-
-    if($inDB->num_rows($result)){
-
-        while($msg = $inDB->fetch_assoc($result)){
-		
-			$html = $inCore->parseSmiles($msg['message'], true);
-			$html = mysql_escape_string($html);
-			
-            $inDB->query("UPDATE cms_user_msg SET message = '{$html}' WHERE id = '{$msg['id']}'");
-
-        }
-
-        echo '<p>Записи личных сообщений оптимизированы.</p>';
-
-    }
+//    $sql = "SELECT id, message
+//            FROM cms_user_msg";
+//
+//    $result = $inDB->query($sql);
+//
+//    if($inDB->num_rows($result)){
+//
+//        while($msg = $inDB->fetch_assoc($result)){
+//
+//			$html = $inCore->parseSmiles($msg['message'], true);
+//			$html = mysql_escape_string($html);
+//
+//            $inDB->query("UPDATE cms_user_msg SET message = '{$html}' WHERE id = '{$msg['id']}'");
+//
+//        }
+//
+//        echo '<p>Записи личных сообщений оптимизированы.</p>';
+//
+//    }
 
 // ========================================================================== //
 // ========================================================================== //
 
-    $sql = "SELECT id, content
-            FROM cms_comments";
-
-    $result = $inDB->query($sql);
-
-    if($inDB->num_rows($result)){
-
-        while($msg = $inDB->fetch_assoc($result)){
-		
-			$html = $inCore->parseSmiles($msg['content'], true);
-			$html = mysql_escape_string($html);
-			
-            $inDB->query("UPDATE cms_comments SET content = '{$html}' WHERE id = '{$msg['id']}'");
-
-        }
-
-        echo '<p>Комментарии оптимизированы.</p>';
-
-    }
+//    $sql = "SELECT id, content
+//            FROM cms_comments";
+//
+//    $result = $inDB->query($sql);
+//
+//    if($inDB->num_rows($result)){
+//
+//        while($msg = $inDB->fetch_assoc($result)){
+//
+//			$html = $inCore->parseSmiles($msg['content'], true);
+//			$html = mysql_escape_string($html);
+//
+//            $inDB->query("UPDATE cms_comments SET content = '{$html}' WHERE id = '{$msg['id']}'");
+//
+//        }
+//
+//        echo '<p>Комментарии оптимизированы.</p>';
+//
+//    }
 		
 // ========================================================================== //
 // ========================================================================== //
 
-    $sql = "SELECT id, content
-            FROM cms_user_wall";
-
-    $result = $inDB->query($sql);
-
-    if($inDB->num_rows($result)){
-
-        while($msg = $inDB->fetch_assoc($result)){
-		
-			$html = $inCore->parseSmiles($msg['content'], true);
-			$html = mysql_escape_string($html);
-			
-            $inDB->query("UPDATE cms_user_wall SET content = '{$html}' WHERE id = '{$msg['id']}'");
-
-        }
-
-        echo '<p>Записи на стенах пользователей оптимизированы.</p>';
-
-    }
+//    $sql = "SELECT id, content
+//            FROM cms_user_wall";
+//
+//    $result = $inDB->query($sql);
+//
+//    if($inDB->num_rows($result)){
+//
+//        while($msg = $inDB->fetch_assoc($result)){
+//
+//			$html = $inCore->parseSmiles($msg['content'], true);
+//			$html = mysql_escape_string($html);
+//
+//            $inDB->query("UPDATE cms_user_wall SET content = '{$html}' WHERE id = '{$msg['id']}'");
+//
+//        }
+//
+//        echo '<p>Записи на стенах пользователей оптимизированы.</p>';
+//
+//    }
 
 // ========================================================================== //
 // ========================================================================== //
@@ -409,10 +509,7 @@
 
     if (!$mod_friends_installed){
 
-        $sql = "INSERT INTO `cms_modules` VALUES ('', 'left', 'Друзья онлайн', 'Друзья онлайн', 1, 'mod_user_friend', 5, 1, 0, 0,
-    '---
-    limit: 5
-    view_type: table', 1, '', -1, 0, 1, 'HOUR','module_simple.tpl', 0)";
+        $sql = "INSERT INTO `cms_modules` VALUES ('', 'left', 'Друзья онлайн', 'Друзья онлайн', 1, 'mod_user_friend', 5, 1, 0, 0, '---\nlimit: 5\nview_type: table', 1, '', -1, 0, 1, 'HOUR','module_simple.tpl', 0)";
 
         $result = $inDB->query($sql);
 
@@ -452,16 +549,6 @@
         echo '<p>Права доступа тем к закрытым разделам форума установлены.</p>';
 
     }
-	
-// ========================================================================== //
-// ========================================================================== //
-
-//    if (!$inDB->isFieldExists('', '')){
-//
-//        $inDB->query("");
-//        echo '<p></p>';
-//
-//    }
 
 // ========================================================================== //
 // ========================================================================== //

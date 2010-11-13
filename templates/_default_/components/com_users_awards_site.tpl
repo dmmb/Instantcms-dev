@@ -13,7 +13,7 @@
 					<div class="usr_aw_title"><strong>{$aw.title}</strong></div>
 					<div class="usr_aw_desc">{$aw.description}</div>
 									
-					<table border="0" cellspacing="4" cellpadding="0" class="usr_aw_dettable">                      
+					<table border="0" cellspacing="0" cellpadding="3" class="usr_aw_dettable">                      
 						{if $aw.p_comment}  
 							<tr>
 								<td><img src="/images/autoawards/p_comment.gif" width="16" height="16" /></td>

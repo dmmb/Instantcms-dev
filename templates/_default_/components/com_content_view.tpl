@@ -73,7 +73,7 @@
 								{if $cat.showcomm}
 									{if $showdate} | {/if}
                                     <a href="{$article.url}" title="{$LANG.DETAIL}">{$LANG.DETAIL}</a>
-									| <a href="{$article.url}#c" title="{$LANG.COMMENTS}">{$article.comments|spellcount:$LANG.COMMENT:$LANG.COMMENT2:$LANG.COMMENT10}</a> 
+									| <a href="{$article.url}#c" title="{$LANG.COMMENTS}">{$article.comments|spellcount:$LANG.COMMENT:$LANG.COMMENT2:$LANG.COMMENT10}</a>
 								{/if}
                                  | {$article.hits|spellcount:$LANG.HIT:$LANG.HIT2:$LANG.HIT10}
 								{if $cat.showtags && $article.tagline}

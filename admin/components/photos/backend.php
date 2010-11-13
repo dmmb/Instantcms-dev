@@ -21,7 +21,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
     $inCore->loadModel('photos');
     $model = new cms_model_photos();
 
-    $opt = $inCore->request('opt', 'str', 'config');
+    $opt = $inCore->request('opt', 'str', 'list_albums');
 
 	cpAddPathway('Фотогалерея', '?view=components&do=config&id='.$_REQUEST['id']);
 	echo '<h3>Фотогалерея</h3>';
@@ -75,6 +75,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$toolmenu[4]['icon'] = 'listphoto.gif';
 		$toolmenu[4]['title'] = 'Все фотографии';
 		$toolmenu[4]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_photos';
+
+		$toolmenu[5]['icon'] = 'config.gif';
+		$toolmenu[5]['title'] = 'Настройки';
+		$toolmenu[5]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config';
 
 	}
 
@@ -308,27 +312,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if ($opt == 'config') {
 
+        cpAddPathway('Настройки', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config');
+
 		if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
 			
-		echo '<div style="padding:10px">';
-
-		$albums_total   = dbRowsCount('cms_photo_albums', "id>0 AND NSDiffer=''");
-		$albums_pub     = dbRowsCount('cms_photo_albums', "published=1 AND NSDiffer=''");
-		echo '<div><strong>Фотоальбомов:</strong> '.$albums_total.' <a href="index.php?view=components&do=config&id=3&opt=list_albums">&rarr;</a></div>';
-		echo '<div><strong>Публикуемых фотоальбомов:</strong> '.$albums_pub.'</div>';		
-
-		$photos_total   = dbRowsCount('cms_photo_files', 'id>0');
-		$photos_pub     = dbRowsCount('cms_photo_files', 'published=1');
-		$photos_unpub   = $photos_total - $photos_pub;
-		echo '<div style="margin-top:10px"><strong>Фотографий:</strong> '.$photos_total.' <a href="index.php?view=components&do=config&id=3&opt=list_photos">&rarr;</a></div>';
-		echo '<div><strong>Публикуемых фотографий:</strong> '.$photos_pub.'</div>';		
-		
-		if ($photos_unpub) {
-			echo '<div style="margin-top:10px;color:#FF3333" ><strong>Неопубликованных фотографий:</strong> '.$photos_unpub.' <a href="index.php?view=components&do=config&id=3&opt=list_photos">&rarr;</a></div>';
-		}
-		
-		echo '</div>';
-		
 		if (!isset($cfg['showlat'])) { $cfg['showlat'] = 1; }		
 		if (!isset($cfg['orderto'])) { $cfg['orderto'] = 'title'; }		
 		if (!isset($cfg['orderby'])) { $cfg['orderby'] = 'ASC'; }		
@@ -341,10 +328,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		<?php cpCheckWritable('/images/photos/small', 'folder'); ?>				
 
 			<form action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id']; ?>" method="post" enctype="multipart/form-data" name="optform">
-			  <table width="700" border="0" cellpadding="10" cellspacing="0" class="proptable">
+			  <table width="" border="0" cellpadding="10" cellspacing="0" class="proptable">
 				<tr>
-				  <td><strong>Показывать ссылки на оригинал: </strong></td>
-				  <td width="200">
+				  <td width="300"><strong>Показывать ссылки на оригинал: </strong></td>
+				  <td width="250">
 				  	<input name="link" type="radio" value="1" <?php if (@$cfg['link']) { echo 'checked="checked"'; } ?>/> Да
 				  <input name="link" type="radio" value="0" <?php if (@!$cfg['link']) { echo 'checked="checked"'; } ?>/> Нет				  </td>
 				</tr>
@@ -356,8 +343,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					  <input name="saveorig" type="radio" value="0" <?php if (@!$cfg['saveorig']) { echo 'checked="checked"'; } ?>/> Нет				  </td>
 			    </tr>
 				<tr>
-				  <td><strong>Количество колонок для <br />
-			      вывода списка альбомов: </strong></td>
+				  <td><strong>Количество колонок для<br />вывода списка альбомов: </strong></td>
 				  <td><input name="maxcols" type="text" id="maxcols" size="5" value="<?php echo @$cfg['maxcols'];?>"/> шт</td>
 			    </tr>
 				<tr>
@@ -373,43 +359,50 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                     </select></td>
 			    </tr>
 				<tr>
-				  <td><strong>Показывать ссылки &quot;Последние загруженные&quot; 
-			      и &quot;Лучшие фото&quot;: </strong></td>
+				  <td><strong>Показывать ссылки на последние и лучшие фото: </strong></td>
 				  <td>
 				  	<input name="showlat" type="radio" value="1" <?php if (@$cfg['showlat']) { echo 'checked="checked"'; } ?>/> Да
 					<input name="showlat" type="radio" value="0" <?php if (@!$cfg['showlat']) { echo 'checked="checked"'; } ?>/> Нет			      </td>
 			    </tr>
 				<tr>
-				  <td><strong>Наносить водяной знак:</strong>  <br />Если включено, то на все загружаемые
-			      фотографии будет наносится изображение 
-			      из файла "<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>"</td>
+				  <td>
+                      <strong>Наносить водяной знак:</strong><br />
+                      <span class="hinttext">Если включено, то на все загружаемые фотографии будет наносится изображение из файла "<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>"</td>
 				  <td>
 					<input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Да
 					<input name="watermark" type="radio" value="0" <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Нет				  </td>
 			    </tr>
 				<tr>
-				  <td><strong>Показ мини-эскизов:</strong>  <br />Каждый альбом может быть показан мини-эскизом. Для этого существуют два способа: мини-эскиз может быть выбран вручную для каждого из альбомов, или каждый альбом будет показан при помощи случайно выбранного мини-эскиза, принадлежащего этому фотоальбому или любым из его подальбомов (см. настройки ниже). Во втором случае мини-эскизы меняются динамически каждый раз, когда перезагружается страница.<br /><strong>
-ВНИМАНИЕ !</strong> При большом числе категорий и подкатегорий использование случайного показа мини-эскизов может привести к замедленному показу страницы !</td>
+				  <td>
+                      <strong>Показ мини-эскизов:</strong><br />
+                      <span class="hinttext">Выводить фото вместо иконки фотольбома</span>
+                  </td>
 				  <td>
 					<select name="tumb_view" style="width:190px">
                         <option value="1" <?php if(@$cfg['tumb_view']=='1') { echo 'selected'; } ?>>Не показывать</option>
                         <option value="2" <?php if(@$cfg['tumb_view']=='2') { echo 'selected'; } ?>>Случайный</option>
                         <option value="3" <?php if(@$cfg['tumb_view']=='3') { echo 'selected'; } ?>>По выбору</option>
-                  	</select><br /><br />
-                    <input name="tumb_club" type="checkbox" value="1" <?php if (@$cfg['tumb_club']) { echo 'checked'; } ?>/>
-                    Не применять к фотоальбомам клуба.				  
+                  	</select><br />
+                    <label>
+                        <input name="tumb_club" type="checkbox" value="1" <?php if (@$cfg['tumb_club']) { echo 'checked'; } ?>/>
+                        Не применять к альбомам клубов
+                    </label>
                     </td>
 			    </tr>
 				<tr>
-				  <td><strong>Выбор случайных мини-эскизов:</strong> <br />Из каких категорий выбирать мини-эскизы, если выбран случайный их показ для категорий ?</td>
+				  <td>
+                      <strong>Выбор случайных мини-эскизов:</strong><br />
+                      <span class="hinttext">Из каких альбомов выбирать эскизы, если выбран их случайный показ</span>
+                  </td>
 				  <td>
 					<select name="tumb_from" style="width:190px">
-                        <option value="1" <?php if(@$cfg['tumb_from']=='1') { echo 'selected'; } ?>>Только из самой категории</option>
-                        <option value="2" <?php if(@$cfg['tumb_from']=='2') { echo 'selected'; } ?>>Включая подкатегорию</option>
-                  	</select>				  </td>
+                        <option value="1" <?php if(@$cfg['tumb_from']=='1') { echo 'selected'; } ?>>Из текущего</option>
+                        <option value="2" <?php if(@$cfg['tumb_from']=='2') { echo 'selected'; } ?>>Включая вложенные</option>
+                  	</select>
+                  </td>
 			    </tr>
                 <tr>
-                    <td><strong>Показывать количество новых фото в альбомах за день?</strong></td>
+                    <td><strong>Показывать количество новых фото за день?</strong></td>
                         <td>
                             <input name="is_today" type="radio" value="1" <?php if (@$cfg['is_today']) { echo 'checked="checked"'; } ?> /> Да
                             <input name="is_today" type="radio" value="0"  <?php if (@!$cfg['is_today']) { echo 'checked="checked"'; } ?> /> Нет
@@ -554,7 +547,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //=================================================================================================//
 
 	if ($opt == 'list_albums'){
-		cpAddPathway('Фотоальбомы', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_albums');
+		
 		echo '<h3>Фотоальбомы</h3>';
 
 		//TABLE COLUMNS

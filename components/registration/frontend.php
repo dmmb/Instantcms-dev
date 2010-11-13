@@ -48,6 +48,9 @@ function registration(){
     
     $inCore->loadModel('registration');
     $model = new cms_model_registration();
+
+    $inCore->loadModel('users');
+    $users_model = new cms_model_users();
 	
     global $_LANG;
 
@@ -58,6 +61,7 @@ function registration(){
     if (!isset($cfg['first_auth_redirect'])) { $cfg['first_auth_redirect'] = 'profile'; }
     if (!isset($cfg['ask_icq'])) { $cfg['ask_icq'] = 1; }
     if (!isset($cfg['ask_birthdate'])) { $cfg['ask_birthdate'] = 1; }
+    if (!isset($cfg['send_greetmsg'])) { $cfg['send_greetmsg'] = 0; }
 
     //request params
 	$id     =   $inCore->request('id', 'int', 0);
@@ -85,7 +89,7 @@ function registration(){
             //SEND NEW PASSWORD TO EMAIL
             $email = $inCore->request('email', 'str');
 
-            if (!eregi("^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$", $email)){
+            if (!preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/i", $email)){
                 echo '<p style="color:red">'.$_LANG['ERR_EMAIL'].'</p>';
             } else {
 
@@ -132,7 +136,7 @@ function registration(){
 		$pass2	= $inCore->request('pass2', 'str', '');
 
         if(strlen($login)<2) 					{ $msg .= $_LANG['TYPE_LOGIN'].'<br/>'; }
-		if ((!eregi("^[a-zA-Z0-9]+\$", $login)) && strlen($login)>=2)	{$msg  .= $_LANG['ERR_LOGIN'].'<br/>'; }
+		if ((!preg_match("/^([a-zA-Z0-9])+$/i", $login)) && strlen($login)>=2)	{$msg  .= $_LANG['ERR_LOGIN'].'<br/>'; }
         if(!$pass) 								{ $msg .= $_LANG['TYPE_PASS'].'<br/>'; }
         if($pass && !$pass2) 					{ $msg .= $_LANG['TYPE_PASS_TWICE'].'<br/>'; }
 		if($pass && $pass2 && strlen($pass)<6) 	{ $msg .= $_LANG['PASS_SHORT'].'<br/>'; }
@@ -158,13 +162,9 @@ function registration(){
             $msg .= $_LANG['ERR_NICK_EXISTS'].'<br/>';
         }
 		// Проверяем email
-            $email = $inCore->request('email', 'str', '');
+        $email = $inCore->request('email', 'email');
         if(!$email) {
-            $msg .= $_LANG['TYPE_EMAIL'].'<br/>';
-        } else {
-            if (!eregi("^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$", $email)){
-                $msg  .= $_LANG['ERR_EMAIL'].'<br/>';
-            }
+            $msg  .= $_LANG['ERR_EMAIL'].'<br/>';
         }
 		// Если есть опция показывать ДР при регистрации, то проверяем
         if ($cfg['ask_birthdate']){
@@ -205,8 +205,21 @@ function registration(){
 
                     cmsCore::callEvent('USER_BEFORE_REGISTER', $user_array);
 
-                    $sql = "INSERT INTO cms_users (login, nickname, password, email, icq, regdate, logdate, birthdate, is_locked)
-                            VALUES ('$login', '$nickname', '$pass', '$email', '$icq', NOW(), NOW(), '$birthdate', '$is_locked')";
+                    if (cmsUser::sessionGet('invite_code')){
+
+                        $invite_code    = cmsUser::sessionGet('invite_code');
+                        $invited_by     = (int)$users_model->getInviteOwner($invite_code);
+
+                        if ($invited_by){ $users_model->closeInvite($invite_code); }
+
+                        cmsUser::sessionDel('invite_code');
+
+                    } else {
+                        $invited_by = 0;
+                    }
+
+                    $sql = "INSERT INTO cms_users (login, nickname, password, email, icq, regdate, logdate, birthdate, is_locked, invited_by)
+                            VALUES ('$login', '$nickname', '$pass', '$email', '$icq', NOW(), NOW(), '$birthdate', '$is_locked', '{$invited_by}')";
                     $inDB->query($sql) ;
 
                     $new_user_id = dbLastId('cms_users');
@@ -230,6 +243,9 @@ function registration(){
                         $inCore->halt();
                     } else {                        
                         $inPage->includeTemplateFile('special/regcomplete.php');
+
+                        if ($cfg['send_greetmsg']){ $model->sendGreetsMessage($new_user_id, $cfg['greetmsg']); }
+
                         $inCore->halt();
                     }
 
@@ -252,28 +268,34 @@ function registration(){
 
         $inPage->setTitle($_LANG['REGISTRATION']);
 
-        $do = 'view';
-        echo '<div class="con_heading">'.$_LANG['REGISTRATION'].'</div>';
+        $do             = 'view';
 
-        if ($cfg['is_on']){
+        $correct_invite = (cmsUser::sessionGet('invite_code') ? true : false);
 
-            $inPage->addHeadJS('components/registration/js/check.js');
+        if ($cfg['reg_type']=='invite' && $inCore->inRequest('invite_code')){
 
-            if (isset($msg)) { if($msg!='') { echo '<p><font color="red">'.$msg.'</font></p>'; } }           
+            $invite_code    = $inCore->request('invite_code', 'str', '');
+            $correct_invite = $users_model->checkInvite($invite_code);
 
-            $smarty = $inCore->initSmarty('components', 'com_registration.tpl');
-                $smarty->assign('cfg', $cfg);
-                if(isset($login)){ $smarty->assign('login', $login); }
-                if(isset($nickname)){ $smarty->assign('nickname', $nickname); }
-                if(isset($realname1)){ $smarty->assign('realname1', $realname1); }
-                if(isset($realname2)){ $smarty->assign('realname2', $realname2); }
-                if(isset($email)){ $smarty->assign('email', $email); }
-                if(isset($icq)){ $smarty->assign('icq', $icq); }
-            $smarty->display('com_registration.tpl');
+            if ($correct_invite) {
+                cmsUser::sessionPut('invite_code', $invite_code);
+            } else {
+                $msg = $_LANG['INCORRECT_INVITE'];
+            }
 
-        } else {
-            echo '<div style="margin-top:10px">'.$cfg['offmsg'].'</div>';
         }
+
+        $smarty = $inCore->initSmarty('components', 'com_registration.tpl');
+            $smarty->assign('cfg', $cfg);
+            if(isset($login)){ $smarty->assign('login', $login); }
+            if(isset($nickname)){ $smarty->assign('nickname', $nickname); }
+            if(isset($realname1)){ $smarty->assign('realname1', $realname1); }
+            if(isset($realname2)){ $smarty->assign('realname2', $realname2); }
+            if(isset($email)){ $smarty->assign('email', $email); }
+            if(isset($icq)){ $smarty->assign('icq', $icq); }
+            if(isset($msg)){ $smarty->assign('msg', $msg); }
+            $smarty->assign('correct_invite', $correct_invite);
+        $smarty->display('com_registration.tpl');
 
     }
 
@@ -337,7 +359,7 @@ function registration(){
 
                 $remember_pass = $inCore->inRequest('remember');
 
-                if (!eregi("^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$", $login)){
+                if (!preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/i", $login)){
                     $where_login = "login = '{$login}'";
                 } else {
                     $where_login = "email = '{$login}'";
@@ -420,6 +442,8 @@ function registration(){
             $inDB->query($sql) or die($_LANG['ERR_ACTIVATION']);
 
             cmsCore::callEvent('USER_ACTIVATED', $user_id);
+
+            if ($cfg['send_greetmsg']){ $model->sendGreetsMessage($user_id, $cfg['greetmsg']); }
 
             $inPage->includeTemplateFile('special/regcomplete.php');
             $inCore->halt();

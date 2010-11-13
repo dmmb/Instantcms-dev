@@ -36,6 +36,7 @@
 					<span class="members"><strong>{$club.members|spellcount:$LANG.USER:$LANG.USER2:$LANG.USER10}</strong></span>
 				</div>
 			</div>
+            <div class="blog_desc"></div>
 		</div>
 	{/foreach}
 	

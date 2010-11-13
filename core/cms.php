@@ -12,8 +12,8 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-define('CORE_VERSION', 		'1.6.2');
-define('CORE_BUILD', 		'4');
+define('CORE_VERSION', 		'1.7');
+define('CORE_BUILD', 		'1');
 define('CORE_VERSION_DATE', '2010-05-13');
 define('CORE_BUILD_DATE', 	'2010-05-13');
 
@@ -535,10 +535,10 @@ class cmsCore {
         //находим ID установленной версии
         $component_id = $this->getComponentId( $component['link'] );
 
-        //если плагин еще не был установлен, выходим
+        //если компонент еще не был установлен, выходим
         if (!$component_id) { return false; }
 
-        //загружаем текущие настройки плагина
+        //загружаем текущие настройки компонента
         $old_config = $this->loadComponentConfig( $component['link'] );
 
         //удал€ем настройки, которые больше не нужны
@@ -558,7 +558,7 @@ class cmsCore {
         //конвертируем массив настроек в YAML
         $config_yaml   = $this->arrayToYaml($old_config);
 
-        //обновл€ем плагин в базе
+        //обновл€ем компонент в базе
         $update_query  = "UPDATE cms_components
                           SET title='{$component['title']}',
                               author='{$component['author']}',
@@ -667,7 +667,7 @@ class cmsCore {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * ¬озвращает список папок с плагинами
+     * ¬озвращает список папок с компонентами
      * @return array
      */
     public function getComponentsDirs() {
@@ -749,6 +749,279 @@ class cmsCore {
         if (!file_exists($installer_file)){ return false; }
 
         $this->includeFile('components/'.$component.'/install.php');
+
+        return true;
+
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * ”станавливает модуль
+     * ¬озвращает ID установленного модул€
+     * @param array $module
+     * @param array $config
+     * @return int
+     */
+    public function installModule($module, $config) {
+
+        $inDB = cmsDatabase::getInstance();
+
+        $config_yaml    = $this->arrayToYaml($config);
+
+        if (!$config_yaml) { $config_yaml = ''; }
+
+        //добавл€ем модуль в базу
+        $install_query  = "INSERT INTO cms_modules (`position`, `name`, `title`, `is_external`,
+                                                    `content`, `ordering`, `showtitle`, `published`,
+                                                    `user`, `config`, `original`, `css_prefix`,
+                                                    `allow_group`, `cache`, `cachetime`, `cacheint`,
+                                                    `template`, `is_strict_bind`, `version`)
+                VALUES ('{$module['position']}', '{$module['name']}', '{$module['title']}', '1',
+                        '{$module['link']}', '1', '1', '1',
+                        '0', '{$config_yaml}', '1', '',
+                        '-1', '0', '1', 'HOUR',
+                        'module.tpl', '0', '{$module['version']}')";
+
+        $inDB->query($install_query);
+
+        //получаем ID модул€
+        $module_id = $inDB->get_last_id('cms_modules');
+
+        //возвращаем ложь, если модуль не установилс€
+        if (!$module_id)    { return false; }
+
+        //возращаем ID установленного модул€
+        return $module_id;
+
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * ƒелает апгрейд установленного модул€
+     * @param array $component
+     * @param array $config
+     * @return bool
+     */
+    public function upgradeModule($module, $config) {
+        $inDB = cmsDatabase::getInstance();
+
+        //находим ID установленной версии
+        $module_id = $this->getModuleId( $module['link'] );
+
+        //если модуль еще не был установлен, выходим
+        if (!$module_id) { return false; }
+
+        //загружаем текущие настройки модул€
+        $old_config = $this->loadModuleConfig( $module_id );
+
+        //удал€ем настройки, которые больше не нужны
+        foreach($old_config as $param=>$value){
+            if ( !isset($config[$param]) ){
+                unset($old_config[$param]);
+            }
+        }
+
+        //добавл€ем настройки, которых раньше не было
+        foreach($config as $param=>$value){
+            if ( !isset($old_config[$param]) ){
+                $old_config[$param] = $value;
+            }
+        }
+
+        //конвертируем массив настроек в YAML
+        $config_yaml   = $this->arrayToYaml($old_config);
+
+        //обновл€ем модуль в базе
+        $update_query  = "UPDATE cms_modules
+                          SET title='{$module['title']}',
+                              name='{$module['name']}',
+                              version='{$module['version']}',
+                              config='{$config_yaml}'
+                          WHERE id = {$module_id}";
+
+        $inDB->query($update_query);
+
+        //модуль успешно обновлен
+        return true;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * ”дал€ет установленный модуль
+     * @param int $module_id
+     * @return bool
+     */
+    public function removeModule($module_id) {
+
+        $inDB = cmsDatabase::getInstance();
+
+        //если модуль не был установлен, выходим
+        if (!$module_id) { return false; }
+
+        //удал€ем модуль из базы
+        $delete_query  = "DELETE FROM cms_modules WHERE id = {$module_id}";
+
+        $inDB->query($delete_query);
+
+        //модуль успешно удален
+        return true;
+
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * ¬озвращает список модулей, имеющихс€ на диске, но не установленных
+     * @return array
+     */
+    public function getNewModules() {
+
+        $inDB = cmsDatabase::getInstance();
+
+        $new_modules    = array();
+        $all_modules    = $this->getModulesDirs();
+
+        if (!$all_modules) { return false; }
+
+        foreach($all_modules as $module){
+
+            $installer_file = PATH . '/modules/' . $module . '/install.php';
+
+            if (file_exists($installer_file)){
+
+                $installed = $inDB->rows_count('cms_modules', "content='{$module}' AND user=0", 1);
+                if (!$installed){
+                    $new_modules[] = $module;
+                }
+
+            }
+
+        }
+
+        if (!$new_modules) { return false; }
+
+        return $new_modules;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * ¬озвращает список модулей, верси€ которых изменилась в большую сторону
+     * @return array
+     */
+    public function getUpdatedModules() {
+
+        $inDB = cmsDatabase::getInstance();
+
+        $upd_modules    = array();
+        $all_modules    = $inDB->get_table('cms_modules', 'user=0');
+
+        if (!$all_modules) { return false; }
+
+        foreach($all_modules as $module){
+            if($this->loadModuleInstaller($module['content'])){
+                $version    = $module['version'];
+                $_module    = call_user_func('info_module_'.$module['content']);
+                if ($version){
+                    if ($version < $_module['version']){
+                        $upd_modules[] = $module['content'];
+                    }
+                }
+            }
+        }
+
+        if (!$upd_modules) { return false; }
+
+        return $upd_modules;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * ¬озвращает список папок с модул€ми
+     * @return array
+     */
+    public function getModulesDirs() {
+        $dir    = PATH . '/modules';
+        $pdir   = opendir($dir);
+
+        $modules = array();
+
+        while ($nextfile = readdir($pdir)){
+            if (
+                    ($nextfile != '.')  &&
+                    ($nextfile != '..') &&
+                    is_dir($dir.'/'.$nextfile) &&
+                    ($nextfile!='.svn')
+               ) {
+                $modules[$nextfile] = $nextfile;
+            }
+        }
+
+        if (!sizeof($modules)){ return false; }
+
+        return $modules;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * ¬озвращает ID модул€ по названию
+     * @param string $component
+     * @return int
+     */
+    public function getModuleId($module){
+
+        $inDB = cmsDatabase::getInstance();
+
+        return $inDB->get_field('cms_modules', "content='{$module}' AND user=0", 'id');
+
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * ¬озвращает название модул€ по ID
+     * @param int $component_id
+     * @return string
+     */
+    public function getModuleById($module_id){
+
+        $inDB = cmsDatabase::getInstance();
+
+        $link = $inDB->get_field('cms_modules', "id={$module_id} AND user=0", 'content');
+
+        return $link;
+
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * ¬озвращает версию модул€ по названию
+     * @param string $component
+     * @return float
+     */
+    public function getModuleVersion($module){
+
+        $inDB = cmsDatabase::getInstance();
+
+        return $inDB->get_field('cms_modules', "content='{$module}' AND user=0", 'version');
+
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public function loadModuleInstaller($module){
+
+        $installer_file = PATH . '/modules/' . $module . '/install.php';
+
+        if (!file_exists($installer_file)){ return false; }
+
+        $this->includeFile('modules/'.$module.'/install.php');
 
         return true;
 
@@ -1300,7 +1573,7 @@ class cmsCore {
 		 *  ритерий "включенности" компонента определ€етс€ в функции loadComponentConfig
 		 */
         //провер€ем что в названии только буквы и цифры
-        if (!eregi("^[a-z0-9]+$", $component)){ cmsCore::error404(); }
+        if (!preg_match("/^([a-z0-9])+$/", $component)){ cmsCore::error404(); }
         
         $this->loadLanguage('components/'.$component);
 
@@ -1430,6 +1703,7 @@ class cmsCore {
             switch($type){
                 case 'int':   return (int)$_REQUEST[$var]; break;
                 case 'str':   if ($_REQUEST[$var]) { return $this->strClear($_REQUEST[$var]); } else { return $default; } break;
+                case 'email': if(preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/i", $_REQUEST[$var])){ return $_REQUEST[$var]; } else { return $default; } break;
                 case 'html':  if ($_REQUEST[$var]) { return $this->strClear($_REQUEST[$var], false); } else { return $default; } break;
                 case 'array': if (is_array($_REQUEST[$var])) { return $_REQUEST[$var]; } else { return $default; } break;
                 case 'array_int': if (is_array($_REQUEST[$var])) { foreach($_REQUEST[$var] as $k=>$i){ $arr[$k] = (int)$i; } return $arr; } else { return $default; } break;
@@ -2626,7 +2900,7 @@ class cmsCore {
         $html = '';
 
         if(@$seldate){
-            $parts = split('-', $seldate);
+            $parts = explode('-', $seldate);
             if ($parts[2]){
                 $day_default = $parts[2];
             }
@@ -2790,7 +3064,7 @@ class cmsCore {
             $ac         = $inDB->fetch_assoc($result);
             $access_str = $ac['access'];
             $access     = str_replace(', ', ',', $access_str);
-            $access     = split(',', $access);
+            $access     = explode(',', $access);
             return $access;
         }
 
@@ -2821,7 +3095,7 @@ class cmsCore {
      * @return bool
      */
     public function isUserCan($access_type){ //$access_type like "comments/delete" or "photo/edit"
-        $inDB   = cmsDatabase::getInstance();
+        $inDB = cmsDatabase::getInstance();
         $inUser = cmsUser::getInstance();
         $do_access = false;
 
@@ -2848,7 +3122,7 @@ class cmsCore {
                 $access_str = $ac['access'];
 
                 $access = str_replace(', ', ',', $access_str);
-                $access = split(',', $access);
+                $access = explode(',', $access);
 
                 if (in_array($access_type, $access)){
                     $do_access = true;

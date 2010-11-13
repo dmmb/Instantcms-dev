@@ -33,6 +33,7 @@
                 </li>
             {/foreach}
          </ul>
+         <div class="blog_desc"></div>
     </div>
         
 {else}

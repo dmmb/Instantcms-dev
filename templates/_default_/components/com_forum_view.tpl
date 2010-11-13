@@ -22,13 +22,6 @@
 {* ------ Список подфорумов -------- *}
 
 {if $subforums_count}
-    <table width="100%" cellspacing="0" cellpadding="5"  class="forum_toolbar">
-        <tr>
-            <td width="16"><img src="/components/forum/images/toolbar/subforums.gif"/></td>
-            <td><div class="subforumshead">{$LANG.SUBFORUMS}</div></td>
-        </tr>
-    </table>
-
     <table class="forums_table" width="100%" cellspacing="0" cellpadding="8" border="0" bordercolor="#999999" >
         {php}$row=1;{/php}
         {foreach key=id item=subf from=$subforums}

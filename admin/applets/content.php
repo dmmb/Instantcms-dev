@@ -164,15 +164,33 @@ function applet_content(){
 		}
 	}
 
-	if ($do == 'move_up'){
-		if ($id >= 0){ dbMoveUp('cms_content', $id, $co); }
-		header('location:'.$_SERVER['HTTP_REFERER']);
+	if ($do == 'move'){
+
+        $item_id = $inCore->request('id', 'int', 0);
+        $cat_id  = $inCore->request('cat_id', 'int', 0);
+
+        $dir     = $_REQUEST['dir'];
+        $step    = 1;
+
+        $model->moveItem($item_id, $cat_id, $dir, $step);
+        echo '1'; exit;
+
 	}
 
-	if ($do == 'move_down'){
-		if ($id >= 0){ dbMoveDown('cms_content', $id, $co); }
-		header('location:'.$_SERVER['HTTP_REFERER']);
-	}
+    if ($do == 'move_to_cat'){
+
+        $items      = $inCore->request('item', 'array_int');
+        $to_cat_id  = $inCore->request('obj_id', 'int', 0);
+
+        if ($items && $to_cat_id){
+
+            $model->moveArticlesToCat($items, $to_cat_id);
+
+        }
+
+        $inCore->redirect('?view=tree&cat_id='.$to_cat_id);
+
+    }
 
 	if ($do == 'saveorder'){
 		if(isset($_REQUEST['ordering'])) { 
@@ -217,7 +235,7 @@ function applet_content(){
 		} else {
 			$model->deleteArticles($_REQUEST['item'], $cfg['af_delete']);
 		}
-		header('location:?view=content');
+		$inCore->redirectBack();
 	}
 	
 	if ($do == 'update'){
@@ -250,7 +268,7 @@ function applet_content(){
 			$pubdate                   = $inCore->request('pubdate', 'str', '');
 
             $article['user_id']         = $inCore->request('user_id', 'int', $inUser->id);
-			
+
 			$article['tpl'] 			= $inCore->request('tpl', 'str', 'com_content_read.tpl');
 
             $date = explode('.', $pubdate);
@@ -308,9 +326,9 @@ function applet_content(){
             }
 
 			if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
-				header('location:?view=content');		
+				$inCore->redirect('?view=tree&cat_id='.$article['category_id']);
 			} else {
-				header('location:?view=content&do=edit');		
+				$inCore->redirect('?view=content&do=edit');
 			}	
 		}
 	}
@@ -344,7 +362,7 @@ function applet_content(){
 		$article['pubdate']         = $date[2] . '-' . $date[1] . '-' . $date[0] . ' ' .date('H:i');
 		
 		$article['user_id']         = $inCore->request('user_id', 'int', $inUser->id);
-		
+
 		$article['tpl'] 			= $inCore->request('tpl', 'str', 'com_content_read.tpl');
 
         $autokeys                   = $inCore->request('autokeys', 'int');
@@ -399,7 +417,7 @@ function applet_content(){
             }
         }
 
-		header('location:?view=content');
+		$inCore->redirect('?view=tree&cat_id='.$article['category_id']);
 	}	  
 
    if ($do == 'add' || $do == 'edit'){
@@ -423,14 +441,9 @@ function applet_content(){
  	 		 cpAddPathway('Добавить статью', 'index.php?view=content&do=add');
 			 $mod['category_id'] = $_REQUEST['to'];
 		} else {
-					 if(isset($_REQUEST['multiple'])){				 
-						if (isset($_REQUEST['item'])){					
-							$_SESSION['editlist'] = $_REQUEST['item'];
-						} else {
-							echo '<p class="error">Нет выбранных объектов!</p>';
-							return;
-						}				 
-					 }
+                    if (isset($_REQUEST['item'])){
+                        $_SESSION['editlist'] = $_REQUEST['item'];
+                    }
 						
 					 $ostatok = '';
 					

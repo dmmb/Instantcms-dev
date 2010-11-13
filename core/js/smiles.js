@@ -7,8 +7,8 @@ function getCaretPos(obj) {
     clone.moveToElementText(obj);
     clone.setEndPoint('EndToEnd', sel);
     return clone.text.length;
-    } else if (obj.selectionStart!==false) return obj.selectionStart; // Gecko
-    else return 0;
+  } else if (obj.selectionStart!==false) return obj.selectionStart; // Gecko
+  else return 0;
 }
 
 function replaceSelectedText(obj,cbFunc,s_open, s_close){
@@ -45,20 +45,29 @@ function addSmile(tag, field_id){
 }
 
 function addTag(field_id, s_open, s_close){
-    var txtarea = document.getElementById(field_id);
-    replaceSelectedText(txtarea,'insertTag',s_open, s_close);
-    return;
+   var txtarea = document.getElementById(field_id);
+   replaceSelectedText(txtarea,'insertTag',s_open, s_close);
+   return;
 } 
 
 function addTagUrl(field_id){
-    var txtarea = document.getElementById(field_id);
-    var link_url    = prompt('Адрес ссылки (URL):');
-    var link_name = prompt('Название ссылки (не обязательно):'); 
-    var pos = getCaretPos(txtarea);
-    if (link_url=='') { return; }
-    if (link_name.length > 0){txtarea.value = txtarea.value.substring(0,pos) + '[url='+link_url+']' + link_name + '[/url]'+ txtarea.value.substring(pos+1,txtarea.value.length);} 
-    else {txtarea.value = txtarea.value.substring(0,pos) +  '[url]' + link_url + '[/url]'+ txtarea.value.substring(pos+1,txtarea.value.length);}
-    return;
+   var txtarea = document.getElementById(field_id);
+   var link_url = prompt('Адрес ссылки (URL):');
+   var link_name = prompt('Название ссылки (не обязательно):'); 
+   var pos = getCaretPos(txtarea);
+   if (link_url=='') { return; }   
+   if (link_name.length > 0){txtarea.value = txtarea.value.substring(0,pos) + '[url='+link_url+']' + link_name + '[/url]'+ txtarea.value.substring(pos+1,txtarea.value.length);} 
+   else {txtarea.value = txtarea.value.substring(0,pos) +  '[url]' + link_url + '[/url]'+ txtarea.value.substring(pos+1,txtarea.value.length);}
+   return;
+}
+
+function addTagImage(field_id){
+   var txtarea = document.getElementById(field_id);
+   var link_url = prompt('Адрес картинки (URL):');
+   var pos = getCaretPos(txtarea);
+   if (link_url=='') { return; }
+   txtarea.value = txtarea.value.substring(0,pos) +  '[img]' + link_url + '[/img]'+ txtarea.value.substring(pos+1,txtarea.value.length);
+   return;
 }
 
 function addTagEmail(field_id){
@@ -79,11 +88,11 @@ function addTagAudio(field_id){
 }
 
 function addTagVideo(field_id){
-   var txtarea     = document.getElementById(field_id);
-   var link_url    = prompt('Код видео (Youtube/Rutube):');
+   var txtarea = document.getElementById(field_id);
+   var link_url = prompt('Код видео (Youtube/Rutube):'); 
    var pos = getCaretPos(txtarea);  
    if (link_url.length > 0){txtarea.value = txtarea.value.substring(0,pos) + '[video]' + link_url + '[/video]' + txtarea.value.substring(pos+1,txtarea.value.length);}
-   return;
+	return;
 
 }
 
@@ -144,15 +153,15 @@ function imageLoaded(field_id, data, placekind){
 }
 
 function addTagQuote(field_id){
-    var txtarea = document.getElementById(field_id);
-    var q_text = '';
-    q_text = prompt('Текст цитаты:');
-    var q_user = prompt('Автор цитаты (не обязательно):');
-    var pos = getCaretPos(txtarea);
-    if (q_text=='') { return; }
-    if (q_user.length > 0){txtarea.value = txtarea.value.substring(0,pos) + '[quote='+q_user+']' + q_text + '[/quote]' + txtarea.value.substring(pos+1,txtarea.value.length);} 
-    else {txtarea.value = txtarea.value.substring(0,pos) + '[quote]' + q_text + '[/quote]' + txtarea.value.substring(pos+1,txtarea.value.length);}
-    return;
+   var txtarea = document.getElementById(field_id);
+   var q_text = '';
+   q_text = prompt('Текст цитаты:');
+   var q_user = prompt('Автор цитаты (не обязательно):');
+   var pos = getCaretPos(txtarea);
+   if (q_text=='') { return; }   
+   if (q_user.length > 0){txtarea.value = txtarea.value.substring(0,pos) + '[quote='+q_user+']' + q_text + '[/quote]' + txtarea.value.substring(pos+1,txtarea.value.length);} 
+   else {txtarea.value = txtarea.value.substring(0,pos) + '[quote]' + q_text + '[/quote]' + txtarea.value.substring(pos+1,txtarea.value.length);}
+   return;
 
 } 
 
@@ -163,7 +172,7 @@ function insertAlbumImage(field_id){
    var txtval = txtarea.value;
    var pos = getCaretPos(txtarea);
    txtarea.value = txtval.substring(0,pos) + ' [IMG]/images/users/photos/medium/'+path+'[/IMG] ' + txtval.substring(pos+1,txtval.length);
-   $('#albumimginsert').hide();
+	$('#albumimginsert').hide();
    return;
 	
 }
@@ -178,5 +187,5 @@ function addTagCut(field_id){
    var cut_text = prompt('Заголовок ссылки на полный текст поста:', 'Читать далее...');
    var pos = getCaretPos(txtarea);
    if (cut_text.length > 0){ txtarea.value = txtarea.value.substring(0,pos) + '[cut=' + cut_text + ']' + txtarea.value.substring(pos+1,txtarea.value.length);}
-   return;
+	return;
 }

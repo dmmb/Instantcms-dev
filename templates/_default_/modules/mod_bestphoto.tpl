@@ -1,48 +1,39 @@
 {if $is_best}
-<table cellspacing="2" border="0" width="100%">
+<table cellspacing="2" cellpadding="2" border="0" width="100%">
   {assign var="col" value="1"}	
   {foreach key=tid item=con from=$cons}
-  {if $col==1}
-  <tr> {/if}
-    <td align="center" valign="middle" class="mod_lp_photo" width="">
-    	<table width="100%" height="100" cellspacing="0" cellpadding="0">
+  	{if $col==1}  <tr> {/if}
+    <td align="center" valign="bottom" class="mod_lp_photo" width="{math equation="100 / z" z=$cfg.maxcols}%">
+
         	{if $cfg.showtype == 'full'}
-        	<tr>
-          		<td align="center"><div class="mod_lp_titlelink"><a href="/photos/photo{$con.id}.html" title="{$con.title} ({$con.rating})">{$con.title}</a></div></td>
-        	</tr>
+	          	<div class="mod_lp_titlelink"><a href="/photos/photo{$con.id}.html" title="{$con.title} ({$con.rating})">{$con.title}</a></div>
             {/if}
-        	<tr>
-          		<td valign="middle" align="center"><a href="/photos/photo{$con.id}.html" title="{$con.title}"> <img class="photo_thumb_img" src="/images/photos/small/{$con.file}" alt="{$con.title} ({$con.rating})" border="0" /></a></td>
-        	</tr>
+        	<a href="/photos/photo{$con.id}.html" title="{$con.title}"> <img class="photo_thumb_img" src="/images/photos/small/{$con.file}" alt="{$con.title} ({$con.rating})" border="0" /></a>
+
             {if $cfg.showtype == 'full'}
-       		<tr>
-          		<td align="center">
                 	{if $cfg.showalbum}
             			<div class="mod_lp_albumlink"><a href="/photos/{$con.album_id}" title="{$con.album}">{$con.album}</a></div>
             		{/if}
-            		{if $cfg.showcom || $cfg.showdate}
+            		{if $cfg.showcom || $cfg.showdate || $cfg.showrating}
             			<div class="mod_lp_details">
-              				<table cellpadding="2" cellspacing="2" align="center" border="0">
-                				<tr>
-                                	{if $cfg.showdate}
+                               	  {if $cfg.showrating}
                   						{if $cfg.sort == 'rating'}
-                  							<td style="font-weight:bold">{$con.votes}</td>
+                                          	<strong>{$con.votes}</strong>
                   						{else}
-                  							<td>{$con.votes}</td>
+                                              {$con.votes}
                   						{/if}
                   					{/if}
                   					{if $cfg.showcom}
-                  					<td><img src="/images/icons/comments.gif" border="0"/></td>
-                  					<td><a href="/photos/photo{$con.id}.html#c">{$con.comments}</a></td>
+										<a class="blog_comments_link" href="/photos/photo{$con.id}.html#c">{$con.comments}</a>
                   					{/if}
-                               </tr>
-              				</table>
+                                {if $cfg.showdate}
+                                <div>
+                                	<span class="blog_entry_date">{$con.pubdate}</span>
+                                </div>
+                  					{/if}
             			</div>
             		{/if}
-            	</td>
-        </tr>
         {/if}
-      </table>
       </td>
       {if $col==$cfg.maxcols} </tr> {assign var="col" value="1"} {else} {math equation="x + 1" x=$col assign="col"} {/if}
   {/foreach}

@@ -88,7 +88,7 @@ if($opt=='saveconfig'){
 
     $cfg['privforms']   = $_REQUEST['privforms'];
 
-	$cfg['j_code']      = $_REQUEST['j_code'];
+	$cfg['j_code']   = $_REQUEST['j_code'];
 	$cfg['deltime']     = $_REQUEST['deltime'];
 
     $inCore->saveComponentConfig('users', $cfg);

@@ -455,6 +455,11 @@
                          );
 
         $routes[] = array(
+                            '_uri'  => '/^users\/invites.html$/i',
+                            'do'    => 'invites'
+                         );
+
+        $routes[] = array(
                             '_uri'  => '/^users\/rating([0-9]+).html$/i',
                             1       => 'page',
                             'orderby' => 'rating',

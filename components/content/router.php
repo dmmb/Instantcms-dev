@@ -23,7 +23,7 @@
                             'do'    => 'deletearticle',
                             1       => 'id'
                          );
-						 
+
         $routes[] = array(
                             '_uri'  => '/^content\/publish([0-9]+).html$/i',
                             'do'    => 'publisharticle',

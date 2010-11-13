@@ -17,98 +17,44 @@
 <title>InstantCMS - Авторизация</title>
 <style type="text/css">
 <!--
-html{
-	height:100%;
+    html{ height:100%; }
+    body { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; height:100%; margin:0px; background:#FFF; }
+    #top{ display:block; width:368px; height:30px; background:url(images/auth/top.jpg) no-repeat center top; }
+    #form{ display:block; width:368px; height:178px; background:url(images/auth/form.jpg) no-repeat center top; }
+    #fields { padding-top: 25px; }
+    #fields .field { display:block; width:270px; height:34px; text-align: right; margin-bottom: 6px; }
+    #fields .field input { width:230px; font-size:16px; margin-right:10px; margin-top:6px; border:none; background: none; }
+    #fields .login { background:url(images/auth/login.png) no-repeat; }
+    #fields .passw { background:url(images/auth/passw.png) no-repeat; }
+    .button{ display:block; width:100px; height: 32px; background:url(images/auth/btn.png) no-repeat; cursor: pointer; margin-top:25px; }
+    .button:hover{ background:url(images/auth/btn_hover.png) no-repeat; }
+    #copy { margin-top:15px; }
+    #copy a { color: #316294; }
 }
-body {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	height:100%;
-	margin:0px;
-	background:#FFF;
-}
-#inputs {
-	padding:0px;
-}
-#inputs div{
-	margin:2px;
-	padding:0px;
-	margin-left:15px;
-	width:245px;
-	height:40px;
-	background:url(/admin/images/auth/input.gif) no-repeat;
-	
-}
-#login, #pass{
-	display:inline;
-	width:245px;
-	height:40px;
-	background:none;
-	_padding:9px;
-	border:none;
-	font-size:18px;
-	margin-left:10px;
-}
-#title{
-	font-size:18px;
-	font-weight:bold;
-	text-align:center;
-	color:#003366;
-	margin:10px;
-}
-#title span{
-	color:#FF3300;
-}
-#gobtn{
-	width:64px;
-	height:65px;
-	margin-right:15px;
-}
-#copy{
-	text-align:center;
-	margin:10px;
-}
-
 -->
 </style>
 </head>
 
 <body onLoad="document.loginform.login.focus();">
-<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <td align="center" valign="middle"><table width="376" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-        <td>
-			<div id="title">
-				InstantCMS - <span>Авторизация</span>
-			</div>
-		</td>
-      </tr>
-      <tr>
-        <td height="114">
-			<form action="/login" method="post" name="loginform" target="_top" id="loginform">
-			<input type="hidden" name="is_admin" value="1" />
-			<table width="378" height="115" border="0" cellpadding="0" cellspacing="0" style="background:url(/admin/images/auth/auth_bg.jpg) no-repeat;">
-			  <tr>
-				<td valign="middle" id="inputs">
-					<div><input name="login" type="text" id="login" /></div>
-					<div><input name="pass" type="password" id="pass" /></div>
-				</td>
-				<td>
-					<input name="go" id="gobtn" type="image" src="/admin/images/auth/loginbtn.gif" alt="Вход" width="60" height="67"  onclick="document.loginform.submit()"/>
-				</td>
-			  </tr>
-			</table>
-			</form>
-		</td>
-      </tr>
-	  <tr>
-	  <td>
-	  	<div id="copy"><a href="http://www.instantcms.ru/">InstantCMS</a> &copy; 2007 - <?php echo date('Y'); ?></div>
-	  </td>
-	  </tr>
-    </table></td>
-  </tr>
-</table>
+    <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td align="center" valign="middle">
+
+                <div id="top"></div>
+                <div id="form">
+                    <form action="/login" method="post" name="loginform" target="_top" id="loginform">
+                        <input type="hidden" name="is_admin" value="1" />
+                        <div id="fields">
+                            <div class="field login"><input name="login" type="text" id="login" /></div>
+                            <div class="field passw"><input name="pass" type="password" id="pass" /></div>
+                        </div>
+                        <div class="button" onclick="document.loginform.submit()"></div>
+                    </form>
+                </div>
+                <div id="copy"><a href="http://www.instantcms.ru/">InstantCMS</a> &copy; 2007-2010</div>
+
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

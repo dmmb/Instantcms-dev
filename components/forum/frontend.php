@@ -208,7 +208,7 @@ if ($do=='view'){
                     //PRINT FORUM DATA
                     if ($row % 2) { $class='row1'; } else { $class = 'row2'; }
                     echo '<tr>';
-                        echo '<td width="40" class="'.$class.'" align="center" valign="top"><img src="/components/forum/images/forum.gif" border="0" /></td>';
+                        echo '<td width="32" class="'.$class.'" align="center" valign="top"><img src="/components/forum/images/forum.gif" border="0" /></td>';
                         echo '<td width="" class="'.$class.'" align="left" valign="top">';
                             //FORUM TITLE
                             echo '<div class="forum_link"><a href="/forum/'.$f['id'].'">'.$f['title'].'</a></div>';
@@ -362,7 +362,7 @@ if ($do=='forum'){
 }
 ///////////////////////////// READ THREAD /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='thread'){
-	
+
 	$groupsql = forumUserAuthSQL("f.");
 
 	$sql = "SELECT t.*, f.title as forum, f.id as fid, f.NSLeft as forum_left, f.NSRight as forum_right
@@ -933,7 +933,7 @@ if ($do=='movethread'){
 					
 					echo '<div style="margin-top:10px"><strong>'.$_LANG['THREAD'].':</strong> <a href="/forum/thread'.$t['id'].'.html">'.$t['title'].'</a></div>';
 					echo '<div><form action="" method="POST">';
-					echo '<table border="0" cellspacing="10" style="background-color:#EBEBEB"><tr><td valign="top">'.$_LANG['MOVE_THREAD_IN_FORUM'].':</td>';
+					echo '<table border="0" cellpadding="10" style="background-color:#EBEBEB"><tr><td valign="top">'.$_LANG['MOVE_THREAD_IN_FORUM'].':</td>';
 					
 						echo '<td valign="top"><select name="forum_id">';
 
@@ -990,7 +990,7 @@ if ($do=='renamethread'){
 					
 					echo '<div style="margin-top:5px"><form action="" method="POST">';
 					
-					echo '<table border="0" cellspacing="10" style="background-color:#EBEBEB">
+					echo '<table border="0" cellpadding="5" style="background-color:#EBEBEB">
 						  <tr><td valign="top">'.$_LANG['THREAD_TITLE'].':</td>';
 					
 						echo '<td valign="top">

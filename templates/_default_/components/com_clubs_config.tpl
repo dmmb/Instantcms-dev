@@ -12,7 +12,7 @@
 
 <form name="configform" id="club_config_form" action="" method="post" enctype="multipart/form-data">
 
-<div id="configtabs">
+<div id="configtabs" style="margin-top:20px">
 	<ul id="tabs"> 
 		<li><a href="#tab1"><span>{$LANG.CLUB_DESC}</span></a></li>
 		<li><a href="#tab2"><span>{$LANG.MODERATORS}</span></a></li>
@@ -71,9 +71,9 @@
 	</div>
 
 	<div id="tab3">		
-		<table width="500" border="0" cellspacing="0" cellpadding="10">
+		<table width="550" border="0" cellspacing="0" cellpadding="10">
 			<tr>
-			  <td>{$LANG.MAX_MEMBERS}:<br/><span style="color:#CCCCCC">{$LANG.MAX_MEMBERS_TEXT}</span> </td>
+			  <td>{$LANG.MAX_MEMBERS}:<br/><span style="color:#5F98BF">{$LANG.MAX_MEMBERS_TEXT}</span> </td>
 			  <td><input name="maxsize" type="text" style="width:200px"  value="{$club.maxsize}"/></td>
 		  </tr>
 			<tr>
@@ -88,9 +88,9 @@
 				</td>			
 			</tr>	
 		</table>
-		<table width="500" border="0" cellspacing="0" id="minkarma" cellpadding="10" style="display: {if $club.clubtype!='public'}none;{else}table;{/if}">
+		<table width="550" border="0" cellspacing="0" id="minkarma" cellpadding="10" style="display: {if $club.clubtype!='public'}none;{else}table;{/if}">
 			<tr>
-			  <td>{$LANG.USE_LIMITS_KARMA}: <br/><span style="color:#CCCCCC">{$LANG.USE_LIMITS_KARMA_TEXT}</span></td>
+			  <td>{$LANG.USE_LIMITS_KARMA}: <br/><span style="color:#5F98BF">{$LANG.USE_LIMITS_KARMA_TEXT}</span></td>
 			  <td valign="top">
 					<input name="join_karma_limit" type="radio" value="1" {if $club.join_karma_limit}checked{/if}/> {$LANG.YES}
 					<input name="join_karma_limit" type="radio" value="0" {if !$club.join_karma_limit}checked{/if}/> {$LANG.NO}
@@ -98,14 +98,14 @@
 		  </tr>
 			<tr>
 				<td>
-					{$LANG.LIMITS_KARMA}: <br/><span style="color:#CCCCCC">{$LANG.LIMITS_KARMA_TEXT}</span>
+					{$LANG.LIMITS_KARMA}: <br/><span style="color:#5F98BF">{$LANG.LIMITS_KARMA_TEXT}</span>
 				</td>
 				<td width="200" valign="top">
 					&ge; <input name="join_min_karma" type="text" style="width:60px" value="{$club.join_min_karma}"/> {$LANG.POINTS}
 				</td>			
 			</tr>	
 		</table>		
-		<table width="500" border="0" cellspacing="0" cellpadding="10" id="members" style="display: {if $club.clubtype=='public'}none;{else}table;{/if}">
+		<table width="550" border="0" cellspacing="0" cellpadding="10" id="members" style="display: {if $club.clubtype=='public'}none;{else}table;{/if}">
 			<tr>
 				<td align="center" valign="top">
 					<p><strong>{$LANG.CLUB_MEMBERS}: </strong></p>
@@ -129,7 +129,7 @@
 	
 	{if $club.enabled_photos || $club.enabled_blogs}
 	<div id="tab4">		
-		<table width="400" border="0" cellspacing="0" cellpadding="10">
+		<table width="500" border="0" cellspacing="0" cellpadding="10">
 			{if $club.enabled_blogs}
 			<tr>
 				<td>

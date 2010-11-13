@@ -140,7 +140,7 @@ function search(){
             $inCore->includeFile('includes/stemmer/stemmer.php');
             $stemmer = new Lingua_Stem_Ru();
 
-            $words = split(' ', $query);
+            $words = explode(' ', $query);
 
             //SEARCH IN THREADS TITLES
             if ($look == 'anyword' || $look == 'allwords'){

@@ -73,4 +73,10 @@ $_LANG['SITE_LOGIN']               ='Войти на сайт';
 $_LANG['SITE_LOGIN_SUBMIT']        ='Войти';
 $_LANG['REMEMBER_ME']              ='Запомнить меня';
 $_LANG['PAGE_ACCESS_NOTICE']       ='Для доступа к запрошенной странице необходимо авторизоваться';
+
+$_LANG['INVITE_CODE']              ='Код приглашения';
+$_LANG['INVITES_ONLY']             ='Регистрация на сайте производится только по приглашениям';
+$_LANG['SHOW_INVITE']              ='Продолжить';
+$_LANG['INCORRECT_INVITE']         ='Некорректный код приглашения';
+
 ?>

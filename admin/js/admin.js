@@ -1,11 +1,11 @@
 $(document).ready(function(){
 	$('#hmenu ul li').hover(
 		function() {
-			$(this).find('ul:first').fadeIn("fast");
+			$(this).find('ul:first').show();
 			$(this).addClass("hilite");
 		},
 		function() {            
-			$(this).find('ul:first').fadeOut("fast");
+			$(this).find('ul:first').hide();
 			$(this).removeClass("hilite");						
 		}
 	);    

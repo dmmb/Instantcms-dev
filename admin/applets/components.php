@@ -124,23 +124,6 @@ function applet_components(){
                       </div>';
             }
 
-            if ($task == 'install' && $_component['htaccess']){
-
-                echo '<div style="margin-top:2px;margin-bottom:2px;padding:10px;border:solid 1px gray;"1>
-                        <div><strong><span style="color:red">Внимание:</span> для завершения установки добавьте в файл .htaccess следующие строки:</strong></div>
-                        <div>
-                            <pre style="font-family:Courier">';
-
-                    foreach ($_component['htaccess'] as $rule){
-                        echo $rule."\n";
-                    }
-
-                echo '</pre>
-                        </div>
-                      </div>';
-
-            }
-
             if ($task == 'remove'){
                 echo '<div style="color:green;margin-top:12px;margin-bottom:5px;">Компонент удален из системы.</div>';
             }

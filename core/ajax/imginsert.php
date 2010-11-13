@@ -46,9 +46,11 @@
 		//LOAD CURRENT CONFIG
         $cfg = $inCore->loadComponentConfig($place);
 
-		if (!isset($cfg['img_max'])) { $cfg['img_max'] = 10; } 
+		if (!isset($cfg['img_max'])) { $cfg['img_max'] = 50; }
 		if (!isset($cfg['img_on'])) { $cfg['img_on'] = 1; } 
 		if (!isset($cfg['watermark'])) { $cfg['watermark'] = 1; } 
+		if (!isset($cfg['img_w'])) { $cfg['img_w'] = 600; }
+		if (!isset($cfg['img_h'])) { $cfg['img_h'] = 600; }
 		
 		if ($cfg['img_on']){
 		
@@ -66,6 +68,7 @@
 				if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'bmp' || $ext == 'png'){
 		
 					$filename       = md5($realfile.time()).'.'.$ext;
+                    $filename_jpg   = md5($realfile.time()).'.'.$ext.'.jpg';
 					
 					$uploadfile     = $uploaddir . $realfile;
 					$uploadphoto    = $uploaddir . $filename;
@@ -73,16 +76,23 @@
 					if (@move_uploaded_file($_FILES['attach_img']['tmp_name'], $uploadphoto)) {		
 						$inCore->includeGraphics();
 						$sql = "INSERT INTO cms_upload_images (post_id, session_id, fileurl, target)
-								VALUES ('0', '".session_id()."', '/upload/".$place."/$filename', '$place')";
+								VALUES ('0', '".session_id()."', '/upload/".$place."/$filename_jpg', '$place')";
 						$inDB->query($sql);
 
-					    $filepath	= PATH."/upload/".$place."/".$filename;
-						$filedir 	= PATH."/upload/".$place;
-						if ($cfg['watermark']) { @img_add_watermark($filepath); }
+					    $filepath       = PATH."/upload/".$place."/".$filename;
+					    $filepath_jpg	= PATH."/upload/".$place."/".$filename_jpg;
+						$filedir        = PATH."/upload/".$place;
+
+                        @img_resize($filepath, $filepath_jpg, $cfg['img_w'], $cfg['img_h']);
+
+						if ($cfg['watermark']) { @img_add_watermark($filepath_jpg); }
 	                    @chmod(dirname($filedir), 0755);
+
+                        @unlink($filepath);
+
 						echo "{";
 						echo	"error: '',\n";
-						echo	"msg: '".$filename."'\n";
+						echo	"msg: '".$filename.".jpg'\n";
 						echo "}";
 					} else { 
 						echo "{";
@@ -118,6 +128,6 @@
 			echo		"msg: ''\n";
 			echo "}";
 	 }
-	
+
 	return;
 ?>

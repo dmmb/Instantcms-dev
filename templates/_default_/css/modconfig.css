@@ -1,5 +1,4 @@
 #mc_module_title{
-    width:500px;
     border-radius:8px;
     -moz-border-radius:8px;
     background-color:#E0EAEF;
@@ -28,6 +27,17 @@
     font-size:12px;
     vertical-align: top;
 }
+
+#mc_module_cfg .params-form .param-links{
+    margin-top: 5px;
+    font-size:11px;
+}
+
+#mc_module_cfg .params-form .param-links a{
+    text-decoration: none;
+    border-bottom:dashed 1px #0099CC;
+}
+
 #mc_module_cfg .params-form .param-value{
     vertical-align: top;
 }

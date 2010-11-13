@@ -42,7 +42,7 @@ function applet_cats(){
     $inDB = cmsDatabase::getInstance();
 
 	$GLOBALS['cp_page_title'] = 'Разделы сайта';
- 	cpAddPathway('Разделы сайта', 'index.php?view=cats');	
+ 	cpAddPathway('Разделы сайта', 'index.php?view=tree');
 
     $inCore->loadModel('content');
     $model = new cms_model_content();
@@ -144,7 +144,7 @@ function applet_cats(){
 			foreach ($ord as $id=>$ordering){			
 				dbQuery("UPDATE cms_category SET ordering = $ordering WHERE id = ".$ids[$id]) ;						
 			}
-			header('location:?view=cats');
+			header('location:?view=tree');
 
 		}
 	}
@@ -172,13 +172,11 @@ function applet_cats(){
 	}
 	
 	if ($do == 'delete'){
-		if (!isset($_REQUEST['item'])){
-			if ($id >= 0){ dbDeleteNS('cms_category', $id);  }
-		} else {
-			dbDeleteListNS('cms_category', $_REQUEST['item']);				
-		}
+        $is_with_content = $inCore->inRequest('content');
+
+        $model->deleteCategory($id, $is_with_content);
 		reorder();
-		header('location:?view=cats');
+		header('location:?view=tree');
 	}
 	
 	if ($do == 'update'){
@@ -270,7 +268,7 @@ function applet_cats(){
             }
 			
 			if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
-				header('location:?view=cats');		
+				header('location:?view=tree');
 			} else {
 				header('location:?view=cats&do=edit');		
 			}
@@ -348,7 +346,7 @@ function applet_cats(){
 			createMenuItem($inmenu, $category['id'], $category['title']);
 		}
 	
-		header('location:?view=cats');		
+		header('location:?view=tree');
 	}	  
 
    if ($do == 'add' || $do == 'edit'){
@@ -421,7 +419,7 @@ function applet_cats(){
                         </tr>
                         <tr>
                           <td>
-                            <input name="title" type="text" id="title" style="width:100%" value="<?php echo @$mod['title'];?>" />
+                        <input name="title" type="text" id="title" style="width:100%" value="<?php echo @$mod['title'];?>" />
                           </td>
                           <td style="padding-left:6px">
                             <input name="tpl" type="text" style="width:98%" value="<?php echo @$mod['tpl'];?>">

@@ -176,8 +176,8 @@ if ($do=='view'){
 
 			if ($album['orderform'] && $root['id']!=$id){ echo orderForm($orderby, $orderto); }			
 			$sql .=  " ORDER BY ".$orderby." ".$orderto." \n";
-
-			$sql .= "LIMIT ".(($page-1)*$perpage).", $perpage";
+			
+				$sql .= "LIMIT ".(($page-1)*$perpage).", $perpage";
 			
 			$result = $inDB->query($sql) ;
 			
@@ -194,15 +194,15 @@ if ($do=='view'){
 				$can_add_photo = true;
 			}		
 			
-			if ($inDB->num_rows($result)){
+			if ($inDB->num_rows($result)){	
 
 				if(!$show_hidden) { $totsql	= ' AND published = 1'; } else { $totsql = ''; }
 				$total = $inDB->rows_count('cms_photo_files', "album_id = $id $totsq");
 
-				if ($album['showtype'] == 'lightbox'){
-					$inPage->addHeadJS('includes/jquery/lightbox/js/jquery.lightbox.js');
-					$inPage->addHeadCSS('includes/jquery/lightbox/css/jquery.lightbox.css');
-				}
+					if ($album['showtype'] == 'lightbox'){
+						$inPage->addHeadJS('includes/jquery/lightbox/js/jquery.lightbox.js');
+						$inPage->addHeadCSS('includes/jquery/lightbox/css/jquery.lightbox.css');
+					}
 				if ($show_hidden){
 					$inPage->addHeadJS('components/photos/js/photos.js');
 				}	
@@ -227,9 +227,9 @@ if ($do=='view'){
 				}
 				$is_poto_yes = true;
 			} else { 
-                if(!$subcats_list && $owner == 'club' && $album['parent_id']==0){ echo '<p>'.$_LANG['NO_SUB_ALBUMS'].'</p>'; }
+                     if(!$subcats_list && $owner == 'club' && $album['parent_id']==0){ echo '<p>'.$_LANG['NO_SUB_ALBUMS'].'</p>'; }
 					 $is_poto_yes = false;
-				}
+					}
 					
 		}//END - ALBUM CONTENT
 	// מעהאול ג ראבכמם
@@ -324,8 +324,8 @@ if($do=='viewphoto'){
 		
 		$photo['karma'] 		= cmsKarmaFormatSmall($photo['rating']);
 		$photo['karma_buttons'] = cmsKarmaButtons('photo', $photo['id'], $photo['rating'], $is_author);
-
-		if($cfg['link']){
+		
+					if($cfg['link']){
 						$file = PATH.'/images/photos/'.$photo['file'];
 						if (file_exists($file)){
 							$photo['file_orig'] = '<a href="/images/photos/'.$photo['file'].'" target="_blank">'.$_LANG['OPEN_ORIGINAL'].'</a>';
@@ -376,12 +376,12 @@ if ($do=='addphoto'){
 	if (!$uid) { $can_add = false; } 
 	else {		
 		if ($album['NSDiffer']=='') { 
-			$can_add    = $uid; 
-			$min_karma  = false; 
+			$can_add = $uid; 
+			$min_karma = false; 
 			$club['id'] = false;
 			$differ     = '';
 		} elseif (strstr($album['NSDiffer'],'club')){
-			$club    = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], '*');
+			$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], '*');
 			$can_add = clubUserIsMember($club['id'], $uid) || clubUserIsAdmin($club['id'], $uid) || $inUser->is_admin;
 			$differ  = 'club'.$club['id'];
 			$inPage->addPathway($club['title'], '/clubs/'.$club['id']);

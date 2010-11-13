@@ -52,7 +52,7 @@
                                 {/if}
                                 <a href="{$post.url}">{$post.title}</a>
                             </div>							
-							<div class="blog_entry_info">{$post.author} &rarr; <span class="blog_entry_date">{$post.fpubdate}</span></div>
+							<div class="blog_entry_info">{$post.author} <span class="blog_entry_date">{$post.fpubdate}</span></div>
 						</td>
 					</tr>
 					<tr>

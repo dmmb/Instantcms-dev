@@ -879,6 +879,9 @@ public static function getBBCodeToolbar($field_id, $images=0, $placekind='forum'
                  </a>
                  <a class="usr_bb_button" href="javascript:addTagAudio(\''.$field_id.'\')" title="Вставить mp3">
                     <img src="/includes/bbcode/images/audio.gif" border="0" alt="Вставить mp3" />
+                 </a>
+                 <a class="usr_bb_button" href="javascript:addTagImage(\''.$field_id.'\')" title="Вставить картинку из Сети">
+                    <img src="/includes/bbcode/images/image_link.gif" border="0" alt="Вставить картинку из Сети" />
                  </a>';
 		if ($inUser->id) {
 			$html .= '<a class="usr_bb_button" href="javascript:addImage(\''.$field_id.'\')" title="Загрузить и вставить фото">

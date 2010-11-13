@@ -55,8 +55,8 @@
 		echo '<script language="JavaScript" type="text/javascript" src="/includes/jquery/upload/ajaxfileupload.js"></script>';
     }
     if ($cfg['smiles'] && $is_user_add_bb){
-		//smilies toolbar
-		$smilies = cmsPage::getSmilesPanel('content');
+	//smilies toolbar
+	$smilies = cmsPage::getSmilesPanel('content');
     }
 
 	//LOAD SMARTY
@@ -89,7 +89,7 @@
         $smarty->assign('bb_toolbar', $bb_toolbar);
     }
     if ($cfg['smiles'] && $is_user_add_bb){
-		$smarty->assign('smilies', $smilies);
+	$smarty->assign('smilies', $smilies);
     }
 	ob_start();
 		$smarty->display('com_comments_add.tpl');

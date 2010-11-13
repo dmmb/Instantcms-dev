@@ -214,11 +214,11 @@ function cmsKarmaForm($target, $target_id, $points = 0, $is_author = false){
     $inPage     = cmsPage::getInstance();
 	$html       = '';
 
-	global $_LANG;
-	
+    global $_LANG;
+
 	if (!$points) {
 		$postkarma = cmsKarma($target, $target_id);
-		$points    = cmsKarmaFormat($postkarma['points']);
+	$points     = cmsKarmaFormat($postkarma['points']);
 	} else {
 		$points    = $points;
     }
@@ -249,11 +249,11 @@ function cmsKarmaButtons($target, $target_id, $points = 0, $is_author = false){
     $inPage = cmsPage::getInstance();
 	$html   = '';
     $control = '';
-	global $_LANG;
+    global $_LANG;
 
 	if (!$points) {
-		$postkarma = cmsKarma($target, $target_id);
-		$points = cmsKarmaFormat($postkarma['points']);
+	$postkarma = cmsKarma($target, $target_id);
+	$points = cmsKarmaFormat($postkarma['points']);
 	} else {
 		$points    = $points;
 	}
@@ -286,8 +286,8 @@ function cmsKarmaButtonsText($target, $target_id, $points = 0, $is_author = fals
 	$html = '';
 
 	if (!$points) {
-		$postkarma = cmsKarma($target, $target_id);
-		$points = cmsKarmaFormat($postkarma['points']);
+	$postkarma = cmsKarma($target, $target_id);
+	$points = cmsKarmaFormat($postkarma['points']);
 	} else {
 		$points    = $points;
 	}

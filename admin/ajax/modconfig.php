@@ -32,6 +32,8 @@
     $inCore->loadClass('formgen');
     $inCore->loadClass('plugin');
 
+	$inConf = cmsConfig::getInstance();
+
     define('TEMPLATE_DIR', PATH.'/templates/'.$inConf->template.'/');
     define('DEFAULT_TEMPLATE_DIR', PATH.'/templates/_default_/');
 
@@ -49,7 +51,7 @@
     $xml_file = PATH.'/admin/modules/'.$mod['content'].'/backend.xml';
     $php_file = PATH.'/admin/modules/'.$mod['content'].'/backend.php';
 
-    $mode       = 'custom';
+    $mode       = 'none';
     $cfg_form   = '';
 
     if (file_exists($xml_file)){
@@ -61,6 +63,10 @@
 
     if (file_exists($php_file)){
         $mode = 'php';
+    }
+
+    if($mod['user']){
+        $mode = 'custom';
     }
 
     $inPage->includeTemplateFile('admin/modconfig.php');

@@ -14,8 +14,8 @@
 <head>
 <?php cpHead(); ?>
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-<link href="css/styles.css" rel="stylesheet" type="text/css" />
-<link href="js/hmenu/hmenu.css" rel="stylesheet" type="text/css" />
+<link href="css/styles.css?17" rel="stylesheet" type="text/css" />
+<link href="js/hmenu/hmenu.css?17" rel="stylesheet" type="text/css" />
 <link href="/includes/jquery/tablesorter/style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="js/admin.js"></script>
 <script type="text/javascript" src="/includes/jquery/jquery.columnfilters.js"></script>
@@ -35,30 +35,30 @@
             <td valign="top">
                 <div id="container">
                     <div id="header" style="height:69px">
-                        <table width="100%" height="69" border="0" cellpadding="0" cellspacing="0" background="images/topbg.jpg">
+                        <table width="100%" height="69" border="0" cellpadding="0" cellspacing="0">
                             <tr>
-                                <td width="230" align="left" valign="middle">
+                                <td width="230" align="left" valign="middle" style="padding-left:20px; padding-top:5px;">
                                     <a href="/admin/">
-                                        <img src="images/toplogo.gif" alt="InstantCMS - Панель управления" width="151" height="32" border="0" style="padding-left:15px"/>
+                                        <img src="images/toplogo.png" alt="InstantCMS - Панель управления" border="0" />
                                     </a>
                                 </td>
-                                <td width="180">
-                                    <div class="jdate"><?php echo $inCore->getRusDate(date('d F, Y')); ?></div>
+                                <td width="120">
+                                    <div class="jdate"><?php echo date('d') .' '. $_LANG['MONTH_'.date('m')]; ?></div>
                                     <div class="jclock">00:00:00</div>
                                 </td>
-                                <td width="200">
+                                <td>
                                     <?php
                                         $new_messages =	cmsUser::isNewMessages($inUser->id);
                                         if ($new_messages){
-                                            $msg_link = '<a href="/users/'.$inUser->id.'/messages.html" style="color:red">Новые сообщения</a> '.$new_messages.'';
+                                            $msg_link = '<a href="/users/'.$inUser->id.'/messages.html" style="color:yellow">Новые сообщения</a> '.$new_messages.'';
                                         } else {
-                                            $msg_link = '<span style="color:#CCC">Нет новых сообщений</span>';
+                                            $msg_link = '<span>Нет новых сообщений</span>';
                                         }
                                     ?>
                                     <div class="juser">Вы &mdash; <a href="<?php echo cmsUser::getProfileURL($inUser->login); ?>" target="_blank" title="Перейти в профиль"><?php echo dbGetField('cms_users', 'id='.$inUser->id, 'nickname'); ?></a></div>
                                     <div class="jmessages"><?php echo $msg_link; ?></div>
                                 </td>
-                                <td>
+                                <td width="120">
                                     <div class="jsite"><a href="/" target="_blank" class="" title="В новом окне">Открыть сайт</a></div>
                                     <div class="jlogout"><a href="/logout" target="" >Выход</a></div>
                                 </td>

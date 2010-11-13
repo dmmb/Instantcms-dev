@@ -14,7 +14,10 @@ class cmsActions {
 
     private static $instance;
 
-    public $show_targets = true;
+    private $show_targets = true;
+	private $where = '';
+    private $limit = 100;
+    private $only_friends = false;
 
 // ============================================================================ //
 // ============================================================================ //
@@ -142,6 +145,15 @@ class cmsActions {
 // ============================================================================ //
 // ============================================================================ //
 
+	/**
+	 * Добавляет условие в запрос ленты событий
+     * @param str $condition Условие
+     *
+     */
+	public function where($condition){
+		$this->where .= "AND ({$condition})";
+	}
+
     /**
      * Управляет показом категорий, в которых находятся объекты вызвавшие события
      * @param bool $show Показывать категории?
@@ -153,6 +165,78 @@ class cmsActions {
     }
 
     /**
+     * Устанавливает лимит на количество получаемых действий
+     * @param int $from C какого
+     * @param int $howmany Сколько (необязательно)
+     */
+    public function limitIs($from, $howmany=0) {
+        $this->limit = (int)$from;
+        if ($howmany){
+            $this->limit .= ', '.$howmany;
+        }
+    }
+
+    /**
+     * Устанавливает лимит для действий выводимых на одной странице
+     * @param int $page Страница
+     * @param int $perpage Действий на странице
+     */
+    public function limitPage($page, $perpage) {
+        $this->limitIs(($page-1)*$perpage, $perpage);
+    }
+
+
+    /**
+     * Включает режим показа только событий друзей
+     *
+     */
+	public function onlyMyFriends(){
+
+		$inUser = cmsUser::getInstance();
+
+		$friends = cmsUser::getFriends($inUser->id); 
+
+		if (!is_array($friends)){ $this->where('1=0'); return; }
+
+		$f_list = array();
+
+		foreach($friends as $friend){
+			$f_list[] = $friend['id']; 
+		}
+
+		$f_list = rtrim(implode(',', $f_list), ',');
+
+        if ($f_list){
+            $this->where("log.user_id IN ({$f_list})");
+        } else {
+            $this->where('1=0');
+        }
+
+        $this->only_friends = true;
+
+		return;
+
+	}
+
+    public function onlySelectedTypes($types) {
+
+        if (!is_array($types)){ $this->where('1=0'); return; }
+
+        $t_list = array();
+
+		foreach($types as $type){
+			$t_list[] = $type;
+		}
+
+		$t_list = rtrim(implode(',', $t_list), ',');
+
+		$this->where("a.id IN ({$t_list})");
+
+		return;
+
+    }
+
+    /**
      * Возвращает массив событий для ленты активности
      * @return array
      */
@@ -161,6 +245,9 @@ class cmsActions {
         $inDB   = cmsDatabase::getInstance();
         $inUser = cmsUser::getInstance();
 
+        if (!$this->only_friends){ $this->where('log.is_friends_only = 0'); }
+        if (!$inUser->id) { $this->where('log.is_users_only = 0'); }
+        
         $sql = "SELECT log.object as object,
                        log.object_url as object_url,
                        log.target as target,
@@ -172,15 +259,21 @@ class cmsActions {
                        u.nickname as user_nickname,
                        u.login as user_login
 
-                FROM cms_actions_log log
-				INNER JOIN cms_actions a ON a.id = log.action_id AND a.is_visible = 1
-				LEFT JOIN cms_users u ON u.id = log.user_id
+                FROM cms_actions_log log,
+                     cms_actions a,
+                     cms_users u
+                     
+                WHERE   log.user_id = u.id AND 
+                        log.action_id = a.id AND
+                        a.is_visible = 1
+						{$this->where}
 
-                ORDER BY log.id DESC
-
-                LIMIT 100
-                
+                ORDER BY log.pubdate DESC
                 ";
+
+        if ($this->limit){
+            $sql .= "LIMIT {$this->limit}";
+        }
 
         $result = $inDB->query($sql);
 
@@ -229,7 +322,7 @@ class cmsActions {
 
         $inDB   = cmsDatabase::getInstance();
 		
-        $sql = "DELETE FROM cms_actions_log WHERE DATEDIFF(NOW(), pubdate) > pubdays";
+        $sql = "DELETE FROM cms_actions_log WHERE DATEDIFF(NOW(), pubdate) > '{$pubdays}'";
 
         $inDB->query($sql);
 

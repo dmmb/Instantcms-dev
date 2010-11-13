@@ -297,7 +297,9 @@ function forumAttachedFiles($post_id, $mypost, $showimg=false){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
 	$html = '';
-	
+
+    global $_LANG;
+
 	$graphic_ext[] = 'jpg';
 	$graphic_ext[] = 'jpeg';
 	$graphic_ext[] = 'gif';

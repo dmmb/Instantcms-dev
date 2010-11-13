@@ -73,6 +73,40 @@ function componentsList($new_components, $action_name, $action){
 
 }
 
+function modulesList($new_modules, $action_name, $action){
+
+    $inCore = cmsCore::getInstance();
+
+    echo '<table cellpadding="3" cellspacing="0" border="0" style="margin-left:40px">';
+    foreach($new_modules as $module){
+        if ($inCore->loadModuleInstaller($module)) {
+
+            $_module = call_user_func('info_module_'.$module);
+
+            if ($action == 'install_module') { $version = $_module['version']; }
+            if ($action == 'upgrade_module') { $version = $inCore->getModuleVersion($module) . ' &rarr; '. $_module['version']; }
+
+            echo '<tr>';
+                echo '<td width="16"><img src="/admin/images/icons/hmenu/plugins.png" /></td>';
+                echo '<td><a style="font-weight:bold;font-size:14px" title="'.$action_name.' '.$_module['title'].'" href="index.php?view=install&do='.$action.'&id='.$module.'">'.$_module['title'].'</a> v'.$version.'</td>';
+            echo '<tr>';
+            echo '<tr>';
+                echo '<td width="16">&nbsp;</td>';
+                echo '<td>
+                            <div style="margin-bottom:6px;">'.$_module['description'].'</div>
+                            <div style="color:gray"><strong>Автор:</strong> '.$_module['author'].'</div>
+                            <div style="color:gray"><strong>Папка:</strong> /modules/'.$_module['link'].'</div>
+                      </td>';
+            echo '<tr>';
+
+        }
+    }
+    echo '</table>';
+
+    return;
+
+}
+
 function applet_install(){
 
     $inCore = cmsCore::getInstance();
@@ -85,15 +119,138 @@ function applet_install(){
 
 // ============================================================================== //
 
-//    if ($do != 'plugin' && $do != 'install_plugin' && $do != 'upgrade_plugin' && $do != 'finish_plugin' && $do != 'remove_plugin'){
-//
-//        echo '<p><b>В текущей версии системы установка указанных расширений не доступна.</b></p>';
-//        echo '<p>Обратитесь на <a href="http://www.instantcms.ru">официальный сайт</a>.</p>';
-//        echo '<p><a href="javascript:window.history.go(-1);">Назад</a></p>';
-//
-//        return;
-//
-//    }
+    if ($do == 'module'){
+
+      	cpAddPathway('Установка расширений', 'index.php?view=install&do=module');
+
+        $new_modules = $inCore->getNewModules();
+        $upd_modules = $inCore->getUpdatedModules();
+
+        echo '<h3>Установка модулей</h3>';
+
+        if (!$new_modules && !$upd_modules){
+
+            echo '<p>В системе не найдены модули, которые еще не установлены.</p>';
+            echo '<p>Если вы скачали архив с модулем и хотите установить или обновить, то распакуйте его в корень сайта и перезагрузите страницу.</p>';
+            echo '<p><a href="javascript:window.history.go(-1);">Вернуться назад</a></p>';
+            return;
+
+        }
+
+        if ($new_modules){
+
+            echo '<p><strong>Найдены модули, доступные для установки:</strong></p>';
+            modulesList($new_modules, 'Установить', 'install_module');
+
+        }
+
+        if ($upd_modules){
+
+            echo '<p><strong>Найдены модули, доступные для обновления:</strong></p>';
+            modulesList($upd_modules, 'Обновить', 'upgrade_module');
+
+        }
+
+        echo '<p>Щелкните по названию модуля, чтобы продолжить.</p>';
+
+        echo '<p><a href="javascript:window.history.go(-1);">Назад</a></p>';
+
+    }
+
+// ============================================================================== //
+
+    if ($do == 'install_module'){
+
+        cpAddPathway('Установка расширений', 'index.php?view=install&do=module');
+
+        $error = '';
+
+        $module_id = $inCore->request('id', 'str', '');
+
+        if(!$module_id){
+            $inCore->redirectBack();
+        }
+
+        if ($inCore->loadModuleInstaller($module_id)){
+            $_module    = call_user_func('info_module_'.$module_id);
+            $error      = call_user_func('install_module_'.$module_id);
+        } else {
+            $error = 'Не удалось загрузить установщик модуля.';
+        }
+
+        if ($error === true) {
+            $inCore->installModule($_module, $_module['config']);
+            $inCore->redirect('/admin/index.php?view=install&do=finish_module&id='.$module_id.'&task=install');
+        } else {
+
+            echo '<p style="color:red">'.$error.'</p>';
+
+        }
+
+        echo '<p><a href="index.php?view=install&do=module">Назад</a></p>';
+
+    }
+
+// ============================================================================== //
+
+    if ($do == 'upgrade_module'){
+
+        cpAddPathway('Установка расширений', 'index.php?view=install&do=module');
+
+        $error = '';
+
+        $module_id = $inCore->request('id', 'str', '');
+
+        if(!$module_id){
+            $inCore->redirectBack();
+        }
+
+        if ($inCore->loadModuleInstaller($module_id)) {
+            $_module    = call_user_func('info_module_'.$module_id);
+            $error      = call_user_func('upgrade_module_'.$module_id);
+        } else {
+            $error = 'Не удалось загрузить установщик модуля.';
+        }
+
+        if ($error === true) {
+            $inCore->upgradeModule($_module, $_module['config']);
+            $inCore->redirect('/admin/index.php?view=install&do=finish_module&id='.$module_id.'&task=upgrade');
+        } else {
+
+            echo '<p style="color:red">'.$error.'</p>';
+
+        }
+
+        echo '<p><a href="index.php?view=install&do=module">Назад</a></p>';
+
+    }
+
+// ============================================================================== //
+
+    if ($do == 'remove_module'){
+
+        $module_id = $inCore->request('id', 'int', '');
+
+        if(!$module_id){
+            $inCore->redirectBack();
+        }
+
+        $inCore->removeModule($module_id);
+
+        $inCore->redirect('/admin/index.php?view=install&do=finish_module&id='.$module_id.'&task=remove');
+
+    }
+
+// ============================================================================== //
+
+    if ($do == 'finish_module'){
+
+        $module_id      = $inCore->request('id', 'str', '');
+        $task           = $inCore->request('task', 'str', 'install');
+
+        $inCore->redirect('/admin/index.php?view=modules&installed='.$module_id.'&task='.$task);
+
+    }
 
 // ============================================================================== //
 

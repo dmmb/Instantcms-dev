@@ -258,7 +258,9 @@ function applet_menu(){
 		$menu = $_REQUEST['menu'];
 		$title = $_REQUEST['title'];
 		$target = $_REQUEST['target'];
-		$linktype = $_REQUEST['mode'];
+		$link = $inCore->getMenuLink($_REQUEST['mode'], $_REQUEST[$_REQUEST['mode']], $id);
+        $linktype = $_REQUEST['mode'];
+        $linkid = $_REQUEST[$_REQUEST['mode']];
 		$template = $_REQUEST['template'];
 		$iconurl = $_REQUEST['iconurl'];
 		$allow_group = $_REQUEST['allow_group'];
@@ -274,8 +276,6 @@ function applet_menu(){
 
 		$ns = $inCore->nestedSetsInit('cms_menu');
 		$myid = $ns->AddNode($parent_id);
-
-        $link = $inCore->getMenuLink($linktype, $_REQUEST[$linktype], $myid);
 
 		$sql = "UPDATE cms_menu 
 				SET menu='$menu', 

@@ -132,7 +132,7 @@ function comments($target='', $target_id=0){
         unset($_SESSION['cm_error']);
 
 		$comments_count = $model->getCommentsCount($target, $target_id);
-
+		
 		$is_admin           = $inCore->userIsAdmin($inUser->id);
 		$user_can_delete    = $inCore->isUserCan('comments/delete');
 		$user_can_moderate  = $inCore->isUserCan('comments/moderate');
@@ -143,7 +143,7 @@ function comments($target='', $target_id=0){
 			$inCore->includeFile('components/users/includes/usercore.php');	
 			
 			//LIST COMMENTS
-
+	
 			$comments = array();
 			$tree     = array();			
 			
@@ -225,11 +225,11 @@ function comments($target='', $target_id=0){
         $captha_code    = $inCore->request('code', 'str', '');
         $guestname      = $inCore->request('guestname', 'str', '');
         $user_id        = $inCore->request('user_id', 'int', 0);
-
+		
 		if ($inCore->isUserCan('comments/bbcode') && ($cfg['bbcode'] || $cfg['smiles'])) {	
 			$content        = $inCore->request('content', 'html', '');
-			$content        = $inCore->parseSmiles($content, true);
-			$content        = $inDB->escape_string($content);
+		$content        = $inCore->parseSmiles($content, true);
+		$content        = $inDB->escape_string($content);
 		} else {
 			$content        = $inCore->request('content', 'str', '');
 		}

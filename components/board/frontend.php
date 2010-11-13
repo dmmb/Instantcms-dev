@@ -310,7 +310,7 @@ if($do=='read'){
 			$smarty->assign('is_user', $inUser->id);
 			$smarty->assign('user_id', $inUser->id);
 		$smarty->display('com_board_item.tpl');
-
+        
 }
 /////////////////////////////// NEW BOARD ITEM /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='additem'){
@@ -450,16 +450,16 @@ if ($do=='additem'){
                                     'file'=>$filename
                                 ));
 		if ($published == 1) {
-			//регистрируем событие
-			cmsActions::log('add_board', array(
-						'object' => $title,
-						'object_url' => '/board/read'.$item_id.'.html',
-						'object_id' => $item_id,
-						'target' => $cat['title'],
-						'target_url' => '/board/'.$cat['id'],
-						'target_id' => $cat['id'], 
-						'description' => ''
-			));
+		//регистрируем событие
+		cmsActions::log('add_board', array(
+					'object' => $title,
+					'object_url' => '/board/read'.$item_id.'.html',
+					'object_id' => $item_id,
+					'target' => $cat['title'],
+					'target_url' => '/board/'.$cat['id'],
+					'target_id' => $cat['id'], 
+					'description' => ''
+		));
 		}
 
         //finish

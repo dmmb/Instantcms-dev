@@ -32,13 +32,13 @@ function applet_main(){
 
 <table width="100%" border="0" align="center" cellpadding="5" cellspacing="0">
   <tr>
-    <td width="33%" valign="top" style="">
+    <td width="275" valign="top" style="padding-left:0px;">
 	<div class="small_box">
 	<div class="small_title">Контент сайта</div>
 	<div style="padding:8px">
 	<table width="100%" border="0" align="center" cellpadding="5" cellspacing="0">
       <tr>
-        <td><a href="index.php?view=content">Статьи</a> <?php if($new['content']) { ?><span class="new_content">+<?php echo $new['content']?></span><?php } ?></td>
+        <td><a href="index.php?view=tree">Статьи</a> <?php if($new['content']) { ?><span class="new_content">+<?php echo $new['content']?></span><?php } ?></td>
         <td width="20" align="center"><a href="index.php?view=cats&amp;do=add"><img src="/admin/images/mainpage/folder_add.png" alt="Создать раздел" width="16" height="16" border="0" /></a></td>
         <td width="20" align="center"><a href="index.php?view=content&amp;do=add"><img src="/admin/images/mainpage/page_add.png" alt="Создать статью" width="16" height="16" border="0" /></a></td>
         </tr>
@@ -96,9 +96,6 @@ function applet_main(){
               <td>Новые за месяц &mdash; <?php echo (int)dbGetField('cms_users', "regdate >= DATE_SUB(NOW(), INTERVAL 1 MONTH)", 'COUNT(id)'); ?></td>
             </tr>
           </table>
-          <div style="margin-top:5px;text-align:right">
-            Настроить <a href="index.php?view=components&do=config&link=registration">регистрацию</a> | <a href="index.php?view=components&do=config&link=users">профили</a> | <a href="index.php?view=usergroups">группы</a>
-          </div>
 		</div>
 	</div>	
 	<div class="small_box">
@@ -108,36 +105,28 @@ function applet_main(){
 		</div>
 	</div>
 	</td>
-    <td width="33%" valign="top" style="">
+    <td width="" valign="top" style="">
 	<div class="small_box">
-		<div class="small_title"><strong>Последние комментарии</strong></div>
-	    <div style="padding:6px;font-size:10px">
-			<?php echo cpUpdates();?>
+		<div class="small_title"><strong>Последние события</strong></div>
+	    <div id="actions_box">
+            <div id="actions">
+                <?php
+
+                    $inActions = cmsActions::getInstance();
+
+                    $inActions->showTargets(false);
+
+                    $actions = $inActions->getActionsLog();
+
+                    include(TEMPLATE_DIR.'admin/actions.php');
+
+                ?>
+            </div>
 		</div>			
 	</div>
-    
-	<div class="small_box">
-		<?php if ($inCore->isComponentInstalled('rssfeed')){ ?>
-		<div class="small_title">RSS-ленты сайта</div>
-		<div style="padding:10px;font-size:10px">
-		<table width="100%" border="0" cellspacing="0" cellpadding="2" align="center">
-		  <tr>
-			<td width="16"><img src="/images/markers/rssfeed.png" width="16" height="16" /></td>
-			<td><a href="/rss/comments/all/feed.rss" id="rss_link">Лента комментариев </a></td>
-		    <td width="16"><img src="/images/markers/rssfeed.png" width="16" height="16" /></td>
-		    <td><a href="/rss/blogs/all/feed.rss" id="rss_link">Лента блогов</a></td>
-		  </tr>
-		  <tr>
-			<td><img src="/images/markers/rssfeed.png" width="16" height="16" /></td>
-			<td><a href="/rss/content/all/feed.rss" id="rss_link">Лента материалов</a> </td>
-		    <td><img src="/admin/images/icons/config.png" width="16" height="16" /></td>
-		    <td><a href="index.php?view=components&amp;do=config&amp;id=<?php echo dbGetField('cms_components', "link='rssfeed'", 'id'); ?>" id="rss_link">Настройки RSS </a></td>
-		  </tr>
-		</table>
-		</div>
-	</div>
-	<?php } ?>	</td>
-    <td width="33%" valign="top" style=""><table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+    </td>
+    <td width="325" valign="top" style=""><table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td height="100" valign="top">
         <?php
@@ -149,7 +138,7 @@ function applet_main(){
         <?php if ($new_photos || $new_quests || $new_content || $new_catalog){ ?>
             <div class="small_box">
                 <div class="small_title">
-                    <span style="padding-left:20px;background:url(/admin/images/icons/attention.gif) no-repeat left center">
+                    <span class="attention">
                         <strong>Материалы на модерацию</strong>
                     </span>
                 </div>
@@ -191,6 +180,28 @@ function applet_main(){
 			</ul>
 		</div>
         -->
+        <?php if ($inCore->isComponentInstalled('rssfeed')){ ?>
+        <div class="small_box">
+            <div class="small_title">RSS-ленты сайта</div>
+            <div style="padding:10px;">
+            <table width="100%" border="0" cellspacing="0" cellpadding="2" align="center">
+              <tr>
+                <td width="16"><img src="/images/markers/rssfeed.png" width="16" height="16" /></td>
+                <td><a href="/rss/comments/all/feed.rss" id="rss_link">Лента комментариев </a></td>
+                <td width="16"><img src="/images/markers/rssfeed.png" width="16" height="16" /></td>
+                <td><a href="/rss/blogs/all/feed.rss" id="rss_link">Лента блогов</a></td>
+              </tr>
+              <tr>
+                <td><img src="/images/markers/rssfeed.png" width="16" height="16" /></td>
+                <td><a href="/rss/content/all/feed.rss" id="rss_link">Лента материалов</a> </td>
+                <td><img src="/admin/images/icons/config.png" width="16" height="16" /></td>
+                <td><a href="index.php?view=components&amp;do=config&amp;id=<?php echo dbGetField('cms_components', "link='rssfeed'", 'id'); ?>" id="rss_link">Настройки RSS </a></td>
+              </tr>
+            </table>
+            </div>
+        </div>
+        <?php } ?>
+
 		<div class="small_box">
 		  <div class="small_title">Сообщество InstantCMS</div>
             <ul>

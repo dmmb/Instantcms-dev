@@ -186,7 +186,7 @@ function applet_usergroups(){
 
 	if(isset($mod['access'])){
 		$mod['access'] = str_replace(', ', ',', $mod['access']);
-		$mod['access'] = split(',', $mod['access']);
+		$mod['access'] = explode(',', $mod['access']);
 	}
 			
 	?>

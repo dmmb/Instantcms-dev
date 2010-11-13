@@ -46,7 +46,7 @@ function clubs(){
 	if(!isset($cfg['perpage'])) { $cfg['perpage'] = 10; }
     if(!isset($cfg['notify_in'])) { $cfg['notify_in'] = 1; }
     if(!isset($cfg['notify_out'])) { $cfg['notify_out'] = 1; }
-
+	
     //Определяем адрес для редиректа назад
     $back   = $inCore->getBackURL();
 	

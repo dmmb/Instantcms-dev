@@ -102,33 +102,11 @@ function cpWhoOnline(){
 				$html .= '<img src="images/user.gif"/>';
 			$html .= '</td>';
 			
-			$html .= '<td width="120" valign="top">';
+			$html .= '<td width="" valign="top">';
 				$html .= '<div><strong>Пользователей: </strong>'.$people['users'].'</div>';
 				$html .= '<div><strong>Гостей: </strong>'.$people['guests'].'</div>';	
 			$html .= '</td>';
-		
-		include $_SERVER['DOCUMENT_ROOT'].'/includes/config.inc.php';
-		
-		if ($_CFG['stats']){
-			$html .= '<td width="24" valign="top">';
-				$html .= '<img src="images/on.gif"/>';
-			$html .= '</td>';
-			
-			$html .= '<td width="" valign="top">';
-				$html .= '<div style="color:#00BB00">Сбор статистики включен</div>';
-				$html .= '<div><a href="index.php?view=components&do=config&id=13">Просмотр статистики</a></div>';	
-			$html .= '</td>';		
-		} else {
-			$html .= '<td width="24" valign="top">';
-				$html .= '<img src="images/off.gif"/>';
-			$html .= '</td>';
-			
-			$html .= '<td width="" valign="top">';
-				$html .= '<div style="color:#BB0000">Сбор статистики отключен</div>';
-				$html .= '<div><a href="index.php?view=config">Изменить настройки</a></div>';	
-			$html .= '</td>';			
-		}
-	
+
 		$html .= '</tr></table>';
 	$html .= '</div>';
 	
@@ -231,10 +209,9 @@ function cpMenu(){
 			<?php } ?>
 			<?php if ($inCore->isAdminCan('admin/content', $adminAccess)){ ?>
 			<li>
-				<a class="cats">Контент</a>
+				<a class="content" href="index.php?view=tree">Контент</a>
 				<ul>
-					<li><a class="cats" href="index.php?view=cats">Разделы</a></li>
-					<li><a class="content" href="index.php?view=content">Статьи / страницы</a></li>
+					<li><a class="content" href="index.php?view=tree">Разделы и статьи</a></li>
 					<li><a class="arhive" href="index.php?view=arhive">Архив статей</a></li>
 					<li><a class="add" href="index.php?view=cats&do=add">Создать раздел</a></li>
 					<li><a class="add" href="index.php?view=content&do=add">Создать статью</a></li>
@@ -308,7 +285,7 @@ function cpMenu(){
 			<li>
                 <a href="index.php?view=users" class="users">Пользователи</a>
                 <ul>
-                    <li><a href="index.php?view=users" class="users">Пользователи</a></li>
+                    <li><a href="index.php?view=users" class="user">Пользователи</a></li>
                     <li><a class="users" href="index.php?view=usergroups">Группы</a></li>
                     <li><a class="add" href="index.php?view=users&do=add">Создать пользователя</a></li>
                     <li><a class="add" href="index.php?view=usergroups&do=add">Создать группу</a></li>
@@ -320,9 +297,11 @@ function cpMenu(){
 			<li>
 				<a href="index.php?view=config" class="config">Настройки</a>			
 				<ul>
+					<li><a class="config" href="index.php?view=config">Настройки сайта</a></li>
 					<li><a class="backup" href="index.php?view=backup">Резервные копии БД</a></li>
 					<!-- <li><a class="repair" href="index.php?view=repair">Проверка БД</a></li> -->
 					<li><a class="repairnested" href="index.php?view=repairnested">Проверка деревьев</a></li>
+                    <li><a class="cron" href="index.php?view=cron">Задачи CRON</a></li>
 				</ul>	
 			</li>		
 			<?php } ?>					
@@ -361,6 +340,11 @@ function cpProceedBody(){
 	$link = str_replace(':', '', $link);
 	$link = str_replace('-', '', $link);
 	$file = $link . '.php';
+
+    if (!file_exists(PATH.'/admin/applets/'.$file)){
+        echo "Апплет <strong>&laquo;{$link}&raquo;</strong> не найден"; exit;
+    }
+
 	include('applets/'.$file);
 	eval('applet_'.$link.'();');
 	
@@ -603,7 +587,13 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 								$otstup = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', ($item['NSLevel']-1)); 
 								if ($item['NSLevel']-1 > 0){ $otstup .=  ' &raquo; '; }
 							} else { $otstup = ''; }
-							 echo '<td class="'.$row_class.'" valign="middle">'.$otstup.'<a class="lt_link" href="'.$link.'">'.$data.'</a></td>'. "\n";
+                            if ($table != 'cms_components'){
+                                echo '<td class="'.$row_class.'" valign="middle">'.$otstup.'<a class="lt_link" href="'.$link.'">'.$data.'</a></td>'. "\n";
+                            } else {
+                                echo '<td class="'.$row_class.'" valign="middle">
+                                            <a class="lt_link" style="padding:1px; padding-left:24px; background:url(/admin/images/components/'.$item['link'].'.png) no-repeat" href="'.$link.'">'.$data.'</a>
+                                      </td>'. "\n";
+                            }
 						} else {						
 							if ($_fields[$key]['field'] != 'ordering'){
 								if ($_fields[$key]['field'] == 'published'){

@@ -26,7 +26,7 @@
 	$inCore->loadLib('photos');
 	$inCore->loadLib('tags');
 
-	$id     = $inCore->request('id', 'int');
+	$id = $inCore->request('id', 'int');
 	$clubid = $inCore->request('clubid', 'int');
 
 	if (!$id || !$clubid) { return; }

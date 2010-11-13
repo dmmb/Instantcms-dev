@@ -102,5 +102,6 @@ $_LANG['LIKE']                  = 'Нравится';
 $_LANG['UNLIKE']                = 'Не нравится';
 $_LANG['OR']                    ='или';
 $_LANG['WROTE']                 ='написал';
+$_LANG['MODULE_NOT_CONFIGURED'] ='Модуль не настроен';
 
 ?>

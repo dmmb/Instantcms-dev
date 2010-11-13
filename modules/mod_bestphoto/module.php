@@ -20,17 +20,27 @@ function mod_bestphoto($module_id){
 		if (!isset($cfg['showtype'])) { $cfg['showtype'] = 'full'; }
 		if (!isset($cfg['showmore'])) { $cfg['showmore'] = 1; }
 		if (!isset($cfg['album_id'])) { $cfg['album_id'] = 0; }
+		if (!isset($cfg['whatphoto'])) { $cfg['whatphoto'] = 'all'; }
 		
-		if ($cfg['album_id']) { $catsql = ' AND album_id = '.$cfg['album_id']; }
-		else { $catsql = ''; }
+		$catsql = $cfg['album_id'] ? ' AND album_id = '.$cfg['album_id'] : '';
 		
-		$sql = "SELECT f.*, f.id as fid, f.pubdate as fpubdate,
-					   a.id as album_id, a.title as album, 
+		$today = date("d-m");
+
+		switch ($cfg['whatphoto']){
+
+			case 'all':   $periodsql = ''; break;
+			case 'day':   $periodsql = " AND DATE_FORMAT(f.pubdate, '%d-%m')='$today'"; break;
+			case 'week':  $periodsql = " AND DATEDIFF(NOW(), f.pubdate) <= 7"; break;
+			case 'month': $periodsql = " AND DATE_SUB(NOW(), INTERVAL 1 MONTH) < f.pubdate"; break;
+
+		}
+
+		$sql = "SELECT f.id, f.album_id, f.title, f.pubdate, f.file, f.hits, f.comments, a.title as album,
 					   IFNULL(r.total_rating, 0) as rating
 				FROM cms_photo_files f
 				LEFT JOIN cms_ratings_total r ON r.item_id=f.id AND r.target = 'photo'
 				LEFT JOIN cms_photo_albums a ON f.album_id = a.id
-				WHERE f.published = 1 ".$catsql."
+					WHERE f.published = 1 ".$catsql." ".$periodsql." 
 				ORDER BY ".$cfg['sort']." DESC 
 				LIMIT ".$cfg['shownum'];		
  	
@@ -38,7 +48,7 @@ function mod_bestphoto($module_id){
 
 		$is_best = false;	
 
-		if (!function_exists('cmsKarmaFormat') && $cfg['showdate']){ //if not included earlier
+		if (!function_exists('cmsKarmaFormat') && $cfg['showrating']){ //if not included earlier
 			include_once($_SERVER['DOCUMENT_ROOT'].'/core/lib_karma.php');
 		}
 
@@ -47,19 +57,20 @@ function mod_bestphoto($module_id){
 			$cons = array();
 			while($con = $inDB->fetch_assoc($result)){
 				if ($cfg['showtype']=='full'){
-						if($cfg['showcom'] || $cfg['showdate']){
-								if ($cfg['showdate']){
+					if ($cfg['showrating']){
 									if ($cfg['sort'] == 'rating'){
 										$con['votes'] = cmsKarmaFormat($con['rating']);
 									} else {
 										$con['votes'] = $con[$cfg['sort']];
 									}
 								}
-								if ($cfg['showcom']){
+					if ($cfg['showdate']){
+						$con['pubdate'] = cmsCore::dateFormat($con['pubdate']);
+					}
+					if ($cfg['showcom'] && $con['comments']){
 									$con['comments'] = $inCore->getCommentsCount('photo', $con['id']);
 								}
 						}
-				}
 				$cons[] = $con;
 			}			
 			}

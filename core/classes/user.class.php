@@ -119,7 +119,7 @@ class cmsUser {
         $user['group']  = $_groupdata['alias'];
 
         $access = str_replace(', ', ',', $_groupdata['access']);
-        $access = split(',', $access);
+        $access = explode(',', $access);
 
         $user['access'] = array();
         $user['access'] = $access;
@@ -1159,14 +1159,19 @@ class cmsUser {
      * @return bool
      */
     public static function sendMessage($sender_id, $receiver_id, $message){
-        $inDB    = cmsDatabase::getInstance();
-		$message = $inDB->escape_string(stripslashes($message));
+        
+        $inDB = cmsDatabase::getInstance();
+
+        $message = $inDB->escape_string(stripslashes($message));
 
         $sql = "INSERT INTO cms_user_msg (to_id, from_id, senddate, is_new, message)
                 VALUES ('$receiver_id', '$sender_id', NOW(), 1, '$message')";
         $inDB->query($sql);
 
-        return true;
+        $msg_id = $inDB->get_last_id('cms_user_msg');
+
+        return $msg_id ? $msg_id : false;
+        
     }
 
 // ============================================================================ //
@@ -1414,6 +1419,9 @@ class cmsUser {
 // ============================================================================ //
 // ============================================================================ //
 
+    /**
+     * Запоминает текущий URI в сессии и перенаправляет пользователя на форму логина
+     */
     public static function goToLogin(){
 
         $inCore = cmsCore::getInstance();
@@ -1426,11 +1434,22 @@ class cmsUser {
 // ============================================================================ //
 // ============================================================================ //
 
+    /**
+     * Сохраняет переменную в сессии
+     * @param str $param Название переменной
+     * @param mixed $value Значение
+     * @return bool
+     */
     public static function sessionPut($param, $value){
         $_SESSION['icms'][$param] = $value;
         return true;
     }
 
+    /**
+     * Извлекает переменную из сессии
+     * @param str $param Название переменной
+     * @return bool
+     */
     public static function sessionGet($param){
         if (isset($_SESSION['icms'][$param])){
             return $_SESSION['icms'][$param];
@@ -1439,11 +1458,100 @@ class cmsUser {
         }
     }
 
+    /**
+     * Удаляет переменную из сессии
+     * @param str $param Название переменной
+     */
     public static function sessionDel($param){
         unset($_SESSION['icms'][$param]);
     }
 
+// ============================================================================ //
+// ============================================================================ //
 
+    /**
+     * Возвращает список всех активных пользователей
+     * @return array
+     */
+    public static function getAllUsers(){
+
+        $inDB = cmsDatabase::getInstance();
+
+        return $inDB->get_table('cms_users', 'id > 0 AND is_locked = 0 AND is_deleted = 0');
+
+    }
+
+    /**
+     * Возвращает название группы пользователей
+     * @param int $group_id
+     * @return str
+     */
+    public static function getGroupTitle($group_id){
+
+        $inDB = cmsDatabase::getInstance();
+
+        return $inDB->get_field('cms_user_groups', "id='{$group_id}'", 'title');
+
+    }
+
+    /**
+     * Возвращает список групп пользователей
+     * @param bool $no_guests Если TRUE, группа "Гости" не выводится
+     * @return array
+     */
+    public static function getGroups($no_guests=false){
+
+        $inDB = cmsDatabase::getInstance();
+
+        $groups = array();
+
+        $sql = "SELECT id, title, alias, is_admin, access
+                FROM cms_user_groups\n";
+
+        if ($no_guests){
+            $sql .= "WHERE alias <> 'guest'\n";
+        }
+
+        $sql .= "ORDER BY is_admin ASC";
+
+        $result = $inDB->query($sql);
+
+        if ($inDB->num_rows($result)){
+            while($group = $inDB->fetch_assoc($result)){
+				$groups[] = $group;
+            }
+        }
+
+        return $groups;
+
+    }
+
+    /**
+     * Возвращает пользователей в указанной группе
+     * @param int $group_id
+     * @return array 
+     */
+    public static function getGroupMembers($group_id){
+
+        $inDB = cmsDatabase::getInstance();
+
+        $users = array();
+
+        $sql = "SELECT id, nickname, login
+                FROM cms_users
+				WHERE group_id='{$group_id}' AND is_deleted=0";
+
+        $result = $inDB->query($sql);
+
+        if ($inDB->num_rows($result)){
+            while($user = $inDB->fetch_assoc($result)){
+				$users[] = $user;
+            }
+        }
+
+        return $users;
+
+    }
 
 // ============================================================================ //
 // ============================================================================ //
