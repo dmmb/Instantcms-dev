@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -464,71 +464,71 @@
 // ========================================================================== //
 // ========================================================================== //
 
-//    $sql = "SELECT id, message
-//            FROM cms_user_msg";
-//
-//    $result = $inDB->query($sql);
-//
-//    if($inDB->num_rows($result)){
-//
-//        while($msg = $inDB->fetch_assoc($result)){
-//
-//			$html = $inCore->parseSmiles($msg['message'], true);
-//			$html = mysql_escape_string($html);
-//
-//            $inDB->query("UPDATE cms_user_msg SET message = '{$html}' WHERE id = '{$msg['id']}'");
-//
-//        }
-//
-//        echo '<p>Записи личных сообщений оптимизированы.</p>';
-//
-//    }
+    $sql = "SELECT id, message
+            FROM cms_user_msg";
+
+    $result = $inDB->query($sql);
+
+    if($inDB->num_rows($result)){
+
+        while($msg = $inDB->fetch_assoc($result)){
+
+			$html = $inCore->parseSmiles($msg['message'], true);
+			$html = mysql_escape_string($html);
+
+            $inDB->query("UPDATE cms_user_msg SET message = '{$html}' WHERE id = '{$msg['id']}'");
+
+        }
+
+        echo '<p>Записи личных сообщений оптимизированы.</p>';
+
+    }
 
 // ========================================================================== //
 // ========================================================================== //
 
-//    $sql = "SELECT id, content
-//            FROM cms_comments";
-//
-//    $result = $inDB->query($sql);
-//
-//    if($inDB->num_rows($result)){
-//
-//        while($msg = $inDB->fetch_assoc($result)){
-//
-//			$html = $inCore->parseSmiles($msg['content'], true);
-//			$html = mysql_escape_string($html);
-//
-//            $inDB->query("UPDATE cms_comments SET content = '{$html}' WHERE id = '{$msg['id']}'");
-//
-//        }
-//
-//        echo '<p>Комментарии оптимизированы.</p>';
-//
-//    }
+    $sql = "SELECT id, content
+            FROM cms_comments";
+
+    $result = $inDB->query($sql);
+
+    if($inDB->num_rows($result)){
+
+        while($msg = $inDB->fetch_assoc($result)){
+
+			$html = $inCore->parseSmiles($msg['content'], true);
+			$html = mysql_escape_string($html);
+
+            $inDB->query("UPDATE cms_comments SET content = '{$html}' WHERE id = '{$msg['id']}'");
+
+        }
+
+        echo '<p>Комментарии оптимизированы.</p>';
+
+    }
 		
 // ========================================================================== //
 // ========================================================================== //
 
-//    $sql = "SELECT id, content
-//            FROM cms_user_wall";
-//
-//    $result = $inDB->query($sql);
-//
-//    if($inDB->num_rows($result)){
-//
-//        while($msg = $inDB->fetch_assoc($result)){
-//
-//			$html = $inCore->parseSmiles($msg['content'], true);
-//			$html = mysql_escape_string($html);
-//
-//            $inDB->query("UPDATE cms_user_wall SET content = '{$html}' WHERE id = '{$msg['id']}'");
-//
-//        }
-//
-//        echo '<p>Записи на стенах пользователей оптимизированы.</p>';
-//
-//    }
+    $sql = "SELECT id, content
+            FROM cms_user_wall";
+
+    $result = $inDB->query($sql);
+
+    if($inDB->num_rows($result)){
+
+        while($msg = $inDB->fetch_assoc($result)){
+
+			$html = $inCore->parseSmiles($msg['content'], true);
+			$html = mysql_escape_string($html);
+
+            $inDB->query("UPDATE cms_user_wall SET content = '{$html}' WHERE id = '{$msg['id']}'");
+
+        }
+
+        echo '<p>Записи на стенах пользователей оптимизированы.</p>';
+
+    }
 
 // ========================================================================== //
 // ========================================================================== //

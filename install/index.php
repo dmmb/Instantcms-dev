@@ -1,7 +1,7 @@
 <?php 
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -359,6 +359,7 @@ function installCheckExtensions(){
                     <td>Пароль администратора сайта:</td>
                     <td align="center"><input name="admin_password" type="password" id="txt"></td>
                   </tr>
+                  <!--
                   <tr>
                     <td>Демо-данные:<br>                      <br>                    </td>
                     <td align="center" valign="top">
@@ -366,7 +367,10 @@ function installCheckExtensions(){
                         <label><input name="demodata" type="radio" value="0" /> Нет</label>
                     </td>
                   </tr>
+                  -->
                 </table>
+
+                <input type="hidden" name="demodata" value="1" />
 
                 <p style="color:gray">
                     При установке с демо-данными всем пользователям будет установлен одинаковый пароль, совпадающий с паролем администратора.

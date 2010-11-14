@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -18,14 +18,14 @@
 
 ////////////////////////////// Проверяем что система установлена /////////////////////////////
 
-//    if(is_dir('install')||is_dir('migrate')) {
-//        if (!file_exists(PATH.'/includes/config.inc.php')){
-//            header('location:/install/');
-//        } else {
-//            include(PATH.'/core/messages/installation.html');
-//            die();
-//        }
-//    }
+    if(is_dir('install')||is_dir('migrate')) {
+        if (!file_exists(PATH.'/includes/config.inc.php')){
+            header('location:/install/');
+        } else {
+            include(PATH.'/core/messages/installation.html');
+            die();
+        }
+    }
 
 /////////////////////////////////// Подготовка //////////////////////////////////////////////
 	
