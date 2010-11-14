@@ -48,7 +48,7 @@ echo "Deleting RSS cache...";
 rm -f $TO_DIR/includes/rss/cache/*;
 
 echo "Deleting files in root...";
-find $TO_DIR -maxdepth 1 -mindepth 1 -type f -not -name .htaccess -not -name url_rewrite.php -not -name readme.txt -not -name version_log.txt -not -name license.txt -not -name license.rus.win.txt -not -name license.rus.utf.txt -not -name index.php -not -name $DISTR_NAME -print0 | xargs -0 rm -f;
+find $TO_DIR -maxdepth 1 -mindepth 1 -type f -not -name cron.php -not -name .htaccess -not -name url_rewrite.php -not -name readme.txt -not -name version_log.txt -not -name license.txt -not -name license.rus.win.txt -not -name license.rus.utf.txt -not -name index.php -not -name $DISTR_NAME -print0 | xargs -0 rm -f;
 echo "";
 
 echo "Building archive...";
