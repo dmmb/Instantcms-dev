@@ -394,11 +394,16 @@ function installCheckExtensions(){
 					echo '<h2>Установка завершена!</h2>';
 					echo '<div>';
 					echo '<p>Система установлена и готова к работе.</p>';
-					echo '<p style="background:url(/install/images/warning.png) no-repeat;padding-left:32px;margin-top:30px;margin-bottom:30px;">
-                            <strong>ВНИМАНИЕ:</strong><br/>
+					echo '<div style="background:url(/install/images/cron.png) no-repeat;padding-left:24px;margin-top:30px;margin-bottom:30px;">
+                            <div style="margin-bottom:6px;"><strong>Создайте задание для CRON</strong></div>
+                            Добавьте файл <strong>/cron.php</strong> в расписание заданий CRON в панели вашего хостинга.<br/>
+                            Интервал выполнения &mdash; 24 часа. Это позволит системе выполнять периодические сервисные задачи.
+                          </div>';
+					echo '<div style="background:url(/install/images/warning.png) no-repeat;padding-left:24px;margin-top:30px;margin-bottom:30px;">
+                            <div style="margin-bottom:6px;"><strong>Внимание!</strong></div>
                             До перехода на сайт необходимо удалить каталоги "install" и "migrate"<br/>
                             на сервере вместе со всеми находящимися в них файлами!
-                          </p>';
+                          </div>';
 					echo '<p style="font-size:18px"><a href="/">Перейти на сайт</a> | <a href="/admin">Перейти в панель управления</a></p>';
 					echo '<p><a id="tutorial" href="http://www.instantcms.ru/articles/quickstart.html">Учебник для начинающих</a></p>';
 					echo '</div>';
