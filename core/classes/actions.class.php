@@ -318,7 +318,7 @@ class cmsActions {
      * @param int $pubdays
      * @return bool
      */
-    static function removeOldLog($pubdays = 30){
+    static function removeOldLog($pubdays = 60){
 
         $inDB   = cmsDatabase::getInstance();
 		

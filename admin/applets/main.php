@@ -219,9 +219,9 @@ function applet_main(){
             </ul>
         </div>
 		<div class="small_box">
-            <div class="small_title">Дополнительные возможности</div>
-            <div class="advert_design"><a href="http://www.instantcms.ru/design.html" target="_blank">Закажите уникальный дизайн</a></div>
-            <div class="advert_inshop"><a href="http://www.instantcms.ru/blogs/InstantSoft/professionalnyi-magazin-dlja-InstantCMS.html" target="_blank">Профессиональный магазин для InstantCMS</a></div>
+            <div class="small_title">Премиум-компоненты</div>
+            <div class="advert_inmaps"><a href="http://www.instantcms.ru/blogs/InstantSoft/instantmaps-katalog-obektov-na-karte.html" target="_blank"><strong>InstantMaps</strong></a> &mdash; каталог объектов на карте</div>
+            <div class="advert_inshop"><a href="http://www.instantcms.ru/blogs/InstantSoft/professionalnyi-magazin-dlja-InstantCMS.html" target="_blank"><strong>InstantShop</strong></a> &mdash; профессиональный магазин</div>
         </div>
 		  </td>
       </tr>

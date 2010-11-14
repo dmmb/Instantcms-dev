@@ -169,7 +169,7 @@ function applet_cron(){
                     <span class="hinttext">Максимум 200 символов</span>
                 </td>
                 <td valign="middle">
-                    <input name="comment" type="text" maxlength="200" style="width:400px" value="<?php echo @$mod['comment'];?>" />
+                    <input name="comment" type="text" maxlength="200" style="width:400px" value="<?php echo htmlspecialchars($mod['comment']);?>" />
                 </td>
             </tr>
             <tr>

@@ -23,6 +23,7 @@ $_LANG['USERMENU_MESS']                ='Сообщения';
 $_LANG['USERMENU_MY_BLOG']             ='Мой блог';
 $_LANG['USERMENU_MY_CONTENT']          ='Мой контент';
 $_LANG['USERMENU_PHOTOALBUM']          ='Фотоальбом';
+$_LANG['USERMENU_PHOTOS']              ='Фото';
 $_LANG['USERMENU_ADV']                 ='Объявления';
 $_LANG['USERMENU_ARTICLES']            ='Статьи';
 $_LANG['USERMENU_ADMININTER']          ='Админка';

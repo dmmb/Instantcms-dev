@@ -135,6 +135,7 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
                         <input name="sw_search" type="radio" value="0" <?php if (@!$cfg['sw_search']) { echo 'checked="checked"'; } ?>/> Выкл
                     </td>
                 </tr>
+                <!--
                 <tr>
                     <td><strong>Показывать группу пользователя в профиле: </strong></td>
                     <td width="182">
@@ -142,6 +143,7 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
                         <input name="showgroup" type="radio" value="0" <?php if (@!$cfg['showgroup']) { echo 'checked="checked"'; } ?>/> Нет
                     </td>
                 </tr>
+                -->
                 <tr>
                     <td><strong>Показывать число комментариев: </strong></td>
                     <td width="182">
@@ -250,20 +252,6 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Вкладка "Контент":</strong></td>
-                    <td>
-                        <input name="sw_content" type="radio" value="1" <?php if (@$cfg['sw_content']) { echo 'checked="checked"'; } ?>/> Вкл
-                        <input name="sw_content" type="radio" value="0" <?php if (@!$cfg['sw_content']) { echo 'checked="checked"'; } ?>/> Выкл
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>Вкладка "Друзья":</strong></td>
-                    <td>
-                        <input name="sw_friends" type="radio" value="1" <?php if (@$cfg['sw_friends']) { echo 'checked="checked"'; } ?>/> Вкл
-                        <input name="sw_friends" type="radio" value="0" <?php if (@!$cfg['sw_friends']) { echo 'checked="checked"'; } ?>/> Выкл
-                    </td>
-                </tr>
-                <tr>
                     <td><strong>Вкладка "Клубы":</strong></td>
                     <td>
                         <input name="sw_clubs" type="radio" value="1" <?php if (@$cfg['sw_clubs']) { echo 'checked="checked"'; } ?>/> Вкл
@@ -360,7 +348,7 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
                         <strong>Доступные типы файлов:</strong><br />
                         <span class="hinttext">Введите через запятую расширения для доступных типов файлов</span>
                     </td>
-                    <td><input name="filestype" type="text" id="filestype" size="60" value="<?php echo $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar';?>"/></td>
+                    <td><input name="filestype" type="text" id="filestype" size="30" value="<?php echo $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar';?>"/></td>
                 </tr>
             </table>
         </div>

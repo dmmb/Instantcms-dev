@@ -3402,8 +3402,8 @@ table.feed td.date strong { color:green; }
 	padding:0;
     display: block;
     float:left;
-    width:210px;
-	height:85px;
+    width:200px;
+	height:90px;
 }
 .usr_albums_list li.no_albums{
 	height:auto;
