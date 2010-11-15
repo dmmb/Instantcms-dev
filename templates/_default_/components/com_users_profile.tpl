@@ -81,7 +81,7 @@
                                 </tr>
 							{/if}
 
-                            {if !$myprofile && $cfg.sw_friends}
+                            {if !$myprofile}
                             	{if !$usr.isfriend}
                                     <tr>
                                         {if !$usr.isfriend_not_add}
@@ -180,7 +180,7 @@
 			<div id="profiletabs">
 				<ul id="tabs"> 
 					<li><a href="#upr_profile"><span>{$LANG.PROFILE}</span></a></li>
-					{if $myprofile && $cfg.sw_feed && $cfg.sw_friends}
+					{if $myprofile && $cfg.sw_feed}
 						<li><a href="#upr_feed"><span>{$LANG.FEED}</span></a></li>
 					{/if}
 					{if $cfg.sw_clubs}
@@ -354,7 +354,7 @@
                             </div>
                         {/if}
 
-                        {if $usr.friends_total && $cfg.sw_friends}
+                        {if $usr.friends_total}
                             <div class="usr_friends_block usr_profile_block">
                                 {if $usr.friends_total > 6}
                                     <div class="float_bar">
@@ -390,7 +390,7 @@
 				</div>
 				
 				{* ============================== «¿ À¿ƒ ¿ π2 ============================================== *}
-				{if $myprofile && $cfg.sw_feed && $cfg.sw_friends}
+				{if $myprofile && $cfg.sw_feed}
 					<div id="upr_feed">
                        {if $usr.actions}
                             <div class="actions_list">

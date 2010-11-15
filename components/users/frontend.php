@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -696,15 +696,13 @@ if ($do=='profile'){
 
     $usr['avatar']				 = usrImageNOdb($usr['id'], 'big', $usr['imageurl'], $usr['is_deleted']);
 	
-	if($cfg['sw_friends']){
-		$usr['isfriend']			= (($inUser->id && !$myprofile) ? usrIsFriends($usr['id'], $inUser->id) : false);
-		$usr['isfriend_not_add']	= $usr['isfriend'];
-        $usr['is_new_friends']		= ($inUser->id==$usr['id'] && $model->isNewFriends($usr['id']) && $cfg['sw_friends']);
-        if ($usr['is_new_friends']){
-            $usr['new_friends'] 	= usrFriendQueriesList($usr['id'], $model);
-        }
-        $usr['friends']				= usrFriends($usr['id'], $usr['friends_total'], 6, 6);
-	}
+	$usr['isfriend']			= (($inUser->id && !$myprofile) ? usrIsFriends($usr['id'], $inUser->id) : false);
+	$usr['isfriend_not_add']	= $usr['isfriend'];
+    $usr['is_new_friends']		= ($inUser->id==$usr['id'] && $model->isNewFriends($usr['id']));
+    if ($usr['is_new_friends']){
+         $usr['new_friends'] 	= usrFriendQueriesList($usr['id'], $model);
+    }
+    $usr['friends']				= usrFriends($usr['id'], $usr['friends_total'], 6, 6);
     
 
     if ($usr['friends'] && $inUser->id && $myprofile && $cfg['sw_feed']){
@@ -1776,14 +1774,18 @@ if ($do=='addfriend'){
 				$to_id      = $id;
 				$from_id    = $inUser->id;
 				if (!usrIsFriendsOld($to_id, $from_id, false)){
+					$my_friends = cmsUser::getFriends($from_id);
+					if (!$my_friends) { return false; }
 					$sql = "INSERT INTO cms_user_friends (to_id, from_id, logdate, is_accepted) 
 							VALUES ('$to_id', '$from_id', NOW(), '0')";
 					$inDB->query($sql);
+
+					cmsUser::sendMessage(USER_UPDATER, $to_id, '<b>'.$_LANG['RECEIVED_F_O'].'</b>. '.$_LANG['YOU_CAN_SEE'].' <a href="'.cmsUser::getProfileURL($usr['login']).'">'.$_LANG['INPROFILE'].'</a>.');
+					cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND'], 'info');					
+				} else {
+					cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND_ERR'], 'error');
 				}
-				
-				cmsUser::sendMessage(USER_UPDATER, $to_id, '<b>'.$_LANG['RECEIVED_F_O'].'</b>. '.$_LANG['YOU_CAN_SEE'].' <a href="'.cmsUser::getProfileURL($usr['login']).'">'.$_LANG['INPROFILE'].'</a>.');
-				cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND'], 'info');
-				
+
 				$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 		}//!goadd
 		} else { $inCore->redirectBack(); }

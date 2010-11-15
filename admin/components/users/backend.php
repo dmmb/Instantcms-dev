@@ -43,7 +43,6 @@ if (!isset($cfg['karmatime'])) { $cfg['karmatime'] = 3; }
 if (!isset($cfg['karmaint']))  { $cfg['karmaint'] = 'HOUR'; }
 
 if (!isset($cfg['sw_feed'])) { $cfg['sw_feed'] = 1; }
-if (!isset($cfg['sw_content'])) { $cfg['sw_content'] = 1; }
 if (!isset($cfg['sw_awards'])) { $cfg['sw_awards'] = 1; }
 
 if (!isset($cfg['smallw'])) { $cfg['smallw'] = 64; }
@@ -55,18 +54,14 @@ if(!isset($cfg['deltime'])) { $cfg['deltime']=6;	}
 
 if($opt=='saveconfig'){	
     $cfg = array();
-    $cfg['showgroup']   = $_REQUEST['showgroup'];
-    $cfg['sw_stats']    = $_REQUEST['sw_stats'];
     $cfg['sw_comm']     = $_REQUEST['sw_comm'];
     $cfg['sw_search']   = $_REQUEST['sw_search'];
     $cfg['sw_forum']    = $_REQUEST['sw_forum'];
     $cfg['sw_photo']    = $_REQUEST['sw_photo'];
     $cfg['sw_wall']     = $_REQUEST['sw_wall'];
-    $cfg['sw_friends']  = $_REQUEST['sw_friends'];
     $cfg['sw_blogs']    = $_REQUEST['sw_blogs'];
     $cfg['sw_clubs']    = $_REQUEST['sw_clubs'];
     $cfg['sw_feed']     = $_REQUEST['sw_feed'];
-    $cfg['sw_content']  = $_REQUEST['sw_content'];
     $cfg['sw_awards']   = $_REQUEST['sw_awards'];
     $cfg['sw_board']    = $_REQUEST['sw_board'];
     $cfg['sw_msg']      = $_REQUEST['sw_msg'];
@@ -135,6 +130,7 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
                         <input name="sw_search" type="radio" value="0" <?php if (@!$cfg['sw_search']) { echo 'checked="checked"'; } ?>/> Выкл
                     </td>
                 </tr>
+                <!--
                 <tr>
                     <td><strong>Показывать группу пользователя в профиле: </strong></td>
                     <td width="182">
@@ -142,6 +138,7 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
                         <input name="showgroup" type="radio" value="0" <?php if (@!$cfg['showgroup']) { echo 'checked="checked"'; } ?>/> Нет
                     </td>
                 </tr>
+                -->
                 <tr>
                     <td><strong>Показывать число комментариев: </strong></td>
                     <td width="182">
@@ -250,20 +247,6 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Вкладка "Контент":</strong></td>
-                    <td>
-                        <input name="sw_content" type="radio" value="1" <?php if (@$cfg['sw_content']) { echo 'checked="checked"'; } ?>/> Вкл
-                        <input name="sw_content" type="radio" value="0" <?php if (@!$cfg['sw_content']) { echo 'checked="checked"'; } ?>/> Выкл
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>Вкладка "Друзья":</strong></td>
-                    <td>
-                        <input name="sw_friends" type="radio" value="1" <?php if (@$cfg['sw_friends']) { echo 'checked="checked"'; } ?>/> Вкл
-                        <input name="sw_friends" type="radio" value="0" <?php if (@!$cfg['sw_friends']) { echo 'checked="checked"'; } ?>/> Выкл
-                    </td>
-                </tr>
-                <tr>
                     <td><strong>Вкладка "Клубы":</strong></td>
                     <td>
                         <input name="sw_clubs" type="radio" value="1" <?php if (@$cfg['sw_clubs']) { echo 'checked="checked"'; } ?>/> Вкл
@@ -360,7 +343,7 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
                         <strong>Доступные типы файлов:</strong><br />
                         <span class="hinttext">Введите через запятую расширения для доступных типов файлов</span>
                     </td>
-                    <td><input name="filestype" type="text" id="filestype" size="60" value="<?php echo $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar';?>"/></td>
+                    <td><input name="filestype" type="text" id="filestype" size="30" value="<?php echo $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar';?>"/></td>
                 </tr>
             </table>
         </div>
