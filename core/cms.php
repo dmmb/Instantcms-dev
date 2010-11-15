@@ -1230,7 +1230,7 @@ class cmsCore {
      * @param int $time
      */
     public function setCookie($name, $value, $time){
-        setcookie('InstantCMS['.$name.']', $value, $time, '/', $_SERVER['SERVER_NAME']);
+        setcookie('InstantCMS['.$name.']', $value, $time, '/');        
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
