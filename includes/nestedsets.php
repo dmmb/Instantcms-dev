@@ -341,7 +341,7 @@ class CCelkoNastedSet {
 	
     public function MoveOrdering($IDNode, $dir = 1){
 
-        $this->BeginTransaction($Differ);
+        $this->BeginTransaction();
 
         if (!$this->_IsInTransaction)
 		{ return false; }
