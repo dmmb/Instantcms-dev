@@ -1118,11 +1118,16 @@ class bbcode {
     // Функция - обработчик тега [img]
     function img_2html($elem) {
         $attr = 'alt=""';
-	$src = '';
+        $src = '';
         foreach ($elem['val'] as $text) {
             if ('text'==$text['type']) { $src .= $text['str']; }
         }
-		$attr .= isset($elem['attrib']['align']) ? ' align="'.$elem['attrib']['align'].'"' : "";		
+        if (isset($elem['attrib']['align'])){
+            $align       = $elem['attrib']['align'];
+            $div_style   = "float:{$align};overflow:hidden;";
+            $div_style  .= "margin-" .($align=='left' ? 'right' : 'left'). ":15px; margin-bottom:15px; ";
+        }
+
 		$width = '';
 		$hegiht = '';
 		$zoom = false;
@@ -1140,7 +1145,7 @@ class bbcode {
 					}			
 				} 		
 				if (!$zoom){
-					return '<img src="'.htmlspecialchars($src).'" '.$attr.' />';
+					return '<div class="bb_img" style="'.$div_style.'"><img src="'.htmlspecialchars($src).'" '.$attr.' /></div>';
 				} else {
 					$html = '<div class="forum_zoom" style="width:'.$width.'px">'."\n";
 						$html .= '<div><a href="'.htmlspecialchars($src).'" target="_blank"><img src="'.htmlspecialchars($src).'" '.$attr.' width="'.$width.'" height="'.$height.'" border="0"/></a></div>'."\n";
@@ -1152,7 +1157,7 @@ class bbcode {
 				return '<div class="forum_lostimg">Файл "'.$src.'" не найден!</div>';
 			}
 		} else {
-			return '<img src="'.htmlspecialchars($src).'" '.$attr.' />';
+			return '<div class="bb_img" style="'.$div_style.'"><img src="'.htmlspecialchars($src).'" '.$attr.' /></div>';
 		}
     }
     // Функция - обработчик тега [quote]
