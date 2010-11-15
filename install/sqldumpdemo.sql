@@ -30,7 +30,7 @@ INSERT INTO `#__actions` (`id`, `component`, `name`, `title`, `message`, `is_tra
 (21, 'users', 'add_award', 'Получение награды пользователем', 'получает награду %s|', 1, 1),
 (22, 'users', 'add_file', 'Загрузка файла пользователем', 'загружает файл %s|', 1, 1),
 (23, 'users', 'add_wall', 'Добавление записи на стену', 'добавляет запись на стене пользователя %s|', 1, 1),
-(24, 'clubs', 'add_wall_club', 'Добавление записи на стену', 'добавляет запись на стене клуба %s|', 1, 1),
+(24, 'clubs', 'add_wall_club', 'Добавление записи на стену клуба', 'добавляет запись на стене клуба %s|', 1, 1),
 (25, 'clubs', 'add_post_club', 'Добавление поста в блог клуба', 'пишет пост %s| в клубе %s', 1, 1),
 (26, 'users', 'add_user_photo', 'Добавление фото в личный альбом', 'добавляет фото %s| в альбом %s', 1, 1),
 (27, 'users', 'add_user_photo_multi', 'Добавление много фоток в личный альбом', 'добавляет %s фото| в альбом %s', 1, 1),
@@ -130,7 +130,7 @@ CREATE TABLE `#__blogs` (
 
 INSERT INTO `#__blogs` (`id`, `user_id`, `title`, `pubdate`, `allow_who`, `view_type`, `showcats`, `ownertype`, `premod`, `forall`, `owner`, `seolink`, `rating`) VALUES
 (1, 1, 'Пример блога админа', '2008-06-03 13:26:55', 'all', 'list', 1, 'single', 0, 1, 'user', 'primer-bloga-admina', 2),
-(24, 14, 'Блог', '2010-10-20 00:02:41', 'all', 'list', 1, 'multi', 0, 0, 'club', '', 0);
+(24, 14, 'Блог', '2010-10-20 00:02:41', 'all', 'list', 1, 'multi', 0, 0, 'club', 'instantcms-lovers', 0);
 
 DROP TABLE IF EXISTS `#__blog_authors`;
 CREATE TABLE `#__blog_authors` (
