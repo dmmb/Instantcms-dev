@@ -497,7 +497,9 @@ INSERT INTO `#__cron_jobs` (`id`, `job_name`, `job_interval`, `job_run_date`, `c
 (1, 'photos_clear', 24, '2010-11-11 20:53:13', 'users', 'clearUploadedPhotos', '', 1, 1, 'Удаление неиспользуемых личных фотографий', '', ''),
 (2, 'optimize_tables', 24, '2010-11-14 14:52:45', '', '', '', 1, 1, 'Оптимизация таблиц БД', 'db|cmsDatabase', 'optimizeTables'),
 (3, 'drop_inactive_users', 48, '2010-11-14 14:58:24', 'users', 'deleteInactiveUsers', '', 1, 1, 'Удаление неактивных пользователей (см. настройки компонента "Профили пользователей")', '', ''),
-(4, 'remove_old_log', 48, '2010-11-14 14:58:35', '', '', '', 1, 1, 'Удаляет старые записи ленты событий', 'actions|cmsActions', 'removeOldLog');
+(4, 'remove_old_log', 48, '2010-11-14 14:58:35', '', '', '', 1, 1, 'Удаляет старые записи ленты событий', 'actions|cmsActions', 'removeOldLog'),
+(5, 'give_invites', 24, '2010-11-15 20:30:03', 'users', 'giveInvitesCron', '', 1, 1, 'Выдача инвайтов пользователям', '', ''),
+(6, 'clear_invites', 24, '2010-11-15 20:30:33', 'users', 'clearInvites', '', 1, 1, 'Удаление использованных инвайтов', '', '');
 
 DROP TABLE IF EXISTS `#__downloads`;
 CREATE TABLE `#__downloads` (
