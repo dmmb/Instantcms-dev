@@ -2315,18 +2315,20 @@ if ($do=='addfile'){
 						$name       = $inCore->strClear($data_array["name"]);
 						$size       = $inCore->strClear($data_array["size"]);
 						$size_mb    += round(($size/1024)/1024, 2);
-						
+
 						$types 		= $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar';
-						$maytypes 	= explode(',', str_replace(' ', '', $types));  
+						$maytypes 	= explode(',', str_replace(' ', '', $types));
+						$path_parts = pathinfo($name);
+						$ext        = strtolower($path_parts['extension']);
 						foreach($maytypes as $maytype){  
-							if(stristr($data_array['type'], $maytype)){  
+							if(stristr($ext , $maytype)){  
 							   $may = 1;  
 							   break;  
 							}else{  
 							   $may = 0;  
 							}  
 						} 
-						
+
 						if ($size_mb <= $free_mb){
 							if ($may){
 								if (move_uploaded_file($tmp_name, PATH."/upload/userfiles/$id/$name")){
