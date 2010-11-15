@@ -188,7 +188,7 @@ class cms_model_board{
         $record = $this->inDB->fetch_assoc($result);
 
 		$timedifference 	  = strtotime("now") - strtotime($record['pubdate']);
-		$record['is_overdue'] = bcdiv($timedifference,86400) > $record['pubdays'] && $record['pubdays'] > 0;
+		$record['is_overdue'] = round(timedifference / 86400) > $record['pubdays'] && $record['pubdays'] > 0;
 		$record['fpubdate']   = $record['pubdate'];
 		$record['pubdate'] 	  = cmsCore::dateFormat($record['pubdate']);
 

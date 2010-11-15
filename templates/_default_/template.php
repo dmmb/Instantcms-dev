@@ -63,11 +63,9 @@
             </div>
             <?php } ?>
 
-            <?php if ($inCore->menuId()>1){ ?>
                 <div id="pathway" class="container_12">
                     <div class="grid_12"><?php cmsPathway('&rarr;'); ?></div>
                 </div>
-            <?php } ?>
 
             <div class="clear"></div>
 
