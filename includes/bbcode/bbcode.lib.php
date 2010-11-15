@@ -232,17 +232,6 @@ class bbcode {
                         'font','google','h1','h2','h3','hr','i','img','list',
                         'nobb','php','quote','s','size','sub','sup','table','tt','u','url')
                 ),
-            'size' => array(
-                    'handler' => 'size_2html',
-                    'is_close' => false,
-                    'lbr' => 0,
-                    'rbr' => 0,
-                    'ends' => array('*','align','code','video', 'audio', 'hide','h1','h2','h3','hr',
-                        'list','php','quote','table','td','th','tr'),
-                    'permission_top_level' => true,
-                    'children' => array('b','color','email','font','google','i','img',
-                        'nobb','s','size','sub','sup','tt','u','url')
-                ),
             'u' => array(
                     'handler' => 'u_2html',
                     'is_close' => false,
