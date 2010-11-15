@@ -36,29 +36,29 @@ function faq(){
 if ($do=='view'){
 
 	if($id>0){
-	//CURRENT CATEGORY
-	$sql = "SELECT *
-			FROM cms_faq_cats
-			WHERE id = '$id'
-			ORDER BY title ASC LIMIT 1
-			";		
+		//CURRENT CATEGORY
+		$sql = "SELECT *
+				FROM cms_faq_cats
+				WHERE id = '$id'
+				ORDER BY title ASC LIMIT 1
+				";		
+		
+		$result = $inDB->query($sql) ;
 	
-	$result = $inDB->query($sql) ;
-
-	if (!$inDB->num_rows($result)) { cmsCore::error404(); }
-
-	$cat = $inDB->fetch_assoc($result);	
-
-	//PAGE HEADING
+		if (!$inDB->num_rows($result)) { cmsCore::error404(); }
+	
+		$cat = $inDB->fetch_assoc($result);	
+	
+		//PAGE HEADING
 		$pagetitle = $cat['title'];
 		$inPage->setTitle($cat['title']);
+		$inPage->addPathway($cat['title']);
+		$inPage->setDescription($cat['title']);
 	} else {
 		$pagetitle = $_LANG['FAQ'];
 		$inPage->setTitle($_LANG['FAQ']);
+		$inPage->setDescription($_LANG['FAQ']);
 	}
-	
-	//PATHWAY ENTRY
-	if ($cat['title']) { $inPage->addPathway($cat['title']); }
 
 	//LIST OF SUBCATEGORIES
 	$sql = "SELECT *
@@ -107,6 +107,7 @@ if ($do=='view'){
 		$quests = array();
 		while($con = $inDB->fetch_assoc($result)){
 			$con['pubdate'] = $inCore->dateFormat($con['pubdate'], true, false, false);
+			$con['quest']	= nl2br($con['quest']);
 			$quests[] = $con;	
 		}
 		$is_quests = true;		
@@ -148,8 +149,10 @@ if ($do=='read'){
 			$quest['answerdate'] = $inCore->dateFormat($quest['answerdate'], true, false, false);
 			if (strlen($quest['quest'])>40) { $shortquest = substr($quest['quest'], 0, 40).'...'; }
 			else { $shortquest = $quest['quest']; }
+			$quest['quest']		 = nl2br($quest['quest']);
 			
 			$inPage->setTitle($shortquest);
+			$inPage->setDescription($shortquest);
 				
 			$inPage->addPathway($quest['cat_title'], '/faq/'.$quest['cat_id']);
 			$inPage->addPathway($shortquest);
@@ -185,7 +188,7 @@ if ($do=='sendquest'){
 		$smarty = $inCore->initSmarty('components', 'com_faq_add.tpl');			
 		$smarty->assign('catslist', $inCore->getListItems('cms_faq_cats', $category_id));
 		$smarty->assign('user_id', $inUser->id);
-		$smarty->assign('message', $message);
+		$smarty->assign('message', $_REQUEST['message']);
 		$smarty->assign('error', $error);
 		$smarty->display('com_faq_add.tpl');
 	} else {
