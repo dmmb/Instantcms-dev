@@ -130,6 +130,21 @@
 // ========================================================================== //
 // ========================================================================== //
 
+    $mod_friends_installed = $inDB->get_field('cms_modules', "content='mod_user_friend'", 'id');
+
+    if (!$mod_friends_installed){
+
+        $sql = "INSERT INTO `cms_modules` VALUES ('', 'left', 'Друзья онлайн', 'Друзья онлайн', 1, 'mod_user_friend', 5, 1, 0, 0, '---\nlimit: 5\nview_type: table', 1, '', -1, 0, 1, 'HOUR','module_simple.tpl', 0, '1.0')";
+
+        $result = $inDB->query($sql);
+
+        echo '<p>Модуль &laquo;<strong>Друзья онлайн</strong>&raquo; установлен</p>';
+
+    }
+
+// ========================================================================== //
+// ========================================================================== //
+
     if (!$inDB->isTableExists('cms_ns_transactions')){
 
         $sql = "CREATE TABLE cms_ns_transactions (
@@ -527,21 +542,6 @@
         }
 
         echo '<p>Записи на стенах пользователей оптимизированы.</p>';
-
-    }
-
-// ========================================================================== //
-// ========================================================================== //
-
-    $mod_friends_installed = $inDB->get_field('cms_modules', "content='mod_user_friend'", 'id');
-
-    if (!$mod_friends_installed){
-
-        $sql = "INSERT INTO `cms_modules` VALUES ('', 'left', 'Друзья онлайн', 'Друзья онлайн', 1, 'mod_user_friend', 5, 1, 0, 0, '---\nlimit: 5\nview_type: table', 1, '', -1, 0, 1, 'HOUR','module_simple.tpl', 0)";
-
-        $result = $inDB->query($sql);
-
-        echo '<p>Модуль &laquo;<strong>Друзья онлайн</strong>&raquo; установлен</p>';
 
     }
 
