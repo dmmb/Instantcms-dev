@@ -270,58 +270,50 @@ function usrCanKarma($to, $from){
 
 function usrStatus($user_id, $logdate='', $online=false, $gender='m'){
 
-    $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
     global $_LANG;
+
     if ($online===false){
-        $sql = "SELECT id
-                FROM cms_online
-                WHERE user_id = '$user_id' LIMIT 1";
-        $result     = $inDB->query($sql);
-        $is_online  = $inDB->num_rows($result);
+        $is_online  = $inDB->rows_count('cms_online', "user_id = '$user_id'");
     } else {
         $is_online  = $online;
     }
-	
+
 	if ($is_online){
 		return '<span class="online">'.$_LANG['ONLINE'].'</span>';
 	} else {
-				if ($logdate){
-                    if (!strstr(strtolower($logdate), $_LANG['YESTERDAY']) && !strstr(strtolower($logdate), $_LANG['TODAY'])){
-                        $logdate = cmsCore::dateDiffNow($logdate);                        
-                        if (!strstr($logdate, 'не известно')) { $logdate .=  ' '.$_LANG['BACK']; }
-                    }
-					return '<span class="offline">'.$logdate.'</span>';
-				} else {
-					return '<span class="offline">'.$_LANG['OFFLINE'].'</span>';
-				}
-			}
+		if ($logdate){
+            if (!strstr(strtolower($logdate), $_LANG['YESTERDAY']) && !strstr(strtolower($logdate), $_LANG['TODAY'])){
+                  $logdate = cmsCore::dateDiffNow($logdate);                        
+                  if (!strstr($logdate, 'не известно')) { $logdate .=  ' '.$_LANG['BACK']; }
+            }
+			return '<span class="offline">'.$logdate.'</span>';
+		} else {
+			return '<span class="offline">'.$_LANG['OFFLINE'].'</span>';
+		}
+	}
 }
 
 function usrStatusList($user_id, $logdate='', $online=false, $gender='m'){
 
-    $inCore = cmsCore::getInstance();
-    $inDB = cmsDatabase::getInstance();
+    $inDB   = cmsDatabase::getInstance();
     global $_LANG;
+
     if ($online===false){
-        $sql = "SELECT id
-                FROM cms_online
-                WHERE user_id = '$user_id'";
-        $result     = $inDB->query($sql);
-        $is_online  = $inDB->num_rows($result);
+        $is_online  = $inDB->rows_count('cms_online', "user_id = '$user_id'");
     } else {
         $is_online  = $online;
     }
-	
+
 	if ($is_online){
 		return '<span class="online">'.$_LANG['ONLINE'].'</span>';
 	} else {
-				if ($logdate){
-					return '<span class="offline">'.$logdate.'</span>';
-				} else {
-					return '<span class="offline">'.$_LANG['OFFLINE'].'</span>';
-				}
-			}
+		if ($logdate){
+			return '<span class="offline">'.$logdate.'</span>';
+		} else {
+			return '<span class="offline">'.$_LANG['OFFLINE'].'</span>';
+		}
+	}
 }
 
 function usrCheckAuth(){
@@ -369,7 +361,13 @@ function usrNotAllowed(){
 	return ob_get_clean();
 }
 
-function usrIsFriends($to_id, $my_id){
+function usrIsFriends($to_id, $my_id, $is_accepted = true){
+
+	if (!$is_accepted) {
+		$inDB  = cmsDatabase::getInstance();
+		$total = $inDB->rows_count('cms_user_friends', "(to_id = '$to_id' AND from_id = '$my_id') OR (to_id = '$my_id' AND from_id = '$to_id')");
+		return $total ? true : false;
+	}
 
 	$my_friends = cmsUser::getFriends($my_id);
 	if (!$my_friends) { return false; }
@@ -386,24 +384,9 @@ function usrIsFriends($to_id, $my_id){
 	return $is_friend;
 }
 
-function usrIsFriendsOld ($first_id, $second_id, $strict=true){
-    $inDB = cmsDatabase::getInstance();
-	if ($strict) { $is_accepted = 'is_accepted = 1'; } else { $is_accepted = '(is_accepted = 0 OR is_accepted = 1)'; }
-	$sql = "SELECT * FROM cms_user_friends WHERE ((to_id = $first_id AND from_id = $second_id) OR (to_id = $second_id AND from_id = $first_id)) AND $is_accepted";
-	$result = $inDB->query($sql);
-	if ($inDB->num_rows($result)){
-		return true;
-	} else { return false; }
-}
-
-function usrFriendQueriesNum($user_id, $from_id=''){
-
-}
-
 function usrFriendQueriesList($user_id, $model){
    
     $inCore = cmsCore::getInstance();
-    $inDB = cmsDatabase::getInstance();
 
     $query_list = array();
 
@@ -441,11 +424,12 @@ function usrFriends($user_id, &$total, $limit=8, $max_cols=4){
 			LEFT JOIN cms_users u ON u.id = CASE WHEN f.from_id = $user_id THEN f.to_id WHEN f.to_id = $user_id THEN f.from_id END
 			LEFT JOIN cms_user_profiles p ON p.user_id = u.id
             LEFT JOIN cms_online o ON p.user_id = o.user_id
-			WHERE (from_id = $user_id OR to_id = $user_id) AND is_accepted =1 ";
+			WHERE (from_id = '$user_id' OR to_id = '$user_id') AND is_accepted =1
+			GROUP BY u.id";
 
 	$result = $inDB->query($sql) ;
 
-    $total = $inDB->num_rows($result);
+    $total  = $inDB->num_rows($result);
 
 	if ($total){
 
@@ -476,10 +460,11 @@ function usrFriends($user_id, &$total, $limit=8, $max_cols=4){
 }
 
 function usrAllowed($allow_who, $owner_id){
-    $inCore = cmsCore::getInstance();
-    $inDB = cmsDatabase::getInstance();
-    $inUser     = cmsUser::getInstance();
+
+    $inCore  = cmsCore::getInstance();
+    $inUser  = cmsUser::getInstance();
 	$user_id = $inUser->id;
+
 	if ($owner_id == $user_id) { return true; }
 	if ($allow_who == 'all') { return true; }
 	if ($allow_who == 'registered') { return usrCheckAuth(); }
@@ -491,7 +476,7 @@ function usrAllowed($allow_who, $owner_id){
 }
 
 function usrAwardsList($selected = 'aw.gif'){
-    $inDB = cmsDatabase::getInstance();
+
 	$html = '';
 	if ($handle = opendir(PATH.'/images/users/awards')) {
 		while (false !== ($file = readdir($handle))) {
