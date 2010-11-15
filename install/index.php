@@ -64,7 +64,7 @@
 			$_CFG['show_pw']    = '1';
 			$_CFG['splash']     = '0';
 			$_CFG['stats']      = '0';
-			$_CFG['slight']     = '1';
+			$_CFG['slight']     = '0';
 			$_CFG['siteoff']    = '0';
 			$_CFG['offtext']    = 'Производится обновление сайта';
 			$_CFG['keywords']   = 'InstantCMS, система управления сайтом, бесплатная CMS, движок сайта, CMS, движок социальной сети';
@@ -73,7 +73,7 @@
             $_CFG['debug']      = '0';
             $_CFG['lang']       = 'ru';
             $_CFG['wmark']      = 'watermark.png';
-            $_CFG['back_btn']   = 1;
+            $_CFG['back_btn']   = 0;
 
             $inConf->saveToFile($_CFG);
 			
@@ -329,7 +329,7 @@ function installCheckExtensions(){
 				<table width="" border="0" cellpadding="4" cellspacing="0" style="margin-left:10px;margin-bottom:0px">
                   <tr>
                     <td width="220">Название сайта:</td>
-                    <td width="" align="center"><input name="sitename" type="text" id="txt" value="Мой сайт"></td>
+                    <td width="" align="center"><input name="sitename" type="text" id="txt" value="Моя социальная сеть"></td>
                   </tr>
                   <tr>
                     <td>Сервер MySQL: </td>
@@ -348,7 +348,7 @@ function installCheckExtensions(){
                     <td align="center"><input name="db_password" type="password" id="txt"></td>
                   </tr>
                   <tr>
-                    <td>Префикс базы данных: </td>
+                    <td>Префикс таблиц в базе данных: </td>
                     <td align="center"><input name="db_prefix" type="text" id="txt" value="cms"></td>
                   </tr>
     		      <tr>
