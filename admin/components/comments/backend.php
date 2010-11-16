@@ -20,13 +20,18 @@ function cpStripComment($text){
 	cpAddPathway('Комментарии пользователей', '?view=components&do=config&id='.$_REQUEST['id']);
 	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; }
 		$toolmenu = array();
-		$toolmenu[1]['icon'] = 'list.gif';
-		$toolmenu[1]['title'] = 'Все комментарии';
-		$toolmenu[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list';
 
-		$toolmenu[2]['icon'] = 'config.gif';
-		$toolmenu[2]['title'] = 'Настройки компонента';
-		$toolmenu[2]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config';
+        if ($opt!='list'){
+            $toolmenu[1]['icon'] = 'listcomments.gif';
+            $toolmenu[1]['title'] = 'Все комментарии';
+            $toolmenu[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list';
+        }
+
+        if ($opt!='config'){
+            $toolmenu[2]['icon'] = 'config.gif';
+            $toolmenu[2]['title'] = 'Настройки компонента';
+            $toolmenu[2]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config';
+        }
 
 		$toolmenu[3]['icon'] = 'cancel.gif';
 		$toolmenu[3]['title'] = 'Отмена';

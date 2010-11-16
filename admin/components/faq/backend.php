@@ -11,26 +11,26 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	cpAddPathway('Вопросы и ответы', '?view=components&do=config&id='.(int)$_REQUEST['id']);
 	echo '<h3>Вопросы и ответы</h3>';
-	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list_cats'; }
+	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list_items'; }
 	
 	$toolmenu = array();
 	if($opt != 'config'){
-		$toolmenu[0]['icon'] = 'newfolder.gif';
-		$toolmenu[0]['title'] = 'Новая категория';
-		$toolmenu[0]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_cat';
-	
-		$toolmenu[2]['icon'] = 'newquest.gif';
-		$toolmenu[2]['title'] = 'Новый вопрос';
-		$toolmenu[2]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_item';
-	
-		$toolmenu[1]['icon'] = 'folders.gif';
-		$toolmenu[1]['title'] = 'Категории вопросов';
-		$toolmenu[1]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats';
-	
-		$toolmenu[3]['icon'] = 'listquest.gif';
-		$toolmenu[3]['title'] = 'Все вопросы';
-		$toolmenu[3]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items';
-	
+		$toolmenu[0]['icon'] = 'newstuff.gif';
+		$toolmenu[0]['title'] = 'Новый вопрос';
+		$toolmenu[0]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_item';
+
+		$toolmenu[1]['icon'] = 'newfolder.gif';
+		$toolmenu[1]['title'] = 'Новая категория';
+		$toolmenu[1]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_cat';
+
+		$toolmenu[2]['icon'] = 'liststuff.gif';
+		$toolmenu[2]['title'] = 'Все вопросы';
+		$toolmenu[2]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items';
+
+		$toolmenu[3]['icon'] = 'folders.gif';
+		$toolmenu[3]['title'] = 'Категории вопросов';
+		$toolmenu[3]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats';
+		
 		if($opt == 'list_items'){
 			$toolmenu[11]['icon'] = 'edit.gif';
 			$toolmenu[11]['title'] = 'Редактировать выбранные';

@@ -49,10 +49,6 @@ if($opt=='list'){
     $toolmenu[0]['title'] = 'Новый клуб';
     $toolmenu[0]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add';
 
-    $toolmenu[3]['icon'] = 'list.gif';
-    $toolmenu[3]['title'] = 'Все клубы';
-    $toolmenu[3]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list';
-
     $toolmenu[4]['icon'] = 'config.gif';
     $toolmenu[4]['title'] = 'Настройки';
     $toolmenu[4]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config';

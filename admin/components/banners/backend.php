@@ -40,10 +40,6 @@ function bannerHitsbyID($id){
 		$toolmenu[0]['title'] = 'Новый баннер';
 		$toolmenu[0]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add';
 	
-		$toolmenu[3]['icon'] = 'listphoto.gif';
-		$toolmenu[3]['title'] = 'Все баннеры';
-		$toolmenu[3]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list';
-
 		$toolmenu[11]['icon'] = 'edit.gif';
 		$toolmenu[11]['title'] = 'Редактировать выбранные';
 		$toolmenu[11]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=edit&multiple=1');";

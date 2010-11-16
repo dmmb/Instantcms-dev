@@ -44,7 +44,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         $toolmenu[1]['title'] = 'Отмена';
         $toolmenu[1]['link'] = '?view=components';
 
-        $toolmenu[2]['icon'] = 'list.gif';
+        $toolmenu[2]['icon'] = 'listblogs.gif';
         $toolmenu[2]['title'] = 'Список блогов';
         $toolmenu[2]['link'] = '?view=components&do=config&link=blogs&opt=list_blogs';
         cpToolMenu($toolmenu);

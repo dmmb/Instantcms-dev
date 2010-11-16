@@ -89,10 +89,6 @@ function applet_users(){
 		$actions[1]['icon']  = 'message.gif';
 		$actions[1]['link']  = '/users/%id%/sendmessage.html';
 
-		$actions[2]['title'] = 'Редактировать';
-		$actions[2]['icon']  = 'edit.gif';
-		$actions[2]['link']  = '?view=users&do=edit&id=%id%';
-		
 		$actions[3]['title'] = 'Забанить';
 		$actions[3]['icon']  = 'ban.gif';
 		$actions[3]['link']  = '/admin/index.php?view=userbanlist&do=add&to=%id%';

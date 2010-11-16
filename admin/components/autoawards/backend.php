@@ -21,11 +21,11 @@ function error($msg){
 
 	if($opt=='list'){
 
-		$toolmenu[0]['icon'] = 'new.gif';
+		$toolmenu[0]['icon'] = 'newaward.gif';
 		$toolmenu[0]['title'] = 'Новая награда';
 		$toolmenu[0]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add';
 	
-		$toolmenu[3]['icon'] = 'listphoto.gif';
+		$toolmenu[3]['icon'] = 'listawards.gif';
 		$toolmenu[3]['title'] = 'Все награды';
 		$toolmenu[3]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list';
 

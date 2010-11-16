@@ -59,6 +59,10 @@ function applet_menu(){
 		$toolmenu[2]['title'] = 'Редактировать выбранные';
 		$toolmenu[2]['link'] = "javascript:checkSel('?view=menu&do=edit&multiple=1');";
 
+		$toolmenu[5]['icon'] = 'delete.gif';
+		$toolmenu[5]['title'] = 'Удалить выбранные';
+		$toolmenu[5]['link'] = "javascript:checkSel('?view=menu&do=delete&multiple=1');";
+
 		$toolmenu[3]['icon'] = 'show.gif';
 		$toolmenu[3]['title'] = 'Публиковать выбранные';
 		$toolmenu[3]['link'] = "javascript:checkSel('?view=menu&do=show&multiple=1');";
@@ -66,10 +70,6 @@ function applet_menu(){
 		$toolmenu[4]['icon'] = 'hide.gif';
 		$toolmenu[4]['title'] = 'Скрыть выбранные';
 		$toolmenu[4]['link'] = "javascript:checkSel('?view=menu&do=hide&multiple=1');";
-
-		$toolmenu[5]['icon'] = 'delete.gif';
-		$toolmenu[5]['title'] = 'Удалить выбранные';
-		$toolmenu[5]['link'] = "javascript:checkSel('?view=menu&do=delete&multiple=1');";
 
 		$toolmenu[6]['icon'] = 'reorder.gif';
 		$toolmenu[6]['title'] = 'Сохранить порядок элементов';
