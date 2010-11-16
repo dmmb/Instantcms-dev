@@ -160,7 +160,7 @@ function applet_content(){
 			$id = (int)$_REQUEST['id'];
 			$sql = "UPDATE cms_content SET is_arhive = 1 WHERE id = $id";
 			dbQuery($sql) ;
-			header('location:?view=content');
+			$inCore->redirectBack();
 		}
 	}
 
