@@ -10,8 +10,8 @@ class p_morecontent extends cmsPlugin {
 		// Информация о плагине
 		
         $this->info['plugin']           = 'p_morecontent';
-        $this->info['title']            = 'Plugin More Content';
-        $this->info['description']      = 'Добавляет в конец каждой статьи список похожих статей. ВНИМАНИЕ: при большом количестве тегов статьи, производительность упадет';
+        $this->info['title']            = 'Похожие статьи';
+        $this->info['description']      = 'Добавляет в конец каждой статьи список похожих статей.';
         $this->info['author']           = 'Maximov & InstantCMS Team';
         $this->info['version']          = '1.0';
 		
