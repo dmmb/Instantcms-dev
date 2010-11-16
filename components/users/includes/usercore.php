@@ -429,13 +429,12 @@ function usrFriends($user_id, &$total, $perpage=10, $page=1){
 			THEN f.to_id
 			WHEN f.to_id = $user_id
 			THEN f.from_id
-			END AS id_friends, u.id as id, u.nickname as nickname, u.login as login, u.is_deleted as is_deleted, p.imageurl as avatar, u.logdate as flogdate, o.id as online
+			END AS id_friends, u.id as id, u.nickname as nickname, u.login as login, u.is_deleted as is_deleted, u.status, p.imageurl as avatar, u.logdate as flogdate, o.id as online
 			FROM cms_user_friends f
 			LEFT JOIN cms_users u ON u.id = CASE WHEN f.from_id = $user_id THEN f.to_id WHEN f.to_id = $user_id THEN f.from_id END
 			LEFT JOIN cms_user_profiles p ON p.user_id = u.id
             LEFT JOIN cms_online o ON p.user_id = o.user_id
 			WHERE (from_id = '$user_id' OR to_id = '$user_id') AND is_accepted =1
-			GROUP BY u.id
 			LIMIT ".(($page-1)*$perpage).", $perpage";
 
 	$result = $inDB->query($sql) ;
@@ -446,7 +445,7 @@ function usrFriends($user_id, &$total, $perpage=10, $page=1){
 
          $friend['flogdate'] = usrStatus($friend['id'], $friend['flogdate'], (int)$friend['online']);
          $friend['avatar']   = usrImageNOdb($friend['id'], 'small', $friend['avatar'], $friend['is_deleted']);
-         $friends[] = $friend;
+         $friends[$friend['id']] = $friend;
 
     }
                    

@@ -1620,7 +1620,7 @@ if ($do=='viewboard'){
 					$con['moderator'] = false;
 											}											
 					$timedifference    = strtotime("now") - strtotime($con['pubdate']);
-					$con['is_overdue'] = bcdiv($timedifference,86400) > $con['pubdays'] && $con['pubdays'] > 0;
+					$con['is_overdue'] = round($timedifference / 86400) > $con['pubdays'] && $con['pubdays'] > 0;
 					$con['pubdate'] = $inCore->dateFormat($con['pubdate']);
 				$cons[] = $con;
 											}
@@ -1646,12 +1646,14 @@ if ($do=='friendlist'){
 	if (!$usr) { cmsCore::error404(); }
 
 	$page    = $inCore->request('page', 'int', 1);
-	$perpage = 15;
+	$perpage = 10;
 	
 	if (!usrCheckAuth()) { cmsUser::goToLogin(); }
 
 	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 	$inPage->addPathway($_LANG['FRIENDS'], $_SERVER['REQUEST_URI']);
+	$inPage->setTitle($_LANG['FRIENDS']);
+	$inPage->backButton(false);
 
 	$friends = usrFriends($usr['id'], $total, $perpage, $page);
 
@@ -1763,7 +1765,6 @@ if ($do=='addfriend'){
 				$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 			}
 			if(usrIsFriends($id, $inUser->id, false)){ cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND_ERR'], 'error'); $inCore->redirect(cmsUser::getProfileURL($usr['login'])); }
-			$inPage->backButton(false);
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 			$inPage->addPathway($_LANG['ADD_TO_FRIEND']);
             $inPage->backButton(false);

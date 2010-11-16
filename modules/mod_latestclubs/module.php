@@ -50,7 +50,7 @@ function mod_latestclubs($module_id){
 
 			$smarty = $inCore->initSmarty('modules', 'mod_clubs.tpl');			
 			$smarty->assign('clubs', $clubs);
-		$smarty->assign('is_clubs', $is_clubs);
+			$smarty->assign('is_clubs', $is_clubs);
 			$smarty->display('mod_clubs.tpl');
 						
 		return true;

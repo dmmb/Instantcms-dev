@@ -2843,6 +2843,13 @@ table.users_list div.microstatus {
     clear:both;
     margin-top:3px;
 }
+.microstatus {
+    color:#5F98BF; font-size:11px;
+    padding:1px;
+    padding-left:20px;
+    background:url(../images/icons/comment-small.png) no-repeat left top;
+    margin-top:3px;
+}
 table.users_list div.karma,
 table.users_list div.rating{
     font-size:12px;

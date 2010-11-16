@@ -16,7 +16,7 @@
 			</div>
 			<div class="details">
 				<span class="rating"><strong>Рейтинг</strong> &mdash; {$club.rating}</span>
-				<span class="members"><strong>{$club.members|spellcount:'участник':'участника':'участников'}</strong></span>
+				<span class="members"><strong>{$club.members|spellcount:$LANG.CLUBS_USER:$LANG.CLUBS_USER2:$LANG.CLUBS_USER10}</strong></span>
 			</div>
 		</div>
 	</div>
