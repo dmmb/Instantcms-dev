@@ -376,7 +376,6 @@ function registration(){
 
                     if (!cmsUser::isBanned($user['id'])) {
 
-                        session_register('user');
                         $_SESSION['user'] = cmsUser::createUser($user);
                         
                         cmsCore::callEvent('USER_LOGIN', $_SESSION['user']);

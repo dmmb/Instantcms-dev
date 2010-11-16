@@ -205,7 +205,6 @@ class cmsUser {
 
             if($inDB->num_rows($res)==1){
                 $userrow = $inDB->fetch_assoc($res);
-                session_register('user');
                 $_SESSION['user'] = self::createUser($userrow);
                 cmsCore::callEvent('USER_LOGIN', $_SESSION['user']);
                 $inDB->query("UPDATE cms_users SET logdate = NOW() WHERE id = ".$_SESSION['user']['id']);
