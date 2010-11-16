@@ -1806,8 +1806,13 @@ class cmsCore {
      * Загружает класс Smarty
      */
     public function loadSmarty(){
+
         $this->includeFile('/includes/smarty/libs/Smarty.class.php');
+
         $this->smarty = new Smarty();
+
+        $this->smarty->compile_dir = PATH.'/cache';
+        
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1823,8 +1828,6 @@ class cmsCore {
         global $_LANG;
 
         if (!$this->smarty){ $this->loadSmarty(); }
-
-        $this->smarty->compile_dir = PATH.'/cache';
 
         $template_has_tpl = file_exists(TEMPLATE_DIR . "{$tpl_folder}/{$tpl_file}");
 
@@ -1847,8 +1850,6 @@ class cmsCore {
     public function initSmartyModule(){
 
         if (!$this->smarty){ $this->loadSmarty(); }
-
-        $this->smarty->compile_dir = PATH.'/cache';
 
         $template_has_dir = is_dir(TEMPLATE_DIR.'modules');
 
