@@ -581,7 +581,6 @@ function applet_content(){
 
                     <div style="margin-top:7px">
                         <select name="category_id" size="10" id="category_id" style="width:99%;height:200px">
-                            <option value="1" <?php if (@$mod['category_id']==1 || !isset($mod['category_id'])) { echo 'selected'; }?>>-- Корневой раздел --</option>
                             <?php
                                 if (isset($mod['category_id'])){
                                     echo $inCore->getListItemsNS('cms_category', $mod['category_id']);
