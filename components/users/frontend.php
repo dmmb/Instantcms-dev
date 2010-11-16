@@ -695,15 +695,14 @@ if ($do=='profile'){
 	}
 
     $usr['avatar']				 = usrImageNOdb($usr['id'], 'big', $usr['imageurl'], $usr['is_deleted']);
-	
+
+    $usr['friends']				= usrFriends($usr['id'], $usr['friends_total'], 6);
 	$usr['isfriend']			= (($inUser->id && !$myprofile) ? usrIsFriends($usr['id'], $inUser->id) : false);
 	$usr['isfriend_not_add']	= $usr['isfriend'];
     $usr['is_new_friends']		= ($inUser->id==$usr['id'] && $model->isNewFriends($usr['id']));
     if ($usr['is_new_friends']){
          $usr['new_friends'] 	= usrFriendQueriesList($usr['id'], $model);
     }
-    $usr['friends']				= usrFriends($usr['id'], $usr['friends_total'], 6, 6);
-    
 
     if ($usr['friends'] && $inUser->id && $myprofile && $cfg['sw_feed']){
         $inActions = cmsActions::getInstance();
@@ -1645,17 +1644,25 @@ if ($do=='friendlist'){
 	
 	$usr = $model->getUserShort($id);
 	if (!$usr) { cmsCore::error404(); }
-	
-		if (usrCheckAuth()){
 
-			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-			$inPage->addPathway($_LANG['FRIENDS'], $_SERVER['REQUEST_URI']);
-
-			echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; '.$_LANG['FRIENDS'].'</div>';
+	$page    = $inCore->request('page', 'int', 1);
+	$perpage = 15;
 	
-		echo usrFriends($usr['id'], $total, false, 5);
-		
-		} else { echo usrNeedReg(); }
+	if (!usrCheckAuth()) { cmsUser::goToLogin(); }
+
+	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+	$inPage->addPathway($_LANG['FRIENDS'], $_SERVER['REQUEST_URI']);
+
+	$friends = usrFriends($usr['id'], $total, $perpage, $page);
+
+    $smarty = $inCore->initSmarty('components', 'com_users_friends.tpl');
+
+   	$smarty->assign('friends', $friends);
+	$smarty->assign('usr', $usr);
+	$smarty->assign('total', $total);
+	$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/users/%user_id%/friendlist%page%.html', array('user_id'=>$id)));
+
+    $smarty->display('com_users_friends.tpl');
 
 }
 
@@ -1752,9 +1759,10 @@ if ($do=='addfriend'){
 						'target_id' => 0, 
 						'description' => ''
 					));
-				header('location:'.$_SERVER['HTTP_REFERER']);
+				cmsUser::clearSessionFriends();
+				$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 			}
-
+			if(usrIsFriends($id, $inUser->id, false)){ cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND_ERR'], 'error'); $inCore->redirect(cmsUser::getProfileURL($usr['login'])); }
 			$inPage->backButton(false);
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 			$inPage->addPathway($_LANG['ADD_TO_FRIEND']);
@@ -1781,12 +1789,11 @@ if ($do=='addfriend'){
 	
 				cmsUser::sendMessage(USER_UPDATER, $to_id, '<b>'.$_LANG['RECEIVED_F_O'].'</b>. '.$_LANG['YOU_CAN_SEE'].' <a href="'.cmsUser::getProfileURL($usr['login']).'">'.$_LANG['INPROFILE'].'</a>.');
 				cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND'], 'info');					
-	
-				$inCore->redirect(cmsUser::getProfileURL($usr['login']));
+
 			} else {
 				cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND_ERR'], 'error');
-				$inCore->redirectBack();
 			}
+			$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 		}//!goadd
 	} else {
 		$inCore->redirectBack();

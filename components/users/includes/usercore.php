@@ -409,9 +409,19 @@ function usrFriendQueriesList($user_id, $model){
 	return ob_get_clean();
 }
 
-function usrFriends($user_id, &$total, $limit=8, $max_cols=4){
+function usrFriends($user_id, &$total, $perpage=10, $page=1){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
+	$inUser = cmsUser::getInstance();
+
+	$ses_friends = cmsUser::getFriends($inUser->id);
+
+	// общее количество моих друзей выбирается из сессии, начиная со 2-й страницы
+    $total  = (($page > 1) && ($user_id == $inUser->id)) ? sizeof($ses_friends) : $inDB->rows_count('cms_user_friends', "(from_id = '$user_id' OR to_id = '$user_id') AND is_accepted =1");
+	// если нет друзей, выходим
+	if(!$total) { return false; }
+	// очищать сессию друзей если в своем профиле и количество друзей из базы не совпадает с количеством друзей в сессии
+	if (($user_id == $inUser->id) && sizeof($ses_friends) != $total) { cmsUser::clearSessionFriends(); }
 	
 	$sql = "SELECT
 			CASE
@@ -425,38 +435,22 @@ function usrFriends($user_id, &$total, $limit=8, $max_cols=4){
 			LEFT JOIN cms_user_profiles p ON p.user_id = u.id
             LEFT JOIN cms_online o ON p.user_id = o.user_id
 			WHERE (from_id = '$user_id' OR to_id = '$user_id') AND is_accepted =1
-			GROUP BY u.id";
+			GROUP BY u.id
+			LIMIT ".(($page-1)*$perpage).", $perpage";
 
 	$result = $inDB->query($sql) ;
 
-    $total  = $inDB->num_rows($result);
+	$friends    = array();
 
-	if ($total){
+	while ($friend = $inDB->fetch_assoc($result)){
 
-		$friends    = array();
-
-		while ($friend = $inDB->fetch_assoc($result)){
-
-            $friend['flogdate'] = usrStatus($friend['id'], $friend['flogdate'], (int)$friend['online']);
-            $friend['avatar']   = usrImageNOdb($friend['id'], 'small', $friend['avatar'], $friend['is_deleted']);
-            $friends[] = $friend;
-
-            if ($limit && sizeof($friends) == $limit){ break; }
-
-        }
+         $friend['flogdate'] = usrStatus($friend['id'], $friend['flogdate'], (int)$friend['online']);
+         $friend['avatar']   = usrImageNOdb($friend['id'], 'small', $friend['avatar'], $friend['is_deleted']);
+         $friends[] = $friend;
 
     }
-		
-    ob_start();
-                    
-    $smarty = $inCore->initSmarty('components', 'com_users_friends.tpl');
-					
-    $smarty->assign('friends', $friends);
-	$smarty->assign('maxcols', $maxcols);
-				
-    $smarty->display('com_users_friends.tpl');
-                    
-	return ob_get_clean();
+                   
+	return $friends;
 }
 
 function usrAllowed($allow_who, $owner_id){
