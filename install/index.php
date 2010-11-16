@@ -142,8 +142,8 @@ function installCheckFolders(){
 	
 	echo '<table align="center">';
 		echo '<tr>';
-			echo '<th width="360">Папка</th>';
-			echo '<th style="text-align:center" width="70">Права</th>';
+			echo '<th width="260">Папка</th>';
+			echo '<th style="text-align:center" width="170">Доступна для записи</th>';
 		echo '</tr>';
 
 	foreach($folders as $key=>$folder){	
@@ -308,11 +308,16 @@ function installCheckExtensions(){
 				<img src="/install/images/folders.gif" border="0" />
 
                 <p>
-					Для корректной работы InstantCMS необходимо выставить права (chmod) 777 на указанные ниже папки. 
-					Это можно сделать с помощью FTP-клиента, например Total Commander или FAR.
+					Для корректной работы InstantCMS указанные ниже папки должны быть доступны для записи.
+					Сменить права на папки можно с помощью FTP-клиента, например Total Commander или FAR.
 				</p>
 
 				<?php installCheckFolders(); ?>
+
+				<p>
+					Если вы не знаете или сомневаетесь какие права нужно установить, чтобы сделать папку доступной для записи, обратитесь
+                    в техническую поддержку вашего хостинга.
+				</p>
 
 				<p>
 					Установку можно произвести и не выставляя права, но полноценное функционирование системы при этом не гарантируется.
@@ -323,52 +328,65 @@ function installCheckExtensions(){
 			<!-- ================================================================ -->
 			
 		  <div id="install" class="wizardpage">
-				<h2>Установка</h2>
-				<img src="/install/images/install.gif" border="0" />
-			  <p>Заполните форму и нажмите "Установить" для завершения процесса.</p>
-				<table width="" border="0" cellpadding="4" cellspacing="0" style="margin-left:10px;margin-bottom:0px">
-                  <tr>
-                    <td width="220">Название сайта:</td>
-                    <td width="" align="center"><input name="sitename" type="text" id="txt" value="Моя социальная сеть"></td>
-                  </tr>
-                  <tr>
-                    <td>Сервер MySQL: </td>
-                    <td align="center"><input name="db_server" type="text" id="txt" value="localhost"></td>
-                  </tr>
-                  <tr>
-                    <td>База данных: </td>
-                    <td align="center"><input name="db_base" type="text" id="txt"></td>
-                  </tr>
-                  <tr>
-                    <td>Пользователь БД: </td>
-                    <td align="center"><input name="db_user" type="text" id="txt" value="root"></td>
-                  </tr>
-                  <tr>
-                    <td>Пароль пользователя БД: </td>
-                    <td align="center"><input name="db_password" type="password" id="txt"></td>
-                  </tr>
-                  <tr>
-                    <td>Префикс таблиц в базе данных: </td>
-                    <td align="center"><input name="db_prefix" type="text" id="txt" value="cms"></td>
-                  </tr>
-    		      <tr>
-                    <td>Логин администратора сайта:</td>
-                    <td align="center"><input name="admin_login" type="text" id="txt" value="admin"></td>
-                  </tr>
-                  <tr>
-                    <td>Пароль администратора сайта:</td>
-                    <td align="center"><input name="admin_password" type="password" id="txt"></td>
-                  </tr>
-                  <!--
-                  <tr>
-                    <td>Демо-данные:<br>                      <br>                    </td>
-                    <td align="center" valign="top">
-                        <label><input name="demodata" type="radio" value="1" checked /> Да</label>
-                        <label><input name="demodata" type="radio" value="0" /> Нет</label>
-                    </td>
-                  </tr>
-                  -->
+                <h2>Установка</h2>
+                <p>Заполните форму и нажмите "Установить" для завершения процесса.</p>
+
+                <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                    <tr>
+                        <td width="140" valign="top">
+                            <img src="/install/images/install.gif" border="0" />
+                        </td>
+                        <td valign="top">
+                            <table width="" border="0" cellpadding="4" cellspacing="0" style="margin-bottom:10px">
+                              <tr>
+                                <td width="220">Название сайта:</td>
+                                <td width="" align="center"><input name="sitename" type="text" class="txt" value="Моя социальная сеть"></td>
+                              </tr>
+                              <tr>
+                                <td>Логин администратора сайта:</td>
+                                <td align="center"><input name="admin_login" type="text" class="txt" value="admin"></td>
+                              </tr>
+                              <tr>
+                                <td>Пароль администратора сайта:</td>
+                                <td align="center"><input name="admin_password" type="password" class="txt"></td>
+                              </tr>
+                            </table>
+                            <table width="" border="0" cellpadding="4" cellspacing="0" style="margin-bottom:0px">
+                              <tr>
+                                <td width="220">Сервер MySQL: </td>
+                                <td align="center"><input name="db_server" type="text" class="txt" value="localhost"></td>
+                              </tr>
+                              <tr>
+                                <td>База данных: </td>
+                                <td align="center"><input name="db_base" type="text" class="txt"></td>
+                              </tr>
+                              <tr>
+                                <td>Пользователь БД: </td>
+                                <td align="center"><input name="db_user" type="text" class="txt" value="root"></td>
+                              </tr>
+                              <tr>
+                                <td>Пароль пользователя БД: </td>
+                                <td align="center"><input name="db_password" type="password" class="txt"></td>
+                              </tr>
+                              <tr>
+                                <td>Префикс таблиц в базе данных: </td>
+                                <td align="center"><input name="db_prefix" type="text" class="txt" value="cms"></td>
+                              </tr>
+                              <!--
+                              <tr>
+                                <td>Демо-данные:<br>                      <br>                    </td>
+                                <td align="center" valign="top">
+                                    <label><input name="demodata" type="radio" value="1" checked /> Да</label>
+                                    <label><input name="demodata" type="radio" value="0" /> Нет</label>
+                                </td>
+                              </tr>
+                              -->
+                            </table>
+                        </td>
+                    </tr>
                 </table>
+
+				
 
                 <input type="hidden" name="demodata" value="1" />
 
@@ -409,7 +427,10 @@ function installCheckExtensions(){
                             на сервере вместе со всеми находящимися в них файлами!
                           </div>';
 					echo '<p style="font-size:18px"><a href="/">Перейти на сайт</a> | <a href="/admin">Перейти в панель управления</a></p>';
-					echo '<p><a id="tutorial" href="http://www.instantcms.ru/articles/quickstart.html">Учебник для начинающих</a></p>';
+					echo '<p>
+                            <a id="tutorial" href="http://www.instantcms.ru/articles/quickstart.html">Учебник для начинающих</a>
+                            <a id="video" href="http://www.instantcms.ru/video-lessons.html">Видео-уроки</a>
+                          </p>';
 					echo '</div>';
 					echo '</div>';
 				}
