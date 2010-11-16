@@ -1453,7 +1453,7 @@ span.user_karma_point{
 /* ---------------------------- MODULE "LATEST CLUBS" ----------------------- */
 
 .mod_clubs div.club_entry { overflow:hidden; margin-bottom:10px;  }
-.mod_clubs div.club_entry .image{ width:48px; height:48px; padding: 2px; background:#FFF; float: left; margin-right:14px; }
+.mod_clubs div.club_entry .image{ padding: 2px; background:#FFF; float: left; margin-right:14px; }
 .mod_clubs div.club_entry .data{ float: left; }
 .mod_clubs div.club_entry .data .title { margin-bottom: 5px; margin-top:5px;  }
 .mod_clubs div.club_entry .data .title a{ font-size: 16px; font-weight:bold;  }
@@ -2119,7 +2119,7 @@ div.club_entry {
     -moz-border-radius:8px;
     clear:both;
 }
-div.club_entry .image{ width:48px; height:48px; padding: 2px; background:#FFF; float: left; margin-right:14px; }
+div.club_entry .image{ padding: 2px; background:#FFF; float: left; margin-right:14px; }
 
 div.club_entry .data{ float: left; }
 
