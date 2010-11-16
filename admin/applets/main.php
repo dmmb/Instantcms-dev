@@ -118,8 +118,11 @@ function applet_main(){
 
                     $actions = $inActions->getActionsLog();
 
-                    include(TEMPLATE_DIR.'admin/actions.php');
+                    $tpl_file   = 'admin/actions.php';
+                    $tpl_dir    = file_exists(TEMPLATE_DIR.$tpl_file) ? TEMPLATE_DIR : DEFAULT_TEMPLATE_DIR;
 
+                    include($tpl_dir.$tpl_file);
+                    
                 ?>
             </div>
 		</div>			
