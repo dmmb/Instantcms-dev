@@ -522,7 +522,7 @@ if ($do == 'send_message'){
 		if ($errors) { $inCore->redirect($back); }
 
 		foreach ($total_list as $user_id){
-			cmsUser::sendMessage(USER_UPDATER, $user_id, '<b>Сообщение от <a href="'.cmsUser::getProfileURL($inUser->login).'">Администратора</a> клуба "<a href="/clubs/'.$id.'">'.$club['title'].'</a>":</b><br><br> '.$message);
+			cmsUser::sendMessage(USER_UPDATER, $user_id, '<b>Сообщение от <a href="'.cmsUser::getProfileURL($inUser->login).'">Администратора</a> клуба "<a href="/clubs/'.$id.'">'.$club['title'].'</a>":</b><br> '.$message);
 		}
 		$_POST['only_mod'] ? $inCore->addSessionMessage($_LANG['SEND_MESS_TO_MODERS_OK'], 'info') : $inCore->addSessionMessage($_LANG['SEND_MESS_TO_MEMBERS_OK'], 'info');
 		$inCore->redirect('/clubs/'.$id);
