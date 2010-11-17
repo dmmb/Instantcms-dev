@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<backend>    
+    <module>
+        <id>mod_usermenu</id>
+        <title>Меню пользователя</title>
+    </module>
+    <params>
+        <param type="list" name="showtype" title="Вид меню">
+            <option title="Иконки и подписи" value="text" />
+            <option title="Только иконки" value="icons" />
+        </param>
+        <param type="flag" name="avatar" title="Показывать аватар" default="on" />
+    </params>
+</backend>
