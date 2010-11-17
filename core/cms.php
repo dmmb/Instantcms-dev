@@ -12,7 +12,7 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-define('CORE_VERSION', 		'1.7 RC');
+define('CORE_VERSION', 		'1.7 RC2');
 define('CORE_BUILD', 		'1');
 define('CORE_VERSION_DATE', '2010-11-14');
 define('CORE_BUILD_DATE', 	'2010-11-14');

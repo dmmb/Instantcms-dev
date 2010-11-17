@@ -356,8 +356,9 @@ function usrAccessDenied(){
 
 function usrNotAllowed(){
     global $_LANG;
+    $inCore = cmsCore::getInstance();
     ob_start();
-	$smarty = cmsCore::initSmarty('components', 'com_error.tpl');
+	$smarty = $inCore->initSmarty('components', 'com_error.tpl');
 	$smarty->assign('err_title', $_LANG['ACCESS_BLOCK']);
 	$smarty->assign('err_content', $_LANG['ACCESS_SECURITY']);
 	$smarty->display('com_error.tpl');
