@@ -1380,7 +1380,7 @@ class cmsUser {
 // ============================================================================ //
 
     public static function getProfileURL($user_login) {
-        return HOST . '/' . self::PROFILE_LINK_PREFIX . urlencode($user_login);
+        return '/' . self::PROFILE_LINK_PREFIX . urlencode($user_login);
     }
 
 // ============================================================================ //
