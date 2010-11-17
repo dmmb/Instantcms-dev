@@ -413,6 +413,11 @@ span.fast_cfg_link img{ border:none; }
 	background:url(../images/icons/comment-small.png) no-repeat left center;
     padding-left:20px;
 }
+.mod_latest_hits{
+    padding:1px;
+	background:url(../images/icons/eye.png) no-repeat left center;
+    padding-left:20px;
+}
 .mod_latest_rss{
     clear:both;
 	padding-left:20px;

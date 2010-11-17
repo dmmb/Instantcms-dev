@@ -79,6 +79,7 @@ function mod_latest($module_id){
 				$next = sizeof($articles);				
 				$articles[$next]['id']          = $con['id'];
 				$articles[$next]['title']       = $con['title'];
+				$articles[$next]['hits']        = $con['hits'];
 				$articles[$next]['href']        = $model->getArticleURL(null, $con['seolink']);
 				$articles[$next]['author']      = $con['author'];
 				$articles[$next]['authorhref']  = cmsUser::getProfileURL($con['author_login']);
