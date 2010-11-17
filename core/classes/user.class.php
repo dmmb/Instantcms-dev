@@ -1161,7 +1161,7 @@ class cmsUser {
         
         $inDB = cmsDatabase::getInstance();
 
-        $message = $inDB->escape_string(stripslashes($message));
+        $message = $inDB->escape_string(stripslashes(str_replace('\r\n', ' ', $message)));
 
         $sql = "INSERT INTO cms_user_msg (to_id, from_id, senddate, is_new, message)
                 VALUES ('$receiver_id', '$sender_id', NOW(), 1, '$message')";
@@ -1379,7 +1379,7 @@ class cmsUser {
 // ============================================================================ //
 
     public static function getProfileURL($user_login) {
-        return HOST . '/' . self::PROFILE_LINK_PREFIX . urlencode($user_login);
+        return '/' . self::PROFILE_LINK_PREFIX . urlencode($user_login);
     }
 
 // ============================================================================ //

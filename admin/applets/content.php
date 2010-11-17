@@ -57,7 +57,7 @@ function applet_content(){
     $inCore->loadLib('content');
 
     $GLOBALS['cp_page_title'] = 'Статьи сайта';
-    cpAddPathway('Статьи сайта', 'index.php?view=content');
+    cpAddPathway('Статьи сайта', 'index.php?view=tree');
 	
 	$GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="js/content.js"></script>';
 
@@ -200,7 +200,7 @@ function applet_content(){
 			foreach ($ord as $id=>$ordering){			
 				dbQuery("UPDATE cms_content SET ordering = $ordering WHERE id = ".$ids[$id]) ;						
 			}
-			header('location:?view=content');
+			header('location:?view=tree');
 
 		}
 	}

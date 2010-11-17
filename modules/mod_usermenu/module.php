@@ -20,11 +20,8 @@
 		//logged user menu
 		if (!$inUser->id){ return false; }
 
-        if (!isset($cfg['avatar'])){ $cfg['avatar'] = true;	}
-        if (!isset($cfg['showtype'])){ $cfg['showtype'] = 'text';	}
-
         //activate profiles support
-         if (!function_exists('usrImage') && !function_exists('usrBlog')){ //if not included earlier
+         if (!function_exists('usrBlog')){ //if not included earlier
                 $inCore->includeFile('components/users/includes/usercore.php');
             }
 
@@ -38,7 +35,6 @@
         $smarty->assign('nickname', $inUser->nickname);
         $smarty->assign('login', $inUser->login);
         $smarty->assign('id', $inUser->id);
-        $smarty->assign('avatar', usrImage($inUser->id));
         $smarty->assign('newmsg', $newmsg);
         $smarty->assign('is_can_add', $inCore->isUserCan('content/add'));
         $smarty->assign('is_admin', $inCore->userIsAdmin($inUser->id));

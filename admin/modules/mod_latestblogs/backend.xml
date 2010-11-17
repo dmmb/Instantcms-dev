@@ -13,6 +13,8 @@
 
         <param type="number" name="shownum" title="Количество новых записей" units="шт." default="5" />
 
+		<param type="flag" name="showcom" title="Показывать число комментариев" default="on" />
+
         <param type="number" name="minrate" title="Ограничение по рейтингу" default="5" hint="Показывать записи с рейтингом выше указанного" />
 
         <param type="flag" name="showrss" title="Показывать ссылку на RSS" default="on" />

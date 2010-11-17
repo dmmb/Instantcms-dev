@@ -19,6 +19,7 @@ function mod_latestblogs($module_id){
 		if (!isset($cfg['showrss'])) { $cfg['showrss'] = 1;}
 		if (!isset($cfg['minrate'])) { $cfg['minrate'] = 0;}
         if (!isset($cfg['namemode'])) { $cfg['namemode'] = 'blog';}
+		if (!isset($cfg['showcom'])) { $cfg['showcom'] = 1;}
 
 		if (!isset($cfg['shownum'])){
 			echo '<p>'.$_LANG['LATESTBLOGS_CONFIG_TEXT'].'</p>';
@@ -40,17 +41,14 @@ function mod_latestblogs($module_id){
                         u.id as author_id,
                         u.nickname as author,
                         up.imageurl as author_image,
-                        u.is_deleted as author_deleted,
-                        IFNULL(COUNT(cm.id), 0) as comments
+                        u.is_deleted as author_deleted
 				FROM cms_blog_posts p
 				LEFT JOIN cms_blogs b ON b.id = p.blog_id
 				LEFT JOIN cms_users u ON u.id = p.user_id				
 				LEFT JOIN cms_user_profiles up ON up.user_id = p.user_id
                 LEFT JOIN cms_ratings_total r ON r.item_id=p.id AND r.target='blogpost'
-                LEFT JOIN cms_comments cm ON cm.target_id=p.id AND cm.target='blog'
 				WHERE p.published = 1 AND b.allow_who = 'all'
-                GROUP BY p.id
-				ORDER BY p.pubdate DESC
+				ORDER BY p.id DESC
                 LIMIT 30";
 		
 		$result = $inDB->query($sql);
@@ -85,6 +83,7 @@ function mod_latestblogs($module_id){
                     $con['title'] 	 = strip_tags($con['title']);
 					if (strlen($con['title'])>70) { $con['title'] = substr($con['title'], 0, 70). '...'; }
 					$con['fpubdate'] = $inCore->dateFormat($con['fpubdate']);
+					$con['comments'] = $cfg['showcom'] ? $inCore->getCommentsCount('blog', $con['id']) : false;
 					$con['bloghref'] = $model->getBlogURL(null, $con['bloglink']);
 
                     $con['image'] = usrImageNOdb($con['author_id'], 'small', $con['author_image'], $con['author_deleted']);

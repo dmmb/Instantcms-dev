@@ -10,17 +10,17 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-function albumCreateRoot($user_id, $differ=''){
+function albumCreateRoot($user_id, $differ='', $title=''){
     $inDB = cmsDatabase::getInstance();
     $inCore = cmsCore::getInstance();
 	$ns = $inCore->nestedSetsInit('cms_photo_albums');
 	$album_id = $ns->AddRootNode($differ);
 	
 	$sql = "UPDATE cms_photo_albums
-			SET user_id = $user_id, 
-				title = '-Корневой альбом клуба-',
+			SET user_id = '$user_id', 
+				title = '-Корневой альбом клуба $title-',
 				orderform=0
-			WHERE id = $album_id";
+			WHERE id = '$album_id'";
 	$inDB->query($sql);
 	
 	return $album_id;
@@ -106,7 +106,7 @@ function cmsPhotoList($album){
     $inDB = cmsDatabase::getInstance();
 	ob_start();		
 		//SHOW ALBUM CONTENT
-		$sql = "SELECT * FROM cms_photo_albums WHERE id = {$album['id']} LIMIT 1";				
+		$sql = "SELECT * FROM cms_photo_albums WHERE id = '{$album['id']}' LIMIT 1";				
 		$result = $inDB->query($sql) ;
 				
 		if ($inDB->num_rows($result)==1){
@@ -116,7 +116,7 @@ function cmsPhotoList($album){
 			$sql = "SELECT f.*, IFNULL(r.total_rating, 0) as rating
 					FROM cms_photo_files f
 					LEFT JOIN cms_ratings_total r ON r.item_id=f.id AND r.target='photo' 
-					WHERE f.album_id = {$album['id']} AND f.published = 1
+					WHERE f.album_id = '{$album['id']}' AND f.published = 1
 					";
 			
 			//ORDERING

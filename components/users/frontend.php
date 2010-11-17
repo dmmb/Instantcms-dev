@@ -696,16 +696,13 @@ if ($do=='profile'){
 
     $usr['avatar']				 = usrImageNOdb($usr['id'], 'big', $usr['imageurl'], $usr['is_deleted']);
 	
-	if($cfg['sw_friends']){
+    $usr['friends']				= usrFriends($usr['id'], $usr['friends_total'], 6);
 		$usr['isfriend']			= (($inUser->id && !$myprofile) ? usrIsFriends($usr['id'], $inUser->id) : false);
 		$usr['isfriend_not_add']	= $usr['isfriend'];
-        $usr['is_new_friends']		= ($inUser->id==$usr['id'] && $model->isNewFriends($usr['id']) && $cfg['sw_friends']);
+    $usr['is_new_friends']		= ($inUser->id==$usr['id'] && $model->isNewFriends($usr['id']));
         if ($usr['is_new_friends']){
             $usr['new_friends'] 	= usrFriendQueriesList($usr['id'], $model);
         }
-        $usr['friends']				= usrFriends($usr['id'], $usr['friends_total'], 6, 6);
-	}
-    
 
     if ($usr['friends'] && $inUser->id && $myprofile && $cfg['sw_feed']){
         $inActions = cmsActions::getInstance();
@@ -1134,6 +1131,10 @@ if ($do=='uploadphotos'){
 
     $uploaddir 				= PATH.'/images/users/photos/';
     $realfile 				= $inDB->escape_string($_FILES['Filedata']['name']);
+
+	$path_parts             = pathinfo($realfile);
+    $ext                    = strtolower($path_parts['extension']);
+	if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'png' && $ext != 'bmp') {  exit(0); }
 
     $lid 					= $inDB->get_fields('cms_user_photos', 'id>0', 'id', 'id DESC');
     $lastid 				= $lid['id']+1;	
@@ -1623,7 +1624,7 @@ if ($do=='viewboard'){
 					$con['moderator'] = false;
 											}											
 					$timedifference    = strtotime("now") - strtotime($con['pubdate']);
-					$con['is_overdue'] = bcdiv($timedifference,86400) > $con['pubdays'] && $con['pubdays'] > 0;
+					$con['is_overdue'] = round($timedifference / 86400) > $con['pubdays'] && $con['pubdays'] > 0;
 					$con['pubdate'] = $inCore->dateFormat($con['pubdate']);
 				$cons[] = $con;
 											}
@@ -1648,16 +1649,26 @@ if ($do=='friendlist'){
 	$usr = $model->getUserShort($id);
 	if (!$usr) { cmsCore::error404(); }
 	
-		if (usrCheckAuth()){
+	$page    = $inCore->request('page', 'int', 1);
+	$perpage = 10;
+	
+	if (!usrCheckAuth()) { cmsUser::goToLogin(); }
 
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 			$inPage->addPathway($_LANG['FRIENDS'], $_SERVER['REQUEST_URI']);
+	$inPage->setTitle($_LANG['FRIENDS']);
+	$inPage->backButton(false);
 
-			echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; '.$_LANG['FRIENDS'].'</div>';
+	$friends = usrFriends($usr['id'], $total, $perpage, $page);
 	
-		echo usrFriends($usr['id'], $total, false, 5);
+    $smarty = $inCore->initSmarty('components', 'com_users_friends.tpl');
+
+   	$smarty->assign('friends', $friends);
+	$smarty->assign('usr', $usr);
+	$smarty->assign('total', $total);
+	$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/users/%user_id%/friendlist%page%.html', array('user_id'=>$id)));
 		
-		} else { echo usrNeedReg(); }
+    $smarty->display('com_users_friends.tpl');
 
 }
 
@@ -1734,14 +1745,14 @@ if ($do=='addfriend'){
 
     cmsUser::clearSessionFriends();
 
-	if (usrCheckAuth() && $inUser->id!=$id){
+	if (!usrCheckAuth() && $inUser->id == $id) { cmsCore::error404(); }
 
 	if(!usrIsFriends($id, $inUser->id)){
-		if (!isset($_POST['goadd'])){
+		if (!$inCore->inRequest('goadd')){
 
 			if ($model->isNewFriends($inUser->id, $id)){
-					$fr_id = $inDB->get_field('cms_user_friends', "to_id = ".$inUser->id." AND from_id = $id", 'id');
-					$sql   = "UPDATE cms_user_friends SET is_accepted = 1 WHERE id = $fr_id";
+				$fr_id = $inDB->get_field('cms_user_friends', "to_id = '{$inUser->id}' AND from_id = '$id'", 'id');
+				$sql   = "UPDATE cms_user_friends SET is_accepted = 1 WHERE id = '$fr_id'";
 				$inDB->query($sql);
 					cmsCore::addSessionMessage($_LANG['ADD_FRIEND_OK'] . $usr['nickname'], 'info');
 					//регистрируем событие
@@ -1754,10 +1765,10 @@ if ($do=='addfriend'){
 						'target_id' => 0, 
 						'description' => ''
 					));
-				header('location:'.$_SERVER['HTTP_REFERER']);
+				cmsUser::clearSessionFriends();
+				$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 			}
-
-				$inPage->backButton(false);
+			if(usrIsFriends($id, $inUser->id, false)){ cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND_ERR'], 'error'); $inCore->redirect(cmsUser::getProfileURL($usr['login'])); }
 				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 				$inPage->addPathway($_LANG['ADD_TO_FRIEND']);
                 $inPage->backButton(false);
@@ -1775,19 +1786,23 @@ if ($do=='addfriend'){
 		} else {
 				$to_id      = $id;
 				$from_id    = $inUser->id;
-				if (!usrIsFriendsOld($to_id, $from_id, false)){
+			if(!usrIsFriends($id, $inUser->id, false)){
+
 					$sql = "INSERT INTO cms_user_friends (to_id, from_id, logdate, is_accepted) 
 							VALUES ('$to_id', '$from_id', NOW(), '0')";
 					$inDB->query($sql);
-				}
 				
 				cmsUser::sendMessage(USER_UPDATER, $to_id, '<b>'.$_LANG['RECEIVED_F_O'].'</b>. '.$_LANG['YOU_CAN_SEE'].' <a href="'.cmsUser::getProfileURL($usr['login']).'">'.$_LANG['INPROFILE'].'</a>.');
 				cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND'], 'info');
 				
+			} else {
+				cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND_ERR'], 'error');
+			}
 				$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 		}//!goadd
-		} else { $inCore->redirectBack(); }
-	} else { echo usrAccessDenied(); } //usrCheckAuth
+	} else {
+		$inCore->redirectBack();
+	}
 }//do
 /////////////////////////////// DEL FRIEND /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delfriend'){
@@ -2318,8 +2333,10 @@ if ($do=='addfile'){
 						
 						$types 		= $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar';
 						$maytypes 	= explode(',', str_replace(' ', '', $types));  
+						$path_parts = pathinfo($name);
+						$ext        = strtolower($path_parts['extension']);
 						foreach($maytypes as $maytype){  
-							if(stristr($data_array['type'], $maytype)){  
+							if(stristr($ext , $maytype)){  
 							   $may = 1;  
 							   break;  
 							}else{  
@@ -2626,20 +2643,23 @@ if ($do=='votekarma'){
 		if ($record_id && $my_id){
 			
 				if ($usertype=='user'){
-					$can_delete = $inDB->rows_count('cms_user_wall', "id=$record_id AND (user_id=$my_id OR author_id=$my_id)");
+					$can_delete = $inDB->get_field('cms_user_wall', "id = '$record_id' AND (user_id = '$my_id' OR author_id = '$my_id')", 'author_id');
 				}
                 elseif ($usertype=='club'){
 					$inCore->loadLib('clubs');
-					$club_id        = $inDB->get_field('cms_user_wall', "id=$record_id", 'user_id');
+					$club_id        = $inDB->get_field('cms_user_wall', "id = '$record_id'", 'user_id');
                     $is_club_admin  = clubUserIsAdmin($club_id, $my_id);
                     $is_club_moder  = clubUserIsRole($club_id, $my_id, 'moderator');
-                    $is_author      = $inDB->rows_count('cms_user_wall', "id=$record_id AND author_id=$my_id");
+                    $is_author      = $inDB->rows_count('cms_user_wall', "id = '$record_id' AND author_id = '$my_id'");
 					$can_delete     = $is_author || $is_club_admin || $is_club_moder;
 				}
 
 				if ($can_delete || $inCore->userIsAdmin( $my_id )){
-					$inDB->query("DELETE FROM cms_user_wall WHERE id = $record_id LIMIT 1");
-					cmsActions::removeObjectLog('add_wall', $record_id);
+					$inDB->query("DELETE FROM cms_user_wall WHERE id = '$record_id' LIMIT 1");
+					switch ($usertype){
+						case 'user': ($can_delete == $my_id) ? cmsActions::removeObjectLog('add_wall_my', $record_id) : cmsActions::removeObjectLog('add_wall', $record_id); break;
+						case 'club': cmsActions::removeObjectLog('add_wall_club', $record_id); break;
+					}
 				}
 				$inCore->addSessionMessage($_LANG['WALL_MESG_DEL'], 'info');
 		}
@@ -2748,7 +2768,7 @@ if ($do=='invites'){
     if (!$inCore->inRequest('send_invite')){
 
         $inPage->addPathway($inUser->nickname, cmsUser::getProfileURL($inUser->login));
-        $inPage->addPathway($_LANG['MY_INVITES'], cmsUser::getProfileURL($inUser->login));
+        $inPage->addPathway($_LANG['MY_INVITES']);
 
         $smarty = $inCore->initSmarty('components', 'com_users_invites.tpl');
         $smarty->assign('invites_count', $invites_count);

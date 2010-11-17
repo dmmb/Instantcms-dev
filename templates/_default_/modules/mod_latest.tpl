@@ -12,7 +12,7 @@
 	    <a class="mod_latest_title" href="{$article.href}">{$article.title}</a>
 		{if $cfg.showdate}
             <div class="mod_latest_date">
-                {$article.date} - <a href="{$article.authorhref}">{$article.author}</a>{if $cfg.showcom} - <a href="{$article.href}" title="{$article.comments|spellcount:$LANG.COMMENT1:$LANG.COMMENT2:$LANG.COMMENT10}" class="mod_latest_comments">{$article.comments}</a>{/if}
+                {$article.date} - <a href="{$article.authorhref}">{$article.author}</a>{if $cfg.showcom} - <a href="{$article.href}" title="{$article.comments|spellcount:$LANG.COMMENT1:$LANG.COMMENT2:$LANG.COMMENT10}" class="mod_latest_comments">{$article.comments}</a> - <span class="mod_latest_hits">{$article.hits}</span>{/if}
             </div>
         {/if}
 

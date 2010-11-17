@@ -1,23 +1,29 @@
 {* ================================================================================ *}
 {* ============================ Äðóçüÿ ============================================ *}
 {* ================================================================================ *}
-                    
-{assign var="col" value="1"}
-<table width="" cellpadding="0" cellspacing="0" border="0" class="usr_friends_list" align="left">
+<div class="con_heading"><a href="{profile_url login=$usr.login}">{$usr.nickname}</a> &rarr; {$LANG.FRIENDS} ({$total})</div>
+				<div class="users_list">
+					<table width="100%" cellspacing="0" cellpadding="0" class="users_list">
   {foreach key=tid item=friend from=$friends}
-  {if $col==1}<tr>{/if}
-            <td align="center" valign="top">
-                <div class="usr_friend_cell">
-                    <div align="center"><a class="friend_link" href="{profile_url login=$friend.login}">{$friend.nickname}</a></div>
-                    <div align="center"><a href="{profile_url login=$friend.login}">{$friend.avatar}</a></div>
-                    <div align="center">{$friend.flogdate}</div>
+								<tr>
+									<td width="80" valign="top">
+										<div class="avatar"><a href="{profile_url login=$friend.login}">{$friend.avatar}</a></div>
+									</td>
+									<td valign="top">
+                                         <div class="status">{$friend.flogdate}<br />
+                                         	<a href="/users/{$friend.id}/sendmessage.html">{$LANG.WRITE_MESS}</a><br />
+                                            <a href="/users/{$friend.id}/nofriends.html">{$LANG.STOP_FRIENDLY}</a>
+                                         </div>
+										<div class="nickname">
+                                        	<a class="friend_link" href="{profile_url login=$friend.login}">{$friend.nickname}</a><br />
+                                            {if $friend.status}
+                                            	<span class="microstatus">{$friend.status}</span>
+                                            {/if}    
                 </div>
             </td>
-              
-      {if $col==$maxcols} </tr> {assign var="col" value="1"} {else} {math equation="x + 1" x=$col assign="col"} {/if}
+                                 </tr>
   {/foreach}
-  {if $col>1}<td colspan="{math equation="x - y + 1" x=$col y=$maxcols}">&nbsp;</td></tr>{/if}
 </table>
-        {if $not_all && $short}
-        <div style="text-align:right"><a href="/users/{$user_id}/friendlist.html" class="usr_friendslink">{$LANG.ALL_FRIENDS}</a> &rarr;</div>
-		{/if}
+				</div>
+
+{$pagebar}

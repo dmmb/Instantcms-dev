@@ -343,11 +343,10 @@ if ($do=='addarticle' || $do=='editarticle'){
     }
 
     if ( !$inCore->inRequest('add_mod') ){
-
+		$inPage->addPathway($inUser->nickname, cmsUser::getProfileURL($inUser->login));
         $inPage->addPathway($_LANG['MY_ARTICLES'], '/content/my.html');
         if ($do=='addarticle'){
             $inPage->setTitle($_LANG['ADD_ARTICLE']);
-			$inPage->addPathway($inUser->nickname, cmsUser::getProfileURL($inUser->login));
             $inPage->addPathway($_LANG['ADD_ARTICLE']);
             $pagetitle = $_LANG['ADD_ARTICLE'];
         }

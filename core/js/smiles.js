@@ -55,7 +55,7 @@ function addTagUrl(field_id){
    var link_url = prompt('Адрес ссылки (URL):');
    var link_name = prompt('Название ссылки (не обязательно):'); 
    var pos = getCaretPos(txtarea);
-   if (link_url=='') { return; }   
+   if (link_url.length == 0) { return; }
    if (link_name.length > 0){txtarea.value = txtarea.value.substring(0,pos) + '[url='+link_url+']' + link_name + '[/url]'+ txtarea.value.substring(pos+1,txtarea.value.length);} 
    else {txtarea.value = txtarea.value.substring(0,pos) +  '[url]' + link_url + '[/url]'+ txtarea.value.substring(pos+1,txtarea.value.length);}
    return;
@@ -65,7 +65,7 @@ function addTagImage(field_id){
    var txtarea = document.getElementById(field_id);
    var link_url = prompt('Адрес картинки (URL):');
    var pos = getCaretPos(txtarea);
-   if (link_url=='') { return; }
+   if (link_url.length == 0) { return; }
    txtarea.value = txtarea.value.substring(0,pos) +  '[img]' + link_url + '[/img]'+ txtarea.value.substring(pos+1,txtarea.value.length);
    return;
 }
@@ -82,7 +82,7 @@ function addTagAudio(field_id){
    var txtarea = document.getElementById(field_id);
    var link_url = prompt('Ссылка на mp3-файл::');
    var pos = getCaretPos(txtarea);
-   if (link_url=='') { return; }
+   if (link_url.length == 0) { return; }
    txtarea.value = txtarea.value.substring(0,pos) +  '[audio]' + link_url + '[/audio]'+ txtarea.value.substring(pos+1,txtarea.value.length);
    return;
 }

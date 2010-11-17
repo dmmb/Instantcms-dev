@@ -50,14 +50,14 @@ function forms(){
 					 $mail_message .= $_LANG['FORM'].': ' . $form['title'];
 					 $mail_message .=  "\n----------------------------------------------\n\n";
 				} else {
-					 $mail_message .= '[h3]'.$_LANG['FORM'].': ' . $form['title'] . '[/h3]';
-					 $mail_message .=  "[h3]----------------------------------------------[/h3]";
+					 $mail_message .= '<h3>'.$_LANG['FORM'].': ' . $form['title'] . '</h3>';
+					 $mail_message .=  "<h3>----------------------------------------------</h3>";
 				}
 
 				$fields = $inCore->request('field', 'array');
 
 				//Получаем данные полей из базы
-				$sql            = "SELECT id, title, mustbe FROM cms_form_fields WHERE form_id = $form_id ORDER BY ordering ASC";
+				$sql            = "SELECT id, title, mustbe FROM cms_form_fields WHERE form_id = '$form_id' ORDER BY ordering ASC";
 				$result         = $inDB->query($sql);
 				$items_count    = $inDB->num_rows($result);
 
@@ -74,7 +74,7 @@ function forms(){
 							if($form['sendto']=='mail'){
 								$mail_message .= $field['title'] . ":\n" . $fields[$field['id']] . "\n\n";
 							} else {
-								$mail_message .= '[h3]'.$field['title'] . ':[/h3]' . $fields[$field['id']];
+								$mail_message .= '<h3>'.$field['title'] . ':</h3>' . $fields[$field['id']];
 							}
 							$_SESSION['form_last'.$form_id][$field['id']] = $fields[$field['id']];
 						}

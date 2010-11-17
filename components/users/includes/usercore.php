@@ -270,15 +270,11 @@ function usrCanKarma($to, $from){
 
 function usrStatus($user_id, $logdate='', $online=false, $gender='m'){
 
-    $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
     global $_LANG;
+
     if ($online===false){
-        $sql = "SELECT id
-                FROM cms_online
-                WHERE user_id = '$user_id' LIMIT 1";
-        $result     = $inDB->query($sql);
-        $is_online  = $inDB->num_rows($result);
+        $is_online  = $inDB->rows_count('cms_online', "user_id = '$user_id'");
     } else {
         $is_online  = $online;
     }
@@ -300,15 +296,11 @@ function usrStatus($user_id, $logdate='', $online=false, $gender='m'){
 
 function usrStatusList($user_id, $logdate='', $online=false, $gender='m'){
 
-    $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
     global $_LANG;
+
     if ($online===false){
-        $sql = "SELECT id
-                FROM cms_online
-                WHERE user_id = '$user_id'";
-        $result     = $inDB->query($sql);
-        $is_online  = $inDB->num_rows($result);
+        $is_online  = $inDB->rows_count('cms_online', "user_id = '$user_id'");
     } else {
         $is_online  = $online;
     }
@@ -364,16 +356,21 @@ function usrAccessDenied(){
 
 function usrNotAllowed(){
     global $_LANG;
-    $inCore = cmsCore::getInstance();
     ob_start();
-	$smarty = $inCore->initSmarty('components', 'com_error.tpl');
+	$smarty = cmsCore::initSmarty('components', 'com_error.tpl');
 	$smarty->assign('err_title', $_LANG['ACCESS_BLOCK']);
 	$smarty->assign('err_content', $_LANG['ACCESS_SECURITY']);
 	$smarty->display('com_error.tpl');
 	return ob_get_clean();
 }
 
-function usrIsFriends($to_id, $my_id){
+function usrIsFriends($to_id, $my_id, $is_accepted = true){
+
+	if (!$is_accepted) {
+		$inDB  = cmsDatabase::getInstance();
+		$total = $inDB->rows_count('cms_user_friends', "(to_id = '$to_id' AND from_id = '$my_id') OR (to_id = '$my_id' AND from_id = '$to_id')");
+		return $total ? true : false;
+	}
 
 	$my_friends = cmsUser::getFriends($my_id);
 	if (!$my_friends) { return false; }
@@ -390,24 +387,9 @@ function usrIsFriends($to_id, $my_id){
 	return $is_friend;
 }
 
-function usrIsFriendsOld ($first_id, $second_id, $strict=true){
-    $inDB = cmsDatabase::getInstance();
-	if ($strict) { $is_accepted = 'is_accepted = 1'; } else { $is_accepted = '(is_accepted = 0 OR is_accepted = 1)'; }
-	$sql = "SELECT * FROM cms_user_friends WHERE ((to_id = $first_id AND from_id = $second_id) OR (to_id = $second_id AND from_id = $first_id)) AND $is_accepted";
-	$result = $inDB->query($sql);
-	if ($inDB->num_rows($result)){
-		return true;
-	} else { return false; }
-}
-
-function usrFriendQueriesNum($user_id, $from_id=''){
-
-}
-
 function usrFriendQueriesList($user_id, $model){
    
     $inCore = cmsCore::getInstance();
-    $inDB = cmsDatabase::getInstance();
 
     $query_list = array();
 
@@ -430,9 +412,19 @@ function usrFriendQueriesList($user_id, $model){
 	return ob_get_clean();
 }
 
-function usrFriends($user_id, &$total, $limit=8, $max_cols=4){
+function usrFriends($user_id, &$total, $perpage=10, $page=1){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
+	$inUser = cmsUser::getInstance();
+
+	$ses_friends = cmsUser::getFriends($inUser->id);
+
+	// общее количество моих друзей выбирается из сессии, начиная со 2-й страницы
+    $total  = (($page > 1) && ($user_id == $inUser->id)) ? sizeof($ses_friends) : $inDB->rows_count('cms_user_friends', "(from_id = '$user_id' OR to_id = '$user_id') AND is_accepted =1");
+	// если нет друзей, выходим
+	if(!$total) { return false; }
+	// очищать сессию друзей если в своем профиле и количество друзей из базы не совпадает с количеством друзей в сессии
+	if (($user_id == $inUser->id) && sizeof($ses_friends) != $total) { cmsUser::clearSessionFriends(); }
 	
 	$sql = "SELECT
 			CASE
@@ -440,18 +432,15 @@ function usrFriends($user_id, &$total, $limit=8, $max_cols=4){
 			THEN f.to_id
 			WHEN f.to_id = $user_id
 			THEN f.from_id
-			END AS id_friends, u.id as id, u.nickname as nickname, u.login as login, u.is_deleted as is_deleted, p.imageurl as avatar, u.logdate as flogdate, o.id as online
+			END AS id_friends, u.id as id, u.nickname as nickname, u.login as login, u.is_deleted as is_deleted, u.status, p.imageurl as avatar, u.logdate as flogdate, o.id as online
 			FROM cms_user_friends f
 			LEFT JOIN cms_users u ON u.id = CASE WHEN f.from_id = $user_id THEN f.to_id WHEN f.to_id = $user_id THEN f.from_id END
 			LEFT JOIN cms_user_profiles p ON p.user_id = u.id
             LEFT JOIN cms_online o ON p.user_id = o.user_id
-			WHERE (from_id = $user_id OR to_id = $user_id) AND is_accepted =1 ";
+			WHERE (from_id = '$user_id' OR to_id = '$user_id') AND is_accepted =1
+			LIMIT ".(($page-1)*$perpage).", $perpage";
 
 	$result = $inDB->query($sql) ;
-
-    $total = $inDB->num_rows($result);
-
-	if ($total){
 
 		$friends    = array();
 
@@ -459,31 +448,19 @@ function usrFriends($user_id, &$total, $limit=8, $max_cols=4){
 
             $friend['flogdate'] = usrStatus($friend['id'], $friend['flogdate'], (int)$friend['online']);
             $friend['avatar']   = usrImageNOdb($friend['id'], 'small', $friend['avatar'], $friend['is_deleted']);
-            $friends[] = $friend;
-
-            if ($limit && sizeof($friends) == $limit){ break; }
+         $friends[$friend['id']] = $friend;
 
         }
 
-    }
-		
-    ob_start();
-                    
-    $smarty = $inCore->initSmarty('components', 'com_users_friends.tpl');
-					
-    $smarty->assign('friends', $friends);
-	$smarty->assign('maxcols', $maxcols);
-				
-    $smarty->display('com_users_friends.tpl');
-                    
-	return ob_get_clean();
+	return $friends;
 }
 
 function usrAllowed($allow_who, $owner_id){
+
     $inCore = cmsCore::getInstance();
-    $inDB = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
 	$user_id = $inUser->id;
+
 	if ($owner_id == $user_id) { return true; }
 	if ($allow_who == 'all') { return true; }
 	if ($allow_who == 'registered') { return usrCheckAuth(); }
@@ -495,7 +472,7 @@ function usrAllowed($allow_who, $owner_id){
 }
 
 function usrAwardsList($selected = 'aw.gif'){
-    $inDB = cmsDatabase::getInstance();
+
 	$html = '';
 	if ($handle = opendir(PATH.'/images/users/awards')) {
 		while (false !== ($file = readdir($handle))) {

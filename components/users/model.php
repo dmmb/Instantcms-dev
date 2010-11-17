@@ -389,7 +389,7 @@ class cms_model_users{
 
     public function getUserInvitesCount($owner_id) {
 
-        $count = $this->inDB->rows_count('cms_user_invites', "owner_id='{$owner_id}'");
+        $count = $this->inDB->rows_count('cms_user_invites', "owner_id='{$owner_id}' AND is_used = 0 AND is_sended = 0");
 
         return $count;
 

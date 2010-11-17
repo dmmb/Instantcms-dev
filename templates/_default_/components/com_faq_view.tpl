@@ -49,7 +49,7 @@
                         {/if}
 						<div class="faq_questdate">{$quest.pubdate}</div>
                         {if $cfg.user_link}
-                        <div class="faq_questuser"><a href="{profile_url login=$quest.login}">{$quest.nickname}</a></div>
+                        <div class="faq_questuser">{if $quest.nickname}<a href="{profile_url login=$quest.login}">{$quest.nickname}</a>{else}{$LANG.QUESTION_GUEST}{/if}</div>
                         {/if}
 						
 					</td>	

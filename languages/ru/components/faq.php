@@ -29,7 +29,7 @@ $_LANG['CONTACTS_TEXT']         ='Укажите свое имя и контакты, если хотите чтобы
 $_LANG['CAT_QUESTIONS']         ='Категория вопроса';
 $_LANG['QUESTION_VIEW']         ='Просмотр вопроса';
 $_LANG['LAST_QUESTIONS']        ='Последние вопросы';
-
+$_LANG['QUESTION_GUEST']        ='Гость';
 $_LANG['DELETE_QUES']            ='Удаление вопроса';
 $_LANG['YOU_REALY_DELETE_QUES']  ='Вы действительно хотите удалить вопрос';
 

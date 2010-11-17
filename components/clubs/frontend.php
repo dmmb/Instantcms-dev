@@ -172,7 +172,7 @@ if ($do=='club'){
 
 	if ($club['enabled_photos']) {
 		$club['root_album_id']	= clubRootAlbumId($club['id']);
-		if (!$club['root_album_id']) { albumCreateRoot($id, 'club'.$id); }
+		if (!$club['root_album_id']) { $club['root_album_id'] = albumCreateRoot($id, 'club'.$id, $club['title']); }
 		$club['photo_albums']	= clubPhotoAlbums($club['id'],  $is_admin, $is_moder, $is_member);
 		$club['all_albums']	    = $inDB->rows_count('cms_photo_albums', "NSDiffer = 'club{$club['id']}' AND user_id = '{$club['id']}' AND parent_id > 0");
 	}

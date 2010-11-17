@@ -349,6 +349,7 @@ if($do=='viewphoto'){
 			$smarty->assign('bbcode', '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/photos/medium/'.$photo['file'].'[/IMG]');
 			$smarty->assign('previd', $previd);
 			$smarty->assign('nextid', $nextid);
+			$smarty->assign('cfg', $cfg);
 			$smarty->assign('is_author', $is_author);
 			$smarty->assign('is_admin', $is_admin);
 			$smarty->assign('is_can_operation', $is_can_operation);
@@ -405,6 +406,9 @@ if ($do=='addphoto'){
 							if ($userid == $inUser->id){
 								$uploaddir = $_SERVER['DOCUMENT_ROOT'].'/images/photos/';		
 								$realfile  = $_FILES['picture']['name'];
+								$path_parts = pathinfo($realfile);
+								$ext        = strtolower($path_parts['extension']);
+								if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'png' && $ext != 'bmp') { cmsCore::error404(); }
 	
 								$lid = $inDB->get_fields('cms_photo_files', 'id>0', 'id', 'id DESC');
 								$lastid = $lid['id']+1;	

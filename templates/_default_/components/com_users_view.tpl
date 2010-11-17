@@ -103,6 +103,7 @@
                                             <div class="microstatus">{$usr.microstatus}</div>
                                         {/if}
 									</td>
+                                </tr>
 							{/foreach}		
 						{else}
 							<tr>

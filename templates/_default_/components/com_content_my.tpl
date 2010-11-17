@@ -35,7 +35,7 @@
 			<td class="{$article.class}" align="center">
 				<a href="/content/edit{$article.id}.html" title="{$LANG.EDIT}"><img src="/templates/_default_/images/icons/edit.png" border="0"/></a>
 				{if $user_can_delete}
-					<a href="javascript:deleteArticle({$article.id})" title="{$LANG.DELETE}"><img src="/templates/_default_/images/icons/delete.png" border="0"/></a>
+					<a href="/content/delete{$article.id}.html" title="{$LANG.DELETE}"><img src="/templates/_default_/images/icons/delete.png" border="0"/></a>
 				{/if}
 			</td>
 		</tr>			

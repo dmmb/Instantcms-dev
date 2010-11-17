@@ -426,6 +426,11 @@ span.fast_cfg_link img{ border:none; }
 	background:url(../images/icons/comment-small.png) no-repeat left center;
     padding-left:20px;
 }
+.mod_latest_hits{
+    padding:1px;
+	background:url(../images/icons/eye.png) no-repeat left center;
+    padding-left:20px;
+}
 .mod_latest_rss{
     clear:both;
 	padding-left:20px;
@@ -2857,6 +2862,13 @@ table.users_list div.microstatus {
     padding-left:20px;
     background:url(../images/icons/comment-small.png) no-repeat left top;
     clear:both;
+    margin-top:3px;
+}
+.microstatus {
+    color:#5F98BF; font-size:11px;
+    padding:1px;
+    padding-left:20px;
+    background:url(../images/icons/comment-small.png) no-repeat left top;
     margin-top:3px;
 }
 table.users_list div.karma,

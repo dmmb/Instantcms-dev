@@ -306,7 +306,7 @@ function registration(){
         if($inCore->inRequest('is_admin')){
             $back = '/admin/';
         } else {
-            $back = $inCore->getBackURL();
+            $back = ($_SERVER['HTTP_REFERER'] == 'http://'.$_SERVER['HTTP_HOST'].'/login') ? '/' : $inCore->getBackURL();
         }
 
         if( $inCore->inRequest('logout') ) {
