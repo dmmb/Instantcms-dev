@@ -38,8 +38,10 @@ function applet_cron(){
 
         $items = cmsCron::getJobs(false);
 
-        include(TEMPLATE_DIR.'admin/cron.php');
+        $tpl_file   = 'admin/cron.php';
+        $tpl_dir    = file_exists(TEMPLATE_DIR.$tpl_file) ? TEMPLATE_DIR : DEFAULT_TEMPLATE_DIR;
 
+        include($tpl_dir.$tpl_file);
 	}
 
     if ($do == 'show'){
@@ -64,6 +66,14 @@ function applet_cron(){
 
 	}
 	
+	if ($do == 'execute'){
+
+        if ($id) { cmsCron::executeJobById($id); }
+
+        $inCore->redirect('index.php?view=cron');
+
+	}
+
 	if ($do == 'submit'){
 
         $job_name       = $inCore->request('job_name', 'str');

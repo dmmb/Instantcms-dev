@@ -128,13 +128,19 @@ class cmsCron {
 // ============================================================================ //
 // ============================================================================ //
 
+    /**
+     * Возвращает список задач CRON
+     * @param bool $only_enabled Только активные
+     * @param bool $only_custom Только задачи выполнения скрипта
+     * @return array
+     */
     public static function getJobs($only_enabled=true, $only_custom=false){
 
         $inDB = cmsDatabase::getInstance();
 
         $enabled = $only_enabled ? 'AND is_enabled=1' : '';
 
-        $custom = $only_custom ? "AND component='' AND model_method=''" : '';
+        $custom = $only_custom ? "AND component='' AND model_method='' AND class_name='' AND class_method=''" : '';
 
         $sql = "SELECT id,
                        job_name as name,
@@ -216,6 +222,12 @@ class cmsCron {
 
     }
 
+    /**
+     * Изменяет активность задачи
+     * @param int $job_id ID задачи
+     * @param bool $is_enabled Активность
+     * @return bool
+     */
     public static function jobEnabled($job_id, $is_enabled){
 
         $is_enabled = (int)$is_enabled;
@@ -234,6 +246,11 @@ class cmsCron {
 // ============================================================================ //
 // ============================================================================ //
 
+    /**
+     * Отмечает задачу как успешно выполненную
+     * @param int $job_id ID задачи
+     * @return bool
+     */
     public static function jobSuccess($job_id){
         
         $inDB = cmsDatabase::getInstance();        
@@ -246,6 +263,98 @@ class cmsCron {
         
     }
 
+// ============================================================================ //
+// ============================================================================ //
+
+    /**
+     * Выполняет задачу с указанным ID
+     * @param int $job_id
+     */
+    public static function executeJobById($job_id){
+
+        $job = self::getJobById($job_id);
+        self::executeJob($job);
+
+    }
+
+    /**
+     * Выполняет переданную задачу
+     * @param array $job
+     */
+    public static function executeJob($job){
+
+        $inCore = cmsCore::getInstance();
+
+        $job_result = true;
+
+        /* ================================================ */
+        /* ==============  внешний php-файл  ============== */
+        /* ================================================ */
+        if ($job['custom_file']){
+
+            $inCore->includeFile(ltrim($job['custom_file'], '/'));
+
+        }
+
+        /* ================================================ */
+        /* ================  метод модели ================= */
+        /* ================================================ */
+        if ($job['component'] && $job['model_method']){
+
+            $inCore->loadModel($job['component']);
+
+            $classname  = "cms_model_{$job['component']}";
+
+            if (class_exists($classname)) {
+
+                $model = new $classname();
+
+                if (method_exists($model, $job['model_method'])){
+
+                    $job_result = call_user_func(array($model, $job['model_method']));
+                    
+                }
+
+            }
+
+        }
+
+        /* ================================================ */
+        /* =================  метод класса ================ */
+        /* ================================================ */
+        if ($job['class_name'] && $job['class_method']){
+
+            $classfile = '';
+
+            if (!strstr($job['class_name'], '|')){
+                $classname = $job['class_name'];
+            } else {
+                $job['class_name'] = explode('|', $job['class_name']);
+                $classfile = $job['class_name'][0];
+                $classname = $job['class_name'][1];
+            }
+
+            if ($classfile){ $inCore->loadClass($classfile); }
+
+            if (class_exists($classname)) {
+
+                if (method_exists($classname, $job['class_method'])){
+
+                    $job_result = $job_result && call_user_func(array($classname, $job['class_method']));
+
+                }
+
+            }
+
+        }
+
+        if ($job_result){ self::jobSuccess($job['id']); }
+
+    }
+
+
+// ============================================================================ //
+// ============================================================================ //
     
 }
 ?>
