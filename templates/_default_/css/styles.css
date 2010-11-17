@@ -2326,6 +2326,8 @@ border:thin dashed #999999;
 .cmm_all_title{
     margin-bottom:5px;
     color:#5F98BF;
+    font-size:100%;
+    font-weight:normal;
 }
 
 #addcomment {
