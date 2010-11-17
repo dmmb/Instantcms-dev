@@ -1131,6 +1131,10 @@ if ($do=='uploadphotos'){
 
     $uploaddir 				= PATH.'/images/users/photos/';
     $realfile 				= $inDB->escape_string($_FILES['Filedata']['name']);
+			
+	$path_parts             = pathinfo($realfile);
+    $ext                    = strtolower($path_parts['extension']);
+	if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'png' && $ext != 'bmp') {  exit(0); }
 
     $lid 					= $inDB->get_fields('cms_user_photos', 'id>0', 'id', 'id DESC');
     $lastid 				= $lid['id']+1;	
