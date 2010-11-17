@@ -2,7 +2,7 @@
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -38,8 +38,10 @@ function applet_cron(){
 
         $items = cmsCron::getJobs(false);
 
-        include(TEMPLATE_DIR.'admin/cron.php');
+        $tpl_file   = 'admin/cron.php';
+        $tpl_dir    = file_exists(TEMPLATE_DIR.$tpl_file) ? TEMPLATE_DIR : DEFAULT_TEMPLATE_DIR;
 
+        include($tpl_dir.$tpl_file);
 	}
 
     if ($do == 'show'){
@@ -64,6 +66,14 @@ function applet_cron(){
 
 	}
 	
+	if ($do == 'execute'){
+
+        if ($id) { cmsCron::executeJobById($id); }
+
+        $inCore->redirect('index.php?view=cron');
+
+	}
+
 	if ($do == 'submit'){
 
         $job_name       = $inCore->request('job_name', 'str');
@@ -169,7 +179,7 @@ function applet_cron(){
                     <span class="hinttext">Максимум 200 символов</span>
                 </td>
                 <td valign="middle">
-                    <input name="comment" type="text" maxlength="200" style="width:400px" value="<?php echo @$mod['comment'];?>" />
+                    <input name="comment" type="text" maxlength="200" style="width:400px" value="<?php echo htmlspecialchars($mod['comment']);?>" />
                 </td>
             </tr>
             <tr>

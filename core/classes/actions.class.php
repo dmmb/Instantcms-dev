@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -318,7 +318,7 @@ class cmsActions {
      * @param int $pubdays
      * @return bool
      */
-    static function removeOldLog($pubdays = 30){
+    static function removeOldLog($pubdays = 60){
 
         $inDB   = cmsDatabase::getInstance();
 		

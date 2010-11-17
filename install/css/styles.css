@@ -120,10 +120,18 @@ td.extension{
 	padding-left:20px;
 }
 
-#txt{ width:200px; }
+.txt{ width:200px; border:solid 1px #246493; padding: 2px; }
+.txt:focus{ border:1px solid #FFD100; }
 
 #tutorial { 
-	background:url(/install/images/book.gif) no-repeat left center; 
+	background:url(/install/images/book.png) no-repeat left center;
 	line-height:16px;
 	padding-left:22px;
+    margin-right: 15px;
+}
+#video {
+	background:url(/install/images/video.png) no-repeat left center;
+	line-height:16px;
+	padding-left:22px;
+    margin-right: 15px;
 }

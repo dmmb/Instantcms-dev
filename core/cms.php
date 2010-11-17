@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -12,10 +12,10 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-define('CORE_VERSION', 		'1.7');
+define('CORE_VERSION', 		'1.7 RC2');
 define('CORE_BUILD', 		'1');
-define('CORE_VERSION_DATE', '2010-05-13');
-define('CORE_BUILD_DATE', 	'2010-05-13');
+define('CORE_VERSION_DATE', '2010-11-14');
+define('CORE_BUILD_DATE', 	'2010-11-14');
 
 if (!defined('USER_UPDATER')) { define('USER_UPDATER', -1); }
 if (!defined('USER_MASSMAIL')) { define('USER_MASSMAIL', -2); }
@@ -38,6 +38,8 @@ class cmsCore {
     private         $module_configs = array();
     private         $component_configs = array();
 
+    private         $smarty = false;
+
     private function __construct($install_mode=false) {
 
         if ($install_mode){ return; }
@@ -45,6 +47,16 @@ class cmsCore {
         //подключим базу и конфиг
         $this->loadClass('db');
         $this->loadClass('config');
+
+        $inConf = cmsConfig::getInstance();
+
+        //проверяем был ли переопределен шаблон через сессию
+        //например, из модуля "выбор шаблона"
+        if ($_SESSION['template']) { $inConf->template = $_SESSION['template']; }
+
+        define('TEMPLATE', $inConf->template);
+        define('TEMPLATE_DIR', PATH.'/templates/'.$inConf->template.'/');
+        define('DEFAULT_TEMPLATE_DIR', PATH.'/templates/_default_/');
 
         //загрузим структуру меню в память
         $this->loadMenuStruct();
@@ -1230,7 +1242,7 @@ class cmsCore {
      * @param int $time
      */
     public function setCookie($name, $value, $time){
-        setcookie('InstantCMS['.$name.']', $value, $time, '/', $_SERVER['SERVER_NAME']);
+        setcookie('InstantCMS['.$name.']', $value, $time, '/');        
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1240,7 +1252,7 @@ class cmsCore {
      * @param string $name
      */
     public function unsetCookie($name){
-        setcookie('InstantCMS['.$name.']', '', time()-3600, '/', $_SERVER['SERVER_NAME']);
+        setcookie('InstantCMS['.$name.']', '', time()-3600, '/');
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1804,60 +1816,62 @@ class cmsCore {
      * Загружает класс Smarty
      */
     public function loadSmarty(){
+
         $this->includeFile('/includes/smarty/libs/Smarty.class.php');
+
+        $this->smarty = new Smarty();
+
+        $this->smarty->compile_dir = PATH.'/cache';
+        
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * Возвращает объект Smarty для дальнейшей работы с шаблоном
-     * @param string $for = modules / components / plugins
-     * @param string $tpl
+     * @param string $tpl_folder = modules / components / plugins
+     * @param string $tpl_file
      * @return obj
      */
-    public function initSmarty($for='modules', $tpl=''){ //cmsSmartyInit
-        global $smarty;
-        global $_CFG;
+    public function initSmarty($tpl_folder='modules', $tpl_file=''){
+
         global $_LANG;
-        $smarty->compile_dir = PATH.'/cache';
 
-        if (!is_writable($smarty->compile_dir)){ @chmod($smarty->compile_dir, 0755); }
+        if (!$this->smarty){ $this->loadSmarty(); }
 
-        if(file_exists(PATH.'/templates/'.$_CFG['template'].'/'.$for.'/'.$tpl)){
-            $smarty->template_dir = PATH.'/templates/'.$_CFG['template'].'/'.$for;
-        } else {
-            $smarty->template_dir = PATH.'/templates/_default_/'.$for;
-        }
-        // Передаем языковый массив в шаблон
-        $smarty->assign('LANG', $_LANG);
-        $smarty->register_modifier("NoSpam", "cmsSmartyNoSpam");
-        $smarty->register_function('add_js', 'cmsSmartyAddJS');
-        $smarty->register_function('add_css', 'cmsSmartyAddCSS');
-        $smarty->register_function('wysiwyg', 'cmsSmartyWysiwyg');
-        $smarty->register_function('comments', 'cmsSmartyComments');
-        $smarty->register_function('profile_url', 'cmsSmartyProfileURL');
+        $template_has_tpl = file_exists(TEMPLATE_DIR . "{$tpl_folder}/{$tpl_file}");
 
-        return $smarty;
+        $this->smarty->template_dir = $template_has_tpl ? TEMPLATE_DIR . $tpl_folder : DEFAULT_TEMPLATE_DIR . $tpl_folder;
+
+        $this->smarty->assign('LANG', $_LANG);
+        $this->smarty->register_modifier("NoSpam", "cmsSmartyNoSpam");
+        $this->smarty->register_function('add_js', 'cmsSmartyAddJS');
+        $this->smarty->register_function('add_css', 'cmsSmartyAddCSS');
+        $this->smarty->register_function('wysiwyg', 'cmsSmartyWysiwyg');
+        $this->smarty->register_function('comments', 'cmsSmartyComments');
+        $this->smarty->register_function('profile_url', 'cmsSmartyProfileURL');
+
+        return $this->smarty;
+        
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public function initSmartyModule(){ //cmsSmartyInitModule
-        global $smarty;
-        $smarty->compile_dir = PATH.'/cache';
-        if(@is_dir(TEMPLATE_DIR.'modules')){
-            $smarty->template_dir = TEMPLATE_DIR.'modules';
-        } else {
-            $smarty->template_dir = PATH.'/templates/_default_/modules';
-        }
+    public function initSmartyModule(){
 
-        $smarty->register_modifier("NoSpam", "cmsSmartyNoSpam");
-        $smarty->register_function('add_js', 'cmsSmartyAddJS');
-        $smarty->register_function('add_css', 'cmsSmartyAddCSS');
-        $smarty->register_function('wysiwyg', 'cmsSmartyWysiwyg');
-        $smarty->register_function('profile_url', 'cmsSmartyProfileURL');
+        if (!$this->smarty){ $this->loadSmarty(); }
 
-        return $smarty;
+        $template_has_dir = is_dir(TEMPLATE_DIR.'modules');
+
+        $this->smarty->template_dir = $template_has_dir ? TEMPLATE_DIR.'modules' : DEFAULT_TEMPLATE_DIR.'modules';
+
+        $this->smarty->register_modifier("NoSpam", "cmsSmartyNoSpam");
+        $this->smarty->register_function('add_js', 'cmsSmartyAddJS');
+        $this->smarty->register_function('add_css', 'cmsSmartyAddCSS');
+        $this->smarty->register_function('wysiwyg', 'cmsSmartyWysiwyg');
+        $this->smarty->register_function('profile_url', 'cmsSmartyProfileURL');
+
+        return $this->smarty;
     }
 
     // CONFIGS //////////////////////////////////////////////////////////////////////////////////////////////////////////////

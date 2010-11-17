@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -376,7 +376,6 @@ function registration(){
 
                     if (!cmsUser::isBanned($user['id'])) {
 
-                        session_register('user');
                         $_SESSION['user'] = cmsUser::createUser($user);
                         
                         cmsCore::callEvent('USER_LOGIN', $_SESSION['user']);
@@ -392,7 +391,7 @@ function registration(){
 
                     $inUser->dropStatTimer();
 
-                    cmsUser::updateStats($user['id']);
+                    //cmsUser::updateStats($user['id']);
 
                     $first_time_auth = ($user['logdate']=='0000-00-00 00:00:00' || intval($user['logdate']==0));
 

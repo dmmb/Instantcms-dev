@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -50,7 +50,7 @@ function mod_latestclubs($module_id){
 
 			$smarty = $inCore->initSmarty('modules', 'mod_clubs.tpl');			
 			$smarty->assign('clubs', $clubs);
-			$smarty->assign('is_clubs', $is_clubs);
+		$smarty->assign('is_clubs', $is_clubs);
 			$smarty->display('mod_clubs.tpl');
 						
 		return true;

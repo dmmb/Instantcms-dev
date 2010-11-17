@@ -55,13 +55,12 @@
 		echo '<script language="JavaScript" type="text/javascript" src="/includes/jquery/upload/ajaxfileupload.js"></script>';
     }
     if ($cfg['smiles'] && $is_user_add_bb){
-	//smilies toolbar
-	$smilies = cmsPage::getSmilesPanel('content');
+        //smilies toolbar
+        $smilies = cmsPage::getSmilesPanel('content');
     }
 
 	//LOAD SMARTY
-	$inCore->loadSmarty();
-    $smarty = new Smarty();
+    $smarty = $inCore->initSmarty();
 
 	$karma_need     = $cfg['min_karma_add'];
 	$karma_has      = cmsUser::getKarma($inUser->id);

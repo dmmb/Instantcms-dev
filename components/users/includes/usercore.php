@@ -278,25 +278,25 @@ function usrStatus($user_id, $logdate='', $online=false, $gender='m'){
     } else {
         $is_online  = $online;
     }
-
+	
 	if ($is_online){
 		return '<span class="online">'.$_LANG['ONLINE'].'</span>';
 	} else {
-		if ($logdate){
-            if (!strstr(strtolower($logdate), $_LANG['YESTERDAY']) && !strstr(strtolower($logdate), $_LANG['TODAY'])){
-                  $logdate = cmsCore::dateDiffNow($logdate);                        
-                  if (!strstr($logdate, 'не известно')) { $logdate .=  ' '.$_LANG['BACK']; }
-            }
-			return '<span class="offline">'.$logdate.'</span>';
-		} else {
-			return '<span class="offline">'.$_LANG['OFFLINE'].'</span>';
-		}
-	}
+				if ($logdate){
+                    if (!strstr(strtolower($logdate), $_LANG['YESTERDAY']) && !strstr(strtolower($logdate), $_LANG['TODAY'])){
+                        $logdate = cmsCore::dateDiffNow($logdate);                        
+                        if (!strstr($logdate, 'не известно')) { $logdate .=  ' '.$_LANG['BACK']; }
+                    }
+					return '<span class="offline">'.$logdate.'</span>';
+				} else {
+					return '<span class="offline">'.$_LANG['OFFLINE'].'</span>';
+				}
+			}
 }
 
 function usrStatusList($user_id, $logdate='', $online=false, $gender='m'){
 
-    $inDB   = cmsDatabase::getInstance();
+    $inDB = cmsDatabase::getInstance();
     global $_LANG;
 
     if ($online===false){
@@ -304,16 +304,16 @@ function usrStatusList($user_id, $logdate='', $online=false, $gender='m'){
     } else {
         $is_online  = $online;
     }
-
+	
 	if ($is_online){
 		return '<span class="online">'.$_LANG['ONLINE'].'</span>';
 	} else {
-		if ($logdate){
-			return '<span class="offline">'.$logdate.'</span>';
-		} else {
-			return '<span class="offline">'.$_LANG['OFFLINE'].'</span>';
-		}
-	}
+				if ($logdate){
+					return '<span class="offline">'.$logdate.'</span>';
+				} else {
+					return '<span class="offline">'.$_LANG['OFFLINE'].'</span>';
+				}
+			}
 }
 
 function usrCheckAuth(){
@@ -323,8 +323,9 @@ function usrCheckAuth(){
 
 function usrNeedReg(){
     global $_LANG;
+    $inCore = cmsCore::getInstance();
     ob_start();
-	$smarty = cmsCore::initSmarty('components', 'com_error.tpl');
+	$smarty = $inCore->initSmarty('components', 'com_error.tpl');
 	$smarty->assign('err_title', $_LANG['ACCESS_DENIED']);
 	$smarty->assign('err_content', $_LANG['ACCESS_ONLY_REGISTERED']);
 	$smarty->display('com_error.tpl');
@@ -333,8 +334,9 @@ function usrNeedReg(){
 
 function usrFriendOnly(){
     global $_LANG;
+    $inCore = cmsCore::getInstance();
     ob_start();
-	$smarty = cmsCore::initSmarty('components', 'com_error.tpl');
+	$smarty = $inCore->initSmarty('components', 'com_error.tpl');
 	$smarty->assign('err_title', $_LANG['ACCESS_DENIED']);
 	$smarty->assign('err_content', $_LANG['ACCESS_ONLY_FRIENDS']);
 	$smarty->display('com_error.tpl');
@@ -343,8 +345,9 @@ function usrFriendOnly(){
 
 function usrAccessDenied(){
     global $_LANG;
+    $inCore = cmsCore::getInstance();
     ob_start();
-	$smarty = cmsCore::initSmarty('components', 'com_error.tpl');
+	$smarty = $inCore->initSmarty('components', 'com_error.tpl');
 	$smarty->assign('err_title', $_LANG['ACCESS_DENIED']);
 	$smarty->assign('err_content', $_LANG['ACCESS_NEED_AVTOR']);
 	$smarty->display('com_error.tpl');
@@ -353,8 +356,9 @@ function usrAccessDenied(){
 
 function usrNotAllowed(){
     global $_LANG;
+    $inCore = cmsCore::getInstance();
     ob_start();
-	$smarty = cmsCore::initSmarty('components', 'com_error.tpl');
+	$smarty = $inCore->initSmarty('components', 'com_error.tpl');
 	$smarty->assign('err_title', $_LANG['ACCESS_BLOCK']);
 	$smarty->assign('err_content', $_LANG['ACCESS_SECURITY']);
 	$smarty->display('com_error.tpl');
@@ -439,23 +443,23 @@ function usrFriends($user_id, &$total, $perpage=10, $page=1){
 
 	$result = $inDB->query($sql) ;
 
-	$friends    = array();
+		$friends    = array();
 
-	while ($friend = $inDB->fetch_assoc($result)){
+		while ($friend = $inDB->fetch_assoc($result)){
 
-         $friend['flogdate'] = usrStatus($friend['id'], $friend['flogdate'], (int)$friend['online']);
-         $friend['avatar']   = usrImageNOdb($friend['id'], 'small', $friend['avatar'], $friend['is_deleted']);
+            $friend['flogdate'] = usrStatus($friend['id'], $friend['flogdate'], (int)$friend['online']);
+            $friend['avatar']   = usrImageNOdb($friend['id'], 'small', $friend['avatar'], $friend['is_deleted']);
          $friends[$friend['id']] = $friend;
 
-    }
-                   
+        }
+
 	return $friends;
 }
 
 function usrAllowed($allow_who, $owner_id){
 
-    $inCore  = cmsCore::getInstance();
-    $inUser  = cmsUser::getInstance();
+    $inCore = cmsCore::getInstance();
+    $inUser     = cmsUser::getInstance();
 	$user_id = $inUser->id;
 
 	if ($owner_id == $user_id) { return true; }

@@ -2,7 +2,7 @@
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -48,10 +48,6 @@ if($opt=='list'){
     $toolmenu[0]['icon'] = 'new.gif';
     $toolmenu[0]['title'] = 'Новый клуб';
     $toolmenu[0]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add';
-
-    $toolmenu[3]['icon'] = 'list.gif';
-    $toolmenu[3]['title'] = 'Все клубы';
-    $toolmenu[3]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list';
 
     $toolmenu[4]['icon'] = 'config.gif';
     $toolmenu[4]['title'] = 'Настройки';

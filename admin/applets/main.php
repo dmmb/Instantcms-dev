@@ -2,7 +2,7 @@
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -118,8 +118,11 @@ function applet_main(){
 
                     $actions = $inActions->getActionsLog();
 
-                    include(TEMPLATE_DIR.'admin/actions.php');
+                    $tpl_file   = 'admin/actions.php';
+                    $tpl_dir    = file_exists(TEMPLATE_DIR.$tpl_file) ? TEMPLATE_DIR : DEFAULT_TEMPLATE_DIR;
 
+                    include($tpl_dir.$tpl_file);
+                    
                 ?>
             </div>
 		</div>			
@@ -219,9 +222,9 @@ function applet_main(){
             </ul>
         </div>
 		<div class="small_box">
-            <div class="small_title">Дополнительные возможности</div>
-            <div class="advert_design"><a href="http://www.instantcms.ru/design.html" target="_blank">Закажите уникальный дизайн</a></div>
-            <div class="advert_inshop"><a href="http://www.instantcms.ru/blogs/InstantSoft/professionalnyi-magazin-dlja-InstantCMS.html" target="_blank">Профессиональный магазин для InstantCMS</a></div>
+            <div class="small_title">Премиум-компоненты</div>
+            <div class="advert_inmaps"><a href="http://www.instantcms.ru/blogs/InstantSoft/instantmaps-katalog-obektov-na-karte.html" target="_blank"><strong>InstantMaps</strong></a> &mdash; каталог объектов на карте</div>
+            <div class="advert_inshop"><a href="http://www.instantcms.ru/blogs/InstantSoft/professionalnyi-magazin-dlja-InstantCMS.html" target="_blank"><strong>InstantShop</strong></a> &mdash; профессиональный магазин</div>
         </div>
 		  </td>
       </tr>

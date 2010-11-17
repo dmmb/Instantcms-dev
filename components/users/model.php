@@ -103,7 +103,7 @@ class cms_model_users{
 		
 		} else {
 		
-		$user = $this->inDB->get_fields('cms_users', "id = '$user_id'", 'id, nickname, login');
+            $user = $this->inDB->get_fields('cms_users', "id = '$user_id'", 'id, nickname, login');
         
 		}
         
@@ -468,7 +468,7 @@ class cms_model_users{
 
         $this->inDB->query($sql);
 
-        $album_id = $this->inDB->get_last_id('cms_photo_files');
+        $album_id = $this->inDB->get_last_id('cms_user_albums');
 
         return $album_id;
         

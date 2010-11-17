@@ -36,20 +36,20 @@ function faq(){
 if ($do=='view'){
 
 	if($id>0){
-		//CURRENT CATEGORY
-		$sql = "SELECT *
-				FROM cms_faq_cats
-				WHERE id = '$id'
-				ORDER BY title ASC LIMIT 1
-				";		
-		
-		$result = $inDB->query($sql) ;
+	//CURRENT CATEGORY
+	$sql = "SELECT *
+			FROM cms_faq_cats
+			WHERE id = '$id'
+			ORDER BY title ASC LIMIT 1
+			";		
 	
-		if (!$inDB->num_rows($result)) { cmsCore::error404(); }
-	
-		$cat = $inDB->fetch_assoc($result);	
-	
-		//PAGE HEADING
+	$result = $inDB->query($sql) ;
+
+	if (!$inDB->num_rows($result)) { cmsCore::error404(); }
+
+	$cat = $inDB->fetch_assoc($result);	
+
+	//PAGE HEADING
 		$pagetitle = $cat['title'];
 		$inPage->setTitle($cat['title']);
 		$inPage->addPathway($cat['title']);
@@ -59,7 +59,7 @@ if ($do=='view'){
 		$inPage->setTitle($_LANG['FAQ']);
 		$inPage->setDescription($_LANG['FAQ']);
 	}
-
+	
 	//LIST OF SUBCATEGORIES
 	$sql = "SELECT *
 			FROM cms_faq_cats

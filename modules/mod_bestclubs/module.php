@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -9,13 +9,12 @@
 /*********************************************************************************************/
 
 function mod_bestclubs($module_id){
-
         $inCore = cmsCore::getInstance();
-        $inDB   = cmsDatabase::getInstance();
+        $inDB = cmsDatabase::getInstance();
         global $_LANG;
 		
 		if (!function_exists('clubTotalMembers')){ //if not included earlier
-			$inCore->loadLib('clubs');
+		$inCore->loadLib('clubs');
 		}
 	
 		$cfg = $inCore->loadModuleConfig($module_id);
@@ -29,7 +28,7 @@ function mod_bestclubs($module_id){
 				 LIMIT ".$cfg['count'];
  	
 		$result = $inDB->query($sql);
-		
+						
 		$is_clubs = false;
 						
 		if ($inDB->num_rows($result)){	

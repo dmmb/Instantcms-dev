@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -23,7 +23,7 @@
         //activate profiles support
          if (!function_exists('usrBlog')){ //if not included earlier
                 $inCore->includeFile('components/users/includes/usercore.php');
-        }
+            }
 
         $newmsg     = cmsUser::isNewMessages($inUser->id);
 

@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -17,7 +17,7 @@
 	
 	if (isset($_REQUEST['addtocart'])){
 	
-		if(!isset($_SESSION['cart'])) { session_register('cart'); $_SESSION['cart'] = array(); }
+		if(!isset($_SESSION['cart'])) { $_SESSION['cart'] = array(); }
 	
 		foreach($_REQUEST as $key=>$value){
 			if (strpos($key, 'item')===0){

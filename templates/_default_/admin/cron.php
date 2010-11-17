@@ -39,10 +39,13 @@
                         </td>
                         <td align="right">
                             <div style="padding-right: 8px;">
+                                <a title="Выполнить сейчас" onclick="jsmsg('Выполнить задачу <?php echo $item['name']; ?>?', '?view=cron&do=execute&id=<?php echo $item['id']; ?>')" href="#">
+                                    <img border="0" hspace="2" alt="Выполнить сейчас" src="images/actions/play.gif"/>
+                                </a>
                                 <a title="Редактировать" href="?view=cron&do=edit&id=<?php echo $item['id']; ?>">
                                     <img border="0" hspace="2" alt="Редактировать" src="images/actions/edit.gif"/>
                                 </a>
-                                <a title="Удалить" onclick="jsmsg('Удалить задачу <?php echo $item['job_name']; ?>?', '?view=cron&do=delete&id=<?php echo $item['id']; ?>')" href="#">
+                                <a title="Удалить" onclick="jsmsg('Удалить задачу <?php echo $item['name']; ?>?', '?view=cron&do=delete&id=<?php echo $item['id']; ?>')" href="#">
                                     <img border="0" hspace="2" alt="Удалить" src="images/actions/delete.gif"/>
                                 </a>
                             </div>

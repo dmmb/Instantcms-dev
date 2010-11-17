@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -66,16 +66,6 @@
     //устанавливаем заголовок браузера в название сайта
     $inPage->setTitle( $inConf->sitename );
 
-//////////////////////// Определяем каталоги шаблонов //////////////////////////
-
-    //проверяем был ли переопределен шаблон через сессию
-    //например, из модуля "выбор шаблона"
-    if ($_SESSION['template']) { $inConf->template = $_SESSION['template']; }
-
-    define('TEMPLATE', $inConf->template);
-	define('TEMPLATE_DIR', PATH.'/templates/'.$inConf->template.'/');
-	define('DEFAULT_TEMPLATE_DIR', PATH.'/templates/_default_/');
-
 ////////////////////////// Проверяем, включен ли сайт //////////////////////////
 
     //Если сайт выключен и пользователь не администратор,
@@ -101,10 +91,6 @@
 	
 ////////////////////////////// Генерация страницы //////////////////////////////
 	
-	//Загружаем Smarty
-	$inCore->loadSmarty();
-	$smarty = new Smarty();
-
 	//Получаем ID текущего пункта меню
 	$menuid = $inCore->menuId();
 		

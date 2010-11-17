@@ -695,14 +695,14 @@ if ($do=='profile'){
 	}
 
     $usr['avatar']				 = usrImageNOdb($usr['id'], 'big', $usr['imageurl'], $usr['is_deleted']);
-
+	
     $usr['friends']				= usrFriends($usr['id'], $usr['friends_total'], 6);
-	$usr['isfriend']			= (($inUser->id && !$myprofile) ? usrIsFriends($usr['id'], $inUser->id) : false);
-	$usr['isfriend_not_add']	= $usr['isfriend'];
+		$usr['isfriend']			= (($inUser->id && !$myprofile) ? usrIsFriends($usr['id'], $inUser->id) : false);
+		$usr['isfriend_not_add']	= $usr['isfriend'];
     $usr['is_new_friends']		= ($inUser->id==$usr['id'] && $model->isNewFriends($usr['id']));
-    if ($usr['is_new_friends']){
-         $usr['new_friends'] 	= usrFriendQueriesList($usr['id'], $model);
-    }
+        if ($usr['is_new_friends']){
+            $usr['new_friends'] 	= usrFriendQueriesList($usr['id'], $model);
+        }
 
     if ($usr['friends'] && $inUser->id && $myprofile && $cfg['sw_feed']){
         $inActions = cmsActions::getInstance();
@@ -1131,7 +1131,7 @@ if ($do=='uploadphotos'){
 
     $uploaddir 				= PATH.'/images/users/photos/';
     $realfile 				= $inDB->escape_string($_FILES['Filedata']['name']);
-			
+
 	$path_parts             = pathinfo($realfile);
     $ext                    = strtolower($path_parts['extension']);
 	if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'png' && $ext != 'bmp') {  exit(0); }
@@ -1648,26 +1648,26 @@ if ($do=='friendlist'){
 	
 	$usr = $model->getUserShort($id);
 	if (!$usr) { cmsCore::error404(); }
-
+	
 	$page    = $inCore->request('page', 'int', 1);
 	$perpage = 10;
 	
 	if (!usrCheckAuth()) { cmsUser::goToLogin(); }
 
-	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-	$inPage->addPathway($_LANG['FRIENDS'], $_SERVER['REQUEST_URI']);
+			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+			$inPage->addPathway($_LANG['FRIENDS'], $_SERVER['REQUEST_URI']);
 	$inPage->setTitle($_LANG['FRIENDS']);
 	$inPage->backButton(false);
 
 	$friends = usrFriends($usr['id'], $total, $perpage, $page);
-
+	
     $smarty = $inCore->initSmarty('components', 'com_users_friends.tpl');
 
    	$smarty->assign('friends', $friends);
 	$smarty->assign('usr', $usr);
 	$smarty->assign('total', $total);
 	$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/users/%user_id%/friendlist%page%.html', array('user_id'=>$id)));
-
+		
     $smarty->display('com_users_friends.tpl');
 
 }
@@ -1686,55 +1686,55 @@ if ($do=='viewphoto'){
 	$usr = $model->getUserShort($id);
 	if (!$usr) { cmsCore::error404(); }
 
-	$sql = "SELECT p.*, a.title as album
-                  FROM cms_user_photos p, cms_user_albums a
-                  WHERE p.id = '$photoid' AND p.user_id = '$id' AND p.album_id = a.id
-                  LIMIT 1";
-	$result = $inDB->query($sql) ;
+			$sql = "SELECT p.*, a.title as album
+                    FROM cms_user_photos p, cms_user_albums a
+                    WHERE p.id = '$photoid' AND p.user_id = '$id' AND p.album_id = a.id
+                    LIMIT 1";
+			$result = $inDB->query($sql) ;
 
 	if (!$inDB->num_rows($result)){ cmsCore::error404(); }
 
-	$photo = $inDB->fetch_assoc($result);
+				$photo = $inDB->fetch_assoc($result);
 				
-	$inDB->query("UPDATE cms_user_photos SET hits = hits + 1 WHERE id = ".$photo['id']) ;
+				$inDB->query("UPDATE cms_user_photos SET hits = hits + 1 WHERE id = ".$photo['id']) ;
 	
 	$inPage->setTitle($photo['title']);
 	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 	$inPage->addPathway($_LANG['PHOTOALBUMS'], '/users/'.$usr['id'].'/photoalbum.html');
-	$inPage->addPathway($photo['album'], '/users/'.$usr['login'].'/photos/private'.$photo['album_id'].'.html');
-	$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
+				$inPage->addPathway($photo['album'], '/users/'.$usr['login'].'/photos/private'.$photo['album_id'].'.html');
+				$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
 
-	if (usrAllowed($photo['allow_who'], $id) || $inCore->userIsAdmin($inUser->id)){
-			$photo['pubdate'] = $inCore->dateFormat($photo['pubdate'], true, false, false);
-			$photo['genderlink'] = cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, '', $usr['login']);
-			$photo['filesize'] = round(filesize($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/medium/'.$photo['imageurl'])/1024, 2);
-			//ссылки на предыдущую и следующую фотографии
-			$previd = $inDB->get_fields('cms_user_photos', "id>'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id ASC');
-			$nextid = $inDB->get_fields('cms_user_photos', "id<'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id DESC');
+				if (usrAllowed($photo['allow_who'], $id) || $inCore->userIsAdmin($inUser->id)){
+					$photo['pubdate'] = $inCore->dateFormat($photo['pubdate'], true, false, false);
+					$photo['genderlink'] = cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, '', $usr['login']);
+					$photo['filesize'] = round(filesize($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/medium/'.$photo['imageurl'])/1024, 2);
+					//ссылки на предыдущую и следующую фотографии
+					$previd = $inDB->get_fields('cms_user_photos', "id>'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id ASC');
+					$nextid = $inDB->get_fields('cms_user_photos', "id<'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id DESC');
 
-			$is_photo = true;	
-	} else { $is_photo = false; }
-
-	$smarty = $inCore->initSmarty('components', 'com_users_photos_view.tpl');
-	$smarty->assign('photo', $photo);
-	$smarty->assign('bbcode', '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/users/photos/medium/'.$photo['imageurl'].'[/IMG]');
-	$smarty->assign('previd', $previd);
-	$smarty->assign('nextid', $nextid);
-	$smarty->assign('usr', $usr);
-	$smarty->assign('myprofile', $myprofile);
-	$smarty->assign('is_admin', $inCore->userIsAdmin($user_id));
-	$smarty->assign('is_photo', $is_photo);
-	if($is_photo){
-		$inCore->loadLib('tags');	
-		$smarty->assign('tagbar', cmsTagBar('userphoto', $photo['id']));
-	}
-	$smarty->display('com_users_photos_view.tpl');	
-
-	//show user comments
-	if($inCore->isComponentInstalled('comments') && $is_photo){
-		$inCore->includeComments();
-		comments('userphoto', $photo['id']);
-	}					
+					$is_photo = true;	
+				} else { $is_photo = false; }
+					
+				$smarty = $inCore->initSmarty('components', 'com_users_photos_view.tpl');
+				$smarty->assign('photo', $photo);
+				$smarty->assign('bbcode', '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/users/photos/medium/'.$photo['imageurl'].'[/IMG]');
+				$smarty->assign('previd', $previd);
+				$smarty->assign('nextid', $nextid);
+				$smarty->assign('usr', $usr);
+				$smarty->assign('myprofile', $myprofile);
+				$smarty->assign('is_admin', $inCore->userIsAdmin($user_id));
+				$smarty->assign('is_photo', $is_photo);
+				if($is_photo){
+					$inCore->loadLib('tags');	
+					$smarty->assign('tagbar', cmsTagBar('userphoto', $photo['id']));
+				}
+				$smarty->display('com_users_photos_view.tpl');	
+					
+					//show user comments
+				if($inCore->isComponentInstalled('comments') && $is_photo){
+						$inCore->includeComments();
+						comments('userphoto', $photo['id']);
+					}					
 				
 }
 /////////////////////////////// ADD FRIEND /////////////////////////////////////////////////////////////////////////////////////////
@@ -1769,36 +1769,36 @@ if ($do=='addfriend'){
 				$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 			}
 			if(usrIsFriends($id, $inUser->id, false)){ cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND_ERR'], 'error'); $inCore->redirect(cmsUser::getProfileURL($usr['login'])); }
-			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-			$inPage->addPathway($_LANG['ADD_TO_FRIEND']);
-            $inPage->backButton(false);
+				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+				$inPage->addPathway($_LANG['ADD_TO_FRIEND']);
+                $inPage->backButton(false);
 
-			$confirm['title']                   = $_LANG['ADD_TO_FRIEND'];
-			$confirm['text']                    = $_LANG['SEND_TO_USER'].' '.ucfirst($usr['nickname']).' '.$_LANG['FRIENDSHIP_OFFER'].'?<br>'.$_LANG['IF'].' '.ucfirst($usr['nickname']).' '.$_LANG['SUCCESS_TEXT'];
-			$confirm['action']                  = $_SERVER['REQUEST_URI'];
-			$confirm['yes_button']              = array();
-			$confirm['yes_button']['type']      = 'submit';
-			$confirm['yes_button']['name']  	= 'goadd';
-			$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
-			$smarty->assign('confirm', $confirm);
-			$smarty->display('action_confirm.tpl');
+				$confirm['title']                   = $_LANG['ADD_TO_FRIEND'];
+				$confirm['text']                    = $_LANG['SEND_TO_USER'].' '.ucfirst($usr['nickname']).' '.$_LANG['FRIENDSHIP_OFFER'].'?<br>'.$_LANG['IF'].' '.ucfirst($usr['nickname']).' '.$_LANG['SUCCESS_TEXT'];
+				$confirm['action']                  = $_SERVER['REQUEST_URI'];
+				$confirm['yes_button']              = array();
+				$confirm['yes_button']['type']      = 'submit';
+				$confirm['yes_button']['name']  	= 'goadd';
+				$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
+				$smarty->assign('confirm', $confirm);
+				$smarty->display('action_confirm.tpl');
 
 		} else {
-			$to_id      = $id;
-			$from_id    = $inUser->id;
+				$to_id      = $id;
+				$from_id    = $inUser->id;
 			if(!usrIsFriends($id, $inUser->id, false)){
 
-				$sql = "INSERT INTO cms_user_friends (to_id, from_id, logdate, is_accepted) 
-						VALUES ('$to_id', '$from_id', NOW(), '0')";
-				$inDB->query($sql);
-	
+					$sql = "INSERT INTO cms_user_friends (to_id, from_id, logdate, is_accepted) 
+							VALUES ('$to_id', '$from_id', NOW(), '0')";
+					$inDB->query($sql);
+				
 				cmsUser::sendMessage(USER_UPDATER, $to_id, '<b>'.$_LANG['RECEIVED_F_O'].'</b>. '.$_LANG['YOU_CAN_SEE'].' <a href="'.cmsUser::getProfileURL($usr['login']).'">'.$_LANG['INPROFILE'].'</a>.');
-				cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND'], 'info');					
-
+				cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND'], 'info');
+				
 			} else {
 				cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND_ERR'], 'error');
 			}
-			$inCore->redirect(cmsUser::getProfileURL($usr['login']));
+				$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 		}//!goadd
 	} else {
 		$inCore->redirectBack();
@@ -2330,9 +2330,9 @@ if ($do=='addfile'){
 						$name       = $inCore->strClear($data_array["name"]);
 						$size       = $inCore->strClear($data_array["size"]);
 						$size_mb    += round(($size/1024)/1024, 2);
-
+						
 						$types 		= $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar';
-						$maytypes 	= explode(',', str_replace(' ', '', $types));
+						$maytypes 	= explode(',', str_replace(' ', '', $types));  
 						$path_parts = pathinfo($name);
 						$ext        = strtolower($path_parts['extension']);
 						foreach($maytypes as $maytype){  
@@ -2343,7 +2343,7 @@ if ($do=='addfile'){
 							   $may = 0;  
 							}  
 						} 
-
+						
 						if ($size_mb <= $free_mb){
 							if ($may){
 								if (move_uploaded_file($tmp_name, PATH."/upload/userfiles/$id/$name")){

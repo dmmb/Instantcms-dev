@@ -2,7 +2,7 @@
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -89,10 +89,6 @@ function applet_users(){
 		$actions[1]['icon']  = 'message.gif';
 		$actions[1]['link']  = '/users/%id%/sendmessage.html';
 
-		$actions[2]['title'] = 'Редактировать';
-		$actions[2]['icon']  = 'edit.gif';
-		$actions[2]['link']  = '?view=users&do=edit&id=%id%';
-		
 		$actions[3]['title'] = 'Забанить';
 		$actions[3]['icon']  = 'ban.gif';
 		$actions[3]['link']  = '/admin/index.php?view=userbanlist&do=add&to=%id%';

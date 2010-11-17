@@ -143,6 +143,19 @@ a:hover { color:#375E93; }
     box-shadow:1px 1px 3px #000;
     -moz-box-shadow:1px 1px 3px #000;
 }
+#topmenu ul li ul li ul {
+    display:none;
+    position: relative;
+    margin-top:-155px;
+    left:200px;
+	width: 200px;
+	background: #E9E9E9;
+	color: #000;
+    padding:0px;
+    z-index:1000;
+    box-shadow:1px 1px 3px #000;
+    -moz-box-shadow:1px 1px 3px #000;
+}
 
 #topmenu ul li ul li,  #topmenu ul li ul li a{
     display:block;
@@ -852,6 +865,7 @@ span.fast_cfg_link img{ border:none; }
 }
 .mod_fweb2_date{
 	background-color:#EBEBEB;
+    width:100px;
 }
 .mod_fweb2_topiclink{
 	text-decoration:underline;
@@ -1278,7 +1292,7 @@ a.new_messages_link:hover{ color:#F00; background:#Fff; font-weight:bold; paddin
 .faq_questtext{
 	font-size:18px;
     margin-bottom:10px;
-
+    color:#375E93;
 }
 .faq_quest_link {
     margin-bottom:5px;
@@ -1444,7 +1458,7 @@ span.user_karma_point{
 /* ---------------------------- MODULE "LATEST CLUBS" ----------------------- */
 
 .mod_clubs div.club_entry { overflow:hidden; margin-bottom:10px;  }
-.mod_clubs div.club_entry .image{ width:48px; height:48px; padding: 2px; background:#FFF; float: left; margin-right:14px; }
+.mod_clubs div.club_entry .image{ padding: 2px; background:#FFF; float: left; margin-right:14px; }
 .mod_clubs div.club_entry .data{ float: left; }
 .mod_clubs div.club_entry .data .title { margin-bottom: 5px; margin-top:5px;  }
 .mod_clubs div.club_entry .data .title a{ font-size: 16px; font-weight:bold;  }
@@ -2110,7 +2124,7 @@ div.club_entry {
     -moz-border-radius:8px;
     clear:both;
 }
-div.club_entry .image{ width:48px; height:48px; padding: 2px; background:#FFF; float: left; margin-right:14px; }
+div.club_entry .image{ padding: 2px; background:#FFF; float: left; margin-right:14px; }
 
 div.club_entry .data{ float: left; }
 
@@ -2317,6 +2331,8 @@ border:thin dashed #999999;
 .cmm_all_title{
     margin-bottom:5px;
     color:#5F98BF;
+    font-size:100%;
+    font-weight:normal;
 }
 
 #addcomment {
@@ -3094,6 +3110,11 @@ div.user_profile_data .field .value {  }
     width:257px;
 }
 
+.photo_desc{
+    text-align:center;
+    color:#5F98BF;
+}
+
 .usr_photos_add_limit{
     margin-bottom: 20px; color:#5F98BF;;
 }
@@ -3144,6 +3165,12 @@ div.user_profile_data .field .value {  }
     padding:1px;
     padding-left:20px;
     background:url(../images/icons/info.png) no-repeat left center;
+}
+
+.usr_photos_add_st{
+    margin-top:20px;
+    width:500px;
+    color:#5F98BF;
 }
 
 .usr_photo_sel_bar{
@@ -3402,8 +3429,8 @@ table.feed td.date strong { color:green; }
 	padding:0;
     display: block;
     float:left;
-    width:210px;
-	height:85px;
+    width:200px;
+	height:90px;
 }
 .usr_albums_list li.no_albums{
 	height:auto;
@@ -3482,3 +3509,6 @@ table.feed td.date strong { color:green; }
 .act_add_wall_club{ background:url(../images/icons/actions/add_wall_club.png) no-repeat left 3px; }
 .act_add_post_club{ background:url(../images/icons/actions/add_post_club.png) no-repeat left 3px; }
 .act_add_user_photo{ background:url(../images/icons/actions/add_user_photo.png) no-repeat left 3px; }
+.act_add_user_photo_multi{ background:url(../images/icons/actions/add_user_photo_multi.png) no-repeat left 3px; }
+.add_user{ background:url(../images/icons/actions/add_user.png) no-repeat left 3px; }
+.add_wall_my{ background:url(../images/icons/actions/add_wall_my.png) no-repeat left 3px; }

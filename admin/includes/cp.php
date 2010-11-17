@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -1158,16 +1158,18 @@ function cpBuildList($attr_name, $list, $selected_id=false){
 
 function cpGetList($listtype){
 
+    global $_CFG;
+
 	$list = array();	
 	//Module positions
 	if ($listtype == 'positions'){
-		$list[0]['title'] = 'left';		$list[0]['id'] = 'left';
-		$list[1]['title'] = 'right';	$list[1]['id'] = 'right';
-		$list[2]['title'] = 'top';		$list[2]['id'] = 'top';
-		$list[3]['title'] = 'bottom';	$list[3]['id'] = 'bottom';
-		$list[4]['title'] = 'column1';	$list[4]['id'] = 'column1';
-		$list[5]['title'] = 'column2';	$list[5]['id'] = 'column2';
-		$list[6]['title'] = 'column3';	$list[6]['id'] = 'column3';
+
+        $pos = cpModulePositions($_CFG['template']);
+
+        foreach($pos as $p){
+            $list[] = array('title'=>$p, 'id'=>$p);
+        }
+
 		return $list;
 	}
 	//Menu types

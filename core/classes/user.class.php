@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -205,7 +205,6 @@ class cmsUser {
 
             if($inDB->num_rows($res)==1){
                 $userrow = $inDB->fetch_assoc($res);
-                session_register('user');
                 $_SESSION['user'] = self::createUser($userrow);
                 cmsCore::callEvent('USER_LOGIN', $_SESSION['user']);
                 $inDB->query("UPDATE cms_users SET logdate = NOW() WHERE id = ".$_SESSION['user']['id']);

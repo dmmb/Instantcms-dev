@@ -232,17 +232,6 @@ class bbcode {
                         'font','google','h1','h2','h3','hr','i','img','list',
                         'nobb','php','quote','s','size','sub','sup','table','tt','u','url')
                 ),
-            'size' => array(
-                    'handler' => 'size_2html',
-                    'is_close' => false,
-                    'lbr' => 0,
-                    'rbr' => 0,
-                    'ends' => array('*','align','code','video', 'audio', 'hide','h1','h2','h3','hr',
-                        'list','php','quote','table','td','th','tr'),
-                    'permission_top_level' => true,
-                    'children' => array('b','color','email','font','google','i','img',
-                        'nobb','s','size','sub','sup','tt','u','url')
-                ),
             'u' => array(
                     'handler' => 'u_2html',
                     'is_close' => false,
@@ -1129,11 +1118,16 @@ class bbcode {
     // Функция - обработчик тега [img]
     function img_2html($elem) {
         $attr = 'alt=""';
-	$src = '';
+        $src = '';
         foreach ($elem['val'] as $text) {
             if ('text'==$text['type']) { $src .= $text['str']; }
         }
-		$attr .= isset($elem['attrib']['align']) ? ' align="'.$elem['attrib']['align'].'"' : "";		
+        if (isset($elem['attrib']['align'])){
+            $align       = $elem['attrib']['align'];
+            $div_style   = "float:{$align};overflow:hidden;";
+            $div_style  .= "margin-" .($align=='left' ? 'right' : 'left'). ":15px; margin-bottom:15px; ";
+        }
+
 		$width = '';
 		$hegiht = '';
 		$zoom = false;
@@ -1151,7 +1145,7 @@ class bbcode {
 					}			
 				} 		
 				if (!$zoom){
-					return '<img src="'.htmlspecialchars($src).'" '.$attr.' />';
+					return '<div class="bb_img" style="'.$div_style.'"><img src="'.htmlspecialchars($src).'" '.$attr.' /></div>';
 				} else {
 					$html = '<div class="forum_zoom" style="width:'.$width.'px">'."\n";
 						$html .= '<div><a href="'.htmlspecialchars($src).'" target="_blank"><img src="'.htmlspecialchars($src).'" '.$attr.' width="'.$width.'" height="'.$height.'" border="0"/></a></div>'."\n";
@@ -1163,7 +1157,7 @@ class bbcode {
 				return '<div class="forum_lostimg">Файл "'.$src.'" не найден!</div>';
 			}
 		} else {
-			return '<img src="'.htmlspecialchars($src).'" '.$attr.' />';
+			return '<div class="bb_img" style="'.$div_style.'"><img src="'.htmlspecialchars($src).'" '.$attr.' /></div>';
 		}
     }
     // Функция - обработчик тега [quote]

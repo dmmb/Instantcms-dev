@@ -86,7 +86,7 @@
                             <input type="text" name="title" value="<?php echo $title_part; ?>" style="width:99%"/>
                         </td>
                         <td width="30">
-                            <input type="submit" name="filter" value=">>" style="width:30px"/>
+                            <input type="submit" name="filter" value="&raquo;" style="width:30px"/>
                         </td>
                     </tr>
                 </table>
@@ -106,7 +106,7 @@
                             <?php if ($category_id && sizeof($items)>1){ ?>
                                 <th class="lt_header" width="24">&darr;&uarr;</th>
                             <?php } ?>
-                            <th class="lt_header" align="center" width="65">Действия</th>
+                            <th class="lt_header" align="center" width="90">Действия</th>
                         </tr>
                     </thead>
                     <?php if ($items){ ?>
@@ -152,6 +152,9 @@
                                             </a>
                                             <a title="Редактировать" href="?view=content&do=edit&id=<?php echo $item['id']; ?>">
                                                 <img border="0" hspace="2" alt="Редактировать" src="images/actions/edit.gif"/>
+                                            </a>
+                                            <a title="В архив" href="?view=content&do=arhive_on&id=<?php echo $item['id']; ?>">
+                                                <img border="0" hspace="2" alt="В архив" src="images/actions/arhive_on.gif">
                                             </a>
                                             <a title="Удалить" onclick="jsmsg('Удалить <?php echo $item['title']; ?>?', '?view=content&do=delete&id=<?php echo $item['id']; ?>')" href="#">
                                                 <img border="0" hspace="2" alt="Удалить" src="images/actions/delete.gif"/>

@@ -22,7 +22,7 @@
 
     {if $users_cfg.sw_photo}
     <span class="my_photos">
-        <a href="/users/{$id}/photoalbum.html">{$LANG.USERMENU_PHOTOALBUM}</a>
+        <a href="/users/{$id}/photoalbum.html">{$LANG.USERMENU_PHOTOS}</a>
     </span>
     {/if}
 

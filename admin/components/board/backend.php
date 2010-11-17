@@ -2,7 +2,7 @@
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -16,7 +16,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	cpAddPathway('Доска объявлений', '?view=components&do=config&id='.$_REQUEST['id']);
 	echo '<h3>Доска объявлений</h3>';
-	if (isset($_REQUEST['opt'])) { $opt = $inCore->request('opt', 'str'); } else { $opt = 'config'; }
+	if (isset($_REQUEST['opt'])) { $opt = $inCore->request('opt', 'str'); } else { $opt = 'list_items'; }
 
     $inUser = cmsUser::getInstance();
 
@@ -45,22 +45,22 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	}
 
 	if ($opt=='list_items' || $opt=='list_cats' || $opt=='config'){
-	
-		$toolmenu[0]['icon'] = 'newfolder.gif';
-		$toolmenu[0]['title'] = 'Новая рубрика';
-		$toolmenu[0]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_cat';
-	
-		$toolmenu[1]['icon'] = 'newform.gif';
-		$toolmenu[1]['title'] = 'Новое объявление';
-		$toolmenu[1]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_item';
 
-		$toolmenu[3]['icon'] = 'folders.gif';
+		$toolmenu[0]['icon'] = 'newstuff.gif';
+		$toolmenu[0]['title'] = 'Новое объявление';
+		$toolmenu[0]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_item';
+	
+		$toolmenu[1]['icon'] = 'newfolder.gif';
+		$toolmenu[1]['title'] = 'Новая рубрика';
+		$toolmenu[1]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_cat';
+	
+		$toolmenu[2]['icon'] = 'liststuff.gif';
+		$toolmenu[2]['title'] = 'Все объявления';
+		$toolmenu[2]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items';
+
+        $toolmenu[3]['icon'] = 'folders.gif';
 		$toolmenu[3]['title'] = 'Все рубрики';
 		$toolmenu[3]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats';
-	
-		$toolmenu[4]['icon'] = 'listforms.gif';
-		$toolmenu[4]['title'] = 'Все объявления';
-		$toolmenu[4]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items';
 
 	}
 	if($opt=='list_items'){
@@ -79,14 +79,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	}
 
-	if ($opt=='list_items' || $opt=='list_cats' || $opt=='config'){
+	if ($opt=='add_cat' || $opt=='add_item' || $opt=='edit_item' || $opt=='edit_cat'){
 
-		$toolmenu[15]['icon'] = 'cancel.gif';
-		$toolmenu[15]['title'] = 'Отмена';
-		$toolmenu[15]['link'] = '?view=components';
-	
-	} else {
-	
 		$toolmenu[20]['icon'] = 'save.gif';
 		$toolmenu[20]['title'] = 'Сохранить';
 		$toolmenu[20]['link'] = 'javascript:document.addform.submit();';
@@ -95,7 +89,16 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$toolmenu[21]['title'] = 'Отмена';
 		$toolmenu[21]['link'] = 'javascript:history.go(-1);';
 	
-	}
+	} else {
+
+        if ($opt!='config'){
+            $toolmenu[40]['icon'] = 'config.gif';
+            $toolmenu[40]['title'] = 'Настройки';
+            $toolmenu[40]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=config';
+
+        }
+
+    }
 
 	cpToolMenu($toolmenu);
 

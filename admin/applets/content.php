@@ -2,7 +2,7 @@
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -160,7 +160,7 @@ function applet_content(){
 			$id = (int)$_REQUEST['id'];
 			$sql = "UPDATE cms_content SET is_arhive = 1 WHERE id = $id";
 			dbQuery($sql) ;
-			header('location:?view=tree');
+			$inCore->redirectBack();
 		}
 	}
 
@@ -581,7 +581,6 @@ function applet_content(){
 
                     <div style="margin-top:7px">
                         <select name="category_id" size="10" id="category_id" style="width:99%;height:200px">
-                            <option value="1" <?php if (@$mod['category_id']==1 || !isset($mod['category_id'])) { echo 'selected'; }?>>-- Корневой раздел --</option>
                             <?php
                                 if (isset($mod['category_id'])){
                                     echo $inCore->getListItemsNS('cms_category', $mod['category_id']);

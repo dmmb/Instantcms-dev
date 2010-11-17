@@ -2,7 +2,7 @@
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -84,9 +84,12 @@ function applet_tree(){
 
         $pages      = ceil($total / $perpage);
 
-        include(TEMPLATE_DIR.'admin/content.php');
-        //$inPage->includeTemplateFile('admin/content.php');
-        
+
+        $tpl_file   = 'admin/content.php';
+        $tpl_dir    = file_exists(TEMPLATE_DIR.$tpl_file) ? TEMPLATE_DIR : DEFAULT_TEMPLATE_DIR;
+
+        include($tpl_dir.$tpl_file);
+
 	}
 
 //============================================================================//    

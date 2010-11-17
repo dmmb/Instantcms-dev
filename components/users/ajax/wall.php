@@ -23,8 +23,7 @@
     $inUser = cmsUser::getInstance();
     if ( !$inUser->update() ) { return; }
 
-    $inCore->loadSmarty();
-	$smarty = new Smarty();
+	$smarty = $inCore->initSmarty();
 
     cmsCore::loadLanguage('lang');
 

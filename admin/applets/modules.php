@@ -2,7 +2,7 @@
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -38,11 +38,13 @@ function applet_modules(){
 		
 		if (!$module_name) { header('location:index.php?view=modules&do=edit&id='.$id); }
 
-        $php_file = 'modules/'.$module_name.'/backend.php';
-        if (file_exists($php_file)){ include $php_file; return; }
-
         $xml_file = PATH.'/admin/modules/'.$module_name.'/backend.xml';
-        if (!file_exists($xml_file)){ $inCore->halt(); }
+        $php_file = 'modules/'.$module_name.'/backend.php';
+
+        if (!file_exists($xml_file)){
+            if (file_exists($php_file)){ include $php_file; return; }
+            $inCore->halt();
+        }
 
         $cfg = $inCore->loadModuleConfig($id);
 
@@ -65,13 +67,13 @@ function applet_modules(){
         $toolmenu[0]['title'] = 'Сохранить';
         $toolmenu[0]['link'] = 'javascript:submitModuleConfig()';
 
-        $toolmenu[1]['icon'] = 'edit.gif';
-        $toolmenu[1]['title'] = 'Редактировать отображение модуля';
-        $toolmenu[1]['link'] = '?view=modules&do=edit&id='.$id;
-
         $toolmenu[2]['icon'] = 'cancel.gif';
         $toolmenu[2]['title'] = 'Отмена';
         $toolmenu[2]['link'] = '?view=modules';
+
+        $toolmenu[1]['icon'] = 'edit.gif';
+        $toolmenu[1]['title'] = 'Редактировать отображение модуля';
+        $toolmenu[1]['link'] = '?view=modules&do=edit&id='.$id;
 
         cpToolMenu($toolmenu);
 
@@ -154,13 +156,13 @@ function applet_modules(){
 		$toolmenu[0]['title'] = 'Добавить модуль';
 		$toolmenu[0]['link'] = '?view=modules&do=add';
 
-		$toolmenu[1]['icon'] = 'install.gif';
-		$toolmenu[1]['title'] = 'Установить модуль';
-		$toolmenu[1]['link'] = '?view=install&do=module';
-
 		$toolmenu[2]['icon'] = 'edit.gif';
 		$toolmenu[2]['title'] = 'Редактировать выбранные';
 		$toolmenu[2]['link'] = "javascript:checkSel('?view=modules&do=edit&multiple=1');";
+
+		$toolmenu[5]['icon'] = 'delete.gif';
+		$toolmenu[5]['title'] = 'Удалить выбранные';
+		$toolmenu[5]['link'] = "javascript:checkSel('?view=modules&do=delete&multiple=1');";
 
 		$toolmenu[3]['icon'] = 'show.gif';
 		$toolmenu[3]['title'] = 'Публиковать выбранные';
@@ -170,17 +172,17 @@ function applet_modules(){
 		$toolmenu[4]['title'] = 'Скрыть выбранные';
 		$toolmenu[4]['link'] = "javascript:checkSel('?view=modules&do=hide&multiple=1');";
 
-		$toolmenu[5]['icon'] = 'delete.gif';
-		$toolmenu[5]['title'] = 'Удалить выбранные';
-		$toolmenu[5]['link'] = "javascript:checkSel('?view=modules&do=delete&multiple=1');";
+		$toolmenu[7]['icon'] = 'autoorder.gif';
+		$toolmenu[7]['title'] = 'Упорядочить модули';
+		$toolmenu[7]['link'] = "?view=modules&do=autoorder";
 
 		$toolmenu[6]['icon'] = 'reorder.gif';
 		$toolmenu[6]['title'] = 'Сохранить порядок модулей';
 		$toolmenu[6]['link'] = "javascript:checkSel('?view=modules&do=saveorder');";
 
-		$toolmenu[7]['icon'] = 'autoorder.gif';
-		$toolmenu[7]['title'] = 'Упорядочить модули';
-		$toolmenu[7]['link'] = "?view=modules&do=autoorder";
+		$toolmenu[1]['icon'] = 'install.gif';
+		$toolmenu[1]['title'] = 'Установить модуль';
+		$toolmenu[1]['link'] = '?view=install&do=module';
 
 		$toolmenu[8]['icon'] = 'help.gif';
 		$toolmenu[8]['title'] = 'Помощь';
@@ -574,19 +576,19 @@ function applet_modules(){
 		$toolmenu[0]['title'] = 'Сохранить';
 		$toolmenu[0]['link'] = 'javascript:document.addform.submit();';
 
+		$toolmenu[2]['icon'] = 'cancel.gif';
+		$toolmenu[2]['title'] = 'Отмена';
+		$toolmenu[2]['link'] = 'javascript:history.go(-1);';
+
 		if(@$mod['is_external']){
 			$php_file = 'modules/'.$mod['content'].'/backend.php';
 			$xml_file = 'modules/'.$mod['content'].'/backend.xml';
 			if (file_exists($php_file) || file_exists($xml_file)){
 				$toolmenu[1]['icon'] = 'config.gif';
 				$toolmenu[1]['title'] = 'Настроить модуль';
-				$toolmenu[1]['link'] = '?view=modules&do=config&id='.$mod['id'];				
-			}		
+				$toolmenu[1]['link'] = '?view=modules&do=config&id='.$mod['id'];
+			}
 		}
-
-		$toolmenu[2]['icon'] = 'cancel.gif';
-		$toolmenu[2]['title'] = 'Отмена';
-		$toolmenu[2]['link'] = 'javascript:history.go(-1);';
 		
 		cpToolMenu($toolmenu);
 

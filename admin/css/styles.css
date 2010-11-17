@@ -451,16 +451,16 @@ div.filter {
 	margin-bottom:4px;
 }
 
-.advert_design, .advert_inshop{
-    height:21px;
-    line-height:21px;
+.advert_inmaps, .advert_inshop{
+    height:32px;
+    line-height:32px;
     padding:1px;
-    padding-left:30px;
-    margin-left:20px;    
+    padding-left:36px;
+    margin-left:15px;
 }
 
-.advert_design{ margin-top:12px; background:url(/admin/images/advert/design.png) no-repeat; }
-.advert_inshop{ margin-top:4px; margin-bottom:12px; background:url(/admin/images/advert/shop.png) no-repeat; }
+.advert_inmaps{ margin-top:8px; background:url(/admin/images/advert/maps.png) no-repeat; }
+.advert_inshop{ margin-top:0px; margin-bottom:8px; background:url(/admin/images/advert/shop.png) no-repeat; }
 
 #catalog_advert{
     padding-left:20px;
@@ -632,3 +632,6 @@ div.filter {
 .act_add_wall_club{ background:url(/templates/_default_/images/icons/actions/add_wall_club.png) no-repeat left 1px; }
 .act_add_post_club{ background:url(/templates/_default_/images/icons/actions/add_post_club.png) no-repeat left 1px; }
 .act_add_user_photo{ background:url(/templates/_default_/images/icons/actions/add_user_photo.png) no-repeat left 1px; }
+.act_add_user_photo_multi{ background:url(/templates/_default_/images/icons/actions/add_user_photo_multi.png) no-repeat left 3px; }
+.add_user{ background:url(/templates/_default_/images/icons/actions/add_user.png) no-repeat left 3px; }
+.add_wall_my{ background:url(/templates/_default_/images/icons/actions/add_wall_my.png) no-repeat left 3px; }
