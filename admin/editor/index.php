@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -28,14 +28,16 @@
 
     $inCore->loadClass('page');         //страница
     $inCore->loadClass('plugin');       //плагины
-    $inCore->loadClass('user');       //плагины
+    $inCore->loadClass('user');       //пользователь
+    $inCore->loadClass('actions');      //лента активности
 
     $inPage     = cmsPage::getInstance();
     $inConf     = cmsConfig::getInstance();
     $inDB       = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
 
-    if ( !$inUser->update() ) { $inCore->redirect('/404'); }
+	$inUser->update();
+    if (!$inUser->id) { cmsCore::error404(); }
     
 	$editor_category_id = editorCheckAuth(); //CHECK AUTHENTICATION
 
@@ -78,7 +80,7 @@ if ($do=='view'){
 	}
 	
 	$perpage = 20;
-	if (isset($_REQUEST['page'])) { $page = abs((int)$_REQUEST['page']); } else { $page = 1; }
+	$page	 = $inCore->request('page',	'int', 1);
 	
 	echo '<div class="title">'.$cat['title'].'</div>';
 	
@@ -297,6 +299,7 @@ if ($do == 'updatecat'){
         $category['parent_id']		= $inCore->request('parent', 'int');
         $category['description']	= $inCore->request('description', 'html');
         $category['description']	= $inDB->escape_string($category['description']);
+        $category['description']    = $inCore->badTagClear($category['description']);
         $category['published'] 		= (int)$_REQUEST['published'];
         $category['showdate'] 		= (int)$_REQUEST['showdate'];
         $category['showcomm'] 		= (int)$_REQUEST['showcomm'];
@@ -338,6 +341,7 @@ if ($do == 'submitcat'){
     $category['parent_id']		= $inCore->request('parent', 'int');
     $category['description']	= $inCore->request('description', 'html');
     $category['description']	= $inDB->escape_string($category['description']);
+	$category['description']    = $inCore->badTagClear($category['description']);
     $category['published'] 		= (int)$_REQUEST['published'];
     $category['showdate'] 		= (int)$_REQUEST['showdate'];
     $category['showcomm'] 		= (int)$_REQUEST['showcomm'];
@@ -349,9 +353,6 @@ if ($do == 'submitcat'){
     $category['showrss'] 		= 1;
     $category['showdesc'] 		= 1;
     $category['is_public'] 		= 0;
-
-    $album = array();
-    $photoalbum = serialize($album);
 
     $ns = $inCore->nestedSetsInit('cms_category');
     $category['id'] = $ns->AddNode($category['parent_id']);
@@ -428,7 +429,6 @@ if ($do=='newdoc' || $do=='editdoc'){
 					  <td valign="top">Раздел:<br />
 					  <span class="hinttext">Куда поместить статью</span></td>
 					  <td valign="top"><select name="category_id" size="8" id="category_id" style="width:250px">
-                        <option value="<?php echo $editor_category_id; ?>" <?php if (@$mod['category_id']==$editor_category_id || !isset($mod['category_id'])) { echo 'selected'; }?>>-- Корневой раздел --</option>
                         <?php
                             if (isset($mod['category_id'])){
 								echo $inCore->getListItemsNS('cms_category', $mod['category_id'], '', '', $editor_category_id);
@@ -505,6 +505,10 @@ if ($do == 'updatedoc'){
 		$doc['title']           = $inCore->request('title', 'str', 'Статья без названия');
 		$doc['description']     = $inCore->request('description', 'html', '');
 		$doc['content']         = $inCore->request('content', 'html', '');
+		$doc['description']	    = $inDB->escape_string($doc['description']);
+		$doc['description']     = $inCore->badTagClear($doc['description']);
+		$doc['content']	        = $inDB->escape_string($doc['content']);
+		$doc['content']         = $inCore->badTagClear($doc['content']);
 		$doc['published']       = $inCore->request('published', 'int', 0);
 		$doc['showdate']        = $inCore->request('showdate', 'int', 1);
 		$doc['comments']        = $inCore->request('comments', 'int', 0);
@@ -538,6 +542,10 @@ if ($do == 'submitdoc'){
     $doc['title']           = $inCore->request('title', 'str', 'Статья без названия');
     $doc['description']     = $inCore->request('description', 'html', '');
     $doc['content']         = $inCore->request('content', 'html', '');
+	$doc['description']	    = $inDB->escape_string($doc['description']);
+	$doc['description']     = $inCore->badTagClear($doc['description']);
+	$doc['content']	        = $inDB->escape_string($doc['content']);
+	$doc['content']         = $inCore->badTagClear($doc['content']);
     $doc['published']       = $inCore->request('published', 'int', 0);
     $doc['showdate']        = $inCore->request('showdate', 'int', 1);
     $doc['comments']        = $inCore->request('comments', 'int', 0);
@@ -546,8 +554,8 @@ if ($do == 'submitdoc'){
     $doc['is_end']          = 0;
     $doc['user_id']         = $inUser->id;
 
-	$doc['meta_desc']       = strip_tags($doc['description']);
-	$doc['meta_keys']       = '';
+    $doc['meta_desc']       = strtolower($doc['title']);
+    $doc['meta_keys']       = $inCore->getKeywords($inCore->strClear($doc['content']));
 		
 	$sql = "INSERT INTO cms_content (category_id, user_id, pubdate, enddate, is_end, title, description, content, published, hits, meta_desc, meta_keys, showtitle, showdate, showlatest, ordering, comments, seolink, canrate)
 			VALUES ({$doc['category_id']}, '{$doc['user_id']}', NOW(), '{$doc['enddate']}', {$doc['is_end']},
@@ -563,6 +571,19 @@ if ($do == 'submitdoc'){
         $model = new cms_model_content();
         $seolink = $model->getSeoLink($doc);
         dbQuery("UPDATE cms_content SET seolink='{$seolink}' WHERE id={$doc['id']}");
+		if ($doc['published']){
+			$doc['category']    = $inDB->get_fields('cms_category', "id='{$doc['category_id']}'", 'title, seolink');
+			//регистрируем событие
+			cmsActions::log('add_article', array(
+				  'object' => $doc['title'],
+				  'object_url' =>  "/{$seolink}.html",
+				  'object_id' =>  $doc['id'],
+				  'target' => $doc['category']['title'],
+				  'target_url' => "/{$doc['category']['seolink']}",
+				  'target_id' =>  $doc['category_id'],
+				  'description' => ''
+			));
+		}
     }
 
 	header('location:index.php?do=view&id='.$doc['category_id']);
@@ -596,8 +617,11 @@ if ($do == 'hidedoc'){
 if ($do == 'deletecat'){
 	if (isset($id)){	
 		if (isset($_GET['confirm'])){
-		 	dbDeleteNS('cms_category', $id);
-			dbQuery("DELETE FROM cms_content WHERE category_id = $id") ;
+            $inCore->loadModel('content');
+            $model = new cms_model_content();
+
+            $model->deleteCategory($id, true);
+
 			header('location:index.php');			
 		} else {	
 			$result = dbQuery("SELECT title FROM cms_category WHERE id = $id");
