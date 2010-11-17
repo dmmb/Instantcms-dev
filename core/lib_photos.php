@@ -10,17 +10,17 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-function albumCreateRoot($user_id, $differ=''){
+function albumCreateRoot($user_id, $differ='', $title=''){
     $inDB = cmsDatabase::getInstance();
     $inCore = cmsCore::getInstance();
 	$ns = $inCore->nestedSetsInit('cms_photo_albums');
 	$album_id = $ns->AddRootNode($differ);
 	
 	$sql = "UPDATE cms_photo_albums
-			SET user_id = $user_id, 
-				title = '-Корневой альбом клуба-',
+			SET user_id = '$user_id', 
+				title = '-Корневой альбом клуба $title-',
 				orderform=0
-			WHERE id = $album_id";
+			WHERE id = '$album_id'";
 	$inDB->query($sql);
 	
 	return $album_id;

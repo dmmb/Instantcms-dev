@@ -118,7 +118,7 @@ class cms_model_clubs{
         $blog_seolink = cmsCore::strToURL($item['title']);
 
         $sql = "INSERT INTO cms_blogs (user_id, title, pubdate, allow_who, view_type, showcats, ownertype, premod, forall, owner, seolink)
-                VALUES ('$club_id', 'Блог', NOW(), 'all', 'list', 1, 'multi', 0, 0, 'club', '$blog_seolink')";
+                VALUES ('$club_id', 'Блог клуба {$item['title']}', NOW(), 'all', 'list', 1, 'multi', 0, 0, 'club', '$blog_seolink')";
         $this->inDB->query($sql);
 
         return $club_id;

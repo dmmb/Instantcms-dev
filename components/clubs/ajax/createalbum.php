@@ -28,7 +28,7 @@
 
 	if (!$title) return;
 
-	$club = dbGetFields('cms_clubs', 'id='.$clubid, '*');
+	$club = $inDB->get_fields('cms_clubs', 'id='.$clubid, '*');
 	$uid  = $inUser->id;
 	
 	if (!($club && $uid)){ echo 'error'; return;  }
