@@ -34,8 +34,7 @@
 	$inCore->loadLanguage('modules/mod_latest');
 
 	// √рузим шаблонизатор
-	$inCore->loadSmarty();
-    $smarty = new Smarty();
+    $smarty = $inCore->initSmarty();
 
 	// ¬ходные данные
 	$page	    = $inCore->request('page', 'int', 1);	
