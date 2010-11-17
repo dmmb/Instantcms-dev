@@ -349,6 +349,7 @@ if($do=='viewphoto'){
 			$smarty->assign('bbcode', '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/photos/medium/'.$photo['file'].'[/IMG]');
 			$smarty->assign('previd', $previd);
 			$smarty->assign('nextid', $nextid);
+			$smarty->assign('cfg', $cfg);
 			$smarty->assign('is_author', $is_author);
 			$smarty->assign('is_admin', $is_admin);
 			$smarty->assign('is_can_operation', $is_can_operation);
