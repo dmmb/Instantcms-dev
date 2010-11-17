@@ -38,11 +38,13 @@ function applet_modules(){
 		
 		if (!$module_name) { header('location:index.php?view=modules&do=edit&id='.$id); }
 
-        $php_file = 'modules/'.$module_name.'/backend.php';
-        if (file_exists($php_file)){ include $php_file; return; }
-
         $xml_file = PATH.'/admin/modules/'.$module_name.'/backend.xml';
-        if (!file_exists($xml_file)){ $inCore->halt(); }
+        $php_file = 'modules/'.$module_name.'/backend.php';
+
+        if (!file_exists($xml_file)){
+            if (file_exists($php_file)){ include $php_file; return; }
+            $inCore->halt();
+        }
 
         $cfg = $inCore->loadModuleConfig($id);
 
