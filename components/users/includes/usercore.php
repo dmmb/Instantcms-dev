@@ -331,8 +331,9 @@ function usrCheckAuth(){
 
 function usrNeedReg(){
     global $_LANG;
+    $inCore = cmsCore::getInstance();
     ob_start();
-	$smarty = cmsCore::initSmarty('components', 'com_error.tpl');
+	$smarty = $inCore->initSmarty('components', 'com_error.tpl');
 	$smarty->assign('err_title', $_LANG['ACCESS_DENIED']);
 	$smarty->assign('err_content', $_LANG['ACCESS_ONLY_REGISTERED']);
 	$smarty->display('com_error.tpl');
@@ -341,8 +342,9 @@ function usrNeedReg(){
 
 function usrFriendOnly(){
     global $_LANG;
+    $inCore = cmsCore::getInstance();
     ob_start();
-	$smarty = cmsCore::initSmarty('components', 'com_error.tpl');
+	$smarty = $inCore->initSmarty('components', 'com_error.tpl');
 	$smarty->assign('err_title', $_LANG['ACCESS_DENIED']);
 	$smarty->assign('err_content', $_LANG['ACCESS_ONLY_FRIENDS']);
 	$smarty->display('com_error.tpl');
@@ -351,8 +353,9 @@ function usrFriendOnly(){
 
 function usrAccessDenied(){
     global $_LANG;
+    $inCore = cmsCore::getInstance();
     ob_start();
-	$smarty = cmsCore::initSmarty('components', 'com_error.tpl');
+	$smarty = $inCore->initSmarty('components', 'com_error.tpl');
 	$smarty->assign('err_title', $_LANG['ACCESS_DENIED']);
 	$smarty->assign('err_content', $_LANG['ACCESS_NEED_AVTOR']);
 	$smarty->display('com_error.tpl');
@@ -361,8 +364,9 @@ function usrAccessDenied(){
 
 function usrNotAllowed(){
     global $_LANG;
+    $inCore = cmsCore::getInstance();
     ob_start();
-	$smarty = cmsCore::initSmarty('components', 'com_error.tpl');
+	$smarty = $inCore->initSmarty('components', 'com_error.tpl');
 	$smarty->assign('err_title', $_LANG['ACCESS_BLOCK']);
 	$smarty->assign('err_content', $_LANG['ACCESS_SECURITY']);
 	$smarty->display('com_error.tpl');

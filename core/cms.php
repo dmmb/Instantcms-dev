@@ -48,6 +48,16 @@ class cmsCore {
         $this->loadClass('db');
         $this->loadClass('config');
 
+        $inConf = cmsConfig::getInstance();
+
+        //проверяем был ли переопределен шаблон через сессию
+        //например, из модуля "выбор шаблона"
+        if ($_SESSION['template']) { $inConf->template = $_SESSION['template']; }
+
+        define('TEMPLATE', $inConf->template);
+        define('TEMPLATE_DIR', PATH.'/templates/'.$inConf->template.'/');
+        define('DEFAULT_TEMPLATE_DIR', PATH.'/templates/_default_/');
+
         //загрузим структуру меню в память
         $this->loadMenuStruct();
 

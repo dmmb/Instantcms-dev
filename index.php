@@ -66,16 +66,6 @@
     //устанавливаем заголовок браузера в название сайта
     $inPage->setTitle( $inConf->sitename );
 
-//////////////////////// ќпредел€ем каталоги шаблонов //////////////////////////
-
-    //провер€ем был ли переопределен шаблон через сессию
-    //например, из модул€ "выбор шаблона"
-    if ($_SESSION['template']) { $inConf->template = $_SESSION['template']; }
-
-    define('TEMPLATE', $inConf->template);
-	define('TEMPLATE_DIR', PATH.'/templates/'.$inConf->template.'/');
-	define('DEFAULT_TEMPLATE_DIR', PATH.'/templates/_default_/');
-
 ////////////////////////// ѕровер€ем, включен ли сайт //////////////////////////
 
     //≈сли сайт выключен и пользователь не администратор,
