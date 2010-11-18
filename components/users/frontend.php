@@ -570,6 +570,9 @@ if ($do=='comments'){
 				$com['fpubdate'] = $inCore->dateFormat($com['pubdate']);
                 $comments[] = $com;
 		}
+
+        $comments = cmsCore::callEvent('GET_COMMENTS', $comments);
+
 		// —читаем общее число комментариев
 		$records_total = $inDB->rows_count('cms_comments', 'user_id = '.$id.' AND published = 1');
 
@@ -629,6 +632,8 @@ if ($do=='forumposts'){
 				$post['date'] = $inCore->dateFormat($post['pubdate']);
 				$posts[] = $post;
 		}
+
+        $posts = cmsCore::callEvent('GET_FORUM_POSTS', $posts);
 
 		$smarty = $inCore->initSmarty('components', 'com_users_forumposts.tpl');
         $smarty->assign('user_id', $id);

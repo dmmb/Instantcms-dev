@@ -487,8 +487,20 @@ if ($do=='thread'){
 					 LIMIT ".(($page-1)*$perpage).", $perpage";
 					 
 			$presult = $inDB->query($psql);
-			if ($inDB->num_rows($presult)){				
+			if ($inDB->num_rows($presult)){
+
 				$num = (($page-1)*$perpage)+1;
+
+                $posts = array();
+
+				while ($p = $inDB->fetch_assoc($presult)){
+                    $p['content'] = $inCore->parseSmiles($p['content'], true);
+                    $p['content'] = str_replace("&amp;", '&', $p['content']);
+                    $posts[] = $p;
+                }
+
+                $posts = cmsCore::callEvent('GET_FORUM_POSTS', $posts);
+
 				//print posts in thread
 				echo $toolbar_pages . $toolbar;
 
@@ -497,7 +509,8 @@ if ($do=='thread'){
 	
 				//THREAD MESSAGES LIST
 				echo '<table class="posts_table" width="100%" cellspacing="2" cellpadding="5" border="0" bordercolor="#999999" >';
-				while ($p = $inDB->fetch_assoc($presult)){
+
+				foreach ($posts as $p){
 					$mypost = $inUser->id ? (@$inUser->id==$p['user_id'] || $is_adm) : false;
 					$user_messages = forumUserMsgNum($p['uid']);
 					echo '<tr>';
@@ -553,12 +566,7 @@ if ($do=='thread'){
                             
 							echo '</td></tr></table>';
                             
-							//message text							
-							$msg = $p['content'];
-							$msg = $inCore->parseSmiles($msg, true);	
-							$msg = str_replace("&amp;", '&', $msg);
-                            
-							echo '<div class="post_content">'.$msg.'</div>';
+							echo '<div class="post_content">'.$p['content'].'</div>';
 													
 							if ($cfg['fa_on']){
 								echo forumAttachedFiles($p['id'], $mypost, @$cfg['showimg']);

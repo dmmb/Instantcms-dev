@@ -102,7 +102,8 @@ class cmsActions {
 
 		$params['object']      =  $inDB->escape_string(stripslashes(str_replace('\r\n', ' ', $params['object'])));
 		$params['target']      =  $inDB->escape_string(stripslashes(str_replace('\r\n', ' ', $params['target'])));
-		$params['description'] =  $inDB->escape_string(stripslashes(str_replace('\r\n', ' ', $params['description'])));
+        $params['description'] =  preg_replace('/\[hide\](.*?)\[\/hide\]/i', '', $params['description']);
+        $params['description'] =  $inDB->escape_string(stripslashes(str_replace('\r\n', ' ', $params['description'])));
 		$params['user_id']     =  $params['user_id'] ? $params['user_id'] : $inUser->id;
 		
         $sql = "INSERT INTO cms_actions_log (action_id, pubdate, user_id, object, object_url, object_id,
