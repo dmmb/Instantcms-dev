@@ -14,6 +14,7 @@ function getCaretPos(obj) {
 function replaceSelectedText(obj,cbFunc,s_open, s_close){
 	obj.focus();
 	if (document.selection) {
+        console.log('selection');
 		var s = document.selection.createRange(); 
 		if (s.text) {
 			eval("s.text="+cbFunc+"(s.text,s_open, s_close);");
@@ -21,15 +22,15 @@ function replaceSelectedText(obj,cbFunc,s_open, s_close){
 			return true;
 		}
 	} else if (typeof(obj.selectionStart)=="number") {
-		if (obj.selectionStart!=obj.selectionEnd) {
-			var start = obj.selectionStart;
-			var end = obj.selectionEnd;
-			eval("var rs = "+cbFunc+"(obj.value.substr(start,end-start),s_open, s_close);");
-			obj.value = obj.value.substr(0,start)+rs+obj.value.substr(end);
-			obj.setSelectionRange(end,end);
-		}
+        var start = obj.selectionStart;
+        var end = obj.selectionEnd;
+        eval("var rs = "+cbFunc+"(obj.value.substr(start,end-start),s_open, s_close);");
+        obj.value = obj.value.substr(0,start)+rs+obj.value.substr(end);
+        obj.setSelectionRange(end,end);
 		return true;
-	}
+	} else {
+        
+    }
 	return false;
 }
 
