@@ -52,6 +52,7 @@
 	if (!isset($cfg['min_karma'])) { $cfg['min_karma'] = 0; }
 	if (!isset($cfg['min_karma_add'])) { $cfg['min_karma_add'] = 0; }
 	if (!isset($cfg['min_karma_show'])) { $cfg['min_karma_show'] = 0; }
+    if(!isset($cfg['max_level'])) { $cfg['max_level']=5;	}
 
     $target     = $inCore->request('target', 'str');
     $target_id  = $inCore->request('target_id', 'int');

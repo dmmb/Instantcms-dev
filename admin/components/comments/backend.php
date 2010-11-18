@@ -63,6 +63,7 @@ function cpStripComment($text){
 		$cfg['j_code'] 			= (int)$_REQUEST['j_code'];
 		$cfg['cmm_ajax'] 		= (int)$_REQUEST['cmm_ajax'];
 		$cfg['cmm_ip'] 		    = (int)$_REQUEST['cmm_ip'];
+		$cfg['max_level'] 		= (int)$_REQUEST['max_level'];
 			
 		$inCore->saveComponentConfig('comments', $cfg);
         
@@ -243,6 +244,7 @@ function cpStripComment($text){
 	if(!isset($cfg['j_code'])) { 			$cfg['j_code']=1;	}
 	if(!isset($cfg['cmm_ajax'])) { 			$cfg['cmm_ajax']=0;	}
 	if(!isset($cfg['cmm_ip'])) { 			$cfg['cmm_ip']=1;	}
+	if(!isset($cfg['max_level'])) { 		$cfg['max_level']=5;	}
 
 	cpAddPathway('Настройки', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config');	
 	echo '<h3>Настройки комментариев</h3>';
@@ -299,7 +301,11 @@ function cpStripComment($text){
             <td valign="top"><a href="/includes/letters/newcomment.txt">/includes/letters/newcomment.txt</a></td>
           </tr>
           <tr>
-            <td valign="top"><strong>Количество комментариев на страницы при просмотре всех комментариев сайта:</strong></td>
+            <td valign="top"><strong>Максимальный уровень вложенности:</strong></td>
+            <td valign="top"><input name="max_level" type="text" id="max_level" value="<?php echo @$cfg['max_level'];?>" size="3" /></td>
+          </tr>
+          <tr>
+            <td valign="top"><strong>Количество комментариев на странице при просмотре всех комментариев сайта:</strong></td>
             <td valign="top"><input name="perpage" type="text" id="perpage" value="<?php echo @$cfg['perpage'];?>" size="3" /></td>
           </tr>
           <tr>

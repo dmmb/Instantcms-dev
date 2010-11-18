@@ -30,6 +30,7 @@ function comments($target='', $target_id=0){
 	if (!isset($cfg['min_karma_show'])) { $cfg['min_karma_show'] = 0; }
 	if(!isset($cfg['j_code'])) { $cfg['j_code']=1;	}
 	if(!isset($cfg['cmm_ajax'])) { $cfg['cmm_ajax']=0;	}
+    if(!isset($cfg['max_level'])) { $cfg['max_level']=5;	}
 
     //Определяем адрес для редиректа назад
     $back   = $inCore->getBackURL();

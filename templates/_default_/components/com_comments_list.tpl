@@ -4,9 +4,13 @@
 
 {if $comments_count}
 	{foreach key=cid item=comment from=$comments}
-        {math equation="x+1" x=$cid assign="next"}
+        {math equation="x+1" x=$cid assign="next"}        
 		<a name="c{$comment.id}"></a>
-        <div style="margin-left:{math equation="x*35" x=$comment.level}px;">
+        {if $comment.level < $cfg.max_level-1}
+            <div style="margin-left:{math equation="x*35" x=$comment.level}px;">
+        {else}
+            <div style="margin-left:{math equation="(x-1)*35" x=$cfg.max_level}px;">
+        {/if}
         <table class="cmm_entry">
 			<tr>
 				<td class="cmm_title" valign="middle">
