@@ -11,7 +11,7 @@
 /*********************************************************************************************/
 
     Error_Reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
-    setlocale(LC_ALL, 'ru');
+    setlocale(LC_ALL, 'ru_RU.CP1251');
 
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
     define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
