@@ -3509,5 +3509,5 @@ table.feed td.date strong { color:green; }
 .act_add_post_club{ background:url(../images/icons/actions/add_post_club.png) no-repeat left 3px; }
 .act_add_user_photo{ background:url(../images/icons/actions/add_user_photo.png) no-repeat left 3px; }
 .act_add_user_photo_multi{ background:url(../images/icons/actions/add_user_photo_multi.png) no-repeat left 3px; }
-.add_user{ background:url(../images/icons/actions/add_user.png) no-repeat left 3px; }
-.add_wall_my{ background:url(../images/icons/actions/add_wall_my.png) no-repeat left 3px; }
+.act_add_user{ background:url(../images/icons/actions/add_user.png) no-repeat left 3px; }
+.act_add_wall_my{ background:url(../images/icons/actions/add_wall_my.png) no-repeat left 3px; }
