@@ -24,6 +24,7 @@ class p_hidetext extends cmsPlugin {
         $this->events[]                 = 'GET_BEST_POSTS';
         $this->events[]                 = 'GET_COMMENTS';
         $this->events[]                 = 'GET_FORUM_POSTS';
+        $this->events[]                 = 'GET_WALL_POSTS';
 
     }
 
@@ -70,6 +71,7 @@ class p_hidetext extends cmsPlugin {
             case 'GET_BEST_POSTS': $item = $this->eventGetPosts($item); break;
             case 'GET_COMMENTS': $item = $this->eventGetComments($item); break;
             case 'GET_FORUM_POSTS': $item = $this->eventGetComments($item); break;
+            case 'GET_WALL_POSTS': $item = $this->eventGetComments($item); break;
         }
 
         return $item;

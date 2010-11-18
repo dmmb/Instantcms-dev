@@ -873,6 +873,8 @@ class cmsUser {
                 $records[]          = $record;
             }
 
+            $records = cmsCore::callEvent('GET_WALL_POSTS', $records);
+
             if ($pages>1){
                 $pagebar = cmsPage::getPagebar($total, $page, $perpage, 'javascript:wallPage(%page%)');
             }
