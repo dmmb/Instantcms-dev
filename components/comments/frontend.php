@@ -23,6 +23,8 @@ function comments($target='', $target_id=0){
 
     //Загружаем настройки компонента
 	$cfg = $inCore->loadComponentConfig('comments');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { return false; }
     if (!isset($cfg['bbcode'])) { $cfg['bbcode'] = 1; }
     if (!isset($cfg['regcap'])) { $cfg['regcap'] = 1; }
 	if (!isset($cfg['min_karma'])) { $cfg['min_karma'] = 0; }

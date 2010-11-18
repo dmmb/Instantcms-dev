@@ -85,6 +85,8 @@ function board(){
     $inUser     = cmsUser::getInstance();
 
 	$cfg        = $inCore->loadComponentConfig('board');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     global $_LANG;
 

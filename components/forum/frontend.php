@@ -141,6 +141,8 @@ function forum(){
     $inUser     = cmsUser::getInstance();
 
 	$cfg = $inCore->loadComponentConfig('forum');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     $inCore->loadModel('forum');
     $model = new cms_model_forum();

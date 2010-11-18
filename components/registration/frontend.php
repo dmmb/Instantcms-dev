@@ -55,6 +55,8 @@ function registration(){
     global $_LANG;
 
     $cfg = $inCore->loadComponentConfig('registration');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     //config defaults
     if (!isset($cfg['name_mode'])) { $cfg['name_mode'] = 'nickname'; }

@@ -69,6 +69,8 @@ function price(){
     $inDB   = cmsDatabase::getInstance();
     global $_LANG;
 	$cfg    = $inCore->loadComponentConfig('price');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 	
 	$id     =   $inCore->request('id', 'int', 0);
 	$do     =   $inCore->request('do', 'str', 'view');

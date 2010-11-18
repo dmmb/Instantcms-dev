@@ -89,6 +89,8 @@ function users(){
     $model = new cms_model_users();
 
     $cfg = $inCore->loadComponentConfig('users');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
     $inCore->loadLanguage('components/users');
 
     if (!isset($cfg['showgroup'])) { $cfg['showgroup']  = 0; }

@@ -48,6 +48,8 @@
 /*********************************************************************************************/
 
     $cfg = $inCore->loadComponentConfig('comments');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { return false; }
     if (!isset($cfg['bbcode'])) { $cfg['bbcode'] = 1; }
 	if (!isset($cfg['min_karma'])) { $cfg['min_karma'] = 0; }
 	if (!isset($cfg['min_karma_add'])) { $cfg['min_karma_add'] = 0; }

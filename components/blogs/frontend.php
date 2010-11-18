@@ -35,6 +35,8 @@ function blogs(){
 		
 	//Загрузка настроек блогов
 	$cfg = $inCore->loadComponentConfig('blogs');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 	
 	//Значения настроек по-умолчанию
 	$cfg['fa_ext'] = 'gif jpeg jpg png bmp';		

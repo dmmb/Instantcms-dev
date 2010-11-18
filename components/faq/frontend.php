@@ -24,6 +24,8 @@ function faq(){
 	global $_LANG;
 	
 	$cfg = $inCore->loadComponentConfig('faq');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     if(!isset($cfg['user_link'])) { $cfg['user_link'] = 1; }
     if(!isset($cfg['publish'])) { $cfg['publish'] = 0; }

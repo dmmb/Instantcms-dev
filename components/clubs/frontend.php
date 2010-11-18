@@ -34,6 +34,8 @@ function clubs(){
 
 	//LOAD CONFIG
 	$cfg = $inCore->loadComponentConfig('clubs');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 	
 	//SOME DEFAULT CONFIG VALUES
 	if(!isset($cfg['seo_club'])) { $cfg['seo_club'] = 'title'; }

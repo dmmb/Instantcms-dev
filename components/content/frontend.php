@@ -24,6 +24,8 @@ function content(){
     $inCore->loadLib('content');
 
 	$cfg = $inCore->loadComponentConfig('content');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     $inCore->loadModel('content');
     $model = new cms_model_content();
