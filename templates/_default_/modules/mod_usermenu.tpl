@@ -1,7 +1,7 @@
 <div class="mod_user_menu">
 
     <span class="my_profile">
-        <a href="{profile_url login=$login}">{$LANG.USERMENU_MY_PROFILE}</a>
+        <a href="{profile_url login=$login}">{$nickname}</a>
     </span>
 
     {if $users_cfg.sw_msg}
@@ -26,7 +26,7 @@
     </span>
     {/if}
 
-    {if $is_can_add}
+    {if $is_can_add && !$is_admin}
     <span class="my_content">
         <a href="/content/my.html">{$LANG.USERMENU_ARTICLES}</a>
     </span>

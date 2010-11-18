@@ -124,7 +124,7 @@
 								{/if}
                                 <tr>
                                     <td><img src="/templates/_default_/images/icons/profile/edit.png" border="0"/></td>
-                                    <td><a href="/users/{$usr.id}/editprofile.html" title="{$LANG.CONFIG_PROFILE}">{$LANG.CONFIG_PROFILE}</a></td>
+                                    <td><a href="/users/{$usr.id}/editprofile.html" title="{$LANG.CONFIG_PROFILE}">{$LANG.MY_CONFIG}</a></td>
                                 </tr>
                             {/if}
                             {if $is_admin && !$myprofile}

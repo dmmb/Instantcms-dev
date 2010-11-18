@@ -455,7 +455,15 @@ span.fast_cfg_link img{ border:none; }
     background:#FFF;
     padding:1px;
     border:solid 1px #6E93C9;
+}
 
+.mod_latest_pagebar .pagebar{
+    margin-top:25px !important;
+    margin-bottom:10px !important;
+}
+
+.mod_latest_pagebar .pagebar .pagebar_title{
+    margin-left:0px;
 }
 
 /*-------------------------- REGISTRATION FORM -------------------------------*/
@@ -1152,7 +1160,7 @@ a.tag:hover{
 .mod_user_menu .add_content a{ background:url(../images/icons/add.png) no-repeat 6px center; }
 .mod_user_menu .admin a{ background:url(../images/icons/cpanel.png) no-repeat 6px center; }
 .mod_user_menu .logout a{ background:url(../images/icons/logout.png) no-repeat 6px center; }
-.mod_user_menu .register a{ background:url(../images/icons/add.png) no-repeat 6px center; }
+.mod_user_menu .register a{ background:url(../images/icons/register.png) no-repeat 6px center; }
 .mod_user_menu .login a{ background:url(../images/icons/key.png) no-repeat 6px center; }
 
 .usr_msgmenu_bar{
@@ -1192,7 +1200,7 @@ a.tag:hover{
 }
 .usr_msg_bbcodebox{
 	padding:0px;
-	background:url(../images/bbtoolbar.jpg) repeat-x left bottom #FFF;
+	background:url(../images/bbtoolbar.jpg) left bottom #FFF;
 	border:solid 1px #666;
     border-bottom:none;
 	overflow:hidden;
@@ -1211,7 +1219,7 @@ a.tag:hover{
     border: solid 1px #83BBD9;
 	padding:6px;
 	float:left;
-	background:url(../images/bbbtn.jpg) repeat-x left bottom #FFF;
+	background:url(../images/bbbtn.jpg) repeat-x left bottom #DFF2F9;
 }
 .usr_bb_hint{
 	display:block;

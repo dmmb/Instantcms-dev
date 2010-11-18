@@ -45,6 +45,7 @@ $_LANG['PASS_SHORT']                ='Пароль должен быть не менее 6 символов!';
 $_LANG['PASS_CHANGED']              ='Пароль успешно изменен.';
 
 $_LANG['CONFIG_PROFILE']            ='Настройки профиля';
+$_LANG['MY_CONFIG']                 ='Мои настройки';
 $_LANG['COMMENTS']                  ='Комментарии';
 $_LANG['NO_USER_COMMENT']           ='Пользователь не оставлял комментарии.';
 
@@ -277,7 +278,7 @@ $_LANG['STOP_FRIENDLY']             ='Прекратить дружбу';
 
 $_LANG['TO_BANN']                   ='Забанить';
 $_LANG['DEL_PROFILE']               ='Удалить профиль';
-$_LANG['SET_AVATAR']                ='Установить аватар';
+$_LANG['SET_AVATAR']                ='Изменить аватар';
 $_LANG['USERS_PHOTOS_PUBLIC_ALBUMS']='Фотографии пользователя в общих альбомах';
 $_LANG['ALL_PHOTOS']                ='Все фотографии';
 $_LANG['NOT_PHOTOS']                ='Нет доступных фотографий.';
