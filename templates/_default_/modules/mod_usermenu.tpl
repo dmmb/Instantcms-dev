@@ -30,6 +30,10 @@
     <span class="my_content">
         <a href="/content/my.html">{$LANG.USERMENU_ARTICLES}</a>
     </span>
+
+    <span class="add_content">
+        <a href="/content/add.html">{$LANG.USERMENU_ADD_ARTICLE}</a>
+    </span>
     {/if}
 
     {if $is_admin || $is_editor}
