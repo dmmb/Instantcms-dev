@@ -787,7 +787,7 @@ if ($do=='profile'){
     $usr['fregdate'] 			= $inCore->dateFormat($usr['fregdate']);
     $usr['birthdate'] 			= $inCore->dateFormat($usr['birthdate']);
 
-    $usr['profile_link']        = cmsUser::getProfileURL($usr['login']);
+    $usr['profile_link']        = HOST . cmsUser::getProfileURL($usr['login']);
 
     $usr['genderimg']			= '';
     if ($usr['gender']) {
@@ -1665,6 +1665,7 @@ if ($do=='friendlist'){
 
    	$smarty->assign('friends', $friends);
 	$smarty->assign('usr', $usr);
+	$smarty->assign('myprofile', ($id == $inUser->id));
 	$smarty->assign('total', $total);
 	$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/users/%user_id%/friendlist%page%.html', array('user_id'=>$id)));
 		
@@ -1717,7 +1718,7 @@ if ($do=='viewphoto'){
 					
 				$smarty = $inCore->initSmarty('components', 'com_users_photos_view.tpl');
 				$smarty->assign('photo', $photo);
-				$smarty->assign('bbcode', '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/users/photos/medium/'.$photo['imageurl'].'[/IMG]');
+				$smarty->assign('bbcode', '[IMG]'.HOST.'/images/users/photos/medium/'.$photo['imageurl'].'[/IMG]');
 				$smarty->assign('previd', $previd);
 				$smarty->assign('nextid', $nextid);
 				$smarty->assign('usr', $usr);
@@ -1757,8 +1758,9 @@ if ($do=='addfriend'){
 					cmsCore::addSessionMessage($_LANG['ADD_FRIEND_OK'] . $usr['nickname'], 'info');
 					//регистрируем событие
 					cmsActions::log('add_friend', array(
-						'object' => $usr['nickname'],
-						'object_url' => cmsUser::getProfileURL($usr['login']),
+						'object' => $inUser->nickname,
+						'user_id' => $usr['id'],
+						'object_url' => cmsUser::getProfileURL($inUser->login),
 						'object_id' => $fr_id,
 						'target' => '',
 						'target_url' => '',
@@ -2240,7 +2242,7 @@ if ($do=='files'){
 				//build file list rows
 				$files = array();
 				while($file = $inDB->fetch_assoc($result)){
-						$file['filelink'] = 'http://'.$_SERVER['HTTP_HOST'].'/users/files/download'.$file['id'].'.html';
+						$file['filelink'] = HOST.'/users/files/download'.$file['id'].'.html';
 						if ($rownum % 2) { $file['class'] = 'usr_list_row1'; } else { $file['class'] = 'usr_list_row2'; }
 						$file['fileicon'] 	= $inCore->fileIcon($file['filename']);
 						$file['mb'] 		= round(($file['filesize']/1024)/1024, 2);if ($mb == '0') { $mb = '~ 0'; }
