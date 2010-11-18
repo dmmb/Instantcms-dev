@@ -797,10 +797,10 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 					//регистрируем событие
 					cmsActions::log('add_fpost', array(
 						'object' => 'пост',
-						'object_url' => '/forum/thread'.$id.'.html#'.$lastid,
+						'object_url' => '/forum/thread-last'.$id.'.html#'.$lastid,
 						'object_id' => $lastid,
 						'target' => $title,
-						'target_url' => '/forum/thread'.$id.'.html',
+						'target_url' => '/forum/thread-last'.$id.'.html',
 						'target_id' => $id, 
 						'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
 					));		
