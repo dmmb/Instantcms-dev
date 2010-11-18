@@ -59,6 +59,10 @@ a:hover { color:#375E93; }
     color:#375E93;
 }
 
+.hinttext{
+    color:#5F98BF;
+}
+
 /***************************** Шапка страницы *********************************/
 
 #header{
@@ -565,6 +569,12 @@ span.fast_cfg_link img{ border:none; }
 	color:#375E93;
     margin: 0px;
 	margin-bottom: 5px;
+}
+h3 {
+	font-size: 18px;
+    font-weight:normal;
+	color:#375E93;
+    margin: 15px 0px;
 }
 .con_pubdate{
 	color:#666666;
