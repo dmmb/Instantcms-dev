@@ -62,6 +62,7 @@
 			$_CFG['tooltips']   = '1';
 			$_CFG['index_pw']   = '0';
 			$_CFG['show_pw']    = '1';
+			$_CFG['short_pw']   = '1';
 			$_CFG['splash']     = '0';
 			$_CFG['stats']      = '0';
 			$_CFG['slight']     = '0';

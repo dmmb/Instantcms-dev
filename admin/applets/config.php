@@ -64,6 +64,7 @@ function applet_config(){
 		$newCFG['db_pass'] 		= $_CFG['db_pass'];
 		$newCFG['db_prefix']	= $_CFG['db_prefix'];
 		$newCFG['show_pw']		= $inCore->request('show_pw', 'int');
+		$newCFG['short_pw']		= $inCore->request('short_pw', 'int');
 		$newCFG['index_pw']		= $inCore->request('index_pw', 'int');
 		$newCFG['fastcfg']		= $inCore->request('fastcfg', 'int');
 		
@@ -395,6 +396,13 @@ function applet_config(){
 					<td>
 						<input name="index_pw" type="radio" value="1" <?php if (@$_CFG['index_pw']) { echo 'checked="checked"'; } ?>/> Да
 						<input name="index_pw" type="radio" value="0" <?php if (@!$_CFG['index_pw']) { echo 'checked="checked"'; } ?>/>	Нет 
+					</td>
+				</tr>
+				<tr>
+					<td><strong>Выводить текущую страницу в глубиномере:</strong></td>
+					<td>
+						<input name="short_pw" type="radio" value="0" <?php if (!$_CFG['index_pw']) { echo 'checked="checked"'; } ?>/> Да
+						<input name="short_pw" type="radio" value="1" <?php if ($_CFG['index_pw']) { echo 'checked="checked"'; } ?>/> Нет
 					</td>
 				</tr>
 			</table>

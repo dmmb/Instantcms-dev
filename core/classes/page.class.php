@@ -240,18 +240,24 @@ public function printBody(){
  */
 public function printPathway($separator='&rarr;'){
 
-    //Проверяем, на главной мы или нет
-    require($_SERVER['DOCUMENT_ROOT'].'/includes/config.inc.php');
-    if (($GLOBALS['menuid']==1 && !$_CFG['index_pw']) || !$_CFG['show_pw']) { return false; }
+    $inCore = cmsCore::getInstance();
+    $inConf = cmsConfig::getInstance();
 
-    echo '<div class="pathway">';
-    foreach($this->pathway as $key => $value){
-        echo '<a href="'.$this->pathway[$key]['link'].'" class="pathwaylink">'.$this->pathway[$key]['title'].'</a> ';
-        if ($key<sizeof($this->pathway)-1) {
-            echo ' '.$separator.' ';
+    //Проверяем, на главной мы или нет
+    if (($inCore->menuId()==1 && !$inConf->index_pw) || !$inConf->show_pw) { return false; }
+
+    if ($inConf->short_pw){ unset($this->pathway[sizeof($this->pathway)-1]); }
+    
+    if (is_array($this->pathway)){
+        echo '<div class="pathway">';
+        foreach($this->pathway as $key => $value){
+            echo '<a href="'.$this->pathway[$key]['link'].'" class="pathwaylink">'.$this->pathway[$key]['title'].'</a> ';
+            if ($key<sizeof($this->pathway)-1) {
+                echo ' '.$separator.' ';
+            }
         }
+        echo '</div>';
     }
-    echo '</div>';
 
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
