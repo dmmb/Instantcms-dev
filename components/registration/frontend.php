@@ -391,7 +391,7 @@ function registration(){
 
                     $inUser->dropStatTimer();
 
-                    cmsUser::updateStats($user['id']);
+                    //cmsUser::updateStats($user['id']);
 
                     $first_time_auth = ($user['logdate']=='0000-00-00 00:00:00' || intval($user['logdate']==0));
 

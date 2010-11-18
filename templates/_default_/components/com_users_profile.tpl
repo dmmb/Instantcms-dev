@@ -81,7 +81,7 @@
                                 </tr>
 							{/if}
 
-                            {if !$myprofile && $cfg.sw_friends}
+                            {if !$myprofile}
                             	{if !$usr.isfriend}
                                     <tr>
                                         {if !$usr.isfriend_not_add}
@@ -180,7 +180,7 @@
 			<div id="profiletabs">
 				<ul id="tabs"> 
 					<li><a href="#upr_profile"><span>{$LANG.PROFILE}</span></a></li>
-					{if $myprofile && $cfg.sw_feed && $cfg.sw_friends}
+					{if $myprofile && $cfg.sw_feed}
 						<li><a href="#upr_feed"><span>{$LANG.FEED}</span></a></li>
 					{/if}
 					{if $cfg.sw_clubs}
@@ -354,7 +354,7 @@
                             </div>
                         {/if}
 
-                        {if $usr.friends_total && $cfg.sw_friends}
+                        {if $usr.friends_total}
                             <div class="usr_friends_block usr_profile_block">
                                 {if $usr.friends_total > 6}
                                     <div class="float_bar">
@@ -368,7 +368,22 @@
                                         {$LANG.MY_FRIENDS}
                                     {/if}
                                 </div>
-                                {$usr.friends}
+                                {assign var="col" value="1"}
+                                <table width="" cellpadding="5" cellspacing="0" border="0" class="usr_friends_list" align="left">
+                                  {foreach key=tid item=friend from=$usr.friends}
+                                  {if $col==1}<tr>{/if}
+                                            <td align="center" valign="top">
+                                                <div class="usr_friend_cell">
+                                                    <div align="center"><a class="friend_link" href="{profile_url login=$friend.login}">{$friend.nickname}</a></div>
+                                                    <div align="center"><a href="{profile_url login=$friend.login}">{$friend.avatar}</a></div>
+                                                    <div align="center">{$friend.flogdate}</div>
+                                                </div>
+                                            </td>
+                                              
+                                      {if $col==6} </tr> {assign var="col" value="1"} {else} {math equation="x + 1" x=$col assign="col"} {/if}
+                                  {/foreach}
+                                  {if $col>1}<td colspan="{math equation="x - y + 1" x=$col y=$maxcols}">&nbsp;</td></tr>{/if}
+                                </table>
                             </div>
                         {/if}
 
@@ -390,7 +405,7 @@
 				</div>
 				
 				{* ============================== «¿ À¿ƒ ¿ π2 ============================================== *}
-				{if $myprofile && $cfg.sw_feed && $cfg.sw_friends}
+				{if $myprofile && $cfg.sw_feed}
 					<div id="upr_feed">
                        {if $usr.actions}
                             <div class="actions_list">

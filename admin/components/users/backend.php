@@ -43,7 +43,6 @@ if (!isset($cfg['karmatime'])) { $cfg['karmatime'] = 3; }
 if (!isset($cfg['karmaint']))  { $cfg['karmaint'] = 'HOUR'; }
 
 if (!isset($cfg['sw_feed'])) { $cfg['sw_feed'] = 1; }
-if (!isset($cfg['sw_content'])) { $cfg['sw_content'] = 1; }
 if (!isset($cfg['sw_awards'])) { $cfg['sw_awards'] = 1; }
 
 if (!isset($cfg['smallw'])) { $cfg['smallw'] = 64; }
@@ -55,18 +54,14 @@ if(!isset($cfg['deltime'])) { $cfg['deltime']=6;	}
 
 if($opt=='saveconfig'){	
     $cfg = array();
-    $cfg['showgroup']   = $_REQUEST['showgroup'];
-    $cfg['sw_stats']    = $_REQUEST['sw_stats'];
     $cfg['sw_comm']     = $_REQUEST['sw_comm'];
     $cfg['sw_search']   = $_REQUEST['sw_search'];
     $cfg['sw_forum']    = $_REQUEST['sw_forum'];
     $cfg['sw_photo']    = $_REQUEST['sw_photo'];
     $cfg['sw_wall']     = $_REQUEST['sw_wall'];
-    $cfg['sw_friends']  = $_REQUEST['sw_friends'];
     $cfg['sw_blogs']    = $_REQUEST['sw_blogs'];
     $cfg['sw_clubs']    = $_REQUEST['sw_clubs'];
     $cfg['sw_feed']     = $_REQUEST['sw_feed'];
-    $cfg['sw_content']  = $_REQUEST['sw_content'];
     $cfg['sw_awards']   = $_REQUEST['sw_awards'];
     $cfg['sw_board']    = $_REQUEST['sw_board'];
     $cfg['sw_msg']      = $_REQUEST['sw_msg'];
