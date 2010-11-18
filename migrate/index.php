@@ -80,7 +80,7 @@
         echo '<div class="migrate">'; include "step{$step}.php"; echo '</div>';
 
         if ($step < $steps_count){
-            echo '<div class="nextlink"><a href="?step='.($step+1).'>Далее &rarr;</a></div>';
+            echo '<div class="nextlink"><a href="?step='.($step+1).'">Далее &rarr;</a></div>';
         } else {
             //COMPLETED
             echo '<p><strong>Создайте задание для CRON!</strong></p>';

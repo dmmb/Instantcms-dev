@@ -2647,7 +2647,9 @@ if ($do=='votekarma'){
 		if ($record_id && $my_id){
 			
 				if ($usertype=='user'){
-					$can_delete = $inDB->get_field('cms_user_wall', "id = '$record_id' AND (user_id = '$my_id' OR author_id = '$my_id')", 'author_id');
+					$can_delete = $inDB->get_fields('cms_user_wall', "id = '$record_id' AND (user_id = '$my_id' OR author_id = '$my_id')", 'author_id, user_id');
+					$author_id     = $can_delete['author_id'];
+					$wall_user_id  = $can_delete['user_id'];
 				}
                 elseif ($usertype=='club'){
 					$inCore->loadLib('clubs');
@@ -2661,7 +2663,7 @@ if ($do=='votekarma'){
 				if ($can_delete || $inCore->userIsAdmin( $my_id )){
 					$inDB->query("DELETE FROM cms_user_wall WHERE id = '$record_id' LIMIT 1");
 					switch ($usertype){
-						case 'user': ($can_delete == $my_id) ? cmsActions::removeObjectLog('add_wall_my', $record_id) : cmsActions::removeObjectLog('add_wall', $record_id); break;
+						case 'user': ($author_id == $my_id && $wall_user_id == $my_id) ? cmsActions::removeObjectLog('add_wall_my', $record_id) : cmsActions::removeObjectLog('add_wall', $record_id); break;
 						case 'club': cmsActions::removeObjectLog('add_wall_club', $record_id); break;
 					}
 				}
