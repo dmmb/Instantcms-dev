@@ -1,17 +1,30 @@
 <?php
 
-    if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
-
 	session_start();
 
-	if (!isset($_REQUEST['user_id'])) { die(1); } else { $user_id = intval($_REQUEST['user_id']); }
+	define("VALID_CMS", 1);
+    define('PATH', $_SERVER['DOCUMENT_ROOT']);
+    define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
 
-	define("VALID_CMS", 1);	
-	include($_SERVER['DOCUMENT_ROOT'].'/includes/config.inc.php');
-	include($_SERVER['DOCUMENT_ROOT'].'/includes/database.inc.php');
-	include($_SERVER['DOCUMENT_ROOT'].'/core/cms.php');
+	include(PATH.'/core/cms.php');
+    $inCore = cmsCore::getInstance();
 
-	$last_ip = dbGetField('cms_users', 'id='.$user_id, 'last_ip');
+    $inCore->loadClass('config'); 
+	$inCore->loadClass('db');
+	$inCore->loadClass('page');
+    $inCore->loadClass('user');
+
+    $inUser = cmsUser::getInstance();
+	$inDB   = cmsDatabase::getInstance();
+
+	$inUser->update();
+    if (!$inUser->id) { $inCore->halt(); }
+
+    $user_id = $inCore->request('user_id', 'int');
+
+    if (!$user_id) return;
+
+	$last_ip = $inDB->get_field('cms_users', "id = '$user_id'", 'last_ip');
 	
 	echo $last_ip;
     

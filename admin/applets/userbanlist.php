@@ -95,12 +95,12 @@ function applet_userbanlist(){
 	
 	if ($do == 'submit'){	
 		$user_id = $_REQUEST['user_id'];
-		$ip = trim($_REQUEST['ip']);
+		$ip      = trim($_REQUEST['ip']);
 		
 		if (isset($_REQUEST['forever'])){ $forever = true; } else { $forever = false; }
 		if (isset($_REQUEST['autodelete'])){ $autodelete = 1; } else { $autodelete = 0; }
 
-		$int_num = $_REQUEST['int_num'];
+		$int_num    = $_REQUEST['int_num'];
 		$int_period = $_REQUEST['int_period'];
 		
 		if ($forever) { $int_num = 0; }
@@ -109,7 +109,7 @@ function applet_userbanlist(){
 				
 		if (!$ip){	$error = 'Нужно указать IP-адрес!';	}		
 		if ($ip == $_SERVER['REMOTE_ADDR'] || $user_id == $inUser->id){ $error = 'IP-адрес совпадает с вашим!';	}
-		
+
 		if($inCore->userIsAdmin($user_id)){
 			$error = 'Нельзя забанить администратора!';
 		}
@@ -182,7 +182,7 @@ function applet_userbanlist(){
    
 		if ($do=='add'){
 			 echo '<h3>Добавить в бан-лист</h3>';
- 	 		 cpAddPathway('Добавить в бан-лист', 'index.php?view=usergroups&do=add');
+ 	 		 cpAddPathway('Добавить в бан-лист', 'index.php?view=userbanlist&do=add');
 		} else {
 					 if(isset($_REQUEST['multiple'])){				 
 						if (isset($_REQUEST['item'])){					
