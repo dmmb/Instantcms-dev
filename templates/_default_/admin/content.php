@@ -18,8 +18,17 @@
                 <?php } ?>
                 </div>
             </div>
+            <div class="cat_link">
+                <div>
+                <?php if ($category_id != 1) { ?>
+                    <a href="<?php echo $base_uri.'&cat_id=1'; ?>" style="font-weight:bold">Корневой раздел</a>
+                <?php } else { $current_cat = 'Корневой раздел'; ?>
+                    Корневой раздел
+                <?php } ?>
+                </div>
+            </div>
             <?php foreach($cats as $num=>$cat) { ?>
-                <div style="padding-left:<?php echo ($cat['NSLevel']-1)*20; ?>px" class="cat_link">
+                <div style="padding-left:<?php echo ($cat['NSLevel'])*20; ?>px" class="cat_link">
                     <div>
                         <?php if ($category_id != $cat['id']) { ?>
                             <a href="<?php echo $base_uri.'&cat_id='.$cat['id']; ?>" style="<?php if ($cat['NSLevel']==1){ echo 'font-weight:bold'; } ?>"><?php echo $cat['title']; ?></a>
@@ -52,7 +61,7 @@
                                 <a title="Добавить статью" href="?view=content&do=add<?php if($category_id){ ?>&to=<?php echo $category_id; } ?>">
                                     <img border="0" hspace="2" alt="Добавить статью" src="images/actions/add.gif"/>
                                 </a>
-                                <?php if($category_id){ ?>
+                                <?php if($category_id>1){ ?>
                                     <a title="Редактировать раздел" href="?view=cats&do=edit&id=<?php echo $category_id; ?>">
                                         <img border="0" hspace="2" alt="Редактировать раздел" src="images/actions/edit.gif"/>
                                     </a>
@@ -187,6 +196,7 @@
                                 </td>
                                 <td class="sel_move" style="display:none">
                                     <select id="move_cat_id" style="width:250px">
+                                        <option value="1">Корневой раздел</option>
                                         <?php
                                            echo $inCore->getListItemsNS('cms_category', $category_id);
                                         ?>
