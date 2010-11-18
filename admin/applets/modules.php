@@ -475,26 +475,37 @@ function applet_modules(){
 		}
 		
 		if ($operate == 'clone'){ //DUPLICATE MODULE
+
 			$mod_id     = $inCore->request('clone_id', 'int', 0);
 					
 			$sql        = "SELECT * FROM cms_modules WHERE id = $mod_id LIMIT 1";
 			$result     = dbQuery($sql) ;
 			$original   = mysql_fetch_assoc($result);
 
-			$sql = "INSERT INTO cms_modules (id, position, name, title, is_external, content, ordering, showtitle, published, user, config, css_prefix)
-					VALUES ('', 
-							'".$position."', 
-							'".$original['name']."', 
-							'".$title."', 
-							".$original['is_external'].", 
-							'".$original['content']."', 
-							$maxorder, 
-							".$showtitle.", 
-							0,
-							".$original['user'].",
-							'".$original['config']."',
-							'$css_prefix')";
-			dbQuery($sql) ;					
+			$sql = "INSERT INTO cms_modules (position, name, title, is_external,
+                                             content, ordering, showtitle, published,
+                                             original, user, config, css_prefix, template,
+                                             allow_group, is_strict_bind,
+                                             cache, cachetime, cacheint)
+					VALUES (
+							'{$position}',
+							'{$original['name']}',
+							'{$title}',
+							'{$original['is_external']}',
+							'{$original['content']}',
+							'{$maxorder}',
+							'{$showtitle}',
+							'{$published}',
+							'0',
+							'{$original['user']}',
+							'{$original['config']}',
+							'$css_prefix',
+                            '{$template}',
+                            '{$allow_group}',
+                            '{$is_strict_bind}', 
+                            0, 24, 'HOUR'
+                            )";
+			dbQuery($sql);
 						
 			if ($inCore->request('del_orig', 'int', 0)){
 				$sql = "DELETE FROM cms_modules WHERE id = $mod_id";

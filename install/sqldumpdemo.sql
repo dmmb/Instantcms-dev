@@ -847,7 +847,6 @@ INSERT INTO `#__modules` (`id`, `position`, `name`, `title`, `is_external`, `con
 (65, 'sidebar', 'Популярное в блогах', 'Популярное в блогах', 1, 'mod_bestblogs', 3, 1, 1, 0, '---\nnamemode: blog\nshownum: 10\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
 (66, 'header', 'Меню пользователя', 'Меню пользователя', 1, 'mod_usermenu', 1, 0, 1, 0, '---\navatar: 1\nshowtype: text\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
 (67, 'bottom', 'Последние вопросы FAQ', 'Последние вопросы FAQ', 1, 'mod_latest_faq', 33, 1, 0, 0, '---\nnewscount: 5\nmaxlen: 140\ncat_id: \n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(68, 'top', 'Горизонтальное меню', 'Горизонтальное меню', 1, 'mod_hmenu', 2, 0, 0, 0, '---\nmenu: mainmenu\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
 (69, 'top', 'Популярные статьи', 'Популярные статьи', 1, 'mod_bestcontent', 3, 1, 0, 0, '---\nshownum: 4\nmenuid: 21\nshowlink: 1\nshowdesc: 1\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
 (70, 'sidebar', 'Поиск пользователей', 'Поиск пользователей', 1, 'mod_usersearch', 4, 1, 0, 0, '---\ncat_id: \nsource: \nmenuid: 15\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
 (71, 'top', 'Новые объявления', 'Новые объявления', 1, 'mod_latestboard', 1, 1, 1, 0, '---\nshownum: 10\nshowcity: 1\ncat_id: -1\nsubs: 1\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
