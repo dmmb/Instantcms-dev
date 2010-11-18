@@ -12,7 +12,7 @@
 
         <param type="list" name="view_type" title="Показывать как">
             <option title="С аватарами" value="table" />
-            <option title="Списоком" value="list" />
+            <option title="Списком" value="list" />
         </param>
 
     </params>
