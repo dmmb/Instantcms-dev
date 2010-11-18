@@ -18,7 +18,9 @@ function usersClubByID($id){
     return($b);
 }
 
-$cfg = $inCore->loadComponentConfig('clubs');
+    $inDB = cmsDatabase::getInstance();
+
+    $cfg = $inCore->loadComponentConfig('clubs');
 
     if(!isset($cfg['enabled_blogs'])) { $cfg['enabled_blogs'] = 1; }
     if(!isset($cfg['enabled_photos'])) { $cfg['enabled_photos'] = 1; }
