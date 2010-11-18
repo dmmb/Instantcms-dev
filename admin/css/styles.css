@@ -142,10 +142,14 @@ a:hover{
 	display:block;
 	width:32px;
 	height:32px;
-	background-color:#FFFFFF;
+	background:#FFF;
 	padding:4px;
 	margin-right:2px;
-	border: 1px solid #CCC;
+    border-color:#8E9CAE #DFE5EC #DFE5EC #8E9CAE;
+    border-style:solid;
+    border-width:1px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 h3{
 	padding:8px;
