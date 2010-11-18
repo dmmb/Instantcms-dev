@@ -43,6 +43,7 @@ function cpStripComment($text){
 	$cfg = $inCore->loadComponentConfig('comments');
     $inCore->loadModel('comments');
     $model = new cms_model_comments();
+	$inDB  = cmsDatabase::getInstance();
 
 	if($opt=='saveconfig'){	
 		$cfg = array();
@@ -98,6 +99,7 @@ function cpStripComment($text){
 			$pubdate   = $inCore->request('pubdate', 'str');
 			$published = $inCore->request('published', 'int');
 			$content   = $inCore->request('content', 'html');
+			$content   = $inDB->escape_string($content);
 						
 			$sql = "UPDATE cms_comments
 					SET guestname = '$guestname',
@@ -204,18 +206,11 @@ function cpStripComment($text){
                 Нет</label></td>
           </tr>
         </table>
-        <div class="usr_msg_bbcodebox" style="width:660px">
-            <?php
-                $GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="/core/js/smiles.js"></script>';
-                echo cmsPage::getBBCodeToolbar('content', false);
-            ?>
-        </div>
-        <div style="width:660px;">
-            <?php
-                echo cmsPage::getSmilesPanel('content');
-            ?>
-        </div>
-        <textarea id="content" name="content" style="width:650px;height:200px"><?php echo $mod['content']; ?></textarea>
+                <?php
+
+                    $inCore->insertEditor('content', $mod['content'], '250', '100%');
+                
+                ?>
         <p>
           <label>
           <input name="add_mod" type="submit" id="add_mod" value="Сохранить изменения"/>
