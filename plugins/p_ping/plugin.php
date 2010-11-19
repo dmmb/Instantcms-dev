@@ -99,24 +99,34 @@ class p_ping extends cmsPlugin {
         $siteName = $inConf->sitename;
         $siteURL  = 'http://'.$_SERVER['HTTP_HOST'].'/';
 
+        $result   = array();
+
         //
         // Яндекс.Блоги
         //
-        $pingClient = new IXR_Client($this->config['Yandex HOST'], $this->config['Yandex PATH']);
+        if ($this->config['Yandex HOST']){
 
-        // Посылаем запрос
-        if ($pingClient->query('weblogUpdates.ping', $siteName, $siteURL, $pageURL)) {
-            $result[] = 'Отправлен ping Яндексу';
+            $pingClient = new IXR_Client($this->config['Yandex HOST'], $this->config['Yandex PATH']);
+
+            // Посылаем запрос
+            if ($pingClient->query('weblogUpdates.ping', $siteName, $siteURL, $pageURL)) {
+                $result[] = 'Отправлен ping Яндексу';
+            }
+
         }
 
         //
         // Google
         //
-        $pingClient = new IXR_Client($this->config['Google HOST'], $this->config['Google PATH']);
+        if($this->config['Google HOST']){
 
-        // Посылаем запрос
-        if ($pingClient->query('weblogUpdates.extendedPing', $siteName, $siteURL, $pageURL, $feedURL)) {
-            $result[] = 'Отправлен ping Google';
+            $pingClient = new IXR_Client($this->config['Google HOST'], $this->config['Google PATH']);
+
+            // Посылаем запрос
+            if ($pingClient->query('weblogUpdates.extendedPing', $siteName, $siteURL, $pageURL, $feedURL)) {
+                $result[] = 'Отправлен ping Google';
+            }
+
         }
 
         $_SESSION['ping_result'] = $result;
