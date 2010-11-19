@@ -331,8 +331,8 @@ if ($do == 'config'){
                                         'join_karma_limit'=>$join_karma_limit
                                     ));
 
-        $moders 		= $_POST['moderslist'] ? $_POST['moderslist'] : array();
-        $members 		= $_POST['memberslist'] ? $_POST['memberslist'] : array();
+        $moders 		= $inCore->request('moderslist', 'array_int', array());
+        $members 		= $inCore->request('memberslist', 'array_int', array());
 
         if ($moders) { if (array_search($admin_id, $moders)) { unset($moders[array_search($admin_id, $moders)]); }	}
         if ($members) { if (array_search($admin_id, $members)) { unset($members[array_search($admin_id, $members)]); }	}
@@ -374,24 +374,15 @@ if ($do == 'config'){
 		foreach($friends as $friend){ 
 			$friends_ids[] = $friend['id'];
 		}
+		// формируем список друзья не в клубе + участники клуба
 		$fr_members = array_merge($club_users_list, $friends_ids);
+		// Проверяем наличие друга или участников клуба в списке модераторов
+		$fr_members = array_diff($fr_members, $moderators);
 		// Формируем список option друзей (которые еще не в этом клубе) и участников
 		if ($fr_members) { $fr_members_list = cmsUser::getAuthorsList($fr_members); } else { $fr_members_list = ''; }
-
-
-
-
-
-
-
-
-
-
-
+		// Формируем список option участников клуба
         if ($moderators) { $moders_list = cmsUser::getAuthorsList($moderators); } else { $moders_list = ''; }
-        if ($members) { $members_list = cmsUser::getAuthorsList($members); } else { $members_list = ''; }
-
-        if (array_search($user_nick, $userslist)) { unset($userslist[array_search($user_nick, $userslist)]); }
+        if ($club_users_list) { $members_list = cmsUser::getAuthorsList($club_users_list); } else { $members_list = ''; }
 
         $club['blog_id'] = clubBlogId($id);
 

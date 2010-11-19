@@ -636,13 +636,12 @@ class cmsUser {
 
         $sql = "SELECT id, nickname FROM cms_users WHERE ";
 
-        $a = 1;
-        foreach($authors as $key=>$id){
-            if ($a == 1) { $sql .= 'id = '.$id; }
-            else {
-                $sql .= ' OR id = '.$id;
-            }
-            $a++;
+		$a_list = rtrim(implode(',', $authors), ',');
+
+        if ($a_list){
+            $sql .= "id IN ({$a_list})";
+        } else {
+            $sql .= '1=0';
         }
 
         $rs = $inDB->query($sql);
