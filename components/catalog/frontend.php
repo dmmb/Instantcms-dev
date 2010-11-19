@@ -1022,7 +1022,7 @@ function catalog(){
         if ($opt=='add'){ 
 		
 				$item_id = $model->addItem($item);
-				if (!$cfg['premod'] && !$cfg['premod_msg']) {
+				if (!$cfg['premod'] || $inUser->is_admin) {
 					//регистрируем событие
 					cmsActions::log('add_catalog', array(
 						'object' => $item['title'],
