@@ -347,18 +347,49 @@ if ($do == 'config'){
         
         if ( !(clubUserIsAdmin($id, $user_id) || $inCore->userIsAdmin($user_id)) ){ return; }
 
-        //show config form
+        // Заголовки и пафвей
         $inPage->addPathway($club['title'], '/clubs/'.$id);
         $inPage->addPathway($_LANG['CONFIG_CLUB']);
         $inPage->setTitle($_LANG['CONFIG_CLUB']);
 
-        $moderators     = clubModerators($id);
-        $members        = clubMembers($id);
+		// Получаем список друзей владельца клуба
+		$friends     	 = cmsUser::getFriends($club['admin_id']);
+		// Получаем участников клуба, без учета администратора
+        $moderators      = clubModerators($id);
+        $members         = clubMembers($id);
+        $club_users_list = array_merge($moderators, $members);
+		// Проверяем наличие друга в списке участников клуба или является ли он администратором
+		foreach($friends as $key=>$friend){ 
+			if (in_array($friend['id'], $club_users_list) || $friend['id'] == $club['admin_id']) { unset($friends[$key]); }
+		}
+		// Формируем список option друзей, если они есть
+		if ($_SESSION['user']['friends'] && $friends) { 
+			foreach($friends as $friend){ 
+				$friends_list .= '<option value="'.$friend['id'].'">'.$friend['nickname'].'</option>';
+			}		
+		}
+		// Формируем массив id друзей для мержа с участниками клуба
+		// массив друзей берется с уже отфильтрованными участниками
+		$friends_ids = array();
+		foreach($friends as $friend){ 
+			$friends_ids[] = $friend['id'];
+		}
+		$fr_members = array_merge($club_users_list, $friends_ids);
+		// Формируем список option друзей (которые еще не в этом клубе) и участников
+		if ($fr_members) { $fr_members_list = cmsUser::getAuthorsList($fr_members); } else { $fr_members_list = ''; }
+
+
+
+
+
+
+
+
+
+
 
         if ($moderators) { $moders_list = cmsUser::getAuthorsList($moderators); } else { $moders_list = ''; }
         if ($members) { $members_list = cmsUser::getAuthorsList($members); } else { $members_list = ''; }
-        
-        $userslist      = cmsUser::getUsersList(false, array_merge($moderators, $members, array($user_id)));
 
         if (array_search($user_nick, $userslist)) { unset($userslist[array_search($user_nick, $userslist)]); }
 
@@ -378,7 +409,8 @@ if ($do == 'config'){
         $smarty->assign('club', $club);
         $smarty->assign('moders_list', $moders_list);
         $smarty->assign('members_list', $members_list);
-        $smarty->assign('users_list', $userslist);
+        $smarty->assign('friends_list', $friends_list);
+		$smarty->assign('fr_members_list', $fr_members_list);
         $smarty->display('com_clubs_config.tpl');
 
     }
