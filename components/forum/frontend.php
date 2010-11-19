@@ -763,8 +763,9 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 			echo '</form>';
 			
 		} else {
-			$message = $inCore->request('message', 'html');
-            $message = $inDB->escape_string($message);
+			$message_post = $inCore->request('message', 'html');
+            $message = $inDB->escape_string($message_post);
+			$message = $inCore->badTagClear($message);
 			if (!$message) { echo '<p>'.$_LANG['NEED_TEXT_POST'].'</p>'; return; }
 
 			if($do=='newpost'){												
@@ -797,6 +798,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 				if (!$file_error){
 					$title = $inDB->get_field('cms_forum_threads', "id = '$id'", 'title');	
 					//регистрируем событие
+					$message_post = $inCore->parseSmiles($message_post, true);
 					cmsActions::log('add_fpost', array(
 						'object' => 'пост',
 						'object_url' => '/forum/thread'.$id.'.html#'.$lastid,
@@ -804,7 +806,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 						'target' => $title,
 						'target_url' => '/forum/thread'.$id.'.html',
 						'target_id' => $id, 
-						'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
+						'description' => strip_tags( strlen(strip_tags($message_post))>100 ? substr($message_post, 0, 100) : $message_post )
 					));		
 					$posts_in_thread = $inDB->rows_count('cms_forum_posts', 'thread_id='.$id);
 					$pages = ceil($posts_in_thread / $cfg['pp_thread']);
