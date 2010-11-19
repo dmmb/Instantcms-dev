@@ -243,7 +243,18 @@ function registration(){
                         sendActivationNotice($send_pass, $new_user_id);
                         $inPage->includeTemplateFile('special/regactivate.php');
                         $inCore->halt();
-                    } else {                        
+                    } else {
+						// Регистрируем событие
+						cmsActions::log('add_user', array(
+							'object' => '',
+							'user_id' => $new_user_id,
+							'object_url' => '',
+							'object_id' => $new_user_id,
+							'target' => '',
+							'target_url' => '',
+							'target_id' => 0,
+							'description' => ''
+						));                  
                         $inPage->includeTemplateFile('special/regcomplete.php');
 
                         if ($cfg['send_greetmsg']){ $model->sendGreetsMessage($new_user_id, $cfg['greetmsg']); }
@@ -445,6 +456,18 @@ function registration(){
             cmsCore::callEvent('USER_ACTIVATED', $user_id);
 
             if ($cfg['send_greetmsg']){ $model->sendGreetsMessage($user_id, $cfg['greetmsg']); }
+			
+			// Регистрируем событие
+			cmsActions::log('add_user', array(
+					'object' => '',
+					'user_id' => $user_id,
+					'object_url' => '',
+					'object_id' => $user_id,
+					'target' => '',
+					'target_url' => '',
+					'target_id' => 0,
+					'description' => ''
+			));   
 
             $inPage->includeTemplateFile('special/regcomplete.php');
             $inCore->halt();

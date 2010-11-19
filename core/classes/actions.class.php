@@ -94,7 +94,7 @@ class cmsActions {
         $inDB = cmsDatabase::getInstance();
         $inUser = cmsUser::getInstance();
 
-        if (!$inUser->id){ return false; }
+        if (!$inUser->id && $action_name != 'add_user'){ return false; }
 
         $action = self::getAction($action_name);
 
