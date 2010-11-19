@@ -105,9 +105,7 @@ class p_ping extends cmsPlugin {
         $pingClient = new IXR_Client($this->config['Yandex HOST'], $this->config['Yandex PATH']);
 
         // Посылаем запрос
-        if (!$pingClient->query('weblogUpdates.ping', $siteName, $siteURL, $pageURL)) {
-            $result[] = 'Ошибка ping-запроса: [' . $pingClient->getErrorCode().'] '.$pingClient->getErrorMessage();
-        } else {
+        if ($pingClient->query('weblogUpdates.ping', $siteName, $siteURL, $pageURL)) {
             $result[] = 'Отправлен ping Яндексу';
         }
 
@@ -117,9 +115,7 @@ class p_ping extends cmsPlugin {
         $pingClient = new IXR_Client($this->config['Google HOST'], $this->config['Google PATH']);
 
         // Посылаем запрос
-        if (!$pingClient->query('weblogUpdates.extendedPing', $siteName, $siteURL, $pageURL, $feedURL)) {
-            $result[] = 'Ошибка ping-запроса: [' . $pingClient->getErrorCode().'] '.$pingClient->getErrorMessage();
-        } else {
+        if ($pingClient->query('weblogUpdates.extendedPing', $siteName, $siteURL, $pageURL, $feedURL)) {
             $result[] = 'Отправлен ping Google';
         }
 
