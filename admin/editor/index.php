@@ -87,7 +87,6 @@ if ($do=='view'){
 	echo '<div class="desc">';
 		echo '<a href="?do=editcat&id='.$id.'" class="toollink">Редактировать раздел</a>';
 		if (!$root){
-			echo ' | <a href="?do=deletecat&id='.$id.'" class="toollink">Удалить раздел</a>';
 			echo ' | <a href="index.php" class="toollink">Назад</a>';			
 		}
 	echo '</div>';
@@ -612,32 +611,6 @@ if ($do == 'hidedoc'){
 		dbQuery("UPDATE cms_content SET published = 0 WHERE id = $id");
 	}
 	header('location:'.$_SERVER['HTTP_REFERER']);
-}
-/*********************************************************************************************/
-if ($do == 'deletecat'){
-	if (isset($id)){	
-		if (isset($_GET['confirm'])){
-            $inCore->loadModel('content');
-            $model = new cms_model_content();
-
-            $model->deleteCategory($id, true);
-
-			header('location:index.php');			
-		} else {	
-			$result = dbQuery("SELECT title FROM cms_category WHERE id = $id");
-			$data = mysql_fetch_assoc($result);
-			
-			//MENU
-			$GLOBALS['ed_menu'][0]['link'] = 'javascript:window.history.go(-1)';
-			$GLOBALS['ed_menu'][0]['title'] = 'Отмена';	
-
-			$GLOBALS['ed_page_title'] = 'Удаление подраздела';
-			
-			echo '<div class="title">Удаление подраздела</div>';		
-			echo '<p style="margin-bottom:30px">Вы действительно хотите удалить подраздел "'.$data['title'].'"?</p>';		
-			echo '<a href="?do=deletecat&id='.$id.'&confirm=yes" class="btnlink">ДА</a><a href="javascript:window.history.go(-1)" class="btnlink">НЕТ</a>';		
-		}	
-	}
 }
 /*********************************************************************************************/
 if ($do == 'deletedoc'){
