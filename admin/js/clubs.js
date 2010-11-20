@@ -20,7 +20,7 @@ $().ready(function() {
             opt     = user.pop();
             opt2    = $(opt).clone();
             $(opt).remove().appendTo('#userslist1');
-            $(opt2).remove().appendTo('#userslist2');
+            $(opt2).remove();
         }
 
   });  
@@ -48,12 +48,24 @@ $().ready(function() {
             user.push(this);
         });
 
+        var user_id = new Array;
+
+        $('#memberslist option:selected').each(function () {
+            user_id.push(this.value);
+        });
+
         while (user.length){
             opt     = user.pop();
             opt2    = $(opt).clone();
             $(opt).remove().appendTo('#userslist1');
             $(opt2).remove().appendTo('#userslist2');
         }
+
+        while (user_id.length){
+            id = user_id.pop();
+            $('#moderslist option[@value='+id+']').remove();
+        }
+
   });
 
   $('#member_add').click(function() {
@@ -65,11 +77,6 @@ $().ready(function() {
         });
 
    		$('#userslist2 option:selected').remove().appendTo('#memberslist');       
-
-        while (user_id.length){
-            id = user_id.pop();
-            $('#userslist1 option[@value='+id+']').remove();
-        }
 
   });  
  

@@ -270,6 +270,7 @@ if ($do == 'config'){
 
     if (!$user_id){ return; }
     if (!$club){ return; }
+	if ( !(clubUserIsAdmin($id, $user_id) || $inCore->userIsAdmin($user_id)) ){ return; }
 
     if ( $inCore->inRequest('save') ){
         //save to database
@@ -292,11 +293,15 @@ if ($do == 'config'){
         //upload logo
         if ($_FILES['picture']['name']){
             $inCore->includeGraphics();
-            $uploaddir = PATH.'/images/clubs/';
+			
+			$uploaddir = PATH.'/images/clubs/';	
+			if (!is_dir($uploaddir)) { @mkdir($uploaddir); }
+			@chmod($uploaddir, 0755);
 
-            if (!is_dir($uploaddir)) { @mkdir($uploaddir); }
-
-            @chmod($uploaddir, 0755);
+			$realfile   = $_FILES['picture']['name'];
+			$path_parts = pathinfo($realfile);
+			$ext        = strtolower($path_parts['extension']);
+			if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'png' && $ext != 'bmp') { cmsCore::error404(); }
 
             $filename       = md5($id . $user_id . time()).'.jpg';
             $uploadphoto    = $uploaddir . $filename;
@@ -307,7 +312,6 @@ if ($do == 'config'){
 						@unlink(PATH.'/images/clubs/'.$club['imageurl']);
 						@unlink(PATH.'/images/clubs/small/'.$club['imageurl']);
 					}
-                    if(!isset($cfg['watermark'])) { $cfg['watermark'] = 0; }
                     @img_resize($uploadphoto, $uploadthumb, $cfg['thumb1'], $cfg['thumb1'], $cfg['thumbsqr']);
                     @img_resize($uploadphoto, $uploadphoto, $cfg['thumb2'], $cfg['thumb2'], $cfg['thumbsqr']);
             } else {
@@ -331,21 +335,21 @@ if ($do == 'config'){
                                         'join_karma_limit'=>$join_karma_limit
                                     ));
 
-        $moders 		= $inCore->request('moderslist', 'array_int', array());
-        $members 		= $inCore->request('memberslist', 'array_int', array());
+        $moders  = $inCore->request('moderslist', 'array_int', array());
+        $members = $inCore->request('memberslist', 'array_int', array());
 
         if ($moders) { if (array_search($admin_id, $moders)) { unset($moders[array_search($admin_id, $moders)]); }	}
         if ($members) { if (array_search($admin_id, $members)) { unset($members[array_search($admin_id, $members)]); }	}
 
         clubSaveUsers($id, $members, 'member', $clubtype, $cfg);
         clubSaveUsers($id, $moders, 'moderator', $clubtype, $cfg);
+		
+		cmsCore::addSessionMessage($_LANG['CONFIG_SAVE_OK'], 'info');
 
         $inCore->redirect('/clubs/'.$id);
     }
 
     if ( !$inCore->inRequest('save') ){
-        
-        if ( !(clubUserIsAdmin($id, $user_id) || $inCore->userIsAdmin($user_id)) ){ return; }
 
         // Заголовки и пафвей
         $inPage->addPathway($club['title'], '/clubs/'.$id);
@@ -420,6 +424,8 @@ if ($do == 'leave'){
     $inPage->addPathway($club['title'], '/clubs/'.$id);
     $inPage->addPathway($_LANG['EXIT_FROM_CLUB']);
 	$inPage->setTitle($_LANG['EXIT_FROM_CLUB']);
+	
+	if (!clubUserIsMember($id, $user_id)){ return; }
 
     if ( $inCore->inRequest('confirm') ){
         clubRemoveUser($id, $user_id);
@@ -429,7 +435,6 @@ if ($do == 'leave'){
     }
 
     if ( !$inCore->inRequest('confirm') ){
-        if (!clubUserIsMember($id, $user_id)){ return; }
 
         $inPage->setTitle($_LANG['EXIT_FROM_CLUB']);
 		$inPage->backButton(false);
@@ -481,7 +486,7 @@ if ($do == 'join'){
 
         $inPage->setTitle($_LANG['JOINING_CLUB']);
 
-        $min_karma = $club['join_min_karma'];
+        $min_karma  = $club['join_min_karma'];
         $user_karma = cmsUser::getKarma($user_id);
 
         if(($user_karma >= $min_karma) || !$club['join_karma_limit']){
