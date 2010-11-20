@@ -36,10 +36,6 @@ function applet_arhive(){
 		$toolmenu[1]['title'] = 'Удалить выбранные';
 		$toolmenu[1]['link'] = "javascript:checkSel('?view=arhive&do=delete&multiple=1');";
 
-		$toolmenu[2]['icon'] = 'help.gif';
-		$toolmenu[2]['title'] = 'Помощь';
-		$toolmenu[2]['link'] = "?view=help&topic=menu";
-
 		cpToolMenu($toolmenu);
 
 		//TABLE COLUMNS
