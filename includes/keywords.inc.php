@@ -115,9 +115,9 @@ class autokeyword {
 		$content = strip_tags($content);
 
 		$punctuations = array(',', ')', '(', '.', "'", '"',
-		'<', '>', ';', '!', '?', '/', '-',
+		'<', '>', '!', '?', '/', '-',
 		'_', '[', ']', ':', '+', '=', '#',
-		'$', '&quot;', '&copy;', '&gt;', '&lt;', '&laquo;', '&laquo', '&raquo',
+		'$', '&quot;', '&copy;', '&gt;', '&lt;', '&laquo;', '&laquo', '&raquo', ';',
 		chr(10), chr(13), chr(9));
 
 		$content = str_replace($punctuations, " ", $content);
