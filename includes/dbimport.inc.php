@@ -13,7 +13,7 @@
 				while(!feof($sqlfile)){
 					$str = fgets($sqlfile);
 					$str = str_replace("#_", $db_pref, $str);
-					if(!ereg('^--', $str)) {
+					if(!preg_match('/^\-\-(.*)$/i', $str)) {
 						if (   strstr($str, 'SET ') ||
                                 strstr($str, 'CREATE TABLE') ||
                                 strstr($str, 'INSERT INTO') ||
