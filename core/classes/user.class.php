@@ -49,17 +49,17 @@ class cmsUser {
 
         $inCore = cmsCore::getInstance();
 
-        $user_id    = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : 0;
+        $user_id = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : 0;
 
         if (!$user_id){
-            $this->id   = 0;
-			$this->ip   = $_SERVER['REMOTE_ADDR'];
+            $this->id       = 0;
+			$this->ip       = $_SERVER['REMOTE_ADDR'];
             $this->is_admin = 0;
             $this->group_id = self::getGuestGroupId();
             return true;
         }
 
-        $info       =   $this->loadUser($user_id);
+        $info = $this->loadUser($user_id);
 
         if (!$info){ return false; }
 
@@ -67,7 +67,16 @@ class cmsUser {
             $this->{$key}   = $value;
         }
 
-        $this->id           = (int)$user_id;
+        $avatar_dir     = PATH . '/images/users/avatars/small/';
+        $avatar_path    = $avatar_dir . $this->imageurl;
+
+        if (!$this->imageurl) {
+            $this->imageurl = 'nopic.jpg';
+        } elseif (!file_exists($avatar_path)){
+            $this->imageurl = 'nopic.jpg';
+        }
+
+        $this->id = (int)$user_id;
 
         $this->checkBan();
 
@@ -88,9 +97,12 @@ class cmsUser {
         $inDB       = cmsDatabase::getInstance();
         $inCore     = cmsCore::getInstance();
 
-        $sql    = "SELECT u.*, g.is_admin is_admin
+        $sql    = "SELECT u.*, 
+                          g.is_admin as is_admin,
+                          p.imageurl as imageurl
                    FROM cms_users u
 				   INNER JOIN cms_user_groups g ON g.id = u.group_id
+                   JOIN cms_user_profiles p ON p.user_id = u.id
                    WHERE u.id='$user_id' AND u.is_deleted = 0 AND u.is_locked = 0 LIMIT 1";
 
         $result = $inDB->query($sql);

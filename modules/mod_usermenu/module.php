@@ -13,25 +13,26 @@
         $inCore     = cmsCore::getInstance();
         $inDB       = cmsDatabase::getInstance();
         $inUser     = cmsUser::getInstance();
-		$cfg        = $inCore->loadModuleConfig($module_id);
-	
-        $users_cfg  = $inCore->loadComponentConfig('users');
 						
-		//logged user menu
 		if (!$inUser->id){ return false; }
 
-        //activate profiles support
-         if (!function_exists('usrBlog')){ //if not included earlier
-                $inCore->includeFile('components/users/includes/usercore.php');
-            }
+        $cfg            = $inCore->loadModuleConfig($module_id);
+        $users_cfg      = $inCore->loadComponentConfig('users');
+        $cfg['avatar']  = 1;
+
+        if (!function_exists('usrBlog')){
+            $inCore->includeFile('components/users/includes/usercore.php');
+        }
 
         $newmsg     = cmsUser::isNewMessages($inUser->id);
 
         $blog       = usrBlog($inUser->id);
 
         $blog_href  = ($blog['id']) ? '/blogs/'.$blog['seolink'] : '/blogs/createblog.html';
+        $avatar     = '<img src="/images/users/avatars/small/'.$inUser->imageurl.'" />';
 
         $smarty = $inCore->initSmarty('modules', 'mod_usermenu.tpl');
+        $smarty->assign('avatar', $avatar);
         $smarty->assign('nickname', $inUser->nickname);
         $smarty->assign('login', $inUser->login);
         $smarty->assign('id', $inUser->id);
