@@ -1160,7 +1160,7 @@ class cmsUser {
         
         $inDB = cmsDatabase::getInstance();
 
-        $message = $inDB->escape_string(stripslashes(str_replace('\r\n', ' ', $message)));
+        $message = $inDB->escape_string(stripslashes(str_replace(array('\r', '\n'), ' ', $message)));
 
         $sql = "INSERT INTO cms_user_msg (to_id, from_id, senddate, is_new, message)
                 VALUES ('$receiver_id', '$sender_id', NOW(), 1, '$message')";
