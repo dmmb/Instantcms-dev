@@ -530,7 +530,8 @@ INSERT INTO `#__event_hooks` (`id`, `event`, `plugin_id`) VALUES
 (31, 'GET_LATEST_POSTS', '14'),
 (30, 'GET_POST', '14'),
 (29, 'GET_POSTS', '14'),
-(35, 'GET_WALL_POSTS', '14');
+(35, 'GET_WALL_POSTS', '14'),
+(36, 'GET_ARTICLE', '15');
 
 DROP TABLE IF EXISTS `#__faq_cats`;
 CREATE TABLE `#__faq_cats` (
@@ -1048,7 +1049,7 @@ INSERT INTO `#__plugins` (`id`, `plugin`, `title`, `description`, `author`, `ver
 (3, 'p_fckeditor', 'FCKEditor', 'Визуальный редактор', 'F. C. Knabben', '2.63', 'wysiwyg', 1, '---\n'),
 (5, 'p_demo', 'Demo Plugin', 'Пример плагина - Добавляет текст в конец каждой статьи на сайте', 'InstantCMS Team', '1.0', 'plugin', 0, '---\ntext: Added By Plugin From Parameter\ncolor: blue\ncounter: 1\n'),
 (8, 'p_ping', 'Пинг поисковых систем', 'Пингует Яндекс и Гугл при добавлении статей и постов в блоги', 'InstantCMS Team', '1.0', 'plugin', 1, '---\nYandex HOST: ping.blogs.yandex.ru\nYandex PATH: /RPC2\nGoogle HOST: blogsearch.google.com\nGoogle PATH: /ping/RPC2\n'),
-(9, 'p_morecontent', 'Похожие статьи', 'Добавляет в конец каждой статьи список похожих статей.', 'Maximov & InstantCMS Team', '1.0', 'plugin', 0, '---\nlimit: 5\nunsort: 1\n'),
+(15, 'p_morecontent', 'Похожие статьи', 'Добавляет в конец каждой статьи список похожих статей.', 'Maximov & InstantCMS Team', '1.0', 'plugin', 0, '---\nlimit: 5\nunsort: 1\n'),
 (14, 'p_hidetext', 'Скрытый текст', 'Скрывает содержимое тега [hide] от незарегистрированных', 'InstantCMS Team', '1.0', 'plugin', 1, '---\n');
 
 DROP TABLE IF EXISTS `#__polls`;
