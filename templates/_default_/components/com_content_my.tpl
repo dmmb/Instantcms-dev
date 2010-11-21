@@ -9,7 +9,7 @@
         {/foreach}
     </div>
 {/if}
-
+<p><a href="/content/add.html">{$LANG.ADD_ARTICLE}?</a></p>
 <table width="100%" cellpadding="5" cellspacing="0" border="0">
 	<thead>
 		<tr>
