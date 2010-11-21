@@ -33,12 +33,8 @@
     $inCore->loadClass('plugin');
 
 	$inConf = cmsConfig::getInstance();
-
-    define('TEMPLATE_DIR', PATH.'/templates/'.$inConf->template.'/');
-    define('DEFAULT_TEMPLATE_DIR', PATH.'/templates/_default_/');
-
-    $inPage     = cmsPage::getInstance();
-    $inDB       = cmsDatabase::getInstance();
+    $inPage = cmsPage::getInstance();
+    $inDB   = cmsDatabase::getInstance();
 
     $module_id = $inCore->request('id', 'int');
 
@@ -59,13 +55,9 @@
         $formGen = new cmsFormGen($xml_file, $cfg);
         $cfg_form = $formGen->getHTML();
         $mode = 'xml';
-    }
-
-    if (file_exists($php_file)){
+    } elseif (file_exists($php_file)){
         $mode = 'php';
-    }
-
-    if($mod['user']){
+    } elseif ($mod['user']){
         $mode = 'custom';
     }
 
