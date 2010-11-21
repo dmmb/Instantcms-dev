@@ -652,7 +652,7 @@ if ($do=='profile'){
     if (!$id){
         $login = $inCore->request('login', 'str', '');
         $login = urldecode($login);
-        $id    = $inDB->get_field('cms_users', "login='{$login}' AND is_deleted=0", 'id');
+        $id    = $inDB->get_field('cms_users', "login='{$login}'", 'id');
     }
 
     $usr = $model->getUser($id);
@@ -2139,8 +2139,7 @@ if ($do == 'delprofile'){
 			
 				if (isset($_REQUEST['confirm'])){
 					if ($inUser->id == $data['id'] || $inCore->userIsAdmin($inUser->id)){
-						$inDB->query("UPDATE cms_users SET is_deleted = 1 WHERE id = $id");	
-						$inDB->query("DELETE FROM cms_user_friends WHERE to_id = $id OR from_id = $id");
+						$model->deleteUser($id);
                         $user_blog_id = $inDB->get_field('cms_blogs', 'user_id='.$id, 'id');
 						if ($user_blog_id) {
                             $inCore->loadModel('blogs');
