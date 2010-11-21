@@ -358,7 +358,9 @@ function registration(){
                 if ($inCore->inRequest('pass')) { $passw = $inCore->request('pass', 'str'); }
 
                 if (!$login && !$passw){
-                    $_SESSION['auth_back_url'] = $back;
+					if ($is_sess_back) {
+                    	$_SESSION['auth_back_url'] = $back;
+					}
 
                     $inPage->setTitle($_LANG['SITE_LOGIN']);
                     $inPage->addPathway($_LANG['SITE_LOGIN']);
