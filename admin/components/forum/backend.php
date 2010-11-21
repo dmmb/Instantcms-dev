@@ -204,7 +204,28 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 						auth_group=$auth_group
 					WHERE id = $id
 					LIMIT 1";
-			dbQuery($sql) ;		
+			dbQuery($sql) ;	
+
+			$sql = "SELECT id
+					FROM cms_forum_threads
+					WHERE forum_id = '$id'";
+			$result = dbQuery($sql);
+			if(mysql_num_rows($result)){
+				if ($auth_group){
+					while($msg = mysql_fetch_assoc($result)){
+			
+						dbQuery("UPDATE cms_forum_threads SET is_hidden = 1 WHERE id = '{$msg['id']}'");
+			
+					}
+				} else {
+					while($msg = mysql_fetch_assoc($result)){
+			
+						dbQuery("UPDATE cms_forum_threads SET is_hidden = 0 WHERE id = '{$msg['id']}'");
+			
+					}
+				}
+			}
+
 		}
 		if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
 			header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_forums');
