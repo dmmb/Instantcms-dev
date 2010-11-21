@@ -168,12 +168,13 @@ function addTagQuote(field_id){
 
 function insertAlbumImage(field_id){
    var path = $("#photolist option:selected").val();
-
-   var txtarea = document.getElementById(field_id);
-   var txtval = txtarea.value;
-   var pos = getCaretPos(txtarea);
-   txtarea.value = txtval.substring(0,pos) + ' [IMG]/images/users/photos/medium/'+path+'[/IMG] ' + txtval.substring(pos+1,txtval.length);
-	$('#albumimginsert').hide();
+   if (path){
+       var txtarea = document.getElementById(field_id);
+       var txtval = txtarea.value;
+       var pos = getCaretPos(txtarea);
+       txtarea.value = txtval.substring(0,pos) + ' [IMG]/images/users/photos/medium/'+path+'[/IMG] ' + txtval.substring(pos+1,txtval.length);
+   }
+   $('#albumimginsert').hide();
    return;
 	
 }

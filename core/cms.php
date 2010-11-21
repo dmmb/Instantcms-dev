@@ -52,7 +52,7 @@ class cmsCore {
 
         //проверяем был ли переопределен шаблон через сессию
         //например, из модуля "выбор шаблона"
-        if ($_SESSION['template']) { $inConf->template = $_SESSION['template']; }
+        if (isset($_SESSION['template'])) { $inConf->template = $_SESSION['template']; }
 
         define('TEMPLATE', $inConf->template);
         define('TEMPLATE_DIR', PATH.'/templates/'.$inConf->template.'/');

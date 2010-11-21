@@ -84,7 +84,7 @@ public function addHeadCSS($src){
  */
 public function homeTitle(){
     $inConf = cmsConfig::getInstance();
-    if ($inConf->hometitle) { return $inConf->hometitle; }
+    if (isset($inConf->hometitle)) { return $inConf->hometitle; }
     else { return $inConf->sitename; }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
