@@ -89,18 +89,18 @@ if ($opt=='list' || $opt=='config'){
 
 if($opt=='saveconfig'){	
     $cfg = array();
-	$cfg['seo_club'] = $_REQUEST['seo_club'];
-    $cfg['enabled_blogs'] = $_REQUEST['enabled_blogs'];
-    $cfg['enabled_photos'] = $_REQUEST['enabled_photos'];
-
-    $cfg['thumb1'] = $_REQUEST['thumb1'];
-    $cfg['thumb2'] = $_REQUEST['thumb2'];
-    $cfg['thumbsqr'] = $_REQUEST['thumbsqr'];
-    $cfg['cancreate'] = $_REQUEST['cancreate'];
-    $cfg['perpage'] = $_REQUEST['perpage'];
-
-    $cfg['create_min_karma'] = $_REQUEST['create_min_karma'];
-    $cfg['create_min_rating'] = $_REQUEST['create_min_rating'];
+	$cfg['seo_club']        = $inCore->request('seo_club', 'str');
+    $cfg['enabled_blogs']   = $inCore->request('enabled_blogs', 'str');
+    $cfg['enabled_photos']  = $inCore->request('enabled_photos', 'str');
+    $cfg['thumb1']          = $inCore->request('thumb1', 'int');
+    $cfg['thumb2']          = $inCore->request('thumb2', 'int');
+    $cfg['thumbsqr']        = $inCore->request('thumbsqr', 'int');
+    $cfg['cancreate']       = $inCore->request('cancreate', 'int');
+    $cfg['perpage']         = $inCore->request('perpage', 'int');
+    $cfg['create_min_karma']    = $inCore->request('create_min_karma', 'int');
+    $cfg['create_min_rating']   = $inCore->request('create_min_rating', 'int');
+    $cfg['notify_in']       = $inCore->request('notify_in', 'int');
+    $cfg['notify_out']      = $inCore->request('notify_out', 'int');
 
     $inCore->saveComponentConfig('clubs', $cfg);
 

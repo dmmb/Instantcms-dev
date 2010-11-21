@@ -1200,7 +1200,7 @@ a.tag:hover{
 }
 .usr_msg_bbcodebox{
 	padding:0px;
-	background:url(../images/bbtoolbar.jpg) left bottom #FFF;
+	background:url(../images/bbtoolbar.jpg) repeat-x left top #EFEFEF;
 	border:solid 1px #666;
     border-bottom:none;
 	overflow:hidden;

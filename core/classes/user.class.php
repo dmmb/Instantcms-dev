@@ -880,7 +880,8 @@ class cmsUser {
             $inCore->includeFile('components/users/includes/usercore.php');
 
             while($record = $inDB->fetch_assoc($result)){
-				$record['fpubdate'] = $inCore->dateDiffNow($record['pubdate']);
+                $record['is_today'] = time() - strtotime($record['pubdate']) < 86400;
+				$record['fpubdate'] = $record['is_today'] ? $inCore->dateDiffNow($record['pubdate']) : $inCore->dateFormat($record['pubdate']);
                 $record['avatar']   = usrImageNOdb($record['author_id'], 'small', $record['imageurl'], $record['is_deleted']);
                 $records[]          = $record;
             }
