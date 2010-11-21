@@ -791,23 +791,25 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 				}
 				//subscribe thread
 				if ($_POST['subscribe']){
-					cmsUser::isSubscribed($inUser->id, 'forum', $id);
+					cmsUser::subscribe($inUser->id, 'forum', $id);
 				}
 				cmsUser::sendUpdateNotify('forum', $id);
 				//redirect to last page of thread
 				if (!$file_error){
-					$title = $inDB->get_field('cms_forum_threads', "id = '$id'", 'title');	
-					//регистрируем событие
-					$message_post = $inCore->parseSmiles($message_post, true);
-					cmsActions::log('add_fpost', array(
-						'object' => 'пост',
-						'object_url' => '/forum/thread'.$id.'.html#'.$lastid,
-						'object_id' => $lastid,
-						'target' => $title,
-						'target_url' => '/forum/thread'.$id.'.html',
-						'target_id' => $id, 
-						'description' => strip_tags( strlen(strip_tags($message_post))>100 ? substr($message_post, 0, 100) : $message_post )
-					));		
+					if (!$t['is_hidden']){
+						$title = $t['title'];	
+						//регистрируем событие
+						$message_post = $inCore->parseSmiles($message_post, true);
+						cmsActions::log('add_fpost', array(
+							'object' => 'пост',
+							'object_url' => '/forum/thread'.$id.'.html#'.$lastid,
+							'object_id' => $lastid,
+							'target' => $title,
+							'target_url' => '/forum/thread'.$id.'.html',
+							'target_id' => $id, 
+							'description' => strip_tags( strlen(strip_tags($message_post))>100 ? substr($message_post, 0, 100) : $message_post )
+						));	
+					}
 					$posts_in_thread = $inDB->rows_count('cms_forum_posts', 'thread_id='.$id);
 					$pages = ceil($posts_in_thread / $cfg['pp_thread']);
 					if ($pages==1){
@@ -849,7 +851,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 						
 						//subscribe thread
 						if ($_POST['subscribe']){
-							cmsUser::isSubscribed($inUser->id, 'forum', $lastid);
+							cmsUser::subscribe($inUser->id, 'forum', $threadlastid);
 						}
 									
 						//create attached poll
@@ -867,16 +869,18 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
                             $file_error = uploadFiles($lastid, $cfg);
                         }
                         if (!$file_error){
-							//регистрируем событие
-							cmsActions::log('add_thread', array(
-								'object' => $title,
-								'object_url' => '/forum/thread'.$threadlastid.'.html',
-								'object_id' => $threadlastid,
-								'target' => $forum['title'],
-								'target_url' => '/forum/'.$forum['id'],
-								'target_id' => $forum['id'], 
-								'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
-							));	
+							if (!$is_hidden) {
+								//регистрируем событие
+								cmsActions::log('add_thread', array(
+									'object' => $title,
+									'object_url' => '/forum/thread'.$threadlastid.'.html',
+									'object_id' => $threadlastid,
+									'target' => $forum['title'],
+									'target_url' => '/forum/'.$forum['id'],
+									'target_id' => $forum['id'], 
+									'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
+								));	
+							}
                             header('location:/forum/thread'.$threadlastid.'.html');
                         } else {
                             uploadError($threadlastid, $post_id, $cfg['fa_size'], $cfg['fa_ext']);
