@@ -797,8 +797,8 @@ if ($do=='profile'){
     $usr['genderimg']			= '';
     if ($usr['gender']) {
         switch ($usr['gender']){
-            case 'm': $usr['genderimg'] = '<img src="/components/users/images/male.gif"/>'; $usr['gender']=$_LANG['MALES']; break;
-            case 'f': $usr['genderimg'] = '<img src="/components/users/images/female.gif"/>'; $usr['gender']=$_LANG['FEMALES']; break;
+            case 'm': $usr['genderimg'] = '<img src="/components/users/images/male.png"/>'; $usr['gender']=$_LANG['MALES']; break;
+            case 'f': $usr['genderimg'] = '<img src="/components/users/images/female.png"/>'; $usr['gender']=$_LANG['FEMALES']; break;
         }
     }
 

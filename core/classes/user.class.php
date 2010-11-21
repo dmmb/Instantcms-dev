@@ -1338,15 +1338,15 @@ class cmsUser {
      */
     public static function getGenderLink($user_id, $nickname='', $menuid=0, $gender='m', $login='', $css_style=''){
         $inDB = cmsDatabase::getInstance();
-        $gender_img = '/components/users/images/male.gif';
+        $gender_img = '/components/users/images/male.png';
         if (!$gender){
             $user = $inDB->get_field('cms_user_profiles', 'user_id='.$user_id, 'gender');
         }
         if ($gender){
             switch($gender){
-                case 'm': $gender_img = '/components/users/images/male.gif'; break;
-                case 'f': $gender_img = '/components/users/images/female.gif'; break;
-                default : $gender_img = '/components/users/images/male.gif'; break;
+                case 'm': $gender_img = '/components/users/images/male.png'; break;
+                case 'f': $gender_img = '/components/users/images/female.png'; break;
+                default : $gender_img = '/components/users/images/male.png'; break;
             }
         }
         if (!$nickname || !$login){
@@ -1354,7 +1354,7 @@ class cmsUser {
             $nickname   = $user['nickname'];
             $login      = $user['login'];
         }
-        return '<a style="height:16px; line-height:16px; background:url('.$gender_img.') no-repeat left center; padding-left:18px; '.$css_style.'" href="'.cmsUser::getProfileURL($login).'" class="user_gender_link">'.$nickname.'</a>';
+        return '<a style="padding:1px; height:16px; line-height:16px; background:url('.$gender_img.') no-repeat left center; padding-left:18px; '.$css_style.'" href="'.cmsUser::getProfileURL($login).'" class="user_gender_link">'.$nickname.'</a>';
     }
 
 // ============================================================================ //
