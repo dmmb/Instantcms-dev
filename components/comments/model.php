@@ -185,7 +185,7 @@ class cms_model_comments{
 		global $_LANG;
         $comments = array();
 
-        $sql = "SELECT c.id, c.guestname, c.content, c.pubdate as fpubdate, c.target_title, c.target_link, c.ip,
+        $sql = "SELECT c.id, c.guestname, c.content, c.pubdate as fpubdate, c.target_title, c.target_link, c.ip, c.user_id,
                        IFNULL(v.total_rating, 0) as votes,
 					   IFNULL(u.nickname, 0) as nickname,
 					   IFNULL(u.login, 0) as login,
