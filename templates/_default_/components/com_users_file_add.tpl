@@ -14,10 +14,12 @@
 </script> 
 {/literal}
 <div class="con_heading">{$LANG.UPLOAD_FILES}</div>
-{if $free_mb > 0}
+{if $free_mb > 0 || !$cfg.filessize}
 <div>{$LANG.SELECT_FILE_TEXT}</div>
 <div>{$LANG.ERR_FILE_NAME}</div>
+{if $cfg.filessize}
 <div style="margin:10px 0px 0px 0px"><strong>{$LANG.YOUR_FILE_LIMIT}:</strong> {$free_mb} {$LANG.MBITE}</div>
+{/if}
 <div style="margin:0px 0px 10px 0px"><strong>{$LANG.MAX_FILE_SIZE}:</strong> {$post_max_mb}</div>
 <div style="margin:0px 0px 10px 0px"><strong>{$LANG.TYPE_FILE}:</strong> {$types}</div>
 <form action="" method="post" enctype="multipart/form-data" name="uploadform">

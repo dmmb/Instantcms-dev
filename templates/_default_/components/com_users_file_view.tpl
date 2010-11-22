@@ -11,7 +11,11 @@
       <td width="15">&nbsp;</td>
       <td width="80"><strong>{$LANG.FILE_COUNT}: </strong>{$total_files}</td>
       {if $myprofile}
-          <td width="130"><strong>{$LANG.FREE}: </strong>{$free_mb} {$LANG.MBITE}</td>
+      		{if $cfg.filessize}
+          		<td width="130"><strong>{$LANG.FREE}: </strong>{$free_mb} {$LANG.MBITE}</td>
+            {else}
+            	<td width="130"></td>
+          	{/if}
           <td width="16"><img src="/components/users/images/upload.gif" border="0" /></td>
           <td width="100"><a href="addfile.html">{$LANG.UPLOAD_FILES}</a></td>
       {/if}

@@ -2232,9 +2232,9 @@ if ($do=='files'){
 			$total_files = $inDB->rows_count('cms_user_files', 'user_id = '.$id.' '.$allowsql.'');
 			//calculate free space
 			$max_mb = $cfg['filessize'];
-			$current_bytes = usrFilesSize($id);							
+			$current_bytes = $max_mb ? usrFilesSize($id) : false;							
 			if ($current_bytes) { $current_mb = round(($current_bytes / 1024) / 1024, 2); } else { $current_mb = 0; }
-			$free_mb = round($max_mb - $current_mb, 2);
+			$free_mb = $max_mb ? round($max_mb - $current_mb, 2) : '';
 			$is_files = false;
 			$myprofile = ($inUser->id==$id);
 			if ($inDB->num_rows($result)){ 
@@ -2262,6 +2262,7 @@ if ($do=='files'){
 			$smarty->assign('usr', $usr);
 			$smarty->assign('orderby', $orderby);
 			$smarty->assign('orderto', $orderto);
+			$smarty->assign('cfg', $cfg);
 			$smarty->assign('total_files', $total_files);
 			$smarty->assign('is_files', $is_files);
 			$smarty->assign('free_mb', $free_mb);
@@ -2322,9 +2323,9 @@ if ($do=='addfile'){
 
 				echo '<div class="con_heading">'.$_LANG['FILE_UPLOAD_FINISH'].'</div>';
 				
-				$e = false;
-				
-				$size_mb = 0; $size_limit = false;
+				$e            = false;
+				$size_mb      = 0;
+				$size_limit   = false;
 				$loaded_files = array();
 				
 				foreach ($_FILES as $key => $data_array) {
@@ -2350,7 +2351,7 @@ if ($do=='addfile'){
 							}  
 						} 
 						
-						if ($size_mb <= $free_mb){
+						if ($size_mb <= $free_mb || !$cfg['filessize']){
 							if ($may){
 								if (move_uploaded_file($tmp_name, PATH."/upload/userfiles/$id/$name")){
 									$loaded_files[] = $name;
@@ -2374,6 +2375,7 @@ if ($do=='addfile'){
 				
 				if ($size_limit) { 
 					echo '<div style="color:#660000;margin-bottom:10px;font-weight:bold">'.$_LANG['YOUR_FILE_LIMIT'].' ('.$max_mb.' '.$_LANG['MBITE'].') '.$_LANG['IS_OVER_LIMIT'].'.</div>';
+
 					echo '<div style="color:#660000;font-weight:bold">'.$_LANG['FOR_NEW_FILE_DEL_OLD'].'</div>';
 				}
 				if ($type_error) { 
@@ -2387,8 +2389,9 @@ if ($do=='addfile'){
 							echo '<li>'.$val.'</li>';						
 						}
 					echo '</ul>';
-					
-					echo '<div style="margin-top:10px"><strong>'.$_LANG['FREE_SPACE_LEFT'].':</strong> '.round($free_mb-$size_mb, 2).' '.$_LANG['MBITE'].'</div>';
+					if ($cfg['filessize']){
+						echo '<div style="margin-top:10px"><strong>'.$_LANG['FREE_SPACE_LEFT'].':</strong> '.round($free_mb-$size_mb, 2).' '.$_LANG['MBITE'].'</div>';
+					}
 				} else {
 					echo '<div style="color:red">'.$_LANG['ERR_BIG_FILE'].'</div>';
 					echo '<div style="color:red">'.$_LANG['ERR_FILE_NAME'].'</div>';
@@ -2409,13 +2412,14 @@ if ($do=='addfile'){
 					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
 					$inPage->addPathway($_LANG['UPLOAD_FILES'], $_SERVER['REQUEST_URI']);
 					
-						$post_max_b = return_bytes(ini_get('upload_max_filesize'));
-						$post_max_mb = (round($post_max_b/1024)/1024) . ' '.$_LANG['MBITE'];
+					$post_max_b = return_bytes(ini_get('upload_max_filesize'));
+					$post_max_mb = (round($post_max_b/1024)/1024) . ' '.$_LANG['MBITE'];
 					
 					$smarty = $inCore->initSmarty('components', 'com_users_file_add.tpl');
 					$smarty->assign('free_mb', $free_mb);
 					$smarty->assign('post_max_b', $post_max_b);
 					$smarty->assign('post_max_mb', $post_max_mb);
+					$smarty->assign('cfg', $cfg);
 					$smarty->assign('types', $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar');
 					$smarty->display('com_users_file_add.tpl');
 				}
