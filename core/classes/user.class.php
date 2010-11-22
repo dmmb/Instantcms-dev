@@ -327,8 +327,8 @@ class cmsUser {
 
         if ($inUser->id && $controls){
             if(usrCanKarma($user_id, $inUser->id)){
-                $plus = '<a href="/users/karma/plus/'.$user_id.'/'.$inUser->id.'" title="Карма +"><img src="/components/users/images/karma_up.png" border="0" alt="Карма +"/></a>';
-                $minus = '<a href="/users/karma/minus/'.$user_id.'/'.$inUser->id.'" title="Карма -"><img src="/components/users/images/karma_down.png" border="0" alt="Карма -"/></a>';
+                $plus = '<a href="/users/karma/plus/'.$user_id.'/'.$inUser->id.'" onclick="plusUkarma(\''.$user_id.'\', \''.$inUser->id.'\'); return false;" title="Карма +"><img src="/components/users/images/karma_up.png" border="0" alt="Карма +"/></a>';
+                $minus = '<a href="/users/karma/minus/'.$user_id.'/'.$inUser->id.'" onclick="minusUkarma(\''.$user_id.'\', \''.$inUser->id.'\'); return false;" title="Карма -"><img src="/components/users/images/karma_down.png" border="0" alt="Карма -"/></a>';
             }
         }
 

@@ -2623,11 +2623,12 @@ if ($do=='awardslist'){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='votekarma'){
 
-    $sign   = $inCore->request('sign', 'str', 'plus');
-    $to     = $inCore->request('to', 'int', 0);
-    $from   = $inCore->request('from', 'int', 0);
+    $sign    = $inCore->request('sign', 'str', 'plus');
+    $to      = $inCore->request('to', 'int', 0);
+    $from    = $inCore->request('from', 'int', 0);
+	$is_ajax = $inCore->request('is_ajax', 'int', 0);
 
-    if (!$to || !$from) { $inCore->redirectBack(); }
+    if (!$to || !$from) { if ($is_ajax) { return; } else { $inCore->redirectBack(); } }
 
     $inCore = cmsCore::getInstance();
 
@@ -2641,8 +2642,17 @@ if ($do=='votekarma'){
 			}
 		}
 	}
+	if (!$is_ajax) { $inCore->redirectBack(); }
+	$points = strip_tags( cmsUser::getKarmaFormat($to, false), '<table><tr><td><img><a>' );
+	$points_int = strip_tags($points);
+	if ($points_int >= 0) {
+		$points = '<div class="value-positive">'.$points.'</div>';
+	} else {
+		$points = '<div class="value-negative">'.$points.'</div>';
+	}
+	echo $points;
 
-	$inCore->redirectBack();
+	exit;
 
 }
 ////////////////////////// DELETE FROM WALL ////////////////////////////////////////////////////////

@@ -25,7 +25,7 @@
 <div id="usertitle">
 
     <div id="user_ratings">
-        <div class="karma" title="{$LANG.KARMA}">
+        <div class="karma" title="{$LANG.KARMA}" id="u_karma">
             {if $usr.karma_int >= 0}
                 <div class="value-positive">{$usr.karma}</div>
             {else}
