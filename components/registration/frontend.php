@@ -283,7 +283,7 @@ function registration(){
 
         $do             = 'view';
 		// ≈сли пользователь авторизован, то не показываем форму регистрации, редирект в профиль.
-        if ($inUser->id) {
+        if ($inUser->id && !$inUser->is_admin) {
             if ($inCore->menuId() == 1) { return; } else {  $inCore->redirect(cmsUser::getProfileURL($inUser->login)); }
         }
 
