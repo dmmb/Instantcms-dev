@@ -3,6 +3,13 @@
 {* ================================================================================ *}
 
 <div class="board_gallery">
+{if $messages}
+    <div class="sess_messages">
+        {foreach key=id item=message from=$messages}
+            {$message}
+        {/foreach}
+    </div>
+{/if}
 	{if $is_items}
 		<table width="100%" cellpadding="0" cellspacing="0" border="0">
 			{assign var="col" value="1"}	

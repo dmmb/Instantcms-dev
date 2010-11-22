@@ -1,7 +1,13 @@
 {* ================================================================================ *}
 {* ==================== Просмотр объявления (на доске объявлений) ================= *}
 {* ================================================================================ *}
-
+{if $messages}
+    <div class="sess_messages">
+        {foreach key=id item=message from=$messages}
+            {$message}
+        {/foreach}
+    </div>
+{/if}
 <div class="bd_item_details_full">
 	<span class="bd_item_date">{$item.pubdate}</span>
 	{if $item.city}

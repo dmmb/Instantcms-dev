@@ -52,7 +52,6 @@ class cms_model_board{
         $this->deleteOldRecords();
 
         $category   = $this->inDB->get_fields('cms_board_cats', 'id='.$category_id, '*');
-		if (!$category['id']) { cmsCore::error404(); }
         $category   = cmsCore::callEvent('GET_BOARD_CAT', $category);
 
         if (!$category['obtypes']){

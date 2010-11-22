@@ -1,3 +1,10 @@
+{if $messages}
+    <div class="sess_messages">
+        {foreach key=id item=message from=$messages}
+            {$message}
+        {/foreach}
+    </div>
+{/if}
 <form action="{$action}" method="post" enctype="multipart/form-data">
 	<table cellpadding="2">
 		<tr>

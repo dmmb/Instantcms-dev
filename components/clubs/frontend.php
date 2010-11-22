@@ -100,9 +100,6 @@ if ($do=='view'){
 if ($do=='club'){
 
 	$club   = $model->getClub($id);
-
-	$smarty = $inCore->initSmarty('components', 'com_clubs_view_club.tpl');			
-				
 	if(!$club){	cmsCore::error404(); }
     
     //TITLES
@@ -181,6 +178,7 @@ if ($do=='club'){
 
 	$club['pubdate'] = $inCore->dateformat($club['pubdate'], true, true);
 
+	$smarty = $inCore->initSmarty('components', 'com_clubs_view_club.tpl');	
     $smarty->assign('clubid', $id);
     $smarty->assign('club', $club);
     $smarty->assign('is_access', $is_access);
