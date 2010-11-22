@@ -282,6 +282,10 @@ function registration(){
         $inPage->setTitle($_LANG['REGISTRATION']);
 
         $do             = 'view';
+		// ≈сли пользователь авторизован, то не показываем форму регистрации, редирект в профиль.
+        if ($inUser->id) {
+            $inCore->redirect('/users/'.$inUser->login);
+        }
 
         $correct_invite = (cmsUser::sessionGet('invite_code') ? true : false);
 
