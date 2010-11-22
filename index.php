@@ -72,8 +72,8 @@
     //то показываем шаблон сообщения о том что сайт отключен
 	if ( $inConf->siteoff &&
         !$inUser->is_admin &&
-        !$inCore->request('uri', 'str')=='/login' &&
-        !$inCore->request('uri', 'str')=='/logout'
+        $inCore->request('uri', 'str')!='login' &&
+        $inCore->request('uri', 'str')!='logout'
        ) {
             $inPage->includeTemplateFile('special/siteoff.php');
             $inCore->halt();
