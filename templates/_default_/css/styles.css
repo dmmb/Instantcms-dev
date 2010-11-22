@@ -3484,6 +3484,8 @@ table.feed td.date strong { color:green; }
     margin-bottom:15px;    
 }
 
+.action_entry .is_new { color:#FF5A00; }
+
 .action_user{
     color:#375E93;
     font-weight:bold;

@@ -586,6 +586,8 @@ div.filter {
     overflow:hidden;
 }
 
+.action_entry .is_new { color:#FF5A00; }
+
 .action_user{
     color:#375E93;
     font-weight:bold;
@@ -637,5 +639,5 @@ div.filter {
 .act_add_post_club{ background:url(/templates/_default_/images/icons/actions/add_post_club.png) no-repeat left 1px; }
 .act_add_user_photo{ background:url(/templates/_default_/images/icons/actions/add_user_photo.png) no-repeat left 1px; }
 .act_add_user_photo_multi{ background:url(/templates/_default_/images/icons/actions/add_user_photo_multi.png) no-repeat left 3px; }
-.add_user{ background:url(/templates/_default_/images/icons/actions/add_user.png) no-repeat left 3px; }
-.add_wall_my{ background:url(/templates/_default_/images/icons/actions/add_wall_my.png) no-repeat left 3px; }
+.act_add_user{ background:url(/templates/_default_/images/icons/actions/add_user.png) no-repeat left 3px; }
+.act_add_wall_my{ background:url(/templates/_default_/images/icons/actions/add_wall_my.png) no-repeat left 3px; }

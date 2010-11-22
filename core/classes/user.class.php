@@ -67,6 +67,8 @@ class cmsUser {
             $this->{$key}   = $value;
         }
 
+        $this->logdate = $_SESSION['user']['logdate'];
+
         $avatar_dir     = PATH . '/images/users/avatars/small/';
         $avatar_path    = $avatar_dir . $this->imageurl;
 

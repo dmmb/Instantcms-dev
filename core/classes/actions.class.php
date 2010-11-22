@@ -248,7 +248,7 @@ class cmsActions {
 
         if (!$this->only_friends){ $this->where('log.is_friends_only = 0'); }
         if (!$inUser->id) { $this->where('log.is_users_only = 0'); }
-        
+
         $sql = "SELECT log.object as object,
                        log.object_url as object_url,
                        log.target as target,
@@ -300,6 +300,12 @@ class cmsActions {
                 $action['message']      = sprintf($action['message'], $action['object_link'], $action['target_link']);
             }
 
+            $action['is_new'] = false;
+
+            if ($inUser->id){
+                $action['is_new'] = (bool)(strtotime($action['pubdate']) > strtotime($inUser->logdate));
+            }
+            
             $action['user_url']     = cmsUser::getProfileURL($action['user_login']);
             $action['pubdate']      = cmsCore::dateDiffNow($action['pubdate']);
 
