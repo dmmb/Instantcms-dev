@@ -284,7 +284,7 @@ function registration(){
         $do             = 'view';
 		// ≈сли пользователь авторизован, то не показываем форму регистрации, редирект в профиль.
         if ($inUser->id) {
-            $inCore->redirect('/users/'.$inUser->login);
+            if ($inCore->menuId() == 1) { return; } else {  $inCore->redirect(cmsUser::getProfileURL($inUser->login)); }
         }
 
         $correct_invite = (cmsUser::sessionGet('invite_code') ? true : false);
