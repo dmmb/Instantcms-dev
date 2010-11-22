@@ -251,15 +251,15 @@ function applet_config(){
                         <div style="margin-top:2px">
                             <strong>Шаблон:</strong><br />
                             <span class="hinttext">Содержимое папки &quot;templates/&quot; </span>
-                        </div>
-                        <div style="margin-top:2px">
-                            <a style="color:#09C" target="_blank" href="http://www.instantcms.ru/design.html">Заказать уникальный шаблон</a>
-                        </div>
+                        </div>                        
 					</td>
 					<td>
                         <select name="template" id="template" style="width:350px" onchange="document.CFGform.submit();">
                             <?php $inCore->templatesList($_CFG['template']); ?>
                         </select>
+                        <div style="margin-top:5px" class="hinttext">
+                            При смене шаблона необходимо очистить папку &laquo;<strong>cache</strong>&raquo; на сервере
+                        </div>
 					</td>
 				</tr>
 				<tr>
