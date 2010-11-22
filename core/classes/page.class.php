@@ -873,7 +873,7 @@ public static function getBBCodeToolbar($field_id, $images=0, $placekind='forum'
                 <img src="/includes/bbcode/images/smiles.png" border="0" alt="Вставить смайл" />
              </a>';
 
-    if ($placekind=='blog'){
+    if ($placekind=='blogs'){
 
         $html .= '<a class="usr_bb_button" href="javascript:addTagCut(\''.$field_id.'\')" title="Вставить конец анонса (кат)">
                     <img src="/includes/bbcode/images/cut.png" border="0" alt="Вставить конец анонса (кат)" />
@@ -1109,10 +1109,9 @@ public static function getModuleTemplates() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public function siteOffNotify() {
-    return '<div style="margin:0px; padding:5px; border-bottom:2px solid gray; border-right:2px solid gray; background:#FFF; position:absolute;">
+    return '<div style="margin:4px; padding:5px; border:solid 1px red; background:#FFF; position:absolute; z-index:999">
                 <strong style="color:red">Сайт отключен.</strong> 
                 Только администраторы видят его содержимое.
-                Вы можете <a href="/admin/index.php?view=config">включить сайт</a> в панели управления.
             </div>';
 }
 

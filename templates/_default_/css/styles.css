@@ -24,12 +24,18 @@ a { color:#09c; }
 a:hover { color:#375E93; }
 
 #wrapper {
-  position: relative;
+  position:relative;
+  min-height:100%;
+  height:auto !important;
+  height:100%;
   min-height: 100%;
+  display:block;
 }
 * html #wrapper {
   height: 100%;
 }
+
+#wrapper .pad{ height:52px; clear:both; }
 
 .text-input{ border:1px solid #4DA4CF; padding:2px; }
 .text-input:focus{ border:1px solid #FFD100; padding:2px; }
