@@ -952,7 +952,7 @@ function showMapMarker(){
             <td>Файл фотографии: </td>
             <td><?php if (@$mod['file']) {
                 echo '<div><img src="/images/photos/small/'.$mod['file'].'" border="1" /></div>';
-                echo '<div><a href="/images/photos/'.$mod['file'].'" title="Посмотреть фото">'.$mod['file'].'</a></div>';
+                echo '<div><a href="/images/photos/medium/'.$mod['file'].'" title="Посмотреть фото">'.$mod['file'].'</a></div>';
             } else { ?>
                 <input name="picture" type="file" id="picture" size="30" />
             <?php } ?></td>

@@ -9,7 +9,7 @@
 
     {foreach key=id item=record from=$records}
         <div class="usr_wall_entry">
-            <div class="usr_wall_title"><a href="{profile_url login=$record.author_login}">{$record.author}</a> {$LANG.WROTE} {$record.fpubdate} {$LANG.BACK}:</div>
+            <div class="usr_wall_title"><a href="{profile_url login=$record.author_login}">{$record.author}</a>, {$record.fpubdate}{if $record.is_today} {$LANG.BACK}{/if}:</div>
             {if $myprofile || $record.author_id==$user_id}
                 <div class="usr_wall_delete"><a href="/users/wall-delete/{$usertype}/{$record.id}">{$LANG.DELETE}</a></div>
             {/if}

@@ -636,6 +636,8 @@ class cms_model_users{
 
     public function addUploadedPhoto($user_id, $photo) {
 
+        $photo['filename'] = iconv('utf-8', 'cp1251', $photo['filename']);
+
         $sql = "INSERT INTO cms_user_photos (user_id, album_id, pubdate, title, description, allow_who, hits, imageurl)
                 VALUES('{$user_id}', '0', NOW(), '{$photo['filename']}', '', 'none', 0, '{$photo['imageurl']}')";
 

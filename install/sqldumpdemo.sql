@@ -219,7 +219,7 @@ CREATE TABLE `#__board_cats` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__board_cats` (`id`, `parent_id`, `ordering`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`, `title`, `description`, `published`, `orderform`, `showdate`, `pubdate`, `orderby`, `orderto`, `public`, `perpage`, `maxcols`, `thumb1`, `thumb2`, `thumbsqr`, `uplimit`, `is_photos`, `icon`, `obtypes`) VALUES
-(1, 0, 1, 1, 8, '', 0, 0, '-- Корневая рубрика --', '', 1, 1, 1, '2008-09-22 13:39:32', 'title', 'asc', 0, 15, 1, 64, 400, 0, 10, 1, 'folder_grey.png', ''),
+(1, 0, 1, 1, 8, '', 0, 0, '-- Корневая рубрика --', '', 1, 1, 1, '2008-09-22 13:39:32', 'pudate', 'desc', 0, 15, 1, 64, 400, 0, 10, 1, 'folder_grey.png', ''),
 (10, 1, 21, 2, 3, '', 0, 1, 'Услуги', '', 1, 1, 1, '2008-09-22 14:30:29', 'pubdate', 'desc', -1, 20, 1, 64, 400, 0, 10, 1, 'folder_grey.png', 'Предлагаю\r\nТребуется'),
 (9, 1, 23, 6, 7, '', 0, 1, 'Автомобили', '', 1, 1, 1, '2008-09-22 14:30:23', 'pubdate', 'desc', -1, 20, 1, 64, 400, 0, 10, 1, 'folder_grey.png', 'Куплю\r\nПродам\r\nОбменяю'),
 (8, 1, 22, 4, 5, '', 0, 1, 'Недвижимость', '', 1, 1, 1, '2008-09-22 14:30:00', 'pubdate', 'desc', -1, 20, 1, 64, 400, 0, 10, 1, 'folder_grey.png', 'Продам\r\nКуплю\r\nОбменяю\r\nСдам\r\nСниму');
@@ -493,13 +493,13 @@ CREATE TABLE `#__cron_jobs` (
   KEY `job_name` (`job_name`,`is_enabled`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__cron_jobs` (`id`, `job_name`, `job_interval`, `job_run_date`, `component`, `model_method`, `custom_file`, `is_enabled`, `is_new`, `comment`, `class_name`, `class_method`) VALUES
-(1, 'photos_clear', 24, '2010-11-11 20:53:13', 'users', 'clearUploadedPhotos', '', 1, 1, 'Удаление неиспользуемых личных фотографий', '', ''),
-(2, 'optimize_tables', 24, '2010-11-14 14:52:45', '', '', '', 1, 1, 'Оптимизация таблиц БД', 'db|cmsDatabase', 'optimizeTables'),
-(3, 'drop_inactive_users', 48, '2010-11-14 14:58:24', 'users', 'deleteInactiveUsers', '', 1, 1, 'Удаление неактивных пользователей (см. настройки компонента "Профили пользователей")', '', ''),
-(4, 'remove_old_log', 48, '2010-11-14 14:58:35', '', '', '', 1, 1, 'Удаляет старые записи ленты событий', 'actions|cmsActions', 'removeOldLog'),
-(5, 'give_invites', 24, '2010-11-15 20:30:03', 'users', 'giveInvitesCron', '', 1, 1, 'Выдача инвайтов пользователям', '', ''),
-(6, 'clear_invites', 24, '2010-11-15 20:30:33', 'users', 'clearInvites', '', 1, 1, 'Удаление использованных инвайтов', '', '');
+INSERT INTO `#__cron_jobs` (`id`, `job_name`, `job_interval`, `component`, `model_method`, `custom_file`, `is_enabled`, `is_new`, `comment`, `class_name`, `class_method`) VALUES
+(1, 'photos_clear', 24, 'users', 'clearUploadedPhotos', '', 1, 1, 'Удаление неиспользуемых личных фотографий', '', ''),
+(2, 'optimize_tables', 24, '', '', '', 1, 1, 'Оптимизация таблиц БД', 'db|cmsDatabase', 'optimizeTables'),
+(3, 'drop_inactive_users', 48, 'users', 'deleteInactiveUsers', '', 1, 1, 'Удаление неактивных пользователей (см. настройки компонента "Профили пользователей")', '', ''),
+(4, 'remove_old_log', 48, '', '', '', 1, 1, 'Удаляет старые записи ленты событий', 'actions|cmsActions', 'removeOldLog'),
+(5, 'give_invites', 24, 'users', 'giveInvitesCron', '', 1, 1, 'Выдача инвайтов пользователям', '', ''),
+(6, 'clear_invites', 24, 'users', 'clearInvites', '', 1, 1, 'Удаление использованных инвайтов', '', '');
 
 DROP TABLE IF EXISTS `#__downloads`;
 CREATE TABLE `#__downloads` (
@@ -523,7 +523,15 @@ INSERT INTO `#__event_hooks` (`id`, `event`, `plugin_id`) VALUES
 (3, 'INSERT_WYSIWYG', '3'),
 (7, 'USER_PROFILE', '6'),
 (11, 'ADD_ARTICLE_DONE', '8'),
-(10, 'ADD_POST_DONE', '8');
+(10, 'ADD_POST_DONE', '8'),
+(34, 'GET_FORUM_POSTS', '14'),
+(33, 'GET_COMMENTS', '14'),
+(32, 'GET_BEST_POSTS', '14'),
+(31, 'GET_LATEST_POSTS', '14'),
+(30, 'GET_POST', '14'),
+(29, 'GET_POSTS', '14'),
+(35, 'GET_WALL_POSTS', '14'),
+(36, 'GET_ARTICLE', '15');
 
 DROP TABLE IF EXISTS `#__faq_cats`;
 CREATE TABLE `#__faq_cats` (
@@ -840,7 +848,6 @@ INSERT INTO `#__modules` (`id`, `position`, `name`, `title`, `is_external`, `con
 (65, 'sidebar', 'Популярное в блогах', 'Популярное в блогах', 1, 'mod_bestblogs', 3, 1, 1, 0, '---\nnamemode: blog\nshownum: 10\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
 (66, 'header', 'Меню пользователя', 'Меню пользователя', 1, 'mod_usermenu', 1, 0, 1, 0, '---\navatar: 1\nshowtype: text\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
 (67, 'bottom', 'Последние вопросы FAQ', 'Последние вопросы FAQ', 1, 'mod_latest_faq', 33, 1, 0, 0, '---\nnewscount: 5\nmaxlen: 140\ncat_id: \n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(68, 'top', 'Горизонтальное меню', 'Горизонтальное меню', 1, 'mod_hmenu', 2, 0, 0, 0, '---\nmenu: mainmenu\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
 (69, 'top', 'Популярные статьи', 'Популярные статьи', 1, 'mod_bestcontent', 3, 1, 0, 0, '---\nshownum: 4\nmenuid: 21\nshowlink: 1\nshowdesc: 1\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
 (70, 'sidebar', 'Поиск пользователей', 'Поиск пользователей', 1, 'mod_usersearch', 4, 1, 0, 0, '---\ncat_id: \nsource: \nmenuid: 15\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
 (71, 'top', 'Новые объявления', 'Новые объявления', 1, 'mod_latestboard', 1, 1, 1, 0, '---\nshownum: 10\nshowcity: 1\ncat_id: -1\nsubs: 1\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
@@ -1042,7 +1049,8 @@ INSERT INTO `#__plugins` (`id`, `plugin`, `title`, `description`, `author`, `ver
 (3, 'p_fckeditor', 'FCKEditor', 'Визуальный редактор', 'F. C. Knabben', '2.63', 'wysiwyg', 1, '---\n'),
 (5, 'p_demo', 'Demo Plugin', 'Пример плагина - Добавляет текст в конец каждой статьи на сайте', 'InstantCMS Team', '1.0', 'plugin', 0, '---\ntext: Added By Plugin From Parameter\ncolor: blue\ncounter: 1\n'),
 (8, 'p_ping', 'Пинг поисковых систем', 'Пингует Яндекс и Гугл при добавлении статей и постов в блоги', 'InstantCMS Team', '1.0', 'plugin', 1, '---\nYandex HOST: ping.blogs.yandex.ru\nYandex PATH: /RPC2\nGoogle HOST: blogsearch.google.com\nGoogle PATH: /ping/RPC2\n'),
-(9, 'p_morecontent', 'Похожие статьи', 'Добавляет в конец каждой статьи список похожих статей.', 'Maximov & InstantCMS Team', '1.0', 'plugin', 0, '---\nlimit: 5\nunsort: 1\n');
+(15, 'p_morecontent', 'Похожие статьи', 'Добавляет в конец каждой статьи список похожих статей.', 'Maximov & InstantCMS Team', '1.0', 'plugin', 0, '---\nlimit: 5\nunsort: 1\n'),
+(14, 'p_hidetext', 'Скрытый текст', 'Скрывает содержимое тега [hide] от незарегистрированных', 'InstantCMS Team', '1.0', 'plugin', 1, '---\n');
 
 DROP TABLE IF EXISTS `#__polls`;
 CREATE TABLE `#__polls` (
@@ -1578,7 +1586,7 @@ CREATE TABLE `#__user_profiles` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 ROW_FORMAT=DYNAMIC;
 
 INSERT INTO `#__user_profiles` (`id`, `user_id`, `city`, `description`, `showmail`, `showbirth`, `showicq`, `karma`, `imageurl`, `allow_who`, `signature`, `gender`, `formsdata`, `email_newmsg`, `cm_subscribe`, `stats`) VALUES
-(1, 1, 'Москва', 'Р.Хайнлайн, А.Азимов, А.Кларк', 1, 1, 1, 3, '', 'all', '', 'm', '---\n22: Р.Хайнлайн, А.Азимов, А.Кларк\n24: Высшее\n', 1, 'none', '---\ncount: \n  comments: 1\n  forum: 1\n  photos: 2\n  board: 2\n  files_public: 0\n  files_private: 0\nrating: 0\n'),
+(1, 1, 'Москва', 'Р.Хайнлайн, А.Азимов, А.Кларк', 1, 1, 1, 0, '', 'all', '', 'm', '---\n22: Р.Хайнлайн, А.Азимов, А.Кларк\n24: Высшее\n', 1, 'none', '---\ncount: \n  comments: 1\n  forum: 1\n  photos: 2\n  board: 2\n  files_public: 0\n  files_private: 0\nrating: 0\n'),
 (2, 2, 'Москва', 'живопись, &#8217;музыка&#8217;, всякая "всячина" однако', 0, 0, 1, 0, '165e5d6b2786dc6d0a538146de38b480.jpg', 'all', '', 'm', '---\n22: |\n  &#8217;музыка&#8217;, всякая &quot;всячина&quot; однако\n24: Высшее\n', 1, '0', '---\ncount: \n  comments: 1\n  forum: 0\n  photos: 0\n  board: 1\n  files_public: 0\n  files_private: 0\nrating: 0\n'),
 (3, 3, '', '', 0, 0, 1, 0, 'a946f7701b178eedbbdae7a57ba7e0be.jpg', 'all', '', '', '', 1, '', '---\ncount: \n  comments: 0\n  forum: 0\n  photos: 0\n  board: 0\n  files_public: 0\n  files_private: 0\nrating: 0\n');
 

@@ -655,8 +655,8 @@ class CCelkoNastedSet {
 			if ($Level == -1) // All child nodes
 			{
 				$sql_result = "SELECT * FROM " . $this->TableName . 
-							  " WHERE " . $this->FieldLeft . " >= " . $row_select[$this->FieldLeft] .
-							  " AND " . $this->FieldRight . " <= " . $row_select[$this->FieldRight] . 
+							  " WHERE " . $this->FieldLeft . " > " . $row_select[$this->FieldLeft] .
+							  " AND " . $this->FieldRight . " < " . $row_select[$this->FieldRight] . 
 						  	  " AND " . $this->FieldDiffer . " = '" . $Differ . "'" .
 							  " ORDER BY " . $this->FieldLeft . "," . $this->FieldOrder;
 			}

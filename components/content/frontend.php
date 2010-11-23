@@ -620,7 +620,7 @@ if ($do=='deletearticle'){
 				$message = str_replace('%link%', $link, $_LANG['MSG_ARTICLE_REJECTED']);
 				cmsUser::sendMessage(USER_UPDATER, $article['user_id'], $message);
 		}
-			$inCore->redirect('/'.$article['seolink']);
+        $inCore->redirect('/content/my.html');
 	}
 
 	}

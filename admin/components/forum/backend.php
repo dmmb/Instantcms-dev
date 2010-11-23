@@ -204,7 +204,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 						auth_group=$auth_group
 					WHERE id = $id
 					LIMIT 1";
-			dbQuery($sql) ;	
+			dbQuery($sql) ;		
 
 			$sql = "SELECT id
 					FROM cms_forum_threads

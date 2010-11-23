@@ -124,7 +124,7 @@
 								{/if}
                                 <tr>
                                     <td><img src="/templates/_default_/images/icons/profile/edit.png" border="0"/></td>
-                                    <td><a href="/users/{$usr.id}/editprofile.html" title="{$LANG.CONFIG_PROFILE}">{$LANG.CONFIG_PROFILE}</a></td>
+                                    <td><a href="/users/{$usr.id}/editprofile.html" title="{$LANG.CONFIG_PROFILE}">{$LANG.MY_CONFIG}</a></td>
                                 </tr>
                             {/if}
                             {if $is_admin && !$myprofile}
@@ -411,7 +411,7 @@
                             <div class="actions_list">
                                 {foreach key=aid item=action from=$usr.actions}
                                     <div class="action_entry act_{$action.name}">
-                                        <div class="action_date">{$action.pubdate} {$LANG.BACK}</div>
+                                        <div class="action_date{if $action.is_new} is_new{/if}">{$action.pubdate} {$LANG.BACK}</div>
                                         <div class="action_title">
                                             <a href="{$action.user_url}" class="action_user">{$action.user_nickname}</a>
                                             {if $action.message}

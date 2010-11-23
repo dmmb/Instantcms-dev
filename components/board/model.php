@@ -144,8 +144,8 @@ class cms_model_board{
         if (!$this->inDB->num_rows($result)){ return false; }
 
         while($item = $this->inDB->fetch_assoc($result)){
-            $item['content']      = nl2br($item['content']);
-			$item['fpubdate']     = $inCore->dateformat($item['fpubdate']);
+            $item['content']    = nl2br($item['content']);
+			$item['fpubdate']   = $inCore->dateformat($item['fpubdate']);
             $records[$item['id']] = $item;
         }
 

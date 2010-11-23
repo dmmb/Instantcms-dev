@@ -83,7 +83,8 @@ function search(){
 
 	$menuid     = $inCore->menuId();
 	$cfg        = $inCore->loadComponentConfig('search');
-	// ÐŸÑ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼ Ð²ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸ Ð»Ð¸ ÐºÐ¾Ð¼Ð¿Ð¾Ð½ÐµÐ½Ñ‚
+    
+	// Ïðîâåðÿåì âêëþ÷åí ëè êîìïîíåíò
 	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     $query  = $inCore->request('query', 'str', '');

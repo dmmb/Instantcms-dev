@@ -2,7 +2,7 @@
     <div class="actions_list">
         <?php foreach($actions as $action) { ?>
             <div class="action_entry act_<?php echo $action['name']; ?>">
-                <div class="action_date"><?php echo $action['pubdate']; ?> назад</div>
+                <div class="action_date<?php if ($action['is_new']){ ?> is_new<?php } ?>"><?php echo $action['pubdate']; ?> назад</div>
                 <div class="action_title">
                     <a href="<?php echo $action['user_url']; ?>" class="action_user"><?php echo $action['user_nickname']; ?></a>
                     <?php if ($action['message']) { ?>

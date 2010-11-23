@@ -26,6 +26,20 @@
         {if ($is_admin || $my_profile) && $album_type == 'private'}
         <form action="/users/{$user_id}/photos/editlist" method="post">
             <input type="hidden" name="album_id" value="{$album.id}" />
+            <script type="text/javascript">
+                {literal}
+                function toggleButtons(){
+                    var is_sel = $('.photo_id:checked').length;
+                    if (is_sel > 0) {
+                        $('#edit_btn').attr('disabled', '');
+                        $('#delete_btn').attr('disabled', '');
+                    } else {
+                        $('#edit_btn').attr('disabled', 'disabled');
+                        $('#delete_btn').attr('disabled', 'disabled');
+                    }
+                }
+                {/literal}
+            </script>
         {/if}
 
 		<table width="" cellpadding="0" cellspacing="0" border="0">
@@ -45,7 +59,7 @@
                             <span class="usr_photo_hits"><strong>{$LANG.HITS}:</strong> {$photo.hits}</span>
                         </div>
                         {if ($is_admin || $my_profile) && $album_type == 'private'}
-                            <input type="checkbox" name="photos[]" class="photo_id" value="{$photo.id}" />
+                            <input type="checkbox" name="photos[]" class="photo_id" value="{$photo.id}" onclick="toggleButtons()" />
                         {/if}                        
                     </div>
 				</td> 
@@ -61,8 +75,8 @@
         {if ($is_admin || $my_profile) && $album_type == 'private'}
             <div class="usr_photo_sel_bar bar">
                 {$LANG.SELECTED_ITEMS}:
-                <input type="submit" name="edit" value="{$LANG.EDIT}" />
-                <input type="submit" name="delete" value="{$LANG.DELETE}" />
+                <input type="submit" name="edit" id="edit_btn" value="{$LANG.EDIT}" disabled="disabled" />
+                <input type="submit" name="delete" id="delete_btn" value="{$LANG.DELETE}" disabled="disabled" />
             </div>
             </form>
         {/if}

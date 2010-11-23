@@ -12,7 +12,7 @@
       <td width="80"><strong>{$LANG.FILE_COUNT}: </strong>{$total_files}</td>
       {if $myprofile}
       		{if $cfg.filessize}
-          		<td width="130"><strong>{$LANG.FREE}: </strong>{$free_mb} {$LANG.MBITE}</td>
+          <td width="130"><strong>{$LANG.FREE}: </strong>{$free_mb} {$LANG.MBITE}</td>
             {else}
             	<td width="130"></td>
           	{/if}

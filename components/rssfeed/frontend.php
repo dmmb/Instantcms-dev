@@ -18,7 +18,8 @@ function rssfeed(){
     $inConf     = cmsConfig::getInstance();
 
 	$cfg        = $inCore->loadComponentConfig('rssfeed');
-	// РџСЂРѕРІРµСЂСЏРµРј РІРєР»СЋС‡РµРЅРё Р»Рё РєРѕРјРїРѕРЅРµРЅС‚
+    
+	// Проверяем включен ли компонент
 	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     global $_LANG;

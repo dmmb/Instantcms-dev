@@ -291,10 +291,10 @@ if ($do == 'config'){
         //upload logo
         if ($_FILES['picture']['name']){
             $inCore->includeGraphics();
-			
+
 			$uploaddir = PATH.'/images/clubs/';	
-			if (!is_dir($uploaddir)) { @mkdir($uploaddir); }
-			@chmod($uploaddir, 0755);
+            if (!is_dir($uploaddir)) { @mkdir($uploaddir); }
+            @chmod($uploaddir, 0755);
 
 			$realfile   = $_FILES['picture']['name'];
 			$path_parts = pathinfo($realfile);
@@ -341,14 +341,14 @@ if ($do == 'config'){
 
         clubSaveUsers($id, $members, 'member', $clubtype, $cfg);
         clubSaveUsers($id, $moders, 'moderator', $clubtype, $cfg);
-		
+
 		cmsCore::addSessionMessage($_LANG['CONFIG_SAVE_OK'], 'info');
 
         $inCore->redirect('/clubs/'.$id);
     }
 
     if ( !$inCore->inRequest('save') ){
-
+        
         // Заголовки и пафвей
         $inPage->addPathway($club['title'], '/clubs/'.$id);
         $inPage->addPathway($_LANG['CONFIG_CLUB']);
@@ -357,8 +357,8 @@ if ($do == 'config'){
 		// Получаем список друзей владельца клуба
 		$friends     	 = cmsUser::getFriends($club['admin_id']);
 		// Получаем участников клуба, без учета администратора
-        $moderators      = clubModerators($id);
-        $members         = clubMembers($id);
+        $moderators     = clubModerators($id);
+        $members        = clubMembers($id);
         $club_users_list = array_merge($moderators, $members);
 		// Проверяем наличие друга в списке участников клуба или является ли он администратором
 		foreach($friends as $key=>$friend){ 
@@ -422,7 +422,7 @@ if ($do == 'leave'){
     $inPage->addPathway($club['title'], '/clubs/'.$id);
     $inPage->addPathway($_LANG['EXIT_FROM_CLUB']);
 	$inPage->setTitle($_LANG['EXIT_FROM_CLUB']);
-	
+
 	if (!clubUserIsMember($id, $user_id)){ return; }
 
     if ( $inCore->inRequest('confirm') ){
@@ -484,7 +484,7 @@ if ($do == 'join'){
 
         $inPage->setTitle($_LANG['JOINING_CLUB']);
 
-        $min_karma  = $club['join_min_karma'];
+        $min_karma = $club['join_min_karma'];
         $user_karma = cmsUser::getKarma($user_id);
 
         if(($user_karma >= $min_karma) || !$club['join_karma_limit']){

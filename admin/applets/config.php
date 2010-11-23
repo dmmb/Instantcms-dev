@@ -64,6 +64,7 @@ function applet_config(){
 		$newCFG['db_pass'] 		= $_CFG['db_pass'];
 		$newCFG['db_prefix']	= $_CFG['db_prefix'];
 		$newCFG['show_pw']		= $inCore->request('show_pw', 'int');
+		$newCFG['short_pw']		= $inCore->request('short_pw', 'int');
 		$newCFG['index_pw']		= $inCore->request('index_pw', 'int');
 		$newCFG['fastcfg']		= $inCore->request('fastcfg', 'int');
 		
@@ -250,15 +251,15 @@ function applet_config(){
                         <div style="margin-top:2px">
                             <strong>Шаблон:</strong><br />
                             <span class="hinttext">Содержимое папки &quot;templates/&quot; </span>
-                        </div>
-                        <div style="margin-top:2px">
-                            <a style="color:#09C" target="_blank" href="http://www.instantcms.ru/design.html">Заказать уникальный шаблон</a>
-                        </div>
+                        </div>                        
 					</td>
 					<td>
                         <select name="template" id="template" style="width:350px" onchange="document.CFGform.submit();">
                             <?php $inCore->templatesList($_CFG['template']); ?>
                         </select>
+                        <div style="margin-top:5px" class="hinttext">
+                            При смене шаблона необходимо очистить папку &laquo;<strong>cache</strong>&raquo; на сервере
+                        </div>
 					</td>
 				</tr>
 				<tr>
@@ -395,6 +396,13 @@ function applet_config(){
 					<td>
 						<input name="index_pw" type="radio" value="1" <?php if (@$_CFG['index_pw']) { echo 'checked="checked"'; } ?>/> Да
 						<input name="index_pw" type="radio" value="0" <?php if (@!$_CFG['index_pw']) { echo 'checked="checked"'; } ?>/>	Нет 
+					</td>
+				</tr>
+				<tr>
+					<td><strong>Выводить текущую страницу в глубиномере:</strong></td>
+					<td>
+						<input name="short_pw" type="radio" value="0" <?php if (!$_CFG['index_pw']) { echo 'checked="checked"'; } ?>/> Да
+						<input name="short_pw" type="radio" value="1" <?php if ($_CFG['index_pw']) { echo 'checked="checked"'; } ?>/> Нет
 					</td>
 				</tr>
 			</table>

@@ -24,12 +24,18 @@ a { color:#09c; }
 a:hover { color:#375E93; }
 
 #wrapper {
-  position: relative;
+  position:relative;
+  min-height:100%;
+  height:auto !important;
+  height:100%;
   min-height: 100%;
+  display:block;
 }
 * html #wrapper {
   height: 100%;
 }
+
+#wrapper .pad{ height:52px; clear:both; }
 
 .text-input{ border:1px solid #4DA4CF; padding:2px; }
 .text-input:focus{ border:1px solid #FFD100; padding:2px; }
@@ -57,6 +63,10 @@ a:hover { color:#375E93; }
     text-decoration:none;
     border-bottom:dashed 1px #375E93;
     color:#375E93;
+}
+
+.hinttext{
+    color:#5F98BF;
 }
 
 /***************************** Шапка страницы *********************************/
@@ -451,7 +461,15 @@ span.fast_cfg_link img{ border:none; }
     background:#FFF;
     padding:1px;
     border:solid 1px #6E93C9;
+}
 
+.mod_latest_pagebar .pagebar{
+    margin-top:25px !important;
+    margin-bottom:10px !important;
+}
+
+.mod_latest_pagebar .pagebar .pagebar_title{
+    margin-left:0px;
 }
 
 /*-------------------------- REGISTRATION FORM -------------------------------*/
@@ -566,6 +584,12 @@ span.fast_cfg_link img{ border:none; }
     margin: 0px;
 	margin-bottom: 5px;
 }
+h3 {
+	font-size: 18px;
+    font-weight:normal;
+	color:#375E93;
+    margin: 15px 0px;
+}
 .con_pubdate{
 	color:#666666;
 	font-weight:bold;
@@ -581,7 +605,7 @@ span.fast_cfg_link img{ border:none; }
 	margin-top:0px;
 }
 .con_text{
-    margin-top:15px;
+    margin:15px 0px;
 }
 .con_subcat{
     font-size:18px;
@@ -1142,7 +1166,7 @@ a.tag:hover{
 .mod_user_menu .add_content a{ background:url(../images/icons/add.png) no-repeat 6px center; }
 .mod_user_menu .admin a{ background:url(../images/icons/cpanel.png) no-repeat 6px center; }
 .mod_user_menu .logout a{ background:url(../images/icons/logout.png) no-repeat 6px center; }
-.mod_user_menu .register a{ background:url(../images/icons/add.png) no-repeat 6px center; }
+.mod_user_menu .register a{ background:url(../images/icons/register.png) no-repeat 6px center; }
 .mod_user_menu .login a{ background:url(../images/icons/key.png) no-repeat 6px center; }
 
 .usr_msgmenu_bar{
@@ -1182,7 +1206,7 @@ a.tag:hover{
 }
 .usr_msg_bbcodebox{
 	padding:0px;
-	background:url(../images/bbtoolbar.jpg) repeat-x left bottom #FFF;
+	background:url(../images/bbtoolbar.jpg) repeat-x left top #EFEFEF;
 	border:solid 1px #666;
     border-bottom:none;
 	overflow:hidden;
@@ -1201,7 +1225,7 @@ a.tag:hover{
     border: solid 1px #83BBD9;
 	padding:6px;
 	float:left;
-	background:url(../images/bbbtn.jpg) repeat-x left bottom #FFF;
+	background:url(../images/bbbtn.jpg) repeat-x left bottom #DFF2F9;
 }
 .usr_bb_hint{
 	display:block;
@@ -1258,7 +1282,6 @@ a.new_messages_link:hover{ color:#F00; background:#Fff; font-weight:bold; paddin
 .bb_tag_hide{
 	padding:8px;
 	background-color:#FFFFCC;
-	color:#666666;
 }
 .bb_tag_hide a{
 	color:#333333;
@@ -3461,6 +3484,8 @@ table.feed td.date strong { color:green; }
     margin-bottom:15px;    
 }
 
+.action_entry .is_new { color:#FF5A00; }
+
 .action_user{
     color:#375E93;
     font-weight:bold;
@@ -3510,5 +3535,5 @@ table.feed td.date strong { color:green; }
 .act_add_post_club{ background:url(../images/icons/actions/add_post_club.png) no-repeat left 3px; }
 .act_add_user_photo{ background:url(../images/icons/actions/add_user_photo.png) no-repeat left 3px; }
 .act_add_user_photo_multi{ background:url(../images/icons/actions/add_user_photo_multi.png) no-repeat left 3px; }
-.add_user{ background:url(../images/icons/actions/add_user.png) no-repeat left 3px; }
-.add_wall_my{ background:url(../images/icons/actions/add_wall_my.png) no-repeat left 3px; }
+.act_add_user{ background:url(../images/icons/actions/add_user.png) no-repeat left 3px; }
+.act_add_wall_my{ background:url(../images/icons/actions/add_wall_my.png) no-repeat left 3px; }

@@ -427,15 +427,18 @@ if ($do=='newdoc' || $do=='editdoc'){
 					<tr>
 					  <td valign="top">Раздел:<br />
 					  <span class="hinttext">Куда поместить статью</span></td>
-					  <td valign="top"><select name="category_id" size="8" id="category_id" style="width:250px">
-                        <?php
-                            if (isset($mod['category_id'])){
-								echo $inCore->getListItemsNS('cms_category', $mod['category_id'], '', '', $editor_category_id);
-                            } else {
-						  		echo $inCore->getListItemsNS('cms_category', 0, '', '', $editor_category_id);
-    						}
-                        ?>
-                      </select></td>
+					  <td valign="top">
+                        <select name="category_id" size="8" id="category_id" style="width:250px">
+                              <option value="<?php echo $editor_category_id; ?>" <?php if (@$mod['category_id']==$editor_category_id || !isset($mod['category_id'])) { echo 'selected'; }?>>-- Корневой раздел --</option>
+                                <?php
+                                    if (isset($mod['category_id'])){
+                                        echo $inCore->getListItemsNS('cms_category', $mod['category_id'], '', '', $editor_category_id);
+                                    } else {
+                                        echo $inCore->getListItemsNS('cms_category', 0, '', '', $editor_category_id);
+                                    }
+                                ?>
+                        </select>
+                      </td>
 					</tr>
 					<tr>
 					  <td valign="top">Публиковать статью?</td>

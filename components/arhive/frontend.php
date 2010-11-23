@@ -19,7 +19,8 @@ function arhive(){
     $inUser     = cmsUser::getInstance();
 
 	$cfg        = $inCore->loadComponentConfig('arhive');
-	// ĞŸÑ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼ Ğ²ĞºĞ»ÑÑ‡ĞµĞ½Ğ¸ Ğ»Ğ¸ ĞºĞ¾Ğ¼Ğ¿Ğ¾Ğ½ĞµĞ½Ñ‚
+
+    // Ïğîâåğÿåì âêëş÷åí ëè êîìïîíåíò
 	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     $id         = $inCore->request('id', 'int', 0);

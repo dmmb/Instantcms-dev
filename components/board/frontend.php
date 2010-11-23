@@ -336,7 +336,7 @@ if ($do=='additem'){
 
     $inPage->printHeading($_LANG['ADD_ADV']);
 
-    if ( !(loadedByUser24h($inUser->id, $cat['id'])<$cat['uplimit'] || $cat['uplimit'] == 0) ){ 
+    if ( !(loadedByUser24h($inUser->id, $cat['id'])<$cat['uplimit'] || $cat['uplimit'] == 0) ){       
 		cmsCore::addSessionMessage('<p>'.$_LANG['MAX_VALUE_OF_ADD_ADV'].'</p>', 'error');
 		$inCore->redirect('/board/'.$id);      
     }
@@ -399,7 +399,7 @@ if ($do=='additem'){
 
         if ($cfg['srok']){  $pubdays = ($inCore->request('pubdays', 'int') <= 50) ? $inCore->request('pubdays', 'int') : 50; }
         if (!$cfg['srok']){ $pubdays = isset($cfg['pubdays']) ? $cfg['pubdays'] : 14; }
-		
+
 		$errors = false;
         if (!$title_r) 	 { cmsCore::addSessionMessage($_LANG['NEED_TITLE'], 'error'); $errors = true; }
         if (!$content) { cmsCore::addSessionMessage($_LANG['NEED_TEXT_ADV'], 'error'); $errors = true; }
@@ -445,16 +445,16 @@ if ($do=='additem'){
                                     'file'=>$filename
                                 ));
 		if ($published == 1) {
-			//регистрируем событие
-			cmsActions::log('add_board', array(
-						'object' => $title,
-						'object_url' => '/board/read'.$item_id.'.html',
-						'object_id' => $item_id,
-						'target' => $cat['title'],
-						'target_url' => '/board/'.$cat['id'],
-						'target_id' => $cat['id'], 
-						'description' => ''
-			));
+		//регистрируем событие
+		cmsActions::log('add_board', array(
+					'object' => $title,
+					'object_url' => '/board/read'.$item_id.'.html',
+					'object_id' => $item_id,
+					'target' => $cat['title'],
+					'target_url' => '/board/'.$cat['id'],
+					'target_id' => $cat['id'], 
+					'description' => ''
+		));
 		}
 
         //finish

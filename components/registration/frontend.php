@@ -243,7 +243,7 @@ function registration(){
                         sendActivationNotice($send_pass, $new_user_id);
                         $inPage->includeTemplateFile('special/regactivate.php');
                         $inCore->halt();
-                    } else {
+                    } else {                        
 						// Регистрируем событие
 						cmsActions::log('add_user', array(
 							'object' => '',
@@ -363,7 +363,7 @@ function registration(){
 
                 if (!$login && !$passw){
 					if ($is_sess_back) {
-                    	$_SESSION['auth_back_url'] = $back;
+                    $_SESSION['auth_back_url'] = $back;
 					}
 
                     $inPage->setTitle($_LANG['SITE_LOGIN']);
@@ -462,7 +462,7 @@ function registration(){
             cmsCore::callEvent('USER_ACTIVATED', $user_id);
 
             if ($cfg['send_greetmsg']){ $model->sendGreetsMessage($user_id, $cfg['greetmsg']); }
-			
+
 			// Регистрируем событие
 			cmsActions::log('add_user', array(
 					'object' => '',

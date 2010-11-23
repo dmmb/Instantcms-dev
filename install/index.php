@@ -24,7 +24,7 @@
     //Минимальная версия PHP
     $php_req = array();
     $php_req['major']       = '5';
-    $php_req['minor']       = '1';
+    $php_req['minor']       = '2';
     $php_req['release']     = '0';
 
     $php_req_ver = $php_req['major'] * 10000 + $php_req['minor'] * 100 + $php_req['release'];
@@ -62,6 +62,7 @@
 			$_CFG['tooltips']   = '1';
 			$_CFG['index_pw']   = '0';
 			$_CFG['show_pw']    = '1';
+			$_CFG['short_pw']   = '1';
 			$_CFG['splash']     = '0';
 			$_CFG['stats']      = '0';
 			$_CFG['slight']     = '0';
@@ -203,25 +204,11 @@ function installCheckExtensions(){
     $php53 = false;
     
     if ($php_ver['int'] < $php_req_ver) { $right=false; }
-    if ($php_ver['int']>=50300) { $right=false; $php53=true; }
 
-    echo '<p><strong>Версия PHP:</strong> '.$php_ver['text'].' &mdash '.($right ? '<span style="color:green">Оk</span>' : (!$php53 ? '<span style="color:red">требуется '.$php_req['major'].'.'.$php_req['minor'].'.'.$php_req['release'].' или выше</span>' : '<span style="color:red">PHP версии 5.3 частично не поддерживается</span>')).'</p>';
+    echo '<p><strong>Версия PHP:</strong> '.$php_ver['text'].' &mdash '.($right ? '<span style="color:green">Оk</span>' : '<span style="color:red">требуется '.$php_req['major'].'.'.$php_req['minor'].'.'.$php_req['release'].' или выше</span>').'</p>';
 
     if (!$right){
-        if (!$php53){
-            echo '<p>Для обновления PHP обратитесь к своему хостеру.</p>';
-        } else {
-            echo '<p>
-                    Впрочем, вы можете использовать PHP 5.3, но с выключенным выводом предупреждений (warning) в php.ini.
-                    В противном случае посетители сайта будут видеть множество предупреждений о устаревших функциях языка (E_DEPRECATED).
-                  </p>
-                  <p>
-                    В одном из ближайших релизов поддержка PHP 5.3 будет обеспечена, а пока мы рекомендуем использовать PHP 5.2.
-                  </p>
-                  <p>Для изменения версии PHP или отключения вывода предупреждений обратитесь к своему хостеру.</p>
-                  <p>Для локальной установки используйте <a href="http://www.denwer.ru/packages/base_php52.html">Денвер с PHP 5.2</a>.</p>';
-
-        }
+        echo '<p>Для обновления PHP обратитесь к своему хостеру.</p>';
     }
     
 }

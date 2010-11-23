@@ -11,21 +11,21 @@
 /*********************************************************************************************/
 
     Error_Reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
-    setlocale(LC_ALL, 'ru');
+    setlocale(LC_ALL, 'ru_RU.CP1251');
 
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
     define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
 
 ////////////////////////////// Проверяем что система установлена /////////////////////////////
 
-//    if(is_dir('install')||is_dir('migrate')) {
-//        if (!file_exists(PATH.'/includes/config.inc.php')){
-//            header('location:/install/');
-//        } else {
-//            include(PATH.'/core/messages/installation.html');
-//            die();
-//        }
-//    }
+    if(is_dir('install')||is_dir('migrate')) {
+        if (!file_exists(PATH.'/includes/config.inc.php')){
+            header('location:/install/');
+        } else {
+            include(PATH.'/core/messages/installation.html');
+            die();
+        }
+    }
 
 /////////////////////////////////// Подготовка //////////////////////////////////////////////
 	
@@ -72,8 +72,8 @@
     //то показываем шаблон сообщения о том что сайт отключен
 	if ( $inConf->siteoff &&
         !$inUser->is_admin &&
-        !$inCore->request('uri', 'str')=='/login' &&
-        !$inCore->request('uri', 'str')=='/logout'
+        $inCore->request('uri', 'str')!='login' &&
+        $inCore->request('uri', 'str')!='logout'
        ) {
             $inPage->includeTemplateFile('special/siteoff.php');
             $inCore->halt();

@@ -52,7 +52,7 @@ class cmsCore {
 
         //проверяем был ли переопределен шаблон через сессию
         //например, из модуля "выбор шаблона"
-        if ($_SESSION['template']) { $inConf->template = $_SESSION['template']; }
+        if (isset($_SESSION['template'])) { $inConf->template = $_SESSION['template']; }
 
         define('TEMPLATE', $inConf->template);
         define('TEMPLATE_DIR', PATH.'/templates/'.$inConf->template.'/');
@@ -1471,6 +1471,7 @@ class cmsCore {
      * Определяет текущий компонент
      * Считается, что компонент указан в первом сегменте URI,
      * иначе подключается компонент для главной страницы
+	 * Критерий "включенности" компонента определяется в функции loadComponentConfig
      * @return string $component
      */
     private function detectComponent(){
@@ -1523,7 +1524,9 @@ class cmsCore {
         if (!$component || !$this->uri) { return false; }
 
         if(!file_exists('components/'.$component.'/router.php')){ return false; }
-
+		/**
+		 * Критерий "включенности" компонента определяется в функции loadComponentConfig
+		 */
         //подключаем список маршрутов компонента
         $this->includeFile('components/'.$component.'/router.php');
 
@@ -1578,7 +1581,9 @@ class cmsCore {
 
         //проверяем что компонент указан
         if (!$component) { return false; }
-
+		/**
+		 * Критерий "включенности" компонента определяется в функции loadComponentConfig
+		 */
         //проверяем что в названии только буквы и цифры
         if (!preg_match("/^([a-z0-9])+$/", $component)){ cmsCore::error404(); }
         
@@ -3646,7 +3651,7 @@ class cmsCore {
         $diff_min   = (string)round(($diff_sec/60)-($diff_hour*60));
 
         //Выводим разницу в днях
-        if ($diff_day){
+        if ($diff_day > 0){
 
             if ($diff_day == 11 || $diff_day == 12 || $diff_day == 13 || $diff_day == 14) {
                 $diff_str = $diff_day. " дней";
@@ -3663,7 +3668,7 @@ class cmsCore {
         }
 
         //Выводим разницу в часах
-        if ($diff_hour){
+        if ($diff_hour > 0){
 
             if ($diff_hour == 1 || $diff_hour == 21) $diff_str = $diff_hour." час"; else
             if ($diff_hour == 2 || $diff_hour == 3 or $diff_hour == 4 || $diff_hour == 22 || $diff_hour == 23) $diff_str = $diff_hour." часа";
@@ -3674,7 +3679,7 @@ class cmsCore {
         }
 
         //Выводим разницу в минутах
-        if ($diff_min){
+        if ($diff_min > 0){
 
             if ($diff_min == "11" || $diff_min == "12" || $diff_min == "13" || $diff_min == "14") {
                 $diff_str = $diff_min. " минут";

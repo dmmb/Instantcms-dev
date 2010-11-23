@@ -49,17 +49,17 @@ class cmsUser {
 
         $inCore = cmsCore::getInstance();
 
-        $user_id    = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : 0;
+        $user_id = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : 0;
 
         if (!$user_id){
-            $this->id   = 0;
-			$this->ip   = $_SERVER['REMOTE_ADDR'];
+            $this->id       = 0;
+			$this->ip       = $_SERVER['REMOTE_ADDR'];
             $this->is_admin = 0;
             $this->group_id = self::getGuestGroupId();
             return true;
         }
 
-        $info       =   $this->loadUser($user_id);
+        $info = $this->loadUser($user_id);
 
         if (!$info){ return false; }
 
@@ -67,7 +67,7 @@ class cmsUser {
             $this->{$key}   = $value;
         }
 
-        $this->id           = (int)$user_id;
+        $this->id = (int)$user_id;
 
         $this->checkBan();
 
@@ -867,10 +867,13 @@ class cmsUser {
             $inCore->includeFile('components/users/includes/usercore.php');
 
             while($record = $inDB->fetch_assoc($result)){
-				$record['fpubdate'] = $inCore->dateDiffNow($record['pubdate']);
+                $record['is_today'] = time() - strtotime($record['pubdate']) < 86400;
+				$record['fpubdate'] = $record['is_today'] ? $inCore->dateDiffNow($record['pubdate']) : $inCore->dateFormat($record['pubdate']);
                 $record['avatar']   = usrImageNOdb($record['author_id'], 'small', $record['imageurl'], $record['is_deleted']);
                 $records[]          = $record;
             }
+
+            $records = cmsCore::callEvent('GET_WALL_POSTS', $records);
 
             if ($pages>1){
                 $pagebar = cmsPage::getPagebar($total, $page, $perpage, 'javascript:wallPage(%page%)');
@@ -1323,15 +1326,15 @@ class cmsUser {
      */
     public static function getGenderLink($user_id, $nickname='', $menuid=0, $gender='m', $login='', $css_style=''){
         $inDB = cmsDatabase::getInstance();
-        $gender_img = '/components/users/images/male.gif';
+        $gender_img = '/components/users/images/male.png';
         if (!$gender){
             $user = $inDB->get_field('cms_user_profiles', 'user_id='.$user_id, 'gender');
         }
         if ($gender){
             switch($gender){
-                case 'm': $gender_img = '/components/users/images/male.gif'; break;
-                case 'f': $gender_img = '/components/users/images/female.gif'; break;
-                default : $gender_img = '/components/users/images/male.gif'; break;
+                case 'm': $gender_img = '/components/users/images/male.png'; break;
+                case 'f': $gender_img = '/components/users/images/female.png'; break;
+                default : $gender_img = '/components/users/images/male.png'; break;
             }
         }
         if (!$nickname || !$login){
@@ -1339,7 +1342,7 @@ class cmsUser {
             $nickname   = $user['nickname'];
             $login      = $user['login'];
         }
-        return '<a style="height:16px; line-height:16px; background:url('.$gender_img.') no-repeat left center; padding-left:18px; '.$css_style.'" href="'.cmsUser::getProfileURL($login).'" class="user_gender_link">'.$nickname.'</a>';
+        return '<a style="padding:1px; height:16px; line-height:16px; background:url('.$gender_img.') no-repeat left center; padding-left:18px; '.$css_style.'" href="'.cmsUser::getProfileURL($login).'" class="user_gender_link">'.$nickname.'</a>';
     }
 
 // ============================================================================ //
