@@ -304,15 +304,15 @@ function applet_menu(){
 	
 		$menu = $_REQUEST['menu'];
 		$title = $_REQUEST['title'];
-		$position = $_REQUEST['target'];
+		$position = $_REQUEST['position'];
 		$published = $_REQUEST['published'];
 		$css_prefix = $_REQUEST['css_prefix'];
 		$allow_group = $_REQUEST['allow_group'];
 	
-		$cfg['menu'] = $menu;		
-		$cfg_str = serialize($cfg);
+		$cfg['showtype'] = $menu;		
+		$cfg_str = $inCore->arrayToYaml($cfg);
 	
-		$sql = "INSERT INTO cms_modules (position, name, title, is_external, content, ordering, showtitle, published, user, config, css_prefix)
+		$sql = "INSERT INTO cms_modules (position, name, title, is_external, content, ordering, showtitle, published, user, config, css_prefix, allow_group)
 				VALUES ('".$position."', 
 						'Μενώ', 
 						'".$title."', 
@@ -323,7 +323,8 @@ function applet_menu(){
 						$published,
 						0,
 						'$cfg_str',
-						'$css_prefix')";
+						'$css_prefix',
+						'$allow_group')";
 	
 		dbQuery($sql) ;
 		

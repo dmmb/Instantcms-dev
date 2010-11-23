@@ -34,6 +34,8 @@ function clubs(){
 
 	//LOAD CONFIG
 	$cfg = $inCore->loadComponentConfig('clubs');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 	
 	//SOME DEFAULT CONFIG VALUES
 	if(!isset($cfg['seo_club'])) { $cfg['seo_club'] = 'title'; }
@@ -98,9 +100,6 @@ if ($do=='view'){
 if ($do=='club'){
 
 	$club   = $model->getClub($id);
-
-	$smarty = $inCore->initSmarty('components', 'com_clubs_view_club.tpl');			
-				
 	if(!$club){	cmsCore::error404(); }
     
     //TITLES
@@ -179,6 +178,7 @@ if ($do=='club'){
 
 	$club['pubdate'] = $inCore->dateformat($club['pubdate'], true, true);
 
+	$smarty = $inCore->initSmarty('components', 'com_clubs_view_club.tpl');	
     $smarty->assign('clubid', $id);
     $smarty->assign('club', $club);
     $smarty->assign('is_access', $is_access);
@@ -268,6 +268,7 @@ if ($do == 'config'){
 
     if (!$user_id){ return; }
     if (!$club){ return; }
+	if ( !(clubUserIsAdmin($id, $user_id) || $inCore->userIsAdmin($user_id)) ){ return; }
 
     if ( $inCore->inRequest('save') ){
         //save to database
@@ -290,11 +291,15 @@ if ($do == 'config'){
         //upload logo
         if ($_FILES['picture']['name']){
             $inCore->includeGraphics();
-            $uploaddir = PATH.'/images/clubs/';
 
+			$uploaddir = PATH.'/images/clubs/';	
             if (!is_dir($uploaddir)) { @mkdir($uploaddir); }
-
             @chmod($uploaddir, 0755);
+
+			$realfile   = $_FILES['picture']['name'];
+			$path_parts = pathinfo($realfile);
+			$ext        = strtolower($path_parts['extension']);
+			if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'png' && $ext != 'bmp') { cmsCore::error404(); }
 
             $filename       = md5($id . $user_id . time()).'.jpg';
             $uploadphoto    = $uploaddir . $filename;
@@ -305,7 +310,6 @@ if ($do == 'config'){
 						@unlink(PATH.'/images/clubs/'.$club['imageurl']);
 						@unlink(PATH.'/images/clubs/small/'.$club['imageurl']);
 					}
-                    if(!isset($cfg['watermark'])) { $cfg['watermark'] = 0; }
                     @img_resize($uploadphoto, $uploadthumb, $cfg['thumb1'], $cfg['thumb1'], $cfg['thumbsqr']);
                     @img_resize($uploadphoto, $uploadphoto, $cfg['thumb2'], $cfg['thumb2'], $cfg['thumbsqr']);
             } else {
@@ -329,8 +333,8 @@ if ($do == 'config'){
                                         'join_karma_limit'=>$join_karma_limit
                                     ));
 
-        $moders 		= $_POST['moderslist'] ? $_POST['moderslist'] : array();
-        $members 		= $_POST['memberslist'] ? $_POST['memberslist'] : array();
+        $moders  = $inCore->request('moderslist', 'array_int', array());
+        $members = $inCore->request('memberslist', 'array_int', array());
 
         if ($moders) { if (array_search($admin_id, $moders)) { unset($moders[array_search($admin_id, $moders)]); }	}
         if ($members) { if (array_search($admin_id, $members)) { unset($members[array_search($admin_id, $members)]); }	}
@@ -338,27 +342,49 @@ if ($do == 'config'){
         clubSaveUsers($id, $members, 'member', $clubtype, $cfg);
         clubSaveUsers($id, $moders, 'moderator', $clubtype, $cfg);
 
+		cmsCore::addSessionMessage($_LANG['CONFIG_SAVE_OK'], 'info');
+
         $inCore->redirect('/clubs/'.$id);
     }
 
     if ( !$inCore->inRequest('save') ){
         
-        if ( !(clubUserIsAdmin($id, $user_id) || $inCore->userIsAdmin($user_id)) ){ return; }
-
-        //show config form
+        // Заголовки и пафвей
         $inPage->addPathway($club['title'], '/clubs/'.$id);
         $inPage->addPathway($_LANG['CONFIG_CLUB']);
         $inPage->setTitle($_LANG['CONFIG_CLUB']);
 
+		// Получаем список друзей владельца клуба
+		$friends     	 = cmsUser::getFriends($club['admin_id']);
+		// Получаем участников клуба, без учета администратора
         $moderators     = clubModerators($id);
         $members        = clubMembers($id);
-
+        $club_users_list = array_merge($moderators, $members);
+		// Проверяем наличие друга в списке участников клуба или является ли он администратором
+		foreach($friends as $key=>$friend){ 
+			if (in_array($friend['id'], $club_users_list) || $friend['id'] == $club['admin_id']) { unset($friends[$key]); }
+		}
+		// Формируем список option друзей, если они есть
+		if ($_SESSION['user']['friends'] && $friends) { 
+			foreach($friends as $friend){ 
+				$friends_list .= '<option value="'.$friend['id'].'">'.$friend['nickname'].'</option>';
+			}		
+		}
+		// Формируем массив id друзей для мержа с участниками клуба
+		// массив друзей берется с уже отфильтрованными участниками
+		$friends_ids = array();
+		foreach($friends as $friend){ 
+			$friends_ids[] = $friend['id'];
+		}
+		// формируем список друзья не в клубе + участники клуба
+		$fr_members = array_merge($club_users_list, $friends_ids);
+		// Проверяем наличие друга или участников клуба в списке модераторов
+		$fr_members = array_diff($fr_members, $moderators);
+		// Формируем список option друзей (которые еще не в этом клубе) и участников
+		if ($fr_members) { $fr_members_list = cmsUser::getAuthorsList($fr_members); } else { $fr_members_list = ''; }
+		// Формируем список option участников клуба
         if ($moderators) { $moders_list = cmsUser::getAuthorsList($moderators); } else { $moders_list = ''; }
-        if ($members) { $members_list = cmsUser::getAuthorsList($members); } else { $members_list = ''; }
-        
-        $userslist      = cmsUser::getUsersList(false, array_merge($moderators, $members, array($user_id)));
-
-        if (array_search($user_nick, $userslist)) { unset($userslist[array_search($user_nick, $userslist)]); }
+        if ($club_users_list) { $members_list = cmsUser::getAuthorsList($club_users_list); } else { $members_list = ''; }
 
         $club['blog_id'] = clubBlogId($id);
 
@@ -376,7 +402,8 @@ if ($do == 'config'){
         $smarty->assign('club', $club);
         $smarty->assign('moders_list', $moders_list);
         $smarty->assign('members_list', $members_list);
-        $smarty->assign('users_list', $userslist);
+        $smarty->assign('friends_list', $friends_list);
+		$smarty->assign('fr_members_list', $fr_members_list);
         $smarty->display('com_clubs_config.tpl');
 
     }
@@ -396,6 +423,8 @@ if ($do == 'leave'){
     $inPage->addPathway($_LANG['EXIT_FROM_CLUB']);
 	$inPage->setTitle($_LANG['EXIT_FROM_CLUB']);
 
+	if (!clubUserIsMember($id, $user_id)){ return; }
+
     if ( $inCore->inRequest('confirm') ){
         clubRemoveUser($id, $user_id);
         setClubsRating($id);
@@ -404,7 +433,6 @@ if ($do == 'leave'){
     }
 
     if ( !$inCore->inRequest('confirm') ){
-        if (!clubUserIsMember($id, $user_id)){ return; }
 
         $inPage->setTitle($_LANG['EXIT_FROM_CLUB']);
 		$inPage->backButton(false);

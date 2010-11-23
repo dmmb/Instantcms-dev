@@ -1953,11 +1953,10 @@ class cmsCore {
 
         if (isset($this->component_configs[$component])) { return $this->component_configs[$component]; }
 
-        $config_yaml = $inDB->get_field('cms_components', "link='{$component}' AND published = 1", 'config');
+        $config_yaml = $inDB->get_fields('cms_components', "link='{$component}'", 'config, published');
 
-		if (!$config_yaml) { $this->error404(); }
-
-        $config = $this->yamlToArray($config_yaml);
+        $config = $this->yamlToArray($config_yaml['config']);
+		$config['component_enabled'] = $config_yaml['published'];
 
         $this->cacheComponentConfig($component, $config);
 

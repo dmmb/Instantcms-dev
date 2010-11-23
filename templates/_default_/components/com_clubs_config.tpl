@@ -61,9 +61,9 @@
 					<div><input name="moderator_remove" type="button" id="moderator_remove" value="&gt;&gt;" style="margin-top:4px"></div>
 				</td>
 				<td align="center" valign="top">
-					<p><strong>{$LANG.ALL_USERS}:</strong></p>
+					<p><strong>{$LANG.MY_FRIENDS_AND_CLUB_USERS}:</strong></p>
 					<select name="userslist1" size="10" multiple id="userslist1" style="width:200px">
-						{$users_list}
+						{$fr_members_list}
 					</select>
 				</td>
 			</tr> 
@@ -118,9 +118,9 @@
 					<div><input name="member_remove" type="button" id="member_remove" value="&gt;&gt;" style="margin-top:4px"></div>
 				</td>
 				<td align="center" valign="top">
-					<p><strong>{$LANG.ALL_USERS}:</strong></p>
+					<p><strong>{$LANG.MY_FRIENDS}:</strong></p>
 					<select name="userslist2" size="10" multiple id="userslist2" style="width:200px">
-						{$users_list}
+						{$friends_list}
 					</select>
 				</td>
 			</tr>  

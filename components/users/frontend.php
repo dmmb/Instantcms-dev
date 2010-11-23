@@ -89,6 +89,8 @@ function users(){
     $model = new cms_model_users();
 
     $cfg = $inCore->loadComponentConfig('users');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
     $inCore->loadLanguage('components/users');
 
     if (!isset($cfg['showgroup'])) { $cfg['showgroup']  = 0; }
@@ -528,7 +530,7 @@ if ($do=='editprofile'){
 		
 		} else { echo usrAccessDenied(); }
 	
-	} else { echo usrAccessDenied(); }
+	} else { cmsUser::goToLogin(); }
 
 }
 /////////////////////////////// VIEW USER COMMENTS /////////////////////////////////////////////////////////////////////////////////////
@@ -655,7 +657,7 @@ if ($do=='profile'){
     if (!$id){
         $login = $inCore->request('login', 'str', '');
         $login = urldecode($login);
-        $id    = $inDB->get_field('cms_users', "login='{$login}' AND is_deleted=0", 'id');
+        $id    = $inDB->get_field('cms_users', "login='{$login}'", 'id');
     }
 
     $usr = $model->getUser($id);
@@ -663,16 +665,19 @@ if ($do=='profile'){
     if (!$usr){ cmsCore::error404(); }
 
 	if (!$inUser->id && !$cfg['sw_guest']) {
-        $inPage->setTitle($_LANG['ACCESS_DENIED']);
-		echo usrNeedReg();
-        return;
+        cmsUser::goToLogin(); 
 	}
 
     $inPage->setTitle($usr['nickname']);
     $inPage->addPathway($usr['nickname']);
 
     if ( !(usrAllowed($usr['allow_who'], $id) || $inUser->is_admin) ){
-        echo usrNotAllowed();
+		$usr['flogdate'] = strip_tags(usrStatus($usr['id'], $usr['flogdate'], false, $usr['gender']));
+        $smarty = $inCore->initSmarty('components', 'com_users_not_allow.tpl');
+		$smarty->assign('is_auth', $inUser->id);
+        $smarty->assign('avatar', usrImageNOdb($usr['id'], 'big', $usr['imageurl'], $usr['is_deleted']));
+        $smarty->assign('usr', $usr);
+        $smarty->display('com_users_not_allow.tpl');
         return;
     }
 
@@ -792,7 +797,7 @@ if ($do=='profile'){
     $usr['fregdate'] 			= $inCore->dateFormat($usr['fregdate']);
     $usr['birthdate'] 			= $inCore->dateFormat($usr['birthdate']);
 
-    $usr['profile_link']        = cmsUser::getProfileURL($usr['login']);
+    $usr['profile_link']        = HOST . cmsUser::getProfileURL($usr['login']);
 
     $usr['genderimg']			= '';
     if ($usr['gender']) {
@@ -1071,7 +1076,7 @@ if ($do=='addphoto'){
 
     if (!$cfg['sw_photo']) { cmsCore::error404(); }
 
-    if (!$inUser->id) { cmsCore::error404(); }
+    if (!$inUser->id) { cmsUser::goToLogin(); }
 
     if ($id != $inUser->id) { cmsCore::error404(); }
 
@@ -1670,6 +1675,7 @@ if ($do=='friendlist'){
 
    	$smarty->assign('friends', $friends);
 	$smarty->assign('usr', $usr);
+	$smarty->assign('myprofile', ($id == $inUser->id));
 	$smarty->assign('total', $total);
 	$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/users/%user_id%/friendlist%page%.html', array('user_id'=>$id)));
 		
@@ -1722,7 +1728,7 @@ if ($do=='viewphoto'){
 					
 				$smarty = $inCore->initSmarty('components', 'com_users_photos_view.tpl');
 				$smarty->assign('photo', $photo);
-				$smarty->assign('bbcode', '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/users/photos/medium/'.$photo['imageurl'].'[/IMG]');
+	$smarty->assign('bbcode', '[IMG]'.HOST.'/images/users/photos/medium/'.$photo['imageurl'].'[/IMG]');
 				$smarty->assign('previd', $previd);
 				$smarty->assign('nextid', $nextid);
 				$smarty->assign('usr', $usr);
@@ -1762,8 +1768,9 @@ if ($do=='addfriend'){
 					cmsCore::addSessionMessage($_LANG['ADD_FRIEND_OK'] . $usr['nickname'], 'info');
 					//регистрируем событие
 					cmsActions::log('add_friend', array(
-						'object' => $usr['nickname'],
-						'object_url' => cmsUser::getProfileURL($usr['login']),
+						'object' => $inUser->nickname,
+						'user_id' => $usr['id'],
+						'object_url' => cmsUser::getProfileURL($inUser->login),
 						'object_id' => $fr_id,
 						'target' => '',
 						'target_url' => '',
@@ -2048,8 +2055,8 @@ if ($do=='karma'){
 				$k['kpoints']   = karmaPoints($k['kpoints']);
 				$karma[]        = $k;
 					}
-
 		}
+
 		$smarty = $inCore->initSmarty('components', 'com_users_karma.tpl');
 		$smarty->assign('karma', $karma);
 		$smarty->assign('usr', $usr);
@@ -2137,8 +2144,7 @@ if ($do == 'delprofile'){
 			
 				if (isset($_REQUEST['confirm'])){
 					if ($inUser->id == $data['id'] || $inCore->userIsAdmin($inUser->id)){
-						$inDB->query("UPDATE cms_users SET is_deleted = 1 WHERE id = $id");	
-						$inDB->query("DELETE FROM cms_user_friends WHERE to_id = $id OR from_id = $id");
+						$model->deleteUser($id);
                         $user_blog_id = $inDB->get_field('cms_blogs', 'user_id='.$id, 'id');
 						if ($user_blog_id) {
                             $inCore->loadModel('blogs');
@@ -2231,9 +2237,9 @@ if ($do=='files'){
 			$total_files = $inDB->rows_count('cms_user_files', 'user_id = '.$id.' '.$allowsql.'');
 			//calculate free space
 			$max_mb = $cfg['filessize'];
-			$current_bytes = usrFilesSize($id);							
+			$current_bytes = $max_mb ? usrFilesSize($id) : false;							
 			if ($current_bytes) { $current_mb = round(($current_bytes / 1024) / 1024, 2); } else { $current_mb = 0; }
-			$free_mb = round($max_mb - $current_mb, 2);
+			$free_mb = $max_mb ? round($max_mb - $current_mb, 2) : '';
 			$is_files = false;
 			$myprofile = ($inUser->id==$id);
 			if ($inDB->num_rows($result)){ 
@@ -2245,7 +2251,7 @@ if ($do=='files'){
 				//build file list rows
 				$files = array();
 				while($file = $inDB->fetch_assoc($result)){
-						$file['filelink'] = 'http://'.$_SERVER['HTTP_HOST'].'/users/files/download'.$file['id'].'.html';
+						$file['filelink'] = HOST.'/users/files/download'.$file['id'].'.html';
 						if ($rownum % 2) { $file['class'] = 'usr_list_row1'; } else { $file['class'] = 'usr_list_row2'; }
 						$file['fileicon'] 	= $inCore->fileIcon($file['filename']);
 						$file['mb'] 		= round(($file['filesize']/1024)/1024, 2);if ($mb == '0') { $mb = '~ 0'; }
@@ -2261,6 +2267,7 @@ if ($do=='files'){
 			$smarty->assign('usr', $usr);
 			$smarty->assign('orderby', $orderby);
 			$smarty->assign('orderto', $orderto);
+			$smarty->assign('cfg', $cfg);
 			$smarty->assign('total_files', $total_files);
 			$smarty->assign('is_files', $is_files);
 			$smarty->assign('free_mb', $free_mb);
@@ -2322,8 +2329,8 @@ if ($do=='addfile'){
 				echo '<div class="con_heading">'.$_LANG['FILE_UPLOAD_FINISH'].'</div>';
 				
 				$e = false;
-				
-				$size_mb = 0; $size_limit = false;
+				$size_mb      = 0;
+				$size_limit   = false;
 				$loaded_files = array();
 				
 				foreach ($_FILES as $key => $data_array) {
@@ -2349,7 +2356,7 @@ if ($do=='addfile'){
 							}  
 						} 
 						
-						if ($size_mb <= $free_mb){
+						if ($size_mb <= $free_mb || !$cfg['filessize']){
 							if ($may){
 								if (move_uploaded_file($tmp_name, PATH."/upload/userfiles/$id/$name")){
 									$loaded_files[] = $name;
@@ -2373,6 +2380,7 @@ if ($do=='addfile'){
 				
 				if ($size_limit) { 
 					echo '<div style="color:#660000;margin-bottom:10px;font-weight:bold">'.$_LANG['YOUR_FILE_LIMIT'].' ('.$max_mb.' '.$_LANG['MBITE'].') '.$_LANG['IS_OVER_LIMIT'].'.</div>';
+
 					echo '<div style="color:#660000;font-weight:bold">'.$_LANG['FOR_NEW_FILE_DEL_OLD'].'</div>';
 				}
 				if ($type_error) { 
@@ -2386,8 +2394,9 @@ if ($do=='addfile'){
 							echo '<li>'.$val.'</li>';						
 						}
 					echo '</ul>';
-					
+					if ($cfg['filessize']){
 					echo '<div style="margin-top:10px"><strong>'.$_LANG['FREE_SPACE_LEFT'].':</strong> '.round($free_mb-$size_mb, 2).' '.$_LANG['MBITE'].'</div>';
+					}
 				} else {
 					echo '<div style="color:red">'.$_LANG['ERR_BIG_FILE'].'</div>';
 					echo '<div style="color:red">'.$_LANG['ERR_FILE_NAME'].'</div>';
@@ -2415,12 +2424,13 @@ if ($do=='addfile'){
 					$smarty->assign('free_mb', $free_mb);
 					$smarty->assign('post_max_b', $post_max_b);
 					$smarty->assign('post_max_mb', $post_max_mb);
+					$smarty->assign('cfg', $cfg);
 					$smarty->assign('types', $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar');
 					$smarty->display('com_users_file_add.tpl');
 				}
 		
 		} else { echo usrAccessDenied(); }	
-	} else { echo usrAccessDenied(); }
+	} else { cmsUser::goToLogin(); }
 }
 
 /////////////////////////////// FILE DELETE /////////////////////////////////////////////////////////////////////////////////////////
@@ -2621,8 +2631,9 @@ if ($do=='votekarma'){
     $sign   = $inCore->request('sign', 'str', 'plus');
     $to     = $inCore->request('to', 'int', 0);
     $from   = $inCore->request('from', 'int', 0);
+	$is_ajax = $inCore->request('is_ajax', 'int', 0);
 
-    if (!$to || !$from) { $inCore->redirectBack(); }
+    if (!$to || !$from) { if ($is_ajax) { return; } else { $inCore->redirectBack(); } }
 
     $inCore = cmsCore::getInstance();
 
@@ -2636,8 +2647,17 @@ if ($do=='votekarma'){
 			}
 		}
 	}
+	if (!$is_ajax) { $inCore->redirectBack(); }
+	$points = strip_tags( cmsUser::getKarmaFormat($to, false), '<table><tr><td><img><a>' );
+	$points_int = strip_tags($points);
+	if ($points_int >= 0) {
+		$points = '<div class="value-positive">'.$points.'</div>';
+	} else {
+		$points = '<div class="value-negative">'.$points.'</div>';
+	}
+	echo $points;
 
-	$inCore->redirectBack();
+	exit;
 
 }
 ////////////////////////// DELETE FROM WALL ////////////////////////////////////////////////////////
@@ -2648,7 +2668,9 @@ if ($do=='votekarma'){
 		if ($record_id && $my_id){
 			
 				if ($usertype=='user'){
-					$can_delete = $inDB->get_field('cms_user_wall', "id = '$record_id' AND (user_id = '$my_id' OR author_id = '$my_id')", 'author_id');
+					$can_delete = $inDB->get_fields('cms_user_wall', "id = '$record_id' AND (user_id = '$my_id' OR author_id = '$my_id')", 'author_id, user_id');
+					$author_id     = $can_delete['author_id'];
+					$wall_user_id  = $can_delete['user_id'];
 				}
                 elseif ($usertype=='club'){
 					$inCore->loadLib('clubs');
@@ -2662,7 +2684,7 @@ if ($do=='votekarma'){
 				if ($can_delete || $inCore->userIsAdmin( $my_id )){
 					$inDB->query("DELETE FROM cms_user_wall WHERE id = '$record_id' LIMIT 1");
 					switch ($usertype){
-						case 'user': ($can_delete == $my_id) ? cmsActions::removeObjectLog('add_wall_my', $record_id) : cmsActions::removeObjectLog('add_wall', $record_id); break;
+						case 'user': ($author_id == $my_id && $wall_user_id == $my_id) ? cmsActions::removeObjectLog('add_wall_my', $record_id) : cmsActions::removeObjectLog('add_wall', $record_id); break;
 						case 'club': cmsActions::removeObjectLog('add_wall_club', $record_id); break;
 					}
 				}

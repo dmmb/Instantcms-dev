@@ -293,7 +293,7 @@ function shopOrder($cfg){
 			echo '<table width="100%" cellspacing="0" cellpadding="5">';
 			echo '<tr>';		
 				echo '<td width="40%" align="right">'.$_LANG['FIO_CUSTOMER'].': </td>';
-				echo '<td width="60%" align="left"><input name="customer_fio" type="text" size="45" /></td>';			
+				echo '<td width="60%" align="left"><input name="customer_fio" type="text" size="45" value="'.$inUser->nickname.'" /></td>';			
 			echo '</tr>';
 			echo '<tr>';		
 				echo '<td width="40%" align="right">'.$_LANG['ORGANIZATION'].': </td>';
@@ -305,7 +305,7 @@ function shopOrder($cfg){
 			echo '</tr>';
 			echo '<tr>';
 				echo '<td width="40%" align="right">'.$_LANG['ADRESS_EMAIL'].': </td>';
-				echo '<td width="60%" align="left"><input name="customer_email" type="text" size="45" /></td>';
+				echo '<td width="60%" align="left"><input name="customer_email" type="text" size="45" value="'.$inUser->email.'" /></td>';
 			echo '</tr>';
 			echo '<tr>';		
 				echo '<td width="40%" align="right">'.$_LANG['CUSTOMER_COMMENT'].': </td>';

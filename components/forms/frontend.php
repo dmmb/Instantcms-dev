@@ -26,7 +26,7 @@ function forms(){
 //========================================================================================================================//
     if ($do=='processform'){
 
-        if (!$inCore->request('field')){  $inCore->redirect($back);  }
+        if (!$inCore->request('field')){  return;  }
 
         $captcha_code   = $inCore->request('code', 'str', '');
 

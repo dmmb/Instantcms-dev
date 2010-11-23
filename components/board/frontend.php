@@ -85,6 +85,8 @@ function board(){
     $inUser     = cmsUser::getInstance();
 
 	$cfg        = $inCore->loadComponentConfig('board');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     global $_LANG;
 
@@ -126,6 +128,7 @@ if ($do=='view'){
 
 	//SHOW CATEGORY LIST
 	$category   = $model->getCategory($id);
+	if (!$category) { cmsCore::error404(); }
     $perpage    = $category['perpage'] ? $category['perpage'] : 20;
     $page       = $inCore->request('page', 'int', 1);	
     if ( $category['public'] == -1 ) { $category['public'] = $cfg['public']; }
@@ -250,6 +253,7 @@ if ($do=='view'){
         $smarty->assign('items', $items);
         $smarty->assign('maxcols', $maxcols);
         $smarty->assign('colwidth', $colwidth);
+		$smarty->assign('messages', cmsCore::getSessionMessages());
         $smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/board/%catid%-%page%', array('catid'=>$id)));
         $smarty->assign('is_user', $inUser->id);
     $smarty->display('com_board_items.tpl');
@@ -309,6 +313,7 @@ if($do=='read'){
 			$smarty->assign('cfg', $cfg);
 			$smarty->assign('is_user', $inUser->id);
 			$smarty->assign('user_id', $inUser->id);
+			$smarty->assign('messages', cmsCore::getSessionMessages());
 		$smarty->display('com_board_item.tpl');
         
 }
@@ -320,30 +325,25 @@ if ($do=='additem'){
 
     $cat = $model->getCategory($id);
 
-    if ( !$cat ) { $inCore->halt($_LANG['CAT_NOT_FOUND']); }
+    if (!$cat) { cmsCore::error404(); }
 	
     if ( $cat['public'] == -1 ) { $cat['public'] = $cfg['public']; }
 
     $inPage->addPathway($cat['title'], '/board/'.$cat['id']);
 	$inPage->addPathway($_LANG['ADD_ADV']);
 
-    if ( !$inUser->id ) {
-		$inPage->printHeading($_LANG['NEED_REGISTRATION']);
-		echo '<div>'.$_LANG['NEED_REGISTRATION_TEXT'].'</div>';
-		echo '<div><a href="/registration">'.$_LANG['GOTO_REGISTRATION'].'</a></div>';
-        return;
-	}
+    if ( !$inUser->id ) { cmsUser::goToLogin();	}
 
     $inPage->printHeading($_LANG['ADD_ADV']);
 
     if ( !(loadedByUser24h($inUser->id, $cat['id'])<$cat['uplimit'] || $cat['uplimit'] == 0) ){       
-        echo '<p>'.$_LANG['MAX_VALUE_OF_ADD_ADV'].'</p>';
-        return;
+		cmsCore::addSessionMessage('<p>'.$_LANG['MAX_VALUE_OF_ADD_ADV'].'</p>', 'error');
+		$inCore->redirect('/board/'.$id);      
     }
    
     if ( !$cat['public'] ){
-        echo '<p>'.$_LANG['YOU_CANT_ADD_ADV'].'</p>';
-        return;
+		cmsCore::addSessionMessage('<p>'.$_LANG['YOU_CANT_ADD_ADV'].'</p>', 'error');
+		$inCore->redirect('/board/'.$id);  
     }
     
     ///////////// first upload step ////////////////////////////////////////////
@@ -366,6 +366,7 @@ if ($do=='additem'){
         $smarty->assign('category_id', '');
         $smarty->assign('is_admin', $inUser->is_admin);
         $smarty->assign('catslist', $inCore->getListItemsNS('cms_board_cats'));
+		$smarty->assign('messages', cmsCore::getSessionMessages());
         $smarty->display('com_board_edit.tpl');
         return;
 
@@ -379,8 +380,8 @@ if ($do=='additem'){
 
         //params
         $obtype     = $inCore->request('obtype', 'str');
-        $title 		= $inCore->request('title', 'str', '');
-        $title      = $obtype .' '. $title;
+        $title_r	= $inCore->request('title', 'str', '');
+        $title      = $obtype .' '. $title_r;
         $content 	= $inCore->request('content', 'str', '');
 
         $captcha    = $inCore->request('code', 'str', '');
@@ -399,20 +400,14 @@ if ($do=='additem'){
         if ($cfg['srok']){  $pubdays = ($inCore->request('pubdays', 'int') <= 50) ? $inCore->request('pubdays', 'int') : 50; }
         if (!$cfg['srok']){ $pubdays = isset($cfg['pubdays']) ? $cfg['pubdays'] : 14; }
 
-        if (empty($title)) 	 { $errors .= '<div style="color:red">'.$_LANG['NEED_TITLE'].'</div>'; }
-        if (empty($content)) { $errors .= '<div style="color:red">'.$_LANG['NEED_TEXT_ADV'].'</div>'; }
-        if (empty($city))    { $errors .= '<div style="color:red">'.$_LANG['NEED_CITY'].'</div>'; }
+		$errors = false;
+        if (!$title_r) 	 { cmsCore::addSessionMessage($_LANG['NEED_TITLE'], 'error'); $errors = true; }
+        if (!$content) { cmsCore::addSessionMessage($_LANG['NEED_TEXT_ADV'], 'error'); $errors = true; }
+        if (!$city)    { cmsCore::addSessionMessage($_LANG['NEED_CITY'], 'error'); $errors = true; }
 
-        if (!$inCore->checkCaptchaCode($captcha) && !$inUser->is_admin){	$errors .= '<div style="color:red">'.$_LANG['ERR_CAPTCHA'].'</div>';		}
+        if (!$inCore->checkCaptchaCode($captcha) && !$inUser->is_admin){ cmsCore::addSessionMessage($_LANG['ERR_CAPTCHA'], 'error'); $errors = true; }
 
-        if ($errors){
-            //finish
-            echo '<p><strong>'.$_LANG['ADV_NOT_ADDED'].'</strong></p>';
-            echo '<p>'.$errors.'</p>';
-            echo '<p>&larr; <a href="/board/'.$id.'/add.html">'.$_LANG['REPEAT_ADD'].'</a><br/>';
-            echo '&larr; <a href="/board/'.$id.'">'.$_LANG['RETURN_TO_BOARD'].'</a><br/>';
-            return;
-        }
+        if ($errors){ $inCore->redirect('/board/'.$id.'/add.html'); }
 
         $filename = '';
         if (isset($_FILES['picture'])){
@@ -434,7 +429,7 @@ if ($do=='additem'){
                 if ($cfg['watermark']) { @img_add_watermark($uploadphoto);	}
                 @unlink($uploadphoto);
             } else {
-                echo '<p>'.$_LANG['PHOTO_NOT_UPLOAD'].'</p>';
+				cmsCore::addSessionMessage($_LANG['PHOTO_NOT_UPLOAD'], 'info');
             }
         }
 
@@ -463,12 +458,10 @@ if ($do=='additem'){
 		}
 
         //finish
-        echo '<p><strong>'.$_LANG['ADV_NOT_ADDED'].'</strong></p>';
-        if (!$published) { echo '<p>'.$_LANG['ADV_PREMODER_TEXT'].'</p>'; }
-        echo '<p>&larr; <a href="/board/'.$id.'/add.html">'.$_LANG['ADD_ADV_MORE'].'</a><br/>';
-        echo '&larr; <a href="/board/'.$id.'">'.$_LANG['RETURN_TO_BOARD'].'</a><br/>';
+		if (!$published) { $prmoder = '<p>'.$_LANG['ADV_PREMODER_TEXT'].'</p>'; }
+		cmsCore::addSessionMessage('<p><strong>'.$_LANG['ADV_IS_ADDED'].'</strong></p>'.$prmoder, 'info');
+		$inCore->redirect('/board/'.$id);
 
-        return;
     }
 	
 }
@@ -478,12 +471,8 @@ if ($do=='edititem'){
 	//Load data
     $item = $model->getRecord($id);
     $cat  = $model->getCategory($item['category_id']);
-
-	if (!$item){
-   		$inPage->printHeading($_LANG['ADV_NOT_FOUND']);
-		echo '<p>'.$_LANG['ADV_NOT_FOUND_TEXT'].'</p>';
-		return;
-    }
+	if (!$cat) { cmsCore::error404(); }
+	if (!$item) { cmsCore::error404(); }
 
     $inPage->setTitle($_LANG['EDIT_ADV']);
     $inPage->addPathway($item['category'], '/board/'.$item['cat_id']);
@@ -500,9 +489,8 @@ if ($do=='edititem'){
 				
 	//Show data only for moderators and owners
 	if (!$moderator){
-		echo '<div class="con_heading">'.$_LANG['ACCESS_DENIED'].'</div>';
-		echo '<p>'.$_LANG['YOU_HAVENT_ACCESS'].'</p>';
-        return;
+		cmsCore::addSessionMessage($_LANG['YOU_HAVENT_ACCESS'], 'error');
+		$inCore->redirect('/board/'.$item['cat_id']);  
 	}
 
     if (!$inCore->inRequest('submit')){
@@ -524,6 +512,7 @@ if ($do=='edititem'){
         $smarty->assign('category_id', $item['cat_id']);
         $smarty->assign('is_admin', $inUser->is_admin);
         $smarty->assign('catslist',  $inCore->getListItemsNS('cms_board_cats'));
+		$smarty->assign('messages', cmsCore::getSessionMessages());
         $smarty->display('com_board_edit.tpl');
     }
 
@@ -532,8 +521,8 @@ if ($do=='edititem'){
         $uid        = $inUser->id;
 
         $obtype     = $inCore->request('obtype', 'str');
-        $title 		= $inCore->request('title', 'str', '');
-        $title      = $obtype .' '. $title;
+        $title_r	= $inCore->request('title', 'str', '');
+        $title      = $obtype .' '. $title_r;
         $content 	= $inCore->request('content', 'str', '');
         $captcha    = $inCore->request('code', 'str', '');
 
@@ -558,19 +547,13 @@ if ($do=='edititem'){
 			$pubdate = $item['fpubdate'];
 		}
 
-        if (empty($title)) 	 { $errors .= '<div style="color:red">'.$_LANG['NEED_TITLE'].'</div>'; }
-        if (empty($content)) { $errors .= '<div style="color:red">'.$_LANG['NEED_TEXT_ADV'].'</div>'; }
-        if (empty($city)) { $errors .= '<div style="color:red">'.$_LANG['NEED_CITY'].'</div>'; }
-        
-        if (!$inCore->checkCaptchaCode($captcha) && !$inUser->is_admin){	$errors .= '<div style="color:red">'.$_LANG['ERR_CAPTCHA'].'</div>';		}
+		$errors = false;
+        if (!$title_r) 	 { cmsCore::addSessionMessage($_LANG['NEED_TITLE'], 'error'); $errors = true; }
+        if (!$content) { cmsCore::addSessionMessage($_LANG['NEED_TEXT_ADV'], 'error'); $errors = true; }
+        if (!$city)    { cmsCore::addSessionMessage($_LANG['NEED_CITY'], 'error'); $errors = true; }
+        if (!$inCore->checkCaptchaCode($captcha) && !$inUser->is_admin){ cmsCore::addSessionMessage($_LANG['ERR_CAPTCHA'], 'error'); $errors = true; }
 
-        if ($errors){
-            echo '<p><strong>'.$_LANG['ADV_NOT_MODIFY'].'</strong></p>';
-            echo '<p>'.$errors.'</p>';
-            echo '<p>&larr; <a href="/board/edit'.$id.'.html">'.$_LANG['REPEAT_EDIT'].'</a><br/>';
-            echo '&larr; <a href="/board/'.$item['cat_id'].'">'.$_LANG['RETURN_TO_BOARD'].'</a><br/>';
-            return;
-        }
+		if ($errors){ $inCore->redirect('/board/edit'.$id.'.html'); }
 
         $filename   = $item['file'];
         $uploaddir  = PATH.'/images/board/';
@@ -618,9 +601,9 @@ if ($do=='edititem'){
                                 ));
 
         //finish
-        echo '<p><strong>'.$_LANG['ADV_MODIFIED'].'</strong></p>';
-        if (!$published) { echo '<p>'.$_LANG['ADV_EDIT_PREMODER_TEXT'].'</p>'; }
-        echo '<p>&larr; <a href="/board/'.$item['cat_id'].'">'.$_LANG['RETURN_TO_BOARD'].'</a></p>';
+		if (!$published) { $prmoder = '<p>'.$_LANG['ADV_EDIT_PREMODER_TEXT'].'</p>'; }
+		cmsCore::addSessionMessage('<p><strong>'.$_LANG['ADV_MODIFIED'].'</strong></p>'.$prmoder, 'info');
+		$inCore->redirect('/board/read'.$id.'.html');
 
     }
 }
@@ -628,12 +611,7 @@ if ($do=='edititem'){
 if ($do == 'delete'){
 	//Check user access
 	$item = $model->getRecord($id);
-
-    if (!$item){
-        $inPage->printHeading($_LANG['ADV_NOT_FOUND']);
-        echo '<p>'.$_LANG['ADV_NOT_FOUND_TEXT_DEL'].'</p>';
-        return false;
-    }
+    if (!$item){ cmsCore::error404(); }
 
 	if ($inUser->id){
         $moderator = ($inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('board/moderate') || $item['user_id'] == $inUser->id);
@@ -641,7 +619,10 @@ if ($do == 'delete'){
         $moderator = false;
     }
 
-	if (!$moderator){ $inCore->halt(); }
+	if (!$moderator){
+		cmsCore::addSessionMessage($_LANG['YOU_HAVENT_ACCESS'], 'error');
+		$inCore->redirect('/board/'.$item['cat_id']);  
+	}
 
         if (!$inCore->inRequest('godelete')){
 			//confirmation
@@ -662,6 +643,7 @@ if ($do == 'delete'){
         if ($inCore->inRequest('godelete')){
 			//deleting
             $model->deleteRecord($id);
+			cmsCore::addSessionMessage($_LANG['ADV_IS_DELETED'], 'info');
             $inCore->redirect('/board/'.$item['cat_id']);
 		}
 

@@ -257,6 +257,8 @@ function catalog(){
     $menutitle  = $inCore->menuTitle();
     if (!$menutitle) { $menutitle = $_LANG['CATALOG']; }
     $cfg        = $inCore->loadComponentConfig('catalog');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     if (!isset($cfg['email'])) { $cfg['email'] = 'shop@site.ru'; }
     if (!isset($cfg['delivery'])) { $cfg['delivery'] = 'Сведения о доставке'; }
@@ -1020,7 +1022,7 @@ function catalog(){
         if ($opt=='add'){ 
 		
 				$item_id = $model->addItem($item);
-				if (!$cfg['premod'] && !$cfg['premod_msg']) {
+				if (!$cfg['premod'] || $inUser->is_admin) {
 					//регистрируем событие
 					cmsActions::log('add_catalog', array(
 						'object' => $item['title'],

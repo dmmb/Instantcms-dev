@@ -38,3 +38,10 @@ function wallPage(page){
 	});
 
 }
+
+function plusUkarma(to_user_id, user_id){
+	$("#u_karma").load("/users/karma/plus/"+to_user_id+"/"+user_id+"", {'is_ajax': 1});
+}
+function minusUkarma(to_user_id, user_id){
+	$("#u_karma").load("/users/karma/minus/"+to_user_id+"/"+user_id+"", {'is_ajax': 1});
+}

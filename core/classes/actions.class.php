@@ -94,16 +94,15 @@ class cmsActions {
         $inDB = cmsDatabase::getInstance();
         $inUser = cmsUser::getInstance();
 
-        if (!$inUser->id){ return false; }
+        if (!$inUser->id && $action_name != 'add_user'){ return false; }
 
         $action = self::getAction($action_name);
 
         if (!$action) { return false; }
 
-		$params['object']      =  $inDB->escape_string(stripslashes(str_replace('\r\n', ' ', $params['object'])));
-		$params['target']      =  $inDB->escape_string(stripslashes(str_replace('\r\n', ' ', $params['target'])));
-        $params['description'] =  preg_replace('/\[hide\](.*?)\[\/hide\]/i', '', $params['description']);
-        $params['description'] =  $inDB->escape_string(stripslashes(str_replace('\r\n', ' ', $params['description'])));
+		$params['object']      =  $inDB->escape_string(stripslashes(str_replace(array('\r', '\n'), ' ', $params['object'])));
+		$params['target']      =  $inDB->escape_string(stripslashes(str_replace(array('\r', '\n'), ' ', $params['target'])));
+		$params['description'] =  $inDB->escape_string(stripslashes(str_replace(array('\r', '\n'), ' ', $params['description'])));
 		$params['user_id']     =  $params['user_id'] ? $params['user_id'] : $inUser->id;
 		
         $sql = "INSERT INTO cms_actions_log (action_id, pubdate, user_id, object, object_url, object_id,

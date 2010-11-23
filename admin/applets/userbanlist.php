@@ -182,7 +182,7 @@ function applet_userbanlist(){
    
 		if ($do=='add'){
 			 echo '<h3>Добавить в бан-лист</h3>';
- 	 		 cpAddPathway('Добавить в бан-лист', 'index.php?view=usergroups&do=add');
+ 	 		 cpAddPathway('Добавить в бан-лист', 'index.php?view=userbanlist&do=add');
 		} else {
 					 if(isset($_REQUEST['multiple'])){				 
 						if (isset($_REQUEST['item'])){					

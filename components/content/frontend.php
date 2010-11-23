@@ -24,6 +24,8 @@ function content(){
     $inCore->loadLib('content');
 
 	$cfg = $inCore->loadComponentConfig('content');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     $inCore->loadModel('content');
     $model = new cms_model_content();
@@ -639,15 +641,10 @@ if ($do=='my'){
 	$inPage->addPathway($inUser->nickname, cmsUser::getProfileURL($inUser->login));
     $inPage->addPathway($_LANG['MY_ARTICLES']);
 
-    $inPage->printHeading($_LANG['MY_ARTICLES']);
-
     //total count
-    $sql = "SELECT con.id
-            FROM cms_content con
-            WHERE con.user_id = '{$user_id}'
-            LIMIT 200";
+    $total = $inDB->rows_count('cms_content con', "con.user_id = '$user_id'");
 
-   $rs = $inDB->query($sql); $total = $inDB->num_rows($rs);
+    $inPage->printHeading($_LANG['MY_ARTICLES'].' ('.$total.')' );	
 
     //current page
     $sql = "SELECT  con.*,
@@ -670,8 +667,6 @@ if ($do=='my'){
         return;
     }
 
-    $inPage->addHeadJS('components/content/js/my.js');
-
     $articles = array(); $row=0;
     while($con = $inDB->fetch_assoc($rs)){
         $row++;
@@ -689,6 +684,7 @@ if ($do=='my'){
     $smarty = $inCore->initSmarty('components', 'com_content_my.tpl');
         $smarty->assign('articles', $articles);
         $smarty->assign('messages', $messages);
+		$smarty->assign('total', $total);
         $smarty->assign('user_can_delete', $inCore->isUserCan('content/delete'));
         $smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/content/my%page%.html'));
     $smarty->display('com_content_my.tpl');

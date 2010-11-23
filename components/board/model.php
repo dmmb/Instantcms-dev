@@ -52,7 +52,6 @@ class cms_model_board{
         $this->deleteOldRecords();
 
         $category   = $this->inDB->get_fields('cms_board_cats', 'id='.$category_id, '*');
-		if (!$category['id']) { cmsCore::error404(); }
         $category   = cmsCore::callEvent('GET_BOARD_CAT', $category);
 
         if (!$category['obtypes']){
@@ -137,7 +136,6 @@ class cms_model_board{
         $sql = "SELECT i.*, i.pubdate as fpubdate, u.nickname as user, u.login as user_login
                 FROM cms_board_items i, cms_users u, cms_board_cats cat
                 WHERE i.user_id = u.id AND i.published = 1 $city_filter $type_filter $catsql
-                GROUP BY i.id
                 ORDER BY $orderby $orderto
                 LIMIT ".($page-1)*$perpage.", $perpage";
 
@@ -148,7 +146,7 @@ class cms_model_board{
         while($item = $this->inDB->fetch_assoc($result)){
             $item['content']    = nl2br($item['content']);
 			$item['fpubdate']   = $inCore->dateformat($item['fpubdate']);
-            $records[]          = $item;
+            $records[$item['id']] = $item;
         }
 
         $records = cmsCore::callEvent('GET_BOARD_RECORDS', $records);

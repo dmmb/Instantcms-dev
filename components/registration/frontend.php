@@ -55,6 +55,8 @@ function registration(){
     global $_LANG;
 
     $cfg = $inCore->loadComponentConfig('registration');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     //config defaults
     if (!isset($cfg['name_mode'])) { $cfg['name_mode'] = 'nickname'; }
@@ -242,6 +244,17 @@ function registration(){
                         $inPage->includeTemplateFile('special/regactivate.php');
                         $inCore->halt();
                     } else {                        
+						// Регистрируем событие
+						cmsActions::log('add_user', array(
+							'object' => '',
+							'user_id' => $new_user_id,
+							'object_url' => '',
+							'object_id' => $new_user_id,
+							'target' => '',
+							'target_url' => '',
+							'target_id' => 0,
+							'description' => ''
+						));                  
                         $inPage->includeTemplateFile('special/regcomplete.php');
 
                         if ($cfg['send_greetmsg']){ $model->sendGreetsMessage($new_user_id, $cfg['greetmsg']); }
@@ -269,6 +282,10 @@ function registration(){
         $inPage->setTitle($_LANG['REGISTRATION']);
 
         $do             = 'view';
+		// Если пользователь авторизован, то не показываем форму регистрации, редирект в профиль.
+        if ($inUser->id && !$inUser->is_admin) {
+            if ($inCore->menuId() == 1) { return; } else {  $inCore->redirect(cmsUser::getProfileURL($inUser->login)); }
+        }
 
         $correct_invite = (cmsUser::sessionGet('invite_code') ? true : false);
 
@@ -345,7 +362,9 @@ function registration(){
                 if ($inCore->inRequest('pass')) { $passw = $inCore->request('pass', 'str'); }
 
                 if (!$login && !$passw){
+					if ($is_sess_back) {
                     $_SESSION['auth_back_url'] = $back;
+					}
 
                     $inPage->setTitle($_LANG['SITE_LOGIN']);
                     $inPage->addPathway($_LANG['SITE_LOGIN']);
@@ -443,6 +462,18 @@ function registration(){
             cmsCore::callEvent('USER_ACTIVATED', $user_id);
 
             if ($cfg['send_greetmsg']){ $model->sendGreetsMessage($user_id, $cfg['greetmsg']); }
+
+			// Регистрируем событие
+			cmsActions::log('add_user', array(
+					'object' => '',
+					'user_id' => $user_id,
+					'object_url' => '',
+					'object_id' => $user_id,
+					'target' => '',
+					'target_url' => '',
+					'target_id' => 0,
+					'description' => ''
+			));   
 
             $inPage->includeTemplateFile('special/regcomplete.php');
             $inCore->halt();

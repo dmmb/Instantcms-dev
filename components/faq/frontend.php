@@ -24,6 +24,8 @@ function faq(){
 	global $_LANG;
 	
 	$cfg = $inCore->loadComponentConfig('faq');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     if(!isset($cfg['user_link'])) { $cfg['user_link'] = 1; }
     if(!isset($cfg['publish'])) { $cfg['publish'] = 0; }
@@ -208,7 +210,7 @@ if ($do=='sendquest'){
 			echo '<div class="con_heading">'.$_LANG['QUESTION_SEND'].'</div>';
             echo '<div style="margin-top:10px">'.$_LANG['QUESTION_PREMODER'].'</div>';
 			echo '<div style="margin-top:10px"><a href="/faq">'.$_LANG['CONTINUE'].'</a></div>';
-        } elseif ($published && $cfg['publish']) {
+        } elseif ($published) {
 			$category = $inDB->get_field('cms_faq_cats', "id={$category_id}", 'title');
             //регистрируем событие
             cmsActions::log('add_quest', array(

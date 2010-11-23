@@ -396,7 +396,7 @@ function applet_content(){
 			createMenuItem($inmenu, $article['id'], $article['title']);
 		}
 
-        if ($cfg['af_on'] && $category_id != $cfg['af_hidecat_id'] && !$inCore->inRequest('noforum')){
+        if ($cfg['af_on'] && $category_id != $cfg['af_hidecat_id'] && !$inCore->inRequest('noforum') && $article['published']){
             cmsAutoCreateThread($article, $cfg);
         }
 

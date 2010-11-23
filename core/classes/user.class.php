@@ -67,17 +67,6 @@ class cmsUser {
             $this->{$key}   = $value;
         }
 
-        $this->logdate = $_SESSION['user']['logdate'];
-
-        $avatar_dir     = PATH . '/images/users/avatars/small/';
-        $avatar_path    = $avatar_dir . $this->imageurl;
-
-        if (!$this->imageurl) {
-            $this->imageurl = 'nopic.jpg';
-        } elseif (!file_exists($avatar_path)){
-            $this->imageurl = 'nopic.jpg';
-        }
-
         $this->id = (int)$user_id;
 
         $this->checkBan();
@@ -99,12 +88,9 @@ class cmsUser {
         $inDB       = cmsDatabase::getInstance();
         $inCore     = cmsCore::getInstance();
 
-        $sql    = "SELECT u.*, 
-                          g.is_admin as is_admin,
-                          p.imageurl as imageurl
+        $sql    = "SELECT u.*, g.is_admin is_admin
                    FROM cms_users u
 				   INNER JOIN cms_user_groups g ON g.id = u.group_id
-                   JOIN cms_user_profiles p ON p.user_id = u.id
                    WHERE u.id='$user_id' AND u.is_deleted = 0 AND u.is_locked = 0 LIMIT 1";
 
         $result = $inDB->query($sql);
@@ -1178,7 +1164,7 @@ class cmsUser {
         
         $inDB = cmsDatabase::getInstance();
 
-        $message = $inDB->escape_string(stripslashes(str_replace('\r\n', ' ', $message)));
+        $message = $inDB->escape_string(stripslashes(str_replace(array('\r', '\n'), ' ', $message)));
 
         $sql = "INSERT INTO cms_user_msg (to_id, from_id, senddate, is_new, message)
                 VALUES ('$receiver_id', '$sender_id', NOW(), 1, '$message')";

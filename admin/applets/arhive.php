@@ -14,7 +14,12 @@ function applet_arhive(){
     $inCore = cmsCore::getInstance();
 
 	$GLOBALS['cp_page_title'] = 'Архив статей';
-	cpAddPathway('Статьи сайта', 'index.php?view=content');
+	
+	$cfg = $inCore->loadComponentConfig('content');
+    $inCore->loadModel('content');
+    $model = new cms_model_content();
+
+	cpAddPathway('Статьи сайта', 'index.php?view=tree');
 	cpAddPathway('Архив статей', 'index.php?view=arhive');
 	
 	if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
@@ -30,10 +35,6 @@ function applet_arhive(){
 		$toolmenu[1]['icon'] = 'delete.gif';
 		$toolmenu[1]['title'] = 'Удалить выбранные';
 		$toolmenu[1]['link'] = "javascript:checkSel('?view=arhive&do=delete&multiple=1');";
-
-		$toolmenu[2]['icon'] = 'help.gif';
-		$toolmenu[2]['title'] = 'Помощь';
-		$toolmenu[2]['link'] = "?view=help&topic=menu";
 
 		cpToolMenu($toolmenu);
 
@@ -77,10 +78,13 @@ function applet_arhive(){
 	}
 	
 	if ($do == 'delete'){
+		if ($cfg['af_delete']){ include_once($_SERVER['DOCUMENT_ROOT'].'/components/forum/includes/forumcore.php'); }
 		if (!isset($_REQUEST['item'])){
-			if ($id >= 0){ dbDelete('cms_content', $id);  }
+			if ($id >= 0){
+				$model->deleteArticle($id, $cfg['af_delete']);
+			}
 		} else {
-			dbDeleteList('cms_content', $_REQUEST['item']);				
+			$model->deleteArticles($_REQUEST['item'], $cfg['af_delete']);
 		}
 		header('location:?view=arhive');
 	}

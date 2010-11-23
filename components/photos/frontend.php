@@ -29,6 +29,8 @@ function photos(){
     global $_LANG;
 
 	$cfg = $inCore->loadComponentConfig('photos');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 	
 	if (!isset($cfg['showlat'])) { $cfg['showlat'] = 1; }
 	

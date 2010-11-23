@@ -83,6 +83,9 @@ function search(){
 
 	$menuid     = $inCore->menuId();
 	$cfg        = $inCore->loadComponentConfig('search');
+    
+	// Проверяем включен ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     $query  = $inCore->request('query', 'str', '');
     $look   = $inCore->request('look', 'str', 'allwords');
