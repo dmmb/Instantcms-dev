@@ -1,7 +1,13 @@
 {* ================================================================================ *}
 {* ==================Закрытый профиль пользователя ================================ *}
 {* ================================================================================ *}
-
+{if $messages}
+    <div class="sess_messages">
+        {foreach key=id item=message from=$messages}
+            {$message}
+        {/foreach}
+    </div>
+{/if}
 <div id="usertitle">
     <div class="con_heading" id="nickname">
         {$usr.nickname}
