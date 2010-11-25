@@ -401,8 +401,8 @@ function applet_config(){
 				<tr>
 					<td><strong>Выводить текущую страницу в глубиномере:</strong></td>
 					<td>
-						<input name="short_pw" type="radio" value="0" <?php if (!$_CFG['index_pw']) { echo 'checked="checked"'; } ?>/> Да
-						<input name="short_pw" type="radio" value="1" <?php if ($_CFG['index_pw']) { echo 'checked="checked"'; } ?>/> Нет
+						<input name="short_pw" type="radio" value="0" <?php if (!$_CFG['short_pw']) { echo 'checked="checked"'; } ?>/> Да
+						<input name="short_pw" type="radio" value="1" <?php if ($_CFG['short_pw']) { echo 'checked="checked"'; } ?>/> Нет
 					</td>
 				</tr>
 			</table>
