@@ -46,8 +46,11 @@ function applet_backup(){
 						</form>
 					</div>
 					<div id="dumpinfo" style="margin-top:10px">
-						<span class="hinttext">После создания дампа, скачайте его и удалите с сервера.<br />
-						Оставлять дампы на сервере может быть не безопасно!</span>
+                        <span class="hinttext" style="color:gray">
+                            Если база большого объема, то перед началом экспорта убедитесь что максимальное время выполнения скрипта
+                            (max_execution_time в php.ini) достаточно велико, чтобы экспорт успел произойти полностью.<br/><br/>
+                            После создания дампа, скачайте его по FTP из папки <strong>backups</strong>и удалите с сервера.
+						</span>
 					</div>
 				</td>
 			</tr>

@@ -1,7 +1,5 @@
 <?php
 
-    if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
-
 	session_start();
 
 	define("VALID_CMS", 1);
@@ -38,11 +36,11 @@
 			$dumper->doDump();
 			if(!$inDB->errno()){
 				$fileurl = '/backups/'.$shortfile;	
-				echo '<span style="color:green">Экспорт базы данных завершен.</span> <a href="/backups/'.$shortfile.'" target="_blank">Скачать файл</a> | <a href="#" onclick="deleteDump(\''.$shortfile.'\')">Удалить файл</a>';				
-				echo '<div class="hinttext">Чтобы скачать файл, щелкните правой кнопкой мыши по ссылке и выберите "Сохранить объект как..."</div>';
+				echo '<span style="color:green">Экспорт базы данных завершен.</span> <a href="#" onclick="deleteDump(\''.$shortfile.'\')">Удалить файл</a>';				
+				echo '<div class="hinttext">Файл дампа находится в папке <strong>backups</strong> на FTP.</div>';
 			} else {
 				echo '<span style="color:red">Ошибка экспорта базы</span>';
-			}			
+			}
 		} else {
 			echo '<span style="color:red">Папка "/backups" не доступна для записи!</span>';	
 		}	
@@ -52,7 +50,7 @@
 		$uploaddump = $dir.'/import.sql';
 		if (@move_uploaded_file($_FILES['dumpfile']['tmp_name'], $uploaddump)) {
 			include($_SERVER['DOCUMENT_ROOT'].'/includes/dbimport.inc.php');
-			$errors = '';
+			$errors = 'Ошибка импорта базы';
 			if(dbRunSQL($uploaddump, $inConf->db_prefix)){
 				@unlink($uploaddump);
 				echo '<span style="color:green">Импорт базы данных завершен.</span>';
