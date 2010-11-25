@@ -499,6 +499,7 @@ if ($do=='edititem'){
         $smarty->assign('action', "/board/edit{$id}.html");
         $smarty->assign('form_do', 'edit');
         $smarty->assign('cfg', $cfg);
+        $smarty->assign('cat', $cat);
         $smarty->assign('obtypes', obTypesOptions($cat['obtypes'], $item['obtype']));
         $smarty->assign('title', trim(str_replace($item['obtype'], '', $item['title'])));
         $smarty->assign('city', $item['city']);
