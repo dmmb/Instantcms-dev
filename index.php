@@ -53,6 +53,8 @@
     $inConf     = cmsConfig::getInstance();
     $inUser     = cmsUser::getInstance();
 
+    date_default_timezone_set($inConf->timezone);
+
     cmsCore::loadLanguage('lang');      //главный языковый файл
 
 	$inUser->autoLogin();     //автоматически авторизуем пользователя, если найден кукис

@@ -39,6 +39,8 @@
     $inDB       = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
 
+    date_default_timezone_set($inConf->timezone);
+
     if ( !$inUser->update() ) { $inCore->redirect('/404'); }
 
     define('TEMPLATE_DIR', PATH.'/templates/'.$inConf->template.'/');

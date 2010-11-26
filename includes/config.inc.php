@@ -24,7 +24,7 @@ $_CFG['db_user'] 	= 'root';
 $_CFG['db_pass'] 	= '';
 $_CFG['db_prefix'] 	= 'cms';
 $_CFG['show_pw'] 	= 1;
-$_CFG['short_pw'] 	= 0;
+$_CFG['short_pw'] 	= 1;
 $_CFG['index_pw'] 	= 0;
 $_CFG['fastcfg'] 	= 1;
 $_CFG['mailer'] 	= 'mail';
@@ -33,4 +33,6 @@ $_CFG['smtpauth'] 	= 0;
 $_CFG['smtpuser'] 	= '';
 $_CFG['smtppass'] 	= '';
 $_CFG['smtphost'] 	= 'localhost';
+$_CFG['timezone'] 	= 'Europe/Moscow';
+$_CFG['timediff'] 	= '';
 ?>

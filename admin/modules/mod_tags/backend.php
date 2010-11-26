@@ -112,6 +112,18 @@
                   <td><input name="targets[userphoto]" type="checkbox" id="t_userphoto" value="userphoto" <?php if (@$cfg['targets']['userphoto']) { echo 'checked="checked"'; }?>/>
                     Фото пользователей </td>
                 </tr>
+                <?php if ($inCore->isComponentInstalled('shop')){ ?>
+                <tr>
+                  <td><input name="targets[shop]" type="checkbox" id="t_shop" value="shop" <?php if (@$cfg['targets']['shop']) { echo 'checked="checked"'; }?>/>
+                    InstantShop </td>
+                </tr>
+                <?php } ?>
+                <?php if ($inCore->isComponentInstalled('maps')){ ?>
+                <tr>
+                  <td><input name="targets[maps]" type="checkbox" id="t_maps" value="maps" <?php if (@$cfg['targets']['maps']) { echo 'checked="checked"'; }?>/>
+                    InstantMaps </td>
+                </tr>
+                <?php } ?>
             </table></td>
           </tr>
         </table>
