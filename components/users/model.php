@@ -711,6 +711,8 @@ class cms_model_users{
             }
         }
 
+		cmsActions::removeTargetLog('add_user_photo_multi', $album_id);
+
         $this->inDB->query("DELETE FROM cms_user_albums WHERE id = '$album_id'") ;
 
         return true;

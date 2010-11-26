@@ -142,6 +142,30 @@ class cmsActions {
         
     }
 
+    /**
+     * Удаляет из ленты активности все события определенного типа для указанной цели
+     * @param string $action_name Тип события
+     * @param int $target_id Идентификатор цели
+     * @return bool
+     */
+    public static function removeTargetLog($action_name, $target_id, $user_id = false){
+        
+        $inDB = cmsDatabase::getInstance();
+        
+        $action = self::getAction($action_name);
+        
+        $usr_sql = $user_id ? "AND user_id = {$user_id}" : '';
+        
+        $sql = "DELETE 
+                FROM cms_actions_log 
+                WHERE action_id = '{$action['id']}' AND target_id = '{$target_id}' $usr_sql";
+
+        $inDB->query($sql);
+
+        return true;
+        
+    }
+
 // ============================================================================ //
 // ============================================================================ //
 
