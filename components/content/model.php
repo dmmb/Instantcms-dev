@@ -128,12 +128,9 @@ class cms_model_content{
                         cat.NSLeft as NSLeft,
                         cat.NSRight as NSRight,
                         cat.NSLevel as NSLevel,
-                        IFNULL(COUNT(con.id), 0) as content_count,
                         cat.seolink as seolink
                 FROM cms_category cat
-                LEFT JOIN cms_content con ON con.category_id = cat.id
                 WHERE cat.NSLevel>0
-                GROUP BY cat.id
                 ORDER BY cat.NSLeft";
 
         $result = $this->inDB->query($sql);
