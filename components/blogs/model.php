@@ -76,12 +76,13 @@ class cms_model_blogs{
 
         $sql = "SELECT *
 				FROM cms_blogs
-				WHERE id = $id
+				WHERE id = '$id'
 				LIMIT 1";
 		$result = $this->inDB->query($sql);
 
         $blog = $this->inDB->num_rows($result) ? $this->inDB->fetch_assoc($result) : false;
         $blog = cmsCore::callEvent('GET_BLOG', $blog);
+		$blog['pubdate'] = cmsCore::dateFormat($blog['pubdate']);
 
 		return $blog;
 
@@ -111,6 +112,7 @@ class cms_model_blogs{
 
         $blog = $this->inDB->num_rows($result) ? $this->inDB->fetch_assoc($result) : false;
         $blog = cmsCore::callEvent('GET_BLOG', $blog);
+		$blog['pubdate'] = cmsCore::dateFormat($blog['pubdate']);
 
 		return $blog;
 
@@ -414,6 +416,7 @@ class cms_model_blogs{
         $result = $this->inDB->query($sql);
 
         while($blog = $this->inDB->fetch_assoc($result)){
+			$blog['pubdate'] = cmsCore::dateFormat($blog['pubdate']);
             $list[] = $blog;
         }
 
@@ -434,7 +437,7 @@ class cms_model_blogs{
         $sql = "SELECT p.id
                 FROM cms_blogs b
 				LEFT JOIN cms_blog_posts p ON p.blog_id = b.id
-                WHERE b.id = $blog_id AND p.published = 1 AND b.owner = '$owner' {$cat_sql}
+                WHERE b.id = '$blog_id' AND p.published = 1 AND b.owner = '$owner' {$cat_sql}
                 ";
         $result = $this->inDB->query($sql);
         return $this->inDB->num_rows($result);
@@ -453,7 +456,7 @@ class cms_model_blogs{
         }
 
         //Получаем записи, относящиеся к нужной странице блога
-        $sql = "SELECT p.*, p.pubdate as fpubdate, 
+        $sql = "SELECT p.*, 
                        IFNULL(r.total_rating, 0) as points, u.nickname as author, u.id as author_id
                 FROM cms_blogs b
 				LEFT JOIN cms_blog_posts p ON p.blog_id = b.id
@@ -468,6 +471,7 @@ class cms_model_blogs{
 
         if ($this->inDB->num_rows($result)){
             while($post = $this->inDB->fetch_assoc($result)){
+				$post['fpubdate'] = cmsCore::dateFormat($post['pubdate']);
                 $list[] = $post;
             }
         }
@@ -481,8 +485,6 @@ class cms_model_blogs{
     public function getPost($post_id){
 
 	$sql = "SELECT p.*,
-                   DATE_FORMAT(p.pubdate, '%d-%m-%Y %H:%i') fpubdate,
-                   DATE_FORMAT(p.edit_date, '%d-%m-%Y %H:%i') feditdate,
                    u.nickname as author,
                    u.login as author_login, 
                    u.id as author_id,
@@ -507,8 +509,6 @@ class cms_model_blogs{
     public function getPostByLink($bloglink, $seolink){
 
 	$sql = "SELECT p.*,
-                   DATE_FORMAT(p.pubdate, '%d-%m-%Y %H:%i') fpubdate,
-                   DATE_FORMAT(p.edit_date, '%d-%m-%Y %H:%i') feditdate,
                    u.nickname as author,
                    u.id as author_id, 
                    up.imageurl as author_image,
@@ -523,7 +523,11 @@ class cms_model_blogs{
 		$result = $this->inDB->query($sql);
 		$post   = $this->inDB->num_rows($result) ? $this->inDB->fetch_assoc($result) : false;
 
-        if ($post){  $post = cmsCore::callEvent('GET_POST', $post); }
+        if ($post){ 
+			$post = cmsCore::callEvent('GET_POST', $post);
+			$post['fpubdate'] = cmsCore::dateFormat($post['pubdate']);
+			$post['feditdate'] = cmsCore::dateFormat($post['edit_date']);
+		}
 
         return $post;
     }
@@ -574,17 +578,17 @@ class cms_model_blogs{
         $list = array();
 
         $sql = "SELECT  p.*,
-                        DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate,
                         IFNULL(r.total_rating, 0) as points,
                         u.nickname as author,
                         u.id as author_id,
                         b.allow_who blog_allow_who,
                         b.seolink bloglink,
                         b.owner
-                FROM cms_blogs b, cms_users u, cms_blog_posts p
+                FROM cms_blog_posts p
+				LEFT JOIN cms_users u ON u.id = p.user_id				
+				LEFT JOIN cms_blogs b ON b.id = p.blog_id
                 LEFT JOIN cms_ratings_total r ON r.item_id=p.id AND r.target='blogpost'
-                WHERE p.user_id = u.id AND p.published = 1 AND p.blog_id = b.id AND DATEDIFF(NOW(), p.pubdate) <= 7 AND b.owner = 'user'
-                GROUP BY p.id
+                WHERE p.published = 1 AND DATEDIFF(NOW(), p.pubdate) <= 7 AND b.owner = 'user'
                 ORDER BY points DESC
                 LIMIT ".(($page-1)*$perpage).", $perpage";
 
@@ -681,7 +685,7 @@ class cms_model_blogs{
 
         $list = array();
 
-        $sql = "SELECT p.*, DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate, u.nickname as author, u.id as author_id,
+        $sql = "SELECT p.*, u.nickname as author, u.id as author_id,
                        b.seolink as bloglink,
                        u.login as author_login
                 FROM cms_blog_posts p

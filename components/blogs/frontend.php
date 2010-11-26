@@ -294,8 +294,6 @@ if ($do=='view'){
             $blog['url']        = $model->getBlogURL(null, $blog['seolink']);
             //Считаем число комментариев
             $blog['comments']   = blogComments($blog['id']);
-			//Нормализуем дату создания
-			$blog['pubdate']    = $inCore->dateFormat($blog['pubdate']);
             //Форматируем значение кармы блога
             $blog['karma']      = cmsKarmaFormatSmall($blog['points']);
             //добавляем блог в список
@@ -468,7 +466,6 @@ if ($do=='blog'){
                     $post['url']        = $model->getPostURL(null, $blog['seolink'], $post['seolink']);
                     $post['comments']   = $post['comments'] ? $inCore->getCommentsCount('blog', $post['id']) : false;
                     $post['karma']      = cmsKarmaFormatSmall($post['points']);
-					$post['fpubdate']	= $inCore->dateFormat($post['fpubdate']);
                     
                     $msg                = $post['content_html'];
 
@@ -571,6 +568,7 @@ if ($do=='moderate'){
     foreach($posts_list as $post){
         $post['msg']        = $post['content_html'];
         $post['tagline']    = cmsTagLine('blogpost', $post['id']);
+		$post['fpubdate']	= $inCore->dateFormat($post['pubdate']);
         $post['url']        = $model->getPostURL(null, $post['bloglink'], $post['seolink']);
         $posts[]            = $post;
     }
@@ -993,8 +991,7 @@ if($do=='post'){
         }
     }
 
-    $post['fpubdate'] = cmsCore::dateDiffNow($post['fpubdate']).' '.$_LANG['BACK'].' ('.$post['fpubdate'].')';
-    $post['feditdate'] = cmsCore::dateDiffNow($post['feditdate']).' '.$_LANG['BACK'];
+    $post['fpubdate'] = cmsCore::dateDiffNow($post['pubdate']).' '.$_LANG['BACK'].' ('.$post['fpubdate'].')';
 
     if ($post['cat_id']){
         $cat = $model->getBlogCategory($post['cat_id']);
@@ -1175,10 +1172,6 @@ if ($do == 'delblog'){
 
     if (!$user_id){ $inCore->halt(); }
 
-    $blog = $model->getBlog($id);
-
-    if (!$blog){ $inCore->halt(); }
-
     if ( $inCore->inRequest('confirm') ){
         if ($user_id == $blog['user_id'] || $inUser->is_admin){
             $model->deleteBlog($id);
@@ -1275,7 +1268,6 @@ if ($do=='latest'){
 	}
 	
 	$smarty     = $inCore->initSmarty('components', 'com_blog_view_posts.tpl');
-	$error      = '';
 				
 	$user_id    = $inUser->id;
 	$is_admin   = $inCore->userIsAdmin($user_id);
@@ -1283,36 +1275,29 @@ if ($do=='latest'){
 
     $posts      = array();
 
-    if ($error) {
-        echo '<p style="color:red">'.$error.'</p>';
-        return;
-    }
+    //Считаем количество персональных и коллективных блогов
+    $single_blogs	= $model->getSingleBlogsCount();
+    $multi_blogs 	= $model->getMultiBlogsCount();
 
-	if (!$error){
+    //TITLES
+	$inPage->setTitle($_LANG['RSS_BLOGS']);
+	$inPage->addPathway($_LANG['RSS_BLOGS']);
+	$inPage->setDescription($_LANG['RSS_BLOGS']);
 
-        //Считаем количество персональных и коллективных блогов
-        $single_blogs	= $model->getSingleBlogsCount();
-        $multi_blogs 	= $model->getMultiBlogsCount();
-
-		//TITLES
-		$inPage->setTitle($_LANG['RSS_BLOGS']);
-		$inPage->addPathway($_LANG['RSS_BLOGS']);
-		$inPage->setDescription($_LANG['RSS_BLOGS']);
-
-		//PAGINATION
-		$perpage = isset($cfg['perpage']) ? $cfg['perpage'] : 10;
-		$page = $inCore->request('page', 'int', 1);
+	//PAGINATION
+	$perpage = isset($cfg['perpage']) ? $cfg['perpage'] : 10;
+	$page = $inCore->request('page', 'int', 1);
 							
-        $total = $model->getLatestCount($user_id, $is_admin);
+    $total = $model->getLatestCount($user_id, $is_admin);
 					
-        //GET ENTRIES
-        $posts_list = $model->getLatestPosts($page, $perpage);
+    //GET ENTRIES
+    $posts_list = $model->getLatestPosts($page, $perpage);
 
-        //PAGINATION
-        $pagination = cmsPage::getPagebar($total, $page, $perpage, '/blogs/latest-%page%.html', array());
+    //PAGINATION
+    $pagination = cmsPage::getPagebar($total, $page, $perpage, '/blogs/latest-%page%.html', array());
 
-        //FETCH ENTRIES
-        if ($posts_list){
+    //FETCH ENTRIES
+    if ($posts_list){
             foreach($posts_list as $post){
                 $can_view = ($post['blog_allow_who']=='all' || ($post['blog_allow_who']=='friends' && usrIsFriends($post['user_id'], $user_id)) || $post['user_id']==$user_id || $is_admin);
                 if ($can_view){
@@ -1337,28 +1322,25 @@ if ($do=='latest'){
                     $posts[]            = $post;
                 }
             }
-        }
-
-        $smarty->assign('is_posts', (bool)sizeof($posts));
-        $smarty->assign('is_latest', (bool)sizeof($posts));
-        $smarty->assign('pagetitle', $_LANG['BLOGS']);
-        $smarty->assign('is_admin', $is_admin);
-        $smarty->assign('total', $total);
-        $smarty->assign('uid', $user_id);
-
-        $smarty->assign('single_blogs', $single_blogs);
-        $smarty->assign('multi_blogs', $multi_blogs);
-
-        if ($posts) { $smarty->assign('posts', $posts); }
-        if ($pagination) { $smarty->assign('pagination', $pagination); }
-
-        $smarty->assign('id', $id);
-        $smarty->assign('cfg', $cfg);
-        $smarty->assign('round_corners_js', '$.jcorners(".blog_comments",{radius:10});');
-
-        $smarty->display('com_blog_view_posts.tpl');
-
     }
+
+    $smarty->assign('is_posts', (bool)sizeof($posts));
+    $smarty->assign('is_latest', (bool)sizeof($posts));
+    $smarty->assign('pagetitle', $_LANG['BLOGS']);
+    $smarty->assign('is_admin', $is_admin);
+    $smarty->assign('total', $total);
+    $smarty->assign('uid', $user_id);
+    $smarty->assign('single_blogs', $single_blogs);
+    $smarty->assign('multi_blogs', $multi_blogs);
+
+    if ($posts) { $smarty->assign('posts', $posts); }
+    if ($pagination) { $smarty->assign('pagination', $pagination); }
+
+    $smarty->assign('id', $id);
+    $smarty->assign('cfg', $cfg);
+    $smarty->assign('round_corners_js', '$.jcorners(".blog_comments",{radius:10});');
+
+    $smarty->display('com_blog_view_posts.tpl');
 
 }
 ////////// VIEW POPULAR POSTS ////////////////////////////////////////////////////////////////////////////////////////
@@ -1372,7 +1354,6 @@ if ($do=='best'){
 	}
 
 	$smarty   = $inCore->initSmarty('components', 'com_blog_view_posts.tpl');
-	$error    = '';
 				
 	$user_id  = $inUser->id;
 	$is_admin = $inCore->userIsAdmin($user_id);
@@ -1381,33 +1362,26 @@ if ($do=='best'){
 
     $posts    = array();
 
-    if ($error) {
-        echo '<p style="color:red">'.$error.'</p>';
-        return;
-    }
-	
-	if (!$error){
+	//TITLES
+	$inPage->setTitle($_LANG['POPULAR_IN_BLOGS']);
+	$inPage->addPathway($_LANG['POPULAR_IN_BLOGS']);
+	$inPage->setDescription($_LANG['POPULAR_IN_BLOGS']);
 
-		//TITLES
-		$inPage->setTitle($_LANG['POPULAR_IN_BLOGS']);
-		$inPage->addPathway($_LANG['POPULAR_IN_BLOGS']);
-		$inPage->setDescription($_LANG['POPULAR_IN_BLOGS']);
-
-		//PAGINATION
-		$perpage    = isset($cfg['perpage']) ? $cfg['perpage'] : 20;
-		$page       = $inCore->request('page', 'int', 1);
+	//PAGINATION
+	$perpage    = isset($cfg['perpage']) ? $cfg['perpage'] : 20;
+	$page       = $inCore->request('page', 'int', 1);
 							
-		//COUNT ENTRIES
-        $total      = $model->getBestCount($user_id, $is_admin);
+	//COUNT ENTRIES
+    $total      = $model->getBestCount($user_id, $is_admin);
         
-        //GET ENTRIES
-        $posts_list = $model->getBestPosts($page, $perpage);
+    //GET ENTRIES
+    $posts_list = $model->getBestPosts($page, $perpage);
 
-        //PAGINATION
-        $pagination = cmsPage::getPagebar($total, $page, $perpage, '/blogs/popular-%page%.html', array());
+    //PAGINATION
+    $pagination = cmsPage::getPagebar($total, $page, $perpage, '/blogs/popular-%page%.html', array());
 
-        //FETCH ENTRIES
-        if ($posts_list){
+    //FETCH ENTRIES
+    if ($posts_list){
             foreach($posts_list as $post){
 
                 $can_view = ($post['blog_allow_who']=='all' || ($post['blog_allow_who']=='friends' && usrIsFriends($post['user_id'], $user_id)) || $post['user_id']==$user_id || $inCore->userIsAdmin($user_id));
@@ -1417,6 +1391,7 @@ if ($do=='best'){
 
                     $post['comments']   = $post['comments'] ? $inCore->getCommentsCount('blog', $post['id']) : false;
                     $post['karma']      = cmsKarmaFormatSmall($post['points']);
+					$post['fpubdate']	= $inCore->dateFormat($post['pubdate']);
 
                     $msg = $post['content_html'];
 
@@ -1431,7 +1406,6 @@ if ($do=='best'){
                     $posts[]            = $post;
                 }
             }
-        }
     }
 
     $smarty->assign('is_posts', (bool)sizeof($posts));
