@@ -1128,14 +1128,18 @@ if ($do=='uploadphotos'){
 
     // Code for Session Cookie workaround
 	if ($inCore->inRequest("PHPSESSID")) {
-		session_id($inCore->request("PHPSESSID", 'str'));
+        session_destroy();
+        $sess_id = $inCore->request("PHPSESSID", 'str');
+        session_id($sess_id);
         session_start();
 	}
 
     $user_id = $_SESSION['user']['id'];
 
-    if (!$user_id) { exit(0); }
-	if (($cfg['photosize']>0) && (usrPhotoCount($user_id, false) >= $cfg['photosize']) && !$inCore->userIsAdmin($inUser->id)) { exit(0); }
+    if (!$user_id) { header("HTTP/1.1 500 Internal Server Error"); exit(0); }
+	if (($cfg['photosize']>0) && (usrPhotoCount($user_id, false) >= $cfg['photosize']) && !$inCore->userIsAdmin($inUser->id)) { 
+        header("HTTP/1.1 500 Internal Server Error"); exit(0); 
+    }
 
     $inCore->includeGraphics();
 

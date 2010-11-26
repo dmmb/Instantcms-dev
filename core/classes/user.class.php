@@ -227,8 +227,6 @@ class cmsUser {
      */
     public function resetStatTimer() {
 
-        $_SESSION['user']['s_timer'] = time();
-
         return true;
         
     }
@@ -242,11 +240,7 @@ class cmsUser {
      */
     public function checkStatTimer() {
 
-        if (!isset($_SESSION['user']['s_timer'])) { return true; }
-
-        $user_time = $_SESSION['user']['s_timer'];
-        
-        return (bool)(time()-$user_time >= self::STAT_TIMER_INTERVAL);
+        return true;
 
     }
 
@@ -256,7 +250,6 @@ class cmsUser {
 
     public function dropStatTimer(){
 
-        unset($_SESSION['user']['s_timer']);
         return true;
 
     }
