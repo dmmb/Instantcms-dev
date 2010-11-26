@@ -166,7 +166,7 @@ class cms_model_content{
             $count_sql = "SELECT con.id
                           FROM cms_content con
 						  INNER JOIN cms_category cat ON cat.id = con.category_id AND (cat.NSLeft >= {$subcat['NSLeft']} AND cat.NSRight <= {$subcat['NSRight']})
-                          WHERE con.published = 1";
+                          WHERE con.published = 1 AND con.is_arhive = 0";
 
             $count_result = $this->inDB->query($count_sql);
 
