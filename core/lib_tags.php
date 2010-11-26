@@ -139,6 +139,39 @@ function cmsTagItemLink($target, $item_id){
 							$link .= '<a href="/catalog/item'.$item['item_id'].'.html" class="tag_searchitem">'.$item['title'].'</a>';
 						}
 						break; 	
+		case 'shop': $sql = "SELECT i.title as title, i.seolink as seolink, c.title as cat, c.seolink as cat_seolink
+							 FROM cms_shop_items i
+							 LEFT JOIN cms_shop_cats c ON c.id = i.category_id
+							 WHERE i.id = $item_id";
+						$rs = $inDB->query($sql) ;
+						if ($inDB->num_rows($rs)){
+							$item = $inDB->fetch_assoc($rs);
+							$link =  '<a href="/shop/'.$item['cat_seolink'].'" class="tag_searchcat">'.$item['cat'].'</a> &rarr; ';
+							$link .= '<a href="/shop/'.$item['seolink'].'.html" class="tag_searchitem">'.$item['title'].'</a>';
+						}
+						break;
+		case 'shop': $sql = "SELECT i.title as title, i.seolink as seolink, c.title as cat, c.seolink as cat_seolink
+							 FROM cms_shop_items i
+							 LEFT JOIN cms_shop_cats c ON c.id = i.category_id
+							 WHERE i.id = $item_id";
+						$rs = $inDB->query($sql) ;
+						if ($inDB->num_rows($rs)){
+							$item = $inDB->fetch_assoc($rs);
+							$link =  '<a href="/shop/'.$item['cat_seolink'].'" class="tag_searchcat">'.$item['cat'].'</a> &rarr; ';
+							$link .= '<a href="/shop/'.$item['seolink'].'.html" class="tag_searchitem">'.$item['title'].'</a>';
+						}
+						break;
+		case 'maps': $sql = "SELECT i.title as title, i.seolink as seolink, c.title as cat, c.seolink as cat_seolink
+							 FROM cms_maps_items i
+							 LEFT JOIN cms_maps_cats c ON c.id = i.category_id
+							 WHERE i.id = $item_id";
+						$rs = $inDB->query($sql) ;
+						if ($inDB->num_rows($rs)){
+							$item = $inDB->fetch_assoc($rs);
+							$link =  '<a href="/maps/'.$item['cat_seolink'].'" class="tag_searchcat">'.$item['cat'].'</a> &rarr; ';
+							$link .= '<a href="/maps/'.$item['seolink'].'.html" class="tag_searchitem">'.$item['title'].'</a>';
+						}
+						break;
 	}
 	return $link;
 }
