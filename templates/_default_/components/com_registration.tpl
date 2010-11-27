@@ -39,7 +39,7 @@
                         <div><strong>{$LANG.LOGIN}:</strong></div>
                         <div><small>{$LANG.USED_FOR_AUTH}<br/>{$LANG.ONLY_LAT_SYMBOLS}</small></div>
                     </td>
-                    <td  valign="top" class="">
+                    <td valign="top" class="">
                         <input name="login" id="logininput" class="text-input" type="text" size="30" value="{$login}" onchange="checkLogin()" autocomplete="off"/>
                         <span class="regstar">*</span>
                         <div id="logincheck"></div>
@@ -47,7 +47,7 @@
                 </tr>
                 {if $cfg.name_mode == 'nickname'}
                     <tr>
-                        <td valign="top" class="">
+                        <td valign="top" class="" width="269">
                             <div><strong>{$LANG.NICKNAME}:</strong></div>
                             <small>{$LANG.NICKNAME_TEXT}</small>
                         </td>
