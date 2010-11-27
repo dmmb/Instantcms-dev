@@ -294,8 +294,6 @@ if ($do=='view'){
             $blog['url']        = $model->getBlogURL(null, $blog['seolink']);
             //Считаем число комментариев
             $blog['comments']   = blogComments($blog['id']);
-			//Нормализуем дату создания
-			$blog['pubdate']    = $inCore->dateFormat($blog['pubdate']);
             //Форматируем значение кармы блога
             $blog['karma']      = cmsKarmaFormatSmall($blog['points']);
             //добавляем блог в список
@@ -468,7 +466,6 @@ if ($do=='blog'){
                     $post['url']        = $model->getPostURL(null, $blog['seolink'], $post['seolink']);
                     $post['comments']   = $post['comments'] ? $inCore->getCommentsCount('blog', $post['id']) : false;
                     $post['karma']      = cmsKarmaFormatSmall($post['points']);
-					$post['fpubdate']	= $inCore->dateFormat($post['fpubdate']);
                     
                     $msg                = $post['content_html'];
 
@@ -571,6 +568,7 @@ if ($do=='moderate'){
     foreach($posts_list as $post){
         $post['msg']        = $post['content_html'];
         $post['tagline']    = cmsTagLine('blogpost', $post['id']);
+		$post['fpubdate']	= $inCore->dateFormat($post['pubdate']);
         $post['url']        = $model->getPostURL(null, $post['bloglink'], $post['seolink']);
         $posts[]            = $post;
     }
@@ -993,8 +991,7 @@ if($do=='post'){
         }
     }
 
-    $post['fpubdate'] = cmsCore::dateDiffNow($post['fpubdate']).' '.$_LANG['BACK'].' ('.$post['fpubdate'].')';
-    $post['feditdate'] = cmsCore::dateDiffNow($post['feditdate']).' '.$_LANG['BACK'];
+    $post['fpubdate'] = cmsCore::dateDiffNow($post['pubdate']).' '.$_LANG['BACK'].' ('.$post['fpubdate'].')';
 
     if ($post['cat_id']){
         $cat = $model->getBlogCategory($post['cat_id']);
@@ -1175,10 +1172,6 @@ if ($do == 'delblog'){
 
     if (!$user_id){ $inCore->halt(); }
 
-    $blog = $model->getBlog($id);
-
-    if (!$blog){ $inCore->halt(); }
-
     if ( $inCore->inRequest('confirm') ){
         if ($user_id == $blog['user_id'] || $inUser->is_admin){
             $model->deleteBlog($id);
@@ -1275,20 +1268,12 @@ if ($do=='latest'){
 	}
 	
 	$smarty     = $inCore->initSmarty('components', 'com_blog_view_posts.tpl');
-	$error      = '';
 				
 	$user_id    = $inUser->id;
 	$is_admin   = $inCore->userIsAdmin($user_id);
 	$can_view   = false;
 
     $posts      = array();
-
-    if ($error) {
-        echo '<p style="color:red">'.$error.'</p>';
-        return;
-    }
-
-	if (!$error){
 
         //Считаем количество персональных и коллективных блогов
         $single_blogs	= $model->getSingleBlogsCount();
@@ -1359,8 +1344,6 @@ if ($do=='latest'){
         $smarty->display('com_blog_view_posts.tpl');
 
     }
-
-}
 ////////// VIEW POPULAR POSTS ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='best'){
 
@@ -1372,7 +1355,6 @@ if ($do=='best'){
 	}
 
 	$smarty   = $inCore->initSmarty('components', 'com_blog_view_posts.tpl');
-	$error    = '';
 				
 	$user_id  = $inUser->id;
 	$is_admin = $inCore->userIsAdmin($user_id);
@@ -1380,13 +1362,6 @@ if ($do=='best'){
 	$can_view = false;
 
     $posts    = array();
-
-    if ($error) {
-        echo '<p style="color:red">'.$error.'</p>';
-        return;
-    }
-	
-	if (!$error){
 
 		//TITLES
 		$inPage->setTitle($_LANG['POPULAR_IN_BLOGS']);
@@ -1417,6 +1392,7 @@ if ($do=='best'){
 
                     $post['comments']   = $post['comments'] ? $inCore->getCommentsCount('blog', $post['id']) : false;
                     $post['karma']      = cmsKarmaFormatSmall($post['points']);
+					$post['fpubdate']	= $inCore->dateFormat($post['pubdate']);
 
                     $msg = $post['content_html'];
 
@@ -1432,7 +1408,6 @@ if ($do=='best'){
                 }
             }
         }
-    }
 
     $smarty->assign('is_posts', (bool)sizeof($posts));
 

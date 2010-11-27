@@ -144,6 +144,30 @@ class cmsActions {
         
     }
 
+    /**
+     * Óäàëÿåò èç ëåíòû àêòèâíîñòè âñå ñîáûòèÿ îïğåäåëåííîãî òèïà äëÿ óêàçàííîé öåëè
+     * @param string $action_name Òèï ñîáûòèÿ
+     * @param int $target_id Èäåíòèôèêàòîğ öåëè
+     * @return bool
+     */
+    public static function removeTargetLog($action_name, $target_id, $user_id = false){
+        
+        $inDB = cmsDatabase::getInstance();
+        
+        $action = self::getAction($action_name);
+        
+        $usr_sql = $user_id ? "AND user_id = {$user_id}" : '';
+        
+        $sql = "DELETE 
+                FROM cms_actions_log 
+                WHERE action_id = '{$action['id']}' AND target_id = '{$target_id}' $usr_sql";
+
+        $inDB->query($sql);
+
+        return true;
+        
+    }
+
 // ============================================================================ //
 // ============================================================================ //
 
@@ -153,7 +177,11 @@ class cmsActions {
      *
      */
 	public function where($condition){
+		if ($this->where) {
 		$this->where .= "AND ({$condition})";
+		} else {
+		    $this->where  = "({$condition})";
+		}
 	}
 
     /**
@@ -261,16 +289,13 @@ class cmsActions {
                        u.nickname as user_nickname,
                        u.login as user_login
 
-                FROM cms_actions_log log,
-                     cms_actions a,
-                     cms_users u
-                     
-                WHERE   log.user_id = u.id AND 
-                        log.action_id = a.id AND
-                        a.is_visible = 1
-						{$this->where}
+                FROM cms_actions_log log
+                LEFT JOIN cms_actions a ON a.id = log.action_id AND a.is_visible = 1
+                LEFT JOIN cms_users u ON u.id = log.user_id
+   
+                WHERE {$this->where}
 
-                ORDER BY log.pubdate DESC
+                ORDER BY log.id DESC
                 ";
 
         if ($this->limit){

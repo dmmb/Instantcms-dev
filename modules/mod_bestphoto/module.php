@@ -24,12 +24,12 @@ function mod_bestphoto($module_id){
 		
 		$catsql = $cfg['album_id'] ? ' AND album_id = '.$cfg['album_id'] : '';
 		
-		$today = date("d-m");
+		$today = date("d-m-Y");
 
 		switch ($cfg['whatphoto']){
 
 			case 'all':   $periodsql = ''; break;
-			case 'day':   $periodsql = " AND DATE_FORMAT(f.pubdate, '%d-%m')='$today'"; break;
+			case 'day':   $periodsql = " AND DATE_FORMAT(f.pubdate, '%d-%m-%Y')='$today'"; break;
 			case 'week':  $periodsql = " AND DATEDIFF(NOW(), f.pubdate) <= 7"; break;
 			case 'month': $periodsql = " AND DATE_SUB(NOW(), INTERVAL 1 MONTH) < f.pubdate"; break;
 

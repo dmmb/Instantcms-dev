@@ -66,12 +66,12 @@ class cms_model_users{
                 IFNULL(ui.nickname, '') as inv_nickname,
                 IFNULL(COUNT(i.id), 0) as invites_count
                 FROM cms_users u
-				LEFT JOIN cms_user_profiles p ON u.id = p.id
-				LEFT JOIN cms_user_groups g ON u.group_id = g.id
-				LEFT JOIN cms_online o ON u.id = o.user_id
-				LEFT JOIN cms_banlist b ON u.id = b.user_id
-                LEFT JOIN cms_users ui ON u.invited_by = ui.id
-                LEFT JOIN cms_user_invites i ON u.id = i.owner_id AND i.is_used = 0 AND i.is_sended = 0
+				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+				LEFT JOIN cms_user_groups g ON g.id = u.group_id
+				LEFT JOIN cms_online o ON o.user_id = u.id
+				LEFT JOIN cms_banlist b ON b.user_id = u.id
+                LEFT JOIN cms_users ui ON ui.id = u.invited_by
+                LEFT JOIN cms_user_invites i ON i.owner_id = u.id AND i.is_used = 0 AND i.is_sended = 0
                 WHERE u.is_locked = 0 AND u.id = '$user_id'
 				GROUP BY u.id
                 LIMIT 1";
@@ -710,6 +710,8 @@ class cms_model_users{
                 $this->deletePhoto($photo['id']);
             }
         }
+
+		cmsActions::removeTargetLog('add_user_photo_multi', $album_id);
 
         $this->inDB->query("DELETE FROM cms_user_albums WHERE id = '$album_id'") ;
 

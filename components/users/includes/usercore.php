@@ -12,7 +12,7 @@
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 function usrBlog($user_id){
-	return dbGetFields('cms_blogs', 'owner="user" AND user_id = '.$user_id, 'id, seolink');
+	return dbGetFields('cms_blogs', 'owner="user" AND user_id = '.$user_id, 'id, seolink', 'owner');
 }
 
 function usrLink($title, $user_login){

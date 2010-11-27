@@ -71,10 +71,6 @@ function applet_menu(){
 		$toolmenu[4]['title'] = 'Скрыть выбранные';
 		$toolmenu[4]['link'] = "javascript:checkSel('?view=menu&do=hide&multiple=1');";
 
-		$toolmenu[6]['icon'] = 'reorder.gif';
-		$toolmenu[6]['title'] = 'Сохранить порядок элементов';
-		$toolmenu[6]['link'] = "javascript:checkSel('?view=menu&do=saveorder');";
-
 		$toolmenu[7]['icon'] = 'autoorder.gif';
 		$toolmenu[7]['title'] = 'Упорядочить элементы';
 		$toolmenu[7]['link'] = "?view=menu&do=autoorder";

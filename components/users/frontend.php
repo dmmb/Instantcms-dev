@@ -677,6 +677,7 @@ if ($do=='profile'){
 		$smarty->assign('is_auth', $inUser->id);
         $smarty->assign('avatar', usrImageNOdb($usr['id'], 'big', $usr['imageurl'], $usr['is_deleted']));
         $smarty->assign('usr', $usr);
+		$smarty->assign('messages', cmsCore::getSessionMessages());
         $smarty->display('com_users_not_allow.tpl');
         return;
     }
