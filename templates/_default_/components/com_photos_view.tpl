@@ -78,7 +78,7 @@
 {* ======================= список фотографий ===================================== *}
 {* =============================================================================== *}
 {if $can_add_photo}
-	<a class="photo_add_link" href="/photos/{$album.id}/addphoto.html">{$LANG.ADD_PHOTO_TO_ALBUM}</a></td>
+	<a class="photo_add_link" href="/photos/{$album.id}/addphoto.html">{$LANG.ADD_PHOTO_TO_ALBUM}</a>
 {/if}
 
 		

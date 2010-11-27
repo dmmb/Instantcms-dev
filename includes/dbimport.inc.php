@@ -22,6 +22,7 @@
                                 strstr($str, 'ALTER TABLE')){
 
                             if ($sql){
+                                $sql = str_replace("DEFAULT 'CURRENT_TIMESTAMP'", "DEFAULT CURRENT_TIMESTAMP", $sql);
                                 mysql_query($sql) or die(mysql_error().'<pre>'.$sql.'</pre>');
                             }
 

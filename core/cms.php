@@ -2822,7 +2822,13 @@ class cmsCore {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static function dateFormat($date, $is_full_m = true, $is_time=false, $is_now_time = true){
+
+        $inConf = cmsConfig::getInstance();
+
 	    global $_LANG;
+
+        $date = date('Y-m-d H:i:s', strtotime($date)+($inConf->timediff*3600));
+
 		// получаем значение даты и времени
 		list($day, $time) = explode(' ', $date);
 		switch( $day ) {

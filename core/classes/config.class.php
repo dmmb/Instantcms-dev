@@ -18,7 +18,11 @@ class cmsConfig {
         
         $cfg_file = PATH.'/includes/config.inc.php';
 
-        $this->homecom = '';
+        //defaults
+        $this->db_prefix    = 'cms';
+        $this->homecom      = '';
+        $this->timezone     = 'Europe/Moscow';
+        $this->timediff     = '0';
 
         if (file_exists($cfg_file)){
         
@@ -30,10 +34,8 @@ class cmsConfig {
 
         }
 
-        if (!$this->db_prefix){ $this->db_prefix = 'cms'; }
-        if (!$this->homecom){ $this->homecom = ''; }
-
         return true;
+        
 	}
 
     private function __clone() {}

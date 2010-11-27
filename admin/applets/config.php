@@ -33,7 +33,9 @@ function applet_config(){
   
 	include('../includes/config.inc.php');
 
-    if (!isset($_CFG['wmark'])) { $_CFG['wmark'] = 'watermark.png'; }
+    if (!isset($_CFG['wmark']))    { $_CFG['wmark'] = 'watermark.png'; }
+    if (!isset($_CFG['timezone'])) { $_CFG['timezone'] = 'Europe/Moscow'; }
+    if (!isset($_CFG['timediff'])) { $_CFG['timediff'] = '0'; }
 	
 	if ($do == 'save'){
 
@@ -76,6 +78,9 @@ function applet_config(){
 		$newCFG['smtphost']		= $inCore->request('smtphost', 'str');
         $newCFG['lang']         = $_CFG['lang'];
 
+        $newCFG['timezone']		= $inCore->request('timezone', 'str');
+        $newCFG['timediff']		= $inCore->request('timediff', 'str');
+
 		if ($inConf->saveToFile($newCFG)){
            $inCore->redirect('index.php?view=config&msg=ok');
         } else {
@@ -98,6 +103,7 @@ function applet_config(){
 	  	<li><a href="#basic"><span>Сайт</span></a></li>
 	  	<li><a href="#home"><span>Главная страница</span></a></li>
 		<li><a href="#design"><span>Дизайн</span></a></li>
+		<li><a href="#time"><span>Время</span></a></li>
 		<li><a href="#database"><span>База данных</span></a></li>
 		<li><a href="#mail"><span>Почта</span></a></li>
 		<li><a href="#other"><span>Разное</span></a></li>
@@ -278,6 +284,37 @@ function applet_config(){
 				</tr>
 			</table>
 		</div>
+		<div id="time">
+			<table width="720" border="0" cellpadding="5">
+				<tr>
+					<td valign="top" width="100">
+                        <div style="margin-top:2px">
+                            <strong>Временная зона:</strong>
+                        </div>
+					</td>
+					<td>
+                        <select name="timezone" id="timezone" style="width:350px">
+                            <?php include(PATH.'/admin/includes/timezones.php'); ?>
+                            <?php foreach($timezones as $tz) { ?>
+                            <option value="<?php echo $tz; ?>" <?php if ($tz == $_CFG['timezone']) { ?>selected="selected"<?php } ?>><?php echo $tz; ?></option>
+                            <?php } ?>
+                        </select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<strong>Смещение в часах:</strong>
+					</td>
+					<td width="350">
+                        <select name="timediff" id="timediff" style="width:60px">
+                            <?php for($h=-12; $h<=12; $h++) { ?>
+                                <option value="<?php echo $h; ?>" <?php if ($h == $_CFG['timediff']) { ?>selected="selected"<?php } ?>><?php echo ($h > 0 ? '+'.$h : $h); ?></option>
+                            <?php } ?>
+                        </select>
+					</td>
+				</tr>
+			</table>
+		</div>
 		<div id="database">
 			<table width="720" border="0" cellpadding="5" style="margin-top:15px;">
 				<tr>
@@ -401,8 +438,8 @@ function applet_config(){
 				<tr>
 					<td><strong>Выводить текущую страницу в глубиномере:</strong></td>
 					<td>
-						<input name="short_pw" type="radio" value="0" <?php if (!$_CFG['index_pw']) { echo 'checked="checked"'; } ?>/> Да
-						<input name="short_pw" type="radio" value="1" <?php if ($_CFG['index_pw']) { echo 'checked="checked"'; } ?>/> Нет
+						<input name="short_pw" type="radio" value="0" <?php if (!$_CFG['short_pw']) { echo 'checked="checked"'; } ?>/> Да
+						<input name="short_pw" type="radio" value="1" <?php if ($_CFG['short_pw']) { echo 'checked="checked"'; } ?>/> Нет
 					</td>
 				</tr>
 			</table>

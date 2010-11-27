@@ -75,6 +75,8 @@
             $_CFG['lang']       = 'ru';
             $_CFG['wmark']      = 'watermark.png';
             $_CFG['back_btn']   = '0';
+            $_CFG['timezone']   = 'Europe/Moscow';
+            $_CFG['timediff']   = '0';
 
             $inConf->saveToFile($_CFG);
 			

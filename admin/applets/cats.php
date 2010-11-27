@@ -429,7 +429,8 @@ function applet_cats(){
                     </table>
                     <div><strong>Родительский раздел</strong></div>
                     <div>
-                        <select name="parent_id" size="12" id="parent_id" style="width:100%">
+                        <div class="parent_notice" style="color:red;margin:4px 0px;display:none">Раздел будет вложен сам в себя. Выберите другого родителя.</div>
+                        <select name="parent_id" size="12" id="parent_id" style="width:100%" onchange="if($(this).val()=='<?php echo $mod['id']; ?>'){ $('.parent_notice').show(); } else { $('.parent_notice').hide(); }">
                             <?php $rootid = dbGetField('cms_category', 'parent_id=0', 'id'); ?>
                             <option value="<?php echo $rootid; ?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- Корневой раздел --</option>
                             <?php

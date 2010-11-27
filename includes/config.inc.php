@@ -24,4 +24,6 @@ $_CFG['debug'] 	= '0';
 $_CFG['lang'] 	= 'ru';
 $_CFG['wmark'] 	= 'watermark.png';
 $_CFG['back_btn'] 	= '0';
+$_CFG['timezone'] 	= 'Europe/Moscow';
+$_CFG['timediff'] 	= '0';
 ?>

@@ -1275,29 +1275,29 @@ if ($do=='latest'){
 
     $posts      = array();
 
-    //Считаем количество персональных и коллективных блогов
-    $single_blogs	= $model->getSingleBlogsCount();
-    $multi_blogs 	= $model->getMultiBlogsCount();
+        //Считаем количество персональных и коллективных блогов
+        $single_blogs	= $model->getSingleBlogsCount();
+        $multi_blogs 	= $model->getMultiBlogsCount();
 
-    //TITLES
-	$inPage->setTitle($_LANG['RSS_BLOGS']);
-	$inPage->addPathway($_LANG['RSS_BLOGS']);
-	$inPage->setDescription($_LANG['RSS_BLOGS']);
+		//TITLES
+		$inPage->setTitle($_LANG['RSS_BLOGS']);
+		$inPage->addPathway($_LANG['RSS_BLOGS']);
+		$inPage->setDescription($_LANG['RSS_BLOGS']);
 
-	//PAGINATION
-	$perpage = isset($cfg['perpage']) ? $cfg['perpage'] : 10;
-	$page = $inCore->request('page', 'int', 1);
+		//PAGINATION
+		$perpage = isset($cfg['perpage']) ? $cfg['perpage'] : 10;
+		$page = $inCore->request('page', 'int', 1);
 							
-    $total = $model->getLatestCount($user_id, $is_admin);
+        $total = $model->getLatestCount($user_id, $is_admin);
 					
-    //GET ENTRIES
-    $posts_list = $model->getLatestPosts($page, $perpage);
+        //GET ENTRIES
+        $posts_list = $model->getLatestPosts($page, $perpage);
 
-    //PAGINATION
-    $pagination = cmsPage::getPagebar($total, $page, $perpage, '/blogs/latest-%page%.html', array());
+        //PAGINATION
+        $pagination = cmsPage::getPagebar($total, $page, $perpage, '/blogs/latest-%page%.html', array());
 
-    //FETCH ENTRIES
-    if ($posts_list){
+        //FETCH ENTRIES
+        if ($posts_list){
             foreach($posts_list as $post){
                 $can_view = ($post['blog_allow_who']=='all' || ($post['blog_allow_who']=='friends' && usrIsFriends($post['user_id'], $user_id)) || $post['user_id']==$user_id || $is_admin);
                 if ($can_view){
@@ -1322,25 +1322,26 @@ if ($do=='latest'){
                     $posts[]            = $post;
                 }
             }
-    }
+        }
 
-    $smarty->assign('is_posts', (bool)sizeof($posts));
-    $smarty->assign('is_latest', (bool)sizeof($posts));
-    $smarty->assign('pagetitle', $_LANG['BLOGS']);
-    $smarty->assign('is_admin', $is_admin);
-    $smarty->assign('total', $total);
-    $smarty->assign('uid', $user_id);
-    $smarty->assign('single_blogs', $single_blogs);
-    $smarty->assign('multi_blogs', $multi_blogs);
+        $smarty->assign('is_posts', (bool)sizeof($posts));
+        $smarty->assign('is_latest', (bool)sizeof($posts));
+        $smarty->assign('pagetitle', $_LANG['BLOGS']);
+        $smarty->assign('is_admin', $is_admin);
+        $smarty->assign('total', $total);
+        $smarty->assign('uid', $user_id);
 
-    if ($posts) { $smarty->assign('posts', $posts); }
-    if ($pagination) { $smarty->assign('pagination', $pagination); }
+        $smarty->assign('single_blogs', $single_blogs);
+        $smarty->assign('multi_blogs', $multi_blogs);
 
-    $smarty->assign('id', $id);
-    $smarty->assign('cfg', $cfg);
-    $smarty->assign('round_corners_js', '$.jcorners(".blog_comments",{radius:10});');
+        if ($posts) { $smarty->assign('posts', $posts); }
+        if ($pagination) { $smarty->assign('pagination', $pagination); }
 
-    $smarty->display('com_blog_view_posts.tpl');
+        $smarty->assign('id', $id);
+        $smarty->assign('cfg', $cfg);
+        $smarty->assign('round_corners_js', '$.jcorners(".blog_comments",{radius:10});');
+
+        $smarty->display('com_blog_view_posts.tpl');
 
 }
 ////////// VIEW POPULAR POSTS ////////////////////////////////////////////////////////////////////////////////////////
@@ -1362,26 +1363,26 @@ if ($do=='best'){
 
     $posts    = array();
 
-	//TITLES
-	$inPage->setTitle($_LANG['POPULAR_IN_BLOGS']);
-	$inPage->addPathway($_LANG['POPULAR_IN_BLOGS']);
-	$inPage->setDescription($_LANG['POPULAR_IN_BLOGS']);
+		//TITLES
+		$inPage->setTitle($_LANG['POPULAR_IN_BLOGS']);
+		$inPage->addPathway($_LANG['POPULAR_IN_BLOGS']);
+		$inPage->setDescription($_LANG['POPULAR_IN_BLOGS']);
 
-	//PAGINATION
-	$perpage    = isset($cfg['perpage']) ? $cfg['perpage'] : 20;
-	$page       = $inCore->request('page', 'int', 1);
+		//PAGINATION
+		$perpage    = isset($cfg['perpage']) ? $cfg['perpage'] : 20;
+		$page       = $inCore->request('page', 'int', 1);
 							
-	//COUNT ENTRIES
-    $total      = $model->getBestCount($user_id, $is_admin);
+		//COUNT ENTRIES
+        $total      = $model->getBestCount($user_id, $is_admin);
         
-    //GET ENTRIES
-    $posts_list = $model->getBestPosts($page, $perpage);
+        //GET ENTRIES
+        $posts_list = $model->getBestPosts($page, $perpage);
 
-    //PAGINATION
-    $pagination = cmsPage::getPagebar($total, $page, $perpage, '/blogs/popular-%page%.html', array());
+        //PAGINATION
+        $pagination = cmsPage::getPagebar($total, $page, $perpage, '/blogs/popular-%page%.html', array());
 
-    //FETCH ENTRIES
-    if ($posts_list){
+        //FETCH ENTRIES
+        if ($posts_list){
             foreach($posts_list as $post){
 
                 $can_view = ($post['blog_allow_who']=='all' || ($post['blog_allow_who']=='friends' && usrIsFriends($post['user_id'], $user_id)) || $post['user_id']==$user_id || $inCore->userIsAdmin($user_id));
@@ -1406,7 +1407,7 @@ if ($do=='best'){
                     $posts[]            = $post;
                 }
             }
-    }
+        }
 
     $smarty->assign('is_posts', (bool)sizeof($posts));
 

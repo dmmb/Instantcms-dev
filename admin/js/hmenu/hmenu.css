@@ -113,6 +113,7 @@ ul.fleft {
 #hmenu li a.repair{ margin-left:5px; background:url(/admin/images/icons/hmenu/repair.png) no-repeat 6px 6px; }
 #hmenu li a.repairnested{ margin-left:5px; background:url(/admin/images/icons/hmenu/repairnested.png) no-repeat 6px 6px; }
 #hmenu li a.cron{ margin-left:5px; background:url(/admin/images/icons/hmenu/cron.png) no-repeat 6px 6px; }
+#hmenu li a.phpinfo{ margin-left:5px; background:url(/admin/images/icons/hmenu/php.png) no-repeat 6px 6px; }
 
 #hmenu li a.add{ margin-left:5px; background:url(/admin/images/icons/hmenu/add.png) no-repeat 6px 6px; }
 #hmenu li a.list{ margin-left:5px; background:url(/admin/images/icons/hmenu/list.png) no-repeat 6px 6px; }

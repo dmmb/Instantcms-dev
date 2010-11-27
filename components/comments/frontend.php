@@ -299,7 +299,7 @@ function comments($target='', $target_id=0){
                 'target' => $target_data['title'],
                 'target_url' => $target_data['link'],
                 'target_id' => 0, 
-                'description' => strip_tags( strlen(strip_tags($content))>100 ? substr($content, 0, 100) : $content )
+                'description' => strip_tags( strlen(strip_tags($content))>140 ? substr($content, 0, 140) : $content )
             ));
 
 			//подписываем пользователя на обновления, если нужно

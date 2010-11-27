@@ -302,6 +302,7 @@ function cpMenu(){
 					<!-- <li><a class="repair" href="index.php?view=repair">Проверка БД</a></li> -->
 					<li><a class="repairnested" href="index.php?view=repairnested">Проверка деревьев</a></li>
                     <li><a class="cron" href="index.php?view=cron">Задачи CRON</a></li>
+                    <li><a class="phpinfo" href="index.php?view=phpinfo">Информация PHP</a></li>
 				</ul>	
 			</li>		
 			<?php } ?>					

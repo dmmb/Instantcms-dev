@@ -111,7 +111,6 @@
                     $(this).find('a:first').removeClass("hover");
                 }
             );
-            $('div[class^=action_entry]:last').css('border-bottom', '0px');
         });
     </script>
 

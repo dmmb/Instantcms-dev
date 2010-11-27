@@ -71,7 +71,7 @@ function cpStripComment($text){
         $inCore->redirect('index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
 	}
 
-	if ($opt == 'show'){
+	if ($opt == 'show_comment'){
 		if(isset($_REQUEST['item_id'])) { 
 			$id = $_REQUEST['item_id'];
 			$sql = "UPDATE cms_comments SET published = 1 WHERE id = $id";
@@ -80,7 +80,7 @@ function cpStripComment($text){
 		}
 	}
 
-	if ($opt == 'hide'){
+	if ($opt == 'hide_comment'){
 		if(isset($_REQUEST['item_id'])) { 
 			$id = $_REQUEST['item_id'];
 			$sql = "UPDATE cms_comments SET published = 0 WHERE id = $id";
@@ -138,11 +138,14 @@ function cpStripComment($text){
 
 		$fields[3]['title'] = 'IP';			$fields[3]['field'] = 'ip';			$fields[3]['width'] = '80'; 
 
-		$fields[4]['title'] = 'Автор';		$fields[4]['field'] = 'id';			$fields[4]['width'] = '180'; 
-		$fields[4]['prc'] = 'cpCommentAuthor';
+		$fields[4]['title'] = 'Показ';      $fields[4]['field'] = 'published';	$fields[4]['width'] = '50';
+        $fields[4]['do'] = 'opt';           $fields[4]['do_suffix'] = '_comment';
 
-		$fields[5]['title'] = 'Цель';		$fields[5]['field'] = 'id';			$fields[5]['width'] = '220'; 
-		$fields[5]['prc'] = 'cpCommentTarget';
+		$fields[5]['title'] = 'Автор';		$fields[5]['field'] = 'id';			$fields[5]['width'] = '180';
+		$fields[5]['prc'] = 'cpCommentAuthor';
+
+		$fields[6]['title'] = 'Цель';		$fields[6]['field'] = 'id';			$fields[6]['width'] = '220';
+		$fields[6]['prc'] = 'cpCommentTarget';
 
 		//ACTIONS
 		$actions = array();

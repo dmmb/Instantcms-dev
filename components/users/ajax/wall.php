@@ -15,6 +15,7 @@
     $inCore->loadClass('db');           //база данных
     $inCore->loadClass('page');
     $inCore->loadClass('user');
+    $inCore->loadClass('plugin');
    
     $user_id    = $inCore->request('user_id', 'int', 0);
     $usertype   = $inCore->request('usertype', 'str', '');

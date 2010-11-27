@@ -1,13 +1,16 @@
-/*----------------------------------------------------------------------------*/
-/*----------------------------------------------------------------------------*/
-/*------                                                                ------*/
-/*------    Внимание! Этот файл содержит огромное количество стилей     ------*/
-/*------    Не пытайтесь найти здесь что-то вручную                     ------*/
-/*------    Для поиска названия нужного стиля используйте Firebug:      ------*/
-/*------    http://www.instantcms.ru/content/0/read58.html              ------*/
-/*------                                                                ------*/
-/*----------------------------------------------------------------------------*/
-/*----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------*/
+/*------                                                                                                          ------*/
+/*------    Внимание! Этот файл содержит огромное количество стилей                                               ------*/
+/*------    Не пытайтесь найти здесь что-то вручную                                                               ------*/
+/*------    Для поиска названия нужного стиля используйте Firebug:                                                ------*/
+/*------    http://www.instantcms.ru/articles/chto-takoe-firebug-i-pochemu-ego-objazatelno-nado-ustanovit.html    ------*/
+/*------                                                                                                          ------*/
+/*------    Краткое руководство по созданию шаблона:                                                              ------*/
+/*------    http://www.instantcms.ru/articles/sozdanie-shablona.html                                              ------*/                                                                                                       ------*/
+/*------                                                                                                          ------*/
+/*----------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------*/
 
 html, body {
   margin:0;
@@ -16,8 +19,11 @@ html, body {
   height:100%;
 }
 
+html { height:100%; }
+
 body {
     background:url(../images/bg.jpg) no-repeat center top #1F3147;
+    height: 100%;
 }
 
 a { color:#09c; }
@@ -25,12 +31,11 @@ a:hover { color:#375E93; }
 
 #wrapper {
   position:relative;
-  min-height:100%;
   height:auto !important;
-  height:100%;
   min-height: 100%;
   display:block;
 }
+
 * html #wrapper {
   height: 100%;
 }
@@ -100,6 +105,7 @@ a:hover { color:#375E93; }
     box-shadow: 0 0 5px #000;
     -moz-box-shadow: 0 0 5px #000;
     width:940px;
+    border:solid 1px #1F3147\9;
 }
 
 #topmenu .menu{ list-style:none; margin:0; padding:0; }
@@ -111,9 +117,10 @@ a:hover { color:#375E93; }
     height:40px;
     line-height:40px;
     display:inline-block;
-	_display: inline;
+	//display: inline;
 	zoom: 1;
     font-size:18px;
+    //position: relative;
 }
 
 #topmenu .menu li.selected{
@@ -145,6 +152,8 @@ a:hover { color:#375E93; }
     display:none;
     position: absolute;
     top: 115px;
+    //top:40px;
+    //left:0;
 	width: 200px;
 	background: #E9E9E9;
 	color: #000;
@@ -207,6 +216,7 @@ a:hover { color:#375E93; }
     box-shadow: 0 0 5px #000;
     -moz-box-shadow: 0 0 5px #000;
     width:940px !important;
+    border:solid 1px #1F3147\9;
 }
 
 #topwide .moduletitle{
@@ -223,7 +233,9 @@ a:hover { color:#375E93; }
 /*************************** Верхний главный модуль ***************************/
 #main .module{
     margin-bottom:10px;
+    //margin-bottom:20px;
     padding:10px 20px 15px 20px;
+    //padding-top:0px;
     background:#FFF;
     border-radius:8px;
     -moz-border-radius:8px;
@@ -236,7 +248,7 @@ a:hover { color:#375E93; }
     height:40px;
     line-height:40px;
     background:url(../images/modtop.jpg) repeat-x left;
-    margin-top:-11px;
+    margin-top:-11px;    
     margin-bottom:10px;
     padding-left:14px;
     text-shadow:0 1px 0 #1F3147;
@@ -283,7 +295,6 @@ a:hover { color:#375E93; }
     color:#FFF;
     text-shadow:0 1px 0 #000;
     margin-top:-52px;
-    position: relative;
     clear:both;
 }
 
@@ -3479,6 +3490,10 @@ table.feed td.date strong { color:green; }
 /* ======================= ЛЕНТА АКТИВНОСТИ ================================= */
 /* ========================================================================== */
 
+.actions_list{
+    clear:both;
+}
+
 .action_entry{
     padding-left:25px;
     margin-bottom:15px;    
@@ -3505,6 +3520,7 @@ table.feed td.date strong { color:green; }
 
 .action_details{
     clear:both;
+    //clear:none;
     color:gray;
 }
 

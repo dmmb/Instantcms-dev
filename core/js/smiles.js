@@ -14,7 +14,6 @@ function getCaretPos(obj) {
 function replaceSelectedText(obj,cbFunc,s_open, s_close){
 	obj.focus();
 	if (document.selection) {
-        console.log('selection');
 		var s = document.selection.createRange(); 
 		if (s.text) {
 			eval("s.text="+cbFunc+"(s.text,s_open, s_close);");
