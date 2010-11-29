@@ -69,7 +69,7 @@
                     <p class="operations">
                         {if $is_author || $is_admin}
                             <a href="/photos/editphoto{$photo.id}.html" title="{$LANG.EDIT}"><img src="/templates/_default_/images/icons/edit.png" border="0"/></a>&nbsp;
-                        {if is_admin}
+                        {if $is_admin}
                             <a href="/photos/movephoto{$photo.id}.html" title="{$LANG.MOVE}"><img src="/templates/_default_/images/icons/move.png" border="0"/></a>&nbsp;
                         {/if}
                             <a href="/photos/delphoto{$photo.id}.html" title="{$LANG.DELETE}"><img src="/templates/_default_/images/icons/delete.png" border="0"/></a>&nbsp;
@@ -105,35 +105,3 @@
 
 
 {/strip}
-
-{*
-
-		<table width="100%" cellpadding="5" cellspacing="0">
-			<tr>
-            	<td colspan="3" align="center">
-
-                </td>
-            </tr>	
-			<tr>
-            	<td colspan="3" align="center">
-					<div>&larr; {$LANG.BACK_TO} <a href="/photos/{$photo.cat_id}">{$LANG.TO_ALBUM}</a>
-						{if $photo.NSDiffer==''} | <a href="/photos">{$LANG.TO_LIST_ALBUMS}</a>{/if}
-            		</div>
-				</td>
-            </tr>
-			<tr>
-				<td style="text-align:center"></td>
-			</tr>
-			{if $photo.a_bbcode}
-			<tr>
-            	<td style="text-align:center">		
-					<label for="bbcode">{$LANG.CODE_INPUT_TO_FORUMS}: </label>
-                    
-				</td>
-            </tr>
-			{/if}
-
-		</table>
-				           
-        {/if}
-*}

@@ -361,8 +361,6 @@ class cms_model_photos{
 
 		$photo = $this->inDB->get_fields('cms_photo_files', "id = '$id'", '*');
 
-		if (!$photo) { cmsCore::error404(); }
-
 		return $photo;
 
     }
