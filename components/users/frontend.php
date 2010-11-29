@@ -1129,8 +1129,8 @@ if ($do=='uploadphotos'){
 
     // Code for Session Cookie workaround
 	if ($inCore->inRequest("PHPSESSID")) {
-        session_destroy();
         $sess_id = $inCore->request("PHPSESSID", 'str');
+        if ($sess_id != session_id()) { session_destroy(); }
         session_id($sess_id);
         session_start();
 	}
