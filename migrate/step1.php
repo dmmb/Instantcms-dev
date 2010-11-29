@@ -4,6 +4,8 @@
         $inDB->query("ALTER TABLE `cms_modules` ADD `is_strict_bind` TINYINT NOT NULL DEFAULT '0'");
     }
 
+    $inDB->query("ALTER TABLE `cms_user_photos` CHANGE `pubdate` `pubdate` DATETIME NOT NULL");
+
     if (!$inDB->isFieldExists('cms_modules', 'version')){
         $inDB->query("ALTER TABLE `cms_modules` ADD `version` VARCHAR(6) NOT NULL DEFAULT '1.0'");
     }
