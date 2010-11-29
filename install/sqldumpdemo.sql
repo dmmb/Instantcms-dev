@@ -1550,7 +1550,7 @@ CREATE TABLE `#__user_photos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `album_id` int(11) NOT NULL,
-  `pubdate` date NOT NULL,
+  `pubdate` datetime NOT NULL,
   `title` varchar(250) NOT NULL,
   `description` text NOT NULL,
   `allow_who` varchar(15) NOT NULL DEFAULT 'all',
