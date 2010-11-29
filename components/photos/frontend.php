@@ -470,6 +470,7 @@ if ($do=='addphoto'){
 								} else { 
 									$published = 1; 
 								}
+								$photo['is_hidden'] = $club['clubtype'] == 'private' ? true : false;
 							}
 
                             $photo['published']     = $published;

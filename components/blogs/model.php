@@ -562,7 +562,7 @@ class cms_model_blogs{
             while($post = $this->inDB->fetch_assoc($result)){
                 if ($post['owner']=='club'){
                     $post['blog_title'] = $post['club_title'];
-                    if ($post['club_type']=='private') { $post['content'] = ''; }
+                    if ($post['club_type']=='private') { $post['content_html'] = ''; }
                 }
                 $list[] = $post;
             }
