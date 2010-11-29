@@ -24,16 +24,15 @@ function mod_comments($module_id){
 
         if (!$targeting){ echo '<p>'.$_LANG['COMMENTS_NOT_SHOWTYPE'].'</p>'; return true; }
 
-        $sql            = '';
-        $target_where   = '';
-        $t              = 1;
+        $t_list = array();
 
-        foreach($cfg['targets'] as $key=>$value){
-            if ($t === 1) { $target_where .= " AND ("; }
-            $target_where .= 'c.target="'.$value.'"';
-            if ($t <= sizeof($cfg['targets'])-1) { $target_where .= " OR "; } else { $target_where .= ")"; }
-            $t++;
-        }
+		foreach($cfg['targets'] as $type){
+			$t_list[] = "'$type'";
+		}
+
+		$t_list = rtrim(implode(',', $t_list), ',');
+
+		$target_where = "AND c.target IN ({$t_list})";
 
         $guest_sql = $cfg['showguest'] ? "OR c.guestname<>''" : "";
 
@@ -49,11 +48,12 @@ function mod_comments($module_id){
                        IFNULL(u.nickname, '') as author,
                        IFNULL(u.login, '') as author_login,
                        IFNULL(v.total_rating, 0) as rating
-				FROM cms_users u, cms_comments c
+				FROM cms_comments c
+				INNER JOIN cms_users u ON u.id = c.user_id {$guest_sql}
                 LEFT JOIN cms_ratings_total v ON v.item_id=c.id AND v.target='comment'
-				WHERE (c.user_id=u.id {$guest_sql}) AND c.published=1 {$target_where}
-                GROUP BY c.id
-                ORDER BY c.pubdate DESC
+				WHERE c.published=1 {$target_where}
+				GROUP BY c.id
+                ORDER BY c.id DESC
                 LIMIT 70";
 
         $result = $inDB->query($sql);
