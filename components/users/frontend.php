@@ -1395,7 +1395,7 @@ if ($do=='editphoto'){
 
 	cmsUser::sessionPut('photos_list', array($photo['id']));
 
-    $inCore->redirect('/users/'.$usr['login'].'/photos/submit');
+    $inCore->redirect('/users/'.$usr['login'].'/photos/submit-edit');
 
 }
 
@@ -1702,55 +1702,55 @@ if ($do=='viewphoto'){
 	$usr = $model->getUserShort($id);
 	if (!$usr) { cmsCore::error404(); }
 
-			$sql = "SELECT p.*, a.title as album
-                    FROM cms_user_photos p, cms_user_albums a
-                    WHERE p.id = '$photoid' AND p.user_id = '$id' AND p.album_id = a.id
-                    LIMIT 1";
-			$result = $inDB->query($sql) ;
+	$sql = "SELECT p.*, a.title as album, pr.gender
+            FROM cms_user_photos p
+			INNER JOIN cms_user_albums a ON a.id = p.album_id
+			INNER JOIN cms_user_profiles pr ON pr.user_id = p.user_id
+            WHERE p.id = '$photoid' AND p.user_id = '$id'
+            LIMIT 1";
+	$result = $inDB->query($sql) ;
 
 	if (!$inDB->num_rows($result)){ cmsCore::error404(); }
 
-				$photo = $inDB->fetch_assoc($result);
-				
-				$inDB->query("UPDATE cms_user_photos SET hits = hits + 1 WHERE id = ".$photo['id']) ;
+	$photo = $inDB->fetch_assoc($result);
 	
 	$inPage->setTitle($photo['title']);
 	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 	$inPage->addPathway($_LANG['PHOTOALBUMS'], '/users/'.$usr['id'].'/photoalbum.html');
-				$inPage->addPathway($photo['album'], '/users/'.$usr['login'].'/photos/private'.$photo['album_id'].'.html');
-				$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
+	$inPage->addPathway($photo['album'], '/users/'.$usr['login'].'/photos/private'.$photo['album_id'].'.html');
+	$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
 
-				if (usrAllowed($photo['allow_who'], $id) || $inCore->userIsAdmin($inUser->id)){
-					$photo['pubdate'] = $inCore->dateFormat($photo['pubdate'], true, false, false);
-					$photo['genderlink'] = cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, '', $usr['login']);
-					$photo['filesize'] = round(filesize($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/medium/'.$photo['imageurl'])/1024, 2);
-					//ссылки на предыдущую и следующую фотографии
-					$previd = $inDB->get_fields('cms_user_photos', "id>'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id ASC');
-					$nextid = $inDB->get_fields('cms_user_photos', "id<'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id DESC');
-
-					$is_photo = true;	
-				} else { $is_photo = false; }
-					
-				$smarty = $inCore->initSmarty('components', 'com_users_photos_view.tpl');
-				$smarty->assign('photo', $photo);
+	$photo['pubdate'] = $inCore->dateFormat($photo['pubdate'], true, false, false);
+	$photo['genderlink'] = cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, $photo['gender'], $usr['login']);
+	$photo['filesize'] = round(filesize($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/medium/'.$photo['imageurl'])/1024, 2);
+	//ссылки на предыдущую и следующую фотографии
+	$previd = $inDB->get_fields('cms_user_photos', "id>'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id ASC');
+	$nextid = $inDB->get_fields('cms_user_photos', "id<'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id DESC');
+	// Проверяем права доступа
+	$is_allow = usrAllowed($photo['allow_who'], $id) || $inCore->userIsAdmin($inUser->id) ? true : false;
+	// Если видим фото, обновляем просмотры
+	if ($is_allow) { $inDB->query("UPDATE cms_user_photos SET hits = hits + 1 WHERE id = ".$photo['id']) ; }
+				
+	$smarty = $inCore->initSmarty('components', 'com_users_photos_view.tpl');
+	$smarty->assign('photo', $photo);
 	$smarty->assign('bbcode', '[IMG]'.HOST.'/images/users/photos/medium/'.$photo['imageurl'].'[/IMG]');
-				$smarty->assign('previd', $previd);
-				$smarty->assign('nextid', $nextid);
-				$smarty->assign('usr', $usr);
-				$smarty->assign('myprofile', $myprofile);
-				$smarty->assign('is_admin', $inCore->userIsAdmin($user_id));
-				$smarty->assign('is_photo', $is_photo);
-				if($is_photo){
-					$inCore->loadLib('tags');	
-					$smarty->assign('tagbar', cmsTagBar('userphoto', $photo['id']));
-				}
-				$smarty->display('com_users_photos_view.tpl');	
-					
-					//show user comments
-				if($inCore->isComponentInstalled('comments') && $is_photo){
-						$inCore->includeComments();
-						comments('userphoto', $photo['id']);
-					}					
+	$smarty->assign('previd', $previd);
+	$smarty->assign('nextid', $nextid);
+	$smarty->assign('usr', $usr);
+	$smarty->assign('myprofile', $myprofile);
+	$smarty->assign('is_admin', $inCore->userIsAdmin($user_id));
+	$smarty->assign('is_allow', $is_allow);
+	if($is_allow){
+		$inCore->loadLib('tags');	
+		$smarty->assign('tagbar', cmsTagBar('userphoto', $photo['id']));
+	}
+	$smarty->display('com_users_photos_view.tpl');	
+
+	//show user comments
+	if($inCore->isComponentInstalled('comments') && $is_allow){
+		$inCore->includeComments();
+		comments('userphoto', $photo['id']);
+	}					
 				
 }
 /////////////////////////////// ADD FRIEND /////////////////////////////////////////////////////////////////////////////////////////

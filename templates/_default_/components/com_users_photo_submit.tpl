@@ -84,9 +84,9 @@
                                 <td height="30">{$LANG.SHOW}:</td>
                                 <td>
                                     <select name="allow[{$photo.id}]">
-                                        <option value="all">{$LANG.TO_ALL}</option>
-                                        <option value="registered">{$LANG.TO_REGISTERED}</option>
-                                        <option value="friends">{$LANG.TO_MY_FRIEND}</option>
+                                        <option value="all" {if $photo.allow_who=='all'}selected="selected"{/if}>{$LANG.TO_ALL}</option>
+                                        <option value="registered" {if $photo.allow_who=='registered'}selected="selected"{/if}>{$LANG.TO_REGISTERED}</option>
+                                        <option value="friends" {if $photo.allow_who=='friends'}selected="selected"{/if}>{$LANG.TO_MY_FRIEND}</option>
                                     </select>
                                 </td>
                             </tr>

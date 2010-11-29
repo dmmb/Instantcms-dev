@@ -66,8 +66,8 @@ class cms_model_users{
                 IFNULL(ui.nickname, '') as inv_nickname,
                 IFNULL(COUNT(i.id), 0) as invites_count
                 FROM cms_users u
-				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
-				LEFT JOIN cms_user_groups g ON g.id = u.group_id
+				INNER JOIN cms_user_profiles p ON p.user_id = u.id
+				INNER JOIN cms_user_groups g ON g.id = u.group_id
 				LEFT JOIN cms_online o ON o.user_id = u.id
 				LEFT JOIN cms_banlist b ON b.user_id = u.id
                 LEFT JOIN cms_users ui ON ui.id = u.invited_by
