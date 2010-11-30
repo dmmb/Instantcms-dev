@@ -44,7 +44,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	}
 
-	if ($opt=='list_items' || $opt=='list_cats' || $opt=='config'){
+	if ($opt=='list_items' || $opt=='list_cats' || $opt=='config' || $opt == 'show_item' || $opt == 'hide_item'){
 
 		$toolmenu[0]['icon'] = 'newstuff.gif';
 		$toolmenu[0]['title'] = 'Новое объявление';
@@ -63,7 +63,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$toolmenu[3]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats';
 
 	}
-	if($opt=='list_items'){
+	if($opt=='list_items' || $opt == 'show_item' || $opt == 'hide_item'){
 
 		$toolmenu[11]['icon'] = 'edit.gif';
 		$toolmenu[11]['title'] = 'Редактировать выбранные';
@@ -105,19 +105,21 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if ($opt == 'show_item'){
 		if (!isset($_REQUEST['item'])){
 			if (isset($_REQUEST['item_id'])){ dbShow('cms_board_items', (int)$_REQUEST['item_id']);  }
+			echo '1'; exit;
 		} else {
-			dbShowList('cms_board_items', $_REQUEST['item']);				
+			dbShowList('cms_board_items', $_REQUEST['item']);	
+			$opt = 'list_items';			
 		}			
-		echo '1'; exit;
 	}
 
 	if ($opt == 'hide_item'){
 		if (!isset($_REQUEST['item'])){
 			if (isset($_REQUEST['item_id'])){ dbHide('cms_board_items', (int)$_REQUEST['item_id']);  }
+			echo '1'; exit;
 		} else {
-			dbHideList('cms_board_items', $_REQUEST['item']);				
+			dbHideList('cms_board_items', $_REQUEST['item']);	
+			$opt = 'list_items';			
 		}			
-		echo '1'; exit;
 	}
 
 	if ($opt == 'submit_item'){	

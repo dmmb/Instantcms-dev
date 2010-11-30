@@ -126,19 +126,21 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if ($opt == 'show_forum'){
 		if (!isset($_REQUEST['item'])){
 			if (isset($_REQUEST['item_id'])){ dbShow('cms_forums', $_REQUEST['item_id']);  }
+			echo '1'; exit;
 		} else {
-			dbShowList('cms_forums', $_REQUEST['item']);				
+			dbShowList('cms_forums', $_REQUEST['item']);
+			header('location:'.$_SERVER['HTTP_REFERER']);
 		}			
-		echo '1'; exit;
 	}
 
 	if ($opt == 'hide_forum'){
 		if (!isset($_REQUEST['item'])){
 			if (isset($_REQUEST['item_id'])){ dbHide('cms_forums', $_REQUEST['item_id']);  }
+			echo '1'; exit;
 		} else {
-			dbHideList('cms_forums', $_REQUEST['item']);				
+			dbHideList('cms_forums', $_REQUEST['item']);
+			header('location:'.$_SERVER['HTTP_REFERER']);
 		}			
-		echo '1'; exit;
 	}
 
 	function reorder(){
