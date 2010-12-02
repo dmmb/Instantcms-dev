@@ -829,12 +829,12 @@ class cmsUser {
 
         $perpage    = 10;
 
-        if ($usertype=='user'){
-            $myprofile = ($inUser->id == $user_id || $inUser->is_admin);
-        } else {
-            $inCore->loadLib('clubs');
-            $myprofile = ($clubUserIsRole || $clubUserIsAdmin || $inUser->is_admin);
-        }
+		switch ($usertype){
+			case 'user': $myprofile = ($inUser->id == $user_id || $inUser->is_admin);  break;
+			case 'club': $inCore->loadLib('clubs');
+            			 $myprofile = ($clubUserIsRole || $clubUserIsAdmin || $inUser->is_admin); break;
+			default: $myprofile = $inUser->is_admin;
+		}
 
         $records = array();
 
@@ -848,16 +848,17 @@ class cmsUser {
             //получаем нужную страницу записей стены
             $sql = "SELECT w.*, g.gender, g.imageurl, u.nickname as author, u.login as author_login, u.is_deleted, w.pubdate
                     FROM cms_user_wall w
-					LEFT JOIN cms_users u ON u.id = w.author_id
-					LEFT JOIN cms_user_profiles g ON g.user_id = w.author_id
+					INNER JOIN cms_users u ON u.id = w.author_id
+					INNER JOIN cms_user_profiles g ON g.user_id = u.id
                     WHERE w.user_id = $user_id AND w.usertype = '$usertype'
                     ORDER BY w.pubdate DESC
                     LIMIT ".(($page-1)*$perpage).", $perpage";
 
             $result     = $inDB->query($sql);
-            $total_page = $inDB->num_rows($result);
 
-            $inCore->includeFile('components/users/includes/usercore.php');
+			if (!function_exists('usrImageNOdb')){
+            	$inCore->includeFile('components/users/includes/usercore.php');
+			}
 
             while($record = $inDB->fetch_assoc($result)){
                 $record['is_today'] = time() - strtotime($record['pubdate']) < 86400;
@@ -886,7 +887,6 @@ class cmsUser {
         $smarty->assign('pages', $pages);
         $smarty->assign('page', $page);
         $smarty->assign('total', $total);
-        $smarty->assign('total_page', $total_page);
         $smarty->assign('pagebar', $pagebar);
 
         $smarty->display('com_users_wall.tpl');
