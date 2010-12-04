@@ -2714,9 +2714,9 @@ if ($do=='votekarma'){
 			switch ($usertype){
 				case 'user': 	$usr  = $model->getUserShort($user_id);
 								if (!$usr) { cmsCore::error404(); }
-                $sql = "INSERT INTO cms_user_wall (user_id, author_id, pubdate, content, usertype)
-                        VALUES ('$user_id', '$author_id', NOW(), '$message', '$usertype')";
-                $inDB->query($sql);
+								$sql = "INSERT INTO cms_user_wall (user_id, author_id, pubdate, content, usertype)
+										VALUES ('$user_id', '$author_id', NOW(), '$message', '$usertype')";
+               					$inDB->query($sql);
 								$wall_id = $inDB->get_last_id('cms_user_wall');
 								if ($author_id != $user_id){
 									//регистрируем событие
@@ -2741,14 +2741,14 @@ if ($do=='votekarma'){
 									));
 								}
                     //send email notification, if user want it
-                    $user['email_newmsg']   = $inDB->get_field('cms_user_profiles', "user_id='{$user_id}'", 'email_newmsg');
-                    if ($user['email_newmsg'] && $user_id != $author_id){
+                    $usr['email_newmsg']   = $inDB->get_field('cms_user_profiles', "user_id='{$user_id}'", 'email_newmsg');
+                    if ($usr['email_newmsg'] && $user_id != $author_id){
                             $inConf = cmsConfig::getInstance();
                             //fetch target user
-										$to_email       = $inDB->get_field('cms_users', 'id='.$user_id, 'email');
+							$to_email       = $inDB->get_field('cms_users', 'id='.$user_id, 'email');
                             $postdate       = date('d/m/Y H:i:s');
-										$from_nick      = $inDB->get_field('cms_users', "id='{$author_id}'", 'nickname');
-										$profilelink    = cmsUser::getProfileURL($usr['login']);
+							$from_nick      = $inDB->get_field('cms_users', "id='{$author_id}'", 'nickname');
+							$profilelink    = HOST . cmsUser::getProfileURL($usr['login']);
 
                             $letter_path    = PATH.'/includes/letters/newwallpost.txt';
                             $letter         = file_get_contents($letter_path);
