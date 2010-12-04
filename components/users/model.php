@@ -182,13 +182,24 @@ class cms_model_users{
         if ($user_id == 1) { return false; }
 
 		if ($is_delete) {
+
+			$avatar = $this->inDB->get_field('cms_user_profiles', "user_id = '$user_id'", 'imageurl');
+            if ($avatar && $avatar != 'nopic.jpg'){
+                 @unlink(PATH.'/images/users/avatars/'.$avatar);
+                 @unlink(PATH.'/images/users/avatars/small/'.$avatar);
+            }
+
 			$this->inDB->query("DELETE FROM cms_users WHERE id = '$user_id' LIMIT 1");
 			$this->inDB->query("DELETE FROM cms_user_profiles WHERE user_id = '$user_id' LIMIT 1");
+			$this->inDB->query("DELETE FROM cms_user_wall WHERE user_id = '$user_id' AND usertype = 'user'");
+			
 		} else {
         	$this->inDB->query("UPDATE cms_users SET is_deleted = 1 WHERE id = '$user_id'");
 		}
         $this->inDB->query("DELETE FROM cms_user_friends WHERE to_id = '$user_id' OR from_id = '$user_id'");
 		$this->inDB->query("DELETE FROM cms_user_clubs WHERE user_id = '$user_id'");
+		$this->inDB->query("DELETE FROM cms_user_awards WHERE user_id = '$user_id'");
+
 		cmsActions::removeUserLog($user_id);
         
     }
