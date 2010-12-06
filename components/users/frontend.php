@@ -1528,7 +1528,9 @@ if ($do=='viewalbum'){
     //Определяем, друзья мы или нет
 	$we_friends = ($inUser->id && !$my_profile) ? (int)usrIsFriends($usr['id'], $inUser->id) : 0;
 
-    $photos = $model->getAlbumPhotos($usr['id'], $album_type, $album_id, $we_friends);
+	if ($album['allow_who'] == 'all' || $my_profile || ($album['allow_who'] == 'friends' && $we_friends) || ($album['allow_who'] == 'registered' && $inUser->id)) {
+    	$photos = $model->getAlbumPhotos($usr['id'], $album_type, $album_id, $we_friends);
+	}
 
     //Делим на страницы
     $total      = sizeof($photos);

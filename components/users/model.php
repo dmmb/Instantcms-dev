@@ -490,7 +490,7 @@ class cms_model_users{
         $album = array();
 
         if ($type == 'private'){
-            $album = $this->inDB->get_fields('cms_user_albums', "id='{$id}'", 'id, user_id, title');
+            $album = $this->inDB->get_fields('cms_user_albums', "id='{$id}'", 'id, user_id, title, allow_who');
         }
 
         if ($type == 'public'){
@@ -584,7 +584,7 @@ class cms_model_users{
             $filter = "AND (
                                 a.allow_who='all'
                                 OR
-                                (a.allow_who='registered' AND ({$user_id}>0))
+                                (a.allow_who='registered' AND ({$inUser->id}>0))
                                 OR
                                 (a.allow_who='friends' AND ({$is_friends}=1))
                             )";
