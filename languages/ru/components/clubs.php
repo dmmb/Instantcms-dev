@@ -101,6 +101,7 @@ $_LANG['PHOTO10']                       ='фотографий';
 $_LANG['PHOTO_ON_MOD']                  ='На модерации';
 $_LANG['LOADING']                       ='Загрузка';
 $_LANG['CLUB_WALL']                     ='Стена клуба';
+$_LANG['NOT_POSTS_ON_WALL_TEXT']        ='На стене нет записей. Ваша будет первой!';
 $_LANG['WRITE_ON_WALL']                 ='Написать на стене';
 $_LANG['CLUB_NOT_FOUND_TEXT']           ='Клуб не найден. Возможно он не активен или удален.';
 $_LANG['CREATE']                        ='Создать';

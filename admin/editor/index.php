@@ -85,9 +85,8 @@ if ($do=='view'){
 	echo '<div class="title">'.$cat['title'].'</div>';
 	
 	echo '<div class="desc">';
-		echo '<a href="?do=editcat&id='.$id.'" class="toollink">Редактировать раздел</a>';
 		if (!$root){
-			echo ' | <a href="index.php" class="toollink">Назад</a>';			
+			echo '<a href="index.php" class="toollink">Назад</a>';			
 		}
 	echo '</div>';
 	
@@ -123,9 +122,6 @@ if ($do=='view'){
 						echo '<td style="'.$style.'" width="60" align="center" valign="top"><a href="?do=showcat&id='.$subcat['id'].'">Показать</a></td>';							
 					}
 
-					echo '<td style="'.$style.'" width="16" valign="top"><img src="../images/actions/delete.gif" /></td>';			
-					echo '<td style="'.$style.'" width="60" align="center" valign="top"><a href="?do=deletecat&id='.$subcat['id'].'">Удалить</a></td>';			
-							
 				echo '</tr>';
 			}
 			echo '</table>';
@@ -185,7 +181,7 @@ if ($do=='view'){
 	echo '</div>';		
 }
 /*********************************************************************************************/
-if ($do=='newcat' || $do=='editcat'){
+if ($do=='newcat'){
 
 	//MENU
 	$GLOBALS['ed_menu'][0]['link'] = '/admin/editor/index.php';
@@ -290,49 +286,6 @@ if ($do=='newcat' || $do=='editcat'){
 
 }
 /*********************************************************************************************/
-if ($do == 'updatecat'){
-	if(isset($_REQUEST['id'])) {
-
-        $category['id']				= (int)$_REQUEST['id'];
-        $category['title']			= $inCore->request('title', 'str');
-        $category['parent_id']		= $inCore->request('parent', 'int');
-        $category['description']	= $inCore->request('description', 'html');
-        $category['description']	= $inDB->escape_string($category['description']);
-        $category['description']    = $inCore->badTagClear($category['description']);
-        $category['published'] 		= (int)$_REQUEST['published'];
-        $category['showdate'] 		= (int)$_REQUEST['showdate'];
-        $category['showcomm'] 		= (int)$_REQUEST['showcomm'];
-        $category['orderby'] 		= $inCore->request('orderby', 'str');
-        $category['orderto']		= $inCore->request('orderto', 'str');
-        $category['modgrp_id'] 		= 0;
-        $category['maxcols'] 		= 1;
-        $category['showtags'] 		= 1;
-        $category['showrss'] 		= 1;
-        $category['showdesc'] 		= 1;
-        $category['is_public'] 		= 0;
-
-        $inCore->loadModel('content');
-        $model = new cms_model_content();
-
-        $seolink    = $model->getCategorySeoLink($category);
-
-		$sql = "UPDATE cms_category 
-				SET title='{$category['title']}',
-					description='{$category['description']}',
-					published={$category['published']},
-					showdate={$category['showdate']},
-					showcomm={$category['showcomm']},
-					orderby='{$category['orderby']}',
-					orderto='{$category['orderto']}',
-                    seolink='$seolink'
-				WHERE id = {$category['id']}
-				LIMIT 1";
-		dbQuery($sql) ;
-		
-		header('location:index.php?do=view&id='.$id);		
-	}
-}
-/*********************************************************************************************/	
 if ($do == 'submitcat'){
 
     $category['id']				= (int)$_REQUEST['id'];

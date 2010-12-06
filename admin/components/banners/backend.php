@@ -9,10 +9,6 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //                                                                                           //
 /*********************************************************************************************/
 
-function error($msg){
-//
-}
-
 function bannerCTRbyID($id){
 	$b = dbGetFields('cms_banners', 'id='.$id, 'clicks, hits');
 	if ($b['hits']>0) { 
@@ -31,10 +27,11 @@ function bannerHitsbyID($id){
 	cpAddPathway('Баннеры', '?view=components&do=config&id='.$_REQUEST['id']);
 	echo '<h3>Баннеры</h3>';
 	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; }
+	$msg = '';
 	
 	$toolmenu = array();
 
-	if($opt=='list'){
+	if($opt=='list' || $opt=='show_banner' || $opt=='hide_banner'){
 
 		$toolmenu[0]['icon'] = 'new.gif';
 		$toolmenu[0]['title'] = 'Новый баннер';
@@ -46,15 +43,15 @@ function bannerHitsbyID($id){
 
 		$toolmenu[12]['icon'] = 'show.gif';
 		$toolmenu[12]['title'] = 'Публиковать выбранные';
-		$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=show&multiple=1');";
+		$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=show_banner&multiple=1');";
 
 		$toolmenu[13]['icon'] = 'hide.gif';
 		$toolmenu[13]['title'] = 'Скрыть выбранные';
-		$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=hide&multiple=1');";
+		$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=hide_banner&multiple=1');";
 
 	}
 	
-	if ($opt=='list' || $opt=='config'){
+	if ($opt=='list' || $opt=='config' || $opt=='show_banner' || $opt=='hide_banner'){
 
 		$toolmenu[15]['icon'] = 'cancel.gif';
 		$toolmenu[15]['title'] = 'Отмена';
@@ -76,9 +73,6 @@ function bannerHitsbyID($id){
 
 	if($opt=='saveconfig'){	
 		$cfg = array();
-		$cfg['link']        = $_REQUEST['link'];
-		$cfg['saveorig']    = $_REQUEST['saveorig'];
-		$cfg['maxcols']     = $_REQUEST['maxcols'];
 			
 		$inCore->saveComponentConfig('banners', $cfg);
 		
@@ -89,24 +83,26 @@ function bannerHitsbyID($id){
 	if ($opt == 'show_banner'){
 		if (!isset($_REQUEST['item'])){
 			if (isset($_REQUEST['item_id'])){ dbShow('cms_banners', $_REQUEST['item_id']);  }
+			echo '1'; exit;
 		} else {
 			dbShowList('cms_banners', $_REQUEST['item']);				
+			$opt = 'list';				
 		}			
-		echo '1'; exit;
 	}
 
 	if ($opt == 'hide_banner'){
 		if (!isset($_REQUEST['item'])){
 			if (isset($_REQUEST['item_id'])){ dbHide('cms_banners', $_REQUEST['item_id']);  }
+			echo '1'; exit;
 		} else {
 			dbHideList('cms_banners', $_REQUEST['item']);				
+			$opt = 'list';				
 		}			
-		echo '1'; exit;
 	}
 
 	if ($opt == 'submit'){	
 
-			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("Укажите название баннера!"); }
+			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { $msg .= 'Укажите название баннера!<br>'; }
 			$link = $_REQUEST['link'];
 			
 			$typeimg = $_REQUEST['typeimg'];
@@ -129,15 +125,16 @@ function bannerHitsbyID($id){
 					$sql = "INSERT INTO cms_banners (position, typeimg, fileurl, hits, clicks, maxhits, maxuser, user_id, pubdate, title, link, published)
 							VALUES ('$position', '$typeimg', '$filename', 0, 0, '$maxhits', $maxuser, 1, NOW(), '$title', '$link', $published)";	
 					dbQuery($sql);
-			} else { $msg = 'Ошибка загрузки баннера!'; }
-			header('location:?view=components&do=config&opt=list&id='.$_REQUEST['id']);		
+			} else { $msg .= 'Ошибка загрузки баннера или файл не загружен!<br>'; }
+			if ($msg) {$opt = 'add';} else {
+			header('location:?view=components&do=config&opt=list&id='.$_REQUEST['id']);	}
 	}	  
 	
 	if ($opt == 'update'){
 		if(isset($_REQUEST['item_id'])) { 
 			$id = $_REQUEST['item_id'];
 			
-			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("Укажите название баннера!"); }
+			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { $msg .= 'Укажите название баннера!<br>'; }
 			$link = $_REQUEST['link'];
 			
 			$typeimg = $_REQUEST['typeimg'];
@@ -158,7 +155,7 @@ function bannerHitsbyID($id){
                 if (@move_uploaded_file($_FILES['picture']['tmp_name'], $uploadfile)) {
                         $sql = "UPDATE cms_banners SET fileurl = '$filename' WHERE id = $id";
                         dbQuery($sql) ;
-                } else { $msg = 'Ошибка загрузки баннера!'; }
+                } else { $msg .= 'Ошибка загрузки баннера!'; }
             }
 					
 			$sql = "UPDATE cms_banners
@@ -173,11 +170,13 @@ function bannerHitsbyID($id){
 			
 			dbQuery($sql);		
 		}
+		if ($msg) {$opt = 'edit';} else {
 		if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
 			header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
 		} else {
 			header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit');
 		}
+	}
 	}
 
 	if($opt == 'delete'){
@@ -245,6 +244,8 @@ function bannerHitsbyID($id){
 			
 		if ($opt=='add'){
 			 echo '<h3>Добавить баннер</h3>';
+			 cpAddPathway('Добавить баннер', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add');
+			 if (@$msg) { echo '<p class="error">'.$msg.'</p>'; }
 		} else {
 					if(isset($_REQUEST['multiple'])){				 
 						if (isset($_REQUEST['item'])){					

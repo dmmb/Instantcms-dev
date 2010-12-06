@@ -23,14 +23,14 @@
                         //Количество записей
                         $msg_count = $inDB->rows_count('cms_user_msg', 'to_id = '.$id.'');
                         // Пагинация
-                        $pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, '/users/%user_id%/messages%page%.html', array('user_id'=>$id)) : '';
+                   $pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/messages%page%.html\')') : '';
 
                 $sql = "SELECT m.*, m.senddate as fpubdate, m.from_id as sender_id, u.nickname as author, u.login as author_login, u.is_deleted, p.imageurl
                 FROM cms_user_msg m
-                LEFT JOIN cms_users u ON m.from_id = u.id
-                LEFT JOIN cms_user_profiles p ON m.from_id = p.user_id
-                WHERE m.to_id = $id
-                ORDER BY senddate DESC
+									LEFT JOIN cms_users u ON u.id = m.from_id
+									LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+									WHERE m.to_id = '$id'
+									ORDER BY m.id DESC
                 LIMIT ".(($page-1)*$perpage).", $perpage";
 
                         break;
@@ -39,27 +39,31 @@
                         //Количество записей
                         $msg_count = $inDB->rows_count('cms_user_msg m, cms_users u', 'm.from_id = '.$id.' AND m.to_id = u.id');
                         // Пагинация
-                        $pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, '/users/%user_id%/messages-sent%page%.html', array('user_id'=>$id)) : '';
+                    $pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/messages-sent%page%.html\')') : '';
 
             $sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.to_id as sender_id, u.is_deleted, p.imageurl
-                    FROM cms_user_msg m, cms_users u, cms_user_profiles p
-                    WHERE m.from_id = $id AND m.to_id = u.id AND m.to_id = p.user_id
-                    ORDER BY senddate DESC
+								FROM cms_user_msg m
+								INNER JOIN cms_users u ON u.id = m.to_id
+								INNER JOIN cms_user_profiles p ON p.user_id = u.id
+								WHERE m.from_id = '$id'
+								ORDER BY m.id DESC
                     LIMIT ".(($page-1)*$perpage).", $perpage";
 
                         break;
 
-        case 'history':	$with_name = dbGetField('cms_users', "id = $with_id", 'nickname');
+        case 'history':	$with_name = $inDB->get_field('cms_users', "id = $with_id", 'nickname');
                         $inPage->addPathway($_LANG['MESSEN_WITH'].' '.$with_name, $_SERVER['REQUEST_URI']);
                         //Количество записей
-                        $msg_count = $inDB->rows_count('cms_user_msg m, cms_users u', '((m.from_id = '.$id.' AND m.to_id = '.$with_id.') OR (m.from_id = '.$with_id.' AND m.to_id = '.$id.')) AND m.from_id = u.id');
+                        $msg_count = $inDB->rows_count('cms_user_msg m, cms_users u', "m.from_id IN ($id, $with_id) AND m.to_id IN ($id, $with_id) AND m.from_id = u.id");
                         // Пагинация
-                        $pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, '/users/%user_id%/messages-history%to_id%-%page%.html', array('user_id'=>$id, 'to_id'=>$with_id)) : '';
+                        $pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/messages-history'.$with_id.'-%page%.html\')') : '';
 
             $sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.from_id as sender_id, u.is_deleted, p.imageurl
-                    FROM cms_user_msg m, cms_users u, cms_user_profiles p
-                    WHERE ((m.from_id = $id AND m.to_id = $with_id) OR (m.from_id = $with_id AND m.to_id = $id)) AND m.from_id = u.id AND m.from_id = p.user_id
-                    ORDER BY senddate DESC
+								FROM cms_user_msg m
+								INNER JOIN cms_users u ON u.id = m.from_id
+								INNER JOIN cms_user_profiles p ON p.user_id = u.id
+								WHERE m.from_id IN ($id, $with_id) AND m.to_id IN ($id, $with_id)
+								ORDER BY m.id DESC
                     LIMIT ".(($page-1)*$perpage).", $perpage";
 
                         break;
@@ -139,5 +143,6 @@
     }
     
     $smarty->display('com_users_messages.tpl');
+	if ($inCore->inRequest('of_ajax')) { echo ob_get_clean(); exit; }
 
 ?>

@@ -134,10 +134,11 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if ($opt == 'show_photo'){
 		if (!isset($_REQUEST['item'])){
 			if (isset($_REQUEST['item_id'])){ dbShow('cms_photo_files', $_REQUEST['item_id']);  }
+			echo '1'; exit;
 		} else {
 			dbShowList('cms_photo_files', $_REQUEST['item']);				
+			header('location:'.$_SERVER['HTTP_REFERER']);				
 		}			
-		echo '1'; exit;
 	}
 
 //=================================================================================================//
@@ -146,10 +147,11 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if ($opt == 'hide_photo'){
 		if (!isset($_REQUEST['item'])){
 			if (isset($_REQUEST['item_id'])){ dbHide('cms_photo_files', $_REQUEST['item_id']);  }
+			echo '1'; exit;
 		} else {
 			dbHideList('cms_photo_files', $_REQUEST['item']);				
+			header('location:'.$_SERVER['HTTP_REFERER']);			
 		}			
-		echo '1'; exit;
 	}
 
 //=================================================================================================//

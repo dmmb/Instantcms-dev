@@ -2,7 +2,7 @@
 {* ========================= Просмотр фотографии ================================== *}
 {* ================================================================================ *}
 {strip}
-    {if $is_photo}
+    {if $is_allow}
 
         {if $myprofile || $is_admin}
             <div class="float_bar" style="background: none">
@@ -54,7 +54,41 @@
         {$tagbar}
 
     {else}
-        <div class="con_heading">{$LANG.PHOTO_NOT_FOUND}</div>
-        <p>{$LANG.PHOTO_NOT_FOUND_TEXT}</p>
+        <div class="con_heading">{$photo.title}</div>
+
+        <div class="bar">
+            {$photo.genderlink} &mdash; {$photo.pubdate} &mdash; <strong>{$LANG.HITS}:</strong> {$photo.hits}
+        </div>
+
+        <table cellpadding="0" cellspacing="0" border="0" width="100%" height="300">
+            <tr>
+                
+                <td width="30%">
+                    {if $previd}
+                        <a class="usr_photo_prev_link" href="/users/{$usr.id}/photo{$previd.id}.html" title="{$previd.title}"></a>
+                    {else}
+                        &nbsp;
+                    {/if}
+                </td>
+                
+                <td width="40%">
+                    <div class="usr_photo_view">
+                        {if $nextid}<a href="/users/{$usr.id}/photo{$nextid.id}.html">{/if}
+                            <span>{$LANG.PHOTO_NOT_FOUND_TEXT}</span>
+                        {if $nextid}</a>{/if}
+                    </div>
+                </td>
+                
+                <td width="30%">
+                    {if $nextid}
+                        <a class="usr_photo_next_link" href="/users/{$usr.id}/photo{$nextid.id}.html" title="{$nextid.title}"></a>
+                    {else}
+                        &nbsp;
+                    {/if}
+                </td>
+                
+            </tr>
+        </table>
+
     {/if}
 {/strip}

@@ -52,6 +52,8 @@ function clubs(){
     //Определяем адрес для редиректа назад
     $back   = $inCore->getBackURL();
 	
+	$pagetitle = $inCore->menuTitle();
+	
 	//INPUT PARAMETERS
 	$id 		= $inCore->request('id', 'int', 0);
 	$do 		= $inCore->request('do', 'str', 'view');

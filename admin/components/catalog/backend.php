@@ -242,13 +242,14 @@ function cpPriceInput($id){
                 dbShow('cms_uc_items', $_REQUEST['item_id']);
                 dbQuery('UPDATE cms_uc_items SET on_moderate = 0 WHERE id='.$_REQUEST['item_id']);
             }
+			echo '1'; exit;
 		} else {
 			dbShowList('cms_uc_items', $_REQUEST['item']);
             foreach($_REQUEST['item'] as $k=>$id){
                 dbQuery('UPDATE cms_uc_items SET on_moderate = 0 WHERE id='.$id);
             }
+			header('location:'.$_SERVER['HTTP_REFERER']);
 		}			
-		echo '1'; exit;
 	}
 
 //=================================================================================================//
@@ -257,10 +258,11 @@ function cpPriceInput($id){
 	if ($opt == 'hide_item'){
 		if (!isset($_REQUEST['item'])){
 			if (isset($_REQUEST['item_id'])){ dbHide('cms_uc_items', $_REQUEST['item_id']);  }
+			echo '1'; exit;
 		} else {
 			dbHideList('cms_uc_items', $_REQUEST['item']);				
+			header('location:'.$_SERVER['HTTP_REFERER']);			
 		}			
-		echo '1'; exit;
 	}
 
 //=================================================================================================//

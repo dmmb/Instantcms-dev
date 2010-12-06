@@ -143,15 +143,15 @@ class cms_model_photos{
         $album_title = $this->inDB->get_field('cms_photo_albums', "id='{$photo['album_id']}'", 'title');
 		
 		if ($photo['published']) {
+			$description = $photo['is_hidden'] ? '' : '<a href="/photos/photo'.$photo_id.'.html" class="act_photo"><img border="0" src="/images/photos/small/'.$photo['filename'].'" /></a>';
+
 			cmsActions::log('add_photo', array(
 				  'object' => $photo['title'],
 				  'object_url' => '/photos/photo'.$photo_id.'.html',
 				  'object_id' => $photo_id,
 				  'target' => $album_title,
 				  'target_url' => '/photos/'.$photo['album_id'],
-				  'description' => '<a href="/photos/photo'.$photo_id.'.html" class="act_photo">
-										<img border="0" src="/images/photos/small/'.$photo['filename'].'" />
-									  </a>'
+				  'description' => $description
 			));
 		}
 
@@ -360,8 +360,6 @@ class cms_model_photos{
     public function getPhoto($id) {
 
 		$photo = $this->inDB->get_fields('cms_photo_files', "id = '$id'", '*');
-
-		if (!$photo) { cmsCore::error404(); }
 
 		return $photo;
 

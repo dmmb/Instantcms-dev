@@ -66,8 +66,8 @@ class cms_model_users{
                 IFNULL(ui.nickname, '') as inv_nickname,
                 IFNULL(COUNT(i.id), 0) as invites_count
                 FROM cms_users u
-				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
-				LEFT JOIN cms_user_groups g ON g.id = u.group_id
+				INNER JOIN cms_user_profiles p ON p.user_id = u.id
+				INNER JOIN cms_user_groups g ON g.id = u.group_id
 				LEFT JOIN cms_online o ON o.user_id = u.id
 				LEFT JOIN cms_banlist b ON b.user_id = u.id
                 LEFT JOIN cms_users ui ON ui.id = u.invited_by
@@ -182,13 +182,24 @@ class cms_model_users{
         if ($user_id == 1) { return false; }
 
 		if ($is_delete) {
+
+			$avatar = $this->inDB->get_field('cms_user_profiles', "user_id = '$user_id'", 'imageurl');
+            if ($avatar && $avatar != 'nopic.jpg'){
+                 @unlink(PATH.'/images/users/avatars/'.$avatar);
+                 @unlink(PATH.'/images/users/avatars/small/'.$avatar);
+            }
+
 			$this->inDB->query("DELETE FROM cms_users WHERE id = '$user_id' LIMIT 1");
 			$this->inDB->query("DELETE FROM cms_user_profiles WHERE user_id = '$user_id' LIMIT 1");
+			$this->inDB->query("DELETE FROM cms_user_wall WHERE user_id = '$user_id' AND usertype = 'user'");
+			
 		} else {
         	$this->inDB->query("UPDATE cms_users SET is_deleted = 1 WHERE id = '$user_id'");
 		}
         $this->inDB->query("DELETE FROM cms_user_friends WHERE to_id = '$user_id' OR from_id = '$user_id'");
 		$this->inDB->query("DELETE FROM cms_user_clubs WHERE user_id = '$user_id'");
+		$this->inDB->query("DELETE FROM cms_user_awards WHERE user_id = '$user_id'");
+
 		cmsActions::removeUserLog($user_id);
         
     }
@@ -479,7 +490,7 @@ class cms_model_users{
         $album = array();
 
         if ($type == 'private'){
-            $album = $this->inDB->get_fields('cms_user_albums', "id='{$id}'", 'id, user_id, title');
+            $album = $this->inDB->get_fields('cms_user_albums', "id='{$id}'", 'id, user_id, title, allow_who');
         }
 
         if ($type == 'public'){
@@ -573,7 +584,7 @@ class cms_model_users{
             $filter = "AND (
                                 a.allow_who='all'
                                 OR
-                                (a.allow_who='registered' AND ({$user_id}>0))
+                                (a.allow_who='registered' AND ({$inUser->id}>0))
                                 OR
                                 (a.allow_who='friends' AND ({$is_friends}=1))
                             )";

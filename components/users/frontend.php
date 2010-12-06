@@ -584,8 +584,9 @@ if ($do=='comments'){
 		$smarty->assign('login', $usr['login']);
 		$smarty->assign('comments', $comments);
         $smarty->assign('avatar', usrImage($id));
-		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, '/users/%user_id%/comments%page%.html', array('user_id'=>$id)));
+		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/comments%page%.html\')'));
 		$smarty->display('com_users_comments.tpl');	
+		if ($inCore->inRequest('of_ajax')) { echo ob_get_clean(); exit; }
 
 	} else { echo '<p>'.$_LANG['NO_USER_COMMENT'].'</p>';	}
 	
@@ -643,8 +644,9 @@ if ($do=='forumposts'){
 		$smarty->assign('nickname', $usr['nickname']);
 		$smarty->assign('posts', $posts);
         $smarty->assign('avatar', usrImage($id));
-		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, '/users/%user_id%/forumposts%page%.html', array('user_id'=>$id)));
+		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/forumposts%page%.html\')'));
 		$smarty->display('com_users_forumposts.tpl');
+		if ($inCore->inRequest('of_ajax')) { echo ob_get_clean(); exit; }
 
 	} else { echo '<p>'.$_LANG['NOT_USER_POSTS_IN_FORUM'].'</p>';	}
 
@@ -1395,7 +1397,7 @@ if ($do=='editphoto'){
 
 	cmsUser::sessionPut('photos_list', array($photo['id']));
 
-    $inCore->redirect('/users/'.$usr['login'].'/photos/submit');
+    $inCore->redirect('/users/'.$usr['login'].'/photos/submit-edit');
 
 }
 
@@ -1528,7 +1530,9 @@ if ($do=='viewalbum'){
     //Определяем, друзья мы или нет
 	$we_friends = ($inUser->id && !$my_profile) ? (int)usrIsFriends($usr['id'], $inUser->id) : 0;
 
+	if ($album['allow_who'] == 'all' || $my_profile || ($album['allow_who'] == 'friends' && $we_friends) || ($album['allow_who'] == 'registered' && $inUser->id)) {
     $photos = $model->getAlbumPhotos($usr['id'], $album_type, $album_id, $we_friends);
+	}
 
     //Делим на страницы
     $total      = sizeof($photos);
@@ -1618,7 +1622,7 @@ if ($do=='viewboard'){
 			// Считаем общее число объявлений
 			$records_total = $inDB->rows_count('cms_board_items', 'user_id = '.$id.' AND published = 1');
 		}
-		$perpage = 15; // объявлений на странице
+		$perpage = 10; // объявлений на странице
 		$page = $inCore->request('page', 'int', 1);
 		$sql .= "LIMIT ".($page-1)*$perpage.", $perpage";
 
@@ -1653,8 +1657,9 @@ if ($do=='viewboard'){
 		$smarty->assign('cfg_board', $cfg_board);
 		$smarty->assign('myprofile', ($inUser->id == $id));
         $smarty->assign('is_con', $is_con);
-		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, '/users/%user_id%/board%page%.html', array('user_id'=>$id)));
+		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/board%page%.html\')'));
 		$smarty->display('com_users_boards.tpl');					
+		if ($inCore->inRequest('of_ajax')) { echo ob_get_clean(); exit; }
 
 }
 
@@ -1682,9 +1687,10 @@ if ($do=='friendlist'){
 	$smarty->assign('usr', $usr);
 	$smarty->assign('myprofile', ($id == $inUser->id));
 	$smarty->assign('total', $total);
-	$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/users/%user_id%/friendlist%page%.html', array('user_id'=>$id)));
+	$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/friendlist%page%.html\')'));
 		
     $smarty->display('com_users_friends.tpl');
+	if ($inCore->inRequest('of_ajax')) { echo ob_get_clean(); exit; }
 
 }
 
@@ -1702,9 +1708,11 @@ if ($do=='viewphoto'){
 	$usr = $model->getUserShort($id);
 	if (!$usr) { cmsCore::error404(); }
 
-			$sql = "SELECT p.*, a.title as album
-                    FROM cms_user_photos p, cms_user_albums a
-                    WHERE p.id = '$photoid' AND p.user_id = '$id' AND p.album_id = a.id
+	$sql = "SELECT p.*, a.title as album, pr.gender
+            FROM cms_user_photos p
+			INNER JOIN cms_user_albums a ON a.id = p.album_id
+			INNER JOIN cms_user_profiles pr ON pr.user_id = p.user_id
+            WHERE p.id = '$photoid' AND p.user_id = '$id'
                     LIMIT 1";
 			$result = $inDB->query($sql) ;
 
@@ -1712,24 +1720,22 @@ if ($do=='viewphoto'){
 
 				$photo = $inDB->fetch_assoc($result);
 				
-				$inDB->query("UPDATE cms_user_photos SET hits = hits + 1 WHERE id = ".$photo['id']) ;
-	
 	$inPage->setTitle($photo['title']);
 	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 	$inPage->addPathway($_LANG['PHOTOALBUMS'], '/users/'.$usr['id'].'/photoalbum.html');
 				$inPage->addPathway($photo['album'], '/users/'.$usr['login'].'/photos/private'.$photo['album_id'].'.html');
 				$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
 
-				if (usrAllowed($photo['allow_who'], $id) || $inCore->userIsAdmin($inUser->id)){
 					$photo['pubdate'] = $inCore->dateFormat($photo['pubdate'], true, false, false);
-					$photo['genderlink'] = cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, '', $usr['login']);
+	$photo['genderlink'] = cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, $photo['gender'], $usr['login']);
 					$photo['filesize'] = round(filesize($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/medium/'.$photo['imageurl'])/1024, 2);
 					//ссылки на предыдущую и следующую фотографии
 					$previd = $inDB->get_fields('cms_user_photos', "id>'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id ASC');
 					$nextid = $inDB->get_fields('cms_user_photos', "id<'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id DESC');
-
-					$is_photo = true;	
-				} else { $is_photo = false; }
+	// Проверяем права доступа
+	$is_allow = usrAllowed($photo['allow_who'], $id) || $inCore->userIsAdmin($inUser->id) ? true : false;
+	// Если видим фото, обновляем просмотры
+	if ($is_allow) { $inDB->query("UPDATE cms_user_photos SET hits = hits + 1 WHERE id = ".$photo['id']) ; }
 					
 				$smarty = $inCore->initSmarty('components', 'com_users_photos_view.tpl');
 				$smarty->assign('photo', $photo);
@@ -1739,15 +1745,15 @@ if ($do=='viewphoto'){
 				$smarty->assign('usr', $usr);
 				$smarty->assign('myprofile', $myprofile);
 				$smarty->assign('is_admin', $inCore->userIsAdmin($user_id));
-				$smarty->assign('is_photo', $is_photo);
-				if($is_photo){
+	$smarty->assign('is_allow', $is_allow);
+	if($is_allow){
 					$inCore->loadLib('tags');	
 					$smarty->assign('tagbar', cmsTagBar('userphoto', $photo['id']));
 				}
 				$smarty->display('com_users_photos_view.tpl');	
 					
 					//show user comments
-				if($inCore->isComponentInstalled('comments') && $is_photo){
+	if($inCore->isComponentInstalled('comments') && $is_allow){
 						$inCore->includeComments();
 						comments('userphoto', $photo['id']);
 					}					
@@ -2741,14 +2747,14 @@ if ($do=='votekarma'){
 									));
 								}
                     //send email notification, if user want it
-                    $user['email_newmsg']   = $inDB->get_field('cms_user_profiles', "user_id='{$user_id}'", 'email_newmsg');
-                    if ($user['email_newmsg'] && $user_id != $author_id){
+                    $usr['email_newmsg']   = $inDB->get_field('cms_user_profiles', "user_id='{$user_id}'", 'email_newmsg');
+                    if ($usr['email_newmsg'] && $user_id != $author_id){
                             $inConf = cmsConfig::getInstance();
                             //fetch target user
 										$to_email       = $inDB->get_field('cms_users', 'id='.$user_id, 'email');
                             $postdate       = date('d/m/Y H:i:s');
 										$from_nick      = $inDB->get_field('cms_users', "id='{$author_id}'", 'nickname');
-										$profilelink    = cmsUser::getProfileURL($usr['login']);
+							$profilelink    = HOST . cmsUser::getProfileURL($usr['login']);
 
                             $letter_path    = PATH.'/includes/letters/newwallpost.txt';
                             $letter         = file_get_contents($letter_path);

@@ -35,11 +35,11 @@ function error($msg){
 
 		$toolmenu[12]['icon'] = 'show.gif';
 		$toolmenu[12]['title'] = 'Включить выбранные';
-		$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=show&multiple=1');";
+		$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=show_award&multiple=1');";
 
 		$toolmenu[13]['icon'] = 'hide.gif';
 		$toolmenu[13]['title'] = 'Отключить выбранные';
-		$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=hide&multiple=1');";
+		$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=hide_award&multiple=1');";
 
 	}
 	
@@ -73,19 +73,21 @@ function error($msg){
 	if ($opt == 'show_award'){
 		if (!isset($_REQUEST['item'])){
 			if (isset($_REQUEST['item_id'])){ dbShow('cms_user_autoawards', $_REQUEST['item_id']);  }
+			echo '1'; exit;
 		} else {
 			dbShowList('cms_user_autoawards', $_REQUEST['item']);				
+			header('location:'.$_SERVER['HTTP_REFERER']);			
 		}			
-		echo '1'; exit;
 	}
 
 	if ($opt == 'hide_award'){
 		if (!isset($_REQUEST['item'])){
 			if (isset($_REQUEST['item_id'])){ dbHide('cms_user_autoawards', $_REQUEST['item_id']);  }
+			echo '1'; exit;
 		} else {
 			dbHideList('cms_user_autoawards', $_REQUEST['item']);				
+			header('location:'.$_SERVER['HTTP_REFERER']);			
 		}			
-		echo '1'; exit;
 	}
 
 	if ($opt == 'submit'){	

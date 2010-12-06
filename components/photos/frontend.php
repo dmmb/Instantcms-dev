@@ -263,13 +263,13 @@ if ($do=='view'){
 if($do=='viewphoto'){
 
 	$sql = "SELECT f.id, f.album_id, f.title, f.description, f.pubdate, f.file, f.published, f.hits, f.comments, f.user_id,
-			a.id cat_id, a.NSLeft as NSLeft, a.NSRight as NSRight, a.NSDiffer as NSDiffer, a.user_id as album_user_id, a.title cat_title, a.nav album_nav, a.public public, a.showtype a_type, a.showtags a_tags, a.bbcode a_bbcode,
-			u.nickname, u.login,
+			a.id cat_id, a.NSLeft as NSLeft, a.NSRight as NSRight, a.NSDiffer as NSDiffer, a.user_id as album_user_id, a.title cat_title, a.nav album_nav, a.public public, a.showtype a_type, a.showtags a_tags, a.bbcode a_bbcode, u.nickname, u.login, p.gender,
 			IFNULL(r.total_rating, 0) as rating
 			FROM cms_photo_files f
 			LEFT JOIN cms_photo_albums a ON a.id = f.album_id
 			LEFT JOIN cms_ratings_total r ON r.item_id = f.id AND r.target = 'photo'
-			LEFT JOIN cms_users u ON u.id = f.user_id
+			INNER JOIN cms_users u ON u.id = f.user_id
+			INNER JOIN cms_user_profiles p ON p.user_id = u.id
 			WHERE f.id = '$id'";
 			
 	$result = $inDB->query($sql);
@@ -302,7 +302,7 @@ if($do=='viewphoto'){
 		$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
 		$inPage->setTitle($photo['title']);
 		// Обновляем количество просмотров фотографии
-		$inDB->query("UPDATE cms_photo_files SET hits = hits + 1 WHERE id = $id");
+	$inDB->query("UPDATE cms_photo_files SET hits = hits + 1 WHERE id = '$id'");
 								
 		//навигация
 		if($photo['album_nav']){
@@ -321,7 +321,7 @@ if($do=='viewphoto'){
 
 			$photo['pubdate'] = $inCore->dateformat($photo['pubdate']);
 					if ($photo['public']){
-						$photo['genderlink'] = cmsUser::getGenderLink($photo['user_id'], $photo['nickname'], 0, '', $photo['login']);
+			$photo['genderlink'] = cmsUser::getGenderLink($photo['user_id'], $photo['nickname'], 0, $photo['gender'], $photo['login']);
 					}
 		
 		$photo['karma'] 		= cmsKarmaFormatSmall($photo['rating']);
@@ -471,6 +471,7 @@ if ($do=='addphoto'){
 								} else { 
 									$published = 1; 
 								}
+								$photo['is_hidden'] = $club['clubtype'] == 'private' ? true : false;
 							}
 
                             $photo['published']     = $published;
@@ -515,6 +516,7 @@ if ($do=='uploaded'){
 	$id = $inCore->request('id', 'int', 0);
 
 	$photo = $model->getPhoto($id);
+	if (!$photo) { cmsCore::error404(); }
 
 	$inPage->addPathway($_LANG['PHOTO_ADDED']);
 
@@ -534,6 +536,7 @@ if ($do=='editphoto'){
 	$photoid = $inCore->request('id', 'int', '');
 		
 	$photo = $model->getPhoto($photoid);
+	if (!$photo) { cmsCore::error404(); }
 	
 	$album = $model->getAlbum($photo['album_id']);
 	
@@ -604,6 +607,7 @@ if ($do=='editphoto'){
 				} else { 
 							if(isset($_REQUEST['id'])){								
 								$photo = $model->getPhoto($photoid);
+								if (!$photo) { cmsCore::error404(); }
 
 								$photo_max_size = ($max_mb * 1024 * 1024);
 									
@@ -626,6 +630,7 @@ if ($do=='editphoto'){
 if ($do=='movephoto'){
 
 	$photo = $model->getPhoto($id);
+	if (!$photo) { cmsCore::error404(); }
 	
 	$album = $model->getAlbum($photo['album_id']);
 
@@ -637,9 +642,7 @@ if ($do=='movephoto'){
 		$is_admin = $inCore->userIsAdmin($inUser->id);
 	}
 
-	$is_author = ($inUser->id == $photo['user_id']);
-
-	if ($is_admin || $is_author){
+	if (!$is_admin) { cmsCore::error404(); }
 			
 		if (!isset($_POST['gomove'])){ //SHOW MOVE FORM
 
@@ -667,17 +670,13 @@ if ($do=='movephoto'){
 
 		} else { //DO MOVE
 			
-				if (@$_POST['album_id']){				
+			if ($_POST['album_id']){				
 					$fid = $inCore->request('album_id', 'int');
-					if ($is_admin){		
-						$inDB->query("UPDATE cms_photo_files SET album_id = $fid WHERE id = '$id'") ;
-					}									
+				$inDB->query("UPDATE cms_photo_files SET album_id = '$fid' WHERE id = '$id'") ;
 				}
 				header('location:/photos/'.$fid);
 		}
 			
-		} else { cmsUser::goToLogin(); }
-	
 }
 /////////////////////////////// PHOTO DELETE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delphoto'){
@@ -685,6 +684,7 @@ if ($do=='delphoto'){
 	$photo_id = $inCore->request('id', 'int', '');
 
 	$photo = $model->getPhoto($photo_id);
+	if (!$photo) { cmsCore::error404(); }
 
 	$album = $model->getAlbum($photo['album_id']);
 	

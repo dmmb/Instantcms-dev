@@ -235,7 +235,7 @@ class cms_model_content{
 
     public function getArticlesList($only_published=true) {
 
-        $this->reorder();
+//        $this->reorder();
 
         $articles = array();
 
@@ -284,8 +284,6 @@ class cms_model_content{
 
     public function getArticlesCount($only_published=true) {
 
-        $this->reorder();
-
         $articles = array();
 
 		$today    = date("Y-m-d H:i:s");
@@ -294,14 +292,9 @@ class cms_model_content{
             $this->where("con.published = 1 AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today'))");
         }
 
-        $sql = "SELECT con.*,
-                       con.pubdate as fpubdate,
-                       u.nickname as author,
-                       u.login as user_login
+        $sql = "SELECT 1
 
                 FROM cms_content con
-
-				LEFT JOIN cms_users u ON u.id = con.user_id
 
                 WHERE con.is_arhive = 0
                       {$this->where}

@@ -31,7 +31,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$toolmenu[3]['title'] = 'Категории вопросов';
 		$toolmenu[3]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats';
 		
-		if($opt == 'list_items'){
+		if($opt == 'list_items' || $opt == 'show_item' || $opt == 'hide_item'){
 			$toolmenu[11]['icon'] = 'edit.gif';
 			$toolmenu[11]['title'] = 'Редактировать выбранные';
 			$toolmenu[11]['link'] = "javascript:checkSel('?view=components&do=config&id=".(int)$_REQUEST['id']."&opt=edit_item&multiple=1');";
@@ -137,19 +137,21 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if ($opt == 'show_item'){
 		if (!isset($_REQUEST['item'])){
 			if (isset($_REQUEST['item_id'])){ dbShow('cms_faq_quests', (int)$_REQUEST['item_id']);  }
+			echo '1'; exit;
 		} else {
 			dbShowList('cms_faq_quests', $_REQUEST['item']);				
+			$opt = 'list_items';				
 		}			
-		echo '1'; exit;
 	}
 
 	if ($opt == 'hide_item'){
 		if (!isset($_REQUEST['item'])){
 			if (isset($_REQUEST['item_id'])){ dbHide('cms_faq_quests', (int)$_REQUEST['item_id']);  }
+			echo '1'; exit;
 		} else {
 			dbHideList('cms_faq_quests', $_REQUEST['item']);				
+			$opt = 'list_items';				
 		}			
-		echo '1'; exit;
 	}
 
 	if ($opt == 'submit_item'){	

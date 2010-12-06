@@ -206,7 +206,7 @@ function search(){
                               </div>';
                         echo '<div style="margin-top:4px;margin-left:40px">
                                 <a style="color:gray" href="'.$item['placelink'].'">'.$item['place'].'</a>
-                                &mdash <span style="color:green">http://'.$_SERVER['HTTP_HOST'].$item['link'].'</span>
+                                &mdash; <span style="color:green">http://'.$_SERVER['HTTP_HOST'].$item['link'].'</span>
                               </div>';
                     echo '</div>';
                     
