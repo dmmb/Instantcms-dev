@@ -14,6 +14,9 @@
         $inDB = cmsDatabase::getInstance();
 		$cfg = $inCore->loadModuleConfig($module_id);
 
+        if (!isset($cfg['color_admin'])) { $cfg['color_admin'] = '#FF0000'; }
+        if (!isset($cfg['color_editor'])) { $cfg['color_editor'] = '#009900'; }
+
         global $_LANG;
 
 		$sql = "SELECT		        
@@ -34,13 +37,13 @@
 				$now = 0;
 				while($usr = $inDB->fetch_assoc($result)){
 					if($cfg['admin_editor']){
-					if ($inCore->userIsAdmin($usr['id'])){
-						echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login'], "color:red");
-					} elseif ($inCore->userIsEditor($usr['id'])) {	
-						echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login'], "color:green");
-					} else {
-						echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login']);
-					}
+                        if ($inCore->userIsAdmin($usr['id'])){
+                            echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login'], "color:{$cfg['color_admin']}");
+                        } elseif ($inCore->userIsEditor($usr['id'])) {
+                            echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login'], "color:{$cfg['color_editor']}");
+                        } else {
+                            echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login']);
+                        }
 					} else {
 						echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login']);
 					}
@@ -72,9 +75,9 @@
             while($usr = $inDB->fetch_assoc($result)){
 					if($cfg['admin_editor']){
 						if ($inCore->userIsAdmin($usr['id'])){
-							echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login'], "color:red");
+							echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login'], "color:{$cfg['color_admin']}");
 						} elseif ($inCore->userIsEditor($usr['id'])) {	
-							echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login'], "color:green");
+							echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login'], "color:{$cfg['color_editor']}");
 						} else {
 							echo cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login']);
 						}

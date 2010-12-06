@@ -116,6 +116,9 @@ class CCelkoNastedSet {
 
 	private function BeginTransaction ($Differ = "")
 	{
+        //r2: здесь нужно будет разбираться с транзакциями
+        $this->_IsInTransaction = true; return true;
+
         $this->InitializeTransaction($Differ);
 
 		$TStamp = date ("YmdHis");

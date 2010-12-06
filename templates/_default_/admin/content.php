@@ -27,16 +27,18 @@
                 <?php } ?>
                 </div>
             </div>
-            <?php foreach($cats as $num=>$cat) { ?>
-                <div style="padding-left:<?php echo ($cat['NSLevel'])*20; ?>px" class="cat_link">
-                    <div>
-                        <?php if ($category_id != $cat['id']) { ?>
-                            <a href="<?php echo $base_uri.'&cat_id='.$cat['id']; ?>" style="<?php if ($cat['NSLevel']==1){ echo 'font-weight:bold'; } ?>"><?php echo $cat['title']; ?></a>
-                        <?php } else { ?>
-                            <?php echo $cat['title']; $current_cat = $cat['title']; ?>
-                        <?php } ?>
+            <?php if (is_array($cats)){ ?>
+                <?php foreach($cats as $num=>$cat) { ?>
+                    <div style="padding-left:<?php echo ($cat['NSLevel'])*20; ?>px" class="cat_link">
+                        <div>
+                            <?php if ($category_id != $cat['id']) { ?>
+                                <a href="<?php echo $base_uri.'&cat_id='.$cat['id']; ?>" style="<?php if ($cat['NSLevel']==1){ echo 'font-weight:bold'; } ?>"><?php echo $cat['title']; ?></a>
+                            <?php } else { ?>
+                                <?php echo $cat['title']; $current_cat = $cat['title']; ?>
+                            <?php } ?>
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
             <?php } ?>
         </td>
 

@@ -10,7 +10,7 @@
 <body>
 <table width="100%" height="50" border="0" cellpadding="0" cellspacing="0" style="background-color:#2D557D">
   <tr>
-    <td width="326" style="padding-left:10px">
+    <td style="padding-left:10px">
         <h2><a style="color:#fff;text-decoration:none;" href="index.php"><?php echo $inConf->sitename; ?> &mdash; Панель редактора</a></h2>
     </td>
     <td><table width="100%" border="0" cellspacing="0" cellpadding="5">

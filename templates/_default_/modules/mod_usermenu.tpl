@@ -26,7 +26,7 @@
     </span>
     {/if}
 
-    {if $is_can_add && !$is_admin}
+    {if $is_can_add && !$is_admin && !$is_editor}
     <span class="my_content">
         <a href="/content/my.html">{$LANG.USERMENU_ARTICLES}</a>
     </span>

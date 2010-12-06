@@ -14,17 +14,7 @@ function dbQuery($sql){
 
     $inDB = cmsDatabase::getInstance();
 
-	if (!$GLOBALS['DEMO_MODE']){
-		return $inDB->query($sql);
-	} else {
-	
-		if (strstr($sql, 'SELECT')){
-			return $inDB->query($sql);
-		}
-	
-	}
-    
-	return;
+    return $inDB->query($sql);
     
 }
 
