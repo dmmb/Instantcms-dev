@@ -23,7 +23,7 @@
                    //Количество записей
                    $msg_count = $inDB->rows_count('cms_user_msg', 'to_id = '.$id.'');
                    // Пагинация
-                   $pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, '/users/%user_id%/messages%page%.html', array('user_id'=>$id)) : '';
+                   $pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/messages%page%.html\')') : '';
 
 				   $sql = "SELECT m.*, m.senddate as fpubdate, m.from_id as sender_id, u.nickname as author, u.login as author_login, u.is_deleted, p.imageurl
 									FROM cms_user_msg m
@@ -39,7 +39,7 @@
                     //Количество записей
                     $msg_count = $inDB->rows_count('cms_user_msg m, cms_users u', 'm.from_id = '.$id.' AND m.to_id = u.id');
                     // Пагинация
-                    $pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, '/users/%user_id%/messages-sent%page%.html', array('user_id'=>$id)) : '';
+                    $pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/messages-sent%page%.html\')') : '';
 
 					$sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.to_id as sender_id, u.is_deleted, p.imageurl
 								FROM cms_user_msg m
@@ -56,7 +56,7 @@
                         //Количество записей
                         $msg_count = $inDB->rows_count('cms_user_msg m, cms_users u', "m.from_id IN ($id, $with_id) AND m.to_id IN ($id, $with_id) AND m.from_id = u.id");
                         // Пагинация
-                        $pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, '/users/%user_id%/messages-history%to_id%-%page%.html', array('user_id'=>$id, 'to_id'=>$with_id)) : '';
+                        $pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/messages-history'.$with_id.'-%page%.html\')') : '';
 
 						$sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.from_id as sender_id, u.is_deleted, p.imageurl
 								FROM cms_user_msg m
@@ -143,5 +143,6 @@
     }
     
     $smarty->display('com_users_messages.tpl');
+	if ($inCore->inRequest('of_ajax')) { echo ob_get_clean(); exit; }
 
 ?>

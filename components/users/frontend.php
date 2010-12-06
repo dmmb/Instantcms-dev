@@ -584,8 +584,9 @@ if ($do=='comments'){
 		$smarty->assign('login', $usr['login']);
 		$smarty->assign('comments', $comments);
         $smarty->assign('avatar', usrImage($id));
-		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, '/users/%user_id%/comments%page%.html', array('user_id'=>$id)));
-		$smarty->display('com_users_comments.tpl');	
+		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/comments%page%.html\')'));
+		$smarty->display('com_users_comments.tpl');
+		if ($inCore->inRequest('of_ajax')) { echo ob_get_clean(); exit; }
 
 	} else { echo '<p>'.$_LANG['NO_USER_COMMENT'].'</p>';	}
 	
@@ -643,8 +644,9 @@ if ($do=='forumposts'){
 		$smarty->assign('nickname', $usr['nickname']);
 		$smarty->assign('posts', $posts);
         $smarty->assign('avatar', usrImage($id));
-		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, '/users/%user_id%/forumposts%page%.html', array('user_id'=>$id)));
+		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/forumposts%page%.html\')'));
 		$smarty->display('com_users_forumposts.tpl');
+		if ($inCore->inRequest('of_ajax')) { echo ob_get_clean(); exit; }
 
 	} else { echo '<p>'.$_LANG['NOT_USER_POSTS_IN_FORUM'].'</p>';	}
 
@@ -1620,7 +1622,7 @@ if ($do=='viewboard'){
 			// —читаем общее число объ€влений
 			$records_total = $inDB->rows_count('cms_board_items', 'user_id = '.$id.' AND published = 1');
 		}
-		$perpage = 15; // объ€влений на странице
+		$perpage = 10; // объ€влений на странице
 		$page = $inCore->request('page', 'int', 1);
 		$sql .= "LIMIT ".($page-1)*$perpage.", $perpage";
 
@@ -1655,8 +1657,9 @@ if ($do=='viewboard'){
 		$smarty->assign('cfg_board', $cfg_board);
 		$smarty->assign('myprofile', ($inUser->id == $id));
         $smarty->assign('is_con', $is_con);
-		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, '/users/%user_id%/board%page%.html', array('user_id'=>$id)));
-		$smarty->display('com_users_boards.tpl');					
+		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/board%page%.html\')'));
+		$smarty->display('com_users_boards.tpl');
+		if ($inCore->inRequest('of_ajax')) { echo ob_get_clean(); exit; }
 
 }
 
@@ -1684,9 +1687,10 @@ if ($do=='friendlist'){
 	$smarty->assign('usr', $usr);
 	$smarty->assign('myprofile', ($id == $inUser->id));
 	$smarty->assign('total', $total);
-	$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/users/%user_id%/friendlist%page%.html', array('user_id'=>$id)));
+	$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/friendlist%page%.html\')'));
 		
     $smarty->display('com_users_friends.tpl');
+	if ($inCore->inRequest('of_ajax')) { echo ob_get_clean(); exit; }
 
 }
 
