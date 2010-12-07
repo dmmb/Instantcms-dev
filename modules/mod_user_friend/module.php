@@ -55,16 +55,18 @@
 
         if ($total){
             while($friend = $inDB->fetch_assoc($result)){
-					$friend['avatar'] = ($cfg['view_type'] == 'table') ? usrLink(usrImageNOdb($friend['user_id'], 'small', $friend['imageurl'], $friend['is_deleted']), $friend['login']) : false;
-					$friend['user_link'] = cmsUser::getProfileLink($friend['login'], $friend['nickname']);
-			$friends[] = $friend;
+                $friend['avatar'] = ($cfg['view_type'] == 'table') ? usrLink(usrImageNOdb($friend['user_id'], 'small', $friend['imageurl'], $friend['is_deleted']), $friend['login']) : false;
+                $friend['user_link'] = cmsUser::getProfileLink($friend['login'], $friend['nickname']);
+                $friends[$friend['id']] = $friend;
             }
         }
+        
 		$smarty = $inCore->initSmarty('modules', 'mod_user_friend.tpl');
 		$smarty->assign('friends', $friends);
-		$smarty->assign('total', $total);
+		$smarty->assign('total', sizeof($friends));
 		$smarty->assign('cfg', $cfg);
 		$smarty->display('mod_user_friend.tpl');
-		return true;	
+		return true;
+
 	}
 ?>

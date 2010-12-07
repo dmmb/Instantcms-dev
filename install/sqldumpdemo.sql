@@ -1411,10 +1411,11 @@ CREATE TABLE `#__user_albums` (
   `title` varchar(100) NOT NULL,
   `pubdate` datetime NOT NULL,
   `allow_who` varchar(10) NOT NULL,
+  `description` varchar(200) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `allow_who` (`allow_who`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__user_albums` (`id`, `user_id`, `title`, `pubdate`, `allow_who`) VALUES
 (2, 3, 'Ìמי פמעמאכüבמל', '2010-10-22 20:28:51', 'all'),
