@@ -585,7 +585,7 @@ if ($do=='comments'){
 		$smarty->assign('comments', $comments);
         $smarty->assign('avatar', usrImage($id));
 		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/comments%page%.html\')'));
-		$smarty->display('com_users_comments.tpl');
+		$smarty->display('com_users_comments.tpl');	
 		if ($inCore->inRequest('of_ajax')) { echo ob_get_clean(); exit; }
 
 	} else { echo '<p>'.$_LANG['NO_USER_COMMENT'].'</p>';	}
@@ -1132,7 +1132,7 @@ if ($do=='uploadphotos'){
     // Code for Session Cookie workaround
 	if ($inCore->inRequest("PHPSESSID")) {
         $sess_id = $inCore->request("PHPSESSID", 'str');
-		if ($sess_id != session_id()) { session_destroy(); }
+        if ($sess_id != session_id()) { session_destroy(); }
         session_id($sess_id);
         session_start();
 	}
@@ -1531,7 +1531,7 @@ if ($do=='viewalbum'){
 	$we_friends = ($inUser->id && !$my_profile) ? (int)usrIsFriends($usr['id'], $inUser->id) : 0;
 
 	if ($album['allow_who'] == 'all' || $my_profile || ($album['allow_who'] == 'friends' && $we_friends) || ($album['allow_who'] == 'registered' && $inUser->id)) {
-    	$photos = $model->getAlbumPhotos($usr['id'], $album_type, $album_id, $we_friends);
+    $photos = $model->getAlbumPhotos($usr['id'], $album_type, $album_id, $we_friends);
 	}
 
     //Делим на страницы
@@ -1658,7 +1658,7 @@ if ($do=='viewboard'){
 		$smarty->assign('myprofile', ($inUser->id == $id));
         $smarty->assign('is_con', $is_con);
 		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/board%page%.html\')'));
-		$smarty->display('com_users_boards.tpl');
+		$smarty->display('com_users_boards.tpl');					
 		if ($inCore->inRequest('of_ajax')) { echo ob_get_clean(); exit; }
 
 }
@@ -1713,50 +1713,50 @@ if ($do=='viewphoto'){
 			INNER JOIN cms_user_albums a ON a.id = p.album_id
 			INNER JOIN cms_user_profiles pr ON pr.user_id = p.user_id
             WHERE p.id = '$photoid' AND p.user_id = '$id'
-            LIMIT 1";
-	$result = $inDB->query($sql) ;
+                    LIMIT 1";
+			$result = $inDB->query($sql) ;
 
 	if (!$inDB->num_rows($result)){ cmsCore::error404(); }
 
-	$photo = $inDB->fetch_assoc($result);
-	
+				$photo = $inDB->fetch_assoc($result);
+				
 	$inPage->setTitle($photo['title']);
 	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 	$inPage->addPathway($_LANG['PHOTOALBUMS'], '/users/'.$usr['id'].'/photoalbum.html');
-	$inPage->addPathway($photo['album'], '/users/'.$usr['login'].'/photos/private'.$photo['album_id'].'.html');
-	$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
+				$inPage->addPathway($photo['album'], '/users/'.$usr['login'].'/photos/private'.$photo['album_id'].'.html');
+				$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
 
-	$photo['pubdate'] = $inCore->dateFormat($photo['pubdate'], true, false, false);
+					$photo['pubdate'] = $inCore->dateFormat($photo['pubdate'], true, false, false);
 	$photo['genderlink'] = cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, $photo['gender'], $usr['login']);
-	$photo['filesize'] = round(filesize($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/medium/'.$photo['imageurl'])/1024, 2);
-	//ссылки на предыдущую и следующую фотографии
-	$previd = $inDB->get_fields('cms_user_photos', "id>'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id ASC');
-	$nextid = $inDB->get_fields('cms_user_photos', "id<'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id DESC');
+					$photo['filesize'] = round(filesize($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/medium/'.$photo['imageurl'])/1024, 2);
+					//ссылки на предыдущую и следующую фотографии
+					$previd = $inDB->get_fields('cms_user_photos', "id>'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id ASC');
+					$nextid = $inDB->get_fields('cms_user_photos', "id<'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id DESC');
 	// Проверяем права доступа
 	$is_allow = usrAllowed($photo['allow_who'], $id) || $inCore->userIsAdmin($inUser->id) ? true : false;
 	// Если видим фото, обновляем просмотры
 	if ($is_allow) { $inDB->query("UPDATE cms_user_photos SET hits = hits + 1 WHERE id = ".$photo['id']) ; }
-				
-	$smarty = $inCore->initSmarty('components', 'com_users_photos_view.tpl');
-	$smarty->assign('photo', $photo);
+					
+				$smarty = $inCore->initSmarty('components', 'com_users_photos_view.tpl');
+				$smarty->assign('photo', $photo);
 	$smarty->assign('bbcode', '[IMG]'.HOST.'/images/users/photos/medium/'.$photo['imageurl'].'[/IMG]');
-	$smarty->assign('previd', $previd);
-	$smarty->assign('nextid', $nextid);
-	$smarty->assign('usr', $usr);
-	$smarty->assign('myprofile', $myprofile);
-	$smarty->assign('is_admin', $inCore->userIsAdmin($user_id));
+				$smarty->assign('previd', $previd);
+				$smarty->assign('nextid', $nextid);
+				$smarty->assign('usr', $usr);
+				$smarty->assign('myprofile', $myprofile);
+				$smarty->assign('is_admin', $inCore->userIsAdmin($user_id));
 	$smarty->assign('is_allow', $is_allow);
 	if($is_allow){
-		$inCore->loadLib('tags');	
-		$smarty->assign('tagbar', cmsTagBar('userphoto', $photo['id']));
-	}
-	$smarty->display('com_users_photos_view.tpl');	
-
-	//show user comments
+					$inCore->loadLib('tags');	
+					$smarty->assign('tagbar', cmsTagBar('userphoto', $photo['id']));
+				}
+				$smarty->display('com_users_photos_view.tpl');	
+					
+					//show user comments
 	if($inCore->isComponentInstalled('comments') && $is_allow){
-		$inCore->includeComments();
-		comments('userphoto', $photo['id']);
-	}					
+						$inCore->includeComments();
+						comments('userphoto', $photo['id']);
+					}					
 				
 }
 /////////////////////////////// ADD FRIEND /////////////////////////////////////////////////////////////////////////////////////////
@@ -2720,9 +2720,9 @@ if ($do=='votekarma'){
 			switch ($usertype){
 				case 'user': 	$usr  = $model->getUserShort($user_id);
 								if (!$usr) { cmsCore::error404(); }
-								$sql = "INSERT INTO cms_user_wall (user_id, author_id, pubdate, content, usertype)
-										VALUES ('$user_id', '$author_id', NOW(), '$message', '$usertype')";
-               					$inDB->query($sql);
+                $sql = "INSERT INTO cms_user_wall (user_id, author_id, pubdate, content, usertype)
+                        VALUES ('$user_id', '$author_id', NOW(), '$message', '$usertype')";
+                $inDB->query($sql);
 								$wall_id = $inDB->get_last_id('cms_user_wall');
 								if ($author_id != $user_id){
 									//регистрируем событие
@@ -2751,9 +2751,9 @@ if ($do=='votekarma'){
                     if ($usr['email_newmsg'] && $user_id != $author_id){
                             $inConf = cmsConfig::getInstance();
                             //fetch target user
-							$to_email       = $inDB->get_field('cms_users', 'id='.$user_id, 'email');
+										$to_email       = $inDB->get_field('cms_users', 'id='.$user_id, 'email');
                             $postdate       = date('d/m/Y H:i:s');
-							$from_nick      = $inDB->get_field('cms_users', "id='{$author_id}'", 'nickname');
+										$from_nick      = $inDB->get_field('cms_users', "id='{$author_id}'", 'nickname');
 							$profilelink    = HOST . cmsUser::getProfileURL($usr['login']);
 
                             $letter_path    = PATH.'/includes/letters/newwallpost.txt';

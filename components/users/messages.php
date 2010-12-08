@@ -19,37 +19,37 @@
     $page = $inCore->request('cpage', 'int', 1);
 
     switch ($opt){
-        case 'in': $inPage->addPathway($_LANG['INBOX']);
-                   //Количество записей
-                   $msg_count = $inDB->rows_count('cms_user_msg', 'to_id = '.$id.'');
-                   // Пагинация
+        case 'in': 		$inPage->addPathway($_LANG['INBOX']);
+                        //Количество записей
+                        $msg_count = $inDB->rows_count('cms_user_msg', 'to_id = '.$id.'');
+                        // Пагинация
                    $pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/messages%page%.html\')') : '';
 
-				   $sql = "SELECT m.*, m.senddate as fpubdate, m.from_id as sender_id, u.nickname as author, u.login as author_login, u.is_deleted, p.imageurl
-									FROM cms_user_msg m
+                $sql = "SELECT m.*, m.senddate as fpubdate, m.from_id as sender_id, u.nickname as author, u.login as author_login, u.is_deleted, p.imageurl
+                FROM cms_user_msg m
 									LEFT JOIN cms_users u ON u.id = m.from_id
 									LEFT JOIN cms_user_profiles p ON p.user_id = u.id
 									WHERE m.to_id = '$id'
 									ORDER BY m.id DESC
-									LIMIT ".(($page-1)*$perpage).", $perpage";
+                LIMIT ".(($page-1)*$perpage).", $perpage";
 
-                   break;
+                        break;
 
-        case 'out':	$inPage->addPathway($_LANG['SENT']);
-                    //Количество записей
-                    $msg_count = $inDB->rows_count('cms_user_msg m, cms_users u', 'm.from_id = '.$id.' AND m.to_id = u.id');
-                    // Пагинация
+        case 'out':		$inPage->addPathway($_LANG['SENT']);
+                        //Количество записей
+                        $msg_count = $inDB->rows_count('cms_user_msg m, cms_users u', 'm.from_id = '.$id.' AND m.to_id = u.id');
+                        // Пагинация
                     $pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/messages-sent%page%.html\')') : '';
 
-					$sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.to_id as sender_id, u.is_deleted, p.imageurl
+            $sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.to_id as sender_id, u.is_deleted, p.imageurl
 								FROM cms_user_msg m
 								INNER JOIN cms_users u ON u.id = m.to_id
 								INNER JOIN cms_user_profiles p ON p.user_id = u.id
 								WHERE m.from_id = '$id'
 								ORDER BY m.id DESC
-								LIMIT ".(($page-1)*$perpage).", $perpage";
+                    LIMIT ".(($page-1)*$perpage).", $perpage";
 
-                    break;
+                        break;
 
         case 'history':	$with_name = $inDB->get_field('cms_users', "id = $with_id", 'nickname');
                         $inPage->addPathway($_LANG['MESSEN_WITH'].' '.$with_name, $_SERVER['REQUEST_URI']);
@@ -58,13 +58,13 @@
                         // Пагинация
                         $pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/messages-history'.$with_id.'-%page%.html\')') : '';
 
-						$sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.from_id as sender_id, u.is_deleted, p.imageurl
+            $sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.from_id as sender_id, u.is_deleted, p.imageurl
 								FROM cms_user_msg m
 								INNER JOIN cms_users u ON u.id = m.from_id
 								INNER JOIN cms_user_profiles p ON p.user_id = u.id
 								WHERE m.from_id IN ($id, $with_id) AND m.to_id IN ($id, $with_id)
 								ORDER BY m.id DESC
-								LIMIT ".(($page-1)*$perpage).", $perpage";
+                    LIMIT ".(($page-1)*$perpage).", $perpage";
 
                         break;
 

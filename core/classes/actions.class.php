@@ -178,7 +178,7 @@ class cmsActions {
      */
 	public function where($condition){
 		if ($this->where) {
-			$this->where .= " AND ({$condition})";
+		$this->where .= "AND ({$condition})";
 		} else {
 		    $this->where  = "({$condition})";
 		}

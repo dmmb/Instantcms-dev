@@ -276,95 +276,96 @@ if($do=='viewphoto'){
 
 	if (!$inDB->num_rows($result)) { cmsCore::error404(); }
 
-	$photo = $inDB->fetch_assoc($result);
+		$photo = $inDB->fetch_assoc($result);
 
-	if (!$photo['published']) { echo '<div class="con_heading">'.$_LANG['WAIT_MODERING'].'</div>'; return; }
+		if (!$photo['published']) { echo '<div class="con_heading">'.$_LANG['WAIT_MODERING'].'</div>'; return; }
 		
-    $can_view = true;
-	if (strstr($photo['NSDiffer'],'club')){
-        $owner = 'club';
+        $can_view = true;
+		if (strstr($photo['NSDiffer'],'club')){
+            $owner = 'club';
 		$club = $inDB->get_fields('cms_clubs', 'id='.$photo['album_user_id'], 'id, title, clubtype');
-        $can_view = $club['clubtype'] == 'public' || ($club['clubtype'] == 'private' && (clubUserIsMember($club['id'], $inUser->id) || $inUser->is_admin || clubUserIsAdmin($club['id'], $inUser->id)));
-		$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
-		$inPage->addPathway($_LANG['PHOTOALBUMS'], '/photos/'.clubRootAlbumId($club['id']));            
-	}
+            $can_view = $club['clubtype'] == 'public' || ($club['clubtype'] == 'private' && (clubUserIsMember($club['id'], $inUser->id) || $inUser->is_admin || clubUserIsAdmin($club['id'], $inUser->id)));
+			$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
+			$inPage->addPathway($_LANG['PHOTOALBUMS'], '/photos/'.clubRootAlbumId($club['id']));            
+		}
 
-    if (!$can_view && $owner=='club') { $inCore->redirect('/clubs/'.$club['id']); }
+        if (!$can_view && $owner=='club') { $inCore->redirect('/clubs/'.$club['id']); }
 
 	// Формируем глубиномер, заголовок страницы
-	$left_key = $photo['NSLeft'];
-	$right_key = $photo['NSRight'];
-	$sql = "SELECT id, title, NSLevel FROM cms_photo_albums WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0 AND NSDiffer = '".$photo['NSDiffer']."' ORDER BY NSLeft";
-	$rs_rows = $inDB->query($sql);
-	while($pcat=$inDB->fetch_assoc($rs_rows)){
-		$inPage->addPathway($pcat['title'], '/photos/'.$pcat['id']);
-	}
-	$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
-	$inPage->setTitle($photo['title']);
-	// Обновляем количество просмотров фотографии
+		$left_key = $photo['NSLeft'];
+		$right_key = $photo['NSRight'];
+		$sql = "SELECT id, title, NSLevel FROM cms_photo_albums WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0 AND NSDiffer = '".$photo['NSDiffer']."' ORDER BY NSLeft";
+		$rs_rows = $inDB->query($sql);
+		while($pcat=$inDB->fetch_assoc($rs_rows)){
+				$inPage->addPathway($pcat['title'], '/photos/'.$pcat['id']);
+		}
+		$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
+		$inPage->setTitle($photo['title']);
+		// Обновляем количество просмотров фотографии
 	$inDB->query("UPDATE cms_photo_files SET hits = hits + 1 WHERE id = '$id'");
 								
-	//навигация
-	if($photo['album_nav']){
+		//навигация
+		if($photo['album_nav']){
 		$nextid = $inDB->get_fields('cms_photo_files', 'id<'.$photo['id'].' AND album_id = '.$photo['cat_id'].' AND published=1', 'id, file', 'id DESC');
 		$previd = $inDB->get_fields('cms_photo_files', 'id>'.$photo['id'].' AND album_id = '.$photo['cat_id'].' AND published=1', 'id, file', 'id ASC');
-	} else {
-		$previd = false;
-		$nextid = false;
-	}
+		} else {
+			$previd = false;
+			$nextid = false;		
+		}
 
-	$inCore->loadLib('karma');
+		$inCore->loadLib('karma');
 		
-	if ($photo['a_type'] != 'simple'){
+		if ($photo['a_type'] != 'simple'){
 
 		$is_author = $photo['user_id'] == $inUser->id;
 
-		$photo['pubdate'] = $inCore->dateFormat($photo['pubdate']);
-		if ($photo['public']){
+			$photo['pubdate'] = $inCore->dateformat($photo['pubdate']);
+					if ($photo['public']){
 			$photo['genderlink'] = cmsUser::getGenderLink($photo['user_id'], $photo['nickname'], 0, $photo['gender'], $photo['login']);
-		}
+					}
 		
 		$photo['karma'] 		= cmsKarmaFormatSmall($photo['rating']);
 		$photo['karma_buttons'] = cmsKarmaButtons('photo', $photo['id'], $photo['rating'], $is_author);
 		
-		if($cfg['link']){
-			$file = PATH.'/images/photos/'.$photo['file'];
-			if (file_exists($file)){
-				$photo['file_orig'] = '<a href="/images/photos/'.$photo['file'].'" target="_blank">'.$_LANG['OPEN_ORIGINAL'].'</a>';
+					if($cfg['link']){
+						$file = PATH.'/images/photos/'.$photo['file'];
+						if (file_exists($file)){
+							$photo['file_orig'] = '<a href="/images/photos/'.$photo['file'].'" target="_blank">'.$_LANG['OPEN_ORIGINAL'].'</a>';
+						}
+					}
+					
+					if($photo['NSDiffer'] == ''){
+						$is_admin = $inCore->userIsAdmin($inUser->id);
+					}				
+					if(strstr($photo['NSDiffer'],'club')){
+						$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');
+					}
+					
+					$is_can_operation = false;
+					if(($photo['public'] && $inUser->id) || $inUser->is_admin){
+						$is_can_operation = true;
+					}
+			
+			$smarty = $inCore->initSmarty('components', 'com_photos_view_photo.tpl');
+			$smarty->assign('photo', $photo);
+			$smarty->assign('bbcode', '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/photos/medium/'.$photo['file'].'[/IMG]');
+			$smarty->assign('previd', $previd);
+			$smarty->assign('nextid', $nextid);
+			$smarty->assign('cfg', $cfg);
+			$smarty->assign('is_author', $is_author);
+			$smarty->assign('is_admin', $is_admin);
+			$smarty->assign('is_can_operation', $is_can_operation);
+			if($photo['a_tags']){
+				$smarty->assign('tagbar', cmsTagBar('photo', $photo['id']));
 			}
-		}
-
-		if($photo['NSDiffer'] == ''){
-			$is_admin = $inCore->userIsAdmin($inUser->id);
-		}				
-		if(strstr($photo['NSDiffer'],'club')){
-			$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');
-		}
-
-		$is_can_operation = false;
-		if(($photo['public'] && $inUser->id) || $inUser->is_admin){
-			$is_can_operation = true;
-		}
-
-		$smarty = $inCore->initSmarty('components', 'com_photos_view_photo.tpl');
-		$smarty->assign('photo', $photo);
-		$smarty->assign('bbcode', '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/photos/medium/'.$photo['file'].'[/IMG]');
-		$smarty->assign('previd', $previd);
-		$smarty->assign('nextid', $nextid);
-		$smarty->assign('cfg', $cfg);
-		$smarty->assign('is_author', $is_author);
-		$smarty->assign('is_admin', $is_admin);
-		$smarty->assign('is_can_operation', $is_can_operation);
-		if($photo['a_tags']){
-			$smarty->assign('tagbar', cmsTagBar('photo', $photo['id']));
-		}
-		$smarty->display('com_photos_view_photo.tpl');
-		//если есть, выводим комментарии
-		if($photo['comments'] && $inCore->isComponentInstalled('comments')){
-			$inCore->includeComments();
-			comments('photo', $photo['id']);
-		}
-	}			
+			$smarty->display('com_photos_view_photo.tpl');
+			//если есть, выводим комментарии
+			if($photo['comments'] && $inCore->isComponentInstalled('comments')){
+				$inCore->includeComments();
+				comments('photo', $photo['id']);
+			}
+			
+		}			
 }
 /////////////////////////////// PHOTO UPLOAD /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='addphoto'){
@@ -634,7 +635,7 @@ if ($do=='movephoto'){
 	$album = $model->getAlbum($photo['album_id']);
 
 	if(strstr($album['NSDiffer'],'club')) { 
-		$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], 'id, title');
+			$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], 'id, title');
 		$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
 		$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');	
 	} else {
@@ -643,15 +644,15 @@ if ($do=='movephoto'){
 
 	if (!$is_admin) { cmsCore::error404(); }
 			
-	if (!isset($_POST['gomove'])){ //SHOW MOVE FORM
+		if (!isset($_POST['gomove'])){ //SHOW MOVE FORM
 
 			$inPage->setTitle($_LANG['MOVE_PHOTO']);
 			$inPage->addPathway($_LANG['MOVE_PHOTO'], $_SERVER['REQUEST_URI']);
 
 			if ($album['NSDiffer'] == '') { 
-				$fsql = "SELECT id, title FROM cms_photo_albums WHERE NSDiffer='' ORDER BY title";
+						$fsql = "SELECT id, title FROM cms_photo_albums WHERE NSDiffer='' ORDER BY title";
 			} elseif ($album['NSDiffer'] == 'club'.$club['id'].'') {
-				$fsql = "SELECT id, title FROM cms_photo_albums WHERE NSDiffer='club{$club['id']}' AND parent_id>0 AND user_id = ".$club['id']." ORDER BY title";
+						$fsql = "SELECT id, title FROM cms_photo_albums WHERE NSDiffer='club{$club['id']}' AND parent_id>0 AND user_id = ".$club['id']." ORDER BY title";
 			}
 			$fresult = $inDB->query($fsql) ;
 			if ($inDB->num_rows($fresult)){
@@ -659,23 +660,23 @@ if ($do=='movephoto'){
 				while ($f = $inDB->fetch_assoc($fresult)){
 					$html .= '<option value="'.$f['id'].'" ';
 					if ($photo['album_id'] == $f['id']) { $html .= 'selected'; }
-					$html .= '>--- '.$f['title'].'</option>';
+						$html .= '>--- '.$f['title'].'</option>';
+					}
 				}
-			}
-			$smarty = $inCore->initSmarty('components', 'com_photos_move.tpl');
-			$smarty->assign('photo', $photo);
-			$smarty->assign('html', $html);
-			$smarty->display('com_photos_move.tpl');
+				$smarty = $inCore->initSmarty('components', 'com_photos_move.tpl');
+				$smarty->assign('photo', $photo);
+				$smarty->assign('html', $html);
+				$smarty->display('com_photos_move.tpl');
 
-	} else { //DO MOVE
+		} else { //DO MOVE
 			
 			if ($_POST['album_id']){				
-				$fid = $inCore->request('album_id', 'int');
+					$fid = $inCore->request('album_id', 'int');
 				$inDB->query("UPDATE cms_photo_files SET album_id = '$fid' WHERE id = '$id'") ;
-			}
-			header('location:/photos/'.$fid);
-	}
-	
+				}
+				header('location:/photos/'.$fid);
+		}
+			
 }
 /////////////////////////////// PHOTO DELETE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delphoto'){

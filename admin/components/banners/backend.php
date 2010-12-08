@@ -73,7 +73,7 @@ function bannerHitsbyID($id){
 
 	if($opt=='saveconfig'){	
 		$cfg = array();
-
+			
 		$inCore->saveComponentConfig('banners', $cfg);
 		
 		$msg = 'Настройки сохранены.';
@@ -85,7 +85,7 @@ function bannerHitsbyID($id){
 			if (isset($_REQUEST['item_id'])){ dbShow('cms_banners', $_REQUEST['item_id']);  }
 			echo '1'; exit;
 		} else {
-			dbShowList('cms_banners', $_REQUEST['item']);
+			dbShowList('cms_banners', $_REQUEST['item']);				
 			$opt = 'list';				
 		}			
 	}
@@ -95,7 +95,7 @@ function bannerHitsbyID($id){
 			if (isset($_REQUEST['item_id'])){ dbHide('cms_banners', $_REQUEST['item_id']);  }
 			echo '1'; exit;
 		} else {
-			dbHideList('cms_banners', $_REQUEST['item']);
+			dbHideList('cms_banners', $_REQUEST['item']);				
 			$opt = 'list';				
 		}			
 	}
@@ -171,12 +171,12 @@ function bannerHitsbyID($id){
 			dbQuery($sql);		
 		}
 		if ($msg) {$opt = 'edit';} else {
-			if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
-				header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
-			} else {
-				header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit');
-			}
+		if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
+			header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
+		} else {
+			header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit');
 		}
+	}
 	}
 
 	if($opt == 'delete'){

@@ -1343,7 +1343,7 @@ if ($do=='latest'){
 
         $smarty->display('com_blog_view_posts.tpl');
 
-}
+    }
 ////////// VIEW POPULAR POSTS ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='best'){
 

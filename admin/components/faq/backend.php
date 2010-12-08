@@ -139,7 +139,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			if (isset($_REQUEST['item_id'])){ dbShow('cms_faq_quests', (int)$_REQUEST['item_id']);  }
 			echo '1'; exit;
 		} else {
-			dbShowList('cms_faq_quests', $_REQUEST['item']);
+			dbShowList('cms_faq_quests', $_REQUEST['item']);				
 			$opt = 'list_items';				
 		}			
 	}
@@ -149,7 +149,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			if (isset($_REQUEST['item_id'])){ dbHide('cms_faq_quests', (int)$_REQUEST['item_id']);  }
 			echo '1'; exit;
 		} else {
-			dbHideList('cms_faq_quests', $_REQUEST['item']);
+			dbHideList('cms_faq_quests', $_REQUEST['item']);				
 			$opt = 'list_items';				
 		}			
 	}

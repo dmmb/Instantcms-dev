@@ -67,6 +67,8 @@ class cmsUser {
             $this->{$key}   = $value;
         }
 
+        if (!file_exists(PATH.'/images/users/avatars/small/'.$this->imageurl)){ $this->imageurl = 'nopic.jpg'; }
+
         $this->id = (int)$user_id;
 
         $this->checkBan();
@@ -88,9 +90,10 @@ class cmsUser {
         $inDB       = cmsDatabase::getInstance();
         $inCore     = cmsCore::getInstance();
 
-        $sql    = "SELECT u.*, g.is_admin is_admin
+        $sql    = "SELECT u.*, g.is_admin is_admin, p.imageurl as imageurl
                    FROM cms_users u
 				   INNER JOIN cms_user_groups g ON g.id = u.group_id
+				   INNER JOIN cms_user_profiles p ON p.user_id = u.id
                    WHERE u.id='$user_id' AND u.is_deleted = 0 AND u.is_locked = 0 LIMIT 1";
 
         $result = $inDB->query($sql);
@@ -834,7 +837,7 @@ class cmsUser {
 			case 'club': $inCore->loadLib('clubs');
             			 $myprofile = ($clubUserIsRole || $clubUserIsAdmin || $inUser->is_admin); break;
 			default: $myprofile = $inUser->is_admin;
-		}
+        }
 
         $records = array();
 
@@ -857,7 +860,7 @@ class cmsUser {
             $result     = $inDB->query($sql);
 
 			if (!function_exists('usrImageNOdb')){
-            	$inCore->includeFile('components/users/includes/usercore.php');
+            $inCore->includeFile('components/users/includes/usercore.php');
 			}
 
             while($record = $inDB->fetch_assoc($result)){

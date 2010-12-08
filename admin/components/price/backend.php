@@ -73,7 +73,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			if (isset($_REQUEST['id'])){ dbShow('cms_price_items', $id);  }
 			echo '1'; exit;
 		} else {
-			dbShowList('cms_price_items', $_REQUEST['item']);
+			dbShowList('cms_price_items', $_REQUEST['item']);				
 			header('location:'.$_SERVER['HTTP_REFERER']);					
 		}			
 	}
@@ -83,7 +83,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			if (isset($_REQUEST['id'])){ dbHide('cms_price_items', $id);  }
 			echo '1'; exit;
 		} else {
-			dbHideList('cms_price_items', $_REQUEST['item']);
+			dbHideList('cms_price_items', $_REQUEST['item']);				
 			header('location:'.$_SERVER['HTTP_REFERER']);					
 		}			
 	}

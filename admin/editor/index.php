@@ -121,7 +121,7 @@ if ($do=='view'){
 						echo '<td style="'.$style.'" width="16" valign="top"><img src="../images/actions/off.gif" alt="Раздел скрыт"/></td>';			
 						echo '<td style="'.$style.'" width="60" align="center" valign="top"><a href="?do=showcat&id='.$subcat['id'].'">Показать</a></td>';							
 					}
-						
+
 				echo '</tr>';
 			}
 			echo '</table>';
@@ -285,7 +285,7 @@ if ($do=='newcat'){
 	echo '</div>';
 
 }
-/*********************************************************************************************/	
+/*********************************************************************************************/
 if ($do == 'submitcat'){
 
     $category['id']				= (int)$_REQUEST['id'];

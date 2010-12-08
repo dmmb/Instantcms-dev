@@ -75,7 +75,7 @@ function error($msg){
 			if (isset($_REQUEST['item_id'])){ dbShow('cms_user_autoawards', $_REQUEST['item_id']);  }
 			echo '1'; exit;
 		} else {
-			dbShowList('cms_user_autoawards', $_REQUEST['item']);	
+			dbShowList('cms_user_autoawards', $_REQUEST['item']);				
 			header('location:'.$_SERVER['HTTP_REFERER']);			
 		}			
 	}
@@ -85,7 +85,7 @@ function error($msg){
 			if (isset($_REQUEST['item_id'])){ dbHide('cms_user_autoawards', $_REQUEST['item_id']);  }
 			echo '1'; exit;
 		} else {
-			dbHideList('cms_user_autoawards', $_REQUEST['item']);	
+			dbHideList('cms_user_autoawards', $_REQUEST['item']);				
 			header('location:'.$_SERVER['HTTP_REFERER']);			
 		}			
 	}

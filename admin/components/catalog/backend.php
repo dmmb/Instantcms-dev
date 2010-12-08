@@ -260,7 +260,7 @@ function cpPriceInput($id){
 			if (isset($_REQUEST['item_id'])){ dbHide('cms_uc_items', $_REQUEST['item_id']);  }
 			echo '1'; exit;
 		} else {
-			dbHideList('cms_uc_items', $_REQUEST['item']);	
+			dbHideList('cms_uc_items', $_REQUEST['item']);				
 			header('location:'.$_SERVER['HTTP_REFERER']);			
 		}			
 	}

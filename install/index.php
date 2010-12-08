@@ -361,25 +361,19 @@ function installCheckExtensions(){
                                 <td>Префикс таблиц в базе данных: </td>
                                 <td align="center"><input name="db_prefix" type="text" class="txt" value="cms"></td>
                               </tr>
-                              <!--
                               <tr>
-                                <td>Демо-данные:<br>                      <br>                    </td>
+                                <td>Демо-данные:</td>
                                 <td align="center" valign="top">
                                     <label><input name="demodata" type="radio" value="1" checked /> Да</label>
                                     <label><input name="demodata" type="radio" value="0" /> Нет</label>
                                 </td>
                               </tr>
-                              -->
                             </table>
                         </td>
                     </tr>
                 </table>
 
-				
-
-                <input type="hidden" name="demodata" value="1" />
-
-                <p style="color:gray">
+				<p style="color:gray">
                     При установке с демо-данными всем пользователям будет установлен одинаковый пароль, совпадающий с паролем администратора.
                     Логин каждого пользователя можно узнать из адреса его профиля или из панели управления.
                 </p>

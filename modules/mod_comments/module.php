@@ -28,7 +28,7 @@ function mod_comments($module_id){
 
 		foreach($cfg['targets'] as $type){
 			$t_list[] = "'$type'";
-		}
+        }
 
 		$t_list = rtrim(implode(',', $t_list), ',');
 
@@ -52,7 +52,7 @@ function mod_comments($module_id){
 				INNER JOIN cms_users u ON u.id = c.user_id {$guest_sql}
                 LEFT JOIN cms_ratings_total v ON v.item_id=c.id AND v.target='comment'
 				WHERE c.published=1 {$target_where}
-				GROUP BY c.id
+                GROUP BY c.id
                 ORDER BY c.id DESC
                 LIMIT 70";
 

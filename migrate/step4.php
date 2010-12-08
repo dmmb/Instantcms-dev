@@ -12,10 +12,11 @@
                   `title` varchar(100) NOT NULL,
                   `pubdate` datetime NOT NULL,
                   `allow_who` varchar(10) NOT NULL,
+                  `description` varchar(200) NOT NULL DEFAULT '',
                   PRIMARY KEY (`id`),
                   KEY `user_id` (`user_id`),
                   KEY `allow_who` (`allow_who`)
-                ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251";
+                ) ENGINE=MyISAM DEFAULT CHARSET=cp1251";
 
         $inDB->query($sql);
         echo '<p>Таблица <strong>cms_user_albums</strong> создана</p>';
