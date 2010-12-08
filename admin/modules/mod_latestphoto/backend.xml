@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<backend>    
+    <module>
+        <id>mod_latestphoto</id>
+        <title>Новинки фотогалереи</title>
+    </module>
+    <params>
+        <param type="number" name="shownum" title="Количество фотографий" units="шт." default="5" />
+        <param type="number" name="maxcols" title="Число колонок для вывода" units="шт." default="5" />
+        <param type="flag" name="showclubs" title="Показывать фотографии из клубов" default="on" />
+        <param type="flag" name="showalbum" title="Показывать название альбома" default="on" />
+        <param type="flag" name="showdate" title="Показывать даты" default="on" />
+        <param type="flag" name="showcom" title="Показывать число комментариев" default="on" />
+        <param type="list_db" name="album_id" title="Фотографии из альбома" src="cms_photo_albums" src_title="title" src_value="id" tree="1">
+            <option title="-- Все альбомы --" value="0" />
+        </param>
+        <param type="list" name="showtype" title="Режим вывода">
+            <option title="Подробный" value="full" />
+            <option title="Только фото" value="short" />
+        </param>
+        <param type="flag" name="showmore" title="Показывать ссылку на галерею" default="on" />
+    </params>
+</backend>

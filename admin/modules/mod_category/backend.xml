@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<backend>    
+    <module>
+        <id>mod_category</id>
+        <title>Разделы сайта</title>
+    </module>
+    <params>
+
+        <param type="flag" name="showdesc" title="Показывать описания" default="on" />
+
+        <param type="list_db" name="category_id" title="Родительский раздел" src="cms_category" src_title="title" src_value="id" tree="1" />
+
+        <param type="string" name="icon" title="Иконка" default="/images/markers/folder.png" hint="Оставьте поле пустым, если иконка не нужна" />
+
+    </params>
+</backend>

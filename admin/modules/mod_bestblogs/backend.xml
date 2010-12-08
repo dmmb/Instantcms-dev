@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<backend>    
+    <module>
+        <id>mod_arhive</id>
+        <title>Популярное в блогах</title>
+    </module>
+    <params>        
+        <param type="list" name="namemode" title="Формат названия личных блогов" hint="Показывать название блога или имя его хозяина">
+            <option title="Название блога" value="blog" />
+            <option title="Имя пользователя" value="user" />
+        </param>
+        <param type="number" name="shownum" title="Количество популярных записей" units="шт." default="5" />
+    </params>
+</backend>
