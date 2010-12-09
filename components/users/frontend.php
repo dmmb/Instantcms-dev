@@ -2733,7 +2733,7 @@ if ($do=='votekarma'){
 											'target' => '',
 											'target_url' => '',
 											'target_id' => 0, 
-											'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
+											'description' => strlen(strip_tags($message))>100 ? substr(strip_tags($message), 0, 100) : strip_tags($message)
 									));
 								} elseif($author_id == $user_id) {
 									cmsActions::log('add_wall_my', array(
@@ -2743,7 +2743,7 @@ if ($do=='votekarma'){
 											'target' => '',
 											'target_url' => '',
 											'target_id' => 0, 
-											'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
+											'description' => strlen(strip_tags($message))>100 ? substr(strip_tags($message), 0, 100) : strip_tags($message)
 									));
 								}
                     //send email notification, if user want it
@@ -2781,7 +2781,7 @@ if ($do=='votekarma'){
 											'target' => '',
 											'target_url' => '',
 											'target_id' => 0, 
-											'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
+											'description' => strlen(strip_tags($message))>100 ? substr(strip_tags($message), 0, 100) : strip_tags($message)
 								));
 						break;
                 }
