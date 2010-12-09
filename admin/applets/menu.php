@@ -229,11 +229,11 @@ function applet_menu(){
 						linktype='$linktype',
 						linkid='$linkid',
 						target='$target',
-						published=$published,
+						published='$published',
 						template='$template',
 						allow_group='$allow_group',
 						iconurl='$iconurl'
-					WHERE id = $id
+					WHERE id = '$id'
 					LIMIT 1";
 			dbQuery($sql) ;					
 			if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
