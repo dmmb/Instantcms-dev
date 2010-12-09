@@ -45,6 +45,8 @@ function blogs(){
     if (!isset($cfg['img_on'])) { $cfg['img_on'] = 1; }
     if (!isset($cfg['update_date'])) { $cfg['update_date'] = 1; }
 	if (!isset($cfg['j_code'])) { $cfg['j_code'] = 1; }
+	if (!isset($cfg['update_seo_link'])) { $cfg['update_seo_link'] = 0; }
+	if (!isset($cfg['update_seo_link_blog'])) { $cfg['update_seo_link_blog'] = 0; }
 	
 	//Получаем параметры
 	$id 		= $inCore->request('id', 'int', 0);	
@@ -250,9 +252,10 @@ if ($do=='config'){
             //сохраняем авторов
             $model->updateBlogAuthors($blog['id'], $authors);
             //сохраняем настройки блога
-            $blog['seolink'] = $model->updateBlog($blog['id'], array('title'=>$title, 'allow_who'=>$allow_who, 'showcats'=>$showcats, 'ownertype'=>$ownertype, 'premod'=>$premod, 'forall'=>$forall));
+            $blog['seolink_new'] = $model->updateBlog($blog['id'], array('title'=>$title, 'allow_who'=>$allow_who, 'showcats'=>$showcats, 'ownertype'=>$ownertype, 'premod'=>$premod, 'forall'=>$forall), $cfg['update_seo_link_blog']);
             //Перенаправляем на главную страницу блога
-            $inCore->redirect($model->getBlogURL(null, $blog['seolink']));
+			$blog_url = $cfg['update_seo_link_blog'] ? $model->getBlogURL(null, $blog['seolink_new']) : $model->getBlogURL(null, $blog['seolink']);
+            $inCore->redirect($blog_url);
         }
 
         //Если найдены ошибки

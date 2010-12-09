@@ -121,6 +121,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$cfg['rss_all']             = $inCore->request('rss_all', 'int');
 		$cfg['rss_one']             = $inCore->request('rss_one', 'int');
 		$cfg['j_code']              = $inCore->request('j_code', 'int');
+		$cfg['update_seo_link_blog'] = $inCore->request('update_seo_link_blog', 'int');
 			
 		$inCore->saveComponentConfig('blogs', $cfg);
 		
@@ -136,6 +137,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if (!isset($cfg['min_karma'])) { 		 $cfg['min_karma'] = 0; 		}
 	if (!isset($cfg['update_date'])) { 		 $cfg['update_date'] = 1; 		}
 	if (!isset($cfg['update_seo_link'])) { 	 $cfg['update_seo_link'] = 0; 		}
+	if (!isset($cfg['update_seo_link_blog'])) { $cfg['update_seo_link_blog'] = 0; }
 	
 	if (!isset($cfg['watermark'])) { 	 	$cfg['watermark'] = 1; 		}
 	if (!isset($cfg['img_on'])) { 	 		$cfg['img_on'] = 1; 		}
@@ -242,6 +244,18 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             <td valign="top">
                 <input name="update_date" type="radio" value="1" <?php if (@$cfg['update_date']) { echo 'checked="checked"'; } ?> /> Да
                 <input name="update_date" type="radio" value="0" <?php if (@!$cfg['update_date']) { echo 'checked="checked"'; } ?>/> Нет
+            </td>
+        </tr>
+        <tr>
+            <td valign="top">
+                <strong>Обновлять ссылку блога после редактирования при смене заголовка:</strong><br />
+                <span class="hinttext">
+                    Если включено, после редактирования блога его ссылка, а так же все ссылки постов в блоге, будут изменены согласно нового заголовка блога.
+                </span>
+            </td>
+            <td valign="top">
+                <input name="update_seo_link_blog" type="radio" value="1" <?php if (@$cfg['update_seo_link_blog']) { echo 'checked="checked"'; } ?> /> Да
+                <input name="update_seo_link_blog" type="radio" value="0" <?php if (@!$cfg['update_seo_link_blog']) { echo 'checked="checked"'; } ?>/> Нет
             </td>
         </tr>
         <tr>
