@@ -22,7 +22,7 @@
 		$result      = $inDB->query($sql);
 		$currentmenu = $inDB->fetch_assoc($result);
 
-		$root_id     = dbGetField('cms_menu', 'parent_id=0', 'id');
+		$root_id     = $inDB->get_field('cms_menu', 'parent_id=0', 'id');
 
 		$nested_sets = $inCore->nestedSetsInit('cms_menu');
 		$rs_rows     = $nested_sets->SelectSubNodes($root_id);

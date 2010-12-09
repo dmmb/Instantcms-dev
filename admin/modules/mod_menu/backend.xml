@@ -6,7 +6,7 @@
     </module>
     <params>
 
-        <param type="list" name="showtype" title="Меню для отображения">
+        <param type="list" name="menu" title="Меню для отображения">
             <option title="Главное меню" value="mainmenu" />
             <option title="Дополнительное меню 1" value="menu1" />
             <option title="Дополнительное меню 2" value="menu2" />
