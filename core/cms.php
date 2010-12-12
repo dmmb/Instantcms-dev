@@ -2132,7 +2132,7 @@ class cmsCore {
      * Определяет группу текущего пользователя и перетирает содержание страницы
      * в случае остутствия у группы доступа к текущему пункту меню
      */
-    public function сheckMenuAccess(){
+    public function checkMenuAccess(){
         $inPage = cmsPage::getInstance();
         $inUser = cmsUser::getInstance();
         global $menuid;

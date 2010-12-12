@@ -67,7 +67,7 @@ class cmsUser {
             $this->{$key}   = $value;
         }
 
-        if (!file_exists(PATH.'/images/users/avatars/small/'.$this->imageurl)){ $this->imageurl = 'nopic.jpg'; }
+        if (!file_exists(PATH.'/images/users/avatars/small/'.$this->imageurl) || !$this->imageurl){ $this->imageurl = 'nopic.jpg'; }
 
         $this->id = (int)$user_id;
 

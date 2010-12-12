@@ -429,7 +429,7 @@ if ($do=='addphoto'){
 	
 									if ( !isset($cfg['watermark']) ) 	{ $cfg['watermark'] = 0; 			}
 									if ( $cfg['watermark'] ) 		 	{ @img_add_watermark($destination);	}
-									if ( @!$cfg['saveorig'] )			{ @unlink($destination);			}
+									if ( !$cfg['saveorig'] )			{ @unlink($destination);			}
 									
 									$inPage->initAutocomplete();
 									$autocomplete_js = $inPage->getAutocompleteJS('tagsearch', 'tags');
