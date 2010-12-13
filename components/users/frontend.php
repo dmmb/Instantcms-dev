@@ -761,6 +761,7 @@ if ($do=='profile'){
 	
     $usr['board_count']			= $cfg['sw_board'] ? (int)$inDB->rows_count('cms_board_items', "user_id={$usr['id']} AND published=1") : false;
     $usr['comments_count']		= $cfg['sw_comm'] ? (int)$inDB->rows_count('cms_comments', "user_id={$usr['id']} AND published=1") : false;
+	$usr['invites_count']		= ($inUser->id && $myprofile) ? $model->getUserInvitesCount($inUser->id) : 0;
 
     if($cfg['sw_forum']){
         if ($inUser->id==$id){

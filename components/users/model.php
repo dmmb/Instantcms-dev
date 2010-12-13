@@ -63,17 +63,14 @@ class cms_model_users{
 				o.user_id as status,
 				b.user_id as banned,
                 IFNULL(ui.login, '') as inv_login,
-                IFNULL(ui.nickname, '') as inv_nickname,
-                IFNULL(COUNT(i.id), 0) as invites_count
+                IFNULL(ui.nickname, '') as inv_nickname
                 FROM cms_users u
 				INNER JOIN cms_user_profiles p ON p.user_id = u.id
 				INNER JOIN cms_user_groups g ON g.id = u.group_id
 				LEFT JOIN cms_online o ON o.user_id = u.id
 				LEFT JOIN cms_banlist b ON b.user_id = u.id
                 LEFT JOIN cms_users ui ON ui.id = u.invited_by
-                LEFT JOIN cms_user_invites i ON i.owner_id = u.id AND i.is_used = 0 AND i.is_sended = 0
                 WHERE u.is_locked = 0 AND u.id = '$user_id'
-				GROUP BY u.id
                 LIMIT 1";
 
         $result = $this->inDB->query($sql);
