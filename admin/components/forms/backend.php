@@ -150,7 +150,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	if ($opt == 'submit'){
 			
-		if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("”кажите название формы!"); }
+		$title = $inCore->request('title', 'str', '‘орма без названи€');
 		$description = $_REQUEST['description'];
 
 		$sendto = $_REQUEST['sendto']; 
