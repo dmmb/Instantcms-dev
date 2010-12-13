@@ -305,7 +305,7 @@ function applet_menu(){
 		$css_prefix = $_REQUEST['css_prefix'];
 		$allow_group = $_REQUEST['allow_group'];
 	
-		$cfg['showtype'] = $menu;		
+		$cfg['menu'] = $menu;		
 		$cfg_str = $inCore->arrayToYaml($cfg);
 	
 		$sql = "INSERT INTO cms_modules (position, name, title, is_external, content, ordering, showtitle, published, user, config, css_prefix, allow_group)
