@@ -74,11 +74,11 @@
                         <table border="0" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td width="100" height="30">{$LANG.TITLE}:</td>
-                                <td><input type="text" name="title[{$photo.id}]" value="{$photo.title}" class="text-input" /></td>
+                                <td><input type="text" name="title[{$photo.id}]" value="{$photo.title|escape:'html'}" class="text-input" /></td>
                             </tr>
                             <tr>
                                 <td height="30">{$LANG.DESCRIPTION}:</td>
-                                <td><input type="text" name="desc[{$photo.id}]" value="{$photo.description}" class="text-input" /></td>
+                                <td><input type="text" name="desc[{$photo.id}]" value="{$photo.description|escape:'html'}" class="text-input" /></td>
                             </tr>
                             <tr>
                                 <td height="30">{$LANG.SHOW}:</td>

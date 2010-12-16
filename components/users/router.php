@@ -146,6 +146,13 @@
                             1       => 'id',
                             2       => 'album_id'
                          );
+						 
+        $routes[] = array(
+                            '_uri'  => '/^users\/([0-9]+)\/editalbum([0-9]+).html$/i',
+                            'do'    => 'editalbum',
+                            1       => 'id',
+                            2       => 'album_id'
+                         );
 
         $routes[] = array(
                             '_uri'  => '/^users\/([0-9]+)\/photos\/editlist$/i',

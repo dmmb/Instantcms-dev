@@ -1380,6 +1380,36 @@ if ($do=='delphoto'){
 
 	} else { echo usrAccessDenied(); }
 }
+
+/////////////////////////////// ALBUM EDIT /////////////////////////////////////////////////////////////////////////////////////////
+if ($do=='editalbum'){
+	
+	if (!$cfg['sw_photo']) { cmsCore::error404(); }
+
+    $usr = $model->getUserShort($id);
+    if (!$usr) { cmsCore::error404(); }
+	
+	$album_id = $inCore->request('album_id', 'int', '');
+
+    $album    = $model->getPhotoAlbum('private', $album_id);
+
+    if (!$album) { cmsCore::error404(); }
+
+    if ($album['user_id'] != $inUser->id && !$inUser->is_admin){ cmsCore::error404(); }
+
+	unset($album);
+
+    $album['title']       = $inCore->request('album_title', 'str', $_LANG['PHOTOALBUM'].' '.date('d.m.Y'));
+    $album['allow_who']   = $inCore->request('album_allow_who', 'str', 'all');
+	$album['description'] = $inCore->request('description', 'str', '');
+	$album['id']          = $album_id;
+	
+	$model->updatePhotoAlbum($album);
+
+    $inCore->redirect('/users/'.$usr['login'].'/photos/private'.$album_id.'.html');
+
+}
+
 /////////////////////////////// PHOTO EDIT /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='editphoto'){
 
@@ -1394,7 +1424,7 @@ if ($do=='editphoto'){
 
     if (!$photo) { cmsCore::error404(); }
 
-    if ($photo['user_id'] != $id && !$inUser->is_admin){ cmsCore::error404(); }
+    if ($photo['user_id'] != $inUser->id && !$inUser->is_admin){ cmsCore::error404(); }
 
 	cmsUser::sessionPut('photos_list', array($photo['id']));
 
@@ -1424,7 +1454,7 @@ if ($do=='editphotolist'){
 
         $photo      = $model->getPhoto($photo_id);
 
-        if ($photo['user_id'] != $id && !$inUser->is_admin){ cmsCore::error404(); exit; }
+        if ($photo['user_id'] != $inUser->id && !$inUser->is_admin){ cmsCore::error404(); exit; }
 
     }
 

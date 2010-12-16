@@ -3128,6 +3128,12 @@ div.user_profile_data .field .value {  }
     background:url(../images/icons/deletecat.png) no-repeat left center;
     margin-left:6px;
 }
+.usr_edit_album{
+    padding:1px;
+    padding-left:20px;
+    background:url(../images/icons/edit.png) no-repeat left center;
+    margin-left:6px;
+}
 
 #usr_photos_upload_album{
     background:#E0EAEF;

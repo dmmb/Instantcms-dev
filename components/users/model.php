@@ -481,13 +481,30 @@ class cms_model_users{
         return $album_id;
         
     }
+	
+    public function updatePhotoAlbum($album) {
+
+        if (!$album['allow_who']) { $album['allow_who'] = 'all'; }
+
+		$sql = "UPDATE cms_user_albums
+						SET title = '{$album['title']}',
+							description = '{$album['description']}',
+							allow_who = '{$album['allow_who']}'
+						WHERE id = '{$album['id']}'
+						LIMIT 1";
+
+        $this->inDB->query($sql);
+
+        return true;
+        
+    }
 
     public function getPhotoAlbum($type, $id) {
 
         $album = array();
 
         if ($type == 'private'){
-            $album = $this->inDB->get_fields('cms_user_albums', "id='{$id}'", 'id, user_id, title, allow_who');
+            $album = $this->inDB->get_fields('cms_user_albums', "id='{$id}'", 'id, user_id, title, allow_who, description');
         }
 
         if ($type == 'public'){
