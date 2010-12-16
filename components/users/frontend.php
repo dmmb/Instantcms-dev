@@ -1546,7 +1546,9 @@ if ($do=='viewalbum'){
     $album = $model->getPhotoAlbum($album_type, $album_id);
 
     if (!$album){ cmsCore::error404(); }
-    
+
+    if ($album_type != 'private') { $album['allow_who'] = 'all'; }
+
     $inPage->setTitle($album['title']);
     $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 	$inPage->addPathway($_LANG['PHOTOALBUMS'], '/users/'.$usr['id'].'/photoalbum.html');
