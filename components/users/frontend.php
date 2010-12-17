@@ -1800,7 +1800,7 @@ if ($do=='addfriend'){
 
     cmsUser::clearSessionFriends();
 
-	if (!usrCheckAuth() && $inUser->id == $id) { cmsCore::error404(); }
+	if (!usrCheckAuth() || $inUser->id == $id) { cmsCore::error404(); }
 
 	if(!usrIsFriends($id, $inUser->id)){
 		if (!$inCore->inRequest('goadd')){
