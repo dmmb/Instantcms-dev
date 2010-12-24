@@ -659,7 +659,7 @@ if ($do=='profile'){
     if (!$id){
         $login = $inCore->request('login', 'str', '');
         $login = urldecode($login);
-        $id    = $inDB->get_field('cms_users', "login='{$login}'", 'id');
+        $id    = $inDB->get_field('cms_users', "login='{$login}' ORDER BY is_deleted ASC", 'id');
     }
 
     $usr = $model->getUser($id);
