@@ -28,6 +28,8 @@ function rssfeed(){
     $target     = $inCore->request('target', 'str', 'rss');
     $item_id    = $inCore->request('item_id', 'str', 'all');
 
+    if ($item_id != 'all' && !is_numeric($item_id)) { $inCore->halt(); }
+
     if (strstr($target, '..') || strstr($target, '/')){ $inCore->halt(); }
 
     if (!isset($cfg['addsite'])) { $cfg['addsite'] = 1; }
