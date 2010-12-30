@@ -18,7 +18,7 @@ function sendActivationNotice($send_pass, $user_id){
     $inDB   = cmsDatabase::getInstance();
     $user   = dbGetFields('cms_users', 'id='.$user_id, '*');
     global $_LANG;
-    $code = md5($user['email']);
+    $code = md5($user['email'].substr(md5(rand(0,9999)), 0, 8));
     $codelink = 'http://'.$_SERVER['HTTP_HOST'].'/activate/'.$code;
 
     $sql = "INSERT cms_users_activate (pubdate, user_id, code)
