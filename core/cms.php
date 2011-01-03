@@ -2900,6 +2900,34 @@ class cmsCore {
 		 return $result;
 	}
 
+    /**
+     * Возвращает день недели по дате
+     * @param string $date
+     * @return string
+     */
+    static function dateToWday($date){
+		
+        $inConf = cmsConfig::getInstance();
+
+	    global $_LANG;
+
+        $date = date('Y-m-d H:i:s', strtotime($date)+($inConf->timediff*3600));
+
+		// получаем значение даты и времени
+		list($day, $time)  = explode(' ', $date);
+		list($h, $min, $s) = explode(':', $time);
+		list($y, $m, $d)   = explode('-', $day);
+
+		$days_week = array($_LANG['SUNDAY'], $_LANG['MONDAY'], $_LANG['TUESDAY'], $_LANG['WEDNESDAY'], $_LANG['THURSDAY'], $_LANG['FRIDAY'], $_LANG['SATURDAY']);
+		
+		$arr  = getdate(mktime($h, $min, $s, $m, $d, $y));
+		
+		$wday = $days_week[$arr['wday']];
+        
+		return $wday;
+
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public function initAutoGrowText($element_id){
