@@ -116,6 +116,8 @@ class cms_model_clubs{
 
         //create blog
         $blog_seolink = cmsCore::strToURL($item['title']);
+        $is_exists = $this->inDB->rows_count('cms_blogs', "seolink = '{$blog_seolink}'");
+        if ($is_exists) { $blog_seolink .= '-' . date("d-i"); }
 
         $sql = "INSERT INTO cms_blogs (user_id, title, pubdate, allow_who, view_type, showcats, ownertype, premod, forall, owner, seolink)
                 VALUES ('$club_id', 'Блог клуба {$item['title']}', NOW(), 'all', 'list', 1, 'multi', 0, 0, 'club', '$blog_seolink')";
