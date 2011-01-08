@@ -752,8 +752,17 @@ class cms_model_blogs{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function isUserBlogAuthor($blog_id, $user_id){
-        return $this->inDB->get_field('cms_blogs', 'id='.$blog_id.' AND user_id='.$user_id, 'id');
+    public function isUserBlogAuthor($blog_id, $post_id, $blog_user_id){
+		
+		$inUser = cmsUser::getInstance();
+
+		$blog_id_sql = $this->inDB->get_field('cms_blog_posts', "id='$post_id'", 'blog_id');
+		
+		$this_blog_post = ($blog_id_sql == $blog_id) ? true : false;
+		
+		$is_my_blog = ($blog_user_id == $inUser->id) ? true : false;
+
+        return ($this_blog_post && $is_my_blog) ? true : false;
     }
 
 /* ==================================================================================================== */
