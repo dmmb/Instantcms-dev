@@ -641,7 +641,12 @@ if ($do=='newpost' || $do=='editpost'){
 
     //ќпредел€ем уровень доступа к блогу (админ, хоз€ин, автор) в зависимости от типа владельца
     if ($owner=='user'){
-        $myblog     = $model->isUserBlogAuthor($blog['id'], $post_id, $blog['user_id']);
+		if ($do=='newpost'){
+			$myblog  = $blog['user_id'] ==$user_id ;
+		}
+		if ($do=='editpost'){
+        	$myblog  = $model->isUserBlogAuthor($blog['id'], $post_id, $blog['user_id']);
+		}
 		$is_author  = $model->isUserAuthor($blog['id'], $user_id) || ($blog['ownertype']=='multi' && $blog['forall']);
         $is_admin   = $inCore->userIsAdmin($user_id);
         $min_karma  = false;
