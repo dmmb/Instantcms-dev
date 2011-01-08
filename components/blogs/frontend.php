@@ -522,7 +522,7 @@ if ($do=='moderate'){
     //Если пользователь авторизован, проверяем является ли он хозяином блога, модератором или админом
 	if ($user_id){
 		if ($owner=='user'){
-			$myblog     = ($user_id == $blog['user_id']);
+			$myblog     = $model->isUserBlogAuthor($blog['id'], $user_id);
 			$is_admin   = $inCore->userIsAdmin($user_id);
 		} elseif ($owner=='club') {
 			$myblog     = clubUserIsRole($blog['user_id'], $user_id, 'moderator') || clubUserIsAdmin($blog['user_id'], $user_id);
@@ -641,7 +641,7 @@ if ($do=='newpost' || $do=='editpost'){
 
     //Определяем уровень доступа к блогу (админ, хозяин, автор) в зависимости от типа владельца
     if ($owner=='user'){
-        $myblog     = ($user_id == $blog['user_id']);
+        $myblog     = $model->isUserBlogAuthor($blog['id'], $user_id);
 		$is_author  = $model->isUserAuthor($blog['id'], $user_id) || ($blog['ownertype']=='multi' && $blog['forall']);
         $is_admin   = $inCore->userIsAdmin($user_id);
         $min_karma  = false;
@@ -881,7 +881,7 @@ if ($do=='newcat' || $do=='editcat'){
 
     //Проверяем что пользователь является хозяином или модератором блога
 	if ($owner=='user') { 		
-		$myblog = ($blog['user_id']==$user_id) || $inUser->is_admin;
+		$myblog = $model->isUserBlogAuthor($blog['id'], $user_id) || $inUser->is_admin;
 	}
     if ($owner=='club'){
 		$myblog = clubUserIsRole($blog['user_id'], $user_id, 'moderator') || clubUserIsAdmin($blog['user_id'], $user_id) || $inUser->is_admin;
@@ -1062,7 +1062,7 @@ if ($do == 'delpost'){
     if (!$post){ cmsCore::error404(); }
 
     if ($owner=='user'){
-        $myblog     = ($user_id == $blog['user_id']);
+        $myblog     = $model->isUserBlogAuthor($blog['id'], $user_id);
         $is_author  = (((!$myblog) && $inDB->get_field('cms_blog_authors', 'blog_id='.$id.' AND user_id='.$user_id, 'id')) || ($blog['forall'] && $post['user_id'] == $user_id));
     }
     if($owner=='club') {
@@ -1117,7 +1117,7 @@ if ($do == 'publishpost'){
     //Если пользователь авторизован, проверяем является ли он хозяином блога, модератором или админом
 	if ($user_id){
 		if ($owner=='user'){
-			$myblog     = ($user_id == $blog['user_id']);
+			$myblog     = $model->isUserBlogAuthor($blog['id'], $user_id);
 			$is_admin   = $inCore->userIsAdmin($user_id);
 		} elseif ($owner=='club') {
 			$myblog     = clubUserIsRole($blog['user_id'], $user_id, 'moderator') || clubUserIsAdmin($blog['user_id'], $user_id);
@@ -1176,7 +1176,7 @@ if ($do == 'delblog'){
     if (!$user_id){ $inCore->halt(); }
 
     if ( $inCore->inRequest('confirm') ){
-        if ($user_id == $blog['user_id'] || $inUser->is_admin){
+        if ($model->isUserBlogAuthor($blog['id'], $user_id) || $inUser->is_admin){
             $model->deleteBlog($id);
             $inCore->redirect('/blogs');
         }        
