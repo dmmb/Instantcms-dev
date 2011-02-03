@@ -58,13 +58,7 @@ class cms_model_photos{
         }
         if (!$file){ return false; }
 
-        @chmod($_SERVER['DOCUMENT_ROOT'].'/images/photos/'.$file, 0777);
-        @chmod($_SERVER['DOCUMENT_ROOT'].'/images/photos/small/'.$file, 0777);
-        @chmod($_SERVER['DOCUMENT_ROOT'].'/images/photos/medium/'.$file, 0777);
-
-        @unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/'.$file);
-        @unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/small/'.$file);
-        @unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/medium/'.$file);
+        $this->deletePhotoFile($file, PATH.'/images/photos/');
 
 		$inCore->deleteComments('photo', $id);
 		$inCore->deleteRatings('photo', $id);
@@ -373,6 +367,155 @@ class cms_model_photos{
 		$loaded = $this->inDB->rows_count('cms_photo_files', "user_id = '$user_id' AND album_id = '$album_id' AND pubdate >= DATE_SUB(NOW(), INTERVAL 1 DAY)");
 
 		return $loaded;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+	public function deletePhotoFile($file = false, $dir = false){
+		
+		if (!($file && $dir)) { return false; }
+		
+		@chmod($dir . $file, 0777);
+		@unlink($dir . $file);
+		@chmod($dir.'small/'.$file, 0777);
+		@unlink($dir.'small/'.$file);
+		@chmod($dir.'medium/'.$file, 0777);
+		@unlink($dir.'medium/'.$file);
+
+        return true;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function uploadPhoto($album, $photo_file = false) {
+		
+		if (!$album) { return false; }
+
+		$inCore = cmsCore::getInstance();
+
+		if ($_FILES['Filedata']['name']){
+			
+			$cfg = $inCore->loadComponentConfig('photos');
+			if (!isset($cfg['watermark'])) { $cfg['watermark'] = 0; }
+
+			$inCore->includeGraphics();
+			
+			$file = array();
+
+			$uploaddir 				= PATH.'/images/photos/';
+			$realfile 				= $this->inDB->escape_string($_FILES['Filedata']['name']);
+		
+			$path_parts             = pathinfo($realfile);
+			$ext                    = strtolower($path_parts['extension']);
+			
+			// убираем расширение файла вместе с точкой
+			$realfile = substr($realfile, 0, strrpos($realfile, '.'));
+		
+			if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'png' && $ext != 'bmp') { return false; }
+		
+			$lid 					= $this->inDB->get_fields('cms_photo_files', 'id>0', 'id', 'id DESC');
+			$lastid 				= $lid['id']+1;	
+			$filename 				= md5($lastid.$realfile).'.jpg';					
+		
+			$uploadfile				= $uploaddir . $realfile;
+			$uploadphoto 			= $uploaddir . $filename;
+			$uploadthumb['small'] 	= $uploaddir . 'small/' . $filename;
+			$uploadthumb['medium']	= $uploaddir . 'medium/' . $filename;
+		
+			$source					= $_FILES['Filedata']['tmp_name'];
+			$errorCode				= $_FILES['Filedata']['error'];
+		
+			if ($inCore->moveUploadedFile($source, $uploadphoto, $errorCode)) {
+				
+				// если уже есть фото, то удаляем его
+				$this->deletePhotoFile($photo_file, $uploaddir);
+
+				@img_resize($uploadphoto, $uploadthumb['small'], $album['thumb1'], $album['thumb1'], $album['thumbsqr']);
+				@img_resize($uploadphoto, $uploadthumb['medium'], $album['thumb2'], $album['thumb2'], false, false);
+
+				if ($cfg['watermark']) { @img_add_watermark($uploadphoto); @img_add_watermark($uploadthumb['medium']); }
+				if (@!$cfg['saveorig']) { @unlink($uploadphoto);}
+
+				$file['filename'] = $filename;
+				
+				$file['realfile'] = $inCore->inRequest('upload') ? $realfile : iconv('utf-8', 'cp1251', $realfile);
+		
+		
+			} else {
+		
+				return false;
+				
+			}
+
+
+		} else {
+		
+			return false;
+			
+		}
+
+        return $file;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function checkAccess($album){
+		
+		$inCore = cmsCore::getInstance();
+		$inUser = cmsUser::getInstance();
+		
+		$user_karma = cmsUser::getKarma($inUser->id);
+		
+		global $_LANG;
+		
+		if ($album['NSDiffer']=='') { 
+
+			$can_add    = $inUser->id; 
+			$min_karma  = false; 
+
+		} elseif (strstr($album['NSDiffer'],'club')){
+			
+			$club =$this->inDB->get_fields('cms_clubs', 'id='.$album['user_id'], '*');
+
+			$can_add   = clubUserIsMember($club['id'], $inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || $inUser->is_admin;
+			$min_karma = $club['photo_min_karma'];
+
+		}
+		
+		if ($album['public'] && $can_add){
+			
+			if ($this->loadedByUser24h($inUser->id, $album['id'])<$album['uplimit'] || $album['uplimit'] == 0){
+				
+				if ($min_karma === false || $user_karma>=$min_karma || clubUserIsRole($club['id'], $inUser->id, 'moderator')){
+					
+					return true;
+					
+				} else {
+					
+					cmsCore::addSessionMessage('<p><strong>'.$_LANG['NEED_KARMA_TEXT'].'</strong></p><p>'.$_LANG['NEEDED'].' '.$min_karma.', '.$_LANG['HAVE_ONLY'].' '.$user_karma.'.</p><p>'.$_LANG['WANT_SEE'].' <a href="/users/'.$inUser->id.'/karma.html">'.$_LANG['HISTORY_YOUR_KARMA'].'</a>?</p>', 'error');
+				
+					return false;
+					
+				}
+				
+			} else {
+
+				cmsCore::addSessionMessage('<div><strong>'.$_LANG['MAX_UPLOAD_IN_DAY'].'</strong> '.$_LANG['CAN_UPLOAD_TOMORROW'].'</div>', 'error');
+				return false;
+			
+			}
+			
+		} else {
+
+			return false;
+
+		}
 
     }
 

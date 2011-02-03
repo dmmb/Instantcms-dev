@@ -41,6 +41,18 @@
                             1       => 'id'
                          );
 
+        $routes[] = array(
+                            '_uri'  => '/^photos\/([0-9]+)\/submit_photo.html$/i',
+                            'do'    => 'submit_photo',
+                            1       => 'id'
+                         );
+
+        $routes[] = array(
+                            '_uri'  => '/^photos\/([0-9]+)\/upload$/i',
+                            'do'    => 'uploadphotos',
+                            1       => 'id'
+                         );
+
         //RewriteRule ^photos/([0-9]*)/uploaded.html$ /index.php?view=photos&id=$1&do=uploaded
         $routes[] = array(
                             '_uri'  => '/^photos\/([0-9]+)\/uploaded.html$/i',

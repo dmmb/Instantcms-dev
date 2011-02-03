@@ -42,11 +42,11 @@ function photos(){
     $inCore->loadModel('photos');
     $model = new cms_model_photos();
 	
-	$root       = $inDB->get_fields('cms_photo_albums', "parent_id=0 AND NSDiffer=''", 'id, title');
+	$root    = $inDB->get_fields('cms_photo_albums', "parent_id=0 AND NSDiffer=''", 'id, title');
 	
-	$id         = $inCore->request('id', 'int', $root['id']);
-	$user_id    = $inCore->request('userid', 'int');
-	$do         = $inCore->request('do', 'str', 'view');
+	$id      = $inCore->request('id', 'int', $root['id']);
+	$user_id = $inCore->request('userid', 'int');
+	$do      = $inCore->request('do', 'str', 'view');
 	
 /////////////////////////////// Просмотр альбома ///////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){ 
@@ -59,12 +59,16 @@ if ($do=='view'){
     $owner = 'user';
 
 	if(strstr($album['NSDiffer'],'club')) {
+
         $owner = 'club';
 		$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], '*');
 		$club['root_album_id'] = $inDB->get_field('cms_photo_albums', "parent_id=0 AND NSDiffer='club".$club['id']."' AND user_id = ".$club['id'], 'id');
 		if ($inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator')) { $show_hidden = 1; } //показывать скрытые фотки админам и модераторам клуба
+
 	} else {
+
 		if ($inCore->userIsAdmin($inUser->id)) { $show_hidden = 1; } //показывать скрытые фотки админам
+
 	}
 
     $can_view = true;
@@ -122,11 +126,11 @@ if ($do=='view'){
 		$subcats    = array();
 		$today1 = date("d-m-Y");
         foreach($subcats_list as $cat){
-                    $sub = $inDB->rows_count('cms_photo_albums', 'NSLeft > '.$cat['NSLeft'].' AND NSRight < '.$cat['NSRight']);
+                $sub = $inDB->rows_count('cms_photo_albums', 'NSLeft > '.$cat['NSLeft'].' AND NSRight < '.$cat['NSRight']);
                 if ($sub>1) { $cat['subtext'] = '/'.$sub; } else { $cat['subtext'] = ''; }
 				if ($cfg['is_today']) {
 					$cat['today_count'] = (int)$inDB->get_field('cms_photo_files', "DATE_FORMAT(pubdate, '%d-%m-%Y') = '$today1' AND album_id={$cat['id']}", 'COUNT(id)');
-        }
+        		}
 				if ($cfg['tumb_view'] == 2 && $cfg['tumb_from'] == 2) {
 					$cat['iconurl'] = $model->randPhoto($cat['id'], true);
 				} elseif ($cfg['tumb_view'] == 2 && $cfg['tumb_from'] == 1) {
@@ -199,39 +203,41 @@ if ($do=='view'){
 			if ($inDB->num_rows($result)){	
 
 				if(!$show_hidden) { $totsql	= ' AND published = 1'; } else { $totsql = ''; }
+
 				$total = $inDB->rows_count('cms_photo_files', "album_id = $id $totsq");
 
-					if ($album['showtype'] == 'lightbox'){
-						$inPage->addHeadJS('includes/jquery/lightbox/js/jquery.lightbox.js');
-						$inPage->addHeadCSS('includes/jquery/lightbox/css/jquery.lightbox.css');
-					}
+				if ($album['showtype'] == 'lightbox'){
+					$inPage->addHeadJS('includes/jquery/lightbox/js/jquery.lightbox.js');
+					$inPage->addHeadCSS('includes/jquery/lightbox/css/jquery.lightbox.css');
+				}
+
 				if ($show_hidden){
 					$inPage->addHeadJS('components/photos/js/photos.js');
 				}	
 				$cons = array();
 				$is_poto_yes = false;
-					while($con = $inDB->fetch_assoc($result)){			
+				while($con = $inDB->fetch_assoc($result)){			
 					$con['fpubdate'] 		= $inCore->dateformat($con['pubdate']);
 					$con['commentscount'] 	= $album['showdate'] ? $inCore->getCommentsCount('photo', $con['id']) : 0;
-						if ($album['showtype'] == 'lightbox'){
-							$con['photolink'] 	= '/images/photos/medium/'.$con['file'];
+					if ($album['showtype'] == 'lightbox'){
+						$con['photolink'] 	= '/images/photos/medium/'.$con['file'];
+						$con['photolink2'] 	= '/photos/photo'.$con['id'].'.html';
+					} else {
+						if ($album['showtype']!='fast'){
+							$con['photolink'] 	= '/photos/photo'.$con['id'].'.html';
 							$con['photolink2'] 	= '/photos/photo'.$con['id'].'.html';
 						} else {
-							if ($album['showtype']!='fast'){
-								$con['photolink'] 	= '/photos/photo'.$con['id'].'.html';
-								$con['photolink2'] 	= '/photos/photo'.$con['id'].'.html';
-							} else {
-								$con['photolink']	= '/images/photos/'.$con['file'];
-								$con['photolink2']	= '/images/photos/'.$con['file'];
+							$con['photolink']	= '/images/photos/'.$con['file'];
+							$con['photolink2']	= '/images/photos/'.$con['file'];
 						}
                     }
 					$cons[] = $con;
 				}
 				$is_poto_yes = true;
 			} else { 
-                     if(!$subcats_list && $owner == 'club' && $album['parent_id']==0){ echo '<p>'.$_LANG['NO_SUB_ALBUMS'].'</p>'; }
-					 $is_poto_yes = false;
-					}
+                if(!$subcats_list && $owner == 'club' && $album['parent_id']==0){ echo '<p>'.$_LANG['NO_SUB_ALBUMS'].'</p>'; }
+				$is_poto_yes = false;
+			}
 					
 		}//END - ALBUM CONTENT
 	// отдаем в шаблон
@@ -248,6 +254,7 @@ if ($do=='view'){
 	$smarty->assign('subcats', $subcats);
 	$smarty->assign('cons', $cons);
 	$smarty->assign('is_poto_yes', $is_poto_yes);
+	$smarty->assign('messages', cmsCore::getSessionMessages());	
 	$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/photos/%catid%-%page%', array('catid'=>$id)));
 	$smarty->assign('is_subcats', $is_subcats);
 	$smarty->assign('maxcols', $maxcols);
@@ -368,170 +375,211 @@ if($do=='viewphoto'){
 		}			
 }
 /////////////////////////////// PHOTO UPLOAD /////////////////////////////////////////////////////////////////////////////////////////
-if ($do=='addphoto'){
+if ($do=='uploadphotos'){
 
 	$album = $model->getAlbum($id);
-
-	$uid   = $inUser->id;
-	$user_karma = cmsUser::getKarma($uid);
 	
-	//check add photos permission
-	if (!$uid) { $can_add = false; } 
-	else {		
-		if ($album['NSDiffer']=='') { 
-			$can_add = $uid; 
-			$min_karma = false; 
-			$club['id'] = false;
-			$differ     = '';
-		} elseif (strstr($album['NSDiffer'],'club')){
-			$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], '*');
-			$can_add = clubUserIsMember($club['id'], $uid) || clubUserIsAdmin($club['id'], $uid) || $inUser->is_admin;
-			$differ  = 'club'.$club['id'];
-			$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
-			$inPage->addPathway($_LANG['PHOTOALBUMS']);
-			$min_karma = $club['photo_min_karma'];
-		}				
+    // Code for Session Cookie workaround
+	if ($inCore->inRequest("PHPSESSID")) {
+        $sess_id = $inCore->request("PHPSESSID", 'str');
+        if ($sess_id != session_id()) { session_destroy(); }
+        session_id($sess_id);
+        session_start();
 	}
 
+    $user_id = $_SESSION['user']['id'];
+
+    if (!$user_id) { header("HTTP/1.1 500 Internal Server Error"); exit(0); }
+
+	if(!$model->checkAccess($album)) { header("HTTP/1.1 500 Internal Server Error"); exit(0); }
+	
+	$photo = cmsUser::sessionGet('mod');
+	if (!$photo) { header("HTTP/1.1 500 Internal Server Error"); exit(0); }
+
+	if ($album['NSDiffer']=='') { 
+
+		$club['id'] = false;
+		$differ     = '';
+
+	} elseif (strstr($album['NSDiffer'],'club')){
+
+		$club   = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], '*');
+		$differ = 'club'.$club['id'];
+
+	}
+
+    $file = $model->uploadPhoto($album);
+
+    if ($file) {
+
+		if ($album['NSDiffer'] == ''){
+			
+			if ($album['public']==2 || $inCore->userIsAdmin($inUser->id)) { $published = 1; } else { $published = 0; }	
+		
+		} elseif (strstr($album['NSDiffer'], 'club')){
+
+			if ($club['photo_premod'] && !clubUserIsAdmin($club['id'], $inUser->id) && !clubUserIsRole($club['id'], $inUser->id, 'moderator')) { 
+				$published = 0; 
+			} else { 
+				$published = 1; 
+			}
+			$photo['is_hidden'] = $club['clubtype'] == 'private' ? true : false;
+
+		}
+
+        $photo['published'] = $published;
+        $photo['showdate']  = 1;
+		$photo['album_id']	= $id;
+		$photo['filename']	= $file['filename'];
+		$photo['title']     = $photo['title'] ? $photo['title'] : $file['realfile'];
+
+		$photo_id = $model->addPhoto($photo, $differ);
+
+		if ($inCore->inRequest('upload')) { $inCore->redirect('/photos/'.$album['id'].'/uploaded.html'); }
+
+    } else {
+
+        header("HTTP/1.1 500 Internal Server Error");
+        echo $inCore->uploadError();
+        
+    }
+
+    exit(0);
+    
+}
+/////////////////////////////// PHOTO UPLOAD STEP 1 /////////////////////////////////////////////////////////////////////////////////////////
+if ($do=='addphoto'){
+
+    if (!$inUser->id) { cmsUser::goToLogin(); }
+
+	$inPage->backButton(false);
+
+    $album = ($id == 100 )|| !$id ? '' : $model->getAlbum($id);
+	
+	if(!$model->checkAccess($album)) { $inCore->redirect('/photos/'.$album['id']); }
+
+	if (!$inCore->inRequest('submit')){
+		
+		$mod = cmsUser::sessionGet('mod');
+		if ($mod) { cmsUser::sessionDel('mod'); }
+
+		$inPage->initAutocomplete();
+		$autocomplete_js = $inPage->getAutocompleteJS('tagsearch', 'tags');
+									
+		$inPage->setTitle($_LANG['ADD_PHOTO'].' - '.$_LANG['STEP'].' 1');
+		if (strstr($album['NSDiffer'],'club')) {
+			$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], 'id, title');
+			$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
+		}
+		$inPage->addPathway($album['title'], '/photos/'.$album['id']);
+		$inPage->addPathway($_LANG['ADD_PHOTO'].' - '.$_LANG['STEP'].' 1');
+		
+		$form_action = '/photos/'.$album['id'].'/addphoto.html';
+
+		$smarty = $inCore->initSmarty('components', 'com_photos_add1.tpl');			
+		$smarty->assign('form_action', $form_action);
+		$smarty->assign('mod', $mod);
+		$smarty->assign('album', $album);
+		$smarty->assign('autocomplete_js', $autocomplete_js);
+		$smarty->display('com_photos_add1.tpl');
+
+	}
+
+	if ($inCore->inRequest('submit')){
+
+		$errors = false;
+
+		$mod    = array();
+
+		//Проверяем входные данные
+		
+		$mod['title']       = $inCore->request('title', 'str', '');
+
+		$mod['description'] = $inCore->request('description', 'str');
+		
+		$mod['tags']        = $inCore->request('tags', 'str');
+		
+		$mod['is_multi']    = $inCore->request('only_mod', 'int', 0);
+
+		cmsUser::sessionPut('mod', $mod);
+		$inCore->redirect('/photos/'.$album['id'].'/submit_photo.html');
+
+	}
+	
+}
+/////////////////////////////// PHOTO UPLOAD STEP 2 /////////////////////////////////////////////////////////////////////////////////////////
+if ($do=='submit_photo'){
+
+    if (!$inUser->id) { cmsUser::goToLogin(); }
+
+	$inPage->backButton(false);
+
+    $album = $model->getAlbum($id);
+
+	if(!$model->checkAccess($album)) { $inCore->redirect('/photos/'.$album['id']); }
+
+	$mod = cmsUser::sessionGet('mod');
+	if (!$mod) { cmsCore::error404(); }
+
+	$uload_type = $mod['is_multi'] ? 'multi' : 'single';
+
+	if (strstr($album['NSDiffer'],'club')){
+
+		$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], '*');
+		$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
+		$inPage->addPathway($_LANG['PHOTOALBUMS']);
+
+	}	
+
+	$photo_count = $model->loadedByUser24h($inUser->id, $album['id']);
+
+    if($album['uplimit'] != 0 && !$inCore->userIsAdmin($inUser->id)) {
+
+        $max_limit  = true;
+        $max_files  = $album['uplimit'] - $photo_count;
+		$stop_photo = $photo_count >= $album['uplimit'];
+
+    } else {
+
+        $max_limit  = false;
+        $max_files  = 0;
+		$stop_photo = false;
+
+    }
+
+    $inPage->setTitle($_LANG['ADD_PHOTO']);
 	$inPage->addPathway($album['title'], '/photos/'.$album['id']);
 	$inPage->addPathway($_LANG['ADD_PHOTO']);
-	
-	if ($uid){
-		if ($model->loadedByUser24h($uid, $album['id'])<$album['uplimit'] || $album['uplimit'] == 0){	
-			if ($album['public'] && $can_add){
-			if ($min_karma === false || $user_karma>=$min_karma || clubUserIsAdmin($club['id'], $uid) || clubUserIsRole($club['id'], $uid, 'moderator')){
-				$inPage->printHeading($_LANG['ADD_PHOTO']);
-					if ($inCore->inRequest('upload')) {
-						//first upload step
-						if (isset($_POST['userid'])){
-							$userid = $inCore->request('userid', 'int');
-							if ($userid == $inUser->id){
-								$uploaddir = $_SERVER['DOCUMENT_ROOT'].'/images/photos/';		
-								$realfile  = $_FILES['picture']['name'];
-								$path_parts = pathinfo($realfile);
-								$ext        = strtolower($path_parts['extension']);
-								if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'png' && $ext != 'bmp') { cmsCore::error404(); }
-	
-								$lid = $inDB->get_fields('cms_photo_files', 'id>0', 'id', 'id DESC');
-								$lastid = $lid['id']+1;	
-								$filename = md5($lastid . time() . $inUser->id).'.jpg';
-								
-								$source					= $_FILES['picture']['tmp_name'];
-								$destination 			= $uploaddir . $filename;
-								$uploadthumb['small'] 	= $uploaddir . 'small/' . $filename;
-								$uploadthumb['medium'] 	= $uploaddir . 'medium/' . $filename;
-															
-								$errorCode 	= $_FILES['picture']['error'];
-															
-								if ($inCore->moveUploadedFile($source, $destination, $errorCode)) {
-									@img_resize($destination, $uploadthumb['small'], $album['thumb1'], $album['thumb1'], $album['thumbsqr']);
-									@img_resize($destination, $uploadthumb['medium'], $album['thumb2'], $album['thumb2'], false, $cfg['watermark']);
-	
-									if ( !isset($cfg['watermark']) ) 	{ $cfg['watermark'] = 0; 			}
-									if ( $cfg['watermark'] ) 		 	{ @img_add_watermark($destination);	}
-									if ( !$cfg['saveorig'] )			{ @unlink($destination);			}
-									
-									$inPage->initAutocomplete();
-									$autocomplete_js = $inPage->getAutocompleteJS('tagsearch', 'tags');
-									
-									$inPage->setTitle($_LANG['ADD_PHOTO'].' - '.$_LANG['STEP'].' 2');
-	
-									$form_action = '/photos/'.$album['id'].'/addphoto.html';
-									
-									$smarty = $inCore->initSmarty('components', 'com_photos_add2.tpl');			
-									$smarty->assign('form_action', $form_action);
-									$smarty->assign('filename', $filename);
-									$smarty->assign('autocomplete_js', $autocomplete_js);
-									$smarty->display('com_photos_add2.tpl');
-								} else {
-									echo '<p><strong>'.$_LANG['ERROR'].':</strong> '.$inCore->uploadError().'!</p>';
-								}
-												
-							} else { die($_LANG['ACCESS_DENIED']); }
-						} else { die($_LANG['ACCESS_DENIED']); }
-					
-					} else {
-						if (isset($_POST['submit'])){		
-							//final upload step
 
-                            $photo['album_id']      = $id;
-							$photo['title']         = $inCore->request('title', 'str', $_LANG['PHOTO_WITHOUT_NAME']);
-							$photo['description']   = $inCore->request('description', 'str');
-							$photo['tags']          = $inCore->request('tags', 'str');
-		
-							$imageurl               = $inCore->request('imageurl', 'str');
-							$imageurl               = str_replace("*", '',  $imageurl);
-                            $photo['filename']      = $imageurl;
-							
-							if ($album['NSDiffer'] == ''){
-								if ($album['public']==2 || $inCore->userIsAdmin($inUser->id)) { $published = 1; } else { $published = 0; }				
-							} elseif (strstr($album['NSDiffer'], 'club')){
-								if ($club['photo_premod'] && !clubUserIsAdmin($club['id'], $inUser->id) && !clubUserIsRole($club['id'], $inUser->id, 'moderator')) { 
-									$published = 0; 
-								} else { 
-									$published = 1; 
-								}
-								$photo['is_hidden'] = $club['clubtype'] == 'private' ? true : false;
-							}
+    $smarty = $inCore->initSmarty('components', 'com_photos_add2.tpl');
+    $smarty->assign('user_id', $inUser->id);
+    $smarty->assign('album', $album);
+    $smarty->assign('sess_id', session_id());
+    $smarty->assign('max_limit', $max_limit);
+    $smarty->assign('max_files', $max_files);
+	$smarty->assign('uload_type', $uload_type);
+	$smarty->assign('stop_photo', $stop_photo);
+    $smarty->display('com_photos_add2.tpl');
 
-                            $photo['published']     = $published;
-                            $photo['showdate']      = 1;
-																															
-							//ADD TO ALBUM
-							$photo_id = $model->addPhoto($photo, $differ);
-							
-							$inCore->redirect('/photos/'.$photo_id.'/uploaded.html');
-								
-						} else { 
-							//upload form
-							$inPage->setTitle($_LANG['ADD_PHOTO'].' - '.$_LANG['STEP'].' 1');
-							
-							$form_action = '/photos/'.$id.'/addphoto.html';
-							
-							$smarty = $inCore->initSmarty('components', 'com_photos_add1.tpl');			
-							$smarty->assign('form_action', $form_action);
-							$smarty->assign('user_id', $uid);
-							$smarty->display('com_photos_add1.tpl');						
-						}
-					}
-				} else {
-					$inPage->printHeading($_LANG['NEED_KARMA']);
-					echo '<p><strong>'.$_LANG['NEED_KARMA_TEXT'].'</strong></p>';
-					echo '<p>'.$_LANG['NEEDED'].' '.$min_karma.', '.$_LANG['HAVE_ONLY'].' '.$user_karma.'.</p>';
-					echo '<p>'.$_LANG['WANT_SEE'].' <a href="/users/'.$uid.'/karma.html">'.$_LANG['HISTORY_YOUR_KARMA'].'</a>?</p>';
-				}	
-			} else { echo '<p>'.$_LANG['YOU_CANT_ADD_PHOTO'].'</p>'; }
-		} else { 
-			echo '<div class="con_heading">'.$_LANG['ADD_PHOTO'].'</div>';
-			echo '<div><strong>'.$_LANG['MAX_UPLOAD_IN_DAY'].'</strong> '.$_LANG['CAN_UPLOAD_TOMORROW'].'</div>';
-		}
-	} else { 
-		cmsUser::goToLogin();
-	}
 }
-
 /////////////////////////////// PHOTO UPLOADED ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='uploaded'){
 
-	$id = $inCore->request('id', 'int', 0);
-
-	$photo = $model->getPhoto($id);
-	if (!$photo) { cmsCore::error404(); }
-
-	$inPage->addPathway($_LANG['PHOTO_ADDED']);
-
-		$smarty = $inCore->initSmarty('components', 'com_photos_added_f.tpl');			
-		$smarty->assign('id', $id);
-		$smarty->assign('photo', $photo);
-		$smarty->display('com_photos_added_f.tpl');
+    if (!$inUser->id) { cmsUser::goToLogin(); }
+	
+	$album = $model->getAlbum($id);
+	
+	$photo = cmsUser::sessionGet('mod');
+	if ($photo) { cmsUser::sessionDel('mod'); }
+	
+	$inCore->redirect('/photos/'.$album['id']);
 
 }
 
 /////////////////////////////// PHOTO EDIT ///////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='editphoto'){
-	$max_mb = 2; //max filesize in Mb
 	
-	$inCore->includeFile('components/users/includes/usercore.php');
+	if (!$inUser->id) { cmsUser::goToLogin(); }
 	
 	$photoid = $inCore->request('id', 'int', '');
 		
@@ -541,90 +589,48 @@ if ($do=='editphoto'){
 	$album = $model->getAlbum($photo['album_id']);
 	
 	if (strstr($album['NSDiffer'],'club')){
+
 		$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], 'id, title');
 		$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
-		$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');	
+		$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');
 	} else {
-		$is_admin = $inCore->userIsAdmin($inUser->id);
+		
+		$is_admin = $inUser->is_admin;
+
 	}
 	
 	$is_author = ($inUser->id == $photo['user_id']);
 	
-	if ($inUser->id && ($is_admin || $is_author)){
-	
-		$sql = "SELECT * FROM cms_users WHERE id = ".$photo['user_id'];
-		$result = $inDB->query($sql) ;
+	if (!$is_admin && !$is_author) { cmsCore::error404(); }
 
-		if ($inDB->num_rows($result)){
-			$usr = $inDB->fetch_assoc($result);
-	
-			$inPage->addPathway($_LANG['EDIT_PHOTO']);
+	$inPage->addPathway($_LANG['EDIT_PHOTO']);
 			
-            if ($inCore->inRequest('save')){
-					$photo['title']         = $inCore->request('title', 'str', $_LANG['PHOTO_WITHOUT_NAME']);
-					$photo['description']   = $inCore->request('description', 'str');
-					$photo['tags']          = $inCore->request('tags', 'str');
-                    $photo['filename']      = $inCore->request('file', 'str');
-										
-					//replace file					
-					if (isset($_FILES['picture']['name'])){
-						//upload new
-						$uploaddir      = $_SERVER['DOCUMENT_ROOT'].'/images/photos/';
-						$realfile       = $_FILES['picture']['name'];
-						$filename       = md5($realfile.time()).'.jpg';
-						$uploadfile     = $uploaddir . $realfile;
-						$uploadphoto    = $uploaddir . $filename;
-						$uploadthumb    = $uploaddir . 'small/' . $filename;
-						$uploadthumb2   = $uploaddir . 'medium/' . $filename;
-                       
-						if ($_FILES['picture']['size'] <= $max_mb*1024*1024){
-							if (@move_uploaded_file($_FILES['picture']['tmp_name'], $uploadphoto)) {
-								if(!isset($cfg['watermark'])) { $cfg['watermark'] = 0; }
-								@img_resize($uploadphoto, $uploadthumb, $album['thumb1'], $album['thumb1'], $album['thumbsqr']);
-								@img_resize($uploadphoto, $uploadthumb2, $album['thumb2'], $album['thumb2'], false, $cfg['watermark']);
+    if ($inCore->inRequest('save')){
 
-                                $photo['filename'] = $filename;
+		$photo['title']         = $inCore->request('title', 'str', $photo['title']);
+		$photo['description']   = $inCore->request('description', 'str');
+		$photo['tags']          = $inCore->request('tags', 'str');
 
-                                //delete old
-                                $file = $photo['filename'];
-                                $result = $inDB->query("SELECT id FROM cms_photo_files WHERE user_id = ".$inUser->id." AND file = '$file'") ;
-                                if ($inDB->num_rows($result)){ //delete only if user is owner
-                                    @unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/'.$file);
-                                    @unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/small/'.$file);
-                                    @unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/medium/'.$file);
-                                }
-							}								
-						}
-					}
-                    
-					//UPDATE                    
-					$model->updatePhoto($photo['id'], $photo);
-					
-					echo '<p><strong>'.$_LANG['PHOTO_SAVED'].'</strong></p>';
-					echo '<p>&larr; <a href="/photos/photo'.$photo['id'].'.html">'.$_LANG['BACK_TO_PHOTO'].'</a><br/>
-							 &larr; <a href="/photos/'.$photo['album_id'].'">'.$_LANG['BACK_TO_PHOTOALBUM'].'</a></p>';
-					
-				} else { 
-							if(isset($_REQUEST['id'])){								
-								$photo = $model->getPhoto($photoid);
-								if (!$photo) { cmsCore::error404(); }
-
-								$photo_max_size = ($max_mb * 1024 * 1024);
+		// Меняем файл фото если есть
+		$file = $model->uploadPhoto($album, $photo['file']);
+		// если файл не был загружен, имя файла оставляем старое
+		$photo['filename'] = $file['filename'] ? $file['filename'] : $photo['file'];
 									
-								$smarty = $inCore->initSmarty('components', 'com_photos_edit.tpl');
-								$smarty->assign('photo', $photo);
-								$smarty->assign('input_poto', '<input type="hidden" name="file" value="'.$photo['file'].'" />');
-								$smarty->assign('action', '/photos/editphoto'.$photoid.'.html');
-								$smarty->assign('images', '/images/photos/small/'.$photo['file'].'');
-								$smarty->assign('photo_tag', cmsTagLine('photo', $photo['id'], false));
-								$smarty->assign('photo_max_size', $photo_max_size);
-								$smarty->display('com_photos_edit.tpl');
+		$model->updatePhoto($photo['id'], $photo);
 
-							} //isset photo id
-							else { echo usrAccessDenied(); }
-						}//print form
-		} else { echo usrAccessDenied(); } //user exists
-	} else { cmsUser::goToLogin(); }
+		$inCore->redirect('/photos/photo'.$photo['id'].'.html');
+					
+	} else { 
+
+		$smarty = $inCore->initSmarty('components', 'com_photos_edit.tpl');
+		$smarty->assign('photo', $photo);
+		$smarty->assign('action', '/photos/editphoto'.$photo['id'].'.html');
+		$smarty->assign('images', '/images/photos/small/'.$photo['file'].'');
+		$smarty->assign('photo_tag', cmsTagLine('photo', $photo['id'], false));
+		$smarty->display('com_photos_edit.tpl');
+
+	}
+
 }
 /////////////////////////////// PHOTO MOVE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='movephoto'){
