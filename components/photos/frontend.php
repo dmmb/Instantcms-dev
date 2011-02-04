@@ -684,8 +684,14 @@ if ($do=='movephoto'){
 
 			$album_id = $inCore->request('album_id', 'int');
 
-			$inDB->query("UPDATE cms_photo_files SET album_id = '$album_id' WHERE id = '{$photo['id']}'") ;
+			$inDB->query("UPDATE cms_photo_files SET album_id = '$album_id' WHERE id = '{$photo['id']}'");
+			
+			cmsCore::addSessionMessage($_LANG['PHOTO_MOVED'], 'info');
 
+		} else {
+			
+			cmsCore::addSessionMessage($_LANG['PHOTO_MOVED_ERR'], 'error');
+				
 		}
 		
 		$inCore->redirect('/photos/'.$album_id);
@@ -738,6 +744,7 @@ if ($do=='delphoto'){
 	} else {
 
         $model->deletePhoto($photo_id);
+		cmsCore::addSessionMessage($_LANG['PHOTO_DELETED'], 'info');
 		$inCore->redirect('/photos/'.$photo['album_id']);
 
 	}
