@@ -634,6 +634,8 @@ if ($do=='editphoto'){
 }
 /////////////////////////////// PHOTO MOVE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='movephoto'){
+	
+	if (!$inUser->id) { cmsUser::goToLogin(); }
 
 	$photo = $model->getPhoto($id);
 	if (!$photo) { cmsCore::error404(); }
@@ -641,51 +643,60 @@ if ($do=='movephoto'){
 	$album = $model->getAlbum($photo['album_id']);
 
 	if(strstr($album['NSDiffer'],'club')) { 
-			$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], 'id, title');
+
+		$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], 'id, title');
 		$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
-		$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');	
+		$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');
+
 	} else {
-		$is_admin = $inCore->userIsAdmin($inUser->id);
+
+		$is_admin = $inUser->is_admin;
+
 	}
 
 	if (!$is_admin) { cmsCore::error404(); }
 			
-		if (!isset($_POST['gomove'])){ //SHOW MOVE FORM
+	if (!$inCore->inRequest('gomove')){
 
-			$inPage->setTitle($_LANG['MOVE_PHOTO']);
-			$inPage->addPathway($_LANG['MOVE_PHOTO'], $_SERVER['REQUEST_URI']);
+		$inPage->setTitle($_LANG['MOVE_PHOTO']);
+		$inPage->addPathway($_LANG['MOVE_PHOTO']);
 
-			if ($album['NSDiffer'] == '') { 
-						$fsql = "SELECT id, title FROM cms_photo_albums WHERE NSDiffer='' ORDER BY title";
-			} elseif ($album['NSDiffer'] == 'club'.$club['id'].'') {
-						$fsql = "SELECT id, title FROM cms_photo_albums WHERE NSDiffer='club{$club['id']}' AND parent_id>0 AND user_id = ".$club['id']." ORDER BY title";
-			}
-			$fresult = $inDB->query($fsql) ;
-			if ($inDB->num_rows($fresult)){
-				$html = '';
-				while ($f = $inDB->fetch_assoc($fresult)){
-					$html .= '<option value="'.$f['id'].'" ';
-					if ($photo['album_id'] == $f['id']) { $html .= 'selected'; }
-						$html .= '>--- '.$f['title'].'</option>';
-					}
-				}
-				$smarty = $inCore->initSmarty('components', 'com_photos_move.tpl');
-				$smarty->assign('photo', $photo);
-				$smarty->assign('html', $html);
-				$smarty->display('com_photos_move.tpl');
+		if ($album['NSDiffer'] == '') { 
 
-		} else { //DO MOVE
-			
-			if ($_POST['album_id']){				
-					$fid = $inCore->request('album_id', 'int');
-				$inDB->query("UPDATE cms_photo_files SET album_id = '$fid' WHERE id = '$id'") ;
-				}
-				header('location:/photos/'.$fid);
+			$where = "NSDiffer = ''";
+
+		} elseif ($album['NSDiffer'] == 'club'.$club['id'].'') {
+
+			$where = "NSDiffer = 'club{$club['id']}' AND parent_id > 0 AND user_id = '{$club['id']}'";
+
 		}
+
+		$album_options = $inCore->getListItems('cms_photo_albums', $photo['album_id'], 'title', 'ASC', $where);
+		
+		$smarty = $inCore->initSmarty('components', 'com_photos_move.tpl');
+		$smarty->assign('photo', $photo);
+		$smarty->assign('html', $album_options);
+		$smarty->display('com_photos_move.tpl');
+
+	} else {
+		
+		if ($inCore->inRequest('album_id')){
+
+			$album_id = $inCore->request('album_id', 'int');
+
+			$inDB->query("UPDATE cms_photo_files SET album_id = '$album_id' WHERE id = '{$photo['id']}'") ;
+
+		}
+		
+		$inCore->redirect('/photos/'.$album_id);
+
+	}
 			
 }
 /////////////////////////////// PHOTO DELETE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delphoto'){
+	
+	if (!$inUser->id) { cmsUser::goToLogin(); }
 
 	$photo_id = $inCore->request('id', 'int', '');
 
@@ -695,35 +706,41 @@ if ($do=='delphoto'){
 	$album = $model->getAlbum($photo['album_id']);
 	
 	if (strstr($album['NSDiffer'],'club')){
+
 		$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], 'id, title');
 		$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
-		$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');	
+		$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');
+
 	} else {
-		$is_admin = $inCore->userIsAdmin($inUser->id);
+
+		$is_admin = $inUser->is_admin;
+
 	}
 	
 	$is_author = ($inUser->id == $photo['user_id']);
 	
-	if ($inUser->id && ($is_admin || $is_author)){
+	if (!$is_admin && !$is_author) { cmsCore::error404(); }
 
-		if (!isset($_POST['godelete'])){
+	if (!$inCore->inRequest('godelete')){
 
-			$inPage->addPathway($_LANG['DELETE_PHOTOGALLERY'], $_SERVER['REQUEST_URI']);
-			$confirm['title']                   = $_LANG['DELETING_PHOTO'];
-					$confirm['text']                    = ''.$_LANG['YOU_REALLY_DELETE_PHOTO'].' "'.$photo['title'].'"?';
-			$confirm['action']                  = $_SERVER['REQUEST_URI'];
-			$confirm['yes_button']              = array();
-			$confirm['yes_button']['type']      = 'submit';
-			$confirm['yes_button']['name']  	= 'godelete';
-			$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
-			$smarty->assign('confirm', $confirm);
-			$smarty->display('action_confirm.tpl');
+		$inPage->addPathway($_LANG['DELETE_PHOTOGALLERY']);
 
-		} else {
-            $model->deletePhoto($photo_id);
-			header('location:/photos/'.$photo['album_id']);
-		}
-	} else { cmsUser::goToLogin(); }
+		$confirm['title']              = $_LANG['DELETING_PHOTO'];
+		$confirm['text']               = ''.$_LANG['YOU_REALLY_DELETE_PHOTO'].' "'.$photo['title'].'"?';
+		$confirm['action']             = $_SERVER['REQUEST_URI'];
+		$confirm['yes_button']         = array();
+		$confirm['yes_button']['type'] = 'submit';
+		$confirm['yes_button']['name'] = 'godelete';
+		$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
+		$smarty->assign('confirm', $confirm);
+		$smarty->display('action_confirm.tpl');
+
+	} else {
+
+        $model->deletePhoto($photo_id);
+		$inCore->redirect('/photos/'.$photo['album_id']);
+
+	}
 }
 /////////////////////////////// VIEW LATEST PHOTOS ///////////////////////////////////////////////////////////////////////////////////
 if ($do=='latest'){
