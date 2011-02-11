@@ -247,7 +247,6 @@ class cmsPhoto {
 			$f_sql_from = '';
 		}
 		
-		
 		$sql = "SELECT f.id, f.album_id, f.title, f.description, f.pubdate, f.file, f.hits, f.user_id, a.user_id as auser_id, a.title cat_title
 				{$f_sql_from}
 				FROM cms_photo_files f
@@ -416,7 +415,97 @@ class cmsPhoto {
      */	
     public function getAlbum($album_id){
 		
-		return $this->inDB->get_fields('cms_photo_albums', "id = '$album_id'", '*');
+		return $this->inDB->get_fields('cms_photo_albums', "id = '$album_id' AND published = 1", '*');
+
+    }
+// ============================================================================ //
+// ============================================================================ //
+    /**
+     * Возвращает количество альбомов для заданного $differ
+     * @param str $differ
+     * @return int
+     */	
+    public function getAlbumsCount($differ){
+		
+		return (int)$this->inDB->rows_count('cms_photo_albums', "NSDiffer = '$differ' AND parent_id > 0 AND published = 1");
+
+    }
+// ============================================================================ //
+// ============================================================================ //
+    /**
+     * Возвращает альбомы
+     * @param int $parent_id
+     * @param str $differ
+     * @param int $page
+     * @param int $perpage
+     * @return array $albums
+     */	
+	public function getAlbums($parent_id=0, $differ, $page=1, $perpage=0, $orderby='id', $orderto='DESC'){
+
+		$inCore = cmsCore::getInstance();
+
+        if (!$parent_id) { 
+            $parent_where = 'a.parent_id > 0'; 
+        }
+
+        if ($parent_id) {
+            $parent = $this->inDB->get_fields('cms_photo_albums', "id = '{$parent_id}'", 'NSLeft, NSRight');
+            $parent_where = "a.NSLeft >= {$parent['NSLeft']} AND a.NSRight <= '{$parent['NSRight']}'";
+        }
+
+		$sql  = "SELECT a.id, a.title, a.pubdate, a.iconurl, f.file, IFNULL(COUNT(f.id), 0) as content_count
+				FROM cms_photo_albums a
+				LEFT JOIN cms_photo_files f ON f.album_id = a.id AND f.published = 1
+				WHERE a.NSDiffer='$differ' AND {$parent_where} AND a.published = 1
+				GROUP BY a.id
+				ORDER BY a.$orderby $orderto
+				";
+		
+		$sql .= $perpage ? "LIMIT ".(($page-1)*$perpage).", $perpage" : '';
+						
+		$result = $this->inDB->query($sql);
+	
+		$albums = array();
+	
+		if (!$this->inDB->num_rows($result)){ return false; }
+
+		while ($album = $this->inDB->fetch_assoc($result)){
+
+			$album['file']    = $album['file'] ? $album['file'] : 'no_image.png';
+			$album['pubdate'] = $inCore->dateFormat($album['pubdate']);
+			$albums[] = $album;
+
+		}
+
+		return $albums;
+
+	}
+// ============================================================================ //
+// ============================================================================ //
+    /**
+     * Возвращает все родительские альбомы
+     * @param int $left_key
+     * @param int $right_key
+     * @return array $path
+     */	
+    public function getAlbumPath($left_key, $right_key) {
+
+        $path = array();
+
+        $sql = "SELECT id, title, NSLevel
+                FROM cms_photo_albums
+                WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0
+                ORDER BY NSLeft";
+
+        $result = $this->inDB->query($sql);
+
+        if (!$this->inDB->num_rows($result)) { return false; }
+
+        while($cat = $this->inDB->fetch_assoc($result)){
+            $path[] = $cat;
+        }
+
+        return $path;
 
     }
 // ============================================================================ //
@@ -485,6 +574,23 @@ class cmsPhoto {
 		$ns = $inCore->nestedSetsInit('cms_photo_albums');
 
 		return $ns->DeleteNode($album_id, $differ);
+
+    }
+// ============================================================================ //
+// ============================================================================ //
+    /**
+     * Обновляет иконку альбома
+     * @param int $album_id
+     * @param str $file
+     * @return bool
+     */	
+    public function updateAlbumIcon($album_id, $file){
+		
+		$sql = "UPDATE cms_photo_albums SET iconurl='$file' WHERE id = '$album_id'";
+
+		$this->inDB->query($sql);
+		
+		return true;
 
     }
 // ============================================================================ //
