@@ -247,7 +247,7 @@ class cmsPhoto {
 			$f_sql_from = '';
 		}
 		
-		$sql = "SELECT f.id, f.album_id, f.title, f.description, f.pubdate, f.file, f.hits, f.user_id, a.user_id as auser_id, a.title cat_title
+		$sql = "SELECT f.id, f.album_id, f.title, f.description, f.published, f.pubdate, f.file, f.hits, f.user_id, a.user_id as auser_id, a.title cat_title
 				{$f_sql_from}
 				FROM cms_photo_files f
 				INNER JOIN cms_photo_albums a ON a.id = f.album_id
@@ -438,9 +438,13 @@ class cmsPhoto {
      * @param str $differ
      * @param int $page
      * @param int $perpage
+     * @param str $orderby
+     * @param str $orderto
+     * @param bool $is_admin
+     * @param bool $is_moder
      * @return array $albums
      */	
-	public function getAlbums($parent_id=0, $differ, $page=1, $perpage=0, $orderby='id', $orderto='DESC'){
+	public function getAlbums($parent_id=0, $differ, $page=1, $perpage=0, $orderby='id', $orderto='DESC', $is_admin=false, $is_moder=false){
 
 		$inCore = cmsCore::getInstance();
 
@@ -471,6 +475,12 @@ class cmsPhoto {
 
 		while ($album = $this->inDB->fetch_assoc($result)){
 
+			if ($is_admin || $is_moder){
+
+				$album['on_moderate'] = $this->inDB->rows_count('cms_photo_files', 'album_id='.$album['id'].' AND published = 0');
+
+			}
+			$album['file']    = $album['iconurl'] ? $album['iconurl'] : $album['file'];
 			$album['file']    = $album['file'] ? $album['file'] : 'no_image.png';
 			$album['pubdate'] = $inCore->dateFormat($album['pubdate']);
 			$albums[] = $album;
@@ -596,6 +606,23 @@ class cmsPhoto {
 // ============================================================================ //
 // ============================================================================ //
     /**
+     * Возвращает список options альбомов для заданного $differ
+     * @param str $differ
+     * @param str $selected
+     * @return str
+     */	
+    public function getAlbumsOption($differ, $selected=''){
+        
+		$inCore = cmsCore::getInstance();
+		
+		$cats_options = $inCore->getListItems('cms_photo_albums', $selected, 'id', 'ASC',"parent_id > 0 AND NSDiffer='$differ'");
+
+		return $cats_options;
+
+    }
+// ============================================================================ //
+// ============================================================================ //
+    /**
      * Возвращает массив фотографий по заданным условиям
      * @param bool $show_all
      * @return array $photos
@@ -608,7 +635,7 @@ class cmsPhoto {
         $pub_where = ($show_all ? '1=1' : 'f.published = 1');
         $left_join = strstr($this->where, 'rt.') ? "LEFT JOIN cms_ratings_total rt ON rt.item_id = f.id AND rt.target='photo'" : '';
 
-        $sql = "SELECT f.id, f.album_id, f.title, f.description, f.pubdate, f.file, f.hits
+        $sql = "SELECT f.id, f.album_id, f.title, f.description, f.published, f.pubdate, f.file, f.hits
 
                 FROM cms_photo_files f
 				{$left_join}
