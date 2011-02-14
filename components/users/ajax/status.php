@@ -23,13 +23,12 @@
     if (!$inUser->id) { return; }
 
     $status = $inCore->request('status', 'str', '');
-    if (strlen($status)>140){ $status = substr($status, 0, 140); }
-
     $status = @iconv('UTF-8', 'CP1251', $status);
+    if (strlen($status)>140){ $status = substr($status, 0, 140); }
 
     $sql = "UPDATE cms_users
             SET status = '{$status}', status_date = NOW()
-            WHERE id = {$inUser->id}
+            WHERE id = '{$inUser->id}'
             LIMIT 1";
 
     $inDB->query($sql);
