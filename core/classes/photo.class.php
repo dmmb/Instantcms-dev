@@ -208,6 +208,8 @@ class cmsPhoto {
      */
 	public function updatePhoto($photo){
 
+        $inCore = cmsCore::getInstance();
+
         $sql = "UPDATE cms_photo_files
                 SET title='{$photo['title']}',
                     file='{$photo['filename']}',
@@ -247,7 +249,7 @@ class cmsPhoto {
 			$f_sql_from = '';
 		}
 		
-		$sql = "SELECT f.id, f.album_id, f.title, f.description, f.published, f.pubdate, f.file, f.hits, f.user_id, a.user_id as auser_id, a.title cat_title
+		$sql = "SELECT f.id, f.album_id, f.title, f.description, f.published, f.pubdate, f.file, f.hits, f.user_id, f.comments, a.user_id as auser_id, a.title cat_title, a.NSLeft, a.NSRight, a.NSDiffer as NSDiffer, a.nav album_nav, a.public, a.showtags a_tags, a.bbcode a_bbcode
 				{$f_sql_from}
 				FROM cms_photo_files f
 				INNER JOIN cms_photo_albums a ON a.id = f.album_id
@@ -258,10 +260,10 @@ class cmsPhoto {
 
 		$photo = $this->inDB->fetch_assoc($result);
 		
-		$photo['pubdate'] = cmsCore::dateformat($photo['pubdate']);
+		if($photo) { $photo['pubdate'] = cmsCore::dateformat($photo['pubdate']); }
 
 		// Обновляем количество просмотров фотографии
-		$photo ? $this->inDB->query("UPDATE cms_photo_files SET hits = hits + 1 WHERE id = '$photo_id' LIMIT 1") : '';
+		($photo && $is_full) ? $this->inDB->query("UPDATE cms_photo_files SET hits = hits + 1 WHERE id = '$photo_id' LIMIT 1") : '';
 
 		return $photo ? $photo : false;
 
@@ -300,6 +302,22 @@ class cmsPhoto {
 // ============================================================================ //
 // ============================================================================ //
     /**
+     * Удаляет фотографии
+     * @param array $photo
+     * @return bool
+     */
+    public function deletePhotos($id_list){
+
+        foreach($id_list as $key=>$id){
+            $this->deletePhoto($id);
+        }
+
+        return true;
+        
+    }
+// ============================================================================ //
+// ============================================================================ //
+    /**
      * Удаляет файл фото с папок загрузки
      * @return bool
      */
@@ -316,6 +334,32 @@ class cmsPhoto {
 
         return true;
 
+    }
+// ============================================================================ //
+// ============================================================================ //
+    /**
+     * Возвращает массив следующей/предыдущей фото
+     * метод полностью не доделан, не учитывается сортировка
+     * @param int $photo_id
+     * @param int $album_id
+     * @param str $nav
+     * @param str $orderby
+     * @return array $navigate
+     */
+	public function getNavPhoto($photo_id, $album_id, $nav = 'next', $orderby = 'id'){
+		
+		if($nav == 'next'){
+			$nav =  '<';
+			$orderto = 'desc';
+		} else {
+			$nav =  '>';
+			$orderto = 'asc';
+		}
+		
+		$navigate = $this->inDB->get_fields('cms_photo_files', "id $nav $photo_id AND album_id = '$album_id' AND published=1", 'id, file', "$orderby $orderto");
+		
+		return $navigate;
+        
     }
 // ============================================================================ //
 // ============================================================================ //
@@ -347,46 +391,82 @@ class cmsPhoto {
 // ============================================================================ //
 // ============================================================================ //
     /**
+     * Настройки по умолчанию для альбома
+     * @return array $album
+     */
+    public function getDefaultAlbumConfig() {
+
+        $album = array(
+                     'title'=>'',
+                     'description'=>'',
+                     'published'=>1,
+                     'showdate'=>1,
+                     'iconurl'=>'',
+                     'orderby'=>'pubdate',
+                     'orderto'=>'desc',
+                     'public'=>1,
+                     'perpage'=>20,
+                     'cssprefix'=>'',
+                     'thumb1'=>96,
+                     'thumb2'=>600,
+                     'thumbsqr'=>1,
+                     'showtype'=>'thumb',
+                     'nav'=>1,
+                     'uplimit'=>100,
+                     'maxcols'=>5,
+                     'orderform'=>0,
+                     'showtags'=>1,
+                     'bbcode'=>0,
+                     'is_comments'=>1
+               );
+
+        return $album;
+
+    }
+// ============================================================================ //
+// ============================================================================ //
+    /**
      * Создает фотоальбом
-     * @param int $user_id
-     * @param int $parent_id
+     * @param array $album
      * @param str $differ
-     * @param str $title
-     * @param str $description
      * @return bool
      */	
-	public function createAlbum($differ='', $parent_id, $title, $description, $user_id){
+	public function createAlbum($differ='', $album){
 
 		$inCore = cmsCore::getInstance();
 
 		$ns = $inCore->nestedSetsInit('cms_photo_albums');
-		$album_id = $ns->AddNode($parent_id, -1, $differ);
+		$album_id = $ns->AddNode($album['parent_id'], -1, $differ);
 		
 		if(!$album_id) { return false; }
-		
+
+        $d_album_cfg = $this->getDefaultAlbumConfig();
+        $album       = array_merge($d_album_cfg, $album);
+
 		$sql = "UPDATE cms_photo_albums
-				SET title='$title',
-					description='$description',
-					published=1,
-					showdate=1,
+				SET title='{$album['title']}',
+					description='{$album['description']}',
+					published='{$album['published']}',
+					showdate='{$album['showdate']}',
 					iconurl='',
 					pubdate=NOW(),
-					orderby='pubdate',
-					orderto='desc',
-					public=1,
-					perpage=20,
-					cssprefix='',
-					thumb1=96,
-					thumb2=600,
-					thumbsqr=1,
-					showtype='thumb',
-					nav=1,
-					uplimit=100,
-					maxcols=5,
-					orderform=0,
-					showtags=1,
-					bbcode=0,
-					user_id = '$user_id'
+					orderby='{$album['orderby']}',
+					orderto='{$album['orderto']}',
+					public='{$album['public']}',
+					perpage='{$album['perpage']}',
+					cssprefix='{$album['cssprefix']}',
+					thumb1='{$album['thumb1']}',
+					thumb2='{$album['thumb2']}',
+					thumbsqr='{$album['thumbsqr']}',
+					showtype='{$album['showtype']}',
+					nav='{$album['nav']}',
+					uplimit='{$album['uplimit']}',
+					maxcols='{$album['maxcols']}',
+					orderform='{$album['orderform']}',
+					showtags='{$album['showtags']}',
+					bbcode='{$album['bbcode']}',
+                    is_comments='{$album['is_comments']}',
+					user_id = '{$album['user_id']}'
 				WHERE id = '$album_id'";
 
 		$this->inDB->query($sql);
@@ -401,7 +481,7 @@ class cmsPhoto {
      * @param str $differ
      * @return int $album_id
      */	
-    public function getRootAlbumId($differ){
+    public function getRootAlbumId($differ = ''){
 		
 		return $this->inDB->get_field('cms_photo_albums', "parent_id=0 AND NSDiffer = '$differ'", 'id');
 
@@ -498,13 +578,13 @@ class cmsPhoto {
      * @param int $right_key
      * @return array $path
      */	
-    public function getAlbumPath($left_key, $right_key) {
+    public function getAlbumPath($left_key, $right_key, $differ='') {
 
         $path = array();
 
         $sql = "SELECT id, title, NSLevel
                 FROM cms_photo_albums
-                WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0
+                WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0 AND NSDiffer = '$differ'
                 ORDER BY NSLeft";
 
         $result = $this->inDB->query($sql);
@@ -625,20 +705,25 @@ class cmsPhoto {
     /**
      * Возвращает массив фотографий по заданным условиям
      * @param bool $show_all
+     * @param bool $is_rating
      * @return array $photos
      */	
-	public function getPhotos($show_all = false){
+	public function getPhotos($show_all = false, $is_rating = false, $is_users = false){
 
 		$inCore = cmsCore::getInstance();
 
         //подготовим условия
         $pub_where = ($show_all ? '1=1' : 'f.published = 1');
-        $left_join = strstr($this->where, 'rt.') ? "LEFT JOIN cms_ratings_total rt ON rt.item_id = f.id AND rt.target='photo'" : '';
+        $r_join    = $is_rating ? "LEFT JOIN cms_ratings_total rt ON rt.item_id = f.id AND rt.target='photo'" : '';
+        $r_join   .= $is_users ? "LEFT JOIN cms_users u ON u.id = f.user_id" : '';
 
-        $sql = "SELECT f.id, f.album_id, f.title, f.description, f.published, f.pubdate, f.file, f.hits
+		$r_select  = $is_rating ? ', IFNULL(rt.total_rating, 0) as rating' : '';
+		$r_select .= $is_users ? ', u.login, u.nickname' : '';
+
+        $sql = "SELECT f.id, f.album_id, f.title, f.description, f.published, f.pubdate, f.file, f.hits{$r_select}
 
                 FROM cms_photo_files f
-				{$left_join}
+				{$r_join}
                 WHERE {$pub_where}
                       {$this->where}
 
@@ -670,7 +755,11 @@ class cmsPhoto {
 	}
 /* ========================================================================== */
 /* ========================================================================== */
-
+    /**
+     * Возвращает количество фотографий по заданным условиям
+     * @param bool $show_all
+     * @return int
+     */	
     public function getPhotosCount($show_all = false){
 
         //подготовим условия
