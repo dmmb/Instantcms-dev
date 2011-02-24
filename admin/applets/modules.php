@@ -379,8 +379,13 @@ function applet_modules(){
 			$content        = $inCore->request('content', 'html', '');
 			$published      = $inCore->request('published', 'int', 0);
 			$css_prefix     = $inCore->request('css_prefix', 'str', '');
-			$allow_group    = $inCore->request('allow_group', 'int', 0);
 			$is_strict_bind = $inCore->request('is_strict_bind', 'int', 0);
+
+			$is_public      = $inCore->request('is_public', 'int', '');
+			if (!$is_public){
+				$access_list = $inCore->request('allow_group', 'array_int');
+				$access_list = $inCore->arrayToYaml($access_list);
+			}
 
             $template       = $inCore->request('template', 'str', '');
 
@@ -402,7 +407,7 @@ function applet_modules(){
 			$sql .=	"
 						published=$published,
 						css_prefix='$css_prefix',
-						allow_group='$allow_group',
+						access_list='$access_list',
 						cachetime = '$cachetime',
 						cacheint = '$cacheint',
 						cache = '$cache',
@@ -456,7 +461,12 @@ function applet_modules(){
 		$content    	= $inDB->escape_string($content); 
         $published      = $inCore->request('published', 'int', 0);
         $css_prefix     = $inCore->request('css_prefix', 'str', '');
-        $allow_group    = $inCore->request('allow_group', 'int', 0);
+		
+		$is_public      = $inCore->request('is_public', 'int', '');
+		if (!$is_public){
+			$access_list = $inCore->request('allow_group', 'array_int');
+			$access_list = $inCore->arrayToYaml($access_list);
+		}
 
         $template       = $inCore->request('template', 'str', '');
 
@@ -469,8 +479,8 @@ function applet_modules(){
         $is_strict_bind = $inCore->request('is_strict_bind', 'int', 0);
 		
 		if ($operate == 'user'){ //USER MODULE
-			$sql = "INSERT INTO cms_modules (id, position, name, title, is_external, content, ordering, showtitle, published, original, css_prefix, allow_group, cache, cachetime, cacheint, template, is_strict_bind)
-					VALUES ('', '$position', '$name', '$title', 0, '$content', $maxorder, $showtitle, $published, 1, '$css_prefix', '$allow_group', 0, 24, 'HOUR', '$template', '$is_strict_bind')";
+			$sql = "INSERT INTO cms_modules (id, position, name, title, is_external, content, ordering, showtitle, published, original, css_prefix, access_list, cache, cachetime, cacheint, template, is_strict_bind)
+					VALUES ('', '$position', '$name', '$title', 0, '$content', $maxorder, $showtitle, $published, 1, '$css_prefix', '$access_list', 0, 24, 'HOUR', '$template', '$is_strict_bind')";
 			dbQuery($sql) ;			
 		}
 		
@@ -881,22 +891,68 @@ function applet_modules(){
                         </div>
 
                     {tab=Доступ}
-
-                        <div style="margin-top:4px">
-                            <strong>Кому показывать этот модуль</strong>
-                        </div>
-                        <div>
-                            <select name="allow_group" id="allow_group" style="width:100%">
-                                <option value="-1" <?php if (@$mod['allow_group']==-1 || !isset($mod['allow_group'])) { echo 'selected="selected"'; } ?>>-- Все группы --</option>
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist" style="margin-top:5px">
+                        <tr>
+                            <td width="20">
                                 <?php
-                                    if (isset($mod['allow_group'])) {
-                                        echo $inCore->getListItems('cms_user_groups', $mod['allow_group']);
-                                    } else {
-                                        echo $inCore->getListItems('cms_user_groups');
+								
+									$groups = cmsUser::getGroups();
+
+                                    $style  = 'disabled="disabled"';
+                                    $public = 'checked="checked"';
+
+                                    if ($do == 'edit'){
+
+                                        if ($mod['access_list']){
+                                            $public = '';
+                                            $style  = '';
+											
+											$access_list = $inCore->yamlToArray($mod['access_list']);
+
+                                        }
                                     }
                                 ?>
-                            </select>
+                                <input name="is_public" type="checkbox" id="is_public" onclick="checkAccesList()" value="1" <?php echo $public?> />
+                            </td>
+                            <td><label for="is_public"><strong>Общий доступ</strong></label></td>
+                        </tr>
+                    </table>
+                    <div style="padding:5px">
+                        <span class="hinttext">
+                            Если отмечено, модуль виден всем посетителям. Снимите галочку, чтобы вручную выбрать разрешенные группы пользователей.
+                        </span>
+                    </div>
+
+                    <div style="margin-top:10px;padding:5px;padding-right:0px;" id="grp">
+                        <div>
+                            <strong>Показывать группам:</strong><br />
+                            <span class="hinttext">
+                                Можно выбрать несколько, удерживая CTRL.
+                            </span>
                         </div>
+                        <div>
+                            <?php
+                                echo '<select style="width: 99%" name="allow_group[]" id="allow_group" size="6" multiple="multiple" '.$style.'>';
+
+                                if ($groups){
+									foreach($groups as $group){
+                                        echo '<option value="'.$group['id'].'"';
+                                        if ($do=='edit'){
+                                            if (inArray($access_list, $group['id'])){
+                                                echo 'selected';
+                                            }
+                                        }
+
+                                        echo '>';
+                                        echo $group['title'].'</option>';
+									}
+
+                                }
+                                
+                                echo '</select>';
+                            ?>
+                        </div>
+                    </div>
 
                     {/tabs}
 
