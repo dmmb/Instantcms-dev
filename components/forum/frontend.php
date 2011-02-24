@@ -671,10 +671,11 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 			echo '<div class="con_heading">'.$_LANG['NEW_THREAD'].'</div>';
 		} else {
 			if ($do == 'newpost'){
-				$sql = "SELECT * FROM cms_forum_threads WHERE id = $id";
+				$sql = "SELECT * FROM cms_forum_threads WHERE id = '$id'";
 				$res = $inDB->query($sql);
 				if ($inDB->num_rows($res)){		
 					$t = $inDB->fetch_assoc($res);
+					if($t['closed'] == 1) { $inCore->halt(); }
 					$inPage->setTitle($_LANG['NEW_POST']);
 					$inPage->addPathway($_LANG['NEW_POST'], $_SERVER['REQUEST_URI']);
 					echo '<div class="con_heading">'.$_LANG['NEW_POST'].'</div>';

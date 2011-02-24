@@ -264,7 +264,9 @@ function comments($target='', $target_id=0){
 
         //  2. подключим модель этого компонента
         $inCore->loadModel($target_component);
-        eval('$target_model = new cms_model_'.$target_component.'();');
+        $model_class  = 'cms_model_'.$target_component;
+	    $target_model = new $model_class();
+
         if (!$target_model) { $error = $_LANG['ERR_UNKNOWN_TARGET'] . ' #2'; }
 
         //  3. запросим массив $target[link, title] у метода getCommentTarget модели

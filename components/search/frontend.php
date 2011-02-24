@@ -169,12 +169,13 @@ function search(){
 					if (file_exists($spfile)){
 						if (in_array($component['link'], $cfg['comp'])){
 							include $spfile;
-							eval('search_'.$component['link'].'("'.$against.'", "'.$look.'", "'.$mode.'");');
+							$search_func = 'search_' . $component['link'];
+							call_user_func($search_func, $against, $look, $mode);
 						}
 					}
 				}
 			}
-					
+				
 			//OUTPUT SEARCH RESULTS	
 			$sql = "SELECT DISTINCT *
 					FROM cms_search

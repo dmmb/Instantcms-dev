@@ -175,7 +175,8 @@ function cmsSubmitKarma($target, $item_id, $points){
         $inCore = cmsCore::getInstance();
         $inCore->loadModel($info['component']);
         if (class_exists('cms_model_'.$info['component'])){
-            eval('$model = new cms_model_'.$info['component'].'();');
+			$model_class  = 'cms_model_'.$info['component'];
+			$model = new $model_class();
             if (method_exists($model, 'updateRatingHook')){
                 $model->updateRatingHook($target, $item_id, $points);
             }

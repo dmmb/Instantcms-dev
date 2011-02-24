@@ -44,6 +44,8 @@ if ($do=='rss'){
 
 		$inCore->includeFile('components/'.$target.'/prss.php');
 
+//      $rss_func = 'rss_' . $target;
+//      call_user_func($rss_func, $item_id, $cfg, $rssdata);
 		eval('rss_'.$target.'($item_id, $cfg, $rssdata);');	
 		
 		$ready = sizeof($rssdata['items']);
