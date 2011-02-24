@@ -439,40 +439,38 @@ public function countModules_old($position){
 }
 
 public function countModules($position){
-    $inCore     = cmsCore::getInstance();
-    $inDB       = cmsDatabase::getInstance();
-    $inUser     = cmsUser::getInstance();
+
+    $inCore = cmsCore::getInstance();
+    $inDB   = cmsDatabase::getInstance();
 	
-	if ($inUser->id) {
-    	//if authorized, but not admin, get group_id
-        if (!$inCore->userIsAdmin($inUser->id)){ 
-			$gid = $_SESSION['user']['group_id']; 
-		} else { 
-			$gid = false;  
-		}
-    } else { 
-		$gid = cmsUser::getGuestGroupId();  
-	}
-
-    //if not admin, add access check to sql
-    if ($gid !== false) { $group_sql = "AND ((m.allow_group=-1) OR (m.allow_group=$gid))"; } else { $group_sql = ""; }
-
     if (!$inCore->isMenuIdStrict()){ $strict_sql = "AND (m.is_strict_bind = 0)"; } else { $strict_sql = ""; }
 
 	$menuid = $inCore->menuId();
-    $sql = "SELECT m.id
+
+    $sql = "SELECT m.access_list
             FROM cms_modules m, cms_modules_bind mb
             WHERE mb.position = '$position' AND
                   m.published = 1 AND
                   m.id = mb.module_id AND
-                  (mb.menu_id = $menuid OR mb.menu_id = 0)
+                  (mb.menu_id = '$menuid' OR mb.menu_id = 0)
                   $strict_sql
-                  $group_sql
             ";
 
+	$result = $inDB->query($sql);
 
-    $result = $inDB->query($sql) ;
-    return $inDB->num_rows($result);
+    if (!$inDB->num_rows($result)){ return 0; }
+	
+	$mods = array();
+
+    while($mod = $inDB->fetch_assoc($result)){
+
+		// Проверяем права доступа
+		if (!$inCore->getAccessModule($mod['access_list'])) { continue; }
+		$mods[] = $mod;
+		
+	}
+
+    return sizeof($mods);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -482,43 +480,41 @@ public function countModules($position){
  * @return html
  */
 public function printModules($position){
-    $inCore     = cmsCore::getInstance();
-    $inDB       = cmsDatabase::getInstance();
-    $inUser     = cmsUser::getInstance();
+
+    $inCore = cmsCore::getInstance();
+    $inDB   = cmsDatabase::getInstance();
+    $inUser = cmsUser::getInstance();
+
     global $_CFG;
     global $_LANG;
-    //check menu item number
+
+    //Получаем id пункта меню
     $menuid = $inCore->menuId();
-    //check position
+
+    // Проверяем позиции
     if (!$position) { return false; }
     if ($position=='top' && @$_REQUEST['view']=='search') { return true; }
 
-    if ($inUser->id) {
-        //if authorized, but not admin, get group_id
-        if (!$inCore->userIsAdmin($inUser->id)){ $gid = $_SESSION['user']['group_id']; } else { $gid = false; }
-    } else { $gid = cmsUser::getGuestGroupId(); }
-
-    //if not admin, add access check to sql
-    if ($gid !== false) { $group_sql = "AND ((m.allow_group=-1) OR (m.allow_group=$gid))"; } else { $group_sql = ""; }
-
     if (!$inCore->isMenuIdStrict()){ $strict_sql = "AND (m.is_strict_bind = 0)"; } else { $strict_sql = ""; }
 
-    //get modules info
+    // Получаем все модули на позицию
     $sql = "SELECT *, m.id as mid, m.template as tpl
             FROM cms_modules m, cms_modules_bind mb
             WHERE (mb.position = '$position') AND
                   m.published = 1 AND
                   m.id = mb.module_id AND
-                  (mb.menu_id = $menuid OR mb.menu_id = 0)
+                  (mb.menu_id = '$menuid' OR mb.menu_id = 0)
                   $strict_sql
-                  $group_sql
             ORDER BY m.ordering ASC
             ";
 
     $result = $inDB->query($sql);
-    //draw module
+
     if($inDB->num_rows($result)){
         while ($mod = $inDB->fetch_assoc($result)){
+			
+			// Проверяем права доступа
+			if (!$inCore->getAccessModule($mod['access_list'])) { continue; }
             
             $modulefile = PATH.'/modules/'.$mod['content'].'/module.php';
 
@@ -544,17 +540,21 @@ public function printModules($position){
                     //run module and get its output to $modulebody
 
                     if ($mod['cache'] && $inCore->isCached('module', $mod['mid'], $mod['cachetime'], $mod['cacheint'])){
+
                         $modulebody = $inCore->getCache('module', $mod['mid']);
                         $callback = true;
-                    } else {
-                                $config = $inCore->yamlToArray($mod['config']);
-                                $inCore->cacheModuleConfig($mod['module_id'], $config);
 
-                                ob_start();
-                                $callback = $mod['content']($mod['module_id']);
-                                $modulebody = ob_get_clean();
-                                if($mod['cache']) { $inCore->saveCache('module', $mod['mid'], $modulebody); }
-                           }
+                    } else {
+
+                        $config = $inCore->yamlToArray($mod['config']);
+                        $inCore->cacheModuleConfig($mod['module_id'], $config);
+
+                        ob_start();
+                        $callback = $mod['content']($mod['module_id']);
+                        $modulebody = ob_get_clean();
+                        if($mod['cache']) { $inCore->saveCache('module', $mod['mid'], $modulebody); }
+                    }
+
                 }
             }
 
