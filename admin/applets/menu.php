@@ -201,7 +201,7 @@ function applet_menu(){
 		if(isset($_REQUEST['id'])) { 
 			$id = (int)$_REQUEST['id'];
 			
-			$title = $_REQUEST['title'];
+			$title = $inCore->request('title', 'str', '');
 			$menu = $_REQUEST['menu'];
 			$link = $inCore->getMenuLink($_REQUEST['mode'], $_REQUEST[$_REQUEST['mode']], $id);
 			$linktype = $_REQUEST['mode'];
@@ -209,7 +209,13 @@ function applet_menu(){
 			$target = $_REQUEST['target'];		
 			$published = $_REQUEST['published'];
 			$template = $_REQUEST['template'];
-			$allow_group = $_REQUEST['allow_group'];
+
+			$is_public      = $inCore->request('is_public', 'int', '');
+			if (!$is_public){
+				$access_list = $inCore->request('allow_group', 'array_int');
+				$access_list = $inCore->arrayToYaml($access_list);
+			}
+
 			$iconurl = $_REQUEST['iconurl'];
 
 			$parent_id = $_REQUEST['parent_id'];
@@ -231,7 +237,7 @@ function applet_menu(){
 						target='$target',
 						published='$published',
 						template='$template',
-						allow_group='$allow_group',
+						access_list='$access_list',
 						iconurl='$iconurl'
 					WHERE id = '$id'
 					LIMIT 1";
@@ -252,14 +258,18 @@ function applet_menu(){
 		$maxorder = $row['max_o'] + 1;
 	
 		$menu = $_REQUEST['menu'];
-		$title = $_REQUEST['title'];
+		$title = $inCore->request('title', 'str', '');
 		$target = $_REQUEST['target'];
 		$link = $inCore->getMenuLink($_REQUEST['mode'], $_REQUEST[$_REQUEST['mode']], $id);
         $linktype = $_REQUEST['mode'];
         $linkid = $_REQUEST[$_REQUEST['mode']];
 		$template = $_REQUEST['template'];
 		$iconurl = $_REQUEST['iconurl'];
-		$allow_group = $_REQUEST['allow_group'];
+		$is_public      = $inCore->request('is_public', 'int', '');
+		if (!$is_public){
+			$access_list = $inCore->request('allow_group', 'array_int');
+			$access_list = $inCore->arrayToYaml($access_list);
+		}
 		$parent_id = $_REQUEST['parent_id'];
 			
 		if ($linktype != 'link') {
@@ -282,9 +292,9 @@ function applet_menu(){
 					target='$target', 
 					published='$published', 
 					template='$template', 
-					allow_group='$allow_group', 
+					access_list='$access_list', 
 					iconurl='$iconurl'
-				WHERE id = $myid";
+				WHERE id = '$myid'";
 	
 		dbQuery($sql) or die(mysql_error().$sql);
 		reorder();
@@ -299,16 +309,20 @@ function applet_menu(){
 		$maxorder = $row['max_o'] + 1;
 	
 		$menu = $_REQUEST['menu'];
-		$title = $_REQUEST['title'];
+		$title = $inCore->request('title', 'str', '');
 		$position = $_REQUEST['position'];
 		$published = $_REQUEST['published'];
 		$css_prefix = $_REQUEST['css_prefix'];
-		$allow_group = $_REQUEST['allow_group'];
+		$is_public      = $inCore->request('is_public', 'int', '');
+		if (!$is_public){
+			$access_list = $inCore->request('allow_group', 'array_int');
+			$access_list = $inCore->arrayToYaml($access_list);
+		}
 	
 		$cfg['menu'] = $menu;		
 		$cfg_str = $inCore->arrayToYaml($cfg);
 	
-		$sql = "INSERT INTO cms_modules (position, name, title, is_external, content, ordering, showtitle, published, user, config, css_prefix, allow_group)
+		$sql = "INSERT INTO cms_modules (position, name, title, is_external, content, ordering, showtitle, published, user, config, css_prefix, access_list)
 				VALUES ('".$position."', 
 						'Меню', 
 						'".$title."', 
@@ -320,7 +334,7 @@ function applet_menu(){
 						0,
 						'$cfg_str',
 						'$css_prefix',
-						'$allow_group')";
+						'$access_list')";
 	
 		dbQuery($sql) ;
 		
@@ -330,6 +344,9 @@ function applet_menu(){
 	}	  
 
    if ($do == 'addmenu'){
+		$GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="js/menu.js"></script>';
+
+
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'save.gif';
 		$toolmenu[0]['title'] = 'Сохранить';
@@ -345,9 +362,9 @@ function applet_menu(){
 		cpAddPathway('Добавить меню', 'index.php?view=menu&do=addmenu');
 		
 		echo '<h3>Добавить меню</h3>';
- 		
+
 		?>
-        <form action="index.php?view=menu&do=submitmenu" method="post">
+        <form id="addform" name="addform" action="index.php?view=menu&do=submitmenu" method="post">
             <table class="proptable" width="650" cellspacing="10" cellpadding="10">
                 <tr>
                     <td width="300" valign="top">
@@ -416,16 +433,68 @@ function applet_menu(){
                         <span class="hinttext">Какой группе пользователей показывать это меню</span>
                     </td>
                     <td valign="top">
-                        <select name="allow_group" id="allow_group" style="width:200px">
-                            <option value="-1" <?php if (@$mod['allow_group']==-1 || !isset($mod['allow_group'])) { echo 'selected="selected"'; } ?>>-- Все группы --</option>
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist" style="margin-top:5px">
+                        <tr>
+                            <td width="20">
+                                <?php
+								
+									$groups = cmsUser::getGroups();
+
+                                    $style  = 'disabled="disabled"';
+                                    $public = 'checked="checked"';
+
+                                    if ($do == 'edit'){
+
+                                        if ($mod['access_list']){
+                                            $public = '';
+                                            $style  = '';
+											
+											$access_list = $inCore->yamlToArray($mod['access_list']);
+
+                                        }
+                                    }
+                                ?>
+                                <input name="is_public" type="checkbox" id="is_public" onclick="checkAccesList()" value="1" <?php echo $public?> />
+                            </td>
+                            <td><label for="is_public"><strong>Общий доступ</strong></label></td>
+                        </tr>
+                    </table>
+                    <div style="padding:5px">
+                        <span class="hinttext">
+                            Если отмечено, назначение пункта меню будет видно всем пользователям. Снимите галочку, чтобы вручную выбрать разрешенные группы пользователей.
+                        </span>
+                    </div>
+
+                    <div style="margin-top:10px;padding:5px;padding-right:0px;" id="grp">
+                        <div>
+                            <strong>Показывать группам:</strong><br />
+                            <span class="hinttext">
+                                Можно выбрать несколько, удерживая CTRL.
+                            </span>
+                        </div>
+                        <div>
                             <?php
-                                if (isset($mod['allow_group'])) {
-                                    echo $inCore->getListItems('cms_user_groups', $mod['allow_group']);
-                                } else {
-                                    echo $inCore->getListItems('cms_user_groups');
+                                echo '<select style="width: 99%" name="allow_group[]" id="allow_group" size="6" multiple="multiple" '.$style.'>';
+
+                                if ($groups){
+									foreach($groups as $group){
+                                        echo '<option value="'.$group['id'].'"';
+                                        if ($do=='edit'){
+                                            if (inArray($access_list, $group['id'])){
+                                                echo 'selected';
+                                            }
+                                        }
+
+                                        echo '>';
+                                        echo $group['title'].'</option>';
+									}
+
                                 }
+                                
+                                echo '</select>';
                             ?>
-                        </select>
+                        </div>
+                    </div>
                     </td>
                 </tr>
                 <tr>
@@ -737,22 +806,68 @@ function applet_menu(){
                         </div>
 
                     {tab=Доступ}
-
-                        <div>
-                            <strong>Группа пользователей</strong>
-                        </div>
-                        <div>
-                            <select name="allow_group" id="allow_group" style="width:100%">
-                                <option value="-1" <?php if (@$mod['allow_group']==-1 || !isset($mod['allow_group'])) { echo 'selected="selected"'; } ?>>-- Все группы --</option>
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist" style="margin-top:5px">
+                        <tr>
+                            <td width="20">
                                 <?php
-                                    if (isset($mod['allow_group'])) {
-                                        echo $inCore->getListItems('cms_user_groups', $mod['allow_group']);
-                                    } else {
-                                        echo $inCore->getListItems('cms_user_groups');
+								
+									$groups = cmsUser::getGroups();
+
+                                    $style  = 'disabled="disabled"';
+                                    $public = 'checked="checked"';
+
+                                    if ($do == 'edit'){
+
+                                        if ($mod['access_list']){
+                                            $public = '';
+                                            $style  = '';
+											
+											$access_list = $inCore->yamlToArray($mod['access_list']);
+
+                                        }
                                     }
                                 ?>
-                            </select>
+                                <input name="is_public" type="checkbox" id="is_public" onclick="checkAccesList()" value="1" <?php echo $public?> />
+                            </td>
+                            <td><label for="is_public"><strong>Общий доступ</strong></label></td>
+                        </tr>
+                    </table>
+                    <div style="padding:5px">
+                        <span class="hinttext">
+                            Если отмечено, назначение пункта меню будет видно всем пользователям. Снимите галочку, чтобы вручную выбрать разрешенные группы пользователей.
+                        </span>
+                    </div>
+
+                    <div style="margin-top:10px;padding:5px;padding-right:0px;" id="grp">
+                        <div>
+                            <strong>Показывать группам:</strong><br />
+                            <span class="hinttext">
+                                Можно выбрать несколько, удерживая CTRL.
+                            </span>
                         </div>
+                        <div>
+                            <?php
+                                echo '<select style="width: 99%" name="allow_group[]" id="allow_group" size="6" multiple="multiple" '.$style.'>';
+
+                                if ($groups){
+									foreach($groups as $group){
+                                        echo '<option value="'.$group['id'].'"';
+                                        if ($do=='edit'){
+                                            if (inArray($access_list, $group['id'])){
+                                                echo 'selected';
+                                            }
+                                        }
+
+                                        echo '>';
+                                        echo $group['title'].'</option>';
+									}
+
+                                }
+                                
+                                echo '</select>';
+                            ?>
+                        </div>
+                    </div>
 
                     {/tabs}
 

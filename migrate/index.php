@@ -109,6 +109,44 @@
 		$is_was_migrate = true;
     }
 // ========================================================================== //
+// ========================================================================== //	
+    if (!$inDB->isFieldExists('cms_menu', 'access_list')){
+        $inDB->query("ALTER TABLE `cms_menu` ADD `access_list` TINYTEXT NOT NULL AFTER `template`");
+        echo '<p>Поле <strong>access_list</strong> добавлено в таблицу <strong>cms_menu</strong></p>';
+		$is_was_migrate = true;
+    }
+// ========================================================================== //
+// ========================================================================== //
+    if ($inDB->isFieldExists('cms_menu', 'allow_group')){
+		$sql    = "SELECT id, allow_group
+				   FROM cms_menu";
+	
+		$result = $inDB->query($sql);
+	
+		if ($inDB->num_rows($result)){
+			while($mod = $inDB->fetch_assoc($result)){
+				if($mod['allow_group'] != -1) {
+	
+					$access_list[]  = $mod['allow_group'];
+					$access_list_ya = $inCore->arrayToYaml($access_list);
+					$inDB->query("UPDATE cms_menu SET `access_list` = '{$access_list_ya}' WHERE id = '{$mod['id']}'");
+					unset ($access_list);
+	
+				}
+			}
+		}
+	
+		echo '<p>Мультидоступ групп к пунктам меню выполнен.</p>';
+		$is_was_migrate = true;
+	}
+// ========================================================================== //
+// ========================================================================== //
+    if ($inDB->isFieldExists('cms_menu', 'allow_group')){
+        $inDB->query("ALTER TABLE `cms_menu` DROP `allow_group`");
+        echo '<p>Поле <strong>allow_group</strong> удалено из таблицы <strong>cms_menu</strong></p>';
+		$is_was_migrate = true;
+    }
+// ========================================================================== //
 // ========================================================================== //
 	if ($is_was_migrate) {
 	    echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Миграция завершена. Удалите папку /migrate/ прежде чем продолжить!</div>';

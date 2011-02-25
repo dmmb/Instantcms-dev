@@ -18,7 +18,7 @@
 		if (!isset($cfg['menu'])) { $menu = 'mainmenu'; } else { $menu = $cfg['menu']; }
 		if (!isset($cfg['show_home'])) { $cfg['show_home'] = 1; }
 
-		$sql         = "SELECT NSLeft, NSRight, NSLevel FROM cms_menu WHERE id = $menuid";
+		$sql         = "SELECT NSLeft, NSRight, NSLevel FROM cms_menu WHERE id = '$menuid'";
 		$result      = $inDB->query($sql);
 		$currentmenu = $inDB->fetch_assoc($result);
 
@@ -31,9 +31,10 @@
         
 		while ($row = $inDB->fetch_assoc($rs_rows)){
 			if ($row['menu'] == $menu){
-                $item               = $row;
-                $item['url']        = $inCore->menuSeoLink($row['link'], $row['linktype'], $row['id']);
-                $items[]            = $item;
+                $item             = $row;
+                $item['url']      = $inCore->menuSeoLink($row['link'], $row['linktype'], $row['id']);
+				$item['is_allow'] = $inCore->checkContentAccess($item['access_list']);
+                $items[]          = $item;
             }
         }
 
@@ -47,7 +48,6 @@
         $smarty->assign('last_level', -1);
         $smarty->assign('hide_parent', 0);
         $smarty->assign('user_id', $inUser->id);
-        $smarty->assign('user_group', $inUser->group_id);
         $smarty->assign('is_admin', $inUser->is_admin);
         $smarty->assign('root_id', $root_id);
         $smarty->assign('cfg', $cfg);

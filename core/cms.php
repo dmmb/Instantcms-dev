@@ -1042,11 +1042,11 @@ class cmsCore {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * Проверяет доступ модуля к группе пользователя
+     * Проверяет доступ (модуля, меню) к группе пользователя
      * @param string $access_list
      * @return bool
      */
-    public function getModuleAccess($access_list){
+    public function checkContentAccess($access_list){
 		
 		$inUser = cmsUser::getInstance();
 		
@@ -2137,46 +2137,29 @@ class cmsCore {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * Проверяет доступ группы пользователей к пункту меню
-     * @param int $menuid
-     * @param int $groupid
-     * @return bool
-     */
-    public function isMenuAccess($menuid, $groupid=-1){
-
-        if (!$this->menu_item) { $this->menu_item = $this->getMenuItem($menuid); }
-
-        $allow = $this->menu_item['allow_group'];
-
-        if ($allow == -1 || $menuid==0 || $allow == $groupid){
-            return true;
-        } else {
-            return false;
-        }
-        
-    }
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Определяет группу текущего пользователя и перетирает содержание страницы
+     * Перетирает содержание страницы
      * в случае остутствия у группы доступа к текущему пункту меню
      */
     public function checkMenuAccess(){
-        $inPage = cmsPage::getInstance();
-        $inUser = cmsUser::getInstance();
-        global $menuid;
-        $group_id = $inUser->group_id;
-        if ($menuid!=0){
-            if(!$this->isMenuAccess($menuid, $group_id)){
-                if (!$inUser->id){
-                    $inPage->page_body = '<p>Доступ запрещен</p>';
-                } else {
-                    if (!$inUser->is_admin){
-                        $inPage->page_body = '<p>Доступ запрещен</p>';
-                    }
-                }
-            }
-        }
+
+		$inPage = cmsPage::getInstance();
+
+		global $menuid;
+
+		if (!$this->menu_item) { $this->menu_item = $this->getMenuItem($menuid); }
+		
+		$access_list = $this->menu_item['access_list'];
+
+		if (!$this->checkContentAccess($access_list) && $menuid != 0) { 
+
+			$inPage->page_body = '<p>Доступ запрещен</p>';
+
+		} else {
+
+			return true;
+
+		}
+
     }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

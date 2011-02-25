@@ -465,7 +465,7 @@ public function countModules($position){
     while($mod = $inDB->fetch_assoc($result)){
 
 		// Проверяем права доступа
-		if (!$inCore->getModuleAccess($mod['access_list'])) { continue; }
+		if (!$inCore->checkContentAccess($mod['access_list'])) { continue; }
 		$mods[] = $mod;
 		
 	}
@@ -514,7 +514,7 @@ public function printModules($position){
         while ($mod = $inDB->fetch_assoc($result)){
 			
 			// Проверяем права доступа
-			if (!$inCore->getModuleAccess($mod['access_list'])) { continue; }
+			if (!$inCore->checkContentAccess($mod['access_list'])) { continue; }
             
             $modulefile = PATH.'/modules/'.$mod['content'].'/module.php';
 
