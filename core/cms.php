@@ -786,12 +786,12 @@ class cmsCore {
         $install_query  = "INSERT INTO cms_modules (`position`, `name`, `title`, `is_external`,
                                                     `content`, `ordering`, `showtitle`, `published`,
                                                     `user`, `config`, `original`, `css_prefix`,
-                                                    `allow_group`, `cache`, `cachetime`, `cacheint`,
+                                                    `access_list`, `cache`, `cachetime`, `cacheint`,
                                                     `template`, `is_strict_bind`, `version`)
                 VALUES ('{$module['position']}', '{$module['name']}', '{$module['title']}', '1',
                         '{$module['link']}', '1', '1', '1',
                         '0', '{$config_yaml}', '1', '',
-                        '-1', '0', '1', 'HOUR',
+                        '', '0', '1', 'HOUR',
                         'module.tpl', '0', '{$module['version']}')";
 
         $inDB->query($install_query);

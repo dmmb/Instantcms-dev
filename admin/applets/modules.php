@@ -495,7 +495,7 @@ function applet_modules(){
 			$sql = "INSERT INTO cms_modules (position, name, title, is_external,
                                              content, ordering, showtitle, published,
                                              original, user, config, css_prefix, template,
-                                             allow_group, is_strict_bind,
+                                             access_list, is_strict_bind,
                                              cache, cachetime, cacheint)
 					VALUES (
 							'{$position}',
@@ -511,7 +511,7 @@ function applet_modules(){
 							'{$original['config']}',
 							'$css_prefix',
                             '{$template}',
-                            '{$allow_group}',
+                            '{$access_list}',
                             '{$is_strict_bind}', 
                             0, 24, 'HOUR'
                             )";
