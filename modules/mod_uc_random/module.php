@@ -9,9 +9,11 @@
 /*********************************************************************************************/
 
 	function mod_uc_random($module_id){
+
         $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
-		$cfg = $inCore->loadModuleConfig($module_id);
+        $inDB   = cmsDatabase::getInstance();
+
+		$cfg    = $inCore->loadModuleConfig($module_id);
 
 		if ($cfg['cat_id']>0){
 
@@ -31,7 +33,7 @@
 		$sql = "SELECT i.*, c.title as category, c.view_type as viewtype
 				FROM cms_uc_items i
 				LEFT JOIN cms_uc_cats c ON c.id = i.category_id
-				WHERE i.imageurl != '' AND i.published = 1 ".$catsql."
+				WHERE i.published = 1 ".$catsql."
 				ORDER BY RAND()
 				LIMIT ".$cfg['count'];
 		
@@ -47,7 +49,7 @@
 					$item['imageurl'] = 'nopic';
 				} elseif (!file_exists(PATH.'/images/catalog/small/'.$item['imageurl'].'.jpg')) {
 					$item['imageurl'] = 'nopic';
-					}
+				}
 						
 				if ($item['viewtype']=='shop'){
 					$item['price'] = number_format($item['price'], 2, '.', ' ');

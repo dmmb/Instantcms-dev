@@ -1046,7 +1046,7 @@ class cmsCore {
      * @param string $access_list
      * @return bool
      */
-    public function getAccessModule($access_list){
+    public function getModuleAccess($access_list){
 		
 		$inUser = cmsUser::getInstance();
 		

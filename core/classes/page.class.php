@@ -277,7 +277,7 @@ public function addPathway($title, $link=''){
     //Проверяем, есть ли уже в глубиномере такое звено
     $already = false;
     foreach($this->pathway as $key => $val){
-        if ($this->pathway[$key]['title'] == $title && $this->pathway[$key]['link'] == $link){
+        if ($this->pathway[$key]['link'] == $link){
             $already = true;
         }
     }
@@ -299,7 +299,7 @@ public function addMenuPathway($menuid){
     $inDB   = cmsDatabase::getInstance();
 
     //Получаем путь к пункту меню
-    $rs_item = $inDB->query("SELECT * FROM cms_menu WHERE id = $menuid");
+    $rs_item = $inDB->query("SELECT NSLeft, NSRight FROM cms_menu WHERE id = '$menuid'");
 
     if ($inDB->num_rows($rs_item)){
         $current_item   = $inDB->fetch_assoc($rs_item);
@@ -465,7 +465,7 @@ public function countModules($position){
     while($mod = $inDB->fetch_assoc($result)){
 
 		// Проверяем права доступа
-		if (!$inCore->getAccessModule($mod['access_list'])) { continue; }
+		if (!$inCore->getModuleAccess($mod['access_list'])) { continue; }
 		$mods[] = $mod;
 		
 	}
@@ -514,7 +514,7 @@ public function printModules($position){
         while ($mod = $inDB->fetch_assoc($result)){
 			
 			// Проверяем права доступа
-			if (!$inCore->getAccessModule($mod['access_list'])) { continue; }
+			if (!$inCore->getModuleAccess($mod['access_list'])) { continue; }
             
             $modulefile = PATH.'/modules/'.$mod['content'].'/module.php';
 
@@ -988,7 +988,7 @@ public static function getPagebar($total, $page, $perpage, $link, $params=array(
 
     global $_LANG;
 
-    $html = '<div class="pagebar">';
+    $html  = '<div class="pagebar">';
     $html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
 
     $total_pages = ceil($total / $perpage);

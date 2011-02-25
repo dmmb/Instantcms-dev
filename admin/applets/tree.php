@@ -56,9 +56,9 @@ function applet_tree(){
 
         $title_part     = $inCore->request('title', 'str', '');
 
-        $def_order  = $category_id ? 'con.ordering' : 'title';
+        $def_order  = $category_id ? 'con.ordering' : 'pubdate';
         $orderby    = $inCore->request('orderby', 'str', $def_order);
-        $orderto    = $inCore->request('orderto', 'str', 'asc');
+        $orderto    = $inCore->request('orderto', 'str', 'desc');
         $page       = $inCore->request('page', 'int', 1);
         $perpage    = 20;
 
