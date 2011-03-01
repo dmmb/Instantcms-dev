@@ -852,7 +852,7 @@ function applet_menu(){
                                 if ($groups){
 									foreach($groups as $group){
                                         echo '<option value="'.$group['id'].'"';
-                                        if ($do=='edit'){
+                                        if ($do=='edit' && $mod['access_list']){
                                             if (inArray($access_list, $group['id'])){
                                                 echo 'selected';
                                             }
