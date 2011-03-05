@@ -482,7 +482,7 @@ if ($do=='thread'){
 		
 			$psql = "SELECT p.*, u.id as uid, u.nickname author, u.login author_login, u.is_deleted deleted, up.imageurl imageurl, up.signature signature
 					 FROM cms_forum_posts p
-					 INNER JOIN cms_users u ON u.id = p.user_id
+					 LEFT JOIN cms_users u ON u.id = p.user_id
 					 LEFT JOIN cms_user_profiles up ON up.user_id = u.id
 					 WHERE p.thread_id = $id 
 					 ORDER BY p.pubdate ASC
