@@ -103,6 +103,7 @@ if ($do=='club'){
 
 	$club   = $model->getClub($id);
 	if(!$club){	cmsCore::error404(); }
+	$club = cmsCore::callEvent('GET_SINGLE_CLUB', $club);
     
     //TITLES
     $pagetitle = $club['title'];

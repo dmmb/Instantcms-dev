@@ -287,6 +287,8 @@ if($do=='viewphoto'){
 
 		if (!$photo['published']) { echo '<div class="con_heading">'.$_LANG['WAIT_MODERING'].'</div>'; return; }
 		
+		$photo = cmsCore::callEvent('GET_PHOTO', $photo);
+		
         $can_view = true;
 		if (strstr($photo['NSDiffer'],'club')){
             $owner = 'club';
