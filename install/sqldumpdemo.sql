@@ -1166,7 +1166,7 @@ CREATE TABLE `#__search` (
   `id` int(11) NOT NULL,
   `session_id` varchar(100) NOT NULL,
   `title` varchar(250) NOT NULL,
-  `link` varchar(100) NOT NULL,
+  `link` varchar(200) NOT NULL,
   `place` varchar(100) NOT NULL,
   `placelink` varchar(100) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
