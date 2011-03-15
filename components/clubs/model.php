@@ -203,4 +203,82 @@ class cms_model_clubs{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
+    public function hasUserClub(){
+		
+		$inUser = cmsUser::getInstance();
+		
+		$is_has_club = $inUser->id ? $this->inDB->get_fields('cms_clubs', "admin_id = '{$inUser->id}'", 'id, create_karma', 'id DESC') : true;
+
+        return $is_has_club;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function canCreate($cfg, $is_mes = false){
+
+		global $_LANG;
+
+		$inUser = cmsUser::getInstance();
+		
+		// неавторизованные не могут создавать клубы
+		if (!$inUser->id) { return false; }
+		// администраторы могут создавать клубы
+		if ($inUser->is_admin) { return true; }
+		
+		$is_has_club = $this->hasUserClub();
+
+		$u_karma = cmsUser::getKarma($inUser->id);
+
+		// клуб можно создавать каждые $cfg['every_karma']
+		if ($is_has_club) {
+			if (!$cfg['every_karma']) {
+				
+				cmsCore::addSessionMessage($_LANG['USER_HAS_ONE_CLUB'], 'error');
+				return false;
+			
+			}
+			if ($cfg['every_karma'] && ($is_has_club['create_karma'] + $cfg['every_karma']) > $u_karma) {
+
+				$message = $_LANG['USER_HAS_CLUB'];
+				$message = str_replace('%create_karma%', $is_has_club['create_karma'], $message);
+				$message = str_replace('%every_karma%', $cfg['every_karma'], $message);
+				$message = str_replace('%karma%', $u_karma, $message);
+				$message = str_replace('%new_karma%', ($is_has_club['create_karma']+$cfg['every_karma']), $message);
+
+				cmsCore::addSessionMessage($message, 'error');
+				return false;
+			
+			}
+		}
+
+		if($cfg['cancreate'] && $u_karma >= $cfg['create_min_karma'] && $inUser->rating >= $cfg['create_min_rating']){
+			
+			return true;
+
+		} elseif($is_mes) {
+			
+			if($u_karma < $cfg['create_min_karma']){
+				$message = $_LANG['NEED_KARMA_TEXT_ACCESS'];
+				$message = str_replace('%karma%', $u_karma, $message);
+				$message = str_replace('%min_karma%', $cfg['create_min_karma'], $message);
+				cmsCore::addSessionMessage($message, 'error');
+			}
+			if($inUser->rating < $cfg['create_min_rating']){
+				$message = $_LANG['NEED_RATING_TEXT_ACCESS'];
+				$message = str_replace('%rating%', $inUser->rating, $message);
+				$message = str_replace('%min_rating%', $cfg['create_min_rating'], $message);
+				cmsCore::addSessionMessage($message, 'error');
+			}
+			
+		}
+		
+        return false;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
 }

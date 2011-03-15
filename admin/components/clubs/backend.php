@@ -34,6 +34,7 @@ function usersClubByID($id){
     if(!isset($cfg['notify_in'])) { $cfg['notify_in'] = 1; }
     if(!isset($cfg['notify_out'])) { $cfg['notify_out'] = 1; }
 	if(!isset($cfg['seo_club'])) { $cfg['seo_club'] = 'title'; }
+	if(!isset($cfg['every_karma'])) { $cfg['every_karma'] = 100; }
 
 if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; }
 
@@ -101,6 +102,7 @@ if($opt=='saveconfig'){
     $cfg['create_min_rating']   = $inCore->request('create_min_rating', 'int');
     $cfg['notify_in']       = $inCore->request('notify_in', 'int');
     $cfg['notify_out']      = $inCore->request('notify_out', 'int');
+	$cfg['every_karma']     = $inCore->request('every_karma', 'int', 100);
 
     $inCore->saveComponentConfig('clubs', $cfg);
 
@@ -612,6 +614,11 @@ if ($opt=='config') {
             <td valign="top">
                 <input name="cancreate" type="radio" value="1"  <?php if (@$cfg['cancreate']) { echo 'checked="checked"'; } ?> />Да
             <input name="cancreate" type="radio" value="0"  <?php if (@!$cfg['cancreate']) { echo 'checked="checked"'; } ?> /> Нет			</td>
+        </tr>
+        <tr>
+            <td><strong>Шаг кармы для создания нового клуба:</strong><br />
+            <span class="hinttext">0 - можно создавать только один клуб</span></td>
+            <td valign="top"><input name="every_karma" type="text" id="every_karma" style="width:300px" value="<?php echo @$cfg['every_karma'];?>"/></td>
         </tr>
         <tr>
             <td><strong>Ограничение по карме на создание клубов:</strong><br />

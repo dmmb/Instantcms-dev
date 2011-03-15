@@ -1334,7 +1334,7 @@ class cmsUser {
         $inDB = cmsDatabase::getInstance();
         $gender_img = '/components/users/images/male.png';
         if (!$gender){
-            $user = $inDB->get_field('cms_user_profiles', 'user_id='.$user_id, 'gender');
+            $user = $inDB->get_field('cms_user_profiles', "user_id = '$user_id'", 'gender');
         }
         if ($gender){
             switch($gender){
@@ -1344,7 +1344,7 @@ class cmsUser {
             }
         }
         if (!$nickname || !$login){
-            $user       = $inDB->get_fields('cms_users', 'id='.$user_id, 'nickname, login');
+            $user       = $inDB->get_fields('cms_users', "id = '$user_id'", 'nickname, login');
             $nickname   = $user['nickname'];
             $login      = $user['login'];
         }

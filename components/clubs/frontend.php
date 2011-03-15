@@ -48,6 +48,7 @@ function clubs(){
 	if(!isset($cfg['perpage'])) { $cfg['perpage'] = 10; }
     if(!isset($cfg['notify_in'])) { $cfg['notify_in'] = 1; }
     if(!isset($cfg['notify_out'])) { $cfg['notify_out'] = 1; }
+	if(!isset($cfg['every_karma'])) { $cfg['every_karma'] = 100; }
 	
     //Определяем адрес для редиректа назад
     $back   = $inCore->getBackURL();
@@ -60,8 +61,6 @@ function clubs(){
 
 ////////// VIEW ALL CLUBS ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){
-
-	$user_id    = $inUser->id;
 
 	//PAGINATION
     $perpage    = isset($cfg['perpage']) ? $cfg['perpage'] : 10;
@@ -85,12 +84,11 @@ if ($do=='view'){
         $pagination = cmsPage::getPagebar($total, $page, $perpage, '/clubs/page-%page%', array());
 	}
 
-	$can_create = $user_id ? $user_id && ( $inUser->is_admin || ($cfg['cancreate'] && !$inDB->get_field('cms_clubs', 'admin_id='.$user_id, 'id') && cmsUser::getKarma($user_id)>=$cfg['create_min_karma'] && $inUser->rating >= $cfg['create_min_rating'])): false;
-
 	$smarty = $inCore->initSmarty('components', 'com_clubs_view.tpl');
 	$smarty->assign('pagetitle', $pagetitle);
 	$smarty->assign('clubid', $id);
-	$smarty->assign('can_create', $can_create);
+	// Ссылку на создание клуба показываем всем авторизованным
+	$smarty->assign('can_create', $inUser->id);
 	$smarty->assign('clubs', $clubs);
 	$smarty->assign('total', $total);
 	$smarty->assign('pagination', $pagination);
@@ -199,16 +197,14 @@ if ($do=='club'){
 if ($do == 'create'){
 
 	$inPage->backButton(false);
+	
+	if (!$inUser->id){ cmsUser::goToLogin(); }
 
-    $user_id = $inUser->id;
+    $can_create = $model->canCreate($cfg, true);
 
-	if (!$user_id){ return; }
+    if (!$can_create){ $inCore->redirectBack(); }
 
     $inPage->addPathway($_LANG['CREATE_CLUB']);
-
-    $can_create = $user_id && ( $inUser->is_admin || ($cfg['cancreate'] && !$inDB->get_field('cms_clubs', 'admin_id='.$user_id, 'id') && cmsUser::getKarma($user_id)>=$cfg['create_min_karma'] && $inUser->rating>=$cfg['create_min_rating']));
-
-    if (!$can_create){ $inCore->redirect('/'); }
 
     if ( !$inCore->inRequest('create') ){
         $inPage->setTitle($_LANG['CREATE_CLUB']);
@@ -239,7 +235,7 @@ if ($do == 'create'){
         }
 
         if(!$errors){
-            $created_id = $model->addClub(array('user_id'=>$user_id, 'title'=>$title, 'clubtype'=>$clubtype));
+            $created_id = $model->addClub(array('user_id'=>$inUser->id, 'title'=>$title, 'clubtype'=>$clubtype));
             if($created_id){ setClubRating($created_id); }
 			//регистрируем событие
 			cmsActions::log('add_club', array(

@@ -148,6 +148,13 @@
     }
 // ========================================================================== //
 // ========================================================================== //
+    if ($inDB->isFieldExists('cms_clubs', 'create_karma')){
+        $inDB->query("ALTER TABLE `cms_clubs` ADD `create_karma` INT( 11 ) NOT NULL AFTER `join_karma_limit`");
+        echo '<p>Поле <strong>create_karma</strong> добавлено в таблицу <strong>cms_clubs</strong></p>';
+		$is_was_migrate = true;
+    }	
+// ========================================================================== //
+// ========================================================================== //
 	if ($is_was_migrate) {
 	    echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Миграция завершена. Удалите папку /migrate/ прежде чем продолжить!</div>';
 	} else {
