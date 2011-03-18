@@ -920,8 +920,8 @@ class bbcode {
                 "'([^\w\d-\.])([\w\d-\.]+@[\w\d-\.]+\.[\w]+[^.,;\s<\"\'\)]+)'si"
             );
         $replace = array(
-                '$1<a href="$2" target="_blank">$2</a>',
-                '$1<a href="http://$2" target="_blank">$2</a>',
+                '$1<a href="/go/url=$2" target="_blank">$2</a>',
+                '$1<a href="/go/url=http://$2" target="_blank">$2</a>',
                 '$1<a href="mailto:$2">$2</a>'
             );
         $text = preg_replace($search, $replace, $text);
@@ -1167,8 +1167,8 @@ class bbcode {
             }
         }
         $protocols = array(
-                'http://','https://','ftp://','file://','#','/','?','./','../'
-            );
+            'http://','https://','ftp://','file://','#','/','?','./','../'
+        );
         $is_http = false;
         foreach ($protocols as $val) {
             if ($val==substr($href,0,strlen($val))) {
@@ -1178,15 +1178,13 @@ class bbcode {
         }
         if (! $is_http) { $href = 'http://'.$href; }
         if ($href) {
-            if (preg_match('/^http:\/\/'.$_SERVER['HTTP_HOST'].'/', $href)){
+            if (preg_match('/^http:\/\/'.$_SERVER['HTTP_HOST'].'/', $href) || substr($href,0,1)=='/'){
                 $url = $href;
                 $local = true;
-            } elseif (!strstr($href, '?')) {
+            } else {
                 $url = '/go/url='.htmlspecialchars($href);
                 $local = false;
-            } else {
-				$url = $href;
-			}
+            }
             $attr .= ' href="'.$url.'"';
         }
         $title = isset($elem['attrib']['title']) ? $elem['attrib']['title'] : '';

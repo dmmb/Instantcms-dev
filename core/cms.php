@@ -1445,7 +1445,8 @@ class cmsCore {
      */
     private function detectURI(){
 
-        $uri    = $this->request('uri', 'str', '');
+        $uri    = $_SERVER['REQUEST_URI']; //$this->request('uri', 'str', '');
+        $uri    = ltrim($uri, '/');
         $rules  = array();
 
         //специальный хак для поиска по сайту, для совместимости со старыми шаблонами
@@ -3424,7 +3425,7 @@ class cmsCore {
         if (!$parse_bbcode){
             //convert URLs to links
             $text = ereg_replace("/(?<!http:\\/\\/)(www)(\\S+)/si",'http://www\\2', $text);
-            $text = ereg_replace("/(http:\\/\\/)(\\S+)/si",'<a href="http://\\2" target=_new>http://\\2</a>',$text);
+            $text = ereg_replace("/(http:\\/\\/)(\\S+)/si",'<a href="/go/url=http://\\2" target=_blank>http://\\2</a>',$text);
         } else {
             //parse bbcode
             include_once PATH.'/includes/bbcode/bbcode.lib.php';
