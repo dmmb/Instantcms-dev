@@ -41,6 +41,8 @@ if (!isset($cfg['inv_count'])) { $cfg['inv_count'] = 5; }
 if (!isset($cfg['inv_karma'])) { $cfg['inv_karma'] = 50; }
 if (!isset($cfg['inv_period'])) { $cfg['inv_period'] = 'WEEK'; }
 
+if (!isset($cfg['default_gid'])) { $cfg['default_gid'] = 1; }
+
 if (!isset($cfg['is_on'])) { $cfg['is_on'] = 1; }
 if (!isset($cfg['auth_redirect'])) { $cfg['auth_redirect'] = 'none'; }
 if (!isset($cfg['name_mode'])) { $cfg['name_mode'] = 'nickname'; }
@@ -60,6 +62,8 @@ if($opt=='saveconfig'){
     $cfg['inv_count']   = $inCore->request('inv_count', 'int');
     $cfg['inv_karma']   = $inCore->request('inv_karma', 'int');
     $cfg['inv_period']  = $inCore->request('inv_period', 'str');
+
+    $cfg['default_gid'] = $inCore->request('default_gid', 'int');
 
     $cfg['is_on']       = $inCore->request('is_on', 'int');
     $cfg['act']         = $inCore->request('act', 'int');
@@ -195,6 +199,17 @@ if ($msg) { echo '<p class="success">'.$msg.'</p>'; cmsUser::sessionDel('reg_msg
             <tr>
                 <td><strong>Письмо с инструкцией по активации:</strong> </td>
                 <td><a href="/includes/letters/activation.txt">/includes/letters/activation.txt</a></td>
+            </tr>
+            <tr>
+                <td><strong>Группа пользователей по-умолчанию:</strong></td>
+                <td>
+                    <?php $groups = cmsUser::getGroups(true); ?>
+                    <select name="default_gid" id="default_gid" style="width:300px">
+                        <?php foreach($groups as $group){ ?>
+                        <option value="<?php echo $group['id']; ?>" <?php if ($cfg['default_gid']==$group['id']){ ?>selected="selected"<?php } ?>><?php echo $group['title']; ?></option>
+                        <?php } ?>
+                    </select>
+                </td>
             </tr>
             <tr>
                 <td><strong>После первой авторизации на сайте:</strong></td>

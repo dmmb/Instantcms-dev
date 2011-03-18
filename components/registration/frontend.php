@@ -220,8 +220,10 @@ function registration(){
                         $invited_by = 0;
                     }
 
-                    $sql = "INSERT INTO cms_users (login, nickname, password, email, icq, regdate, logdate, birthdate, is_locked, invited_by)
-                            VALUES ('$login', '$nickname', '$pass', '$email', '$icq', NOW(), NOW(), '$birthdate', '$is_locked', '{$invited_by}')";
+                    $group_id = $cfg['default_gid'] ? $cfg['default_gid'] : 1;
+
+                    $sql = "INSERT INTO cms_users (group_id, login, nickname, password, email, icq, regdate, logdate, birthdate, is_locked, invited_by)
+                            VALUES ('$group_id', '$login', '$nickname', '$pass', '$email', '$icq', NOW(), NOW(), '$birthdate', '$is_locked', '{$invited_by}')";
                     $inDB->query($sql) ;
 
                     $new_user_id = dbLastId('cms_users');
