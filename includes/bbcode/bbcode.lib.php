@@ -1181,10 +1181,12 @@ class bbcode {
             if (preg_match('/^http:\/\/'.$_SERVER['HTTP_HOST'].'/', $href)){
                 $url = $href;
                 $local = true;
-            } else {
-                $url = '/go/url='.htmlspecialchars($this->process_url($href));
+            } elseif (!strstr($href, '?')) {
+                $url = '/go/url='.htmlspecialchars($href);
                 $local = false;
-            }
+            } else {
+				$url = $href;
+			}
             $attr .= ' href="'.$url.'"';
         }
         $title = isset($elem['attrib']['title']) ? $elem['attrib']['title'] : '';
@@ -1199,9 +1201,6 @@ class bbcode {
         return '<a'.$attr.'>'.$this -> get_html($elem['val']).'</a>';
     }
 
-  private function process_url($href){
-  	return str_replace('?', '--q--', $href);
-  }
 }
 
 ?>

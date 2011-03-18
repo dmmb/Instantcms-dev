@@ -163,4 +163,7 @@ $_LANG['NOT_NEW_MESS']               ='Нет новых сообщений';
 $_LANG['HITS']                       ='Просмотров';
 $_LANG['REPLIES']                    ='Ответов';
 $_LANG['NOT_THREADS_IN_FORUM']       ='Нет тем в этом форуме';
+
+$_LANG['TOPIC_FIXED_LABEL']          ='Проблема решена, закрыть тему';
+$_LANG['TOPIC_FIXED_PREFIX']         ='[РЕШЕНО]';
 ?>

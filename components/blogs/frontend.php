@@ -886,7 +886,7 @@ if ($do=='newcat' || $do=='editcat'){
 
     //Проверяем что пользователь является хозяином или модератором блога
 	if ($owner=='user') { 		
-		$myblog = $blog['user_id'] == $user_id;
+		$myblog = ($blog['user_id']==$user_id) || $inUser->is_admin;
 	}
     if ($owner=='club'){
 		$myblog = clubUserIsRole($blog['user_id'], $user_id, 'moderator') || clubUserIsAdmin($blog['user_id'], $user_id) || $inUser->is_admin;

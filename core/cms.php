@@ -599,6 +599,22 @@ class cmsCore {
         //если компонент не был установлен, выходим
         if (!$component_id) { return false; }
 
+        //определяем название компонента по id
+        $component = $this->getComponentById($component_id);
+
+        //удаляем зависимые модули компонента
+        if ($this->loadComponentInstaller($component)){
+            $_component = call_user_func('info_component_'.$component);
+            if (isset($_component['modules'])){
+                if (is_array($_component['modules'])){
+                    foreach($_component['modules'] as $module=>$title){
+                        $module_id = $this->getModuleId($module);
+                        if ($module_id) { $this->removeModule($module_id); }
+                    }
+                }
+            }
+        }
+
         //удаляем компонент из базы, но только если он не системный
         $delete_query  = "DELETE FROM cms_components WHERE id = {$component_id} AND system = 0";
 
@@ -2511,26 +2527,6 @@ class cmsCore {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * Возвращает элементы <option> для списка баннерных позиций
-     * @param int $selected
-     * @return html
-     */
-    public function bannersList($selected=0){
-        $html = '';
-        for($bp=1; $bp<=10; $bp++){
-            if (@$selected==$bp){
-                $s = 'selected';
-            } else {
-                $s = '';
-            }
-            $html .= '<option value="banner'.$bp.'" '.$s.'>banner'.$bp.'</option>'."\n";
-        }
-        return $html;
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /**
      * Возвращает элементы <option> для списка типов доски объявлений
      * @param int $selected
      * @return html
@@ -2804,7 +2800,13 @@ class cmsCore {
      * @return bool
      */
     public function isComponentInstalled($component){
-        return (file_exists(PATH.'/components/'.$component.'/frontend.php'));
+        $inDB = cmsDatabase::getInstance();
+        return (bool)$inDB->rows_count('cms_components', "link='{$component}'", 1);
+    }
+
+    public function isModuleInstalled($module) {
+        $inDB = cmsDatabase::getInstance();
+        return (bool)$inDB->rows_count('cms_modules', "content='{$module}' AND user=0", 1);
     }
 
     // DATE METHODS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3558,14 +3560,16 @@ class cmsCore {
      * @return html
      */
     public function getBanner($position){
+
+        if (!$this->isComponentInstalled('banners')) { return false; }
+
         $inDB = cmsDatabase::getInstance();
         $html = '';
 
-        //get active banners with enough hits
         $sql = "SELECT *
                 FROM cms_banners
                 WHERE position = '$position' AND published = 1 AND ((maxhits > hits) OR (maxhits = 0))
-                ORDER BY hits ASC
+                ORDER BY RAND() ASC
                 LIMIT 1";
         $rs = $inDB->query($sql);
 

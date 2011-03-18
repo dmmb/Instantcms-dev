@@ -641,7 +641,12 @@ if ($do=='thread'){
 							echo '<div class="forum_fast_form">';
 								echo '<form action="/forum/reply'.$id.'.html" method="post">';
 									echo '<textarea id="message" name="message" rows="5"></textarea>';
-									echo '<div class="forum_fast_submit"><input type="submit" name="gosend" value="'.$_LANG['SEND'].'"/></div>';
+									echo '<div class="forum_fast_submit" style="float:right;padding:5px;"><input type="submit" name="gosend" value="'.$_LANG['SEND'].'"/></div>';
+                                    if ($mythread || $is_admin){
+                                        echo '<div style="float:right;padding:8px;">
+                                                <label><input type="checkbox" name="fixed" value="1" /> '.$_LANG['TOPIC_FIXED_LABEL'].'</label>
+                                              </div>';
+                                    }
 								echo '</form>';
 							echo '</div>';
 						} else {
@@ -682,6 +687,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 					echo '<div style="margin-bottom:10px">
 							<strong>'.$_LANG['THREAD'].': </strong><a href="/forum/thread'.$t['id'].'.html">'.$t['title'].'</a>
 						  </div>';
+                    $is_topic_starter = ($t['user_id'] == $inUser->id);
 				} else {
 					die($_LANG['THREAD_NOT_FOUND']);
 				}
@@ -759,8 +765,12 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 					}
 
 					if (($do=='newpost' && !cmsUser::isSubscribed($inUser->id, 'forum', @$id)) || ($do=='newthread')){
-						echo '<div style="margin-top:16px;"><input name="subscribe" type="checkbox" value="1" /> '.$_LANG['SUBSCRIBE_THREAD'].'</div>';
+						echo '<div style="margin-top:16px;"><label><input name="subscribe" type="checkbox" value="1" /> '.$_LANG['SUBSCRIBE_THREAD'].'</label></div>';
 					}
+
+                    if ($do=='newpost' && ($inUser->is_admin || $is_topic_starter)){
+                        echo '<div style="margin-top:3px;margin-bottom:15px"><label><input name="fixed" type="checkbox" value="1" /> '.$_LANG['TOPIC_FIXED_LABEL'].'</label></div>';
+                    }
 					
 					echo '<div style="margin-top:6px;"><input type="submit" name="gosend" value="'.$_LANG['SEND'].'" style="font-size:18px"/> ';
 					echo '<input type="button" name="gosend" value="'.$_LANG['CANCEL'].'" style="font-size:18px" onclick="window.history.go(-1)"/></div>';
@@ -785,6 +795,15 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 						'user_id' => $inUser->id,
 						'message' => $message
 					));
+
+                $ts_id = $inDB->get_field('cms_forum_threads', "id='{$id}'", 'user_id');
+                $is_topic_starter = ($ts_id == $inUser->id);
+
+                $is_fixed = $inCore->request('fixed', 'int', 0);
+
+                if ($is_fixed && ($inUser->is_admin || $is_topic_starter)){
+                    $inDB->query("UPDATE cms_forum_threads SET title = CONCAT('{$_LANG['TOPIC_FIXED_PREFIX']} ', title), closed=1 WHERE id = $id");
+                }
 
 				cmsUser::checkAwards($inUser->id);
 
@@ -910,7 +929,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 						$inDB->query($sql) ;
 						$inCore->registerUploadImages(session_id(), $id, 'forum');						
 						if ($pages==1){
-						header('location:/forum/thread'.$msg['thread_id'].'.html');
+                            header('location:/forum/thread'.$msg['thread_id'].'.html');
 						} else {
 							header('location:/forum/thread'.$msg['thread_id'].'-'.$pages.'.html');
 						}					

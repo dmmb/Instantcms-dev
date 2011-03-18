@@ -609,25 +609,30 @@ class cmsPhoto {
      * @param str $description
      * @return bool
      */	
-	public function editAlbum($album_id, $title, $description, $parent_id,  $differ=''){
+	public function editAlbum($differ='', $album){
 		
-		if(!$album_id) { return false; }
+		if(!$album) { return false; }
 
 		$inCore = cmsCore::getInstance();
 
-		$old_parent = $this->inDB->get_field('cms_photo_albums', "id = '$album_id'", 'parent_id');
+		$old_parent = $this->inDB->get_field('cms_photo_albums', "id = '{$album['id']}'", 'parent_id');
 		
-		if ($parent_id && $old_parent != $parent_id){
+		if ($album['parent_id'] && $old_parent != $album['parent_id']){
 
 			$ns = $inCore->nestedSetsInit('cms_photo_albums');
-			$ns->MoveNode($album_id, $parent_id, -1, $differ);
+			$ns->MoveNode($album['id'], $album['parent_id'], -1, $differ);
 
 		}
-	
+
+		foreach($album as $field=>$value){
+			$set .= "{$field} = '{$value}',";
+		}
+
+		$set = rtrim($set, ',');
+
 		$sql = "UPDATE cms_photo_albums
-				SET title='$title',
-					description='$description'
-				WHERE id = '$album_id'";
+				SET {$set}
+				WHERE id = '{$album['id']}'";
 
 		$this->inDB->query($sql);
 

@@ -1006,57 +1006,19 @@ echo '<table width="100%" border="0" cellspacing="0" cellpadding="8" class="prop
 		echo '</td>';
 		echo '<td width="">';
 			echo '<select name="ins" id="ins" style="width:99%" onChange="showIns()">
-					<option value="material">ссылка на статью</option>
-					<option value="photo">ссылка на фотографию</option>
-					<option value="album">ссылка на фотоальбом</option>
-					<option value="price">ссылка на категорию прайса</option>
-					<option value="frm">форма для отправки</option>
+					<option value="frm" selected="selected">форма с заголовком</option>
 					<option value="blank">форма без заголовка</option>	
 					<option value="include">внешний скрипт</option>	
-					<option value="filelink">ссылка "Скачать файл"</option>
-					<option value="banpos">баннерная позиция</option>	
-					<option value="pagebreak">-- разрыв страницы --</option>
+					<option value="filelink">ссылка "Скачать файл"</option>';
+                    if ($inCore->isComponentInstalled('banners')){
+                        echo '<option value="banpos">баннерная позиция</option>';
+                    }
+		    echo   '<option value="pagebreak">-- разрыв страницы --</option>
 					<option value="pagetitle">-- новая страница --</option>
 				  </select>';
 		echo '</td>';
         echo '<td width="100">&nbsp;</td>';
 	echo '</tr>';
-	echo '<tr id="material">';
-		echo '<td width="120">
-                    <strong>Статья:</strong>
-              </td>';
-        echo '<td>
-                    <select name="m" style="width:99%">'.$inCore->getListItems('cms_content').'</select>
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
-	echo '<tr id="photo">';
-		echo '<td width="120">
-                    <strong>Фото:</strong>
-              </td>';
-        echo '<td>
-                    <select name="f" style="width:99%">'.$inCore->getListItems('cms_photo_files').'</select>
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
-	echo '<tr id="album">';
-		echo '<td width="120">
-                    <strong>Альбом:</strong>
-              </td>';
-        echo '<td>
-                    <select name="a" style="width:99%">'.$inCore->getListItemsNS('cms_photo_albums', 0, '',  '', 0, true).'</select>
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
-	echo '<tr id="price">';
-		echo '<td width="120">
-                    <strong>Категория::</strong>
-              </td>';
-        echo '<td>
-                    <select name="p" style="width:99%">'.$inCore->getListItems('cms_price_cats').'</select>
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
 	echo '<tr id="frm">';
 		echo '<td width="120">
                     <strong>Форма:</strong>
@@ -1068,7 +1030,7 @@ echo '<table width="100%" border="0" cellspacing="0" cellpadding="8" class="prop
     echo '</tr>';
 	echo '<tr id="blank">';
 		echo '<td width="120">
-                    <strong>Бланк:</strong>
+                    <strong>Форма:</strong>
               </td>';
         echo '<td>
                     <select name="b" style="width:99%">'.$inCore->getListItems('cms_forms').'</select>
@@ -1093,15 +1055,19 @@ echo '<table width="100%" border="0" cellspacing="0" cellpadding="8" class="prop
               </td>';
         echo '<td width="100">'.$submit_btn.'</td>';
     echo '</tr>';
-	echo '<tr id="banpos">';
-		echo '<td width="120">
-                    <strong>Позиция:</strong>
-              </td>';
-        echo '<td>
-                    <select name="ban" style="width:99%">'.$inCore->bannersList().'</select>
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
+    if ($inCore->isComponentInstalled('banners')){
+        $inCore->loadModel('banners');
+        $banners_model = new cms_model_banners();
+        echo '<tr id="banpos">';
+            echo '<td width="120">
+                        <strong>Позиция:</strong>
+                  </td>';
+            echo '<td>
+                        <select name="ban" style="width:99%">'.$banners_model->getBannersListHTML().'</select>
+                  </td>';
+            echo '<td width="100">'.$submit_btn.'</td>';
+        echo '</tr>';
+    }
 	echo '<tr id="pagebreak">';
 		echo '<td width="120">
                     <strong>Тег:</strong>

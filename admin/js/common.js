@@ -76,10 +76,6 @@ function pub(id, qs, qs2, action, action2){
 
 function showIns(){
 
-	document.getElementById('material').style.display = 'none';
-	document.getElementById('album').style.display = 'none';
-	document.getElementById('photo').style.display = 'none';
-	document.getElementById('price').style.display = 'none';
 	document.getElementById('blank').style.display = 'none';
 	document.getElementById('frm').style.display = 'none';
 	document.getElementById('filelink').style.display = 'none';

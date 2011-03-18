@@ -147,20 +147,8 @@
                          );
 
         $rules[] = array(
-                            'source'  => '/^content\/(.+).html$/i',
-                            'target'  => '/{1}.html',
-                            'action'  => 'redirect-301'
-                         );
-
-        $rules[] = array(
                             'source'  => '/^content\/(.+)\/page\-([0-9]+)$/i',
                             'target'  => '/{1}/page-{2}',
-                            'action'  => 'redirect-301'
-                         );
-
-        $rules[] = array(
-                            'source'  => '/^content\/(.+)$/i',
-                            'target'  => '/{1}',
                             'action'  => 'redirect-301'
                          );
 
@@ -171,14 +159,20 @@
                          );
 
         $rules[] = array(
-                            'source'  => '/^content\/([0-9]+)\/(.+)\/page\-([0-9]+).html$/i',
-                            'target'  => '/{2}/page-{3}.html',
+                            'source'  => '/^content\/([0-9]+)\/(.+)$/i',
+                            'target'  => '/{2}',
                             'action'  => 'redirect-301'
                          );
 
         $rules[] = array(
-                            'source'  => '/^content\/([0-9]+)\/(.+)$/i',
-                            'target'  => '/{2}',
+                            'source'  => '/^content\/(.+)$/i',
+                            'target'  => '/{1}',
+                            'action'  => 'redirect-301'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^content\/([0-9]+)\/(.+)\/page\-([0-9]+).html$/i',
+                            'target'  => '/{2}/page-{3}.html',
                             'action'  => 'redirect-301'
                          );
 

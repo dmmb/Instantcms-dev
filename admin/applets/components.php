@@ -119,9 +119,19 @@ function applet_components(){
                 $_component = call_user_func('info_component_'.$component);
 
                 $task_str   = ($task=='install') ? 'установлен' : 'обновлен';
-                echo '<div style="color:green;margin-top:12px;margin-bottom:5px;">
-                        Компонент <strong>"'.$_component['title'].'"</strong> успешно '.$task_str.'.
-                      </div>';
+                echo '<div style="color:green;margin-top:12px;margin-bottom:5px;">';
+                echo '<p>Компонент <strong>"'.$_component['title'].'"</strong> успешно '.$task_str.'.</p>';
+                if (isset($_component['modules'])){
+                    if(is_array($_component['modules'])){
+                        echo '<p>Дополнительно установлены модули:</p>';
+                        echo '<ul>';
+                            foreach($_component['modules'] as $module=>$title){
+                                echo '<li>'.$title.'</li>';
+                            }
+                        echo '</ul>';
+                    }
+                }
+                echo '</div>';
             }
 
             if ($task == 'remove'){

@@ -94,7 +94,9 @@ function shopUpdateCart($itemcounts){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
 	foreach($itemcounts as $id => $count){
-		$sql = "UPDATE cms_uc_cart SET itemscount = $count WHERE id = $id";
+        $id     = intval($id);
+        $count  = intval($count);
+		$sql = "UPDATE cms_uc_cart SET itemscount = '$count' WHERE id = '$id'";
 		$inDB->query($sql) ;
 	}
 	return true;
