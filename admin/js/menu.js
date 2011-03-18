@@ -1,3 +1,13 @@
+function checkAccesList(){
+
+	if(document.addform.is_public.checked){
+		$('select#allow_group').attr('disabled', 'disabled');
+	} else {
+		$('select#allow_group').attr('disabled', '');
+	}
+
+}
+
 function selectIcon(file){
 	document.addform.iconurl.value = file;
 	hideIcons();

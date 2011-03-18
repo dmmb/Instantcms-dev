@@ -54,10 +54,11 @@
 		$total	= $inDB->num_rows($result);
 
         if ($total){
+			$friends = array();
             while($friend = $inDB->fetch_assoc($result)){
                 $friend['avatar'] = ($cfg['view_type'] == 'table') ? usrLink(usrImageNOdb($friend['user_id'], 'small', $friend['imageurl'], $friend['is_deleted']), $friend['login']) : false;
                 $friend['user_link'] = cmsUser::getProfileLink($friend['login'], $friend['nickname']);
-                $friends[$friend['id']] = $friend;
+				$friends[$friend['user_id']] = $friend;
             }
         }
         

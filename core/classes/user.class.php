@@ -67,7 +67,7 @@ class cmsUser {
             $this->{$key}   = $value;
         }
 
-        if (!file_exists(PATH.'/images/users/avatars/small/'.$this->imageurl)){ $this->imageurl = 'nopic.jpg'; }
+        if (!file_exists(PATH.'/images/users/avatars/small/'.$this->imageurl) || !$this->imageurl){ $this->imageurl = 'nopic.jpg'; }
 
         $this->id = (int)$user_id;
 
@@ -1018,15 +1018,25 @@ class cmsUser {
      */
     public static function getOnlineCount(){
 
-        $inDB = cmsDatabase::getInstance();
-        $people = array();
+        $inDB   = cmsDatabase::getInstance();
 
-        $sql = "SELECT user_id, id FROM cms_online WHERE user_id = '0' OR user_id = ''";
+        $sql    = "SELECT user_id FROM cms_online";
         $result = $inDB->query($sql);
-        $people['guests'] = $inDB->num_rows($result);
-        $sql = "SELECT user_id, id FROM cms_online WHERE user_id > 0 GROUP BY user_id";
-        $result = $inDB->query($sql);
-        $people['users'] = $inDB->num_rows($result);
+
+		$guests = 0;
+
+		$online = array();
+
+        while($o = $inDB->fetch_assoc($result)){
+			if ($o['user_id'] == 0 || $o['user_id'] == ''){
+				$guests++;
+			} else {
+				$online[$o['user_id']][] = $o;	
+			}
+        }
+
+		$people['guests'] = $guests;
+		$people['users']  = sizeof($online);
 
         return $people;
 
@@ -1324,7 +1334,7 @@ class cmsUser {
         $inDB = cmsDatabase::getInstance();
         $gender_img = '/components/users/images/male.png';
         if (!$gender){
-            $user = $inDB->get_field('cms_user_profiles', 'user_id='.$user_id, 'gender');
+            $user = $inDB->get_field('cms_user_profiles', "user_id = '$user_id'", 'gender');
         }
         if ($gender){
             switch($gender){
@@ -1334,7 +1344,7 @@ class cmsUser {
             }
         }
         if (!$nickname || !$login){
-            $user       = $inDB->get_fields('cms_users', 'id='.$user_id, 'nickname, login');
+            $user       = $inDB->get_fields('cms_users', "id = '$user_id'", 'nickname, login');
             $nickname   = $user['nickname'];
             $login      = $user['login'];
         }

@@ -107,11 +107,14 @@ $_LANG['DELETE_PHOTO']              ='Удалить фотографию';
 $_LANG['DELETING_PHOTO']            ='Удаление фотографии';
 $_LANG['REALLY_DELETE_PHOTO']       ='Вы действительно желаете удалить фото';
 $_LANG['EDIT_PHOTO']                ='Редактировать фотографию';
+$_LANG['EDIT_ALBUM']                ='Редактировать альбом';
 $_LANG['PHOTO_SAVED']               ='Фотография успешно cохранена.';
 $_LANG['BACK_TO_PHOTOALBUM']        ='Вернуться к фотоальбому';
 
 $_LANG['PHOTO_TITLE']               ='Название фото';
 $_LANG['PHOTO_DESCRIPTION']         ='Описание фото';
+$_LANG['ALBUM_TITLE']               ='Название альбома';
+$_LANG['ALBUM_DESCRIPTION']         ='Описание альбома';
 $_LANG['TAGS']                      ='Теги';
 $_LANG['KEYWORDS']                  ='ключевые слова, через запятую';
 $_LANG['REPLACE_FILE']              ='Заменить файлом';

@@ -802,12 +802,12 @@ class cmsCore {
         $install_query  = "INSERT INTO cms_modules (`position`, `name`, `title`, `is_external`,
                                                     `content`, `ordering`, `showtitle`, `published`,
                                                     `user`, `config`, `original`, `css_prefix`,
-                                                    `allow_group`, `cache`, `cachetime`, `cacheint`,
+                                                    `access_list`, `cache`, `cachetime`, `cacheint`,
                                                     `template`, `is_strict_bind`, `version`)
                 VALUES ('{$module['position']}', '{$module['name']}', '{$module['title']}', '1',
                         '{$module['link']}', '1', '1', '1',
                         '0', '{$config_yaml}', '1', '',
-                        '-1', '0', '1', 'HOUR',
+                        '', '0', '1', 'HOUR',
                         'module.tpl', '0', '{$module['version']}')";
 
         $inDB->query($install_query);
@@ -1052,6 +1052,35 @@ class cmsCore {
         $this->includeFile('modules/'.$module.'/install.php');
 
         return true;
+
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Проверяет доступ (модуля, меню) к группе пользователя
+     * @param string $access_list
+     * @return bool
+     */
+    public function checkContentAccess($access_list){
+		
+		$inUser = cmsUser::getInstance();
+		
+		// если $access_list пуста, то считаем что доступ для всех
+		if (!$access_list) { return true; }
+
+		// администраторам всегда показываем модуль		
+		if ($inUser->is_admin) { return true; }
+
+        $access_list = $this->yamlToArray($access_list);
+
+		// если по каким-то причинам $access_list не массив, то считаем что доступ для всех
+		if (!is_array($access_list)) { return true; }
+		
+		// id группы текущего пользователя
+		$group_id = $inUser->group_id;
+		
+		return in_array($group_id, $access_list);
 
     }
 
@@ -2124,46 +2153,29 @@ class cmsCore {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * Проверяет доступ группы пользователей к пункту меню
-     * @param int $menuid
-     * @param int $groupid
-     * @return bool
-     */
-    public function isMenuAccess($menuid, $groupid=-1){
-
-        if (!$this->menu_item) { $this->menu_item = $this->getMenuItem($menuid); }
-
-        $allow = $this->menu_item['allow_group'];
-
-        if ($allow == -1 || $menuid==0 || $allow == $groupid){
-            return true;
-        } else {
-            return false;
-        }
-        
-    }
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Определяет группу текущего пользователя и перетирает содержание страницы
+     * Перетирает содержание страницы
      * в случае остутствия у группы доступа к текущему пункту меню
      */
-    public function сheckMenuAccess(){
-        $inPage = cmsPage::getInstance();
-        $inUser = cmsUser::getInstance();
-        global $menuid;
-        $group_id = $inUser->group_id;
-        if ($menuid!=0){
-            if(!$this->isMenuAccess($menuid, $group_id)){
-                if (!$inUser->id){
-                    $inPage->page_body = '<p>Доступ запрещен</p>';
-                } else {
-                    if (!$inUser->is_admin){
-                        $inPage->page_body = '<p>Доступ запрещен</p>';
-                    }
-                }
-            }
-        }
+    public function checkMenuAccess(){
+
+		$inPage = cmsPage::getInstance();
+
+		global $menuid;
+
+		if (!$this->menu_item) { $this->menu_item = $this->getMenuItem($menuid); }
+		
+		$access_list = $this->menu_item['access_list'];
+
+		if (!$this->checkContentAccess($access_list) && $menuid != 0) { 
+
+			$inPage->page_body = '<p>Доступ запрещен</p>';
+
+		} else {
+
+			return true;
+
+		}
+
     }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2902,6 +2914,34 @@ class cmsCore {
 		 return $result;
 	}
 
+    /**
+     * Возвращает день недели по дате
+     * @param string $date
+     * @return string
+     */
+    static function dateToWday($date){
+		
+        $inConf = cmsConfig::getInstance();
+
+	    global $_LANG;
+
+        $date = date('Y-m-d H:i:s', strtotime($date)+($inConf->timediff*3600));
+
+		// получаем значение даты и времени
+		list($day, $time)  = explode(' ', $date);
+		list($h, $min, $s) = explode(':', $time);
+		list($y, $m, $d)   = explode('-', $day);
+
+		$days_week = array($_LANG['SUNDAY'], $_LANG['MONDAY'], $_LANG['TUESDAY'], $_LANG['WEDNESDAY'], $_LANG['THURSDAY'], $_LANG['FRIDAY'], $_LANG['SATURDAY']);
+		
+		$arr  = getdate(mktime($h, $min, $s, $m, $d, $y));
+		
+		$wday = $days_week[$arr['wday']];
+        
+		return $wday;
+
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public function initAutoGrowText($element_id){
@@ -3593,7 +3633,7 @@ class cmsCore {
 
         $str    = trim($str);        
         $str    = mb_strtolower($str, 'cp1251');
-        $string = str_replace(' ', '-', $string);
+        $str    = str_replace(' ', '-', $str);
         $string = preg_replace ('/[^a-zA-Zа-яА-Я0-9\-]/i', '-', $str);
         $string = rtrim($string, '-');
 
@@ -3605,7 +3645,7 @@ class cmsCore {
                         'и'=>'i','й'=>'i','к'=>'k','л'=>'l','м'=>'m',
                         'н'=>'n','о'=>'o','п'=>'p','р'=>'r','с'=>'s',
                         'т'=>'t','у'=>'u','ф'=>'f','х'=>'h','ц'=>'c',
-                        'ч'=>'ch','ш'=>'sh','щ'=>'sh','ъ'=>'','ы'=>'y',
+                        'ч'=>'ch','ш'=>'sh','щ'=>'sch','ъ'=>'','ы'=>'y',
                         'ь'=>'','э'=>'ye','ю'=>'yu','я'=>'ja'
                       );
 
@@ -3617,7 +3657,7 @@ class cmsCore {
 
         return $string;
 
-}
+	}
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

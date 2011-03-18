@@ -204,7 +204,7 @@ function forumAttachedPoll($thread_id){
 					$html .= '<table class="forum_poll_answers">';
 					foreach($answers_title as $key=>$value){
 						  $html .= '<tr>';
-						  $html .= '<td><input name="answer" type="radio" value="'.$value.'"></td>';
+						  $html .= '<td><input name="answer" type="radio" value="'.htmlspecialchars($value).'"></td>';
 						  $html .= '<td class="mod_poll_answer">'.$value;
 						  $html .= '</td>';
 						  $html .= '</tr>';

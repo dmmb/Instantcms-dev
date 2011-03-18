@@ -27,14 +27,10 @@
     $inConf     = cmsConfig::getInstance();
     $inDB       = cmsDatabase::getInstance();
 
-    $steps_count = 6;
-
-    $version_prev = '1.6';
-    $version_next = '1.7';
-
-    $step   = $inCore->request('step', 'int', 0);
-
-    $locker = file_exists('locker');
+    $version_prev = '1.7';
+    $version_next = '1.7.1';
+	
+	$is_was_migrate = false;
 
 // ========================================================================== //
 // ========================================================================== //
@@ -74,49 +70,102 @@
 
     echo "<h2>Миграция InstantCMS {$version_prev} &rarr; {$version_next}</h2>";
 
-    if ($step){
-
-        echo "<h4>Шаг {$step} из {$steps_count}</h4>";
-        echo '<div class="migrate">'; include "step{$step}.php"; echo '</div>';
-
-        if ($step < $steps_count){
-            echo '<div class="nextlink"><a href="?step='.($step+1).'">Далее &rarr;</a></div>';
-        } else {
-            //COMPLETED
-            echo '<p><strong>Создайте задание для CRON!</strong></p>';
-
-            echo '<p>
-                        Добавьте файл <strong>/cron.php</strong> в расписание заданий CRON в панели вашего хостинга.<br/>
-                        Интервал выполнения — 24 часа. Это позволит системе выполнять периодические сервисные задачи.
-                  </p>';
-
-            echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Миграция завершена. Удалите папку /migrate/ прежде чем продолжить!</div>';
-            echo '<div class="nextlink"><a href="/">Перейти на сайт</a></div>';
-        }
-
-    } else {
-
-        echo "<p>
-                База данных сайта будет обновлена до новой версии.<br/>
-                Чтобы не превысить максимальное время выполнения скрипта<br/>
-                процесс миграции разбит на {$steps_count} шагов.
-              </p>";
-                
-        echo '<p>От вас требуется только нажимать ссылку "Далее" после каждого шага.</p>';
-
-        echo '<p>
-                Прежде чем начать сделайте бекап базы данных и убедитесь<br/>
-                что сайт недоступен для посетителей на время миграции.
-              </p>';
-
-        if (is_writable(dirname(__FILE__))){
-            echo '<div class="nextlink"><a href="?step=1">Начать миграцию</a></div>';
-        } else {
-            echo '<p style="color:red">Папка /migrate/ не доступна для записи</p>';
-        }
-
+// ========================================================================== //
+// ========================================================================== //	
+    if (!$inDB->isFieldExists('cms_modules', 'access_list')){
+        $inDB->query("ALTER TABLE `cms_modules` ADD `access_list` TINYTEXT NOT NULL AFTER `css_prefix`");
+        echo '<p>Поле <strong>access_list</strong> добавлено в таблицу <strong>cms_modules</strong></p>';
+		$is_was_migrate = true;
     }
+// ========================================================================== //
+// ========================================================================== //
+    if ($inDB->isFieldExists('cms_modules', 'allow_group')){
+		$sql    = "SELECT id, allow_group
+				   FROM cms_modules";
+	
+		$result = $inDB->query($sql);
+	
+		if ($inDB->num_rows($result)){
+			while($mod = $inDB->fetch_assoc($result)){
+				if($mod['allow_group'] != -1) {
+	
+					$access_list[]  = $mod['allow_group'];
+					$access_list_ya = $inCore->arrayToYaml($access_list);
+					$inDB->query("UPDATE cms_modules SET `access_list` = '{$access_list_ya}' WHERE id = '{$mod['id']}'");
+					unset ($access_list);
+	
+				}
+			}
+		}
+	
+		echo '<p>Мультидоступ групп к модулям выполнен.</p>';
+		$is_was_migrate = true;
+	}
+// ========================================================================== //
+// ========================================================================== //
+    if ($inDB->isFieldExists('cms_modules', 'allow_group')){
+        $inDB->query("ALTER TABLE `cms_modules` DROP `allow_group`");
+        echo '<p>Поле <strong>allow_group</strong> удалено из таблицы <strong>cms_modules</strong></p>';
+		$is_was_migrate = true;
+    }
+// ========================================================================== //
+// ========================================================================== //	
+    if (!$inDB->isFieldExists('cms_menu', 'access_list')){
+        $inDB->query("ALTER TABLE `cms_menu` ADD `access_list` TINYTEXT NOT NULL AFTER `template`");
+        echo '<p>Поле <strong>access_list</strong> добавлено в таблицу <strong>cms_menu</strong></p>';
+		$is_was_migrate = true;
+    }
+// ========================================================================== //
+// ========================================================================== //
+    if ($inDB->isFieldExists('cms_menu', 'allow_group')){
+		$sql    = "SELECT id, allow_group
+				   FROM cms_menu";
+	
+		$result = $inDB->query($sql);
+	
+		if ($inDB->num_rows($result)){
+			while($mod = $inDB->fetch_assoc($result)){
+				if($mod['allow_group'] != -1) {
+	
+					$access_list[]  = $mod['allow_group'];
+					$access_list_ya = $inCore->arrayToYaml($access_list);
+					$inDB->query("UPDATE cms_menu SET `access_list` = '{$access_list_ya}' WHERE id = '{$mod['id']}'");
+					unset ($access_list);
+	
+				}
+			}
+		}
+	
+		echo '<p>Мультидоступ групп к пунктам меню выполнен.</p>';
+		$is_was_migrate = true;
+	}
+// ========================================================================== //
+// ========================================================================== //
+    if ($inDB->isFieldExists('cms_menu', 'allow_group')){
+        $inDB->query("ALTER TABLE `cms_menu` DROP `allow_group`");
+        echo '<p>Поле <strong>allow_group</strong> удалено из таблицы <strong>cms_menu</strong></p>';
+		$is_was_migrate = true;
+    }
+// ========================================================================== //
+// ========================================================================== //
+    if ($inDB->isFieldExists('cms_clubs', 'create_karma')){
+        $inDB->query("ALTER TABLE `cms_clubs` ADD `create_karma` INT( 11 ) NOT NULL AFTER `join_karma_limit`");
+        echo '<p>Поле <strong>create_karma</strong> добавлено в таблицу <strong>cms_clubs</strong></p>';
+		$is_was_migrate = true;
+    }	
+// ========================================================================== //
+// ========================================================================== //
 
+    $inDB->query("ALTER TABLE `cms_search` CHANGE `link` `link` VARCHAR( 200 ) CHARACTER SET cp1251 COLLATE cp1251_general_ci NOT NULL");
+
+// ========================================================================== //
+// ========================================================================== //
+	if ($is_was_migrate) {
+	    echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Миграция завершена. Удалите папку /migrate/ прежде чем продолжить!</div>';
+	} else {
+		echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Вы уже прошли миграцию.</div>';
+	}
+    echo '<div class="nextlink"><a href="/">Перейти на сайт</a></div>';
     echo '</div>';
 
     

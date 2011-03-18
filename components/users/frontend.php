@@ -659,7 +659,7 @@ if ($do=='profile'){
     if (!$id){
         $login = $inCore->request('login', 'str', '');
         $login = urldecode($login);
-        $id    = $inDB->get_field('cms_users', "login='{$login}'", 'id');
+        $id    = $inDB->get_field('cms_users', "login='{$login}' ORDER BY is_deleted ASC", 'id');
     }
 
     $usr = $model->getUser($id);
@@ -761,6 +761,7 @@ if ($do=='profile'){
 	
     $usr['board_count']			= $cfg['sw_board'] ? (int)$inDB->rows_count('cms_board_items', "user_id={$usr['id']} AND published=1") : false;
     $usr['comments_count']		= $cfg['sw_comm'] ? (int)$inDB->rows_count('cms_comments', "user_id={$usr['id']} AND published=1") : false;
+	$usr['invites_count']		= ($inUser->id && $myprofile) ? $model->getUserInvitesCount($inUser->id) : 0;
 
     if($cfg['sw_forum']){
         if ($inUser->id==$id){
@@ -1379,6 +1380,36 @@ if ($do=='delphoto'){
 
 	} else { echo usrAccessDenied(); }
 }
+
+/////////////////////////////// ALBUM EDIT /////////////////////////////////////////////////////////////////////////////////////////
+if ($do=='editalbum'){
+	
+	if (!$cfg['sw_photo']) { cmsCore::error404(); }
+
+    $usr = $model->getUserShort($id);
+    if (!$usr) { cmsCore::error404(); }
+	
+	$album_id = $inCore->request('album_id', 'int', '');
+
+    $album    = $model->getPhotoAlbum('private', $album_id);
+
+    if (!$album) { cmsCore::error404(); }
+
+    if ($album['user_id'] != $inUser->id && !$inUser->is_admin){ cmsCore::error404(); }
+
+	unset($album);
+
+    $album['title']       = $inCore->request('album_title', 'str', $_LANG['PHOTOALBUM'].' '.date('d.m.Y'));
+    $album['allow_who']   = $inCore->request('album_allow_who', 'str', 'all');
+	$album['description'] = $inCore->request('description', 'str', '');
+	$album['id']          = $album_id;
+	
+	$model->updatePhotoAlbum($album);
+
+    $inCore->redirect('/users/'.$usr['login'].'/photos/private'.$album_id.'.html');
+
+}
+
 /////////////////////////////// PHOTO EDIT /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='editphoto'){
 
@@ -1393,7 +1424,7 @@ if ($do=='editphoto'){
 
     if (!$photo) { cmsCore::error404(); }
 
-    if ($photo['user_id'] != $id && !$inUser->is_admin){ cmsCore::error404(); }
+    if ($photo['user_id'] != $inUser->id && !$inUser->is_admin){ cmsCore::error404(); }
 
 	cmsUser::sessionPut('photos_list', array($photo['id']));
 
@@ -1423,7 +1454,7 @@ if ($do=='editphotolist'){
 
         $photo      = $model->getPhoto($photo_id);
 
-        if ($photo['user_id'] != $id && !$inUser->is_admin){ cmsCore::error404(); exit; }
+        if ($photo['user_id'] != $inUser->id && !$inUser->is_admin){ cmsCore::error404(); exit; }
 
     }
 
@@ -1515,7 +1546,9 @@ if ($do=='viewalbum'){
     $album = $model->getPhotoAlbum($album_type, $album_id);
 
     if (!$album){ cmsCore::error404(); }
-    
+
+    if ($album_type != 'private') { $album['allow_who'] = 'all'; }
+
     $inPage->setTitle($album['title']);
     $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 	$inPage->addPathway($_LANG['PHOTOALBUMS'], '/users/'.$usr['id'].'/photoalbum.html');
@@ -1767,7 +1800,7 @@ if ($do=='addfriend'){
 
     cmsUser::clearSessionFriends();
 
-	if (!usrCheckAuth() && $inUser->id == $id) { cmsCore::error404(); }
+	if (!usrCheckAuth() || $inUser->id == $id) { cmsCore::error404(); }
 
 	if(!usrIsFriends($id, $inUser->id)){
 		if (!$inCore->inRequest('goadd')){
@@ -2733,7 +2766,7 @@ if ($do=='votekarma'){
 											'target' => '',
 											'target_url' => '',
 											'target_id' => 0, 
-											'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
+											'description' => strlen(strip_tags($message))>100 ? substr(strip_tags($message), 0, 100) : strip_tags($message)
 									));
 								} elseif($author_id == $user_id) {
 									cmsActions::log('add_wall_my', array(
@@ -2743,7 +2776,7 @@ if ($do=='votekarma'){
 											'target' => '',
 											'target_url' => '',
 											'target_id' => 0, 
-											'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
+											'description' => strlen(strip_tags($message))>100 ? substr(strip_tags($message), 0, 100) : strip_tags($message)
 									));
 								}
                     //send email notification, if user want it
@@ -2781,7 +2814,7 @@ if ($do=='votekarma'){
 											'target' => '',
 											'target_url' => '',
 											'target_id' => 0, 
-											'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
+											'description' => strlen(strip_tags($message))>100 ? substr(strip_tags($message), 0, 100) : strip_tags($message)
 								));
 						break;
                 }

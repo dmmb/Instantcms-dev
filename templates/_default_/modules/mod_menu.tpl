@@ -10,7 +10,7 @@
         {/if}
 
 {foreach key=key item=item from=$items}
-    {if $item.allow_group == -1 || $item.allow_group == $user_group || $is_admin}
+    {if $item.is_allow}
         {if $item.published}
             {if $item.parent_id != $hide_parent}
 

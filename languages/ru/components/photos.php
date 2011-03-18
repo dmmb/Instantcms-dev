@@ -75,14 +75,15 @@ $_LANG['PHOTO_SAVED']             ='Фотография успешно cохранена.';
 $_LANG['BACK_TO_PHOTO']           ='Вернуться к фотографии';
 $_LANG['WAIT_MODERING']           ='Ожидает модерации.';
 
-$_LANG['PHOTO_TITLE']             ='Название фото';
+$_LANG['PHOTO_TITLE']             ='Название фотографии';
+$_LANG['PHOTO_TITLES']            ='Название фотографий';
 $_LANG['PHOTO_DESCRIPTION']       ='Описание фото';
 $_LANG['REPLACE_FILE']            ='Заменить файлом';
 
-$_LANG['SHOW']                      ='Показывать';
-$_LANG['EVERYBODY']                 ='Всем';
-$_LANG['REGISTERED']                ='Зарегистрированным';
-$_LANG['MY_FRIENDS']                ='Моим друзьям';
+$_LANG['SHOW']                    ='Показывать';
+$_LANG['EVERYBODY']               ='Всем';
+$_LANG['REGISTERED']              ='Зарегистрированным';
+$_LANG['MY_FRIENDS']              ='Моим друзьям';
 
 $_LANG['MOVE_PHOTO']              ='Перенести фото';
 $_LANG['PHOTO']                   ='Фото';
@@ -101,8 +102,18 @@ $_LANG['SELECT_FILE_TO_UPLOAD']   ='Выберите файл для загрузки';
 $_LANG['ALLOW_FILE_TYPE']         ='Допустимые типы файлов';
 $_LANG['LOAD']                    ='Загрузить';
 $_LANG['PHOTO_DESC']              ='Описание фотографии';
+$_LANG['PHOTO_DESCS']             ='Описание фотографий';
 $_LANG['SHOW']                    ='Показывать';
 $_LANG['TO_ALL']                  ='Всем';
 $_LANG['TO_REGISTERED']           ='Зарегистрированным';
 $_LANG['TO_MY_FRIEND']            ='Моим друзьям';
+$_LANG['YOU_CAN_UPLOAD']          ='Вы можете загрузить максимум';
+$_LANG['UPLOAD_QUEUE']            ='Очередь загрузки';
+$_LANG['UPLOADED']                ='Загружено';
+$_LANG['GO_TO_UPLOAD']            ='перейти к загрузке';
+$_LANG['ADD_MULTY']               ='добавить много фотографий за раз - мультизагрузка фото';
+$_LANG['PHOTO_DELETED']           ='Фотография успешно удалена';
+$_LANG['PHOTO_MOVED']             ='Фотография успешно перенесена';
+$_LANG['PHOTO_MOVED_ERR']         ='Фотография не перенесена, укажите альбом';
+
 ?>

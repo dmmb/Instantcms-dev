@@ -1,7 +1,15 @@
 $(document).ready(function(){
     checkGroupList();
 });
+function checkAccesList(){
 
+	if(document.addform.is_public.checked){
+		$('select#allow_group').attr('disabled', 'disabled');
+	} else {
+		$('select#allow_group').attr('disabled', '');
+	}
+
+}
 // JavaScript Document
 function checkDiv(){
 	

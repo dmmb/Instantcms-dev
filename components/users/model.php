@@ -63,17 +63,14 @@ class cms_model_users{
 				o.user_id as status,
 				b.user_id as banned,
                 IFNULL(ui.login, '') as inv_login,
-                IFNULL(ui.nickname, '') as inv_nickname,
-                IFNULL(COUNT(i.id), 0) as invites_count
+                IFNULL(ui.nickname, '') as inv_nickname
                 FROM cms_users u
 				INNER JOIN cms_user_profiles p ON p.user_id = u.id
 				INNER JOIN cms_user_groups g ON g.id = u.group_id
 				LEFT JOIN cms_online o ON o.user_id = u.id
 				LEFT JOIN cms_banlist b ON b.user_id = u.id
                 LEFT JOIN cms_users ui ON ui.id = u.invited_by
-                LEFT JOIN cms_user_invites i ON i.owner_id = u.id AND i.is_used = 0 AND i.is_sended = 0
                 WHERE u.is_locked = 0 AND u.id = '$user_id'
-				GROUP BY u.id
                 LIMIT 1";
 
         $result = $this->inDB->query($sql);
@@ -484,13 +481,30 @@ class cms_model_users{
         return $album_id;
         
     }
+	
+    public function updatePhotoAlbum($album) {
+
+        if (!$album['allow_who']) { $album['allow_who'] = 'all'; }
+
+		$sql = "UPDATE cms_user_albums
+						SET title = '{$album['title']}',
+							description = '{$album['description']}',
+							allow_who = '{$album['allow_who']}'
+						WHERE id = '{$album['id']}'
+						LIMIT 1";
+
+        $this->inDB->query($sql);
+
+        return true;
+        
+    }
 
     public function getPhotoAlbum($type, $id) {
 
         $album = array();
 
         if ($type == 'private'){
-            $album = $this->inDB->get_fields('cms_user_albums', "id='{$id}'", 'id, user_id, title, allow_who');
+            $album = $this->inDB->get_fields('cms_user_albums', "id='{$id}'", 'id, user_id, title, allow_who, description');
         }
 
         if ($type == 'public'){

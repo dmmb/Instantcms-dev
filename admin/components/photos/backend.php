@@ -617,7 +617,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete_photo&item_id=%id%';
 				
 		//Print table
-		cpListTable('cms_photo_files', $fields, $actions, '', 'pubdate DESC');		
+		cpListTable('cms_photo_files', $fields, $actions, '', 'id DESC');		
 	}
 
 //=================================================================================================//

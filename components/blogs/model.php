@@ -110,9 +110,11 @@ class cms_model_blogs{
 				LIMIT 1";
 		$result = $this->inDB->query($sql);
 
-        $blog = $this->inDB->num_rows($result) ? $this->inDB->fetch_assoc($result) : false;
-        $blog = cmsCore::callEvent('GET_BLOG', $blog);
-		$blog['pubdate'] = cmsCore::dateFormat($blog['pubdate']);
+		if ($this->inDB->num_rows($result)) {
+			$blog = $this->inDB->fetch_assoc($result);	
+			$blog = cmsCore::callEvent('GET_BLOG', $blog);
+			$blog['pubdate'] = cmsCore::dateFormat($blog['pubdate']);			
+		}
 
 		return $blog;
 
@@ -325,14 +327,17 @@ class cms_model_blogs{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function updateBlog($id, $item){
+    public function updateBlog($id, $item, $update_seo_link = 0){
 
         if (!$item['forall']) { $item['forall'] = 0; }
         if (!$item['owner']) { $item['owner'] = 'user'; }
         
         $item['id']         = $id;
-
-        $item['seolink']    = $this->getBlogSeoLink($item);
+		
+		if ($update_seo_link){
+        	$item['seolink']    = $this->getBlogSeoLink($item);
+			$seo_sql = ', seolink = "'.$item['seolink'].'"';
+		}
 
         $item = cmsCore::callEvent('UPDATE_BLOG', $item);
 
@@ -344,32 +349,33 @@ class cms_model_blogs{
                     ownertype='{$item['ownertype']}',
                     premod={$item['premod']},
                     forall={$item['forall']},
-                    owner='{$item['owner']}',
-                    seolink='{$item['seolink']}'
-                WHERE id = $id";
+                    owner='{$item['owner']}'{$seo_sql}
+                WHERE id = '$id'";
 
         $this->inDB->query($sql);
 
-        //обновляем ссылки меню
-        $menuid = $this->inDB->get_field('cms_menu', "linktype='blog' AND linkid={$id}", 'id');
-        if ($menuid){
-            $inCore     = cmsCore::getInstance();
-            $menulink   = $inCore->getMenuLink('blog', $id, $menuid);
-            $this->inDB->query("UPDATE cms_menu SET link='{$menulink}' WHERE id={$menuid}");
-        }
+		if ($update_seo_link){
+			//обновляем ссылки меню
+			$menuid = $this->inDB->get_field('cms_menu', "linktype='blog' AND linkid={$id}", 'id');
+			if ($menuid){
+				$inCore     = cmsCore::getInstance();
+				$menulink   = $inCore->getMenuLink('blog', $id, $menuid);
+				$this->inDB->query("UPDATE cms_menu SET link='{$menulink}' WHERE id={$menuid}");
+			}
+	
+			//обновляем ссылки на комментарии постов блога
+			$comments_sql = "UPDATE cms_comments c,
+									cms_blog_posts p,
+									cms_blogs b
+							 SET c.target_link = CONCAT('/blogs/', b.seolink, '/', p.seolink, '.html')
+							 WHERE b.id = {$id} AND
+								   p.blog_id = b.id AND
+								   c.target = 'blog' AND c.target_id = p.id";
+	
+			$this->inDB->query($comments_sql);
+		}
 
-        //обновляем ссылки на комментарии постов блога
-        $comments_sql = "UPDATE cms_comments c,
-                                cms_blog_posts p,
-                                cms_blogs b
-                         SET c.target_link = CONCAT('/blogs/', b.seolink, '/', p.seolink, '.html')
-                         WHERE b.id = {$id} AND
-                               p.blog_id = b.id AND
-                               c.target = 'blog' AND c.target_id = p.id";
-
-        $this->inDB->query($comments_sql);
-
-        return $item['seolink'];
+        return $item['seolink'] ? $item['seolink'] : true;
         
     }
 
@@ -741,6 +747,22 @@ class cms_model_blogs{
 
     public function isUserAuthor($blog_id, $user_id){
         return $this->inDB->get_field('cms_blog_authors', 'blog_id='.$blog_id.' AND user_id='.$user_id, 'id');
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function isUserBlogAuthor($blog_id, $post_id, $blog_user_id){
+		
+		$inUser = cmsUser::getInstance();
+
+		$blog_id_sql = $this->inDB->get_field('cms_blog_posts', "id='$post_id'", 'blog_id');
+		
+		$this_blog_post = ($blog_id_sql == $blog_id) ? true : false;
+		
+		$is_my_blog = ($blog_user_id == $inUser->id) ? true : false;
+
+        return ($this_blog_post && $is_my_blog) ? true : false;
     }
 
 /* ==================================================================================================== */
