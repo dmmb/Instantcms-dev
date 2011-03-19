@@ -25,6 +25,13 @@
         // Вход / Выход
         //
 
+
+        $rules[] = array(
+                            'source'  => '/^admin$/i',
+                            'target'  => '/admin/index.php',
+                            'action'  => 'redirect'
+                         );
+
         $rules[] = array(
                             'source'  => '/^login$/i',
                             'target'  => 'registration/login',

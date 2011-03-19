@@ -55,12 +55,16 @@
 					{/if}
                             {if $is_user}
                                 <div style="display:block; margin-top:20px;">
-                                    [<a href="javascript:void(0)" onclick="addComment('{php}echo md5(session_id());{/php}', '{$target}', '{$target_id}', {$comment.id})">{$LANG.REPLY}</a>]
-                                    {if $is_admin}
-                                        [<a href="/admin/index.php?view=components&do=config&id=7&opt=edit&item_id={$comment.id}">{$LANG.EDIT}</a>]
+                                    <a href="javascript:void(0)" onclick="addComment('{php}echo md5(session_id());{/php}', '{$target}', '{$target_id}', {$comment.id})">{$LANG.REPLY}</a>
+                                    {if $is_admin || ($comment.is_my && $comment.is_editable && $comment.content_bbcode)}
+                                        {if !$comment.content_bbcode}
+                                            | <a href="/admin/index.php?view=components&do=config&id=7&opt=edit&item_id={$comment.id}">{$LANG.EDIT}</a>
+                                        {else}
+                                            | <a href="javascript:" onclick="editComment('{php}echo md5(session_id());{/php}', '{$comment.id}')">{$LANG.EDIT}</a>
+                                        {/if}
                                     {/if}
                                     {if $is_admin || ($comment.is_my && $user_can_delete) || $user_can_moderate}
-                                        [<a href="/comments/delete/{$comment.id}">{if $comments[$next].level > $comment.level}{$LANG.DELETE_BRANCH}{else}{$LANG.DELETE}{/if}</a>]
+                                        | <a href="/comments/delete/{$comment.id}">{if $comments[$next].level > $comment.level}{$LANG.DELETE_BRANCH}{else}{$LANG.DELETE}{/if}</a>
                                     {/if}
                                 </div>
                             {/if}

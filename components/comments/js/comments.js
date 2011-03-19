@@ -5,12 +5,22 @@ function addComment(sess_md5, target, target_id, parent_id){
 	$("#cm_addentry"+parent_id).slideDown("fast");
 }
 
+function editComment(sess_md5, comment_id){
+	$('div.reply').html('').hide();
+    var entry = $("#cm_addentry"+comment_id);
+    entry.parent('div').find('.cmm_entry').hide();
+    entry.show();
+    entry.html("<div>Загрузка формы...</div>");
+	entry.load("/components/comments/addform.php", {cd: sess_md5, action: 'edit', id: comment_id}, cmLoaded());	
+}
+
 function cmLoaded() {
     //$("#content").autogrow();
 }
 
 function cancelComment(parent_id){
-	$("#cm_addentry"+parent_id).slideUp("fast");
+    $("#cm_addentry"+parent_id).parent('div').find('.cmm_entry').show();
+	$("#cm_addentry"+parent_id).hide();
 }
 
 function expandComment(id){

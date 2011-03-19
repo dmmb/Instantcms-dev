@@ -12,10 +12,10 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-define('CORE_VERSION', 		'1.7');
+define('CORE_VERSION', 		'1.8');
 define('CORE_BUILD', 		'1');
-define('CORE_VERSION_DATE', '2010-12-07');
-define('CORE_BUILD_DATE', 	'2010-12-07');
+define('CORE_VERSION_DATE', '2011-04-04');
+define('CORE_BUILD_DATE', 	'2011-04-04');
 
 if (!defined('USER_UPDATER')) { define('USER_UPDATER', -1); }
 if (!defined('USER_MASSMAIL')) { define('USER_MASSMAIL', -2); }
@@ -1448,6 +1448,8 @@ class cmsCore {
         $uri    = $_SERVER['REQUEST_URI']; //$this->request('uri', 'str', '');
         $uri    = ltrim($uri, '/');
         $rules  = array();
+
+        if (rtrim($uri, '/') == 'admin') { return; }
 
         //специальный хак для поиска по сайту, для совместимости со старыми шаблонами
         if (strstr($_SERVER['QUERY_STRING'], 'view=search')){ $uri = 'search'; }

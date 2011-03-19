@@ -28,7 +28,7 @@
     $inDB       = cmsDatabase::getInstance();
 
     $version_prev = '1.7';
-    $version_next = '1.7.1';
+    $version_next = '1.8';
 	
 	$is_was_migrate = false;
 
@@ -148,9 +148,16 @@
     }
 // ========================================================================== //
 // ========================================================================== //
-    if ($inDB->isFieldExists('cms_clubs', 'create_karma')){
+    if (!$inDB->isFieldExists('cms_clubs', 'create_karma')){
         $inDB->query("ALTER TABLE `cms_clubs` ADD `create_karma` INT( 11 ) NOT NULL AFTER `join_karma_limit`");
         echo '<p>Поле <strong>create_karma</strong> добавлено в таблицу <strong>cms_clubs</strong></p>';
+		$is_was_migrate = true;
+    }	
+// ========================================================================== //
+// ========================================================================== //
+    if ($inDB->isFieldExists('cms_comments', 'content_bbcode')){
+        $inDB->query("ALTER TABLE `cms_comments` ADD `content_bbcode` TEXT NOT NULL AFTER `content`");
+        echo '<p>Поле <strong>content_bbcode</strong> добавлено в таблицу <strong>cms_comments</strong></p>';
 		$is_was_migrate = true;
     }	
 // ========================================================================== //
