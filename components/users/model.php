@@ -750,6 +750,8 @@ class cms_model_users{
     public function deleteInactiveUsers() {
 
 		$inCore = cmsCore::getInstance();
+		
+		$inCore->loadClass('actions');
 
 		$cfg    = $inCore->loadComponentConfig('users');
 
