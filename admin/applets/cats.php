@@ -309,10 +309,13 @@ function applet_cats(){
 		$ns = $inCore->nestedSetsInit('cms_category');
 		$category['id'] = $ns->AddNode($category['parent_id']);
 
+        if (!$category['title']) { $category['title'] = 'Раздел #'.$category['id']; }
+
         if ($category['url']) { $category['url'] = cmsCore::strToURL($category['url']); }
         $seolink    = $model->getCategorySeoLink($category);
 		
 		if ($category['id']){
+
 			$sql = "UPDATE cms_category
 					SET parent_id={$category['parent_id']},
 						title='{$category['title']}',
