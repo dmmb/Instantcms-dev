@@ -1879,7 +1879,7 @@ if ($do=='delfriend'){
 			cmsCore::addSessionMessage($usr['nickname'] . $_LANG['DEL_FRIEND'], 'info');
 		}
 
-		header('location:'.$_SERVER['HTTP_REFERER']);
+		$inCore->redirectBack();
 
 	} else { echo usrAccessDenied(); } //usrCheckAuth
 }//do
@@ -2057,7 +2057,7 @@ if ($do=='delmessage'){
 			}
 		}
 	}
-	header('location:'.$_SERVER['HTTP_REFERER']);
+	$inCore->redirectBack();
 }//do
 /////////////////////////////// DELETE ALL INBOX MESSAGES ///////////////////////////////////////////////////////////////////////
 if ($do=='delmessages'){
@@ -2071,7 +2071,7 @@ if ($do=='delmessages'){
 			$inCore->addSessionMessage($_LANG['MESS_ALL_DEL_OK'], 'info');
 		}
 	}
-	header('location:'.$_SERVER['HTTP_REFERER']);
+	$inCore->redirectBack();
 }//do
 ///////////////////////////////////////////// KARMA LOG /////////////////////////////////////////////////////////////////////////
 if ($do=='karma'){
@@ -2174,7 +2174,7 @@ if ($do=='delaward'){
 			}
 		}
 	}
-	header('location:'.$_SERVER['HTTP_REFERER']);
+	$inCore->redirectBack();
 }//do
 ///////////////////////// DELETE PROFILE /////////////////////////////////////////////////////////////////////////////
 if ($do == 'delprofile'){
@@ -2235,7 +2235,7 @@ if ($do=='restoreprofile'){
 		$back = $_SERVER['HTTP_REFERER'];
 	} else { $back = '/'; }
 
-	header('location:'.$back);
+	$inCore->redirectBack();
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// VIEW USER FILES ///////////////////////////////////////////////////////////////////////////////////////	
@@ -2317,6 +2317,7 @@ if ($do=='files'){
 			$smarty->assign('free_mb', $free_mb);
 			$smarty->assign('pagination', $pagination);
 			$smarty->assign('myprofile', $myprofile);
+			$smarty->assign('messages', cmsCore::getSessionMessages());
 			$smarty->assign('files', $files);
 			$smarty->display('com_users_file_view.tpl');
 	
@@ -2356,125 +2357,137 @@ if ($do=='download'){
 if ($do=='addfile'){
 
     if (!$cfg['sw_files']) { cmsCore::error404(); }
+	
+	if (!$inUser->id) { cmsUser::goToLogin(); }
 
-	if (usrCheckAuth()){
-		if ($inUser->id == $id){
+	if ($inUser->id != $id){ cmsCore::error404(); }
 		
-			$max_mb         = $cfg['filessize'];
-			$current_bytes  = usrFilesSize($id);
-			if ($current_bytes) { $current_mb = round(($current_bytes / 1024) / 1024, 2); } else { $current_mb = 0; }
-			$free_mb = round($max_mb - $current_mb, 2);
-		
-			if (isset($_POST['upload'])){
-				//uploading files
-				$inPage->setTitle($_LANG['FILE_UPLOAD_FINISH']);
-				$inPage->backButton(false);
+	$max_mb        = $cfg['filessize'];
+	$current_bytes = usrFilesSize($id);
+	
+	if ($current_bytes) { $current_mb = round(($current_bytes / 1024) / 1024, 2); } else { $current_mb = 0; }
+	$free_mb = round($max_mb - $current_mb, 2);
+	
+	if($inCore->inRequest('upload')){
 
-				echo '<div class="con_heading">'.$_LANG['FILE_UPLOAD_FINISH'].'</div>';
+		$size_mb      = 0;
+		$size_limit   = false;
+		$loaded_files = array();
 				
-				$e = false;
-				$size_mb      = 0;
-				$size_limit   = false;
-				$loaded_files = array();
+		foreach ($_FILES as $key => $data_array) {
+
+			$error = $data_array['error'];
+			if ($error == UPLOAD_ERR_OK) {
+
+				@mkdir(PATH.'/upload/userfiles/'.$id);
+			
+				$tmp_name = $data_array["tmp_name"];
+				$name     = $data_array["name"];
+				$size     = $inCore->strClear($data_array["size"]);
+				$size_mb += round(($size/1024)/1024, 2);
+
+				// проверяем тип файла
+				$types 		= $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar';
+				$maytypes 	= explode(',', str_replace(' ', '', $types));  
+				$path_parts = pathinfo($name);
+				// расширение файла
+				$ext        = strtolower($path_parts['extension']);
+				// флаг существования расширения в разрешенных
+				$may        = in_array($ext, $maytypes);
+				if(!$may) { cmsCore::addSessionMessage($_LANG['ERROR_TYPE_FILE'].': '.$types, 'error'); $inCore->redirectBack(); }
 				
-				foreach ($_FILES as $key => $data_array) {
-					$error = $data_array['error'];
-					if ($error == UPLOAD_ERR_OK) {
-						@mkdir(PATH.'/upload/userfiles/'.$id);
+				// Переводим имя файла в транслит
+				// отделяем имя файла от расширения
+				$name  = substr($name, 0, strrpos($name, '.'));
+				// транслитируем
+				$name  = cmsCore::strToURL($name);
+				// присоединяем расширения файла
+				$name .= '.'.$ext;
+				// Обрабатываем получившееся имя файла для записи в БД
+				$name  = $inCore->strClear($name);
+
+				// Проверяем свободное место
+				if ($size_mb > $free_mb && $cfg['filessize']){ cmsCore::addSessionMessage($_LANG['YOUR_FILE_LIMIT'].' ('.$max_mb.' '.$_LANG['MBITE'].') '.$_LANG['IS_OVER_LIMIT'].'<br>'.$_LANG['FOR_NEW_FILE_DEL_OLD'], 'error'); $inCore->redirectBack(); }
+
+				// Загружаем файл	
+				if ($inCore->moveUploadedFile($tmp_name, PATH."/upload/userfiles/$id/$name", $error)) {
+		
+					$loaded_files[] = $name;
+
+					$sql = "INSERT INTO cms_user_files(user_id, filename, pubdate, allow_who, filesize, hits)
+							VALUES ($id, '$name', NOW(), 'all', '$size', 0)";
+					$inDB->query($sql);
+
+					$file_id = $inDB->get_last_id('cms_user_files');
+
+					cmsActions::log('add_file', array(
+						  'object' => $name,
+						  'object_url' => '/users/files/download'.$file_id.'.html',
+						  'object_id' => $file_id,
+						  'target' => '',
+						  'target_url' => '',
+						  'description' => ''
+					));
+
+				}						
+
+			}
+		}
 					
-						$tmp_name   = $data_array["tmp_name"];
-						$name       = $inCore->strClear($data_array["name"]);
-						$size       = $inCore->strClear($data_array["size"]);
-						$size_mb    += round(($size/1024)/1024, 2);
-						
-						$types 		= $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar';
-						$maytypes 	= explode(',', str_replace(' ', '', $types));  
-						$path_parts = pathinfo($name);
-						$ext        = strtolower($path_parts['extension']);
-						foreach($maytypes as $maytype){  
-							if(stristr($ext , $maytype)){  
-							   $may = 1;  
-							   break;  
-							}else{  
-							   $may = 0;  
-							}  
-						} 
-						
-						if ($size_mb <= $free_mb || !$cfg['filessize']){
-							if ($may){
-								if (move_uploaded_file($tmp_name, PATH."/upload/userfiles/$id/$name")){
-									$loaded_files[] = $name;
-									$sql = "INSERT INTO cms_user_files(user_id, filename, pubdate, allow_who, filesize, hits)
-											VALUES ($id, '$name', NOW(), 'all', '$size', 0)";
-									$inDB->query($sql);
-									$file_id = $inDB->get_last_id('cms_user_files');
-									cmsActions::log('add_file', array(
-										  'object' => $name,
-										  'object_url' => '/users/files/download'.$file_id.'.html',
-										  'object_id' => $file_id,
-										  'target' => '',
-										  'target_url' => '',
-										  'description' => ''
-									));
-								}						
-							} else { $type_error = true; }
-						} else { $size_limit = true; }
-					}
-				}
-				
-				if ($size_limit) { 
-					echo '<div style="color:#660000;margin-bottom:10px;font-weight:bold">'.$_LANG['YOUR_FILE_LIMIT'].' ('.$max_mb.' '.$_LANG['MBITE'].') '.$_LANG['IS_OVER_LIMIT'].'.</div>';
+		if (sizeof($loaded_files)){
+			
+			$ok_message  = '<div><strong>'.$_LANG['UPLOADED_FILES'].':</strong></div>';
+			$ok_message .= '<ul>';
 
-					echo '<div style="color:#660000;font-weight:bold">'.$_LANG['FOR_NEW_FILE_DEL_OLD'].'</div>';
-				}
-				if ($type_error) { 
-					echo '<div style="color:red">'.$_LANG['ERROR_TYPE_FILE'].': '.$types.'</div>';
-				}
-										
-				if (sizeof($loaded_files)){
-					echo '<div><strong>'.$_LANG['UPLOADED_FILES'].':</strong></div>';
-					echo '<ul>';
-						foreach($loaded_files as $k=>$val){
-							echo '<li>'.$val.'</li>';						
-						}
-					echo '</ul>';
-					if ($cfg['filessize']){
-					echo '<div style="margin-top:10px"><strong>'.$_LANG['FREE_SPACE_LEFT'].':</strong> '.round($free_mb-$size_mb, 2).' '.$_LANG['MBITE'].'</div>';
-					}
-				} else {
-					echo '<div style="color:red">'.$_LANG['ERR_BIG_FILE'].'</div>';
-					echo '<div style="color:red">'.$_LANG['ERR_FILE_NAME'].'</div>';
-				}
-				
-				echo '<div><a href="/users/'.$id.'/files.html">'.$_LANG['CONTINUE'].'</a> &rarr;</div>';
+			foreach($loaded_files as $k=>$val){
+				$ok_message .= '<li>'.$val.'</li>';						
+			}
+
+			$ok_message .= '</ul>';
+
+			if ($cfg['filessize']){
+				$ok_message .= '<div style="margin-top:10px"><strong>'.$_LANG['FREE_SPACE_LEFT'].':</strong> '.round($free_mb-$size_mb, 2).' '.$_LANG['MBITE'].'</div>';
+			}
+
+			cmsCore::addSessionMessage($ok_message, 'info');
+
+		} else {
+			
+			cmsCore::addSessionMessage($_LANG['ERR_BIG_FILE'].', '.$_LANG['ERR_FILE_NAME'], 'error');
+
+		}
+
+		$inCore->redirect('/users/'.$id.'/files.html');
 							
-			} else {
-				$usr = $model->getUserShort($id);
-				if (!$usr) { cmsCore::error404(); }
+	}
+
+	if(!$inCore->inRequest('upload')){
 		
-					//build upload form
-					$inPage->setTitle($_LANG['UPLOAD_FILES']);
-					$inPage->backButton(false);
-                    $inPage->addHeadJS('includes/jquery/multifile/jquery.multifile.js');
-					
-					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
-					$inPage->addPathway($_LANG['UPLOAD_FILES'], $_SERVER['REQUEST_URI']);
-					
-						$post_max_b = return_bytes(ini_get('upload_max_filesize'));
-						$post_max_mb = (round($post_max_b/1024)/1024) . ' '.$_LANG['MBITE'];
-					
-					$smarty = $inCore->initSmarty('components', 'com_users_file_add.tpl');
-					$smarty->assign('free_mb', $free_mb);
-					$smarty->assign('post_max_b', $post_max_b);
-					$smarty->assign('post_max_mb', $post_max_mb);
-					$smarty->assign('cfg', $cfg);
-					$smarty->assign('types', $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar');
-					$smarty->display('com_users_file_add.tpl');
-				}
+		$usr = $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
 		
-		} else { echo usrAccessDenied(); }	
-	} else { cmsUser::goToLogin(); }
+		$inPage->setTitle($_LANG['UPLOAD_FILES']);
+		$inPage->backButton(false);
+        $inPage->addHeadJS('includes/jquery/multifile/jquery.multifile.js');
+					
+		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+		$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
+		$inPage->addPathway($_LANG['UPLOAD_FILES'], $_SERVER['REQUEST_URI']);
+					
+		$post_max_b = return_bytes(ini_get('upload_max_filesize'));
+		$post_max_mb = (round($post_max_b/1024)/1024) . ' '.$_LANG['MBITE'];
+					
+		$smarty = $inCore->initSmarty('components', 'com_users_file_add.tpl');
+		$smarty->assign('free_mb', $free_mb);
+		$smarty->assign('post_max_b', $post_max_b);
+		$smarty->assign('post_max_mb', $post_max_mb);
+		$smarty->assign('cfg', $cfg);
+		$smarty->assign('messages', cmsCore::getSessionMessages());
+		$smarty->assign('types', $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar');
+		$smarty->display('com_users_file_add.tpl');
+
+	}
+
 }
 
 /////////////////////////////// FILE DELETE /////////////////////////////////////////////////////////////////////////////////////////
