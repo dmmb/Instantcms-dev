@@ -13,12 +13,13 @@
     define('VALID_CMS', 1);
     
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
-    define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
 
     require(PATH."/core/cms.php");
     include(PATH."/includes/config.inc.php");
 
     $inCore     = cmsCore::getInstance();
+
+    define('HOST', 'http://' . $inCore->getHost());
 
     $inCore->loadClass('config');       //конфигурация
     $inCore->loadClass('db');           //база данных

@@ -84,6 +84,18 @@ class cmsCore {
         return self::$instance;
     }
 
+    public function getHost(){
+
+        $this->loadClass('idna_convert');
+
+        $IDN = new idna_convert();
+
+        $host = iconv('utf-8', 'cp1251', $IDN->decode($_SERVER['HTTP_HOST']));
+
+        return $host;
+
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public function startGenTimer() {

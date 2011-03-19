@@ -4,7 +4,6 @@
 
     define("VALID_CMS", 1);
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
-    define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
 
 	//PROTECT FROM DIRECT RUN
 	if (isset($_REQUEST['cd'])){
@@ -17,6 +16,8 @@
 	include(PATH.'/includes/config.inc.php');
 
 	$inCore     = cmsCore::getInstance();
+
+    define('HOST', 'http://' . $inCore->getHost());
 
     $inCore->loadLanguage('lang');
     $inCore->loadLanguage('components/comments');

@@ -16,13 +16,15 @@
 
 	define("VALID_CMS", 1);
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
-    define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
 
 	// Грузим ядро и классы
 	include(PATH.'/core/cms.php');
 	// Грузим конфиг
 	include(PATH.'/includes/config.inc.php');
     $inCore = cmsCore::getInstance();
+
+    define('HOST', 'http://' . $inCore->getHost());
+    
     $inCore->loadClass('config'); 
     $inCore->loadClass('db'); 
     $inCore->loadClass('user');

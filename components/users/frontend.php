@@ -1909,7 +1909,8 @@ if ($do=='sendmessage'){
 
         if ($replyid){
 
-            $sql = "SELECT m.senddate, m.message, u.login, u.nickname
+            $sql = "SELECT m.id as id,
+                           m.senddate, m.message, u.login, u.nickname
                     FROM cms_user_msg m
                     LEFT JOIN cms_users u ON u.id = m.from_id
                     WHERE m.id = '$replyid' AND m.to_id = '$from_id'";
@@ -1928,7 +1929,11 @@ if ($do=='sendmessage'){
             $is_reply_user      = true;
             $msg                = $inDB->fetch_assoc($result);
             $msg['senddate']    = $inCore->dateFormat($msg['senddate'], true, true);
-            
+
+            $update_sql = "UPDATE cms_user_msg SET is_new = 0 WHERE id = '{$msg['id']}' LIMIT 1";
+
+            $inDB->query($update_sql);
+
         }
 
         $usr['avatar'] = usrImage($usr['id'], 'big');

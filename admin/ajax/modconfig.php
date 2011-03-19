@@ -7,12 +7,13 @@
 	define("VALID_CMS", 1);
 	define("VALID_CMS_ADMIN", 1);
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
-    define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
 
 	include(PATH.'/core/cms.php');
 	include(PATH.'/admin/includes/cp.php');
 
     $inCore = cmsCore::getInstance();
+
+    define('HOST', 'http://' . $inCore->getHost());
 
     $inCore->loadClass('user');
 

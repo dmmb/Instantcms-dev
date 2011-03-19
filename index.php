@@ -13,8 +13,7 @@
     Error_Reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
     setlocale(LC_ALL, 'ru_RU.CP1251');
 
-    define('PATH', $_SERVER['DOCUMENT_ROOT']);
-    define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
+    define('PATH', $_SERVER['DOCUMENT_ROOT']);    
 
 ////////////////////////////// Проверяем что система установлена /////////////////////////////
 
@@ -37,6 +36,8 @@
 
     $inCore = cmsCore::getInstance();
 
+    define('HOST', 'http://' . $inCore->getHost());
+
 /////////////////////////////////// Включаем таймер /////////////////////////////////////////
 
     $inCore->startGenTimer();
@@ -46,7 +47,7 @@
     $inCore->loadClass('page');         //страница    
     $inCore->loadClass('plugin');       //плагины
     $inCore->loadClass('user');         //пользователь
-    $inCore->loadClass('actions');      //лента активности
+    $inCore->loadClass('actions');      //лента активности    
 
     $inDB       = cmsDatabase::getInstance();
     $inPage     = cmsPage::getInstance();
