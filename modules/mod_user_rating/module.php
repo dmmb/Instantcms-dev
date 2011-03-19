@@ -21,7 +21,7 @@
 		}
 		if ($cfg['view_type'] == 'rating') { $target = 'Рейтинг'; } else { $target = 'Карма'; }
 
-		$sql = "SELECT u.id, u.login, u.nickname, u.rating as rating, u.is_deleted, p.karma as karma, p.user_id, p.imageurl
+		$sql = "SELECT u.id, u.login, u.nickname, u.rating as rating, u.is_deleted, p.karma as karma, p.user_id, p.imageurl, u.status
 				FROM cms_users u
 				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
 				WHERE u.is_deleted = 0 AND u.is_locked = 0

@@ -4,7 +4,6 @@
 		<tr>
 			<td width="20" class="avatar">{$usr.usrimage}</td>
 			<td width="">
-				<div>
 					<a href="{$usr.profileurl}" class="nickname">{$usr.nickname}</a>
 					
 					{if $cfg.view_type == 'rating'}
@@ -16,8 +15,9 @@
 					{else}
 						<div class="karma"><span style="color:red">{$usr.karma}</span></div>							
 					{/if}
-					
-				</div>	
+                    {if $usr.status}
+                    	<div class="microstatus">{$usr.status}</div>
+                    {/if}
 			</td>
 		</tr>
 	{/foreach}
