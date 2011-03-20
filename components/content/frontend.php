@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //																							 //
-//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.8   (c) 2010 FREEWARE                          //
 //	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 						    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -481,7 +481,7 @@ if ($do=='addarticle' || $do=='editarticle'){
 
         if ($do=='editarticle' && !$errors){
 
-            $model->updateArticle($id, $article);
+            $model->updateArticle($id, $article, true);
 
 			if (!$article['published'] && !$is_auto_add){
                 $article['seolink']  = $inDB->get_field('cms_content', "id='$id'", 'seolink');
