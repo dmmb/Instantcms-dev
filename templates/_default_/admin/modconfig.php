@@ -10,6 +10,14 @@
                     </div>
                 </td>
             </tr>
+            <tr>
+                <td width="145">&nbsp;</td>
+                <td style="padding-top:4px">
+                    <label>
+                        <input type="checkbox" name="published" value="1" <?php if ($mod['published']){ ?>checked="checked"<?php } ?> /> Публиковать модуль
+                    </label>
+                </td>
+            </tr>
         </table>
     </div>
     <div id="mc_module_cfg">
