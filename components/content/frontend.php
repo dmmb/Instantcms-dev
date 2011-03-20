@@ -61,6 +61,14 @@ if ($do=='view'){
 
     if (!$cat && $inCore->menuId() !== 1) { cmsCore::error404(); }
 
+	if( !$inCore->checkUserAccess('category', $cat['id']) ){
+		$inPage->setTitle($_LANG['NO_PERM_FOR_VIEW']);
+		$inPage->printHeading($_LANG['NO_PERM_FOR_VIEW']);
+		echo '<p><b>'.$_LANG['NO_PERM_FOR_VIEW_TEXT'].'</b></p>';
+		echo '<p>'.$_LANG['NO_PERM_FOR_VIEW_RULES'].'</p>';
+        return;
+	}
+
 	//PAGE HEADING
 	if($cat['id']>0){
 		$inPage->setTitle($cat['title']);
@@ -82,6 +90,13 @@ if ($do=='view'){
 
     if ($path_list){
         foreach($path_list as $pcat){
+			if( !$inCore->checkUserAccess('category', $pcat['id']) ){
+				$inPage->setTitle($_LANG['NO_PERM_FOR_VIEW']);
+				$inPage->printHeading($_LANG['NO_PERM_FOR_VIEW']);
+				echo '<p><b>'.$_LANG['NO_PERM_FOR_VIEW_TEXT'].'</b></p>';
+				echo '<p>'.$_LANG['NO_PERM_FOR_VIEW_RULES'].'</p>';
+				return;
+			}
             if ($pcat['id']!=1){
                 $inPage->addPathway($pcat['title'], $model->getCategoryURL(null, $pcat['seolink']));
             }
@@ -125,7 +140,7 @@ if ($do=='view'){
 		foreach($content_list as $con){
 			$con['tagline']		 = cmsTagLine('content', $con['id'], true);
 			$con['comments'] 	 = $inCore->getCommentsCount('article', $con['id']);
-			$con['user_access']  = $inCore->checkUserAccess('material', $con['id']);
+			$con['user_access']  = true; // оставлено для совместимости со старыми шаблонами, убрать в след версиях.
             $con['url']          = $model->getArticleURL(null, $con['seolink']);
             $con['image']       = (file_exists(PATH.'/images/photos/small/article'.$con['id'].'.jpg') ? 'article'.$con['id'].'.jpg' : '');
 			$cons[]              = $con;
@@ -186,7 +201,7 @@ if ($do=='read'){
 
 	if (!$article['published'] && !$is_admin && !$is_editor && !$is_author) { cmsCore::error404(); } 	
 
-	if( !$inCore->checkUserAccess('material', $article['id']) ){
+	if( !$inCore->checkUserAccess('material', $article['id']) || !$inCore->checkUserAccess('category', $article['category_id']) ){
 		$inPage->setTitle($_LANG['NO_PERM_FOR_VIEW']);
 		$inPage->printHeading($_LANG['NO_PERM_FOR_VIEW']);
 		echo '<p><b>'.$_LANG['NO_PERM_FOR_VIEW_TEXT'].'</b></p>';
@@ -217,6 +232,13 @@ if ($do=='read'){
 
         if ($path_list){
             foreach($path_list as $pcat){
+				if( !$inCore->checkUserAccess('category', $pcat['id']) ){
+					$inPage->setTitle($_LANG['NO_PERM_FOR_VIEW']);
+					$inPage->printHeading($_LANG['NO_PERM_FOR_VIEW']);
+					echo '<p><b>'.$_LANG['NO_PERM_FOR_VIEW_TEXT'].'</b></p>';
+					echo '<p>'.$_LANG['NO_PERM_FOR_VIEW_RULES'].'</p>';
+					return;
+				}
                 if ($pcat['id']!=1){
                     $inPage->addPathway($pcat['title'], $model->getCategoryURL(null, $pcat['seolink']));
                 }

@@ -782,15 +782,15 @@ class cms_model_content{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function setArticleAccess($id, $showfor_list){
+    public function setArticleAccess($id, $showfor_list, $content_type = 'material'){
 
         if (!sizeof($showfor_list)){ return true; }
 
-        $this->clearArticleAccess($id);
+        $this->clearArticleAccess($id, $content_type);
 
         foreach ($showfor_list as $key=>$value){
             $sql = "INSERT INTO cms_content_access (content_id, content_type, group_id)
-                    VALUES ('$id', 'material', '$value')";
+                    VALUES ('$id', '$content_type', '$value')";
             $this->inDB->query($sql);
         }
         
@@ -800,9 +800,9 @@ class cms_model_content{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function clearArticleAccess($id){
+    public function clearArticleAccess($id, $content_type = 'material'){
 
-        $sql = "DELETE FROM cms_content_access WHERE content_id = '$id' AND content_type = 'material'";
+        $sql = "DELETE FROM cms_content_access WHERE content_id = '$id' AND content_type = '$content_type'";
 
         $this->inDB->query($sql);
 

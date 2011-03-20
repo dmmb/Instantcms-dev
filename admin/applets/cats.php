@@ -266,12 +266,20 @@ function applet_cats(){
                 $menulink = $inCore->getMenuLink('category', $category['id'], $menuid);
                 $inDB->query("UPDATE cms_menu SET link='{$menulink}' WHERE id={$menuid}");
             }
+
+			if (!$inCore->request('is_access', 'int', 0)){
+				$showfor = $_REQUEST['showfor'];				
+                $model->setArticleAccess($category['id'], $showfor, 'category');
+			} else {
+                $model->clearArticleAccess($category['id'], 'category');
+            }
 			
 			if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
-				header('location:?view=tree');
+				header('location:?view=tree&cat_id='.$category['id']);
 			} else {
 				header('location:?view=cats&do=edit');		
 			}
+			
 		}
 	}
 	
@@ -335,7 +343,14 @@ function applet_cats(){
 					WHERE id = {$category['id']}
 					LIMIT 1";
 
-			dbQuery($sql) ;
+			dbQuery($sql);
+			
+			if (!$inCore->request('is_access', 'int', 0)){
+				$showfor = $_REQUEST['showfor'];				
+                $model->setArticleAccess($category['id'], $showfor, 'category');
+			} else {
+                $model->clearArticleAccess($category['id'], 'category');
+            }
 		}
         
 		reorder();
@@ -353,6 +368,7 @@ function applet_cats(){
  
 	 	require('../includes/jwtabs.php');
 		$GLOBALS['cp_page_head'][] = jwHeader();
+		$GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="js/content.js"></script>';
  
  		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'save.gif';
@@ -396,7 +412,7 @@ function applet_cats(){
 					 }
 					
 					 echo '<h3>Редактировать раздел '.$ostatok.'</h3>';
- 					 cpAddPathway($mod['title'], 'index.php?view=menu&do=edit&id='.$mod['id']);
+ 					 cpAddPathway($mod['title'], 'index.php?view=cats&do=edit&id='.$mod['id']);
 			}   
 	?>
 
@@ -540,7 +556,7 @@ function applet_cats(){
                             <span class="hinttext">Если включено, то раздел отображается в списке доступных для публикации разделов, когда пользователь добавляет статью с сайта.</span>
                         </div>
                         <div>
-                            <select name="is_public" id="is_public" style="width:100%">
+                            <select name="is_public" style="width:100%">
                                 <option value="0" <?php if(!$mod['is_public']) { echo 'selected'; } ?>>Нет</option>
                                 <option value="1" <?php if($mod['is_public']) { echo 'selected'; } ?>>Да</option>
                             </select>
@@ -633,6 +649,73 @@ function applet_cats(){
                             <?php if(!isset($mod['photoalbum']['max'])) { $mod['photoalbum']['max'] = 8; } ?>
                             <input name="album_max" type="text" id="album_max" style="width:99%" value="<?php echo @$mod['photoalbum']['max'];?>"/>
                         </div>
+                      {tab=Доступ}
+  
+                      <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist" style="margin-top:5px">
+                          <tr>
+                              <td width="20">
+                                  <?php
+                                      $sql    = "SELECT * FROM cms_user_groups";
+                                      $result = dbQuery($sql) ;
+  
+                                      $style  = 'disabled="disabled"';
+                                      $public = 'checked="checked"';
+  
+                                      if ($do == 'edit'){
+  
+                                          $sql2 = "SELECT * FROM cms_content_access WHERE content_id = ".$mod['id']." AND content_type = 'category'";
+                                          $result2 = dbQuery($sql2);
+                                          $ord = array();
+  
+                                          if (mysql_num_rows($result2)){
+                                              $public = '';
+                                              $style = '';
+                                              while ($r = mysql_fetch_assoc($result2)){
+                                                  $ord[] = $r['group_id'];
+                                              }
+                                          }
+                                      }
+                                  ?>
+                                  <input name="is_access" type="checkbox" id="is_public" onclick="checkGroupList()" value="1" <?php echo $public?> />
+                              </td>
+                              <td><label for="is_public"><strong>Общий доступ</strong></label></td>
+                          </tr>
+                      </table>
+                      <div style="padding:5px">
+                          <span class="hinttext">
+                              Если отмечено, категория будет видна всем посетителям. Снимите галочку, чтобы вручную выбрать разрешенные группы пользователей.
+                          </span>
+                      </div>
+  
+                      <div style="margin-top:10px;padding:5px;padding-right:0px;" id="grp">
+                          <div>
+                              <strong>Показывать группам:</strong><br />
+                              <span class="hinttext">
+                                  Можно выбрать несколько, удерживая CTRL.
+                              </span>
+                          </div>
+                          <div>
+                              <?php
+                                  echo '<select style="width: 99%" name="showfor[]" id="showin" size="6" multiple="multiple" '.$style.'>';
+  
+                                  if (mysql_num_rows($result)){
+                                      while ($item=mysql_fetch_assoc($result)){
+                                          echo '<option value="'.$item['id'].'"';
+                                          if ($do=='edit'){
+                                              if (inArray($ord, $item['id'])){
+                                                  echo 'selected';
+                                              }
+                                          }
+  
+                                          echo '>';
+                                          echo $item['title'].'</option>';
+                                      }
+                                  }
+                                  
+                                  echo '</select>';
+                              ?>
+                          </div>
+                      </div>
 
                     {/tabs}
 
