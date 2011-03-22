@@ -116,6 +116,12 @@
                             'action'  => 'rewrite'
                          );
 
+        $rules[] = array(
+                            'source'  => '/^r([0-9]+)$/i',
+                            'target'  => 'billing/ref_link/{1}',
+                            'action'  => 'rewrite'
+                         );
+        
         //
         // Баннеры
         //
