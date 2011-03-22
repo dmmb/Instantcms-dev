@@ -847,6 +847,8 @@ function catalog(){
                 $inPage->addPathway($pcat['title'], '/catalog/'.$pcat['id']);
             }
         }
+		
+		$cats = $inCore->getListItems('cms_uc_cats', $cat_id, 'id', 'ASC', 'parent_id > 0 AND published = 1');
 
         if ($do == 'add_item'){
 
@@ -909,6 +911,7 @@ function catalog(){
             $smarty->assign('item', $item);
             $smarty->assign('fields', $fields);
             $smarty->assign('cat', $cat);
+			$smarty->assign('cats', $cats);
             $smarty->assign('cfg', $cfg);
             $smarty->assign('is_admin', $inUser->is_admin);
             $smarty->assign('cat_id', $cat_id);

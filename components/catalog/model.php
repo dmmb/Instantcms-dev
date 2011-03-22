@@ -68,6 +68,7 @@ class cms_model_catalog{
 
         $sql = "UPDATE cms_uc_items
                 SET title='{$item['title']}',
+				    category_id = '{$item['cat_id']}',
                     pubdate='{$item['pubdate']}',
                     published='{$item['published']}',
                     imageurl='{$item['imageurl']}',
