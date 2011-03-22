@@ -235,7 +235,7 @@ if ($do == 'create'){
         }
 
         if(!$errors){
-            $created_id = $model->addClub(array('user_id'=>$inUser->id, 'title'=>$title, 'clubtype'=>$clubtype));
+            $created_id = $model->addClub(array('user_id'=>$inUser->id, 'title'=>$title, 'clubtype'=>$clubtype), $cfg);
             if($created_id){ setClubRating($created_id); }
 			//регистрируем событие
 			cmsActions::log('add_club', array(

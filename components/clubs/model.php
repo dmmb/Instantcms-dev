@@ -102,12 +102,12 @@ class cms_model_clubs{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function addClub($item){
+    public function addClub($item, $cfg){
 
         $item = cmsCore::callEvent('ADD_CLUB', $item);
 
-        $sql = "INSERT INTO cms_clubs (id, admin_id, title, description, imageurl, pubdate, clubtype)
-                VALUES('', '{$item['user_id']}', '{$item['title']}', '', '', NOW(), '{$item['clubtype']}')";
+        $sql = "INSERT INTO cms_clubs (id, admin_id, title, description, imageurl, pubdate, clubtype, enabled_blogs, enabled_photos)
+                VALUES('', '{$item['user_id']}', '{$item['title']}', '', '', NOW(), '{$item['clubtype']}', '{$cfg['enabled_blogs']}', '{$cfg['enabled_photos']}')";
         $this->inDB->query($sql);
 
         if($this->inDB->errno()){ return false; }
