@@ -44,7 +44,7 @@
                     {/if}
                 </td>
                 <td width="120" class="{php}echo $class{/php}" style="font-size:10px" valign="top">{$subf.messages}</td>
-                <td width="250" style="font-size:10px" class="{php}echo $class{/php}" valign="top">{$subf.lastmessage}</td>
+                <td width="250" style="font-size:10px" class="{php}echo $class{/php}" valign="top">{$subf.last_message}</td>
             </tr>
             {php}$row++;{/php}
         {/foreach}
