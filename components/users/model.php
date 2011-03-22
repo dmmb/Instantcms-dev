@@ -268,7 +268,7 @@ class cms_model_users{
             $plugin = $inCore->loadPlugin( $plugin_name );
 
             if ($plugin!==false){                
-                $html = $plugin->execute($event, $user);
+                $html = $plugin->execute('USER_PROFILE', $user);
             }
 
             if ($html){
