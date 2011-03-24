@@ -352,7 +352,7 @@ function comments($target='', $target_id=0){
 					case 'blog':
 						$table      = 'cms_blog_posts';
 						$subj       = $_LANG['YOUR_POST'];
-						$targetlink = 'http://'.$_SERVER['HTTP_HOST'].'/%post_url%#c'.$comment_id;
+						$targetlink = 'http://'.$_SERVER['HTTP_HOST'].'%post_url%#c'.$comment_id;
 					break;
 				}
 
