@@ -289,6 +289,28 @@ class cms_model_board{
 
     }
 
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+	
+	public function uploadPhoto($old_file = '', $cfg, $cat) {
+		
+		$inCore = cmsCore::getInstance();
+
+		// Загружаем класс загрузки фото
+		$inCore->loadClass('upload_photo');
+		$inUploadPhoto = cmsUploadPhoto::getInstance();
+		// Выставляем конфигурационные параметры
+		$inUploadPhoto->upload_dir    = PATH.'/images/board/';
+		$inUploadPhoto->small_size_w  = $cat['thumb1'];
+		$inUploadPhoto->medium_size_w = $cat['thumb2'];
+		$inUploadPhoto->thumbsqr      = $cat['thumbsqr'];
+		$inUploadPhoto->is_watermark  = $cfg['watermark'];
+		// Процесс загрузки фото
+		$file = $inUploadPhoto->uploadPhoto($old_file);
+		
+		return $file;
+
+	}
 
 /* ==================================================================================================== */
 /* ==================================================================================================== */

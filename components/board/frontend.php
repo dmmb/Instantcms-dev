@@ -319,51 +319,47 @@ if($do=='read'){
 }
 /////////////////////////////// NEW BOARD ITEM /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='additem'){
-	$max_mb = 2; //max filesize in Mb
+
+    if ( !$inUser->id ) { cmsUser::goToLogin();	}
 
 	$inPage->backButton(false);
 
     $cat = $model->getCategory($id);
-
     if (!$cat) { cmsCore::error404(); }
 	
     if ( $cat['public'] == -1 ) { $cat['public'] = $cfg['public']; }
 
     $inPage->addPathway($cat['title'], '/board/'.$cat['id']);
 	$inPage->addPathway($_LANG['ADD_ADV']);
-
-    if ( !$inUser->id ) { cmsUser::goToLogin();	}
-
     $inPage->printHeading($_LANG['ADD_ADV']);
 
+	// Проверяем права доступа
     if ( !(loadedByUser24h($inUser->id, $cat['id'])<$cat['uplimit'] || $cat['uplimit'] == 0) ){       
 		cmsCore::addSessionMessage('<p>'.$_LANG['MAX_VALUE_OF_ADD_ADV'].'</p>', 'error');
 		$inCore->redirect('/board/'.$id);      
     }
-   
     if ( !$cat['public'] ){
 		cmsCore::addSessionMessage('<p>'.$_LANG['YOU_CANT_ADD_ADV'].'</p>', 'error');
 		$inCore->redirect('/board/'.$id);  
     }
     
-    ///////////// first upload step ////////////////////////////////////////////
     if ( !$inCore->inRequest('submit') ) {
 
         $inPage->setTitle($_LANG['ADD_ADV']);
+		
+		$item = cmsUser::sessionGet('item');
+		if ($item) { cmsUser::sessionDel('item'); }
+
+		$item['city'] = $item['city'] ? $item['city'] : $inDB->get_field('cms_user_profiles', 'id='.$inUser->id, 'city');
 
         $smarty = $inCore->initSmarty('components', 'com_board_edit.tpl');
         $smarty->assign('action', "/board/{$cat['id']}/add.html");
         $smarty->assign('form_do', 'add');
         $smarty->assign('cfg', $cfg);
 		$smarty->assign('cat', $cat);
+		$smarty->assign('item', $item);
         $smarty->assign('obtypes', obTypesOptions($cat['obtypes']));
-        $smarty->assign('title', '');
-        $smarty->assign('city', $inDB->get_field('cms_user_profiles', 'id='.$inUser->id, 'city'));
         $smarty->assign('cities', $inCore->boardCities('', '-- '.$_LANG['NOT_SELECT'].' --'));
-        $smarty->assign('content', '');
-        $smarty->assign('pubdays', '');
-        $smarty->assign('file', '');
-        $smarty->assign('category_id', '');
         $smarty->assign('is_admin', $inUser->is_admin);
         $smarty->assign('catslist', $inCore->getListItemsNS('cms_board_cats'));
 		$smarty->assign('messages', cmsCore::getSessionMessages());
@@ -372,25 +368,17 @@ if ($do=='additem'){
 
     }
 
-    ///////////// final upload step ////////////////////////////////////////////
     if ( $inCore->inRequest('submit') ) {
 
-        $errors     = '';
-        $user_id    = $inUser->id;
-
-        //params
+        // входные данные
         $obtype     = $inCore->request('obtype', 'str');
         $title_r	= $inCore->request('title', 'str', '');
         $title      = $obtype .' '. $title_r;
         $content 	= $inCore->request('content', 'str', '');
-
         $captcha    = $inCore->request('code', 'str', '');
-
         $city_ed    = $inCore->request('city_ed', 'str', '');
         $city       = $inCore->request('city', 'str', '');
         $city       = $city ? $city : $city_ed;
-
-        $published  = 0;
 
         if ($cat['public']==-1) { $cat['public'] = $cfg['public']; }
 
@@ -401,60 +389,47 @@ if ($do=='additem'){
         if (!$cfg['srok']){ $pubdays = isset($cfg['pubdays']) ? $cfg['pubdays'] : 14; }
 
 		$errors = false;
-        if (!$title_r) 	 { cmsCore::addSessionMessage($_LANG['NEED_TITLE'], 'error'); $errors = true; }
+        if (!$title_r) { cmsCore::addSessionMessage($_LANG['NEED_TITLE'], 'error'); $errors = true; }
         if (!$content) { cmsCore::addSessionMessage($_LANG['NEED_TEXT_ADV'], 'error'); $errors = true; }
         if (!$city)    { cmsCore::addSessionMessage($_LANG['NEED_CITY'], 'error'); $errors = true; }
 
         if (!$inCore->checkCaptchaCode($captcha) && !$inUser->is_admin){ cmsCore::addSessionMessage($_LANG['ERR_CAPTCHA'], 'error'); $errors = true; }
 
-        if ($errors){ $inCore->redirect('/board/'.$id.'/add.html'); }
+        if ($errors){
+			$item['content'] = $_REQUEST['content'];
+			$item['city']    = $city;
+			$item['title']   = $title_r;
+			cmsUser::sessionPut('item', $item);
+			$inCore->redirect('/board/'.$id.'/add.html');
+		}
 
-        $filename = '';
-        if (isset($_FILES['picture'])){
-            $inCore->includeGraphics();
-            //dirs
-            $uploaddir      = PATH.'/images/board/';
-            $realfile       = $_FILES['picture']['name'];
-            //next id
-            $filename       = md5($realfile . $user_id . time()).'.jpg';
-            //filenames
-            $uploadfile     = $uploaddir . $realfile;
-            $uploadphoto    = $uploaddir . $filename;
-            $uploadthumb    = $uploaddir . 'small/' . $filename;
-            $uploadthumb2   = $uploaddir . 'medium/' . $filename;
-            //uploading
-            if (@move_uploaded_file($_FILES['picture']['tmp_name'], $uploadphoto)) {
-                @img_resize($uploadphoto, $uploadthumb, $cat['thumb1'], $cat['thumb1'], $cat['thumbsqr']);
-                @img_resize($uploadphoto, $uploadthumb2, $cat['thumb2'], $cat['thumb2'], false, $cfg['watermark']);
-                if ($cfg['watermark']) { @img_add_watermark($uploadphoto);	}
-                @unlink($uploadphoto);
-            } else {
-				cmsCore::addSessionMessage($_LANG['PHOTO_NOT_UPLOAD'], 'info');
-            }
-        }
+		// Загружаем фото
+        $file = $model->uploadPhoto('', $cfg, $cat);
+		
+		if(!$file) { cmsCore::addSessionMessage($_LANG['PHOTO_NOT_UPLOAD'], 'info'); }
 
         $item_id = $model->addRecord(array(
                                     'category_id'=>$id,
-                                    'user_id'=>$user_id,
+                                    'user_id'=>$inUser->id,
                                     'obtype'=>$obtype,
                                     'title'=>$title,
                                     'content'=>$content,
                                     'city'=>$city,
                                     'pubdays'=>$pubdays,
                                     'published'=>$published,
-                                    'file'=>$filename
+                                    'file'=>$file['filename']
                                 ));
 		if ($published == 1) {
-		//регистрируем событие
-		cmsActions::log('add_board', array(
-					'object' => $title,
-					'object_url' => '/board/read'.$item_id.'.html',
-					'object_id' => $item_id,
-					'target' => $cat['title'],
-					'target_url' => '/board/'.$cat['id'],
-					'target_id' => $cat['id'], 
-					'description' => ''
-		));
+			//регистрируем событие
+			cmsActions::log('add_board', array(
+						'object' => $title,
+						'object_url' => '/board/read'.$item_id.'.html',
+						'object_id' => $item_id,
+						'target' => $cat['title'],
+						'target_url' => '/board/'.$cat['id'],
+						'target_id' => $cat['id'], 
+						'description' => ''
+			));
 		}
 
         //finish
@@ -477,7 +452,6 @@ if ($do=='edititem'){
     $inPage->setTitle($_LANG['EDIT_ADV']);
     $inPage->addPathway($item['category'], '/board/'.$item['cat_id']);
     $inPage->addPathway($_LANG['EDIT_ADV']);
-
     $inPage->printHeading($_LANG['EDIT_ADV']);
 
 	//Check user access
@@ -501,16 +475,8 @@ if ($do=='edititem'){
         $smarty->assign('cfg', $cfg);
         $smarty->assign('cat', $cat);
         $smarty->assign('obtypes', obTypesOptions($cat['obtypes'], $item['obtype']));
-        $smarty->assign('title', trim(str_replace($item['obtype'], '', $item['title'])));
-        $smarty->assign('city', $item['city']);
         $smarty->assign('cities', $inCore->boardCities('', '-- '.$_LANG['NOT_SELECT'].' --'));
-        $smarty->assign('content', $item['content']);
-        $smarty->assign('pubdays', $item['pubdays']);
-		$smarty->assign('published', $item['published']);
-		$smarty->assign('pubdate', $item['pubdate']);
-		$smarty->assign('is_overdue', $item['is_overdue']);
-        $smarty->assign('file', $item['file']);
-        $smarty->assign('category_id', $item['cat_id']);
+        $smarty->assign('item', $item);
         $smarty->assign('is_admin', $inUser->is_admin);
         $smarty->assign('catslist',  $inCore->getListItemsNS('cms_board_cats'));
 		$smarty->assign('messages', cmsCore::getSessionMessages());
@@ -518,8 +484,6 @@ if ($do=='edititem'){
     }
 
     if ($inCore->inRequest('submit')){
-        $errors = '';
-        $uid        = $inUser->id;
 
         $obtype     = $inCore->request('obtype', 'str');
         $title_r	= $inCore->request('title', 'str', '');
@@ -556,38 +520,9 @@ if ($do=='edititem'){
 
 		if ($errors){ $inCore->redirect('/board/edit'.$id.'.html'); }
 
-        $filename   = $item['file'];
-        $uploaddir  = PATH.'/images/board/';
-
-        if (isset($_FILES['picture']['name'])){
-            $inCore->includeGraphics();
-            $realfile       = $_FILES['picture']['name'];
-            $filename       = md5($id . $realfile . time()).'.jpg';
-            $uploadfile     = $uploaddir . $realfile;
-            $uploadphoto    = $uploaddir . $filename;
-            $uploadthumb    = $uploaddir . 'small/' . $filename;
-            $uploadthumb2   = $uploaddir . 'medium/' . $filename;
-
-            if (@move_uploaded_file($_FILES['picture']['tmp_name'], $uploadphoto)) {
-
-				if ($item['file'] && $item['file'] != 'nopic.jpg'){
-					@unlink($uploaddir . 'small/'.$item['file']);
-					@unlink($uploaddir . 'medium/'.$item['file']);
-				}
-                @img_resize($uploadphoto, $uploadthumb, $item['thumb1'], $item['thumb1'], $item['thumbsqr']);
-                @img_resize($uploadphoto, $uploadthumb2, $item['thumb2'], $item['thumb2'], false, $cfg['watermark']);
-                if ($cfg['watermark']) { @img_add_watermark($uploadphoto);	}
-                @unlink($uploadphoto);
-            } else {
-                $filename = $item['file'];
-            }
-        }
-
-        if ($inCore->request('delphoto', 'int', 0)){
-            $filename = '';
-            @unlink($uploaddir.'medium/'.$item['file']);
-            @unlink($uploaddir.'small/'.$item['file']);
-        }
+		// Загружаем фото
+        $file = $model->uploadPhoto($item['file'], $cfg, $cat);
+		$file['filename'] = $file['filename'] ? $file['filename'] : $item['file'];
 
         $model->updateRecord($id, array(
                                     'category_id'=>$item['category_id'],
@@ -598,10 +533,9 @@ if ($do=='edititem'){
 									'pubdate'=>$pubdate,
 									'pubdays'=>$pubdays,
                                     'published'=>$published,
-                                    'file'=>$filename
+                                    'file'=>$file['filename']
                                 ));
 
-        //finish
 		if (!$published) { $prmoder = '<p>'.$_LANG['ADV_EDIT_PREMODER_TEXT'].'</p>'; }
 		cmsCore::addSessionMessage('<p><strong>'.$_LANG['ADV_MODIFIED'].'</strong></p>'.$prmoder, 'info');
 		$inCore->redirect('/board/read'.$id.'.html');

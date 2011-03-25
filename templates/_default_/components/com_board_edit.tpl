@@ -15,7 +15,7 @@
 				<select name="obtype" id="obtype" style="width:120px">
 					{$obtypes}
 				</select>
-				<input name="title" type="text" id="title" style="width:280px" maxlength="250"  value="{$title|escape:'html'}"/>
+				<input name="title" type="text" id="title" style="width:280px" maxlength="250"  value="{$item.title|escape:'html'}"/>
 			</td>
 		</tr>
 		<tr class="proptable">
@@ -23,7 +23,7 @@
 				<span>{$LANG.CITY}:</span>
 			</td>
 			<td height="35" valign="top">
-				<input name="city_ed" type="text" id="city_ed" style="width:182px" value="{$city|escape:'html'}"/> {$LANG.OR_SELECTING} {$cities}
+				<input name="city_ed" type="text" id="city_ed" style="width:182px" value="{$item.city|escape:'html'}"/> {$LANG.OR_SELECTING} {$cities}
 			</td>
 		</tr>
 		<tr>
@@ -31,13 +31,13 @@
 				<span>{$LANG.TEXT_ADV}:</span>
 			</td>
 			<td height="100" valign="top">
-				<textarea name="content" style="width:400px" rows="5" id="content">{$content}</textarea>
+				<textarea name="content" style="width:400px" rows="5" id="content">{$item.content}</textarea>
 			</td>
 		</tr>
 		{if $form_do == 'edit'}
 			<tr>
 				<td height="35"><span>{$LANG.PERIOD_PUBL}:</span></td>
-				<td height="35">{$pubdays} {$LANG.DAYS}, {$LANG.DAYS_TO} {$pubdate}.</td>
+				<td height="35">{$item.pubdays} {$LANG.DAYS}, {$LANG.DAYS_TO} {$item.pubdate}.</td>
 			</tr>
 		{elseif $cfg.srok}
 			<tr>
@@ -53,7 +53,7 @@
 				</td>
 			</tr>
 		{/if}
-        {if $cfg.extend && $form_do == 'edit' && !$published && $is_overdue}
+        {if $cfg.extend && $form_do == 'edit' && !$item.published && $item.is_overdue}
         	{if $cfg.srok}
                 <tr>
                     <td height="35"><span>{$LANG.ADV_EXTEND}:</span></td>
@@ -69,24 +69,18 @@
             {else}
                 <tr>
                     <td height="35"><span>{$LANG.ADV_EXTEND}:</span></td>
-                    <td height="35">{$LANG.ADV_EXTEND_SROK} {$pubdays} {$LANG.DAYS}</td>
+                    <td height="35">{$LANG.ADV_EXTEND_SROK} {$item.pubdays} {$LANG.DAYS}</td>
                 </tr>
             {/if}
         {/if}
 		{if $cfg.photos && $cat.is_photos}
 			<tr>
 				<td><span>{$LANG.PHOTO}:</span></td>
-				<td><input name="picture" type="file" id="picture" style="width:400px;" /></td>
+				<td><input name="Filedata" type="file" id="picture" style="width:400px;" /></td>
 			</tr>
-			{if strlen($file)}
-				<tr>
-					<td height="30" valign="middle"><span>{$LANG.DEL_PHOTO}:</span></td>
-					<td valign="middle"><input type="checkbox" name="delphoto" value="1" id="delphoto" /></td>
-				</tr>
-			{/if}
 		{/if}
 
-		{if $category_id}
+		{if $item.cat_id}
 			<tr>
 				<td height="30"><span>{$LANG.MOVE_TO_CAT}:</span></td>
 				<td>
