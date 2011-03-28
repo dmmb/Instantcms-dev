@@ -168,6 +168,16 @@
 
 // ========================================================================== //
 // ========================================================================== //
+
+    if ($inDB->isFieldExists('cms_user_msg', 'to_del')){
+        $inDB->query("ALTER TABLE `cms_user_msg` ADD `to_del` TINYINT NOT NULL DEFAULT '0'");
+        $inDB->query("ALTER TABLE `cms_user_msg` ADD `from_del` TINYINT NOT NULL DEFAULT '0'");
+        echo '<p>Поля <strong>to_del</strong>, <strong>from_del</strong> добавлены в таблицу <strong>cms_user_msg</strong></p>';
+        $is_was_migrate = true;
+    }	
+
+// ========================================================================== //
+// ========================================================================== //
 	if ($is_was_migrate) {
 	    echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Миграция завершена. Удалите папку /migrate/ прежде чем продолжить!</div>';
 	} else {

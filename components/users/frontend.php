@@ -2045,38 +2045,52 @@ if ($do=='sendmessage'){
 /////////////////////////////// DEL MESSAGE /////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delmessage'){
 
-	if (!$cfg['sw_msg']) { cmsCore::error404(); }
-	
-	if (usrCheckAuth()){
-		$sql = "SELECT to_id, from_id, is_new FROM cms_user_msg WHERE id = '$id' LIMIT 1";
-		$result = $inDB->query($sql) ;
-		if ($inDB->num_rows($result)){
-			$msg = $inDB->fetch_assoc($result);
-			if ($msg['to_id']==$inUser->id || ($msg['from_id']==$inUser->id && $msg['is_new'])){
-				$inDB->query("DELETE FROM cms_user_msg WHERE id = '$id' LIMIT 1") ;
-				if ($msg['is_new']) { 
-					$inCore->addSessionMessage($_LANG['MESS_BACK_OK'], 'info');
-				} else {
-					$inCore->addSessionMessage($_LANG['MESS_DEL_OK'], 'info');
-				}
-			}
-		}
-	}
-	header('location:'.$_SERVER['HTTP_REFERER']);
+    if (!$cfg['sw_msg']) { cmsCore::error404(); }
+    if (!$inUser->id) { cmsCore::error404(); }
+
+    $msg = $inDB->get_fields('cms_user_msg', "id='$id'", '*');
+
+    if (!$msg){ cmsCore::error404(); }
+
+    if ($msg['to_id']==$inUser->id){
+        $inDB->query("UPDATE cms_user_msg SET to_del=1 WHERE id='{$id}'");
+        $inCore->addSessionMessage($_LANG['MESS_DEL_OK'], 'info');
+    }
+
+    if ($msg['from_id']==$inUser->id && !$msg['is_new']){
+        $inDB->query("UPDATE cms_user_msg SET from_del=1 WHERE id='{$id}'");
+        $inCore->addSessionMessage($_LANG['MESS_DEL_OK'], 'info');
+    }
+
+    if ($msg['from_id']==$inUser->id && $msg['is_new']){
+        $inDB->query("DELETE FROM cms_user_msg WHERE id = '$id' LIMIT 1");
+        $inCore->addSessionMessage($_LANG['MESS_BACK_OK'], 'info');
+    }
+
+    $inDB->query("DELETE FROM cms_user_msg WHERE to_del=1 AND from_del=1");
+
+    $inCore->redirectBack();
+
 }//do
 /////////////////////////////// DELETE ALL INBOX MESSAGES ///////////////////////////////////////////////////////////////////////
 if ($do=='delmessages'){
 
 	if (!$cfg['sw_msg']) { cmsCore::error404(); }
-	
-	if (usrCheckAuth()){
-		if($inUser->id == $id || $inCore->userIsAdmin($inUser->id)){
-			$sql = "DELETE FROM cms_user_msg WHERE to_id = '$id'";
-			$inDB->query($sql) ;
-			$inCore->addSessionMessage($_LANG['MESS_ALL_DEL_OK'], 'info');
-		}
-	}
-	header('location:'.$_SERVER['HTTP_REFERER']);
+
+    if ($inUser->id != $id && !$inUser->is_admin){ cmsCore::error404(); }
+
+    $opt        = $inCore->request('opt', 'str', 'in');
+
+    $del_flag   = $opt=='in' ? 'to_del' : 'from_del';
+    $id_flag    = $opt=='in' ? 'to_id' : 'from_id';
+
+    $inDB->query("UPDATE cms_user_msg SET {$del_flag}=1 WHERE {$id_flag}='{$id}'");
+    $inDB->query("DELETE FROM cms_user_msg WHERE to_del=1 AND from_del=1") ;
+
+    $inCore->addSessionMessage($_LANG['MESS_ALL_DEL_OK'], 'info');
+
+	$inCore->redirectBack();
+
 }//do
 ///////////////////////////////////////////// KARMA LOG /////////////////////////////////////////////////////////////////////////
 if ($do=='karma'){

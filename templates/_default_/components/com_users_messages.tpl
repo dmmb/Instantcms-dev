@@ -36,11 +36,8 @@
 		
 				<td><strong>{$LANG.MESS_INBOX}:</strong> {$msg_count}</td>
 			
-				{if $opt=='out'}
-					<td align="center"><span style="color:gray">{$LANG.SENT_TEXT}</span></td>
-				{/if}
-				{if $opt=='in' && $msg_count>0}
-					<td width="100" align="right"><a href="/users/{$id}/delmessages.html">{$LANG.CLEAN_CAT}</a></td>
+				{if ($opt=='in' || $opt=='out') && $msg_count>0}
+					<td width="100" align="right"><a href="/users/{$id}/delmessages-{$opt}.html">{$LANG.CLEAN_CAT}</a></td>
 				{/if}
 			
 			</tr></table>
@@ -68,7 +65,7 @@
 									<td class="usr_msg_title" width="80" align="right"><a class="msg_history" href="/users/{$id}/messages-history{$record.from_id}.html">{$LANG.HISTORY}</a></td>
 								{/if}
 							{/if}
-							{if $opt=='in' || $record.to_id==$usr_id}
+							{if $opt=='in' || ($opt=='out' && !$record.is_new)}
 								<td class="usr_msg_title" width="70" align="right"><a class="msg_delete" href="/users/delmsg{$record.id}.html">{$LANG.DELETE}</a></td>
 							{/if}
 						</tr>
