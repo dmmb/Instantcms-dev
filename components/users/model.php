@@ -315,6 +315,7 @@ class cms_model_users{
                         IFNULL(SUM(k.points), 0) as karma
                 FROM cms_users u
                 LEFT JOIN cms_user_karma k ON k.user_id = u.id
+                WHERE is_deleted = 0
                 GROUP BY u.id
                 ";
 
