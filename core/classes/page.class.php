@@ -59,9 +59,13 @@ public function addHead($tag){
  * @return true
  */
 public function addHeadJS($src){
-    $src = '/'.$src;
-    $this->page_head[] = '<script language="JavaScript" type="text/javascript" src="'.$src.'"></script>';
+
+    $js_tag = '<script language="JavaScript" type="text/javascript" src="/'.$src.'"></script>';
+
+    if (!in_array($js_tag, $this->page_head)){ $this->page_head[] = $js_tag; }
+
     return true;
+
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,9 +75,13 @@ public function addHeadJS($src){
  * @return true
  */
 public function addHeadCSS($src){
-    $src = '/'.$src;
-    $this->page_head[] = '<link href="'.$src.'" rel="stylesheet" type="text/css" />';
+
+    $css_tag = '<link href="/'.$src.'" rel="stylesheet" type="text/css" />';
+
+    if (!in_array($css_tag, $this->page_head)){ $this->page_head[] = $css_tag; }
+    
     return true;
+
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

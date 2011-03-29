@@ -977,8 +977,15 @@ class bbcode {
         $lang = $elem['attrib']['code'];
         if(!$lang){ $lang = 'php'; }
         $str = '<div class="bb_tag_code">';
-		$str .= '<b>Код '.strtoupper($lang).':</b><br/>';
-		$str .= '<pre class="brush: '.strtolower($lang).';">';
+        $str .= '<b>Код '.strtoupper($lang).':</b><br/>';
+        $str .= '<pre class="brush: '.strtolower($lang).';">';
+
+        $inPage = cmsPage::getInstance();       
+        $inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
+        $inPage->addHeadJS('includes/jquery/syntax/scripts/shCore.js');
+        $inPage->addHeadJS('includes/jquery/syntax/scripts/shBrush'.ucfirst(strtolower($lang)).'.js');
+        $_SESSION['bbcode']['code_js_added'][$lang] = 1;
+
         foreach ($elem['val'] as $item) {
             if ('item'==$item['type']) { continue; }
             $item['str'] = str_replace('&#8217;', "'", $item['str']);
@@ -992,6 +999,7 @@ class bbcode {
                  </script>';
         return $str;
     }
+
     // Функция - обработчик тега [video]
     function video_2html($elem) {
         $str = '<div class="bb_tag_video">';
@@ -1001,7 +1009,8 @@ class bbcode {
         }
         $str .= '</div>';
         return $str;
-    }	
+    }
+    
     // Функция - обработчик тега [audio]
     function audio_2html($elem) {
         $str = '<div class="bb_tag_audio">';
