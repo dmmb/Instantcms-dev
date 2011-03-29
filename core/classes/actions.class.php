@@ -168,6 +168,14 @@ class cmsActions {
         
     }
 
+    public static function removeLogById($id){
+
+        $inDB = cmsDatabase::getInstance();
+
+        $inDB->query("DELETE FROM cms_actions_log WHERE id = '{$id}'");
+
+    }
+
 // ============================================================================ //
 // ============================================================================ //
 
@@ -278,7 +286,8 @@ class cmsActions {
         if (!$this->only_friends){ $this->where('log.is_friends_only = 0'); }
         if (!$inUser->id) { $this->where('log.is_users_only = 0'); }
 
-        $sql = "SELECT log.object as object,
+        $sql = "SELECT log.id as id,
+                       log.object as object,
                        log.object_url as object_url,
                        log.target as target,
                        log.target_url as target_url,
