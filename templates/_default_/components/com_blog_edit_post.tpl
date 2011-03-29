@@ -50,10 +50,10 @@
 			</td>
 			<td>
                 <select name="comments" id="comments" style="width:407px">
-                    <option value="0" >{$LANG.NO}</option>
-                    <option value="1" selected >{$LANG.YES}</option>
+                    <option value="0" {if !$mod.comments}selected="selected"{/if}>{$LANG.NO}</option>
+                    <option value="1" {if $mod.comments}selected="selected"{/if} >{$LANG.YES}</option>
                 </select><br />
-				<span class="hinttext" style="font-size:11px">{$LANG.IS_COMMENTS}</span>
+                <span class="hinttext" style="font-size:11px">{$LANG.IS_COMMENTS}</span>
 			</td>
 		</tr>
         {/if}
