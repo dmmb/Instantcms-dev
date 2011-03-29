@@ -1285,10 +1285,16 @@ a.new_messages_link:hover{ color:#F00; background:#Fff; font-weight:bold; paddin
     margin:0px;
 }
 .bb_tag_code{
-	border:solid 1px silver;
-	padding:8px;
+    border:solid 1px silver;
+    padding:8px;
     margin-top:5px;
     margin-bottom:5px;
+    max-width:700px;
+    overflow:auto;
+}
+.bb_tag_code ol{
+    padding: 6px 0;
+    padding-left:5px;
 }
 .bb_tag_hide{
 	padding:8px;

@@ -782,10 +782,10 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 			echo '</form>';
 			
 		} else {
-			$message_post = $inCore->request('message', 'html');
-            $message = $inDB->escape_string($message_post);
-			$message = $inCore->badTagClear($message);
-			if (!$message) { echo '<p>'.$_LANG['NEED_TEXT_POST'].'</p>'; return; }
+                $message_post = $inCore->request('message', 'html');
+                $message = $inDB->escape_string($message_post);
+                $message = $inCore->badTagClear($message);
+                if (!$message) { echo '<p>'.$_LANG['NEED_TEXT_POST'].'</p>'; return; }
 
 			if($do=='newpost'){												
 				//NEW POST
