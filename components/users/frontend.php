@@ -544,7 +544,7 @@ if ($do=='comments'){
 
 	$inPage->setTitle($_LANG['COMMENTS'].' - '.$usr['nickname']);
 	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-	$inPage->addPathway($_LANG['COMMENTS'], $_SERVER['REQUEST_URI']);
+	$inPage->addPathway($_LANG['COMMENTS']);
 
 	$sql = "SELECT c.*,  IFNULL(v.total_rating, 0) as votes
                 FROM cms_comments c
@@ -555,13 +555,6 @@ if ($do=='comments'){
 	$result = $inDB->query($sql) ;
 	
 	if ($inDB->num_rows($result)>0){
-		$cfg_comm = $inCore->loadComponentConfig('comments');
-		if ($cfg_comm['bbcode'] && $cfg_comm['j_code']) {
-			$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
-			$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
-			$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
-			$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
-		}
 		$comments = array();
 		while ($com = $inDB->fetch_assoc($result)){
                 if ($com['votes']>0){
@@ -602,7 +595,7 @@ if ($do=='forumposts'){
 
     $inPage->setTitle($_LANG['POSTS_IN_FORUM'].' - '.$usr['nickname']);
     $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-    $inPage->addPathway($_LANG['POSTS_IN_FORUM'], $_SERVER['REQUEST_URI']);
+    $inPage->addPathway($_LANG['POSTS_IN_FORUM']);
 
 	if ($inUser->id == $id) {
 		$sql = "SELECT *, t.title as topic, p.id as id, t.id as thread_id
@@ -700,13 +693,6 @@ if ($do=='profile'){
         return;
     }
 	
-	if ($cfg['j_code']) {
-		$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
-		$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
-		$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
-		$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
-	}
-
     $usr['avatar']				 = usrImageNOdb($usr['id'], 'big', $usr['imageurl'], $usr['is_deleted']);
 	
     $usr['friends']				= usrFriends($usr['id'], $usr['friends_total'], 6);
@@ -854,12 +840,6 @@ if ($do=='messages'){
 				$inPage->setTitle($_LANG['MY_MESS']);
 				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 				$inPage->addPathway($_LANG['MY_MESS'], '/users/'.$id.'/messages.html');
-		if ($cfg['j_code']) {
-				$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
-				$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
-				$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
-				$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
-		}
 				include 'components/users/messages.php';			
 
 	} else { echo usrAccessDenied(); }
@@ -965,7 +945,7 @@ if ($do=='select_avatar'){
 
 	if (usrCheckAuth() && $inUser->id==$id){
 
-        $avatars_dir        = $_SERVER['DOCUMENT_ROOT']."/images/users/avatars/library";
+        $avatars_dir        = PATH."/images/users/avatars/library";
         $avatars_dir_rel    = "/images/users/avatars/library";
 
         //get avatars list from library directory
@@ -1900,7 +1880,7 @@ if ($do=='sendmessage'){
 
     $inPage->setTitle($_LANG['SEND_MESS']);
     $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-    $inPage->addPathway($_LANG['SEND_MESS'], $_SERVER['REQUEST_URI']);
+    $inPage->addPathway($_LANG['SEND_MESS']);
 
     if(!$inCore->inRequest('gosend')){
 
@@ -1917,13 +1897,6 @@ if ($do=='sendmessage'){
             $result = $inDB->query($sql) ;
 
             if (!$inDB->num_rows($result)){ $inCore->redirect("/users/{$from_id}/messages.html"); }
-
-            if ($cfg['j_code']) {
-                $inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
-                $inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
-                $inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
-                $inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
-            }
 
             $is_reply_user      = true;
             $msg                = $inDB->fetch_assoc($result);

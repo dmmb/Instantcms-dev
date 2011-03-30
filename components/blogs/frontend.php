@@ -44,7 +44,6 @@ function blogs(){
 	if (!isset($cfg['rss_one'])) { $cfg['rss_one'] = 1; }
     if (!isset($cfg['img_on'])) { $cfg['img_on'] = 1; }
     if (!isset($cfg['update_date'])) { $cfg['update_date'] = 1; }
-	if (!isset($cfg['j_code'])) { $cfg['j_code'] = 1; }
 	if (!isset($cfg['update_seo_link'])) { $cfg['update_seo_link'] = 0; }
 	if (!isset($cfg['update_seo_link_blog'])) { $cfg['update_seo_link_blog'] = 0; }
 	
@@ -335,13 +334,6 @@ if ($do=='view'){
 ////////// ÏÐÎÑÌÎÒÐ ÁËÎÃÀ ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='blog'){
 
-	if ($cfg['j_code']) {
-		$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
-		$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
-		$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
-		$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
-	}
-    
     $error = '';
 
     //Ïîëó÷àåì ID ïîëüçîâàòåëÿ
@@ -1267,13 +1259,6 @@ if ($do == 'delcat'){
 
 ////////// VIEW LATEST POSTS ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='latest'){
-
-	if ($cfg['j_code']) {
-		$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
-		$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
-		$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
-		$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
-	}
 	
 	$smarty     = $inCore->initSmarty('components', 'com_blog_view_posts.tpl');
 				
@@ -1354,13 +1339,6 @@ if ($do=='latest'){
     }
 ////////// VIEW POPULAR POSTS ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='best'){
-
-	if ($cfg['j_code']) {
-		$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
-		$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
-		$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
-		$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
-	}
 
 	$smarty   = $inCore->initSmarty('components', 'com_blog_view_posts.tpl');
 				
