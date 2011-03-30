@@ -1179,6 +1179,7 @@ a.tag:hover{
 .mod_user_menu .logout a{ background:url(../images/icons/logout.png) no-repeat 6px center; }
 .mod_user_menu .register a{ background:url(../images/icons/register.png) no-repeat 6px center; }
 .mod_user_menu .login a{ background:url(../images/icons/key.png) no-repeat 6px center; }
+.mod_user_menu .my_balance a{ background:url(../images/billing/balance.png) no-repeat 6px center; }
 
 .usr_msgmenu_bar{
 	background-color:#E0EAEF;
