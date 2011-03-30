@@ -409,9 +409,9 @@ if ($do=='addarticle' || $do=='editarticle'){
         $article['content']             = $inCore->badTagClear($article['content']);
 
         $article['published']           = $is_auto_add ? 1 : 0;
-		if ($do=='editarticle'){
-			$article['published']           = ($mod['published'] == 0) ? $mod['published'] : $article['published'];
-		}
+          if ($do=='editarticle'){
+               $article['published']           = ($mod['published'] == 0) ? $mod['published'] : $article['published'];
+          }
         $article['pubdate']             = $mod['pubdate'] ? $mod['pubdate'] : date('Y-m-d H:i');
         $article['enddate']             = $article['pubdate'];
         $article['is_end']              = 0;

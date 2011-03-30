@@ -1005,8 +1005,16 @@ class bbcode {
     function video_2html($elem) {
         $str = '<div class="bb_tag_video">';
         foreach ($elem['val'] as $item) {
+            
             if ('item'==$item['type']) { continue; }
-            $str .= strip_tags($item['str'], '<object><param><embed>');
+
+            $iframe_regexp      = '/<iframe.*?src=(?!"http:\/\/www\.youtube\.com\/embed\/|"http:\/\/vkontakte\.ru\/video_ext\.php\?).*?><\/iframe>/i';
+            $iframe_regexp2     = '/<iframe.*>.+<\/iframe>/i';
+            $item['str']        = preg_replace($iframe_regexp, '', $item['str']);
+            $item['str']        = preg_replace($iframe_regexp2, '', $item['str']);
+
+            $str .= strip_tags($item['str'], '<iframe><object><param><embed>');
+
         }
         $str .= '</div>';
         return $str;

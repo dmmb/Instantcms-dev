@@ -272,7 +272,7 @@ if ($do == 'config'){
     if ( $inCore->inRequest('save') ){
         //save to database
         $description 		= $inCore->request('description', 'html', '');
-		$description 		= $inCore->badTagClear($description);
+        $description 		= $inCore->badTagClear($description);
         $description 		= $inDB->escape_string($description);
         $admin_id 			= $club['admin_id'];
         $clubtype			= $inCore->request('clubtype', 'str', 'public');

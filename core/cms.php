@@ -3231,12 +3231,19 @@ class cmsCore {
      * @return bool
      */
     public static function badTagClear($string){
-		$bad_teg = array ("'<script[^>]*?>.*?</script>'si",
-						 "'<iframe[^>]*?>.*?</iframe>'si",
-						 "'<style[^>]*?>.*?</style>'si",
-						 "'<meta[^>]*?>'si");
-		$string = preg_replace($bad_teg, '', $string);
+
+        $bad_tags = array (
+            "'<script[^>]*?>.*?</script>'si",
+            "'<style[^>]*?>.*?</style>'si",
+            "'<meta[^>]*?>'si",
+            '/<iframe.*?src=(?!"http:\/\/www\.youtube\.com\/embed\/|"http:\/\/vkontakte\.ru\/video_ext\.php\?).*?>.*?<\/iframe>/i',
+            '/<iframe.*>.+<\/iframe>/i'
+        );
+
+        $string = preg_replace($bad_tags, '', $string);
+
         return $string;
+        
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
