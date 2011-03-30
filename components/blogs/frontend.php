@@ -1061,15 +1061,17 @@ if ($do == 'delpost'){
     if ($owner=='user'){
         $myblog     = $model->isUserBlogAuthor($blog['id'], $post_id, $blog['user_id']);
         $is_author  = (((!$myblog) && $inDB->get_field('cms_blog_authors', 'blog_id='.$id.' AND user_id='.$user_id, 'id')) || ($blog['forall'] && $post['user_id'] == $user_id));
+		$is_admin   = $inUser->is_admin;
     }
     if($owner=='club') {
         $myblog     = clubUserIsRole($blog['user_id'], $user_id, 'moderator');
         $is_author  = (clubUserIsRole($blog['user_id'], $user_id, 'member') && $post['user_id'] == $user_id);
+		$is_admin   = clubUserIsAdmin($blog['user_id'], $user_id) || $inUser->is_admin;
     }
 
     if ( !$inCore->inRequest('confirm') ) {
         //MENU
-        if ($myblog || ($is_author && $post['user_id'] == $user_id) || $inUser->is_admin){
+        if ($myblog || ($is_author && $post['user_id'] == $user_id) || $is_admin){
             $inPage->setTitle($_LANG['DELETE_POST']);
 			$inPage->addPathway($_LANG['DELETE_POST']);
             $inPage->backButton(false);
@@ -1089,7 +1091,7 @@ if ($do == 'delpost'){
 
     if ( $inCore->inRequest('confirm') ){
 
-        if ($myblog || ($is_author && $post['user_id'] == $user_id) || $inUser->is_admin){
+        if ($myblog || ($is_author && $post['user_id'] == $user_id) || $is_admin){
             
             $model->deletePost($post_id);
 
@@ -1115,10 +1117,10 @@ if ($do == 'publishpost'){
 	if ($user_id){
 		if ($owner=='user'){
 			$myblog     = $blog['user_id'] == $user_id;
-			$is_admin   = $inCore->userIsAdmin($user_id);
+			$is_admin   = $inUser->is_admin;
 		} elseif ($owner=='club') {
 			$myblog     = clubUserIsRole($blog['user_id'], $user_id, 'moderator') || clubUserIsAdmin($blog['user_id'], $user_id);
-			$is_admin   = $inCore->userIsAdmin($user_id);
+			$is_admin   = clubUserIsAdmin($blog['user_id'], $user_id) || $inUser->is_admin;
 		}
 	}
     if ($myblog || $is_admin){
