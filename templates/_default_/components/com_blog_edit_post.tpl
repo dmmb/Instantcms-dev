@@ -1,3 +1,10 @@
+{if $messages}
+    <div class="sess_messages">
+        {foreach key=id item=message from=$messages}
+            {$message}
+        {/foreach}
+    </div>
+{/if}
 <form style="margin-top:15px" action="" method="post" name="msgform" enctype="multipart/form-data">
 	{if !$blog.showcats}
 		<input type="hidden" name="cat_id" value="0"/>
@@ -50,8 +57,8 @@
 			</td>
 			<td>
                 <select name="comments" id="comments" style="width:407px">
-                    <option value="0" >{$LANG.NO}</option>
-                    <option value="1" selected >{$LANG.YES}</option>
+                    <option value="0" {if !$mod.comments}selected="selected"{/if}>{$LANG.NO}</option>
+                    <option value="1" {if $mod.comments}selected="selected"{/if} >{$LANG.YES}</option>
                 </select><br />
 				<span class="hinttext" style="font-size:11px">{$LANG.IS_COMMENTS}</span>
 			</td>
@@ -74,7 +81,7 @@
 				<div class="usr_msg_bbcodebox">{$bb_toolbar}</div>
 				{$smilies}
 				{$autogrow}
-				<div><textarea class="ajax_autogrowarea" name="content" id="message">{$msg}</textarea></div>
+				<div><textarea class="ajax_autogrowarea" name="content" id="message">{$mod.content}</textarea></div>
                 <div style="margin-top:12px;margin-bottom:15px;" class="hinttext">
                     <strong>{$LANG.IMPORTANT}:</strong> {$LANG.CUT_TEXT},<br/>
                     <a href="javascript:addTagCut('message');" class="ajaxlink">{$LANG.ADD_CUT_TAG}</a> {$LANG.BETWEEN}.

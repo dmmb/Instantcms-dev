@@ -702,17 +702,6 @@ if ($do=='newpost' || $do=='editpost'){
         $bb_toolbar = cmsPage::getBBCodeToolbar('message',$cfg['img_on'], 'blogs');
         $smilies    = cmsPage::getSmilesPanel('message');
 
-        //подготавливаем текст поста, если пост загружен
-        if (isset($post['content'])){
-            $msg = $post['content'];
-            $msg = str_replace('&amp;', "&", $msg);
-            $msg = str_replace('<br/>', "\n", $msg);
-            $msg = str_replace('<br />', "\n", $msg);
-            $msg = str_replace('<br>', "\n", $msg);
-         } else {
-            $msg = '';
-         }
-
         $inCore->initAutoGrowText('#message');
         $inPage->backButton(false);
 
@@ -720,6 +709,11 @@ if ($do=='newpost' || $do=='editpost'){
         $tagline = isset($post['id']) ? cmsTagLine('blogpost', $post['id'], false) : '';
 
         $autocomplete_js = $inPage->getAutocompleteJS('tagsearch', 'tags');
+
+		if ($do=='newpost'){
+			$post = cmsUser::sessionGet('mod');
+			if ($post) { cmsUser::sessionDel('mod'); }
+		}
 
         //показываем форму
         $smarty = $inCore->initSmarty('components', 'com_blog_edit_post.tpl');
@@ -733,6 +727,7 @@ if ($do=='newpost' || $do=='editpost'){
 			$smarty->assign('is_admin', $is_admin);
 			$smarty->assign('user_can_iscomments', $user_can_iscomments);
             $smarty->assign('tagline', $tagline);
+			$smarty->assign('messages', cmsCore::getSessionMessages());
             $smarty->assign('autocomplete_js', $autocomplete_js);
         $smarty->display('com_blog_edit_post.tpl');
 
@@ -740,7 +735,8 @@ if ($do=='newpost' || $do=='editpost'){
 
     //Если есть запрос на сохранение
     if ( $inCore->inRequest('goadd') ) {
-        $error_msg = '';;
+
+        $error = false;
 
         //Получаем параметры
         $title 		= $inCore->request('title', 'str');
@@ -753,19 +749,23 @@ if ($do=='newpost' || $do=='editpost'){
 		$comments   = $inCore->request('comments', 'int', 1);
 
         //Проверяем их
-        if (strlen($title)<2) { $error_msg .= $_LANG['POST_ERR_TITLE'].'<br/>'; }
-        if (strlen($content)<5) { $error_msg .= $_LANG['POST_ERR_TEXT'].'<br/>'; }
+        if (strlen($title)<2) {  cmsCore::addSessionMessage($_LANG['POST_ERR_TITLE'], 'error'); $errors = true; }
+        if (strlen($content)<5) { cmsCore::addSessionMessage($_LANG['POST_ERR_TEXT'], 'error'); $errors = true; }
+		
+		// Если есть ошибки, возвращаемся назад
+		if($errors){
+			$mod['content']   = $content;
+			$mod['comments']  = $comments;
+			$mod['feel']      = $feel;
+			$mod['music']     = $music;
+			$mod['title']     = $title;
+			$mod['allow_who'] = $allow_who;
+			cmsUser::sessionPut('mod', $mod);
+			$inCore->redirectBack();
+		}
 
-        //Если найдены ошибки - показываем и выходим
-        if($error_msg) {
-            $inPage->setTitle($_LANG['ERR_POST_CREATE']);
-            $inPage->printHeading($_LANG['ERR_POST_CREATE']);
-            echo '<p style="color:red">'.$error_msg.'</p>';
-            return;
-        }
-
-        //Если ошибки не найдены 
-        if(!$error_msg){
+        //Если нет ошибок
+        if(!$errors){
             //добавляем новый пост...
             if ($do=='newpost'){
 
