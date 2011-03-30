@@ -30,6 +30,9 @@
 
         $blog_href  = ($blog['id']) ? '/blogs/'.$blog['seolink'] : '/blogs/createblog.html';
         $avatar     = '<img src="/images/users/avatars/small/'.$inUser->imageurl.'" />';
+        
+        $is_billing = $inCore->isComponentInstalled('billing');
+        $balance    = $is_billing ? $inUser->balance : 0;
 
         $smarty = $inCore->initSmarty('modules', 'mod_usermenu.tpl');
         $smarty->assign('avatar', $avatar);
@@ -44,6 +47,7 @@
         $smarty->assign('blogid', $blog['id']);
         $smarty->assign('blog_href', $blog_href);
         $smarty->assign('users_cfg', $users_cfg);
+        $smarty->assign('balance', $balance);
         $smarty->display('mod_usermenu.tpl');
 
         return true;
