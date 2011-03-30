@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Мар 28 2011 г., 13:15
+-- Время создания: Мар 30 2011 г., 14:19
 -- Версия сервера: 5.5.8
 -- Версия PHP: 5.3.5
 
@@ -106,12 +106,14 @@ INSERT INTO `cms_actions_log` (`id`, `action_id`, `pubdate`, `user_id`, `object`
 (5, 20, '2010-11-13 23:18:39', 3, 'Администратор', 'http://icms/users/admin', 11, '', '', 0, '', 0, 0),
 (6, 2, '2010-11-13 23:19:19', 3, 'комментарий', '/stati/marketing/yelastichnost-sprosa.html#c14', 14, 'Эластичность спроса', '/stati/marketing/yelastichnost-sprosa.html', 0, 'Полностью согласен с Вами, коллега.', 0, 0),
 (7, 15, '2010-11-13 23:21:43', 3, 'Клуб любителей InstantCMS', '/clubs/14', 14, '', '', 0, '', 0, 0),
-(8, 28, '2011-03-18 14:47:04', 4, '', '', 4, '', '', 0, '', 0, 0),
 (9, 17, '2011-03-18 15:43:16', 1, 'пост', '/forum/thread-last12.html#30', 30, 'Пример темы', '/forum/thread-last12.html', 12, 'тест ссылок\r\n\r\n1. http://www.yandex.ru/', 0, 0),
 (15, 2, '2011-03-19 14:45:17', 3, 'комментарий', '/stati/marketing/yelastichnost-sprosa.html#c20', 20, 'Эластичность спроса', '/stati/marketing/yelastichnost-sprosa.html', 0, 'qwe qwe', 0, 0),
 (14, 2, '2011-03-19 14:43:54', 1, 'комментарий', '/stati/marketing/yelastichnost-sprosa.html#c19', 19, 'Эластичность спроса', '/stati/marketing/yelastichnost-sprosa.html', 0, 'да ужж...', 0, 0),
 (13, 2, '2011-03-19 13:39:22', 2, 'комментарий', '/stati/marketing/yelastichnost-sprosa.html#c18', 18, 'Эластичность спроса', '/stati/marketing/yelastichnost-sprosa.html', 0, 'исчо бы ты был не согласен!!!', 0, 0),
-(16, 2, '2011-03-19 14:46:58', 3, 'комментарий', '/stati/marketing/yelastichnost-sprosa.html#c21', 21, 'Эластичность спроса', '/stati/marketing/yelastichnost-sprosa.html', 0, 'wtf', 0, 0);
+(16, 2, '2011-03-19 14:46:58', 3, 'комментарий', '/stati/marketing/yelastichnost-sprosa.html#c21', 21, 'Эластичность спроса', '/stati/marketing/yelastichnost-sprosa.html', 0, 'wtf', 0, 0),
+(19, 17, '2011-03-30 12:54:08', 2, 'пост', '/forum/thread-last12.html#33', 33, 'Пример темы', '/forum/thread-last12.html', 12, ' ', 0, 0),
+(20, 18, '2011-03-30 13:32:58', 2, 'видео тест', '/forum/thread13.html', 13, 'Общий форум', '/forum/1', 1, '[video][/video]', 0, 0),
+(21, 17, '2011-03-30 13:35:42', 2, 'пост', '/forum/thread-last13.html#35', 35, 'видео тест', '/forum/thread-last13.html', 13, '&lt;iframe title="YouTube video player" width="640" height="390" src="', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -317,7 +319,7 @@ CREATE TABLE `cms_blog_posts` (
 --
 
 INSERT INTO `cms_blog_posts` (`id`, `user_id`, `cat_id`, `blog_id`, `pubdate`, `title`, `feel`, `music`, `content`, `content_html`, `allow_who`, `edit_times`, `edit_date`, `published`, `seolink`, `comments`) VALUES
-(5, 1, 5, 1, '2009-09-07 11:50:16', 'Пример записи в блоге', '', '', '[b]Блоги InstantCMS - это мощный и надежный инструмент для ваших публикаций:[/b]\r\n\r\n- Редактор BB-кода (скрытый текст, ссылки, цитаты, картинки);\r\n- Вставка изображений "на лету";\r\n- Неограниченное число рубрик;\r\n- Комментарии к записям;\r\n- Возможность ведения коллективных блогов;\r\n- Смайлы и теги;', '<b>Блоги InstantCMS - это мощный и надежный инструмент для ваших публикаций:</b><br />\r\n<br />\r\n- Редактор BB-кода (скрытый текст, ссылки, цитаты, картинки);<br />\r\n- Вставка изображений "на лету";<br />\r\n- Неограниченное число рубрик;<br />\r\n- Комментарии к записям;<br />\r\n- Возможность ведения коллективных блогов;<br />\r\n- Смайлы и теги;', '0', 3, '2009-09-07 11:50:16', 1, 'primer-zapisi-v-bloge', 1);
+(5, 1, 0, 1, '2009-09-07 11:50:16', 'Пример записи в блоге', '', '', '[b]Блоги InstantCMS - это мощный и надежный инструмент для ваших публикаций:[/b]\r\n\r\n- Редактор BB-кода (скрытый текст, ссылки, цитаты, картинки);\r\n- Вставка изображений "на лету";\r\n- Неограниченное число рубрик;\r\n- Комментарии к записям;\r\n- Возможность ведения коллективных блогов;\r\n- Смайлы и теги;', '<strong>Блоги InstantCMS - это мощный и надежный инструмент для ваших публикаций:</strong><br />\r\n<br />\r\n- Редактор BB-кода (скрытый текст, ссылки, цитаты, картинки);<br />\r\n- Вставка изображений "на лету";<br />\r\n- Неограниченное число рубрик;<br />\r\n- Комментарии к записям;<br />\r\n- Возможность ведения коллективных блогов;<br />\r\n- Смайлы и теги;', 'all', 10, '2011-03-29 13:25:11', 1, 'primer-zapisi-v-bloge', 0);
 
 -- --------------------------------------------------------
 
@@ -642,7 +644,7 @@ CREATE TABLE `cms_components` (
 
 INSERT INTO `cms_components` (`id`, `title`, `link`, `config`, `internal`, `author`, `published`, `version`, `system`) VALUES
 (1, 'Каталог статей', 'content', '---\nreaddesc: 0\nrating: 1\nperpage: 15\npt_show: 1\npt_disp: 1\npt_hide: 1\nautokeys: 1\nimg_small_w: 100\nimg_big_w: 200\nimg_sqr: 1\nimg_users: 1\nwatermark: 1\nwatermark_only_big: 1\naf_on: 0\naf_delete: 1\naf_showlink: 1\naf_forum_id: 1\naf_hidecat_id: 2\n', 0, 'InstantCMS team', 1, '1.5', 1),
-(2, 'Регистрация', 'registration', '---\nreg_type: open\ninv_count: 3\ninv_karma: 1\ninv_period: WEEK\ndefault_gid: 1\nis_on: 1\nact: 0\nsend: false\noffmsg: >\n  Регистрация приостановлена по\n  техническим причинам.\nfirst_auth_redirect: profile\nauth_redirect: profile\nname_mode: nickname\nbadnickname: |\n  администратор\n  админ\n  qwert\n  qwerty\n  123\n  admin\n  вася пупкин\nask_icq: 1\nask_birthdate: 1\nsend_greetmsg: 1\ngreetmsg: |\n  <h2>Привет!</h2>\n  <p><span style="font-size: medium;">Мы очень <span style="color: rgb(51, 153, 102);">рады</span> что ты зарегистрировался!</span></p>\n', 0, 'InstantCMS team', 1, '1.5', 1),
+(2, 'Регистрация', 'registration', '---\nreg_type: invite\ninv_count: 1\ninv_karma: 0\ninv_period: WEEK\ndefault_gid: 1\nis_on: 1\nact: 0\nsend: false\noffmsg: >\n  Регистрация приостановлена по\n  техническим причинам.\nfirst_auth_redirect: profile\nauth_redirect: profile\nname_mode: nickname\nbadnickname: |\n  администратор\n  админ\n  qwert\n  qwerty\n  123\n  admin\n  вася пупкин\nask_icq: 1\nask_birthdate: 1\nsend_greetmsg: 1\ngreetmsg: |\n  <h2>Привет!</h2>\n  <p><span style="font-size: medium;">Мы очень <span style="color: rgb(51, 153, 102);">рады</span> что ты зарегистрировался!</span></p>\n', 0, 'InstantCMS team', 1, '1.5', 1),
 (3, 'Фотогалерея', 'photos', '---\nlink: 0\nsaveorig: 0\nmaxcols: 2\norderby: title\norderto: desc\nshowlat: 1\nwatermark: 1\ntumb_view: 2\ntumb_from: 1\ntumb_club: \nis_today: 1\n', 0, 'InstantCMS team', 1, '1.5', 1),
 (4, 'Прайс-лист', 'price', '---\n', 0, 'InstantCMS team', 1, '1.5', 1),
 (5, 'Поиск', 'search', '---\nperpage: 10\ncomp: \n  - content\n  - photos\n  - price\n  - catalog\n  - forum\n  - blogs\n  - board\n', 0, 'InstantCMS team', 1, '1.5', 1),
@@ -1132,7 +1134,12 @@ CREATE TABLE `cms_forum_posts` (
 
 INSERT INTO `cms_forum_posts` (`id`, `thread_id`, `user_id`, `pubdate`, `editdate`, `edittimes`, `content`) VALUES
 (29, 12, 1, '2009-04-04 18:54:53', '2010-10-07 18:07:14', 2, 'Геосинклиналь [b]обогащает магматический монтмориллонит[/b], что в общем свидетельствует о преобладании тектонических опусканий в это время. Углефикация характерна. Порода существенна. Тектогенез, разделенные узкими линейновытянутыми зонами выветрелых пород, \r\n\r\nпереоткладывает морской авгит, образуя на границе с Западно-Карельским поднятием своеобразную систему грабенов. Ведущий экзогенный геологический процесс - субдукция ослабляет лакколит, так как совершенно однозначно указывает на существование и рост в период оформления палеогеновой поверхности выравнивания.'),
-(30, 12, 1, '2011-03-18 15:43:16', '2011-03-18 15:55:41', 2, 'тест ссылок\r\n\r\n1. http://www.yandex.ru/ - direct\r\n\r\n2. www.yandex.ru - direct \r\n\r\n3. [url=http://www.yandex.ru/]http://www.yandex.ru/[/url] - url tag\r\n\r\n4. [url=/stati/geologija]/stati/geologija[/url] - url tag\r\n\r\n5. [url=http://yandex.ru/yandsearch?text=qwe]с вопросом[/url] - url tag\r\n\r\n6. http://yandex.ru/yandsearch?text=qwe - с вопросом - direct\r\n\r\nконец теста');
+(30, 12, 1, '2011-03-18 15:43:16', '2011-03-18 15:55:41', 2, 'тест ссылок\r\n\r\n1. http://www.yandex.ru/ - direct\r\n\r\n2. www.yandex.ru - direct \r\n\r\n3. [url=http://www.yandex.ru/]http://www.yandex.ru/[/url] - url tag\r\n\r\n4. [url=/stati/geologija]/stati/geologija[/url] - url tag\r\n\r\n5. [url=http://yandex.ru/yandsearch?text=qwe]с вопросом[/url] - url tag\r\n\r\n6. http://yandex.ru/yandsearch?text=qwe - с вопросом - direct\r\n\r\nконец теста'),
+(31, 12, 1, '2011-03-29 11:22:14', '2011-03-29 13:08:44', 8, '[code=html]\r\n<a href="#">My Link</a>\r\n[/code]\r\n\r\n[code=javascript]\r\nalert(''debug'');\r\n[/code]\r\n\r\n[code=php]\r\n    public function mailText($email, $subject, $message, $content=''text/plain''){\r\n        $inConf = cmsConfig::getInstance();\r\n        $headers = ''MIME-Version: 1.0'' . "\\r\\n" .\r\n                   ''Content-type: ''.$content.''; charset=windows-1251;'' . "\\r\\n" .\r\n                   ''From: ''.$inConf->sitename.'' <''.$inConf->sitemail.''>'' . "\\r\\n" .\r\n                   ''Reply-To: ''.$inConf->sitename.'' <''.$inConf->sitemail.''>'' . "\\r\\n" .\r\n                   ''X-Mailer: PHP/'' . phpversion();\r\n        $message = wordwrap($message, 70);\r\n        $this->sendMail( $inConf->sitemail, $inConf->sitename, $email, $subject, $message );\r\n    }\r\n[/code]'),
+(32, 12, 1, '2011-03-29 11:37:22', '2011-03-29 12:19:22', 4, '[video] [/video]'),
+(33, 12, 2, '2011-03-30 12:54:08', '2011-03-30 13:32:18', 5, '[video][/video]'),
+(34, 13, 2, '2011-03-30 13:32:58', '2011-03-30 14:08:35', 20, '[video]<object width="640" height="390"><param name="movie" value="http://www.youtube.com/v/P6aCE0BF23g?fs=1&amp;hl=ru_RU"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/P6aCE0BF23g?fs=1&amp;hl=ru_RU" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="640" height="390"></embed></object>[/video]\r\n\r\n\r\n\r\n[video]<iframe title="YouTube video player" width="640" height="390" src="http://www.youtube.com/embed/7gxZmaht9Ng" frameborder="0" allowfullscreen></iframe>[/video]\r\n\r\n\r\n[video]<iframe src="http://vkontakte.ru/video_ext.php?oid=39602443&id=157031345&hash=12634ea0fbf57ab6" width="607" height="360" frameborder="0"></iframe>[/video]'),
+(35, 13, 2, '2011-03-30 13:35:42', '2011-03-30 13:35:42', 0, '<iframe title="YouTube video player" width="640" height="390" src="http://www.youtube.com/embed/7gxZmaht9Ng" frameborder="0" allowfullscreen></iframe>');
 
 -- --------------------------------------------------------
 
@@ -1164,7 +1171,8 @@ CREATE TABLE `cms_forum_threads` (
 --
 
 INSERT INTO `cms_forum_threads` (`id`, `forum_id`, `user_id`, `title`, `description`, `icon`, `pubdate`, `hits`, `closed`, `pinned`, `is_hidden`, `rel_to`, `rel_id`) VALUES
-(12, 1, 1, 'Пример темы', '', '', '2011-03-18 15:43:16', 89, 0, 0, 0, '', 0);
+(12, 1, 1, 'Пример темы', '', '', '2011-03-30 12:54:08', 149, 0, 0, 0, '', 0),
+(13, 1, 2, 'видео тест', '', '', '2011-03-30 13:35:42', 24, 0, 0, 0, '', 0);
 
 -- --------------------------------------------------------
 
@@ -1453,7 +1461,7 @@ CREATE TABLE `cms_online` (
 --
 
 INSERT INTO `cms_online` (`id`, `ip`, `sess_id`, `lastdate`, `user_id`, `agent`, `viewurl`) VALUES
-(74, '127.0.0.1', 'd87oicgho0j136p0es32t5j1h0', '2011-03-28 15:15:01', 1, '', '/users/1/messages-sent.html');
+(99, '127.0.0.1', 'rgj7l8009dciik39henu4skkb6', '2011-03-30 14:25:28', 1, '', '/admin/index.php?view=phpinfo');
 
 -- --------------------------------------------------------
 
@@ -1857,8 +1865,8 @@ INSERT INTO `cms_tags` (`id`, `tag`, `target`, `item_id`) VALUES
 (28, 'тойота', 'catalog', 5),
 (31, 'авто', 'catalog', 7),
 (32, 'минивэн', 'catalog', 7),
-(241, 'блог', 'blogpost', 5),
-(240, 'пример', 'blogpost', 5),
+(296, 'блог', 'blogpost', 5),
+(295, 'пример', 'blogpost', 5),
 (273, 'геология', 'content', 31),
 (272, 'пример', 'content', 31),
 (271, 'статья', 'content', 31),
@@ -2128,9 +2136,9 @@ CREATE TABLE `cms_users` (
 --
 
 INSERT INTO `cms_users` (`id`, `group_id`, `login`, `nickname`, `password`, `email`, `icq`, `regdate`, `logdate`, `birthdate`, `is_locked`, `is_deleted`, `rating`, `points`, `last_ip`, `status`, `status_date`, `invited_by`, `invdate`) VALUES
-(1, 2, 'admin', 'Администратор', '2ca41752ccf4dbdb76d8fe88c488fd44', 'admin@cms.ru', '100200300', '2007-11-23 12:41:57', '2011-03-28 15:14:59', '1980-10-23', 0, 0, 32, 0, '127.0.0.1', 'Самый длинный статус из всех что существуют в этом прекрасном мире', '2010-10-21 02:06:53', 0, '2010-11-09 23:25:59'),
-(2, 1, 'vasya', 'Василий', '2ca41752ccf4dbdb76d8fe88c488fd44', 'vasya@cms.ru', '100200300', '2008-07-16 16:31:48', '2011-03-28 15:14:54', '1980-01-01', 0, 0, 7, 0, '127.0.0.1', 'I love InstantCMS', '2010-11-13 23:09:34', 0, '2010-11-02 13:50:04'),
-(3, 7, 'fedor', 'Федор', '2ca41752ccf4dbdb76d8fe88c488fd44', 'fedor@cms.com', '100334564', '2010-10-20 17:33:42', '2011-03-19 14:46:50', '1979-10-20', 0, 0, 0, 0, '127.0.0.1', 'We are all made of stars (c) Moby', '2010-10-28 15:44:45', NULL, NULL),
+(1, 2, 'admin', 'Администратор', '2ca41752ccf4dbdb76d8fe88c488fd44', 'admin@cms.ru', '100200300', '2007-11-23 12:41:57', '2011-03-30 14:25:08', '1980-10-23', 0, 0, 32, 0, '127.0.0.1', 'Самый длинный статус из всех что существуют в этом прекрасном мире', '2010-10-21 02:06:53', 0, '2011-03-29 11:13:34'),
+(2, 1, 'vasya', 'Василий', '2ca41752ccf4dbdb76d8fe88c488fd44', 'vasya@cms.ru', '100200300', '2008-07-16 16:31:48', '2011-03-30 14:25:05', '1980-01-01', 0, 0, 7, 0, '127.0.0.1', 'I love InstantCMS', '2010-11-13 23:09:34', 0, '2011-03-29 11:13:34'),
+(3, 7, 'fedor', 'Федор', '2ca41752ccf4dbdb76d8fe88c488fd44', 'fedor@cms.com', '100334564', '2010-10-20 17:33:42', '2011-03-19 14:46:50', '1979-10-20', 0, 0, 0, 0, '127.0.0.1', 'We are all made of stars (c) Moby', '2010-10-28 15:44:45', NULL, '2011-03-29 11:13:34'),
 (4, 9, 'Sidor', 'Sidor', '2ca41752ccf4dbdb76d8fe88c488fd44', 'sidor@sidorov.ru', '', '2011-03-18 14:47:04', '2011-03-18 14:47:17', '1980-01-01', 0, 0, 0, 0, '127.0.0.1', '', '0000-00-00 00:00:00', 0, NULL);
 
 -- --------------------------------------------------------
@@ -2349,7 +2357,7 @@ CREATE TABLE `cms_user_invites` (
   `is_sended` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `code` (`code`,`owner_id`,`is_used`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 --
 -- Дамп данных таблицы `cms_user_invites`
