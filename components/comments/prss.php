@@ -23,7 +23,7 @@ function rss_comments($item_id, $cfg, &$rssdata){
 		//CHANNEL
 		if ($item_id){						
 			$item_id                = explode('-', $item_id);
-			$catsql                 = "AND c.target = '".$item_id[0]."' AND c.target_id = ".$item_id[1]."";
+			$catsql                 = "AND c.target = '".$item_id[0]."' AND c.target_id = '".$item_id[1]."'";
             $target                 = $inDB->get_fields('cms_comments', "target='{$item_id[0]}' AND target_id='{$item_id[1]}'", 'target_title, target_link');
 			$channel['title']       = $target['target_title'];
 			$channel['description'] = $_LANG['COMMENTS'];
@@ -36,11 +36,9 @@ function rss_comments($item_id, $cfg, &$rssdata){
 		}
         
 		//ITEMS				
-		$sql = "SELECT  c.*,
-                        DATE_FORMAT(c.pubdate, '%a, %d %b %Y %H:%i:%s GMT') as pubdate,
-                        u.nickname as author
-				FROM cms_comments c, cms_users u
-				WHERE c.user_id = u.id AND c.published=1 $catsql
+		$sql = "SELECT  c.*, DATE_FORMAT(c.pubdate, '%a, %d %b %Y %H:%i:%s GMT') as pubdate
+				FROM cms_comments c
+				WHERE c.published=1 $catsql
 				ORDER by c.pubdate DESC
 				LIMIT $maxitems";
 						
