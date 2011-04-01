@@ -750,16 +750,13 @@ function catalog(){
             }
 			
 			
-            if ($item['on_moderate']){
-                $user = $inDB->get_fields('cms_users', "id={$item['user_id']}", 'login, nickname');
-                $getProfileLink = cmsUser::getProfileLink($user['login'], $user['nickname']);
-            }
+            $user = $inDB->get_fields('cms_users', "id={$item['user_id']}", 'login, nickname');
+            $getProfileLink = cmsUser::getProfileLink($user['login'], $user['nickname']);
 
             if ($cat['is_ratings']){
 				$ratingForm = ratingForm($ratingdata, $item['id']);	
 
             }
-
 			
 			$smarty = $inCore->initSmarty('components', 'com_catalog_item.tpl');
 			$smarty->assign('shopCartLink', $shopCartLink);
