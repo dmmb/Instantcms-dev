@@ -162,6 +162,7 @@ if ($do=='read'){
 			$smarty = $inCore->initSmarty('components', 'com_faq_read.tpl');			
 			$smarty->assign('quest', $quest);
 			$smarty->assign('cfg', $cfg);
+			$smarty->assign('labels', array('comments' => $_LANG['ANSWERS'], 'add' => $_LANG['REPLY'], 'rss' => $_LANG['RSS_FEED'], 'not_comments' => $_LANG['NOT_ANSWERS']));
 			$smarty->assign('is_admin', $inUser->is_admin);
 			$smarty->display('com_faq_read.tpl');	
 													

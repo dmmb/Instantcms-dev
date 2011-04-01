@@ -3887,7 +3887,7 @@ function cmsSmartyComments($params){
     $inCore = cmsCore::getInstance();
     $inCore->includeComments();
 
-    comments($params['target'], $params['target_id']);
+    comments($params['target'], $params['target_id'], $params['labels']);
 
     return;
 

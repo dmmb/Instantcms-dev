@@ -11,7 +11,7 @@
 /*********************************************************************************************/
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-function comments($target='', $target_id=0){
+function comments($target='', $target_id=0, $labels=array()){
 
     $inCore     = cmsCore::getInstance();
     $inPage     = cmsPage::getInstance();
@@ -33,15 +33,19 @@ function comments($target='', $target_id=0){
 	if (!isset($cfg['min_karma_add'])) { $cfg['min_karma_add'] = 0; }
 	if (!isset($cfg['min_karma_show'])) { $cfg['min_karma_show'] = 0; }
 	if(!isset($cfg['cmm_ajax'])) { $cfg['cmm_ajax']=0;	}
-    if(!isset($cfg['max_level'])) { $cfg['max_level']=5;       }
+    if(!isset($cfg['max_level'])) { $cfg['max_level']=5; }
+
+    global $_LANG;
+    $inCore->loadLanguage('components/comments');
+
+	// Значения по умолчанию для надписей
+	$def_labels = array('comments' => $_LANG['COMMENTS'], 'add' => $_LANG['ADD_COMM'], 'rss' => $_LANG['RSS_COMM'], 'not_comments' => $_LANG['NOT_COMMENT_TEXT']);
+	if (!$labels) { $labels = $def_labels; }
 
     //Определяем адрес для редиректа назад
     $back   = $inCore->getBackURL();
     
     $do     = $inCore->request('do', 'str', 'view');
-    global $_LANG;
-
-    $inCore->loadLanguage('components/comments');
 
 //========================================================================================================================//
 //========================================================================================================================//
@@ -184,6 +188,7 @@ function comments($target='', $target_id=0){
 			$smarty->assign('is_admin', $is_admin);
 			$smarty->assign('is_user', $inUser->id);
 			$smarty->assign('cfg', $cfg);
+			$smarty->assign('labels', $labels);
 			$smarty->assign('target', $target);
 			$smarty->assign('target_id', $target_id);
 			$smarty->assign('url', $_SERVER['REQUEST_URI']);
@@ -200,6 +205,7 @@ function comments($target='', $target_id=0){
         $smarty->assign('target', $target);
         $smarty->assign('target_id', $target_id);
         $smarty->assign('is_admin', $is_admin);
+		$smarty->assign('labels', $labels);
         $smarty->assign('is_user', $inUser->id);
         $smarty->assign('cfg', $cfg);
 		$smarty->assign('html', $html);
