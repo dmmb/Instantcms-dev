@@ -117,7 +117,9 @@ CREATE TABLE `#__blogs` (
   `seolink` varchar(255) NOT NULL,
   `rating` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `seolink` (`seolink`)
+  KEY `seolink` (`seolink`),
+  KEY `user_id` (`user_id`),
+  KEY `pubdate` (`pubdate`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__blog_authors`;
@@ -127,7 +129,9 @@ CREATE TABLE `#__blog_authors` (
   `blog_id` int(11) NOT NULL,
   `description` varchar(100) NOT NULL,
   `startdate` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `blog_id` (`blog_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__blog_cats`;
@@ -135,7 +139,8 @@ CREATE TABLE `#__blog_cats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `blog_id` int(11) NOT NULL,
   `title` varchar(250) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `blog_id` (`blog_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__blog_files`;
@@ -169,6 +174,8 @@ CREATE TABLE `#__blog_posts` (
   `comments` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `seolink` (`seolink`),
+  KEY `blog_id` (`blog_id`),
+  KEY `user_id` (`user_id`),
   FULLTEXT KEY `content` (`content`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -224,6 +231,10 @@ CREATE TABLE `#__board_items` (
   `file` varchar(250) NOT NULL,
   `hits` int(11) NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `category_id` (`category_id`),
+  KEY `user_id` (`user_id`),
+  KEY `obtype` (`obtype`),
+  KEY `city` (`city`),
   FULLTEXT KEY `content` (`content`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -265,6 +276,7 @@ CREATE TABLE `#__category` (
   `url` varchar(100) NOT NULL,
   `tpl` varchar(50) NOT NULL DEFAULT 'com_content_view.tpl',
   PRIMARY KEY (`id`),
+  KEY `parent_id` (`parent_id`),
   UNIQUE KEY `seolink` (`seolink`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -292,7 +304,9 @@ CREATE TABLE `#__clubs` (
   `album_min_karma` int(11) NOT NULL DEFAULT '25',
   `join_min_karma` int(11) NOT NULL,
   `join_karma_limit` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `pubdate` (`pubdate`),
+  KEY `admin_id` (`admin_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__codecheck`;
@@ -320,7 +334,9 @@ CREATE TABLE `#__comments` (
   `target_title` varchar(150) NOT NULL,
   `target_link` varchar(200) NOT NULL,
   `ip` varchar(15) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `target_id` (`target_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__comments_votes`;
@@ -415,6 +431,8 @@ CREATE TABLE `#__content` (
   `url` varchar(100) NOT NULL,
   `tpl` varchar(50) NOT NULL DEFAULT 'com_content_read.tpl',
   PRIMARY KEY (`id`),
+  KEY `category_id` (`category_id`),
+  KEY `user_id` (`user_id`),
   UNIQUE KEY `seolink` (`seolink`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `content` (`content`)
@@ -426,7 +444,8 @@ CREATE TABLE `#__content_access` (
   `content_id` int(11) NOT NULL,
   `content_type` varchar(100) NOT NULL,
   `group_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `content_id` (`content_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__cron_jobs`;
@@ -509,7 +528,8 @@ CREATE TABLE `#__faq_quests` (
   `answeruser_id` int(11) NOT NULL,
   `answerdate` datetime NOT NULL,
   `hits` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `category_id` (`category_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__filters`;
@@ -578,7 +598,9 @@ CREATE TABLE `#__forums` (
   `NSDiffer` varchar(15) NOT NULL,
   `NSIgnore` int(11) NOT NULL,
   `NSLevel` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `category_id` (`category_id`),
+  KEY `parent_id` (`parent_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__forums` (`id`, `category_id`, `title`, `description`, `auth_group`, `ordering`, `published`, `parent_id`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`) VALUES
@@ -591,7 +613,8 @@ CREATE TABLE `#__forum_cats` (
   `published` int(11) NOT NULL DEFAULT '1',
   `auth_group` int(11) NOT NULL,
   `ordering` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `auth_group` (`auth_group`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__forum_files`;
@@ -636,6 +659,8 @@ CREATE TABLE `#__forum_posts` (
   `edittimes` int(11) NOT NULL,
   `content` text NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `thread_id` (`thread_id`),
+  KEY `user_id` (`user_id`),
   FULLTEXT KEY `content` (`content`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -658,6 +683,8 @@ CREATE TABLE `#__forum_threads` (
   `rel_to` varchar(15) NOT NULL,
   `rel_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `forum_id` (`forum_id`),
   FULLTEXT KEY `title` (`title`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -870,7 +897,9 @@ CREATE TABLE `#__online` (
   `user_id` int(11) NOT NULL,
   `agent` varchar(250) NOT NULL,
   `viewurl` varchar(250) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `sess_id` (`sess_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__photo_albums`;
@@ -906,7 +935,9 @@ CREATE TABLE `#__photo_albums` (
   `bbcode` int(11) NOT NULL DEFAULT '1',
   `user_id` int(11) NOT NULL DEFAULT '1',
   `is_comments` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `parent_id` (`parent_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__photo_albums` (`id`, `parent_id`, `ordering`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`, `title`, `description`, `published`, `showdate`, `iconurl`, `pubdate`, `orderby`, `orderto`, `public`, `perpage`, `cssprefix`, `thumb1`, `thumb2`, `thumbsqr`, `showtype`, `nav`, `uplimit`, `maxcols`, `orderform`, `showtags`, `bbcode`, `user_id`, `is_comments`) VALUES
@@ -927,6 +958,8 @@ CREATE TABLE `#__photo_files` (
   `user_id` int(11) NOT NULL DEFAULT '1',
   `owner` varchar(10) DEFAULT 'photos',
   PRIMARY KEY (`id`),
+  KEY `album_id` (`album_id`),
+  KEY `user_id` (`user_id`),
   FULLTEXT KEY `title` (`title`,`description`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -1004,7 +1037,9 @@ CREATE TABLE `#__ratings` (
   `target` varchar(20) NOT NULL,
   `user_id` int(11) NOT NULL DEFAULT '1',
   `pubdate` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `item_id` (`item_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__ratings_total`;
@@ -1015,6 +1050,7 @@ CREATE TABLE `#__ratings_total` (
   `total_rating` int(11) NOT NULL,
   `total_votes` int(11) NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `item_id` (`item_id`),
   KEY `target` (`target`,`item_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -1065,7 +1101,9 @@ CREATE TABLE `#__subscribe` (
   `target` varchar(20) NOT NULL,
   `target_id` int(11) NOT NULL,
   `pubdate` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `target_id` (`target_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__tags`;
@@ -1074,7 +1112,9 @@ CREATE TABLE `#__tags` (
   `tag` varchar(250) NOT NULL,
   `target` varchar(25) NOT NULL,
   `item_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `tag` (`tag`),
+  KEY `item_id` (`item_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__uc_cart`;
@@ -1164,6 +1204,7 @@ CREATE TABLE `#__uc_items` (
   `user_id` int(11) NOT NULL,
   `on_moderate` int(11) NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `category_id` (`category_id`),
   FULLTEXT KEY `title` (`title`,`fieldsdata`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -1215,7 +1256,8 @@ CREATE TABLE `#__users` (
   `status_date` datetime NOT NULL,
   `invited_by` int(11) DEFAULT NULL,
   `invdate` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `login` (`login`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 ROW_FORMAT=DYNAMIC;
 
 INSERT INTO `#__users` (`id`, `group_id`, `login`, `nickname`, `password`, `email`, `icq`, `regdate`, `logdate`, `birthdate`, `is_locked`, `is_deleted`, `rating`, `points`, `last_ip`, `status`, `status_date`, `invited_by`, `invdate`) VALUES
@@ -1276,7 +1318,8 @@ CREATE TABLE `#__user_awards` (
   `imageurl` varchar(100) NOT NULL,
   `from_id` int(11) NOT NULL,
   `award_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__user_awards` (`id`, `user_id`, `pubdate`, `title`, `description`, `imageurl`, `from_id`, `award_id`) VALUES
@@ -1309,7 +1352,9 @@ CREATE TABLE `#__user_friends` (
   `from_id` int(11) NOT NULL,
   `logdate` datetime NOT NULL,
   `is_accepted` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `to_id` (`to_id`),
+  KEY `from_id` (`from_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__user_groups`;
@@ -1348,7 +1393,8 @@ CREATE TABLE `#__user_karma` (
   `sender_id` int(11) NOT NULL,
   `points` smallint(6) NOT NULL,
   `senddate` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__user_msg`;
@@ -1359,7 +1405,9 @@ CREATE TABLE `#__user_msg` (
   `senddate` datetime NOT NULL,
   `is_new` int(11) NOT NULL DEFAULT '1',
   `message` text NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `to_id` (`to_id`),
+  KEY `from_id` (`from_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__user_photos`;
@@ -1367,13 +1415,14 @@ CREATE TABLE `#__user_photos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `album_id` int(11) NOT NULL,
-  `pubdate` date NOT NULL,
+  `pubdate` datetime NOT NULL,
   `title` varchar(250) NOT NULL,
   `description` text NOT NULL,
   `allow_who` varchar(15) NOT NULL DEFAULT 'all',
   `hits` int(11) NOT NULL,
   `imageurl` varchar(250) NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
   KEY `album_id` (`album_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -1399,7 +1448,10 @@ CREATE TABLE `#__user_profiles` (
   `email_newmsg` int(11) NOT NULL DEFAULT '1',
   `cm_subscribe` varchar(4) NOT NULL,
   `stats` text NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `city` (`city`),
+  KEY `formsdata` (`formsdata`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 ROW_FORMAT=DYNAMIC;
 
 INSERT INTO `#__user_profiles` (`id`, `user_id`, `city`, `description`, `showmail`, `showbirth`, `showicq`, `karma`, `imageurl`, `allow_who`, `signature`, `gender`, `formsdata`, `email_newmsg`, `cm_subscribe`, `stats`) VALUES
@@ -1413,5 +1465,6 @@ CREATE TABLE `#__user_wall` (
   `pubdate` datetime NOT NULL,
   `content` text NOT NULL,
   `usertype` varchar(8) NOT NULL DEFAULT 'user',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
