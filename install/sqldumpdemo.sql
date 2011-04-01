@@ -816,8 +816,8 @@ INSERT INTO `#__menu` (`id`, `menu`, `title`, `link`, `linktype`, `linkid`, `tar
 (39, 'mainmenu', 'Астрономия', '/stati/astronomija', 'category', '11', '_self', '', 1, 1, '0', '', '', 5, 6, 2, '', 0, 21),
 (40, 'mainmenu', 'Геология', '/stati/geologija', 'category', '12', '_self', '', 2, 1, '0', '', '', 7, 8, 2, '', 0, 21),
 (41, 'mainmenu', 'Психология', '/stati/psihologija', 'category', '14', '_self', '', 3, 1, '0', '', '', 9, 10, 2, '', 0, 21),
-(42, 'mainmenu', 'Новые фото', '/photos/latest.html', 'link', '/photos/latest.html', '_self', '', 5, 1, '0', '', '', 15, 16, 2, '', 0, 20),
-(43, 'mainmenu', 'Лучшие фото', '/photos/top.html', 'link', '/photos/top.html', '_self', '', 6, 1, '0', '', '', 17, 18, 2, '', 0, 20);
+(42, 'mainmenu', 'Новые фото', '/photos/latest.html', 'link', '/photos/latest.html', '_self', '', 1, 1, '0', '', '', 15, 16, 2, '', 0, 20),
+(43, 'mainmenu', 'Лучшие фото', '/photos/top.html', 'link', '/photos/top.html', '_self', '', 2, 1, '0', '', '', 17, 18, 2, '', 0, 20);
 
 DROP TABLE IF EXISTS `#__modules`;
 CREATE TABLE `#__modules` (

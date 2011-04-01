@@ -71,10 +71,6 @@ function applet_menu(){
 		$toolmenu[4]['title'] = 'Скрыть выбранные';
 		$toolmenu[4]['link'] = "javascript:checkSel('?view=menu&do=hide&multiple=1');";
 
-		$toolmenu[7]['icon'] = 'autoorder.gif';
-		$toolmenu[7]['title'] = 'Упорядочить элементы';
-		$toolmenu[7]['link'] = "?view=menu&do=autoorder";
-
 		$toolmenu[8]['icon'] = 'help.gif';
 		$toolmenu[8]['title'] = 'Помощь';
 		$toolmenu[8]['link'] = "?view=help&topic=menu";
@@ -116,55 +112,18 @@ function applet_menu(){
 		cpListTable('cms_menu', $fields, $actions, 'parent_id>0', 'menu, NSLeft');		
 	}
 	
-	function reorder(){
-		$sql = "SELECT * FROM cms_menu ORDER BY NSLeft";
-		$rs = dbQuery($sql) ;
-		
-		if (mysql_num_rows($rs)){
-			$level = array();
-			while ($item = mysql_fetch_assoc($rs)){
-				if (isset($level[$item['NSLevel']])){
-					$level[$item['NSLevel']] += 1;
-				} else {
-					$level[] = 1;
-				}
-				dbQuery("UPDATE cms_menu SET ordering = ".$level[$item['NSLevel']]." WHERE id=".$item['id']) ;
-			}				
-		}
-	}
-
-	if ($do == 'autoorder'){
-		reorder();
-		header('location:index.php?view=menu');		
-	}
-	
 	if ($do == 'move_up'){
 		$id = (int)$_REQUEST['id'];
 		$ns = $inCore->nestedSetsInit('cms_menu');
 		$ns->MoveOrdering($id, -1);
-		reorder();
-		header('location:'.$_SERVER['HTTP_REFERER']);
+		$inCore->redirectBack();
 	}
 
 	if ($do == 'move_down'){
 		$id = (int)$_REQUEST['id'];	
 		$ns = $inCore->nestedSetsInit('cms_menu');
 		$ns->MoveOrdering($id, 1);
-		reorder();
-		header('location:'.$_SERVER['HTTP_REFERER']);
-	}
-
-	if ($do == 'saveorder'){
-		if(isset($_REQUEST['ordering'])) { 
-			$ord = $_REQUEST['ordering'];
-			$ids = $_REQUEST['ids'];
-			
-			foreach ($ord as $id=>$ordering){			
-				dbQuery("UPDATE cms_menu SET ordering = $ordering WHERE id = ".$ids[$id]) ;						
-			}
-			header('location:?view=menu');
-
-		}
+		$inCore->redirectBack();
 	}
 
 	if ($do == 'show'){
@@ -193,7 +152,6 @@ function applet_menu(){
 		} else {
 			dbDeleteListNS('cms_menu', $_REQUEST['item']);				
 		}
-		reorder();
 		header('location:?view=menu');
 	}
 	
@@ -297,7 +255,6 @@ function applet_menu(){
 				WHERE id = '$myid'";
 	
 		dbQuery($sql) or die(mysql_error().$sql);
-		reorder();
 		header('location:?view=menu');		
 	}	  
 
