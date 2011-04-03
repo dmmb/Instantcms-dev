@@ -88,7 +88,7 @@ if ($do=='rss'){
 							  $rss .= '<category>'.$item['category'].'</category>' ."\n";
 							  $rss .= '<comments>'.$item['comments'].'</comments>' ."\n";                            
 							  if ($item['image']){
-								  $rss .= '<enclosure url="'.$item['image'].'" type="image/jpeg" />';
+								  $rss .= '<enclosure url="'.$item['image'].'" length="'.$item['size'].'" type="image/jpeg" />';
 							  }
 						  $rss .= '</item>' ."\n";	
 					  }		

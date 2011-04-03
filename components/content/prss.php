@@ -68,6 +68,7 @@ function rss_content($item_id, $cfg, &$rssdata){
                 $image_url  = $rooturl . '/images/photos/small/article'.$id.'.jpg';
 
                 $items[$id]['image'] = file_exists($image_file) ? $image_url : '';
+				$items[$id]['size']  = round(filesize($image_file));
 			}
 
 		}		
