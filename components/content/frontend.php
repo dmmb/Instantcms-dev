@@ -437,14 +437,14 @@ if ($do=='addarticle' || $do=='editarticle'){
         $article['pubdate']             = $mod['pubdate'] ? $mod['pubdate'] : date('Y-m-d H:i');
         $article['enddate']             = $article['pubdate'];
         $article['is_end']              = 0;
-        $article['showtitle']           = 1;
+        $article['showtitle']           = $do=='editarticle' ? $mod['showtitle'] : 1;
         $article['meta_desc']           = strtolower($article['title']);
         $article['meta_keys']           = $inCore->getKeywords($inCore->strClear($article['content']));
-        $article['showdate']            = 1;
-        $article['showlatest']          = 1;
-        $article['showpath']            = 1;
-        $article['comments']            = 1;
-        $article['canrate']             = 1;
+        $article['showdate']            = $do=='editarticle' ? $mod['showdate'] : 1;
+        $article['showlatest']          = $do=='editarticle' ? $mod['showlatest'] : 1;
+        $article['showpath']            = $do=='editarticle' ? $mod['showpath'] : 1;
+        $article['comments']            = $do=='editarticle' ? $mod['comments'] : 1;
+        $article['canrate']             = $do=='editarticle' ? $mod['canrate'] : 1;
         $article['pagetitle']           = $article['title'];
 
         if (!$article['title']){ cmsCore::addSessionMessage($_LANG['REQ_TITLE'], 'error'); $errors = true; }
