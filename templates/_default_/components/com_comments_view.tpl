@@ -4,7 +4,7 @@
 
 {* ====================================== Заголовок ============================================ *}
 <div class="cmm_heading">
-	<a name="c" />{$LANG.COMMENTS} ({$comments_count})</a>
+	<a name="c" />{$labels.comments} ({$comments_count})</a>
 </div>
 
 {* ========================= Сообщение о добавлении/удалении коммента ========================== *}
@@ -39,7 +39,7 @@
 	<table cellspacing="0" cellpadding="2">
 		<tr>
 			<td width="16"><img src="/templates/_default_/images/icons/comment.png" /></td>
-			<td><a href="javascript:void(0);" id="addcommentlink" onclick="{$add_comment_js}">{$LANG.ADD_COMM}</a></td>
+			<td><a href="javascript:void(0);" id="addcommentlink" onclick="{$add_comment_js}">{$labels.add}</a></td>
 			{if $cfg.subscribe}
 				{if $is_user}
 					{if !$user_subscribed}
@@ -52,7 +52,7 @@
 				{/if}	
 			{/if}
             <td width="16"><img src="/templates/_default_/images/icons/rss.png" border="0" alt="{$LANG.RSS}"/></td>
-            <td><a href="/rss/comments/{$target}-{$target_id}/feed.rss">{$LANG.RSS_COMM}</a></td>
+            <td><a href="/rss/comments/{$target}-{$target_id}/feed.rss">{$labels.rss}</a></td>
 		</tr>
 	</table>	
 </div>

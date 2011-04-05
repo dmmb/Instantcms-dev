@@ -27,7 +27,7 @@ function rss_forum($item_id, $cfg, &$rssdata){
 
 		//CHANNEL
 		if ($item_id){
-			$cat = dbGetFields('cms_forums', 'id='.$item_id, 'id, title, description, NSLeft, NSRight');
+			$cat = dbGetFields('cms_forums', "id='$item_id'", 'id, title, description, NSLeft, NSRight');
 			$catsql = "AND cat.NSLeft >= {$cat['NSLeft']} AND cat.NSRight <= {$cat['NSRight']}";
 			$channel['title']       = $cat['title'] ;
 			$channel['description'] = $cat['description'];

@@ -32,5 +32,5 @@
 {/if}
 
 {if $cfg.is_comment}
-{comments target='faq' target_id=$quest.id}
+{comments target='faq' target_id=$quest.id labels=$labels}
 {/if}

@@ -3101,28 +3101,17 @@ class cmsCore {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public function checkUserAccess($content_type, $content_id){
+
         $inDB = cmsDatabase::getInstance();
         $inUser = cmsUser::getInstance();
-        $access = false;
 
-        if ($inUser->id) {
-            $group_id = $_SESSION['user']['group_id'];
-            if ($this->userIsAdmin($inUser->id)){
-                $access = true;
-            }
-        }
-        else { $group_id = cmsUser::getGuestGroupId(); }
+		if ($inUser->is_admin) { return true; }
 
-        $sql = "SELECT group_id FROM cms_content_access WHERE content_type='$content_type' AND content_id = $content_id";
-        $result = $inDB->query($sql) ;
+		$access   = $inDB->get_table('cms_content_access', "content_type = '$content_type' AND content_id = '$content_id'", 'group_id');
 
-        if ($inDB->num_rows($result)){
-            while($ac = $inDB->fetch_assoc($result)){
-                if ($ac['group_id']==$group_id) { $access = true; }
-            }
-        } else { $access = true; }
+		if (!$access || !is_array($access)) { return true; }
 
-        return $access;
+		return in_array(array('group_id' => $inUser->group_id), $access);
 
     }
 
@@ -3925,7 +3914,7 @@ function cmsSmartyComments($params){
     $inCore = cmsCore::getInstance();
     $inCore->includeComments();
 
-    comments($params['target'], $params['target_id']);
+    comments($params['target'], $params['target_id'], $params['labels']);
 
     return;
 

@@ -61,7 +61,6 @@ function cpStripComment($text){
 		$cfg['min_karma_show'] 	= (int)$_REQUEST['min_karma_show'];
 		$cfg['min_karma_add'] 	= (int)$_REQUEST['min_karma_add'];
 		$cfg['perpage'] 		= (int)$_REQUEST['perpage'];
-		$cfg['j_code'] 			= (int)$_REQUEST['j_code'];
 		$cfg['cmm_ajax'] 		= (int)$_REQUEST['cmm_ajax'];
 		$cfg['cmm_ip'] 		    = (int)$_REQUEST['cmm_ip'];
 		$cfg['max_level'] 		= (int)$_REQUEST['max_level'];
@@ -240,7 +239,6 @@ function cpStripComment($text){
 	if(!isset($cfg['min_karma_show'])) { 	$cfg['min_karma_show']=0;	}
 	if(!isset($cfg['regcap'])) { 			$cfg['regcap']=1;	}
 	if(!isset($cfg['perpage'])) { 			$cfg['perpage']=20;	}
-	if(!isset($cfg['j_code'])) { 			$cfg['j_code']=1;	}
 	if(!isset($cfg['cmm_ajax'])) { 			$cfg['cmm_ajax']=0;	}
 	if(!isset($cfg['cmm_ip'])) { 			$cfg['cmm_ip']=1;	}
 	if(!isset($cfg['max_level'])) { 		$cfg['max_level']=5;	}
@@ -325,13 +323,6 @@ function cpStripComment($text){
             <tr>
                 <td valign="top"><strong>Количество комментариев на странице при просмотре всех комментариев сайта:</strong></td>
                 <td valign="top"><input name="perpage" type="text" id="perpage" value="<?php echo @$cfg['perpage'];?>" size="3" /></td>
-            </tr>
-            <tr>
-                <td valign="top"><strong>Включать подсветку синтаксиса кода:</strong></td>
-                <td valign="top">
-                    <input name="j_code" type="radio" value="1" <?php if (@$cfg['j_code']) { echo 'checked="checked"'; } ?> /> Да
-                    <input name="j_code" type="radio" value="0"  <?php if (!$cfg['j_code']) { echo 'checked="checked"'; } ?> /> Нет
-                </td>
             </tr>
             <tr>
                 <td valign="middle"><strong>Показывать ip комментаторов администраторам: </strong></td>

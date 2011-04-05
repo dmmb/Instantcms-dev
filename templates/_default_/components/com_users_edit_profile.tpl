@@ -186,7 +186,7 @@
                     </tr>
                 </table>
             </div>
-
+</div>
 	<div style="padding:5px; padding-bottom:15px; margin-bottom:5px;">
 		<input style="font-size:16px" name="save" type="submit" id="save" value="{$LANG.SAVE}" />
         <input style="font-size:16px" name="chpassbtn" type="button" id="chpassbtn" value="{$LANG.CHANGE_PASS}" onclick="{literal}$('div#change_password').slideToggle();{/literal}" />

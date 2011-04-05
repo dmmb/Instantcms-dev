@@ -28,9 +28,9 @@ function rssfeed(){
     $target     = $inCore->request('target', 'str', 'rss');
     $item_id    = $inCore->request('item_id', 'str', 'all');
 
-    if ($item_id != 'all' && !is_numeric($item_id)) { $inCore->halt(); }
-
-    if (strstr($target, '..') || strstr($target, '/')){ $inCore->halt(); }
+	// фильтруем входные параметры
+	$target  = preg_replace ('/[^a-z0-9]/i', '', $target);
+	if (!preg_match('/^([a-z0-9\-]+)$/i', $item_id)) { $item_id = 'all'; }
 
     if (!isset($cfg['addsite'])) { $cfg['addsite'] = 1; }
 	if (!isset($cfg['icon_on'])) { $cfg['icon_on'] = 0; }
@@ -41,6 +41,8 @@ if ($do=='rss'){
 	$rss = '';
 
 	if (file_exists(PATH.'/components/'.$target.'/prss.php')){
+
+		header('Content-Type: application/rss+xml; charset=windows-1251');
 
         cmsCore::loadLanguage('components/'.$target);
 
@@ -57,7 +59,7 @@ if ($do=='rss'){
 			if ($cfg['addsite']) { $channel['title'] .= ' :: ' . $inConf->sitename; }
 		
 			$rss .= '<?xml version="1.0" encoding="windows-1251" ?>' ."\n";
-			$rss .= '<rss version="2.0">' ."\n";
+			$rss .= '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">' ."\n";
 				$rss .= '<channel>' ."\n";
 					//CHANNEL
 					$rss .= '<title>'.$channel['title'].'</title>' ."\n";
@@ -82,11 +84,10 @@ if ($do=='rss'){
 							if (isset($item['description'])){
 								$rss .= '<description><![CDATA['.strip_tags($item['description']).']]></description>' ."\n";
 							}
-							$rss .= '<author>'.$item['author'].'</author>' ."\n";
 							$rss .= '<category>'.$item['category'].'</category>' ."\n";
 							$rss .= '<comments>'.$item['comments'].'</comments>' ."\n";                            
                             if ($item['image']){
-                                $rss .= '<enclosure url="'.$item['image'].'" type="image/jpeg" />';
+								  $rss .= '<enclosure url="'.$item['image'].'" length="'.$item['size'].'" type="image/jpeg" />';
                             }
 						$rss .= '</item>' ."\n";	
 					}		

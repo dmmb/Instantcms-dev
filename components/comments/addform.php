@@ -69,16 +69,19 @@
 
 	$is_user_add_bb = $inCore->isUserCan('comments/bbcode');
 
-    if ($is_user_add_bb){
-        if ($cfg['bbcode']){
+    if ($cfg['bbcode'] && $is_user_add_bb){
             $bb_toolbar = cmsPage::getBBCodeToolbar('content', true, 'comments');
+		//smilies toolbar
             $smilies    = cmsPage::getSmilesPanel('content');
             echo '<script language="JavaScript" type="text/javascript" src="/includes/jquery/upload/ajaxfileupload.js"></script>';
         }
-        if ($cfg['smiles']){
+    if ($cfg['smiles'] && $is_user_add_bb){
+        //smilies toolbar
             $smilies = cmsPage::getSmilesPanel('content');
         }
-    }
+
+	//LOAD SMARTY
+    $smarty = $inCore->initSmarty();
 
 	$karma_need     = $cfg['min_karma_add'];
 	$karma_has      = cmsUser::getKarma($inUser->id);

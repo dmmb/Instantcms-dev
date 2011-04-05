@@ -33,4 +33,9 @@ $_LANG['QUESTION_GUEST']        ='Гость';
 $_LANG['DELETE_QUES']            ='Удаление вопроса';
 $_LANG['YOU_REALY_DELETE_QUES']  ='Вы действительно хотите удалить вопрос';
 
+$_LANG['ANSWERS']               ='Ответы';
+$_LANG['REPLY']                 ='Ответить';
+$_LANG['RSS_FEED']              ='RSS лента ответов';
+$_LANG['NOT_ANSWERS']           ='Нет ответов, Ваш ответ будет первым';
+
 ?>

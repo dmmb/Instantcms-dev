@@ -17,7 +17,7 @@
 
 		$sql = "SELECT u.*, p.imageurl 
 				FROM cms_users u
-				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+				INNER JOIN cms_user_profiles p ON p.user_id = u.id
 				WHERE u.is_deleted = 0 AND u.is_locked=0
 				ORDER BY u.regdate DESC
 				LIMIT ".$cfg['newscount']."

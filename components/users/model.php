@@ -753,6 +753,8 @@ class cms_model_users{
 
 		$inCore = cmsCore::getInstance();
 
+		$inCore->loadClass('actions');
+
 		$cfg    = $inCore->loadComponentConfig('users');
 
 		$month  = $cfg['deltime'] ? $cfg['deltime'] : 6;

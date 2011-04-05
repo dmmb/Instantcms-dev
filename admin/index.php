@@ -25,8 +25,6 @@
 	require("../includes/database.inc.php");
 	require("../includes/tools.inc.php");	
 
-    //die('admin');
-
     $inCore = cmsCore::getInstance();
 
     $inCore->loadClass('page');         //страница

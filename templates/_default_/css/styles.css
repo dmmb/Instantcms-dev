@@ -2948,7 +2948,7 @@ div.users_list {
 table.users_list div.avatar{ border:1px solid #C3D6DF; padding:2px; width:63px; height:63px; margin-bottom:10px; }
 table.users_list div.number{ color:#999; }
 table.users_list div.nickname { font-size:18px; }
-table.users_list div.microstatus {
+div.microstatus {
     color:#5F98BF; font-size:11px;
     padding:1px;
     padding-left:20px;

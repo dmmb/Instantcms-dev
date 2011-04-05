@@ -3,6 +3,29 @@
 {* ================================================================================ *}
 
 <script type="text/javascript">
+{if $is_admin}
+{literal}
+		$(document).ready(function() {
+			$('#title').focus();
+			
+			$("#cat_id").change(function () {
+		
+				var cat_id = "";
+				$("#cat_id option:selected").each(function () {
+					cat_id = $(this).val();
+				});
+				if(cat_id != 0) {{/literal}
+					$("#add_form").attr("action", '/catalog/'+cat_id+'/submit.html');{literal}
+				} else {{/literal}
+					$("#add_form").attr("action", "/catalog/0/submit.html");{literal}
+				}
+        
+        })
+        .change();
+			
+		});
+{/literal}
+{/if}
     {literal}
     function showPrices(){
 
@@ -23,14 +46,22 @@
 <div id="configtabs">
 
     <div id="form">
-        <form method="post" action="/catalog/{$cat_id}/submit.html" enctype="multipart/form-data">
+        <form id="add_form" method="post" action="/catalog/{$cat_id}/submit.html" enctype="multipart/form-data">
         <table cellpadding="5" cellspacing="0" style="margin-bottom:10px">
             <tr>
                 <td width="210">
                     <strong>{$LANG.TITLE}:</strong>
                 </td>
-                <td><input type="text" name="title" value="{$item.title|escape:'html'}" style="width:250px"/></td>
+                <td><input type="text" name="title" id="title" value="{$item.title|escape:'html'}" style="width:250px"/></td>
             </tr>
+            {if $is_admin}
+            <tr>
+                <td width="210">
+                    <strong>{$LANG.CAT}:</strong>
+                </td>
+                <td><select  style="width:250px" name="cat_id" id="cat_id">{$cats}</select></td>
+            </tr>
+            {/if}
             <tr>
                 <td width="">
                     <strong>{$LANG.IMAGE}:</strong>

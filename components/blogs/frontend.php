@@ -47,7 +47,6 @@ function blogs(){
 	if (!isset($cfg['rss_one'])) { $cfg['rss_one'] = 1; }
     if (!isset($cfg['img_on'])) { $cfg['img_on'] = 1; }
     if (!isset($cfg['update_date'])) { $cfg['update_date'] = 1; }
-	if (!isset($cfg['j_code'])) { $cfg['j_code'] = 1; }
 	if (!isset($cfg['update_seo_link'])) { $cfg['update_seo_link'] = 0; }
 	if (!isset($cfg['update_seo_link_blog'])) { $cfg['update_seo_link_blog'] = 0; }
 	
@@ -344,13 +343,6 @@ if ($do=='view'){
 ////////// ПРОСМОТР БЛОГА ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='blog'){
 
-	if ($cfg['j_code']) {
-		$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
-		$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
-		$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
-		$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
-	}
-    
     $error = '';
 
     //Получаем ID пользователя
@@ -722,17 +714,6 @@ if ($do=='newpost' || $do=='editpost'){
         $bb_toolbar = cmsPage::getBBCodeToolbar('message',$cfg['img_on'], 'blogs');
         $smilies    = cmsPage::getSmilesPanel('message');
 
-        //подготавливаем текст поста, если пост загружен
-        if (isset($post['content'])){
-            $msg = $post['content'];
-            $msg = str_replace('&amp;', "&", $msg);
-            $msg = str_replace('<br/>', "\n", $msg);
-            $msg = str_replace('<br />', "\n", $msg);
-            $msg = str_replace('<br>', "\n", $msg);
-         } else {
-            $msg = '';
-         }
-
         $inCore->initAutoGrowText('#message');
         $inPage->backButton(false);
 
@@ -740,6 +721,11 @@ if ($do=='newpost' || $do=='editpost'){
         $tagline = isset($post['id']) ? cmsTagLine('blogpost', $post['id'], false) : '';
 
         $autocomplete_js = $inPage->getAutocompleteJS('tagsearch', 'tags');
+
+		if ($do=='newpost'){
+			$post = cmsUser::sessionGet('mod');
+			if ($post) { cmsUser::sessionDel('mod'); }
+		}
 
         //показываем форму
         $smarty = $inCore->initSmarty('components', 'com_blog_edit_post.tpl');
@@ -760,7 +746,8 @@ if ($do=='newpost' || $do=='editpost'){
 
     //Если есть запрос на сохранение
     if ( $inCore->inRequest('goadd') ) {
-        $error_msg = '';;
+
+        $error = false;
 
         //Получаем параметры
         $title 		= $inCore->request('title', 'str');
@@ -773,19 +760,23 @@ if ($do=='newpost' || $do=='editpost'){
 		$comments   = $inCore->request('comments', 'int', 1);
 
         //Проверяем их
-        if (strlen($title)<2) { $error_msg .= $_LANG['POST_ERR_TITLE'].'<br/>'; }
-        if (strlen($content)<5) { $error_msg .= $_LANG['POST_ERR_TEXT'].'<br/>'; }
+        if (strlen($title)<2) {  cmsCore::addSessionMessage($_LANG['POST_ERR_TITLE'], 'error'); $errors = true; }
+        if (strlen($content)<5) { cmsCore::addSessionMessage($_LANG['POST_ERR_TEXT'], 'error'); $errors = true; }
 
-        //Если найдены ошибки - показываем и выходим
-        if($error_msg) {
-            $inPage->setTitle($_LANG['ERR_POST_CREATE']);
-            $inPage->printHeading($_LANG['ERR_POST_CREATE']);
-            echo '<p style="color:red">'.$error_msg.'</p>';
-            return;
+		// Если есть ошибки, возвращаемся назад
+		if($errors){
+			$mod['content']   = $content;
+			$mod['comments']  = $comments;
+			$mod['feel']      = $feel;
+			$mod['music']     = $music;
+			$mod['title']     = $title;
+			$mod['allow_who'] = $allow_who;
+			cmsUser::sessionPut('mod', $mod);
+			$inCore->redirectBack();
         }
 
-        //Если ошибки не найдены 
-        if(!$error_msg){
+        //Если нет ошибок
+        if(!$errors){
             //добавляем новый пост...
             if ($do=='newpost'){
 
@@ -1082,15 +1073,17 @@ if ($do == 'delpost'){
     if ($owner=='user'){
         $myblog     = $model->isUserBlogAuthor($blog['id'], $post_id, $blog['user_id']);
         $is_author  = (((!$myblog) && $inDB->get_field('cms_blog_authors', 'blog_id='.$id.' AND user_id='.$user_id, 'id')) || ($blog['forall'] && $post['user_id'] == $user_id));
+		$is_admin   = $inUser->is_admin;
     }
     if($owner=='club') {
         $myblog     = clubUserIsRole($blog['user_id'], $user_id, 'moderator');
         $is_author  = (clubUserIsRole($blog['user_id'], $user_id, 'member') && $post['user_id'] == $user_id);
+		$is_admin   = clubUserIsAdmin($blog['user_id'], $user_id) || $inUser->is_admin;
     }
 
     if ( !$inCore->inRequest('confirm') ) {
         //MENU
-        if ($myblog || ($is_author && $post['user_id'] == $user_id) || $inUser->is_admin){
+        if ($myblog || ($is_author && $post['user_id'] == $user_id) || $is_admin){
             $inPage->setTitle($_LANG['DELETE_POST']);
 			$inPage->addPathway($_LANG['DELETE_POST']);
             $inPage->backButton(false);
@@ -1110,7 +1103,7 @@ if ($do == 'delpost'){
 
     if ( $inCore->inRequest('confirm') ){
 
-        if ($myblog || ($is_author && $post['user_id'] == $user_id) || $inUser->is_admin){
+        if ($myblog || ($is_author && $post['user_id'] == $user_id) || $is_admin){
             
             $model->deletePost($post_id);
 
@@ -1136,10 +1129,10 @@ if ($do == 'publishpost'){
 	if ($user_id){
 		if ($owner=='user'){
 			$myblog     = $blog['user_id'] == $user_id;
-			$is_admin   = $inCore->userIsAdmin($user_id);
+			$is_admin   = $inUser->is_admin;
 		} elseif ($owner=='club') {
 			$myblog     = clubUserIsRole($blog['user_id'], $user_id, 'moderator') || clubUserIsAdmin($blog['user_id'], $user_id);
-			$is_admin   = $inCore->userIsAdmin($user_id);
+			$is_admin   = clubUserIsAdmin($blog['user_id'], $user_id) || $inUser->is_admin;
 		}
 	}
     if ($myblog || $is_admin){
@@ -1281,13 +1274,6 @@ if ($do == 'delcat'){
 ////////// VIEW LATEST POSTS ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='latest'){
 
-	if ($cfg['j_code']) {
-		$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
-		$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
-		$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
-		$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
-	}
-	
 	$smarty     = $inCore->initSmarty('components', 'com_blog_view_posts.tpl');
 				
 	$user_id    = $inUser->id;
@@ -1367,13 +1353,6 @@ if ($do=='latest'){
     }
 ////////// VIEW POPULAR POSTS ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='best'){
-
-	if ($cfg['j_code']) {
-		$inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
-		$inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
-		$inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
-		$inPage->addHeadJS('includes/jquery/syntax/scripts/shBrushPhp.js');
-	}
 
 	$smarty   = $inCore->initSmarty('components', 'com_blog_view_posts.tpl');
 				

@@ -753,10 +753,8 @@ function catalog(){
             }
 			
 			
-            if ($item['on_moderate']){
                 $user = $inDB->get_fields('cms_users', "id={$item['user_id']}", 'login, nickname');
                 $getProfileLink = cmsUser::getProfileLink($user['login'], $user['nickname']);
-            }
 
             if ($cat['is_ratings']){
 				$ratingForm = ratingForm($ratingdata, $item['id']);	
@@ -851,6 +849,8 @@ function catalog(){
             }
         }
 
+		$cats = $inCore->getListItems('cms_uc_cats', $cat_id, 'id', 'ASC', 'parent_id > 0 AND published = 1');
+
         if ($do == 'add_item'){
 
             $inPage->setTitle($_LANG['ADD_ITEM']);
@@ -915,6 +915,7 @@ function catalog(){
             $smarty->assign('item', $item);
             $smarty->assign('fields', $fields);
             $smarty->assign('cat', $cat);
+			$smarty->assign('cats', $cats);
             $smarty->assign('cfg', $cfg);
             $smarty->assign('is_admin', $inUser->is_admin);
             $smarty->assign('cat_id', $cat_id);

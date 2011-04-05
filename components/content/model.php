@@ -718,15 +718,21 @@ class cms_model_content{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function updateArticle($id, $article){
+    public function updateArticle($id, $article, $not_upd_seo = false){
 
         $inCore             = cmsCore::getInstance();
         $inUser             = cmsUser::getInstance();
 
         $article['id']      = $id;
 
-        if ($article['url']) { $article['url'] = cmsCore::strToURL($article['url']); }
+		if(!$not_upd_seo){
+			if ($article['url']) { 
+				$article['url']  = cmsCore::strToURL($article['url']);
+				$article_url_sql = "url='{$article['url']}',";
+			}
         $article['seolink'] = $this->getSeoLink($article);
+			$article_seo_sql = "seolink='{$article['seolink']}',";
+		}
 
         if (!$article['user_id']) { $article['user_id'] = $inUser->id; }
 
@@ -748,11 +754,11 @@ class cms_model_content{
                     showlatest='{$article['showlatest']}',
                     showpath='{$article['showpath']}',
                     comments='{$article['comments']}',
-                    seolink='{$article['seolink']}',
+                    $article_seo_sql
                     canrate='{$article['canrate']}',
                     pagetitle='{$article['pagetitle']}',
                     user_id='{$article['user_id']}',
-                    url='{$article['url']}',
+                    $article_url_sql
                     tpl='{$article['tpl']}'
                 WHERE id = '$id'
                 LIMIT 1";
@@ -762,6 +768,7 @@ class cms_model_content{
         $inCore->loadLib('tags');
         cmsInsertTags($article['tags'], 'content', $article['id']);
 
+		if(!$not_upd_seo){
         //обновляем ссылки меню
         $menuid = $this->inDB->get_field('cms_menu', "linktype='content' AND linkid={$id}", 'id');
         if ($menuid){
@@ -777,6 +784,7 @@ class cms_model_content{
                                c.target = 'article' AND c.target_id = a.id";
 
         $this->inDB->query($comments_sql);
+		}
 
         return true;
         
@@ -795,15 +803,15 @@ class cms_model_content{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function setArticleAccess($id, $showfor_list){
+    public function setArticleAccess($id, $showfor_list, $content_type = 'material'){
 
         if (!sizeof($showfor_list)){ return true; }
 
-        $this->clearArticleAccess($id);
+        $this->clearArticleAccess($id, $content_type);
 
         foreach ($showfor_list as $key=>$value){
             $sql = "INSERT INTO cms_content_access (content_id, content_type, group_id)
-                    VALUES ('$id', 'material', '$value')";
+                    VALUES ('$id', '$content_type', '$value')";
             $this->inDB->query($sql);
         }
         
@@ -813,9 +821,9 @@ class cms_model_content{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function clearArticleAccess($id){
+    public function clearArticleAccess($id, $content_type = 'material'){
 
-        $sql = "DELETE FROM cms_content_access WHERE content_id = '$id' AND content_type = 'material'";
+        $sql = "DELETE FROM cms_content_access WHERE content_id = '$id' AND content_type = '$content_type'";
 
         $this->inDB->query($sql);
 

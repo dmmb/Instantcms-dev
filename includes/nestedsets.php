@@ -357,13 +357,20 @@ class CCelkoNastedSet {
         if ($move_row[$this->FieldDiffer]) $Differ = 'AND ' . $this->FieldDiffer . ' = ' . $move_row[$this->FieldDiffer];
         else $Differ = '';
         
+		// максимальное значение сортировки
         $sql = "SELECT MAX({$this->FieldOrder}) FROM {$this->TableName} WHERE {$this->FieldIDParent}={$move_row[$this->FieldIDParent]}";
         $res = $this->_safe_query ($sql, $this->MyLink);
         list($maxordering) = mysql_fetch_row($res);
         if (!$maxordering) $maxordering = 1;
+		// минимальное значение сортировки
+        $sql_min = "SELECT MIN({$this->FieldOrder}) FROM {$this->TableName} WHERE {$this->FieldIDParent}={$move_row[$this->FieldIDParent]}";
+        $res_min = $this->_safe_query ($sql_min, $this->MyLink);
+        list($minordering) = mysql_fetch_row($res_min);
+        if (!$minordering) $minordering = 1;
+
         mysql_free_result($res);
         
-        if ($dir == -1 && $move_row[$this->FieldOrder] == 1) return;
+        if ($dir == -1 && $move_row[$this->FieldOrder] == $minordering) return;
         if ($dir == 1 && $move_row[$this->FieldOrder] == $maxordering) return;
         
         if ($dir == -1){

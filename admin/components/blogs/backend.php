@@ -120,7 +120,6 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		
 		$cfg['rss_all']             = $inCore->request('rss_all', 'int');
 		$cfg['rss_one']             = $inCore->request('rss_one', 'int');
-		$cfg['j_code']              = $inCore->request('j_code', 'int');
 		$cfg['update_seo_link_blog'] = $inCore->request('update_seo_link_blog', 'int');
 			
 		$inCore->saveComponentConfig('blogs', $cfg);
@@ -130,7 +129,6 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         $opt = 'config';
 	}
 
-	if(!isset($cfg['j_code'])) { $cfg['j_code']=1;	}
 	if(!isset($cfg['perpage_blog'])) { $cfg['perpage_blog']=15;	}
 	if (!isset($cfg['min_karma_private'])) { $cfg['min_karma_private'] = 0; }
 	if (!isset($cfg['min_karma_public'])) {	 $cfg['min_karma_public'] = 0; }
@@ -202,14 +200,6 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             <td width="100" valign="top">
                 <input name="perpage_blog" type="text" id="perpage_blog" value="<?php echo @$cfg['perpage_blog'];?>" size="5" /> шт.
             </td>
-        </tr>
-        <tr>
-            <td valign="top"><strong>Включать подсветку синтаксиса кода: </strong></td>
-            <td width="100" valign="top"><input name="j_code" type="radio" value="1" <?php if (@$cfg['j_code']) { echo 'checked="checked"'; } ?> />
-              Да
-              <label>
-      <input name="j_code" type="radio" value="0"  <?php if (!$cfg['j_code']) { echo 'checked="checked"'; } ?> />
-              Нет</label></td>
         </tr>
         <tr>
             <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Опции фотографий</h4></td>

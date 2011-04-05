@@ -68,6 +68,7 @@ class cms_model_catalog{
 
         $sql = "UPDATE cms_uc_items
                 SET title='{$item['title']}',
+				    category_id = '{$item['cat_id']}',
                     pubdate='{$item['pubdate']}',
                     published='{$item['published']}',
                     imageurl='{$item['imageurl']}',
@@ -344,11 +345,10 @@ class cms_model_catalog{
 
         $subcats=array();
 
-        $sql = "SELECT cat.*, IFNULL(COUNT(con.id), 0) as content_count
+        $sql = "SELECT cat.*
                 FROM cms_uc_cats cat
-                LEFT JOIN cms_uc_items con ON con.category_id = cat.id AND con.published = 1
-                WHERE (cat.parent_id=$parent_id) AND cat.published = 1
-                GROUP BY cat.id";
+                WHERE cat.parent_id = '$parent_id' AND cat.published = 1
+                ORDER BY cat.title";
 
         $result = $this->inDB->query($sql);
 
