@@ -162,13 +162,14 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	}
 	
 	if ($opt == 'submit_forum'){	
-			$category_id = (int)$_REQUEST['category_id'];
-			$title = $inCore->strClear($_REQUEST['title']);
-			$published = $_REQUEST['published'];
-			$auth_group = $_REQUEST['auth_group'];
-			$parent_id = $_REQUEST['parent_id'];			
-			$description = $_REQUEST['description'];
-			
+			$category_id    = $inCore->request('category_id', 'int');
+			$title          = $inCore->request('title', 'str');
+			$published      = $inCore->request('published', 'int');
+			$auth_group     = $inCore->request('auth_group', 'int');
+			$parent_id      = $inCore->request('parent_id', 'int');
+			$description    = $inCore->request('description', 'str');
+			$topic_cost     = $inCore->request('topic_cost', 'int', 0);
+
 			$ns = $inCore->nestedSetsInit('cms_forums');
 			$myid = $ns->AddNode($parent_id);
 			
@@ -177,8 +178,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 						title='$title', 
 						description='$description', 
 						auth_group='$auth_group', 
-						published=$published
-					WHERE id = $myid";	
+						published=$published,
+                        topic_cost='$topic_cost'
+					WHERE id = $myid";
+
 			dbQuery($sql) ;	
 			reorder();
 			header('location:?view=components&do=config&opt=list_forums&id='.$_REQUEST['id']);		
@@ -188,24 +191,27 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		if(isset($_REQUEST['item_id'])) { 
 			$id = $_REQUEST['item_id'];
 			
-			if (!empty($_REQUEST['category_id'])) { $category_id = $_REQUEST['category_id']; } else { error("Укажите категорию!"); }
-			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("Укажите заголовок фотографии!"); }
-			$published = $_REQUEST['published'];
-			$auth_group = $_REQUEST['auth_group'];
-			$parent_id = $_REQUEST['parent_id'];
-			$description = $_REQUEST['description'];
+			$category_id    = $inCore->request('category_id', 'int');
+			$title          = $inCore->request('title', 'str');
+			$published      = $inCore->request('published', 'int');
+			$auth_group     = $inCore->request('auth_group', 'int');
+			$parent_id      = $inCore->request('parent_id', 'int');
+			$description    = $inCore->request('description', 'str');
+			$topic_cost     = $inCore->request('topic_cost', 'int', 0);
 			
 			$ns = $inCore->nestedSetsInit('cms_forums');
 			$ns->MoveNode($id, $parent_id);			
 
 			$sql = "UPDATE cms_forums
-					SET category_id = $category_id,
-						title='$title', 
+					SET category_id=$category_id,
+						title='$title',
 						description='$description',
+						auth_group='$auth_group',
 						published=$published,
-						auth_group=$auth_group
+                        topic_cost='$topic_cost'
 					WHERE id = $id
 					LIMIT 1";
+
 			dbQuery($sql) ;		
 
 			$sql = "SELECT id
@@ -685,20 +691,27 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			}
 		?>
         <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="addform" id="addform">
-            <table width="514" border="0" cellspacing="5" class="proptable">
+            <table width="514" border="0" cellspacing="10" class="proptable">
                 <tr>
-                    <td width="236" valign="top">Название форума: </td>
-                    <td width="259" valign="top"><input name="title" type="text" id="title" size="30" value="<?php echo @$mod['title'];?>" style="width:250px"/></td>
+                    <td width="236"><strong>Название форума:</strong></td>
+                    <td width="259"><input name="title" type="text" id="title" size="30" value="<?php echo @$mod['title'];?>" style="width:254px"/></td>
                 </tr>
                 <tr>
-                    <td valign="top">Описание форума: </td>
-                    <td valign="top"><textarea name="description" cols="35" rows="2" id="description" style="width:250px"><?php echo @$mod['description']?></textarea></td>
+                    <td valign="top"><strong>Описание форума:</strong></td>
+                    <td><textarea name="description" cols="35" rows="2" id="description" style="width:250px"><?php echo @$mod['description']?></textarea></td>
                 </tr>
                 <tr>
-                    <td valign="top">Родительский форум: </td>
-                    <td valign="top">
+                    <td><strong>Публиковать форум?</strong></td>
+                    <td>
+                        <input name="published" type="radio" value="1" checked="checked" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> /> Да
+                        <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> /> Нет
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Родительский форум:</strong></td>
+                    <td>
                         <?php $rootid = dbGetField('cms_forums', 'parent_id=0', 'id'); ?>
-                        <select name="parent_id" size="8" id="parent_id" style="width:250px">
+                        <select name="parent_id" id="parent_id" style="width:260px">
                                 <option value="<?php echo $rootid?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- Корень форумов --</option>
                         <?php
                             if (isset($mod['parent_id'])){
@@ -711,9 +724,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                    </td>
                 </tr>
                 <tr>
-                    <td valign="top">Категория:</td>
-                    <td valign="top">
-                        <select name="category_id" id="category_id" style="width:250px">
+                    <td><strong>Категория:</strong></td>
+                    <td>
+                        <select name="category_id" id="category_id" style="width:260px">
                         <?php
                             if (isset($mod['category_id'])) { 
                                 echo $inCore->getListItems('cms_forum_cats', $mod['category_id'], 'ordering');
@@ -729,27 +742,29 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                     </td>
                 </tr>
                 <tr>
-                    <td valign="top">Публиковать форум?</td>
-                    <td valign="top">
-                        <input name="published" type="radio" value="1" checked="checked" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> /> Да
-                        <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> /> Нет
+                    <td><strong>Показывать группе:</strong></td>
+                    <td>
+                        <select name="auth_group" id="auth_group" style="width:260px">
+                            <option value="0" <?php if (@$mod['auth_group']=='0') { echo "selected"; }?>>Всем группам</option>
+                            <?php
+                                if (isset($mod['auth_group'])) {
+                                    echo $inCore->getListItems('cms_user_groups', $mod['auth_group']);
+                                } else {
+                                    echo $inCore->getListItems('cms_user_groups');
+                                }
+                            ?>
+                        </select>
                     </td>
                 </tr>
                 <tr>
-                <td valign="top">Показывать группе: </td>
-                <td valign="top">
-                    <select name="auth_group" id="auth_group" style="width:250px">
-                        <option value="0" <?php if (@$mod['auth_group']=='0') { echo "selected"; }?>>Всем группам</option>
-                        <?php
-                            if (isset($mod['auth_group'])) {
-                                echo $inCore->getListItems('cms_user_groups', $mod['auth_group']);
-                            } else {
-                                echo $inCore->getListItems('cms_user_groups');
-                            }
-                        ?>
-                    </select>
-                </td>
-            </tr>
+                    <td width="236">
+                        <strong>Стоимость создания темы:</strong><br/>
+                        <span class="hinttext">0 &mdash бесплатно</span>
+                    </td>
+                    <td width="259">
+                        <input name="topic_cost" type="text" id="title" value="<?php echo @$mod['topic_cost'];?>" style="width:60px"/> баллов
+                    </td>
+                </tr>
         </table>
         <p>
             <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_forum') { echo 'value="Создать форум"'; } else { echo 'value="Сохранить форум"'; } ?> />

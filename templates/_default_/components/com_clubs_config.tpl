@@ -14,16 +14,19 @@
 
 <div id="configtabs" style="margin-top:20px">
 	<ul id="tabs"> 
-		<li><a href="#tab1"><span>{$LANG.CLUB_DESC}</span></a></li>
-		<li><a href="#tab2"><span>{$LANG.MODERATORS}</span></a></li>
-		<li><a href="#tab3"><span>{$LANG.MEMBERS}</span></a></li>
+		<li><a href="#about"><span>{$LANG.CLUB_DESC}</span></a></li>
+		<li><a href="#moders"><span>{$LANG.MODERATORS}</span></a></li>
+		<li><a href="#members"><span>{$LANG.MEMBERS}</span></a></li>
 		{if $club.enabled_photos || $club.enabled_blogs}
-		<li><a href="#tab4"><span>{$LANG.LIMITS}</span></a></li>
+            <li><a href="#limits"><span>{$LANG.LIMITS}</span></a></li>
 		{/if}
+        {if $is_admin}
+            <li><a href="#vip"><span>VIP</span></a></li>
+        {/if}
 	</ul> 
 	
 	{* ============================== ЗАКЛАДКА №1 ============================================== *}
-	<div id="tab1">	
+	<div id="about">
 		<table width="100%" border="0" cellspacing="0" cellpadding="10" style="border-bottom:solid 1px silver;margin-bottom:20px">
 			<tr>
 				<td width="48">
@@ -42,7 +45,7 @@
 		{wysiwyg name='description' value=$club.description height=350 width='100%' toolbar='Admin'}
 	</div>
 
-	<div id="tab2">	
+	<div id="moders">
 		<table width="500" border="0" cellspacing="0" cellpadding="10" id="multiuserscfg">
 			<tr>
 				<td colspan="3">
@@ -70,7 +73,7 @@
 		</table>
 	</div>
 
-	<div id="tab3">		
+	<div id="members">
 		<table width="550" border="0" cellspacing="0" cellpadding="10">
 			<tr>
 			  <td>{$LANG.MAX_MEMBERS}:<br/><span style="color:#5F98BF">{$LANG.MAX_MEMBERS_TEXT}</span> </td>
@@ -128,7 +131,7 @@
 	</div>
 	
 	{if $club.enabled_photos || $club.enabled_blogs}
-	<div id="tab4">		
+	<div id="limits">
 		<table width="500" border="0" cellspacing="0" cellpadding="10">
 			{if $club.enabled_blogs}
 			<tr>
@@ -185,6 +188,39 @@
 	</div>
 	{/if}
 	
+	{if $is_admin}
+	<div id="vip">
+        {if !$is_billing}
+            <p>
+                Для поддержки VIP-клубов необходим компонент &laquo;<a href="http://www.instantcms.ru/billing/about.html">Биллинг пользователей</a>&raquo;
+            </p>
+            <p>
+                Подключив биллинг вы сможете присвоить VIP-статус любому клубу и установить размер оплаты за вступление в этот клуб.
+            </p>
+        {else}
+            <table width="500" border="0" cellspacing="0" cellpadding="10">
+                <tr>
+                    <td>
+                        <label><strong>{$LANG.VIP_CLUB}:</strong></label>
+                    </td>
+                    <td width="150">
+                        <input name="is_vip" type="radio" value="1" {if $club.is_vip}checked{/if}/> {$LANG.YES}
+                        <input name="is_vip" type="radio" value="0" {if !$club.is_vip}checked{/if}/> {$LANG.NO}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>{$LANG.VIP_CLUB_JOIN_COST}:</label>
+                    </td>
+                    <td width="150">
+                        <input name="join_cost" type="text" style="width:60px" value="{$club.join_cost}"/> {$LANG.BILLING_POINT10}
+                    </td>
+                </tr>
+            </table>
+        {/if}
+	</div>
+	{/if}
+
 </div>
 
 <p>

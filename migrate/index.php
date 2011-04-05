@@ -150,17 +150,27 @@
 // ========================================================================== //
 // ========================================================================== //
     if (!$inDB->isFieldExists('cms_clubs', 'create_karma')){
-        $inDB->query("ALTER TABLE `cms_clubs` ADD `create_karma` INT( 11 ) NOT NULL AFTER `join_karma_limit`");
+        $inDB->query("ALTER TABLE `cms_clubs` ADD `is_vip` INT( 11 ) NOT NULL AFTER `join_karma_limit`");
         echo '<p>Поле <strong>create_karma</strong> добавлено в таблицу <strong>cms_clubs</strong></p>';
 		$is_was_migrate = true;
-    }	
+    }
+    if (!$inDB->isFieldExists('cms_clubs', 'is_vip')){
+        $inDB->query("ALTER TABLE `cms_clubs` ADD `is_vip` TINYINT NOT NULL DEFAULT '0'");
+        echo '<p>Поле <strong>is_vip</strong> добавлено в таблицу <strong>cms_clubs</strong></p>';
+		$is_was_migrate = true;
+    }
+    if (!$inDB->isFieldExists('cms_clubs', 'join_cost')){
+        $inDB->query("ALTER TABLE `cms_clubs` ADD `join_cost` FLOAT NOT NULL");
+        echo '<p>Поле <strong>join_cost</strong> добавлено в таблицу <strong>cms_clubs</strong></p>';
+		$is_was_migrate = true;
+    }
 // ========================================================================== //
 // ========================================================================== //
     if ($inDB->isFieldExists('cms_comments', 'content_bbcode')){
         $inDB->query("ALTER TABLE `cms_comments` ADD `content_bbcode` TEXT NOT NULL AFTER `content`");
         echo '<p>Поле <strong>content_bbcode</strong> добавлено в таблицу <strong>cms_comments</strong></p>';
 		$is_was_migrate = true;
-    }	
+    }
 // ========================================================================== //
 // ========================================================================== //
 
@@ -175,6 +185,28 @@
         echo '<p>Поля <strong>to_del</strong>, <strong>from_del</strong> добавлены в таблицу <strong>cms_user_msg</strong></p>';
         $is_was_migrate = true;
     }	
+
+    if ($inDB->isFieldExists('cms_board_items', 'is_vip')){
+        $inDB->query("ALTER TABLE `cms_board_items` ADD `is_vip` TINYINT NOT NULL DEFAULT '0'");
+        $inDB->query("ALTER TABLE `cms_board_items` ADD `vipdate` DATETIME NOT NULL");
+        echo '<p>Поля <strong>is_vip</strong>, <strong>vipdate</strong> добавлены в таблицу <strong>cms_board_items</strong></p>';
+        $is_was_migrate = true;
+    }
+
+    if ($inDB->isFieldExists('cms_category', 'cost')){
+        $inDB->query("ALTER TABLE `cms_category` ADD `cost` VARCHAR( 5 ) NOT NULL");
+        $is_was_migrate = true;
+    }
+
+    if ($inDB->isFieldExists('cms_uc_cats', 'cost')){
+        $inDB->query("ALTER TABLE `cms_uc_cats` ADD `cost` VARCHAR( 5 ) NOT NULL");
+        $is_was_migrate = true;
+    }
+
+    if ($inDB->isFieldExists('cms_forums', 'topic_cost')){
+        $inDB->query("ALTER TABLE `cms_forums` ADD `topic_cost` FLOAT NOT NULL DEFAULT '0'");
+        $is_was_migrate = true;
+    }
 
 // ========================================================================== //
 // ========================================================================== //

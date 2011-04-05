@@ -517,7 +517,6 @@ if ($do=='editprofile'){
 					$smarty = $inCore->initSmarty('components', 'com_users_edit_profile.tpl');
 				
 					$smarty->assign('opt', $opt);
-					$smarty->assign('messages', cmsCore::getSessionMessages());
 					$smarty->assign('usr', $usr);			
 					$smarty->assign('dateform', $inCore->getDateForm('birthdate', false, $usr['bday'], $usr['bmonth'], $usr['byear']));
 					$smarty->assign('private_forms', $private_forms);		
@@ -679,7 +678,6 @@ if ($do=='profile'){
 		$smarty->assign('is_auth', $inUser->id);
         $smarty->assign('avatar', usrImageNOdb($usr['id'], 'big', $usr['imageurl'], $usr['is_deleted']));
         $smarty->assign('usr', $usr);
-		$smarty->assign('messages', cmsCore::getSessionMessages());
         $smarty->display('com_users_not_allow.tpl');
         return;
     }
@@ -710,12 +708,13 @@ if ($do=='profile'){
     $usr['avatar']				 = usrImageNOdb($usr['id'], 'big', $usr['imageurl'], $usr['is_deleted']);
 	
     $usr['friends']				= usrFriends($usr['id'], $usr['friends_total'], 6);
-		$usr['isfriend']			= (($inUser->id && !$myprofile) ? usrIsFriends($usr['id'], $inUser->id) : false);
-		$usr['isfriend_not_add']	= $usr['isfriend'];
+    $usr['isfriend']			= (($inUser->id && !$myprofile) ? usrIsFriends($usr['id'], $inUser->id) : false);
+    $usr['isfriend_not_add']	= $usr['isfriend'];
     $usr['is_new_friends']		= ($inUser->id==$usr['id'] && $model->isNewFriends($usr['id']));
-        if ($usr['is_new_friends']){
-            $usr['new_friends'] 	= usrFriendQueriesList($usr['id'], $model);
-        }
+    
+    if ($usr['is_new_friends']){
+        $usr['new_friends'] 	= usrFriendQueriesList($usr['id'], $model);
+    }
 
     if ($usr['friends'] && $inUser->id && $myprofile && $cfg['sw_feed']){
         $inActions = cmsActions::getInstance();
@@ -771,16 +770,17 @@ if ($do=='profile'){
         }
     }
 
-    if($cfg['sw_files'])
+    if($cfg['sw_files']){
         if ($inUser->id==$id){
             $usr['files_count'] = $inDB->rows_count('cms_user_files', "user_id = ".$usr['id']." AND allow_who = 'all'");
         } else {
             $usr['files_count'] = $inDB->rows_count('cms_user_files', 'user_id = '.$usr['id']);
         }
+    }
 
     $usr['blog_link'] = '';
 	if($cfg['sw_blogs']){
-		$usr['blog']            = usrBlog($usr['id']);
+    $usr['blog']            = usrBlog($usr['id']);
     $usr['blog_id']         = $usr['blog']['id'];
     $usr['blog_seolink']    = $usr['blog']['seolink'];
     
@@ -832,7 +832,6 @@ if ($do=='profile'){
     $smarty->assign('id', $id);
     $smarty->assign('usr', $usr);
     $smarty->assign('plugins', $plugins);
-    $smarty->assign('messages', cmsCore::getSessionMessages());
     $smarty->assign('cfg', $cfg);
     $smarty->assign('myprofile', $myprofile);
 	$smarty->assign('is_admin', $inUser->is_admin);
@@ -950,7 +949,6 @@ if ($do=='avatar'){
 						
 			$smarty = $inCore->initSmarty('components', 'com_users_avatar_upload.tpl');
     		$smarty->assign('id', $id);
-			$smarty->assign('messages', cmsCore::getSessionMessages());
     		$smarty->display('com_users_avatar_upload.tpl');
 			
 			} else {
@@ -1944,7 +1942,6 @@ if ($do=='sendmessage'){
         $smarty->assign('is_reply_user', $is_reply_user);
         $smarty->assign('bbcodetoolbar', cmsPage::getBBCodeToolbar('message'));
         $smarty->assign('smilestoolbar', cmsPage::getSmilesPanel('message'));
-        $smarty->assign('messages', cmsCore::getSessionMessages());
         $smarty->assign('id_admin', $inCore->userIsAdmin($inUser->id));
         $smarty->display('com_users_messages_add.tpl');
 

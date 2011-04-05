@@ -60,6 +60,7 @@ class cms_model_users{
 				p.gender as gender,	p.formsdata,			
 				u.group_id,
 				g.title as grp,
+				g.alias as group_alias,
 				o.user_id as status,
 				b.user_id as banned,
                 IFNULL(ui.login, '') as inv_login,

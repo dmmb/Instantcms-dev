@@ -33,7 +33,7 @@ function mod_latestboard($module_id){
 		} else { $catsql = ''; }
 		
 		$sql = "SELECT i.title, i.id, i.city as city, u.id as user_id, u.nickname as nickname,
-					   i.pubdate as pubdate
+					   i.pubdate as pubdate, i.is_vip as is_vip
 				FROM cms_board_items i
 				LEFT JOIN cms_board_cats cat ON cat.id = i.category_id
 				LEFT JOIN cms_users u ON u.id = i.user_id
@@ -58,11 +58,11 @@ function mod_latestboard($module_id){
 	
 		}
 
-			$smarty = $inCore->initSmarty('modules', 'mod_latestboard.tpl');			
-			$smarty->assign('items', $items);
-			$smarty->assign('cfg', $cfg);
+        $smarty = $inCore->initSmarty('modules', 'mod_latestboard.tpl');
+        $smarty->assign('items', $items);
+        $smarty->assign('cfg', $cfg);
 		$smarty->assign('is_items', $is_items);
-			$smarty->display('mod_latestboard.tpl');
+        $smarty->display('mod_latestboard.tpl');
 			
 		return true;				
 }

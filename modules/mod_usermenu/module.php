@@ -14,7 +14,7 @@
         $inDB       = cmsDatabase::getInstance();
         $inUser     = cmsUser::getInstance();
 						
-		if (!$inUser->id){ return false; }
+        if (!$inUser->id){ return false; }
 
         $cfg            = $inCore->loadModuleConfig($module_id);
         $users_cfg      = $inCore->loadComponentConfig('users');
@@ -47,6 +47,7 @@
         $smarty->assign('blogid', $blog['id']);
         $smarty->assign('blog_href', $blog_href);
         $smarty->assign('users_cfg', $users_cfg);
+        $smarty->assign('is_billing', $is_billing);
         $smarty->assign('balance', $balance);
         $smarty->display('mod_usermenu.tpl');
 

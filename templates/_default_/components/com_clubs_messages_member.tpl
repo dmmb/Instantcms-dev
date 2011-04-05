@@ -16,14 +16,6 @@
 {/literal}
 <div class="con_heading">{$LANG.SEND_MESSAGE}</div>
 
-{if $messages}
-    <div class="sess_messages">
-        {foreach key=id item=message from=$messages}
-            {$message}
-        {/foreach}
-    </div>
-{/if}
-
 <p id="text_mes">{$LANG.SEND_MESSAGE_TEXT} "{$club.title}".</p>
 <form action="" method="POST" name="msgform">
         <div class="usr_msg_bbcodebox">{$bbcodetoolbar}</div>

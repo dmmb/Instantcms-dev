@@ -71,6 +71,9 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $w
 
   if ($size === false) return false;
 
+  $new_width   = $size[0];
+  $new_height  = $size[1];
+
   if (($new_height <= $maxheight) && ($new_width <= $maxwidth)){
       @copy($src, $dest);
       return true;

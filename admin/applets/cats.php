@@ -41,16 +41,19 @@ function applet_cats(){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
 
-	$GLOBALS['cp_page_title'] = 'Разделы сайта';
- 	cpAddPathway('Разделы сайта', 'index.php?view=tree');
+    $GLOBALS['cp_page_title'] = 'Разделы сайта';
+    cpAddPathway('Разделы сайта', 'index.php?view=tree');
 
     $inCore->loadModel('content');
     $model = new cms_model_content();
 
-	if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
-	if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { $id = -1; }
-	if (isset($_REQUEST['co'])) { $co = $_REQUEST['co']; } else { $co = -1; } //current ordering, while resort
-		
+    if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
+    if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { $id = -1; }
+    if (isset($_REQUEST['co'])) { $co = $_REQUEST['co']; } else { $co = -1; } //current ordering, while resort
+
+    define('IS_BILLING', $inCore->isComponentInstalled('billing'));
+    if (IS_BILLING) { $inCore->loadClass('billing'); }
+    
 	if ($do == 'list'){
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'new.gif';
@@ -186,8 +189,8 @@ function applet_cats(){
 			$category['title']			= $inCore->request('title', 'str');
 			$category['url']			= $inCore->request('url', 'str');
 			$category['parent_id']		= $inCore->request('parent_id', 'int');
-			$category['description']	= $inCore->request('description', 'html');
-            $category['description']    = $inDB->escape_string($category['description']);
+			$category['description'] 	= $inCore->request('description', 'html');
+            $category['description']      = $inDB->escape_string($category['description']);
 			$category['published'] 		= $inCore->request('published', 'int', 0);
 			$category['showdate'] 		= $inCore->request('showdate', 'int', 0);
 			$category['showcomm'] 		= $inCore->request('showcomm', 'int', 0);
@@ -200,7 +203,10 @@ function applet_cats(){
 			$category['showdesc'] 		= $inCore->request('showdesc', 'int', 0);
 			$category['is_public'] 		= $inCore->request('is_public', 'int', 0);
 			$category['tpl'] 			= $inCore->request('tpl', 'str', 'com_content_view.tpl');
-			
+
+            $category['cost']           = $inCore->request('cost', 'str', '');
+            if (!is_numeric($category['cost'])) { $category['cost'] = ''; }
+
 			$album = array();
 			$album['id']       = $inCore->request('album_id', 'int', 0);
 			$album['titles']   = $inCore->request('album_titles', 'int', 0);
@@ -220,29 +226,30 @@ function applet_cats(){
             if ($category['url']) { $category['url'] = cmsCore::strToURL($category['url']); }
             $seolink    = $model->getCategorySeoLink($category);
 
-			$sql = "UPDATE cms_category 
-					SET parent_id={$category['parent_id']},
-						title='{$category['title']}',
-						description='{$category['description']}',
-						published={$category['published']},
-						showdate={$category['showdate']},
-						showcomm={$category['showcomm']},
-						orderby='{$category['orderby']}',
-						orderto='{$category['orderto']}',
-						modgrp_id='{$category['modgrp_id']}',
-						maxcols='{$category['maxcols']}',
-						showtags={$category['showtags']},
-						showrss={$category['showrss']},
-						showdesc={$category['showdesc']},
-						is_public={$category['is_public']},
-						photoalbum='$photoalbum',
+            $sql = "UPDATE cms_category
+                    SET parent_id={$category['parent_id']},
+                        title='{$category['title']}',
+                        description='{$category['description']}',
+                        published={$category['published']},
+                        showdate={$category['showdate']},
+                        showcomm={$category['showcomm']},
+                        orderby='{$category['orderby']}',
+                        orderto='{$category['orderto']}',
+                        modgrp_id='{$category['modgrp_id']}',
+                        maxcols='{$category['maxcols']}',
+                        showtags={$category['showtags']},
+                        showrss={$category['showrss']},
+                        showdesc={$category['showdesc']},
+                        is_public={$category['is_public']},
+                        photoalbum='$photoalbum',
+                        cost='{$category['cost']}',
                         seolink='$seolink',
                         url='{$category['url']}',
                         tpl='{$category['tpl']}'
-					WHERE id = {$category['id']}
-					LIMIT 1";
-			dbQuery($sql) ;	
-			reorder();
+                     WHERE id = {$category['id']}
+                     LIMIT 1";
+            dbQuery($sql) ;
+            reorder();
             
             //обновляем УРЛы всех вложенных разделов
             if ($seolink != $old['seolink']){
@@ -268,7 +275,7 @@ function applet_cats(){
             }
 			
 			if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
-				header('location:?view=tree');
+				header('location:?view=tree&cat_id='.$category['id']);
 			} else {
 				header('location:?view=cats&do=edit');		
 			}
@@ -277,23 +284,26 @@ function applet_cats(){
 	
 	if ($do == 'submit'){
 
-        $category['title']			= $inCore->request('title', 'str');
-        $category['url']			= $inCore->request('url', 'str');
-        $category['parent_id']		= $inCore->request('parent_id', 'int');
-        $category['description']	= $inCore->request('description', 'html');
+        $category['title']          = $inCore->request('title', 'str');
+        $category['url']            = $inCore->request('url', 'str');
+        $category['parent_id']      = $inCore->request('parent_id', 'int');
+        $category['description']    = $inCore->request('description', 'html');
         $category['description']    = $inDB->escape_string($category['description']);
-        $category['published'] 		= $inCore->request('published', 'int', 0);
-        $category['showdate'] 		= $inCore->request('showdate', 'int', 0);
-        $category['showcomm'] 		= $inCore->request('showcomm', 'int', 0);
-        $category['orderby'] 		= $inCore->request('orderby', 'str');
-        $category['orderto']		= $inCore->request('orderto', 'str');
-        $category['modgrp_id'] 		= $inCore->request('modgrp_id', 'int', 0);
-        $category['maxcols'] 		= $inCore->request('maxcols', 'int', 0);
-        $category['showtags'] 		= $inCore->request('showtags', 'int', 0);
-        $category['showrss'] 		= $inCore->request('showrss', 'int', 0);
-        $category['showdesc'] 		= $inCore->request('showdesc', 'int', 0);
-        $category['is_public'] 		= $inCore->request('is_public', 'int', 0);
-		$category['tpl'] 			= $inCore->request('tpl', 'str', 'com_content_view.tpl');
+        $category['published']      = $inCore->request('published', 'int', 0);
+        $category['showdate']       = $inCore->request('showdate', 'int', 0);
+        $category['showcomm']       = $inCore->request('showcomm', 'int', 0);
+        $category['orderby']        = $inCore->request('orderby', 'str');
+        $category['orderto']        = $inCore->request('orderto', 'str');
+        $category['modgrp_id']      = $inCore->request('modgrp_id', 'int', 0);
+        $category['maxcols']        = $inCore->request('maxcols', 'int', 0);
+        $category['showtags']       = $inCore->request('showtags', 'int', 0);
+        $category['showrss']        = $inCore->request('showrss', 'int', 0);
+        $category['showdesc']       = $inCore->request('showdesc', 'int', 0);
+        $category['is_public']      = $inCore->request('is_public', 'int', 0);        
+        $category['tpl']            = $inCore->request('tpl', 'str', 'com_content_view.tpl');
+
+        $category['cost']           = $inCore->request('cost', 'str', 0);
+        if (!is_numeric($category['cost'])) { $category['cost'] = ''; }
 
         $album = array();
         $album['id']       = $inCore->request('album_id', 'int', 0);
@@ -302,19 +312,19 @@ function applet_cats(){
         $album['orderby']  = $inCore->request('album_orderby', 'str', '');
         $album['orderto']  = $inCore->request('album_orderto', 'str', '');
         $album['maxcols']  = $inCore->request('album_maxcols', 'int', 0);
-        $album['max']	   = $inCore->request('album_max', 'int', 0);
+        $album['max']	  = $inCore->request('album_max', 'int', 0);
         
         $photoalbum = serialize($album);
 		
-		$ns = $inCore->nestedSetsInit('cms_category');
-		$category['id'] = $ns->AddNode($category['parent_id']);
+        $ns = $inCore->nestedSetsInit('cms_category');
+        $category['id'] = $ns->AddNode($category['parent_id']);
 
         if (!$category['title']) { $category['title'] = 'Раздел #'.$category['id']; }
 
         if ($category['url']) { $category['url'] = cmsCore::strToURL($category['url']); }
         $seolink    = $model->getCategorySeoLink($category);
 		
-		if ($category['id']){
+        if ($category['id']){
 
 			$sql = "UPDATE cms_category
 					SET parent_id={$category['parent_id']},
@@ -332,25 +342,28 @@ function applet_cats(){
 						showdesc={$category['showdesc']},
 						is_public={$category['is_public']},
 						photoalbum='$photoalbum',
+                        cost='{$category['cost']}',
                         seolink='$seolink',
                         url='{$category['url']}',
                         tpl='{$category['tpl']}'
-					WHERE id = {$category['id']}
-					LIMIT 1";
+                    WHERE id = {$category['id']}
+                    LIMIT 1";
 
-			dbQuery($sql) ;
-		}
+			dbQuery($sql);
+
+        }
         
-		reorder();
+        reorder();
 
         $inmenu = $inCore->request('createmenu', 'str', '');
 
-		if ($inmenu){
-			createMenuItem($inmenu, $category['id'], $category['title']);
-		}
+        if ($inmenu){
+            createMenuItem($inmenu, $category['id'], $category['title']);
+        }
 	
-		header('location:?view=tree');
-	}	  
+        header('location:?view=tree');
+
+    }
 
    if ($do == 'add' || $do == 'edit'){
  
@@ -548,7 +561,15 @@ function applet_cats(){
                                 <option value="1" <?php if($mod['is_public']) { echo 'selected'; } ?>>Да</option>
                             </select>
                         </div>
-
+                        <?php if (IS_BILLING){ ?>
+                            <div style="margin-top:15px">
+                                <strong>Стоимость добавления статьи</strong><br/>
+                                <div style="color:gray">Если не указана здесь, то используется цена по-умолчанию, указанная в настройках биллинга</div>
+                            </div>
+                            <div>
+                                <input type="text" name="cost" value="<?php echo $mod['cost']; ?>" style="width:50px"/> баллов
+                            </div>
+                        <?php } ?>
                         <div style="margin-top:20px">
                             <strong>Редакторы раздела</strong><br/>
                             <span class="hinttext">Пользователи выбранной группы смогут заходить в админку, но будут видеть только этот раздел и его подразделы</span>

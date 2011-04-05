@@ -254,6 +254,9 @@ function catalog(){
     $inCore->loadModel('catalog');
     $model = new cms_model_catalog();
 
+    define('IS_BILLING', $inCore->isComponentInstalled('billing'));
+    if (IS_BILLING) { $inCore->loadClass('billing'); }
+
     $menutitle  = $inCore->menuTitle();
     if (!$menutitle) { $menutitle = $_LANG['CATALOG']; }
     $cfg        = $inCore->loadComponentConfig('catalog');
@@ -858,6 +861,9 @@ function catalog(){
             $item = array();
             $fdata = array();
 
+            if ($cat['cost']=='') { $cat['cost'] = false; }
+            cmsBilling::checkBalance('catalog', 'add_catalog_item', false, $cat['cost']);
+
         }
         
         if ($do == 'edit_item'){
@@ -1022,6 +1028,12 @@ function catalog(){
         if ($opt=='add'){ 
 		
 				$item_id = $model->addItem($item);
+
+                if (IS_BILLING){
+                    if ($cat['cost']=='') { $cat['cost'] = false; }
+                    cmsBilling::process('catalog', 'add_catalog_item', $cat['cost']);
+                }
+
 				if (!$cfg['premod'] || $inUser->is_admin) {
 					//регистрируем событие
 					cmsActions::log('add_catalog', array(

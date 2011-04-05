@@ -80,7 +80,7 @@
         <tr>
             <td height="50">
                 <div id="footer" style="text-align:center;background:#ECECEC;height:50px;line-height:50px;">
-                    <a href="http://www.instantcms.ru/"><strong>InstantCMS</strong></a><strong> v<?php echo CORE_VERSION?> &copy; 2010</strong><br />
+                    <a href="http://www.instantcms.ru/"><strong>InstantCMS</strong></a><strong> v<?php echo CORE_VERSION?> &copy; 2011</strong><br />
                 </div>
             </td>
         </tr>

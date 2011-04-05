@@ -2183,7 +2183,12 @@ class cmsCore {
 
 		if (!$this->checkContentAccess($access_list) && $menuid != 0) { 
 
-			$inPage->page_body = '<p>Доступ запрещен</p>';
+            ob_start();
+
+            $inPage->includeTemplateFile('special/accessdenied.php');
+
+			$inPage->page_body = ob_get_clean();
+            return false;
 
 		} else {
 

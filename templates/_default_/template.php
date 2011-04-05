@@ -72,6 +72,16 @@
             <div id="mainbody" class="container_12">
                 <div id="main" class="<?php if ($mod_count['sidebar']) { ?>grid_8<?php } else { ?>grid_12<?php } ?>">
                     <?php cmsModule('maintop'); ?>
+
+                    <?php $messages = cmsCore::getSessionMessages(); ?>
+                    <?php if ($messages) { ?>
+                    <div class="sess_messages">
+                        <?php foreach($messages as $message){ ?>
+                            <?php echo $message; ?>
+                        <?php } ?>
+                    </div>
+                    <?php } ?>
+
                     <?php cmsBody(); ?>
                     <?php cmsModule('mainbottom'); ?>
                 </div>

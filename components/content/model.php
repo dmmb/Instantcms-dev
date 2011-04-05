@@ -182,6 +182,27 @@ class cms_model_content{
 
     }
 
+    public function getPublicCats() {
+
+        $inCore = cmsCore::getInstance();
+
+        $nested_sets    = $inCore->nestedSetsInit('cms_category');
+        $rootid         = $this->inDB->get_field('cms_category', 'parent_id=0', 'id');
+
+        $rs_rows        = $nested_sets->SelectSubNodes($rootid);
+
+        if ($rs_rows){
+            while($node = $this->inDB->fetch_assoc($rs_rows)){
+                if($node['is_public']) { $subcats[] = $node; }
+            }
+        }
+
+        $subcats = cmsCore::callEvent('GET_CONTENT_PUBCATS', $subcats);
+
+        return $subcats;
+
+    }
+
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 

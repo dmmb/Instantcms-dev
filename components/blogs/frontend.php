@@ -32,6 +32,9 @@ function blogs(){
 
     $inCore->loadModel('blogs');
     $model = new cms_model_blogs();
+
+    define('IS_BILLING', $inCore->isComponentInstalled('billing'));
+    if (IS_BILLING) { $inCore->loadClass('billing'); }
 		
 	//Загрузка настроек блогов
 	$cfg = $inCore->loadComponentConfig('blogs');
@@ -100,6 +103,9 @@ if ($do=='create'){
 
     //Показ формы создания блога
     if (!$inCore->inRequest('goadd')){
+
+        if (IS_BILLING){ cmsBilling::checkBalance('blogs', 'add_blog'); }
+
         $inPage->setTitle($_LANG['CREATE_BLOG']);
         $inPage->backButton(false);
 
@@ -161,6 +167,9 @@ if ($do=='create'){
                 'target_id' => 0, 
                 'description' => ''
             ));
+            
+            if (IS_BILLING){ cmsBilling::process('blogs', 'add_blog'); }
+
             //Выводим сообщение о том что блог создан
             $smarty  = $inCore->initSmarty('components', 'com_blog_create_ok.tpl');
             $smarty->assign('blogid', $blog_id);
@@ -674,6 +683,9 @@ if ($do=='newpost' || $do=='editpost'){
 	if ($do=='newpost'){
         //Проверяем доступ
 		if (!$myblog && !$is_author && !$is_admin) { $inCore->redirectBack(); }
+
+        if (IS_BILLING){ cmsBilling::checkBalance('blogs', 'add_post'); }
+        
         //Устанавливаем заголовки
         $inPage->addPathway($_LANG['NEW_POST'], $_SERVER['REQUEST_URI']);
 		$inPage->setTitle($_LANG['NEW_POST']);
@@ -779,6 +791,7 @@ if ($do=='newpost' || $do=='editpost'){
 
                 if ($blog['owner']=='user'){
                     if ($myblog || (!$blog['premod'])){	$published = 1;	} else { $published = 0; }
+                    if (IS_BILLING){ cmsBilling::process('blogs', 'add_post'); }
                 }
 
                 if ($blog['owner']=='club'){

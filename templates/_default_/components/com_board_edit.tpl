@@ -1,10 +1,3 @@
-{if $messages}
-    <div class="sess_messages">
-        {foreach key=id item=message from=$messages}
-            {$message}
-        {/foreach}
-    </div>
-{/if}
 <form action="{$action}" method="post" enctype="multipart/form-data">
 	<table cellpadding="2">
 		<tr>
@@ -34,6 +27,28 @@
 				<textarea name="content" style="width:400px" rows="5" id="content">{$content}</textarea>
 			</td>
 		</tr>
+		{if $category_id}
+			<tr>
+				<td height="30"><span>{$LANG.MOVE_TO_CAT}:</span></td>
+				<td>
+					<select name="category_id" id="category_id" style="width:406px">
+						<option value="0">-- {$LANG.DONT_MOVE} --</option>
+						{$catslist}
+					</select>
+				</td>
+			</tr>
+		{/if}
+		{if $cfg.photos && $cat.is_photos}
+			<tr>
+				<td><span>{$LANG.PHOTO}:</span></td>
+				<td>
+                    <input name="picture" type="file" id="picture" />
+                    {if strlen($file)}
+                        <input type="checkbox" name="delphoto" value="1" id="delphoto" /> {$LANG.DEL_PHOTO}
+                    {/if}
+                </td>
+			</tr>
+		{/if}
 		{if $form_do == 'edit'}
 			<tr>
 				<td height="35"><span>{$LANG.PERIOD_PUBL}:</span></td>
@@ -49,7 +64,7 @@
 						<option value="14">14</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
-					</select>  {$LANG.DAYS}
+					</select> {$LANG.DAYS}
 				</td>
 			</tr>
 		{/if}
@@ -73,39 +88,83 @@
                 </tr>
             {/if}
         {/if}
-		{if $cfg.photos && $cat.is_photos}
+
+        {if $form_do == 'edit' && $is_vip}
 			<tr>
-				<td><span>{$LANG.PHOTO}:</span></td>
-				<td><input name="picture" type="file" id="picture" style="width:400px;" /></td>
+				<td height="35"><span>{$LANG.VIP_STATUS}:</span></td>
+				<td height="35">до {$vipdate}</td>
 			</tr>
-			{if strlen($file)}
-				<tr>
-					<td height="30" valign="middle"><span>{$LANG.DEL_PHOTO}:</span></td>
-					<td valign="middle"><input type="checkbox" name="delphoto" value="1" id="delphoto" /></td>
-				</tr>
-			{/if}
+        {/if}
+
+		{if $is_admin || ($is_billing && $cfg.vip_enabled && ($form_do=='add' || ($form_do=='edit' && $cfg.vip_prolong)))}
+			<tr>
+				<td>
+                    <span>{$LANG.MARK_AS_VIP}:</span>
+                    <div style="color:gray">
+                        VIP-объявления выделяются цветом и всегда находятся в начале списка
+                    </div>
+                </td>
+				<td valign="top" style="padding-top:5px">
+                    <select id="vipdays" name="vipdays" {if !$is_admin}onchange="calculateVip()"{/if}>
+                        {section name=vipdays start=0 loop=$cfg.vip_max_days+1 step=1}
+                            <option value="{$smarty.section.vipdays.index}">
+                                {$smarty.section.vipdays.index}
+                            </option>
+                        {/section}
+                    </select>
+                    {$LANG.DAYS}
+
+                    {if !$is_admin}
+                        <input type="hidden" id="vip_day_cost" name="vip_day_cost" value="{$cfg.vip_day_cost}" />
+                        <input type="hidden" id="balance" name="balance" value="{$balance}" />
+                        <div id="vip_cost" style="margin-top:10px;display: none">
+                            Стоимость: <span>20</span> баллов
+                        </div>
+
+                        <script type="text/javascript">
+                            {literal}
+                                function calculateVip(){
+
+                                    var days = $('#vipdays').val();
+                                    var cost = $('#vip_day_cost').val();
+
+                                    if (Number(days)==0){
+                                        $('#vip_cost').hide().find('span').html('0');
+                                    } else {
+                                        var summ = days * cost;
+                                        $('#vip_cost').show().find('span').html(summ);
+                                    }
+
+                                }
+
+                                function checkBalance(){
+                                    var cost    = Number($('#vip_cost span').html());
+                                    var balance = Number($('#balance').val());
+
+                                    if (balance < cost){
+                                        alert('На вашем балансе не достаточно средств\nдля покупки VIP-статуса на указанный срок');
+                                        return false;
+                                    } else {
+                                        return true;
+                                    }
+                                }
+                            {/literal}
+                        </script>
+                    {/if}
+
+				</td>
+			</tr>
 		{/if}
 
-		{if $category_id}
-			<tr>
-				<td height="30"><span>{$LANG.MOVE_TO_CAT}:</span></td>
-				<td>
-					<select name="category_id" id="category_id" style="width:400px">
-						<option value="0">-- {$LANG.DONT_MOVE} --</option>
-						{$catslist}
-					</select>
-				</td>
-			</tr>	
-		{/if}
         {if !$is_admin}
 		<tr>
-			<td valign="top">&nbsp;</td>
+			<td valign="top">{$LANG.ANTISPAM}:</td>
 			<td>{php}echo cmsPage::getCaptcha();{/php}</td>
 		</tr>
         {/if}
 		<tr>
 			<td height="40" colspan="2" valign="middle">
-				<input name="submit" type="submit" id="submit" style="margin-top:10px;font-size:18px" value="{$LANG.SAVE_ADV}" />
+				<input name="submit" type="submit" id="submit" style="margin-top:10px;font-size:18px" value="{$LANG.SAVE_ADV}" {if $is_admin || ($is_billing && $cfg.vip_enabled)}onclick="if(!checkBalance())return false;"{/if} />
 			</td>
 		</tr>
 	</table>

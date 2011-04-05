@@ -3,9 +3,11 @@
 {* ================================================================================ *}
 
 {* ============================ Ссылка "Задать вопрос" ============================ *}
+{if $is_user || $cfg.guest_enabled}
 <div class="faq_send_quest">
     <a href="/faq/sendquest{if $id>0}{$id}{/if}.html">{$LANG.SET_QUESTION}</a>
 </div>
+{/if}
 
 <div class="con_heading">{$pagetitle}</div>
 

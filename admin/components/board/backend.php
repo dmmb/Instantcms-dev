@@ -14,6 +14,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
     $inCore->loadModel('board');
     $model = new cms_model_board();
 
+    define('IS_BILLING', $inCore->isComponentInstalled('billing'));
+    if (IS_BILLING) { $inCore->loadClass('billing'); }
+
 	cpAddPathway('Доска объявлений', '?view=components&do=config&id='.$_REQUEST['id']);
 	echo '<h3>Доска объявлений</h3>';
 	if (isset($_REQUEST['opt'])) { $opt = $inCore->request('opt', 'str'); } else { $opt = 'list_items'; }
@@ -36,7 +39,13 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$cfg['aftertime'] = $inCore->request('aftertime', 'str');
 		$cfg['comments']  = $inCore->request('comments', 'int');
 		$cfg['extend']    = $inCore->request('extend', 'int');
+		$cfg['vip_enabled']    = $inCore->request('vip_enabled', 'int', 0);
+		$cfg['vip_prolong']    = $inCore->request('vip_prolong', 'int', 0);
+		$cfg['vip_max_days']   = $inCore->request('vip_max_days', 'int', 30);
+		$cfg['vip_day_cost']   = $inCore->request('vip_day_cost', 'str', 5);
 
+        $cfg['vip_day_cost'] = str_replace(',', '.', trim($cfg['vip_day_cost']));
+        
 		$inCore->saveComponentConfig('board', $cfg);
 		
 		$msg = 'Настройки сохранены.';
@@ -230,30 +239,18 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 		if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
 			
-		echo '<div style="padding:10px">';
+        $items_total = dbRowsCount('cms_board_items', 'id>0');
+        $items_pub = dbRowsCount('cms_board_items', 'published=1');
+        $items_unpub = $items_total - $items_pub;
 
-		echo '<table border="0" cellpadding="0" cellspacing="0"><tr>';		
-			echo '<td width="200" valign="top">';
-				$cats_total = dbRowsCount('cms_board_cats', 'id>0');
-				$cats_pub = dbRowsCount('cms_board_cats', 'published=1');
-				echo '<div><strong><a href="index.php?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats">Рубрик:</a></strong> '.$cats_total.'</div>';
-				echo '<div>Публикуемых рубрик: '.$cats_pub.'</div>';		
-			echo '</td>';
-			echo '<td width="200"  valign="top">';
-				$items_total = dbRowsCount('cms_board_items', 'id>0');
-				$items_pub = dbRowsCount('cms_board_items', 'published=1');
-				$items_unpub = $items_total - $items_pub;
-				echo '<div><strong><a href="index.php?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items">Объявлений:</a></strong> '.$items_total.'</div>';
-				echo '<div>Публикуемых объявлений: '.$items_pub.'</div>';	
-			echo '</td>';	
-		echo '</tr></table>';	
-		
 		if ($items_unpub) {
 			echo '<div style="margin-top:10px;color:#FF3333" ><strong>Неопубликованных объявлений:</strong> '.$items_unpub.' - <a href="index.php?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items">Показать</a></div>';
 		}
 		
-		echo '</div>';
-		
+        $GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/includes/jquery/jquery.form.js"></script>';
+        $GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/includes/jquery/tabs/jquery.ui.min.js"></script>';
+        $GLOBALS['cp_page_head'][] = '<link href="/includes/jquery/tabs/tabs.css" rel="stylesheet" type="text/css" />';
+
 		//DEFAULT VALUES	
 		if (!isset($cfg['photos'])) { $cfg['photos'] = 1; }
 		if (!isset($cfg['photos'])) { $cfg['photos'] = 1; }
@@ -265,25 +262,39 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		if (!isset($cfg['watermark'])) { $cfg['watermark'] = 0; }
 		if (!isset($cfg['aftertime'])) { $cfg['aftertime'] = ''; }
 		if (!isset($cfg['extend'])) { $cfg['extend'] = 0; }
+		if (!isset($cfg['vip_enabled'])) { $cfg['vip_enabled'] = 0; }
+		if (!isset($cfg['vip_prolong'])) { $cfg['vip_prolong'] = 0; }
+		if (!isset($cfg['vip_max_days'])) { $cfg['vip_max_days'] = 30; }
+		if (!isset($cfg['vip_day_cost'])) { $cfg['vip_day_cost'] = 5; }
         
 		?>
 		<?php cpCheckWritable('/images/board', 'folder'); ?>
 		<?php cpCheckWritable('/images/board/medium', 'folder'); ?>
 		<?php cpCheckWritable('/images/board/small', 'folder'); ?>				
 
-        <form action="index.php?view=components&amp;do=config&amp;id=<?php echo (int)$_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
-            <table width="600" border="0" cellpadding="0" cellspacing="10" class="proptable">
+<form action="index.php?view=components&amp;do=config&amp;id=<?php echo (int)$_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
+
+    <div id="config_tabs" style="margin-top:12px;">
+
+        <ul id="tabs">
+            <li><a href="#basic"><span>Общие</span></a></li>
+            <li><a href="#access"><span>Доступ</span></a></li>
+            <li><a href="#types"><span>Типы</span></a></li>
+            <li><a href="#vip"><span>VIP</span></a></li>
+        </ul>
+
+        <div id="basic">
+            <table width="600" border="0" cellpadding="0" cellspacing="10" class="proptable" style="border:none">
                 <tr>
-                    <td><strong>Фотографии:</strong></td>
+                    <td><strong>Разрешить фотографии:</strong></td>
                     <td width="250">
-                        <input name="photos" type="radio" value="1" <?php if (@$cfg['photos']) { echo 'checked="checked"'; } ?>/> Разрешить
-                        <input name="photos" type="radio" value="0" <?php if (@!$cfg['photos']) { echo 'checked="checked"'; } ?>/>  Запретить
+                        <input name="photos" type="radio" value="1" <?php if (@$cfg['photos']) { echo 'checked="checked"'; } ?>/> Да
+                        <input name="photos" type="radio" value="0" <?php if (@!$cfg['photos']) { echo 'checked="checked"'; } ?>/> Нет
                     </td>
                 </tr>
                 <tr>
                     <td valign="top">
-                        <strong>Наносить водяной знак:</strong><br />
-                        <span class="hinttext">Если включено, то на все загружаемые фотографии будет наносится изображение из файла &quot;<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>&quot;</span>
+                        <strong>Наносить водяной знак:</strong>
                     </td>
                     <td valign="top">
                         <input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Да
@@ -303,10 +314,15 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                     <td><strong>Количество колонок для вывода списка рубрик: </strong></td>
                     <td width="250"><input name="maxcols" type="text" id="maxcols" size="5" value="<?php echo @$cfg['maxcols'];?>"/> шт</td>
                 </tr>
+            </table>
+        </div>
+
+        <div id="access">
+            <table width="600" border="0" cellpadding="0" cellspacing="10" class="proptable" style="border:none">
                 <tr>
-                    <td>
-                        <strong>Добавление объявлений пользователями: </strong><br/>
-                        <span class="hinttext">Дополнительно зависит от настроек прав группы пользователя</span>
+                    <td width="250">
+                        <strong>Добавление объявлений: </strong><br/>
+                        <span class="hinttext">Дополнительно зависит от настроек<br/>прав группы пользователя</span>
                     </td>
                     <td valign="top">
                         <select name="public" id="public" style="width:260px">
@@ -338,7 +354,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                 </tr>
                 <tr>
                     <td>
-                        <strong>Разрешать пользователям продлевать объявления: </strong><br/>
+                        <strong>Разрешать пользователям продлевать сроки показа объявлений: </strong><br/>
                         <span class="hinttext">Работает, если выбрана опция "скрывать" для просроченных объявлений.</span>
                     </td>
                     <td valign="top">
@@ -346,23 +362,81 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                         <input name="extend" type="radio" value="0" <?php if (@!$cfg['extend']) { echo 'checked="checked"'; } ?>/> Нет
                     </td>
                 </tr>
+            </table>
+        </div>
+
+        <div id="types">
+            <table width="600" border="0" cellpadding="0" cellspacing="10" class="proptable" style="border:none">
                 <tr>
-                    <td valign="top">
+                    <td width="250" valign="top">
                         <div><strong>Типы объявлений:</strong></div>
                         <div class="hinttext">Каждый тип с новой строки</div>
                         <div class="hinttext">Вы можете задать разные типы<br/>в настройках каждой рубрики</div>
                     </td>
                     <td valign="top">
-                        <textarea name="obtypes" style="width:250px" rows="6"><?php echo @$cfg['obtypes'];?></textarea>
+                        <textarea name="obtypes" style="width:250px" rows="10"><?php echo @$cfg['obtypes'];?></textarea>
                     </td>
                 </tr>
             </table>
-            <p>
-                <input name="opt" type="hidden" id="do" value="saveconfig" />
-                <input name="save" type="submit" id="save" value="Сохранить" />
-                <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
-            </p>
-        </form>
+        </div>
+
+        <div id="vip">
+            <?php if (!IS_BILLING){ ?>
+                <p>
+                    Для поддержки VIP-объявлений необходим компонент &laquo;<a href="http://www.instantcms.ru/billing/about.html">Биллинг пользователей</a>&raquo;
+                </p>
+                <p>
+                    Пользователи смогут покупать VIP-статусы для своих объявлений.<br/>
+                    VIP-объявления выделяются цветом, всегда выводятся в начале списка <br/>
+                    и могут быть выведены на главную в отдельном модуле &laquo;VIP-Объявления&raquo;
+                </p>
+                <p>
+                    Без компонента &laquo;<a href="http://www.instantcms.ru/billing/about.html">Биллинг пользователей</a>&raquo; VIP-статусы для объявлений<br/>
+                    может устанавливать только администратор, при создании или редактировании <br/>
+                    любого объявления на сайте.
+                </p>
+            <?php } else { ?>
+                <table width="550" border="0" cellpadding="0" cellspacing="10" class="proptable" style="border:none">
+                    <tr>
+                        <td><strong>Разрешить VIP-объявления:</strong></td>
+                        <td width="250">
+                            <input name="vip_enabled" type="radio" value="1" <?php if (@$cfg['vip_enabled']) { echo 'checked="checked"'; } ?>/> Да
+                            <input name="vip_enabled" type="radio" value="0" <?php if (@!$cfg['vip_enabled']) { echo 'checked="checked"'; } ?>/> Нет
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Разрешить продлевать VIP-статус:</strong></td>
+                        <td width="250">
+                            <input name="vip_prolong" type="radio" value="1" <?php if (@$cfg['vip_prolong']) { echo 'checked="checked"'; } ?>/> Да
+                            <input name="vip_prolong" type="radio" value="0" <?php if (@!$cfg['vip_prolong']) { echo 'checked="checked"'; } ?>/> Нет
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Максимальный срок VIP-статуса: </strong></td>
+                        <td width="250">
+                            <input name="vip_max_days" type="text" id="vip_max_days" size="5" value="<?php echo @$cfg['vip_max_days'];?>"/> дней
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Стоимость VIP-статуса: </strong></td>
+                        <td width="250">
+                            <input name="vip_day_cost" type="text" id="vip_day_cost" size="5" value="<?php echo @$cfg['vip_day_cost'];?>"/> баллов за 1 день
+                        </td>
+                    </tr>
+                </table>
+            <?php } ?>
+        </div>
+    </div>
+    
+    <script type="text/javascript">$('#config_tabs > ul#tabs').tabs();</script>
+
+    <p>
+        <input name="opt" type="hidden" id="do" value="saveconfig" />
+        <input name="save" type="submit" id="save" value="Сохранить" />
+        <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+    </p>
+</form>
+
 		<?php
 	}
 	

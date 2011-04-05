@@ -30,7 +30,7 @@ class cms_model_clubs{
                  LEFT JOIN cms_user_clubs uc ON uc.club_id = c.id
                  WHERE c.published = 1
                  GROUP BY c.id
-                 ORDER BY members DESC
+                 ORDER BY is_vip DESC, members DESC
                  LIMIT ".(($page-1)*$perpage).", $perpage";
 
         $rs  = $this->inDB->query($sql) or die(mysql_error());
@@ -151,10 +151,28 @@ class cms_model_clubs{
                     photo_premod = {$item['photo_premod']},
                     blog_premod = {$item['blog_premod']},
                     join_min_karma = {$item['join_min_karma']},
-                    join_karma_limit = {$item['join_karma_limit']}
+                    join_karma_limit = {$item['join_karma_limit']},
+                    is_vip = '{$item['is_vip']}',
+                    join_cost = '{$item['join_cost']}'
                 WHERE id = $club_id";
         $this->inDB->query($sql);
         return true;
+    }
+
+    public function setVip($club_id, $is_vip, $join_cost){
+
+        if (!$is_vip) { $is_vip = 0; }
+        if (!$join_cost) { $join_cost = 0; }
+
+        $sql = "UPDATE cms_clubs
+                SET is_vip = '{$is_vip}',
+                    join_cost = '{$join_cost}'
+                WHERE id = $club_id";
+
+        $this->inDB->query($sql);
+
+        return true;
+
     }
 
 /* ==================================================================================================== */

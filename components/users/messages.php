@@ -147,7 +147,6 @@
     $smarty->assign('id', $id);
     $smarty->assign('with_name', $with_name);
     $smarty->assign('msg_count', $msg_count);
-    $smarty->assign('messages', cmsCore::getSessionMessages());
     $smarty->assign('pagebar', $pagebar);
     $smarty->assign('perpage', $perpage);
     $smarty->assign('user_opt', $user_opt);

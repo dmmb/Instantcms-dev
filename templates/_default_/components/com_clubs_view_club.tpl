@@ -3,13 +3,7 @@
 {* ================================================================================ *}
 
 <div class="con_heading">{$pagetitle}</div>
-{if $messages}
-    <div class="sess_messages">
-        {foreach key=id item=message from=$messages}
-            {$message}
-        {/foreach}
-    </div>
-{/if}
+
 {if $club}
 
     {if $is_access}
@@ -35,7 +29,11 @@
 				<td valign="top">
 					<div class="data">
 						<div class="details">
-							<span class="rating"><strong>{$LANG.RATING}:</strong> {$club.rating}</span>
+                            {if $club.is_vip}
+                                <span class="vip"><strong>{$LANG.VIP_CLUB}</strong></span>
+                            {else}
+                                <span class="rating"><strong>{$LANG.RATING}:</strong> {$club.rating}</span>
+                            {/if}
 							<span class="members"><strong>{$club.members|spellcount:$LANG.USER:$LANG.USER2:$LANG.USER10}</strong></span>
 							<span class="date">{$club.pubdate}</span>
 						</div>					

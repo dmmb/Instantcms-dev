@@ -20,31 +20,35 @@ function content(){
 
     $inConf     = cmsConfig::getInstance();
     
-	$inCore->loadLib('tags');
+    $inCore->loadLib('tags');
     $inCore->loadLib('content');
 
-	$cfg = $inCore->loadComponentConfig('content');
-	// Проверяем включени ли компонент
-	if(!$cfg['component_enabled']) { cmsCore::error404(); }
+    $cfg = $inCore->loadComponentConfig('content');
+
+    // Проверяем включени ли компонент
+    if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     $inCore->loadModel('content');
     $model = new cms_model_content();
 
+    define('IS_BILLING', $inCore->isComponentInstalled('billing'));
+    if (IS_BILLING) { $inCore->loadClass('billing'); }
+
     global $_LANG;
 
     if(!isset($cfg['perpage'])) { $cfg['perpage'] = 20; }
-	if(!isset($cfg['autokeys'])) { $cfg['autokeys'] = 1; }
+    if(!isset($cfg['autokeys'])) { $cfg['autokeys'] = 1; }
     if(!isset($cfg['af_showlink'])) { $cfg['af_showlink'] = 1; }
     if(!isset($cfg['readdesc'])) { $cfg['readdesc'] = 0; }
     if(!isset($cfg['rating'])) { $cfg['rating'] = 1; }
 
-	if(!isset($cfg['img_small_w'])) { $cfg['img_small_w'] = 100; }
-	if(!isset($cfg['img_big_w'])) { $cfg['img_big_w'] = 200; }
+    if(!isset($cfg['img_small_w'])) { $cfg['img_small_w'] = 100; }
+    if(!isset($cfg['img_big_w'])) { $cfg['img_big_w'] = 200; }
     if(!isset($cfg['img_sqr'])) { $cfg['img_sqr'] = 1; }
     if(!isset($cfg['img_users'])) { $cfg['img_users'] = 1; }
 
-	$id = $inCore->request('id', 'int', 0);
-	$do = $inCore->request('do', 'str', 'view');
+    $id = $inCore->request('id', 'int', 0);
+    $do = $inCore->request('do', 'str', 'view');
 
 ///////////////////////////////////// VIEW CATEGORY ////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){
@@ -345,12 +349,30 @@ if ($do=='addarticle' || $do=='editarticle'){
     }
 
     if ( !$inCore->inRequest('add_mod') ){
-		$inPage->addPathway($inUser->nickname, cmsUser::getProfileURL($inUser->login));
+
+        $inPage->addPathway($inUser->nickname, cmsUser::getProfileURL($inUser->login));
         $inPage->addPathway($_LANG['MY_ARTICLES'], '/content/my.html');
+
         if ($do=='addarticle'){
             $inPage->setTitle($_LANG['ADD_ARTICLE']);
             $inPage->addPathway($_LANG['ADD_ARTICLE']);
             $pagetitle = $_LANG['ADD_ARTICLE'];
+
+            // поддержка биллинга
+            $dynamic_cost = false;
+            if (IS_BILLING){             
+                $pubcats        = $model->getPublicCats();                
+                $action         = cmsBilling::getAction('content', 'add_content');
+                foreach($pubcats as $p=>$pubcat){
+                    if ($pubcat['cost']){
+                        $dynamic_cost = true;
+                    } else {
+                        $pubcats[$p]['cost'] = $action['point_cost'][$inUser->group_id];
+                    }
+                }
+                cmsBilling::checkBalance('content', 'add_content', $dynamic_cost);
+            }
+
         }
 
         if ($do=='editarticle'){
@@ -368,12 +390,6 @@ if ($do=='addarticle' || $do=='editarticle'){
             }
         }
 
-        if (isset($mod['category_id'])){
-            $pubcats = $inCore->getListItemsNS('cms_category', $mod['category_id'], '', 'is_public');
-        } else {
-            $pubcats = $inCore->getListItemsNS('cms_category', 0, '', 'is_public');
-        }
-
         $inPage->initAutocomplete();
         $autocomplete_js = $inPage->getAutocompleteJS('tagsearch', 'tags');
 
@@ -384,6 +400,8 @@ if ($do=='addarticle' || $do=='editarticle'){
         $smarty->assign('pagetitle', $pagetitle);
         $smarty->assign('add_notice', $add_notice);
         $smarty->assign('is_admin', $is_admin);
+        $smarty->assign('is_billing', IS_BILLING);
+        $smarty->assign('dynamic_cost', $dynamic_cost);
         $smarty->assign('autocomplete_js', $autocomplete_js);
         $smarty->display('com_content_edit.tpl');
 
@@ -409,9 +427,9 @@ if ($do=='addarticle' || $do=='editarticle'){
         $article['content']             = $inCore->badTagClear($article['content']);
 
         $article['published']           = $is_auto_add ? 1 : 0;
-          if ($do=='editarticle'){
-               $article['published']           = ($mod['published'] == 0) ? $mod['published'] : $article['published'];
-          }
+        if ($do=='editarticle'){
+           $article['published']           = ($mod['published'] == 0) ? $mod['published'] : $article['published'];
+        }
         $article['pubdate']             = $mod['pubdate'] ? $mod['pubdate'] : date('Y-m-d H:i');
         $article['enddate']             = $article['pubdate'];
         $article['is_end']              = 0;
@@ -431,6 +449,12 @@ if ($do=='addarticle' || $do=='editarticle'){
         if ($do=='addarticle' && !$errors){
 
             $article['id'] = $model->addArticle($article);
+
+            if (IS_BILLING){            
+                $category_cost = $inDB->get_field('cms_category', "id='{$article['category_id']}'", 'cost');
+                $category_cost = $category_cost==='' ? false : (int)$category_cost;
+                cmsBilling::process('content', 'add_content', $category_cost);
+            }
 
             $id = $article['id'];
 

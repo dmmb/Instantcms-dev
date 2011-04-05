@@ -126,6 +126,7 @@ class cms_model_board{
         $records = array();
 		$inCore = cmsCore::getInstance();
         $this->deleteOldRecords();
+        $this->clearOldVips();
 
         $city_filter = isset($_SESSION['board_city']) ? "AND city = '".$_SESSION['board_city']."'" : '';
         $type_filter = isset($_SESSION['board_type']) ? "AND obtype = '".$_SESSION['board_type']."'" : '';
@@ -136,7 +137,7 @@ class cms_model_board{
         $sql = "SELECT i.*, i.pubdate as fpubdate, u.nickname as user, u.login as user_login
                 FROM cms_board_items i, cms_users u, cms_board_cats cat
                 WHERE i.user_id = u.id AND i.published = 1 $city_filter $type_filter $catsql
-                ORDER BY $orderby $orderto
+                ORDER BY is_vip DESC, $orderby $orderto
                 LIMIT ".($page-1)*$perpage.", $perpage";
 
         $result = $this->inDB->query($sql);
@@ -161,6 +162,7 @@ class cms_model_board{
     public function getRecord($item_id) {
 
         $this->deleteOldRecords();
+        $this->clearOldVips();
 
         $sql = "SELECT i.*, 
                        a.id as cat_id,
@@ -189,6 +191,7 @@ class cms_model_board{
 		$record['is_overdue'] = round($timedifference / 86400) > $record['pubdays'] && $record['pubdays'] > 0;
 		$record['fpubdate']   = $record['pubdate'];
 		$record['pubdate'] 	  = cmsCore::dateFormat($record['pubdate']);
+		$record['vipdate'] 	  = cmsCore::dateFormat($record['vipdate']);
 
         $record = cmsCore::callEvent('GET_BOARD_RECORD', $record);
 
@@ -289,6 +292,39 @@ class cms_model_board{
 
     }
 
+    public function clearOldVips() {
+
+        $this->inDB->query("UPDATE cms_board_items SET is_vip=0 WHERE DATE(vipdate) <= CURRENT_DATE");
+
+        return true;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function setVip($id, $days){
+
+        // Установить статус VIP и дату окончания считая от текущей,
+        // если до этого статуса VIP не было
+        $sql = "UPDATE cms_board_items
+                SET is_vip = 1, vipdate = DATE_ADD(NOW(), INTERVAL {$days} DAY)
+                WHERE id='{$id}' AND is_vip=0
+                LIMIT 1";
+
+        $this->inDB->query($sql);
+
+        // Продлить имеющуюся дату VIP, если VIP-статус уже был
+        $sql = "UPDATE cms_board_items
+                SET vipdate = DATE_ADD(vipdate, INTERVAL {$days} DAY)
+                WHERE id='{$id}' AND is_vip=1
+                LIMIT 1";
+                
+        $this->inDB->query($sql);
+
+        return true;
+
+    }
 
 /* ==================================================================================================== */
 /* ==================================================================================================== */

@@ -436,15 +436,15 @@ if ($opt == 'add' || $opt == 'edit'){
         </tr>
     </table>
     {tab=Описание}
-    <table width="625" border="0" cellspacing="5" class="proptable">
+    <table width="100%" border="0" cellspacing="5" class="proptable">
         <tr>
-            <td width="606"><strong>Описание:</strong> <span class="hinttext">Отображается на первой странице при просмотре клуба </span></td>
+            <td><strong>Описание:</strong> <span class="hinttext">Отображается на первой странице при просмотре клуба </span></td>
         </tr>
         <tr>
             <td>
                 <?php
 
-                    $inCore->insertEditor('description', $mod['description'], '250', '100%');
+                    $inCore->insertEditor('description', $mod['description'], '400', '100%');
                 
                 ?>
             </td>
@@ -558,6 +558,10 @@ if ($opt=='config') {
 <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
     <table width="680" border="0" cellpadding="10" cellspacing="0" class="proptable">
         <tr>
+            <td><strong>Количество клубов на странице:</strong><br /></td>
+            <td><input name="perpage" type="text" id="perpage" style="width:300px" value="<?php echo @$cfg['perpage'];?>"/></td>
+        </tr>
+        <tr>
             <td><strong>SEO для клубов:</strong><br />
             <span class="hinttext">Чем заполнять тег meta description при просмотре клуба?</span></td>
             <td width="300">
@@ -575,10 +579,6 @@ if ($opt=='config') {
                     <option value="1" <?php if (@$cfg['enabled_blogs']=='1') { echo 'selected="selected"'; } ?>>Включены</option>
                     <option value="-1" <?php if (@$cfg['enabled_blogs']=='-1') { echo 'selected="selected"'; } ?>>Отключены</option>
             </select>			</td>
-        </tr>
-        <tr>
-            <td><strong>Количество клубов на странице:</strong><br /></td>
-            <td><input name="perpage" type="text" id="perpage" style="width:300px" value="<?php echo @$cfg['perpage'];?>"/></td>
         </tr>
         <tr>
             <td><strong>Фотоальбомы клубов:</strong><br />

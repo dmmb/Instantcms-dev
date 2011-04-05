@@ -67,6 +67,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	//LOAD CURRENT CONFIG
 	$cfg = $inCore->loadComponentConfig('faq');
 
+    if(!isset($cfg['guest_enabled'])) { $cfg['guest_enabled'] = 1; }
     if(!isset($cfg['user_link'])) { $cfg['user_link'] = 1; }
     if(!isset($cfg['publish'])) { $cfg['publish'] = 0; }
 	if(!isset($cfg['is_comment'])) { $cfg['is_comment'] = 1; }
@@ -76,6 +77,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if($opt=='saveconfig'){	
 		$cfg = array();
+		$cfg['guest_enabled']  = (int)$_REQUEST['guest_enabled'];
 		$cfg['user_link']  = (int)$_REQUEST['user_link'];
 		$cfg['publish']    = (int)$_REQUEST['publish'];
 		$cfg['is_comment'] = (int)$_REQUEST['is_comment'];
@@ -96,6 +98,15 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	
 	<form action="index.php?view=components&do=config&id=<?php echo (int)$_REQUEST['id'];?>&opt=config" method="post" name="optform" target="_self" id="form1">
 		<table width="680" border="0" cellpadding="10" cellspacing="0" class="proptable">
+			<tr>
+				<td>
+					<strong>Принимать вопросы от незарегистрированных:</strong><br />
+				</td>
+				<td valign="top">
+					<input name="guest_enabled" type="radio" value="1"  <?php if (@$cfg['guest_enabled']) { echo 'checked="checked"'; } ?> /> Да
+					<input name="guest_enabled" type="radio" value="0"  <?php if (@!$cfg['guest_enabled']) { echo 'checked="checked"'; } ?> /> Нет
+				</td>
+			</tr>
 			<tr>
 				<td>
 					<strong>Показывать ссылки на задавшего вопрос пользователя:</strong><br />
