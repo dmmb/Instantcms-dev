@@ -58,6 +58,7 @@ CREATE TABLE `#__actions_log` (
   KEY `target_id` (`target_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__banlist`;
 CREATE TABLE `#__banlist` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -70,6 +71,7 @@ CREATE TABLE `#__banlist` (
   `autodelete` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__banners`;
 CREATE TABLE `#__banners` (
@@ -101,6 +103,7 @@ CREATE TABLE `#__banner_hits` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__blogs`;
 CREATE TABLE `#__blogs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -117,8 +120,11 @@ CREATE TABLE `#__blogs` (
   `seolink` varchar(255) NOT NULL,
   `rating` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `seolink` (`seolink`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+  KEY `seolink` (`seolink`),
+  KEY `user_id` (`user_id`),
+  KEY `pubdate` (`pubdate`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__blog_authors`;
 CREATE TABLE `#__blog_authors` (
@@ -127,16 +133,21 @@ CREATE TABLE `#__blog_authors` (
   `blog_id` int(11) NOT NULL,
   `description` varchar(100) NOT NULL,
   `startdate` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `blog_id` (`blog_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__blog_cats`;
 CREATE TABLE `#__blog_cats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `blog_id` int(11) NOT NULL,
   `title` varchar(250) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `blog_id` (`blog_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__blog_files`;
 CREATE TABLE `#__blog_files` (
@@ -148,6 +159,7 @@ CREATE TABLE `#__blog_files` (
   `pubdate` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__blog_posts`;
 CREATE TABLE `#__blog_posts` (
@@ -169,8 +181,11 @@ CREATE TABLE `#__blog_posts` (
   `comments` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `seolink` (`seolink`),
+  KEY `blog_id` (`blog_id`),
+  KEY `user_id` (`user_id`),
   FULLTEXT KEY `content` (`content`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__board_cats`;
 CREATE TABLE `#__board_cats` (
@@ -223,9 +238,16 @@ CREATE TABLE `#__board_items` (
   `published` int(11) NOT NULL,
   `file` varchar(250) NOT NULL,
   `hits` int(11) NOT NULL,
+  `is_vip` tinyint(4) NOT NULL DEFAULT '0',
+  `vipdate` datetime NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `category_id` (`category_id`),
+  KEY `user_id` (`user_id`),
+  KEY `obtype` (`obtype`),
+  KEY `city` (`city`),
   FULLTEXT KEY `content` (`content`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__cache`;
 CREATE TABLE `#__cache` (
@@ -236,6 +258,7 @@ CREATE TABLE `#__cache` (
   `cachefile` varchar(80) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__category`;
 CREATE TABLE `#__category` (
@@ -264,12 +287,14 @@ CREATE TABLE `#__category` (
   `seolink` varchar(200) NOT NULL,
   `url` varchar(100) NOT NULL,
   `tpl` varchar(50) NOT NULL DEFAULT 'com_content_view.tpl',
+  `cost` varchar(5) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `seolink` (`seolink`)
+  UNIQUE KEY `seolink` (`seolink`),
+  KEY `parent_id` (`parent_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__category` (`id`, `parent_id`, `title`, `description`, `published`, `showdate`, `showcomm`, `orderby`, `orderto`, `modgrp_id`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `ordering`, `maxcols`, `showtags`, `showrss`, `showdesc`, `is_public`, `photoalbum`, `seolink`, `url`, `tpl`) VALUES
-(1, 0, '--Корневой раздел--', 'Корневой раздел сайта', 1, 1, 1, 'pubdate', 'asc', 0, 1, 2, 0, '', 0, 1, 1, 1, 1, 0, 0, '', '--kornevoi-razdel--', '', 'com_content_view.tpl');
+INSERT INTO `#__category` (`id`, `parent_id`, `title`, `description`, `published`, `showdate`, `showcomm`, `orderby`, `orderto`, `modgrp_id`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `ordering`, `maxcols`, `showtags`, `showrss`, `showdesc`, `is_public`, `photoalbum`, `seolink`, `url`, `tpl`, `cost`) VALUES
+(1, 0, '--Корневой раздел--', 'Корневой раздел сайта', 1, 1, 1, 'pubdate', 'asc', 0, 1, 2, 0, '', 0, 1, 1, 1, 1, 0, 0, '', '--kornevoi-razdel--', '', 'com_content_view.tpl', '');
 
 DROP TABLE IF EXISTS `#__clubs`;
 CREATE TABLE `#__clubs` (
@@ -292,8 +317,14 @@ CREATE TABLE `#__clubs` (
   `album_min_karma` int(11) NOT NULL DEFAULT '25',
   `join_min_karma` int(11) NOT NULL,
   `join_karma_limit` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+  `create_karma` int(11) NOT NULL,
+  `is_vip` tinyint(4) NOT NULL DEFAULT '0',
+  `join_cost` float NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `pubdate` (`pubdate`),
+  KEY `admin_id` (`admin_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__codecheck`;
 CREATE TABLE `#__codecheck` (
@@ -303,6 +334,7 @@ CREATE TABLE `#__codecheck` (
   `session_id` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__comments`;
 CREATE TABLE `#__comments` (
@@ -314,14 +346,18 @@ CREATE TABLE `#__comments` (
   `target_id` int(11) NOT NULL,
   `guestname` varchar(200) NOT NULL,
   `content` text NOT NULL,
+  `content_bbcode` text NOT NULL,
   `pubdate` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `published` int(11) NOT NULL DEFAULT '1',
   `is_new` int(11) NOT NULL DEFAULT '1',
   `target_title` varchar(150) NOT NULL,
   `target_link` varchar(200) NOT NULL,
   `ip` varchar(15) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `target_id` (`target_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__comments_votes`;
 CREATE TABLE `#__comments_votes` (
@@ -331,6 +367,7 @@ CREATE TABLE `#__comments_votes` (
   `user_id` int(11) NOT NULL,
   KEY `comment_id` (`comment_id`,`comment_type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__comment_targets`;
 CREATE TABLE `#__comment_targets` (
@@ -416,9 +453,12 @@ CREATE TABLE `#__content` (
   `tpl` varchar(50) NOT NULL DEFAULT 'com_content_read.tpl',
   PRIMARY KEY (`id`),
   UNIQUE KEY `seolink` (`seolink`),
+  KEY `category_id` (`category_id`),
+  KEY `user_id` (`user_id`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `content` (`content`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__content_access`;
 CREATE TABLE `#__content_access` (
@@ -426,8 +466,10 @@ CREATE TABLE `#__content_access` (
   `content_id` int(11) NOT NULL,
   `content_type` varchar(100) NOT NULL,
   `group_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `content_id` (`content_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__cron_jobs`;
 CREATE TABLE `#__cron_jobs` (
@@ -463,6 +505,7 @@ CREATE TABLE `#__downloads` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__event_hooks`;
 CREATE TABLE `#__event_hooks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -495,7 +538,8 @@ CREATE TABLE `#__faq_cats` (
   `description` text NOT NULL,
   `published` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__faq_quests`;
 CREATE TABLE `#__faq_quests` (
@@ -509,8 +553,10 @@ CREATE TABLE `#__faq_quests` (
   `answeruser_id` int(11) NOT NULL,
   `answerdate` datetime NOT NULL,
   `hits` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+  PRIMARY KEY (`id`),
+  KEY `category_id` (`category_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__filters`;
 CREATE TABLE `#__filters` (
@@ -540,6 +586,7 @@ CREATE TABLE `#__filter_rules` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__forms`;
 CREATE TABLE `#__forms` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -549,7 +596,8 @@ CREATE TABLE `#__forms` (
   `sendto` varchar(4) NOT NULL DEFAULT 'mail',
   `user_id` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__form_fields`;
 CREATE TABLE `#__form_fields` (
@@ -561,7 +609,8 @@ CREATE TABLE `#__form_fields` (
   `mustbe` int(11) NOT NULL,
   `config` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__forums`;
 CREATE TABLE `#__forums` (
@@ -578,11 +627,14 @@ CREATE TABLE `#__forums` (
   `NSDiffer` varchar(15) NOT NULL,
   `NSIgnore` int(11) NOT NULL,
   `NSLevel` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  `topic_cost` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `category_id` (`category_id`),
+  KEY `parent_id` (`parent_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__forums` (`id`, `category_id`, `title`, `description`, `auth_group`, `ordering`, `published`, `parent_id`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`) VALUES
-(1000, 0, '-- Корень форумов --', '', 0, 1, 0, 0, 1, 8, '', 0, 1);
+INSERT INTO `#__forums` (`id`, `category_id`, `title`, `description`, `auth_group`, `ordering`, `published`, `parent_id`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`, `topic_cost`) VALUES
+(1000, 0, '-- Корень форумов --', '', 0, 1, 0, 0, 1, 8, '', 0, 1, 0);
 
 DROP TABLE IF EXISTS `#__forum_cats`;
 CREATE TABLE `#__forum_cats` (
@@ -591,8 +643,10 @@ CREATE TABLE `#__forum_cats` (
   `published` int(11) NOT NULL DEFAULT '1',
   `auth_group` int(11) NOT NULL,
   `ordering` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+  PRIMARY KEY (`id`),
+  KEY `auth_group` (`auth_group`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__forum_files`;
 CREATE TABLE `#__forum_files` (
@@ -605,6 +659,7 @@ CREATE TABLE `#__forum_files` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__forum_images`;
 CREATE TABLE `#__forum_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -613,6 +668,7 @@ CREATE TABLE `#__forum_images` (
   `fileurl` varchar(250) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__forum_polls`;
 CREATE TABLE `#__forum_polls` (
@@ -626,6 +682,7 @@ CREATE TABLE `#__forum_polls` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__forum_posts`;
 CREATE TABLE `#__forum_posts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -636,11 +693,11 @@ CREATE TABLE `#__forum_posts` (
   `edittimes` int(11) NOT NULL,
   `content` text NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `thread_id` (`thread_id`),
+  KEY `user_id` (`user_id`),
   FULLTEXT KEY `content` (`content`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__forum_posts` (`id`, `thread_id`, `user_id`, `pubdate`, `editdate`, `edittimes`, `content`) VALUES
-(29, 12, 1, '2009-04-04 18:54:53', '2010-10-07 18:07:14', 2, 'Геосинклиналь [b]обогащает магматический монтмориллонит[/b], что в общем свидетельствует о преобладании тектонических опусканий в это время. Углефикация характерна. Порода существенна. Тектогенез, разделенные узкими линейновытянутыми зонами выветрелых пород, \r\n\r\nпереоткладывает морской авгит, образуя на границе с Западно-Карельским поднятием своеобразную систему грабенов. Ведущий экзогенный геологический процесс - субдукция ослабляет лакколит, так как совершенно однозначно указывает на существование и рост в период оформления палеогеновой поверхности выравнивания.');
 
 DROP TABLE IF EXISTS `#__forum_threads`;
 CREATE TABLE `#__forum_threads` (
@@ -658,11 +715,11 @@ CREATE TABLE `#__forum_threads` (
   `rel_to` varchar(15) NOT NULL,
   `rel_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `forum_id` (`forum_id`),
   FULLTEXT KEY `title` (`title`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__forum_threads` (`id`, `forum_id`, `user_id`, `title`, `description`, `icon`, `pubdate`, `hits`, `closed`, `pinned`, `is_hidden`, `rel_to`, `rel_id`) VALUES
-(12, 1, 1, 'Пример темы', '', '', '2009-10-16 12:31:36', 71, 0, 0, 0, '', 0);
 
 DROP TABLE IF EXISTS `#__forum_votes`;
 CREATE TABLE `#__forum_votes` (
@@ -673,6 +730,7 @@ CREATE TABLE `#__forum_votes` (
   `pubdate` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__menu`;
 CREATE TABLE `#__menu` (
@@ -687,7 +745,7 @@ CREATE TABLE `#__menu` (
   `ordering` int(11) NOT NULL DEFAULT '1',
   `published` int(11) NOT NULL,
   `template` varchar(30) NOT NULL,
-  `allow_group` int(11) NOT NULL DEFAULT '-1',
+  `access_list` tinytext NOT NULL,
   `iconurl` varchar(100) NOT NULL,
   `NSLeft` int(11) NOT NULL,
   `NSRight` int(11) NOT NULL,
@@ -698,8 +756,8 @@ CREATE TABLE `#__menu` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__menu` (`id`, `menu`, `title`, `link`, `linktype`, `linkid`, `target`, `component`, `ordering`, `published`, `template`, `allow_group`, `iconurl`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `parent_id`) VALUES
-(1, 'root', '-- Главная страница --', '-1', 'link', '-1', '_self', '', 1, 0, '0', -1, '', 1, 2, 0, '', 0, 0);
+INSERT INTO `#__menu` (`id`, `menu`, `title`, `link`, `linktype`, `linkid`, `target`, `component`, `ordering`, `published`, `template`, `access_list`, `iconurl`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `parent_id`) VALUES
+(1, 'root', '-- Главная страница --', '-1', 'link', '-1', '_self', '', 1, 0, '0', '', '', 1, 2, 0, '', 0, 0);
 
 DROP TABLE IF EXISTS `#__modules`;
 CREATE TABLE `#__modules` (
@@ -716,7 +774,7 @@ CREATE TABLE `#__modules` (
   `config` text NOT NULL,
   `original` int(11) NOT NULL,
   `css_prefix` varchar(30) NOT NULL,
-  `allow_group` int(11) NOT NULL DEFAULT '-1',
+  `access_list` tinytext NOT NULL,
   `cache` int(11) NOT NULL,
   `cachetime` int(11) NOT NULL DEFAULT '1',
   `cacheint` varchar(15) NOT NULL DEFAULT 'HOUR',
@@ -726,50 +784,50 @@ CREATE TABLE `#__modules` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__modules` (`id`, `position`, `name`, `title`, `is_external`, `content`, `ordering`, `showtitle`, `published`, `user`, `config`, `original`, `css_prefix`, `allow_group`, `cache`, `cachetime`, `cacheint`, `template`, `is_strict_bind`, `version`) VALUES
-(1, 'topmenu', 'Меню', 'Меню', 1, 'mod_menu', 6, 0, 0, 0, '---\nmenu: mainmenu\njtree: 1\n', 1, '', -1, 0, 1, 'HOUR', 'module_simple.tpl', 0, '1.0'),
-(17, 'top', 'Главная страница', 'Добро пожаловать!', 0, '<table cellspacing="0" cellpadding="0" border="0" width="100%">\r\n    <tbody>\r\n        <tr>\r\n            <td width="100" valign="top"><a target="_blank" href="http://www.instantcms.ru"><img border="0" alt="" src="/images/content/community.png" /></a></td>\r\n            <td>\r\n            <p class="moduletitle">Добро пожаловать!</p>\r\n            <p>Мы рады приветствовать Вас в нашей социальной сети. После регистрации Вам станут доступны все функции сайта.</p>\r\n            <p>Вы сможете завести блог, загружать фотографии и общаться с друзьями.</p>\r\n            <div>\r\n            <div>Чтобы изменить этот текст, <a href="/admin/index.php?view=modules&amp;do=edit&amp;id=17">отредактируйте модуль &quot;Главная страница&quot;</a>.</div>\r\n            </div>\r\n            </td>\r\n        </tr>\r\n    </tbody>\r\n</table>', 0, 0, 0, 1, '---\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(44, 'sidebar', 'Облако тегов', 'Облако тегов', 1, 'mod_tags', 18, 0, 0, 0, '---\ncat_id: \nsortby: tag\nmenuid: \nminfreq: 0\nminlen: 3\ntargets: \n  content: content\n  photo: photo\n  blogpost: blog\n  catalog: catalog\n  userphoto: userphoto\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(46, 'mainbottom', 'Новинки каталога', 'Новинки каталога', 1, 'mod_uc_latest', 30, 1, 0, 0, '---\nnewscount: 6\nshowtype: list\nshowf: 2\ncat_id: \nsubs: 1\nfulllink: 0\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(26, 'sidebar', 'Корзина покупателя', 'Корзина', 1, 'mod_cart', 19, 1, 0, 0, '---\nshowtype: list\nshowqty: 1\nmenuid: 23\nsource: catalog\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(25, 'sidebar', 'Голосования', 'Голосования', 1, 'mod_polls', 2, 1, 0, 0, '---\nshownum: 0\npoll_id: 2\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(27, 'sidebar', 'Поиск', 'Поиск', 1, 'mod_search', 1, 0, 0, 0, '---\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(19, 'maintop', 'Последние материалы', 'Новые статьи', 1, 'mod_latest', 2, 1, 0, 0, '---\nnewscount: 4\nshowdesc: 0\nshowdate: 1\nshowcom: 1\nshowrss: 1\ncat_id: 6\nsubs: 1\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
-(20, 'topmenu', 'Авторизация', 'Авторизация', 1, 'mod_auth', 0, 1, 0, 0, '---\nautolog: 1\npassrem: 1\n', 1, '', -1, 0, 1, 'MINUTE', 'module.tpl', 0, '1.0'),
-(22, 'topmenu', 'Последние регистрации', 'Новые пользователи', 1, 'mod_lastreg', 2, 1, 0, 0, '---\nnewscount: 5\nview_type: hr_table\nmaxcool: 2\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
-(23, 'sidebar', 'Случайное изображение', 'Случайная картинка', 1, 'mod_random_image', 21, 1, 0, 0, '---\nshowtitle: 1\nalbum_id: 0\nmenuid: 20\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(24, 'sidebar', 'Часы', 'Часы', 1, 'mod_clock', 17, 1, 0, 0, '---\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(37, 'sidebar', 'Категории прайса', 'Категории прайса', 1, 'mod_pricecat', 14, 1, 0, 0, '---\nshowdesc: 0\nicon: /images/markers/pricelist.png\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(36, 'sidebar', 'Разделы сайта', 'Статьи', 1, 'mod_category', 13, 1, 0, 0, '---\nshowdesc: 0\ncategory_id: 6\nicon: /images/markers/folder.png\nmenuid: 21\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(39, 'sidebar', 'Выбор шаблона', 'Выбор шаблона', 1, 'mod_template', 12, 1, 0, 0, '---\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(47, 'mainbottom', 'Популярное в каталоге', 'Популярное в каталоге', 1, 'mod_uc_popular', 23, 1, 0, 0, '---\nnum: 10\ncat_id: 0\nmenuid: 23\nshowf: 2\nshowtype: thumb\nfulllink: 1\nsort: rating\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(49, 'sidebar', 'Кто онлайн?', 'Кто онлайн?', 1, 'mod_whoonline', 24, 1, 0, 0, '---\nshow_today: 1\nadmin_editor: 1\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
-(50, 'topmenu', 'Темы на форуме', 'Новости форума', 1, 'mod_forum', 31, 1, 0, 0, '---\nshownum: 2\nshowtype: web2\nshowforum: 0\nshowlink: 0\nshowtext: 0\nmenuid: 18\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(51, 'sidebar', 'Случайное фото', 'Случайное фото', 1, 'mod_user_image', 25, 1, 0, 0, '---\nshowtitle: 1\nmenuid: 15\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(52, 'sidebar', 'Внешний файл', 'Внешний файл', 0, '<p>{ФАЙЛ=test.php}</p>', 11, 1, 0, 1, '---\n', 0, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(56, 'sidebar', 'Архив статей', 'Архив новостей', 1, 'mod_arhive', 27, 1, 0, 0, '---\nsource: both\ncat_id: 6\n', 1, '', 1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(54, 'sidebar', 'Случайное в каталоге', 'Случайное в каталоге', 1, 'mod_uc_random', 26, 1, 0, 0, '---\ncat_id: 1\ncount: 2\nshowtitle: 1\nshowcat: 0\nmenuid: 23\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(60, 'maintop', 'Лента RSS ', 'Лента новостей', 1, 'mod_rss', 9, 1, 0, 0, '---\nshowdesc: 0\nshowicon: 1\nitemslimit: 6\nrssurl: http://portal.novator.ru/ngnews.rss\ncols: 2\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(61, 'sidebar', 'Последние комментарии', 'Последние комментарии', 1, 'mod_comments', 4, 1, 0, 0, '---\nshownum: 10\nminrate: 0\nshowdesc: 1\nshowrss: 1\nshowtarg: 0\ntargets: \n  faq: faq\n  catalog: catalog\n  boarditem: boarditem\n  blog: blog\n  article: article\n  palbum: palbum\n  photo: photo\n  userphoto: userphoto\n', 1, '', -1, 0, 1, 'MINUTE', 'module.tpl', 0, '1.0'),
-(62, 'maintop', 'Новинки фотогалереи', 'Новинки фотогалереи', 1, 'mod_latestphoto', 32, 1, 0, 0, '---\nshownum: 6\nmaxcols: 2\nshowclubs: 1\nshowalbum: 0\nshowdate: 0\nshowcom: 0\nalbum_id: 100\nshowtype: short\nshowmore: 0\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
-(63, 'sidebar', 'Популярные фотографии', 'Популярные фотографии', 1, 'mod_bestphoto', 10, 1, 0, 0, '---\nshownum: 2\nmaxcols: 2\nshowalbum: 0\nshowdate: 1\nshowcom: 1\nalbum_id: 0\nsort: rating\nmenuid: 20\nshowtype: full\nshowmore: 1\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(64, 'maintop', 'Новое в блогах', 'Новое в блогах', 1, 'mod_latestblogs', 2, 1, 0, 0, '---\nnamemode: blog\nshownum: 10\nminrate: 0\nshowrss: 1\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(65, 'sidebar', 'Популярное в блогах', 'Популярное в блогах', 1, 'mod_bestblogs', 3, 1, 0, 0, '---\nnamemode: blog\nshownum: 10\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
-(66, 'header', 'Меню пользователя', 'Меню пользователя', 1, 'mod_usermenu', 1, 0, 0, 0, '---\navatar: 1\nshowtype: text\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(67, 'mainbottom', 'Последние вопросы FAQ', 'Последние вопросы FAQ', 1, 'mod_latest_faq', 33, 1, 0, 0, '---\nnewscount: 5\nmaxlen: 140\ncat_id: \n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(69, 'maintop', 'Популярные статьи', 'Популярные статьи', 1, 'mod_bestcontent', 3, 1, 0, 0, '---\nshownum: 4\nmenuid: 21\nshowlink: 1\nshowdesc: 1\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(70, 'sidebar', 'Поиск пользователей', 'Поиск пользователей', 1, 'mod_usersearch', 4, 1, 0, 0, '---\ncat_id: \nsource: \nmenuid: 15\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
-(71, 'maintop', 'Новые объявления', 'Новые объявления', 1, 'mod_latestboard', 1, 1, 0, 0, '---\nshownum: 10\nshowcity: 1\ncat_id: -1\nsubs: 1\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(72, 'maintop', 'Рейтинг пользователей', 'Рейтинг пользователей', 1, 'mod_user_rating', 1, 1, 0, 0, '---\ncount: 20\nmenuid: 15\nview_type: rating\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(73, 'maintop', 'Новые клубы', 'Новые клубы', 1, 'mod_latestclubs', 3, 1, 0, 0, '---\ncount: 2\nmenuid: 38\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(74, 'maintop', 'Популярные клубы', 'Популярные клубы', 1, 'mod_bestclubs', 4, 1, 0, 0, '---\ncount: 2\nmenuid: 38\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(75, 'sidebar', 'Доска почета', 'Доска почета', 1, 'mod_respect', 1, 1, 0, 0, '---\nview: all\nshow_awards: 1\norder: desc\nlimit: 5\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
-(76, 'sidebar', 'Файлы пользователей', 'Файлы пользователей', 1, 'mod_userfiles', 1, 1, 0, 0, '---\nmenuid: 0\nsw_stats: 1\nsw_latest: 1\nsw_popular: 1\nnum_latest: 5\nnum_popular: 5\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(87, 'maintop', 'Лента активности', 'Лента активности', 1, 'mod_actions', 1, 1, 0, 0, '---\nlimit: 15\nshow_target: 0\naction_types: \n  16: 16\n  15: 15\n  20: 20\n  13: 13\n  29: 29\n  24: 24\n  23: 23\n  2: 2\n  27: 27\n  12: 12\n  10: 10\n  25: 25\n  17: 17\n  8: 8\n  18: 18\n  7: 7\n  26: 26\n  19: 19\n  22: 22\n  11: 11\n  21: 21\n  28: 28\n  9: 9\n  14: 14\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 1, '1.7'),
-(82, 'sidebar', 'Приветствие', 'Универсальный каталог', 0, '<p>С помощью компонента &laquo;Универсальный каталог&raquo;, в котором Вы сейчас находитесь, можно организовать хранение любых данных. От карандашей до автомобилей.</p>\r\n<p>Каждая рубрика каталога имеет собственный набор характеристик, который можно изменить в панели управления. Пользователи могут фильтровать записи каталога по характеристикам одним щелчком мыши.&nbsp;</p>\r\n<p>Любой пользователь может добавлять собственные записи в те рубрики каталога, для которых это разрешено в настройках.</p>', 14, 1, 0, 1, '', 1, '', -1, 0, 24, 'HOUR', 'module.tpl', 1, '1.0'),
-(83, 'sidebar', 'Статистика пользователей', 'Статистика пользователей', 1, 'mod_user_stats', 1, 1, 0, 0, '---\nshow_total: 1\nshow_online: 1\nshow_gender: 1\nshow_city: 1\nshow_bday: 1\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
-(84, 'sidebar', 'Друзья онлайн', 'Друзья онлайн', 1, 'mod_user_friend', 5, 1, 0, 0, '---\r\nlimit: 5\r\nview_type: table', 1, '', -1, 0, 1, 'HOUR', 'module_simple.tpl', 0, '1.0'),
-(85, 'sidebar', 'Пригласить друга', 'Пригласить друга', 1, 'mod_invite', 1, 1, 0, 0, '', 1, '', -1, 0, 1, 'HOUR', 'module.tpl', 1, '1.0');
+INSERT INTO `#__modules` (`id`, `position`, `name`, `title`, `is_external`, `content`, `ordering`, `showtitle`, `published`, `user`, `config`, `original`, `css_prefix`, `access_list`, `cache`, `cachetime`, `cacheint`, `template`, `is_strict_bind`, `version`) VALUES
+(1, 'topmenu', 'Меню', 'Меню', 1, 'mod_menu', 6, 0, 1, 0, '---\nmenu: mainmenu\njtree: 1\n', 1, '', '', 0, 1, 'HOUR', 'module_simple.tpl', 0, '1.0'),
+(17, 'top', 'Главная страница', 'Добро пожаловать!', 0, '<table cellspacing="0" cellpadding="0" border="0" width="100%">\r\n    <tbody>\r\n        <tr>\r\n            <td width="100" valign="top"><a target="_blank" href="http://www.instantcms.ru"><img border="0" alt="" src="/images/content/community.png" /></a></td>\r\n            <td>\r\n            <p class="moduletitle">Добро пожаловать!</p>\r\n            <p>Мы рады приветствовать Вас в нашей социальной сети. После регистрации Вам станут доступны все функции сайта.</p>\r\n            <p>Вы сможете завести блог, загружать фотографии и общаться с друзьями.</p>\r\n            <div>\r\n            <div>Чтобы изменить этот текст, <a href="/admin/index.php?view=modules&amp;do=edit&amp;id=17">отредактируйте модуль &quot;Главная страница&quot;</a>.</div>\r\n            </div>\r\n            </td>\r\n        </tr>\r\n    </tbody>\r\n</table>', 0, 0, 1, 1, '---\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(44, 'sidebar', 'Облако тегов', 'Облако тегов', 1, 'mod_tags', 18, 0, 0, 0, '---\ncat_id: \nsortby: tag\nmenuid: \nminfreq: 0\nminlen: 3\ntargets: \n  content: content\n  photo: photo\n  blogpost: blog\n  catalog: catalog\n  userphoto: userphoto\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(46, 'mainbottom', 'Новинки каталога', 'Новинки каталога', 1, 'mod_uc_latest', 30, 1, 0, 0, '---\nnewscount: 6\nshowtype: list\nshowf: 2\ncat_id: \nsubs: 1\nfulllink: 0\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(26, 'sidebar', 'Корзина покупателя', 'Корзина', 1, 'mod_cart', 19, 1, 0, 0, '---\nshowtype: list\nshowqty: 1\nmenuid: 23\nsource: catalog\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(25, 'sidebar', 'Голосования', 'Голосования', 1, 'mod_polls', 2, 1, 1, 0, '---\nshownum: 0\npoll_id: 2\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(27, 'sidebar', 'Поиск', 'Поиск', 1, 'mod_search', 1, 0, 0, 0, '---\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(19, 'maintop', 'Последние материалы', 'Новые статьи', 1, 'mod_latest', 2, 1, 1, 0, '---\nnewscount: 4\nshowdesc: 0\nshowdate: 1\nshowcom: 1\nshowrss: 1\ncat_id: 6\nsubs: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
+(20, 'topmenu', 'Авторизация', 'Авторизация', 1, 'mod_auth', 0, 1, 1, 0, '---\nautolog: 1\npassrem: 1\n', 1, '', '', 0, 1, 'MINUTE', 'module.tpl', 0, '1.0'),
+(22, 'topmenu', 'Последние регистрации', 'Новые пользователи', 1, 'mod_lastreg', 2, 1, 1, 0, '---\nnewscount: 5\nview_type: hr_table\nmaxcool: 2\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
+(23, 'sidebar', 'Случайное изображение', 'Случайная картинка', 1, 'mod_random_image', 21, 1, 0, 0, '---\nshowtitle: 1\nalbum_id: 0\nmenuid: 20\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(24, 'sidebar', 'Часы', 'Часы', 1, 'mod_clock', 17, 1, 0, 0, '---\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(37, 'sidebar', 'Категории прайса', 'Категории прайса', 1, 'mod_pricecat', 14, 1, 0, 0, '---\nshowdesc: 0\nicon: /images/markers/pricelist.png\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(36, 'sidebar', 'Разделы сайта', 'Статьи', 1, 'mod_category', 13, 1, 0, 0, '---\nshowdesc: 0\ncategory_id: 6\nicon: /images/markers/folder.png\nmenuid: 21\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(39, 'sidebar', 'Выбор шаблона', 'Выбор шаблона', 1, 'mod_template', 12, 1, 0, 0, '---\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(47, 'mainbottom', 'Популярное в каталоге', 'Популярное в каталоге', 1, 'mod_uc_popular', 23, 1, 0, 0, '---\nnum: 10\ncat_id: 0\nmenuid: 23\nshowf: 2\nshowtype: thumb\nfulllink: 1\nsort: rating\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(49, 'sidebar', 'Кто онлайн?', 'Кто онлайн?', 1, 'mod_whoonline', 24, 1, 1, 0, '---\nshow_today: 1\nadmin_editor: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
+(50, 'topmenu', 'Темы на форуме', 'Новости форума', 1, 'mod_forum', 31, 1, 1, 0, '---\nshownum: 2\nshowtype: web2\nshowforum: 0\nshowlink: 0\nshowtext: 0\nmenuid: 18\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(51, 'sidebar', 'Случайное фото', 'Случайное фото', 1, 'mod_user_image', 25, 1, 0, 0, '---\nshowtitle: 1\nmenuid: 15\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(52, 'sidebar', 'Внешний файл', 'Внешний файл', 0, '<p>{ФАЙЛ=test.php}</p>', 11, 1, 0, 1, '---\n', 0, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(56, 'sidebar', 'Архив статей', 'Архив новостей', 1, 'mod_arhive', 27, 1, 0, 0, '---\nsource: both\ncat_id: 6\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(54, 'sidebar', 'Случайное в каталоге', 'Случайное в каталоге', 1, 'mod_uc_random', 26, 1, 0, 0, '---\ncat_id: 1\ncount: 2\nshowtitle: 1\nshowcat: 0\nmenuid: 23\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(60, 'maintop', 'Лента RSS ', 'Лента новостей', 1, 'mod_rss', 9, 1, 0, 0, '---\nshowdesc: 0\nshowicon: 1\nitemslimit: 6\nrssurl: http://portal.novator.ru/ngnews.rss\ncols: 2\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(61, 'sidebar', 'Последние комментарии', 'Последние комментарии', 1, 'mod_comments', 4, 1, 1, 0, '---\nshownum: 10\nminrate: 0\nshowdesc: 1\nshowrss: 1\nshowtarg: 0\ntargets: \n  faq: faq\n  catalog: catalog\n  boarditem: boarditem\n  blog: blog\n  article: article\n  palbum: palbum\n  photo: photo\n  userphoto: userphoto\n', 1, '', '', 0, 1, 'MINUTE', 'module.tpl', 0, '1.0'),
+(62, 'maintop', 'Новинки фотогалереи', 'Новинки фотогалереи', 1, 'mod_latestphoto', 32, 1, 1, 0, '---\nshownum: 6\nmaxcols: 2\nshowclubs: 1\nshowalbum: 0\nshowdate: 0\nshowcom: 0\nalbum_id: 100\nshowtype: short\nshowmore: 0\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
+(63, 'sidebar', 'Популярные фотографии', 'Популярные фотографии', 1, 'mod_bestphoto', 10, 1, 0, 0, '---\nshownum: 2\nmaxcols: 2\nshowalbum: 0\nshowdate: 1\nshowcom: 1\nalbum_id: 0\nsort: rating\nmenuid: 20\nshowtype: full\nshowmore: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(64, 'maintop', 'Новое в блогах', 'Новое в блогах', 1, 'mod_latestblogs', 2, 1, 1, 0, '---\nnamemode: blog\nshownum: 10\nminrate: 0\nshowrss: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(65, 'sidebar', 'Популярное в блогах', 'Популярное в блогах', 1, 'mod_bestblogs', 3, 1, 1, 0, '---\nnamemode: blog\nshownum: 10\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
+(66, 'header', 'Меню пользователя', 'Меню пользователя', 1, 'mod_usermenu', 1, 0, 1, 0, '---\navatar: 1\nshowtype: text\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(67, 'mainbottom', 'Последние вопросы FAQ', 'Последние вопросы FAQ', 1, 'mod_latest_faq', 33, 1, 0, 0, '---\nnewscount: 5\nmaxlen: 140\ncat_id: \n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(69, 'maintop', 'Популярные статьи', 'Популярные статьи', 1, 'mod_bestcontent', 3, 1, 0, 0, '---\nshownum: 4\nmenuid: 21\nshowlink: 1\nshowdesc: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(70, 'sidebar', 'Поиск пользователей', 'Поиск пользователей', 1, 'mod_usersearch', 4, 1, 0, 0, '---\ncat_id: \nsource: \nmenuid: 15\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
+(71, 'maintop', 'Новые объявления', 'Новые объявления', 1, 'mod_latestboard', 1, 1, 1, 0, '---\nshownum: 10\nshowcity: 1\ncat_id: -1\nsubs: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(72, 'maintop', 'Рейтинг пользователей', 'Рейтинг пользователей', 1, 'mod_user_rating', 1, 1, 0, 0, '---\ncount: 20\nmenuid: 15\nview_type: rating\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(73, 'maintop', 'Новые клубы', 'Новые клубы', 1, 'mod_latestclubs', 3, 1, 0, 0, '---\ncount: 2\nmenuid: 38\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(74, 'maintop', 'Популярные клубы', 'Популярные клубы', 1, 'mod_bestclubs', 4, 1, 0, 0, '---\ncount: 2\nmenuid: 38\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(75, 'sidebar', 'Доска почета', 'Доска почета', 1, 'mod_respect', 1, 1, 1, 0, '---\nview: all\nshow_awards: 1\norder: desc\nlimit: 5\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
+(76, 'sidebar', 'Файлы пользователей', 'Файлы пользователей', 1, 'mod_userfiles', 1, 1, 0, 0, '---\nmenuid: 0\nsw_stats: 1\nsw_latest: 1\nsw_popular: 1\nnum_latest: 5\nnum_popular: 5\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(87, 'maintop', 'Лента активности', 'Лента активности', 1, 'mod_actions', 1, 1, 1, 0, '---\nlimit: 15\nshow_target: 0\naction_types: \n  16: 16\n  15: 15\n  20: 20\n  13: 13\n  29: 29\n  24: 24\n  23: 23\n  2: 2\n  27: 27\n  12: 12\n  10: 10\n  25: 25\n  17: 17\n  8: 8\n  18: 18\n  7: 7\n  26: 26\n  19: 19\n  22: 22\n  11: 11\n  21: 21\n  28: 28\n  9: 9\n  14: 14\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.7'),
+(82, 'sidebar', 'Приветствие', 'Универсальный каталог', 0, '<p>С помощью компонента &laquo;Универсальный каталог&raquo;, в котором Вы сейчас находитесь, можно организовать хранение любых данных. От карандашей до автомобилей.</p>\r\n<p>Каждая рубрика каталога имеет собственный набор характеристик, который можно изменить в панели управления. Пользователи могут фильтровать записи каталога по характеристикам одним щелчком мыши.&nbsp;</p>\r\n<p>Любой пользователь может добавлять собственные записи в те рубрики каталога, для которых это разрешено в настройках.</p>', 14, 1, 1, 1, '', 1, '', '', 0, 24, 'HOUR', 'module.tpl', 1, '1.0'),
+(83, 'sidebar', 'Статистика пользователей', 'Статистика пользователей', 1, 'mod_user_stats', 1, 1, 1, 0, '---\nshow_total: 1\nshow_online: 1\nshow_gender: 1\nshow_city: 1\nshow_bday: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
+(84, 'sidebar', 'Друзья онлайн', 'Друзья онлайн', 1, 'mod_user_friend', 5, 1, 0, 0, '---\r\nlimit: 5\r\nview_type: table', 1, '', '', 0, 1, 'HOUR', 'module_simple.tpl', 0, '1.0'),
+(85, 'sidebar', 'Пригласить друга', 'Пригласить друга', 1, 'mod_invite', 1, 1, 0, 0, '', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0');
 
 DROP TABLE IF EXISTS `#__modules_bind`;
 CREATE TABLE `#__modules_bind` (
@@ -860,6 +918,7 @@ CREATE TABLE `#__ns_transactions` (
   PRIMARY KEY (`IDTransaction`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__online`;
 CREATE TABLE `#__online` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -869,8 +928,11 @@ CREATE TABLE `#__online` (
   `user_id` int(11) NOT NULL,
   `agent` varchar(250) NOT NULL,
   `viewurl` varchar(250) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `sess_id` (`sess_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__photo_albums`;
 CREATE TABLE `#__photo_albums` (
@@ -905,7 +967,9 @@ CREATE TABLE `#__photo_albums` (
   `bbcode` int(11) NOT NULL DEFAULT '1',
   `user_id` int(11) NOT NULL DEFAULT '1',
   `is_comments` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `parent_id` (`parent_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__photo_albums` (`id`, `parent_id`, `ordering`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`, `title`, `description`, `published`, `showdate`, `iconurl`, `pubdate`, `orderby`, `orderto`, `public`, `perpage`, `cssprefix`, `thumb1`, `thumb2`, `thumbsqr`, `showtype`, `nav`, `uplimit`, `maxcols`, `orderform`, `showtags`, `bbcode`, `user_id`, `is_comments`) VALUES
@@ -926,8 +990,11 @@ CREATE TABLE `#__photo_files` (
   `user_id` int(11) NOT NULL DEFAULT '1',
   `owner` varchar(10) DEFAULT 'photos',
   PRIMARY KEY (`id`),
+  KEY `album_id` (`album_id`),
+  KEY `user_id` (`user_id`),
   FULLTEXT KEY `title` (`title`,`description`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__plugins`;
 CREATE TABLE `#__plugins` (
@@ -958,10 +1025,8 @@ CREATE TABLE `#__polls` (
   `pubdate` date NOT NULL DEFAULT '0000-00-00',
   `answers` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__polls` (`id`, `title`, `pubdate`, `answers`) VALUES
-(2, 'Какой у вас хостинг?', '2008-05-23', 'a:3:{s:7:"Платный";i:0;s:10:"Бесплатный";i:1;s:11:"Собственный";i:0;}');
 
 DROP TABLE IF EXISTS `#__polls_log`;
 CREATE TABLE `#__polls_log` (
@@ -973,6 +1038,7 @@ CREATE TABLE `#__polls_log` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__price_cats`;
 CREATE TABLE `#__price_cats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -980,7 +1046,8 @@ CREATE TABLE `#__price_cats` (
   `description` text NOT NULL,
   `published` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__price_items`;
 CREATE TABLE `#__price_items` (
@@ -992,7 +1059,8 @@ CREATE TABLE `#__price_items` (
   `canmany` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   FULLTEXT KEY `title` (`title`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__ratings`;
 CREATE TABLE `#__ratings` (
@@ -1003,8 +1071,11 @@ CREATE TABLE `#__ratings` (
   `target` varchar(20) NOT NULL,
   `user_id` int(11) NOT NULL DEFAULT '1',
   `pubdate` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `item_id` (`item_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__ratings_total`;
 CREATE TABLE `#__ratings_total` (
@@ -1014,8 +1085,10 @@ CREATE TABLE `#__ratings_total` (
   `total_rating` int(11) NOT NULL,
   `total_votes` int(11) NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `item_id` (`item_id`),
   KEY `target` (`target`,`item_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__rating_targets`;
 CREATE TABLE `#__rating_targets` (
@@ -1046,6 +1119,7 @@ CREATE TABLE `#__search` (
   `placelink` varchar(100) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__stats`;
 CREATE TABLE `#__stats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1057,6 +1131,7 @@ CREATE TABLE `#__stats` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__subscribe`;
 CREATE TABLE `#__subscribe` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1064,8 +1139,11 @@ CREATE TABLE `#__subscribe` (
   `target` varchar(20) NOT NULL,
   `target_id` int(11) NOT NULL,
   `pubdate` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `target_id` (`target_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__tags`;
 CREATE TABLE `#__tags` (
@@ -1073,8 +1151,11 @@ CREATE TABLE `#__tags` (
   `tag` varchar(250) NOT NULL,
   `target` varchar(25) NOT NULL,
   `item_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+  PRIMARY KEY (`id`),
+  KEY `tag` (`tag`),
+  KEY `item_id` (`item_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__uc_cart`;
 CREATE TABLE `#__uc_cart` (
@@ -1086,6 +1167,7 @@ CREATE TABLE `#__uc_cart` (
   `itemscount` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__uc_cats`;
 CREATE TABLE `#__uc_cats` (
@@ -1117,11 +1199,12 @@ CREATE TABLE `#__uc_cats` (
   `ordering` int(11) NOT NULL,
   `is_public` int(11) NOT NULL,
   `can_edit` int(11) NOT NULL DEFAULT '0',
+  `cost` varchar(5) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__uc_cats` (`id`, `parent_id`, `title`, `description`, `published`, `fieldsstruct`, `view_type`, `fields_show`, `showmore`, `perpage`, `showtags`, `showsort`, `is_ratings`, `orderby`, `orderto`, `showabc`, `shownew`, `newint`, `filters`, `is_shop`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `ordering`, `is_public`, `can_edit`) VALUES
-(1000, 0, '-- Корневая рубрика --', '', 1, '', 'list', 10, 1, 20, 1, 1, 0, 'pubdate', 'desc', 1, 0, '', 0, 0, 1, 2, 0, 0, 0, 1, 0, 0);
+INSERT INTO `#__uc_cats` (`id`, `parent_id`, `title`, `description`, `published`, `fieldsstruct`, `view_type`, `fields_show`, `showmore`, `perpage`, `showtags`, `showsort`, `is_ratings`, `orderby`, `orderto`, `showabc`, `shownew`, `newint`, `filters`, `is_shop`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `ordering`, `is_public`, `can_edit`, `cost`) VALUES
+(1000, 0, '-- Корневая рубрика --', '', 1, '', 'list', 10, 1, 20, 1, 1, 0, 'pubdate', 'desc', 1, 0, '', 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, '');
 
 DROP TABLE IF EXISTS `#__uc_cats_access`;
 CREATE TABLE `#__uc_cats_access` (
@@ -1129,6 +1212,7 @@ CREATE TABLE `#__uc_cats_access` (
   `group_id` int(11) NOT NULL,
   KEY `cat_id` (`cat_id`,`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__uc_discount`;
 CREATE TABLE `#__uc_discount` (
@@ -1141,7 +1225,8 @@ CREATE TABLE `#__uc_discount` (
   `if_limit` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `cat_id` (`cat_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__uc_items`;
 CREATE TABLE `#__uc_items` (
@@ -1163,8 +1248,10 @@ CREATE TABLE `#__uc_items` (
   `user_id` int(11) NOT NULL,
   `on_moderate` int(11) NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `category_id` (`category_id`),
   FULLTEXT KEY `title` (`title`,`fieldsdata`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__uc_ratings`;
 CREATE TABLE `#__uc_ratings` (
@@ -1175,6 +1262,7 @@ CREATE TABLE `#__uc_ratings` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__uc_tags`;
 CREATE TABLE `#__uc_tags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1182,6 +1270,7 @@ CREATE TABLE `#__uc_tags` (
   `item_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__upload_images`;
 CREATE TABLE `#__upload_images` (
@@ -1192,6 +1281,7 @@ CREATE TABLE `#__upload_images` (
   `target` varchar(25) NOT NULL DEFAULT 'forum',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__users`;
 CREATE TABLE `#__users` (
@@ -1214,13 +1304,12 @@ CREATE TABLE `#__users` (
   `status_date` datetime NOT NULL,
   `invited_by` int(11) DEFAULT NULL,
   `invdate` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `login` (`login`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 ROW_FORMAT=DYNAMIC;
 
 INSERT INTO `#__users` (`id`, `group_id`, `login`, `nickname`, `password`, `email`, `icq`, `regdate`, `logdate`, `birthdate`, `is_locked`, `is_deleted`, `rating`, `points`, `last_ip`, `status`, `status_date`, `invited_by`, `invdate`) VALUES
-(1, 2, 'admin', 'Администратор', '2ca41752ccf4dbdb76d8fe88c488fd44', 'admin@cms.ru', '100200300', '2007-11-23 12:41:57', '2010-12-06 21:16:56', '1980-10-23', 0, 0, 32, 0, '127.0.0.1', 'Самый длинный статус из всех что существуют в этом прекрасном мире', '2010-10-21 02:06:53', 0, '2010-11-09 23:25:59'),
-(2, 1, 'vasya', 'Василий', '2ca41752ccf4dbdb76d8fe88c488fd44', 'vasya@cms.ru', '100200300', '2008-07-16 16:31:48', '2010-11-14 14:32:47', '1980-01-01', 0, 1, 5, 0, '127.0.0.1', 'I love InstantCMS', '2010-11-13 23:09:34', 0, '2010-11-02 13:50:04'),
-(3, 1, 'fedor', 'Федор', '2ca41752ccf4dbdb76d8fe88c488fd44', 'fedor@cms.com', '100334564', '2010-10-20 17:33:42', '2010-11-13 23:22:26', '1979-10-20', 0, 1, 0, 0, '127.0.0.1', 'We are all made of stars (c) Moby', '2010-10-28 15:44:45', NULL, NULL);
+(1, 2, 'admin', 'Администратор', '2ca41752ccf4dbdb76d8fe88c488fd44', 'admin@cms.ru', '100200300', '2007-11-23 12:41:57', '2010-12-06 21:16:56', '1980-10-23', 0, 0, 32, 0, '127.0.0.1', 'Самый длинный статус из всех что существуют в этом прекрасном мире', '2010-10-21 02:06:53', 0, '2010-11-09 23:25:59');
 
 DROP TABLE IF EXISTS `#__users_activate`;
 CREATE TABLE `#__users_activate` (
@@ -1230,6 +1319,7 @@ CREATE TABLE `#__users_activate` (
   `code` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__user_albums`;
 CREATE TABLE `#__user_albums` (
@@ -1244,9 +1334,6 @@ CREATE TABLE `#__user_albums` (
   KEY `allow_who` (`allow_who`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__user_albums` (`id`, `user_id`, `title`, `pubdate`, `allow_who`) VALUES
-(2, 3, 'Мой фотоальбом', '2010-10-22 20:28:51', 'all'),
-(5, 1, 'Мои картинки', '2010-11-13 23:13:37', 'all');
 
 DROP TABLE IF EXISTS `#__user_autoawards`;
 CREATE TABLE `#__user_autoawards` (
@@ -1263,7 +1350,8 @@ CREATE TABLE `#__user_autoawards` (
   `p_karma` int(11) NOT NULL,
   `published` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__user_awards`;
 CREATE TABLE `#__user_awards` (
@@ -1275,11 +1363,9 @@ CREATE TABLE `#__user_awards` (
   `imageurl` varchar(100) NOT NULL,
   `from_id` int(11) NOT NULL,
   `award_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
-
-INSERT INTO `#__user_awards` (`id`, `user_id`, `pubdate`, `title`, `description`, `imageurl`, `from_id`, `award_id`) VALUES
-(1, 2, '2010-10-27 21:46:44', 'Медаль за заслуги', 'В благодарность от администрации', 'aw.gif', 1, 0);
 
 DROP TABLE IF EXISTS `#__user_clubs`;
 CREATE TABLE `#__user_clubs` (
@@ -1288,6 +1374,7 @@ CREATE TABLE `#__user_clubs` (
   `role` varchar(20) NOT NULL DEFAULT 'guest',
   `pubdate` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__user_files`;
 CREATE TABLE `#__user_files` (
@@ -1301,6 +1388,7 @@ CREATE TABLE `#__user_files` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__user_friends`;
 CREATE TABLE `#__user_friends` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1308,8 +1396,11 @@ CREATE TABLE `#__user_friends` (
   `from_id` int(11) NOT NULL,
   `logdate` datetime NOT NULL,
   `is_accepted` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+  PRIMARY KEY (`id`),
+  KEY `to_id` (`to_id`),
+  KEY `from_id` (`from_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__user_groups`;
 CREATE TABLE `#__user_groups` (
@@ -1340,6 +1431,7 @@ CREATE TABLE `#__user_invites` (
   KEY `code` (`code`,`owner_id`,`is_used`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__user_karma`;
 CREATE TABLE `#__user_karma` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1347,8 +1439,10 @@ CREATE TABLE `#__user_karma` (
   `sender_id` int(11) NOT NULL,
   `points` smallint(6) NOT NULL,
   `senddate` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__user_msg`;
 CREATE TABLE `#__user_msg` (
@@ -1358,27 +1452,32 @@ CREATE TABLE `#__user_msg` (
   `senddate` datetime NOT NULL,
   `is_new` int(11) NOT NULL DEFAULT '1',
   `message` text NOT NULL,
-  PRIMARY KEY (`id`)
+  `to_del` tinyint(4) NOT NULL DEFAULT '0',
+  `from_del` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `to_id` (`to_id`),
+  KEY `from_id` (`from_id`),
+  KEY `to_del` (`to_del`),
+  KEY `from_del` (`from_del`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__user_photos`;
 CREATE TABLE `#__user_photos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `album_id` int(11) NOT NULL,
-  `pubdate` date NOT NULL,
+  `pubdate` datetime NOT NULL,
   `title` varchar(250) NOT NULL,
   `description` text NOT NULL,
   `allow_who` varchar(15) NOT NULL DEFAULT 'all',
   `hits` int(11) NOT NULL,
   `imageurl` varchar(250) NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
   KEY `album_id` (`album_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__user_photos` (`id`, `user_id`, `album_id`, `pubdate`, `title`, `description`, `allow_who`, `hits`, `imageurl`) VALUES
-(6, 1, 5, '2010-11-13', 'Горный пейзаж', 'Красивый вид с большой высоты', 'all', 4, 'b22c5c0f95c1fb9398578fd5e396c7dd.jpg'),
-(7, 1, 5, '2010-11-13', 'Восход в космосе', 'Вид на нашу планету', 'all', 3, 'efe8d13779cd84cfeb319d9f0875a511.jpg');
 
 DROP TABLE IF EXISTS `#__user_profiles`;
 CREATE TABLE `#__user_profiles` (
@@ -1398,7 +1497,9 @@ CREATE TABLE `#__user_profiles` (
   `email_newmsg` int(11) NOT NULL DEFAULT '1',
   `cm_subscribe` varchar(4) NOT NULL,
   `stats` text NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `city` (`city`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 ROW_FORMAT=DYNAMIC;
 
 INSERT INTO `#__user_profiles` (`id`, `user_id`, `city`, `description`, `showmail`, `showbirth`, `showicq`, `karma`, `imageurl`, `allow_who`, `signature`, `gender`, `formsdata`, `email_newmsg`, `cm_subscribe`, `stats`) VALUES
@@ -1412,5 +1513,6 @@ CREATE TABLE `#__user_wall` (
   `pubdate` datetime NOT NULL,
   `content` text NOT NULL,
   `usertype` varchar(8) NOT NULL DEFAULT 'user',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
