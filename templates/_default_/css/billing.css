@@ -1,0 +1,136 @@
+.balance_add_form{
+    font-size:14px;
+}
+
+.balance_add_form #submit{
+    font-size:16px;
+    width:100px;
+}
+
+.balance_add_form table td{
+    padding:4px 0;
+}
+
+.balance_add_form #summ_out {
+    font-weight: bold;
+}
+
+.billing_discount table { border:solid 1px #375E93; }
+.billing_discount table td { text-align: center; }
+.billing_discount table th { background:#BFDCF2; color:#375E93; border-bottom: 1px solid #AFC6CE;  }
+
+.billing_subs table { border:solid 1px #375E93; margin:20px 0; }
+.billing_subs table td { text-align: center; }
+.billing_subs table td.tx_left,
+.billing_subs table th.tx_left {
+    text-align: left;
+}
+.billing_subs table th { background:#BFDCF2; color:#375E93; border-bottom: 1px solid #AFC6CE;  }
+
+.billing_wait_out{
+    margin-top:10px;
+    background:url(../images/billing/info.png) no-repeat left center;
+    padding:1px;
+    padding-left:18px;
+    color:#375E93;
+}
+
+.billing_history_title { margin: 15px 0; color:#375E93; font-size:16px; }
+
+#billing_history{ border:solid 1px #375E93; }
+#billing_history td { text-align: left; padding:3px 7px; }
+#billing_history th { text-align: left; background:#BFDCF2; color:#375E93; border-bottom: 1px solid #375E93;  }
+
+#billing_history .op_date { color:#5F98BF; font-size:11px;  }
+#billing_history .b_plus { font-size:16px; color:green;  }
+#billing_history .b_minus { font-size:16px; color:red;  }
+
+#billing_history .op_status0 { color:#666;  }
+#billing_history .op_status1 { color:#870C0A;  }
+#billing_history .op_status2 { color:#086D0A;  }
+
+#billing_history .tf_status0 { color:#666;  }
+#billing_history .tf_status1 { color:#086D0A;  }
+
+.usr_balance_info{
+    padding-left:40px;
+    background:url(../images/billing/balance32.png) no-repeat left center;
+    overflow: hidden;
+}
+.usr_balance_info .usr_balance{
+    display:inline-block;
+    padding-right:15px;
+}
+
+.usr_balance_add {
+    margin-top:10px;
+    width:500px;
+    line-height: 23px;
+}
+
+.usr_balance_add a {
+    padding:1px;
+    padding-left:20px;
+    height:20px;
+    line-height:20px;
+    margin-right:10px;
+}
+
+.usr_balance_add a.bal_add{ background:url(../images/billing/buy_points.png) no-repeat left center; }
+.usr_balance_add a.bal_subs{ background:url(../images/billing/subscribe.png) no-repeat left center; }
+.usr_balance_add a.bal_convert{ background:url(../images/billing/convert.png) no-repeat left center; }
+.usr_balance_add a.bal_referals{ background:url(../images/billing/referals.png) no-repeat left center; }
+.usr_balance_add a.bal_out{ background:url(../images/billing/out.png) no-repeat left center; }
+.usr_balance_add a.bal_transfer{ background:url(../images/billing/transfer.png) no-repeat left center; }
+
+.billing_ticket{
+    margin:20px 0;
+}
+
+.billing_ticket .notice{ margin-bottom:10px; color:#375E93; font-size:16px; }
+.billing_ticket .details strong {
+    display:inline-block;
+    width:120px;
+}
+
+.billing_convert { margin-bottom: 20px; }
+
+.billing_convert table{ margin:10px 0; }
+.billing_convert table td { padding:4px 0; }
+.billing_convert table td.title { color:#375E93; }
+.billing_convert .convert_all,
+.billing_out .out_all,
+.billing_out .transfer_all{
+    margin-left:15px;
+    text-decoration: none;
+    border-bottom: dashed 1px #09c;
+}
+
+.billing_convert .convert_all:hover,
+.billing_out .out_all:hover,
+.billing_out .transfer_all:hover{
+    border-bottom: dashed 1px #375E93;
+}
+
+.billing_out table { margin-bottom: 15px; }
+.billing_out table td { height:30px; }
+.billing_out table td.title { color:#375E93; }
+
+.billing_out .error{ color:red; }
+
+.billing_ref_bonus { margin:5px; }
+.billing_ref_bonus span { color:#375E93; }
+
+.billing_ref_link span { color:#375E93; font-weight: bold; }
+
+.billing_ref_link {
+    width:400px;
+    -moz-border-radius: 8px 8px 8px 8px;
+    border-radius: 8px 8px 8px 8px;
+    background: none repeat scroll 0 0 #E0EAEF;
+    clear: both;
+    display: block;
+    margin: 15px 0;
+    padding: 10px;
+    text-align: center;
+}

@@ -392,7 +392,7 @@ if ($do=='uploadphotos'){
 
     if (!$user_id) { header("HTTP/1.1 500 Internal Server Error"); exit(0); }
 
-	if(!$model->checkAccess($album)) { header("HTTP/1.1 500 Internal Server Error"); exit(0); }
+	if(!$model->checkAccess($album, $user_id)) { header("HTTP/1.1 500 Internal Server Error"); exit(0); }
 	
 	$photo = cmsUser::sessionGet('mod');
 	if (!$photo) { header("HTTP/1.1 500 Internal Server Error"); exit(0); }
@@ -415,11 +415,11 @@ if ($do=='uploadphotos'){
 
 		if ($album['NSDiffer'] == ''){
 			
-			if ($album['public']==2 || $inCore->userIsAdmin($inUser->id)) { $published = 1; } else { $published = 0; }	
+			if ($album['public']==2 || $inCore->userIsAdmin($user_id)) { $published = 1; } else { $published = 0; }	
 		
 		} elseif (strstr($album['NSDiffer'], 'club')){
 
-			if ($club['photo_premod'] && !clubUserIsAdmin($club['id'], $inUser->id) && !clubUserIsRole($club['id'], $inUser->id, 'moderator')) { 
+			if ($club['photo_premod'] && !clubUserIsAdmin($club['id'], $user_id) && !clubUserIsRole($club['id'], $user_id, 'moderator')) { 
 				$published = 0; 
 			} else { 
 				$published = 1; 
@@ -434,7 +434,7 @@ if ($do=='uploadphotos'){
 		$photo['filename']	= $file['filename'];
 		$photo['title']     = $photo['title'] ? $photo['title'] : $file['realfile'];
 
-		$photo_id = $model->addPhoto($photo, $differ);
+		$photo_id = $model->addPhoto($photo, $differ, $user_id);
 
 		if ($inCore->inRequest('upload')) { $inCore->redirect('/photos/'.$album['id'].'/uploaded.html'); }
 
@@ -457,7 +457,7 @@ if ($do=='addphoto'){
 
     $album = ($id == 100 )|| !$id ? '' : $model->getAlbum($id);
 	
-	if(!$model->checkAccess($album)) { $inCore->redirect('/photos/'.$album['id']); }
+	if(!$model->checkAccess($album, $inUser->id)) { $inCore->redirect('/photos/'.$album['id']); }
 
 	if (!$inCore->inRequest('submit')){
 		
@@ -517,7 +517,7 @@ if ($do=='submit_photo'){
 
     $album = $model->getAlbum($id);
 
-	if(!$model->checkAccess($album)) { $inCore->redirect('/photos/'.$album['id']); }
+	if(!$model->checkAccess($album, $inUser->id)) { $inCore->redirect('/photos/'.$album['id']); }
 
 	$mod = cmsUser::sessionGet('mod');
 	if (!$mod) { cmsCore::error404(); }
