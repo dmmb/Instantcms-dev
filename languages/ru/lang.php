@@ -110,4 +110,9 @@ $_LANG['UNLIKE']                = 'Не нравится';
 $_LANG['OR']                    ='или';
 $_LANG['WROTE']                 ='написал';
 $_LANG['MODULE_NOT_CONFIGURED'] ='Модуль не настроен';
+$_LANG['BILLING_COST']          ='Стоимость';
+$_LANG['BILLING_POINT1']        ='балл';
+$_LANG['BILLING_POINT2']        ='балла';
+$_LANG['BILLING_POINT10']       ='баллов';
+$_LANG['ANTISPAM']              ='Защита от спама';
 ?>

@@ -36,7 +36,6 @@ function mod_latestblogs($module_id){
                         p.pubdate as fpubdate,
 						b.user_id as uid,
                         IFNULL(r.total_rating, 0) as rating,
-                        b.owner as owner,
                         b.ownertype as ownertype,
                         u.id as author_id,
                         u.nickname as author,
@@ -55,46 +54,44 @@ function mod_latestblogs($module_id){
 
 		$is_blog = false;
 
-		if ($inDB->num_rows($result)){	
+		if (!$inDB->num_rows($result)){	return false; }
 
-			$is_blog = true;
-            $count = 1;
-			$posts = array();
+		$is_blog = true;
+		$count = 1;
+		$posts = array();
 
-			while($con = $inDB->fetch_assoc($result)){
+		include_once(PATH.'/components/users/includes/usercore.php');
 
-				if (!function_exists('usrImageNOdb')){ //if not included earlier
-                include_once($_SERVER['DOCUMENT_ROOT'].'/components/users/includes/usercore.php');
+		while($con = $inDB->fetch_assoc($result)){
+
+			if ($count > $cfg['shownum']) { break; }
+
+			if ($con['rating'] >= $cfg['minrate']){
+
+				if ($con['owner']=='user' && $con['ownertype']=='single' && $cfg['namemode']=='user'){
+					$con['blog'] = $con['author'];
 				}
 
-                if ($count > $cfg['shownum']) { break; }
+				if ($con['owner']=='club'){
+					$con['blog'] = dbGetField('cms_clubs', 'id='.$con['uid'], 'title');
+				}
 
-                if ($con['rating'] >= $cfg['minrate']){
+				$con['href'] 	 = $model->getPostURL(null, $con['bloglink'], $con['seolink']);
+				$con['title'] 	 = strip_tags($con['title']);
+				if (strlen($con['title'])>70) { $con['title'] = substr($con['title'], 0, 70). '...'; }
+				$con['fpubdate'] = $inCore->dateFormat($con['fpubdate']);
+				$con['comments'] = $cfg['showcom'] ? $inCore->getCommentsCount('blog', $con['id']) : false;
+				$con['bloghref'] = $model->getBlogURL(null, $con['bloglink']);
 
-                    if ($con['owner']=='user' && $con['ownertype']=='single' && $cfg['namemode']=='user'){
-                        $con['blog'] = $con['author'];
-                    }
+				$con['image'] = usrImageNOdb($con['author_id'], 'small', $con['author_image'], $con['author_deleted']);
 
-                    if ($con['owner']=='club'){
-                        $con['blog'] = dbGetField('cms_clubs', 'id='.$con['uid'], 'title');
-                    }
-
-                    $con['href'] 	 = $model->getPostURL(null, $con['bloglink'], $con['seolink']);
-                    $con['title'] 	 = strip_tags($con['title']);
-					if (strlen($con['title'])>70) { $con['title'] = substr($con['title'], 0, 70). '...'; }
-					$con['fpubdate'] = $inCore->dateFormat($con['fpubdate']);
-					$con['comments'] = $cfg['showcom'] ? $inCore->getCommentsCount('blog', $con['id']) : false;
-					$con['bloghref'] = $model->getBlogURL(null, $con['bloglink']);
-
-                    $con['image'] = usrImageNOdb($con['author_id'], 'small', $con['author_image'], $con['author_deleted']);
-
-                    $count++;
-
-                }
+				$count++;
+				
 				$posts[] = $con;
+
 			}
 
-			}				
+		}
 		
 		$smarty = $inCore->initSmarty('modules', 'mod_latestblogs.tpl');			
 		$smarty->assign('posts', $posts);

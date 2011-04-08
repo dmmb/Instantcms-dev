@@ -230,6 +230,8 @@ CREATE TABLE `#__board_items` (
   `published` int(11) NOT NULL,
   `file` varchar(250) NOT NULL,
   `hits` int(11) NOT NULL,
+  `is_vip` tinyint(4) NOT NULL DEFAULT '0',
+  `vipdate` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   KEY `user_id` (`user_id`),
@@ -275,13 +277,14 @@ CREATE TABLE `#__category` (
   `seolink` varchar(200) NOT NULL,
   `url` varchar(100) NOT NULL,
   `tpl` varchar(50) NOT NULL DEFAULT 'com_content_view.tpl',
+  `cost` varchar(5) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `parent_id` (`parent_id`),
-  UNIQUE KEY `seolink` (`seolink`)
+  UNIQUE KEY `seolink` (`seolink`),
+  KEY `parent_id` (`parent_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__category` (`id`, `parent_id`, `title`, `description`, `published`, `showdate`, `showcomm`, `orderby`, `orderto`, `modgrp_id`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `ordering`, `maxcols`, `showtags`, `showrss`, `showdesc`, `is_public`, `photoalbum`, `seolink`, `url`, `tpl`) VALUES
-(1, 0, '--Корневой раздел--', 'Корневой раздел сайта', 1, 1, 1, 'pubdate', 'asc', 0, 1, 2, 0, '', 0, 1, 1, 1, 1, 0, 0, '', '--kornevoi-razdel--', '', 'com_content_view.tpl');
+INSERT INTO `#__category` (`id`, `parent_id`, `title`, `description`, `published`, `showdate`, `showcomm`, `orderby`, `orderto`, `modgrp_id`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `ordering`, `maxcols`, `showtags`, `showrss`, `showdesc`, `is_public`, `photoalbum`, `seolink`, `url`, `tpl`, `cost`) VALUES
+(1, 0, '--Корневой раздел--', 'Корневой раздел сайта', 1, 1, 1, 'pubdate', 'asc', 0, 1, 2, 0, '', 0, 1, 1, 1, 1, 0, 0, '', '--kornevoi-razdel--', '', 'com_content_view.tpl', '');
 
 DROP TABLE IF EXISTS `#__clubs`;
 CREATE TABLE `#__clubs` (
@@ -304,6 +307,9 @@ CREATE TABLE `#__clubs` (
   `album_min_karma` int(11) NOT NULL DEFAULT '25',
   `join_min_karma` int(11) NOT NULL,
   `join_karma_limit` int(11) NOT NULL,
+  `create_karma` int(11) NOT NULL,
+  `is_vip` tinyint(4) NOT NULL DEFAULT '0',
+  `join_cost` float NOT NULL,
   PRIMARY KEY (`id`),
   KEY `pubdate` (`pubdate`),
   KEY `admin_id` (`admin_id`)
@@ -328,6 +334,7 @@ CREATE TABLE `#__comments` (
   `target_id` int(11) NOT NULL,
   `guestname` varchar(200) NOT NULL,
   `content` text NOT NULL,
+  `content_bbcode` text NOT NULL,
   `pubdate` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `published` int(11) NOT NULL DEFAULT '1',
   `is_new` int(11) NOT NULL DEFAULT '1',
@@ -431,9 +438,9 @@ CREATE TABLE `#__content` (
   `url` varchar(100) NOT NULL,
   `tpl` varchar(50) NOT NULL DEFAULT 'com_content_read.tpl',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `seolink` (`seolink`),
   KEY `category_id` (`category_id`),
   KEY `user_id` (`user_id`),
-  UNIQUE KEY `seolink` (`seolink`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `content` (`content`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
@@ -598,13 +605,14 @@ CREATE TABLE `#__forums` (
   `NSDiffer` varchar(15) NOT NULL,
   `NSIgnore` int(11) NOT NULL,
   `NSLevel` int(11) NOT NULL,
+  `topic_cost` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   KEY `parent_id` (`parent_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__forums` (`id`, `category_id`, `title`, `description`, `auth_group`, `ordering`, `published`, `parent_id`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`) VALUES
-(1000, 0, '-- Корень форумов --', '', 0, 1, 0, 0, 1, 8, '', 0, 1);
+INSERT INTO `#__forums` (`id`, `category_id`, `title`, `description`, `auth_group`, `ordering`, `published`, `parent_id`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`, `topic_cost`) VALUES
+(1000, 0, '-- Корень форумов --', '', 0, 1, 0, 0, 1, 8, '', 0, 1, 0);
 
 DROP TABLE IF EXISTS `#__forum_cats`;
 CREATE TABLE `#__forum_cats` (
@@ -664,8 +672,6 @@ CREATE TABLE `#__forum_posts` (
   FULLTEXT KEY `content` (`content`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__forum_posts` (`id`, `thread_id`, `user_id`, `pubdate`, `editdate`, `edittimes`, `content`) VALUES
-(29, 12, 1, '2009-04-04 18:54:53', '2010-10-07 18:07:14', 2, 'Геосинклиналь [b]обогащает магматический монтмориллонит[/b], что в общем свидетельствует о преобладании тектонических опусканий в это время. Углефикация характерна. Порода существенна. Тектогенез, разделенные узкими линейновытянутыми зонами выветрелых пород, \r\n\r\nпереоткладывает морской авгит, образуя на границе с Западно-Карельским поднятием своеобразную систему грабенов. Ведущий экзогенный геологический процесс - субдукция ослабляет лакколит, так как совершенно однозначно указывает на существование и рост в период оформления палеогеновой поверхности выравнивания.');
 
 DROP TABLE IF EXISTS `#__forum_threads`;
 CREATE TABLE `#__forum_threads` (
@@ -688,8 +694,6 @@ CREATE TABLE `#__forum_threads` (
   FULLTEXT KEY `title` (`title`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__forum_threads` (`id`, `forum_id`, `user_id`, `title`, `description`, `icon`, `pubdate`, `hits`, `closed`, `pinned`, `is_hidden`, `rel_to`, `rel_id`) VALUES
-(12, 1, 1, 'Пример темы', '', '', '2009-10-16 12:31:36', 71, 0, 0, 0, '', 0);
 
 DROP TABLE IF EXISTS `#__forum_votes`;
 CREATE TABLE `#__forum_votes` (
@@ -994,8 +998,6 @@ CREATE TABLE `#__polls` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__polls` (`id`, `title`, `pubdate`, `answers`) VALUES
-(2, 'Какой у вас хостинг?', '2008-05-23', 'a:3:{s:7:"Платный";i:0;s:10:"Бесплатный";i:1;s:11:"Собственный";i:0;}');
 
 DROP TABLE IF EXISTS `#__polls_log`;
 CREATE TABLE `#__polls_log` (
@@ -1158,11 +1160,12 @@ CREATE TABLE `#__uc_cats` (
   `ordering` int(11) NOT NULL,
   `is_public` int(11) NOT NULL,
   `can_edit` int(11) NOT NULL DEFAULT '0',
+  `cost` varchar(5) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__uc_cats` (`id`, `parent_id`, `title`, `description`, `published`, `fieldsstruct`, `view_type`, `fields_show`, `showmore`, `perpage`, `showtags`, `showsort`, `is_ratings`, `orderby`, `orderto`, `showabc`, `shownew`, `newint`, `filters`, `is_shop`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `ordering`, `is_public`, `can_edit`) VALUES
-(1000, 0, '-- Корневая рубрика --', '', 1, '', 'list', 10, 1, 20, 1, 1, 0, 'pubdate', 'desc', 1, 0, '', 0, 0, 1, 2, 0, 0, 0, 1, 0, 0);
+INSERT INTO `#__uc_cats` (`id`, `parent_id`, `title`, `description`, `published`, `fieldsstruct`, `view_type`, `fields_show`, `showmore`, `perpage`, `showtags`, `showsort`, `is_ratings`, `orderby`, `orderto`, `showabc`, `shownew`, `newint`, `filters`, `is_shop`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `ordering`, `is_public`, `can_edit`, `cost`) VALUES
+(1000, 0, '-- Корневая рубрика --', '', 1, '', 'list', 10, 1, 20, 1, 1, 0, 'pubdate', 'desc', 1, 0, '', 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, '');
 
 DROP TABLE IF EXISTS `#__uc_cats_access`;
 CREATE TABLE `#__uc_cats_access` (
@@ -1261,9 +1264,7 @@ CREATE TABLE `#__users` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 ROW_FORMAT=DYNAMIC;
 
 INSERT INTO `#__users` (`id`, `group_id`, `login`, `nickname`, `password`, `email`, `icq`, `regdate`, `logdate`, `birthdate`, `is_locked`, `is_deleted`, `rating`, `points`, `last_ip`, `status`, `status_date`, `invited_by`, `invdate`) VALUES
-(1, 2, 'admin', 'Администратор', '2ca41752ccf4dbdb76d8fe88c488fd44', 'admin@cms.ru', '100200300', '2007-11-23 12:41:57', '2010-12-06 21:16:56', '1980-10-23', 0, 0, 32, 0, '127.0.0.1', 'Самый длинный статус из всех что существуют в этом прекрасном мире', '2010-10-21 02:06:53', 0, '2010-11-09 23:25:59'),
-(2, 1, 'vasya', 'Василий', '2ca41752ccf4dbdb76d8fe88c488fd44', 'vasya@cms.ru', '100200300', '2008-07-16 16:31:48', '2010-11-14 14:32:47', '1980-01-01', 0, 1, 5, 0, '127.0.0.1', 'I love InstantCMS', '2010-11-13 23:09:34', 0, '2010-11-02 13:50:04'),
-(3, 1, 'fedor', 'Федор', '2ca41752ccf4dbdb76d8fe88c488fd44', 'fedor@cms.com', '100334564', '2010-10-20 17:33:42', '2010-11-13 23:22:26', '1979-10-20', 0, 1, 0, 0, '127.0.0.1', 'We are all made of stars (c) Moby', '2010-10-28 15:44:45', NULL, NULL);
+(1, 2, 'admin', 'Администратор', '2ca41752ccf4dbdb76d8fe88c488fd44', 'admin@cms.ru', '100200300', '2007-11-23 12:41:57', '2010-12-06 21:16:56', '1980-10-23', 0, 0, 32, 0, '127.0.0.1', 'Самый длинный статус из всех что существуют в этом прекрасном мире', '2010-10-21 02:06:53', 0, '2010-11-09 23:25:59');
 
 DROP TABLE IF EXISTS `#__users_activate`;
 CREATE TABLE `#__users_activate` (
@@ -1287,9 +1288,6 @@ CREATE TABLE `#__user_albums` (
   KEY `allow_who` (`allow_who`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__user_albums` (`id`, `user_id`, `title`, `pubdate`, `allow_who`) VALUES
-(2, 3, 'Мой фотоальбом', '2010-10-22 20:28:51', 'all'),
-(5, 1, 'Мои картинки', '2010-11-13 23:13:37', 'all');
 
 DROP TABLE IF EXISTS `#__user_autoawards`;
 CREATE TABLE `#__user_autoawards` (
@@ -1321,9 +1319,6 @@ CREATE TABLE `#__user_awards` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
-
-INSERT INTO `#__user_awards` (`id`, `user_id`, `pubdate`, `title`, `description`, `imageurl`, `from_id`, `award_id`) VALUES
-(1, 2, '2010-10-27 21:46:44', 'Медаль за заслуги', 'В благодарность от администрации', 'aw.gif', 1, 0);
 
 DROP TABLE IF EXISTS `#__user_clubs`;
 CREATE TABLE `#__user_clubs` (
@@ -1405,9 +1400,13 @@ CREATE TABLE `#__user_msg` (
   `senddate` datetime NOT NULL,
   `is_new` int(11) NOT NULL DEFAULT '1',
   `message` text NOT NULL,
+  `to_del` tinyint(4) NOT NULL DEFAULT '0',
+  `from_del` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `to_id` (`to_id`),
-  KEY `from_id` (`from_id`)
+  KEY `from_id` (`from_id`),
+  KEY `to_del` (`to_del`),
+  KEY `from_del` (`from_del`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__user_photos`;
@@ -1426,9 +1425,6 @@ CREATE TABLE `#__user_photos` (
   KEY `album_id` (`album_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__user_photos` (`id`, `user_id`, `album_id`, `pubdate`, `title`, `description`, `allow_who`, `hits`, `imageurl`) VALUES
-(6, 1, 5, '2010-11-13', 'Горный пейзаж', 'Красивый вид с большой высоты', 'all', 4, 'b22c5c0f95c1fb9398578fd5e396c7dd.jpg'),
-(7, 1, 5, '2010-11-13', 'Восход в космосе', 'Вид на нашу планету', 'all', 3, 'efe8d13779cd84cfeb319d9f0875a511.jpg');
 
 DROP TABLE IF EXISTS `#__user_profiles`;
 CREATE TABLE `#__user_profiles` (

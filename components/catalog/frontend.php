@@ -254,6 +254,9 @@ function catalog(){
     $inCore->loadModel('catalog');
     $model = new cms_model_catalog();
 
+    define('IS_BILLING', $inCore->isComponentInstalled('billing'));
+    if (IS_BILLING) { $inCore->loadClass('billing'); }
+
     $menutitle  = $inCore->menuTitle();
     if (!$menutitle) { $menutitle = $_LANG['CATALOG']; }
     $cfg        = $inCore->loadComponentConfig('catalog');
@@ -750,13 +753,14 @@ function catalog(){
             }
 			
 			
-            $user = $inDB->get_fields('cms_users', "id={$item['user_id']}", 'login, nickname');
-            $getProfileLink = cmsUser::getProfileLink($user['login'], $user['nickname']);
+                $user = $inDB->get_fields('cms_users', "id={$item['user_id']}", 'login, nickname');
+                $getProfileLink = cmsUser::getProfileLink($user['login'], $user['nickname']);
 
             if ($cat['is_ratings']){
 				$ratingForm = ratingForm($ratingdata, $item['id']);	
 
             }
+
 			
 			$smarty = $inCore->initSmarty('components', 'com_catalog_item.tpl');
 			$smarty->assign('shopCartLink', $shopCartLink);
@@ -844,7 +848,7 @@ function catalog(){
                 $inPage->addPathway($pcat['title'], '/catalog/'.$pcat['id']);
             }
         }
-		
+
 		$cats = $inCore->getListItems('cms_uc_cats', $cat_id, 'id', 'ASC', 'parent_id > 0 AND published = 1');
 
         if ($do == 'add_item'){
@@ -856,6 +860,9 @@ function catalog(){
 
             $item = array();
             $fdata = array();
+
+            if ($cat['cost']=='') { $cat['cost'] = false; }
+            cmsBilling::checkBalance('catalog', 'add_catalog_item', false, $cat['cost']);
 
         }
         
@@ -1022,6 +1029,12 @@ function catalog(){
         if ($opt=='add'){ 
 		
 				$item_id = $model->addItem($item);
+
+                if (IS_BILLING){
+                    if ($cat['cost']=='') { $cat['cost'] = false; }
+                    cmsBilling::process('catalog', 'add_catalog_item', $cat['cost']);
+                }
+
 				if (!$cfg['premod'] || $inUser->is_admin) {
 					//регистрируем событие
 					cmsActions::log('add_catalog', array(

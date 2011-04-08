@@ -282,9 +282,10 @@
                          );
 
         $routes[] = array(
-                            '_uri'  => '/^users\/([0-9]+)\/delmessages.html$/i',
+                            '_uri'  => '/^users\/([0-9]+)\/delmessages-(in|out).html$/i',
                             'do'    => 'delmessages',
-                            1       => 'id'
+                            1       => 'id',
+                            2       => 'opt'
                          );
 
         $routes[] = array(

@@ -30,6 +30,9 @@ function clubs(){
     $inCore->loadModel('clubs');
     $model = new cms_model_clubs();
 
+    define('IS_BILLING', $inCore->isComponentInstalled('billing'));
+    if (IS_BILLING) { $inCore->loadClass('billing'); }
+
 	$inPage->addHeadJS('components/clubs/js/clubs.js');
 
 	//LOAD CONFIG
@@ -92,7 +95,6 @@ if ($do=='view'){
 	$smarty->assign('clubs', $clubs);
 	$smarty->assign('total', $total);
 	$smarty->assign('pagination', $pagination);
-    $smarty->assign('messages', cmsCore::getSessionMessages());
 	$smarty->display('com_clubs_view.tpl');
 
 }
@@ -188,7 +190,6 @@ if ($do=='club'){
     $smarty->assign('is_moder', $is_moder);
     $smarty->assign('is_member', $is_member);
     $smarty->assign('is_karma_enabled', $is_karma_enabled);
-	$smarty->assign('messages', cmsCore::getSessionMessages());
 	$smarty->assign('pagetitle', $pagetitle);
 	$smarty->display('com_clubs_view_club.tpl');
 	
@@ -210,7 +211,6 @@ if ($do == 'create'){
         $inPage->setTitle($_LANG['CREATE_CLUB']);
         $smarty = $inCore->initSmarty('components', 'com_clubs_create.tpl');
         $smarty->assign('confirm', $confirm);
-		$smarty->assign('messages', cmsCore::getSessionMessages());
         $smarty->display('com_clubs_create.tpl');
     }
 
@@ -272,7 +272,7 @@ if ($do == 'config'){
     if ( $inCore->inRequest('save') ){
         //save to database
         $description 		= $inCore->request('description', 'html', '');
-		$description 		= $inCore->badTagClear($description);
+        $description 		= $inCore->badTagClear($description);
         $description 		= $inDB->escape_string($description);
         $admin_id 			= $club['admin_id'];
         $clubtype			= $inCore->request('clubtype', 'str', 'public');
@@ -331,6 +331,12 @@ if ($do == 'config'){
                                         'join_min_karma'=>$join_min_karma,
                                         'join_karma_limit'=>$join_karma_limit
                                     ));
+
+        if ($inUser->is_admin && IS_BILLING){
+            $is_vip    = $inCore->request('is_vip', 'int', 0);
+            $join_cost = $inCore->request('join_cost', 'int', 0);
+            $model->setVip($id, $is_vip, $join_cost);
+        }
 
         $moders  = $inCore->request('moderslist', 'array_int', array());
         $members = $inCore->request('memberslist', 'array_int', array());
@@ -403,6 +409,8 @@ if ($do == 'config'){
         $smarty->assign('members_list', $members_list);
         $smarty->assign('friends_list', $friends_list);
 		$smarty->assign('fr_members_list', $fr_members_list);
+		$smarty->assign('is_billing', IS_BILLING);
+		$smarty->assign('is_admin', $inUser->is_admin);
         $smarty->display('com_clubs_config.tpl');
 
     }
@@ -463,9 +471,34 @@ if ($do == 'join'){
 
     if (clubUserIsMember($id, $user_id)){ return; }
 
-    if ( $inCore->inRequest('confirm') ){        
+    //
+    // Обработка заявки
+    //
+    if ( $inCore->inRequest('confirm') ){
+
+        //списываем оплату если клуб платный
+        if (IS_BILLING && $club['is_vip'] && $club['join_cost'] && !$inUser->is_admin){
+            if ($inUser->balance >= $club['join_cost']){
+                //если средств на балансе хватает
+                cmsBilling::pay($user_id, $club['join_cost'], sprintf($_LANG['VIP_CLUB_BUY_JOIN'], $club['title']));
+            } else {
+                //недостаточно средств, создаем тикет
+                //и отправляем оплачивать
+                $billing_ticket = array(
+                    'action' => sprintf($_LANG['VIP_CLUB_BUY_JOIN'], $club['title']), 
+                    'cost'   => $club['join_cost'],
+                    'amount' => $club['join_cost'] - $inUser->balance,
+                    'url'    => $_SERVER['REQUEST_URI']
+                );
+                cmsUser::sessionPut('billing_ticket', $billing_ticket);
+                $inCore->redirect('/billing/pay');                
+            }
+        }
+
+        //добавляем пользователя в клуб
         clubAddUser($id, $user_id);
         setClubsRating($id);
+
 		//регистрируем событие
 		cmsActions::log('add_club_user', array(
 						'object' => $club['title'],
@@ -476,9 +509,14 @@ if ($do == 'join'){
 						'target_id' => 0, 
 						'description' => ''
 		));
+
         $inCore->redirect('/clubs/'.$id);
+        
     }
 
+    //
+    // Форма подтверждения заявки
+    //
     if ( !$inCore->inRequest('confirm') ) {
 
         $inPage->setTitle($_LANG['JOINING_CLUB']);
@@ -489,9 +527,12 @@ if ($do == 'join'){
         if(($user_karma >= $min_karma) || !$club['join_karma_limit']){
 
             $inPage->backButton(false);
-            $confirm['title'] = $_LANG['JOINING_CLUB'];
-            $confirm['text'] = $_LANG['YOU_REALY_JOIN_TO'].' <strong>'.$club['title'].'</strong>?';
-            $confirm['action'] = '';
+            $confirm['title']   = $_LANG['JOINING_CLUB'];
+            $confirm['text']    = $_LANG['YOU_REALY_JOIN_TO'].' <strong>'.$club['title'].'</strong>?';
+            if ($club['is_vip'] && $club['join_cost'] && !$inUser->is_admin){
+                $confirm['text'] .= '<br/>'.$_LANG['VIP_CLUB_JOIN_COST'].' &mdash; <strong>'.$club['join_cost'].' '.$_LANG['BILLING_POINT10'].'</strong>';
+            }
+            $confirm['action']  = '';
             $confirm['yes_button']['type'] = 'submit';
             $confirm['yes_button']['name'] = 'confirm';
 
@@ -531,7 +572,6 @@ if ($do == 'send_message'){
 		$smarty->assign('club', $club);
 		$smarty->assign('bbcodetoolbar', cmsPage::getBBCodeToolbar('message'));
 		$smarty->assign('smilestoolbar', cmsPage::getSmilesPanel('message'));
-		$smarty->assign('messages', cmsCore::getSessionMessages());
 		$smarty->display('com_clubs_messages_member.tpl');
 	} else {
 		$errors = false;

@@ -25,6 +25,13 @@
         // Вход / Выход
         //
 
+
+        $rules[] = array(
+                            'source'  => '/^admin$/i',
+                            'target'  => '/admin/index.php',
+                            'action'  => 'redirect'
+                         );
+
         $rules[] = array(
                             'source'  => '/^login$/i',
                             'target'  => 'registration/login',
@@ -40,6 +47,18 @@
         $rules[] = array(
                             'source'  => '/^auth\/error.html$/i',
                             'target'  => 'registration/autherror',
+                            'action'  => 'rewrite'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^go\/url=(.+)$/i',
+                            'target'  => 'files/go/{1}',
+                            'action'  => 'rewrite'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^load\/url=(.+)$/i',
+                            'target'  => 'files/load/{1}',
                             'action'  => 'rewrite'
                          );
 
@@ -97,6 +116,12 @@
                             'action'  => 'rewrite'
                          );
 
+        $rules[] = array(
+                            'source'  => '/^r([0-9]+)$/i',
+                            'target'  => 'billing/ref_link/{1}',
+                            'action'  => 'rewrite'
+                         );
+        
         //
         // Баннеры
         //

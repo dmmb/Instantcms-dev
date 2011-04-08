@@ -254,7 +254,6 @@ if ($do=='view'){
 	$smarty->assign('subcats', $subcats);
 	$smarty->assign('cons', $cons);
 	$smarty->assign('is_poto_yes', $is_poto_yes);
-	$smarty->assign('messages', cmsCore::getSessionMessages());	
 	$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/photos/%catid%-%page%', array('catid'=>$id)));
 	$smarty->assign('is_subcats', $is_subcats);
 	$smarty->assign('maxcols', $maxcols);

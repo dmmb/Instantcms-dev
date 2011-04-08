@@ -284,9 +284,6 @@ class cmsFormGen {
             if ($inDB->num_rows($result)){
                 while($option = $inDB->fetch_assoc($result)){
                     $option['title'] = iconv('cp1251', 'utf-8', $option['title']);
-                    if ($option['level'] >= 1){
-                        $option['title'] = str_repeat('--', $option['level']-1) . ' ' . $option['title'];
-                    }
                     
                     $html .= '<tr>' . "\n" .
                                 "\t" . '<td><input type="checkbox" id="'.$name.'_'.$option['value'].'" name="'.$name.'['.$option['value'].']" value="'.$option['value'].'" '.(in_array($option['value'], $values) ? 'checked="checked"' : '').' />' . "\n" .

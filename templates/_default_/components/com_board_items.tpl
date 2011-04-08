@@ -3,20 +3,13 @@
 {* ================================================================================ *}
 
 <div class="board_gallery">
-{if $messages}
-    <div class="sess_messages">
-        {foreach key=id item=message from=$messages}
-            {$message}
-        {/foreach}
-    </div>
-{/if}
 	{if $is_items}
 		<table width="100%" cellpadding="0" cellspacing="0" border="0">
 			{assign var="col" value="1"}	
 			{foreach key=tid item=con from=$items}									
 				{if $col==1} <tr> {/if} 				
 				<td valign="top" width="{$colwidth}%">
-                    <div class="bd_item">
+                    <div class="bd_item{if $con.is_vip}_vip{/if}">
 					<table width="100%" height="" cellspacing="" cellpadding="0">
 						<tr>
 							{if $cfg.photos}

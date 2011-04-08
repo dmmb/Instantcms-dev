@@ -9,7 +9,6 @@
 /*********************************************************************************************/
 
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
-    define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
     
 	session_start();
 
@@ -18,6 +17,8 @@
 	// Грузим конфиг
 	include(PATH.'/includes/config.inc.php');
     $inCore     = cmsCore::getInstance();
+
+    define('HOST', 'http://' . $inCore->getHost());
 
     $inCore->loadClass('config');           //конфигурация
     $inCore->loadClass('db');               //база данных

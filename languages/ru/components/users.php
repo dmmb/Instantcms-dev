@@ -273,7 +273,7 @@ $_LANG['SEND_MESS_ALL_OK']          ='Сообщение отправлено всем пользователям';
 $_LANG['SEND_MESS_GROUP_OK']        ='Сообщение отправлено группе &laquo;%s&raquo;';
 $_LANG['MESS_DEL_OK']               ='Сообщение удалено';
 $_LANG['MESS_BACK_OK']              ='Сообщение отозвано';
-$_LANG['MESS_ALL_DEL_OK']           ='Все входящие сообщения удалены';
+$_LANG['MESS_ALL_DEL_OK']           ='Все сообщения в папке удалены';
 
 $_LANG['WRITE_MESS']                ='Написать сообщение';
 $_LANG['STOP_FRIENDLY']             ='Прекратить дружбу';

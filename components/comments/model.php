@@ -27,16 +27,36 @@ class cms_model_comments{
 		
 		$item['target_title'] =  $this->inDB->escape_string($item['target_title']);
 		
-        $sql = "INSERT INTO cms_comments (parent_id, user_id, target, target_id, guestname, content, pubdate, published, target_title, target_link, ip)
+        $sql = "INSERT INTO cms_comments (parent_id, user_id, target, target_id, 
+                                          guestname, content, content_bbcode, pubdate,
+                                          published,  target_title, target_link,
+                                          ip)
                 VALUES ({$item['parent_id']}, {$item['user_id']}, '{$item['target']}', {$item['target_id']},
-                        '{$item['guestname']}', '{$item['content']}', NOW(), {$item['published']},
-                        '{$item['target_title']}', '{$item['target_link']}', '{$item['ip']}')";
+                        '{$item['guestname']}', '{$item['content']}', '{$item['content_bbcode']}', NOW(),
+                        {$item['published']}, '{$item['target_title']}', '{$item['target_link']}',
+                        '{$item['ip']}')";
 
         $this->inDB->query($sql);
 
         $comment_id = $this->inDB->get_last_id('cms_comments');
 
         return $comment_id;
+
+    }
+
+    public function updateComment($id, $comment) {
+
+        if (!$id) { return false; }
+
+        $sql = "UPDATE cms_comments
+                   SET content = '{$comment['content']}',
+                       content_bbcode = '{$comment['content_bbcode']}'
+                 WHERE id = '{$id}'
+                 LIMIT 1";
+
+       $this->inDB->query($sql);
+
+       return true;
 
     }
 
@@ -147,7 +167,7 @@ class cms_model_comments{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function getComments($target, $target_id){
+    public function getComments($target, $target_id, $cfg){
 
         $comments = array();
 
@@ -156,7 +176,8 @@ class cms_model_comments{
 					   IFNULL(u.nickname, 0) as nickname,
 					   IFNULL(u.login, 0) as login,
 					   IFNULL(u.is_deleted, 0) as is_deleted,
-					   IFNULL(p.imageurl, 0) as imageurl
+					   IFNULL(p.imageurl, 0) as imageurl,
+                       (NOW() < DATE_ADD(c.pubdate, INTERVAL {$cfg['edit_minutes']} MINUTE)) as is_editable
                 FROM cms_comments c
                 LEFT JOIN cms_ratings_total v ON v.item_id = c.id AND v.target = 'comment'
 				LEFT JOIN cms_users u ON u.id = c.user_id
@@ -178,6 +199,37 @@ class cms_model_comments{
         return $comments;
 
     }
+
+    public function getComment($id, $cfg) {
+
+        $comment = array();
+
+        $sql = "SELECT c.*,
+                       IFNULL(v.total_rating, 0) as votes,
+					   IFNULL(u.nickname, 0) as nickname,
+					   IFNULL(u.login, 0) as login,
+					   IFNULL(u.is_deleted, 0) as is_deleted,
+					   IFNULL(p.imageurl, 0) as imageurl,
+                       (NOW() < DATE_ADD(c.pubdate, INTERVAL {$cfg['edit_minutes']} MINUTE)) as is_editable
+                FROM cms_comments c
+                LEFT JOIN cms_ratings_total v ON v.item_id = c.id AND v.target = 'comment'
+				LEFT JOIN cms_users u ON u.id = c.user_id
+				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+                WHERE c.id='{$id}' AND c.published=1
+                LIMIT 1";
+
+        $result = $this->inDB->query($sql);
+
+        if (!$this->inDB->num_rows($result)) { return false; }
+
+        $comment = $this->inDB->fetch_assoc($result);
+
+        $comments = cmsCore::callEvent('GET_COMMENT', $comment);
+
+        return $comment;
+
+    }
+    
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 

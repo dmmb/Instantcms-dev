@@ -3,13 +3,6 @@
 {* ================================================================================ *}
 
 <div class="con_heading">{$LANG.CREATE_CLUB}</div>
-{if $messages}
-    <div class="sess_messages">
-        {foreach key=id item=message from=$messages}
-            {$message}
-        {/foreach}
-    </div>
-{/if}
 <p>
 	<strong>{$LANG.CLUBS}</strong> {$LANG.CLUBS_DESC}
 </p>

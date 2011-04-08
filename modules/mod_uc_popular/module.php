@@ -64,7 +64,8 @@ function mod_uc_popular($module_id){
 		$items = array();
 		$is_uc = false;
 		
-		if ($inDB->num_rows($result)){	
+		if ($inDB->num_rows($result)){
+            $inCore->includeFile('components/catalog/includes/shopcore.php');
 			$is_uc = true;
 			if ($cfg['showtype']=='thumb'){
 					while($item = $inDB->fetch_assoc($result)){
@@ -74,7 +75,7 @@ function mod_uc_popular($module_id){
 							$item['imageurl'] = 'nopic';
 									}
 								if ($item['viewtype']=='shop'){
-							$item['price'] = number_format($item['price'], 2, '.', ' ');
+							$item['price'] = number_format(shopDiscountPrice($item['id'], $item['category_id'], $item['price']), 2, '.', ' ');
 								}			
 						$items[] = 	$item;												
 					}
@@ -98,7 +99,7 @@ function mod_uc_popular($module_id){
 			
 							$item['fdate'] = $inCore->dateFormat($item['fdate']);
 							if ($item['viewtype']=='shop'){
-								$item['price'] = number_format($item['price'], 2, '.', ' ');
+								$item['price'] = number_format(shopDiscountPrice($item['id'], $item['category_id'], $item['price']), 2, '.', ' ');
 							}			
 							$items[] = 	$item;	
 					}				

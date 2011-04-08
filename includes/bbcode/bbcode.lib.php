@@ -920,8 +920,8 @@ class bbcode {
                 "'([^\w\d-\.])([\w\d-\.]+@[\w\d-\.]+\.[\w]+[^.,;\s<\"\'\)]+)'si"
             );
         $replace = array(
-                '$1<a href="$2" target="_blank">$2</a>',
-                '$1<a href="http://$2" target="_blank">$2</a>',
+                '$1<a href="/go/url=$2" target="_blank">$2</a>',
+                '$1<a href="/go/url=http://$2" target="_blank">$2</a>',
                 '$1<a href="mailto:$2">$2</a>'
             );
         $text = preg_replace($search, $replace, $text);
@@ -970,34 +970,51 @@ class bbcode {
     }
     // Функция - обработчик тега [b]
     function b_2html($elem) {
-        return '<b>'.$this -> get_html($elem['val']).'</b>';
+        return '<strong>'.$this -> get_html($elem['val']).'</strong>';
     }
     // Функция - обработчик тега [code]
     function code_2html($elem) {
+
         $lang = $elem['attrib']['code'];
         if(!$lang){ $lang = 'php'; }
-        $str = '<div class="bb_tag_code">';
-		$str .= '<b>Код '.strtoupper($lang).':</b><br/>';
-		$str .= '<pre class="brush: '.strtolower($lang).';">';
+
+        $str  = '<div class="bb_tag_code">';
+        $str .= '<strong>Код '.strtoupper($lang).':</strong><br/>';
+        $str .= '<pre>';
+
+        $inCore = cmsCore::getInstance();
+        $inCore->includeFile('includes/geshi/geshi.php');
+
         foreach ($elem['val'] as $item) {
             if ('item'==$item['type']) { continue; }
             $item['str'] = str_replace('&#8217;', "'", $item['str']);
             $item['str'] = str_replace('’', "'", $item['str']);
-            $str .= htmlspecialchars($item['str']);
         }
+
+        $geshi = new GeSHi($item['str'], $lang);
+        $geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
+
+        $str .= $geshi->parse_code();
+
         $str .= '</pre></div>';
-        $str .= '<script type="text/javascript">
-                    SyntaxHighlighter.config.clipboardSwf = \'/includes/jquery/syntax/scripts/clipboard.swf\';
-                    SyntaxHighlighter.all();
-                 </script>';
+
         return $str;
+        
     }
     // Функция - обработчик тега [video]
     function video_2html($elem) {
         $str = '<div class="bb_tag_video">';
         foreach ($elem['val'] as $item) {
+            
             if ('item'==$item['type']) { continue; }
-            $str .= strip_tags($item['str'], '<object><param><embed>');
+
+            $iframe_regexp      = '/<iframe.*?src=(?!"http:\/\/www\.youtube\.com\/embed\/|"http:\/\/vkontakte\.ru\/video_ext\.php\?).*?><\/iframe>/i';
+            $iframe_regexp2     = '/<iframe.*>.+<\/iframe>/i';
+            $item['str']        = preg_replace($iframe_regexp, '', $item['str']);
+            $item['str']        = preg_replace($iframe_regexp2, '', $item['str']);
+
+            $str .= strip_tags($item['str'], '<iframe><object><param><embed>');
+
         }
         $str .= '</div>';
         return $str;
@@ -1167,8 +1184,8 @@ class bbcode {
             }
         }
         $protocols = array(
-                'http://','https://','ftp://','file://','#','/','?','./','../'
-            );
+            'http://','https://','ftp://','file://','#','/','?','./','../'
+        );
         $is_http = false;
         foreach ($protocols as $val) {
             if ($val==substr($href,0,strlen($val))) {
@@ -1178,15 +1195,13 @@ class bbcode {
         }
         if (! $is_http) { $href = 'http://'.$href; }
         if ($href) {
-            if (preg_match('/^http:\/\/'.$_SERVER['HTTP_HOST'].'/', $href)){
+            if (preg_match('/^http:\/\/'.$_SERVER['HTTP_HOST'].'/', $href) || substr($href,0,1)=='/'){
                 $url = $href;
                 $local = true;
-            } elseif (!strstr($href, '?')) {
+            } else {
                 $url = '/go/url='.htmlspecialchars($href);
                 $local = false;
-            } else {
-				$url = $href;
-			}
+            }
             $attr .= ' href="'.$url.'"';
         }
         $title = isset($elem['attrib']['title']) ? $elem['attrib']['title'] : '';

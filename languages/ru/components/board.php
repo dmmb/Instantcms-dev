@@ -85,4 +85,8 @@ $_LANG['ORDERBY_AVTOR']           ='ѕо автору';
 $_LANG['ORDERBY_DESC']            ='по убыванию';
 $_LANG['ORDERBY_ASC']             ='по возрастанию';
 $_LANG['FILTER']                  ='‘ильтр';
+$_LANG['MARK_AS_VIP']             ='—делать VIP';
+$_LANG['VIP_STATUS']              ='VIP-статус';
+$_LANG['VIP_BUY_LOG']             ='VIP-объ€вление';
+$_LANG['VIP_ITEM']                ='VIP-объ€вление';
 ?>

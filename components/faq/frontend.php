@@ -21,12 +21,16 @@ function faq(){
     $inCore->loadModel('faq');
     $model = new cms_model_faq();
 
+    define('IS_BILLING', $inCore->isComponentInstalled('billing'));
+    if (IS_BILLING) { $inCore->loadClass('billing'); }
+
 	global $_LANG;
 	
 	$cfg = $inCore->loadComponentConfig('faq');
 	// Проверяем включени ли компонент
 	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
+    if(!isset($cfg['guest_enabled'])) { $cfg['guest_enabled'] = 1; }
     if(!isset($cfg['user_link'])) { $cfg['user_link'] = 1; }
     if(!isset($cfg['publish'])) { $cfg['publish'] = 0; }
 	if(!isset($cfg['is_comment'])) { $cfg['is_comment'] = 1; }
@@ -124,7 +128,8 @@ if ($do=='view'){
 	$smarty->assign('is_subcats', $is_subcats);	
 	$smarty->assign('quests', $quests);
 	$smarty->assign('cfg', $cfg);
-	$smarty->assign('is_quests', $is_quests);	
+	$smarty->assign('is_quests', $is_quests);
+	$smarty->assign('is_user', $inUser->id);
 	$smarty->assign('pagebar', cmsPage::getPagebar($records, $page, $perpage, '/faq/%id%-%page%', array('id'=>$id)));		
 	$smarty->display('com_faq_view.tpl');		
 				
@@ -171,6 +176,8 @@ if ($do=='read'){
 ///////////////////////////////////// SEND QUEST ////////////////////////////////////////////////////////////////////////////////
 if ($do=='sendquest'){
 
+    if (!$inUser->id && !$cfg['guest_enabled']){ cmsCore::error404(); }
+
 	$inPage->setTitle($_LANG['ASK_QUES']);
 	$inPage->addPathway($_LANG['ASK_QUES']);
 	
@@ -187,6 +194,9 @@ if ($do=='sendquest'){
     if ($is_submit && !$inUser->id && !$inCore->checkCaptchaCode($inCore->request('code', 'str'))) { $error = $_LANG['ERR_CAPTCHA']; }
 
 	if (!$is_submit || $error){
+
+        if (IS_BILLING && $inUser->id){ cmsBilling::checkBalance('faq', 'add_quest'); }
+
 		//FORM								
 		$smarty = $inCore->initSmarty('components', 'com_faq_add.tpl');			
 		$smarty->assign('catslist', $inCore->getListItems('cms_faq_cats', $category_id));
@@ -194,6 +204,7 @@ if ($do=='sendquest'){
 		$smarty->assign('message', $_REQUEST['message']);
 		$smarty->assign('error', $error);
 		$smarty->display('com_faq_add.tpl');
+
 	} else {
 		
         //SAVE QUESTION
@@ -202,7 +213,9 @@ if ($do=='sendquest'){
 		$inDB->query($sql);
 		
 		$quest_id = $inDB->get_last_id('cms_faq_quests');
-		
+
+        if (IS_BILLING && $inUser->id){ cmsBilling::process('faq', 'add_quest'); }
+
 		$inPage->setTitle($_LANG['QUESTION_SEND']);
 		$inPage->addPathway($_LANG['QUESTION_SEND'], $_SERVER['REQUEST_URI']);
 		$inPage->backButton(false);

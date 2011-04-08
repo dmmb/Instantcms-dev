@@ -1,13 +1,7 @@
 {* ================================================================================ *}
 {* ======================== Написать сообщение ==================================== *}
 {* ================================================================================ *}
-{if $messages}
-    <div class="sess_messages">
-        {foreach key=id item=message from=$messages}
-            {$message}
-        {/foreach}
-    </div>
-{/if}
+
 {if $is_reply_user}
 <div>
   <div class="con_heading">{$LANG.ORIGINAL_MESS}</div>

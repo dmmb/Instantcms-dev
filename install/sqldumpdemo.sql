@@ -245,6 +245,8 @@ CREATE TABLE `#__board_items` (
   `published` int(11) NOT NULL,
   `file` varchar(250) NOT NULL,
   `hits` int(11) NOT NULL,
+  `is_vip` tinyint(4) NOT NULL DEFAULT '0',
+  `vipdate` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   KEY `user_id` (`user_id`),
@@ -253,10 +255,10 @@ CREATE TABLE `#__board_items` (
   FULLTEXT KEY `content` (`content`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__board_items` (`id`, `category_id`, `user_id`, `obtype`, `title`, `content`, `city`, `pubdate`, `pubdays`, `published`, `file`, `hits`) VALUES
-(4, 10, 1, 'Предлагаю', 'Предлагаю свои услуги', 'Могу выносить мусор и мыть пол.', 'Москва', '2009-10-26 14:11:18', 10, 1, '550de8a5de9b5301133a815de31be00d.jpg', 7),
-(5, 9, 1, 'Обменяю', 'Обменяю ВАЗ-2107 на Nissan Skyline GTR', 'Желательно новый и без доплаты.', 'Москва', '2009-10-26 14:14:24', 10, 1, '931f90c50adcea1ff18177bc22d4ceac.jpg', 34),
-(6, 8, 2, 'Сдам', 'Сдам 2-х комнатную квартиру', 'Семье из 2-3 человек', 'Москва', '2010-10-28 15:57:22', 10, 1, '80204e6bad519060bca9d456949158dc.jpg', 2);
+INSERT INTO `#__board_items` (`id`, `category_id`, `user_id`, `obtype`, `title`, `content`, `city`, `pubdate`, `pubdays`, `published`, `file`, `hits`, `is_vip`, `vipdate`) VALUES
+(4, 10, 1, 'Предлагаю', 'Предлагаю свои услуги', 'Могу выносить мусор и мыть пол.', 'Москва', '2009-10-26 14:11:18', 10, 1, '550de8a5de9b5301133a815de31be00d.jpg', 7, 0, '0000-00-00 00:00:00'),
+(5, 9, 1, 'Обменяю', 'Обменяю ВАЗ-2107 на Nissan Skyline GTR', 'Желательно новый и без доплаты.', 'Москва', '2009-10-26 14:14:24', 10, 1, '931f90c50adcea1ff18177bc22d4ceac.jpg', 34, 0, '0000-00-00 00:00:00'),
+(6, 8, 2, 'Сдам', 'Сдам 2-х комнатную квартиру', 'Семье из 2-3 человек', 'Москва', '2010-10-28 15:57:22', 10, 1, '80204e6bad519060bca9d456949158dc.jpg', 2, 0, '0000-00-00 00:00:00');
 
 DROP TABLE IF EXISTS `#__cache`;
 CREATE TABLE `#__cache` (
@@ -295,19 +297,20 @@ CREATE TABLE `#__category` (
   `seolink` varchar(200) NOT NULL,
   `url` varchar(100) NOT NULL,
   `tpl` varchar(50) NOT NULL DEFAULT 'com_content_view.tpl',
+  `cost` varchar(5) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `parent_id` (`parent_id`),
-  UNIQUE KEY `seolink` (`seolink`)
+  UNIQUE KEY `seolink` (`seolink`),
+  KEY `parent_id` (`parent_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__category` (`id`, `parent_id`, `title`, `description`, `published`, `showdate`, `showcomm`, `orderby`, `orderto`, `modgrp_id`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `ordering`, `maxcols`, `showtags`, `showrss`, `showdesc`, `is_public`, `photoalbum`, `seolink`, `url`, `tpl`) VALUES
-(1, 0, '--Корневой раздел--', 'Корневой раздел сайта', 1, 1, 1, 'pubdate', 'asc', 0, 1, 14, 0, '', 0, 1, 1, 1, 1, 0, 0, '', '--kornevoi-razdel--', '', 'com_content_view.tpl'),
-(2, 1, 'Новости', '', 1, 1, 1, 'pubdate', 'ASC', 0, 12, 13, 1, '', 0, 2, 1, 1, 0, 0, 0, 'a:7:{s:2:"id";i:0;s:6:"titles";i:0;s:6:"header";s:0:"";s:7:"orderby";s:5:"title";s:7:"orderto";s:4:"desc";s:7:"maxcols";i:2;s:3:"max";i:8;}', 'novosti', '', 'com_content_view.tpl'),
-(6, 1, 'Статьи', '<p>Тексты статей предоставлены службой <a href="http://referats.yandex.ru/">Яндекс.Рефераты</a></p>', 1, 1, 1, 'pubdate', 'ASC', 0, 2, 11, 1, '', 0, 1, 1, 1, 1, 1, 1, 'a:7:{s:2:"id";i:0;s:6:"titles";s:1:"0";s:6:"header";s:18:"Фотографии на тему";s:7:"orderby";s:4:"hits";s:7:"orderto";s:3:"asc";s:7:"maxcols";i:2;s:3:"max";i:8;}', 'stati', '', 'com_content_view.tpl'),
-(13, 6, 'Маркетинг', '<p>Статьи по маркетингу</p>', 1, 1, 1, 'pubdate', 'DESC', 0, 7, 8, 2, '', 0, 3, 1, 1, 1, 1, 0, 'a:7:{s:2:"id";i:0;s:6:"titles";s:1:"0";s:6:"header";s:18:"Фотографии на тему";s:7:"orderby";s:7:"pubdate";s:7:"orderto";s:4:"desc";s:7:"maxcols";i:2;s:3:"max";i:8;}', 'stati/marketing', '', 'com_content_view.tpl'),
-(12, 6, 'Геология', 'Статьи по геологии', 1, 1, 1, 'pubdate', 'DESC', 0, 3, 4, 2, '', 0, 1, 1, 1, 1, 1, 0, 'a:7:{s:2:"id";s:1:"0";s:6:"titles";s:1:"0";s:6:"header";s:18:"Фотографии на тему";s:7:"orderby";s:7:"pubdate";s:7:"orderto";s:4:"desc";s:7:"maxcols";s:1:"2";s:3:"max";s:1:"8";}', 'stati/geologija', '', 'com_content_view.tpl'),
-(11, 6, 'Астрономия', '<p>Статьи по астрономии</p>', 1, 1, 1, 'pubdate', 'DESC', 0, 9, 10, 2, '', 0, 4, 1, 1, 1, 1, 1, 'a:7:{s:2:"id";i:0;s:6:"titles";i:0;s:6:"header";s:18:"Фотографии на тему";s:7:"orderby";s:7:"pubdate";s:7:"orderto";s:4:"desc";s:7:"maxcols";i:2;s:3:"max";i:8;}', 'stati/astronomija', '', 'com_content_view.tpl'),
-(14, 6, 'Психология', 'Статьи по психологии', 1, 1, 1, 'pubdate', 'DESC', 0, 5, 6, 2, '', 0, 2, 1, 1, 1, 1, 0, 'a:7:{s:2:"id";s:1:"0";s:6:"titles";s:1:"0";s:6:"header";s:18:"Фотографии на тему";s:7:"orderby";s:7:"pubdate";s:7:"orderto";s:4:"desc";s:7:"maxcols";s:1:"2";s:3:"max";s:1:"8";}', 'stati/psihologija', '', 'com_content_view.tpl');
+INSERT INTO `#__category` (`id`, `parent_id`, `title`, `description`, `published`, `showdate`, `showcomm`, `orderby`, `orderto`, `modgrp_id`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `ordering`, `maxcols`, `showtags`, `showrss`, `showdesc`, `is_public`, `photoalbum`, `seolink`, `url`, `tpl`, `cost`) VALUES
+(1, 0, '--Корневой раздел--', 'Корневой раздел сайта', 1, 1, 1, 'pubdate', 'asc', 0, 1, 14, 0, '', 0, 1, 1, 1, 1, 0, 0, '', '--kornevoi-razdel--', '', 'com_content_view.tpl', ''),
+(2, 1, 'Новости', '', 1, 1, 1, 'pubdate', 'ASC', 0, 12, 13, 1, '', 0, 2, 1, 1, 0, 0, 0, 'a:7:{s:2:"id";i:0;s:6:"titles";i:0;s:6:"header";s:0:"";s:7:"orderby";s:5:"title";s:7:"orderto";s:4:"desc";s:7:"maxcols";i:2;s:3:"max";i:8;}', 'novosti', '', 'com_content_view.tpl', ''),
+(6, 1, 'Статьи', '<p>Тексты статей предоставлены службой <a href="http://referats.yandex.ru/">Яндекс.Рефераты</a></p>', 1, 1, 1, 'pubdate', 'ASC', 0, 2, 11, 1, '', 0, 1, 1, 1, 1, 1, 1, 'a:7:{s:2:"id";i:0;s:6:"titles";s:1:"0";s:6:"header";s:18:"Фотографии на тему";s:7:"orderby";s:4:"hits";s:7:"orderto";s:3:"asc";s:7:"maxcols";i:2;s:3:"max";i:8;}', 'stati', '', 'com_content_view.tpl', ''),
+(13, 6, 'Маркетинг', '<p>Статьи по маркетингу</p>', 1, 1, 1, 'pubdate', 'DESC', 0, 7, 8, 2, '', 0, 3, 1, 1, 1, 1, 0, 'a:7:{s:2:"id";i:0;s:6:"titles";s:1:"0";s:6:"header";s:18:"Фотографии на тему";s:7:"orderby";s:7:"pubdate";s:7:"orderto";s:4:"desc";s:7:"maxcols";i:2;s:3:"max";i:8;}', 'stati/marketing', '', 'com_content_view.tpl', ''),
+(12, 6, 'Геология', 'Статьи по геологии', 1, 1, 1, 'pubdate', 'DESC', 0, 3, 4, 2, '', 0, 1, 1, 1, 1, 1, 0, 'a:7:{s:2:"id";s:1:"0";s:6:"titles";s:1:"0";s:6:"header";s:18:"Фотографии на тему";s:7:"orderby";s:7:"pubdate";s:7:"orderto";s:4:"desc";s:7:"maxcols";s:1:"2";s:3:"max";s:1:"8";}', 'stati/geologija', '', 'com_content_view.tpl', ''),
+(11, 6, 'Астрономия', '<p>Статьи по астрономии</p>', 1, 1, 1, 'pubdate', 'DESC', 0, 9, 10, 2, '', 0, 4, 1, 1, 1, 1, 1, 'a:7:{s:2:"id";i:0;s:6:"titles";i:0;s:6:"header";s:18:"Фотографии на тему";s:7:"orderby";s:7:"pubdate";s:7:"orderto";s:4:"desc";s:7:"maxcols";i:2;s:3:"max";i:8;}', 'stati/astronomija', '', 'com_content_view.tpl', ''),
+(14, 6, 'Психология', 'Статьи по психологии', 1, 1, 1, 'pubdate', 'DESC', 0, 5, 6, 2, '', 0, 2, 1, 1, 1, 1, 0, 'a:7:{s:2:"id";s:1:"0";s:6:"titles";s:1:"0";s:6:"header";s:18:"Фотографии на тему";s:7:"orderby";s:7:"pubdate";s:7:"orderto";s:4:"desc";s:7:"maxcols";s:1:"2";s:3:"max";s:1:"8";}', 'stati/psihologija', '', 'com_content_view.tpl', '');
 
 DROP TABLE IF EXISTS `#__clubs`;
 CREATE TABLE `#__clubs` (
@@ -330,13 +333,16 @@ CREATE TABLE `#__clubs` (
   `album_min_karma` int(11) NOT NULL DEFAULT '25',
   `join_min_karma` int(11) NOT NULL,
   `join_karma_limit` int(11) NOT NULL,
+  `create_karma` int(11) NOT NULL,
+  `is_vip` tinyint(4) NOT NULL DEFAULT '0',
+  `join_cost` float NOT NULL,
   PRIMARY KEY (`id`),
   KEY `pubdate` (`pubdate`),
   KEY `admin_id` (`admin_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__clubs` (`id`, `admin_id`, `title`, `description`, `imageurl`, `pubdate`, `clubtype`, `published`, `maxsize`, `enabled_blogs`, `enabled_photos`, `rating`, `photo_premod`, `blog_premod`, `blog_min_karma`, `photo_min_karma`, `album_min_karma`, `join_min_karma`, `join_karma_limit`) VALUES
-(14, 1, 'Клуб любителей InstantCMS', '', '', '2010-10-12 14:41:45', 'public', 1, 0, 1, 1, 0, 0, 0, 0, 0, 25, 0, 0);
+INSERT INTO `#__clubs` (`id`, `admin_id`, `title`, `description`, `imageurl`, `pubdate`, `clubtype`, `published`, `maxsize`, `enabled_blogs`, `enabled_photos`, `rating`, `photo_premod`, `blog_premod`, `blog_min_karma`, `photo_min_karma`, `album_min_karma`, `join_min_karma`, `join_karma_limit`, `create_karma`, `is_vip`, `join_cost`) VALUES
+(14, 1, 'Клуб любителей InstantCMS', '', '', '2010-10-12 14:41:45', 'public', 1, 0, 1, 1, 0, 0, 0, 0, 0, 25, 0, 0, 0, 0, 0);
 
 DROP TABLE IF EXISTS `#__codecheck`;
 CREATE TABLE `#__codecheck` (
@@ -357,6 +363,7 @@ CREATE TABLE `#__comments` (
   `target_id` int(11) NOT NULL,
   `guestname` varchar(200) NOT NULL,
   `content` text NOT NULL,
+  `content_bbcode` text NOT NULL,
   `pubdate` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `published` int(11) NOT NULL DEFAULT '1',
   `is_new` int(11) NOT NULL DEFAULT '1',
@@ -368,10 +375,10 @@ CREATE TABLE `#__comments` (
   KEY `target_id` (`target_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__comments` (`id`, `parent_id`, `pid`, `user_id`, `target`, `target_id`, `guestname`, `content`, `pubdate`, `published`, `is_new`, `target_title`, `target_link`, `ip`) VALUES
-(8, 0, 0, 1, 'article', 32, '', 'Питание прогиба исходным материалом, несмотря на не менее значительную разницу в плотности теплового потока, составляет биотит, так как совершенно однозначно указывает на существование', '2010-10-13 23:45:56', 1, 1, 'Почему нерезко плато?!!!', '/content/stati/geologija/pochemu-nerezko-plato.html', ''),
-(13, 0, 0, 2, 'article', 34, '', 'Спасибо автору за такую отличную статью!', '2010-11-13 23:11:00', 1, 1, 'Эластичность спроса', '/stati/marketing/yelastichnost-sprosa.html', '127.0.0.1'),
-(14, 13, 0, 3, 'article', 34, '', 'Полностью согласен с Вами, коллега.', '2010-11-13 23:19:19', 1, 1, 'Эластичность спроса', '/stati/marketing/yelastichnost-sprosa.html', '127.0.0.1');
+INSERT INTO `#__comments` (`id`, `parent_id`, `pid`, `user_id`, `target`, `target_id`, `guestname`, `content`, `content_bbcode`, `pubdate`, `published`, `is_new`, `target_title`, `target_link`, `ip`) VALUES
+(8, 0, 0, 1, 'article', 32, '', 'Питание прогиба исходным материалом, несмотря на не менее значительную разницу в плотности теплового потока, составляет биотит, так как совершенно однозначно указывает на существование', '', '2010-10-13 23:45:56', 1, 1, 'Почему нерезко плато?!!!', '/content/stati/geologija/pochemu-nerezko-plato.html', ''),
+(13, 0, 0, 2, 'article', 34, '', 'Спасибо автору за такую отличную статью!', '', '2010-11-13 23:11:00', 1, 1, 'Эластичность спроса', '/stati/marketing/yelastichnost-sprosa.html', '127.0.0.1'),
+(14, 13, 0, 3, 'article', 34, '', 'Полностью согласен с Вами, коллега.', '', '2010-11-13 23:19:19', 1, 1, 'Эластичность спроса', '/stati/marketing/yelastichnost-sprosa.html', '127.0.0.1');
 
 DROP TABLE IF EXISTS `#__comments_votes`;
 CREATE TABLE `#__comments_votes` (
@@ -465,9 +472,9 @@ CREATE TABLE `#__content` (
   `url` varchar(100) NOT NULL,
   `tpl` varchar(50) NOT NULL DEFAULT 'com_content_read.tpl',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `seolink` (`seolink`),
   KEY `category_id` (`category_id`),
   KEY `user_id` (`user_id`),
-  UNIQUE KEY `seolink` (`seolink`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `content` (`content`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
@@ -512,13 +519,13 @@ CREATE TABLE `#__cron_jobs` (
   KEY `job_name` (`job_name`,`is_enabled`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__cron_jobs` (`id`, `job_name`, `job_interval`, `component`, `model_method`, `custom_file`, `is_enabled`, `is_new`, `comment`, `class_name`, `class_method`) VALUES
-(1, 'photos_clear', 24, 'users', 'clearUploadedPhotos', '', 1, 1, 'Удаление неиспользуемых личных фотографий', '', ''),
-(2, 'optimize_tables', 24, '', '', '', 1, 1, 'Оптимизация таблиц БД', 'db|cmsDatabase', 'optimizeTables'),
-(3, 'drop_inactive_users', 48, 'users', 'deleteInactiveUsers', '', 1, 1, 'Удаление неактивных пользователей (см. настройки компонента "Профили пользователей")', '', ''),
-(4, 'remove_old_log', 48, '', '', '', 1, 1, 'Удаляет старые записи ленты событий', 'actions|cmsActions', 'removeOldLog'),
-(5, 'give_invites', 24, 'users', 'giveInvitesCron', '', 1, 1, 'Выдача инвайтов пользователям', '', ''),
-(6, 'clear_invites', 24, 'users', 'clearInvites', '', 1, 1, 'Удаление использованных инвайтов', '', '');
+INSERT INTO `#__cron_jobs` (`id`, `job_name`, `job_interval`, `job_run_date`, `component`, `model_method`, `custom_file`, `is_enabled`, `is_new`, `comment`, `class_name`, `class_method`) VALUES
+(1, 'photos_clear', 24, '2011-04-07 12:10:08', 'users', 'clearUploadedPhotos', '', 1, 1, 'Удаление неиспользуемых личных фотографий', '', ''),
+(2, 'optimize_tables', 24, '2011-04-07 12:10:08', '', '', '', 1, 1, 'Оптимизация таблиц БД', 'db|cmsDatabase', 'optimizeTables'),
+(3, 'drop_inactive_users', 48, '2011-04-07 12:10:08', 'users', 'deleteInactiveUsers', '', 1, 1, 'Удаление неактивных пользователей (см. настройки компонента "Профили пользователей")', '', ''),
+(4, 'remove_old_log', 48, '2011-04-07 12:10:08', '', '', '', 1, 1, 'Удаляет старые записи ленты событий', 'actions|cmsActions', 'removeOldLog'),
+(5, 'give_invites', 24, '2011-04-07 12:10:08', 'users', 'giveInvitesCron', '', 1, 1, 'Выдача инвайтов пользователям', '', ''),
+(6, 'clear_invites', 24, '2011-04-07 12:10:08', 'users', 'clearInvites', '', 1, 1, 'Удаление использованных инвайтов', '', '');
 
 DROP TABLE IF EXISTS `#__downloads`;
 CREATE TABLE `#__downloads` (
@@ -667,16 +674,17 @@ CREATE TABLE `#__forums` (
   `NSDiffer` varchar(15) NOT NULL,
   `NSIgnore` int(11) NOT NULL,
   `NSLevel` int(11) NOT NULL,
+  `topic_cost` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   KEY `parent_id` (`parent_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__forums` (`id`, `category_id`, `title`, `description`, `auth_group`, `ordering`, `published`, `parent_id`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`) VALUES
-(1000, 0, '-- Корень форумов --', '', 0, 1, 0, 0, 1, 8, '', 0, 1),
-(1, 1, 'Общий форум', '', 0, 1, 1, 1000, 2, 7, '', 0, 2),
-(1002, 1, 'Подфорум1', '', 0, 2, 1, 1, 5, 6, '', 0, 3),
-(1004, 1, 'Подфорум2', '', 0, 1, 1, 1, 3, 4, '', 0, 3);
+INSERT INTO `#__forums` (`id`, `category_id`, `title`, `description`, `auth_group`, `ordering`, `published`, `parent_id`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`, `topic_cost`) VALUES
+(1000, 0, '-- Корень форумов --', '', 0, 1, 0, 0, 1, 8, '', 0, 1, 0),
+(1, 1, 'Общий форум', '', 0, 1, 1, 1000, 2, 7, '', 0, 2, 0),
+(1002, 1, 'Подфорум1', '', 0, 2, 1, 1, 5, 6, '', 0, 3, 0),
+(1004, 1, 'Подфорум2', '', 0, 1, 1, 1, 3, 4, '', 0, 3, 0);
 
 DROP TABLE IF EXISTS `#__forum_cats`;
 CREATE TABLE `#__forum_cats` (
@@ -991,6 +999,9 @@ CREATE TABLE `#__online` (
   KEY `user_id` (`user_id`),
   KEY `sess_id` (`sess_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
+INSERT INTO `#__online` (`id`, `ip`, `sess_id`, `lastdate`, `user_id`, `agent`, `viewurl`) VALUES
+(1, '127.0.0.1', 'cro00215v3tvqh3n7n985m0ks2', '2011-04-07 12:10:53', 1, '', '/');
 
 DROP TABLE IF EXISTS `#__photo_albums`;
 CREATE TABLE `#__photo_albums` (
@@ -1317,13 +1328,14 @@ CREATE TABLE `#__uc_cats` (
   `ordering` int(11) NOT NULL,
   `is_public` int(11) NOT NULL,
   `can_edit` int(11) NOT NULL DEFAULT '0',
+  `cost` varchar(5) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__uc_cats` (`id`, `parent_id`, `title`, `description`, `published`, `fieldsstruct`, `view_type`, `fields_show`, `showmore`, `perpage`, `showtags`, `showsort`, `is_ratings`, `orderby`, `orderto`, `showabc`, `shownew`, `newint`, `filters`, `is_shop`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `ordering`, `is_public`, `can_edit`) VALUES
-(1000, 0, '-- Корневая рубрика --', '', 1, '', 'list', 10, 1, 20, 1, 1, 0, 'pubdate', 'desc', 1, 0, '', 0, 0, 1, 6, 0, 0, 0, 1, 0, 0),
-(2, 1000, 'Автомобили', '', 1, 'a:4:{i:0;s:15:"Тип кузова/~m~/";i:1;s:15:"Объем двигателя";i:2;s:16:"Год выпуска/~m~/";i:3;s:13:"Описание/~h~/";}', 'list', 2, 1, 20, 1, 1, 0, 'pubdate', 'desc', 1, 1, '2 DAY', 0, 0, 2, 3, 1, 0, 0, 22, 0, 0),
-(1, 1000, 'Канцелярские принадлежности', '', 1, 'a:6:{i:0;s:12:"Артикул/~m~/";i:1;s:10:"Цвета/~m~/";i:2;s:18:"Минимальная партия";i:3;s:13:"Описание/~h~/";i:4;s:11:"Размер/~m~/";i:5;s:12:"Скачать/~l~/";}', 'shop', 4, 0, 11, 0, 0, 0, 'hits', 'desc', 0, 0, '123 HOUR', 0, 0, 4, 5, 1, 0, 0, 23, 1, 0);
+INSERT INTO `#__uc_cats` (`id`, `parent_id`, `title`, `description`, `published`, `fieldsstruct`, `view_type`, `fields_show`, `showmore`, `perpage`, `showtags`, `showsort`, `is_ratings`, `orderby`, `orderto`, `showabc`, `shownew`, `newint`, `filters`, `is_shop`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `ordering`, `is_public`, `can_edit`, `cost`) VALUES
+(1000, 0, '-- Корневая рубрика --', '', 1, '', 'list', 10, 1, 20, 1, 1, 0, 'pubdate', 'desc', 1, 0, '', 0, 0, 1, 6, 0, 0, 0, 1, 0, 0, ''),
+(2, 1000, 'Автомобили', '', 1, 'a:4:{i:0;s:15:"Тип кузова/~m~/";i:1;s:15:"Объем двигателя";i:2;s:16:"Год выпуска/~m~/";i:3;s:13:"Описание/~h~/";}', 'list', 2, 1, 20, 1, 1, 0, 'pubdate', 'desc', 1, 1, '2 DAY', 0, 0, 2, 3, 1, 0, 0, 22, 0, 0, ''),
+(1, 1000, 'Канцелярские принадлежности', '', 1, 'a:6:{i:0;s:12:"Артикул/~m~/";i:1;s:10:"Цвета/~m~/";i:2;s:18:"Минимальная партия";i:3;s:13:"Описание/~h~/";i:4;s:11:"Размер/~m~/";i:5;s:12:"Скачать/~l~/";}', 'shop', 4, 0, 11, 0, 0, 0, 'hits', 'desc', 0, 0, '123 HOUR', 0, 0, 4, 5, 1, 0, 0, 23, 1, 0, '');
 
 DROP TABLE IF EXISTS `#__uc_cats_access`;
 CREATE TABLE `#__uc_cats_access` (
@@ -1459,9 +1471,9 @@ CREATE TABLE `#__user_albums` (
   KEY `allow_who` (`allow_who`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__user_albums` (`id`, `user_id`, `title`, `pubdate`, `allow_who`) VALUES
-(2, 3, 'Мой фотоальбом', '2010-10-22 20:28:51', 'all'),
-(5, 1, 'Мои картинки', '2010-11-13 23:13:37', 'all');
+INSERT INTO `#__user_albums` (`id`, `user_id`, `title`, `pubdate`, `allow_who`, `description`) VALUES
+(2, 3, 'Мой фотоальбом', '2010-10-22 20:28:51', 'all', ''),
+(5, 1, 'Мои картинки', '2010-11-13 23:13:37', 'all', '');
 
 DROP TABLE IF EXISTS `#__user_autoawards`;
 CREATE TABLE `#__user_autoawards` (
@@ -1589,9 +1601,13 @@ CREATE TABLE `#__user_msg` (
   `senddate` datetime NOT NULL,
   `is_new` int(11) NOT NULL DEFAULT '1',
   `message` text NOT NULL,
+  `to_del` tinyint(4) NOT NULL DEFAULT '0',
+  `from_del` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `to_id` (`to_id`),
-  KEY `from_id` (`from_id`)
+  KEY `from_id` (`from_id`),
+  KEY `to_del` (`to_del`),
+  KEY `from_del` (`from_del`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__user_photos`;
@@ -1611,8 +1627,8 @@ CREATE TABLE `#__user_photos` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__user_photos` (`id`, `user_id`, `album_id`, `pubdate`, `title`, `description`, `allow_who`, `hits`, `imageurl`) VALUES
-(6, 1, 5, '2010-11-13', 'Горный пейзаж', 'Красивый вид с большой высоты', 'all', 4, 'b22c5c0f95c1fb9398578fd5e396c7dd.jpg'),
-(7, 1, 5, '2010-11-13', 'Восход в космосе', 'Вид на нашу планету', 'all', 3, 'efe8d13779cd84cfeb319d9f0875a511.jpg');
+(6, 1, 5, '2010-11-13 00:00:00', 'Горный пейзаж', 'Красивый вид с большой высоты', 'all', 4, 'b22c5c0f95c1fb9398578fd5e396c7dd.jpg'),
+(7, 1, 5, '2010-11-13 00:00:00', 'Восход в космосе', 'Вид на нашу планету', 'all', 3, 'efe8d13779cd84cfeb319d9f0875a511.jpg');
 
 DROP TABLE IF EXISTS `#__user_profiles`;
 CREATE TABLE `#__user_profiles` (

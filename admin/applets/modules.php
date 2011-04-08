@@ -95,8 +95,9 @@ function applet_modules(){
         $is_ajax = $inCore->inRequest('ajax');
 
         if ($is_ajax){
-            $title = $inCore->request('title', 'str');
-            $inDB->query("UPDATE cms_modules SET title='{$title}' WHERE id={$id}");
+            $title      = $inCore->request('title', 'str');
+            $published  = $inCore->request('published', 'int', 0);
+            $inDB->query("UPDATE cms_modules SET title='{$title}', published='{$published}' WHERE id={$id}");
             if($inCore->inRequest('content')){
                 $content = $inDB->escape_string($inCore->request('content', 'html'));
                 $inDB->query("UPDATE cms_modules SET content='{$content}' WHERE id={$id}");

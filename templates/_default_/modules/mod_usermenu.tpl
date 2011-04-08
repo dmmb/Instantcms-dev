@@ -4,6 +4,12 @@
         <a href="{profile_url login=$login}">{$nickname}</a>
     </span>
 
+    {if $is_billing}
+        <span class="my_balance">
+            <a href="{profile_url login=$login}#upr_p_balance" title="Баланс">{if $balance}{$balance}{else}0{/if}</a>
+        </span>
+    {/if}
+
     {if $users_cfg.sw_msg}
     <span class="my_messages">
         {if $newmsg}

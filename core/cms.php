@@ -12,10 +12,10 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-define('CORE_VERSION', 		'1.7');
+define('CORE_VERSION', 		'1.8');
 define('CORE_BUILD', 		'1');
-define('CORE_VERSION_DATE', '2010-12-07');
-define('CORE_BUILD_DATE', 	'2010-12-07');
+define('CORE_VERSION_DATE', '2011-04-04');
+define('CORE_BUILD_DATE', 	'2011-04-04');
 
 if (!defined('USER_UPDATER')) { define('USER_UPDATER', -1); }
 if (!defined('USER_MASSMAIL')) { define('USER_MASSMAIL', -2); }
@@ -82,6 +82,18 @@ class cmsCore {
             self::$instance = new self($install_mode);
         }  
         return self::$instance;
+    }
+
+    public function getHost(){
+
+        $this->loadClass('idna_convert');
+
+        $IDN = new idna_convert();
+
+        $host = iconv('utf-8', 'cp1251', $IDN->decode($_SERVER['HTTP_HOST']));
+
+        return $host;
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1445,8 +1457,11 @@ class cmsCore {
      */
     private function detectURI(){
 
-        $uri    = $this->request('uri', 'str', '');
+        $uri    = $_SERVER['REQUEST_URI']; //$this->request('uri', 'str', '');
+        $uri    = ltrim($uri, '/');
         $rules  = array();
+
+        if (rtrim($uri, '/') == 'admin') { return; }
 
         //специальный хак дл€ поиска по сайту, дл€ совместимости со старыми шаблонами
         if (strstr($_SERVER['QUERY_STRING'], 'view=search')){ $uri = 'search'; }
@@ -2168,7 +2183,12 @@ class cmsCore {
 
 		if (!$this->checkContentAccess($access_list) && $menuid != 0) { 
 
-			$inPage->page_body = '<p>ƒоступ запрещен</p>';
+            ob_start();
+
+            $inPage->includeTemplateFile('special/accessdenied.php');
+
+			$inPage->page_body = ob_get_clean();
+            return false;
 
 		} else {
 
@@ -3082,13 +3102,13 @@ class cmsCore {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public function checkUserAccess($content_type, $content_id){
 
-        $inDB   = cmsDatabase::getInstance();
+        $inDB = cmsDatabase::getInstance();
         $inUser = cmsUser::getInstance();
 
 		if ($inUser->is_admin) { return true; }
 
 		$access   = $inDB->get_table('cms_content_access', "content_type = '$content_type' AND content_id = '$content_id'", 'group_id');
-		
+
 		if (!$access || !is_array($access)) { return true; }
 
 		return in_array(array('group_id' => $inUser->group_id), $access);
@@ -3205,12 +3225,19 @@ class cmsCore {
      * @return bool
      */
     public static function badTagClear($string){
-		$bad_teg = array ("'<script[^>]*?>.*?</script>'si",
-						 "'<iframe[^>]*?>.*?</iframe>'si",
-						 "'<style[^>]*?>.*?</style>'si",
-						 "'<meta[^>]*?>'si");
-		$string = preg_replace($bad_teg, '', $string);
+
+        $bad_tags = array (
+            "'<script[^>]*?>.*?</script>'si",
+            "'<style[^>]*?>.*?</style>'si",
+            "'<meta[^>]*?>'si",
+            '/<iframe.*?src=(?!"http:\/\/www\.youtube\.com\/embed\/|"http:\/\/vkontakte\.ru\/video_ext\.php\?).*?>.*?<\/iframe>/i',
+            '/<iframe.*>.+<\/iframe>/i'
+        );
+
+        $string = preg_replace($bad_tags, '', $string);
+
         return $string;
+        
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3413,7 +3440,7 @@ class cmsCore {
         if (!$parse_bbcode){
             //convert URLs to links
             $text = ereg_replace("/(?<!http:\\/\\/)(www)(\\S+)/si",'http://www\\2', $text);
-            $text = ereg_replace("/(http:\\/\\/)(\\S+)/si",'<a href="http://\\2" target=_new>http://\\2</a>',$text);
+            $text = ereg_replace("/(http:\\/\\/)(\\S+)/si",'<a href="/go/url=http://\\2" target=_blank>http://\\2</a>',$text);
         } else {
             //parse bbcode
             include_once PATH.'/includes/bbcode/bbcode.lib.php';

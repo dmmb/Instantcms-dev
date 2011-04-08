@@ -182,6 +182,27 @@ class cms_model_content{
 
     }
 
+    public function getPublicCats() {
+
+        $inCore = cmsCore::getInstance();
+
+        $nested_sets    = $inCore->nestedSetsInit('cms_category');
+        $rootid         = $this->inDB->get_field('cms_category', 'parent_id=0', 'id');
+
+        $rs_rows        = $nested_sets->SelectSubNodes($rootid);
+
+        if ($rs_rows){
+            while($node = $this->inDB->fetch_assoc($rs_rows)){
+                if($node['is_public']) { $subcats[] = $node; }
+            }
+        }
+
+        $subcats = cmsCore::callEvent('GET_CONTENT_PUBCATS', $subcats);
+
+        return $subcats;
+
+    }
+
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
@@ -699,17 +720,17 @@ class cms_model_content{
 
     public function updateArticle($id, $article, $not_upd_seo = false){
 
-        $inCore = cmsCore::getInstance();
-        $inUser = cmsUser::getInstance();
+        $inCore             = cmsCore::getInstance();
+        $inUser             = cmsUser::getInstance();
 
-        $article['id'] = $id;
+        $article['id']      = $id;
 
 		if(!$not_upd_seo){
 			if ($article['url']) { 
 				$article['url']  = cmsCore::strToURL($article['url']);
 				$article_url_sql = "url='{$article['url']}',";
 			}
-			$article['seolink'] = $this->getSeoLink($article);
+        $article['seolink'] = $this->getSeoLink($article);
 			$article_seo_sql = "seolink='{$article['seolink']}',";
 		}
 
@@ -748,21 +769,21 @@ class cms_model_content{
         cmsInsertTags($article['tags'], 'content', $article['id']);
 
 		if(!$not_upd_seo){
-			//обновляем ссылки меню
-			$menuid = $this->inDB->get_field('cms_menu', "linktype='content' AND linkid={$id}", 'id');
-			if ($menuid){
-				$menulink = $inCore->getMenuLink('content', $id, $menuid);
-				$this->inDB->query("UPDATE cms_menu SET link='{$menulink}' WHERE id='{$menuid}'");
-			}
-	
-			//обновляем ссылки на комментарии
-			$comments_sql = "UPDATE cms_comments c,
-									cms_content a
-							 SET c.target_link = CONCAT('/content/', a.seolink, '.html')
-							 WHERE a.id = '$id' AND
-								   c.target = 'article' AND c.target_id = a.id";
-	
-			$this->inDB->query($comments_sql);
+        //обновляем ссылки меню
+        $menuid = $this->inDB->get_field('cms_menu', "linktype='content' AND linkid={$id}", 'id');
+        if ($menuid){
+            $menulink = $inCore->getMenuLink('content', $id, $menuid);
+            $this->inDB->query("UPDATE cms_menu SET link='{$menulink}' WHERE id='{$menuid}'");
+        }
+
+        //обновляем ссылки на комментарии
+        $comments_sql = "UPDATE cms_comments c,
+                                cms_content a
+                         SET c.target_link = CONCAT('/content/', a.seolink, '.html')
+                         WHERE a.id = '$id' AND
+                               c.target = 'article' AND c.target_id = a.id";
+
+        $this->inDB->query($comments_sql);
 		}
 
         return true;

@@ -14,13 +14,6 @@
 </script> 
 {/literal}
 <div class="con_heading">{$LANG.UPLOAD_FILES}</div>
-{if $messages}
-    <div class="sess_messages">
-        {foreach key=id item=message from=$messages}
-            {$message}
-        {/foreach}
-    </div>
-{/if}
 {if $free_mb > 0 || !$cfg.filessize}
 <div>{$LANG.SELECT_FILE_TEXT}</div>
 {if $cfg.filessize}

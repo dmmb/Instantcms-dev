@@ -32,6 +32,9 @@ function blogs(){
 
     $inCore->loadModel('blogs');
     $model = new cms_model_blogs();
+
+    define('IS_BILLING', $inCore->isComponentInstalled('billing'));
+    if (IS_BILLING) { $inCore->loadClass('billing'); }
 		
 	//Загрузка настроек блогов
 	$cfg = $inCore->loadComponentConfig('blogs');
@@ -99,6 +102,9 @@ if ($do=='create'){
 
     //Показ формы создания блога
     if (!$inCore->inRequest('goadd')){
+
+        if (IS_BILLING){ cmsBilling::checkBalance('blogs', 'add_blog'); }
+
         $inPage->setTitle($_LANG['CREATE_BLOG']);
         $inPage->backButton(false);
 
@@ -160,6 +166,9 @@ if ($do=='create'){
                 'target_id' => 0, 
                 'description' => ''
             ));
+            
+            if (IS_BILLING){ cmsBilling::process('blogs', 'add_blog'); }
+
             //Выводим сообщение о том что блог создан
             $smarty  = $inCore->initSmarty('components', 'com_blog_create_ok.tpl');
             $smarty->assign('blogid', $blog_id);
@@ -666,6 +675,9 @@ if ($do=='newpost' || $do=='editpost'){
 	if ($do=='newpost'){
         //Проверяем доступ
 		if (!$myblog && !$is_author && !$is_admin) { $inCore->redirectBack(); }
+
+        if (IS_BILLING){ cmsBilling::checkBalance('blogs', 'add_post'); }
+        
         //Устанавливаем заголовки
         $inPage->addPathway($_LANG['NEW_POST'], $_SERVER['REQUEST_URI']);
 		$inPage->setTitle($_LANG['NEW_POST']);
@@ -727,7 +739,6 @@ if ($do=='newpost' || $do=='editpost'){
 			$smarty->assign('is_admin', $is_admin);
 			$smarty->assign('user_can_iscomments', $user_can_iscomments);
             $smarty->assign('tagline', $tagline);
-			$smarty->assign('messages', cmsCore::getSessionMessages());
             $smarty->assign('autocomplete_js', $autocomplete_js);
         $smarty->display('com_blog_edit_post.tpl');
 
@@ -751,7 +762,7 @@ if ($do=='newpost' || $do=='editpost'){
         //Проверяем их
         if (strlen($title)<2) {  cmsCore::addSessionMessage($_LANG['POST_ERR_TITLE'], 'error'); $errors = true; }
         if (strlen($content)<5) { cmsCore::addSessionMessage($_LANG['POST_ERR_TEXT'], 'error'); $errors = true; }
-		
+
 		// Если есть ошибки, возвращаемся назад
 		if($errors){
 			$mod['content']   = $content;
@@ -762,7 +773,7 @@ if ($do=='newpost' || $do=='editpost'){
 			$mod['allow_who'] = $allow_who;
 			cmsUser::sessionPut('mod', $mod);
 			$inCore->redirectBack();
-		}
+        }
 
         //Если нет ошибок
         if(!$errors){
@@ -771,6 +782,7 @@ if ($do=='newpost' || $do=='editpost'){
 
                 if ($blog['owner']=='user'){
                     if ($myblog || (!$blog['premod'])){	$published = 1;	} else { $published = 0; }
+                    if (IS_BILLING){ cmsBilling::process('blogs', 'add_post'); }
                 }
 
                 if ($blog['owner']=='club'){
@@ -1261,7 +1273,7 @@ if ($do == 'delcat'){
 
 ////////// VIEW LATEST POSTS ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='latest'){
-	
+
 	$smarty     = $inCore->initSmarty('components', 'com_blog_view_posts.tpl');
 				
 	$user_id    = $inUser->id;

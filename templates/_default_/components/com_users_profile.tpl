@@ -6,14 +6,6 @@
 {add_js file="components/users/js/profile.js"}
 {add_css file='includes/jquery/tabs/tabs.css'}					
 
-{if $messages}
-    <div class="sess_messages">
-        {foreach key=id item=message from=$messages}
-            {$message}
-        {/foreach}
-    </div>
-{/if}
-
 {literal}
 	<script type="text/javascript">
 		$(document).ready(function(){
@@ -35,6 +27,10 @@
         <div class="rating" title="{$LANG.RATING}">
             <div class="value">{$usr.user_rating}</div>
         </div>
+    </div>
+
+    <div class="user_group_name">
+        <div class="{$usr.group_alias}">{$usr.grp}</div>
     </div>
 
     <div class="con_heading" id="nickname">

@@ -48,9 +48,9 @@
 
 	//-------CHECK AUTHENTICATION--------------------------------------//
 	if (!$inUser->id ) {
-		$inCore->redirect('login.php');
+		$inCore->redirect('/admin/login.php');
 	} else {	
-		if (!$inCore->userIsAdmin($inUser->id)){			
+		if (!$inCore->userIsAdmin($inUser->id)){
 			if ($inCore->userIsEditor($inUser->id)){
 				$inCore->redirect('editor/index.php');
 			} else { $inCore->redirect('login.php'); }

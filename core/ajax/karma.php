@@ -10,11 +10,12 @@
 
 	define("VALID_CMS", 1);
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
-    define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
 
 	include(PATH.'/core/cms.php');
 
     $inCore = cmsCore::getInstance();
+
+    define('HOST', 'http://' . $inCore->getHost());
 
     $inCore->loadClass('page');
     $inCore->loadClass('user');

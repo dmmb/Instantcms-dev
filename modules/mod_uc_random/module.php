@@ -52,7 +52,8 @@
 				}
 						
 				if ($item['viewtype']=='shop'){
-					$item['price'] = number_format($item['price'], 2, '.', ' ');
+                    $inCore->includeFile('components/catalog/includes/shopcore.php');
+					$item['price'] = number_format(shopDiscountPrice($item['id'], $item['category_id'], $item['price']), 2, '.', ' ');
 				}
 						
 				$items[] = 	$item;												

@@ -247,7 +247,8 @@ class cms_model_catalog{
                     newint = '{$cat['newint']}',
                     filters = '{$cat['filters']}',
                     is_public = '{$cat['is_public']}',
-                    can_edit = '{$cat['can_edit']}'
+                    can_edit = '{$cat['can_edit']}',
+                    cost = '{$cat['cost']}'
                 WHERE id = $id
                 LIMIT 1";
         $this->inDB->query($sql);
@@ -284,7 +285,8 @@ class cms_model_catalog{
                     newint = '{$cat['newint']}',
                     filters = '{$cat['filters']}',
                     is_public = '{$cat['is_public']}',
-                    can_edit = '{$cat['can_edit']}'
+                    can_edit = '{$cat['can_edit']}',
+                    cost = '{$cat['cost']}'
                 WHERE id = {$cat['id']}
                 LIMIT 1";
         $this->inDB->query($sql);

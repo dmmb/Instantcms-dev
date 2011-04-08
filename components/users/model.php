@@ -60,6 +60,7 @@ class cms_model_users{
 				p.gender as gender,	p.formsdata,			
 				u.group_id,
 				g.title as grp,
+				g.alias as group_alias,
 				o.user_id as status,
 				b.user_id as banned,
                 IFNULL(ui.login, '') as inv_login,
@@ -268,7 +269,7 @@ class cms_model_users{
             $plugin = $inCore->loadPlugin( $plugin_name );
 
             if ($plugin!==false){                
-                $html = $plugin->execute($event, $user);
+                $html = $plugin->execute('USER_PROFILE', $user);
             }
 
             if ($html){
@@ -315,6 +316,7 @@ class cms_model_users{
                         IFNULL(SUM(k.points), 0) as karma
                 FROM cms_users u
                 LEFT JOIN cms_user_karma k ON k.user_id = u.id
+                WHERE is_deleted = 0
                 GROUP BY u.id
                 ";
 
@@ -750,7 +752,7 @@ class cms_model_users{
     public function deleteInactiveUsers() {
 
 		$inCore = cmsCore::getInstance();
-		
+
 		$inCore->loadClass('actions');
 
 		$cfg    = $inCore->loadComponentConfig('users');

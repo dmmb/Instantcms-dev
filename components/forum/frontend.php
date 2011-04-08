@@ -147,6 +147,9 @@ function forum(){
     $inCore->loadModel('forum');
     $model = new cms_model_forum();
 
+    define('IS_BILLING', $inCore->isComponentInstalled('billing'));
+    if (IS_BILLING) { $inCore->loadClass('billing'); }
+
     $menutitle = $inCore->menuTitle();
     global $_LANG;
 	if (!$cfg['is_on']){
@@ -670,10 +673,16 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 		
 		$forum = $model->getForum($id);
 		
-		if ($do == 'newthread') { 
+		if ($do == 'newthread') {
+
+            if (IS_BILLING && $forum['topic_cost']){
+                cmsBilling::checkBalance('forum', 'add_thread', false, $forum['topic_cost']);
+            }
+
 			$inPage->setTitle($_LANG['NEW_THREAD']);
 			$inPage->addPathway($_LANG['NEW_THREAD'], $_SERVER['REQUEST_URI']);
 			echo '<div class="con_heading">'.$_LANG['NEW_THREAD'].'</div>';
+
 		} else {
 			if ($do == 'newpost'){
 				$sql = "SELECT * FROM cms_forum_threads WHERE id = '$id'";
@@ -782,10 +791,10 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 			echo '</form>';
 			
 		} else {
-			$message_post = $inCore->request('message', 'html');
-            $message = $inDB->escape_string($message_post);
-			$message = $inCore->badTagClear($message);
-			if (!$message) { echo '<p>'.$_LANG['NEED_TEXT_POST'].'</p>'; return; }
+                $message_post = $inCore->request('message', 'html');
+                $message = $inCore->badTagClear($message);
+                $message = $inDB->escape_string($message_post);                
+                if (!$message) { echo '<p>'.$_LANG['NEED_TEXT_POST'].'</p>'; return; }
 
 			if($do=='newpost'){												
 				//NEW POST
@@ -912,6 +921,10 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
                             header('location:/forum/thread'.$threadlastid.'.html');
                         } else {
                             uploadError($threadlastid, $post_id, $cfg['fa_size'], $cfg['fa_ext']);
+                        }
+
+                        if (IS_BILLING && $forum['topic_cost']){
+                            cmsBilling::process('forum', 'add_thread', $forum['topic_cost']);
                         }
 
 					} else {

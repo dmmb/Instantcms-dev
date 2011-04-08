@@ -34,6 +34,7 @@
     $ext_req['mbstring']    = 'mbstring';
     $ext_req['iconv']       = 'iconv';
     $ext_req['GD']          = 'gd';
+    $ext_req['SimpleXML']   = 'simplexml';
 
 	if (isset($_POST['install'])){
 	
@@ -401,8 +402,15 @@ function installCheckExtensions(){
 					echo '<p>Система установлена и готова к работе.</p>';
 					echo '<div style="background:url(/install/images/cron.png) no-repeat;padding-left:24px;margin-top:30px;margin-bottom:30px;">
                             <div style="margin-bottom:6px;"><strong>Создайте задание для CRON</strong></div>
+                            <div>
                             Добавьте файл <strong>/cron.php</strong> в расписание заданий CRON в панели вашего хостинга.<br/>
                             Интервал выполнения &mdash; 24 часа. Это позволит системе выполнять периодические сервисные задачи.
+                                Обычно команда, которую нужно добавить в CRON, выглядит так:
+                                <pre class="cron">  php -f /полный/путь/до/сайта/cron.php > /dev/null</pre>
+                            </div>
+                            <div>
+                                В случае затруднений обратитесь в техническую поддержку хостинга.
+                            </div>
                           </div>';
 					echo '<div style="background:url(/install/images/warning.png) no-repeat;padding-left:24px;margin-top:30px;margin-bottom:30px;">
                             <div style="margin-bottom:6px;"><strong>Внимание!</strong></div>

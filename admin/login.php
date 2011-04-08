@@ -52,7 +52,7 @@
                         <input type="submit" name="go" style="display:none" />
                     </form>
                 </div>
-                <div id="copy"><a href="http://www.instantcms.ru/">InstantCMS</a> &copy; 2007-2010</div>
+                <div id="copy"><a href="http://www.instantcms.ru/">InstantCMS</a> &copy; 2007-2011</div>
 
             </td>
         </tr>

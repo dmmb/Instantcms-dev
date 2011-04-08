@@ -1179,6 +1179,7 @@ a.tag:hover{
 .mod_user_menu .logout a{ background:url(../images/icons/logout.png) no-repeat 6px center; }
 .mod_user_menu .register a{ background:url(../images/icons/register.png) no-repeat 6px center; }
 .mod_user_menu .login a{ background:url(../images/icons/key.png) no-repeat 6px center; }
+.mod_user_menu .my_balance a{ background:url(../images/billing/balance.png) no-repeat 6px center; }
 
 .usr_msgmenu_bar{
 	background-color:#E0EAEF;
@@ -1285,10 +1286,16 @@ a.new_messages_link:hover{ color:#F00; background:#Fff; font-weight:bold; paddin
     margin:0px;
 }
 .bb_tag_code{
-	border:solid 1px silver;
-	padding:8px;
+    border:solid 1px silver;
+    padding:8px;
     margin-top:5px;
     margin-bottom:5px;
+    max-width:700px;
+    overflow:auto;
+}
+.bb_tag_code ol{
+    padding: 6px 0;
+    padding-left:5px;
 }
 .bb_tag_hide{
 	padding:8px;
@@ -1480,6 +1487,10 @@ span.user_karma_point{
     margin:0px;
 	margin-bottom:4px;
     font-size:14px;
+}
+.new_board_items li.vip a{
+    color:#ED8115;
+    font-weight:bold;
 }
 .new_board_items{
 	padding:0px;
@@ -1823,6 +1834,15 @@ span.user_karma_point{
     -moz-border-radius:8px;
 }
 
+.bd_item_vip{
+	margin-bottom:4px;
+	border:1px solid #FFCC99;
+	background:#FFFFD9;
+    padding:12px;
+    border-radius:8px;
+    -moz-border-radius:8px;
+}
+
 .board_toolbar{
 	margin-bottom:10px;
 }
@@ -1845,9 +1865,22 @@ div.bd_title a{
 	margin:0px;
 }
 
+.bd_item_vip div.bd_title a{
+	font-size:16px;
+	font-weight:bold;
+	margin:0px;
+    color:#ED8115;
+}
+
 img.bd_image_small{
 	padding:2px;
 	border:solid 1px #C3D6DF;
+	margin-right:10px;
+}
+
+.bd_item_vip img.bd_image_small{
+	padding:2px;
+	border:1px solid #FFCC99;
 	margin-right:10px;
 }
 
@@ -1918,6 +1951,12 @@ div.bd_links span.bd_message{
 }
 div.bd_links span.bd_author{
 	background:url(../images/icons/posts.png) no-repeat 0px 2px;
+}
+
+span.bd_item_is_vip{
+    background:url(../images/icons/vip.png) no-repeat;
+    color:#ED8115;
+    font-weight:bold;
 }
 
 span.bd_item_date{
@@ -2149,7 +2188,8 @@ div.new_club a{
     color:#375E93;
 }
 
-div.club_entry {
+div.club_entry,
+div.club_entry_vip{
     overflow:hidden;
     margin-bottom:5px;
     padding:15px;
@@ -2158,19 +2198,36 @@ div.club_entry {
     -moz-border-radius:8px;
     clear:both;
 }
-div.club_entry .image{ padding: 2px; background:#FFF; float: left; margin-right:14px; }
 
-div.club_entry .data{ float: left; }
+div.club_entry_vip{
+    background: #FFFFD9;
+    border: 1px solid #FFCC99;
+}
 
-div.club_entry .data .title { margin-bottom: 5px; margin-top:5px;  }
-div.club_entry .data .title a{ font-size: 16px; font-weight:bold;  }
-div.club_entry .data .title a.private{ font-size: 16px; font-weight:bold; color:gray; }
+div.club_entry .image,
+div.club_entry_vip .image{ padding: 2px; background:#FFF; float: left; margin-right:14px; }
 
-div.club_entry .data .details { float:left; }
-div.club_entry .data .details span{ color: #999; padding:1px; padding-left:20px; margin-right:4px; font-size:10px; height:20px;line-height:20px; }
-div.club_entry .data .details span.rating{ background:url(../images/icons/rating.png) no-repeat left center; }
-div.club_entry .data .details span.date{ background:url(../images/icons/calendar.png) no-repeat left center; }
-div.club_entry .data .details span.members{ background:url(../images/icons/user.png) no-repeat left center; }
+div.club_entry .data,
+div.club_entry_vip .data{ float: left; }
+
+div.club_entry .data .title,
+div.club_entry_vip .data .title{ margin-bottom: 5px; margin-top:5px;  }
+div.club_entry .data .title a,
+div.club_entry_vip .data .title a{ font-size: 16px; font-weight:bold;  }
+div.club_entry_vip .data .title a{ color:#ED8115;  }
+div.club_entry .data .title a.private,
+div.club_entry_vip .data .title a.private{ font-size: 16px; font-weight:bold; color:gray; }
+div.club_entry .data .details,
+div.club_entry_vip .data .details { float:left; }
+div.club_entry .data .details span,
+div.club_entry_vip .data .details span{ color: #666; padding:2px; padding-left:20px; margin-right:4px; font-size:10px; height:20px;line-height:20px; }
+div.club_entry .data .details span.rating,
+div.club_entry_vip .data .details span.rating{ background:url(../images/icons/rating.png) no-repeat left center; }
+div.club_entry_vip .data .details span.vip{ background:url(../images/icons/vip.png) no-repeat left center; }
+div.club_entry .data .details span.date,
+div.club_entry_vip .data .details span.date{ background:url(../images/icons/calendar.png) no-repeat left center; }
+div.club_entry .data .details span.members,
+div.club_entry_vip .data .details span.members{ background:url(../images/icons/user.png) no-repeat left center; }
 
 table.club_full_entry { overflow:hidden; margin-bottom:10px; width:100%; }
 table.club_full_entry td.left { overflow:hidden; margin-bottom:10px; width:200px; }
@@ -2180,6 +2237,7 @@ table.club_full_entry .data{  }
 
 table.club_full_entry .data .details { margin-bottom:10px; border-bottom:solid 1px #789DAF; padding-bottom:8px; background:#E0EAEF; padding:8px;}
 table.club_full_entry .data .details span{ color: #333; padding:1px; padding-left:20px; margin-right:4px; height:18px; }
+table.club_full_entry .data .details span.vip{ background:url(../images/icons/vip.png) no-repeat left center; color:#ED8115; font-weight:bold; }
 table.club_full_entry .data .details span.rating{ background:url(../images/icons/rating.png) no-repeat left center; }
 table.club_full_entry .data .details span.date{ background:url(../images/icons/calendar.png) no-repeat left center; }
 table.club_full_entry .data .details span.members{ background:url(../images/icons/user.png) no-repeat left center; }
@@ -2970,6 +3028,26 @@ div#user_ratings .karma table { }
 div#user_ratings .karma table td { font-size:14px; }
 
 div#user_ratings .rating .value {  background-color:#4A73A7; color:#FFF; padding:6px 10px; }
+
+.user_group_name{
+    float:right;
+    margin-right:20px;
+    height:38px;
+    line-height:38px;
+}
+
+.user_group_name div {
+    padding-left:20px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    color:#375E93;
+}
+
+.user_group_name .admin { background-image:  url(../images/icons/groups/admin.png); }
+.user_group_name .registered { background-image: url(../images/icons/groups/registered.png); }
+.user_group_name .editors { background-image: url(../images/icons/groups/editors.png); }
+.user_group_name .moderators { background-image: url(../images/icons/groups/moderators.png); }
+.user_group_name .vip { background-image: url(../images/icons/groups/vip.png); }
 
 div#user_profile_url{
     clear:both;

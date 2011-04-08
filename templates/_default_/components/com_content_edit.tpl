@@ -42,7 +42,14 @@
 						</td>
 						<td valign="top">
 							<select name="category_id" id="category_id" style="width:357px">
-								{$pubcats}
+                                {foreach key=p item=pubcat from=$pubcats}
+                                    <option value="{$pubcat.id}">
+                                        {'--'|str_repeat:$pubcat.NSLevel} {$pubcat.title}
+                                        {if $is_billing && $pubcat.cost && $dynamic_cost}
+                                            ({$LANG.BILLING_COST}: {$pubcat.cost|spellcount:$LANG.BILLING_POINT1:$LANG.BILLING_POINT2:$LANG.BILLING_POINT10})
+                                        {/if}
+                                    </option>
+                                {/foreach}
 							</select>
 						</td>
 					</tr>

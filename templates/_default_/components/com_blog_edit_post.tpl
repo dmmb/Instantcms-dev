@@ -1,10 +1,3 @@
-{if $messages}
-    <div class="sess_messages">
-        {foreach key=id item=message from=$messages}
-            {$message}
-        {/foreach}
-    </div>
-{/if}
 <form style="margin-top:15px" action="" method="post" name="msgform" enctype="multipart/form-data">
 	{if !$blog.showcats}
 		<input type="hidden" name="cat_id" value="0"/>
@@ -60,7 +53,7 @@
                     <option value="0" {if !$mod.comments}selected="selected"{/if}>{$LANG.NO}</option>
                     <option value="1" {if $mod.comments}selected="selected"{/if} >{$LANG.YES}</option>
                 </select><br />
-				<span class="hinttext" style="font-size:11px">{$LANG.IS_COMMENTS}</span>
+                <span class="hinttext" style="font-size:11px">{$LANG.IS_COMMENTS}</span>
 			</td>
 		</tr>
         {/if}

@@ -37,6 +37,9 @@ function cpPriceInput($id){
     $cfg = $inCore->loadComponentConfig('catalog');
     $opt = $inCore->request('opt', 'str', 'list_cats');
 
+    define('IS_BILLING', $inCore->isComponentInstalled('billing'));
+    if (IS_BILLING) { $inCore->loadClass('billing'); }
+
 	cpAddPathway('”ниверсальный каталог', '?view=components&do=config&id='.$_REQUEST['id']);
     echo '<h3>”ниверсальный каталог</h3>';
 
@@ -545,8 +548,11 @@ function cpPriceInput($id){
             $cat['fields'] = serialize($fstruct);
         }
 
-        $cat['is_public'] = $inCore->request('is_public', 'int', 0);
-        $cat['can_edit']  = $inCore->request('can_edit', 'int', 0);
+        $cat['is_public']   = $inCore->request('is_public', 'int', 0);
+        $cat['can_edit']    = $inCore->request('can_edit', 'int', 0);
+
+        $cat['cost']        = $inCore->request('cost', 'str', '');
+        if (!is_numeric($cat['cost'])) { $cat['cost'] = ''; }
 
         $cat['id'] = $model->addCategory($cat);
 
@@ -615,6 +621,9 @@ function cpPriceInput($id){
 
             $cat['is_public'] = $inCore->request('is_public', 'int', 0);
             $cat['can_edit']  = $inCore->request('can_edit', 'int', 0);
+
+            $cat['cost']      = $inCore->request('cost', 'str', '');
+            if (!is_numeric($cat['cost'])) { $cat['cost'] = ''; }
 
             if ($cat['is_public']){
                 $showfor = $_REQUEST['showfor'];
@@ -1400,6 +1409,14 @@ function cpPriceInput($id){
                                     ?>
                                 </div>
                             </div>
+
+                            <?php if (IS_BILLING){ ?>
+                                <div style="margin:5px">
+                                    <strong>—тоимость добавлени€ записи</strong><br/>
+                                    <div style="color:gray">≈сли не указана здесь, то используетс€ цена по-умолчанию, из настроек биллинга</div>
+                                    <input type="text" name="cost" value="<?php echo $mod['cost']; ?>" style="width:50px"/> баллов
+                                </div>
+                            <?php } ?>
 
                             <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist" style="margin-top:5px">
                                 <tr>

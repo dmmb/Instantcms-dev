@@ -3,10 +3,13 @@
 	if (!isset($_REQUEST['id'])) { die(100); } else { $id = (int)$_REQUEST['id']; }
 	define("VALID_CMS", 1);	
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
-    define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
 
 	include(PATH.'/core/cms.php');
+    
     $inCore = cmsCore::getInstance();	// €дро
+
+    define('HOST', 'http://' . $inCore->getHost());
+
     $inCore->loadClass('config');       // конфигураци€
     $inCore->loadClass('db');           // база данных
     $inCore->loadClass('user');			// пользователь

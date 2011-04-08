@@ -30,7 +30,7 @@
 	
 {* ========================== Характеристики записи ========================= *}
     <td class="uc_list_itemdesc" align="left" valign="top" class="uc_detaildesc">
-
+    
         <ul class="uc_detaillist">
         	<li class="uc_detailfield"><strong>{$LANG.ADDED_BY}: </strong> {$getProfileLink}</li>
 			{foreach key=field item=value from=$fields}

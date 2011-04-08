@@ -3,13 +3,6 @@
 {* ================================================================================ *}
 {strip}
 <div class="con_heading"><a href="{profile_url login=$usr.login}">{$usr.nickname}</a> &rarr; {$LANG.FILES}</div>
-{if $messages}
-    <div class="sess_messages">
-        {foreach key=id item=message from=$messages}
-            {$message}
-        {/foreach}
-    </div>
-{/if}
 {if $is_files}
 <div class="usr_files_orderbar">
   <table width="100%" cellspacing="0" cellpadding="2">

@@ -214,17 +214,10 @@ function applet_main(){
             </ul>
 		</div>
 		<div class="small_box">
-            <div class="small_title">Участвуйте в разработке</div>
-            <ul>
-                <li><a href="http://trac.instantcms.ru/">Сообщайте об ошибках</a></li>
-                <li><a href="http://trac.instantcms.ru/wiki/Team/Join">Вступите в команду</a></li>
-                <li><a href="http://www.instantcms.ru/donate.html">Поддержите проект</a></li>
-            </ul>
-        </div>
-		<div class="small_box">
             <div class="small_title">Премиум-компоненты</div>
-            <div class="advert_inmaps"><a href="http://www.instantcms.ru/blogs/InstantSoft/instantmaps-katalog-obektov-na-karte.html" target="_blank"><strong>InstantMaps</strong></a> &mdash; каталог объектов на карте</div>
-            <div class="advert_inshop"><a href="http://www.instantcms.ru/blogs/InstantSoft/professionalnyi-magazin-dlja-InstantCMS.html" target="_blank"><strong>InstantShop</strong></a> &mdash; профессиональный магазин</div>
+            <div class="advert_billing"><a href="http://www.instantcms.ru/billing/about.html"><strong>Биллинг</strong></a> &mdash; зарабатывайте на своем сайте!</div>
+            <div class="advert_inmaps"><a href="http://www.instantmaps.ru/"><strong>InstantMaps</strong></a> &mdash; каталог объектов на карте</div>
+            <div class="advert_inshop"><a href="http://www.instantcms.ru/blogs/InstantSoft/professionalnyi-magazin-dlja-InstantCMS.html"><strong>InstantShop</strong></a> &mdash; профессиональный магазин</div>
         </div>
 		  </td>
       </tr>
