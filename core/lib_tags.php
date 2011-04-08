@@ -86,7 +86,7 @@ function cmsTagItemLink($target, $item_id){
 		case 'content': $sql = "SELECT i.title as title, c.title as cat, i.seolink as seolink, c.seolink as cat_seolink
 								FROM cms_content i
 								LEFT JOIN cms_category c ON c.id = i.category_id
-								WHERE i.id = $item_id AND i.published = 1";
+								WHERE i.id = '$item_id' AND i.published = 1";
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
@@ -97,7 +97,7 @@ function cmsTagItemLink($target, $item_id){
 		case 'blogpost': $sql = "SELECT i.title as title, i.id as item_id, c.title as cat, c.id as cat_id, c.owner as owner, c.user_id user_id, i.seolink as seolink, c.seolink as bloglink
 								FROM cms_blog_posts i
 								LEFT JOIN cms_blogs c ON c.id = i.blog_id
-								WHERE i.id = $item_id";
+								WHERE i.id = '$item_id'";
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
@@ -109,7 +109,7 @@ function cmsTagItemLink($target, $item_id){
 		case 'photo': $sql = "SELECT i.title as title, i.id as item_id, c.title as cat, c.id as cat_id
 								FROM cms_photo_files i
 								LEFT JOIN cms_photo_albums c ON c.id = i.album_id
-								WHERE i.id = $item_id";
+								WHERE i.id = '$item_id'";
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
@@ -120,7 +120,7 @@ function cmsTagItemLink($target, $item_id){
 		case 'userphoto': $sql = "SELECT i.title as title, i.id as item_id, c.nickname as cat, c.id as cat_id, c.login as login
 								FROM cms_user_photos i
 								LEFT JOIN cms_users c ON c.id = i.user_id
-								WHERE i.id = $item_id";
+								WHERE i.id = '$item_id'";
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
@@ -131,7 +131,7 @@ function cmsTagItemLink($target, $item_id){
 		case 'catalog': $sql = "SELECT i.title as title, i.id as item_id, c.title as cat, c.id as cat_id
 								FROM cms_uc_items i
 								LEFT JOIN cms_uc_cats c ON c.id = i.category_id
-								WHERE i.id = $item_id";
+								WHERE i.id = '$item_id'";
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
@@ -139,21 +139,21 @@ function cmsTagItemLink($target, $item_id){
 							$link .= '<a href="/catalog/item'.$item['item_id'].'.html" class="tag_searchitem">'.$item['title'].'</a>';
 						}
 						break; 	
-		case 'shop': $sql = "SELECT i.title as title, i.seolink as seolink, c.title as cat, c.seolink as cat_seolink
-							 FROM cms_shop_items i
-							 LEFT JOIN cms_shop_cats c ON c.id = i.category_id
-							 WHERE i.id = $item_id";
+		case 'video': $sql = "SELECT i.title as title, i.id as item_id, c.title as cat, c.id as cat_id
+								FROM cms_video_movie i
+								LEFT JOIN cms_video_category c ON c.id = i.cat_id
+								WHERE i.id = '$item_id'";
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
-							$link =  '<a href="/shop/'.$item['cat_seolink'].'" class="tag_searchcat">'.$item['cat'].'</a> &rarr; ';
-							$link .= '<a href="/shop/'.$item['seolink'].'.html" class="tag_searchitem">'.$item['title'].'</a>';
+							$link =  '<a href="/video/'.$item['cat_id'].'" class="tag_searchcat">'.$item['cat'].'</a> &rarr; ';
+							$link .= '<a href="/video/movie'.$item['item_id'].'.html" class="tag_searchitem">'.$item['title'].'</a>';
 						}
 						break;
 		case 'shop': $sql = "SELECT i.title as title, i.seolink as seolink, c.title as cat, c.seolink as cat_seolink
 							 FROM cms_shop_items i
 							 LEFT JOIN cms_shop_cats c ON c.id = i.category_id
-							 WHERE i.id = $item_id";
+							 WHERE i.id = '$item_id'";
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
@@ -164,7 +164,7 @@ function cmsTagItemLink($target, $item_id){
 		case 'maps': $sql = "SELECT i.title as title, i.seolink as seolink, c.title as cat, c.seolink as cat_seolink
 							 FROM cms_maps_items i
 							 LEFT JOIN cms_maps_cats c ON c.id = i.category_id
-							 WHERE i.id = $item_id";
+							 WHERE i.id = '$item_id'";
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);

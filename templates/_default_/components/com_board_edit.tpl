@@ -84,10 +84,10 @@
             {/if}
         {/if}
 
-        {if $form_do == 'edit' && $is_vip}
+        {if $form_do == 'edit' && $item.is_vip}
 			<tr>
 				<td height="35"><span>{$LANG.VIP_STATUS}:</span></td>
-				<td height="35">до {$vipdate}</td>
+				<td height="35">до {$item.vipdate}</td>
 			</tr>
         {/if}
 
