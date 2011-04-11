@@ -74,10 +74,12 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	cpToolMenu($toolmenu);
 
 	//LOAD CURRENT CONFIG
+    $cfg = $inCore->loadComponentConfig('forum');
+
+    if (!isset($cfg['is_rss'])) { $cfg['is_rss'] = 1; }
 
 	if($opt=='saveconfig'){	
         
-		$cfg = array();
 		$cfg['is_on']       = $inCore->request('is_on', 'int', 1);
 		$cfg['karma']       = $inCore->request('karma', 'int', 1);
 		$cfg['is_rss']      = $inCore->request('is_rss', 'int', 1);
@@ -92,7 +94,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$cfg['fast_on']     = $inCore->request('fast_on', 'int', 1);
 		$cfg['fast_bb']     = $inCore->request('fast_bb', 'int', 1);
 		
-		$cfg['fa_on']       = $inCore->request('fast_on', 'int');
+		$cfg['fa_on']       = $inCore->request('fa_on', 'int');
 		$cfg['fa_allow']    = $inCore->request('fa_allow', 'int');
 		$cfg['fa_max']      = $inCore->request('fa_max', 'int');
 		$cfg['fa_ext']      = $inCore->request('fa_ext', 'str');
@@ -104,10 +106,6 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$opt = 'config';
 
 	}
-
-    $cfg = $inCore->loadComponentConfig('forum');
-
-    if (!isset($cfg['is_rss'])) { $cfg['is_rss'] = 1; }
 
 	if($opt=='saveranks'){	
 		
@@ -143,24 +141,6 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		}			
 	}
 
-	function reorder(){
-		$sql = "SELECT * FROM cms_forums ORDER BY NSLeft";
-		$rs = dbQuery($sql);
-		
-		if (mysql_num_rows($rs)){
-			$level = array();
-			while ($item = mysql_fetch_assoc($rs)){
-				if (isset($level[$item['NSLevel']])){
-					$level[$item['NSLevel']] += 1;
-				} else {
-					$level[$item['NSLevel']] = 1;
-				}
-				$sql = "UPDATE cms_forums SET ordering = ".$level[$item['NSLevel']]." WHERE id=".$item['id'];
-				dbQuery($sql) or die(mysql_error().'<pre>'.$sql);			
-			}				
-		}
-	}
-	
 	if ($opt == 'submit_forum'){	
 			$category_id    = $inCore->request('category_id', 'int');
 			$title          = $inCore->request('title', 'str');
@@ -183,7 +163,6 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					WHERE id = $myid";
 
 			dbQuery($sql) ;	
-			reorder();
 			header('location:?view=components&do=config&opt=list_forums&id='.$_REQUEST['id']);		
 	}	  
 	

@@ -104,10 +104,12 @@ class cms_model_clubs{
 
     public function addClub($item, $cfg){
 
+		$u_karma = cmsUser::getKarma($item['user_id']);
+
         $item = cmsCore::callEvent('ADD_CLUB', $item);
 
-        $sql = "INSERT INTO cms_clubs (id, admin_id, title, description, imageurl, pubdate, clubtype, enabled_blogs, enabled_photos)
-                VALUES('', '{$item['user_id']}', '{$item['title']}', '', '', NOW(), '{$item['clubtype']}', '{$cfg['enabled_blogs']}', '{$cfg['enabled_photos']}')";
+        $sql = "INSERT INTO cms_clubs (id, admin_id, title, description, imageurl, pubdate, clubtype, enabled_blogs, enabled_photos, create_karma)
+                VALUES('', '{$item['user_id']}', '{$item['title']}', '', '', NOW(), '{$item['clubtype']}', '{$cfg['enabled_blogs']}', '{$cfg['enabled_photos']}', '{$u_karma}')";
         $this->inDB->query($sql);
 
         if($this->inDB->errno()){ return false; }

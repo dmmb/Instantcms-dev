@@ -61,7 +61,9 @@ if ($do=='view'){
         $cat = $model->getCategoryByLink($seolink);
     } elseif($id) {
         $cat = $model->getCategory($id); 
-    }
+    } else {
+		$cat = $model->getCategory($model->getRootCatId());
+	}
 
     if (!$cat && $inCore->menuId() !== 1) { cmsCore::error404(); }
 
