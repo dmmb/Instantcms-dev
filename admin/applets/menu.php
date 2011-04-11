@@ -210,15 +210,15 @@ function applet_menu(){
 	
 	if ($do == 'submit'){
 
-		$menu     = $_REQUEST['menu'];
-		$title    = $inCore->request('title', 'str', '');
-		$target   = $_REQUEST['target'];
-		$link     = $inCore->getMenuLink($_REQUEST['mode'], $_REQUEST[$_REQUEST['mode']], $id);
+		$menu = $_REQUEST['menu'];
+		$title = $inCore->request('title', 'str', '');
+		$target = $_REQUEST['target'];
+		$link = $inCore->getMenuLink($_REQUEST['mode'], $_REQUEST[$_REQUEST['mode']], $id);
         $linktype = $_REQUEST['mode'];
-        $linkid   = $_REQUEST[$_REQUEST['mode']];
+        $linkid = $_REQUEST[$_REQUEST['mode']];
 		$template = $_REQUEST['template'];
-		$iconurl  = $_REQUEST['iconurl'];
-		$is_public = $inCore->request('is_public', 'int', '');
+		$iconurl = $_REQUEST['iconurl'];
+		$is_public      = $inCore->request('is_public', 'int', '');
 		if (!$is_public){
 			$access_list = $inCore->request('allow_group', 'array_int');
 			$access_list = $inCore->arrayToYaml($access_list);

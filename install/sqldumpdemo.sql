@@ -56,7 +56,7 @@ CREATE TABLE `#__actions_log` (
   KEY `action_id` (`action_id`,`user_id`),
   KEY `object_id` (`object_id`),
   KEY `target_id` (`target_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__actions_log` (`id`, `action_id`, `pubdate`, `user_id`, `object`, `object_url`, `object_id`, `target`, `target_url`, `target_id`, `description`, `is_friends_only`, `is_users_only`) VALUES
 (2, 11, '2010-11-13 23:09:34', 2, '', '', 0, '', '', 0, 'I love InstantCMS', 0, 0),
@@ -65,6 +65,7 @@ INSERT INTO `#__actions_log` (`id`, `action_id`, `pubdate`, `user_id`, `object`,
 (5, 20, '2010-11-13 23:18:39', 3, 'Администратор', 'http://icms/users/admin', 11, '', '', 0, '', 0, 0),
 (6, 2, '2010-11-13 23:19:19', 3, 'комментарий', '/stati/marketing/yelastichnost-sprosa.html#c14', 14, 'Эластичность спроса', '/stati/marketing/yelastichnost-sprosa.html', 0, 'Полностью согласен с Вами, коллега.', 0, 0),
 (7, 15, '2010-11-13 23:21:43', 3, 'Клуб любителей InstantCMS', '/clubs/14', 14, '', '', 0, '', 0, 0);
+
 
 DROP TABLE IF EXISTS `#__banlist`;
 CREATE TABLE `#__banlist` (
@@ -700,6 +701,7 @@ CREATE TABLE `#__forum_cats` (
 INSERT INTO `#__forum_cats` (`id`, `title`, `published`, `auth_group`, `ordering`) VALUES
 (1, 'Общие вопросы', 1, 0, 1);
 
+
 DROP TABLE IF EXISTS `#__forum_files`;
 CREATE TABLE `#__forum_files` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -998,7 +1000,7 @@ CREATE TABLE `#__online` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `sess_id` (`sess_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__online` (`id`, `ip`, `sess_id`, `lastdate`, `user_id`, `agent`, `viewurl`) VALUES
 (1, '127.0.0.1', 'cro00215v3tvqh3n7n985m0ks2', '2011-04-07 12:10:53', 1, '', '/');
@@ -1252,6 +1254,7 @@ CREATE TABLE `#__tags` (
   KEY `item_id` (`item_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
+
 INSERT INTO `#__tags` (`id`, `tag`, `target`, `item_id`) VALUES
 (255, 'пример', 'photo', 11),
 (257, 'пример', 'photo', 10),
@@ -1469,7 +1472,7 @@ CREATE TABLE `#__user_albums` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `allow_who` (`allow_who`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__user_albums` (`id`, `user_id`, `title`, `pubdate`, `allow_who`, `description`) VALUES
 (2, 3, 'Мой фотоальбом', '2010-10-22 20:28:51', 'all', ''),
@@ -1608,7 +1611,7 @@ CREATE TABLE `#__user_msg` (
   KEY `from_id` (`from_id`),
   KEY `to_del` (`to_del`),
   KEY `from_del` (`from_del`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__user_photos`;
 CREATE TABLE `#__user_photos` (

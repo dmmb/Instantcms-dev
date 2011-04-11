@@ -119,7 +119,7 @@ class cms_model_photos{
         $inUser     = cmsUser::getInstance();
 
         $photo      = cmsCore::callEvent('ADD_PHOTO', $photo);
-		
+
 		$user_id    = $user_id ? $user_id : $inUser->id;
 		
 		if (!$user_id) { return false; }
@@ -471,7 +471,7 @@ class cms_model_photos{
 		
 		$inCore = cmsCore::getInstance();
 		$inUser = cmsUser::getInstance();
-
+		
 		$user_id    = $user_id ? $user_id : $inUser->id;
 		
 		if (!$user_id) { return false; }

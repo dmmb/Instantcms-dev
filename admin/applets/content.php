@@ -21,9 +21,9 @@ function createMenuItem($menu, $id, $title){
 	$sql = "UPDATE cms_menu 
 			SET menu='$menu', 
 				title='$title', 
-				link='$link', 
-				linktype='content',
-				linkid='$id',
+				link='$link',
+				linktype='content', 
+				linkid='$id', 
 				target='_self', 
 				published='1', 
 				template='0', 

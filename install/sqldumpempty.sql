@@ -58,6 +58,7 @@ CREATE TABLE `#__actions_log` (
   KEY `target_id` (`target_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__banlist`;
 CREATE TABLE `#__banlist` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -70,6 +71,7 @@ CREATE TABLE `#__banlist` (
   `autodelete` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__banners`;
 CREATE TABLE `#__banners` (
@@ -101,6 +103,7 @@ CREATE TABLE `#__banner_hits` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__blogs`;
 CREATE TABLE `#__blogs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -120,7 +123,8 @@ CREATE TABLE `#__blogs` (
   KEY `seolink` (`seolink`),
   KEY `user_id` (`user_id`),
   KEY `pubdate` (`pubdate`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__blog_authors`;
 CREATE TABLE `#__blog_authors` (
@@ -134,6 +138,7 @@ CREATE TABLE `#__blog_authors` (
   KEY `blog_id` (`blog_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__blog_cats`;
 CREATE TABLE `#__blog_cats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -142,6 +147,7 @@ CREATE TABLE `#__blog_cats` (
   PRIMARY KEY (`id`),
   KEY `blog_id` (`blog_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__blog_files`;
 CREATE TABLE `#__blog_files` (
@@ -153,6 +159,7 @@ CREATE TABLE `#__blog_files` (
   `pubdate` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__blog_posts`;
 CREATE TABLE `#__blog_posts` (
@@ -177,7 +184,8 @@ CREATE TABLE `#__blog_posts` (
   KEY `blog_id` (`blog_id`),
   KEY `user_id` (`user_id`),
   FULLTEXT KEY `content` (`content`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__board_cats`;
 CREATE TABLE `#__board_cats` (
@@ -238,7 +246,8 @@ CREATE TABLE `#__board_items` (
   KEY `obtype` (`obtype`),
   KEY `city` (`city`),
   FULLTEXT KEY `content` (`content`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__cache`;
 CREATE TABLE `#__cache` (
@@ -249,6 +258,7 @@ CREATE TABLE `#__cache` (
   `cachefile` varchar(80) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__category`;
 CREATE TABLE `#__category` (
@@ -313,7 +323,8 @@ CREATE TABLE `#__clubs` (
   PRIMARY KEY (`id`),
   KEY `pubdate` (`pubdate`),
   KEY `admin_id` (`admin_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__codecheck`;
 CREATE TABLE `#__codecheck` (
@@ -323,6 +334,7 @@ CREATE TABLE `#__codecheck` (
   `session_id` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__comments`;
 CREATE TABLE `#__comments` (
@@ -344,7 +356,8 @@ CREATE TABLE `#__comments` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `target_id` (`target_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__comments_votes`;
 CREATE TABLE `#__comments_votes` (
@@ -354,6 +367,7 @@ CREATE TABLE `#__comments_votes` (
   `user_id` int(11) NOT NULL,
   KEY `comment_id` (`comment_id`,`comment_type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__comment_targets`;
 CREATE TABLE `#__comment_targets` (
@@ -443,7 +457,8 @@ CREATE TABLE `#__content` (
   KEY `user_id` (`user_id`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `content` (`content`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__content_access`;
 CREATE TABLE `#__content_access` (
@@ -454,6 +469,7 @@ CREATE TABLE `#__content_access` (
   PRIMARY KEY (`id`),
   KEY `content_id` (`content_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__cron_jobs`;
 CREATE TABLE `#__cron_jobs` (
@@ -489,6 +505,7 @@ CREATE TABLE `#__downloads` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__event_hooks`;
 CREATE TABLE `#__event_hooks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -521,7 +538,8 @@ CREATE TABLE `#__faq_cats` (
   `description` text NOT NULL,
   `published` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__faq_quests`;
 CREATE TABLE `#__faq_quests` (
@@ -537,7 +555,8 @@ CREATE TABLE `#__faq_quests` (
   `hits` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__filters`;
 CREATE TABLE `#__filters` (
@@ -567,6 +586,7 @@ CREATE TABLE `#__filter_rules` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__forms`;
 CREATE TABLE `#__forms` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -576,7 +596,8 @@ CREATE TABLE `#__forms` (
   `sendto` varchar(4) NOT NULL DEFAULT 'mail',
   `user_id` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__form_fields`;
 CREATE TABLE `#__form_fields` (
@@ -588,7 +609,8 @@ CREATE TABLE `#__form_fields` (
   `mustbe` int(11) NOT NULL,
   `config` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__forums`;
 CREATE TABLE `#__forums` (
@@ -623,7 +645,8 @@ CREATE TABLE `#__forum_cats` (
   `ordering` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `auth_group` (`auth_group`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__forum_files`;
 CREATE TABLE `#__forum_files` (
@@ -636,6 +659,7 @@ CREATE TABLE `#__forum_files` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__forum_images`;
 CREATE TABLE `#__forum_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -644,6 +668,7 @@ CREATE TABLE `#__forum_images` (
   `fileurl` varchar(250) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__forum_polls`;
 CREATE TABLE `#__forum_polls` (
@@ -656,6 +681,7 @@ CREATE TABLE `#__forum_polls` (
   `enddate` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__forum_posts`;
 CREATE TABLE `#__forum_posts` (
@@ -692,7 +718,7 @@ CREATE TABLE `#__forum_threads` (
   KEY `user_id` (`user_id`),
   KEY `forum_id` (`forum_id`),
   FULLTEXT KEY `title` (`title`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
 DROP TABLE IF EXISTS `#__forum_votes`;
@@ -704,6 +730,7 @@ CREATE TABLE `#__forum_votes` (
   `pubdate` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__menu`;
 CREATE TABLE `#__menu` (
@@ -774,7 +801,6 @@ INSERT INTO `#__modules` (`id`, `position`, `name`, `title`, `is_external`, `con
 (36, 'sidebar', 'Разделы сайта', 'Статьи', 1, 'mod_category', 13, 1, 0, 0, '---\nshowdesc: 0\ncategory_id: 6\nicon: /images/markers/folder.png\nmenuid: 21\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
 (39, 'sidebar', 'Выбор шаблона', 'Выбор шаблона', 1, 'mod_template', 12, 1, 0, 0, '---\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
 (47, 'mainbottom', 'Популярное в каталоге', 'Популярное в каталоге', 1, 'mod_uc_popular', 23, 1, 0, 0, '---\nnum: 10\ncat_id: 0\nmenuid: 23\nshowf: 2\nshowtype: thumb\nfulllink: 1\nsort: rating\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-
 (49, 'sidebar', 'Кто онлайн?', 'Кто онлайн?', 1, 'mod_whoonline', 24, 1, 1, 0, '---\nshow_today: 1\nadmin_editor: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
 (50, 'topmenu', 'Темы на форуме', 'Новости форума', 1, 'mod_forum', 31, 1, 1, 0, '---\nshownum: 2\nshowtype: web2\nshowforum: 0\nshowlink: 0\nshowtext: 0\nmenuid: 18\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
 (51, 'sidebar', 'Случайное фото', 'Случайное фото', 1, 'mod_user_image', 25, 1, 0, 0, '---\nshowtitle: 1\nmenuid: 15\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
@@ -892,6 +918,7 @@ CREATE TABLE `#__ns_transactions` (
   PRIMARY KEY (`IDTransaction`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__online`;
 CREATE TABLE `#__online` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -904,7 +931,8 @@ CREATE TABLE `#__online` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `sess_id` (`sess_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__photo_albums`;
 CREATE TABLE `#__photo_albums` (
@@ -965,7 +993,8 @@ CREATE TABLE `#__photo_files` (
   KEY `album_id` (`album_id`),
   KEY `user_id` (`user_id`),
   FULLTEXT KEY `title` (`title`,`description`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__plugins`;
 CREATE TABLE `#__plugins` (
@@ -996,7 +1025,7 @@ CREATE TABLE `#__polls` (
   `pubdate` date NOT NULL DEFAULT '0000-00-00',
   `answers` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
 DROP TABLE IF EXISTS `#__polls_log`;
@@ -1009,6 +1038,7 @@ CREATE TABLE `#__polls_log` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__price_cats`;
 CREATE TABLE `#__price_cats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1016,7 +1046,8 @@ CREATE TABLE `#__price_cats` (
   `description` text NOT NULL,
   `published` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__price_items`;
 CREATE TABLE `#__price_items` (
@@ -1028,7 +1059,8 @@ CREATE TABLE `#__price_items` (
   `canmany` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   FULLTEXT KEY `title` (`title`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__ratings`;
 CREATE TABLE `#__ratings` (
@@ -1044,6 +1076,7 @@ CREATE TABLE `#__ratings` (
   KEY `item_id` (`item_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__ratings_total`;
 CREATE TABLE `#__ratings_total` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1055,6 +1088,7 @@ CREATE TABLE `#__ratings_total` (
   KEY `item_id` (`item_id`),
   KEY `target` (`target`,`item_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__rating_targets`;
 CREATE TABLE `#__rating_targets` (
@@ -1085,6 +1119,7 @@ CREATE TABLE `#__search` (
   `placelink` varchar(100) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__stats`;
 CREATE TABLE `#__stats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1095,6 +1130,7 @@ CREATE TABLE `#__stats` (
   `refer` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__subscribe`;
 CREATE TABLE `#__subscribe` (
@@ -1108,6 +1144,7 @@ CREATE TABLE `#__subscribe` (
   KEY `target_id` (`target_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__tags`;
 CREATE TABLE `#__tags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1117,7 +1154,8 @@ CREATE TABLE `#__tags` (
   PRIMARY KEY (`id`),
   KEY `tag` (`tag`),
   KEY `item_id` (`item_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__uc_cart`;
 CREATE TABLE `#__uc_cart` (
@@ -1129,6 +1167,7 @@ CREATE TABLE `#__uc_cart` (
   `itemscount` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__uc_cats`;
 CREATE TABLE `#__uc_cats` (
@@ -1174,6 +1213,7 @@ CREATE TABLE `#__uc_cats_access` (
   KEY `cat_id` (`cat_id`,`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__uc_discount`;
 CREATE TABLE `#__uc_discount` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1185,7 +1225,8 @@ CREATE TABLE `#__uc_discount` (
   `if_limit` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `cat_id` (`cat_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__uc_items`;
 CREATE TABLE `#__uc_items` (
@@ -1209,7 +1250,8 @@ CREATE TABLE `#__uc_items` (
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   FULLTEXT KEY `title` (`title`,`fieldsdata`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__uc_ratings`;
 CREATE TABLE `#__uc_ratings` (
@@ -1220,6 +1262,7 @@ CREATE TABLE `#__uc_ratings` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__uc_tags`;
 CREATE TABLE `#__uc_tags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1227,6 +1270,7 @@ CREATE TABLE `#__uc_tags` (
   `item_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__upload_images`;
 CREATE TABLE `#__upload_images` (
@@ -1237,6 +1281,7 @@ CREATE TABLE `#__upload_images` (
   `target` varchar(25) NOT NULL DEFAULT 'forum',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__users`;
 CREATE TABLE `#__users` (
@@ -1275,6 +1320,7 @@ CREATE TABLE `#__users_activate` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__user_albums`;
 CREATE TABLE `#__user_albums` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1304,7 +1350,8 @@ CREATE TABLE `#__user_autoawards` (
   `p_karma` int(11) NOT NULL,
   `published` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__user_awards`;
 CREATE TABLE `#__user_awards` (
@@ -1328,6 +1375,7 @@ CREATE TABLE `#__user_clubs` (
   `pubdate` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__user_files`;
 CREATE TABLE `#__user_files` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1340,6 +1388,7 @@ CREATE TABLE `#__user_files` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__user_friends`;
 CREATE TABLE `#__user_friends` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1350,7 +1399,8 @@ CREATE TABLE `#__user_friends` (
   PRIMARY KEY (`id`),
   KEY `to_id` (`to_id`),
   KEY `from_id` (`from_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__user_groups`;
 CREATE TABLE `#__user_groups` (
@@ -1381,6 +1431,7 @@ CREATE TABLE `#__user_invites` (
   KEY `code` (`code`,`owner_id`,`is_used`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
+
 DROP TABLE IF EXISTS `#__user_karma`;
 CREATE TABLE `#__user_karma` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1391,6 +1442,7 @@ CREATE TABLE `#__user_karma` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__user_msg`;
 CREATE TABLE `#__user_msg` (
@@ -1408,6 +1460,7 @@ CREATE TABLE `#__user_msg` (
   KEY `to_del` (`to_del`),
   KEY `from_del` (`from_del`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
 
 DROP TABLE IF EXISTS `#__user_photos`;
 CREATE TABLE `#__user_photos` (
