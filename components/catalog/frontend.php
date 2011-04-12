@@ -862,7 +862,9 @@ function catalog(){
             $fdata = array();
 
             if ($cat['cost']=='') { $cat['cost'] = false; }
-            cmsBilling::checkBalance('catalog', 'add_catalog_item', false, $cat['cost']);
+            if (IS_BILLING){
+                cmsBilling::checkBalance('catalog', 'add_catalog_item', false, $cat['cost']);
+            }
 
         }
         
