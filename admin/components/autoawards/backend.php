@@ -281,7 +281,7 @@ function error($msg){
 				    <td valign="top"><strong>Изображение награды:<br />
 				    </strong><span class="hinttext">Картинки из папки /images/users/awards </span><strong><br />
 			        </strong></td>
-				    <td valign="top"><?php echo usrAwardsList();?></td>
+				    <td valign="top"><?php echo usrAwardsList($mod['imageurl']);?></td>
 			      </tr>
 				  <tr>
 				    <td valign="top"><p><strong>Условия получения награды:</strong> <br>
