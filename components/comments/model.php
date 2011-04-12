@@ -171,6 +171,8 @@ class cms_model_comments{
 
         $comments = array();
 
+        if (!$cfg['edit_minutes']) { $cfg['edit_minutes'] = 0; }
+
         $sql = "SELECT c.*,
                        IFNULL(v.total_rating, 0) as votes,
 					   IFNULL(u.nickname, 0) as nickname,
@@ -203,6 +205,8 @@ class cms_model_comments{
     public function getComment($id, $cfg) {
 
         $comment = array();
+
+        if (!$cfg['edit_minutes']) { $cfg['edit_minutes'] = 0; }
 
         $sql = "SELECT c.*,
                        IFNULL(v.total_rating, 0) as votes,
