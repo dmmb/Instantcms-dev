@@ -11,6 +11,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	cpAddPathway('Форум', '?view=components&do=config&id='.$_REQUEST['id']);
 	echo '<h3>Форум</h3>';
 	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'config'; }
+
+    define('IS_BILLING', $inCore->isComponentInstalled('billing'));
+    if (IS_BILLING) { $inCore->loadClass('billing'); }
 	
 	$toolmenu = array();
 
@@ -762,7 +765,11 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                         <span class="hinttext">0 &mdash бесплатно</span>
                     </td>
                     <td width="259">
-                        <input name="topic_cost" type="text" id="title" value="<?php echo @$mod['topic_cost'];?>" style="width:60px"/> баллов
+                        <?php if (IS_BILLING) { ?>
+                            <input name="topic_cost" type="text" id="title" value="<?php echo @$mod['topic_cost'];?>" style="width:60px"/> баллов
+                        <?php } else { ?>
+                            требуется &laquo;<a href="http://www.instantcms.ru/billing/about.html">Биллинг пользователей</a>&raquo;
+                        <?php } ?>
                     </td>
                 </tr>
         </table>
