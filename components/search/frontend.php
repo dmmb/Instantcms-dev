@@ -234,6 +234,8 @@ function search(){
 		if (!strlen($query)){
 			echo '<p>'.$_LANG['EMPTY_QUERY'].'</p>';
 		} else {
+
+            $query = urldecode($query);
 		
 			if (isset($cfg['perpage'])) { $perpage = $cfg['perpage']; } else { $perpage = 20; }				
 			if (isset($_REQUEST['page'])) { $page = $inCore->request('page', 'int'); } else { $page = 1; }		
