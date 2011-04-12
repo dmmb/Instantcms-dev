@@ -699,7 +699,7 @@ if ($do=='profile'){
     $usr['is_new_friends']		= ($inUser->id==$usr['id'] && $model->isNewFriends($usr['id']));
     
     if ($usr['is_new_friends']){
-        $usr['new_friends'] 	= usrFriendQueriesList($usr['id'], $model);
+        $usr['new_friends'] 	= $model->getNewFriends($usr['id']);
     }
 
     if ($usr['friends'] && $inUser->id && $myprofile && $cfg['sw_feed']){
