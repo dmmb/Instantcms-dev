@@ -510,7 +510,7 @@ if ($do=='thread'){
 				echo $toolbar_pages . $toolbar;
 
 				//ATTACHED POLL
-				echo forumAttachedPoll($id);
+				echo forumAttachedPoll($id, $t);
 	
 				//THREAD MESSAGES LIST
 				echo '<table class="posts_table" width="100%" cellspacing="2" cellpadding="5" border="0" bordercolor="#999999" >';
