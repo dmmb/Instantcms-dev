@@ -24,6 +24,7 @@
     $inCore->loadClass('db');               //база данных
     $inCore->loadClass('user');
     $inCore->loadClass('page');
+	$inCore->loadClass('plugin');
 
     $inCore->loadModel('comments');
     $inCore->loadLanguage('lang');
@@ -71,8 +72,8 @@
 	$comments = array();
     $tree = array();
 
-		//BUILD COMMENTS LIST
-        $comments_list  = $model->getComments($target, $target_id);
+	//BUILD COMMENTS LIST
+    $comments_list  = $model->getComments($target, $target_id, $cfg);
 	if ($comments_list){
 
 		foreach($comments_list as $comment){
