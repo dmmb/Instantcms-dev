@@ -36,7 +36,6 @@ function mod_latestblogs($module_id){
                         p.pubdate as fpubdate,
 						b.user_id as uid,
                         IFNULL(r.total_rating, 0) as rating,
-                        b.owner as owner,
                         b.ownertype as ownertype,
                         u.id as author_id,
                         u.nickname as author,
@@ -55,17 +54,15 @@ function mod_latestblogs($module_id){
 
 		$is_blog = false;
 
-		if ($inDB->num_rows($result)){	
+		if (!$inDB->num_rows($result)){	return false; }
 
 			$is_blog = true;
             $count = 1;
 			$posts = array();
 
-			while($con = $inDB->fetch_assoc($result)){
+		include_once(PATH.'/components/users/includes/usercore.php');
 
-				if (!function_exists('usrImageNOdb')){ //if not included earlier
-                include_once($_SERVER['DOCUMENT_ROOT'].'/components/users/includes/usercore.php');
-				}
+		while($con = $inDB->fetch_assoc($result)){
 
                 if ($count > $cfg['shownum']) { break; }
 
@@ -90,8 +87,8 @@ function mod_latestblogs($module_id){
 
                     $count++;
 
-                }
 				$posts[] = $con;
+
 			}
 
 			}				

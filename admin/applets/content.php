@@ -27,9 +27,9 @@ function createMenuItem($menu, $id, $title){
 				target='_self', 
 				published='1', 
 				template='0', 
-				allow_group='-1', 
+				access_list='', 
 				iconurl=''
-			WHERE id = $myid";
+			WHERE id = '$myid'";
 
 	dbQuery($sql) or die(mysql_error().$sql);
 	return true;

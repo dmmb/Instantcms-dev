@@ -210,11 +210,6 @@ function applet_menu(){
 	
 	if ($do == 'submit'){
 
-		$sql = "SELECT ordering as max_o FROM cms_menu ORDER BY ordering DESC LIMIT 1";
-		$result = dbQuery($sql) ;
-		$row = mysql_fetch_assoc($result);
-		$maxorder = $row['max_o'] + 1;
-	
 		$menu = $_REQUEST['menu'];
 		$title = $inCore->request('title', 'str', '');
 		$target = $_REQUEST['target'];

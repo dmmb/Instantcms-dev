@@ -47,12 +47,11 @@ function rss_comments($item_id, $cfg, &$rssdata){
 				
 		if ($inDB->num_rows($rs)){	
 			while ($item = $inDB->fetch_assoc($rs)){
-				$id                     = $item['id'];
-				$items[$id]             = $item;
-				$items[$id]['title']    = strip_tags($item['content']);
-				$items[$id]['link']     = $rooturl . $item['target_link'];
-				$items[$id]['comments'] = $rooturl . $item['target_link'];
-				$items[$id]['category'] = '';
+				$item['title']    = strip_tags($item['content']);
+				$item['link']     = $rooturl . $item['target_link'].'#c'.$item['id'];
+				$item['comments'] = $rooturl . $item['target_link'].'#c'.$item['id'];
+				$item['category'] = '';
+				$items[]          = $item;
 			}
 		}
 		

@@ -113,14 +113,16 @@ class cms_model_photos{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-	public function addPhoto($photo, $differ = ''){
+	public function addPhoto($photo, $differ = '', $user_id = false){
 
         $inCore     = cmsCore::getInstance();
         $inUser     = cmsUser::getInstance();
 
         $photo      = cmsCore::callEvent('ADD_PHOTO', $photo);
 
-        $user_id    = $inUser->id;
+		$user_id    = $user_id ? $user_id : $inUser->id;
+		
+		if (!$user_id) { return false; }
 
         $sql = "INSERT INTO cms_photo_files (album_id, title, description, pubdate, file, published, showdate, comments, user_id, owner)
                 VALUES ('{$photo['album_id']}', '{$photo['title']}', '{$photo['description']}', NOW(),
@@ -132,7 +134,7 @@ class cms_model_photos{
         
         cmsInsertTags($photo['tags'], 'photo', $photo_id);
 
-        cmsUser::checkAwards($inUser->id);
+        cmsUser::checkAwards($user_id);
 
         $album_title = $this->inDB->get_field('cms_photo_albums', "id='{$photo['album_id']}'", 'title');
 		
@@ -465,40 +467,44 @@ class cms_model_photos{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function checkAccess($album){
+    public function checkAccess($album, $user_id){
 		
 		$inCore = cmsCore::getInstance();
 		$inUser = cmsUser::getInstance();
 		
-		$user_karma = cmsUser::getKarma($inUser->id);
+		$user_id    = $user_id ? $user_id : $inUser->id;
+		
+		if (!$user_id) { return false; }
+
+		$user_karma = cmsUser::getKarma($user_id);
 		
 		global $_LANG;
 		
 		if ($album['NSDiffer']=='') { 
 
-			$can_add    = $inUser->id; 
+			$can_add    = $user_id; 
 			$min_karma  = false; 
 
 		} elseif (strstr($album['NSDiffer'],'club')){
 			
 			$club =$this->inDB->get_fields('cms_clubs', 'id='.$album['user_id'], '*');
 
-			$can_add   = clubUserIsMember($club['id'], $inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || $inUser->is_admin;
+			$can_add   = clubUserIsMember($club['id'], $user_id) || clubUserIsAdmin($club['id'], $user_id) || $inCore->userIsAdmin($user_id);
 			$min_karma = $club['photo_min_karma'];
 
 		}
 		
 		if ($album['public'] && $can_add){
 			
-			if ($this->loadedByUser24h($inUser->id, $album['id'])<$album['uplimit'] || $album['uplimit'] == 0){
+			if ($this->loadedByUser24h($user_id, $album['id'])<$album['uplimit'] || $album['uplimit'] == 0 || $inCore->userIsAdmin($user_id)){
 				
-				if ($min_karma === false || $user_karma>=$min_karma || clubUserIsRole($club['id'], $inUser->id, 'moderator')){
+				if ($min_karma === false || $user_karma>=$min_karma || clubUserIsRole($club['id'], $user_id, 'moderator')){
 					
 					return true;
 					
 				} else {
 					
-					cmsCore::addSessionMessage('<p><strong>'.$_LANG['NEED_KARMA_TEXT'].'</strong></p><p>'.$_LANG['NEEDED'].' '.$min_karma.', '.$_LANG['HAVE_ONLY'].' '.$user_karma.'.</p><p>'.$_LANG['WANT_SEE'].' <a href="/users/'.$inUser->id.'/karma.html">'.$_LANG['HISTORY_YOUR_KARMA'].'</a>?</p>', 'error');
+					cmsCore::addSessionMessage('<p><strong>'.$_LANG['NEED_KARMA_TEXT'].'</strong></p><p>'.$_LANG['NEEDED'].' '.$min_karma.', '.$_LANG['HAVE_ONLY'].' '.$user_karma.'.</p><p>'.$_LANG['WANT_SEE'].' <a href="/users/'.$user_id.'/karma.html">'.$_LANG['HISTORY_YOUR_KARMA'].'</a>?</p>', 'error');
 				
 					return false;
 					

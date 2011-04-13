@@ -24,10 +24,10 @@
 				<span>{$LANG.TEXT_ADV}:</span>
 			</td>
 			<td height="100" valign="top">
-				<textarea name="content" style="width:400px" rows="5" id="content">{$content}</textarea>
+				<textarea name="content" style="width:400px" rows="5" id="content">{$item.content}</textarea>
 			</td>
 		</tr>
-		{if $category_id}
+		{if $item.cat_id}
 			<tr>
 				<td height="30"><span>{$LANG.MOVE_TO_CAT}:</span></td>
 				<td>
@@ -41,12 +41,7 @@
 		{if $cfg.photos && $cat.is_photos}
 			<tr>
 				<td><span>{$LANG.PHOTO}:</span></td>
-				<td>
-                    <input name="picture" type="file" id="picture" />
-                    {if strlen($file)}
-                        <input type="checkbox" name="delphoto" value="1" id="delphoto" /> {$LANG.DEL_PHOTO}
-                    {/if}
-                </td>
+				<td><input name="Filedata" type="file" id="picture" style="width:400px;" /></td>
 			</tr>
 		{/if}
 		{if $form_do == 'edit'}
@@ -89,10 +84,10 @@
             {/if}
         {/if}
 
-        {if $form_do == 'edit' && $is_vip}
+        {if $form_do == 'edit' && $item.is_vip}
 			<tr>
 				<td height="35"><span>{$LANG.VIP_STATUS}:</span></td>
-				<td height="35">до {$vipdate}</td>
+				<td height="35">до {$item.vipdate}</td>
 			</tr>
         {/if}
 

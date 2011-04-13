@@ -187,7 +187,7 @@ class cms_model_content{
         $inCore = cmsCore::getInstance();
 
         $nested_sets    = $inCore->nestedSetsInit('cms_category');
-        $rootid         = $this->inDB->get_field('cms_category', 'parent_id=0', 'id');
+        $rootid         = $this->getRootCatId();
 
         $rs_rows        = $nested_sets->SelectSubNodes($rootid);
 
@@ -200,6 +200,15 @@ class cms_model_content{
         $subcats = cmsCore::callEvent('GET_CONTENT_PUBCATS', $subcats);
 
         return $subcats;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function getRootCatId($differ = ''){
+		
+		return $this->inDB->get_field('cms_category', "parent_id=0 AND NSDiffer = '$differ'", 'id');
 
     }
 

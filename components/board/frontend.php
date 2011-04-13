@@ -339,6 +339,7 @@ if ($do=='additem'){
 	$inPage->addPathway($_LANG['ADD_ADV']);
     $inPage->printHeading($_LANG['ADD_ADV']);
 
+	// Проверяем права доступа
     if ( !(loadedByUser24h($inUser->id, $cat['id'])<$cat['uplimit'] || $cat['uplimit'] == 0) ){       
 		cmsCore::addSessionMessage($_LANG['MAX_VALUE_OF_ADD_ADV'], 'error');
 		$inCore->redirect('/board/'.$id);      
@@ -352,6 +353,7 @@ if ($do=='additem'){
     if ( !$inCore->inRequest('submit') ) {
 
         if (IS_BILLING) { cmsBilling::checkBalance('board', 'add_item'); }
+        $inPage->setTitle($_LANG['ADD_ADV']);
 
 		$item = cmsUser::sessionGet('item');
 		if ($item) { cmsUser::sessionDel('item'); }
@@ -377,10 +379,7 @@ if ($do=='additem'){
 
     if ( $inCore->inRequest('submit') ) {
 
-        $errors     = '';
-        $user_id    = $inUser->id;
-
-        //params
+        // входные данные
         $obtype     = $inCore->request('obtype', 'str');
         $title_r	= $inCore->request('title', 'str', '');
         $title      = $obtype .' '. $title_r;

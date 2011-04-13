@@ -388,31 +388,6 @@ function usrIsFriends($to_id, $my_id, $is_accepted = true){
 	return $is_friend;
 }
 
-function usrFriendQueriesList($user_id, $model){
-   
-    $inCore = cmsCore::getInstance();
-
-    $query_list = array();
-
-    $query_list = $model->getNewFriends($user_id);
-
-    if (!$query_list){ return; }
-
-    foreach($query_list as $id=>$query){
-        $query_list[$id]['sender_img'] = ($query['sender_img']) ? '/images/users/avatars/small/'.$query['sender_img'] : '/images/users/avatars/small/nopic.jpg';
-    }
-
-    ob_start();
-
-    $smarty = $inCore->initSmarty('components', 'com_users_newfriends.tpl');
-
-    $smarty->assign('friends', $query_list);
-
-    $smarty->display('com_users_newfriends.tpl');
-
-	return ob_get_clean();
-}
-
 function usrFriends($user_id, &$total, $perpage=10, $page=1){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();

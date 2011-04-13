@@ -455,7 +455,9 @@ div.filter {
 	margin-bottom:4px;
 }
 
-.advert_inmaps, .advert_inshop{
+.advert_inmaps,
+.advert_inshop,
+.advert_billing{
     height:32px;
     line-height:32px;
     padding:1px;
@@ -463,7 +465,8 @@ div.filter {
     margin-left:15px;
 }
 
-.advert_inmaps{ margin-top:8px; background:url(/admin/images/advert/maps.png) no-repeat; }
+.advert_billing{ margin-top:8px; background:url(/admin/images/advert/billing.png) no-repeat; }
+.advert_inmaps{ background:url(/admin/images/advert/maps.png) no-repeat; }
 .advert_inshop{ margin-top:0px; margin-bottom:8px; background:url(/admin/images/advert/shop.png) no-repeat; }
 
 #catalog_advert{

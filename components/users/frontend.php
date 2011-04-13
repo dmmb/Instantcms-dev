@@ -124,7 +124,7 @@ if ($do=='city'){
                 p.city, p.karma as karma, p.imageurl, 
 				p.gender as gender
                 FROM cms_users u
-				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+				INNER JOIN cms_user_profiles p ON p.user_id = u.id
 				WHERE u.is_deleted = 0 AND u.is_locked = 0 AND p.city LIKE '%$city%'
 				ORDER BY city DESC";
 	
@@ -153,7 +153,7 @@ if ($do=='hobby'){
                 p.city, p.karma as karma, p.imageurl, 
 				p.gender as gender
                 FROM cms_users u
-				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+				INNER JOIN cms_user_profiles p ON p.user_id = u.id
 				WHERE u.is_deleted = 0 AND u.is_locked = 0
 				AND (LOWER(p.description) LIKE '%$hobby%' OR LOWER(p.formsdata) LIKE '%$hobby%')
 				ORDER BY city DESC";
@@ -221,7 +221,7 @@ if ($do=='search'){
                  p.city, p.karma as karma, p.imageurl, 
 				 p.gender as gender
                  FROM cms_users u
-				 LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+				 INNER JOIN cms_user_profiles p ON p.user_id = u.id
 				 WHERE u.is_deleted = 0 AND u.is_locked = 0 $s
 				 ORDER BY city DESC";
 
@@ -278,7 +278,7 @@ if ($do=='view'){
                     p.city, p.karma as karma, p.imageurl, 
 				    p.gender as gender
                     FROM cms_users u
-				    LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+				    INNER JOIN cms_user_profiles p ON p.user_id = u.id
 				    WHERE u.is_locked = 0 AND u.is_deleted = 0
 					ORDER BY ".$orderby." ".$orderto."
 					LIMIT ".(($page-1)*$perpage).", $perpage";
@@ -296,7 +296,7 @@ if ($do=='view'){
 				    p.gender as gender
 				    FROM cms_online o
                     LEFT JOIN cms_users u ON  u.id = o.user_id
-				    LEFT  JOIN cms_user_profiles p ON p.user_id = u.id
+				    INNER  JOIN cms_user_profiles p ON p.user_id = u.id
 				    WHERE u.is_locked = 0 AND u.is_deleted = 0
                     GROUP BY o.user_id
 					ORDER BY ".$orderby." ".$orderto."
@@ -482,7 +482,7 @@ if ($do=='editprofile'){
 							DATE_FORMAT(u.birthdate, '%Y') as byear,
 							IFNULL(p.gender, 0) as gender
 				    FROM cms_users u
-					LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+					INNER JOIN cms_user_profiles p ON p.user_id = u.id
 					WHERE u.id = '$id' AND u.is_locked = 0
 					LIMIT 1
 					";					
@@ -699,7 +699,7 @@ if ($do=='profile'){
     $usr['is_new_friends']		= ($inUser->id==$usr['id'] && $model->isNewFriends($usr['id']));
     
     if ($usr['is_new_friends']){
-        $usr['new_friends'] 	= usrFriendQueriesList($usr['id'], $model);
+        $usr['new_friends'] 	= $model->getNewFriends($usr['id']);
     }
 
     if ($usr['friends'] && $inUser->id && $myprofile && $cfg['sw_feed']){
@@ -859,7 +859,7 @@ if ($do=='avatar'){
 			if ($inCore->inRequest('upload')) {
 				$inCore->includeGraphics();
 		
-						$uploaddir 		= $_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/';		
+			$uploaddir 		= PATH.'/images/users/avatars/';		
 						$realfile		= $_FILES['picture']['name'];
 			$path_parts     = pathinfo($realfile);
             $ext            = strtolower($path_parts['extension']);
@@ -881,13 +881,13 @@ if ($do=='avatar'){
 						if ($inCore->moveUploadedFile($source, $uploadfile, $errorCode)) {
 
                             //DELETE OLD AVATAR
-					$sql = "SELECT imageurl FROM cms_user_profiles WHERE id = $id";
+					$sql = "SELECT imageurl FROM cms_user_profiles WHERE user_id = '$id'";
 							$result = $inDB->query($sql) ;
 							if ($inDB->num_rows($result)){
 								$old = $inDB->fetch_assoc($result);
                                 if ($old['imageurl'] && $old['imageurl']!='nopic.jpg'){
-                                    @unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/'.$old['imageurl']);
-                                    @unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/small/'.$old['imageurl']);
+							@unlink(PATH.'/images/users/avatars/'.$old['imageurl']);
+							@unlink(PATH.'/images/users/avatars/small/'.$old['imageurl']);
                                 }
 							}
 

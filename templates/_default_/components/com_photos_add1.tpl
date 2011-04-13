@@ -26,10 +26,12 @@
         if ($('#only_mod').attr('checked')){{/literal}
 			$('#text_mes').html('<strong>{$LANG.STEP} 1</strong>: {$LANG.PHOTO_DESCS}.');
 			$('#text_title').html('{$LANG.PHOTO_TITLES}:');
+			$('.usr_photos_notice').show();
 			$('#text_desc').html('{$LANG.PHOTO_DESCS}:');{literal}
         } else {{/literal}
 			$('#text_mes').html('<strong>{$LANG.STEP} 1</strong>: {$LANG.PHOTO_DESC}.');
 			$('#text_title').html('{$LANG.PHOTO_TITLE}:');
+			$('.usr_photos_notice').hide();
 			$('#text_desc').html('{$LANG.PHOTO_DESC}:');{literal}
         }
     }
@@ -40,7 +42,7 @@
 <h3 style="border-bottom: solid 1px gray" id="text_mes">
 	<strong>{$LANG.STEP} 1</strong>: {$LANG.PHOTO_DESC}.
 </h3>
-
+<div class="usr_photos_notice" style="display:none;">{$LANG.PHOTO_PLEASE_NOTE}</div>
 <form action="{$form_action}" method="POST">
 	<input type="hidden" name="imageurl" value="{$filename}"/>
 	<table width="500">

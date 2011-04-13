@@ -149,24 +149,36 @@ class cms_model_users{
 
     public function getNewFriends($user_id){
 
+		$inCore  = cmsCore::getInstance();
+
         $friends = array();
 
 		$sql = "SELECT f.*, u.nickname as sender, u.login as sender_login, p.imageurl as sender_img
                 FROM cms_user_friends f
-				LEFT JOIN cms_users u ON f.from_id = u.id
-				LEFT JOIN cms_user_profiles p ON p.id = u.id
+				INNER JOIN cms_users u ON f.from_id = u.id
+				INNER JOIN cms_user_profiles p ON p.user_id = u.id
                 WHERE f.to_id = '$user_id' AND f.is_accepted = 0";
+
         $result = $this->inDB->query($sql);
 
         if (!$this->inDB->num_rows($result)){ return false; }
 
         while($friend = $this->inDB->fetch_assoc($result)){
+			$friend['sender_img'] = ($friend['sender_img']) ? '/images/users/avatars/small/'.$friend['sender_img'] : '/images/users/avatars/small/nopic.jpg';
             $friends[] = $friend;
         }
 
         $friends = cmsCore::callEvent('GET_NEW_FRIENDS', $friends);
 
-        return $friends;
+		ob_start();
+	
+		$smarty = $inCore->initSmarty('components', 'com_users_newfriends.tpl');
+	
+		$smarty->assign('friends', $friends);
+	
+		$smarty->display('com_users_newfriends.tpl');
+	
+		return ob_get_clean();
         
     }
 
