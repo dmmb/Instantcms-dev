@@ -151,7 +151,7 @@ function forumUserAnswer($poll_id){
 	} else { return 0; }
 }
 
-function forumAttachedPoll($thread_id){
+function forumAttachedPoll($thread_id, $thread){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
@@ -211,11 +211,13 @@ function forumAttachedPoll($thread_id){
 						  $total += $answers_num[$key];
 					  }
 					 $html .= '</table>';
-					 if (@$inUser->id && !$uservote){
-						 $html .= '<div class="forum_poll_submit"><input type="submit" name="votepoll" value="'.$_LANG['VOTING'].'"></div>';
-					 }
-                     if (!$inUser->id){
-                         $html .= '<div class="forum_poll_submit">'.$_LANG['GUESTS_NOT_VOTE'].'</div>';
+                     if (!$thread['closed']){
+                         if (@$inUser->id && !$uservote){
+                             $html .= '<div class="forum_poll_submit"><input type="submit" name="votepoll" value="'.$_LANG['VOTING'].'"></div>';
+                         }
+                         if (!$inUser->id){
+                             $html .= '<div class="forum_poll_submit">'.$_LANG['GUESTS_NOT_VOTE'].'</div>';
+                         }
                      }
 					$html .= '</form>';
 				} else {
@@ -281,7 +283,7 @@ function forumAttachedPoll($thread_id){
 					}
 				}
 								
-				if (@$inUser->id){
+				if (@$inUser->id && !$thread['closed']){
 					$html .= '<div class="forum_poll_param">[<a href="/forum/reply'.$thread_id.'.html">'.$_LANG['COMMENT_POOL'].'</a>]</div>';
 				}
 

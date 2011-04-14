@@ -148,7 +148,7 @@ class cms_model_users{
 /* ==================================================================================================== */
 
     public function getNewFriends($user_id){
-		
+
 		$inCore  = cmsCore::getInstance();
 
         $friends = array();

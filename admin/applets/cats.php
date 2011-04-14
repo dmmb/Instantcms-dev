@@ -11,18 +11,19 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 function createMenuItem($menu, $id, $title){
     $inCore = cmsCore::getInstance();
+
 	$rootid = dbGetField('cms_menu', 'parent_id=0', 'id');
 
-	$ns     = $inCore->nestedSetsInit('cms_menu');
-	$myid   = $ns->AddNode($rootid);
-
-    $link   = $inCore->getMenuLink('category', $id, $myid);
+	$ns = $inCore->nestedSetsInit('cms_menu');
+	$myid = $ns->AddNode($rootid);
+	
+    $link = $inCore->getMenuLink('category', $id, $myid);
 
 	$sql = "UPDATE cms_menu 
 			SET menu='$menu', 
 				title='$title', 
 				link='$link',
-				linktype='category', 
+				linktype='category',
 				linkid='$id', 
 				target='_self', 
 				published='1', 

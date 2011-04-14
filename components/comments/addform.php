@@ -58,7 +58,7 @@
 
     if ($do=='edit'){
 
-        if (!$cfg['edit_minutes']) { return; }
+        if (!$cfg['edit_minutes'] && !$inUser->is_admin) { return; }
 
         $comment = $model->getComment($comment_id, $cfg);
 

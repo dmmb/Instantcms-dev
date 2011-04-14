@@ -318,7 +318,7 @@ function bannerHitsbyID($id){
 				    <td><strong>Тип баннера: </strong></td>
 				    <td><select name="typeimg" id="typeimg">
                       <option value="image" <?php if(@$mod['typeimg']=='image') { echo 'selected'; } ?>>Изображение (gif, jpg)</option>
-                      <option value="swf">Flash (swf) (468x60)</option>
+                      <option value="swf" <?php if(@$mod['typeimg']=='swf') { echo 'selected'; } ?>>Flash (swf) (468x60)</option>
                     </select></td>
 			      </tr>
 				  <tr>

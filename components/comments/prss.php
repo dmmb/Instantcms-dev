@@ -34,16 +34,15 @@ function rss_comments($item_id, $cfg, &$rssdata){
 			$channel['description'] = $_LANG['COMMENTS_ON_SITE'];
 			$channel['link']        = $rooturl;
 		}
-
+        
 		//ITEMS				
 		$sql = "SELECT  c.*, DATE_FORMAT(c.pubdate, '%a, %d %b %Y %H:%i:%s GMT') as pubdate
 				FROM cms_comments c
 				WHERE c.published=1 $catsql
 				ORDER by c.pubdate DESC
 				LIMIT $maxitems";
-
-		$rs = $inDB->query($sql) or die('RSS building error!');	
-
+						
+		$rs = $inDB->query($sql) or die('RSS building error!');		
 		$items = array();
 				
 		if ($inDB->num_rows($rs)){	
@@ -55,7 +54,7 @@ function rss_comments($item_id, $cfg, &$rssdata){
 				$items[]          = $item;
 			}
 		}
-
+		
 		//RETURN		
 		$rssdata = array();	
 		$rssdata['channel'] = $channel;

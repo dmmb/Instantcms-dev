@@ -63,7 +63,7 @@ if ($do=='view'){
         $cat = $model->getCategory($id); 
     } else {
 		$cat = $model->getCategory($model->getRootCatId());
-	}
+    }
 
     if (!$cat && $inCore->menuId() !== 1) { cmsCore::error404(); }
 
@@ -382,10 +382,11 @@ if ($do=='addarticle' || $do=='editarticle'){
             $inPage->addPathway($_LANG['ADD_ARTICLE']);
             $pagetitle = $_LANG['ADD_ARTICLE'];
 
+            $pubcats        = $model->getPublicCats();
+
             // поддержка биллинга
             $dynamic_cost = false;
-            if (IS_BILLING){             
-                $pubcats        = $model->getPublicCats();                
+            if (IS_BILLING){                             
                 $action         = cmsBilling::getAction('content', 'add_content');
                 foreach($pubcats as $p=>$pubcat){
                     if ($pubcat['cost']){

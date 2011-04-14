@@ -399,7 +399,6 @@ function comments($target='', $target_id=0, $labels=array()){
         unset($_SESSION['cm_error']);
 
         $error          = '';
-        $user_id        = $inCore->request('user_id', 'int', 0);
 
 		if ($inCore->isUserCan('comments/bbcode') && ($cfg['bbcode'] || $cfg['smiles'])) {
             $content        = $inCore->request('content', 'html', '');
@@ -414,8 +413,7 @@ function comments($target='', $target_id=0, $labels=array()){
         $comment_id     = $inCore->request('comment_id', 'int', 0);
 
         //Проверяем ошибки
-        if (!$comment_id) { $error = $_LANG['ERR_UNKNOWN_TARGET']; }        
-        if ($user_id != $inUser->id) { $error = $_LANG['ERR_DEFINE_USER']; }
+        if (!$comment_id) { $error = $_LANG['ERR_UNKNOWN_TARGET']; }
         if (!$content) { $error = $_LANG['ERR_COMMENT_TEXT']; }
 
         $comment = $model->getComment($comment_id, $cfg);

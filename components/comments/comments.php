@@ -72,7 +72,7 @@
 	$comments = array();
     $tree = array();
 
-	//BUILD COMMENTS LIST
+		//BUILD COMMENTS LIST
     $comments_list  = $model->getComments($target, $target_id, $cfg);
 	if ($comments_list){
 
