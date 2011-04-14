@@ -266,7 +266,7 @@ function installCheckExtensions(){
 
                 <table cellpadding="0" cellspacing="0" border="0">
                     <tr>
-                        <td width="20"><input type="checkbox" id="license_agree" onclick="checkAgree()"/></td>
+                        <td width="20"><input type="checkbox" id="license_agree" onClick="checkAgree()"/></td>
                         <td>
                             <label for="license_agree">Я согласен с условиями</label>
                             <a target="_blank" href="/license.rus.win.txt">лицензии GNU/GPL</a>
@@ -429,7 +429,7 @@ function installCheckExtensions(){
 		?>
 	
 		<div id="footer">
-			<a href="http://www.instantcms.ru/" target="_blank"><strong>InstantCMS</strong></a> &copy; 2007-2010			
+			<a href="http://www.instantcms.ru/" target="_blank"><strong>InstantCMS</strong></a> &copy; 2007-<?php echo date('Y')?>			
 		</div>
 		
 	</div>

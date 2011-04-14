@@ -44,6 +44,7 @@ function arhive(){
                        DATE_FORMAT( pubdate, '%m' ) month,
                        COUNT( id ) num
 				FROM cms_content
+				WHERE published = 1
 				GROUP BY DATE_FORMAT(pubdate, '%M, %Y') 
 				ORDER BY pubdate DESC";
 
@@ -77,7 +78,7 @@ function arhive(){
 
         $sql = "SELECT DATE_FORMAT( pubdate, '%M' ) fdate, DATE_FORMAT( pubdate, '%Y' ) year, DATE_FORMAT( pubdate, '%m' ) month, COUNT( id ) num
                 FROM cms_content
-                WHERE DATE_FORMAT(pubdate, '%Y') LIKE '$year'
+                WHERE published = 1 AND DATE_FORMAT(pubdate, '%Y') LIKE '$year'
                 GROUP BY DATE_FORMAT(pubdate, '%M')
                 ORDER BY pubdate DESC
                 ";
@@ -132,7 +133,7 @@ function arhive(){
                    cat.seolink as cat_seolink, 
                    cat.id cid
             FROM cms_content con, cms_category cat
-            WHERE $date_where AND con.category_id = cat.id
+            WHERE $date_where AND con.published = 1 AND con.category_id = cat.id
             ORDER BY con.pubdate DESC";
 
     $result         = $inDB->query($sql);

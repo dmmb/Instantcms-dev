@@ -25,5 +25,5 @@ function importDump(){
 }
 
 function deleteDump(file){
-	$("div#dumpinfo").load("/core/ajax/dumper.php", {opt: "delete", fileurl: file});	
+	$("div#dumpinfo").load("/core/ajax/dumper.php", {opt: "delete", file: file});	
 }

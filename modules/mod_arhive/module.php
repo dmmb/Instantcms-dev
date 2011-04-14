@@ -18,7 +18,7 @@ function mod_arhive($module_id){
 				FROM cms_content"."\n";
 				
 		if($cfg['cat_id']>0){
-			$sql .= "WHERE category_id = ".$cfg['cat_id'];
+			$sql .= "WHERE published = 1 AND category_id = '{$cfg['cat_id']}'";
 			if ($cfg['source']!='both'){
 				if ($cfg['source']=='arhive'){
 					$sql .= " AND is_arhive = 1". "\n";
