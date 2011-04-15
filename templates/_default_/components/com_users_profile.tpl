@@ -385,16 +385,18 @@
 
 						{if $cfg.sw_wall}
 							<div class="usr_wall usr_profile_block">
-								<div class="usr_wall_header">{$LANG.USER_WALL}</div>
-								<div class="usr_wall_body">
-                                    <div class="wall_body">{$usr.wall_html}</div>
-                                </div>
-                                <div class="usr_wall_addlink">
-                                    <a href="#addwall" id="addlink" onclick="{literal}$('div#addwall').slideToggle();$('.usr_wall_addlink').toggle();$('.wall_message').focus();{/literal}">
-                                        <span>{$LANG.WRITE_ON_WALL}</span>
-                                    </a>
+								<div class="usr_wall_header">
+                                    {$LANG.USER_WALL}
+                                    <div class="usr_wall_addlink" style="float:right">
+                                        <a href="#addwall" id="addlink" onclick="{literal}$('div#addwall').slideToggle();$('.usr_wall_addlink').toggle();$('.wall_message').focus();{/literal}">
+                                            <span>{$LANG.WRITE_ON_WALL}</span>
+                                        </a>
+                                    </div>
                                 </div>
 								<div id="addwall" style="display:none">{$usr.addwall_html}</div>
+								<div class="usr_wall_body" style="clear:both">
+                                    <div class="wall_body">{$usr.wall_html}</div>
+                                </div>
 							</div>
 						{/if}
 					</div>
