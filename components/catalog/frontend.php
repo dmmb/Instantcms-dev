@@ -295,6 +295,8 @@ function catalog(){
     if ($do == 'tag') {
 
         $tag = $inCore->request('tag', 'str');
+        $tag = urldecode($tag);
+
         $sql = "SELECT tag FROM cms_tags WHERE tag = '$tag' AND target='catalog' LIMIT 1";
         $result = $inDB->query($sql) ;
         if ($inDB->num_rows($result)==1){
