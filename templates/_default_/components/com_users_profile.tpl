@@ -45,8 +45,8 @@
         <span>{$usr.status_text}</span>
         <span class="usr_status_date" >// {$usr.status_date} {$LANG.BACK}</span>
     </div>
-    {if $myprofile}
-        <div class="usr_status_link"><a href="javascript:setStatus()">{$LANG.CHANGE_STATUS}</a></div>
+    {if $myprofile || $is_admin}
+        <div class="usr_status_link"><a href="javascript:" onclick="setStatus({$usr.id})">{$LANG.CHANGE_STATUS}</a></div>
     {/if}
 </div>
 

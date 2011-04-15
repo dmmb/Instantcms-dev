@@ -23,13 +23,19 @@
 
     if (!$inUser->id) { return; }
 
-    $status = $inCore->request('status', 'str', '');
+    $status     = $inCore->request('status', 'str', '');
+    $user_id    = $inCore->request('id', 'int', 0);
+
+    if (!$user_id) { $user_id = $inUser->id; }
+
+    if ($user_id != $inUser->id && !$inUser->is_admin) { return; }
+
     $status = @iconv('UTF-8', 'CP1251', $status);
     if (strlen($status)>140){ $status = substr($status, 0, 140); }
 
     $sql = "UPDATE cms_users
             SET status = '{$status}', status_date = NOW()
-            WHERE id = '{$inUser->id}'
+            WHERE id = '{$user_id}'
             LIMIT 1";
 
     $inDB->query($sql);
@@ -43,7 +49,8 @@
             'target' => '',
             'target_url' => '',
             'target_id' => 0,
-            'description' => $status
+            'description' => $status,
+            'user_id' => $user_id
         ));
     }
     
