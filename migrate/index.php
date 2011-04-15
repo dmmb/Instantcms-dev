@@ -208,6 +208,11 @@
         $is_was_migrate = true;
     }
 
+    if (!$inDB->isFieldExists('cms_users', 'is_logged_once')){
+        $inDB->query("ALTER TABLE `cms_users` ADD `is_logged_once` TINYINT NOT NULL DEFAULT '1' AFTER `is_deleted`");
+        $is_was_migrate = true;
+    }
+
 // ========================================================================== //
 // ========================================================================== //
 	if ($is_was_migrate) {

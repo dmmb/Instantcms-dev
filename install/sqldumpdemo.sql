@@ -1436,6 +1436,7 @@ CREATE TABLE `#__users` (
   `birthdate` date NOT NULL DEFAULT '0000-00-00',
   `is_locked` int(11) NOT NULL,
   `is_deleted` int(11) NOT NULL,
+  `is_logged_once` tinyint(4) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL,
   `points` int(11) NOT NULL,
   `last_ip` varchar(15) NOT NULL,
@@ -1447,10 +1448,10 @@ CREATE TABLE `#__users` (
   KEY `login` (`login`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 ROW_FORMAT=DYNAMIC;
 
-INSERT INTO `#__users` (`id`, `group_id`, `login`, `nickname`, `password`, `email`, `icq`, `regdate`, `logdate`, `birthdate`, `is_locked`, `is_deleted`, `rating`, `points`, `last_ip`, `status`, `status_date`, `invited_by`, `invdate`) VALUES
-(1, 2, 'admin', 'Администратор', '2ca41752ccf4dbdb76d8fe88c488fd44', 'admin@cms.ru', '100200300', '2007-11-23 12:41:57', '2010-11-14 15:24:30', '1980-10-23', 0, 0, 32, 0, '127.0.0.1', 'Самый длинный статус из всех что существуют в этом прекрасном мире', '2010-10-21 02:06:53', 0, '2010-11-09 23:25:59'),
-(2, 1, 'vasya', 'Василий', '2ca41752ccf4dbdb76d8fe88c488fd44', 'vasya@cms.ru', '100200300', '2008-07-16 16:31:48', '2010-11-14 14:32:47', '1980-01-01', 0, 0, 5, 0, '127.0.0.1', 'I love InstantCMS', '2010-11-13 23:09:34', 0, '2010-11-02 13:50:04'),
-(3, 1, 'fedor', 'Федор', '2ca41752ccf4dbdb76d8fe88c488fd44', 'fedor@cms.com', '100334564', '2010-10-20 17:33:42', '2010-11-13 23:22:26', '1979-10-20', 0, 0, 0, 0, '127.0.0.1', 'We are all made of stars (c) Moby', '2010-10-28 15:44:45', NULL, NULL);
+INSERT INTO `#__users` (`id`, `group_id`, `login`, `nickname`, `password`, `email`, `icq`, `regdate`, `logdate`, `birthdate`, `is_locked`, `is_deleted`, `is_logged_once`, `rating`, `points`, `last_ip`, `status`, `status_date`, `invited_by`, `invdate`) VALUES
+(1, 2, 'admin', 'Администратор', '2ca41752ccf4dbdb76d8fe88c488fd44', 'admin@cms.ru', '100200300', '2007-11-23 12:41:57', '2011-04-15 13:20:33', '1980-10-23', 0, 0, 0, 32, 0, '127.0.0.1', 'Самый длинный статус из всех что существуют в этом прекрасном мире', '2010-10-21 02:06:53', 0, '2010-11-09 23:25:59'),
+(2, 1, 'vasya', 'Василий', '2ca41752ccf4dbdb76d8fe88c488fd44', 'vasya@cms.ru', '100200300', '2008-07-16 16:31:48', '2011-04-15 12:36:58', '1980-01-01', 0, 0, 0, 5, 0, '127.0.0.1', 'I love InstantCMS', '2010-11-13 23:09:34', 0, '2010-11-02 13:50:04'),
+(3, 1, 'fedor', 'Федор', '2ca41752ccf4dbdb76d8fe88c488fd44', 'fedor@cms.com', '100334564', '2010-10-20 17:33:42', '2010-11-13 23:22:26', '1979-10-20', 0, 0, 0, 0, 0, '127.0.0.1', 'We are all made of stars (c) Moby', '2010-10-28 15:44:45', NULL, NULL);
 
 DROP TABLE IF EXISTS `#__users_activate`;
 CREATE TABLE `#__users_activate` (
