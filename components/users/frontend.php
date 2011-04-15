@@ -138,6 +138,8 @@ if ($do=='hobby'){
 
     $hobby = $inCore->request('hobby', 'str', '');
 
+    $hobby = urldecode($hobby);
+
     $hobby = str_replace('\"', '"', $hobby);
 
     $hobby = strtolower($hobby);
@@ -2364,10 +2366,13 @@ if ($do=='addfile'){
 				foreach ($_FILES as $key => $data_array) {
 					$error = $data_array['error'];
 					if ($error == UPLOAD_ERR_OK) {
-						@mkdir(PATH.'/upload/userfiles/'.$id);
+
+                        $upload_dir = PATH.'/upload/userfiles/'.$id;
+						@mkdir($upload_dir);
+                        file_put_contents($upload_dir.'/index.html', '');
 					
 						$tmp_name   = $data_array["tmp_name"];
-				$name     = $data_array["name"];
+                        $name       = $data_array["name"];
 						$size       = $inCore->strClear($data_array["size"]);
 						$size_mb    += round(($size/1024)/1024, 2);
 						
@@ -2436,7 +2441,7 @@ if ($do=='addfile'){
 
 				} else {
 			
-			cmsCore::addSessionMessage($_LANG['ERR_BIG_FILE'].', '.$_LANG['ERR_FILE_NAME'], 'error');
+			cmsCore::addSessionMessage($_LANG['ERR_BIG_FILE'].' '.$_LANG['ERR_FILE_NAME'], 'error');
 
 				}
 				
