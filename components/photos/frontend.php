@@ -227,8 +227,8 @@ if ($do=='view'){
 							$con['photolink'] 	= '/photos/photo'.$con['id'].'.html';
 							$con['photolink2'] 	= '/photos/photo'.$con['id'].'.html';
 						} else {
-							$con['photolink']	= '/images/photos/'.$con['file'];
-							$con['photolink2']	= '/images/photos/'.$con['file'];
+							$con['photolink']	= '/images/photos/medium/'.$con['file'];
+							$con['photolink2']	= '/images/photos/medium/'.$con['file'];
 						}
                     }
 					$cons[] = $con;
@@ -323,8 +323,6 @@ if($do=='viewphoto'){
 
 		$inCore->loadLib('karma');
 		
-		if ($photo['a_type'] != 'simple'){
-
 		$is_author = $photo['user_id'] == $inUser->id;
 
 			$photo['pubdate'] = $inCore->dateformat($photo['pubdate']);
@@ -372,8 +370,7 @@ if($do=='viewphoto'){
 				$inCore->includeComments();
 				comments('photo', $photo['id']);
 			}
-			
-		}			
+							
 }
 /////////////////////////////// PHOTO UPLOAD /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='uploadphotos'){
