@@ -1132,11 +1132,10 @@ function cpGetList($listtype){
 	//Menu types
 	if ($listtype == 'menu'){
 		$list[0]['title'] = 'Главное меню';			$list[0]['id'] = 'mainmenu';
-		$list[1]['title'] = 'Дополнительное меню 1';	$list[1]['id'] = 'menu1';
-		$list[2]['title'] = 'Дополнительное меню 2';	$list[2]['id'] = 'menu2';
-		$list[3]['title'] = 'Дополнительное меню 3';	$list[3]['id'] = 'menu3';
-		$list[4]['title'] = 'Дополнительное меню 4';	$list[4]['id'] = 'menu4';
-		$list[5]['title'] = 'Дополнительное меню 5';	$list[5]['id'] = 'menu5';						
+        for ($m=1; $m<=15; $m++){
+            $list[$m]['title'] = "Дополнительное меню {$m}";
+            $list[$m]['id'] = 'menu'.$m;
+        }
 		return $list;
 	}
 
