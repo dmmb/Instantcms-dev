@@ -11,7 +11,7 @@
 
     define('HOST', 'http://' . $inCore->getHost());
 
-	if ($inCore->request('file', 'str')) { $shortfile = $inCore->request('file', 'str'); } else { $shortfile = date('d-m-Y').'.sql'; }
+    $shortfile = $inCore->request('file', 'str', date('d-m-Y').'.sql');
     $opt = $inCore->request('opt', 'str', 'export');
 
 	$dir    = PATH.'/backups';
@@ -64,7 +64,7 @@
 	}
 	
 	if ($opt=='delete'){
-		if(@unlink($file)){
+		if(@unlink($dir.'/'.$shortfile)){ 
 		 	echo '<span style="color:green">Файл удален.</span>';
 		} else {
 		 	echo '<span style="color:red">Ошибка удаления файла.</span>';

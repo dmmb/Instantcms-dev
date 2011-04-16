@@ -451,13 +451,10 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 	
 	if ($filter){
 		$f = 0;
-		$sql .= ' WHERE ';
+		$sql .= ' WHERE 1=1';
 		foreach($filter as $key => $value){
 			if($filter[$key]!=-100){
-				$f++;
-				if ($f > 1){
-					$sql .= ' AND ';
-				}
+                $sql .= ' AND ';
 				if ($key != 'category_id'){
 				$sql .= $key . " LIKE '%" . $filter[$key] . "%'";
 				} else {

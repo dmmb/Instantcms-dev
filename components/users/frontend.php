@@ -1110,6 +1110,8 @@ if ($do=='uploadphotos'){
 
     if (!$cfg['sw_photo']) { cmsCore::error404(); }
 
+    if (!$_FILES['Filedata']['name']) { cmsCore::error404(); }
+
     // Code for Session Cookie workaround
 	if ($inCore->inRequest("PHPSESSID")) {
         $sess_id = $inCore->request("PHPSESSID", 'str');

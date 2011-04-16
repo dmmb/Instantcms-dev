@@ -424,13 +424,16 @@ if ($do=='uploadphotos'){
 			$photo['is_hidden'] = $club['clubtype'] == 'private' ? true : false;
 
 		}
-		$last_id = $inDB->get_field('cms_photo_files', 'published=1 ORDER BY id DESC', 'id');
+        
+        if (!$inCore->inRequest('upload')) {
+            $last_id = $inDB->get_field('cms_photo_files', 'published=1 ORDER BY id DESC', 'id');
+        }
 
         $photo['published'] = $published;
         $photo['showdate']  = 1;
 		$photo['album_id']	= $id;
 		$photo['filename']	= $file['filename'];
-		$photo['title']     = $photo['title'] ? $photo['title'].' '.$last_id : $file['realfile'];
+		$photo['title']     = $photo['title'] ? $photo['title'] . $last_id : $file['realfile'];
 
 		$photo_id = $model->addPhoto($photo, $differ, $user_id);
 
