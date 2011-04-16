@@ -1,16 +1,16 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//						   InstantCMS v1.0 (c) 2008 COMMERCIAL VERSION                       //
-//   						Source code protected by copyright laws                          //
-//                                                                                           //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 function isNew($item_id, $shownew, $newint){
