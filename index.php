@@ -62,7 +62,7 @@
 	$inUser->autoLogin();     //автоматически авторизуем пользователя, если найден кукис
 
     //проверяем что пользователь не удален и не забанен
-    if (!$inUser->update() && !$inCore->request('uri', 'str')=='/logout') { $inCore->halt(); }
+    if (!$inUser->update() && !$_SERVER['REQUEST_URI']!=='/logout') { $inCore->halt(); }
 
     //определяем заголовок главной страницы
     $home_title = $inConf->hometitle ? $inConf->hometitle : $inConf->sitename;
@@ -76,8 +76,8 @@
     //то показываем шаблон сообщения о том что сайт отключен
 	if ( $inConf->siteoff &&
         !$inUser->is_admin &&
-        $inCore->request('uri', 'str')!='login' &&
-        $inCore->request('uri', 'str')!='logout'
+        $_SERVER['REQUEST_URI']!='/login' &&
+        $_SERVER['REQUEST_URI']!='/logout'
        ) {
             $inPage->includeTemplateFile('special/siteoff.php');
             $inCore->halt();

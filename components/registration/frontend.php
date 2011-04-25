@@ -434,7 +434,9 @@ function registration(){
                         } else {
                             $url = $back;
                         }
-                    } else { 
+                    } else {
+                        $admin_back = strstr($back, '/admin/login.php') ? '/admin' : $back;
+                        $url = isset($_SESSION['back_url']) ? $_SESSION['back_url'] : $admin_back;
                         $url = isset($_SESSION['back_url']) ? $_SESSION['back_url'] : '/';
                         if (isset($_SESSION['back_url'])) unset($_SESSION['back_url']);
                     }
