@@ -1,4 +1,4 @@
-function setStatus(){
+function setStatus(user_id){
 
     var new_status = prompt('Введите ваше статусное сообщение (максимум 140 символов):');
 
@@ -20,8 +20,10 @@ function setStatus(){
         }
     }
 
+    if (user_id==undefined){ user_id = 0; }
+
     if (new_status || new_status == '') {
-        $.post('/components/users/ajax/status.php', {'status': new_status}, function(data){});
+        $.post('/components/users/ajax/status.php', {'status': new_status, 'id': user_id}, function(data){});
     }
 
 }

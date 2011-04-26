@@ -1,14 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
@@ -222,8 +223,8 @@ function registration(){
 
                     $group_id = $cfg['default_gid'] ? $cfg['default_gid'] : 1;
 
-                    $sql = "INSERT INTO cms_users (group_id, login, nickname, password, email, icq, regdate, logdate, birthdate, is_locked, invited_by)
-                            VALUES ('$group_id', '$login', '$nickname', '$pass', '$email', '$icq', NOW(), NOW(), '$birthdate', '$is_locked', '{$invited_by}')";
+                    $sql = "INSERT INTO cms_users (group_id, login, nickname, password, email, icq, regdate, logdate, birthdate, is_locked, is_logged_once, invited_by)
+                            VALUES ('$group_id', '$login', '$nickname', '$pass', '$email', '$icq', NOW(), NOW(), '$birthdate', '$is_locked', 0, '{$invited_by}')";
                     $inDB->query($sql) ;
 
                     $new_user_id = dbLastId('cms_users');
@@ -325,7 +326,7 @@ function registration(){
         if($inCore->inRequest('is_admin')){
             $back = '/admin/';
         } else {
-            $back = ($_SERVER['HTTP_REFERER'] == 'http://'.$_SERVER['HTTP_HOST'].'/login') ? '/' : $inCore->getBackURL();
+            $back = $inCore->getBackURL();
         }
 
         if( $inCore->inRequest('logout') ) {
@@ -352,30 +353,22 @@ function registration(){
 
         if( !$inCore->inRequest('logout') ) {
 
-                if (isset($_SESSION['auth_back_url'])){
-                    $back = $_SESSION['auth_back_url'];
-                    $is_sess_back = true;
-                    unset($_SESSION['auth_back_url']);
-                } else {
-                    $is_sess_back = false;
-                }
-
                 if ($inCore->inRequest('login')) { $login = $inCore->request('login', 'str'); }
                 if ($inCore->inRequest('pass')) { $passw = $inCore->request('pass', 'str'); }
 
                 if (!$login && !$passw){
-					if ($is_sess_back) {
-                    $_SESSION['auth_back_url'] = $back;
-					}
+
+                    $_SESSION['back_url'] = $inCore->getBackURL();
 
                     $inPage->setTitle($_LANG['SITE_LOGIN']);
                     $inPage->addPathway($_LANG['SITE_LOGIN']);
 
                     $smarty = $inCore->initSmarty('components', 'com_registration_login.tpl');
                     $smarty->assign('cfg', $cfg);
-                    $smarty->assign('is_sess_back', $is_sess_back);
+                    $smarty->assign('is_sess_back', isset($_SESSION['auth_back_url']));
                     $smarty->display('com_registration_login.tpl');
                     return;
+
                 }
 
                 $remember_pass = $inCore->inRequest('remember');
@@ -412,25 +405,41 @@ function registration(){
 
                     $inUser->dropStatTimer();
 
-                    //cmsUser::updateStats($user['id']);
+                    $first_time_auth = !$user['is_logged_once'];
 
-                    $first_time_auth = ($user['logdate']=='0000-00-00 00:00:00' || intval($user['logdate']==0));
-
-                    $inDB->query("UPDATE cms_users SET logdate = NOW(), last_ip = '$current_ip' WHERE id = ".$user['id']) ;
+                    $inDB->query("UPDATE cms_users SET logdate = NOW(), last_ip = '$current_ip', is_logged_once = 1 WHERE id = ".$user['id']) ;
 
                     $cfg = $inCore->loadComponentConfig('registration');
                     if (!isset($cfg['auth_redirect']))          {  $cfg['auth_redirect'] = 'index';            }
                     if (!isset($cfg['first_auth_redirect']))    {  $cfg['first_auth_redirect'] = 'profile';    }
 
-                    if (!$inCore->userIsAdmin($user['id']) && !$is_sess_back){
-                        if ($first_time_auth) { $cfg['auth_redirect'] = $cfg['first_auth_redirect']; }
-                        switch($cfg['auth_redirect']){
-                            case 'none': $url = $back; break;
-                            case 'index': $url = '/'; break;
-                            case 'profile': $url = cmsUser::getProfileURL($user['login']); break;
-                            case 'editprofile': $url = '/users/'.$user['id'].'/editprofile.html'; break;
+                    if ($_SESSION['auth_back_url']){
+                        $back = $_SESSION['auth_back_url'];
+                        $is_sess_back = true;
+                        unset($_SESSION['auth_back_url']);
+                    } else {
+                        $is_sess_back = false;
+                        $back = $inCore->getBackURL();
+                    }
+
+                    if (!$inCore->userIsAdmin($user['id'])){
+                        if (!$is_sess_back){
+                            if ($first_time_auth) { $cfg['auth_redirect'] = $cfg['first_auth_redirect']; }
+                            switch($cfg['auth_redirect']){
+                                case 'none': $url = $back; break;
+                                case 'index': $url = '/'; break;
+                                case 'profile': $url = cmsUser::getProfileURL($user['login']); break;
+                                case 'editprofile': $url = '/users/'.$user['id'].'/editprofile.html'; break;
+                            }
+                        } else {
+                            $url = $back;
                         }
-                    } else { $url = $back; }
+                    } else {
+                        $admin_back = strstr($back, '/admin/login.php') ? '/admin' : $back;
+                        $url = isset($_SESSION['back_url']) ? $_SESSION['back_url'] : $admin_back;
+                        $url = isset($_SESSION['back_url']) ? $_SESSION['back_url'] : '/';
+                        if (isset($_SESSION['back_url'])) unset($_SESSION['back_url']);
+                    }
 
                     //Редиректим назад
                     $inCore->redirect($url);

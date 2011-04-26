@@ -1,4 +1,15 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 	session_start();
 
@@ -11,7 +22,7 @@
 
     define('HOST', 'http://' . $inCore->getHost());
 
-	$shortfile = $inCore->request('file', 'str', date('d-m-Y').'.sql');
+    $shortfile = $inCore->request('file', 'str', date('d-m-Y').'.sql');
     $opt = $inCore->request('opt', 'str', 'export');
 
 	$dir    = PATH.'/backups';
@@ -64,7 +75,7 @@
 	}
 	
 	if ($opt=='delete'){
-		if(@unlink($dir.'/'.$shortfile)){
+		if(@unlink($dir.'/'.$shortfile)){ 
 		 	echo '<span style="color:green">Файл удален.</span>';
 		} else {
 		 	echo '<span style="color:red">Ошибка удаления файла.</span>';

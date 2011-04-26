@@ -1,14 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 class cmsUser {
 
@@ -197,7 +198,9 @@ class cmsUser {
         $inDB       = cmsDatabase::getInstance();
         $inCore     = cmsCore::getInstance();
         
-        if ($inCore->getCookie('userid') && !$this->id){
+        $user_id    = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : 0;
+
+        if ($inCore->getCookie('userid') && !$user_id){
 
             $cookie_code = $inCore->getCookie('userid');
 

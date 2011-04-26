@@ -1,5 +1,17 @@
 <?php
-	header('Content-Type: text/html; charset=windows-1251'); 
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
+    header('Content-Type: text/html; charset=windows-1251');
     session_start();
 
 	define("VALID_CMS", 1);

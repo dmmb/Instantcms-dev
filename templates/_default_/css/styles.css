@@ -3360,7 +3360,7 @@ div.user_profile_data .field .value {  }
     display:inline-block;
 	background:url(../images/icons/add.png) no-repeat 6px center #E0EAEF;
 }
-.usr_wall_addlink a{ color:#375E93; text-decoration:none; }
+.usr_wall_addlink a{ color:#375E93; text-decoration:none; font-size:13px; }
 .usr_friendslink{ text-decoration:underline; color:#999999; }
 
 textarea.wall_message{ width:100%; height:100px; }

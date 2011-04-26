@@ -1,12 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
     session_start();
 
@@ -205,6 +208,11 @@
 
     if (!$inDB->isFieldExists('cms_forums', 'topic_cost')){
         $inDB->query("ALTER TABLE `cms_forums` ADD `topic_cost` FLOAT NOT NULL DEFAULT '0'");
+        $is_was_migrate = true;
+    }
+
+    if (!$inDB->isFieldExists('cms_users', 'is_logged_once')){
+        $inDB->query("ALTER TABLE `cms_users` ADD `is_logged_once` TINYINT NOT NULL DEFAULT '1' AFTER `is_deleted`");
         $is_was_migrate = true;
     }
 

@@ -1,12 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 defined('VALID_CMS_ADMIN') or die( 'Доступ запрещен' );
 
@@ -454,9 +457,7 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 		$sql .= ' WHERE 1=1';
 		foreach($filter as $key => $value){
 			if($filter[$key]!=-100){
-
-				$sql .= ' AND ';
-
+                $sql .= ' AND ';
 				if ($key != 'category_id'){
 				$sql .= $key . " LIKE '%" . $filter[$key] . "%'";
 				} else {
@@ -1131,11 +1132,10 @@ function cpGetList($listtype){
 	//Menu types
 	if ($listtype == 'menu'){
 		$list[0]['title'] = 'Главное меню';			$list[0]['id'] = 'mainmenu';
-		$list[1]['title'] = 'Дополнительное меню 1';	$list[1]['id'] = 'menu1';
-		$list[2]['title'] = 'Дополнительное меню 2';	$list[2]['id'] = 'menu2';
-		$list[3]['title'] = 'Дополнительное меню 3';	$list[3]['id'] = 'menu3';
-		$list[4]['title'] = 'Дополнительное меню 4';	$list[4]['id'] = 'menu4';
-		$list[5]['title'] = 'Дополнительное меню 5';	$list[5]['id'] = 'menu5';						
+        for ($m=1; $m<=15; $m++){
+            $list[$m]['title'] = "Дополнительное меню {$m}";
+            $list[$m]['id'] = 'menu'.$m;
+        }
 		return $list;
 	}
 

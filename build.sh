@@ -2,9 +2,9 @@
 
 VERSION=$1;
 TO_DIR=$2;
-TO_DIR_DEFAULT='/var/www/icms_build';
+TO_DIR_DEFAULT='/home/r2/www/icms_build';
 
-SRC_DIR='/var/www/icms';
+SRC_DIR='/home/r2/www/icms';
 DISTR_NAME='instantCMS_'`date +%Y%m%d`'_v'$VERSION'.zip';
 
 if [[ $VERSION = "" ]]
