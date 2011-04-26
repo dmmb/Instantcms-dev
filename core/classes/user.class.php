@@ -70,6 +70,8 @@ class cmsUser {
 
         if (!file_exists(PATH.'/images/users/avatars/small/'.$this->imageurl) || !$this->imageurl){ $this->imageurl = 'nopic.jpg'; }
 
+        $this->logdate = $_SESSION['user']['logdate'];
+
         $this->id = (int)$user_id;
 
         $this->checkBan();
