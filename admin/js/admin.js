@@ -14,27 +14,27 @@ $(document).ready(function(){
 	
 	$('.jclock').jclock();
 	
-	$('input[@type=button]').addClass('button');
-	$('input[@type=submit]').addClass('button');
+	$('input[type=button]').addClass('button');
+	$('input[type=submit]').addClass('button');
 
-    $('input[@name=published][@type=checkbox]').click(function(){
+    $('input[name=published][type=checkbox]').click(function(){
 
         var checked = $(this).attr('checked');
 
         if (checked){
-            $('label[@for=published] strong').css('color', 'green');
+            $('label[for=published] strong').css('color', 'green');
         } else {
-            $('label[@for=published] strong').css('color', 'red');
+            $('label[for=published] strong').css('color', 'red');
         }
 
     });
 
-    var checked = $('input[@name=published][@type=checkbox]').attr('checked');
+    var checked = $('input[name=published][type=checkbox]').attr('checked');
 
     if (checked){
-        $('label[@for=published] strong').css('color', 'green');
+        $('label[for=published] strong').css('color', 'green');
     } else {
-        $('label[@for=published] strong').css('color', 'red');
+        $('label[for=published] strong').css('color', 'red');
     }
 
 });

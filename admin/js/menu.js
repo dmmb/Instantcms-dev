@@ -27,7 +27,7 @@ function showMenuTarget(){
 
     $('.menu_target').hide();
 
-    var target = $('select[@name=mode]').val();
+    var target = $('select[name=mode]').val();
 
     $('div#t_'+target).fadeIn('fast');
 

@@ -47,7 +47,7 @@ function loadComments(target, target_id, anchor){
                 $('td.loading').html('');
                 if (anchor){
                     window.location.hash = anchor.substr(1, 100);
-                    $('a[@href='+anchor+']').css('color', 'red').attr('title', 'Вы пришли на страницу по этой ссылке');
+                    $('a[href='+anchor+']').css('color', 'red').attr('title', 'Вы пришли на страницу по этой ссылке');
                 }
 			}
     });

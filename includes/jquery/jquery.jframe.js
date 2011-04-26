@@ -58,7 +58,7 @@ jQuery.fn.preloadJFrame = function () {
 
 jQuery.fn.getJFrameTarget = function () {
     // Returns first parent jframe element, if exists
-    var div = jQuery(this).parents("div[@src]").get(0);
+    var div = jQuery(this).parents("div[src]").get(0);
     if (div) {
         var target = jQuery(this).attr("target");
         if (target) {
@@ -82,7 +82,7 @@ jQuery.fn.loadJFrame = function(url, callback) {
                      function() { 
                          jQuery(this).attr("src", url);
                          jQuery(this).activateJFrame(); 
-                         jQuery(this).find("div[@src]").each(function(i) {
+                         jQuery(this).find("div[src]").each(function(i) {
                                  jQuery(this).loadJFrame();
                              } );
                          eval(this_callback);
@@ -126,7 +126,7 @@ jQuery.fn.activateJFrame = function() {
 
 
 jQuery(document).ready(function() { 
-    jQuery(document).find("div[@src]").each(function(i) {
+    jQuery(document).find("div[src]").each(function(i) {
             jQuery(this).loadJFrame();
     } );
 } );
