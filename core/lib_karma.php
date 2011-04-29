@@ -1,12 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
@@ -19,11 +22,10 @@ function setClubsRating($club_id){
 
     if (!is_int($club_id)){ return; }
 
-    $sql = "SELECT SUM( r.points ) AS rating
-            FROM cms_user_clubs u, cms_clubs c, cms_ratings r
-            LEFT JOIN cms_photo_files f ON r.item_id = f.id AND r.target = 'photo'
-            LEFT JOIN cms_blog_posts p ON r.item_id = p.id AND r.target = 'blogpost'
-            WHERE u.club_id = '$club_id' AND (f.user_id = u.user_id OR p.user_id = u.user_id)";
+    $sql = "SELECT SUM( u.rating ) AS rating
+			FROM cms_user_clubs c
+			LEFT JOIN cms_users u ON u.id = c.user_id
+			WHERE c.club_id = '$club_id'";
     
     $rs = $inDB->query($sql);
     
@@ -164,7 +166,7 @@ function cmsSubmitKarma($target, $item_id, $points){
         $user_sql = "UPDATE cms_users u,
                             {$info['target_table']} t
                      SET u.rating = u.rating + ({$points}*{$info['user_weight']})
-                     WHERE t.user_id = u.id";
+                     WHERE t.user_id = u.id AND t.id = '$item_id'";
 
         $inDB->query($user_sql);
         
@@ -176,7 +178,8 @@ function cmsSubmitKarma($target, $item_id, $points){
         $inCore = cmsCore::getInstance();
         $inCore->loadModel($info['component']);
         if (class_exists('cms_model_'.$info['component'])){
-            eval('$model = new cms_model_'.$info['component'].'();');
+			$model_class  = 'cms_model_'.$info['component'];
+			$model = new $model_class();
             if (method_exists($model, 'updateRatingHook')){
                 $model->updateRatingHook($target, $item_id, $points);
             }
@@ -188,7 +191,6 @@ function cmsSubmitKarma($target, $item_id, $points){
 }
 
 function cmsKarmaFormat($points){
-    $inDB = cmsDatabase::getInstance();
 	if ($points==0) {
 		$html = '<span style="color:silver;">0</span>';
 	} elseif ($points>0){
@@ -200,7 +202,6 @@ function cmsKarmaFormat($points){
 }
 
 function cmsKarmaFormatSmall($points){
-    $inDB = cmsDatabase::getInstance();
 	if ($points==0) {
 		$html = '<span style="color:gray;">0</span>';
 	} elseif ($points>0){
@@ -211,33 +212,30 @@ function cmsKarmaFormatSmall($points){
 	return $html;
 }
 
-function cmsKarmaForm($target, $target_id){
-    $inDB       = cmsDatabase::getInstance();
+function cmsKarmaForm($target, $target_id, $points = 0, $is_author = false){
+
     $inUser     = cmsUser::getInstance();
     $inPage     = cmsPage::getInstance();
 	$html       = '';
-	$postkarma  = cmsKarma($target, $target_id);
 
-    //PREPARE POINTS
+    global $_LANG;
+
+	if (!$points) {
+		$postkarma = cmsKarma($target, $target_id);
 	$points     = cmsKarmaFormat($postkarma['points']);
-	$control    = '';
-
-    //Определяем является ли текущий пользователь автором материала
-    switch($target){
-        case 'photo':       $target_table = 'cms_photo_files';  break;
-        case 'blogpost':    $target_table = 'cms_blog_posts';   break;
-        case 'content':     $target_table = 'cms_content';      break;
+	} else {
+		$points    = $points;
     }
     
-    $is_target_author = $inDB->rows_count($target_table, "id={$target_id} AND user_id={$inUser->id}", 1);
+	$control    = '';
 
 	//PREPARE RATING FORM
-	if ($inUser->id && !$is_target_author){
+	if ($inUser->id && !$is_author){
 		if(!cmsAlreadyKarmed($target, $target_id, $inUser->id)){
 			$inPage->addHeadJS('core/js/karma.js');
 			$control .= '<div style="text-align:center;margin-top:10px;">';
-				$control .= '<a href="javascript:void(0);" onclick="plusKarma(\''.$target.'\', \''.$target_id.'\')" title="Одобрить"><img src="/components/users/images/karma_up.gif" border="0" alt="Карма+"/></a> ';
-				$control .= '<a href="javascript:void(0);" onclick="minusKarma(\''.$target.'\', \''.$target_id.'\')" title="Отклонить"><img src="/components/users/images/karma_down.gif" border="0" alt="Карма-"/></a>';
+				$control .= '<a href="javascript:void(0);" onclick="plusKarma(\''.$target.'\', \''.$target_id.'\')" title="'.$_LANG['LIKE'].'"><img src="/components/users/images/karma_up.png" border="0" alt="Карма+"/></a> ';
+				$control .= '<a href="javascript:void(0);" onclick="minusKarma(\''.$target.'\', \''.$target_id.'\')" title="'.$_LANG['UNLIKE'].'"><img src="/components/users/images/karma_down.png" border="0" alt="Карма-"/></a>';
 			$control .= '</div>'; 
 		}
 	}
@@ -249,54 +247,63 @@ function cmsKarmaForm($target, $target_id){
 	return $html;
 }
 
-function cmsKarmaButtons($target, $target_id){
+function cmsKarmaButtons($target, $target_id, $points = 0, $is_author = false){
     
-    $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
     $inPage = cmsPage::getInstance();
 	$html   = '';
+    $control = '';
+    global $_LANG;
 
+	if (!$points) {
 	$postkarma = cmsKarma($target, $target_id);
-
-	//PREPARE POINTS
 	$points = cmsKarmaFormat($postkarma['points']);
+	} else {
+		$points    = $points;
+	}
 
 	//PREPARE RATING FORM
-	if ($inUser->id){
+	if ($inUser->id && !$is_author){
 		if(!cmsAlreadyKarmed($target, $target_id, $inUser->id)){
 			$inPage->addHeadJS('core/js/karma.js');
 			
 			$control .= '<div style="text-align:center">';
-				$control .= '<a href="javascript:void(0);" onclick="plusKarma(\''.$target.'\', '.$target_id.');" title="Одобрить"><img src="/components/users/images/karma_up.gif" border="0" alt="Карма+"/></a> ';
-				$control .= '<a href="javascript:void(0);" onclick="minusKarma(\''.$target.'\', '.$target_id.');" title="Отклонить"><img src="/components/users/images/karma_down.gif" border="0" alt="Карма-"/></a>';
+				$control .= '<a href="javascript:void(0);" onclick="plusKarma(\''.$target.'\', '.$target_id.');" title="'.$_LANG['LIKE'].'"><img src="/components/users/images/karma_up.png" border="0" alt="Карма+"/></a> ';
+				$control .= '<a href="javascript:void(0);" onclick="minusKarma(\''.$target.'\', '.$target_id.');" title="'.$_LANG['UNLIKE'].'"><img src="/components/users/images/karma_down.png" border="0" alt="Карма-"/></a>';
 			$control .= '</div>'; 
 		}
 	}
 
-	$html .= '<div class="karma_buttons">';
-		$html .= '<div id="karmactrl">'.$control.'</div>';
-	$html .= '</div>';
+    if ($control){
+        $html .= '<div class="karma_buttons">';
+            $html .= '<div id="karmactrl">'.$control.'</div>';
+        $html .= '</div>';
+    }
 
 	return $html;
     
 }
+function cmsKarmaButtonsText($target, $target_id, $points = 0, $is_author = false){
 
-function cmsKarmaButtonsText($target, $target_id){
-    $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
     $inPage = cmsPage::getInstance();
 	$html = '';
+
+	if (!$points) {
 	$postkarma = cmsKarma($target, $target_id);
-	//PREPARE POINTS
 	$points = cmsKarmaFormat($postkarma['points']);
+	} else {
+		$points    = $points;
+	}
+
 	$control = '';
 	//PREPARE RATING FORM
-	if ($inUser->id){
+	if ($inUser->id && !$is_author){
 		if(!cmsAlreadyKarmed($target, $target_id, $inUser->id)){
 			$inPage->addHeadJS('core/js/karma.js');
 			$control .= '<span>';
-				$control .= '<a href="javascript:void(0);" onclick="plusKarma(\''.$target.'\', '.$target_id.');" style="color:green">Одобрить</a> &uarr; ';
-				$control .= '<a href="javascript:void(0);" onclick="minusKarma(\''.$target.'\', '.$target_id.');" style="color:red">Отклонить</a> &darr;';
+				$control .= '<a href="javascript:void(0);" onclick="plusKarma(\''.$target.'\', '.$target_id.');" style="color:green">Нравится</a> &uarr; ';
+				$control .= '<a href="javascript:void(0);" onclick="minusKarma(\''.$target.'\', '.$target_id.');" style="color:red">Не нравится</a> &darr;';
 			$control .= '</span>'; 
 			$html .= '<span class="karma_buttons">';
 					$html .= '<span id="karmactrl">'.$control.'</span>';

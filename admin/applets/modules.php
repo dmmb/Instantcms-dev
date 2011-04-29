@@ -1,13 +1,17 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
 
 function applet_modules(){
 
@@ -33,28 +37,121 @@ function applet_modules(){
 
 	if ($do == 'config'){
 	
-		$module_name = cpModuleById($id);
+		$module_name    = cpModuleById($id);
+		$module_title   = cpModuleTitleById($id);
 		
 		if (!$module_name) { header('location:index.php?view=modules&do=edit&id='.$id); }
 
-        $php_file = 'modules/'.$module_name.'/backend.php';
-        if (file_exists($php_file)){ include $php_file; return; }
-
         $xml_file = PATH.'/admin/modules/'.$module_name.'/backend.xml';
-        if (!file_exists($xml_file)){ $inCore->halt(); }
+        $php_file = 'modules/'.$module_name.'/backend.php';
+
+        if (!file_exists($xml_file)){
+            if (file_exists($php_file)){ include $php_file; return; }
+            $inCore->halt();
+        }
 
         $cfg = $inCore->loadModuleConfig($id);
 
         $inCore->loadClass('formgen');
 
-        $formGen = new cmsFormGen($xml_file, $cfg);
+        $formGen = new cmsFormGen($xml_file, $cfg);       
 
+        cpAddPathway($module_title, '?view=modules&do=edit&id='.$id);
+    	cpAddPathway('Настройки', '?view=modules&do=config&id='.$id);
+
+        echo '<h3>'.$module_title.'</h3>';
+
+        if (isset($_SESSION['save_message'])){
+            echo '<p class="success">'.$_SESSION['save_message'].'</p>';
+            unset ($_SESSION['save_message']);
+        }
+
+        $toolmenu = array();
+        $toolmenu[0]['icon'] = 'save.gif';
+        $toolmenu[0]['title'] = 'Сохранить';
+        $toolmenu[0]['link'] = 'javascript:submitModuleConfig()';
+
+        $toolmenu[2]['icon'] = 'cancel.gif';
+        $toolmenu[2]['title'] = 'Отмена';
+        $toolmenu[2]['link'] = '?view=modules';
+
+        $toolmenu[1]['icon'] = 'edit.gif';
+        $toolmenu[1]['title'] = 'Редактировать отображение модуля';
+        $toolmenu[1]['link'] = '?view=modules&do=edit&id='.$id;
+
+        cpToolMenu($toolmenu);
+
+        echo '<form action="index.php?view=modules&do=save_auto_config&id='.$id.'" method="post" name="optform" target="_self" id="optform">';
         echo $formGen->getHTML();
+        echo '</form>';
 
         return;
 
 	}
 		
+//============================================================================//
+//============================================================================//
+
+    if ($do == 'save_auto_config'){
+
+        $module_name = cpModuleById($id);
+
+        $is_ajax = $inCore->inRequest('ajax');
+
+        if ($is_ajax){
+            $title      = $inCore->request('title', 'str');
+            $published  = $inCore->request('published', 'int', 0);
+            $inDB->query("UPDATE cms_modules SET title='{$title}', published='{$published}' WHERE id={$id}");
+            if($inCore->inRequest('content')){
+                $content = $inDB->escape_string($inCore->request('content', 'html'));
+                $inDB->query("UPDATE cms_modules SET content='{$content}' WHERE id={$id}");
+            }
+        }
+
+        if ($inCore->inRequest('title_only')){
+            $inCore->redirectBack();
+        }
+
+        $xml_file = PATH.'/admin/modules/'.$module_name.'/backend.xml';
+        if (!file_exists($xml_file)){ $inCore->halt(); }
+
+        $cfg = array();
+
+        $backend = simplexml_load_file($xml_file);
+
+        foreach($backend->params->param as $param){
+
+            $name       = (string)$param['name'];
+            $type       = (string)$param['type'];
+            $default    = iconv('utf-8', 'cp1251', (string)$param['default']);
+
+            if ($type == 'flag' && $default === 'on') { $default = 1; }
+            if ($type == 'flag' && $default === 'off') { $default = 0; }
+            
+            switch($param['type']){
+                
+                case 'number':  $value = $inCore->request($name, 'int', $default); break;
+                case 'string':  $value = $inCore->request($name, 'str', $default); break;
+                case 'flag':    $value = $inCore->request($name, 'int', $default); break;
+                case 'list':    $value = $inCore->request($name, 'str', $default); break;
+                case 'list_db': $value = (is_array($_POST[$name]) ? $inCore->request($name, 'array', $default) : $inCore->request($name, 'str', $default)); break;
+                
+            }
+
+            $cfg[$name] = $value;
+
+        }
+
+        $inCore->saveModuleConfig($id, $cfg);
+
+        if (!$is_ajax){
+            $_SESSION['save_message'] = 'Настройки модуля сохранены';
+        }
+
+        $inCore->redirectBack();
+
+    }
+
 //============================================================================//
 //============================================================================//
 
@@ -64,13 +161,13 @@ function applet_modules(){
 		$toolmenu[0]['title'] = 'Добавить модуль';
 		$toolmenu[0]['link'] = '?view=modules&do=add';
 
-//		$toolmenu[1]['icon'] = 'install.gif';
-//		$toolmenu[1]['title'] = 'Установить модуль';
-//		$toolmenu[1]['link'] = '?view=install&do=module';
-
 		$toolmenu[2]['icon'] = 'edit.gif';
 		$toolmenu[2]['title'] = 'Редактировать выбранные';
 		$toolmenu[2]['link'] = "javascript:checkSel('?view=modules&do=edit&multiple=1');";
+
+		$toolmenu[5]['icon'] = 'delete.gif';
+		$toolmenu[5]['title'] = 'Удалить выбранные';
+		$toolmenu[5]['link'] = "javascript:checkSel('?view=modules&do=delete&multiple=1');";
 
 		$toolmenu[3]['icon'] = 'show.gif';
 		$toolmenu[3]['title'] = 'Публиковать выбранные';
@@ -80,17 +177,17 @@ function applet_modules(){
 		$toolmenu[4]['title'] = 'Скрыть выбранные';
 		$toolmenu[4]['link'] = "javascript:checkSel('?view=modules&do=hide&multiple=1');";
 
-		$toolmenu[5]['icon'] = 'delete.gif';
-		$toolmenu[5]['title'] = 'Удалить выбранные';
-		$toolmenu[5]['link'] = "javascript:checkSel('?view=modules&do=delete&multiple=1');";
+		$toolmenu[7]['icon'] = 'autoorder.gif';
+		$toolmenu[7]['title'] = 'Упорядочить модули';
+		$toolmenu[7]['link'] = "?view=modules&do=autoorder";
 
 		$toolmenu[6]['icon'] = 'reorder.gif';
 		$toolmenu[6]['title'] = 'Сохранить порядок модулей';
 		$toolmenu[6]['link'] = "javascript:checkSel('?view=modules&do=saveorder');";
 
-		$toolmenu[7]['icon'] = 'autoorder.gif';
-		$toolmenu[7]['title'] = 'Упорядочить модули';
-		$toolmenu[7]['link'] = "?view=modules&do=autoorder";
+		$toolmenu[1]['icon'] = 'install.gif';
+		$toolmenu[1]['title'] = 'Установить модуль';
+		$toolmenu[1]['link'] = '?view=install&do=module';
 
 		$toolmenu[8]['icon'] = 'help.gif';
 		$toolmenu[8]['title'] = 'Помощь';
@@ -130,7 +227,32 @@ function applet_modules(){
 		$actions[2]['icon']  = 'delete.gif';
 		$actions[2]['confirm'] = 'Удалить модуль?';
 		$actions[2]['link']  = '?view=modules&do=delete&id=%id%';
-				
+
+        $module = $inCore->request('installed', 'str', '');
+
+        if ($module){
+
+            $task       = $inCore->request('task', 'str', 'install');
+
+            if ($task == 'install' || $task == 'upgrade'){
+
+                if (is_numeric($module)){ $module = $inCore->getModuleById($module); }
+
+                $inCore->loadModuleInstaller($module);
+                $_module = call_user_func('info_module_'.$module);
+
+                $task_str   = ($task=='install') ? 'установлен' : 'обновлен';
+                echo '<div style="color:green;margin:12px 0px;">
+                        Модуль <strong>"'.$_module['title'].'"</strong> успешно '.$task_str.'.
+                      </div>';
+            }
+
+            if ($task == 'remove'){
+                echo '<div style="color:green;margin-top:12px;margin-bottom:5px;">Модуль удален из системы.</div>';
+            }
+
+        }
+
 		//Print table
 		cpListTable('cms_modules', $fields, $actions);
 
@@ -147,7 +269,7 @@ function applet_modules(){
                             <a href="javascript:" onclick="$('input#_filterText3').val('коммент|Коммент').trigger('keyup');">комментарии</a> |
                             <a href="javascript:" onclick="$('input#_filterText3').val('блог|Блог').trigger('keyup');">блоги</a> |
                             <a href="javascript:" onclick="$('input#_filterText3').val('клуб|Клуб').trigger('keyup');">клубы</a> |
-                            <a href="javascript:" onclick="$('input#_filterText3').val('пользовател|авторизация').trigger('keyup');">пользователи</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('пользовател|авторизация|регистр').trigger('keyup');">пользователи</a> |
                             <a href="javascript:" onclick="$('input#_filterText3').val('каталог|корзина').trigger('keyup');">каталог</a> |
                             <a href="javascript:" onclick="$('input#_filterText3').val('фото|изображен').trigger('keyup');">фотографии</a> |
                             <a href="javascript:" onclick="$('input#_filterText3').val('форум').trigger('keyup');">форум</a> |
@@ -262,7 +384,13 @@ function applet_modules(){
 			$content        = $inCore->request('content', 'html', '');
 			$published      = $inCore->request('published', 'int', 0);
 			$css_prefix     = $inCore->request('css_prefix', 'str', '');
-			$allow_group    = $inCore->request('allow_group', 'int', 0);
+			$is_strict_bind = $inCore->request('is_strict_bind', 'int', 0);
+
+			$is_public      = $inCore->request('is_public', 'int', '');
+			if (!$is_public){
+				$access_list = $inCore->request('allow_group', 'array_int');
+				$access_list = $inCore->arrayToYaml($access_list);
+			}
 
             $template       = $inCore->request('template', 'str', '');
 
@@ -284,10 +412,11 @@ function applet_modules(){
 			$sql .=	"
 						published=$published,
 						css_prefix='$css_prefix',
-						allow_group='$allow_group',
+						access_list='$access_list',
 						cachetime = '$cachetime',
 						cacheint = '$cacheint',
-						cache = $cache
+						cache = '$cache',
+                        is_strict_bind = '$is_strict_bind'
 					WHERE id = $id
 					LIMIT 1";
 			dbQuery($sql) ;
@@ -296,15 +425,16 @@ function applet_modules(){
 			dbQuery($sql) ;
 			
 			if ($inCore->request('show_all', 'int', 0)){
-				$sql = "INSERT INTO cms_modules_bind (module_id, menu_id) 
-						VALUES ($id, 0)";
+				$sql = "INSERT INTO cms_modules_bind (module_id, menu_id, position)
+						VALUES ($id, 0, '{$position}')";
 				dbQuery($sql) ;	
 			} else {		
 				$showin = $_REQUEST['showin'];
+				$showpos = $_REQUEST['showpos'];
 				if (sizeof($showin)>0){
 					foreach ($showin as $key=>$value){
-						$sql = "INSERT INTO cms_modules_bind (module_id, menu_id) 
-								VALUES ($id, $value)";
+						$sql = "INSERT INTO cms_modules_bind (module_id, menu_id, position)
+								VALUES ($id, $value, '{$showpos[$value]}')";
 						dbQuery($sql) ;
 					}
 				}	
@@ -333,9 +463,15 @@ function applet_modules(){
         $position       = $inCore->request('position', 'str', '');
         $showtitle      = $inCore->request('showtitle', 'int', 0);
         $content        = $inCore->request('content', 'html', '');
+		$content    	= $inDB->escape_string($content); 
         $published      = $inCore->request('published', 'int', 0);
         $css_prefix     = $inCore->request('css_prefix', 'str', '');
-        $allow_group    = $inCore->request('allow_group', 'int', 0);
+		
+		$is_public      = $inCore->request('is_public', 'int', '');
+		if (!$is_public){
+			$access_list = $inCore->request('allow_group', 'array_int');
+			$access_list = $inCore->arrayToYaml($access_list);
+		}
 
         $template       = $inCore->request('template', 'str', '');
 
@@ -344,34 +480,47 @@ function applet_modules(){
         $cacheint       = $inCore->request('cacheint', 'str', '');
 
 		$operate        = $inCore->request('operate', 'str', '');
+
+        $is_strict_bind = $inCore->request('is_strict_bind', 'int', 0);
 		
 		if ($operate == 'user'){ //USER MODULE
-			$sql = "INSERT INTO cms_modules (id, position, name, title, is_external, content, ordering, showtitle, published, original, css_prefix, allow_group, cache, cachetime, cacheint, template)
-					VALUES ('', '$position', '$name', '$title', 0, '$content', $maxorder, $showtitle, $published, 1, '$css_prefix', '$allow_group', 0, 24, 'HOUR', '$template')";
+			$sql = "INSERT INTO cms_modules (id, position, name, title, is_external, content, ordering, showtitle, published, original, css_prefix, access_list, cache, cachetime, cacheint, template, is_strict_bind)
+					VALUES ('', '$position', '$name', '$title', 0, '$content', $maxorder, $showtitle, $published, 1, '$css_prefix', '$access_list', 0, 24, 'HOUR', '$template', '$is_strict_bind')";
 			dbQuery($sql) ;			
 		}
 		
 		if ($operate == 'clone'){ //DUPLICATE MODULE
+
 			$mod_id     = $inCore->request('clone_id', 'int', 0);
 					
 			$sql        = "SELECT * FROM cms_modules WHERE id = $mod_id LIMIT 1";
 			$result     = dbQuery($sql) ;
 			$original   = mysql_fetch_assoc($result);
 
-			$sql = "INSERT INTO cms_modules (id, position, name, title, is_external, content, ordering, showtitle, published, user, config, css_prefix)
-					VALUES ('', 
-							'".$position."', 
-							'".$original['name']."', 
-							'".$title."', 
-							".$original['is_external'].", 
-							'".$original['content']."', 
-							$maxorder, 
-							".$showtitle.", 
-							0,
-							".$original['user'].",
-							'".$original['config']."',
-							'$css_prefix')";
-			dbQuery($sql) ;					
+			$sql = "INSERT INTO cms_modules (position, name, title, is_external,
+                                             content, ordering, showtitle, published,
+                                             original, user, config, css_prefix, template,
+                                             access_list, is_strict_bind,
+                                             cache, cachetime, cacheint)
+					VALUES (
+							'{$position}',
+							'{$original['name']}',
+							'{$title}',
+							'{$original['is_external']}',
+							'{$original['content']}',
+							'{$maxorder}',
+							'{$showtitle}',
+							'{$published}',
+							'0',
+							'{$original['user']}',
+							'{$original['config']}',
+							'$css_prefix',
+                            '{$template}',
+                            '{$access_list}',
+                            '{$is_strict_bind}', 
+                            0, 24, 'HOUR'
+                            )";
+			dbQuery($sql);
 						
 			if ($inCore->request('del_orig', 'int', 0)){
 				$sql = "DELETE FROM cms_modules WHERE id = $mod_id";
@@ -385,15 +534,16 @@ function applet_modules(){
 		$lastid  = $row['lastid'];
 		
 		if (isset($_REQUEST['show_all'])){
-			$sql = "INSERT INTO cms_modules_bind (id, module_id, menu_id) 
-					VALUES ('', $lastid, 0)";
+			$sql = "INSERT INTO cms_modules_bind (module_id, menu_id, position)
+					VALUES ($lastid, 0, '{$position}')";
 			dbQuery($sql) ;	
 		} else {		
 			$showin = $_REQUEST['showin'];
+            $showpos = $_REQUEST['showpos'];
 			if (sizeof($showin)>0){
 				foreach ($showin as $key=>$value){
-					$sql = "INSERT INTO cms_modules_bind (id, module_id, menu_id) 
-							VALUES ('', $lastid, $value)";
+					$sql = "INSERT INTO cms_modules_bind (module_id, menu_id, position)
+							VALUES ($lastid, $value, '{$showpos[$value]}')";
 					dbQuery($sql) ;
 				}			
 			}	
@@ -452,19 +602,19 @@ function applet_modules(){
 		$toolmenu[0]['title'] = 'Сохранить';
 		$toolmenu[0]['link'] = 'javascript:document.addform.submit();';
 
+		$toolmenu[2]['icon'] = 'cancel.gif';
+		$toolmenu[2]['title'] = 'Отмена';
+		$toolmenu[2]['link'] = 'javascript:history.go(-1);';
+
 		if(@$mod['is_external']){
 			$php_file = 'modules/'.$mod['content'].'/backend.php';
 			$xml_file = 'modules/'.$mod['content'].'/backend.xml';
 			if (file_exists($php_file) || file_exists($xml_file)){
 				$toolmenu[1]['icon'] = 'config.gif';
 				$toolmenu[1]['title'] = 'Настроить модуль';
-				$toolmenu[1]['link'] = '?view=modules&do=config&id='.$mod['id'];				
-			}		
+				$toolmenu[1]['link'] = '?view=modules&do=config&id='.$mod['id'];
+			}
 		}
-
-		$toolmenu[2]['icon'] = 'cancel.gif';
-		$toolmenu[2]['title'] = 'Отмена';
-		$toolmenu[2]['link'] = 'javascript:history.go(-1);';
 		
 		cpToolMenu($toolmenu);
 
@@ -517,7 +667,7 @@ function applet_modules(){
                     </table>
 
                     <div style="margin-top:8px">
-                        <strong>Позиция показа</strong> <span class="hinttext">&mdash; должна присутствовать в шаблоне</span>
+                        <strong>Позиция показа по-умолчанию</strong> <span class="hinttext">&mdash; должна присутствовать в шаблоне</span>
                     </div>
                     <div>
                         <?php
@@ -622,40 +772,78 @@ function applet_modules(){
                     </table>
 
                     <?php
-                        $sql = "SELECT * FROM cms_menu";
-                        $result = dbQuery($sql) ;
-
                         if ($do=='edit'){
-                            $sql2 = "SELECT * FROM cms_modules_bind WHERE module_id = ".$mod['id'];
-                            $result2 = dbQuery($sql2);
-                            $ord = array();
-                            while ($r = mysql_fetch_assoc($result2)){
-                                $ord[] = $r['menu_id'];
+                            $bind_sql       = "SELECT * FROM cms_modules_bind WHERE module_id = ".$mod['id'];
+                            $bind_res       = dbQuery($bind_sql);
+                            $bind           = array();
+                            $bind_pos       = array();
+                            while ($r = mysql_fetch_assoc($bind_res)){
+                                $bind[]             = $r['menu_id'];
+                                $bind_pos[$r['menu_id']] = $r['position'];
                             }
                         }
-                        
-                        echo '<div id="grp">';
 
-                        echo '<div style="margin-top:13px">
-                                <strong>Где показывать модуль?</strong>
-                              </div>';
+                        $menu_sql = "SELECT * FROM cms_menu";
+                        $menu_res = dbQuery($menu_sql) ;
 
-                        echo '<select style="width: 100%" id="showin" name="showin[]" size="9" multiple="multiple" '.(@$show_all ? 'disabled="disabled"' : '').'>';
+                        $menu_items = array();
 
-                        if (mysql_num_rows($result)){
-                            while ($item=mysql_fetch_assoc($result)){
-                                echo '<option value="'.$item['id'].'"';
+                        if (mysql_num_rows($menu_res)){
+                            while ($item=mysql_fetch_assoc($menu_res)){
                                 if ($do=='edit'){
-                                    if (inArray($ord, $item['id'])){
-                                        echo 'selected';
+                                    if (in_array($item['id'], $bind)){
+                                        $item['selected'] = true;
+                                        $item['position'] = $bind_pos[$item['id']];
                                     }
                                 }
-                                echo '>';
-                                echo $item['title'].'</option>';
+                                $item['title'] = ltrim($item['title'], '- ');
+                                $item['title'] = rtrim($item['title'], '- ');
+                                $menu_items[] = $item;
                             }
                         }
-                        echo '</select></div>';
+
                     ?>
+
+                    <div id="grp">
+
+                        <div style="margin-top:13px">
+                            <strong>Где показывать модуль?</strong>
+                        </div>
+
+                        <div style="height:300px;overflow: auto;border: solid 1px #999; padding:5px 10px; background: #FFF;">
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%" align="center">
+                            <tr>
+                                <td colspan="2" height="25"><strong>Раздел сайта</strong></td>
+                                <td align="center" width="50"><strong>Позиция</strong></td>
+                            </tr>
+                            <?php foreach($menu_items as $i){ ?>
+                            <tr>
+                                <td width="20" height="25">
+                                    <input type="checkbox" name="showin[]" id="mid<?php echo $i['id']; ?>" value="<?php echo $i['id']; ?>" <?php if ($i['selected']){ ?>checked="checked"<?php } ?> onclick="$('#p<?php echo $i['id']; ?>').toggle()"/>
+                                </td>
+                                <td><label for="mid<?php echo $i['id']; ?>"><?php echo $i['title']; ?></label></td>
+                                <td align="center">
+                                    <select id="p<?php echo $i['id']; ?>" name="showpos[<?php echo $i['id']; ?>]" style="<?php if (!$i['selected']) { ?>display:none<?php } ?>">
+                                        <?php foreach($pos as $position){ ?>
+                                            <option value="<?php echo $position; ?>" <?php if ($i['position']==$position){ ?>selected="selected"<?php } ?>><?php echo $position; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                        </table>
+                        </div>
+
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
+                            <tr>
+                                <td width="20"><input type="checkbox" name="is_strict_bind" id="is_strict_bind" value="1" <?php if ($mod['is_strict_bind']) { echo 'checked="checked"'; } ?>/></td>
+                                <td><label for="is_strict_bind"><strong>Не показывать на вложенных страницах</strong></label></td>
+                            </tr>
+                        </table>
+
+                    </div>
+
+                    
 
                     {tab=Кеширование}
 
@@ -708,22 +896,68 @@ function applet_modules(){
                         </div>
 
                     {tab=Доступ}
-
-                        <div style="margin-top:4px">
-                            <strong>Кому показывать этот модуль</strong>
-                        </div>
-                        <div>
-                            <select name="allow_group" id="allow_group" style="width:100%">
-                                <option value="-1" <?php if (@$mod['allow_group']==-1 || !isset($mod['allow_group'])) { echo 'selected="selected"'; } ?>>-- Все группы --</option>
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist" style="margin-top:5px">
+                        <tr>
+                            <td width="20">
                                 <?php
-                                    if (isset($mod['allow_group'])) {
-                                        echo $inCore->getListItems('cms_user_groups', $mod['allow_group']);
-                                    } else {
-                                        echo $inCore->getListItems('cms_user_groups');
+								
+									$groups = cmsUser::getGroups();
+
+                                    $style  = 'disabled="disabled"';
+                                    $public = 'checked="checked"';
+
+                                    if ($do == 'edit'){
+
+                                        if ($mod['access_list']){
+                                            $public = '';
+                                            $style  = '';
+											
+											$access_list = $inCore->yamlToArray($mod['access_list']);
+
+                                        }
                                     }
                                 ?>
-                            </select>
+                                <input name="is_public" type="checkbox" id="is_public" onclick="checkAccesList()" value="1" <?php echo $public?> />
+                            </td>
+                            <td><label for="is_public"><strong>Общий доступ</strong></label></td>
+                        </tr>
+                    </table>
+                    <div style="padding:5px">
+                        <span class="hinttext">
+                            Если отмечено, модуль виден всем посетителям. Снимите галочку, чтобы вручную выбрать разрешенные группы пользователей.
+                        </span>
+                    </div>
+
+                    <div style="margin-top:10px;padding:5px;padding-right:0px;" id="grp">
+                        <div>
+                            <strong>Показывать группам:</strong><br />
+                            <span class="hinttext">
+                                Можно выбрать несколько, удерживая CTRL.
+                            </span>
                         </div>
+                        <div>
+                            <?php
+                                echo '<select style="width: 99%" name="allow_group[]" id="allow_group" size="6" multiple="multiple" '.$style.'>';
+
+                                if ($groups){
+									foreach($groups as $group){
+                                        echo '<option value="'.$group['id'].'"';
+                                        if ($do=='edit' && $mod['access_list']){
+                                            if (inArray($access_list, $group['id'])){
+                                                echo 'selected';
+                                            }
+                                        }
+
+                                        echo '>';
+                                        echo $group['title'].'</option>';
+									}
+
+                                }
+                                
+                                echo '</select>';
+                            ?>
+                        </div>
+                    </div>
 
                     {/tabs}
 

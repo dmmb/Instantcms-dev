@@ -1,12 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 	
@@ -30,7 +33,7 @@ function rss_content($item_id, $cfg, &$rssdata){
 
 		//CHANNEL
 		if ($item_id){
-			$cat = dbGetFields('cms_category', 'id='.$item_id, 'id, title, description, seolink, NSLeft, NSRight');
+			$cat = dbGetFields('cms_category', "id='$item_id'", 'id, title, description, seolink, NSLeft, NSRight');
 			$catsql = "AND c.category_id = cat.id AND cat.NSLeft >= {$cat['NSLeft']} AND cat.NSRight <= {$cat['NSRight']}";
 
 			$channel['title'] = $cat['title'] ;
@@ -45,9 +48,9 @@ function rss_content($item_id, $cfg, &$rssdata){
 		}
 
 		//ITEMS
-		$sql = "SELECT c.*, DATE_FORMAT(c.pubdate, '%a, %d %b %Y %H:%i:%s GMT') as pubdate, u.nickname as author, cat.title as category
-				FROM cms_content c, cms_users u, cms_category cat
-				WHERE c.user_id = u.id AND c.published=1 AND c.category_id = cat.id $catsql
+		$sql = "SELECT c.*, DATE_FORMAT(c.pubdate, '%a, %d %b %Y %H:%i:%s GMT') as pubdate, cat.title as category
+				FROM cms_content c, cms_category cat
+				WHERE c.published=1 AND c.category_id = cat.id $catsql
 				ORDER by c.pubdate DESC
 				LIMIT $maxitems";
 
@@ -64,10 +67,11 @@ function rss_content($item_id, $cfg, &$rssdata){
 				$items[$id]['comments'] = $items[$id]['link'].'#c';				
 				$items[$id]['category'] = $item['category'];
                 
-                $image_file = $_SERVER['DOCUMENT_ROOT'].'/images/photos/small/article'.$id.'.jpg';
+                $image_file = PATH.'/images/photos/small/article'.$id.'.jpg';
                 $image_url  = $rooturl . '/images/photos/small/article'.$id.'.jpg';
 
                 $items[$id]['image'] = file_exists($image_file) ? $image_url : '';
+				$items[$id]['size']  = round(filesize($image_file));
 			}
 
 		}		

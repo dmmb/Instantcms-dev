@@ -3,6 +3,29 @@
 {* ================================================================================ *}
 
 <script type="text/javascript">
+{if $is_admin}
+{literal}
+		$(document).ready(function() {
+			$('#title').focus();
+			
+			$("#cat_id").change(function () {
+		
+				var cat_id = "";
+				$("#cat_id option:selected").each(function () {
+					cat_id = $(this).val();
+				});
+				if(cat_id != 0) {{/literal}
+					$("#add_form").attr("action", '/catalog/'+cat_id+'/submit.html');{literal}
+				} else {{/literal}
+					$("#add_form").attr("action", "/catalog/0/submit.html");{literal}
+				}
+        
+        })
+        .change();
+			
+		});
+{/literal}
+{/if}
     {literal}
     function showPrices(){
 
@@ -23,14 +46,22 @@
 <div id="configtabs">
 
     <div id="form">
-        <form method="post" action="/catalog/{$cat_id}/submit.html" enctype="multipart/form-data">
+        <form id="add_form" method="post" action="/catalog/{$cat_id}/submit.html" enctype="multipart/form-data">
         <table cellpadding="5" cellspacing="0" style="margin-bottom:10px">
             <tr>
                 <td width="210">
                     <strong>{$LANG.TITLE}:</strong>
                 </td>
-                <td><input type="text" name="title" value="{$item.title}" style="width:250px"/></td>
+                <td><input type="text" name="title" id="title" value="{$item.title|escape:'html'}" style="width:250px"/></td>
             </tr>
+            {if $is_admin}
+            <tr>
+                <td width="210">
+                    <strong>{$LANG.CAT}:</strong>
+                </td>
+                <td><select  style="width:250px" name="cat_id" id="cat_id">{$cats}</select></td>
+            </tr>
+            {/if}
             <tr>
                 <td width="">
                     <strong>{$LANG.IMAGE}:</strong>
@@ -62,7 +93,7 @@
                     <strong>{$LANG.PRICE}:</strong>
                 </td>
                 <td>
-                    <input type="text" name="price" value="{$item.price}" style="width:250px"/>
+                    <input type="text" name="price" value="{$item.price|escape:'html'}" style="width:250px"/>
                 </td>
             </tr>
             <tr>
@@ -81,7 +112,7 @@
                     <span class="hint">{$LANG.KEYWORDS}</span>
                 </td>
                 <td>
-                    <input type="text" name="tags" value="{$item.tags}" style="width:250px"/>
+                    <input type="text" name="tags" value="{$item.tags|escape:'html'}" style="width:250px"/>
                 </td>
             </tr>            
         </table>
@@ -95,12 +126,12 @@
                         {if $field.makelink} <br/><span class="hint">{$LANG.COMMA_SEPARATE}</span>{/if}
                     </td>
                     <td>
-                        <input style="width:250px" name="fdata[{$id}]" type="text" id="fdata" size="" value="{if $field.value}{$field.value}{/if}"/>
+                        <input style="width:250px" name="fdata[{$id}]" type="text" id="fdata" size="" value="{if $field.value}{$field.value|escape:'html'}{/if}"/>
                     </td>
                     {else}
                         <td width="214" valign="top"><strong>{$field.title}:</strong></td>
                         <td>
-                            {wysiwyg name='fdata[]' value=$field.value height=300 width='98%' toolbar='Basic'}
+                            {wysiwyg name="fdata[$id]" value=$field.value height=300 width='98%' toolbar='Basic'}
                         </td>
                     {/if}
                 </tr>

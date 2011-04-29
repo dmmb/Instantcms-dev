@@ -2,7 +2,11 @@
 /*
 	CCelkoNastedSet class 
 
-	Thanks to Kirill Hryapin kx@chl.ru for finding and solving bugs into the MoveNode () method.
+    Written by Setec Astronomy
+
+	Thanks to Kirill Hryapin <kx@chl.ru> for finding and solving bugs into the MoveNode () method.
+
+    Modified by Vladimir Obukhov <r2@instantsoft.ru> for InstantCMS project.
 
 	Members
 	$TableName => Table name that contains nasted sets 
@@ -32,48 +36,27 @@
 	EndTransaction () => Method that stop the transaction.
 	IsInTransaction () => Method to check the transaction state. Returns true or false.
 
-	SQL STRUCTURE
-	The structure of tblCelkoTransTable must me mainteined, the structure of tblNastedSets could be modified, 
-	you can add columns but you must maintain the NSFields needed for celko's nasted sets.
-		
-	CREATE TABLE tblCelkoTransTable (
-	  IDTransaction INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-	  TableName TINYTEXT NULL,
-	  Differ TINYTEXT NULL,
-	  InTransaction BIT NULL,
-	  TStamp TIMESTAMP NULL,
-	  PRIMARY KEY(IDTransaction)
-	);
-	
-	CREATE TABLE tblNastedSets (
-	  IDNode INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-	  IDParent INTEGER UNSIGNED NULL DEFAULT '0',
-	  NSLeft INTEGER UNSIGNED NULL DEFAULT '0',
-	  NSRight INTEGER UNSIGNED NULL DEFAULT '0',
-	  NSLevel INTEGER UNSIGNED NULL DEFAULT '0',
-	  NSOrder INTEGER UNSIGNED NULL DEFAULT '1',
-	  NSDiffer TINYTEXT NULL,
-	  NSIgnore INTEGER UNSIGNED NULL DEFAULT '0',
-	  PRIMARY KEY(IDNode)
-	);
-
 */
 
 class CCelkoNastedSet { 
 
-   var $TableName; 
-   var $FieldID; 
-   var $FieldIDParent; 
-   var $FieldLeft; 
-   var $FieldRight; 
-   var $FieldDiffer;
-   var $FieldLevel; 
-   var $FieldOrder; 
-   var $FieldIgnore; 
+   public  $TableName;
+   private $FieldID;
+   private $FieldIDParent;
+   private $FieldLeft;
+   private $FieldRight;
+   private $FieldDiffer;
+   private $FieldLevel;
+   private $FieldOrder;
+   private $FieldIgnore;
    
-   var $MyLink; 
+   public  $TransactionTable;
+   private $_IsInTransaction;
+   private $_TransactionTStamp;
 
-	function CCelkoNastedSet () 
+   public $MyLink;
+
+   public function __construct ()
 	{ 
 	   $this->TableName = "tblCelkoTree";  
 	   $this->FieldID = "id"; 
@@ -82,20 +65,24 @@ class CCelkoNastedSet {
 	   $this->FieldRight = "NSRight"; 
 	   $this->FieldDiffer = "NSDiffer";
 	   $this->FieldLevel = "NSLevel";  
-	   $this->FieldOrder = "ordering"; 
+	   $this->FieldOrder = "ordering";
 	   $this->FieldIgnore = "NSIgnore"; 
 	
-	   $this->MyLink = $GLOBALS['db'];  
+	   $this->TransactionTable = "cms_ns_transactions";
+	   $this->_IsInTransaction = false;
+	   $this->_TransactionTStamp = 0;
+
+	   $this->MyLink = null;  
 	} 
 
 	// Begin private functions //
-	function _safe_set (&$var_true, $var_false = "")
+	private function _safe_set (&$var_true, $var_false = "")
 	{
 		if (!isset ($var_true)) 
 		{ $var_true = $var_false; }
 	}
 
-	function _safe_query ($query, $link)
+	private function _safe_query ($query, $link)
 	{
 		if (empty($query)) { return false; }
         $inDB   = cmsDatabase::getInstance();
@@ -104,15 +91,99 @@ class CCelkoNastedSet {
 	}
 	// End private functions //
 	
-	// Begin nasted set functions //
-	function ClearNodes ($Differ = "") 
+	// Begin transaction functions //
+	private function InitializeTransaction ($Differ = "")
 	{
-		$sql_delete = "DELETE FROM " . $this->TableName . " WHERE " . $this->FieldDiffer . " = '" . $Differ . "'";
-		$this->_safe_query ($sql_delete, $this->MyLink);
+		$sql_verify = "SELECT * FROM " . $this->TransactionTable .
+					  " WHERE TableName = '" . $this->TableName . "' " .
+					  " AND Differ = '" . $Differ . "'";
+		$rs_verify = $this->_safe_query ($sql_verify, $this->MyLink);
+		
+		if (($rs_verify) && (mysql_num_rows ($rs_verify) == 0))
+		{
+			mysql_free_result ($rs_verify);
+			
+	   		$sql_insert = "INSERT INTO " . $this->TransactionTable . 
+						  " (TableName, Differ, InTransaction) " .
+						  " VALUES ('" . $this->TableName . "', '" . $Differ . "', 0)";
+			$this->_safe_query ($sql_insert, $this->MyLink);
+			
+			return true;
+		}
+		else
+		{ return false; }
 	}
 
-	function DeleteNode ($IDNode = -1, $Differ = "") 
+	private function BeginTransaction ($Differ = "")
 	{
+        //r2: здесь нужно будет разбираться с транзакциями
+        $this->_IsInTransaction = true; return true;
+
+        $this->InitializeTransaction($Differ);
+
+		$TStamp = date ("YmdHis");
+
+		$sql_update = "UPDATE " . $this->TransactionTable . 
+					  " SET TStamp = " . $TStamp . ", " .
+					  " InTransaction = 1 " .
+					  " WHERE InTransaction = 0 " .
+					  " AND TableName = '" . $this->TableName . "' " .
+					  " AND Differ = '" . $Differ . "'";
+		$this->_safe_query ($sql_update, $this->MyLink);
+		
+		$sql_verify = "SELECT * FROM " . $this->TransactionTable .
+					  " WHERE TableName = '" . $this->TableName . "' " .
+					  " AND InTransaction = 1 " .
+					  " AND TStamp = " . $TStamp . 
+					  " AND Differ = '" . $Differ . "'";
+		$rs_verify = $this->_safe_query ($sql_verify, $this->MyLink);
+
+		if (($rs_verify) && (mysql_num_rows ($rs_verify) == 1))
+		{
+			mysql_free_result ($rs_verify);
+			$this->_IsInTransaction = true;
+			$this->_TransactionTStamp = $TStamp;
+			return true;
+		}
+		else
+		{ 
+			$this->_IsInTransaction = false;
+			$this->_TransactionTStamp = 0;
+			return false; 
+		}
+	}
+	
+	public function EndTransaction ($Differ = "")
+	{
+		$sql_update = "UPDATE " . $this->TransactionTable . 
+					  " SET InTransaction = 0 " .
+					  " WHERE TableName = '" . $this->TableName . "' " .
+					  " AND TStamp = " . $this->_TransactionTStamp . 
+					  " AND Differ = '" . $Differ . "'";
+		$this->_safe_query ($sql_update, $this->MyLink);
+		$this->_IsInTransaction = false;
+	}
+
+	public function IsInTransaction ()
+	{ return $this->_IsInTransaction; }
+	// End transaction  functions //
+	
+	// Begin nasted set functions //
+	public function ClearNodes ($Differ = "")
+	{
+        $this->BeginTransaction($Differ);
+		$sql_delete = "DELETE FROM " . $this->TableName . " WHERE " . $this->FieldDiffer . " = '" . $Differ . "'";
+		$this->_safe_query ($sql_delete, $this->MyLink);
+        $this->EndTransaction($Differ);
+	}
+
+	public function DeleteNode ($IDNode = -1, $Differ = "")
+	{
+        $this->BeginTransaction($Differ);
+
+		if (!$this->_IsInTransaction)
+		{ return false; }
+		
 		$sql_select = "SELECT * FROM " . $this->TableName . " WHERE " . $this->FieldID . " = " . $IDNode . " AND " . $this->FieldDiffer . " = '" . $Differ . "'"; 
 		$rs_select = $this->_safe_query ($sql_select, $this->MyLink);
 		if (($rs_select) && ($row_select = mysql_fetch_assoc ($rs_select)))
@@ -143,26 +214,47 @@ class CCelkoNastedSet {
 						  " AND " . $this->FieldDiffer . " = '" . $Differ . "'";
 			$this->_safe_query ($sql_update, $this->MyLink);
 		
-			mysql_free_result ($rs_select);			
+			mysql_free_result ($rs_select);
 
+            $this->EndTransaction($Differ);
 			return true;
-		}
-		else
-		{ return false; }
+
+
+        } else {
+
+            $this->EndTransaction($Differ);
+            return false;
+
+        }
 	}
 
-	function AddRootNode ($Differ = "") 
+	public function AddRootNode ($Differ = "")
 	{
+        $this->BeginTransaction($Differ);
+
+		if (!$this->_IsInTransaction)
+		{ return false; }
+
 		$sql_insert = "INSERT INTO " . $this->TableName . 
 					  " (" . $this->FieldIDParent . ", " . $this->FieldLeft . ", " . $this->FieldRight . 
 					  ", " . $this->FieldLevel . ", " . $this->FieldOrder . ", " . $this->FieldDiffer . ") " .
 					  " VALUES (0, 1, 2, 0, 1, '" . $Differ . "')";
 		$this->_safe_query ($sql_insert, $this->MyLink);
-		return mysql_insert_id ($this->MyLink);
+
+        $new_id = mysql_insert_id ($this->MyLink);
+
+        $this->EndTransaction($Differ);
+
+		return $new_id;
 	}
 
-	function AddNode ($IDParent = -1, $Order = -1, $Differ = "") 
+	public function AddNode ($IDParent = -1, $Order = -1, $Differ = "")
 	{
+        $this->BeginTransaction($Differ);
+
+		if (!$this->_IsInTransaction)
+		{ return false; }
+
 		$sql_select = "SELECT * FROM " . $this->TableName . " WHERE " . $this->FieldID . " = " . $IDParent . " AND " . $this->FieldDiffer . " = '" . $Differ . "'";
 		$rs_select = $this->_safe_query ($sql_select, $this->MyLink);
 		if (($rs_select) && ($row_select = mysql_fetch_assoc ($rs_select)))
@@ -240,13 +332,22 @@ class CCelkoNastedSet {
 
 			mysql_free_result ($rs_select);
 
-			return mysql_insert_id ($this->MyLink);
+            $new_id = mysql_insert_id ($this->MyLink);
+
+            $this->EndTransaction($Differ);
+
+			return $new_id;
 		}
 		else
 		{ return false; }
 	}
 	
-function MoveOrdering($IDNode, $dir = 1){
+    public function MoveOrdering($IDNode, $dir = 1){
+
+        $this->BeginTransaction();
+
+        if (!$this->_IsInTransaction)
+		{ return false; }
         
         $sql = "SELECT * FROM {$this->TableName} WHERE {$this->FieldID}='{$IDNode}'";
         $res = $this->_safe_query ($sql, $this->MyLink);
@@ -256,13 +357,20 @@ function MoveOrdering($IDNode, $dir = 1){
         if ($move_row[$this->FieldDiffer]) $Differ = 'AND ' . $this->FieldDiffer . ' = ' . $move_row[$this->FieldDiffer];
         else $Differ = '';
         
+		// максимальное значение сортировки
         $sql = "SELECT MAX({$this->FieldOrder}) FROM {$this->TableName} WHERE {$this->FieldIDParent}={$move_row[$this->FieldIDParent]}";
         $res = $this->_safe_query ($sql, $this->MyLink);
         list($maxordering) = mysql_fetch_row($res);
         if (!$maxordering) $maxordering = 1;
+		// минимальное значение сортировки
+        $sql_min = "SELECT MIN({$this->FieldOrder}) FROM {$this->TableName} WHERE {$this->FieldIDParent}={$move_row[$this->FieldIDParent]}";
+        $res_min = $this->_safe_query ($sql_min, $this->MyLink);
+        list($minordering) = mysql_fetch_row($res_min);
+        if (!$minordering) $minordering = 1;
+
         mysql_free_result($res);
         
-        if ($dir == -1 && $move_row[$this->FieldOrder] == 1) return;
+        if ($dir == -1 && $move_row[$this->FieldOrder] == $minordering) return;
         if ($dir == 1 && $move_row[$this->FieldOrder] == $maxordering) return;
         
         if ($dir == -1){
@@ -342,11 +450,19 @@ function MoveOrdering($IDNode, $dir = 1){
                     WHERE {$this->FieldID} = {$near[$this->FieldID]}";
             $this->_safe_query ($sql, $this->MyLink);
         }
+
+        $this->EndTransaction($Differ);
+
         return true;
     }	
 
-	function MoveNode ($IDNode = -1, $IDParent = -1, $Order = -1, $Differ = "")
+	public function MoveNode ($IDNode = -1, $IDParent = -1, $Order = -1, $Differ = "")
 	{
+        $this->BeginTransaction($Differ);
+
+        if (!$this->_IsInTransaction)
+		{ return false; }
+
 		$sql_select = "SELECT * FROM " . $this->TableName .
 		              " WHERE " . $this->FieldID . " = " . $IDNode .
 		              " AND " . $this->FieldDiffer . " = '" . $Differ . "'";
@@ -498,21 +614,25 @@ function MoveOrdering($IDNode, $dir = 1){
 				$this->_safe_query ($sql_update, $this->MyLink);
 
 				mysql_free_result ($rs_select_parent);
+                $this->EndTransaction($Differ);
 				return true;
 			}
 			else
-			{ return false; }
+			{ $this->EndTransaction($Differ);
+                return false; }
 
 			mysql_free_result ($rs_select);
+            $this->EndTransaction($Differ);
 			return true;
 		}
 		else
-		{ return false; }
+		{ $this->EndTransaction($Differ); return false; }
 	}
 
-	function SelectPath ($IDNode = -1, $Differ = "") 
+	public function SelectPath ($IDNode = -1, $Differ = "")
 	{
-		$sql_select = "SELECT * FROM " . $this->TableName . " WHERE " . $this->FieldID . " = " . $IDNode . " AND " . $this->FieldDiffer . " = '" . $Differ . "'";
+
+		$sql_select = "SELECT * FROM " . $this->TableName . " WHERE " . $this->FieldID . " = " . $IDNode . " AND " . $this->FieldDiffer . " = '" . $Differ . "'";        
 		$rs_select = $this->_safe_query ($sql_select, $this->MyLink);
 		if (($rs_select) && ($row_select = mysql_fetch_assoc ($rs_select)))
 		{
@@ -531,8 +651,9 @@ function MoveOrdering($IDNode, $dir = 1){
 		{ return false; }
 	}
 
-	function SelectSubNodes ($IDNode = -1, $Level = -1, $Differ = "") 
+	public function SelectSubNodes ($IDNode = -1, $Level = -1, $Differ = "")
 	{
+
 		$sql_select = "SELECT * FROM " . $this->TableName . " WHERE " . $this->FieldID . " = " . $IDNode . " AND " . $this->FieldDiffer . " = '" . $Differ . "'";
 		$rs_select = $this->_safe_query ($sql_select, $this->MyLink);
 		if (($rs_select) && ($row_select = mysql_fetch_assoc ($rs_select)))
@@ -552,8 +673,8 @@ function MoveOrdering($IDNode, $dir = 1){
 			else // Only $Level child nodes
 			{
 				$sql_result = "SELECT * FROM " . $this->TableName . 
-							  " WHERE " . $this->FieldLeft . " > " . $row_select[$this->FieldLeft] .
-							  " AND " . $this->FieldRight . " < " . $row_select[$this->FieldRight] . 
+							  " WHERE " . $this->FieldLeft . " >= " . $row_select[$this->FieldLeft] .
+							  " AND " . $this->FieldRight . " <= " . $row_select[$this->FieldRight] . 
 							  " AND " . $this->FieldLevel . " <= " . ($Level + $row_select[$this->FieldLevel]) . 
 						  	  " AND " . $this->FieldDiffer . " = '" . $Differ . "'" .
 							  " ORDER BY " . $this->FieldLeft . "," . $this->FieldOrder;
@@ -565,8 +686,9 @@ function MoveOrdering($IDNode, $dir = 1){
 		{ return false; }
 	}
 	
-	function SelectCountSubNodes ($IDNode = -1, $Level = -1, $Differ = "") 
+	public function SelectCountSubNodes ($IDNode = -1, $Level = -1, $Differ = "")
 	{
+
 		$sql_select = "SELECT * FROM " . $this->TableName . " WHERE " . $this->FieldID . " = " . $IDNode . " AND " . $this->FieldDiffer . " = '" . $Differ . "'";
 		$rs_select = $this->_safe_query ($sql_select, $this->MyLink);
 		if (($rs_select) && ($row_select = mysql_fetch_assoc ($rs_select)))

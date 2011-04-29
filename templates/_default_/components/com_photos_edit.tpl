@@ -1,9 +1,9 @@
 {* ================================================================================ *}
 {* ========================= Редактирование фото ================================== *}
 {* ================================================================================ *}
-
+<div class="con_heading">{$LANG.EDIT_PHOTO}</div>
 <form action="{$action}" method="POST" enctype="multipart/form-data">
-{$input_poto}
+
 	<table border="0" cellspacing="0" cellpadding="0">
         <tr>
             <td width="120" valign="top">
@@ -17,10 +17,10 @@
                       <td valign="top"><strong>{$LANG.PHOTO_TITLE}: </strong></td>
                   </tr>
                   <tr>
-                      <td valign="top"><input name="title" type="text" id="title" size="40" maxlength="250" value="{$photo.title}"/></td>
+                      <td valign="top"><input name="title" type="text" id="title" size="40" maxlength="250" value="{$photo.title|escape:'html'}"/></td>
                   </tr>
                   <tr>
-                      <td valign="top"><strong>{$LANG.PHOTO_DESCRIPTION}:</strong> </td>
+                      <td valign="top"><strong>{$LANG.PHOTO_DESC}:</strong> </td>
                   </tr>
                   <tr>
                       <td valign="top"><textarea name="description" cols="39" rows="5" id="description">{$photo.description}</textarea></td>
@@ -29,7 +29,7 @@
                       <td valign="top"><strong>{$LANG.TAGS}:</strong></td>
                   </tr>
                   <tr>
-                     <td valign="top"><input name="tags" type="text" id="tags" size="40" value="{$photo_tag}"/>
+                     <td valign="top"><input name="tags" type="text" id="tags" size="40" value="{$photo_tag|escape:'html'}"/>
                                               <br />
                                               <span><small>{$LANG.KEYWORDS}</small></span></td>
                   </tr>
@@ -37,23 +37,8 @@
                      <td valign="top"><strong>{$LANG.REPLACE_FILE}</strong>:</td>
                   </tr>
                   <tr>
-                     <td valign="top"><input name="MAX_FILE_SIZE" type="hidden" value="{$photo_max_size}"/>
-                                              <input name="picture" type="file" size="30" /></td>
+                     <td valign="top"><input name="Filedata" type="file" size="30" /></td>
                   </tr>
-                  {if $user_foto}
-                  <tr>
-                     <td valign="top"><strong>{$LANG.SHOW}:</strong></td>
-                  </tr>
-                  <tr>
-                     <td valign="top">
-                     		<select name="allow_who" id="allow_who">
-                            <option value="all" {if $photo.allow_who==all} selected {/if}>{$LANG.EVERYBODY}</option>
-                            <option value="registered" {if $photo.allow_who==registered} selected {/if}>{$LANG.REGISTERED}</option>
-                            <option value="friends" {if $photo.allow_who==friends} selected {/if}>{$LANG.MY_FRIENDS}</option>
-                            </select>
-                     </td>
-                  </tr>
-                  {/if}
                   <tr>
                      <td valign="top">
                             <input style="margin-top:10px;font-size:18px" type="submit" name="save" value="{$LANG.SAVE}" />

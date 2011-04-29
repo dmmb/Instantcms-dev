@@ -1,13 +1,17 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
 
 function cpComponentHasConfig($id){
 	$has = false;
@@ -119,26 +123,19 @@ function applet_components(){
                 $_component = call_user_func('info_component_'.$component);
 
                 $task_str   = ($task=='install') ? 'установлен' : 'обновлен';
-                echo '<div style="color:green;margin-top:12px;margin-bottom:5px;">
-                        Компонент <strong>"'.$_component['title'].'"</strong> успешно '.$task_str.'.
-                      </div>';
-            }
-
-            if ($task == 'install' && $_component['htaccess']){
-
-                echo '<div style="margin-top:2px;margin-bottom:2px;padding:10px;border:solid 1px gray;"1>
-                        <div><strong><span style="color:red">Внимание:</span> для завершения установки добавьте в файл .htaccess следующие строки:</strong></div>
-                        <div>
-                            <pre style="font-family:Courier">';
-
-                    foreach ($_component['htaccess'] as $rule){
-                        echo $rule."\n";
+                echo '<div style="color:green;margin-top:12px;margin-bottom:5px;">';
+                echo '<p>Компонент <strong>"'.$_component['title'].'"</strong> успешно '.$task_str.'.</p>';
+                if (isset($_component['modules'])){
+                    if(is_array($_component['modules'])){
+                        echo '<p>Дополнительно установлены модули:</p>';
+                        echo '<ul>';
+                            foreach($_component['modules'] as $module=>$title){
+                                echo '<li>'.$title.'</li>';
+                            }
+                        echo '</ul>';
                     }
-
-                echo '</pre>
-                        </div>
-                      </div>';
-
+                }
+                echo '</div>';
             }
 
             if ($task == 'remove'){
@@ -156,7 +153,7 @@ function applet_components(){
 
         $fields[2]['title'] = 'Версия';		$fields[2]['field'] = 'version';		$fields[2]['width'] = '60';
 
-		$fields[3]['title'] = 'Показывать в<br/>меню админки';		$fields[3]['field'] = 'published';		$fields[3]['width'] = '100';
+		$fields[3]['title'] = 'Включен';	$fields[3]['field'] = 'published';		$fields[3]['width'] = '65';
 
 		$fields[4]['title'] = 'Автор';		$fields[4]['field'] = 'author';		$fields[4]['width'] = '200';
 		

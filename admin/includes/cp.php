@@ -1,12 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 defined('VALID_CMS_ADMIN') or die( 'Доступ запрещен' );
 
@@ -14,17 +17,7 @@ function dbQuery($sql){
 
     $inDB = cmsDatabase::getInstance();
 
-	if (!$GLOBALS['DEMO_MODE']){
-		return $inDB->query($sql);
-	} else {
-	
-		if (strstr($sql, 'SELECT')){
-			return $inDB->query($sql);
-		}
-	
-	}
-    
-	return;
+    return $inDB->query($sql);
     
 }
 
@@ -102,33 +95,11 @@ function cpWhoOnline(){
 				$html .= '<img src="images/user.gif"/>';
 			$html .= '</td>';
 			
-			$html .= '<td width="120" valign="top">';
+			$html .= '<td width="" valign="top">';
 				$html .= '<div><strong>Пользователей: </strong>'.$people['users'].'</div>';
 				$html .= '<div><strong>Гостей: </strong>'.$people['guests'].'</div>';	
 			$html .= '</td>';
-		
-		include $_SERVER['DOCUMENT_ROOT'].'/includes/config.inc.php';
-		
-		if ($_CFG['stats']){
-			$html .= '<td width="24" valign="top">';
-				$html .= '<img src="images/on.gif"/>';
-			$html .= '</td>';
-			
-			$html .= '<td width="" valign="top">';
-				$html .= '<div style="color:#00BB00">Сбор статистики включен</div>';
-				$html .= '<div><a href="index.php?view=components&do=config&id=13">Просмотр статистики</a></div>';	
-			$html .= '</td>';		
-		} else {
-			$html .= '<td width="24" valign="top">';
-				$html .= '<img src="images/off.gif"/>';
-			$html .= '</td>';
-			
-			$html .= '<td width="" valign="top">';
-				$html .= '<div style="color:#BB0000">Сбор статистики отключен</div>';
-				$html .= '<div><a href="index.php?view=config">Изменить настройки</a></div>';	
-			$html .= '</td>';			
-		}
-	
+
 		$html .= '</tr></table>';
 	$html .= '</div>';
 	
@@ -231,10 +202,9 @@ function cpMenu(){
 			<?php } ?>
 			<?php if ($inCore->isAdminCan('admin/content', $adminAccess)){ ?>
 			<li>
-				<a class="cats">Контент</a>
+				<a class="content" href="index.php?view=tree">Контент</a>
 				<ul>
-					<li><a class="cats" href="index.php?view=cats">Разделы</a></li>
-					<li><a class="content" href="index.php?view=content">Статьи / страницы</a></li>
+					<li><a class="content" href="index.php?view=tree">Разделы и статьи</a></li>
 					<li><a class="arhive" href="index.php?view=arhive">Архив статей</a></li>
 					<li><a class="add" href="index.php?view=cats&do=add">Создать раздел</a></li>
 					<li><a class="add" href="index.php?view=content&do=add">Создать статью</a></li>
@@ -308,7 +278,7 @@ function cpMenu(){
 			<li>
                 <a href="index.php?view=users" class="users">Пользователи</a>
                 <ul>
-                    <li><a href="index.php?view=users" class="users">Пользователи</a></li>
+                    <li><a href="index.php?view=users" class="user">Пользователи</a></li>
                     <li><a class="users" href="index.php?view=usergroups">Группы</a></li>
                     <li><a class="add" href="index.php?view=users&do=add">Создать пользователя</a></li>
                     <li><a class="add" href="index.php?view=usergroups&do=add">Создать группу</a></li>
@@ -320,9 +290,12 @@ function cpMenu(){
 			<li>
 				<a href="index.php?view=config" class="config">Настройки</a>			
 				<ul>
+					<li><a class="config" href="index.php?view=config">Настройки сайта</a></li>
 					<li><a class="backup" href="index.php?view=backup">Резервные копии БД</a></li>
 					<!-- <li><a class="repair" href="index.php?view=repair">Проверка БД</a></li> -->
 					<li><a class="repairnested" href="index.php?view=repairnested">Проверка деревьев</a></li>
+                    <li><a class="cron" href="index.php?view=cron">Задачи CRON</a></li>
+                    <li><a class="phpinfo" href="index.php?view=phpinfo">Информация PHP</a></li>
 				</ul>	
 			</li>		
 			<?php } ?>					
@@ -361,6 +334,11 @@ function cpProceedBody(){
 	$link = str_replace(':', '', $link);
 	$link = str_replace('-', '', $link);
 	$file = $link . '.php';
+
+    if (!file_exists(PATH.'/admin/applets/'.$file)){
+        echo "Апплет <strong>&laquo;{$link}&raquo;</strong> не найден"; exit;
+    }
+
 	include('applets/'.$file);
 	eval('applet_'.$link.'();');
 	
@@ -472,20 +450,19 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 	if (isset($_REQUEST['filter'])) { 
 		$filter = $_REQUEST['filter'];
 		$_SESSION['filter'] = $filter;
-	} elseif (isset($_SESSION['filter'])) {
-		$filter = $_SESSION['filter']; 
 	}
 	
 	if ($filter){
 		$f = 0;
-		$sql .= ' WHERE ';
+		$sql .= ' WHERE 1=1';
 		foreach($filter as $key => $value){
 			if($filter[$key]!=-100){
-				$f++;
-				if ($f > 1){
-					$sql .= ' AND ';
-				}
+                $sql .= ' AND ';
+				if ($key != 'category_id'){
 				$sql .= $key . " LIKE '%" . $filter[$key] . "%'";
+				} else {
+					$sql .= $key . " = '" . $filter[$key] . "'";
+				}
 			}				
 		}
 		if (!isset($_SESSION['filter'])) { $_SESSION['filter'] = $filter; }
@@ -601,7 +578,13 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 								$otstup = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', ($item['NSLevel']-1)); 
 								if ($item['NSLevel']-1 > 0){ $otstup .=  ' &raquo; '; }
 							} else { $otstup = ''; }
-							 echo '<td class="'.$row_class.'" valign="middle">'.$otstup.'<a class="lt_link" href="'.$link.'">'.$data.'</a></td>'. "\n";
+                            if ($table != 'cms_components'){
+                                echo '<td class="'.$row_class.'" valign="middle">'.$otstup.'<a class="lt_link" href="'.$link.'">'.$data.'</a></td>'. "\n";
+                            } else {
+                                echo '<td class="'.$row_class.'" valign="middle">
+                                            <a class="lt_link" style="padding:1px; padding-left:24px; background:url(/admin/images/components/'.$item['link'].'.png) no-repeat" href="'.$link.'">'.$data.'</a>
+                                      </td>'. "\n";
+                            }
 						} else {						
 							if ($_fields[$key]['field'] != 'ordering'){
 								if ($_fields[$key]['field'] == 'published'){
@@ -879,6 +862,13 @@ function cpModuleById($id){
 	else { return false; }
 }
 
+function cpModuleTitleById($id){
+	$sql = "SELECT name FROM cms_modules WHERE id = $id";
+	$result = dbQuery($sql);
+	if (mysql_num_rows($result)) { $mod = mysql_fetch_assoc($result); return $mod['name']; }
+	else { return false; }
+}
+
 function cpTemplateById($template_id){
 
 	if ($template_id) { return $template_id; } else { return '<span style="color:silver">Как на сайте</span>'; }
@@ -1016,57 +1006,19 @@ echo '<table width="100%" border="0" cellspacing="0" cellpadding="8" class="prop
 		echo '</td>';
 		echo '<td width="">';
 			echo '<select name="ins" id="ins" style="width:99%" onChange="showIns()">
-					<option value="material">ссылка на статью</option>
-					<option value="photo">ссылка на фотографию</option>
-					<option value="album">ссылка на фотоальбом</option>
-					<option value="price">ссылка на категорию прайса</option>
-					<option value="frm">форма для отправки</option>
+					<option value="frm" selected="selected">форма с заголовком</option>
 					<option value="blank">форма без заголовка</option>	
 					<option value="include">внешний скрипт</option>	
-					<option value="filelink">ссылка "Скачать файл"</option>
-					<option value="banpos">баннерная позиция</option>	
-					<option value="pagebreak">-- разрыв страницы --</option>
+					<option value="filelink">ссылка "Скачать файл"</option>';
+                    if ($inCore->isComponentInstalled('banners')){
+                        echo '<option value="banpos">баннерная позиция</option>';
+                    }
+		    echo   '<option value="pagebreak">-- разрыв страницы --</option>
 					<option value="pagetitle">-- новая страница --</option>
 				  </select>';
 		echo '</td>';
         echo '<td width="100">&nbsp;</td>';
 	echo '</tr>';
-	echo '<tr id="material">';
-		echo '<td width="120">
-                    <strong>Статья:</strong>
-              </td>';
-        echo '<td>
-                    <select name="m" style="width:99%">'.$inCore->getListItems('cms_content').'</select>
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
-	echo '<tr id="photo">';
-		echo '<td width="120">
-                    <strong>Фото:</strong>
-              </td>';
-        echo '<td>
-                    <select name="f" style="width:99%">'.$inCore->getListItems('cms_photo_files').'</select>
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
-	echo '<tr id="album">';
-		echo '<td width="120">
-                    <strong>Альбом:</strong>
-              </td>';
-        echo '<td>
-                    <select name="a" style="width:99%">'.$inCore->getListItemsNS('cms_photo_albums', 0, '',  '', 0, true).'</select>
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
-	echo '<tr id="price">';
-		echo '<td width="120">
-                    <strong>Категория::</strong>
-              </td>';
-        echo '<td>
-                    <select name="p" style="width:99%">'.$inCore->getListItems('cms_price_cats').'</select>
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
 	echo '<tr id="frm">';
 		echo '<td width="120">
                     <strong>Форма:</strong>
@@ -1078,7 +1030,7 @@ echo '<table width="100%" border="0" cellspacing="0" cellpadding="8" class="prop
     echo '</tr>';
 	echo '<tr id="blank">';
 		echo '<td width="120">
-                    <strong>Бланк:</strong>
+                    <strong>Форма:</strong>
               </td>';
         echo '<td>
                     <select name="b" style="width:99%">'.$inCore->getListItems('cms_forms').'</select>
@@ -1103,15 +1055,19 @@ echo '<table width="100%" border="0" cellspacing="0" cellpadding="8" class="prop
               </td>';
         echo '<td width="100">'.$submit_btn.'</td>';
     echo '</tr>';
-	echo '<tr id="banpos">';
-		echo '<td width="120">
-                    <strong>Позиция:</strong>
-              </td>';
-        echo '<td>
-                    <select name="ban" style="width:99%">'.$inCore->bannersList().'</select>
-              </td>';
-        echo '<td width="100">'.$submit_btn.'</td>';
-    echo '</tr>';
+    if ($inCore->isComponentInstalled('banners')){
+        $inCore->loadModel('banners');
+        $banners_model = new cms_model_banners();
+        echo '<tr id="banpos">';
+            echo '<td width="120">
+                        <strong>Позиция:</strong>
+                  </td>';
+            echo '<td>
+                        <select name="ban" style="width:99%">'.$banners_model->getBannersListHTML().'</select>
+                  </td>';
+            echo '<td width="100">'.$submit_btn.'</td>';
+        echo '</tr>';
+    }
 	echo '<tr id="pagebreak">';
 		echo '<td width="120">
                     <strong>Тег:</strong>
@@ -1159,26 +1115,27 @@ function cpBuildList($attr_name, $list, $selected_id=false){
 
 function cpGetList($listtype){
 
+    global $_CFG;
+
 	$list = array();	
 	//Module positions
 	if ($listtype == 'positions'){
-		$list[0]['title'] = 'left';		$list[0]['id'] = 'left';
-		$list[1]['title'] = 'right';	$list[1]['id'] = 'right';
-		$list[2]['title'] = 'top';		$list[2]['id'] = 'top';
-		$list[3]['title'] = 'bottom';	$list[3]['id'] = 'bottom';
-		$list[4]['title'] = 'column1';	$list[4]['id'] = 'column1';
-		$list[5]['title'] = 'column2';	$list[5]['id'] = 'column2';
-		$list[6]['title'] = 'column3';	$list[6]['id'] = 'column3';
+
+        $pos = cpModulePositions($_CFG['template']);
+
+        foreach($pos as $p){
+            $list[] = array('title'=>$p, 'id'=>$p);
+        }
+
 		return $list;
 	}
 	//Menu types
 	if ($listtype == 'menu'){
 		$list[0]['title'] = 'Главное меню';			$list[0]['id'] = 'mainmenu';
-		$list[1]['title'] = 'Дополнительное меню 1';	$list[1]['id'] = 'menu1';
-		$list[2]['title'] = 'Дополнительное меню 2';	$list[2]['id'] = 'menu2';
-		$list[3]['title'] = 'Дополнительное меню 3';	$list[3]['id'] = 'menu3';
-		$list[4]['title'] = 'Дополнительное меню 4';	$list[4]['id'] = 'menu4';
-		$list[5]['title'] = 'Дополнительное меню 5';	$list[5]['id'] = 'menu5';						
+        for ($m=1; $m<=15; $m++){
+            $list[$m]['title'] = "Дополнительное меню {$m}";
+            $list[$m]['id'] = 'menu'.$m;
+        }
 		return $list;
 	}
 
@@ -1220,6 +1177,8 @@ function cpMenutypeById($id){
 		case 'uccat':			$html = '<span id="menutype"><a href="'.$item['link'].'">Каталог</a></span> - '.$inDB->get_field('cms_uc_cats', 'id='.$item['linkid'], 'title');
 					 			break;
 		case 'blog':			$html = '<span id="menutype"><a href="'.$item['link'].'">Блог</a></span> - '.$inDB->get_field('cms_blogs', 'id='.$item['linkid'], 'title');
+					 			break;
+		case 'photoalbum':		$html = '<span id="menutype"><a href="'.$item['link'].'">Фотоальбом</a></span> - '.$inDB->get_field('cms_photo_albums', 'id='.$item['linkid'], 'title');
 					 			break;
 	}	
 	$clear = strip_tags($html);

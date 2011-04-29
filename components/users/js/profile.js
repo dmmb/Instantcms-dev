@@ -1,9 +1,9 @@
-function setStatus(){
+function setStatus(user_id){
 
-    var new_status = prompt('Введите ваше статусное сообщение (максимум 100 символов):');
+    var new_status = prompt('Введите ваше статусное сообщение (максимум 140 символов):');
 
-    if (new_status.length > 100) {
-        new_status = new_status.substr(0, 100);
+    if (new_status.length > 140) {
+        new_status = new_status.substr(0, 140);
     }
 
     if (new_status) {
@@ -20,16 +20,18 @@ function setStatus(){
         }
     }
 
+    if (user_id==undefined){ user_id = 0; }
+
     if (new_status || new_status == '') {
-        $.post('/components/users/ajax/status.php', {'status': new_status}, function(data){});
+        $.post('/components/users/ajax/status.php', {'status': new_status, 'id': user_id}, function(data){});
     }
 
 }
 
 function wallPage(page){
 
-    var user_id     = $('div.wall_body input[@name=user_id]').val();
-    var usertype    = $('div.wall_body input[@name=usertype]').val();
+    var user_id     = $('div.wall_body input[name=user_id]').val();
+    var usertype    = $('div.wall_body input[name=usertype]').val();
 
     $('.wall_loading').show();
 
@@ -37,4 +39,11 @@ function wallPage(page){
 		$('div.wall_body').html(data);
 	});
 
+}
+
+function plusUkarma(to_user_id, user_id){
+	$("#u_karma").load("/users/karma/plus/"+to_user_id+"/"+user_id+"", {'is_ajax': 1});
+}
+function minusUkarma(to_user_id, user_id){
+	$("#u_karma").load("/users/karma/minus/"+to_user_id+"/"+user_id+"", {'is_ajax': 1});
 }

@@ -1,38 +1,33 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
-    define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
     
-    function buildTree($parent_id, $level, $comments, &$tree){
-        $level++;
-        foreach($comments as $num=>$comment){
-            if ($comment['parent_id']==$parent_id){
-                $comment['level'] = $level-1;
-                $tree[] = $comment;
-                buildTree($comment['id'], $level, $comments, $tree);
-            }
-        }
-    }
-
 	session_start();
 
 	define("VALID_CMS", 1);
     include(PATH.'/core/cms.php');
-
+	// Грузим конфиг
+	include(PATH.'/includes/config.inc.php');
     $inCore     = cmsCore::getInstance();
+
+    define('HOST', 'http://' . $inCore->getHost());
 
     $inCore->loadClass('config');           //конфигурация
     $inCore->loadClass('db');               //база данных
     $inCore->loadClass('user');
     $inCore->loadClass('page');
+	$inCore->loadClass('plugin');
 
     $inCore->loadModel('comments');
     $inCore->loadLanguage('lang');
@@ -58,16 +53,20 @@
 /*********************************************************************************************/
 
     $cfg = $inCore->loadComponentConfig('comments');
+
+    // Проверяем включен ли компонент
+	if(!$cfg['component_enabled']) { return false; }
+
     if (!isset($cfg['bbcode'])) { $cfg['bbcode'] = 1; }
 	if (!isset($cfg['min_karma'])) { $cfg['min_karma'] = 0; }
 	if (!isset($cfg['min_karma_add'])) { $cfg['min_karma_add'] = 0; }
 	if (!isset($cfg['min_karma_show'])) { $cfg['min_karma_show'] = 0; }
+    if(!isset($cfg['max_level'])) { $cfg['max_level']=5;       }
 
     $target     = $inCore->request('target', 'str');
     $target_id  = $inCore->request('target_id', 'int');
 
 	//LIST COMMENTS
-    $comments_count     = $model->getCommentsCount($target, $target_id);
 
 	$is_admin           = $inCore->userIsAdmin($inUser->id);
 	$user_can_delete    = $inCore->isUserCan('comments/delete');
@@ -76,10 +75,9 @@
 	$comments = array();
     $tree = array();
 
-	if ($comments_count){
-
 		//BUILD COMMENTS LIST
-        $comments_list  = $model->getComments($target, $target_id);
+    $comments_list  = $model->getComments($target, $target_id, $cfg);
+	if ($comments_list){
 
 		foreach($comments_list as $comment){
 			$next = sizeof($comments);
@@ -87,12 +85,14 @@
             $comments[$next]['level'] = 0;        
 			if ($comments[$next]['guestname']) {
 				$comments[$next]['author']      = $comments[$next]['guestname'];
-				$comments[$next]['is_profile']  =false;
+				$comments[$next]['is_profile']  = false;
+				$comments[$next]['ip']  		= (($cfg['cmm_ip'] == 1 || $cfg['cmm_ip'] == 2) && $comments[$next]['ip']) ? '('.$comments[$next]['ip'].')' : false;
 			} else {
-				$comments[$next]['author'] 		= $inDB->get_fields('cms_users', 'id='.$comments[$next]['user_id'], 'nickname, login');
-				$comments[$next]['profile'] 	= $inDB->get_fields('cms_user_profiles', 'user_id='.$comments[$next]['user_id'], '*');
+				$comments[$next]['author']['nickname'] = $comments[$next]['nickname'];
+				$comments[$next]['author']['login'] = $comments[$next]['login'];
 				$comments[$next]['is_profile'] 	= true;
-				$comments[$next]['user_image'] 	= usrImage($comments[$next]['user_id']);
+				$comments[$next]['user_image'] 	= usrImageNOdb($comments[$next]['user_id'], 'small', $comments[$next]['imageurl'], $comments[$next]['is_deleted']);
+				$comments[$next]['ip']  		= ($cfg['cmm_ip'] == 2 && $comments[$next]['ip']) ? '('.$comments[$next]['ip'].')' : false;
 			}
             $comments[$next]['show'] 	   	= ((!$cfg['min_karma'] || $comments[$next]['votes']>=$cfg['min_karma_show']) || $inCore->userIsAdmin($comments[$next]['user_id']));
             if ($comments[$next]['votes']>0){
@@ -100,26 +100,19 @@
             } elseif ($comments[$next]['votes']<0){
                 $comments[$next]['votes'] = '<span class="cmm_bad">'.$comments[$next]['votes'].'</span>';
             }
-			if ($cfg['bbcode']){
-				$comments[$next]['content'] = $inCore->parseSmiles($comments[$next]['content'], true);
-			} elseif ($cfg['smilies']) {
-				$comments[$next]['content'] = nl2br(strip_tags($inCore->parseSmiles($comments[$next]['content'])));
-			} else {
-                $comments[$next]['content'] = nl2br(strip_tags($comments[$next]['content']));
-            }
 			$comments[$next]['is_my'] = ($inUser->id==$comments[$next]['user_id']);
             if ($inUser->id){
                 $comments[$next]['is_voted'] = ($comments[$next]['is_my'] || $inDB->rows_count('cms_ratings', 'item_id='.$comments[$next]['id'].' AND target=\'comment\' AND user_id='.$inUser->id, 1));
             }
         }
 
-        buildTree(0, 0, $comments, $tree);
+        $model->buildTree(0, 0, $comments, $tree);
 	}
 
     ob_start();
 
 	$smarty = $inCore->initSmarty('components', 'com_comments_list.tpl');
-	$smarty->assign('comments_count', $comments_count);
+	$smarty->assign('comments_count', $comments_list );
 	$smarty->assign('comments', $tree);
 	$smarty->assign('user_can_moderate', $user_can_moderate);
 	$smarty->assign('user_can_delete', $user_can_delete);

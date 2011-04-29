@@ -1,13 +1,17 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
 
 function createMenuItem($menu, $id, $title){
     $inCore = cmsCore::getInstance();
@@ -27,9 +31,9 @@ function createMenuItem($menu, $id, $title){
 				target='_self', 
 				published='1', 
 				template='0', 
-				allow_group='-1', 
+				access_list='', 
 				iconurl=''
-			WHERE id = $myid";
+			WHERE id = '$myid'";
 
 	dbQuery($sql) or die(mysql_error().$sql);
 	return true;
@@ -39,6 +43,7 @@ function applet_content(){
 
     $inCore = cmsCore::getInstance();
     $inUser = cmsUser::getInstance();
+	$inDB 	= cmsDatabase::getInstance();
 
 	//check access
 	global $adminAccess;
@@ -56,7 +61,7 @@ function applet_content(){
     $inCore->loadLib('content');
 
     $GLOBALS['cp_page_title'] = 'Статьи сайта';
-    cpAddPathway('Статьи сайта', 'index.php?view=content');
+    cpAddPathway('Статьи сайта', 'index.php?view=tree');
 	
 	$GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="js/content.js"></script>';
 
@@ -159,19 +164,37 @@ function applet_content(){
 			$id = (int)$_REQUEST['id'];
 			$sql = "UPDATE cms_content SET is_arhive = 1 WHERE id = $id";
 			dbQuery($sql) ;
-			header('location:?view=content');
+			$inCore->redirectBack();
 		}
 	}
 
-	if ($do == 'move_up'){
-		if ($id >= 0){ dbMoveUp('cms_content', $id, $co); }
-		header('location:'.$_SERVER['HTTP_REFERER']);
+	if ($do == 'move'){
+
+        $item_id = $inCore->request('id', 'int', 0);
+        $cat_id  = $inCore->request('cat_id', 'int', 0);
+
+        $dir     = $_REQUEST['dir'];
+        $step    = 1;
+
+        $model->moveItem($item_id, $cat_id, $dir, $step);
+        echo '1'; exit;
+
 	}
 
-	if ($do == 'move_down'){
-		if ($id >= 0){ dbMoveDown('cms_content', $id, $co); }
-		header('location:'.$_SERVER['HTTP_REFERER']);
-	}
+    if ($do == 'move_to_cat'){
+
+        $items      = $inCore->request('item', 'array_int');
+        $to_cat_id  = $inCore->request('obj_id', 'int', 0);
+
+        if ($items && $to_cat_id){
+
+            $model->moveArticlesToCat($items, $to_cat_id);
+
+        }
+
+        $inCore->redirect('?view=tree&cat_id='.$to_cat_id);
+
+    }
 
 	if ($do == 'saveorder'){
 		if(isset($_REQUEST['ordering'])) { 
@@ -181,7 +204,7 @@ function applet_content(){
 			foreach ($ord as $id=>$ordering){			
 				dbQuery("UPDATE cms_content SET ordering = $ordering WHERE id = ".$ids[$id]) ;						
 			}
-			header('location:?view=content');
+			header('location:?view=tree');
 
 		}
 	}
@@ -216,7 +239,7 @@ function applet_content(){
 		} else {
 			$model->deleteArticles($_REQUEST['item'], $cfg['af_delete']);
 		}
-		header('location:?view=content');
+		$inCore->redirectBack();
 	}
 	
 	if ($do == 'update'){
@@ -228,7 +251,9 @@ function applet_content(){
 			$article['url']            = $inCore->request('url', 'str');
 			$article['showtitle']      = $inCore->request('showtitle', 'int', 0);
 			$article['description']    = $inCore->request('description', 'html', '');
+			$article['description']    = $inDB->escape_string($article['description']); 
 			$article['content']        = $inCore->request('content', 'html', '');
+			$article['content']    	   = $inDB->escape_string($article['content']); 
 			$article['published']      = $inCore->request('published', 'int', 0);
 			
 			$article['showdate']       = $inCore->request('showdate', 'int', 0);
@@ -247,6 +272,8 @@ function applet_content(){
 			$pubdate                   = $inCore->request('pubdate', 'str', '');
 
             $article['user_id']         = $inCore->request('user_id', 'int', $inUser->id);
+
+			$article['tpl'] 			= $inCore->request('tpl', 'str', 'com_content_read.tpl');
 
             $date = explode('.', $pubdate);
             $article['pubdate'] = $date[2] . '-' . $date[1] . '-' . $date[0] . ' ' .date('H:i');
@@ -287,15 +314,13 @@ function applet_content(){
                 if (isset($_FILES["picture"]["name"]) && @$_FILES["picture"]["name"]!=''){
                     //generate image file
                     $tmp_name   = $_FILES["picture"]["tmp_name"];                   
-                    if (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/photos/'.$file)){
-                        @unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/small/'.$file);
-                        @unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/'.$file);
-                    }
                     //upload image and insert record in db
                     if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/photos/$file")){
                         $inCore->includeGraphics();
+						if ($cfg['watermark'] && !$cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/$file"); }
                         @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
                         @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
+						if ($cfg['watermark'] && $cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file"); }
                         @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/$file");
                         @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", 0777);
                         @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", 0777);
@@ -305,9 +330,9 @@ function applet_content(){
             }
 
 			if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
-				header('location:?view=content');		
+				$inCore->redirect('?view=tree&cat_id='.$article['category_id']);
 			} else {
-				header('location:?view=content&do=edit');		
+				$inCore->redirect('?view=content&do=edit');
 			}	
 		}
 	}
@@ -317,8 +342,11 @@ function applet_content(){
         $article['title']           = $inCore->request('title', 'str');
         $article['url']             = $inCore->request('url', 'str');
         $article['showtitle']       = $inCore->request('showtitle', 'int', 0);
-        $article['description']     = $_REQUEST['description'];
-        $article['content']         = $_REQUEST['content'];
+		$article['description']     = $inCore->request('description', 'html', '');
+		$article['description']     = $inDB->escape_string($article['description']); 
+		$article['content']         = $inCore->request('content', 'html', '');
+		$article['content']    	    = $inDB->escape_string($article['content']); 
+
         $article['published']       = $inCore->request('published', 'int', 0);
 
         $article['showdate']        = $inCore->request('showdate', 'int', 0);
@@ -338,6 +366,8 @@ function applet_content(){
 		$article['pubdate']         = $date[2] . '-' . $date[1] . '-' . $date[0] . ' ' .date('H:i');
 		
 		$article['user_id']         = $inCore->request('user_id', 'int', $inUser->id);
+
+		$article['tpl'] 			= $inCore->request('tpl', 'str', 'com_content_read.tpl');
 
         $autokeys                   = $inCore->request('autokeys', 'int');
 
@@ -370,7 +400,7 @@ function applet_content(){
 			createMenuItem($inmenu, $article['id'], $article['title']);
 		}
 
-        if ($cfg['af_on'] && $category_id != $cfg['af_hidecat_id'] && !$inCore->inRequest('noforum')){
+        if ($cfg['af_on'] && $category_id != $cfg['af_hidecat_id'] && !$inCore->inRequest('noforum') && $article['published']){
             cmsAutoCreateThread($article, $cfg);
         }
 
@@ -381,15 +411,17 @@ function applet_content(){
             //upload image and insert record in db
             if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/photos/$file")){
                 $inCore->includeGraphics();
+				if ($cfg['watermark'] && !$cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/$file"); }
                 @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
                 @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
+				if ($cfg['watermark'] && $cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file"); }
                 @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/$file");
                 @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", 0755);
                 @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", 0755);
             }
         }
 
-		header('location:?view=content');
+		$inCore->redirect('?view=tree&cat_id='.$article['category_id']);
 	}	  
 
    if ($do == 'add' || $do == 'edit'){
@@ -411,15 +443,11 @@ function applet_content(){
 		if ($do=='add'){
 			 echo '<h3>Добавить статью</h3>';
  	 		 cpAddPathway('Добавить статью', 'index.php?view=content&do=add');
+			 $mod['category_id'] = $_REQUEST['to'];
 		} else {
-					 if(isset($_REQUEST['multiple'])){				 
-						if (isset($_REQUEST['item'])){					
-							$_SESSION['editlist'] = $_REQUEST['item'];
-						} else {
-							echo '<p class="error">Нет выбранных объектов!</p>';
-							return;
-						}				 
-					 }
+                    if (isset($_REQUEST['item'])){
+                        $_SESSION['editlist'] = $_REQUEST['item'];
+                    }
 						
 					 $ostatok = '';
 					
@@ -438,7 +466,7 @@ function applet_content(){
 					 }
 					
 					 echo '<h3>Редактировать статью '.$ostatok.'</h3>';
- 					 cpAddPathway($mod['title'], 'index.php?view=menu&do=edit&id='.$mod['id']);
+ 					 cpAddPathway($mod['title'], 'index.php?view=content&do=edit&id='.$mod['id']);
 			}   
 	?>
     <form id="addform" name="addform" method="post" action="index.php" enctype="multipart/form-data">
@@ -450,7 +478,7 @@ function applet_content(){
                 <!-- главная ячейка -->
                 <td valign="top">
 
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <table width="100%" cellpadding="0" cellspacing="4" border="0">
                         <tr>
                             <td valign="top">
                                 <div><strong>Название статьи</strong></div>
@@ -487,6 +515,11 @@ function applet_content(){
                             <td width="16" valign="bottom" style="padding-bottom:10px">
                                 <input type="checkbox" name="showdate" id="showdate" title="Показывать дату и автора" value="1" <?php if ($mod['showdate'] || $do=='add') { echo 'checked="checked"'; } ?>/>
                             </td>
+                            <td width="160" valign="top">
+                                <div><strong>Шаблон статьи</strong></div>
+                                <div><input name="tpl" type="text" style="width:160px" value="<?php echo @$mod['tpl'];?>"></div>
+                            </td>
+
                         </tr>
                     </table>
 

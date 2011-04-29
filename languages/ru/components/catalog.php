@@ -1,14 +1,15 @@
 <?php
-/*********************************************************************************************/
-//                                                                                           //											 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 		  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 			    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 /* 
@@ -55,8 +56,8 @@ $_LANG['ITEM_PREMOD_NOTICE']      ='Запись будет опубликована в каталоге после п
 $_LANG['WAIT_MODERATION']         ='Запись ожидает модерации';
 $_LANG['MODERATION_ACCEPT']       ='Разрешить';
 $_LANG['MODERATION_REJECT']       ='Удалить';
-$_LANG['MSG_ITEM_SUBMIT']         ='Пользователь %user% добавил в каталог запись "[b]%link%[/b]".'."\n".'Необходима модерация.';
-$_LANG['MSG_ITEM_EDITED']         ='Пользователь %user% изменил запись "[b]%link%[/b]" в каталоге.'."\n".'Необходима модерация.';
+$_LANG['MSG_ITEM_SUBMIT']         ='Пользователь %user% добавил в каталог запись "<b>%link%</b>".'."\n".'Необходима модерация.';
+$_LANG['MSG_ITEM_EDITED']         ='Пользователь %user% изменил запись "<b>%link%</b>" в каталоге.'."\n".'Необходима модерация.';
 $_LANG['MSG_ITEM_REJECTED']       ='Ваша запись "%item%" была не принята в каталог и удалена';
 $_LANG['MSG_ITEM_ACCEPTED']       ='Ваша запись "%link%" была опубликована в каталоге';
 
@@ -101,7 +102,7 @@ $_LANG['ORDER_COMMENT']           ='ДОПОЛНИТЕЛЬНО';
 $_LANG['ORDER']                   ='ЗАКАЗ';
 $_LANG['ORDER_COMPLETE']          ='Заказ принят';
 $_LANG['TOTAL_ORDER_PRICE']       ='Общая сумма заказа';
-$_LANG['EMAIL_SUBJECT']           ='InstantCMS: ЗАКАЗ ИЗ КАТАЛОГА';
+$_LANG['EMAIL_SUBJECT']           ='{sitename}: ЗАКАЗ ИЗ КАТАЛОГА';
 $_LANG['CUSTOMER_EMAIL_SUBJECT']  ='Ваш заказ поступил в обработку';
 $_LANG['CUSTOMER_EMAIL_TEXT']     ='Наши менеджеры свяжутся с вами по указанному вами телефону в самое ближайшее время.';
 //Template

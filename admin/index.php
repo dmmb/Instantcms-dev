@@ -1,14 +1,15 @@
-<?php Error_Reporting(E_ALL & ~E_NOTICE);
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+<?php Error_Reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 	session_start();
 	
@@ -32,21 +33,25 @@
     $inCore->loadClass('db');           //база данных
     $inCore->loadClass('plugin');       //плагины
     $inCore->loadClass('user');       //плагины
+	$inCore->loadClass('actions');    //лента событий
 
     $inPage     = cmsPage::getInstance();
     $inConf     = cmsConfig::getInstance();
     $inDB       = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
 
+    date_default_timezone_set($inConf->timezone);
+
     if ( !$inUser->update() ) { $inCore->redirect('/404'); }
 
     define('TEMPLATE_DIR', PATH.'/templates/'.$inConf->template.'/');
+    define('DEFAULT_TEMPLATE_DIR', PATH.'/templates/_default_/');
 
 	//-------CHECK AUTHENTICATION--------------------------------------//
 	if (!$inUser->id ) {
-		$inCore->redirect('login.php');
+		$inCore->redirect('/admin/login.php');
 	} else {	
-		if (!$inCore->userIsAdmin($inUser->id)){			
+		if (!$inCore->userIsAdmin($inUser->id)){
 			if ($inCore->userIsEditor($inUser->id)){
 				$inCore->redirect('editor/index.php');
 			} else { $inCore->redirect('login.php'); }
@@ -77,6 +82,8 @@
 	$GLOBALS['cp_pathway'][0]['link'] = 'index.php';
 	
 	$GLOBALS['mainmenu'] = array();
+
+    $inCore->loadLanguage('lang');
 
 	cpGenerateMenu();
 

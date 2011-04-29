@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //                                                                                           //											 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 		  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 			    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -17,6 +17,7 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * site: firs.org.ua
  */
 $_LANG['LATESTBLOGS_CONFIG_TEXT']     ='Задайте настройки модуля в панели управления.';
-$_LANG['LATESTBLOGS_RSS']             ='Лента блогов';
+$_LANG['LATESTBLOGS_RSS']             ='RSS-лента блогов';
 $_LANG['LATESTBLOGS_NOT_POSTS']       ='Нет записей в блогах для отображения.';
+
 ?>

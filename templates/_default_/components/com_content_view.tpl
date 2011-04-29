@@ -9,7 +9,7 @@
 			<td><h1 class="con_heading">{$pagetitle}</h1></td>
 			<td valign="top" style="padding-left:6px">
                         <div class="con_rss_icon">
-                            <a href="/rss/content/{$id}/feed.rss" title="{$LANG.RSS}"><img src="/images/markers/rssfeed.png" border="0" alt="{$LANG.RSS}"/></a>
+                            <a href="/rss/content/{$id}/feed.rss" title="{$LANG.RSS}"><img src="/templates/_default_/images/icons/rss.png" border="0" alt="{$LANG.RSS}"/></a>
                         </div>
                 </td>
         </table>
@@ -23,17 +23,14 @@
 {/if}
 
 {if $is_subcats}
-	<table class="categorylist" cellspacing="2" width="100%">
+	<div class="categorylist">
 		{foreach key=tid item=subcat from=$subcats}
-			<tr>
-				<td width="20" valign="top"><img src="/images/markers/folder.png" border="0" /></td>
-				<td width="" valign="top">
-					<a href="{$subcat.url}">{$subcat.title}</a> ({$subcat.content_count}{$subtext})
-					<div class="con_description">{$subcat.description}</div>
-				</td>
-			</tr>
+            <div class="subcat">
+                <a href="{$subcat.url}" class="con_subcat">{$subcat.title}</a> ({$subcat.content_count}{$subtext})
+                <div class="con_description">{$subcat.description}</div>
+            </div>
 		{/foreach}
-	</table>
+	</div>
 {/if}
 
 {if $cat.photoalbum}
@@ -51,7 +48,7 @@
 			{if $article.user_access}
 				{if $col==1} <tr> {/if}
 					<td width="20" valign="top">
-                        <img src="/images/markers/article.png" border="0" class="con_icon"/>
+                        <img src="/templates/_default_/images/icons/article.png" border="0" class="con_icon"/>
                     </td>
 					<td width="" valign="top">
 						<div class="con_title">
@@ -60,10 +57,8 @@
 						{if $cat.showdesc}
 							<div class="con_desc">
                                 {if $article.image}
-                                    <div class="con_image" style="float:left;margin-right:16px;margin-bottom:16px">
-                                        <a href="{$article.url}" title="{$article.title}">
-                                            <img src="/images/photos/small/{$article.image}" border="0" alt="{$article.title}"/>
-                                        </a>
+                                    <div class="con_image">
+                                        <img src="/images/photos/small/{$article.image}" border="0" alt="{$article.title}"/>
                                     </div>
                                 {/if}
                                 {$article.description}
@@ -80,6 +75,7 @@
                                     <a href="{$article.url}" title="{$LANG.DETAIL}">{$LANG.DETAIL}</a>
 									| <a href="{$article.url}#c" title="{$LANG.COMMENTS}">{$article.comments|spellcount:$LANG.COMMENT:$LANG.COMMENT2:$LANG.COMMENT10}</a>
 								{/if}
+                                 | {$article.hits|spellcount:$LANG.HIT:$LANG.HIT2:$LANG.HIT10}
 								{if $cat.showtags && $article.tagline}
 									{if $showdate || $cat.showcomm} <br/> {/if}
 									{if $article.tagline} <strong>{$LANG.TAGS}:</strong> {$article.tagline} {/if}

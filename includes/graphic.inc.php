@@ -1,10 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//				  http://www.instantcms.ru/, info@instantcms.ru                              //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
@@ -22,7 +27,7 @@ function img_add_watermark($src){
   img_watermark($isrc, $size[0], $size[1]);
   
    // вывод картинки и очистка памяти
-  imagejpeg($isrc,$src,100); 
+  imagejpeg($isrc,$src,80); 
 
 }
 
@@ -60,7 +65,7 @@ function img_watermark(&$img, $w, $h){
   $rgb             - цвет фона, по умолчанию - белый
   $quality         - качество генерируемого JPEG, по умолчанию - максимальное (100)
 ***********************************************************************************/
-function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $watermark=false, $rgb=0xFFFFFF, $quality=75)
+function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $watermark=false, $rgb=0xFFFFFF, $quality=80)
 {
   if (!file_exists($src)) return false;
 
@@ -71,6 +76,14 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $w
 
   if ($size === false) return false;
 
+  $new_width   = $size[0];
+  $new_height  = $size[1];
+
+  if (($new_height <= $maxheight) && ($new_width <= $maxwidth)){
+      @copy($src, $dest);
+      return true;
+  }
+
   // Определяем исходный формат по MIME-информации, предоставленной
   // функцией getimagesize, и выбираем соответствующую формату
   // imagecreatefrom-функцию.
@@ -79,9 +92,6 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $w
   if (!function_exists($icfunc)) return false;
 
   $isrc = $icfunc($src);
-
-  $new_width   = $size[0];
-  $new_height  = $size[1];
 
   if($is_square){
 	  $idest = imagecreatetruecolor($maxwidth,$maxwidth);
@@ -105,9 +115,11 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $w
   }
   
   if ($watermark) { img_watermark($idest, $new_width, $new_height); }         
-  
+
+  imageinterlace($idest,1);
+
   // вывод картинки и очистка памяти
-  imagejpeg($idest,$dest); 
+  imagejpeg($idest,$dest,$quality);
 
   imagedestroy($isrc);
   imagedestroy($idest);

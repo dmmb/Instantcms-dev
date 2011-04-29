@@ -1,14 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 class cmsPage {
 
@@ -59,9 +60,13 @@ public function addHead($tag){
  * @return true
  */
 public function addHeadJS($src){
-    $src = '/'.$src;
-    $this->page_head[] = '<script language="JavaScript" type="text/javascript" src="'.$src.'"></script>';
+
+    $js_tag = '<script language="JavaScript" type="text/javascript" src="/'.$src.'"></script>';
+
+    if (!in_array($js_tag, $this->page_head)){ $this->page_head[] = $js_tag; }
+
     return true;
+
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,9 +76,13 @@ public function addHeadJS($src){
  * @return true
  */
 public function addHeadCSS($src){
-    $src = '/'.$src;
-    $this->page_head[] = '<link href="'.$src.'" rel="stylesheet" type="text/css" />';
+
+    $css_tag = '<link href="/'.$src.'" rel="stylesheet" type="text/css" />';
+
+    if (!in_array($css_tag, $this->page_head)){ $this->page_head[] = $css_tag; }
+    
     return true;
+
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -84,7 +93,10 @@ public function addHeadCSS($src){
  */
 public function homeTitle(){
     $inConf = cmsConfig::getInstance();
-    if ($inConf->hometitle) { return $inConf->hometitle; }
+    if (isset($inConf->hometitle)) { 
+        if ($inConf->hometitle) { return $inConf->hometitle; }
+        else { return $inConf->sitename; }
+    }
     else { return $inConf->sitename; }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -240,18 +252,24 @@ public function printBody(){
  */
 public function printPathway($separator='&rarr;'){
 
-    //Проверяем, на главной мы или нет
-    require($_SERVER['DOCUMENT_ROOT'].'/includes/config.inc.php');
-    if (($GLOBALS['menuid']==1 && !$_CFG['index_pw']) || !$_CFG['show_pw']) { return false; }
+    $inCore = cmsCore::getInstance();
+    $inConf = cmsConfig::getInstance();
 
-    echo '<div class="pathway">';
-    foreach($this->pathway as $key => $value){
-        echo '<a href="'.$this->pathway[$key]['link'].'" class="pathwaylink">'.$this->pathway[$key]['title'].'</a> ';
-        if ($key<sizeof($this->pathway)-1) {
-            echo ' '.$separator.' ';
+    //Проверяем, на главной мы или нет
+    if (($inCore->menuId()==1 && !$inConf->index_pw) || !$inConf->show_pw) { return false; }
+
+    if ($inConf->short_pw){ unset($this->pathway[sizeof($this->pathway)-1]); }
+    
+    if (is_array($this->pathway)){
+        echo '<div class="pathway">';
+        foreach($this->pathway as $key => $value){
+            echo '<a href="'.$this->pathway[$key]['link'].'" class="pathwaylink">'.$this->pathway[$key]['title'].'</a> ';
+            if ($key<sizeof($this->pathway)-1) {
+                echo ' '.$separator.' ';
+            }
         }
+        echo '</div>';
     }
-    echo '</div>';
 
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -268,7 +286,7 @@ public function addPathway($title, $link=''){
     //Проверяем, есть ли уже в глубиномере такое звено
     $already = false;
     foreach($this->pathway as $key => $val){
-        if ($this->pathway[$key]['title'] == $title || $this->pathway[$key]['link'] == $link){
+        if ($this->pathway[$key]['link'] == $link){
             $already = true;
         }
     }
@@ -290,7 +308,7 @@ public function addMenuPathway($menuid){
     $inDB   = cmsDatabase::getInstance();
 
     //Получаем путь к пункту меню
-    $rs_item = $inDB->query("SELECT * FROM cms_menu WHERE id = $menuid");
+    $rs_item = $inDB->query("SELECT NSLeft, NSRight FROM cms_menu WHERE id = '$menuid'");
 
     if ($inDB->num_rows($rs_item)){
         $current_item   = $inDB->fetch_assoc($rs_item);
@@ -430,31 +448,38 @@ public function countModules_old($position){
 }
 
 public function countModules($position){
-    $inCore     = cmsCore::getInstance();
-    $inDB       = cmsDatabase::getInstance();
-    $inUser     = cmsUser::getInstance();
-	
-	if ($inUser->id) {
-    	//if authorized, but not admin, get group_id
-        if (!$inCore->userIsAdmin($inUser->id)){ 
-			$gid = $_SESSION['user']['group_id']; 
-		} else { 
-			$gid = false;  
-		}
-    } else { 
-		$gid = cmsUser::getGuestGroupId();  
-	}
 
-    //if not admin, add access check to sql
-    if ($gid !== false) { $group_sql = "AND ((m.allow_group=-1) OR (m.allow_group=$gid))"; } else { $group_sql = ""; }
+    $inCore = cmsCore::getInstance();
+    $inDB   = cmsDatabase::getInstance();
+	
+    if (!$inCore->isMenuIdStrict()){ $strict_sql = "AND (m.is_strict_bind = 0)"; } else { $strict_sql = ""; }
 
 	$menuid = $inCore->menuId();
-    $sql = "SELECT m.id
+
+    $sql = "SELECT m.access_list
             FROM cms_modules m, cms_modules_bind mb
-            WHERE m.position = '$position' AND m.published = 1 AND m.id = mb.module_id AND (mb.menu_id = $menuid OR mb.menu_id = 0) $group_sql
+            WHERE mb.position = '$position' AND
+                  m.published = 1 AND
+                  m.id = mb.module_id AND
+                  (mb.menu_id = '$menuid' OR mb.menu_id = 0)
+                  $strict_sql
             ";
-    $result = $inDB->query($sql) ;
-    return $inDB->num_rows($result);
+
+	$result = $inDB->query($sql);
+
+    if (!$inDB->num_rows($result)){ return 0; }
+	
+	$mods = array();
+
+    while($mod = $inDB->fetch_assoc($result)){
+
+		// Проверяем права доступа
+		if (!$inCore->checkContentAccess($mod['access_list'])) { continue; }
+		$mods[] = $mod;
+		
+	}
+
+    return sizeof($mods);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -464,36 +489,41 @@ public function countModules($position){
  * @return html
  */
 public function printModules($position){
-    $inCore     = cmsCore::getInstance();
-    $inDB       = cmsDatabase::getInstance();
-    $inUser     = cmsUser::getInstance();
+
+    $inCore = cmsCore::getInstance();
+    $inDB   = cmsDatabase::getInstance();
+    $inUser = cmsUser::getInstance();
+
     global $_CFG;
     global $_LANG;
-    //check menu item number
+
+    //Получаем id пункта меню
     $menuid = $inCore->menuId();
-    //check position
+
+    // Проверяем позиции
     if (!$position) { return false; }
     if ($position=='top' && @$_REQUEST['view']=='search') { return true; }
 
-    if ($inUser->id) {
-        //if authorized, but not admin, get group_id
-        if (!$inCore->userIsAdmin($inUser->id)){ $gid = $_SESSION['user']['group_id']; } else { $gid = false; }
-    } else { $gid = cmsUser::getGuestGroupId(); }
+    if (!$inCore->isMenuIdStrict()){ $strict_sql = "AND (m.is_strict_bind = 0)"; } else { $strict_sql = ""; }
 
-    //if not admin, add access check to sql
-    if ($gid !== false) { $group_sql = "AND ((m.allow_group=-1) OR (m.allow_group=$gid))"; } else { $group_sql = ""; }
-
-    //get modules info
+    // Получаем все модули на позицию
     $sql = "SELECT *, m.id as mid, m.template as tpl
             FROM cms_modules m, cms_modules_bind mb
-            WHERE m.position = '$position' AND m.published = 1 AND m.id = mb.module_id AND (mb.menu_id = $menuid OR mb.menu_id = 0) $group_sql
+            WHERE (mb.position = '$position') AND
+                  m.published = 1 AND
+                  m.id = mb.module_id AND
+                  (mb.menu_id = '$menuid' OR mb.menu_id = 0)
+                  $strict_sql
             ORDER BY m.ordering ASC
             ";
 
     $result = $inDB->query($sql);
-    //draw module
+
     if($inDB->num_rows($result)){
         while ($mod = $inDB->fetch_assoc($result)){
+			
+			// Проверяем права доступа
+			if (!$inCore->checkContentAccess($mod['access_list'])) { continue; }
             
             $modulefile = PATH.'/modules/'.$mod['content'].'/module.php';
 
@@ -519,17 +549,21 @@ public function printModules($position){
                     //run module and get its output to $modulebody
 
                     if ($mod['cache'] && $inCore->isCached('module', $mod['mid'], $mod['cachetime'], $mod['cacheint'])){
+
                         $modulebody = $inCore->getCache('module', $mod['mid']);
                         $callback = true;
-                    } else {
-                                $config = $inCore->yamlToArray($mod['config']);
-                                $inCore->cacheModuleConfig($mod['module_id'], $config);
 
-                                ob_start();
-                                $callback = $mod['content']($mod['module_id']);
-                                $modulebody = ob_get_clean();
-                                if($mod['cache']) { $inCore->saveCache('module', $mod['mid'], $modulebody); }
-                           }
+                    } else {
+
+                        $config = $inCore->yamlToArray($mod['config']);
+                        $inCore->cacheModuleConfig($mod['module_id'], $config);
+
+                        ob_start();
+                        $callback = $mod['content']($mod['module_id']);
+                        $modulebody = ob_get_clean();
+                        if($mod['cache']) { $inCore->saveCache('module', $mod['mid'], $modulebody); }
+                    }
+
                 }
             }
 
@@ -696,9 +730,11 @@ public function buildFormField($form_id, $field, $default=''){
                                       size="'.$cfg['size'].'"
                                       value="'.$cfg['default'].'"
                                       style="'.$style.'"
+                                      class="text-input"
                                       />';
                      break;
         case 'textarea': $html .= '<textarea name="field['.$field['id'].']"
+                                             class="text-input"
                                              maxlength="'.$cfg['max'].'"
                                              cols="'.$cfg['size'].'"
                                              rows="'.$cfg['rows'].'" style="'.$style.'">'.$cfg['default'].'</textarea>';
@@ -798,89 +834,94 @@ public static function getBBCodeToolbar($field_id, $images=0, $placekind='forum'
     $inPage->addHeadJS('includes/jquery/upload/ajaxfileupload.js');
 
     $html = '<a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[b]\', \'[/b]\')" title="Жирный">
-                <img src="/includes/bbcode/images/b.gif" border="0" alt="Жирный" />
+                <img src="/includes/bbcode/images/b.png" border="0" alt="Жирный" />
              </a>
              <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[i]\', \'[/i]\')" title="Курсив">
-                <img src="/includes/bbcode/images/i.gif" border="0" alt="Курсив" />
+                <img src="/includes/bbcode/images/i.png" border="0" alt="Курсив" />
              </a>
              <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[u]\', \'[/u]\')"  title="Подчеркнутый">
-                <img src="/includes/bbcode/images/u.gif" border="0" alt="Подчеркнутый" />
+                <img src="/includes/bbcode/images/u.png" border="0" alt="Подчеркнутый" />
              </a>
              <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[s]\', \'[/s]\')"  title="Зачеркнутый">
-                <img src="/includes/bbcode/images/s.gif" border="0" alt="Зачеркнутый" />
+                <img src="/includes/bbcode/images/s.png" border="0" alt="Зачеркнутый" />
              </a>
              <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[align=left]\', \'[/align]\')" title="По левому краю">
-                <img src="/includes/bbcode/images/align_left.gif" border="0" alt="По левому краю" />
+                <img src="/includes/bbcode/images/align_left.png" border="0" alt="По левому краю" />
              </a>
              <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[align=center]\', \'[/align]\')" title="По центру">
-                <img src="/includes/bbcode/images/align_center.gif" border="0" alt="По центру" />
+                <img src="/includes/bbcode/images/align_center.png" border="0" alt="По центру" />
              </a>
              <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[align=right]\', \'[/align]\')" title="По правому краю">
-                <img src="/includes/bbcode/images/align_right.gif" border="0" alt="По правому краю" />
+                <img src="/includes/bbcode/images/align_right.png" border="0" alt="По правому краю" />
              </a>
              <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[h1]\', \'[/h1]\')" title="Большой заголовок">
-                <img src="/includes/bbcode/images/h1.gif" border="0" alt="Большой заголовок" />
+                <img src="/includes/bbcode/images/h1.png" border="0" alt="Большой заголовок" />
              </a>
              <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[h2]\', \'[/h2]\')" title="Средний заголовок">
-                <img src="/includes/bbcode/images/h2.gif" border="0" alt="Средний заголовок" />
+                <img src="/includes/bbcode/images/h2.png" border="0" alt="Средний заголовок" />
              </a>
              <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[h3]\', \'[/h3]\')" title="Маленький заголовок">
-                <img src="/includes/bbcode/images/h3.gif" border="0" alt="Маленький заголовок" />
+                <img src="/includes/bbcode/images/h3.png" border="0" alt="Маленький заголовок" />
              </a>
              <a class="usr_bb_button" href="javascript:addTagQuote(\''.$field_id.'\')" title="Цитата">
-                <img src="/includes/bbcode/images/quote.gif" border="0" alt="Цитата" />
+                <img src="/includes/bbcode/images/quote.png" border="0" alt="Цитата" />
              </a>
              <a class="usr_bb_button" href="javascript:addTagUrl(\''.$field_id.'\')" title="Вставить ссылку">
-                <img src="/includes/bbcode/images/url.gif" border="0" alt="Вставить ссылку" />
+                <img src="/includes/bbcode/images/url.png" border="0" alt="Вставить ссылку" />
              </a>
              <a class="usr_bb_button" href="javascript:addTagEmail(\''.$field_id.'\')" title="Вставить email">
-                <img src="/includes/bbcode/images/email.gif" border="0" alt="Вставить email" />
+                <img src="/includes/bbcode/images/email.png" border="0" alt="Вставить email" />
              </a>
              <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[code=php]\', \'[/code]\')" title="Вставить код">
-                <img src="/includes/bbcode/images/code.gif" border="0" alt="Вставить код" />
+                <img src="/includes/bbcode/images/code.png" border="0" alt="Вставить код" />
              </a>
              <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[hide]\', \'[/hide]\')" title="Вставить скрытый текст">
-                <img src="/includes/bbcode/images/hide.gif" border="0" alt="Вставить скрытый текст" />
+                <img src="/includes/bbcode/images/hide.png" border="0" alt="Вставить скрытый текст" />
              </a>
              <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[spoiler=Спойлер]\', \'[/spoiler]\')" title="Вставить спойлер">
-                <img src="/includes/bbcode/images/spoiler.gif" border="0" alt="Вставить спойлер" />
+                <img src="/includes/bbcode/images/spoiler.png" border="0" alt="Вставить спойлер" />
              </a>
              <a class="usr_bb_button" href="javascript:void(0)" onclick="$(\'#smilespanel\').slideToggle(\'slow\')" title="Вставить смайл">
-                <img src="/includes/bbcode/images/smiles.gif" border="0" alt="Вставить смайл" />
+                <img src="/includes/bbcode/images/smiles.png" border="0" alt="Вставить смайл" />
              </a>';
 
-    if ($placekind=='blog'){
+    if ($placekind=='blogs'){
 
         $html .= '<a class="usr_bb_button" href="javascript:addTagCut(\''.$field_id.'\')" title="Вставить конец анонса (кат)">
-                    <img src="/includes/bbcode/images/cut.gif" border="0" alt="Вставить конец анонса (кат)" />
+                    <img src="/includes/bbcode/images/cut.png" border="0" alt="Вставить конец анонса (кат)" />
                   </a>';
 
     }
 
     if ($images){
         $html .= '<a class="usr_bb_button" href="javascript:addTagVideo(\''.$field_id.'\')" title="Вставить видео">
-                    <img src="/includes/bbcode/images/video.gif" border="0" alt="Вставить видео" />
+                    <img src="/includes/bbcode/images/video.png" border="0" alt="Вставить видео" />
                  </a>
                  <a class="usr_bb_button" href="javascript:addTagAudio(\''.$field_id.'\')" title="Вставить mp3">
-                    <img src="/includes/bbcode/images/audio.gif" border="0" alt="Вставить mp3" />
+                    <img src="/includes/bbcode/images/audio.png" border="0" alt="Вставить mp3" />
                  </a>
-                 <a class="usr_bb_button" href="javascript:addImage(\''.$field_id.'\')" title="Загрузить и вставить фото">
-                    <img src="/includes/bbcode/images/image.gif" border="0" alt="Загрузить и вставить фото" />
+                 <a class="usr_bb_button" href="javascript:addTagImage(\''.$field_id.'\')" title="Вставить картинку из Сети">
+                    <img src="/includes/bbcode/images/image_link.png" border="0" alt="Вставить картинку из Сети" />
+                 </a>';
+		if ($inUser->id) {
+			$html .= '<a class="usr_bb_button" href="javascript:addImage(\''.$field_id.'\')" title="Загрузить и вставить фото">
+                    <img src="/includes/bbcode/images/image.png" border="0" alt="Загрузить и вставить фото" />
                  </a>
-                 <a class="usr_bb_button" href="javascript:addAlbumImage()" title="Вставить фото из альбома">
-                    <img src="/includes/bbcode/images/albumimage.gif" border="0" alt="Вставить фото из альбома" />
+                 <a class="usr_bb_button" href="javascript:addAlbumImage()" title="Вставить фото из личных альбомов">
+                    <img src="/includes/bbcode/images/albumimage.png" border="0" alt="Вставить фото из личных альбомов" />
                  </a>
-                <div class="usr_bb_button" id="imginsert" style="padding:3px;display:none">
+                <div class="usr_bb_button" id="imginsert" style="display:none">
                     <strong>Загрузить фото:</strong> <input type="file" id="attach_img" name="attach_img"/>
                      <input type="button" name="goinsert" value="Вставить" onclick="loadImage(\''.$field_id.'\', \''.session_id().'\', \''.$placekind.'\')" />
                  </div>
-                 <div class="usr_bb_button" id="imgloading" style="padding:5px;display:none">
+                 <div class="usr_bb_button" id="imgloading" style="display:none">
                     Загрузка изображения...
                  </div>
-                <div class="usr_bb_button" id="albumimginsert" style="padding:3px;display:none">
+                <div class="usr_bb_button" id="albumimginsert" style="display:none">
                     <strong>Вставить фото:</strong> '.cmsUser::getPhotosList($inUser->id).'
                      <input type="button" name="goinsert" value="Вставить" onclick="insertAlbumImage(\''.$field_id.'\')" />
                  </div>';
+    }
     }
 
     return $html;
@@ -956,7 +997,7 @@ public static function getPagebar($total, $page, $perpage, $link, $params=array(
 
     global $_LANG;
 
-    $html = '<div class="pagebar">';
+    $html  = '<div class="pagebar">';
     $html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
 
     $total_pages = ceil($total / $perpage);
@@ -1051,51 +1092,6 @@ public static function getPagebar($total, $page, $perpage, $link, $params=array(
     return $html;
 }
 
-//public static function getPagebar($total, $page, $perpage, $link, $params=array()){
-//	$html = '';
-//	if ($total){
-//		$pages = ceil($total / $perpage);
-//		if($pages>1){
-//			$html .= '<div class="pagebar">';
-//			$html .= '<span class="pagebar_title"><strong>Страницы: </strong></span>';
-//            if ($page > 1){
-//                $href = $link;
-//                if (is_array($params)){
-//                    foreach($params as $param=>$value){
-//                        $href = str_replace('%'.$param.'%', $value, $href);
-//                    }
-//                }
-//                $html .= ' <a href="'.str_replace('%page%', ($page-1), $href).'" class="pagebar_page">&larr;</a> ';
-//            }
-//			for ($p=1; $p<=$pages; $p++){
-//				if ($p != $page) {
-//                    $href = $link;
-//                    if (is_array($params)){
-//                        foreach($params as $param=>$value){
-//                            $href = str_replace('%'.$param.'%', $value, $href);
-//                        }
-//                    }
-//                    $href = str_replace('%page%', $p, $href);
-//					$html .= ' <a href="'.$href.'" class="pagebar_page">'.$p.'</a> ';
-//				} else {
-//					$html .= '<span class="pagebar_current">'.$p.'</span>';
-//				}
-//			}
-//            if ($page < $pages){
-//                $href = $link;
-//                if (is_array($params)){
-//                    foreach($params as $param=>$value){
-//                        $href = str_replace('%'.$param.'%', $value, $href);
-//                    }
-//                }
-//                $html .= ' <a href="'.str_replace('%page%', ($page+1), $href).'" class="pagebar_page">&rarr;</a> ';
-//            }
-//			$html .= '</div>';
-//		}
-//	}
-//	return $html;
-//}
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public static function getModuleTemplates() {
@@ -1125,10 +1121,9 @@ public static function getModuleTemplates() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public function siteOffNotify() {
-    return '<div style="margin:0px; padding:5px; border-bottom:2px solid gray; border-right:2px solid gray; background:#FFF; position:absolute;">
+    return '<div style="margin:4px; padding:5px; border:solid 1px red; background:#FFF; position:absolute; z-index:999">
                 <strong style="color:red">Сайт отключен.</strong> 
                 Только администраторы видят его содержимое.
-                Вы можете <a href="/admin/index.php?view=config">включить сайт</a> в панели управления.
             </div>';
 }
 

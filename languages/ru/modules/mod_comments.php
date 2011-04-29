@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //                                                                                           //											 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 		  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 			    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -19,4 +19,5 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 $_LANG['COMMENTS_RSS']         ='Лента комментариев';
 $_LANG['COMMENTS_NOT_COMM']    ='Нет комментариев для отображения.';
 $_LANG['COMMENTS_NOT_SHOWTYPE']='Не выбран тип комментариев для показа.';
+$_LANG['COMMENTS_ALL']         ='Все комментарии';
 ?>

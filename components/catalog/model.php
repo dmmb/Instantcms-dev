@@ -1,4 +1,16 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 class cms_model_catalog{
@@ -46,7 +58,9 @@ class cms_model_catalog{
         $this->inDB->query("DELETE FROM cms_uc_items WHERE id={$id}");
         $this->inDB->query("DELETE FROM cms_tags WHERE target='catalog' AND item_id = {$id}");
         $this->inDB->query("DELETE FROM cms_uc_ratings WHERE item_id = {$id}");
-
+		
+		cmsActions::removeObjectLog('add_catalog', $id);
+		
         $inCore->deleteComments('catalog', $id);
 
     }
@@ -66,6 +80,7 @@ class cms_model_catalog{
 
         $sql = "UPDATE cms_uc_items
                 SET title='{$item['title']}',
+				    category_id = '{$item['cat_id']}',
                     pubdate='{$item['pubdate']}',
                     published='{$item['published']}',
                     imageurl='{$item['imageurl']}',
@@ -244,7 +259,8 @@ class cms_model_catalog{
                     newint = '{$cat['newint']}',
                     filters = '{$cat['filters']}',
                     is_public = '{$cat['is_public']}',
-                    can_edit = '{$cat['can_edit']}'
+                    can_edit = '{$cat['can_edit']}',
+                    cost = '{$cat['cost']}'
                 WHERE id = $id
                 LIMIT 1";
         $this->inDB->query($sql);
@@ -281,7 +297,8 @@ class cms_model_catalog{
                     newint = '{$cat['newint']}',
                     filters = '{$cat['filters']}',
                     is_public = '{$cat['is_public']}',
-                    can_edit = '{$cat['can_edit']}'
+                    can_edit = '{$cat['can_edit']}',
+                    cost = '{$cat['cost']}'
                 WHERE id = {$cat['id']}
                 LIMIT 1";
         $this->inDB->query($sql);
@@ -340,11 +357,10 @@ class cms_model_catalog{
 
         $subcats=array();
 
-        $sql = "SELECT cat.*, IFNULL(COUNT(con.id), 0) as content_count
+        $sql = "SELECT cat.*
                 FROM cms_uc_cats cat
-                LEFT JOIN cms_uc_items con ON con.category_id = cat.id AND con.published = 1
-                WHERE (cat.parent_id=$parent_id) AND cat.published = 1
-                GROUP BY cat.id";
+                WHERE cat.parent_id = '$parent_id' AND cat.published = 1
+                ORDER BY cat.title";
 
         $result = $this->inDB->query($sql);
 

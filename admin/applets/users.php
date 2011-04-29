@@ -1,13 +1,17 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
 
 function applet_users(){
 
@@ -89,10 +93,6 @@ function applet_users(){
 		$actions[1]['icon']  = 'message.gif';
 		$actions[1]['link']  = '/users/%id%/sendmessage.html';
 
-		$actions[2]['title'] = 'Редактировать';
-		$actions[2]['icon']  = 'edit.gif';
-		$actions[2]['link']  = '?view=users&do=edit&id=%id%';
-		
 		$actions[3]['title'] = 'Забанить';
 		$actions[3]['icon']  = 'ban.gif';
 		$actions[3]['link']  = '/admin/index.php?view=userbanlist&do=add&to=%id%';
@@ -135,7 +135,7 @@ function applet_users(){
         if (!$email) { $error .= 'Нужно указать адрес e-mail!<br/>'; }
         if ($pass != $pass2) { $error .= 'Пароли не совпали!'; }
 
-        if (!eregi("^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$", $email)){ $error .= 'Некорректный адрес e-mail!<br/>'; }
+        if (!preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/i", $email)){ $error .= 'Некорректный адрес e-mail!<br/>'; }
 
         if(!$error){
             $login_exists = $inDB->get_field('cms_users', "login='{$login}'", 'id');

@@ -6,7 +6,7 @@
   <table width="550" border="0" cellpadding="6" cellspacing="0" style="background-color:#EBEBEB">
 	<tr>
 	  <td width="160"><strong>{$LANG.BLOG_TITLE}: </strong></td>
-	  <td><input name="title" type="text" id="title" value="{$blog.title}" style="width:360px"/></td>
+	  <td><input name="title" type="text" id="title" value="{$blog.title|escape:'html'}" style="width:360px"/></td>
 	</tr>
 	<tr>
 	  <td><strong>{$LANG.SHOW_BLOG}:</strong></td>
@@ -59,7 +59,7 @@
 	  </td>
 	</tr>
   </table>
-  <input type="hidden" name="uid" id="uid" value="<?php echo $blog['user_id']?>"/>
+  <input type="hidden" name="uid" id="uid" value="{$blog.user_id}"/>
   <table width="550" border="0" cellspacing="0" cellpadding="10" id="multiuserscfg" style="margin-top:5px;border:solid 1px silver;display: {if $blog.ownertype=='single' || $blog.forall}none;{else}table;{/if}">
 	  <td align="center" valign="top"><strong>{$LANG.CAN_WRITE_TO_BLOG}: </strong><br/>
 		<select name="authorslist[]" size="15" multiple id="authorslist" style="width:200px">
@@ -77,7 +77,7 @@
 	  </td>
 	</tr>  
   </table>
-  <p>
+  <p style="margin-top:20px">
 	<input name="goadd" type="submit" id="goadd" value="{$LANG.SAVE_CONFIG}" />
 	<input name="delete" type="button" onclick="window.location.href='/blogs/{$id}/delblog.html'" value="{$LANG.DEL_BLOG}" />
 	<input name="cancel" type="button" onclick="window.history.go(-1)" value="{$LANG.CANCEL}" />

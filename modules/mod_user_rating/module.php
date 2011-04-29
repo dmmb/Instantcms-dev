@@ -1,58 +1,60 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 	function mod_user_rating($module_id){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
+		
 		$cfg = $inCore->loadModuleConfig($module_id);
 
         if (!isset($cfg['count'])) { $cfg['count'] = 20; }
 		if (!isset($cfg['view_type'])) { $cfg['view_type'] = 'rating'; }	
-
 		if ($cfg['view_type']!='rating' && $cfg['view_type']!='karma') {
 			$cfg['view_type'] = 'rating';
 		}
-		
 		if ($cfg['view_type'] == 'rating') { $target = 'Рейтинг'; } else { $target = 'Карма'; }
 
-		$sql = "SELECT u.*, p.karma as karma, p.user_id, u.rating as rating, p.karma as karma
-				FROM cms_users u, cms_user_profiles p
-				WHERE u.is_deleted = 0 AND u.is_locked = 0 AND p.user_id = u.id
+		$sql = "SELECT u.id, u.login, u.nickname, u.rating as rating, u.is_deleted, p.karma as karma, p.user_id, p.imageurl, u.status
+				FROM cms_users u
+				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+				WHERE u.is_deleted = 0 AND u.is_locked = 0
 				ORDER BY ".$cfg['view_type']." DESC
 				LIMIT ".$cfg['count'];		
 		$result = $inDB->query($sql);
 		
-		if (@$inDB->num_rows($result)){	
-				include_once($_SERVER['DOCUMENT_ROOT'].'/components/users/includes/usercore.php');
+		$users = array();
+		$is_usr = false;
+		
+		if ($inDB->num_rows($result)){
 			
-				echo '<table cellspacing="5" border="0" class="mod_user_rating">';
-				while($usr = $inDB->fetch_assoc($result)){
-					echo '<tr>';
-						echo '<td width="20" class="avatar">'.usrImage($usr['id']).'</td>';
-						echo '<td width="">';
-						echo '<div>';
-							echo '<a href="'.cmsUser::getProfileURL($usr['login']).'" class="nickname">'.$usr['nickname'].'</a>';
-							if ($cfg['view_type'] == 'rating'){
-								echo '<div class="rating">'.$usr[$cfg['view_type']].'</div>';
-							} elseif ($usr[$cfg['view_type']]>0) {
-								echo '<div class="karma"><span style="color:green">+'.$usr[$cfg['view_type']].'</span></div>';
-							} elseif ($usr[$cfg['view_type']]==0) {
-								echo '<div class="karma"><span style="color:gray">'.$usr[$cfg['view_type']].'</span></div>';
-							} else {
-								echo '<div class="karma"><span style="color:red">'.$usr[$cfg['view_type']].'</span></div>';							
-							}
-						echo '</div>';				
-					echo '</tr>';
+				$is_usr=true;
+				
+				if (!function_exists('usrImageNOdb')){ //if not included earlier
+				include_once($_SERVER['DOCUMENT_ROOT'].'/components/users/includes/usercore.php');
 				}
-				echo '</table>';
-		} else { echo '<p>Нет данных для отображения.</p>'; }
+			
+				while($usr = $inDB->fetch_assoc($result)){
+					$usr['profileurl'] = cmsUser::getProfileURL($usr['login']);
+					$usr['usrimage']   = usrImageNOdb($usr['id'], 'small', $usr['imageurl'], $usr['is_deleted']);
+					$users[] = $usr;
+							}
+				}
+		
+		$smarty = $inCore->initSmarty('modules', 'mod_user_rating.tpl');			
+		$smarty->assign('users', $users);
+		$smarty->assign('cfg', $cfg);
+		$smarty->assign('is_usr', $is_usr);
+		$smarty->display('mod_user_rating.tpl');
 				
 		return true;
 	

@@ -12,18 +12,21 @@
 
 <form name="configform" id="club_config_form" action="" method="post" enctype="multipart/form-data">
 
-<div id="configtabs">
+<div id="configtabs" style="margin-top:20px">
 	<ul id="tabs"> 
-		<li><a href="#tab1"><span>{$LANG.CLUB_DESC}</span></a></li>
-		<li><a href="#tab2"><span>{$LANG.MODERATORS}</span></a></li>
-		<li><a href="#tab3"><span>{$LANG.MEMBERS}</span></a></li>
+		<li><a href="#about"><span>{$LANG.CLUB_DESC}</span></a></li>
+		<li><a href="#moders"><span>{$LANG.MODERATORS}</span></a></li>
+		<li><a href="#members"><span>{$LANG.MEMBERS}</span></a></li>
 		{if $club.enabled_photos || $club.enabled_blogs}
-		<li><a href="#tab4"><span>{$LANG.LIMITS}</span></a></li>
+            <li><a href="#limits"><span>{$LANG.LIMITS}</span></a></li>
 		{/if}
+        {if $is_admin}
+            <li><a href="#vip"><span>VIP</span></a></li>
+        {/if}
 	</ul> 
 	
 	{* ============================== ЗАКЛАДКА №1 ============================================== *}
-	<div id="tab1">	
+	<div id="about">
 		<table width="100%" border="0" cellspacing="0" cellpadding="10" style="border-bottom:solid 1px silver;margin-bottom:20px">
 			<tr>
 				<td width="48">
@@ -42,7 +45,7 @@
 		{wysiwyg name='description' value=$club.description height=350 width='100%' toolbar='Admin'}
 	</div>
 
-	<div id="tab2">	
+	<div id="moders">
 		<table width="500" border="0" cellspacing="0" cellpadding="10" id="multiuserscfg">
 			<tr>
 				<td colspan="3">
@@ -61,19 +64,19 @@
 					<div><input name="moderator_remove" type="button" id="moderator_remove" value="&gt;&gt;" style="margin-top:4px"></div>
 				</td>
 				<td align="center" valign="top">
-					<p><strong>{$LANG.ALL_USERS}:</strong></p>
+					<p><strong>{$LANG.MY_FRIENDS_AND_CLUB_USERS}:</strong></p>
 					<select name="userslist1" size="10" multiple id="userslist1" style="width:200px">
-						{$users_list}
+						{$fr_members_list}
 					</select>
 				</td>
 			</tr> 
 		</table>
 	</div>
 
-	<div id="tab3">		
-		<table width="500" border="0" cellspacing="0" cellpadding="10">
+	<div id="members">
+		<table width="550" border="0" cellspacing="0" cellpadding="10">
 			<tr>
-			  <td>{$LANG.MAX_MEMBERS}:<br/><span style="color:#CCCCCC">{$LANG.MAX_MEMBERS_TEXT}</span> </td>
+			  <td>{$LANG.MAX_MEMBERS}:<br/><span style="color:#5F98BF">{$LANG.MAX_MEMBERS_TEXT}</span> </td>
 			  <td><input name="maxsize" type="text" style="width:200px"  value="{$club.maxsize}"/></td>
 		  </tr>
 			<tr>
@@ -88,9 +91,9 @@
 				</td>			
 			</tr>	
 		</table>
-		<table width="500" border="0" cellspacing="0" id="minkarma" cellpadding="10" style="display: {if $club.clubtype!='public'}none;{else}table;{/if}">
+		<table width="550" border="0" cellspacing="0" id="minkarma" cellpadding="10" style="display: {if $club.clubtype!='public'}none;{else}table;{/if}">
 			<tr>
-			  <td>{$LANG.USE_LIMITS_KARMA}: <br/><span style="color:#CCCCCC">{$LANG.USE_LIMITS_KARMA_TEXT}</span></td>
+			  <td>{$LANG.USE_LIMITS_KARMA}: <br/><span style="color:#5F98BF">{$LANG.USE_LIMITS_KARMA_TEXT}</span></td>
 			  <td valign="top">
 					<input name="join_karma_limit" type="radio" value="1" {if $club.join_karma_limit}checked{/if}/> {$LANG.YES}
 					<input name="join_karma_limit" type="radio" value="0" {if !$club.join_karma_limit}checked{/if}/> {$LANG.NO}
@@ -98,14 +101,14 @@
 		  </tr>
 			<tr>
 				<td>
-					{$LANG.LIMITS_KARMA}: <br/><span style="color:#CCCCCC">{$LANG.LIMITS_KARMA_TEXT}</span>
+					{$LANG.LIMITS_KARMA}: <br/><span style="color:#5F98BF">{$LANG.LIMITS_KARMA_TEXT}</span>
 				</td>
 				<td width="200" valign="top">
 					&ge; <input name="join_min_karma" type="text" style="width:60px" value="{$club.join_min_karma}"/> {$LANG.POINTS}
 				</td>			
 			</tr>	
 		</table>		
-		<table width="500" border="0" cellspacing="0" cellpadding="10" id="members" style="display: {if $club.clubtype=='public'}none;{else}table;{/if}">
+		<table width="550" border="0" cellspacing="0" cellpadding="10" id="members" style="display: {if $club.clubtype=='public'}none;{else}table;{/if}">
 			<tr>
 				<td align="center" valign="top">
 					<p><strong>{$LANG.CLUB_MEMBERS}: </strong></p>
@@ -118,9 +121,9 @@
 					<div><input name="member_remove" type="button" id="member_remove" value="&gt;&gt;" style="margin-top:4px"></div>
 				</td>
 				<td align="center" valign="top">
-					<p><strong>{$LANG.ALL_USERS}:</strong></p>
+					<p><strong>{$LANG.MY_FRIENDS}:</strong></p>
 					<select name="userslist2" size="10" multiple id="userslist2" style="width:200px">
-						{$users_list}
+						{$friends_list}
 					</select>
 				</td>
 			</tr>  
@@ -128,8 +131,8 @@
 	</div>
 	
 	{if $club.enabled_photos || $club.enabled_blogs}
-	<div id="tab4">		
-		<table width="400" border="0" cellspacing="0" cellpadding="10">
+	<div id="limits">
+		<table width="500" border="0" cellspacing="0" cellpadding="10">
 			{if $club.enabled_blogs}
 			<tr>
 				<td>
@@ -185,6 +188,39 @@
 	</div>
 	{/if}
 	
+	{if $is_admin}
+	<div id="vip">
+        {if !$is_billing}
+            <p>
+                Для поддержки VIP-клубов необходим компонент &laquo;<a href="http://www.instantcms.ru/billing/about.html">Биллинг пользователей</a>&raquo;
+            </p>
+            <p>
+                Подключив биллинг вы сможете присвоить VIP-статус любому клубу и установить размер оплаты за вступление в этот клуб.
+            </p>
+        {else}
+            <table width="500" border="0" cellspacing="0" cellpadding="10">
+                <tr>
+                    <td>
+                        <label><strong>{$LANG.VIP_CLUB}:</strong></label>
+                    </td>
+                    <td width="150">
+                        <input name="is_vip" type="radio" value="1" {if $club.is_vip}checked{/if}/> {$LANG.YES}
+                        <input name="is_vip" type="radio" value="0" {if !$club.is_vip}checked{/if}/> {$LANG.NO}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>{$LANG.VIP_CLUB_JOIN_COST}:</label>
+                    </td>
+                    <td width="150">
+                        <input name="join_cost" type="text" style="width:60px" value="{$club.join_cost}"/> {$LANG.BILLING_POINT10}
+                    </td>
+                </tr>
+            </table>
+        {/if}
+	</div>
+	{/if}
+
 </div>
 
 <p>

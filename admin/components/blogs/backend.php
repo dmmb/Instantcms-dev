@@ -1,13 +1,16 @@
 <?php
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
     function cpBlogOwner($blog_id){
         $inDB = cmsDatabase::getInstance();
@@ -26,7 +29,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         return $link;
     }
 
-	cpAddPathway('Блоги', '?view=components&do=config&id='.$_REQUEST['id']);
+	cpAddPathway('Блоги', '?view=components&do=config&id='.(int)$_REQUEST['id']);
 	
 	echo '<h3>Блоги</h3>';
 
@@ -44,7 +47,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         $toolmenu[1]['title'] = 'Отмена';
         $toolmenu[1]['link'] = '?view=components';
 
-        $toolmenu[2]['icon'] = 'list.gif';
+        $toolmenu[2]['icon'] = 'listblogs.gif';
         $toolmenu[2]['title'] = 'Список блогов';
         $toolmenu[2]['link'] = '?view=components&do=config&link=blogs&opt=list_blogs';
         cpToolMenu($toolmenu);
@@ -106,15 +109,21 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if($opt=='saveconfig'){	
 		$cfg = array();
-		$cfg['perpage'] = $inCore->request('perpage', 'int');
-		$cfg['update_date'] = $inCore->request('update_date', 'int');
+		$cfg['perpage']             = $inCore->request('perpage', 'int');
+		$cfg['perpage_blog'] 		= $inCore->request('perpage_blog', 'int');
+		$cfg['update_date']         = $inCore->request('update_date', 'int');
+		$cfg['update_seo_link']     = $inCore->request('update_seo_link', 'int');
 		
-		$cfg['min_karma_private'] 	= (int)$_REQUEST['min_karma_private'];
-		$cfg['min_karma_public'] 	= (int)$_REQUEST['min_karma_public'];	
-		$cfg['min_karma'] 			= (int)$_REQUEST['min_karma'];	
+		$cfg['min_karma_private'] 	= $inCore->request('min_karma_private', 'int');
+		$cfg['min_karma_public'] 	= $inCore->request('min_karma_public', 'int');
+		$cfg['min_karma'] 			= $inCore->request('min_karma', 'int');
+		
+		$cfg['watermark'] 			= $inCore->request('watermark', 'int');
+		$cfg['img_on'] 				= $inCore->request('img_on', 'int');
 		
 		$cfg['rss_all']             = $inCore->request('rss_all', 'int');
 		$cfg['rss_one']             = $inCore->request('rss_one', 'int');
+		$cfg['update_seo_link_blog'] = $inCore->request('update_seo_link_blog', 'int');
 			
 		$inCore->saveComponentConfig('blogs', $cfg);
 		
@@ -123,10 +132,16 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         $opt = 'config';
 	}
 
+	if(!isset($cfg['perpage_blog'])) { $cfg['perpage_blog']=15;	}
 	if (!isset($cfg['min_karma_private'])) { $cfg['min_karma_private'] = 0; }
 	if (!isset($cfg['min_karma_public'])) {	 $cfg['min_karma_public'] = 0; }
 	if (!isset($cfg['min_karma'])) { 		 $cfg['min_karma'] = 0; 		}
 	if (!isset($cfg['update_date'])) { 		 $cfg['update_date'] = 1; 		}
+	if (!isset($cfg['update_seo_link'])) { 	 $cfg['update_seo_link'] = 0; 		}
+	if (!isset($cfg['update_seo_link_blog'])) { $cfg['update_seo_link_blog'] = 0; }
+	
+	if (!isset($cfg['watermark'])) { 	 	$cfg['watermark'] = 1; 		}
+	if (!isset($cfg['img_on'])) { 	 		$cfg['img_on'] = 1; 		}
 
 	if (!isset($cfg['rss_all'])) { $cfg['rss_all'] = 1; }
 	if (!isset($cfg['rss_one'])) { $cfg['rss_one'] = 1; }
@@ -172,7 +187,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 <?php
     if ($opt=='config'){
 ?>
-<form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
+<form action="index.php?view=components&do=config&id=<?php echo (int)$_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
     <table width="609" border="0" cellpadding="10" cellspacing="0" class="proptable">
         <tr>
             <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Просмотр блога </h4></td>
@@ -184,18 +199,68 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             </td>
         </tr>
         <tr>
+            <td valign="top"><strong>Количество блогов на странице в списке блогов: </strong></td>
+            <td width="100" valign="top">
+                <input name="perpage_blog" type="text" id="perpage_blog" value="<?php echo @$cfg['perpage_blog'];?>" size="5" /> шт.
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Опции фотографий</h4></td>
+        </tr>
+        <tr>
+            <td valign="top"><strong>Разрешить загрузку фотографий к постам в блоге:</strong></td>
+            <td width="100" valign="top">
+                <input name="img_on" type="radio" value="1" <?php if (@$cfg['img_on']) { echo 'checked="checked"'; } ?> /> Да
+                <input name="img_on" type="radio" value="0" <?php if (@!$cfg['img_on']) { echo 'checked="checked"'; } ?>/> Нет
+            </td>
+        </tr>
+        <tr>
+            <td valign="top"><strong>Наносить водяной знак:</strong>  <br />Если включено, то на все загружаемые
+			      фотографии к постам будет наносится изображение 
+			      из файла "<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>"</td>
+            <td width="100" valign="top">
+                <input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?> /> Да
+                <input name="watermark" type="radio" value="0" <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Нет
+            </td>
+        </tr>
+
+        <tr>
             <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Настройки редактирования</h4></td>
         </tr>
         <tr>
             <td valign="top">
                 <strong>Обновлять дату поста после редактирования:</strong><br />
                 <span class="hinttext">
-                    Если включено, после редактирования поста его дата будет устанавливаться в текущую
+                    Если включено, после редактирования поста его дата будет устанавливаться в текущую.
                 </span>
             </td>
             <td valign="top">
                 <input name="update_date" type="radio" value="1" <?php if (@$cfg['update_date']) { echo 'checked="checked"'; } ?> /> Да
                 <input name="update_date" type="radio" value="0" <?php if (@!$cfg['update_date']) { echo 'checked="checked"'; } ?>/> Нет
+            </td>
+        </tr>
+        <tr>
+            <td valign="top">
+                <strong>Обновлять ссылку блога после редактирования при смене заголовка:</strong><br />
+                <span class="hinttext">
+                    Если включено, после редактирования блога его ссылка, а так же все ссылки постов в блоге, будут изменены согласно нового заголовка блога.
+                </span>
+            </td>
+            <td valign="top">
+                <input name="update_seo_link_blog" type="radio" value="1" <?php if (@$cfg['update_seo_link_blog']) { echo 'checked="checked"'; } ?> /> Да
+                <input name="update_seo_link_blog" type="radio" value="0" <?php if (@!$cfg['update_seo_link_blog']) { echo 'checked="checked"'; } ?>/> Нет
+            </td>
+        </tr>
+        <tr>
+            <td valign="top">
+                <strong>Обновлять ссылку поста после редактирования при смене заголовка:</strong><br />
+                <span class="hinttext">
+                    Если включено, после редактирования поста его ссылка будет изменена согласно нового заголовка.
+                </span>
+            </td>
+            <td valign="top">
+                <input name="update_seo_link" type="radio" value="1" <?php if (@$cfg['update_seo_link']) { echo 'checked="checked"'; } ?> /> Да
+                <input name="update_seo_link" type="radio" value="0" <?php if (@!$cfg['update_seo_link']) { echo 'checked="checked"'; } ?>/> Нет
             </td>
         </tr>
         <tr>

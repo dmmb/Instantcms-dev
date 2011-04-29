@@ -1,12 +1,16 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 function blogAuthors($blogid){
@@ -75,7 +79,7 @@ function blogCategoryList($selected=0, $blog_id){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
 
-	$sql = "SELECT * FROM cms_blog_cats WHERE blog_id = $blog_id ORDER BY id ASC";
+	$sql = "SELECT id, title FROM cms_blog_cats WHERE blog_id = $blog_id ORDER BY id ASC";
 	$result = $inDB->query($sql) ;
 	$html = '';
 	while($cat = $inDB->fetch_assoc($result)){

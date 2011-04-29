@@ -1,13 +1,17 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
 
 function createMenuItem($menu, $id, $title){
     $inCore = cmsCore::getInstance();
@@ -28,9 +32,9 @@ function createMenuItem($menu, $id, $title){
 				target='_self', 
 				published='1', 
 				template='0', 
-				allow_group='-1', 
+				access_list='', 
 				iconurl=''
-			WHERE id = $myid";
+			WHERE id = '$myid'";
 
 	dbQuery($sql) or die(mysql_error().$sql);
 	return true;
@@ -41,16 +45,19 @@ function applet_cats(){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
 
-	$GLOBALS['cp_page_title'] = 'Разделы сайта';
- 	cpAddPathway('Разделы сайта', 'index.php?view=cats');	
+    $GLOBALS['cp_page_title'] = 'Разделы сайта';
+    cpAddPathway('Разделы сайта', 'index.php?view=tree');
 
     $inCore->loadModel('content');
     $model = new cms_model_content();
 
-	if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
-	if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { $id = -1; }
-	if (isset($_REQUEST['co'])) { $co = $_REQUEST['co']; } else { $co = -1; } //current ordering, while resort
-		
+    if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
+    if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { $id = -1; }
+    if (isset($_REQUEST['co'])) { $co = $_REQUEST['co']; } else { $co = -1; } //current ordering, while resort
+
+    define('IS_BILLING', $inCore->isComponentInstalled('billing'));
+    if (IS_BILLING) { $inCore->loadClass('billing'); }
+    
 	if ($do == 'list'){
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'new.gif';
@@ -144,7 +151,7 @@ function applet_cats(){
 			foreach ($ord as $id=>$ordering){			
 				dbQuery("UPDATE cms_category SET ordering = $ordering WHERE id = ".$ids[$id]) ;						
 			}
-			header('location:?view=cats');
+			header('location:?view=tree');
 
 		}
 	}
@@ -172,13 +179,11 @@ function applet_cats(){
 	}
 	
 	if ($do == 'delete'){
-		if (!isset($_REQUEST['item'])){
-			if ($id >= 0){ dbDeleteNS('cms_category', $id);  }
-		} else {
-			dbDeleteListNS('cms_category', $_REQUEST['item']);				
-		}
+        $is_with_content = $inCore->inRequest('content');
+
+        $model->deleteCategory($id, $is_with_content);
 		reorder();
-		header('location:?view=cats');
+		header('location:?view=tree');
 	}
 	
 	if ($do == 'update'){
@@ -188,7 +193,8 @@ function applet_cats(){
 			$category['title']			= $inCore->request('title', 'str');
 			$category['url']			= $inCore->request('url', 'str');
 			$category['parent_id']		= $inCore->request('parent_id', 'int');
-			$category['description']	= $inCore->request('description', 'html');
+			$category['description'] 	= $inCore->request('description', 'html');
+            $category['description']      = $inDB->escape_string($category['description']);
 			$category['published'] 		= $inCore->request('published', 'int', 0);
 			$category['showdate'] 		= $inCore->request('showdate', 'int', 0);
 			$category['showcomm'] 		= $inCore->request('showcomm', 'int', 0);
@@ -200,7 +206,11 @@ function applet_cats(){
 			$category['showrss'] 		= $inCore->request('showrss', 'int', 0);
 			$category['showdesc'] 		= $inCore->request('showdesc', 'int', 0);
 			$category['is_public'] 		= $inCore->request('is_public', 'int', 0);
-			
+			$category['tpl'] 			= $inCore->request('tpl', 'str', 'com_content_view.tpl');
+
+            $category['cost']           = $inCore->request('cost', 'str', '');
+            if (!is_numeric($category['cost'])) { $category['cost'] = ''; }
+
 			$album = array();
 			$album['id']       = $inCore->request('album_id', 'int', 0);
 			$album['titles']   = $inCore->request('album_titles', 'int', 0);
@@ -220,28 +230,30 @@ function applet_cats(){
             if ($category['url']) { $category['url'] = cmsCore::strToURL($category['url']); }
             $seolink    = $model->getCategorySeoLink($category);
 
-			$sql = "UPDATE cms_category 
-					SET parent_id={$category['parent_id']},
-						title='{$category['title']}',
-						description='{$category['description']}',
-						published={$category['published']},
-						showdate={$category['showdate']},
-						showcomm={$category['showcomm']},
-						orderby='{$category['orderby']}',
-						orderto='{$category['orderto']}',
-						modgrp_id='{$category['modgrp_id']}',
-						maxcols='{$category['maxcols']}',
-						showtags={$category['showtags']},
-						showrss={$category['showrss']},
-						showdesc={$category['showdesc']},
-						is_public={$category['is_public']},
-						photoalbum='$photoalbum',
+            $sql = "UPDATE cms_category
+                    SET parent_id={$category['parent_id']},
+                        title='{$category['title']}',
+                        description='{$category['description']}',
+                        published={$category['published']},
+                        showdate={$category['showdate']},
+                        showcomm={$category['showcomm']},
+                        orderby='{$category['orderby']}',
+                        orderto='{$category['orderto']}',
+                        modgrp_id='{$category['modgrp_id']}',
+                        maxcols='{$category['maxcols']}',
+                        showtags={$category['showtags']},
+                        showrss={$category['showrss']},
+                        showdesc={$category['showdesc']},
+                        is_public={$category['is_public']},
+                        photoalbum='$photoalbum',
+                        cost='{$category['cost']}',
                         seolink='$seolink',
-                        url='{$category['url']}'
-					WHERE id = {$category['id']}
-					LIMIT 1";
-			dbQuery($sql) ;	
-			reorder();
+                        url='{$category['url']}',
+                        tpl='{$category['tpl']}'
+                     WHERE id = {$category['id']}
+                     LIMIT 1";
+            dbQuery($sql) ;
+            reorder();
             
             //обновляем УРЛы всех вложенных разделов
             if ($seolink != $old['seolink']){
@@ -266,8 +278,15 @@ function applet_cats(){
                 $inDB->query("UPDATE cms_menu SET link='{$menulink}' WHERE id={$menuid}");
             }
 			
+			if (!$inCore->request('is_access', 'int', 0)){
+				$showfor = $_REQUEST['showfor'];				
+                $model->setArticleAccess($category['id'], $showfor, 'category');
+			} else {
+                $model->clearArticleAccess($category['id'], 'category');
+            }
+			
 			if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
-				header('location:?view=cats');		
+				header('location:?view=tree&cat_id='.$category['id']);
 			} else {
 				header('location:?view=cats&do=edit');		
 			}
@@ -276,21 +295,26 @@ function applet_cats(){
 	
 	if ($do == 'submit'){
 
-        $category['title']			= $inCore->request('title', 'str');
-        $category['url']			= $inCore->request('url', 'str');
-        $category['parent_id']		= $inCore->request('parent_id', 'int');
-        $category['description']	= $inCore->request('description', 'html');
-        $category['published'] 		= $inCore->request('published', 'int', 0);
-        $category['showdate'] 		= $inCore->request('showdate', 'int', 0);
-        $category['showcomm'] 		= $inCore->request('showcomm', 'int', 0);
-        $category['orderby'] 		= $inCore->request('orderby', 'str');
-        $category['orderto']		= $inCore->request('orderto', 'str');
-        $category['modgrp_id'] 		= $inCore->request('modgrp_id', 'int', 0);
-        $category['maxcols'] 		= $inCore->request('maxcols', 'int', 0);
-        $category['showtags'] 		= $inCore->request('showtags', 'int', 0);
-        $category['showrss'] 		= $inCore->request('showrss', 'int', 0);
-        $category['showdesc'] 		= $inCore->request('showdesc', 'int', 0);
-        $category['is_public'] 		= $inCore->request('is_public', 'int', 0);
+        $category['title']          = $inCore->request('title', 'str');
+        $category['url']            = $inCore->request('url', 'str');
+        $category['parent_id']      = $inCore->request('parent_id', 'int');
+        $category['description']    = $inCore->request('description', 'html');
+        $category['description']    = $inDB->escape_string($category['description']);
+        $category['published']      = $inCore->request('published', 'int', 0);
+        $category['showdate']       = $inCore->request('showdate', 'int', 0);
+        $category['showcomm']       = $inCore->request('showcomm', 'int', 0);
+        $category['orderby']        = $inCore->request('orderby', 'str');
+        $category['orderto']        = $inCore->request('orderto', 'str');
+        $category['modgrp_id']      = $inCore->request('modgrp_id', 'int', 0);
+        $category['maxcols']        = $inCore->request('maxcols', 'int', 0);
+        $category['showtags']       = $inCore->request('showtags', 'int', 0);
+        $category['showrss']        = $inCore->request('showrss', 'int', 0);
+        $category['showdesc']       = $inCore->request('showdesc', 'int', 0);
+        $category['is_public']      = $inCore->request('is_public', 'int', 0);        
+        $category['tpl']            = $inCore->request('tpl', 'str', 'com_content_view.tpl');
+
+        $category['cost']           = $inCore->request('cost', 'str', 0);
+        if (!is_numeric($category['cost'])) { $category['cost'] = ''; }
 
         $album = array();
         $album['id']       = $inCore->request('album_id', 'int', 0);
@@ -299,17 +323,20 @@ function applet_cats(){
         $album['orderby']  = $inCore->request('album_orderby', 'str', '');
         $album['orderto']  = $inCore->request('album_orderto', 'str', '');
         $album['maxcols']  = $inCore->request('album_maxcols', 'int', 0);
-        $album['max']	   = $inCore->request('album_max', 'int', 0);
+        $album['max']	  = $inCore->request('album_max', 'int', 0);
         
         $photoalbum = serialize($album);
 		
-		$ns = $inCore->nestedSetsInit('cms_category');
-		$category['id'] = $ns->AddNode($category['parent_id']);
+        $ns = $inCore->nestedSetsInit('cms_category');
+        $category['id'] = $ns->AddNode($category['parent_id']);
+
+        if (!$category['title']) { $category['title'] = 'Раздел #'.$category['id']; }
 
         if ($category['url']) { $category['url'] = cmsCore::strToURL($category['url']); }
         $seolink    = $model->getCategorySeoLink($category);
 		
-		if ($category['id']){
+        if ($category['id']){
+
 			$sql = "UPDATE cms_category
 					SET parent_id={$category['parent_id']},
 						title='{$category['title']}',
@@ -326,29 +353,40 @@ function applet_cats(){
 						showdesc={$category['showdesc']},
 						is_public={$category['is_public']},
 						photoalbum='$photoalbum',
+                        cost='{$category['cost']}',
                         seolink='$seolink',
-                        url='{$category['url']}'
-					WHERE id = {$category['id']}
-					LIMIT 1";
+                        url='{$category['url']}',
+                        tpl='{$category['tpl']}'
+                    WHERE id = {$category['id']}
+                    LIMIT 1";
 
-			dbQuery($sql) ;
-		}
+			dbQuery($sql);
+
+			if (!$inCore->request('is_access', 'int', 0)){
+				$showfor = $_REQUEST['showfor'];				
+                $model->setArticleAccess($category['id'], $showfor, 'category');
+			} else {
+                $model->clearArticleAccess($category['id'], 'category');
+            }
+        }
         
-		reorder();
+        reorder();
 
         $inmenu = $inCore->request('createmenu', 'str', '');
 
-		if ($inmenu){
-			createMenuItem($inmenu, $category['id'], $category['title']);
-		}
+        if ($inmenu){
+            createMenuItem($inmenu, $category['id'], $category['title']);
+        }
 	
-		header('location:?view=cats');		
-	}	  
+        header('location:?view=tree');
+
+    }
 
    if ($do == 'add' || $do == 'edit'){
  
 	 	require('../includes/jwtabs.php');
 		$GLOBALS['cp_page_head'][] = jwHeader();
+		$GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="js/content.js"></script>';
  
  		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'save.gif';
@@ -392,7 +430,7 @@ function applet_cats(){
 					 }
 					
 					 echo '<h3>Редактировать раздел '.$ostatok.'</h3>';
- 					 cpAddPathway($mod['title'], 'index.php?view=menu&do=edit&id='.$mod['id']);
+ 					 cpAddPathway($mod['title'], 'index.php?view=cats&do=edit&id='.$mod['id']);
 			}   
 	?>
 
@@ -403,15 +441,30 @@ function applet_cats(){
 
                 <!-- главная ячейка -->
                 <td valign="top">
-
-                    <div><strong>Название раздела</strong></div>
-                    <div>
+                    <table border="0" cellpadding="0" cellspacing="5" width="100%">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <strong>Название раздела</strong>
+                          </td>
+                          <td width="190" style="padding-left:6px">
+                            <strong>Шаблон раздела</strong>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
                         <input name="title" type="text" id="title" style="width:100%" value="<?php echo @$mod['title'];?>" />
-                    </div>
-                    
+                          </td>
+                          <td style="padding-left:6px">
+                            <input name="tpl" type="text" style="width:98%" value="<?php echo @$mod['tpl'];?>">
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                     <div><strong>Родительский раздел</strong></div>
                     <div>
-                        <select name="parent_id" size="12" id="parent_id" style="width:100%">
+                        <div class="parent_notice" style="color:red;margin:4px 0px;display:none">Раздел будет вложен сам в себя. Выберите другого родителя.</div>
+                        <select name="parent_id" size="12" id="parent_id" style="width:100%" onchange="if($(this).val()=='<?php echo $mod['id']; ?>'){ $('.parent_notice').show(); } else { $('.parent_notice').hide(); }">
                             <?php $rootid = dbGetField('cms_category', 'parent_id=0', 'id'); ?>
                             <option value="<?php echo $rootid; ?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- Корневой раздел --</option>
                             <?php
@@ -526,7 +579,15 @@ function applet_cats(){
                                 <option value="1" <?php if($mod['is_public']) { echo 'selected'; } ?>>Да</option>
                             </select>
                         </div>
-
+                        <?php if (IS_BILLING){ ?>
+                            <div style="margin-top:15px">
+                                <strong>Стоимость добавления статьи</strong><br/>
+                                <div style="color:gray">Если не указана здесь, то используется цена по-умолчанию, указанная в настройках биллинга</div>
+                            </div>
+                            <div>
+                                <input type="text" name="cost" value="<?php echo $mod['cost']; ?>" style="width:50px"/> баллов
+                            </div>
+                        <?php } ?>
                         <div style="margin-top:20px">
                             <strong>Редакторы раздела</strong><br/>
                             <span class="hinttext">Пользователи выбранной группы смогут заходить в админку, но будут видеть только этот раздел и его подразделы</span>
@@ -614,6 +675,73 @@ function applet_cats(){
                             <?php if(!isset($mod['photoalbum']['max'])) { $mod['photoalbum']['max'] = 8; } ?>
                             <input name="album_max" type="text" id="album_max" style="width:99%" value="<?php echo @$mod['photoalbum']['max'];?>"/>
                         </div>
+                      {tab=Доступ}
+  
+                      <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist" style="margin-top:5px">
+                          <tr>
+                              <td width="20">
+                                  <?php
+                                      $sql    = "SELECT * FROM cms_user_groups";
+                                      $result = dbQuery($sql) ;
+  
+                                      $style  = 'disabled="disabled"';
+                                      $public = 'checked="checked"';
+  
+                                      if ($do == 'edit'){
+  
+                                          $sql2 = "SELECT * FROM cms_content_access WHERE content_id = ".$mod['id']." AND content_type = 'category'";
+                                          $result2 = dbQuery($sql2);
+                                          $ord = array();
+  
+                                          if (mysql_num_rows($result2)){
+                                              $public = '';
+                                              $style = '';
+                                              while ($r = mysql_fetch_assoc($result2)){
+                                                  $ord[] = $r['group_id'];
+                                              }
+                                          }
+                                      }
+                                  ?>
+                                  <input name="is_access" type="checkbox" id="is_public" onclick="checkGroupList()" value="1" <?php echo $public?> />
+                              </td>
+                              <td><label for="is_public"><strong>Общий доступ</strong></label></td>
+                          </tr>
+                      </table>
+                      <div style="padding:5px">
+                          <span class="hinttext">
+                              Если отмечено, категория будет видна всем посетителям. Снимите галочку, чтобы вручную выбрать разрешенные группы пользователей.
+                          </span>
+                      </div>
+  
+                      <div style="margin-top:10px;padding:5px;padding-right:0px;" id="grp">
+                          <div>
+                              <strong>Показывать группам:</strong><br />
+                              <span class="hinttext">
+                                  Можно выбрать несколько, удерживая CTRL.
+                              </span>
+                          </div>
+                          <div>
+                              <?php
+                                  echo '<select style="width: 99%" name="showfor[]" id="showin" size="6" multiple="multiple" '.$style.'>';
+  
+                                  if (mysql_num_rows($result)){
+                                      while ($item=mysql_fetch_assoc($result)){
+                                          echo '<option value="'.$item['id'].'"';
+                                          if ($do=='edit'){
+                                              if (inArray($ord, $item['id'])){
+                                                  echo 'selected';
+                                              }
+                                          }
+  
+                                          echo '>';
+                                          echo $item['title'].'</option>';
+                                      }
+                                  }
+                                  
+                                  echo '</select>';
+                              ?>
+                          </div>
+                      </div>
 
                     {/tabs}
 

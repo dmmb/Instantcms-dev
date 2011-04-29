@@ -10,7 +10,7 @@
 {* ======================= Дата публикации =============================== *}
 {if $article.showdate} 
 	<div class="con_pubdate">
-		{$article.pubdate} - <a href="{profile_url login=$article.user_login}">{$article.author}</a>
+		{if !$article.published}<span style="color:#CC0000">{$LANG.NO_PUBLISHED}</span>{else}{$article.pubdate}{/if} - <a href="{profile_url login=$article.user_login}">{$article.author}</a>
 	</div>
 {/if}
 
@@ -54,6 +54,20 @@
         <a href="/forum/thread{$forum_thread_id}.html">{$LANG.DISCUSS_ON_FORUM}</a>
     </div>
 {/if}
+{* ============= Ссылки редактирования и модерации ======================== *}
+{if $is_admin || $is_editor || $is_author}
+    <div class="blog_comments">
+        {if !$article.published && ($is_admin || $is_editor)}
+        	<a class="blog_moderate_yes" href="/content/publish{$id}.html">{$LANG.ARTICLE_ALLOW}</a> | 
+        {/if}
+        {if $is_admin || $is_editor || $is_author_del}
+        	<a class="blog_moderate_no" href="/content/delete{$id}.html">{$LANG.DELETE}</a> | 
+        {/if}
+        {if $is_admin || $is_editor || $is_author}
+        	<a href="/content/edit{$id}.html" class="blog_entry_edit">{$LANG.EDIT}</a>
+        {/if}
+    </div>
+{/if}
 
 {* ================ Теги статьи =============================== *}
 {if $article.showtags}
@@ -66,6 +80,7 @@
 		<div>
 			<strong>{$LANG.RATING}: </strong><span id="karmapoints">{$karma_points}</span>
 			<span style="padding-left:10px;color:#999"><strong>Голосов:</strong> {$karma_votes}</span>
+            <span style="padding-left:10px;color:#999">{$article.hits|spellcount:$LANG.HIT:$LANG.HIT2:$LANG.HIT10}</span>
 		</div>
 		{if $karma_buttons} 
 			<div><strong>{$LANG.RAT_ARTICLE}:</strong> {$karma_buttons}</div>

@@ -1,20 +1,23 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 function forms(){
 
     $inCore     = cmsCore::getInstance();
     $inDB       = cmsDatabase::getInstance();
+	$inConf 	= cmsConfig::getInstance();
 
     //Определяем адрес для редиректа назад
     $back   = $inCore->getBackURL();
@@ -25,7 +28,7 @@ function forms(){
 //========================================================================================================================//
     if ($do=='processform'){
 
-        if (!$inCore->request('field')){  $inCore->redirect($back);  }
+        if (!$inCore->request('field')){  return;  }
 
         $captcha_code   = $inCore->request('code', 'str', '');
 
@@ -49,14 +52,14 @@ function forms(){
 					 $mail_message .= $_LANG['FORM'].': ' . $form['title'];
 					 $mail_message .=  "\n----------------------------------------------\n\n";
 				} else {
-					 $mail_message .= '[h3]'.$_LANG['FORM'].': ' . $form['title'] . '[/h3]';
-					 $mail_message .=  "[h3]----------------------------------------------[/h3]";
+					 $mail_message .= '<h3>'.$_LANG['FORM'].': ' . $form['title'] . '</h3>';
+					 $mail_message .=  "<h3>----------------------------------------------</h3>";
 				}
 
 				$fields = $inCore->request('field', 'array');
 
 				//Получаем данные полей из базы
-				$sql            = "SELECT id, title, mustbe FROM cms_form_fields WHERE form_id = $form_id ORDER BY ordering ASC";
+				$sql            = "SELECT id, title, mustbe FROM cms_form_fields WHERE form_id = '$form_id' ORDER BY ordering ASC";
 				$result         = $inDB->query($sql);
 				$items_count    = $inDB->num_rows($result);
 
@@ -73,7 +76,7 @@ function forms(){
 							if($form['sendto']=='mail'){
 								$mail_message .= $field['title'] . ":\n" . $fields[$field['id']] . "\n\n";
 							} else {
-								$mail_message .= '[h3]'.$field['title'] . ':[/h3]' . $fields[$field['id']];
+								$mail_message .= '<h3>'.$field['title'] . ':</h3>' . $fields[$field['id']];
 							}
 							$_SESSION['form_last'.$form_id][$field['id']] = $fields[$field['id']];
 						}
@@ -91,7 +94,7 @@ function forms(){
 			unset ($_SESSION['form_last'.$form_id]);
 
 			if ($form['sendto']=='mail'){
-				$inCore->mailText($form['email'], $_LANG['INSTANT_CMS'].': '.$form['title'], $mail_message);
+				$inCore->mailText($form['email'], $inConf->sitename.': '.$form['title'], $mail_message);
 			} else {
 				$mail_message = nl2br($mail_message);
 				$mail_message = str_replace('<br /><br /><br /><br />', '<br/>', $mail_message);

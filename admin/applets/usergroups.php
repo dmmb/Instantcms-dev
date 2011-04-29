@@ -1,13 +1,17 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
 
 function applet_usergroups(){
 
@@ -186,7 +190,7 @@ function applet_usergroups(){
 
 	if(isset($mod['access'])){
 		$mod['access'] = str_replace(', ', ',', $mod['access']);
-		$mod['access'] = split(',', $mod['access']);
+		$mod['access'] = explode(',', $mod['access']);
 	}
 			
 	?>
@@ -301,6 +305,10 @@ function applet_usergroups(){
 						<tr>
 							<td><input type="checkbox" name="access[]" value="comments/moderate" <?php if (isset($mod['access'])) { if (in_array('comments/moderate', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
 							<td>Удаление чужих комментариев </td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" name="access[]" value="comments/iscomments" <?php if (isset($mod['access'])) { if (in_array('comments/iscomments', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
+							<td>Возможность отключать комментарии в своем блоге</td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" name="access[]" value="forum/moderate" <?php if (isset($mod['access'])) { if (in_array('forum/moderate', $mod['access'])) { echo 'checked="checked"'; } }?>></td>

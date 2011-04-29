@@ -1,13 +1,16 @@
 <?php
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 function error($msg){
     //
@@ -18,7 +21,9 @@ function usersClubByID($id){
     return($b);
 }
 
-$cfg = $inCore->loadComponentConfig('clubs');
+    $inDB = cmsDatabase::getInstance();
+
+    $cfg = $inCore->loadComponentConfig('clubs');
 
     if(!isset($cfg['enabled_blogs'])) { $cfg['enabled_blogs'] = 1; }
     if(!isset($cfg['enabled_photos'])) { $cfg['enabled_photos'] = 1; }
@@ -31,6 +36,8 @@ $cfg = $inCore->loadComponentConfig('clubs');
     if(!isset($cfg['create_min_rating'])) { $cfg['create_min_rating'] = 0; }
     if(!isset($cfg['notify_in'])) { $cfg['notify_in'] = 1; }
     if(!isset($cfg['notify_out'])) { $cfg['notify_out'] = 1; }
+	if(!isset($cfg['seo_club'])) { $cfg['seo_club'] = 'title'; }
+	if(!isset($cfg['every_karma'])) { $cfg['every_karma'] = 100; }
 
 if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; }
 
@@ -47,10 +54,6 @@ if($opt=='list'){
     $toolmenu[0]['icon'] = 'new.gif';
     $toolmenu[0]['title'] = 'Новый клуб';
     $toolmenu[0]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add';
-
-    $toolmenu[3]['icon'] = 'list.gif';
-    $toolmenu[3]['title'] = 'Все клубы';
-    $toolmenu[3]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list';
 
     $toolmenu[4]['icon'] = 'config.gif';
     $toolmenu[4]['title'] = 'Настройки';
@@ -90,17 +93,19 @@ if ($opt=='list' || $opt=='config'){
 
 if($opt=='saveconfig'){	
     $cfg = array();
-    $cfg['enabled_blogs'] = $_REQUEST['enabled_blogs'];
-    $cfg['enabled_photos'] = $_REQUEST['enabled_photos'];
-
-    $cfg['thumb1'] = $_REQUEST['thumb1'];
-    $cfg['thumb2'] = $_REQUEST['thumb2'];
-    $cfg['thumbsqr'] = $_REQUEST['thumbsqr'];
-    $cfg['cancreate'] = $_REQUEST['cancreate'];
-    $cfg['perpage'] = $_REQUEST['perpage'];
-
-    $cfg['create_min_karma'] = $_REQUEST['create_min_karma'];
-    $cfg['create_min_rating'] = $_REQUEST['create_min_rating'];
+	$cfg['seo_club']        = $inCore->request('seo_club', 'str');
+    $cfg['enabled_blogs']   = $inCore->request('enabled_blogs', 'str');
+    $cfg['enabled_photos']  = $inCore->request('enabled_photos', 'str');
+    $cfg['thumb1']          = $inCore->request('thumb1', 'int');
+    $cfg['thumb2']          = $inCore->request('thumb2', 'int');
+    $cfg['thumbsqr']        = $inCore->request('thumbsqr', 'int');
+    $cfg['cancreate']       = $inCore->request('cancreate', 'int');
+    $cfg['perpage']         = $inCore->request('perpage', 'int');
+    $cfg['create_min_karma']    = $inCore->request('create_min_karma', 'int');
+    $cfg['create_min_rating']   = $inCore->request('create_min_rating', 'int');
+    $cfg['notify_in']       = $inCore->request('notify_in', 'int');
+    $cfg['notify_out']      = $inCore->request('notify_out', 'int');
+	$cfg['every_karma']     = $inCore->request('every_karma', 'int', 100);
 
     $inCore->saveComponentConfig('clubs', $cfg);
 
@@ -131,6 +136,7 @@ if ($opt == 'hide_club'){
 if ($opt == 'submit'){	
     $title 			= $inCore->request('title', 'str');
     $description 	= $inCore->request('description', 'html');
+    $description    = $inDB->escape_string($description);
     $published 		= $inCore->request('published', 'int');
     $admin_id 		= $inCore->request('admin_id', 'int');
     $clubtype		= $inCore->request('clubtype', 'str');
@@ -196,6 +202,7 @@ if ($opt == 'update'){
         $id 			= (int)$_REQUEST['item_id'];
         $title 			= $inCore->request('title', 'str');
         $description 	= $inCore->request('description', 'html');
+        $description    = $inDB->escape_string($description);
         $published 		= $inCore->request('published', 'int');
         $admin_id 		= (int)$_REQUEST['admin_id'];
         $clubtype		= $inCore->request('clubtype', 'str');
@@ -432,15 +439,15 @@ if ($opt == 'add' || $opt == 'edit'){
         </tr>
     </table>
     {tab=Описание}
-    <table width="625" border="0" cellspacing="5" class="proptable">
+    <table width="100%" border="0" cellspacing="5" class="proptable">
         <tr>
-            <td width="606"><strong>Описание:</strong> <span class="hinttext">Отображается на первой странице при просмотре клуба </span></td>
+            <td><strong>Описание:</strong> <span class="hinttext">Отображается на первой странице при просмотре клуба </span></td>
         </tr>
         <tr>
             <td>
                 <?php
 
-                    $inCore->insertEditor('description', $mod['description'], '250', '100%');
+                    $inCore->insertEditor('description', $mod['description'], '400', '100%');
                 
                 ?>
             </td>
@@ -554,6 +561,20 @@ if ($opt=='config') {
 <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
     <table width="680" border="0" cellpadding="10" cellspacing="0" class="proptable">
         <tr>
+            <td><strong>Количество клубов на странице:</strong><br /></td>
+            <td><input name="perpage" type="text" id="perpage" style="width:300px" value="<?php echo @$cfg['perpage'];?>"/></td>
+        </tr>
+        <tr>
+            <td><strong>SEO для клубов:</strong><br />
+            <span class="hinttext">Чем заполнять тег meta description при просмотре клуба?</span></td>
+            <td width="300">
+                <select name="seo_club" id="seo_club" style="width:300px">
+                    <option value="deskr" <?php if (@$cfg['seo_club']=='deskr') { echo 'selected="selected"'; } ?>>Из описания клуба</option>
+                    <option value="title" <?php if (@$cfg['seo_club']=='title') { echo 'selected="selected"'; } ?>>Из заголовка клуба</option>
+                    <option value="def" <?php if (@$cfg['seo_club']=='def') { echo 'selected="selected"'; } ?>>По умолчанию для сайта</option>
+            </select>			</td>
+        </tr>
+        <tr>
             <td><strong>Блоги клубов:</strong><br />
             <span class="hinttext">Включить/выключить блоги</span></td>
             <td width="300">
@@ -561,10 +582,6 @@ if ($opt=='config') {
                     <option value="1" <?php if (@$cfg['enabled_blogs']=='1') { echo 'selected="selected"'; } ?>>Включены</option>
                     <option value="-1" <?php if (@$cfg['enabled_blogs']=='-1') { echo 'selected="selected"'; } ?>>Отключены</option>
             </select>			</td>
-        </tr>
-        <tr>
-            <td><strong>Количество клубов на странице:</strong><br /></td>
-            <td><input name="perpage" type="text" id="perpage" style="width:300px" value="<?php echo @$cfg['perpage'];?>"/></td>
         </tr>
         <tr>
             <td><strong>Фотоальбомы клубов:</strong><br />
@@ -600,6 +617,11 @@ if ($opt=='config') {
             <td valign="top">
                 <input name="cancreate" type="radio" value="1"  <?php if (@$cfg['cancreate']) { echo 'checked="checked"'; } ?> />Да
             <input name="cancreate" type="radio" value="0"  <?php if (@!$cfg['cancreate']) { echo 'checked="checked"'; } ?> /> Нет			</td>
+        </tr>
+        <tr>
+            <td><strong>Шаг кармы для создания нового клуба:</strong><br />
+            <span class="hinttext">0 - можно создавать только один клуб</span></td>
+            <td valign="top"><input name="every_karma" type="text" id="every_karma" style="width:300px" value="<?php echo @$cfg['every_karma'];?>"/></td>
         </tr>
         <tr>
             <td><strong>Ограничение по карме на создание клубов:</strong><br />

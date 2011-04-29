@@ -1,18 +1,38 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
     function routes_comments(){
 
-        //RewriteRule ^comments/add$ /index.php?view=comments&do=add
         $routes[] = array(
                             '_uri'  => '/^comments\/add$/i',
                             'do'    => 'add'
                          );
 
-        //RewriteRule ^comments/delete/([0-9]*)$ /index.php?view=comments&do=delete&id=$1
+        $routes[] = array(
+                            '_uri'  => '/^comments\/edit$/i',
+                            'do'    => 'edit'
+                         );
+
         $routes[] = array(
                             '_uri'  => '/^comments\/delete\/([0-9]+)$/i',
                             'do'    => 'delete',
                             1       => 'id'
+                         );
+
+        $routes[] = array(
+                            '_uri'  => '/^comments\/page\-([0-9]+)$/i',
+                            'do'    => 'view',
+                            1       => 'page'
                          );
 
         return $routes;

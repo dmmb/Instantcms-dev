@@ -1,14 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 class cmsDatabase {
 
@@ -45,53 +46,10 @@ protected function replacePrefix( $sql, $prefix='cms_' ) {
 
     $inConf = cmsConfig::getInstance();
     
-    $sql = trim( $sql );
-    $escaped = false;
-    $quoteChar = '';
-    $n = strlen($sql);
-    $startPos = 0;
-    $literal = '';
+    $sql = trim(str_replace($prefix, $inConf->db_prefix.'_', $sql));
 
-    while ($startPos < $n) {
-        $ip = strpos($sql, $prefix, $startPos);
-        if ($ip === false) { break; }
-        $j = strpos( $sql, "'", $startPos );
-        $k = strpos( $sql, '"', $startPos );
-        if (($k !== FALSE) && (($k < $j) || ($j === FALSE))) {
-            $quoteChar = '"';
-            $j = $k;
-        } else {
-            $quoteChar = "'";
-        }
-
-        if ($j === false) { $j = $n; }
-
-        $literal .= str_replace( $prefix, $inConf->db_prefix.'_', substr( $sql, $startPos, $j - $startPos ) );
-        $startPos = $j;
-
-        $j = $startPos + 1;
-        if ($j >= $n) { break; }
-
-        // quote comes first, find end of quote
-        while (TRUE) {
-            $k = strpos( $sql, $quoteChar, $j );
-            $escaped = false;
-            if ($k === false) { break; }
-            $l = $k - 1;
-            while ($l >= 0 && $sql{$l} == '\\') { $l--; $escaped = !$escaped; }
-            if ($escaped) { $j = $k+1; continue; }
-            break;
-        }
-        if ($k === FALSE) { //error in the query - no end quote; ignore it
-            break;
-        }
-        $literal .= substr( $sql, $startPos, $k - $startPos + 1 );
-        $startPos = $k+1;
-    }
-    if ($startPos < $n) {
-        $literal .= substr( $sql, $startPos, $n - $startPos );
-    }
-    return $literal;
+    return $sql;
+    
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -154,7 +112,7 @@ public function get_last_id($table){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public function rows_count($table, $where, $limit=0){
-    $sql = "SELECT * FROM $table WHERE $where";
+    $sql = "SELECT 1 FROM $table WHERE $where";
 
     if ($limit) { $sql .= " LIMIT ".$limit; }
 
@@ -229,7 +187,7 @@ public function error() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public function escape_string($string) {
-    return mysql_escape_string($string); 
+    return mysql_real_escape_string($string);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -262,8 +220,8 @@ public function isFieldType($table, $field, $type){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public function isTableExists($table){
 
-    $sql    = "SELECT * FROM $table LIMIT 1";
-    $result = @$this->query($sql, true);
+    $sql    = "SELECT 1 FROM $table LIMIT 1";
+    $result = $this->query($sql, true);
     
     if ($this->errno()){ return false; }
 
@@ -273,6 +231,65 @@ public function isTableExists($table){
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+public static function optimizeTables($tlist=''){
+
+	$inDB = self::getInstance();
+    
+    if(is_array($tlist)) {
+    
+		foreach($tlist as $tname) {
+		  	$inDB->query("OPTIMIZE TABLE $tname", true);
+		  	$inDB->query("ANALYZE TABLE $tname", true);
+		}
+    
+	} else {
+
+		$inConf = cmsConfig::getInstance();
+    
+		$tlist  = $inDB->get_table('information_schema.tables', "table_schema = '{$inConf->db_base}'", 'table_name');
+
+		if (!is_array($tlist)) { return false; }
+
+		foreach($tlist as $tname) {
+			$inDB->query("OPTIMIZE TABLE {$tname['table_name']}", true);
+			$inDB->query("ANALYZE TABLE {$tname['table_name']}", true);
+		}
+
+    }
+
+    if ($inDB->errno()){ return false; }
+
+    return true;
+    
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+public function delete($table, $where='', $limit=0) {
+
+    $sql = "DELETE FROM {$table} WHERE {$where}";
+
+    if ($limit) { $sql .= " LIMIT {$limit}"; }
+
+    $result = $this->query($sql, true);
+
+    if ($this->errno()){ return false; }
+
+    return true;
+
+}
+
+public function deleteNS($table, $id) {
+
+    $inCore = cmsCore::getInstance();
+
+    $ns = $inCore->nestedSetsInit($table);
+
+    $ns->DeleteNode($id);
+
+    return true;
+
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

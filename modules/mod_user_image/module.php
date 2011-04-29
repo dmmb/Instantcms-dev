@@ -1,40 +1,55 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 	function mod_user_image($module_id){
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
 		$cfg = $inCore->loadModuleConfig($module_id);
 
-		$sql = "SELECT u.id uid, u.nickname author, u.login as login, p.*, pr.gender gender
-				FROM cms_users u, cms_user_photos p, cms_user_profiles pr
-				WHERE p.user_id = u.id AND p.allow_who = 'all' AND pr.user_id = u.id AND u.is_deleted = 0 AND u.is_locked = 0
+		$sql = "SELECT u.id uid, u.nickname author, u.login as login, p.imageurl, p.title, p.id, pr.gender gender
+				FROM cms_user_photos p
+				LEFT JOIN cms_users u ON u.id = p.user_id
+				LEFT JOIN cms_user_profiles pr ON pr.user_id = u.id
+				LEFT JOIN cms_user_albums a ON a.id = p.album_id
+				WHERE p.allow_who = 'all' AND u.is_deleted = 0 AND u.is_locked = 0
+                      AND p.album_id > 0 AND a.allow_who = 'all'
 				ORDER BY RAND()
-				LIMIT 1
-				";
+				LIMIT 1";
 		
 		$result = $inDB->query($sql) ;
 		
+		$users = array();
+		$is_usr = false;
+		
 		if ($inDB->num_rows($result)){
-			while ($item=$inDB->fetch_assoc($result)){
+			$is_usr=true;
 
-				echo '<a href="/users/'.$item['uid'].'/photo'.$item['id'].'.html">
-					  <div align="center"><img src="/images/users/photos/small/'.$item['imageurl'].'" border="0"/></div></a>';
-				if($cfg['showtitle']){
-					echo '<div style="margin-top:5px" align="center"><strong>'.$item['title'].'</strong></div>';
-					echo '<div align="center">'.cmsUser::getGenderLink($item['uid'], $item['author'], null, $item['gender'], $item['login']).'</a></div>';
-				}
+			while ($usr = $inDB->fetch_assoc($result)){
+				
+				$usr['genderlink'] = cmsUser::getGenderLink($usr['uid'], $usr['author'], null, $usr['gender'], $usr['login']);
+				
+				$users[] = $usr;
 			
 			}
 		}
 
+		$smarty = $inCore->initSmarty('modules', 'mod_user_image.tpl');			
+		$smarty->assign('users', $users);
+		$smarty->assign('cfg', $cfg);
+		$smarty->assign('is_usr', $is_usr);
+		$smarty->display('mod_user_image.tpl');
+				
 		return true;	
+		
 	}
 ?>

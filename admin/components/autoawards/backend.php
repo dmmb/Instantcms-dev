@@ -1,13 +1,16 @@
 <?php
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 function error($msg){
 //
@@ -21,11 +24,11 @@ function error($msg){
 
 	if($opt=='list'){
 
-		$toolmenu[0]['icon'] = 'new.gif';
+		$toolmenu[0]['icon'] = 'newaward.gif';
 		$toolmenu[0]['title'] = 'Новая награда';
 		$toolmenu[0]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add';
 	
-		$toolmenu[3]['icon'] = 'listphoto.gif';
+		$toolmenu[3]['icon'] = 'listawards.gif';
 		$toolmenu[3]['title'] = 'Все награды';
 		$toolmenu[3]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list';
 
@@ -35,11 +38,11 @@ function error($msg){
 
 		$toolmenu[12]['icon'] = 'show.gif';
 		$toolmenu[12]['title'] = 'Включить выбранные';
-		$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=show&multiple=1');";
+		$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=show_award&multiple=1');";
 
 		$toolmenu[13]['icon'] = 'hide.gif';
 		$toolmenu[13]['title'] = 'Отключить выбранные';
-		$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=hide&multiple=1');";
+		$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=hide_award&multiple=1');";
 
 	}
 	
@@ -73,19 +76,21 @@ function error($msg){
 	if ($opt == 'show_award'){
 		if (!isset($_REQUEST['item'])){
 			if (isset($_REQUEST['item_id'])){ dbShow('cms_user_autoawards', $_REQUEST['item_id']);  }
+			echo '1'; exit;
 		} else {
 			dbShowList('cms_user_autoawards', $_REQUEST['item']);				
+			header('location:'.$_SERVER['HTTP_REFERER']);			
 		}			
-		echo '1'; exit;
 	}
 
 	if ($opt == 'hide_award'){
 		if (!isset($_REQUEST['item'])){
 			if (isset($_REQUEST['item_id'])){ dbHide('cms_user_autoawards', $_REQUEST['item_id']);  }
+			echo '1'; exit;
 		} else {
 			dbHideList('cms_user_autoawards', $_REQUEST['item']);				
+			header('location:'.$_SERVER['HTTP_REFERER']);			
 		}			
-		echo '1'; exit;
 	}
 
 	if ($opt == 'submit'){	
@@ -279,7 +284,7 @@ function error($msg){
 				    <td valign="top"><strong>Изображение награды:<br />
 				    </strong><span class="hinttext">Картинки из папки /images/users/awards </span><strong><br />
 			        </strong></td>
-				    <td valign="top"><?php echo usrAwardsList();?></td>
+				    <td valign="top"><?php echo usrAwardsList($mod['imageurl']);?></td>
 			      </tr>
 				  <tr>
 				    <td valign="top"><p><strong>Условия получения награды:</strong> <br>

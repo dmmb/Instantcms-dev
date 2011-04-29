@@ -830,7 +830,7 @@
 			var groups_n = 0;
 			var orig_rel = this.rel;
 			// Create the groups
-			$.each($('[@rel*='+orig_rel+']'), function(index, obj){
+			$.each($('[rel*='+orig_rel+']'), function(index, obj){
 				// Get the group
 				var rel = $(obj).attr('rel');
 				// Are we really a group

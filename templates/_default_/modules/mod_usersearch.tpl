@@ -1,7 +1,7 @@
 <script src="/includes/jquery/autocomplete/jquery.autocomplete.min.js" type="text/javascript"></script>
 <link media="screen" rel="stylesheet" href="/includes/jquery/autocomplete/jquery.autocomplete.css" type="text/css">
 
-<form name="usr_search_form" method="post" action="/users/search.html">
+<form id="mod_usr_search_form" method="post" action="/users/search.html">
     <table width="100%" border="0" cellspacing="0" cellpadding="4">
         <tr>
             <td valign="middle" style="text-align:center">
@@ -16,9 +16,9 @@
         <tr>
             <td style="text-align:center">
                 от
-                <input style="text-align:center;width:60px" name="agefrom" type="text" id="agefrom" value="18"/>
+                <input style="text-align:center;width:56px" name="agefrom" type="text" id="agefrom" value="18"/>
                 до
-                <input style="text-align:center;width:60px" name="ageto" type="text" id="ageto" value=""/>
+                <input style="text-align:center;width:56px" name="ageto" type="text" id="ageto" value=""/>
                 лет
             </td>
         </tr>

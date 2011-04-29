@@ -1,18 +1,28 @@
 <?php
-
-    if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 	session_start();
 
 	define("VALID_CMS", 1);
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
-    define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
 
 	include(PATH.'/core/cms.php');
 
     $inCore = cmsCore::getInstance();
 
-	if ($inCore->request('file', 'str')) { $shortfile = $inCore->request('file', 'str'); } else { $shortfile = date('d-m-Y').'.sql'; }
+    define('HOST', 'http://' . $inCore->getHost());
+
+    $shortfile = $inCore->request('file', 'str', date('d-m-Y').'.sql');
     $opt = $inCore->request('opt', 'str', 'export');
 
 	$dir    = PATH.'/backups';
@@ -38,11 +48,11 @@
 			$dumper->doDump();
 			if(!$inDB->errno()){
 				$fileurl = '/backups/'.$shortfile;	
-				echo '<span style="color:green">Экспорт базы данных завершен.</span> <a href="/backups/'.$shortfile.'" target="_blank">Скачать файл</a> | <a href="#" onclick="deleteDump(\''.$shortfile.'\')">Удалить файл</a>';				
-				echo '<div class="hinttext">Чтобы скачать файл, щелкните правой кнопкой мыши по ссылке и выберите "Сохранить объект как..."</div>';
+				echo '<span style="color:green">Экспорт базы данных завершен.</span> <a href="#" onclick="deleteDump(\''.$shortfile.'\')">Удалить файл</a>';				
+				echo '<div class="hinttext">Файл дампа находится в папке <strong>backups</strong> на FTP.</div>';
 			} else {
 				echo '<span style="color:red">Ошибка экспорта базы</span>';
-			}			
+			}
 		} else {
 			echo '<span style="color:red">Папка "/backups" не доступна для записи!</span>';	
 		}	
@@ -52,7 +62,7 @@
 		$uploaddump = $dir.'/import.sql';
 		if (@move_uploaded_file($_FILES['dumpfile']['tmp_name'], $uploaddump)) {
 			include($_SERVER['DOCUMENT_ROOT'].'/includes/dbimport.inc.php');
-			$errors = '';
+			$errors = 'Ошибка импорта базы';
 			if(dbRunSQL($uploaddump, $inConf->db_prefix)){
 				@unlink($uploaddump);
 				echo '<span style="color:green">Импорт базы данных завершен.</span>';
@@ -65,7 +75,7 @@
 	}
 	
 	if ($opt=='delete'){
-		if(@unlink($file)){
+		if(@unlink($dir.'/'.$shortfile)){ 
 		 	echo '<span style="color:green">Файл удален.</span>';
 		} else {
 		 	echo '<span style="color:red">Ошибка удаления файла.</span>';

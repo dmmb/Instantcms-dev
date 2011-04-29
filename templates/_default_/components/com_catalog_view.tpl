@@ -2,6 +2,14 @@
 {* ========================= Просмотр рубрики каталога ============================ *}
 {* ================================================================================ *}
 
+<div id="shop_toollink_div">
+	<a id="shop_searchlink" href="/catalog/{$cat.id}/search.html">{$LANG.SEARCH_BY_CAT}</a>
+	{if $cat.view_type=='shop'} {$shopcartlink}	{/if}
+    {if $is_can_add}
+    <a id="shop_addlink" href="/catalog/{$cat.id}/add.html">{$LANG.ADD_ITEM}</a>
+    {/if}
+</div>
+
 {if $cfg.is_rss}
 	{* ============================== Заголовок + RSS ==================================== *}
 	<table cellpadding="0" cellspacing="0" border="0">
@@ -16,7 +24,7 @@
 	</table>
 {else}
 	{* ============================== Просто заголовок ==================================== *}
-<h1 class="con_heading">{$cat.title}</h1>
+    <h1 class="con_heading">{$cat.title}</h1>
 {/if}
 
 {if $cat.description}
@@ -28,14 +36,6 @@
 {/if}
 
 {if $alphabet} {$alphabet} {/if}
-
-<div id="shop_toollink_div">
-	<a id="shop_searchlink" href="/catalog/{$cat.id}/search.html">{$LANG.SEARCH_BY_CAT}</a>
-	{if $cat.view_type=='shop'} {$shopcartlink}	{/if}
-    {if $is_can_add}
-    <a id="shop_addlink" href="/catalog/{$cat.id}/add.html">{$LANG.ADD_ITEM}</a>
-    {/if}
-</div>
 
 {if $cat.showsort} {$orderform} {/if}
 
@@ -67,6 +67,11 @@
 							{/if}
 						</td>
 						<td class="uc_list_itemdesc" align="left" valign="top">
+                            {if $item.can_edit}
+                                <div class="uc_item_edit">
+                                    <a href="/catalog/{$cat.id}/edit{$item.id}.html" class="uc_item_edit_link">{$LANG.EDIT}</a>
+                                </div>
+                            {/if}
 							<div>
 								<a class="uc_itemlink" href="/catalog/item{$item.id}.html">{$item.title}</a> 
 								{if $item.is_new}
@@ -76,12 +81,6 @@
 							{if $cat.is_ratings}
 								<div class="uc_rating">{$item.rating}</div>
 							{/if}
-
-                            {if $item.can_edit}
-                                <div class="uc_item_edit">
-                                    <a href="/catalog/{$cat.id}/edit{$item.id}.html" class="uc_item_edit_link">{$LANG.EDIT}</a>
-                                </div>
-                            {/if}
 
 							<div class="uc_itemfieldlist">
 								{foreach key=field item=value from=$item.fields}

@@ -24,7 +24,7 @@
 				<td class="{$article.class}"><a href="{$article.url}">{$article.title}</a></td>
 				<td class="{$article.class}"><img src="/images/icons/comments.gif" border="0"></td>
 				<td class="{$article.class}">{$article.comments}</td>
-				<td class="{$article.class}"><a href="/content/{$article.category_seolink}">{$article.category}</a></td>
+				<td class="{$article.class}"><a href="{$article.category_seolink}">{$article.category}</a></td>
 			</tr>			
 		{/foreach}
 	</tbody>

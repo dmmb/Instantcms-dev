@@ -22,13 +22,6 @@
 {* ------ Список подфорумов -------- *}
 
 {if $subforums_count}
-    <table width="100%" cellspacing="0" cellpadding="5"  class="forum_toolbar">
-        <tr>
-            <td width="16"><img src="/components/forum/images/toolbar/subforums.gif"/></td>
-            <td><div class="subforumshead">{$LANG.SUBFORUMS}</div></td>
-        </tr>
-    </table>
-
     <table class="forums_table" width="100%" cellspacing="0" cellpadding="8" border="0" bordercolor="#999999" >
         {php}$row=1;{/php}
         {foreach key=id item=subf from=$subforums}
@@ -40,8 +33,8 @@
                 }
             {/php}
             <tr>
-                <td width="40" class="{php}echo $class{/php}" align="center" valign="middle">
-                    <img src="/components/forum/images/forum.gif" border="0" />
+                <td width="32" class="{php}echo $class{/php}" align="center" valign="middle">
+                    <img src="/templates/_default_/images/icons/forum/forum.png" border="0" />
                 </td>
                 <td width="" class="{php}echo $class{/php}" align="left" valign="middle">
                     <div class="forum_link"><a href="/forum/{$subf.id}">{$subf.title}</a></div>
@@ -51,7 +44,7 @@
                     {/if}
                 </td>
                 <td width="120" class="{php}echo $class{/php}" style="font-size:10px" valign="top">{$subf.messages}</td>
-                <td width="250" style="font-size:10px" class="{php}echo $class{/php}" valign="top">{$subf.lastmessage}</td>
+                <td width="250" style="font-size:10px" class="{php}echo $class{/php}" valign="top">{$subf.last_message}</td>
             </tr>
             {php}$row++;{/php}
         {/foreach}

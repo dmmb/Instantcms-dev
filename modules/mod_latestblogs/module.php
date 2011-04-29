@@ -1,12 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 function mod_latestblogs($module_id){	
         $inCore = cmsCore::getInstance();
@@ -19,6 +22,7 @@ function mod_latestblogs($module_id){
 		if (!isset($cfg['showrss'])) { $cfg['showrss'] = 1;}
 		if (!isset($cfg['minrate'])) { $cfg['minrate'] = 0;}
         if (!isset($cfg['namemode'])) { $cfg['namemode'] = 'blog';}
+		if (!isset($cfg['showcom'])) { $cfg['showcom'] = 1;}
 
 		if (!isset($cfg['shownum'])){
 			echo '<p>'.$_LANG['LATESTBLOGS_CONFIG_TEXT'].'</p>';
@@ -35,24 +39,33 @@ function mod_latestblogs($module_id){
                         p.pubdate as fpubdate,
 						b.user_id as uid,
                         IFNULL(r.total_rating, 0) as rating,
-                        b.owner as owner,
                         b.ownertype as ownertype,
-                        u.nickname as author
-				FROM cms_users u, cms_blogs b, cms_blog_posts p
+                        u.id as author_id,
+                        u.nickname as author,
+                        up.imageurl as author_image,
+                        u.is_deleted as author_deleted
+				FROM cms_blog_posts p
+				LEFT JOIN cms_blogs b ON b.id = p.blog_id
+				LEFT JOIN cms_users u ON u.id = p.user_id				
+				LEFT JOIN cms_user_profiles up ON up.user_id = p.user_id
                 LEFT JOIN cms_ratings_total r ON r.item_id=p.id AND r.target='blogpost'
-				WHERE p.blog_id = b.id AND b.allow_who = 'all' AND p.published = 1
-                GROUP BY p.id
-				ORDER BY p.pubdate DESC
-                LIMIT 50";
+				WHERE p.published = 1 AND b.allow_who = 'all'
+				ORDER BY p.id DESC
+                LIMIT 30";
 		
 		$result = $inDB->query($sql);
-		
-		if ($inDB->num_rows($result)){	
-			echo '<table cellspacing="2" cellpadding="4" border="0">';
 
+		$is_blog = false;
+
+		if (!$inDB->num_rows($result)){	return false; }
+
+			$is_blog = true;
             $count = 1;
+			$posts = array();
 
-			while($con = $inDB->fetch_assoc($result)){
+		include_once(PATH.'/components/users/includes/usercore.php');
+
+		while($con = $inDB->fetch_assoc($result)){
 
                 if ($count > $cfg['shownum']) { break; }
 
@@ -66,32 +79,28 @@ function mod_latestblogs($module_id){
                         $con['blog'] = dbGetField('cms_clubs', 'id='.$con['uid'], 'title');
                     }
 
-                    $link = $model->getPostURL(null, $con['bloglink'], $con['seolink']);
-                    $text = strip_tags($con['title']);
+                    $con['href'] 	 = $model->getPostURL(null, $con['bloglink'], $con['seolink']);
+                    $con['title'] 	 = strip_tags($con['title']);
+					if (strlen($con['title'])>70) { $con['title'] = substr($con['title'], 0, 70). '...'; }
+					$con['fpubdate'] = $inCore->dateFormat($con['fpubdate']);
+					$con['comments'] = $cfg['showcom'] ? $inCore->getCommentsCount('blog', $con['id']) : false;
+					$con['bloghref'] = $model->getBlogURL(null, $con['bloglink']);
 
-                    if (strlen($text)>70) { $text = substr($text, 0, 70). '...'; }
-                    echo '<tr>';
-                        echo '<td valign="top">';
-                        echo '<a class="mod_blog_userlink" href="'.$model->getBlogURL(null, $con['bloglink']).'">'.$con['blog'].'</a> &rarr; ';
-
-                        echo '<a class="mod_blog_link" href="'.$link.'">'.$text.'</a> ('.$inCore->dateFormat($con['fpubdate']).')</td>';
-                    echo '</tr>';
+                    $con['image'] = usrImageNOdb($con['author_id'], 'small', $con['author_image'], $con['author_deleted']);
 
                     $count++;
 
-                }
+				$posts[] = $con;
 
 			}
 
-			echo '</table>';
-
-			if ($cfg['showrss']){
-				echo '<table align="right" style="margin-top:5px"><tr>';
-					echo '<td width="16"><img src="/images/markers/rssfeed.png" /></td>';
-					echo '<td><a href="/rss/blogs/all/feed.rss" style="text-decoration:underline;color:#333">'.$_LANG['LATESTBLOGS_RSS'].'</a></td>';
-				echo '</tr></table>';
 			}				
-		} else { echo '<p>'.$_LANG['LATESTBLOGS_NOT_POSTS'].'</p>'; }
+		
+		$smarty = $inCore->initSmarty('modules', 'mod_latestblogs.tpl');			
+		$smarty->assign('posts', $posts);
+		$smarty->assign('cfg', $cfg);
+		$smarty->assign('is_blog', $is_blog);
+		$smarty->display('mod_latestblogs.tpl');	
 		
 		return true;
 }

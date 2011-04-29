@@ -20,13 +20,20 @@
 						<div class="members_list">
 							<div class="title">{$LANG.CLUB_MEMBERS} ({math equation="x - 1" x=$club.members}):</div>
 							<div class="list">{$club.members_list}</div>
+                            {if $is_admin}
+                            <div class="title"><a href="/clubs/{$club.id}/message-members.html" title="{$LANG.SEND_MESSAGE_TO_MEMBERS}">{$LANG.SEND_MESSAGE}</a></div>
+                            {/if}
 						</div>
 					{/if}		
 				</td>
 				<td valign="top">
 					<div class="data">
 						<div class="details">
-							<span class="rating"><strong>{$LANG.RATING}:</strong> {$club.rating}</span>
+                            {if $club.is_vip}
+                                <span class="vip"><strong>{$LANG.VIP_CLUB}</strong></span>
+                            {else}
+                                <span class="rating"><strong>{$LANG.RATING}:</strong> {$club.rating}</span>
+                            {/if}
 							<span class="members"><strong>{$club.members|spellcount:$LANG.USER:$LANG.USER2:$LANG.USER10}</strong></span>
 							<span class="date">{$club.pubdate}</span>
 						</div>					
@@ -36,6 +43,9 @@
 						{if $is_member || $is_admin || $is_moder || $club.member_link}
 							<div class="clubmenu">
                                 {if $uid}
+                                	{if $is_member || $is_admin || $is_moder} 
+                                    <div><a href="/clubs/{$club.id}/join_member.html">Пригласить в клуб</a></div>  
+                                    {/if}                             
 								<div>{$club.member_link}</div>
                                 {/if}
 								{if $is_admin}
@@ -58,10 +68,14 @@
 								{$club.photo_albums}
 								{if $is_admin || $is_moder || $is_karma_enabled}
 									<p>
+                                    	{if $club.all_albums >= 6}
+                                    	<span><a href="/photos/{$club.root_album_id}">{$LANG.ALL_ALBUMS} (<strong id="count_photo">{$club.all_albums}</strong>)</a></span>
+                                        {/if}
 										<span id="add_album_link"><a class="service" href="javascript:void(0)" onclick="{literal}$('#add_album_link').toggle();$('#add_album_form').toggle();$('#add_album_form input.text').focus();{/literal}">{$LANG.ADD_PHOTOALBUM}</a></span>
 										<span id="add_album_form" style="display:none">
 											<input type="text" class="text" name="album_title" id="album_title"/> 
-											<input type="button" value="{$LANG.CREATE}" onclick="javascript:createAlbum({$club.id});"/>
+											<input type="button" value="{$LANG.CREATE}" onclick="javascript:createAlbum({$club.id}, {$club.root_album_id});"/>
+                                            <input type="button" value="{$LANG.CANCEL}" onclick="{literal}$('#add_album_link').toggle();$('#add_album_form').toggle();{/literal}"/>
 										</span>
 										<span id="add_album_wait" style="display:none">{$LANG.LOADING}...</span>
 									</p>
@@ -71,7 +85,6 @@
 						{/if}
 					</div>
 					<div class="wall">
-                        {add_js file="components/users/js/wall.js"}
 						<div class="header">{$LANG.CLUB_WALL}</div>
 						<div class="body">
                             <div class="wall_body">{$club.wall_html}</div>

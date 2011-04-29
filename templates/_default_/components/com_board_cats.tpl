@@ -2,13 +2,15 @@
 {* ==================== Cписок [под]рубрик доски объявлений ======================= *}
 {* ================================================================================ *}
 
-{if $is_subcats}
-	<table class="categorylist" style="margin-bottom:10px" cellspacing="3" width="100%" border="0">
+{if $cats}
+	<table class="board_categorylist" cellspacing="3" width="100%" border="0">
 		{assign var="col" value="1"}	
 		{foreach key=tid item=cat from=$cats}			
 			{if $col==1} <tr> {/if}
-				<td width="48" valign="top"><img class="bd_cat_main_icon" src="/images/board/icons/{$cat.icon}" border="0" /></td>
-				<td width="" valign="top">
+				<td width="30" valign="top">
+                    <img class="bd_cat_main_icon" src="/templates/_default_/images/icons/big/folder_table.png" border="0" />
+                </td>
+				<td valign="top" class="bd_cat_cell">
 					<div class="bd_cat_main_title"><a href="/board/{$cat.id}">{$cat.title}</a> ({$cat.content_count}{$cat.subtext})</div>					
 					{if $cat.description} 
 						<div class="bd_cat_main_desc">{$cat.description}</div>

@@ -1,16 +1,16 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//						   InstantCMS v1.0 (c) 2008 COMMERCIAL VERSION                       //
-//   						Source code protected by copyright laws                          //
-//                                                                                           //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 function isNew($item_id, $shownew, $newint){
@@ -66,7 +66,7 @@ function buildRating($rating){
     global $_LANG;
     $rating     = round($rating, 2);
     $html = '<a href="#" title="'.$_LANG['RATING'].': '.$rating.'">';
-    for($r = 0; $r < 5; $r++){
+    for($r = 1; $r < 5; $r++){
         if (round($rating) > $r){
             $html .= '<img src="/images/ratings/starfull.gif" border="0" />';
         } else {
@@ -81,11 +81,11 @@ function alreadyVoted($item_id){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
     $ip     = $_SERVER['REMOTE_ADDR'];
-    $sql    = "SELECT points FROM cms_uc_ratings WHERE item_id = $item_id AND ip = '$ip'";
+    $sql    = "SELECT points FROM cms_uc_ratings WHERE item_id = $item_id AND ip = '$ip' LIMIT 1";
     $result = $inDB->query($sql) ;
     if ($inDB->num_rows($result)){
         $data = $inDB->fetch_assoc($result);
-        return $data['points'];
+        return (int)$data['points'];
     }    
     return false;
 }
@@ -95,7 +95,7 @@ function ratingForm($ratingdata, $item_id){
     $inDB = cmsDatabase::getInstance();
     global $_LANG;
     $html = '';
-    $html .= '<form name="rateform" action="?'.$_SERVER['QUERY_STRING'].'" method="POST"><div class="uc_detailrating"><table><tr>' ."\n";
+    $html .= '<form name="rateform" action="" method="POST"><div class="uc_detailrating"><table><tr>' ."\n";
     $html .= '<td width="90">'."\n";
     $html .= '<strong>'.$_LANG['RATING'].':</strong> '.round($ratingdata['rating'], 2)."\n";
     $html .= '</td>'."\n";
@@ -118,7 +118,7 @@ function ratingForm($ratingdata, $item_id){
         $html .= '<input type="hidden" name="item_id" value="'.$item_id.'"/>'."\n";
         $html .= '<select name="points" style="width:50px" onchange="document.rateform.submit();">'."\n";
         $html .= '<option value="-1"> -- </option>'."\n";
-        for($p=0; $p<=5; $p++) { $html .= '<option value="'.$p.'">'.$p.'</option>'."\n"; }
+        for($p=1; $p<=5; $p++) { $html .= '<option value="'.$p.'">'.$p.'</option>'."\n"; }
         $html .= '</select>'."\n";
     } else {
         $html .= $myvote;
@@ -254,9 +254,14 @@ function catalog(){
     $inCore->loadModel('catalog');
     $model = new cms_model_catalog();
 
+    define('IS_BILLING', $inCore->isComponentInstalled('billing'));
+    if (IS_BILLING) { $inCore->loadClass('billing'); }
+
     $menutitle  = $inCore->menuTitle();
     if (!$menutitle) { $menutitle = $_LANG['CATALOG']; }
     $cfg        = $inCore->loadComponentConfig('catalog');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     if (!isset($cfg['email'])) { $cfg['email'] = 'shop@site.ru'; }
     if (!isset($cfg['delivery'])) { $cfg['delivery'] = 'Сведения о доставке'; }
@@ -290,6 +295,8 @@ function catalog(){
     if ($do == 'tag') {
 
         $tag = $inCore->request('tag', 'str');
+        $tag = urldecode($tag);
+
         $sql = "SELECT tag FROM cms_tags WHERE tag = '$tag' AND target='catalog' LIMIT 1";
         $result = $inDB->query($sql) ;
         if ($inDB->num_rows($result)==1){
@@ -308,7 +315,7 @@ function catalog(){
         //Perform search
         if (isset($_POST['gosearch'])){
             $fdata = $_POST['fdata'];
-            $title = str_replace("'", '?', trim($_POST['title']));
+            $title = $inCore->request('title', 'str');
 
             $query = '';
             $fstr = 'a:%:{';
@@ -325,14 +332,15 @@ function catalog(){
 
                 $fstr .= '}';
                 if ($query=='') { unset($query); }
+				$query = $inCore->strClear($query);
                 $findsql = "SELECT i.* , IFNULL(AVG(r.points),0) AS rating
                             FROM cms_uc_items i
                             LEFT JOIN cms_uc_ratings r ON r.item_id = i.id
                             WHERE i.published = 1 AND i.category_id = $id AND i.fieldsdata LIKE '%{$query}%' AND i.title LIKE '%$title%'";
 
-                if (@$_POST['tags']!='') {
+                if ($_POST['tags'] != '') {
                     $findsql .= " AND (";
-                    $tags = explode(' ', trim($_POST['tags']));
+                    $tags = explode(' ', $inCore->request('tags', 'str'));
                     $t = 1;
                     foreach($tags as $key=>$value){
                         $findsql .= "(i.tags LIKE '%".$value."%')";
@@ -379,14 +387,14 @@ function catalog(){
                 $smarty->assign('fstruct', $fstruct_ready);
                 $smarty->display('com_catalog_search.tpl');
 
-            } else { die('Wrong category ID.'); }
+            } else { cmsCore::error404(); }
         }//search form
 
     }
     //////////////////////////// SEARCH BY FIRST LETTER OF TITLE ///////////////////////////////////////////////////////
     if ($do == 'findfirst') {
 
-        $id = intval($_REQUEST['cat_id']);
+        $id = $inCore->request('cat_id', 'int');
 
         $query = urldecode($inCore->request('text', 'str'));
         $query = str_replace("'", '?', $query);
@@ -409,7 +417,7 @@ function catalog(){
 
     //////////////////////////// SEARCH BY FIELD ////////////////////////////////////////////////////////////////////
     if ($do == 'find') {
-        $id = intval($_REQUEST['cat_id']);
+        $id = $inCore->request('cat_id', 'int');
 
         $query = urldecode($inCore->request('text', 'str'));
         $query = str_replace("'", '?', $query);
@@ -497,7 +505,7 @@ function catalog(){
 
             //ordering
             if (isset($_POST['orderby'])) {
-                $orderby = $_POST['orderby'];
+                $orderby = $inCore->request('orderby', 'str');
                 $_SESSION['uc_orderby'] = $orderby;
             } elseif(isset($_SESSION['uc_orderby'])) {
                 $orderby = $_SESSION['uc_orderby'];
@@ -506,7 +514,7 @@ function catalog(){
             }
 
             if (isset($_POST['orderto'])) {
-                $orderto = $_POST['orderto'];
+                $orderto = $inCore->request('orderto', 'str');
                 $_SESSION['uc_orderto'] = $orderto;
             } elseif(isset($_SESSION['uc_orderto'])) {
                 $orderto = $_SESSION['uc_orderto'];
@@ -633,7 +641,7 @@ function catalog(){
 
             $smarty->display('com_catalog_view.tpl');
 
-        } else { echo $_LANG['CAT_NOT_FOUND']; }
+        } else { cmsCore::error404(); }
 
         return true;
 
@@ -641,7 +649,7 @@ function catalog(){
 
     //////////////////////////// VIEW ITEM DETAILS ///////////////////////////////////////////////////////////////////////
     if ($do == 'item'){
-        $id = intval($_REQUEST['id']);
+        $id = $inCore->request('id', 'int');
         $sql = "SELECT * FROM cms_uc_items WHERE id = $id";
         $itemres = $inDB->query($sql) ;
 
@@ -681,12 +689,12 @@ function catalog(){
 
             $inPage->addPathway($item['title'], '/catalog/item'.$item['id'].'.html');
             $inPage->setTitle($item['title'] . ' - ' . $menutitle);
-            echo '<div class="con_heading">'.$item['title'].'</div>';
+
 
             if ($cat['view_type']=='shop'){
-                echo '<div id="shop_toollink_div">';
-                echo shopCartLink();
-                echo '</div>';
+
+				$shopCartLink=shopCartLink();
+				
             }
 
             //update hits
@@ -694,19 +702,10 @@ function catalog(){
 
             //print item details
 
-            echo '<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:10px"><tr>';
-            echo '<td align="left" valign="top" width="10" class="uc_detailimg">';
-            if (strlen($item['imageurl'])>4) {
-                echo '<a class="lightbox-enabled" rel="lightbox" href="/images/catalog/'.$item['imageurl'].'" target="_blank">';
-                echo '<img alt="'.$item['title'].'" src="/images/catalog/medium/'.$item['imageurl'].'.jpg" border="0" />';
-                echo '</a>';
-            } else {
-                echo '<img src="/images/catalog/medium/nopic.jpg" border="0" />';
-            }
-            echo '</td>';
-            echo '<td class="uc_list_itemdesc" align="left" valign="top" class="uc_detaildesc">';
+			
+			$fields = array();
+			
             if (sizeof($fstruct)>0){
-                echo '<ul class="uc_detaillist">';
                 foreach($fstruct as $key=>$value){
                     if (@$fdata[$key]!=''){
                         if (strstr($value, '/~h~/')){
@@ -720,12 +719,12 @@ function catalog(){
                         $field = str_replace('<p>', '<p style="margin-top:0px; margin-bottom:5px">', $fdata[$key]);
                         if (strstr($value, '/~l~/')){
                             $field = '<a class="uc_detaillink" href="/load/url='.$field.'" target="_blank">'.str_replace('/~l~/', '', $value).'</a> ('.$inCore->fileDownloadCount($field).')';
-                            echo '<li class="uc_detailfield">'.$field.'</li>';
+
                         } else {
-                            echo '<li class="uc_detailfield"><strong>'.$value.'</strong>: ';
+ 
                             if (isset($htmlfield)) {
                                 if ($makelink) {
-                                    echo $inCore->getUCSearchLink($cat['id'], null, $key, strip_tags($field));
+                                     $field = $inCore->getUCSearchLink($cat['id'], null, $key, strip_tags($field));
                                 } else {
                                     //PROCESS FILTERS, if neccessary
                                     if ($cat['filters']){
@@ -737,79 +736,52 @@ function catalog(){
                                             }
                                         }
                                     }
-                                    echo str_replace('\"', '"', $field);
+                                     $field =  str_replace('\"', '"', $field);
                                 }
                             } else {
                                 if ($makelink) {
-                                    echo $inCore->getUCSearchLink($cat['id'], null, $key, $field);
-                                } else {
-                                    echo $field;
+                                     $field =  $inCore->getUCSearchLink($cat['id'], null, $key, $field);
                                 }
                             }
-                            echo '</li>';
+                            
                         }
+						$fields[$value] = $field;
                     }
                 }
-                echo '</ul>';
             }
             if ($cat['view_type']=='shop'){
                 $already = shopIsInCart($item['id']);
                 $item['price'] = number_format(shopDiscountPrice($item['id'], $item['category_id'], $item['price']), 2, '.', ' ');
-                echo '<div id="shop_price">';
-                echo '<span>'.$_LANG['PRICE'].':</span> '. $item['price'] . ' '.$_LANG['RUB'];
-                echo '</div>';
-                echo '<div id="shop_ac_itemdiv">';
-                echo '<a href="/catalog/addcart'.$item['id'].'.html" title="'.$_LANG['ADD_TO_CART'].'" id="shop_ac_item_link">';
-                echo '<img src="/components/catalog/images/shop/addcart.jpg" border="0" alt="'.$_LANG['ADD_TO_CART'].'"/>';
-                echo '</a>';
-                echo '</div>';
             }
-            if ($item['on_moderate']){
+			
+			
                 $user = $inDB->get_fields('cms_users', "id={$item['user_id']}", 'login, nickname');
-                echo '<div id="shop_moder_form">';
-                    echo '<p class="notice">'.$_LANG['WAIT_MODERATION'].':</p>';
-                    echo '<table cellpadding="0" cellspacing="0" border="0"><tr>';
-                    echo '<td>
-                            <form action="/catalog/moderation/accept'.$item['id'].'.html" method="POST">
-                                <input type="submit" name="accept" value="'.$_LANG['MODERATION_ACCEPT'].'"/>
-                            </form>
-                          </td>';
-                    echo '<td>
-                            <form action="/admin/index.php" target="_blank" method="GET">
-                                <input type="hidden" name="view" value="components" />
-                                <input type="hidden" name="do" value="config" />
-                                <input type="hidden" name="link" value="catalog" />
-                                <input type="hidden" name="opt" value="edit_item" />
-                                <input type="hidden" name="item_id" value="'.$item['id'].'" />
-                                <input type="submit" name="accept" value="'.$_LANG['EDIT'].'"/>
-                            </form>
-                          </td>';
-                    echo '<td>
-                            <form action="/catalog/moderation/reject'.$item['id'].'.html" method="POST">
-                                 <input type="submit" name="accept" value="'.$_LANG['MODERATION_REJECT'].'"/>
-                            </form>
-                          </td>';
-                    echo '</tr></table>';
-                    echo '<p>'.$_LANG['ADDED_BY'].': '.cmsUser::getProfileLink($user['login'], $user['nickname']).'</p>';
-                echo '</div>';
-            }
-            echo '</td>';
-            echo '</tr></table>';
+                $getProfileLink = cmsUser::getProfileLink($user['login'], $user['nickname']);
 
-            $tagline = tagLine($item['tags'], $cat['id']);
+            if ($cat['is_ratings']){
+				$ratingForm = ratingForm($ratingdata, $item['id']);	
 
-            if ($cat['showtags'] && $tagline){
-                echo '<div class="uc_detailtags"><strong>'.$_LANG['TAGS'].': </strong>'.$tagline.'</div>';
             }
-            if ($cat['is_ratings']){ echo ratingForm($ratingdata, $item['id']);	}
+
+			
+			$smarty = $inCore->initSmarty('components', 'com_catalog_item.tpl');
+			$smarty->assign('shopCartLink', $shopCartLink);
+			$smarty->assign('getProfileLink', $getProfileLink);
+			$smarty->assign('tagline', tagLine($item['tags'], $cat['id']));
+            $smarty->assign('item', $item);
+            $smarty->assign('cat', $cat);
+            $smarty->assign('fields', $fields);
+			$smarty->assign('ratingForm', $ratingForm);
+			$smarty->assign('show_comments', $show_comments);		
+			$smarty->display('com_catalog_item.tpl');
 
             //show user comments
             if($item['is_comments'] && $inCore->isComponentInstalled('comments')){
-                $inCore->includeFile('/components/comments/frontend.php');
+                $inCore->includeComments();
                 comments('catalog', $item['id']);
             }
 
-        } else { echo $_LANG['NOT_FOUUND_ARTICLE_TEXT']; }
+        } else { cmsCore::error404(); }
 
         return true;
     }
@@ -866,7 +838,7 @@ function catalog(){
         $cat_id     = $inCore->request('cat_id', 'int');
         $cat        = $inDB->get_fields('cms_uc_cats', 'id='.$cat_id, '*');
 
-        if (!$cat){ $inCore->halt(); }
+        if (!$cat){ cmsCore::error404(); }
 
         $is_can_add = $model->checkCategoryAccess($cat['id'], $cat['is_public'], $inUser->group_id) || $inUser->is_admin;
 
@@ -879,6 +851,8 @@ function catalog(){
             }
         }
 
+		$cats = $inCore->getListItems('cms_uc_cats', $cat_id, 'id', 'ASC', 'parent_id > 0 AND published = 1');
+
         if ($do == 'add_item'){
 
             $inPage->setTitle($_LANG['ADD_ITEM']);
@@ -888,6 +862,11 @@ function catalog(){
 
             $item = array();
             $fdata = array();
+
+            if ($cat['cost']=='') { $cat['cost'] = false; }
+            if (IS_BILLING){
+                cmsBilling::checkBalance('catalog', 'add_catalog_item', false, $cat['cost']);
+            }
 
         }
         
@@ -940,6 +919,7 @@ function catalog(){
             $smarty->assign('item', $item);
             $smarty->assign('fields', $fields);
             $smarty->assign('cat', $cat);
+			$smarty->assign('cats', $cats);
             $smarty->assign('cfg', $cfg);
             $smarty->assign('is_admin', $inUser->is_admin);
             $smarty->assign('cat_id', $cat_id);
@@ -996,8 +976,8 @@ function catalog(){
         $item['canmany']        = 1;
 
         //get fields data
-        $item['fields'] = serialize($item['fdata']);
-        $item['fields'] = $inDB->escape_string($item['fields']);
+        $item['fields']         = serialize($item['fdata']);
+        $item['fields']         = $inDB->escape_string($item['fields']);
 
         $item['price']          = 0;
         $item['canmany']        = 1;
@@ -1039,6 +1019,7 @@ function catalog(){
                         @unlink($_SERVER['DOCUMENT_ROOT']."/images/catalog/small/".$item['imageurl'].".jpg");
                         @unlink($_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/".$item['imageurl'].".jpg");
                     }
+					if ( $cfg['watermark'] ) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file"); }
                     @img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", $_SERVER['DOCUMENT_ROOT']."/images/catalog/small/$file.jpg", 100, 100);
                     @img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", $_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$file.jpg", 250, 250);
                     @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", 0744);
@@ -1049,13 +1030,34 @@ function catalog(){
 
         }
 
-        if ($opt=='add'){ $item_id = $model->addItem($item); }
+        if ($opt=='add'){ 
+		
+				$item_id = $model->addItem($item);
+
+                if (IS_BILLING){
+                    if ($cat['cost']=='') { $cat['cost'] = false; }
+                    cmsBilling::process('catalog', 'add_catalog_item', $cat['cost']);
+                }
+
+				if (!$cfg['premod'] || $inUser->is_admin) {
+					//регистрируем событие
+					cmsActions::log('add_catalog', array(
+						'object' => $item['title'],
+						'object_url' => '/catalog/item'.$item_id.'.html',
+						'object_id' => $item_id,
+						'target' => $cat['title'],
+						'target_url' => '/catalog/'.$cat['id'],
+						'target_id' => $cat['id'], 
+						'description' => ''
+					));
+				}
+		}
         if ($opt=='edit'){ $model->updateItem($item_id, $item); }
 
         if ($inUser->id != 1 && $cfg['premod'] && $cfg['premod_msg']){
 
-            $link = "[url=/catalog/item{$item_id}.html]{$item['title']}[/url]";
-            $user = "[url=".cmsUser::getProfileURL($inUser->login)."]{$inUser->nickname}[/url]";
+            $link = '<a href="/catalog/item'.$item_id.'.html">'.$item['title'].'</a>';
+            $user = '<a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a>';
 
             if ($opt=='add')  { $message = $_LANG['MSG_ITEM_SUBMIT']; }
             if ($opt=='edit') { $message = $_LANG['MSG_ITEM_EDITED']; }
@@ -1080,9 +1082,23 @@ function catalog(){
 
         $inDB->query("UPDATE cms_uc_items SET published=1, on_moderate=0 WHERE id={$item_id}");
 
-        $item = $inDB->get_fields('cms_uc_items', "id={$item_id}", 'title, user_id');
+        $item = $inDB->get_fields('cms_uc_items', "id={$item_id}", 'title, user_id, category_id');
+		
+		$cat  = $inDB->get_fields('cms_uc_cats', 'id='.$item['category_id'], 'id, title');
+		
+		//регистрируем событие
+		cmsActions::log('add_catalog', array(
+				'object' => $item['title'],
+				'user_id' => $item['user_id'],
+				'object_url' => '/catalog/item'.$item_id.'.html',
+				'object_id' => $item_id,
+				'target' => $cat['title'],
+				'target_url' => '/catalog/'.$cat['id'],
+				'target_id' => $cat['id'], 
+				'description' => ''
+		));
         
-        $item_link  = '[url=/catalog/item'.$item_id.'.html]'.$item['title'].'[/url]';
+        $item_link  = '<a href="/catalog/item'.$item_id.'.html">'.$item['title'].'</a>';
 
         $message = str_replace('%link%', $item_link, $_LANG['MSG_ITEM_ACCEPTED']);
 

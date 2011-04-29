@@ -1,14 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 function searchForm($query=''){
@@ -49,7 +50,7 @@ function pageBar($cat_id, $current, $perpage){
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {			
 					
-					$link = '/price/'.@$_REQUEST['id'].'-'.$p;
+					$link = '/price/'.(int)$_REQUEST['id'].'-'.$p;
 					
 					$html .= ' <a href="'.$link.'" class="pagebar_page">'.$p.'</a> ';		
 				} else {
@@ -69,9 +70,11 @@ function price(){
     $inDB   = cmsDatabase::getInstance();
     global $_LANG;
 	$cfg    = $inCore->loadComponentConfig('price');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 	
-	if (isset($_REQUEST['id'])){ if(is_numeric($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { die('HACKING ATTEMPT BLOCKED'); } } else { $id = 0; }
-	if (isset($_REQUEST['do'])){ $do = htmlentities($_REQUEST['do'], ENT_QUOTES); } else { $do = 'view'; 	}
+	$id     =   $inCore->request('id', 'int', 0);
+	$do     =   $inCore->request('do', 'str', 'view');
 	
 	if ($inCore->inRequest('query')){ 
 		//PREPARE QUERY
@@ -102,7 +105,7 @@ function price(){
 		$customer['company'] = $inCore->request('customer_company', 'str', '');
 		$customer['comment'] = $inCore->request('customer_comment', 'str', '');
 		
-		if(!$inCore->checkCaptchaCode($_REQUEST['code'])) { $error .= $_LANG['ERR_CAPTCHA'].'<br/>'; }
+		if(!$inCore->checkCaptchaCode($inCore->request('code', 'str'))) { $error .= $_LANG['ERR_CAPTCHA'].'<br/>'; }
 				
 		if($error==''){
 		
@@ -174,6 +177,7 @@ function price(){
 		$match = ""; $n=0;				
 		foreach($_REQUEST['kolvo'] as $key=>$val){ 
 			if ($val) { 
+				$key = (int)$key;
 				if($n==0) { $match .= "id = $key"; $n++; } 
 				else { $match .= " OR id = $key"; } 
 				$_SESSION['cart'][$key] = $val;

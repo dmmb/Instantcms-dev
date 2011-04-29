@@ -1,143 +1,141 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
     if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
     $inUser = cmsUser::getInstance();
+    $inCore = cmsCore::getInstance();
+
+    $mod_count['top']   = cmsCountModules('top');
+    $mod_count['sidebar']  = cmsCountModules('sidebar');
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<!-- HEAD !-->
-<?php cmsPrintHead(); ?>
-<link href="/templates/_default_/css/styles.css" rel="stylesheet" type="text/css" />
-<link type='text/css' href='/templates/_default_/basic/css/basic.css' rel='stylesheet' media='screen' />
-<!--[if lt IE 7]>
-<link type='text/css' href='/templates/modern/basic/css/basic_ie.css' rel='stylesheet' media='screen' />
-<![endif]-->
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1251"/>
-<script src='/templates/_default_/basic/js/jquery.simplemodal.js' type='text/javascript'></script>
-<script src='/templates/_default_/basic/js/basic.js' type='text/javascript'></script>
-<script type="text/javascript" src="/templates/_default_/jquery.iepnghack.1.6.js"></script>
-<script type="text/javascript">$(function(){ $("#logoimg").pngfix(); })</script>
+    <!-- HEAD !-->
+    <?php cmsPrintHead(); ?>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251"/>
+    <?php if($inUser->is_admin){ ?>
+        <script src="/admin/js/modconfig.js" type="text/javascript"></script>
+        <script src="/templates/_default_/js/nyromodal.js" type="text/javascript"></script>
+        <link href="/templates/_default_/css/modconfig.css" rel="stylesheet" type="text/css" />
+        <link href="/templates/_default_/css/nyromodal.css" rel="stylesheet" type="text/css" />
+    <?php } ?>
+    <link href="/templates/_default_/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/templates/_default_/css/text.css" rel="stylesheet" type="text/css" />
+    <link href="/templates/_default_/css/960.css" rel="stylesheet" type="text/css" />
+    <link href="/templates/_default_/css/styles.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-<div id="authModal" style='display:none'>
-<form id="authform" target="_self" style="margin: 0px;" name="authform" method="post" action="/login">
-    <div id="authtitle">Авторизация</div>
-	<table cellpadding="2" cellspacing="2" align="center" id="authtable">
-		<tr>
-			<td id="authtd">Логин:</td>
-			<td id=""><input name="login" type="text" id="authinput" /></td>
-		</tr>
-		<tr>
-			<td id="authtd">Пароль:</td>
-			<td id=""><input name="pass" type="password" id="authinput" /></td>			
-		</tr>
-    </table>
-    <div id="authoption"><input type="checkbox" value="1" name="remember"/>Запомнить меня | <a href="/passremind.html">Забыли пароль?</a></div>
-    <div id="authbutton"><input name="auth" type="submit" value="Войти" id="authbtn"/></div>
-</form>
-</div>
-<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" id="outertable">
-  <tr>
-    <td height="143" valign="top"><table width="100%" height="143" border="0" cellpadding="0" cellspacing="0">
-      <tr>
-        <td height="17" colspan="4">&nbsp;</td>
-        </tr>
-      <tr>
-        <td width="15" height="126" style="background:url(/templates/_default_/images/topbgl.jpg) repeat-y;">&nbsp;</td>
-        <!-- SITENAME --->
-		<td width="473" height="126" id="logotd" style="background:url(/templates/_default_/images/logobg.jpg) no-repeat;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td width="43" style="padding-left:15px"><a href="/"><img id="logoimg" src="/templates/_default_/images/logoicon.png" border="0"/></a></td>
-            <td><div id="sitename"><?php cmsPrintSitename(); ?></div></td>
-          </tr>
-        </table></td>
-		 <!-- HEADING TOOLS --->
-        <td valign="top" style="background:url(/templates/_default_/images/topbg.jpg) repeat-x;">
-		<table width="370" border="0" align="right" cellpadding="0" cellspacing="0" id="headtools">
-          <tr>
-            <td>
-			  <!-- Если юзер не авторизован, показываем ему ссылки с регистрацией и авторизацией -->
-  			  <?php if(!$inUser->id){ ?> 
-				<a href="/registration" id="ht_reg">Регистрация</a>
-				<a href="javascript:auth()" id="ht_auth">Авторизация</a>
-				<a href="javascript:window.external.AddFavorite('http://<?php echo $_SERVER['HTTP_HOST']?>/', '<?php cmsPrintSitename(); ?>')" id="ht_fav">В избранное</a>
-			  <?php } else { 
-							$uid    = $inUser->id;
-							$newmsg = usrNewMessages($inUser->id); 			  	
-			  ?>
-				<a href="/users/<?php echo $inUser->login; ?>" id="ht_profile">Мой профиль</a>
-				<?php if (!$newmsg) { ?>	
-					<a href="/users/<?php echo $uid?>/messages.html" id="ht_messages">Cообщения</a>
-				<?php } else { ?>
-					<a style="color:#F60;" href="/users/<?php echo $uid?>/messages.html" id="ht_messages">Cообщения <?php echo strip_tags($newmsg)?></a>
-				<?php } ?>
-				<a href="/logout" id="ht_logout">Выход</a>
-			  <?php } ?>			</td>
-          </tr>
-          <tr>
-            <td>
-                <div id="bar_search">
-                        <form name="searchform" action="/index.php" method="get">
-                            <input type="hidden" name="view" value="search" />
-                          <input name="query" type="text" id="searchinput" /><input name="gosearch" id="searchbtn" type="image" src="/templates/_default_/images/searchbtn.png" alt="Поиск" width="22" height="23"  onclick="document.searchform.submit()"/>
-                        </form>
+
+    <div id="wrapper">
+
+        <div id="header">
+            <div class="container_12">
+                <div class="grid_3">
+                    <div id="sitename"><a href="/"></a></div>
                 </div>
-            </td>
-          </tr>
-        </table></td>
-        <td width="15" height="126" style="background:url(/templates/_default_/images/topbgr.jpg) repeat-y;">&nbsp;</td>
-      </tr>
-    </table></td>
-  </tr>
-  <tr>
-    <td height="100%" valign="top"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
-      <tr>
-        <td width="15" height="126" style="background:url(/templates/_default_/images/midbgl.jpg) repeat-y;">&nbsp;</td>
-        <td valign="top" style="background:#FFF">
-		<div>
-		 <?php cmsPathway('&raquo;'); ?>
-		</div>
-		<table width="100%" border="0" cellpadding="0" cellspacing="0" id="bodytable">
-          <tr>
-            <?php if (cmsCountModules("left")) { ?>
-			<td width="235" valign="top" id="left"><?php cmsModule("left"); ?></td>
-			<?php } ?>
-            <td valign="top" id="center">
-				<div><?php cmsModule("top"); ?></div>
-				<div><?php cmsBody(); ?></div>
-				<div><?php cmsModule("bottom"); ?></div>	
-			</td>
-            <?php if (cmsCountModules("right")) { ?>			
-            <td width="235" valign="top" id="right"><?php cmsModule("right"); ?></td>
-			<?php } ?>
-          </tr>
-        </table></td>
-        <td width="15" height="126" style="background:url(/templates/_default_/images/midbgr.jpg) repeat-y;">&nbsp;</td>
-      </tr>
-    </table></td>
-  </tr>
-  <tr>
-    <td height="80" valign="top"><table width="100%" height="80" border="0" cellpadding="0" cellspacing="0">
-      <tr>
-        <td width="15">&nbsp;</td>
-		<!-- FOOTER ---> 
-        <td id="footertd" style="background:url(/templates/_default_/images/footerbg.jpg) repeat-x;"><table width="100%" height="80" border="0" cellpadding="15" cellspacing="0">
-          <tr>
-            <td>
-				<div id="footer">
-					<a href="/"><?php cmsPrintSitename(); ?></a> &copy; <?php echo date('Y')?>
-				</div>
-			</td>
-            <td width="250" align="right">
-				<a href="http://www.instantcms.ru/">InstantCMS</a>
-			</td>
-          </tr>
-        </table></td>
-        <td width="15">&nbsp;</td>
-      </tr>
-    </table></td>
-  </tr>
-</table>
+                <div class="grid_9">
+                    <?php if (!$inUser->id){ ?>
+                        <div class="mod_user_menu">
+                            <span class="register"><a href="/registration">Регистрация</a></span>
+                            <span class="login"><a href="/login">Вход</a></span>
+                        </div>
+                    <?php } else { ?>
+                        <?php cmsModule('header'); ?>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
+
+        <div id="page">
+
+            <div class="container_12" id="topmenu">
+                <div class="grid_12">
+                    <?php cmsModule('topmenu'); ?>
+                </div>
+            </div>
+
+            <?php if ($mod_count['top']){ ?>
+            <div class="clear"></div>
+
+            <div id="topwide" class="container_12">
+                <div class="grid_12" id="topmod"><?php cmsModule('top'); ?></div>
+            </div>
+            <?php } ?>
+
+                <div id="pathway" class="container_12">
+                    <div class="grid_12"><?php cmsPathway('&rarr;'); ?></div>
+                </div>
+
+            <div class="clear"></div>
+
+            <div id="mainbody" class="container_12">
+                <div id="main" class="<?php if ($mod_count['sidebar']) { ?>grid_8<?php } else { ?>grid_12<?php } ?>">
+                    <?php cmsModule('maintop'); ?>
+
+                    <?php $messages = cmsCore::getSessionMessages(); ?>
+                    <?php if ($messages) { ?>
+                    <div class="sess_messages">
+                        <?php foreach($messages as $message){ ?>
+                            <?php echo $message; ?>
+                        <?php } ?>
+                    </div>
+                    <?php } ?>
+
+                    <?php cmsBody(); ?>
+                    <?php cmsModule('mainbottom'); ?>
+                </div>
+                <?php if ($mod_count['sidebar']) { ?>
+                    <div class="grid_4" id="sidebar"><?php cmsModule('sidebar'); ?></div>
+                <?php } ?>
+            </div>
+
+        </div>
+
+        <div class="pad"></div>
+
+    </div>
+
+    <div id="footer">
+        <div class="container_12">
+            <div class="grid_8">
+                <div id="copyright"><?php cmsPrintSitename(); ?> &copy; <?php echo date('Y'); ?></div>
+            </div>
+            <div class="grid_4 foot_right">
+                <a href="http://www.instantcms.ru/" title="Работает на InstantCMS">
+                    <img src="/templates/_default_/images/b88x31.gif" border="0"/>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#topmenu .menu li').hover(
+                function() {
+                    $(this).find('ul:first').show();
+                    $(this).find('a:first').addClass("hover");
+                },
+                function() {
+                    $(this).find('ul:first').hide();
+                    $(this).find('a:first').removeClass("hover");
+                }
+            );
+        });
+    </script>
+
 </body>
+
 </html>

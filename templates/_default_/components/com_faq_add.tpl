@@ -10,9 +10,9 @@
 {if $error}<p style="color:red">{$error}</p>{/if}
 
 <form action="" method="POST" name="questform">
-	<table cellpadding="4" cellspacing="0">
+	<table cellpadding="0" cellspacing="0" class="faq_add_cat">
 		<tr>
-			<td>
+			<td width="150">
 				<strong>{$LANG.CAT_QUESTIONS}: </strong>
 			</td>
 			<td>
@@ -23,7 +23,7 @@
 		</tr>
 	</table>
 
-	<textarea name="message" id="message" style="border:solid 1px #666666;width:421px;height:200px">{$message}</textarea>
+	<textarea name="message" id="faq_message" style="">{$message}</textarea>
 
     {if !$user_id}
         <p style="margin-bottom:10px">

@@ -9,7 +9,9 @@
 			<td><h1 class="con_heading">{$blog.title}</h1></td>
 			<td valign="top" style="padding-left:6px">
 					<div class="con_rss_icon">
-						<a href="/rss/blogs/{$blog.id}/feed.rss" title="{$LANG.RSS}"><img src="/images/markers/rssfeed.png" border="0" alt="{$LANG.RSS}"/></a>
+						<a href="/rss/blogs/{$blog.id}/feed.rss" title="{$LANG.RSS}">
+                            <img src="/templates/_default_/images/icons/rss.png" border="0" alt="{$LANG.RSS}"/>
+                        </a>
 					</div>
 			</td>
 		</tr>
@@ -39,40 +41,44 @@
 {/if}
 
 {* ============================== Тулбар ==================================== *}
-{if $myblog || $is_author || $is_admin}		
+{if $myblog || $is_author || $is_admin}
+    <div class="blog_toolbar">
 	{if $myblog || $is_admin}
-		<table cellspacing="0" cellpadding="5" class="blog_toolbar">
+    
+		<table cellspacing="0" cellpadding="5">
 			<tr>
-				{if $on_moderate && $myblog}
+				{if $on_moderate && ($is_admin || $is_moder || $myblog)}
 					<td width="16"><img src="/components/blogs/images/moderate.gif" border="0"/></td>
 					<td width=""><a class="blog_moderate_link" href="/blogs/{$blog.id}/moderate.html">{$LANG.MODERATING}</a> ({$on_moderate})</td>
 				{/if}						
-				<td width="16"><img src="/components/blogs/images/record_add.gif" border="0"/></td>
+				<td width="16"><img src="/templates/_default_/images/icons/edit.png" border="0"/></td>
 				<td width=""><a href="/blogs/{$blog.id}/newpost.html">{$LANG.NEW_POST}</a></td>
                 {if $blog.owner=='user' || $is_moder || $is_admin}
-                    <td width="16"><img src="/components/blogs/images/cat_add.gif" border="0"/></td>
+                    <td width="16"><img src="/templates/_default_/images/icons/addcat.png" border="0"/></td>
                     <td width=""><a href="/blogs/{$blog.id}/newcat.html">{$LANG.NEW_CAT}</a></td>
                     {if $cat_id>0}
-                        <td width="16"><img src="/components/blogs/images/cat_edit.gif" border="0"/></td>
+                        <td width="16"><img src="/templates/_default_/images/icons/editcat.png" border="0"/></td>
                         <td width=""><a href="/blogs/{$blog.id}/editcat{$cat_id}.html">{$LANG.RENAME_CAT}</a></td>
-                        <td width="16"><img src="/components/blogs/images/cat_delete.gif" border="0"/></td>
+                        <td width="16"><img src="/templates/_default_/images/icons/deletecat.png" border="0"/></td>
                         <td width=""><a href="/blogs/{$blog.id}/delcat{$cat_id}.html">{$LANG.DEL_CAT}</a></td>
                     {/if}
                 {/if}
 				{if $is_config}
-					<td width="16"><img src="/components/blogs/images/blog_edit.gif" border="0"/></td>
+					<td width="16"><img src="/templates/_default_/images/icons/settings.png" border="0"/></td>
 					<td width=""><a href="/blogs/{$blog.id}/editblog.html">{$LANG.CONFIG}</a></td>
 				{/if}
 			</tr>
 		</table>
+    
 	{elseif $is_author}
-		<table cellspacing="0" cellpadding="5" class="blog_toolbar">
+		<table cellspacing="0" cellpadding="5">
 			<tr>
 				<td width="16"><img src="/components/blogs/images/record_add.gif" border="0"/></td>
 				<td width=""><a href="/blogs/{$blog.id}/newpost.html">{$LANG.NEW_POST}</a></td>
 			</tr>
 		</table>
 	{/if}
+    </div>
 {/if}
 
 {* ============================== Список рубрик блога ==================================== *}
@@ -85,11 +91,11 @@
 	<div class="blog_entries">
 		{foreach key=tid item=post from=$posts}
 			<div class="blog_entry">
-				<table width="100%" cellspacing="0" cellpadding="5" class="blog_records">
+				<table width="100%" cellspacing="0" cellpadding="0" class="blog_records">
 					<tr>
 						<td width="" class="blog_entry_title_td">
 							<div class="blog_entry_title"><a href="{$post.url}">{$post.title}</a></div>
-							<div class="blog_entry_karma">&uarr; {$post.karma} &darr;</div>
+							<div class="blog_entry_karma">{$post.karma}</div>
 							<div class="blog_entry_info">{$post.author} &rarr; <span class="blog_entry_date">{$post.fpubdate}</span></div>
 						</td>
 					</tr>
@@ -105,7 +111,7 @@
 							{if $post.tagline != false}
 								 <span class="tagline">{$post.tagline}</span>
 							{/if}
-							{if $myblog || $post.user_id == $uid || $is_admin}
+							{if $post.user_id == $uid || $is_admin || $is_moder || $myblog}
 								<span class="editlinks">
 									| <a href="/blogs/{$blog.id}/editpost{$post.id}.html" class="blog_entry_edit">{$LANG.EDIT}</a>
 									| <a href="/blogs/{$blog.id}/delpost{$post.id}.html" class="blog_entry_delete">{$LANG.DELETE}</a>
@@ -118,7 +124,6 @@
 			</div>
 		{/foreach}		
 	</div>	
-	<script type="text/javascript">{$round_corners_js}</script>
 	
 	{$pagination}
 {else}

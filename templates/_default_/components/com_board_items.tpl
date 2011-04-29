@@ -9,7 +9,8 @@
 			{foreach key=tid item=con from=$items}									
 				{if $col==1} <tr> {/if} 				
 				<td valign="top" width="{$colwidth}%">
-					<table width="100%" height="" cellspacing="" cellpadding="0" class="bd_item">
+                    <div class="bd_item{if $con.is_vip}_vip{/if}">
+					<table width="100%" height="" cellspacing="" cellpadding="0">
 						<tr>
 							{if $cfg.photos}
 								<td width="30" valign="top">
@@ -39,6 +40,7 @@
 							</td>
 						</tr>
 					</table>
+                    </div>
 				</td> 
 				{if $col==$maxcols} </tr> {assign var="col" value="1"} {else} {math equation="x + 1" x=$col assign="col"} {/if}
 			{/foreach}

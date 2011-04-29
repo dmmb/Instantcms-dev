@@ -1,14 +1,15 @@
 <?php
-/*********************************************************************************************/
-//                                                                                           //											 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 		  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 			    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 /* 
@@ -18,6 +19,7 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  */
 $_LANG['FAQ']                   ='Вопросы и ответы';
 $_LANG['ASK_QUES']              ='Задать вопрос';
+$_LANG['DEL_QUES']              ='Удалить вопрос?';
 $_LANG['QUESTION_SEND']         ='Вопрос отправлен';
 $_LANG['QUESTION_PREMODER']     ='Вопрос и ответ на него будет опубликован после проверки администратором.';
 $_LANG['ERR_CAPTCHA']             ='Неправильно указан код с картинки!';
@@ -28,4 +30,13 @@ $_LANG['CONTACTS_TEXT']         ='Укажите свое имя и контакты, если хотите чтобы
 $_LANG['CAT_QUESTIONS']         ='Категория вопроса';
 $_LANG['QUESTION_VIEW']         ='Просмотр вопроса';
 $_LANG['LAST_QUESTIONS']        ='Последние вопросы';
+$_LANG['QUESTION_GUEST']        ='Гость';
+$_LANG['DELETE_QUES']            ='Удаление вопроса';
+$_LANG['YOU_REALY_DELETE_QUES']  ='Вы действительно хотите удалить вопрос';
+
+$_LANG['ANSWERS']               ='Ответы';
+$_LANG['REPLY']                 ='Ответить';
+$_LANG['RSS_FEED']              ='RSS лента ответов';
+$_LANG['NOT_ANSWERS']           ='Нет ответов, Ваш ответ будет первым';
+
 ?>

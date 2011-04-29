@@ -1,12 +1,15 @@
 <?php 
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 	define('VALID_CMS', 1);
 
@@ -24,7 +27,7 @@
     //Минимальная версия PHP
     $php_req = array();
     $php_req['major']       = '5';
-    $php_req['minor']       = '1';
+    $php_req['minor']       = '2';
     $php_req['release']     = '0';
 
     $php_req_ver = $php_req['major'] * 10000 + $php_req['minor'] * 100 + $php_req['release'];
@@ -34,6 +37,7 @@
     $ext_req['mbstring']    = 'mbstring';
     $ext_req['iconv']       = 'iconv';
     $ext_req['GD']          = 'gd';
+    $ext_req['SimpleXML']   = 'simplexml';
 
 	if (isset($_POST['install'])){
 	
@@ -62,9 +66,10 @@
 			$_CFG['tooltips']   = '1';
 			$_CFG['index_pw']   = '0';
 			$_CFG['show_pw']    = '1';
+			$_CFG['short_pw']   = '1';
 			$_CFG['splash']     = '0';
 			$_CFG['stats']      = '0';
-			$_CFG['slight']     = '1';
+			$_CFG['slight']     = '0';
 			$_CFG['siteoff']    = '0';
 			$_CFG['offtext']    = 'Производится обновление сайта';
 			$_CFG['keywords']   = 'InstantCMS, система управления сайтом, бесплатная CMS, движок сайта, CMS, движок социальной сети';
@@ -73,7 +78,9 @@
             $_CFG['debug']      = '0';
             $_CFG['lang']       = 'ru';
             $_CFG['wmark']      = 'watermark.png';
-            $_CFG['back_btn']   = 1;
+            $_CFG['back_btn']   = '0';
+            $_CFG['timezone']   = 'Europe/Moscow';
+            $_CFG['timediff']   = '0';
 
             $inConf->saveToFile($_CFG);
 			
@@ -123,7 +130,7 @@
 		}
 	
 	}
-	
+
 // =================================================================================================== //
 
 function getPHPVersion(){
@@ -142,8 +149,8 @@ function installCheckFolders(){
 	
 	echo '<table align="center">';
 		echo '<tr>';
-			echo '<th width="360">Папка</th>';
-			echo '<th style="text-align:center" width="70">Права</th>';
+			echo '<th width="260">Папка</th>';
+			echo '<th style="text-align:center" width="170">Доступна для записи</th>';
 		echo '</tr>';
 
 	foreach($folders as $key=>$folder){	
@@ -203,25 +210,11 @@ function installCheckExtensions(){
     $php53 = false;
     
     if ($php_ver['int'] < $php_req_ver) { $right=false; }
-    if ($php_ver['int']>=50300) { $right=false; $php53=true; }
 
-    echo '<p><strong>Версия PHP:</strong> '.$php_ver['text'].' &mdash '.($right ? '<span style="color:green">Оk</span>' : (!$php53 ? '<span style="color:red">требуется '.$php_req['major'].'.'.$php_req['minor'].'.'.$php_req['release'].' или выше</span>' : '<span style="color:red">PHP версии 5.3 частично не поддерживается</span>')).'</p>';
+    echo '<p><strong>Версия PHP:</strong> '.$php_ver['text'].' &mdash '.($right ? '<span style="color:green">Оk</span>' : '<span style="color:red">требуется '.$php_req['major'].'.'.$php_req['minor'].'.'.$php_req['release'].' или выше</span>').'</p>';
 
     if (!$right){
-        if (!$php53){
-            echo '<p>Для обновления PHP обратитесь к своему хостеру.</p>';
-        } else {
-            echo '<p>
-                    Впрочем, вы можете использовать PHP 5.3, но с выключенным выводом предупреждений (warning) в php.ini.
-                    В противном случае посетители сайта будут видеть множество предупреждений о устаревших функциях языка (E_DEPRECATED).
-                  </p>
-                  <p>
-                    В одном из ближайших релизов поддержка PHP 5.3 будет обеспечена, а пока мы рекомендуем использовать PHP 5.2.
-                  </p>
-                  <p>Для изменения версии PHP или отключения вывода предупреждений обратитесь к своему хостеру.</p>
-                  <p>Для локальной установки используйте <a href="http://www.denwer.ru/packages/base_php52.html">Денвер с PHP 5.2</a>.</p>';
-
-        }
+        echo '<p>Для обновления PHP обратитесь к своему хостеру.</p>';
     }
     
 }
@@ -276,7 +269,7 @@ function installCheckExtensions(){
 
                 <table cellpadding="0" cellspacing="0" border="0">
                     <tr>
-                        <td width="20"><input type="checkbox" id="license_agree" onclick="checkAgree()"/></td>
+                        <td width="20"><input type="checkbox" id="license_agree" onClick="checkAgree()"/></td>
                         <td>
                             <label for="license_agree">Я согласен с условиями</label>
                             <a target="_blank" href="/license.rus.win.txt">лицензии GNU/GPL</a>
@@ -308,11 +301,16 @@ function installCheckExtensions(){
 				<img src="/install/images/folders.gif" border="0" />
 
                 <p>
-					Для корректной работы InstantCMS необходимо выставить права (chmod) 777 на указанные ниже папки. 
-					Это можно сделать с помощью FTP-клиента, например Total Commander или FAR.
+					Для корректной работы InstantCMS указанные ниже папки должны быть доступны для записи.
+					Сменить права на папки можно с помощью FTP-клиента, например Total Commander или FAR.
 				</p>
 
 				<?php installCheckFolders(); ?>
+
+				<p>
+					Если вы не знаете или сомневаетесь какие права нужно установить, чтобы сделать папку доступной для записи, обратитесь
+                    в техническую поддержку вашего хостинга.
+				</p>
 
 				<p>
 					Установку можно произвести и не выставляя права, но полноценное функционирование системы при этом не гарантируется.
@@ -323,52 +321,63 @@ function installCheckExtensions(){
 			<!-- ================================================================ -->
 			
 		  <div id="install" class="wizardpage">
-				<h2>Установка</h2>
-				<img src="/install/images/install.gif" border="0" />
-			  <p>Заполните форму и нажмите "Установить" для завершения процесса.</p>
-				<table width="" border="0" cellpadding="4" cellspacing="0" style="margin-left:10px;margin-bottom:0px">
-                  <tr>
-                    <td width="220">Название сайта:</td>
-                    <td width="" align="center"><input name="sitename" type="text" id="txt" value="Мой сайт"></td>
-                  </tr>
-                  <tr>
-                    <td>Сервер MySQL: </td>
-                    <td align="center"><input name="db_server" type="text" id="txt" value="localhost"></td>
-                  </tr>
-                  <tr>
-                    <td>База данных: </td>
-                    <td align="center"><input name="db_base" type="text" id="txt"></td>
-                  </tr>
-                  <tr>
-                    <td>Пользователь БД: </td>
-                    <td align="center"><input name="db_user" type="text" id="txt" value="root"></td>
-                  </tr>
-                  <tr>
-                    <td>Пароль пользователя БД: </td>
-                    <td align="center"><input name="db_password" type="password" id="txt"></td>
-                  </tr>
-                  <tr>
-                    <td>Префикс базы данных: </td>
-                    <td align="center"><input name="db_prefix" type="text" id="txt" value="cms"></td>
-                  </tr>
-    		      <tr>
-                    <td>Логин администратора сайта:</td>
-                    <td align="center"><input name="admin_login" type="text" id="txt" value="admin"></td>
-                  </tr>
-                  <tr>
-                    <td>Пароль администратора сайта:</td>
-                    <td align="center"><input name="admin_password" type="password" id="txt"></td>
-                  </tr>
-                  <tr>
-                    <td>Демо-данные:<br>                      <br>                    </td>
-                    <td align="center" valign="top">
-                        <label><input name="demodata" type="radio" value="1" checked /> Да</label>
-                        <label><input name="demodata" type="radio" value="0" /> Нет</label>
-                    </td>
-                  </tr>
+                <h2>Установка</h2>
+                <p>Заполните форму и нажмите "Установить" для завершения процесса.</p>
+
+                <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                    <tr>
+                        <td width="140" valign="top">
+                            <img src="/install/images/install.gif" border="0" />
+                        </td>
+                        <td valign="top">
+                            <table width="" border="0" cellpadding="4" cellspacing="0" style="margin-bottom:10px">
+                              <tr>
+                                <td width="220">Название сайта:</td>
+                                <td width="" align="center"><input name="sitename" type="text" class="txt" value="Моя социальная сеть"></td>
+                              </tr>
+                              <tr>
+                                <td>Логин администратора сайта:</td>
+                                <td align="center"><input name="admin_login" type="text" class="txt" value="admin"></td>
+                              </tr>
+                              <tr>
+                                <td>Пароль администратора сайта:</td>
+                                <td align="center"><input name="admin_password" type="password" class="txt"></td>
+                              </tr>
+                            </table>
+                            <table width="" border="0" cellpadding="4" cellspacing="0" style="margin-bottom:0px">
+                              <tr>
+                                <td width="220">Сервер MySQL: </td>
+                                <td align="center"><input name="db_server" type="text" class="txt" value="localhost"></td>
+                              </tr>
+                              <tr>
+                                <td>База данных: </td>
+                                <td align="center"><input name="db_base" type="text" class="txt"></td>
+                              </tr>
+                              <tr>
+                                <td>Пользователь БД: </td>
+                                <td align="center"><input name="db_user" type="text" class="txt" value="root"></td>
+                              </tr>
+                              <tr>
+                                <td>Пароль пользователя БД: </td>
+                                <td align="center"><input name="db_password" type="password" class="txt"></td>
+                              </tr>
+                              <tr>
+                                <td>Префикс таблиц в базе данных: </td>
+                                <td align="center"><input name="db_prefix" type="text" class="txt" value="cms"></td>
+                              </tr>
+                              <tr>
+                                <td>Демо-данные:</td>
+                                <td align="center" valign="top">
+                                    <label><input name="demodata" type="radio" value="1" checked /> Да</label>
+                                    <label><input name="demodata" type="radio" value="0" /> Нет</label>
+                                </td>
+                              </tr>
+                            </table>
+                        </td>
+                    </tr>
                 </table>
 
-                <p style="color:gray">
+				<p style="color:gray">
                     При установке с демо-данными всем пользователям будет установлен одинаковый пароль, совпадающий с паролем администратора.
                     Логин каждого пользователя можно узнать из адреса его профиля или из панели управления.
                 </p>
@@ -394,13 +403,28 @@ function installCheckExtensions(){
 					echo '<h2>Установка завершена!</h2>';
 					echo '<div>';
 					echo '<p>Система установлена и готова к работе.</p>';
-					echo '<p style="background:url(/install/images/warning.png) no-repeat;padding-left:32px;margin-top:30px;margin-bottom:30px;">
-                            <strong>ВНИМАНИЕ:</strong><br/>
+					echo '<div style="background:url(/install/images/cron.png) no-repeat;padding-left:24px;margin-top:30px;margin-bottom:30px;">
+                            <div style="margin-bottom:6px;"><strong>Создайте задание для CRON</strong></div>
+                            <div>
+                                Добавьте файл <strong>/cron.php</strong> в расписание заданий CRON в панели вашего хостинга.<br/>
+                                Интервал выполнения &mdash; 24 часа. Это позволит системе выполнять периодические сервисные задачи. 
+                                Обычно команда, которую нужно добавить в CRON, выглядит так:
+                                <pre class="cron">  php -f /полный/путь/до/сайта/cron.php > /dev/null</pre>
+                            </div>
+                            <div>
+                                В случае затруднений обратитесь в техническую поддержку хостинга.
+                            </div>
+                          </div>';
+					echo '<div style="background:url(/install/images/warning.png) no-repeat;padding-left:24px;margin-top:30px;margin-bottom:30px;">
+                            <div style="margin-bottom:6px;"><strong>Внимание!</strong></div>
                             До перехода на сайт необходимо удалить каталоги "install" и "migrate"<br/>
                             на сервере вместе со всеми находящимися в них файлами!
-                          </p>';
+                          </div>';
 					echo '<p style="font-size:18px"><a href="/">Перейти на сайт</a> | <a href="/admin">Перейти в панель управления</a></p>';
-					echo '<p><a id="tutorial" href="http://www.instantcms.ru/articles/quickstart.html">Учебник для начинающих</a></p>';
+					echo '<p>
+                            <a id="tutorial" href="http://www.instantcms.ru/articles/quickstart.html">Учебник для начинающих</a>
+                            <a id="video" href="http://www.instantcms.ru/video-lessons.html">Видео-уроки</a>
+                          </p>';
 					echo '</div>';
 					echo '</div>';
 				}
@@ -408,7 +432,7 @@ function installCheckExtensions(){
 		?>
 	
 		<div id="footer">
-			<a href="http://www.instantcms.ru/" target="_blank"><strong>InstantCMS</strong></a> &copy; 2007-2010			
+			<a href="http://www.instantcms.ru/" target="_blank"><strong>InstantCMS</strong></a> &copy; 2007-2011
 		</div>
 		
 	</div>

@@ -4,19 +4,23 @@
 
 {if $comments_count}
 	{foreach key=cid item=comment from=$comments}
-        {math equation="x+1" x=$cid assign="next"}
-		<a name="c{$comment.id}"/>
-        <div style="margin-left:{math equation="x*35" x=$comment.level}px;">
+        {math equation="x+1" x=$cid assign="next"}        
+		<a name="c{$comment.id}"></a>
+        {if $comment.level < $cfg.max_level-1}
+            <div style="margin-left:{math equation="x*35" x=$comment.level}px;">
+        {else}
+            <div style="margin-left:{math equation="(x-1)*35" x=$cfg.max_level}px;">
+        {/if}
         <table class="cmm_entry">
 			<tr>
 				<td class="cmm_title" valign="middle">
 					{if !$comment.is_profile}
-						<span class="cmm_author">{$comment.author}</span>
+						<span class="cmm_author">{$comment.author} {if $is_admin}{$comment.ip}{/if}</span>
 					{else}
-						<span class="cmm_author"><a href="{profile_url login=$comment.author.login}">{$comment.author.nickname}</a></span>
+						<span class="cmm_author"><a href="{profile_url login=$comment.author.login}">{$comment.author.nickname}</a> {if $is_admin}{$comment.ip}{/if}</span>
 					{/if}
+
                         <a class="cmm_anchor" href="#c{$comment.id}" title="{$LANG.LINK_TO_COMMENT}">#</a>
-                        <span class="cmm_time">{$comment.fpubtime}</span>
 						<span class="cmm_date">{$comment.fpubdate}</span>
                         {if !$is_user || $comment.is_voted}
                             <span class="cmm_votes">{$comment.votes}</span>
@@ -51,12 +55,16 @@
 					{/if}
                             {if $is_user}
                                 <div style="display:block; margin-top:20px;">
-                                    [<a href="javascript:void(0)" onclick="addComment('{php}echo md5(session_id());{/php}', '{$target}', '{$target_id}', {$comment.id})">{$LANG.REPLY}</a>]
-                                    {if $is_admin}
-                                        [<a href="/admin/index.php?view=components&do=config&id=7&opt=edit&item_id={$comment.id}">{$LANG.EDIT}</a>]
+                                    <a href="javascript:void(0)" onclick="addComment('{php}echo md5(session_id());{/php}', '{$target}', '{$target_id}', {$comment.id})">{$LANG.REPLY}</a>
+                                    {if $is_admin || ($comment.is_my && $comment.is_editable && $comment.content_bbcode)}
+                                        {if !$comment.content_bbcode}
+                                            | <a href="/admin/index.php?view=components&do=config&id=7&opt=edit&item_id={$comment.id}">{$LANG.EDIT}</a>
+                                        {else}
+                                            | <a href="javascript:" onclick="editComment('{php}echo md5(session_id());{/php}', '{$comment.id}')">{$LANG.EDIT}</a>
+                                        {/if}
                                     {/if}
                                     {if $is_admin || ($comment.is_my && $user_can_delete) || $user_can_moderate}
-                                        [<a href="/comments/delete/{$comment.id}">{if $comments[$next].level > $comment.level}{$LANG.DELETE_BRANCH}{else}{$LANG.DELETE}{/if}</a>]
+                                        | <a href="/comments/delete/{$comment.id}">{if $comments[$next].level > $comment.level}{$LANG.DELETE_BRANCH}{else}{$LANG.DELETE}{/if}</a>
                                     {/if}
                                 </div>
                             {/if}
@@ -73,5 +81,5 @@
 
 {else}
     {* ================================= Нет комментариев =============================== *}
-	<p>{$LANG.NOT_COMMENT_TEXT}</p>
+	<p>{$labels.not_comments}</p>
 {/if}

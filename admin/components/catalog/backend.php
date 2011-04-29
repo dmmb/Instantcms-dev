@@ -1,13 +1,16 @@
 <?php
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 function cpPriceInput($id){
 	$sql = "SELECT c.view_type as view_type
@@ -36,6 +39,9 @@ function cpPriceInput($id){
 
     $cfg = $inCore->loadComponentConfig('catalog');
     $opt = $inCore->request('opt', 'str', 'list_cats');
+
+    define('IS_BILLING', $inCore->isComponentInstalled('billing'));
+    if (IS_BILLING) { $inCore->loadClass('billing'); }
 
 	cpAddPathway('Универсальный каталог', '?view=components&do=config&id='.$_REQUEST['id']);
     echo '<h3>Универсальный каталог</h3>';
@@ -242,13 +248,14 @@ function cpPriceInput($id){
                 dbShow('cms_uc_items', $_REQUEST['item_id']);
                 dbQuery('UPDATE cms_uc_items SET on_moderate = 0 WHERE id='.$_REQUEST['item_id']);
             }
+			echo '1'; exit;
 		} else {
 			dbShowList('cms_uc_items', $_REQUEST['item']);
             foreach($_REQUEST['item'] as $k=>$id){
                 dbQuery('UPDATE cms_uc_items SET on_moderate = 0 WHERE id='.$id);
             }
+			header('location:'.$_SERVER['HTTP_REFERER']);
 		}			
-		echo '1'; exit;
 	}
 
 //=================================================================================================//
@@ -257,10 +264,11 @@ function cpPriceInput($id){
 	if ($opt == 'hide_item'){
 		if (!isset($_REQUEST['item'])){
 			if (isset($_REQUEST['item_id'])){ dbHide('cms_uc_items', $_REQUEST['item_id']);  }
+			echo '1'; exit;
 		} else {
 			dbHideList('cms_uc_items', $_REQUEST['item']);				
+			header('location:'.$_SERVER['HTTP_REFERER']);			
 		}			
-		echo '1'; exit;
 	}
 
 //=================================================================================================//
@@ -405,6 +413,7 @@ function cpPriceInput($id){
 
 				if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/catalog/$file")){
                     //create image thumbnails
+					if ( $cfg['watermark'] ) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file"); }
                     @img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", $_SERVER['DOCUMENT_ROOT']."/images/catalog/small/$file.jpg", 100, 100);
                     @img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", $_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$file.jpg", 250, 250);
                     @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", 0644);
@@ -510,6 +519,7 @@ function cpPriceInput($id){
 		$cat['parent_id']      = $inCore->request('parent_id', 'int');
 		$cat['title']          = $inCore->request('title', 'str');
 		$cat['description']    = $inCore->request('description', 'html');
+        $cat['description']    = $inDB->escape_string($cat['description']);
 		$cat['published']      = $inCore->request('published', 'int');
 		$cat['view_type']      = $inCore->request('view_type', 'str');
 		$cat['fields_show']    = $inCore->request('fieldsshow', 'int');
@@ -541,8 +551,11 @@ function cpPriceInput($id){
             $cat['fields'] = serialize($fstruct);
         }
 
-        $cat['is_public'] = $inCore->request('is_public', 'int', 0);
-        $cat['can_edit']  = $inCore->request('can_edit', 'int', 0);
+        $cat['is_public']   = $inCore->request('is_public', 'int', 0);
+        $cat['can_edit']    = $inCore->request('can_edit', 'int', 0);
+
+        $cat['cost']        = $inCore->request('cost', 'str', '');
+        if (!is_numeric($cat['cost'])) { $cat['cost'] = ''; }
 
         $cat['id'] = $model->addCategory($cat);
 
@@ -577,6 +590,7 @@ function cpPriceInput($id){
 			$cat['parent_id']      = $inCore->request('parent_id', 'int');
             $cat['title']          = $inCore->request('title', 'str');
             $cat['description']    = $inCore->request('description', 'html');
+            $cat['description']    = $inDB->escape_string($cat['description']);
             $cat['published']      = $inCore->request('published', 'int');
             $cat['view_type']      = $inCore->request('view_type', 'str');
             $cat['fields_show']    = $inCore->request('fieldsshow', 'int');
@@ -610,6 +624,9 @@ function cpPriceInput($id){
 
             $cat['is_public'] = $inCore->request('is_public', 'int', 0);
             $cat['can_edit']  = $inCore->request('can_edit', 'int', 0);
+
+            $cat['cost']      = $inCore->request('cost', 'str', '');
+            if (!is_numeric($cat['cost'])) { $cat['cost'] = ''; }
 
             if ($cat['is_public']){
                 $showfor = $_REQUEST['showfor'];
@@ -1396,6 +1413,14 @@ function cpPriceInput($id){
                                 </div>
                             </div>
 
+                            <?php if (IS_BILLING){ ?>
+                                <div style="margin:5px">
+                                    <strong>Стоимость добавления записи</strong><br/>
+                                    <div style="color:gray">Если не указана здесь, то используется цена по-умолчанию, из настроек биллинга</div>
+                                    <input type="text" name="cost" value="<?php echo $mod['cost']; ?>" style="width:50px"/> баллов
+                                </div>
+                            <?php } ?>
+
                             <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist" style="margin-top:5px">
                                 <tr>
                                     <td width="20">
@@ -1540,6 +1565,7 @@ function cpPriceInput($id){
         $cfg['premod_msg']  = $inCore->request('premod_msg', 'int', 1);
         $cfg['is_comments'] = $inCore->request('is_comments', 'int', 0);
         $cfg['is_rss']      = $inCore->request('is_rss', 'int', 1);
+		$cfg['watermark']   = $inCore->request('watermark', 'int', 1);
 		$cfg['delivery']    = str_replace('\"', '&quot;', $cfg['delivery']);
 		$cfg['delivery']    = str_replace('"', '&quot;', $cfg['delivery']);
 		
@@ -1600,6 +1626,15 @@ function cpPriceInput($id){
                      <td width="260">
                          <input name="is_comments" type="radio" value="1" <?php if (@$cfg['is_comments']) { echo 'checked="checked"'; } ?> /> Да
                          <input name="is_comments" type="radio" value="0"  <?php if (@!$cfg['is_comments']) { echo 'checked="checked"'; } ?> /> Нет
+                     </td>
+                 </tr>
+                 <tr>
+                     <td><strong>Наносить водяной знак:</strong>  <br />Если включено, то на все загружаемые
+			      фотографии к записям каталога будет наносится изображение 
+			      из файла "<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>"</td>
+                     <td width="260">
+                         <input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?> /> Да
+                         <input name="watermark" type="radio" value="0"  <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?> /> Нет
                      </td>
                  </tr>
              </table>

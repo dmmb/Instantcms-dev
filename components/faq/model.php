@@ -1,4 +1,15 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 class cms_model_faq{
@@ -36,7 +47,33 @@ class cms_model_faq{
         return ($result ? $result : false);
 
     }
+	
+/* ==================================================================================================== */
+/* ==================================================================================================== */
 
+	public function deleteQuest($id){
+		
+		$inCore = cmsCore::getInstance();
+
+        $this->inDB->query("DELETE FROM cms_faq_quests WHERE id={$id}");
+
+		$inCore->deleteComments('faq', $id);
+
+        cmsActions::removeObjectLog('add_quest', $id);
+
+        return true;
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function deleteQuests($id_list){
+        foreach($id_list as $key=>$id){
+            $this->deleteQuest($id);
+        }
+        return true;
+    }
+	
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 

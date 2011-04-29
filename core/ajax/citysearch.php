@@ -1,14 +1,27 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 
     if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
 
 	define("VALID_CMS", 1);
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
-    define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
 
 	include(PATH.'/core/cms.php');
 
     $inCore = cmsCore::getInstance();
+
+    define('HOST', 'http://' . $inCore->getHost());
 
     $q = $inCore->request('q', 'str', '');
 
@@ -25,7 +38,7 @@
 	$sql 	= "SELECT city FROM cms_user_profiles WHERE LOWER(city) LIKE '{$q}%' GROUP BY city LIMIT 10";
 	$rs 	= $inDB->query($sql);
 
-	while ($item = mysql_fetch_assoc($rs)){
+	while ($item = $inDB->fetch_assoc($rs)){
         echo $item['city']."\n";
 	}
 

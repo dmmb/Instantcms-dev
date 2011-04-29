@@ -1,82 +1,61 @@
-<div style="text-align:center;margin-bottom:5px;">
-    <strong>{$nickname}</strong>
+<div class="mod_user_menu">
+
+    <span class="my_profile">
+        <a href="{profile_url login=$login}">{$nickname}</a>
+    </span>
+
+    {if $is_billing}
+        <span class="my_balance">
+            <a href="{profile_url login=$login}#upr_p_balance" title="Баланс">{if $balance}{$balance}{else}0{/if}</a>
+        </span>
+    {/if}
+
+    {if $users_cfg.sw_msg}
+    <span class="my_messages">
+        {if $newmsg}
+            <a class="has_new" href="/users/{$id}/messages.html">{$LANG.USERMENU_MESS} ({$newmsg})</a>
+        {else}
+            <a href="/users/{$id}/messages.html">{$LANG.USERMENU_MESS}</a>
+        {/if}
+    </span>
+    {/if}
+
+    {if $users_cfg.sw_blogs}
+    <span class="my_blog">
+        <a href="{$blog_href}">{$LANG.USERMENU_MY_BLOG}</a>
+    </span>
+    {/if}
+
+    {if $users_cfg.sw_photo}
+    <span class="my_photos">
+        <a href="/users/{$id}/photoalbum.html">{$LANG.USERMENU_PHOTOS}</a>
+    </span>
+    {/if}
+
+    {if $is_can_add && !$is_admin && !$is_editor}
+    <span class="my_content">
+        <a href="/content/my.html">{$LANG.USERMENU_ARTICLES}</a>
+    </span>
+
+    <span class="add_content">
+        <a href="/content/add.html">{$LANG.USERMENU_ADD_ARTICLE}</a>
+    </span>
+    {/if}
+
+    {if $is_admin || $is_editor}
+    <span class="admin">
+        <a href="/admin" target="_blank">{$LANG.USERMENU_ADMININTER}</a>
+    </span>
+    {/if}
+
+    <span class="logout">
+        <a href="/logout">{$LANG.USERMENU_EXIT}</a>
+    </span>
+
 </div>
 
+{*
 {if $cfg.avatar}
-    <table width="100%" border="0">
-        <tr>
-            <td valign="top" class="pmenu_avatar"><a href="/users/{$id}/avatar.html">{$avatar}</a></td>
-            <td>
+    <a href="/users/{$id}/avatar.html">{$avatar}</a>
 {/if}
-
-    <table width="" border="0" cellspacing="0" cellpadding="2" class="pmenu" align="center">
-        <tr>
-            <td width="27"><img src="/components/users/images/menu/profile.gif" border="0"/></td>
-            <td><a href="{profile_url login=$login}">Мой профиль</a></td>
-        </tr>
-        {if $users_cfg.sw_msg}
-            <tr>
-                {if $newmsg}
-                    <td width="27"><img src="/components/users/images/menu/messages_new.gif" border="0"/></td>
-                    <td><a href="/users/{$id}/messages.html" class="new_messages_link">Сообщения</a>{$newmsg}</td>
-                {else}
-                    <td width="27"><img src="/components/users/images/menu/messages.gif" border="0"/></td>
-                    <td><a href="/users/{$id}/messages.html">Сообщения</a></td>
-                {/if}
-            </tr>
-        {/if}
-        {if $users_cfg.sw_blogs}
-        <tr>
-            <td width="27"><img src="/components/users/images/menu/blog.gif" border="0"/></td>
-            <td><a href="{$blog_href}">Мой блог</a></td>
-        </tr>
-        {/if}
-        <tr>
-            <td width="27"><img src="/components/users/images/menu/my.gif" border="0"/></td>
-            <td><a href="javascript:" onclick="$('div#mycontent').slideToggle('slow');">Мой контент</a></td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <div id="mycontent" style="display:none">
-                    <table width="" border="0" cellspacing="0" cellpadding="2" align="center">
-                        {if $users_cfg.sw_photo}
-                        <tr>
-                            <td width="27"><img src="/components/users/images/menu/my-photos.gif" border="0"/></td>
-                            <td><a href="/users/{$id}/photoalbum.html">Фотоальбом</a></td>
-                        </tr>
-                        {/if}
-                        {if $users_cfg.sw_board}
-                        <tr>
-                            <td width="27"><img src="/components/users/images/menu/my-board.gif" border="0"/></td>
-                            <td><a href="/users/{$id}/board.html">Объявления</a></td>
-                        </tr>
-                        {/if}
-                        {if $is_can_add}
-                        <tr>
-                            <td width="27"><img src="/components/users/images/menu/my-articles.gif" border="0"/></td>
-                            <td><a href="/content/my.html">Статьи</a></td>
-                        </tr>
-                        {/if}
-                    </table>
-                </div>
-            </td>
-        </tr>
-        {if $is_admin || $is_editor}
-        <tr>
-            <td width="27"><img src="/components/users/images/menu/cpanel.gif" border="0"/></td>
-            <td><a href="/admin" target="_blank">Админка</a></td>
-        </tr>
-        {/if}
-        {if $is_can_add}
-        <tr>
-            <td width="27"><img src="/components/users/images/menu/add.gif" border="0"/></td>
-            <td><a href="/content/add.html">Добавить статью</a></td>
-        </tr>
-        {/if}
-        <tr>
-            <td width="27"><img src="/components/users/images/menu/logout.gif" border="0"/></td>
-            <td><a href="/logout" style="color:#990000">Выход</a></td>
-        </tr>
-    </table>
-
-{if $cfg.avatar} </td></tr></table> {/if}
+*}

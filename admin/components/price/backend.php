@@ -1,13 +1,17 @@
 <?php
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 
 	cpAddPathway('Прайслист', '?view=components&do=config&id='.$_REQUEST['id']);
 	echo '<h3>Прайслист</h3>';
@@ -71,19 +75,21 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if ($opt == 'show_item'){
 		if (!isset($_REQUEST['item'])){
 			if (isset($_REQUEST['id'])){ dbShow('cms_price_items', $id);  }
+			echo '1'; exit;
 		} else {
 			dbShowList('cms_price_items', $_REQUEST['item']);				
+			header('location:'.$_SERVER['HTTP_REFERER']);					
 		}			
-		echo '1'; exit;
 	}
 
 	if ($opt == 'hide_item'){
 		if (!isset($_REQUEST['item'])){
 			if (isset($_REQUEST['id'])){ dbHide('cms_price_items', $id);  }
+			echo '1'; exit;
 		} else {
 			dbHideList('cms_price_items', $_REQUEST['item']);				
+			header('location:'.$_SERVER['HTTP_REFERER']);					
 		}			
-		echo '1'; exit;
 	}
 
 	if ($opt == 'submit_item'){	

@@ -1,14 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//						   InstantCMS v1.0 (c) 2008 COMMERCIAL VERSION                       //
-//   						Source code protected by copyright laws                          //
-//                                                                                           //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 function usrFormEditor($user_id, $form_id, $formsdata){
@@ -89,10 +90,11 @@ function usrForm($user_id, $form_id, $formsdata){
 								if ($formsdata[$field['id']]){
 									$default = $formsdata[$field['id']];	
 									$default = nl2br($default);
+									$default = cmsPage::getMetaSearchLink('/users/hobby/', $default);
 								}
 							}                            
 						}
-						$html .= '<td valign="top" id="field">'.cmsPage::getMetaSearchLink('/users/hobby/', $default).'</td></tr>';
+						$html .= '<td valign="top" id="field">'.$default.'</td></tr>';
 					}					
 					$html .= '</table>';												
 				} else { $html .= '<p>'.$_LANG['IN_FORM'].' "'.$form['title'].'" '.$_LANG['NOT_FIELDS'].'.</p>'; }

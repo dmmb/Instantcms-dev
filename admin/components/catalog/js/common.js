@@ -28,13 +28,13 @@ function xlsEditCol(){
 function ignoreRow(row){
     var r_id = 'row_'+row;
     var c_id = 'ignore_'+row;
-    var checked = Number($('input:checkbox[@id='+c_id+']').attr('checked'));
+    var checked = Number($('input:checkbox[id='+c_id+']').attr('checked'));
     if(checked){
-        $('tr#'+r_id+' input:text[@class!=other]').attr('disabled', 'disabled');
-        $('tr#'+r_id+' input:text[@class=other]').attr('disabled', '');
+        $('tr#'+r_id+' input:text[class!=other]').attr('disabled', 'disabled');
+        $('tr#'+r_id+' input:text[class=other]').attr('disabled', '');
     } else {
-        $('tr#'+r_id+' input:text[@class!=other]').attr('disabled', '');
-        $('tr#'+r_id+' input:text[@class=other]').attr('disabled', 'disabled');
+        $('tr#'+r_id+' input:text[class!=other]').attr('disabled', '');
+        $('tr#'+r_id+' input:text[class=other]').attr('disabled', 'disabled');
     }
 }
 

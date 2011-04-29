@@ -1,98 +1,180 @@
 <?php
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
-	cpAddPathway('Вопросы и ответы', '?view=components&do=config&id='.$_REQUEST['id']);
+	cpAddPathway('Вопросы и ответы', '?view=components&do=config&id='.(int)$_REQUEST['id']);
 	echo '<h3>Вопросы и ответы</h3>';
-	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list_cats'; }
+	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list_items'; }
 	
 	$toolmenu = array();
+	if($opt != 'config'){
+		$toolmenu[0]['icon'] = 'newstuff.gif';
+		$toolmenu[0]['title'] = 'Новый вопрос';
+		$toolmenu[0]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_item';
 
-	$toolmenu[0]['icon'] = 'newfolder.gif';
-	$toolmenu[0]['title'] = 'Новая категория';
-	$toolmenu[0]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_cat';
+		$toolmenu[1]['icon'] = 'newfolder.gif';
+		$toolmenu[1]['title'] = 'Новая категория';
+		$toolmenu[1]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_cat';
 
-	$toolmenu[2]['icon'] = 'newquest.gif';
-	$toolmenu[2]['title'] = 'Новый вопрос';
-	$toolmenu[2]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_item';
+		$toolmenu[2]['icon'] = 'liststuff.gif';
+		$toolmenu[2]['title'] = 'Все вопросы';
+		$toolmenu[2]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items';
 
-	$toolmenu[1]['icon'] = 'folders.gif';
-	$toolmenu[1]['title'] = 'Категории вопросов';
-	$toolmenu[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats';
-
-	$toolmenu[3]['icon'] = 'listquest.gif';
-	$toolmenu[3]['title'] = 'Все вопросы';
-	$toolmenu[3]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items';
-
-	if($opt == 'list_items'){
-		$toolmenu[11]['icon'] = 'edit.gif';
-		$toolmenu[11]['title'] = 'Редактировать выбранные';
-		$toolmenu[11]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=edit_item&multiple=1');";
-
-		$toolmenu[12]['icon'] = 'show.gif';
-		$toolmenu[12]['title'] = 'Публиковать выбранные';
-		$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=show_item&multiple=1');";
-
-		$toolmenu[13]['icon'] = 'hide.gif';
-		$toolmenu[13]['title'] = 'Скрыть выбранные';
-		$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=hide_item&multiple=1');";
+		$toolmenu[3]['icon'] = 'folders.gif';
+		$toolmenu[3]['title'] = 'Категории вопросов';
+		$toolmenu[3]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats';
 		
-		$toolmenu[14]['icon'] = 'delete.gif';
-		$toolmenu[14]['title'] = 'Удалить выбранные';
-		$toolmenu[14]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=delete_item&multiple=1');";
+		if($opt == 'list_items' || $opt == 'show_item' || $opt == 'hide_item'){
+			$toolmenu[11]['icon'] = 'edit.gif';
+			$toolmenu[11]['title'] = 'Редактировать выбранные';
+			$toolmenu[11]['link'] = "javascript:checkSel('?view=components&do=config&id=".(int)$_REQUEST['id']."&opt=edit_item&multiple=1');";
+	
+			$toolmenu[12]['icon'] = 'show.gif';
+			$toolmenu[12]['title'] = 'Публиковать выбранные';
+			$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".(int)$_REQUEST['id']."&opt=show_item&multiple=1');";
+	
+			$toolmenu[13]['icon'] = 'hide.gif';
+			$toolmenu[13]['title'] = 'Скрыть выбранные';
+			$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".(int)$_REQUEST['id']."&opt=hide_item&multiple=1');";
+			
+			$toolmenu[14]['icon'] = 'delete.gif';
+			$toolmenu[14]['title'] = 'Удалить выбранные';
+			$toolmenu[14]['link'] = "javascript:checkSel('?view=components&do=config&id=".(int)$_REQUEST['id']."&opt=delete_item&multiple=1');";
+		}
+		$toolmenu[15]['icon'] = 'config.gif';
+		$toolmenu[15]['title'] = 'Настройки';
+		$toolmenu[15]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=config';
+	}
+	if($opt == 'config'){
+		$toolmenu[16]['icon'] = 'save.gif';
+		$toolmenu[16]['title'] = 'Сохранить';
+		$toolmenu[16]['link'] = 'javascript:document.optform.submit();';
 	}
 
-	$toolmenu[15]['icon'] = 'cancel.gif';
-	$toolmenu[15]['title'] = 'Отмена';
-	$toolmenu[15]['link'] = '?view=components';
+	$toolmenu[17]['icon'] = 'cancel.gif';
+	$toolmenu[17]['title'] = 'Отмена';
+	$toolmenu[17]['link'] = '?view=components';
 
 	cpToolMenu($toolmenu);
 
 	//LOAD CURRENT CONFIG
 	$cfg = $inCore->loadComponentConfig('faq');
 
+    if(!isset($cfg['guest_enabled'])) { $cfg['guest_enabled'] = 1; }
+    if(!isset($cfg['user_link'])) { $cfg['user_link'] = 1; }
+    if(!isset($cfg['publish'])) { $cfg['publish'] = 0; }
+	if(!isset($cfg['is_comment'])) { $cfg['is_comment'] = 1; }
+	
+    $inCore->loadModel('faq');
+    $model = new cms_model_faq();
+
 	if($opt=='saveconfig'){	
 		$cfg = array();
-		$cfg['email'] = $_REQUEST['email'];
-		$cfg['delivery'] = $_REQUEST['delivery'];
+		$cfg['guest_enabled']  = (int)$_REQUEST['guest_enabled'];
+		$cfg['user_link']  = (int)$_REQUEST['user_link'];
+		$cfg['publish']    = (int)$_REQUEST['publish'];
+		$cfg['is_comment'] = (int)$_REQUEST['is_comment'];
 			
 		$inCore->saveComponentConfig('faq', $cfg);
+		$msg = 'Настройки сохранены!';
+		$opt = 'config';
 	}
 
 	if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
 
+	if ($opt=='config') {
+	
+		cpAddPathway('Вопросы и ответы', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list');
+		cpAddPathway('Настройки', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=config');
+
+		?>
+	
+	<form action="index.php?view=components&do=config&id=<?php echo (int)$_REQUEST['id'];?>&opt=config" method="post" name="optform" target="_self" id="form1">
+		<table width="680" border="0" cellpadding="10" cellspacing="0" class="proptable">
+			<tr>
+				<td>
+					<strong>Принимать вопросы от незарегистрированных:</strong><br />
+				</td>
+				<td valign="top">
+					<input name="guest_enabled" type="radio" value="1"  <?php if (@$cfg['guest_enabled']) { echo 'checked="checked"'; } ?> /> Да
+					<input name="guest_enabled" type="radio" value="0"  <?php if (@!$cfg['guest_enabled']) { echo 'checked="checked"'; } ?> /> Нет
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<strong>Показывать ссылки на задавшего вопрос пользователя:</strong><br />
+				</td>
+				<td valign="top">
+					<input name="user_link" type="radio" value="1"  <?php if (@$cfg['user_link']) { echo 'checked="checked"'; } ?> /> Да
+					<input name="user_link" type="radio" value="0"  <?php if (@!$cfg['user_link']) { echo 'checked="checked"'; } ?> /> Нет
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<strong>Публиковать вопросы пользователей без модерации:</strong><br />
+                    <span class="hinttext">Если включено, вопросы будут появляться в ленте событий.</span>
+				</td>
+				<td valign="top">
+					<input name="publish" type="radio" value="1"  <?php if (@$cfg['publish']) { echo 'checked="checked"'; } ?> /> Да
+					<input name="publish" type="radio" value="0"  <?php if (@!$cfg['publish']) { echo 'checked="checked"'; } ?> /> Нет
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<strong>Разрешить комментарии:</strong><br />
+				</td>
+				<td valign="top">
+					<input name="is_comment" type="radio" value="1"  <?php if (@$cfg['is_comment']) { echo 'checked="checked"'; } ?> /> Да
+					<input name="is_comment" type="radio" value="0"  <?php if (@!$cfg['is_comment']) { echo 'checked="checked"'; } ?> /> Нет
+				</td>
+			</tr>
+		</table>
+		<p>
+			<input name="opt" type="hidden" value="saveconfig" />
+			<input name="save" type="submit" id="save" value="Сохранить" />
+			<input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+		</p>
+	</form>	
+	
+	<?php } 
+	
 	if ($opt == 'show_item'){
 		if (!isset($_REQUEST['item'])){
-			if (isset($_REQUEST['item_id'])){ dbShow('cms_faq_quests', $_REQUEST['item_id']);  }
+			if (isset($_REQUEST['item_id'])){ dbShow('cms_faq_quests', (int)$_REQUEST['item_id']);  }
+			echo '1'; exit;
 		} else {
 			dbShowList('cms_faq_quests', $_REQUEST['item']);				
+			$opt = 'list_items';				
 		}			
-		echo '1'; exit;
 	}
 
 	if ($opt == 'hide_item'){
 		if (!isset($_REQUEST['item'])){
-			if (isset($_REQUEST['item_id'])){ dbHide('cms_faq_quests', $_REQUEST['item_id']);  }
+			if (isset($_REQUEST['item_id'])){ dbHide('cms_faq_quests', (int)$_REQUEST['item_id']);  }
+			echo '1'; exit;
 		} else {
 			dbHideList('cms_faq_quests', $_REQUEST['item']);				
+			$opt = 'list_items';				
 		}			
-		echo '1'; exit;
 	}
 
 	if ($opt == 'submit_item'){	
-		$category_id = $_REQUEST['category_id'];
-		$published = $_REQUEST['published'];
+		$category_id = (int)$_REQUEST['category_id'];
+		$published = (int)$_REQUEST['published'];
 		$quest = $_REQUEST['quest'];
 		$answer = $_REQUEST['answer'];
 		$answeruser_id = $_SESSION['user']['id'];
-		$user_id = $_REQUEST['user_id'];;
+		$user_id = (int)$_REQUEST['user_id'];;
 						
 		$pubdate = $_REQUEST['pubdate'];
 		$answerdate = $_REQUEST['answerdate'];
@@ -106,15 +188,15 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 				VALUES ('$category_id', '$pubdate', $published, '$quest', '$answer', $user_id, $answeruser_id, '$answerdate')";	
 
 		dbQuery($sql) ;	
-		header('location:?view=components&do=config&opt=list_items&id='.$_REQUEST['id']);
+		header('location:?view=components&do=config&opt=list_items&id='.(int)$_REQUEST['id']);
 	}	  
 	
 	if ($opt == 'update_item'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];
+			$id = (int)$_REQUEST['item_id'];
 			
-			$category_id = $_REQUEST['category_id'];
-			$published = $_REQUEST['published'];
+			$category_id = (int)$_REQUEST['category_id'];
+			$published = (int)$_REQUEST['published'];
 			$quest = $_REQUEST['quest'];
 			$answer = $_REQUEST['answer'];
 			$answeruser_id = $_SESSION['user']['id'];
@@ -140,29 +222,24 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			dbQuery($sql);
 		}
 		if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
-			header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
+			header('location:?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items');
 		} else {
-			header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_item');
+			header('location:?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_item');
 		}
 	}
 
 	if($opt == 'delete_item'){
 		if (!isset($_REQUEST['item'])){
-			if (isset($_REQUEST['item_id'])){ dbDelete('cms_faq_quests', $_REQUEST['item_id']);  }
+			if (isset($_REQUEST['item_id'])){ $model->deleteQuest((int)$_REQUEST['item_id']); }
 		} else {
-			dbDeleteList('cms_faq_quests', $_REQUEST['item']);				
-		}
-		header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
+			$model->deleteQuests($_REQUEST['item']);			
 	}
-
-	if ($opt == 'config') {
-		?>
-<?php
+		header('location:?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items');
 	}
 	
 	if ($opt == 'show_cat'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];
+			$id = (int)$_REQUEST['item_id'];
 			$sql = "UPDATE cms_faq_cats SET published = 1 WHERE id = $id";
 			dbQuery($sql) ;
 			echo '1'; exit;
@@ -171,7 +248,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if ($opt == 'hide_cat'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];
+			$id = (int)$_REQUEST['item_id'];
 			$sql = "UPDATE cms_faq_cats SET published = 0 WHERE id = $id";
 			dbQuery($sql) ;
 			echo '1'; exit;
@@ -179,20 +256,20 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	}
 	
 	if ($opt == 'submit_cat'){	
-		$parent_id = $_REQUEST['parent_id'];		
+		$parent_id = (int)$_REQUEST['parent_id'];		
 		$title = $_REQUEST['title'];
-		$published = $_REQUEST['published'];
+		$published = (int)$_REQUEST['published'];
 		$description = $_REQUEST['description'];		
 		
 		$sql = "INSERT INTO cms_faq_cats (parent_id, title, published, description)
 				VALUES ($parent_id, '$title', $published, '$description')";
 		dbQuery($sql) ;		
-		header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
+		header('location:?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats');
 	}	  
 	
 	if($opt == 'delete_cat'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];
+			$id = (int)$_REQUEST['item_id'];
 			//DELETE ITEMS
 			$sql = "DELETE FROM cms_faq_quests WHERE category_id = $id";
 			dbQuery($sql) ;			
@@ -200,16 +277,16 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			$sql = "DELETE FROM cms_faq_cats WHERE id = $id LIMIT 1";
 			dbQuery($sql) ;			
 		}
-		header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
+		header('location:?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats');
 	}
 	
 	if ($opt == 'update_cat'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];
+			$id = (int)$_REQUEST['item_id'];
 			
-			$parent_id = $_REQUEST['parent_id'];		
+			$parent_id = (int)$_REQUEST['parent_id'];		
 			$title = $_REQUEST['title'];
-			$published = $_REQUEST['published'];
+			$published = (int)$_REQUEST['published'];
 			$description = $_REQUEST['description'];		
 			
 			$sql = "UPDATE cms_faq_cats
@@ -221,14 +298,14 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					LIMIT 1";
 			dbQuery($sql) ;
 							
-			header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
+			header('location:?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats');
 		
 		}
 	}
 	
 	
 	if ($opt == 'list_cats'){
-		cpAddPathway('Категории вопросов', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
+		cpAddPathway('Категории вопросов', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats');
 		echo '<h3>Категории вопросов</h3>';
 
 		//TABLE COLUMNS
@@ -238,7 +315,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
 		$fields[1]['filter'] = 20; 
-		$fields[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id=%id%';
+		$fields[1]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_cat&item_id=%id%';
 
 		$fields[2]['title'] = 'Родитель';	$fields[2]['field'] = 'parent_id'; $fields[2]['width'] = '300';
 		$fields[2]['prc'] = 'cpFaqCatById';  $fields[2]['filter'] = 1;  $fields[2]['filterlist'] = cpGetList('cms_faq_cats');
@@ -250,19 +327,19 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$actions = array();
 		$actions[0]['title'] = 'Редактировать';
 		$actions[0]['icon']  = 'edit.gif';
-		$actions[0]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id=%id%';
+		$actions[0]['link']  = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_cat&item_id=%id%';
 
 		$actions[1]['title'] = 'Удалить';
 		$actions[1]['icon']  = 'delete.gif';
 		$actions[1]['confirm'] = 'Удалить категорию вопросов?';
-		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete_cat&item_id=%id%';
+		$actions[1]['link']  = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=delete_cat&item_id=%id%';
 				
 		//Print table
 		cpListTable('cms_faq_cats', $fields, $actions);		
 	}
 
 	if ($opt == 'list_items'){
-		cpAddPathway('Вопросы', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
+		cpAddPathway('Вопросы', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items');
 		echo '<h3>Вопросы</h3>';
 		
 		//TABLE COLUMNS
@@ -271,7 +348,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
 		$fields[1]['title'] = 'Вопрос';		$fields[1]['field'] = 'quest';		$fields[1]['width'] = '';
-		$fields[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
+		$fields[1]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
 		$fields[1]['filter'] = 15;
 		$fields[1]['maxlen'] = 80;
 		
@@ -285,12 +362,12 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$actions = array();
 		$actions[0]['title'] = 'Редактировать';
 		$actions[0]['icon']  = 'edit.gif';
-		$actions[0]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
+		$actions[0]['link']  = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
 
 		$actions[1]['title'] = 'Удалить';
 		$actions[1]['icon']  = 'delete.gif';
 		$actions[1]['confirm'] = 'Удалить вопрос?';
-		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete_item&item_id=%id%';
+		$actions[1]['link']  = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=delete_item&item_id=%id%';
 				
 		//Print table
 		cpListTable('cms_faq_quests', $fields, $actions, '', 'pubdate DESC');		
@@ -299,7 +376,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if ($opt == 'add_item' || $opt == 'edit_item'){
 		if ($opt=='add_item'){
 		 echo '<h3>Добавить вопрос</h3>';
-		 cpAddPathway('Добавить вопрос', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_item');
+		 cpAddPathway('Добавить вопрос', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_item');
 		} else {
 					 if(isset($_REQUEST['multiple'])){				 
 						if (isset($_REQUEST['item'])){					
@@ -316,7 +393,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 						$id = array_shift($_SESSION['editlist']);
 						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
 						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
-					 } else { $id = $_REQUEST['item_id']; }
+					 } else { $id = (int)$_REQUEST['item_id']; }
 		
 		
 					 $sql = "SELECT *, DATE_FORMAT(pubdate, '%d.%m.%Y') as pubdate, DATE_FORMAT(answerdate, '%d.%m.%Y') as answerdate
@@ -328,12 +405,12 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					 }
 
 					 echo '<h3>Просмотр вопроса</h3>';
-					 cpAddPathway('Вопросы', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
-					 cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_item&item_id='.$id);
+					 cpAddPathway('Вопросы', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items');
+					 cpAddPathway($mod['title'], '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_item&item_id='.$id);
 			}
 
 		?>
-<form action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id'];?>" method="post" enctype="multipart/form-data" name="addform" id="addform">
+<form action="index.php?view=components&amp;do=config&amp;id=<?php echo (int)$_REQUEST['id'];?>" method="post" enctype="multipart/form-data" name="addform" id="addform">
         <table width="620" border="0" cellpadding="0" cellspacing="10" class="proptable">
           <tr>
             <td><strong>Категория вопроса:</strong></td>
@@ -354,6 +431,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
           <tr>
             <td><strong>Автор вопроса:</strong></td>
             <td><select name="user_id" id="user_id" style="width:220px">
+                <option value="0" <?php if (!$mod['user_id']) { echo 'selected="selected"'; } ?>>-- Анонимный гость --</option>
               <?php
                   if (isset($mod['user_id'])) {
                         echo $inCore->getListItems('cms_users', $mod['user_id'], 'nickname', 'ASC', 'is_deleted=0 AND is_locked=0', 'id', 'nickname');
@@ -442,10 +520,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if ($opt == 'add_cat' || $opt == 'edit_cat'){		
 		if ($opt=='add_cat'){
 			 echo '<h3>Добавить категорию</h3>';
-			 cpAddPathway('Добавить категорию', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_cat');	 
+			 cpAddPathway('Добавить категорию', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_cat');	 
 			} else {
 				 if(isset($_REQUEST['item_id'])){
-					 $id = $_REQUEST['item_id'];
+					 $id = (int)$_REQUEST['item_id'];
 					 $sql = "SELECT * FROM cms_faq_cats WHERE id = $id LIMIT 1";
 					 $result = dbQuery($sql) ;
 					 if (mysql_num_rows($result)){
@@ -454,11 +532,11 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 				 }
 				
 				 echo '<h3>Категория: '.$mod['title'].'</h3>';
-	 	 		 cpAddPathway('Категории вопросов', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
-				 cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id='.$_REQUEST['item_id']);	 
+	 	 		 cpAddPathway('Категории вопросов', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats');
+				 cpAddPathway($mod['title'], '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_cat&item_id='.(int)$_REQUEST['item_id']);	 
 			}
 			?>
-		<form id="addform" name="addform" method="post" action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id'];?>">
+		<form id="addform" name="addform" method="post" action="index.php?view=components&amp;do=config&amp;id=<?php echo (int)$_REQUEST['id'];?>">
 			<table width="620" border="0" cellpadding="0" cellspacing="10" class="proptable">
 			  <tr>
 				<td><strong>Название категории: </strong></td>

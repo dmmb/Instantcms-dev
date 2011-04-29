@@ -5,10 +5,6 @@
 <div class="blog_catlist">
 
 	<div class="blog_cat">
-		<table cellspacing="0" cellpadding="0"><tr><td><strong>{$LANG.CATS}:</strong></div></td></tr></table>
-	</div>
-
-	<div class="blog_cat">
 		<table cellspacing="0" cellpadding="1">
 			<tr>
 				<td width="16"><img src="/components/blogs/images/cat.gif" border="0" /></td>

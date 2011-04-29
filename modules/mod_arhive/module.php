@@ -1,12 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 function mod_arhive($module_id){
         $inCore = cmsCore::getInstance();
@@ -18,7 +21,7 @@ function mod_arhive($module_id){
 				FROM cms_content"."\n";
 				
 		if($cfg['cat_id']>0){
-			$sql .= "WHERE category_id = ".$cfg['cat_id'];
+			$sql .= "WHERE published = 1 AND category_id = '{$cfg['cat_id']}'";
 			if ($cfg['source']!='both'){
 				if ($cfg['source']=='arhive'){
 					$sql .= " AND is_arhive = 1". "\n";

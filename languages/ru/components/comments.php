@@ -1,14 +1,15 @@
 <?php
-/*********************************************************************************************/
-//                                                                                           //											 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 		  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 			    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 /* 
@@ -24,12 +25,17 @@ $_LANG['ERR_CAPTCHA']             ='Неправильно указан код с картинки!';
 $_LANG['ERR_COMMENT_ADD']         ='Ошибка добавления комментария!';
 $_LANG['COMM_PREMODER_TEXT']      ='Спасибо! Ваш комментарий будет добавлен после проверки администратором!';
 $_LANG['NEW_COMMENT']             ='Новый комментарий';
-$_LANG['EMAIL_SUDJECT_NEW_COMM']  ='InstantCMS: Новый комментарий!';
+$_LANG['EMAIL_SUDJECT_NEW_COMM']  ='{sitename}: Новый комментарий!';
 $_LANG['YOUR_PHOTO']              ='вашей фотографии';
 $_LANG['YOUR_POST']               ='вашей записи';
 $_LANG['COMM_SUC_DELETE']         ='Комментарий успешно удален';
 $_LANG['COMMENTS']                ='Комментарии';
 $_LANG['COMMENTS_ON_SITE']        ='Комментарии на сайте';
+
+$_LANG['COMMENTS_MALE']           ='прокомментировал';
+$_LANG['COMMENTS_FEMALE']         ='прокомментировала';
+$_LANG['COMMENTS_GENDER']         ='комментирует';
+
 // Template
 $_LANG['COMMENTS_CAN_ADD_ONLY']   ='Комментарии могут добавлять только';
 $_LANG['REGISTERED']              ='зарегистрированные';

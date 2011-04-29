@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************************/
 //                                                                                           //											 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
+//                              InstantCMS v1.7   (c) 2010 FREEWARE                          //
 //	 		  http://www.instantcms.ru/, info@instantcms.ru                      //
 //                                                                                           //
 // 			    written by Vladimir E. Obukhov, 2007-2010                        //
@@ -19,6 +19,6 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 $_LANG['AUTH_LOGIN']        ='Логин';
 $_LANG['AUTH_PASS']         ='Пароль';
 $_LANG['AUTH_ENTER']        ='Вход';
-$_LANG['AUTH_REMEMBER']     ='Запомнить';
+$_LANG['AUTH_REMEMBER']     ='Запомнить меня';
 $_LANG['AUTH_FORGOT']       ='Забыли пароль?';
 ?>

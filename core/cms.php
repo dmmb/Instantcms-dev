@@ -1,21 +1,22 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-define('CORE_VERSION', 		'1.6.2');
-define('CORE_BUILD', 		'4');
-define('CORE_VERSION_DATE', '2010-05-13');
-define('CORE_BUILD_DATE', 	'2010-05-13');
+define('CORE_VERSION', 		'1.8');
+define('CORE_BUILD', 		'1');
+define('CORE_VERSION_DATE', '2011-04-04');
+define('CORE_BUILD_DATE', 	'2011-04-04');
 
 if (!defined('USER_UPDATER')) { define('USER_UPDATER', -1); }
 if (!defined('USER_MASSMAIL')) { define('USER_MASSMAIL', -2); }
@@ -29,6 +30,7 @@ class cmsCore {
     private         $menu_item;
     private         $menu_id = 0;
     private         $menu_struct;
+    private         $is_menu_id_strict;
 
     private         $uri;
     private         $component;
@@ -37,6 +39,8 @@ class cmsCore {
     private         $module_configs = array();
     private         $component_configs = array();
 
+    private         $smarty = false;
+
     private function __construct($install_mode=false) {
 
         if ($install_mode){ return; }
@@ -44,6 +48,16 @@ class cmsCore {
         //подключим базу и конфиг
         $this->loadClass('db');
         $this->loadClass('config');
+
+        $inConf = cmsConfig::getInstance();
+
+        //проверяем был ли переопределен шаблон через сессию
+        //например, из модуля "выбор шаблона"
+        if (isset($_SESSION['template'])) { $inConf->template = $_SESSION['template']; }
+
+        define('TEMPLATE', $inConf->template);
+        define('TEMPLATE_DIR', PATH.'/templates/'.$inConf->template.'/');
+        define('DEFAULT_TEMPLATE_DIR', PATH.'/templates/_default_/');
 
         //загрузим структуру меню в память
         $this->loadMenuStruct();
@@ -69,6 +83,18 @@ class cmsCore {
             self::$instance = new self($install_mode);
         }  
         return self::$instance;
+    }
+
+    public function getHost(){
+
+        $this->loadClass('idna_convert');
+
+        $IDN = new idna_convert();
+
+        $host = iconv('utf-8', 'cp1251', $IDN->decode($_SERVER['HTTP_HOST']));
+
+        return $host;
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -107,6 +133,26 @@ class cmsCore {
 
         include_once($langfile);
         return true;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Сортирует ассоциативный массив
+     * @param array $array
+     * @param string $sort_by (критерий сортировки)
+     * @param int $desc (1 - по возрастанию, 0 - по убыванию)
+     * @param string $f (функция сравнения)
+     * @return array
+     */
+    public static function sortArray($array, $sort_by, $desc = 0, $f='strcmp') {
+
+		if (!$desc) { $desc = 1; } else { $desc = -1;}
+		
+		usort($array, create_function('$a, $b', "return $desc*$f(\$b['$sort_by'], \$a['$sort_by']);"));
+
+    	return($array);
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -514,10 +560,10 @@ class cmsCore {
         //находим ID установленной версии
         $component_id = $this->getComponentId( $component['link'] );
 
-        //если плагин еще не был установлен, выходим
+        //если компонент еще не был установлен, выходим
         if (!$component_id) { return false; }
 
-        //загружаем текущие настройки плагина
+        //загружаем текущие настройки компонента
         $old_config = $this->loadComponentConfig( $component['link'] );
 
         //удаляем настройки, которые больше не нужны
@@ -537,7 +583,7 @@ class cmsCore {
         //конвертируем массив настроек в YAML
         $config_yaml   = $this->arrayToYaml($old_config);
 
-        //обновляем плагин в базе
+        //обновляем компонент в базе
         $update_query  = "UPDATE cms_components
                           SET title='{$component['title']}',
                               author='{$component['author']}',
@@ -565,6 +611,22 @@ class cmsCore {
 
         //если компонент не был установлен, выходим
         if (!$component_id) { return false; }
+
+        //определяем название компонента по id
+        $component = $this->getComponentById($component_id);
+
+        //удаляем зависимые модули компонента
+        if ($this->loadComponentInstaller($component)){
+            $_component = call_user_func('info_component_'.$component);
+            if (isset($_component['modules'])){
+                if (is_array($_component['modules'])){
+                    foreach($_component['modules'] as $module=>$title){
+                        $module_id = $this->getModuleId($module);
+                        if ($module_id) { $this->removeModule($module_id); }
+                    }
+                }
+            }
+        }
 
         //удаляем компонент из базы, но только если он не системный
         $delete_query  = "DELETE FROM cms_components WHERE id = {$component_id} AND system = 0";
@@ -646,7 +708,7 @@ class cmsCore {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * Возвращает список папок с плагинами
+     * Возвращает список папок с компонентами
      * @return array
      */
     public function getComponentsDirs() {
@@ -730,6 +792,308 @@ class cmsCore {
         $this->includeFile('components/'.$component.'/install.php');
 
         return true;
+
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Устанавливает модуль
+     * Возвращает ID установленного модуля
+     * @param array $module
+     * @param array $config
+     * @return int
+     */
+    public function installModule($module, $config) {
+
+        $inDB = cmsDatabase::getInstance();
+
+        $config_yaml    = $this->arrayToYaml($config);
+
+        if (!$config_yaml) { $config_yaml = ''; }
+
+        //добавляем модуль в базу
+        $install_query  = "INSERT INTO cms_modules (`position`, `name`, `title`, `is_external`,
+                                                    `content`, `ordering`, `showtitle`, `published`,
+                                                    `user`, `config`, `original`, `css_prefix`,
+                                                    `access_list`, `cache`, `cachetime`, `cacheint`,
+                                                    `template`, `is_strict_bind`, `version`)
+                VALUES ('{$module['position']}', '{$module['name']}', '{$module['title']}', '1',
+                        '{$module['link']}', '1', '1', '1',
+                        '0', '{$config_yaml}', '1', '',
+                        '', '0', '1', 'HOUR',
+                        'module.tpl', '0', '{$module['version']}')";
+
+        $inDB->query($install_query);
+
+        //получаем ID модуля
+        $module_id = $inDB->get_last_id('cms_modules');
+
+        //возвращаем ложь, если модуль не установился
+        if (!$module_id)    { return false; }
+
+        //возращаем ID установленного модуля
+        return $module_id;
+
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Делает апгрейд установленного модуля
+     * @param array $component
+     * @param array $config
+     * @return bool
+     */
+    public function upgradeModule($module, $config) {
+        $inDB = cmsDatabase::getInstance();
+
+        //находим ID установленной версии
+        $module_id = $this->getModuleId( $module['link'] );
+
+        //если модуль еще не был установлен, выходим
+        if (!$module_id) { return false; }
+
+        //загружаем текущие настройки модуля
+        $old_config = $this->loadModuleConfig( $module_id );
+
+        //удаляем настройки, которые больше не нужны
+        foreach($old_config as $param=>$value){
+            if ( !isset($config[$param]) ){
+                unset($old_config[$param]);
+            }
+        }
+
+        //добавляем настройки, которых раньше не было
+        foreach($config as $param=>$value){
+            if ( !isset($old_config[$param]) ){
+                $old_config[$param] = $value;
+            }
+        }
+
+        //конвертируем массив настроек в YAML
+        $config_yaml   = $this->arrayToYaml($old_config);
+
+        //обновляем модуль в базе
+        $update_query  = "UPDATE cms_modules
+                          SET title='{$module['title']}',
+                              name='{$module['name']}',
+                              version='{$module['version']}',
+                              config='{$config_yaml}'
+                          WHERE id = {$module_id}";
+
+        $inDB->query($update_query);
+
+        //модуль успешно обновлен
+        return true;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Удаляет установленный модуль
+     * @param int $module_id
+     * @return bool
+     */
+    public function removeModule($module_id) {
+
+        $inDB = cmsDatabase::getInstance();
+
+        //если модуль не был установлен, выходим
+        if (!$module_id) { return false; }
+
+        //удаляем модуль из базы
+        $delete_query  = "DELETE FROM cms_modules WHERE id = {$module_id}";
+
+        $inDB->query($delete_query);
+
+        //модуль успешно удален
+        return true;
+
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Возвращает список модулей, имеющихся на диске, но не установленных
+     * @return array
+     */
+    public function getNewModules() {
+
+        $inDB = cmsDatabase::getInstance();
+
+        $new_modules    = array();
+        $all_modules    = $this->getModulesDirs();
+
+        if (!$all_modules) { return false; }
+
+        foreach($all_modules as $module){
+
+            $installer_file = PATH . '/modules/' . $module . '/install.php';
+
+            if (file_exists($installer_file)){
+
+                $installed = $inDB->rows_count('cms_modules', "content='{$module}' AND user=0", 1);
+                if (!$installed){
+                    $new_modules[] = $module;
+                }
+
+            }
+
+        }
+
+        if (!$new_modules) { return false; }
+
+        return $new_modules;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Возвращает список модулей, версия которых изменилась в большую сторону
+     * @return array
+     */
+    public function getUpdatedModules() {
+
+        $inDB = cmsDatabase::getInstance();
+
+        $upd_modules    = array();
+        $all_modules    = $inDB->get_table('cms_modules', 'user=0');
+
+        if (!$all_modules) { return false; }
+
+        foreach($all_modules as $module){
+            if($this->loadModuleInstaller($module['content'])){
+                $version    = $module['version'];
+                $_module    = call_user_func('info_module_'.$module['content']);
+                if ($version){
+                    if ($version < $_module['version']){
+                        $upd_modules[] = $module['content'];
+                    }
+                }
+            }
+        }
+
+        if (!$upd_modules) { return false; }
+
+        return $upd_modules;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Возвращает список папок с модулями
+     * @return array
+     */
+    public function getModulesDirs() {
+        $dir    = PATH . '/modules';
+        $pdir   = opendir($dir);
+
+        $modules = array();
+
+        while ($nextfile = readdir($pdir)){
+            if (
+                    ($nextfile != '.')  &&
+                    ($nextfile != '..') &&
+                    is_dir($dir.'/'.$nextfile) &&
+                    ($nextfile!='.svn')
+               ) {
+                $modules[$nextfile] = $nextfile;
+            }
+        }
+
+        if (!sizeof($modules)){ return false; }
+
+        return $modules;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Возвращает ID модуля по названию
+     * @param string $component
+     * @return int
+     */
+    public function getModuleId($module){
+
+        $inDB = cmsDatabase::getInstance();
+
+        return $inDB->get_field('cms_modules', "content='{$module}' AND user=0", 'id');
+
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Возвращает название модуля по ID
+     * @param int $component_id
+     * @return string
+     */
+    public function getModuleById($module_id){
+
+        $inDB = cmsDatabase::getInstance();
+
+        $link = $inDB->get_field('cms_modules', "id={$module_id} AND user=0", 'content');
+
+        return $link;
+
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Возвращает версию модуля по названию
+     * @param string $component
+     * @return float
+     */
+    public function getModuleVersion($module){
+
+        $inDB = cmsDatabase::getInstance();
+
+        return $inDB->get_field('cms_modules', "content='{$module}' AND user=0", 'version');
+
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public function loadModuleInstaller($module){
+
+        $installer_file = PATH . '/modules/' . $module . '/install.php';
+
+        if (!file_exists($installer_file)){ return false; }
+
+        $this->includeFile('modules/'.$module.'/install.php');
+
+        return true;
+
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Проверяет доступ (модуля, меню) к группе пользователя
+     * @param string $access_list
+     * @return bool
+     */
+    public function checkContentAccess($access_list){
+		
+		$inUser = cmsUser::getInstance();
+		
+		// если $access_list пуста, то считаем что доступ для всех
+		if (!$access_list) { return true; }
+
+		// администраторам всегда показываем модуль		
+		if ($inUser->is_admin) { return true; }
+
+        $access_list = $this->yamlToArray($access_list);
+
+		// если по каким-то причинам $access_list не массив, то считаем что доступ для всех
+		if (!is_array($access_list)) { return true; }
+		
+		// id группы текущего пользователя
+		$group_id = $inUser->group_id;
+		
+		return in_array($group_id, $access_list);
 
     }
 
@@ -936,7 +1300,7 @@ class cmsCore {
      * @param int $time
      */
     public function setCookie($name, $value, $time){
-        setcookie('InstantCMS['.$name.']', $value, $time, '/', $_SERVER['SERVER_NAME']);
+        setcookie('InstantCMS['.$name.']', $value, $time, '/');        
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -946,7 +1310,7 @@ class cmsCore {
      * @param string $name
      */
     public function unsetCookie($name){
-        setcookie('InstantCMS['.$name.']', '', time()-3600, '/', $_SERVER['SERVER_NAME']);
+        setcookie('InstantCMS['.$name.']', '', time()-3600, '/');
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1038,10 +1402,10 @@ class cmsCore {
 
         //собираем информацию о текущем пользователе
         $sess_id    = session_id();
-        $ip         = $_SERVER['REMOTE_ADDR'];
-        $useragent  = $_SERVER['HTTP_USER_AGENT'];
-        $page       = $_SERVER['REQUEST_URI'];
-        $refer      = @$_SERVER['HTTP_REFERER'];
+        $ip         = $this->strClear($_SERVER['REMOTE_ADDR']);
+        $useragent  = $this->strClear($_SERVER['HTTP_USER_AGENT']);
+        $page       = $this->strClear($_SERVER['REQUEST_URI']);
+        $refer      = $this->strClear($_SERVER['HTTP_REFERER']);
 
         $user_id    = $inUser->id;
 
@@ -1055,7 +1419,7 @@ class cmsCore {
         if (!$inDB->num_rows($result)){
             //Проверяем, пользователь это или поисковый бот
             $crawler = false;
-            foreach($bots as $bot=>$uagent){ if (strpos($_SERVER['HTTP_USER_AGENT'], $uagent)) { $crawler = true; }	}
+            foreach($bots as $bot=>$uagent){ if (strpos($useragent, $uagent)) { $crawler = true; }	}
             //Если не бот, вставляем запись в "кто онлайн"
             if (!$crawler){
                 $sql = "INSERT INTO cms_online (ip, sess_id, lastdate, user_id, viewurl) VALUES ('$ip', '$sess_id', NOW(), '$user_id', '$page')";
@@ -1094,8 +1458,13 @@ class cmsCore {
      */
     private function detectURI(){
 
-        $uri    = $this->request('uri', 'str', '');
+        $uri    = $_SERVER['REQUEST_URI']; //$this->request('uri', 'str', '');
+        $uri    = ltrim($uri, '/');
         $rules  = array();
+
+        $folder = rtrim($uri, '/');
+
+        if (in_array($folder, array('admin', 'install', 'migrate'))) { return; }
 
         //специальный хак для поиска по сайту, для совместимости со старыми шаблонами
         if (strstr($_SERVER['QUERY_STRING'], 'view=search')){ $uri = 'search'; }
@@ -1165,6 +1534,7 @@ class cmsCore {
      * Определяет текущий компонент
      * Считается, что компонент указан в первом сегменте URI,
      * иначе подключается компонент для главной страницы
+	 * Критерий "включенности" компонента определяется в функции loadComponentConfig
      * @return string $component
      */
     private function detectComponent(){
@@ -1217,7 +1587,9 @@ class cmsCore {
         if (!$component || !$this->uri) { return false; }
 
         if(!file_exists('components/'.$component.'/router.php')){ return false; }
-
+		/**
+		 * Критерий "включенности" компонента определяется в функции loadComponentConfig
+		 */
         //подключаем список маршрутов компонента
         $this->includeFile('components/'.$component.'/router.php');
 
@@ -1272,9 +1644,11 @@ class cmsCore {
 
         //проверяем что компонент указан
         if (!$component) { return false; }
-
+		/**
+		 * Критерий "включенности" компонента определяется в функции loadComponentConfig
+		 */
         //проверяем что в названии только буквы и цифры
-        if (!eregi("^[a-z0-9]+$", $component)){ cmsCore::error404(); }
+        if (!preg_match("/^([a-z0-9])+$/", $component)){ cmsCore::error404(); }
         
         $this->loadLanguage('components/'.$component);
 
@@ -1404,8 +1778,11 @@ class cmsCore {
             switch($type){
                 case 'int':   return (int)$_REQUEST[$var]; break;
                 case 'str':   if ($_REQUEST[$var]) { return $this->strClear($_REQUEST[$var]); } else { return $default; } break;
+                case 'email': if(preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/i", $_REQUEST[$var])){ return $_REQUEST[$var]; } else { return $default; } break;
                 case 'html':  if ($_REQUEST[$var]) { return $this->strClear($_REQUEST[$var], false); } else { return $default; } break;
                 case 'array': if (is_array($_REQUEST[$var])) { return $_REQUEST[$var]; } else { return $default; } break;
+                case 'array_int': if (is_array($_REQUEST[$var])) { foreach($_REQUEST[$var] as $k=>$i){ $arr[$k] = (int)$i; } return $arr; } else { return $default; } break;
+                case 'array_str': if (is_array($_REQUEST[$var])) { foreach($_REQUEST[$var] as $k=>$s){ $arr[$k] = $this->strClear($s); } return $arr; } else { return $default; } break;
             }
         } else {
             return $default;
@@ -1502,60 +1879,62 @@ class cmsCore {
      * Загружает класс Smarty
      */
     public function loadSmarty(){
+
         $this->includeFile('/includes/smarty/libs/Smarty.class.php');
+
+        $this->smarty = new Smarty();
+
+        $this->smarty->compile_dir = PATH.'/cache';
+        
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * Возвращает объект Smarty для дальнейшей работы с шаблоном
-     * @param string $for = modules / components / plugins
-     * @param string $tpl
+     * @param string $tpl_folder = modules / components / plugins
+     * @param string $tpl_file
      * @return obj
      */
-    public function initSmarty($for='modules', $tpl=''){ //cmsSmartyInit
-        global $smarty;
-        global $_CFG;
+    public function initSmarty($tpl_folder='modules', $tpl_file=''){
+
         global $_LANG;
-        $smarty->compile_dir = PATH.'/cache';
 
-        if (!is_writable($smarty->compile_dir)){ @chmod($smarty->compile_dir, 0755); }
+        if (!$this->smarty){ $this->loadSmarty(); }
 
-        if(file_exists(PATH.'/templates/'.$_CFG['template'].'/'.$for.'/'.$tpl)){
-            $smarty->template_dir = PATH.'/templates/'.$_CFG['template'].'/'.$for;
-        } else {
-            $smarty->template_dir = PATH.'/templates/_default_/'.$for;
-        }
-        // Передаем языковый массив в шаблон
-        $smarty->assign('LANG', $_LANG);
-        $smarty->register_modifier("NoSpam", "cmsSmartyNoSpam");
-        $smarty->register_function('add_js', 'cmsSmartyAddJS');
-        $smarty->register_function('add_css', 'cmsSmartyAddCSS');
-        $smarty->register_function('wysiwyg', 'cmsSmartyWysiwyg');
-        $smarty->register_function('comments', 'cmsSmartyComments');
-        $smarty->register_function('profile_url', 'cmsSmartyProfileURL');
+        $template_has_tpl = file_exists(TEMPLATE_DIR . "{$tpl_folder}/{$tpl_file}");
 
-        return $smarty;
+        $this->smarty->template_dir = $template_has_tpl ? TEMPLATE_DIR . $tpl_folder : DEFAULT_TEMPLATE_DIR . $tpl_folder;
+
+        $this->smarty->assign('LANG', $_LANG);
+        $this->smarty->register_modifier("NoSpam", "cmsSmartyNoSpam");
+        $this->smarty->register_function('add_js', 'cmsSmartyAddJS');
+        $this->smarty->register_function('add_css', 'cmsSmartyAddCSS');
+        $this->smarty->register_function('wysiwyg', 'cmsSmartyWysiwyg');
+        $this->smarty->register_function('comments', 'cmsSmartyComments');
+        $this->smarty->register_function('profile_url', 'cmsSmartyProfileURL');
+
+        return $this->smarty;
+        
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public function initSmartyModule(){ //cmsSmartyInitModule
-        global $smarty;
-        $smarty->compile_dir = PATH.'/cache';
-        if(@is_dir(TEMPLATE_DIR.'modules')){
-            $smarty->template_dir = TEMPLATE_DIR.'modules';
-        } else {
-            $smarty->template_dir = PATH.'/templates/_default_/modules';
-        }
+    public function initSmartyModule(){
 
-        $smarty->register_modifier("NoSpam", "cmsSmartyNoSpam");
-        $smarty->register_function('add_js', 'cmsSmartyAddJS');
-        $smarty->register_function('add_css', 'cmsSmartyAddCSS');
-        $smarty->register_function('wysiwyg', 'cmsSmartyWysiwyg');
-        $smarty->register_function('profile_url', 'cmsSmartyProfileURL');
+        if (!$this->smarty){ $this->loadSmarty(); }
 
-        return $smarty;
+        $template_has_dir = is_dir(TEMPLATE_DIR.'modules');
+
+        $this->smarty->template_dir = $template_has_dir ? TEMPLATE_DIR.'modules' : DEFAULT_TEMPLATE_DIR.'modules';
+
+        $this->smarty->register_modifier("NoSpam", "cmsSmartyNoSpam");
+        $this->smarty->register_function('add_js', 'cmsSmartyAddJS');
+        $this->smarty->register_function('add_css', 'cmsSmartyAddCSS');
+        $this->smarty->register_function('wysiwyg', 'cmsSmartyWysiwyg');
+        $this->smarty->register_function('profile_url', 'cmsSmartyProfileURL');
+
+        return $this->smarty;
     }
 
     // CONFIGS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1637,9 +2016,10 @@ class cmsCore {
 
         if (isset($this->component_configs[$component])) { return $this->component_configs[$component]; }
 
-        $config_yaml = $inDB->get_field('cms_components', "link='{$component}'", 'config');
+        $config_yaml = $inDB->get_fields('cms_components', "link='{$component}'", 'config, published');
 
-        $config = $this->yamlToArray($config_yaml);
+        $config = $this->yamlToArray($config_yaml['config']);
+		$config['component_enabled'] = $config_yaml['published'];
 
         $this->cacheComponentConfig($component, $config);
 
@@ -1791,46 +2171,34 @@ class cmsCore {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * Проверяет доступ группы пользователей к пункту меню
-     * @param int $menuid
-     * @param int $groupid
-     * @return bool
-     */
-    public function isMenuAccess($menuid, $groupid=-1){
-
-        if (!$this->menu_item) { $this->menu_item = $this->getMenuItem($menuid); }
-
-        $allow = $this->menu_item['allow_group'];
-
-        if ($allow == -1 || $menuid==0 || $allow == $groupid){
-            return true;
-        } else {
-            return false;
-        }
-        
-    }
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Определяет группу текущего пользователя и перетирает содержание страницы
+     * Перетирает содержание страницы
      * в случае остутствия у группы доступа к текущему пункту меню
      */
-    public function сheckMenuAccess(){
-        $inPage = cmsPage::getInstance();
-        $inUser = cmsUser::getInstance();
-        global $menuid;
-        $group_id = $inUser->group_id;
-        if ($menuid!=0){
-            if(!$this->isMenuAccess($menuid, $group_id)){
-                if (!$inUser->id){
-                    $inPage->page_body = '<p>Доступ запрещен</p>';
-                } else {
-                    if (!$inUser->is_admin){
-                        $inPage->page_body = '<p>Доступ запрещен</p>';
-                    }
-                }
-            }
-        }
+    public function checkMenuAccess(){
+
+		$inPage = cmsPage::getInstance();
+
+		global $menuid;
+
+		if (!$this->menu_item) { $this->menu_item = $this->getMenuItem($menuid); }
+		
+		$access_list = $this->menu_item['access_list'];
+
+		if (!$this->checkContentAccess($access_list) && $menuid != 0) { 
+
+            ob_start();
+
+            $inPage->includeTemplateFile('special/accessdenied.php');
+
+			$inPage->page_body = ob_get_clean();
+            return false;
+
+		} else {
+
+			return true;
+
+		}
+
     }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1878,6 +2246,18 @@ class cmsCore {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
+     * Возвращает true если URI страницы и ссылка активного пункта меню совпали полностью
+     * @return boolean
+     */
+    public function isMenuIdStrict() {
+        
+        return $this->is_menu_id_strict;
+        
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
      * Возвращает ID текущего пункта меню
      * @return int
      */
@@ -1896,9 +2276,16 @@ class cmsCore {
 
         $uri        = '/'.$uri;
 
+        //флаг, показывающий было совпадение URI и ссылки пунта меню
+        //полным или частичным
+        $is_strict  = false;
+
         //главная страница?
         $menuid     = ($uri == '/' ? 1 : 0);
-        if ($menuid == 1) { return $menuid; }
+        if ($menuid == 1) {
+            $this->is_menu_id_strict = 1;
+            return $menuid;
+        }
 
         //перевернем массив меню чтобы перебирать от последнего пункта к первому
         $menu       = array_reverse($this->menu_struct);
@@ -1911,6 +2298,7 @@ class cmsCore {
             //полное совпадение ссылки и адреса?
             if ($uri == $item['link']){
                 $menuid = $item['id'];
+                $is_strict = true; //полное совпадение
                 break;
             }
 
@@ -1923,7 +2311,8 @@ class cmsCore {
             
         }
 
-        $this->menu_id = $menuid;
+        $this->menu_id              = $menuid;
+        $this->is_menu_id_strict    = $is_strict;
 
         return $menuid;
 
@@ -2073,6 +2462,9 @@ class cmsCore {
         if ($linktype=='pricecat'){
             $menulink = '/price/'.$linkid;
         }
+        if ($linktype=='photoalbum'){
+            $menulink = '/photos/'.$linkid;
+        }
 
         return $menulink;
 
@@ -2100,13 +2492,13 @@ class cmsCore {
         $sql .= "ORDER BY {$order_by} {$order_to}";
         $result = $inDB->query($sql) ;
 
-        while($item = mysql_fetch_assoc($result)){
+        while($item = $inDB->fetch_assoc($result)){
             if (@$selected==$item[$id_field]){
                 $s = 'selected';
             } else {
                 $s = '';
             }
-            $html .= '<option value="'.$item[$id_field].'" '.$s.'>'.$item[$title_field].'</option>';
+            $html .= '<option value="'.htmlspecialchars($item[$id_field]).'" '.$s.'>'.$item[$title_field].'</option>';
         }
         return $html;
     }
@@ -2148,29 +2540,9 @@ class cmsCore {
                     } else {
                         $padding = '';
                     }
-                    $html .= '<option value="'.$node['id'].'" '.$s.'>'.$padding.$node['title'].'</option>';
+                    $html .= '<option value="'.htmlspecialchars($node['id']).'" '.$s.'>'.$padding.$node['title'].'</option>';
                 }
             }
-        }
-        return $html;
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Возвращает элементы <option> для списка баннерных позиций
-     * @param int $selected
-     * @return html
-     */
-    public function bannersList($selected=0){
-        $html = '';
-        for($bp=1; $bp<=10; $bp++){
-            if (@$selected==$bp){
-                $s = 'selected';
-            } else {
-                $s = '';
-            }
-            $html .= '<option value="banner'.$bp.'" '.$s.'>banner'.$bp.'</option>'."\n";
         }
         return $html;
     }
@@ -2215,7 +2587,7 @@ class cmsCore {
         $result = $inDB->query($sql) ;
         $html = '<select name="city">';
         $html .= '<option value="">'.$none_label.'</option>';
-        while($c = mysql_fetch_assoc($result)){
+        while($c = $inDB->fetch_assoc($result)){
             if (strtolower($selected)==strtolower($c['city'])){
                 $s = 'selected';
             } else {
@@ -2371,9 +2743,19 @@ class cmsCore {
 
         $inDB = cmsDatabase::getInstance();
 
+		$comments = $inDB->get_table('cms_comments', "target='{$target}' AND target_id='{$target_id}'", 'id');
+
+        if ($comments){
+
+            foreach($comments as $comment){
+                cmsActions::removeObjectLog('add_comment', $comment['id']);
+            }
+			
         $sql  = "DELETE FROM cms_comments WHERE target='{$target}' AND target_id='{$target_id}'";
 
         $inDB->query($sql);
+
+        }
 
         return true;
 
@@ -2388,7 +2770,7 @@ class cmsCore {
     public function getCommentsCount($target, $target_id){
         $inDB = cmsDatabase::getInstance();
         if ($this->isComponentInstalled('comments')){
-            $sql = "SELECT id FROM cms_comments WHERE target = '$target' AND target_id = '$target_id'";
+            $sql = "SELECT id FROM cms_comments WHERE target = '$target' AND target_id = '$target_id' AND published = 1";
             $result = $inDB->query($sql) ;
             return $inDB->num_rows($result);
         } else { return 0; }
@@ -2441,7 +2823,13 @@ class cmsCore {
      * @return bool
      */
     public function isComponentInstalled($component){
-        return (file_exists(PATH.'/components/'.$component.'/frontend.php'));
+        $inDB = cmsDatabase::getInstance();
+        return (bool)$inDB->rows_count('cms_components', "link='{$component}'", 1);
+    }
+
+    public function isModuleInstalled($module) {
+        $inDB = cmsDatabase::getInstance();
+        return (bool)$inDB->rows_count('cms_modules', "content='{$module}' AND user=0", 1);
     }
 
     // DATE METHODS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2471,14 +2859,20 @@ class cmsCore {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static function dateFormat($date, $is_full_m = true, $is_time=false, $is_now_time = true){
+
+        $inConf = cmsConfig::getInstance();
+
 	    global $_LANG;
+
+        $date = date('Y-m-d H:i:s', strtotime($date)+($inConf->timediff*3600));
+
 		// получаем значение даты и времени
 		list($day, $time) = explode(' ', $date);
 		switch( $day ) {
 		// Если дата совпадает с сегодняшней
 		case date('Y-m-d'):
 					$result = ''.$_LANG['TODAY'].'';
-					if ($is_now_time) {
+					if ($is_now_time && $time) {
 						list($h, $m, $s)  = explode(':', $time);
 						$result .= ' '.$_LANG['IN'].' '.$h.':'.$m;
 					}
@@ -2486,7 +2880,7 @@ class cmsCore {
 		//Если дата совпадает со вчерашней
 		case date( 'Y-m-d', mktime(0, 0, 0, date("m")  , date("d")-1, date("Y")) ):
 					$result = ''.$_LANG['YESTERDAY'].'';
-					if ($is_now_time) {
+					if ($is_now_time && $time) {
 						list($h, $m, $s)  = explode(':', $time);
 						$result .= ' '.$_LANG['IN'].' '.$h.':'.$m;
 					}
@@ -2532,7 +2926,7 @@ class cmsCore {
 				$d = str_replace($day_int, $day_norm, $d);
 				// Формирование окончательного результата
 				$result = $d.' '.$m.' '.$y;
-				if( $is_time )   {
+				if( $is_time && $time)   {
 					// Получаем отдельные составляющие времени
 					// Секунды нас не интересуют
 					list($h, $m, $s)  = explode(':', $time);
@@ -2542,6 +2936,34 @@ class cmsCore {
 		}
 		 return $result;
 	}
+
+    /**
+     * Возвращает день недели по дате
+     * @param string $date
+     * @return string
+     */
+    static function dateToWday($date){
+		
+        $inConf = cmsConfig::getInstance();
+
+	    global $_LANG;
+
+        $date = date('Y-m-d H:i:s', strtotime($date)+($inConf->timediff*3600));
+
+		// получаем значение даты и времени
+		list($day, $time)  = explode(' ', $date);
+		list($h, $min, $s) = explode(':', $time);
+		list($y, $m, $d)   = explode('-', $day);
+
+		$days_week = array($_LANG['SUNDAY'], $_LANG['MONDAY'], $_LANG['TUESDAY'], $_LANG['WEDNESDAY'], $_LANG['THURSDAY'], $_LANG['FRIDAY'], $_LANG['SATURDAY']);
+		
+		$arr  = getdate(mktime($h, $min, $s, $m, $d, $y));
+		
+		$wday = $days_week[$arr['wday']];
+        
+		return $wday;
+
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2562,7 +2984,7 @@ class cmsCore {
         $html = '';
 
         if(@$seldate){
-            $parts = split('-', $seldate);
+            $parts = explode('-', $seldate);
             if ($parts[2]){
                 $day_default = $parts[2];
             }
@@ -2641,11 +3063,12 @@ class cmsCore {
             return $inUser->is_admin;
         } else {
             $sql = "SELECT g.is_admin is_admin
-                    FROM cms_user_groups g, cms_users u
-                    WHERE u.group_id = g.id AND u.id = $userid";
+                    FROM cms_users u
+					LEFT JOIN cms_user_groups g ON g.id = u.group_id
+                    WHERE u.id = '$userid' LIMIT 1";
             $result = $inDB->query($sql) ;
-            if (mysql_num_rows($result)){
-                $data = mysql_fetch_assoc($result);
+            if ($inDB->num_rows($result)){
+                $data = $inDB->fetch_assoc($result);
                 return $data['is_admin'];
             } else { return false; }
         }
@@ -2663,8 +3086,10 @@ class cmsCore {
         if (!$userid) { return false; }
 
         $sql = "SELECT c.id as id
-                FROM cms_user_groups g, cms_users u, cms_category c
-                WHERE u.id = $userid AND u.group_id = g.id AND c.modgrp_id = g.id
+                FROM cms_users u
+				LEFT JOIN cms_user_groups g ON g.id = u.group_id
+				LEFT JOIN cms_category c ON c.modgrp_id = g.id
+                WHERE u.id = '$userid'
                 LIMIT 1";
         $result = $inDB->query($sql) ;
 
@@ -2679,28 +3104,17 @@ class cmsCore {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public function checkUserAccess($content_type, $content_id){
+
         $inDB = cmsDatabase::getInstance();
         $inUser = cmsUser::getInstance();
-        $access = false;
 
-        if ($inUser->id) {
-            $group_id = $_SESSION['user']['group_id'];
-            if ($this->userIsAdmin($inUser->id)){
-                $access = true;
-            }
-        }
-        else { $group_id = cmsUser::getGuestGroupId(); }
+		if ($inUser->is_admin) { return true; }
 
-        $sql = "SELECT group_id FROM cms_content_access WHERE content_type='$content_type' AND content_id = $content_id";
-        $result = $inDB->query($sql) ;
+		$access   = $inDB->get_table('cms_content_access', "content_type = '$content_type' AND content_id = '$content_id'", 'group_id');
 
-        if (mysql_num_rows($result)){
-            while($ac = mysql_fetch_assoc($result)){
-                if ($ac['group_id']==$group_id) { $access = true; }
-            }
-        } else { $access = true; }
+		if (!$access || !is_array($access)) { return true; }
 
-        return $access;
+		return in_array(array('group_id' => $inUser->group_id), $access);
 
     }
 
@@ -2723,7 +3137,7 @@ class cmsCore {
             $ac         = $inDB->fetch_assoc($result);
             $access_str = $ac['access'];
             $access     = str_replace(', ', ',', $access_str);
-            $access     = split(',', $access);
+            $access     = explode(',', $access);
             return $access;
         }
 
@@ -2776,12 +3190,12 @@ class cmsCore {
 
             $result = $inDB->query($sql) ;
 
-            if (mysql_num_rows($result)){
-                $ac = mysql_fetch_assoc($result);
+            if ($inDB->num_rows($result)){
+                $ac = $inDB->fetch_assoc($result);
                 $access_str = $ac['access'];
 
                 $access = str_replace(', ', ',', $access_str);
-                $access = split(',', $access);
+                $access = explode(',', $access);
 
                 if (in_array($access_type, $access)){
                     $do_access = true;
@@ -2797,12 +3211,37 @@ class cmsCore {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public function strClear($string, $strip_tags=true){
         $string = trim($string);
-        $string = mysql_real_escape_string($string);
+        //Если magic_quotes_gpc = On, сначала убираем экранирование
+        $string = (@get_magic_quotes_gpc()) ? stripslashes($string) : $string;        
         $string = rtrim($string, ' \\');
-        if ($strip_tags) $string = strip_tags($string);
+        if ($strip_tags) {
+            $string = strip_tags($string);
+            $string = mysql_real_escape_string($string);
+        }
         return $string;
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Удаляет теги script iframe style meta
+     * @param string $string
+     * @return bool
+     */
+    public static function badTagClear($string){
 
+        $bad_tags = array (
+            "'<script[^>]*?>.*?</script>'si",
+            "'<style[^>]*?>.*?</style>'si",
+            "'<meta[^>]*?>'si",
+            '/<iframe.*?src=(?!"http:\/\/www\.youtube\.com\/embed\/|"http:\/\/vkontakte\.ru\/video_ext\.php\?).*?>.*?<\/iframe>/i',
+            '/<iframe.*>.+<\/iframe>/i'
+        );
+
+        $string = preg_replace($bad_tags, '', $string);
+
+        return $string;
+        
+    }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
@@ -2988,8 +3427,8 @@ class cmsCore {
         $inDB = cmsDatabase::getInstance();
         $sql = "SELECT * FROM cms_upload_images WHERE post_id = '$post_id' AND target='$target'";
         $rs = $inDB->query($sql);
-        if (mysql_num_rows($rs)){
-            while($file = mysql_fetch_assoc($rs)){
+        if ($inDB->num_rows($rs)){
+            while($file = $inDB->fetch_assoc($rs)){
                 $filename = PATH.$file['fileurl'];
                 if (file_exists($filename)){ @unlink($filename); }
                 $inDB->query("DELETE FROM cms_upload_images WHERE id=".$file['id']);
@@ -3004,12 +3443,12 @@ class cmsCore {
         if (!$parse_bbcode){
             //convert URLs to links
             $text = ereg_replace("/(?<!http:\\/\\/)(www)(\\S+)/si",'http://www\\2', $text);
-            $text = ereg_replace("/(http:\\/\\/)(\\S+)/si",'<a href="http://\\2" target=_new>http://\\2</a>',$text);
+            $text = ereg_replace("/(http:\\/\\/)(\\S+)/si",'<a href="/go/url=http://\\2" target=_blank>http://\\2</a>',$text);
         } else {
             //parse bbcode
             include_once PATH.'/includes/bbcode/bbcode.lib.php';
             $bb = new bbcode($text);
-            $text = $bb->get_html();
+            $text = $bb->get_html();            
         }
 
         //convert emoticons to smileys
@@ -3140,19 +3579,21 @@ class cmsCore {
      * @return html
      */
     public function getBanner($position){
+
+        if (!$this->isComponentInstalled('banners')) { return false; }
+
         $inDB = cmsDatabase::getInstance();
         $html = '';
 
-        //get active banners with enough hits
         $sql = "SELECT *
                 FROM cms_banners
                 WHERE position = '$position' AND published = 1 AND ((maxhits > hits) OR (maxhits = 0))
-                ORDER BY hits ASC
+                ORDER BY RAND() ASC
                 LIMIT 1";
         $rs = $inDB->query($sql);
 
-        if (mysql_num_rows($rs)==1){
-            $banner = mysql_fetch_assoc($rs);
+        if ($inDB->num_rows($rs)==1){
+            $banner = $inDB->fetch_assoc($rs);
             if ($banner['typeimg']=='image'){
                 $html = '<a href="/gobanner'.$banner['id'].'" title="'.$banner['title'].'" target="_blank"><img src="/images/banners/'.$banner['fileurl'].'" border="0" alt="'.$banner['title'].'"/></a>';
             }
@@ -3187,8 +3628,8 @@ class cmsCore {
                 LIMIT 1";
         $rs = $inDB->query($sql);
 
-        if (mysql_num_rows($rs)==1){
-            $banner = mysql_fetch_assoc($rs);
+        if ($inDB->num_rows($rs)==1){
+            $banner = $inDB->fetch_assoc($rs);
             if ($banner['typeimg']=='image'){
                 $html = '<a href="/gobanner'.$banner['id'].'" title="'.$banner['title'].'"><img src="/images/banners/'.$banner['fileurl'].'" border="0" alt="'.$banner['title'].'"/></a>';
             }
@@ -3211,7 +3652,7 @@ class cmsCore {
 
         $str    = trim($str);        
         $str    = mb_strtolower($str, 'cp1251');
-        $string = str_replace(' ', '-', $string);
+        $str    = str_replace(' ', '-', $str);
         $string = preg_replace ('/[^a-zA-Zа-яА-Я0-9\-]/i', '-', $str);
         $string = rtrim($string, '-');
 
@@ -3223,7 +3664,7 @@ class cmsCore {
                         'и'=>'i','й'=>'i','к'=>'k','л'=>'l','м'=>'m',
                         'н'=>'n','о'=>'o','п'=>'p','р'=>'r','с'=>'s',
                         'т'=>'t','у'=>'u','ф'=>'f','х'=>'h','ц'=>'c',
-                        'ч'=>'ch','ш'=>'sh','щ'=>'sh','ъ'=>'','ы'=>'y',
+                        'ч'=>'ch','ш'=>'sh','щ'=>'sch','ъ'=>'','ы'=>'y',
                         'ь'=>'','э'=>'ye','ю'=>'yu','я'=>'ja'
                       );
 
@@ -3235,7 +3676,7 @@ class cmsCore {
 
         return $string;
 
-}
+	}
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3279,7 +3720,7 @@ class cmsCore {
         $diff_min   = (string)round(($diff_sec/60)-($diff_hour*60));
 
         //Выводим разницу в днях
-        if ($diff_day){
+        if ($diff_day > 0){
 
             if ($diff_day == 11 || $diff_day == 12 || $diff_day == 13 || $diff_day == 14) {
                 $diff_str = $diff_day. " дней";
@@ -3296,7 +3737,7 @@ class cmsCore {
         }
 
         //Выводим разницу в часах
-        if ($diff_hour){
+        if ($diff_hour > 0){
 
             if ($diff_hour == 1 || $diff_hour == 21) $diff_str = $diff_hour." час"; else
             if ($diff_hour == 2 || $diff_hour == 3 or $diff_hour == 4 || $diff_hour == 22 || $diff_hour == 23) $diff_str = $diff_hour." часа";
@@ -3307,14 +3748,14 @@ class cmsCore {
         }
 
         //Выводим разницу в минутах
-        if ($diff_min){
+        if ($diff_min > 0){
 
             if ($diff_min == "11" || $diff_min == "12" || $diff_min == "13" || $diff_min == "14") {
                 $diff_str = $diff_min. " минут";
             } elseif ($diff_min[strlen($diff_min)-1] == "2" || $diff_min[strlen($diff_min)-1] == "3" || $diff_min[strlen($diff_min)-1] == "4") {
                 $diff_str = $diff_min." минуты";
             } elseif($diff_min[strlen($diff_min)-1] == "1") {
-                $diff_str = $diff_min. " минута";
+                $diff_str = $diff_min. " минуту";
             } else {
                 $diff_str = $diff_min. " минут";
             }
@@ -3476,7 +3917,7 @@ function cmsSmartyComments($params){
     $inCore = cmsCore::getInstance();
     $inCore->includeComments();
 
-    comments($params['target'], $params['target_id']);
+    comments($params['target'], $params['target_id'], $params['labels']);
 
     return;
 

@@ -1,14 +1,15 @@
 <?php
-/*********************************************************************************************/
-//                                                                                           //											 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 		  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 			    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 /* 
@@ -34,15 +35,18 @@ $_LANG['SHOW_ONLY_ONLINE']          ='Показать только тех, кто онлайн';
 $_LANG['SHOW_ALL']                  ='Показать всех';
 
 $_LANG['SHORT_NICKNAME']            ='Никнейм не может быть короче 2х символов!';
+$_LANG['ERR_NICK_EXISTS']           ='Выбранный никнейм запрещен администратором!';
 $_LANG['LONG_CITY_NAME']            ='Слишком длинное название города.';
 $_LANG['REALY_ADRESS_EMAIL']        ='Укажите настоящий адрес e-mail!';
 $_LANG['PROFILE_SAVED']             ='Профиль успешно сохранен.';
 
 $_LANG['OLD_PASS_WRONG']            ='Старый пароль введен не верно.';
 $_LANG['WRONG_PASS']                ='Пароли не совпали.';
+$_LANG['PASS_SHORT']                ='Пароль должен быть не менее 6 символов!';
 $_LANG['PASS_CHANGED']              ='Пароль успешно изменен.';
 
 $_LANG['CONFIG_PROFILE']            ='Настройки профиля';
+$_LANG['MY_CONFIG']                 ='Мои настройки';
 $_LANG['COMMENTS']                  ='Комментарии';
 $_LANG['NO_USER_COMMENT']           ='Пользователь не оставлял комментарии.';
 
@@ -76,7 +80,11 @@ $_LANG['SELECT_AVATAR']             ='Выбор аватара';
 
 $_LANG['USR_COMMENTS']              ='Комментарии';
 
-$_LANG['ADD_PHOTO']                 ='Добавить фотографию';
+$_LANG['ADD_PHOTO']                 ='Добавить фото';
+$_LANG['ADD_PHOTOS']                ='Добавить фотографии';
+$_LANG['PHOTOS_CONFIG']             ='Настройки фотографий';
+$_LANG['DELETE_ALBUM']              ='Удалить альбом';
+$_LANG['DELETE_ALBUM_CONFIRM']      ='Удалить фотоальбом со всеми фотографиями?';
 $_LANG['PHOTO_WITHOUT_NAME']        ='Фото без названия';
 $_LANG['PHOTO_ADDED']               ='Фотография успешно добавлена.';
 $_LANG['PHOTO_LIMIT']               ='Достигнут предел количества личных фотографий';
@@ -86,17 +94,28 @@ $_LANG['FOR_ADD_PHOTO_TEXT']        ='Чтобы добавить новое личное фото, удалите 
 $_LANG['GOTO_PHOTO']                ='Перейти к фотографии';
 $_LANG['ADD_PHOTO_MORE']            ='Добавить еще фотографию';
 $_LANG['GOTO_PHOTOALBUM']           ='Перейти к фотоальбому';
+$_LANG['NO_PUBLISHED_PHOTO']        ='Ранее загружено, но не опубликовано';
+$_LANG['TEXT_TO_NO_FLASH']          ='Подсказка: если у Вас возникли какие-либо проблемы с загрузкой фотографий, Вы также можете воспользоваться';
+$_LANG['TEXT_TO_TO_FLASH']          ='Вы можете вернуться и воспользоваться';
+$_LANG['PHOTO_ST_UPLOAD']           ='стандартным загрузчиком фотографий';
+$_LANG['PHOTO_FL_UPLOAD']           ='flash загрузчиком фотографий';
+
 
 $_LANG['PHOTOALBUM']                ='Фотоальбом';
+$_LANG['PHOTOALBUMS']               ='Фотоальбомы';
+$_LANG['ALL_ALBUMS']                ='Все альбомы';
 $_LANG['DELETE_PHOTO']              ='Удалить фотографию';
 $_LANG['DELETING_PHOTO']            ='Удаление фотографии';
 $_LANG['REALLY_DELETE_PHOTO']       ='Вы действительно желаете удалить фото';
 $_LANG['EDIT_PHOTO']                ='Редактировать фотографию';
+$_LANG['EDIT_ALBUM']                ='Редактировать альбом';
 $_LANG['PHOTO_SAVED']               ='Фотография успешно cохранена.';
 $_LANG['BACK_TO_PHOTOALBUM']        ='Вернуться к фотоальбому';
 
 $_LANG['PHOTO_TITLE']               ='Название фото';
 $_LANG['PHOTO_DESCRIPTION']         ='Описание фото';
+$_LANG['ALBUM_TITLE']               ='Название альбома';
+$_LANG['ALBUM_DESCRIPTION']         ='Описание альбома';
 $_LANG['TAGS']                      ='Теги';
 $_LANG['KEYWORDS']                  ='ключевые слова, через запятую';
 $_LANG['REPLACE_FILE']              ='Заменить файлом';
@@ -104,24 +123,33 @@ $_LANG['REPLACE_FILE']              ='Заменить файлом';
 $_LANG['SHOW']                      ='Показывать';
 $_LANG['EVERYBODY']                 ='Всем';
 $_LANG['REGISTERED']                ='Зарегистрированным';
-$_LANG['MY_FRIENDS']                ='Моим друзьям';
+$_LANG['MY_FRIENDS']                ='Мои друзья';
 
 $_LANG['ADVS']                      ='Объявления';
 $_LANG['PUBLISHED']                 ='Опубликовано';
 $_LANG['WAIT_MODER']                ='Ожидает модерации';
+$_LANG['ADV_EXTEND']                ='Просрочено';
 $_LANG['NOT_ADVS']                  ='Нет объявлений.';
 
 $_LANG['FRIENDS']                   ='Друзья';
+$_LANG['ALL_FRIENDS']               ='Все друзья';
+$_LANG['USER_FRIENDS']              ='Друзья пользователя';
+
+$_LANG['USER_PHOTOS']               ='Фотографии пользователя';
+$_LANG['MY_PHOTOS']                 ='Мои фотографии';
 
 $_LANG['HITS']                      ='Просмотров';
-$_LANG['SIZE']                      ='Размер';
 $_LANG['KBITE']                     ='кб';
 $_LANG['CODE_FOR_FORUM']            ='Код для вставки на форумы';
 
 $_LANG['PHOTO_NOT_FOUND']           ='Фотография не найдена';
-$_LANG['PHOTO_NOT_FOUND_TEXT']      ='Возможно она была удалена или пользователь ограничил ее просмотр.';
+$_LANG['PHOTO_NOT_FOUND_TEXT']      ='Пользователь ограничил просмотр этой фотографии.';
 
 $_LANG['ADD_TO_FRIEND']             ='Добавить в друзья';
+$_LANG['ADD_TO_FRIEND_SEND']        ='Предложение дружбы отправлено';
+$_LANG['ADD_TO_FRIEND_SEND_ERR']    ='Предложение дружбы уже было отправлено, пользователь еще не принял его';
+$_LANG['DEL_FRIEND']                =' и Вы больше не друзья';
+$_LANG['ADD_FRIEND_OK']             ='У Вас новый друг: ';
 $_LANG['SEND_TO_USER']              ='Отправить пользователю';
 $_LANG['FRIENDSHIP_OFFER']          ='предложение дружбы';
 $_LANG['IF']                        ='Если';
@@ -130,12 +158,7 @@ $_LANG['RECEIVED_F_O']              ='Получено предложение дружбы';
 $_LANG['YOU_CAN_SEE']               ='Вы можете посмотреть его в своем';
 $_LANG['INPROFILE']                 ='профиле';
 
-$_LANG['SEND_MESS']                 ='Отправить сообщение';
-$_LANG['ORIGINAL_MESS']             ='Исходное сообщение';
-$_LANG['SEND_TO_ALL']               ='Отправить всем (массовая рассылка)';
-$_LANG['YOU_HAVE_NEW_MESS']         ='У вас новое сообщение';
-
-$_LANG['KARMA_NOT_MODIFY']          ='Карма пользователя еще не изменялась.';
+$_LANG['KARMA_NOT_MODIFY']          ='Карма еще не изменялась.';
 $_LANG['KARMA_NOT_MODIFY_TEXT']     ='Оставляйте комментарии и сообщения на форуме чтобы другие могли изменять Вашу карму.';
 $_LANG['KARMA_DESCRIPTION']         ='Карма является аналогом рейтинга и показывает насколько хорошо Вас оценивают другие пользователи сайта.';
 
@@ -181,7 +204,6 @@ $_LANG['IS_OVER_LIMIT']             ='исчерпано';
 $_LANG['UPLOADED_FILES']            ='Загруженные файлы';
 $_LANG['FREE_SPACE_LEFT']           ='Осталось доступного места';
 $_LANG['ERR_BIG_FILE']              ='Ни один файл не был загружен. Может файлы слишком большие?';
-$_LANG['ERR_FILE_NAME']             ='Имена файлов не должны содержать пробелов и русских букв.';
 $_LANG['LOADING']                   ='Идет загрузка';
 
 $_LANG['SELECT_FILE_TEXT']          ='Выбирайте все необходимые файлы поочередно, используя поле.';
@@ -189,6 +211,8 @@ $_LANG['MAX_FILE_SIZE']             ='Максимальный размер файла';
 $_LANG['FOR_NEW_FILE_DEL_OLD']      ='Чтобы загрузить новые файлы, удалите какие-либо из имеющихся.';
 $_LANG['DELETING_FILE']             ='Удаление файла';
 $_LANG['YOU_REALLY_DEL_FILE']       ='Вы действительно желаете удалить файл';
+$_LANG['ERROR_TYPE_FILE']           ='Тип файла не входит в состав разрешённых<br/>Разрешённые типы файлов';
+$_LANG['TYPE_FILE']                 ='Доступные типы файлов';
 
 $_LANG['NOT_SELECTED_FILES']        ='Нет выбранных файлов';
 $_LANG['DELETE_FILES']              ='Удалить файлы';
@@ -202,6 +226,18 @@ $_LANG['POSTS_IN_BLOG']             ='записей в блоге';
 $_LANG['KARMA_POINTS']              ='баллов личной кармы';
 $_LANG['PHOTOS_IN_ALBUMS']          ='фотографий в общих альбомах';
 $_LANG['PHOTOS_IN_PRIVATE_ALBUM']   ='фотографий в личном альбоме';
+$_LANG['PHOTO_SHORT']               ='фото';
+$_LANG['PHOTO']                     ='фотография';
+$_LANG['PHOTO2']                    ='фотографии';
+$_LANG['PHOTO10']                   ='фотографий';
+$_LANG['IS_PUBLIC_ALBUM']           ='Вы смотрите фотографии одного пользователя из общего альбома.';
+$_LANG['ALL_PUBLIC_PHOTOS']         ='Посмотреть весь альбом';
+$_LANG['YOU_CAN_UPLOAD']            ='Вы можете загрузить максимум';
+$_LANG['UPLOAD_QUEUE']              ='Очередь загрузки';
+$_LANG['UPLOADED']                  ='Загружено';
+$_LANG['SAVE_TO_ALBUM']             ='Сохранить в фотоальбом';
+$_LANG['CREATE_NEW_ALBUM']          ='Создать новый фотоальбом';
+$_LANG['AND_GO_TO_ALBUM']           ='и перейти в альбом';
 
 $_LANG['NOT_USERS_WITH_THIS_AWARD'] ='Нет пользователей с этой наградой';
 $_LANG['AWARD_HAVES']               ='Наградой обладают';
@@ -226,16 +262,29 @@ $_LANG['REPLY']                     ='Ответить';
 $_LANG['HISTORY']                   ='История';
 $_LANG['NOT_MESS_IN_CAT']           ='Нет сообщений в этой папке.';
 $_LANG['TO']                        ='Кому';
+$_LANG['SEND_MESS']                 ='Отправить сообщение';
+$_LANG['ORIGINAL_MESS']             ='Исходное сообщение';
+$_LANG['SEND_TO_ALL']               ='Отправить всем';
+$_LANG['SEND_TO_FRIEND']            ='Отправить другу';
+$_LANG['SEND_TO_GROUP']             ='Отправить группе';
+$_LANG['YOU_HAVE_NEW_MESS']         ='У вас новое сообщение';
+$_LANG['ERR_SEND_MESS']             ='В сообщении должен быть текст';
+$_LANG['SEND_MESS_OK']              ='Сообщение отправлено';
+$_LANG['SEND_MESS_ALL_OK']          ='Сообщение отправлено всем пользователям';
+$_LANG['SEND_MESS_GROUP_OK']        ='Сообщение отправлено группе &laquo;%s&raquo;';
+$_LANG['MESS_DEL_OK']               ='Сообщение удалено';
+$_LANG['MESS_BACK_OK']              ='Сообщение отозвано';
+$_LANG['MESS_ALL_DEL_OK']           ='Все сообщения в папке удалены';
 
 $_LANG['WRITE_MESS']                ='Написать сообщение';
 $_LANG['STOP_FRIENDLY']             ='Прекратить дружбу';
 
 $_LANG['TO_BANN']                   ='Забанить';
 $_LANG['DEL_PROFILE']               ='Удалить профиль';
-$_LANG['SET_AVATAR']                ='Установить аватар';
+$_LANG['SET_AVATAR']                ='Изменить аватар';
 $_LANG['USERS_PHOTOS_PUBLIC_ALBUMS']='Фотографии пользователя в общих альбомах';
 $_LANG['ALL_PHOTOS']                ='Все фотографии';
-$_LANG['NOT_PHOTOS']                ='Нет доступных фотографий.';
+$_LANG['NOT_PHOTOS']                ='Нет доступных фотографий, возможно у вас нет прав для просмотра этого альбома.';
 $_LANG['ADD']                       ='Добавить';
 $_LANG['ALL_COMMENTS']              ='Все комментарии';
 $_LANG['USER_NOT_COMMENT']          ='Пользователь не оставлял комментарии.';
@@ -320,15 +369,20 @@ $_LANG['AWARDS']                    ='Награды';
 $_LANG['STATUS']                    ='Статус';
 $_LANG['LAST_VISIT']                ='Последний визит';
 $_LANG['DATE_REGISTRATION']         ='Дата регистрации';
+$_LANG['INVITED_BY']                ='По приглашению от';
 $_LANG['READ']                      ='Читать';
 $_LANG['USER_WALL']                 ='Стена пользователя';
 $_LANG['WRITE_ON_WALL']             ='Написать на стене';
+$_LANG['ERR_SEND_WALL']             ='Запись на стене не может быть пуста';
+$_LANG['WALL_MESG_DEL']             ='Запись на стене удалена';
 $_LANG['LAST_FRIEND_COMM']          ='Последние комментарии друзей';
 $_LANG['LAST_POSTS_IN_FRIEND_BLOG'] ='Последние посты в блогах друзей';
 $_LANG['LAST_FRIEND_PHOTOS']        ='Последние фотографии друзей';
-$_LANG['FEED_DESC']                 ='Лента служит для быстрого просмотра новых фотографий и постов в блогах ваших друзей.';
-$_LANG['FEED_EMPTY_TEXT']           ='У вас пока нет друзей на сайте, поэтому лента пуста.';
+$_LANG['FEED_DESC']                 ='Лента служит для быстрого просмотра действий, которые совершали ваши друзья.';
+$_LANG['FEED_EMPTY_TEXT']           ='У вас пока нет друзей на сайте (или они ничего не делали), поэтому лента пуста.';
 $_LANG['YOUR_CONTENT']              ='Ваш контент';
+$_LANG['MY_CONTENT']                ='Мой контент';
+$_LANG['USER_CONTENT']              ='Контент пользователя';
 $_LANG['NOT_FRIENDS_IN_USER']       ='У пользователя пока нет друзей на сайте.';
 $_LANG['NOT_FRIENDS_IN_YOUR']       ='У вас пока нет друзей на сайте.';
 $_LANG['CONSIST']                   ='Состоит в';
@@ -346,6 +400,7 @@ $_LANG['AGE_FROM']                  ='возраст от';
 $_LANG['TO']                        ='до';
 $_LANG['SEND_TO']                   ='Кому';
 $_LANG['SEARCH']                    ='Поиск';
+$_LANG['LATEST']                    ='Новые';
 $_LANG['POSITIVE']                  ='Позитивные';
 $_LANG['NEGATIVE']                  ='Негативные';
 $_LANG['HOW_MUCH_US']               ='Сколько нас?';
@@ -364,4 +419,15 @@ $_LANG['FEMALE10']                  ='женщин';
 $_LANG['UNKNOWN']                   ='Не определились';
 $_LANG['WHERE_WE_FROM']             ='Откуда мы?';
 $_LANG['TODAY_BIRTH']               ='Сегодня день рождения';
+$_LANG['MY_INVITES']                ='Мои инвайты';
+$_LANG['INVITE_SENDED']             ='Приглашение для <strong>%s</strong> отправлено';
+$_LANG['INVITE_ERROR']              ='Ошибка отправки приглашения';
+$_LANG['YOU_CAN_SEND']              ='Вы можете отправить';
+$_LANG['INVITE1']                   ='инвайт';
+$_LANG['INVITE2']                   ='инвайта';
+$_LANG['INVITE10']                  ='инвайтов';
+$_LANG['SEND_INVITE']               ='Отправить';
+$_LANG['INVITE_EMAIL']              ='Отправить инвайт на E-mail';
+$_LANG['INVITE_NOTICE']             ='На указанный адрес будет выслан код приглашения';
+$_LANG['INVITE_SUBJECT']            ='%s приглашает Вас';
 ?>

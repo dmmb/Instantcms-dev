@@ -1,12 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 function mod_tags($module_id){
         $inCore = cmsCore::getInstance();
@@ -19,7 +22,12 @@ function mod_tags($module_id){
 		if(!isset($cfg['minlen'])) { $cfg['minlen'] = 3; }
         if(!isset($cfg['maxtags'])) { $cfg['maxtags'] = 20; }
 
+		$is_targeting = false;
+
 		if ($targeting){
+		
+			$is_targeting = true;
+			
 			$sql = "SELECT t.*, COUNT(t.tag) as num
 					FROM cms_tags t
 					WHERE ";	
@@ -53,7 +61,11 @@ function mod_tags($module_id){
 			$size = array();
 			for ($s=0; $s<10; $s++) { $size[] = 10 + ($s*4); }
 			
+			$is_tags = false;
+			
 			if ($inDB->num_rows($result)){
+				$is_tags = true;
+				
 				$tags = array();
 				$summary = 0;
 				while($tag = $inDB->fetch_assoc($result)){
@@ -65,7 +77,8 @@ function mod_tags($module_id){
 					}
 				}
 	
-				echo '<div>';
+				$tags_sel = array();
+				
 				foreach($tags as $key=>$value){
 					
 					$tag = $tags[$key]['title'];
@@ -78,16 +91,23 @@ function mod_tags($module_id){
 							if ($prc >= ($s*10)) { $fontsize = $size[$s]; }
 						}
 									
-						echo '<a class="tag" href="/search/tag/'.urlencode($tag).'" style="padding:2px; font-size: '.$fontsize.'px">'.ucfirst($tag).'</a>'."\n";
+						$next = sizeof($tags_sel);
+						$tags_sel[$next]['title'] = $tag;
+						$tags_sel[$next]['num'] = $num;
+						$tags_sel[$next]['fontsize'] = $fontsize;
+
 					}
 				}
-				echo '</div>';
 				
-			} else { echo '<p>Нет тегов для отображения</p>'; }
 			
-		} else {
-			echo '<p>Не выбраны источники тегов для показа.</p>';
 		}
+		} 
+		
+		$smarty = $inCore->initSmarty('modules', 'mod_tags.tpl');			
+		$smarty->assign('tags', $tags_sel);
+		$smarty->assign('is_tags', $is_tags);
+		$smarty->assign('is_targeting', $is_targeting);
+		$smarty->display('mod_tags.tpl');
 				
 		return true;
 	

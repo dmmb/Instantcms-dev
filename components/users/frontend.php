@@ -1,14 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 function karmaPoints($points){
@@ -18,63 +19,6 @@ function karmaPoints($points){
 		return '<span style="font-size:24px;color:red">'.$points.'</span>';
 	}
 	return;
-}
-
-function pageBar($current, $perpage, $orderby, $orderto, $records){
-    $inDB   = cmsDatabase::getInstance();
-    global $_LANG;
-	$html = '';
-	if (!@$_SESSION['usr_online']){
-		$result = $inDB->query("SELECT * FROM cms_users WHERE is_locked=0 AND is_deleted=0") ;
-	} else {
-		$result = $inDB->query("SELECT p.user_id FROM cms_user_profiles p, cms_online o, cms_users u WHERE p.user_id = o.user_id AND u.id=p.user_id AND u.is_deleted=0") ;
-	}
-	$records = $inDB->num_rows($result);
-	if ($records){
-		$pages = ceil($records / $perpage);
-		if($pages>1){
-			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
-			for ($p=1; $p<=$pages; $p++){
-				if ($p != $current) {			
-					$link = '/users/'.$p.'/'.$orderby.'-'.$orderto.'.html';
-					$html .= ' <a href="'.$link.'" class="pagebar_page">'.$p.'</a> ';		
-				} else {
-					$html .= '<span class="pagebar_current">'.$p.'</span>';
-				}
-			}
-			$html .= '</div>';
-		}
-	}
-	return $html;
-}
-
-function pageBarStatic($current, $perpage, $user_id, $page='entries', $table='cms_comment'){
-    $inDB   = cmsDatabase::getInstance();
-    global $_LANG;
-	$html = '';
-	
-	$result = $inDB->query("SELECT id FROM $table WHERE user_id = $user_id");
-	$records = $inDB->num_rows($result);
-	
-	if ($records){
-		$pages = ceil($records / $perpage);
-
-		if($pages>1){
-			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
-			for ($p=1; $p<=$pages; $p++){
-				if ($p != $current) {			
-					$link = '/users/'.$user_id.'/'.$page.$p.'.html';
-					$html .= ' <a href="'.$link.'" class="pagebar_page">'.$p.'</a> ';		
-				} else {
-					$html .= '<span class="pagebar_current">'.$p.'</span>';
-				}
-			}
-			$html .= '</div>';
-		}
-	}
-	return $html;
 }
 
 function pageSelectFiles($records, $current, $perpage){
@@ -117,61 +61,6 @@ function pageSelectFiles($records, $current, $perpage){
 	return $html;
 }
 
-function pageBarBoard($user_id, $current, $perpage){
-    $inDB   = cmsDatabase::getInstance();
-	$html = '';
-	global $_LANG;
-	$result = $inDB->query("SELECT id FROM cms_board_items WHERE user_id = $user_id") ;
-	$records = $inDB->num_rows($result);
-	
-	if ($records){
-		$pages = ceil($records / $perpage);
-
-		if($pages>1){
-			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
-			for ($p=1; $p<=$pages; $p++){
-				if ($p != $current) {			
-					if ($p==1) { $pnum = ''; } else { $pnum = $p; }
-					$link = '/users/'.$user_id.'/board'.$pnum.'.html';					
-					$html .= ' <a href="'.$link.'" class="pagebar_page">'.$p.'</a> ';		
-				} else {
-					$html .= '<span class="pagebar_current">'.$p.'</span>';
-				}
-			}
-			$html .= '</div>';
-		}
-	}
-	return $html;
-}
-
-function pageBarAvatars($current, $perpage, $records, $userid){
-
-    global $_LANG;
-
-    $inDB   = cmsDatabase::getInstance();
-	$html = '';
-
-	if ($records){
-		$pages = ceil($records / $perpage);
-
-		if($pages>1){
-			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>'.$_LANG['PAGES'].': </strong></span>';
-			for ($p=1; $p<=$pages; $p++){
-				if ($p != $current) {
-					$link = '/users/'.$userid.'/select-avatar-'.$p.'.html';
-					$html .= ' <a href="'.$link.'" class="pagebar_page">'.$p.'</a> ';
-				} else {
-					$html .= '<span class="pagebar_current">'.$p.'</span>';
-				}
-			}
-			$html .= '</div>';
-		}
-	}
-	return $html;
-}
-
 function return_bytes($val) {
     $val = trim($val);
     $last = strtolower($val{strlen($val)-1});
@@ -201,6 +90,8 @@ function users(){
     $model = new cms_model_users();
 
     $cfg = $inCore->loadComponentConfig('users');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
     $inCore->loadLanguage('components/users');
 
     if (!isset($cfg['showgroup'])) { $cfg['showgroup']  = 0; }
@@ -210,6 +101,9 @@ function users(){
     if (!isset($cfg['sw_search'])) { $cfg['sw_search'] = 1;  }
     if (!isset($cfg['sw_guest']))  { $cfg['sw_guest'] = 1; }
 	
+    //Определяем адрес для редиректа назад
+    $back   = $inCore->getBackURL();
+	
 	$id     =   $inCore->request('id', 'int', 0);
 	$do     =   $inCore->request('do', 'str', 'view');
 
@@ -218,11 +112,21 @@ function users(){
 /////////////////////////////// SEARCH BY CITY ///////////////////////////////////////////////////////////////////////////////////////
 if ($do=='city'){
 
-	$city = htmlspecialchars(urldecode($_REQUEST['city']), ENT_QUOTES, 'cp1251');
+	$city = urldecode($inCore->request('city', 'str', ''));
 
-	$querysql = "SELECT u.*, p.*, u.id as id, u.regdate as fregdate, u.logdate as flogdate
-				FROM cms_users u, cms_user_profiles p
-				WHERE u.is_locked = 0 AND p.user_id = u.id AND p.city LIKE '%$city%' AND u.is_deleted = 0
+	$querysql = "SELECT	        
+				u.id as id,
+				u.login,
+				u.nickname,
+				u.logdate as flogdate,
+		        u.is_deleted as is_deleted,
+                u.birthdate, u.rating,
+				u.status as microstatus,
+                p.city, p.karma as karma, p.imageurl, 
+				p.gender as gender
+                FROM cms_users u
+				INNER JOIN cms_user_profiles p ON p.user_id = u.id
+				WHERE u.is_deleted = 0 AND u.is_locked = 0 AND p.city LIKE '%$city%'
 				ORDER BY city DESC";
 	
 	$querymsg = '<div class="con_description"><strong>'.$_LANG['SEARCH_BY_CITY'].':</strong> '.$city.' (<a href="/users/all.html">'.$_LANG['CANCEL_SEARCH'].'</a>)</div>';
@@ -235,13 +139,26 @@ if ($do=='hobby'){
 
     $hobby = $inCore->request('hobby', 'str', '');
 
+    $hobby = urldecode($hobby);
+
     $hobby = str_replace('\"', '"', $hobby);
 
     $hobby = strtolower($hobby);
 
-	$querysql = "SELECT u.*, p.*, u.id as id, u.regdate as fregdate, u.logdate as flogdate
-				FROM cms_users u, cms_user_profiles p
-				WHERE u.is_locked = 0 AND p.user_id = u.id AND (LOWER(p.description) LIKE '%$hobby%' OR LOWER(p.formsdata) LIKE '%$hobby%') AND u.is_deleted = 0
+	$querysql = "SELECT		        
+				u.id as id,
+				u.login,
+				u.nickname,
+				u.logdate as flogdate,
+		        u.is_deleted as is_deleted,
+                u.birthdate, u.rating,
+				u.status as microstatus,
+                p.city, p.karma as karma, p.imageurl, 
+				p.gender as gender
+                FROM cms_users u
+				INNER JOIN cms_user_profiles p ON p.user_id = u.id
+				WHERE u.is_deleted = 0 AND u.is_locked = 0
+				AND (LOWER(p.description) LIKE '%$hobby%' OR LOWER(p.formsdata) LIKE '%$hobby%')
 				ORDER BY city DESC";
 	
 	$querymsg = '<div class="con_description"><strong>'.$_LANG['SEARCH_BY_HOBBY'].':</strong> '.$hobby.' (<a href="/users/all.html">'.$_LANG['CANCEL_SEARCH_SHOWALL'].'</a>)</div>';
@@ -254,7 +171,7 @@ if ($do=='search'){
 	$s = '';
 	$stext = array();
 
-	if (@$_REQUEST['gender']){
+	if ($_REQUEST['gender']){
 		$val = $inCore->request('gender', 'str', 'm');
 		if ($val=='m'){
 			$s .= " AND p.gender = 'm'"; 
@@ -264,45 +181,52 @@ if ($do=='search'){
 			$stext[] = $_LANG['FEMALE'];
 		}
 	}	
-	if (@$_REQUEST['agefrom']){
+	if ($_REQUEST['agefrom']){
 		$val = $inCore->request('agefrom', 'int', 18);
 		$s .= ' AND DATEDIFF(NOW(), u.birthdate) >= '.($val*365); 
 		$stext[] = $_LANG['NOT_YOUNG']." $val ".$_LANG['YEARS'];
 	}			
-	if (@$_REQUEST['ageto']){
+	if ($_REQUEST['ageto']){
 		$val = $inCore->request('ageto', 'int');
 		$s .= ' AND DATEDIFF(NOW(), u.birthdate) <= '.($val*365); 
 		$stext[] = $_LANG['NOT_OLD']." $val ".$_LANG['YEARS'];
 	}
 
-    if (@$_REQUEST['name']){
+    if ($_REQUEST['name']){
 		$val = $inCore->request('name', 'str', '');
         $val = strtolower($val);
 		$s .= ' AND LOWER(u.nickname) LIKE \'%'.$val.'%\'';
 		$stext[] = $_LANG['NAME']." &mdash; ".$val;
 	}
 
-    if (@$_REQUEST['city']){
+    if ($_REQUEST['city']){
 		$val = $inCore->request('city', 'str', '');
         $val = strtolower($val);
 		$s .= ' AND LOWER(p.city) LIKE \''.$val.'%\'';
 		$stext[] = $_LANG['CITY']." &mdash; ".$val;
 	}
 
-    if (@$_REQUEST['hobby']){
+    if ($_REQUEST['hobby']){
 		$val = $inCore->request('hobby', 'str', '');
         $val = strtolower($val);        
 		$s .= ' AND (LOWER(p.description) LIKE \'%'.$val.'%\' OR LOWER(p.formsdata) LIKE \'%'.$val.'%\')';
 		$stext[] = $_LANG['HOBBY']." &mdash; ".$val;
 	}
 
-	$querysql = "SELECT u.*, p.*, u.id as id, u.status as microstatus, 
-						u.regdate as fregdate, 
-                        u.logdate as flogdate,
-                        u.status as microstatus
-				FROM cms_users u, cms_user_profiles p
-				WHERE u.is_deleted = 0 AND u.is_locked = 0 AND p.user_id = u.id $s
-				ORDER BY city DESC";
+	$querysql = "SELECT		        
+				 u.id as id,
+				 u.login,
+				 u.nickname,
+                 u.logdate as flogdate,
+		         u.is_deleted as is_deleted,
+                 u.birthdate, u.rating,
+				 u.status as microstatus,
+                 p.city, p.karma as karma, p.imageurl, 
+				 p.gender as gender
+                 FROM cms_users u
+				 INNER JOIN cms_user_profiles p ON p.user_id = u.id
+				 WHERE u.is_deleted = 0 AND u.is_locked = 0 $s
+				 ORDER BY city DESC";
 
     echo '<pre>'.$sql.'</pre>';
 	
@@ -323,18 +247,18 @@ if ($do=='search'){
 /////////////////////////////// VIEW USERS LIST ///////////////////////////////////////////////////////////////////////////////////////	
 if ($do=='view'){
 			
-	$orderby = $inCore->request('orderby', 'str', 'karma');
+	$orderby = $inCore->request('orderby', 'str', 'regdate');
 	$orderto = $inCore->request('orderto', 'str', 'desc');
 	$page	 = $inCore->request('page',	'int', 1);	
 	
-	if($orderby != 'karma' && $orderby != 'rating') { $orderby = 'karma'; } 
+	if($orderby != 'karma' && $orderby != 'rating') { $orderby = 'regdate'; }
 	
 	if ($orderto != 'asc' && $orderto != 'desc' ){ $orderto = 'desc'; }
 	if ($page <= 0) { $page = 1; }
 	
 	if ($inCore->inRequest('online')) { $_SESSION['usr_online'] = $inCore->request('online', 'int'); $page = 1; }
 	
-	$perpage = 20;
+	$perpage = 10;
 
     if ($cfg['sw_search']){
         $inPage->initAutocomplete();
@@ -345,19 +269,38 @@ if ($do=='view'){
 	
 	if (!isset($querysql)){
 		if (!@$_SESSION['usr_online']){
-			$sql = "SELECT u.*, p.*, u.id as id, u.is_deleted as is_deleted, u.regdate as fregdate,  p.karma as karma, 
-						   u.logdate as flogdate,
-                           p.gender as gender, u.status as microstatus
-					FROM cms_user_profiles p, cms_users u
-					WHERE u.is_locked = 0 AND u.is_deleted = 0 AND p.user_id = u.id
+
+			$sql = "SELECT		        
+				    u.id as id,
+				    u.login,
+				    u.nickname,
+				    u.logdate as flogdate,
+		            u.is_deleted as is_deleted,
+                    u.birthdate, u.rating,
+				    u.status as microstatus,
+                    p.city, p.karma as karma, p.imageurl, 
+				    p.gender as gender
+                    FROM cms_users u
+				    INNER JOIN cms_user_profiles p ON p.user_id = u.id
+				    WHERE u.is_locked = 0 AND u.is_deleted = 0
 					ORDER BY ".$orderby." ".$orderto."
 					LIMIT ".(($page-1)*$perpage).", $perpage";
 		} else {
-			$sql = "SELECT u.*, p.*, u.id as id, u.is_deleted as is_deleted, u.regdate as fregdate,  p.karma as karma,
-						   u.logdate as flogdate,
-                           p.gender as gender, u.status as microstatus
-					FROM cms_users u, cms_user_profiles p, cms_online o
-					WHERE u.is_locked = 0 AND u.is_deleted = 0 AND p.user_id = u.id AND p.user_id = o.user_id
+		
+		$sql = "SELECT		        
+				    o.user_id as id,
+				    u.login,
+				    u.nickname,
+					u.logdate as flogdate,
+		            u.is_deleted as is_deleted,
+                    u.birthdate, u.rating,
+				    u.status as microstatus,
+                    p.city, p.karma as karma, p.imageurl, 
+				    p.gender as gender
+				    FROM cms_online o
+                    LEFT JOIN cms_users u ON  u.id = o.user_id
+				    INNER  JOIN cms_user_profiles p ON p.user_id = u.id
+				    WHERE u.is_locked = 0 AND u.is_deleted = 0
                     GROUP BY o.user_id
 					ORDER BY ".$orderby." ".$orderto."
 					LIMIT ".(($page-1)*$perpage).", $perpage";
@@ -368,38 +311,20 @@ if ($do=='view'){
     
 	$result = $inDB->query($sql) ;
 
-	$tsql = "SELECT id FROM cms_users WHERE is_locked = 0 AND is_deleted = 0";
-	$tres = $inDB->query($tsql) ;
-	
-	$total_usr = $inDB->num_rows($tres);
 	$is_users  = $inDB->num_rows($result);
 	
 	$smarty = $inCore->initSmarty('components', 'com_users_view.tpl');			
 	if (isset($querymsg)) { $smarty->assign('querymsg', $querymsg);	}
 	$smarty->assign('page', $page);	
 	
-		$people = cmsUser::getOnlineCount();
-		
-		if (!@$_SESSION['usr_online']) { 
-			$online_link = '<a href="/users/online.html" rel=”nofollow”>'.$_LANG['SHOW_ONLY_ONLINE'].'</a>';
-		} else {
-			$online_link = '<a href="/users/all.html" rel=”nofollow”>'.$_LANG['SHOW_ALL'].'</a>';
-		}
-	
-		$link['positive'] = '/users/1/karma-desc.html';
-		$link['negative'] = '/users/1/karma-asc.html';		
-		$link['rating'] = '/users/1/rating-desc.html';			
-		if ($orderby == 'karma' && $orderto == 'desc') { 
-			$link['selected'] = 'positive'; 
-		} elseif ($orderby == 'karma' && $orderto == 'asc') { 
-			$link['selected'] = 'negative'; 
-		} elseif ($orderby == 'rating'){
-			$link['selected'] = 'rating'; 
-		}
-		
-		$gender_stats   = usrGenderStats($total_usr);
-		$city_stats     = usrCityStats();
-				
+		$link['latest']    = '/users/';
+		$link['positive']  = '/users/positive.html';
+		$link['rating']    = '/users/rating.html';
+
+        if($orderby=='regdate') { $link['selected'] = 'latest'; }
+        if($orderby=='karma') { $link['selected'] = 'positive'; }
+        if($orderby=='rating') { $link['selected'] = 'rating'; }
+
 		$rownum = 0; $users = array();
 		if ($is_users){
 			while($usr = $inDB->fetch_assoc($result)){                
@@ -417,38 +342,28 @@ if ($do=='view'){
 		}
 
         $is_users   = (sizeof($users)>0);
-        $total_usr  = $inDB->rows_count('cms_users', 'is_deleted=0 AND is_locked=0');
 
         $smarty->assign('is_users', $is_users);
-        $smarty->assign('total_usr', $total_usr);
-
-		$bday = cmsUser::getBirthdayUsers();
 
         $smarty->assign('orderby', $orderby);
         $smarty->assign('orderto', $orderto);
 
-		$smarty->assign('people', $people);
-		$smarty->assign('link', $link);
-		$smarty->assign('bday', $bday);
+		$smarty->assign('link', $link);		
 
         if (isset($autocomplete_js)){ $smarty->assign('autocomplete_js', $autocomplete_js); }
 
 		$smarty->assign('users', $users);
 		$smarty->assign('user_id', $inUser->id);	
 		$smarty->assign('cfg', $cfg);	
-		$smarty->assign('gender_stats', $gender_stats);	
-		$smarty->assign('city_stats', $city_stats);	
-		$smarty->assign('online_link', $online_link);			
 		
 		if (!isset($querysql)){
-            if (!@$_SESSION['usr_online']){
-                $result = $inDB->query("SELECT * FROM cms_users WHERE is_locked=0 AND is_deleted=0") ;
+            if (!$_SESSION['usr_online']){
+                $total = $model->getUserTotal();
             } else {
-                $result = $inDB->query("SELECT p.user_id FROM cms_user_profiles p, cms_online o, cms_users u WHERE p.user_id = o.user_id AND u.id=p.user_id AND u.is_deleted=0") ;
+                $total = $model->getUserTotal(true);
             }
-            $total = $inDB->num_rows($result);
 
-			$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/users/%page%/'.$orderby.'-'.$orderto.'.html'));
+			$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/users/'.$link['selected'].'%page%.html'));
 		}
 	
 	$smarty->display('com_users_view.tpl');		
@@ -468,11 +383,16 @@ if ($do=='editprofile'){
 					
 					$nickname = $inCore->request('nickname', 'str');
                     if (strlen($nickname)<2) { cmsCore::addSessionMessage($_LANG['SHORT_NICKNAME'], 'error'); $errors = true; }
+					$inCore->loadModel('registration');
+					$modreg = new cms_model_registration();
+					if (!$inCore->userIsAdmin($inUser->id)){
+						if($modreg->getBadNickname($nickname)) { cmsCore::addSessionMessage($_LANG['ERR_NICK_EXISTS'], 'error'); $errors = true; }
+					}
 
 					$gender = $inCore->request('gender', 'str');
 					
 					$city = $inCore->request('city', 'str');
-					if (strlen($city)>20) { cmsCore::addSessionMessage($_LANG['LONG_CITY_NAME'], 'error'); $errors = true; }
+					if (strlen($city)>25) { cmsCore::addSessionMessage($_LANG['LONG_CITY_NAME'], 'error'); $errors = true; }
 
 					$email = $inCore->request('email', 'str');
 					if (!preg_match('/^([a-z0-9\._-]+)@([a-z0-9\._-]+)\.([a-z]{2,4})$/i', $email)) { cmsCore::addSessionMessage($_LANG['REALY_ADRESS_EMAIL'], 'error'); $errors = true; }
@@ -495,14 +415,11 @@ if ($do=='editprofile'){
 					$showicq        = $inCore->request('showicq', 'int');
 					
 					$cm_subscribe   = $inCore->request('cm_subscribe', 'str');
+					if (!preg_match('/^([a-zA-Z]+)$/i', $cm_subscribe)) { $errors = true; }
 					
 					if ($inCore->inRequest('field')){
 						foreach($_POST['field'] as $k=>$val){
-							$_POST['field'][$k] = str_replace('\"', '&quot;', $_POST['field'][$k]);
-							$_POST['field'][$k] = str_replace('"', '&quot;', $_POST['field'][$k]);
-							$_POST['field'][$k] = str_replace("\'", '&#8217;', $_POST['field'][$k]);
-							$_POST['field'][$k] = str_replace("'", '&#8217;', $_POST['field'][$k]);
-							$_POST['field'][$k] = strip_tags($_POST['field'][$k]);
+							$_POST['field'][$k] = $inCore->strClear($_POST['field'][$k]);
 						}					
 						$formsdata = $inCore->arrayToYaml($_POST['field']);
 						$forms_sql = ", formsdata='$formsdata'";
@@ -535,25 +452,28 @@ if ($do=='editprofile'){
 						$inDB->query($sql) ;
 
                         cmsCore::addSessionMessage($_LANG['PROFILE_SAVED'], 'info');
-
-					}
-
 					$inCore->redirect(cmsUser::getProfileURL($inUser->login));
+					}
                     
 				}				
 				
 				if ($opt == 'changepass'){
-					$emsg = '';
-					$msg = '';
-					if ($inUser->password==md5($_POST['oldpass'])){ $oldpass = $inCore->request('oldpass', 'str'); } else { $emsg .= $_LANG['OLD_PASS_WRONG'].'<br/>'; }
-					if ($_POST['newpass']==$_POST['newpass2']){ $newpass = $inCore->request('newpass', 'str'); } else { $emsg .= $_LANG['WRONG_PASS'].'<br/>'; }
+					$errors = false;
 
-					if (strlen($emsg)==0){
+					$oldpass 	= $inCore->request('oldpass', 'str');
+					$newpass 	= $inCore->request('newpass', 'str');
+					$newpass2 	= $inCore->request('newpass2', 'str');
+					
+					if ($inUser->password != md5($oldpass)) { cmsCore::addSessionMessage($_LANG['OLD_PASS_WRONG'], 'error'); $errors = true;}
+					if ($newpass != $newpass2) { cmsCore::addSessionMessage($_LANG['WRONG_PASS'], 'error'); $errors = true; }
+					if($oldpass && $newpass && $newpass2 && strlen($newpass )<6) { cmsCore::addSessionMessage($_LANG['PASS_SHORT'], 'error'); $errors = true; }
+
+					if (!$errors){
 						$sql = "UPDATE cms_users SET password='".md5($newpass)."' WHERE id = $id AND password='".md5($oldpass)."'";
 						$inDB->query($sql);
-						$msg = $_LANG['PASS_CHANGED'];
-					}
+						cmsCore::addSessionMessage($_LANG['PASS_CHANGED'], 'info');
 					$inCore->redirect(cmsUser::getProfileURL($inUser->login));
+				}
 				}
 		
 		
@@ -564,8 +484,9 @@ if ($do=='editprofile'){
 							DATE_FORMAT(u.birthdate, '%m') as bmonth,
 							DATE_FORMAT(u.birthdate, '%Y') as byear,
 							IFNULL(p.gender, 0) as gender
-					FROM cms_users u, cms_user_profiles p
-					WHERE u.is_locked = 0 AND p.user_id = u.id AND u.id = $id
+				    FROM cms_users u
+					INNER JOIN cms_user_profiles p ON p.user_id = u.id
+					WHERE u.id = '$id' AND u.is_locked = 0
 					LIMIT 1
 					";					
 			$result = $inDB->query($sql);
@@ -599,8 +520,6 @@ if ($do=='editprofile'){
 					$smarty = $inCore->initSmarty('components', 'com_users_edit_profile.tpl');
 				
 					$smarty->assign('opt', $opt);
-					$smarty->assign('msg', $msg);
-					$smarty->assign('emsg', $emsg);
 					$smarty->assign('usr', $usr);			
 					$smarty->assign('dateform', $inCore->getDateForm('birthdate', false, $usr['bday'], $usr['bmonth'], $usr['byear']));
 					$smarty->assign('private_forms', $private_forms);		
@@ -609,110 +528,122 @@ if ($do=='editprofile'){
 					$smarty->display('com_users_edit_profile.tpl');
 				}
 				
-			} else { usrAccessDenied(); }
+			} else { echo usrAccessDenied(); }
 		
-		} else { usrAccessDenied(); }
+		} else { echo usrAccessDenied(); }
 	
-	} else { usrAccessDenied(); }
+	} else { cmsUser::goToLogin(); }
 
 }
 /////////////////////////////// VIEW USER COMMENTS /////////////////////////////////////////////////////////////////////////////////////
 if ($do=='comments'){
 
-	$sql = "SELECT * FROM cms_users WHERE id = $id";
-	$result = $inDB->query($sql) ;
+	$usr = $model->getUserShort($id);
+	if (!$usr) { cmsCore::error404(); }
 
-	if ($inDB->num_rows($result)){
-		$usr        = $inDB->fetch_assoc($result);
+	$page       = $inCore->request('page', 'int', 1);
+	$perpage    = 15;
 
-		$page       = $inCore->request('page', 'int', 1);
-		$perpage    = 15;
-	
-		$inPage->setTitle($_LANG['COMMENTS'].' - '.$usr['nickname']);
-		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-		$inPage->addPathway($_LANG['COMMENTS'], $_SERVER['REQUEST_URI']);
-		
-		if ($page>1) { echo '<div class="con_description"><strong>'.$_LANG['PAGE'].':</strong> '.$page.'</div>'; }
+	$inPage->setTitle($_LANG['COMMENTS'].' - '.$usr['nickname']);
+	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+	$inPage->addPathway($_LANG['COMMENTS']);
 
-		$sql = "SELECT c.*, DATE_FORMAT(c.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate,  IFNULL(v.total_rating, 0) as votes
+	$sql = "SELECT c.*,  IFNULL(v.total_rating, 0) as votes
                 FROM cms_comments c
                 LEFT JOIN cms_ratings_total v ON v.item_id = c.id AND v.target = 'comment'
-                WHERE c.user_id = $id AND c.published = 1
+                WHERE c.user_id = '$id' AND c.published = 1
                 ORDER BY c.pubdate DESC
 				LIMIT ".(($page-1)*$perpage).", $perpage";
-		$result = $inDB->query($sql) ;
+	$result = $inDB->query($sql) ;
 	
-		if ($inDB->num_rows($result)>0){
-			$comments = array();
-			while ($com = $inDB->fetch_assoc($result)){
-                $com['content'] = nl2br($inCore->parseSmiles($com['content'], true));
+	if ($inDB->num_rows($result)>0){
+		$comments = array();
+		while ($com = $inDB->fetch_assoc($result)){
                 if ($com['votes']>0){
                     $com['votes'] = '<span class="cmm_good">+'.$com['votes'].'</span>';
                 } elseif ($com['votes']<0){
                     $com['votes'] = '<span class="cmm_bad">'.$com['votes'].'</span>';
                 }
+				$com['fpubdate'] = $inCore->dateFormat($com['pubdate']);
                 $comments[] = $com;
-			}
-			
-			$smarty = $inCore->initSmarty('components', 'com_users_comments.tpl');
-            $smarty->assign('user_id', $id);
-			$smarty->assign('nickname', $usr['nickname']);
-			$smarty->assign('login', $usr['login']);
-			$smarty->assign('comments', $comments);
-            $smarty->assign('avatar', usrImage($id));
-			$smarty->assign('pagebar', pageBarStatic($page, $perpage, $id, 'comments', 'cms_comments'));
-			$smarty->display('com_users_comments.tpl');	
+		}
 
-		} else { echo '<p>'.$_LANG['NO_USER_COMMENT'].'</p>';	}
-	} else { echo '<p>'.$_LANG['USER_NOT_FOUND_TEXT'].'</p>'; }
-		
+        $comments = cmsCore::callEvent('GET_COMMENTS', $comments);
+
+		// Считаем общее число комментариев
+		$records_total = $inDB->rows_count('cms_comments', 'user_id = '.$id.' AND published = 1');
+
+		$smarty = $inCore->initSmarty('components', 'com_users_comments.tpl');
+        $smarty->assign('user_id', $id);
+		$smarty->assign('nickname', $usr['nickname']);
+		$smarty->assign('login', $usr['login']);
+		$smarty->assign('comments', $comments);
+        $smarty->assign('avatar', usrImage($id));
+		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/comments%page%.html\')'));
+		$smarty->display('com_users_comments.tpl');	
+		if ($inCore->inRequest('of_ajax')) { echo ob_get_clean(); exit; }
+
+	} else { echo '<p>'.$_LANG['NO_USER_COMMENT'].'</p>';	}
+	
 }
 /////////////////////////////// VIEW USER POSTS /////////////////////////////////////////////////////////////////////////////////////
 if ($do=='forumposts'){
 
-	$sql = "SELECT * FROM cms_users WHERE id = $id";
+	$usr = $model->getUserShort($id);
+	if (!$usr) { cmsCore::error404(); }
+
+	$page = $inCore->request('page', 'int', 1);
+	$perpage = 15;
+
+    $inPage->setTitle($_LANG['POSTS_IN_FORUM'].' - '.$usr['nickname']);
+    $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+    $inPage->addPathway($_LANG['POSTS_IN_FORUM']);
+
+	if ($inUser->id == $id) {
+		$sql = "SELECT *, t.title as topic, p.id as id, t.id as thread_id
+					FROM cms_forum_posts p
+					LEFT JOIN cms_forum_threads t ON t.id = p.thread_id
+					WHERE p.user_id = '$id'
+					ORDER BY p.pubdate DESC
+					LIMIT ".(($page-1)*$perpage).", $perpage";
+		// Считаем общее число постов на форуме
+		$records_total = $inDB->rows_count('cms_forum_posts', 'user_id = '.$id.'');
+	} else {
+		$sql = "SELECT *, t.title as topic, p.id as id, t.id as thread_id
+					FROM cms_forum_posts p
+					LEFT JOIN cms_forum_threads t ON t.id = p.thread_id
+					WHERE p.user_id = '$id' AND t.is_hidden = 0
+					ORDER BY p.pubdate DESC
+					LIMIT ".(($page-1)*$perpage).", $perpage";
+		// Считаем общее число постов на форуме
+		$records_total = $inDB->rows_count('cms_forum_posts p LEFT JOIN cms_forum_threads t ON t.id = p.thread_id', 'p.user_id = '.$id.' AND t.is_hidden = 0');
+	}
+
 	$result = $inDB->query($sql) ;
-    
-	if ($inDB->num_rows($result)){
-		$usr = $inDB->fetch_assoc($result);
 
-		$page = $inCore->request('page', 'int', 1);
-		$perpage = 15;
-
-        $inPage->setTitle($_LANG['POSTS_IN_FORUM'].' - '.$usr['nickname']);
-        $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-        $inPage->addPathway($_LANG['POSTS_IN_FORUM'], $_SERVER['REQUEST_URI']);
-
-		if ($page>1) { echo '<div class="con_description"><strong>'.$_LANG['PAGE'].':</strong> '.$page.'</div>'; }
-
-		$sql = "SELECT *, DATE_FORMAT(p.pubdate, '%d-%m-%Y (%H:%i)') as date, t.title as topic, p.id as id, t.id as thread_id
-                FROM cms_forum_posts p, cms_forum_threads t
-                WHERE p.user_id = $id AND p.thread_id = t.id
-                ORDER BY p.pubdate DESC
-                LIMIT ".(($page-1)*$perpage).", $perpage";
-				
-		$result = $inDB->query($sql) ;
-
-		if ($inDB->num_rows($result)>0){
-			$posts = array();
-			while ($post = $inDB->fetch_assoc($result)){
+	if ($inDB->num_rows($result)>0){
+		$posts = array();
+		while ($post = $inDB->fetch_assoc($result)){
 				$post['link'] = '/forum/thread'.$post['thread_id'].'.html#'.$post['id'];
                 $post['content'] = $inCore->parseSmiles($post['content'], true);
 				$post['content'] = str_replace("&amp;", '&', $post['content']);
+				$post['date'] = $inCore->dateFormat($post['pubdate']);
 				$posts[] = $post;
-			}
+		}
 
-			$smarty = $inCore->initSmarty('components', 'com_users_forumposts.tpl');
-            $smarty->assign('user_id', $id);
-            $smarty->assign('user_login', $usr['login']);
-			$smarty->assign('nickname', $usr['nickname']);
-			$smarty->assign('posts', $posts);
-            $smarty->assign('avatar', usrImage($id));
-			$smarty->assign('pagebar', pageBarStatic($page, $perpage, $id, 'forumposts', 'cms_forum_posts'));
-			$smarty->display('com_users_forumposts.tpl');
+        $posts = cmsCore::callEvent('GET_FORUM_POSTS', $posts);
 
-		} else { echo '<p>'.$_LANG['NOT_USER_POSTS_IN_FORUM'].'</p>';	}
-	} else { echo '<p>'.$_LANG['USER_NOT_FOUND_TEXT'].'</p>'; }
+		$smarty = $inCore->initSmarty('components', 'com_users_forumposts.tpl');
+        $smarty->assign('user_id', $id);
+        $smarty->assign('user_login', $usr['login']);
+		$smarty->assign('nickname', $usr['nickname']);
+		$smarty->assign('posts', $posts);
+        $smarty->assign('avatar', usrImage($id));
+		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/forumposts%page%.html\')'));
+		$smarty->display('com_users_forumposts.tpl');
+		if ($inCore->inRequest('of_ajax')) { echo ob_get_clean(); exit; }
+
+	} else { echo '<p>'.$_LANG['NOT_USER_POSTS_IN_FORUM'].'</p>';	}
 
 }
 /////////////////////////////// VIEW PROFILE /////////////////////////////////////////////////////////////////////////////////////////
@@ -723,99 +654,122 @@ if ($do=='profile'){
     if (!$id){
         $login = $inCore->request('login', 'str', '');
         $login = urldecode($login);
-        $id    = $inDB->get_fields('cms_users', "login='{$login}'", 'id', 'is_deleted ASC');
-		$id    = $id['id'];
+        $id    = $inDB->get_field('cms_users', "login='{$login}' ORDER BY is_deleted ASC", 'id');
     }
 
     $usr = $model->getUser($id);
     
-    if (!$usr){
-        cmsCore::error404();
-	}
+    if (!$usr){ cmsCore::error404(); }
 
 	if (!$inUser->id && !$cfg['sw_guest']) {
-        $inPage->setTitle($_LANG['ACCESS_DENIED']);
-		$inPage->printHeading($_LANG['ACCESS_DENIED']);
-		echo '<p>'.$_LANG['ONLY_FOR_REGISTERED_USERS'].'</p>';
-        return;
+        cmsUser::goToLogin(); 
 	}
 
     $inPage->setTitle($usr['nickname']);
     $inPage->addPathway($usr['nickname']);
 
     if ( !(usrAllowed($usr['allow_who'], $id) || $inUser->is_admin) ){
-        usrNotAllowed();
+		$usr['flogdate'] = strip_tags(usrStatus($usr['id'], $usr['flogdate'], false, $usr['gender']));
+        $smarty = $inCore->initSmarty('components', 'com_users_not_allow.tpl');
+		$smarty->assign('is_auth', $inUser->id);
+        $smarty->assign('avatar', usrImageNOdb($usr['id'], 'big', $usr['imageurl'], $usr['is_deleted']));
+        $smarty->assign('usr', $usr);
+        $smarty->display('com_users_not_allow.tpl');
         return;
     }
 
     $deleted    = $usr['is_deleted'];
     $myprofile  = ($inUser->id == $id);
 
-    $usr['banned'] = dbRowsCount('cms_banlist', 'user_id='.$id);
-
     if ($deleted){
         $smarty = $inCore->initSmarty('components', 'com_users_deleted.tpl');
         $smarty->assign('is_user', $inUser->id);
         $smarty->assign('id', $id);
         $smarty->assign('nickname', $usr['nickname']);
-        $smarty->assign('avatar', usrImage($id, 'big'));
+        $smarty->assign('avatar', usrImageNOdb($usr['id'], 'big', $usr['imageurl'], $usr['is_deleted']));
         $smarty->assign('login', $usr['login']);
         $smarty->assign('is_admin', $inUser->is_admin);
         $smarty->assign('others_active', $inDB->rows_count('cms_users', "login='{$usr['login']}' AND is_deleted=0", 1));
         $smarty->display('com_users_deleted.tpl');
         return;
     }
-
-    $usr['avatar']				= usrImage($usr['id'], 'big');
-	$usr['isfriend']			= usrIsFriends($usr['id'], $inUser->id);
-	$usr['isfriend_not_add']	= usrIsFriends($usr['id'], $inUser->id, false);
-    $usr['is_new_friends']		= ($inUser->id==$usr['id'] && $model->isNewFriends($usr['id']) && $cfg['sw_friends']);
+	
+    $usr['avatar']				 = usrImageNOdb($usr['id'], 'big', $usr['imageurl'], $usr['is_deleted']);
+	
+    $usr['friends']				= usrFriends($usr['id'], $usr['friends_total'], 6);
+    $usr['isfriend']			= (($inUser->id && !$myprofile) ? usrIsFriends($usr['id'], $inUser->id) : false);
+    $usr['isfriend_not_add']	= $usr['isfriend'];
+    $usr['is_new_friends']		= ($inUser->id==$usr['id'] && $model->isNewFriends($usr['id']));
+    
     if ($usr['is_new_friends']){
-        $usr['new_friends'] 	= usrFriendQueriesList($usr['id'], $model);
-    }
-    $usr['rating']				= cmsUser::getRating($id);
-    $usr['friends']				= usrFriends($usr['id']);
-
-    if ($usr['friends']){
-        $usr['friends_photos']	= cmsUser::getUserFriendsPhotos($usr['id']);
-        $usr['friends_posts']	= cmsUser::getUserFriendsPosts($usr['id']);
-        $usr['friends_comments']	= cmsUser::getUserFriendsComments($usr['id']);
+        $usr['new_friends'] 	= $model->getNewFriends($usr['id']);
     }
 
-    $usr['awards_html']			= usrAwards($usr['id']);
-    $usr['comments_html'] 		= usrComments($usr['id'], 5);
-    $usr['forum_html'] 			= usrForumPosts($usr['id'], 5);
-    $usr['photos_html']			= usrPhotos($usr['id'], 4);
-    $usr['wall_html']			= cmsUser::getUserWall($usr['id']);
-    $usr['addwall_html'] 		= cmsUser::getUserAddWall($usr['id']);
-    $usr['banned'] 				= cmsUser::isBanned($usr['id']);
+    if ($usr['friends'] && $inUser->id && $myprofile && $cfg['sw_feed']){
+        $inActions = cmsActions::getInstance();
+        $inActions->showTargets(false);
+        $inActions->onlyMyFriends();
+        $inActions->limitIs(15);
+        $usr['actions'] = $inActions->getActionsLog();
+    }
 
-    $usr['clubs'] 				= cmsUserClubs($usr['id']);
+    $usr['awards_html']			 = $cfg['sw_awards'] ? usrAwards($usr['id']) : false;
+	
+	if($cfg['sw_wall']){
+        $usr['wall_html']			= cmsUser::getUserWall($usr['id']);
+        $usr['addwall_html'] 		= cmsUser::getUserAddWall($usr['id']);
+	}
 
-    $usr['status']				= usrStatus($usr['id']);
+	$usr['banned']				= ($usr['banned'] == $usr['id'] ? 1 : 0);
+
+    $usr['clubs'] 				= $cfg['sw_clubs'] ? cmsUserClubs($usr['id']) : false;
+
+    $usr['status']				= ($usr['status'] == $usr['id'] ? '<span class="online">'.$_LANG['ONLINE'].'</span>' : '<span class="offline">'.$_LANG['OFFLINE'].'</span>');
+
     $usr['status_date']         = cmsCore::dateDiffNow($usr['status_date']); 
     $usr['flogdate']            = strip_tags(usrStatus($usr['id'], $usr['flogdate'], false, $usr['gender']));
     $usr['karma']				= strip_tags( cmsUser::getKarmaFormat($usr['id'], false), '<table><tr><td><img><a>' );
     $usr['karma_int']			= strip_tags($usr['karma']);
-    $usr['karma_link']			= '<a href="/users/'.$id.'/karma.html" title="'.$_LANG['KARMA_HISTORY'].'" id="karmalink">?</a>';
+    $usr['karma_link']			= '<a href="/users/'.$usr['id'].'/karma.html" title="'.$_LANG['KARMA_HISTORY'].'" id="karmalink">?</a>';
 
     $usr['cityurl']             = urlencode($usr['city']);
 
-    $usr['photos_count']		= (int)usrPhotoCount($id);
-	$usr['can_add_foto']		= ((usrPhotoCount($usr['id'])<$cfg['photosize'] || $cfg['photosize']==0) && $cfg['sw_photo']);
-    $usr['board_count']			= (int)$inDB->rows_count('cms_board_items', "user_id=$id AND published=1");
-    $usr['comments_count']		= (int)$inDB->rows_count('cms_comments', "user_id=$id AND published=1");
+    $usr['photos_count']		= $cfg['sw_photo'] ? (int)usrPhotoCount($usr['id']) : false;
+	$usr['can_add_foto']		= (($usr['photos_count']<$cfg['photosize'] || $cfg['photosize']==0) && $cfg['sw_photo']);
 
-    if($cfg['sw_files'])
-        if ($inUser->id==$id){
-            $usr['files_count'] = $inDB->rows_count('cms_user_files', "user_id = ".$id." AND allow_who = 'all'");
-        } else {
-            $usr['files_count'] = $inDB->rows_count('cms_user_files', 'user_id = '.$id);
+    if ($cfg['sw_photo']){
+        $usr['albums']          = $model->getPhotoAlbums($usr['id'], $usr['isfriend']);
+        $usr['albums_total']    = sizeof($usr['albums']);
+        $usr['albums_show']     = $usr['albums_total'];
+        if ($usr['albums_total']>6){
+            array_splice($usr['albums'], 6);
+            $usr['albums_show'] = 6;
         }
+    }
+	
+    $usr['board_count']			= $cfg['sw_board'] ? (int)$inDB->rows_count('cms_board_items', "user_id={$usr['id']} AND published=1") : false;
+    $usr['comments_count']		= $cfg['sw_comm'] ? (int)$inDB->rows_count('cms_comments', "user_id={$usr['id']} AND published=1") : false;
+	$usr['invites_count']		= ($inUser->id && $myprofile) ? $model->getUserInvitesCount($inUser->id) : 0;
+
+    if($cfg['sw_forum']){
+        if ($inUser->id==$id){
+            $usr['forum_count']  = $inDB->rows_count('cms_forum_posts', 'user_id = '.$usr['id'].'');
+        } else {
+            $usr['forum_count']  = $inDB->rows_count('cms_forum_posts p LEFT JOIN cms_forum_threads t ON t.id = p.thread_id', 'p.user_id = '.$usr['id'].' AND t.is_hidden = 0');
+        }
+    }
+
+    if($cfg['sw_files']){
+        if ($inUser->id==$id){
+            $usr['files_count'] = $inDB->rows_count('cms_user_files', "user_id = ".$usr['id']." AND allow_who = 'all'");
+        } else {
+            $usr['files_count'] = $inDB->rows_count('cms_user_files', 'user_id = '.$usr['id']);
+        }
+    }
 
     $usr['blog_link'] = '';
-
-    $usr['blog']            = usrBlog($id);
+	if($cfg['sw_blogs']){
+    $usr['blog']            = usrBlog($usr['id']);
     $usr['blog_id']         = $usr['blog']['id'];
     $usr['blog_seolink']    = $usr['blog']['seolink'];
     
@@ -824,6 +778,7 @@ if ($do=='profile'){
     } elseif($myprofile) {
         $usr['blog_link'] 		= '<a href="/blogs/createblog.html">'.$_LANG['CREATE_BLOG'].'</a>';
     }
+	}
 
     if (!$usr['description']) {
         $usr['description']		= '<span style="color:#999"><em>'.$_LANG['TAGS_NOT_SPEC'].'</em></span>';
@@ -835,16 +790,13 @@ if ($do=='profile'){
     $usr['fregdate'] 			= $inCore->dateFormat($usr['fregdate']);
     $usr['birthdate'] 			= $inCore->dateFormat($usr['birthdate']);
 
-    $usr['comments_count'] 		= usrMsg($usr['id'], 'cms_comments');
-    $usr['forum_count']			= usrMsg($usr['id'], 'cms_forum_posts');
-
-    $usr['profile_link']        = cmsUser::getProfileURL($usr['login']);
+    $usr['profile_link']        = HOST . cmsUser::getProfileURL($usr['login']);
 
     $usr['genderimg']			= '';
     if ($usr['gender']) {
         switch ($usr['gender']){
-            case 'm': $usr['genderimg'] = '<img src="/components/users/images/male.gif"/>'; $usr['gender']=$_LANG['MALES']; break;
-            case 'f': $usr['genderimg'] = '<img src="/components/users/images/female.gif"/>'; $usr['gender']=$_LANG['FEMALES']; break;
+            case 'm': $usr['genderimg'] = '<img src="/components/users/images/male.png"/>'; $usr['gender']=$_LANG['MALES']; break;
+            case 'f': $usr['genderimg'] = '<img src="/components/users/images/female.png"/>'; $usr['gender']=$_LANG['FEMALES']; break;
         }
     }
 
@@ -869,7 +821,6 @@ if ($do=='profile'){
     $smarty->assign('id', $id);
     $smarty->assign('usr', $usr);
     $smarty->assign('plugins', $plugins);
-    $smarty->assign('messages', cmsCore::getSessionMessages());
     $smarty->assign('cfg', $cfg);
     $smarty->assign('myprofile', $myprofile);
 	$smarty->assign('is_admin', $inUser->is_admin);
@@ -878,50 +829,45 @@ if ($do=='profile'){
     $smarty->display('com_users_profile.tpl');
 
 }
-/////////////////////////////// VIEW PROFILE /////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// VIEW MESSAGES /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='messages'){
-	if ($inUser->id){
-		$sql = "SELECT u.*, p.*, u.id as id, DATE_FORMAT(u.regdate, '%d-%m-%Y') as fregdate, DATE_FORMAT(u.logdate, '%d-%m-%Y') as flogdate
-				FROM cms_users u, cms_user_profiles p
-				WHERE u.is_locked = 0 AND p.user_id = u.id AND u.id = $id
-				LIMIT 1
-				";				
-		$result = $inDB->query($sql) ;
+
+	if (!$cfg['sw_msg']) { cmsCore::error404(); }
+	
+	if (usrCheckAuth() && ($inUser->id == $id  || $inCore->userIsAdmin($inUser->id))){
 		
-		if ($inDB->num_rows($result)){
-			$usr = $inDB->fetch_assoc($result);
-			if ($inUser->id==$id || $inCore->userIsAdmin($inUser->id)) {
+		$usr = $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
+		
 				$inPage->setTitle($_LANG['MY_MESS']);
+				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 				$inPage->addPathway($_LANG['MY_MESS'], '/users/'.$id.'/messages.html');
 				include 'components/users/messages.php';			
-			} else { usrAccessDenied(); }
-		} else { echo '<p>'.$_LANG['USER_NOT_FOUND_TEXT'].'</p>'; }
-	} else { usrAccessDenied(); }
+
+	} else { echo usrAccessDenied(); }
 	
 }
 /////////////////////////////// AVATAR UPLOAD /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='avatar'){
 
-	if (usrCheckAuth() && @$inUser->id==$id){
-		$sql = "SELECT * FROM cms_users WHERE id = $id";
-		$result = $inDB->query($sql) ;
+	if (usrCheckAuth() && $inUser->id == $id){
 
-		if ($inDB->num_rows($result)){
-			$usr = $inDB->fetch_assoc($result);
+		$usr = $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
 	
 			$inPage->setTitle($_LANG['LOAD_AVATAR']);
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 			$inPage->addPathway($_LANG['LOAD_AVATAR'], $_SERVER['REQUEST_URI']);
-			echo '<div class="con_heading">'.$_LANG['LOAD_AVATAR'].'</div>';
 	
 			if ($inCore->inRequest('upload')) {
 				$inCore->includeGraphics();
 		
-				if ($inCore->inRequest('userid')){
-					$userid = $inCore->request('userid');
-					if ($userid == $inUser->id){
-						$uploaddir 		= $_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/';		
+			$uploaddir 		= PATH.'/images/users/avatars/';		
 						$realfile		= $_FILES['picture']['name'];
+			$path_parts     = pathinfo($realfile);
+            $ext            = strtolower($path_parts['extension']);
+			if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'bmp' || $ext == 'png'){
+				
 						$filename 		= md5($realfile . '-' . $userid . '-' . time()).'.jpg';
 						$uploadfile		= $uploaddir . $realfile;
 						$uploadavatar 	= $uploaddir . $filename;
@@ -930,16 +876,21 @@ if ($do=='avatar'){
 						$source			= $_FILES['picture']['tmp_name'];
 					 	$errorCode 		= $_FILES['picture']['error'];
 						
+			} else {
+				cmsCore::addSessionMessage($_LANG['ERROR_TYPE_FILE'].' jpg, jpeg, gif, bmp, png', 'error');	
+				$inCore->redirect(cmsUser::getProfileURL($usr['login']));
+			}
+
 						if ($inCore->moveUploadedFile($source, $uploadfile, $errorCode)) {
 
                             //DELETE OLD AVATAR
-							$sql = "SELECT imageurl FROM cms_user_profiles WHERE id = $userid";
+					$sql = "SELECT imageurl FROM cms_user_profiles WHERE user_id = '$id'";
 							$result = $inDB->query($sql) ;
 							if ($inDB->num_rows($result)){
 								$old = $inDB->fetch_assoc($result);
                                 if ($old['imageurl'] && $old['imageurl']!='nopic.jpg'){
-                                    @unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/'.$old['imageurl']);
-                                    @unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/small/'.$old['imageurl']);
+							@unlink(PATH.'/images/users/avatars/'.$old['imageurl']);
+							@unlink(PATH.'/images/users/avatars/small/'.$old['imageurl']);
                                 }
 							}
 
@@ -956,39 +907,46 @@ if ($do=='avatar'){
 							//MODIFY PROFILE
 							$sql = "UPDATE cms_user_profiles 
 									SET imageurl = '$filename'
-									WHERE user_id = '$userid'
+							WHERE user_id = '$id'
 									LIMIT 1";	
 							$inDB->query($sql);
-							
+					// очищаем предыдущую запись о смене аватара
+					cmsActions::removeObjectLog('add_avatar', $id);
+					// выводим сообщение в ленту
+					cmsActions::log('add_avatar', array(
+						  'object' => '',
+						  'object_url' => '',
+						  'object_id' => $id,
+						  'target' => '',
+						  'target_url' => '',
+						  'description' => '<a href="'.cmsUser::getProfileURL($usr['login']).'" class="act_usr_ava">
+                                               <img border="0" src="/images/users/avatars/small/'.$filename.'">
+                                            </a>'
+					));
 							//GO BACK TO PROFILE VIEW			
 							$inCore->redirect(cmsUser::getProfileURL($usr['login']));
                             
 						} else {
-							echo '<p><strong>'.$_LANG['ERROR'].':</strong> '.$inCore->uploadError().'!</p>';
+				cmsCore::addSessionMessage('<strong>'.$_LANG['ERROR'].':</strong> '.$inCore->uploadError().'!', 'error');
 						}
 						
-						echo '<ul><li><a href="/users/'.$userid.'/avatar.html">'.$_LANG['REPEAT'].'</a></li>'."\n";
-						echo '<li><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$_LANG['BACK_TO_PROFILE'].'</a></li></ul>'."\n";
-						
-					} else { usrAccessDenied(); }
-				} else { usrAccessDenied(); }
+			$smarty = $inCore->initSmarty('components', 'com_users_avatar_upload.tpl');
+    		$smarty->assign('id', $id);
+    		$smarty->display('com_users_avatar_upload.tpl');
 			
 			} else {
 				$smarty = $inCore->initSmarty('components', 'com_users_avatar_upload.tpl');
-			    $smarty->assign('menuid', $menuid);
     			$smarty->assign('id', $id);
     			$smarty->display('com_users_avatar_upload.tpl');
 			}	
-		}
-	}//auth
-	else { usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 }
 /////////////////////////////// AVATAR LIBRARY /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='select_avatar'){
 
-	if (usrCheckAuth() && @$inUser->id==$id){
+	if (usrCheckAuth() && $inUser->id==$id){
 
-        $avatars_dir        = $_SERVER['DOCUMENT_ROOT']."/images/users/avatars/library";
+        $avatars_dir        = PATH."/images/users/avatars/library";
         $avatars_dir_rel    = "/images/users/avatars/library";
 
         //get avatars list from library directory
@@ -1029,7 +987,7 @@ if ($do=='select_avatar'){
                 $smarty->assign('maxcols', $maxcols);
                 $smarty->assign('page', $page);
                 $smarty->assign('perpage', $perpage);
-                $smarty->assign('pagebar', pageBarAvatars($page, $perpage, $total, $id));
+				$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/users/%user_id%/select-avatar-%page%.html', array('user_id'=>$id)));
             $smarty->display('com_users_avatars.tpl');
 
         } else {
@@ -1072,7 +1030,21 @@ if ($do=='select_avatar'){
                         SET imageurl = '$filename'
                         WHERE user_id = '$userid'
                         LIMIT 1";
-                $inDB->query($sql) ;
+                $inDB->query($sql);
+
+				// очищаем предыдущую запись о смене аватара
+				cmsActions::removeObjectLog('add_avatar', $id);
+				// выводим сообщение в ленту
+				cmsActions::log('add_avatar', array(
+					  'object' => '',
+					  'object_url' => '',
+					  'object_id' => $id,
+					  'target' => '',
+					  'target_url' => '',
+					  'description' => '<a href="'.cmsUser::getProfileURL($inUser->login).'" class="act_usr_ava">
+                                            <img border="0" src="/images/users/avatars/small/'.$filename.'">
+                                        </a>'
+				));
 
             }
 
@@ -1082,342 +1054,501 @@ if ($do=='select_avatar'){
         }
 
 	}//auth
-	else { usrAccessDenied(); }
+	else { echo usrAccessDenied(); }
 }
 /////////////////////////////// PHOTO UPLOAD /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='addphoto'){
 
-    $inCore->loadLib('tags');
+    if (!$cfg['sw_photo']) { cmsCore::error404(); }
+
+    if (!$inUser->id) { cmsUser::goToLogin(); }
+
+    if ($id != $inUser->id) { cmsCore::error404(); }
+
+    $usr = $model->getUserShort($id);
+    if (!$usr){ cmsCore::error404(); }
+
+	$inPage->backButton(false);
+	$uload_type = $inCore->request('uload_type', 'str', 'multi');
+
+    $albums = $model->getPhotoAlbums($id, true, true);
+
+	$photos = $model->getUploadedPhotos($id);
+	$total_no_pub = $photos ? sizeof($photos) : 0; unset($photos);
+	
+	$photo_count = usrPhotoCount($id, false);
+
+    if($cfg['photosize']>0 && !$inCore->userIsAdmin($inUser->id)) {
+        $max_limit = true;
+        $max_files  = $cfg['photosize'] - $photo_count;
+		$stop_photo = $photo_count >= $cfg['photosize'];
+    } else {
+        $max_limit = false;
+        $max_files = 0;
+		$stop_photo = false;
+    }
+
+    $inPage->setTitle($_LANG['ADD_PHOTOS']);
+    $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+	$inPage->addPathway($_LANG['PHOTOALBUMS'], '/users/'.$usr['id'].'/photoalbum.html');
+    $inPage->addPathway($_LANG['ADD_PHOTOS']);
+
+    $smarty = $inCore->initSmarty('components', 'com_users_photo_add.tpl');
+    $smarty->assign('user_id', $id);
+    $smarty->assign('user', $usr);
+	$smarty->assign('total_no_pub', $total_no_pub);
+    $smarty->assign('albums', $albums);
+    $smarty->assign('sess_id', session_id());
+    $smarty->assign('max_limit', $max_limit);
+    $smarty->assign('max_files', $max_files);
+	$smarty->assign('uload_type', $uload_type);
+	$smarty->assign('stop_photo', $stop_photo);
+    $smarty->display('com_users_photo_add.tpl');
+
+}
+
+if ($do=='uploadphotos'){
+
+    if (!$cfg['sw_photo']) { cmsCore::error404(); }
+
+    if (!$_FILES['Filedata']['name']) { cmsCore::error404(); }
+
+    // Code for Session Cookie workaround
+	if ($inCore->inRequest("PHPSESSID")) {
+        $sess_id = $inCore->request("PHPSESSID", 'str');
+        if ($sess_id != session_id()) { session_destroy(); }
+        session_id($sess_id);
+        session_start();
+	}
+
+    $user_id = $_SESSION['user']['id'];
+
+    if (!$user_id) { header("HTTP/1.1 500 Internal Server Error"); exit(0); }
+	if (($cfg['photosize']>0) && (usrPhotoCount($user_id, false) >= $cfg['photosize']) && !$inCore->userIsAdmin($inUser->id)) { 
+        header("HTTP/1.1 500 Internal Server Error"); exit(0); 
+    }
+
+    $inCore->includeGraphics();
+
+    $uploaddir 				= PATH.'/images/users/photos/';
+    $realfile 				= $inDB->escape_string($_FILES['Filedata']['name']);
+
+	$path_parts             = pathinfo($realfile);
+    $ext                    = strtolower($path_parts['extension']);
+	if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'png' && $ext != 'bmp') {  exit(0); }
+
+    $lid 					= $inDB->get_fields('cms_user_photos', 'id>0', 'id', 'id DESC');
+    $lastid 				= $lid['id']+1;	
+    $filename 				= md5($lastid.$realfile).'.jpg';					
+
+    $uploadfile				= $uploaddir . $realfile;
+    $uploadphoto 			= $uploaddir . $filename;
+    $uploadthumb['small'] 	= $uploaddir . 'small/' . $filename;
+    $uploadthumb['medium']	= $uploaddir . 'medium/' . $filename;
+
+    $source					= $_FILES['Filedata']['tmp_name'];
+    $errorCode				= $_FILES['Filedata']['error'];
+
+    if ($inCore->moveUploadedFile($source, $uploadphoto, $errorCode)) {
+
+        if(!isset($cfg['watermark'])) { $cfg['watermark'] = 0; }
+        
+        @img_resize($uploadphoto, $uploadthumb['small'], 96, 96, true);
+        @img_resize($uploadphoto, $uploadthumb['medium'], 600, 600, false, $cfg['watermark']);
+
+        $model->addUploadedPhoto($user_id, array('filename'=>$realfile, 'imageurl'=>$filename));
+		if ($inCore->inRequest('upload')) { $inCore->redirect('/users/'.$inUser->login.'/photos/submit'); }
+
+    } else {
+
+        header("HTTP/1.1 500 Internal Server Error");
+        echo $inCore->uploadError();
+        
+    }
+
+    exit(0);
+    
+}
+
+if ($do=='submitphotos'){
+
+    if (!$cfg['sw_photo']) { cmsCore::error404(); }
+
+    if (!$inUser->id) { cmsCore::error404(); }
+
+    if (!$id){
+        $login = $inCore->request('login', 'str', '');
+        $login = urldecode($login);
+        $id    = $inDB->get_field('cms_users', "login='{$login}' AND is_deleted=0", 'id');
+    }
+
+    $usr = $model->getUserShort($id);
+    if (!$usr){ cmsCore::error404(); }
+
+    if ($id != $inUser->id && !$inUser->is_admin) { cmsCore::error404(); }
+
+    $photos = $model->getUploadedPhotos($id);
+    if (!$photos) { cmsCore::error404(); }
+
     $inCore->loadLanguage('components/photos');
 
-	if ( $inUser->id==$id || $inCore->userIsAdmin($inUser->id) ){
-		$sql = "SELECT * FROM cms_users WHERE id = $id";
-		$result = $inDB->query($sql) ;
+    if (!$inCore->inRequest('submit')){
 
-		if ($inDB->num_rows($result)){
-			$usr = $inDB->fetch_assoc($result);
-	
-			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($inUser->login));
-			$inPage->addPathway($_LANG['ADD_PHOTO']);
-			
-			$inPage->printHeading($_LANG['ADD_PHOTO']);
-                        $inPage->backButton(false);
-	
-			if ($inCore->inRequest('upload')) {
-				//first upload step
-				$inCore->includeGraphics();
-		
-				if ($inCore->inRequest('userid')){
-					$userid = $inCore->request('userid', 'int');
-					if ($userid == $inUser->id){
+        $albums = $model->getPhotoAlbums($id, true, true);
 
-						$uploaddir 				= $_SERVER['DOCUMENT_ROOT'].'/images/users/photos/';		
-						$realfile 				= $_FILES['picture']['name'];
+        $inPage->setTitle($_LANG['PHOTOS_CONFIG']);
+        $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+		$inPage->addPathway($_LANG['PHOTOALBUMS'], '/users/'.$usr['id'].'/photoalbum.html');
+        $inPage->addPathway($_LANG['PHOTOS_CONFIG']);
 
-						$lid 					= dbGetFields('cms_user_photos', 'id>0', 'id', 'id DESC');
-						$lastid 				= $lid['id']+1;	
-						$filename 				= md5($lastid.$realfile).'.jpg';					
-						
-						$uploadfile				= $uploaddir . $realfile;
-						$uploadphoto 			= $uploaddir . $filename;
-						$uploadthumb['small'] 	= $uploaddir . 'small/' . $filename;
-						$uploadthumb['medium']	= $uploaddir . 'medium/' . $filename;
-						
-						$source					= $_FILES['picture']['tmp_name'];
-						$errorCode				= $_FILES['picture']['error'];
-						
-						if ($inCore->moveUploadedFile($source, $uploadphoto, $errorCode)) {
-							if(!isset($cfg['watermark'])) { $cfg['watermark'] = 0; }
-							@img_resize($uploadphoto, $uploadthumb['small'], 96, 96, true);
-							@img_resize($uploadphoto, $uploadthumb['medium'], 600, 600, false, $cfg['watermark']);
-							if ($cfg['watermark']) { @img_add_watermark($uploadphoto);	}
-                                                        @unlink($uploadphoto);
-							//PREPARE FOR STEP 2
-							$inPage->setTitle($_LANG['ADD_PHOTO'].' - '.$_LANG['STEP'].' 2');
-													
-							$inPage->initAutocomplete();
-							$autocomplete_js = $inPage->getAutocompleteJS('tagsearch', 'tags');
-							
-							$form_action = '/users/'.$userid.'/addphoto.html';
+        $smarty = $inCore->initSmarty('components', 'com_users_photo_submit.tpl');
+        $smarty->assign('user_id', $id);
+        $smarty->assign('albums', $albums);
+        $smarty->assign('photos', $photos);
+		$smarty->assign('is_edit', $inCore->request('is_edit', 'int', 0));
+        $smarty->display('com_users_photo_submit.tpl');
 
-							$smarty = $inCore->initSmarty('components', 'com_photos_add2.tpl');			
-							$smarty->assign('form_action', $form_action);
-							$smarty->assign('filename', $filename);
-							$smarty->assign('autocomplete_js', $autocomplete_js);
-							$smarty->assign('allow_who', 1);
-							$smarty->display('com_photos_add2.tpl');							
+    }
 
-						} else {
-							echo '<p><strong>'.$_LANG['ERROR'].':</strong> '.$inCore->uploadError().'!</p>';
-						}
-										
-					} else { usrAccessDenied(); }
-				} else { usrAccessDenied(); }
-			
-			} else {
-				if ($inCore->inRequest('submit')){		
-					//final upload step
-					$title 			= $inCore->request('title', 'str');
-					$description 	= $inCore->request('description', 'str');					
-					$allow_who 		= $inCore->request('allow_who', 'str');
+    if ($inCore->inRequest('submit')){
 
-					if ($title == '') { $title = $_LANG['PHOTO_WITHOUT_NAME']; }
+        cmsUser::sessionDel('photos_list');
 
-					$imageurl = str_replace("'", '',  $inCore->request('imageurl', 'str'));
-					$imageurl = str_replace("*", '',  $imageurl);
-					$imageurl = str_replace("/", '',  $imageurl);
-					$imageurl = str_replace('\\', '', $imageurl);		
-												
-					//ADD TO ALBUM
-					$sql = "INSERT INTO cms_user_photos (user_id, pubdate, title, description, allow_who, hits, imageurl)
-							VALUES ('$id', NOW(), '$title', '$description', '$allow_who', '0', '$imageurl')";
-					$inDB->query($sql);
+        $new_album  = $inCore->request('new_album', 'int', 0);
+        
+        $delete  = $inCore->request('delete', 'array_int');
+        $titles  = $inCore->request('title', 'array_str');
+        $allow   = $inCore->request('allow', 'array_str');
+        $desc    = $inCore->request('desc', 'array_str');
+		$is_edit = $inCore->request('is_edit', 'int', 0);
 
-					cmsUser::checkAwards($id);
+        foreach($delete as $photo_id){
+            $model->deletePhoto($photo_id);
+        }
 
-					//INSERT PHOTO TAGS
-					$photoid = dbLastId('cms_user_photos');										
-					$tags = $inCore->request('tags', 'str');			
-					cmsInsertTags($tags, 'userphoto', $photoid);
-					
-					$smarty = $inCore->initSmarty('components', 'com_photos_added.tpl');			
-					$smarty->assign('id', $id);
-					$smarty->assign('menuid', $menuid);
-					$smarty->assign('photoid', $photoid);
-					$smarty->assign('url_profile', cmsUser::getProfileURL($inUser->login));
-					$smarty->display('com_photos_added.tpl');
-					
-				} else { 
-					if(usrPhotoCount($id, false)<$cfg['photosize'] || $cfg['photosize']==0){
-						//upload form
-						$inPage->setTitle($_LANG['ADD_PHOTO'].' - '.$_LANG['STEP'].' 1');
-						
-						$form_action = '/users/'.$id.'/addphoto.html';
-						
-						$smarty = $inCore->initSmarty('components', 'com_photos_add1.tpl');			
-						$smarty->assign('form_action', $form_action);
-						$smarty->assign('user_id', $id);
-						$smarty->display('com_photos_add1.tpl');							
-						
-					} else {
-						echo '<p><strong>'.$_LANG['PHOTO_LIMIT'].'</strong></p>';
-						echo '<p>'.$_LANG['PHOTO_LIMIT_TEXT'].' '.$cfg['photosize'].' '.$_LANG['PHOTOS'].'.<br/>'.$_LANG['FOR_ADD_PHOTO_TEXT'].'</p>';
-					}
-				}
-			}	
-		}
-	} else { usrAccessDenied(); }
+        if ($new_album){
+            $album['user_id']   = $id;
+            $album['title']     = $inCore->request('album_title', 'str', $_LANG['PHOTOALBUM'].' '.date('d.m.Y'));
+            $album['allow_who'] = $inCore->request('album_allow_who', 'str', 'all');
+            $album_id = $model->addPhotoAlbum($album);
+        } else {
+            $album_id = $inCore->request('album_id', 'int');
+        }
+
+		$total_foto = sizeof($titles);
+
+		$album = !$album ? $model->getPhotoAlbum('private', $album_id) : $album;
+
+		$descr_next = 1;
+
+        foreach($titles as $photo_id => $title){
+
+            $description = isset($desc[$photo_id]) ? $desc[$photo_id] : '';
+            $allow_who   = isset($allow[$photo_id]) ? $allow[$photo_id] : 'all';
+			$imageurl    = $photos[$photo_id]['imageurl'];
+			$title       = $title ? $title : $_LANG['PHOTO_WITHOUT_NAME'];
+
+            $photo_sql = "UPDATE cms_user_photos
+                          SET title='{$title}',
+                              description = '{$description}',
+                              album_id = '{$album_id}',
+                              allow_who = '{$allow_who}'
+                          WHERE id = '{$photo_id}' AND user_id = '{$id}'
+                          LIMIT 1";
+
+            //cmsInsertTags($tags, 'userphoto', $photoid);
+
+            $inDB->query($photo_sql);
+
+			if ($total_foto == 1 && !$is_edit) {
+				$is_friends_only = $allow_who == 'friends' ? 1 : 0;
+				$is_users_only = $allow_who == 'registered' ? 1 : 0;
+				cmsActions::log('add_user_photo', array(
+					  'object' => $title,
+					  'object_url' => '/users/'.$id.'/photo'.$photo_id.'.html',
+					  'object_id' => $photo_id,
+					  'target' => $album['title'],
+					  'target_id' => $album_id,
+					  'target_url' => '/users/'.$usr['login'].'/photos/private'.$album_id.'.html',
+					  'description' => '<a href="/users/'.$id.'/photo'.$photo_id.'.html" class="act_photo">
+											<img border="0" src="/images/users/photos/small/'.$imageurl.'" />
+										  </a>', 
+					  'is_friends_only' => $is_friends_only, 
+					  'is_users_only' => $is_users_only
+				));
+
+			} elseif ($descr_next < 4) {
+
+					$photo_descr .= ' <a href="/users/'.$id.'/photo'.$photo_id.'.html" class="act_photo">
+											<img border="0" src="/images/users/photos/small/'.$imageurl.'" />
+									</a> ';
+			}
+			$descr_next++;
+
+        }
+		if ($total_foto > 1 && !$is_edit) {
+			$is_friends_only = $album['allow_who'] == 'friends' ? 1 : 0;
+			$is_users_only = $album['allow_who'] == 'registered' ? 1 : 0;
+			cmsActions::log('add_user_photo_multi', array(
+				  'object' => $total_foto,
+				  'object_url' => '',
+				  'object_id' => '',
+				  'target' => $album['title'],
+				  'target_id' => $album_id, 
+				  'target_url' => '/users/'.$usr['login'].'/photos/private'.$album_id.'.html',
+				  'description' => $photo_descr, 
+				  'is_friends_only' => $is_friends_only, 
+				  'is_users_only' => $is_users_only
+			));
+        }
+
+        $inCore->redirect("/users/{$usr['login']}/photos/private{$album_id}.html");
+
+    }
+
 }
+
 /////////////////////////////// PHOTO DELETE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delphoto'){
+
+	if (!$cfg['sw_photo']) { cmsCore::error404(); }
+	
 	$inCore->loadLib('tags');
 	$max_mb = 2; //max filesize in Mb
 	$inCore->loadLanguage('components/photos');
-	$photoid = @intval($_REQUEST['photoid']);	
+	$photo_id = $inCore->request('photoid', 'int', '');
 	
-	if (usrCheckAuth() && (@$inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
-		if (!isset($_POST['godelete'])){
-			$sql = "SELECT * FROM cms_users WHERE id = $id";
-			$result = $inDB->query($sql);
-			if ($inDB->num_rows($result)){
-				$inPage->backButton(false);
-				$usr = $inDB->fetch_assoc($result);				
-				$sql = "SELECT * FROM cms_user_photos WHERE id = $photoid AND user_id = $id";
-				$result = $inDB->query($sql);
-				if ($inDB->num_rows($result)){
-					$photo = $inDB->fetch_assoc($result);				
-					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-					$inPage->addPathway($_LANG['PHOTOALBUM'], '/users/'.$id.'/photoalbum.html');
-					$inPage->addPathway($_LANG['DELETE_PHOTO'], $_SERVER['REQUEST_URI']);
-					
-					$confirm['title']                   = $_LANG['DELETING_PHOTO'];
-					$confirm['text']                    = "".$_LANG['REALLY_DELETE_PHOTO']." ".$photo['title']."?";
-					$confirm['action']                  = $_SERVER['REQUEST_URI'];
-					$confirm['yes_button']              = array();
-					$confirm['yes_button']['type']      = 'submit';
-					$confirm['yes_button']['name']  	= 'godelete';
-					$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
-					$smarty->assign('confirm', $confirm);
-					$smarty->display('action_confirm.tpl');
+	if (usrCheckAuth() && ($inUser->id == $id || $inCore->userIsAdmin($inUser->id))){
+        
+        $usr = $model->getUserShort($id);
+        if (!$usr) { cmsCore::error404(); }
 
-				} else { usrAccessDenied(); }
-			}
+        $inPage->backButton(false);
+        
+		$photo = $inDB->get_fields('cms_user_photos', "id = '{$photo_id}' AND user_id = '{$id}'", 'title, album_id');
+
+        if (!$photo){ cmsCore::error404(); }
+        
+		if (!isset($_POST['godelete'])){
+			
+            $inPage->setTitle($_LANG['DELETE_PHOTO']);
+            $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+            $inPage->addPathway($_LANG['PHOTOALBUMS'], '/users/'.$usr['id'].'/photoalbum.html');
+            $inPage->addPathway($_LANG['DELETE_PHOTO'], $_SERVER['REQUEST_URI']);
+
+            $confirm['title']                   = $_LANG['DELETING_PHOTO'];
+            $confirm['text']                    = "".$_LANG['REALLY_DELETE_PHOTO']." &laquo;".$photo['title']."&raquo;?";
+            $confirm['action']                  = $_SERVER['REQUEST_URI'];
+            $confirm['yes_button']              = array();
+            $confirm['yes_button']['type']      = 'submit';
+            $confirm['yes_button']['name']  	= 'godelete';
+            $smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
+            $smarty->assign('confirm', $confirm);
+            $smarty->display('action_confirm.tpl');
+
 		} else {
-			$sql = "SELECT imageurl FROM cms_user_photos WHERE id = $photoid AND user_id = $id";
-			$result = $inDB->query($sql);
-			if ($inDB->num_rows($result)){
-				$photo = $inDB->fetch_assoc($result);
-				@unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/'.$photo['imageurl']);
-				@unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/small/'.$photo['imageurl']);
-				@unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/medium/'.$photo['imageurl']);								
-				$inDB->query("DELETE FROM cms_user_photos WHERE id = $photoid") ;
-                $inCore->deleteComments('userphoto', $photoid);
-				cmsClearTags('userphoto', $photoid);
-			}			
-			header('location:/users/'.$id.'/photoalbum.html');
+
+            $model->deletePhoto($photo_id);
+
+            $album_has_photos = $inDB->rows_count('cms_user_photos', "album_id = {$photo['album_id']}", 1);
+
+            if ($album_has_photos){
+                $inCore->redirect('/users/'.$usr['login'].'/photos/private'.$photo['album_id'].'.html');
+            } else {
+                $model->deletePhotoAlbum($id, $photo['album_id']);
+                $inCore->redirect(cmsUser::getProfileURL($usr['login']));
+            }
+
 		}
-	} else { usrAccessDenied(); }
+
+	} else { echo usrAccessDenied(); }
 }
+
+/////////////////////////////// ALBUM EDIT /////////////////////////////////////////////////////////////////////////////////////////
+if ($do=='editalbum'){
+	
+	if (!$cfg['sw_photo']) { cmsCore::error404(); }
+
+    $usr = $model->getUserShort($id);
+    if (!$usr) { cmsCore::error404(); }
+	
+	$album_id = $inCore->request('album_id', 'int', '');
+
+    $album    = $model->getPhotoAlbum('private', $album_id);
+
+    if (!$album) { cmsCore::error404(); }
+
+    if ($album['user_id'] != $inUser->id && !$inUser->is_admin){ cmsCore::error404(); }
+
+	unset($album);
+
+    $album['title']       = $inCore->request('album_title', 'str', $_LANG['PHOTOALBUM'].' '.date('d.m.Y'));
+    $album['allow_who']   = $inCore->request('album_allow_who', 'str', 'all');
+	$album['description'] = $inCore->request('description', 'str', '');
+	$album['id']          = $album_id;
+	
+	$model->updatePhotoAlbum($album);
+
+    $inCore->redirect('/users/'.$usr['login'].'/photos/private'.$album_id.'.html');
+
+}
+
 /////////////////////////////// PHOTO EDIT /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='editphoto'){
-	$inCore->loadLib('tags');
-    $inCore->loadLanguage('components/photos');
-	$max_mb = 2; //max filesize in Mb
-	
-	$user_id = $inUser->id;
-	
-	$photoid = @intval($_REQUEST['photoid']);	
-	
-	if (usrCheckAuth() && ($user_id==$id||$inCore->userIsAdmin($user_id))){
-		$sql = "SELECT * FROM cms_users WHERE id = $id";
-		$result = $inDB->query($sql);
 
-		if ($inDB->num_rows($result)){
-			$usr = $inDB->fetch_assoc($result);
-	
-			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-			$inPage->addPathway($_LANG['PHOTOALBUM'], '/users/'.$id.'/photoalbum.html');
-			$inPage->addPathway($_LANG['EDIT_PHOTO'], $_SERVER['REQUEST_URI']);
-			echo '<div class="con_heading">'.$_LANG['EDIT_PHOTO'].'</div>';
-			
-			if (isset($_POST['save'])){							
-					$title = strip_tags(htmlspecialchars($_POST['title'], ENT_QUOTES, 'cp1251'));
-					$description = strip_tags(htmlspecialchars($_POST['description'], ENT_QUOTES, 'cp1251'));
-					if ($title == '') { $title = $_LANG['PHOTO_WITHOUT_NAME']; }
-					$allow_who = strip_tags(htmlspecialchars($_POST['allow_who'], ENT_QUOTES, 'cp1251'));
-					//replace file					
-					if (@$_FILES['picture']['name']){
-						$inCore->includeGraphics();
+	if (!$cfg['sw_photo']) { cmsCore::error404(); }
 
-						//delete old
-						$imageurl = $_POST['imageurl'];
-						$result = $inDB->query("SELECT id FROM cms_user_photos WHERE user_id = $id AND imageurl = '$imageurl'");
-						if ($inDB->num_rows($result)){ //delete only if user is owner
-							@unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/'.$imageurl);
-							@unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/small/'.$imageurl);
-							@unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/medium/'.$imageurl);														
-						}
-						//upload new
-						$uploaddir = $_SERVER['DOCUMENT_ROOT'].'/images/users/photos/';		
-						$realfile = $_FILES['picture']['name'];
+    $usr = $model->getUserShort($id);
+    if (!$usr) { cmsCore::error404(); }
 
-						$filename = md5($photoid).'.jpg';
-						$uploadfile = $uploaddir . $realfile;
-						$uploadphoto = $uploaddir . $filename;
-						$uploadthumb = $uploaddir . 'small/' . $filename;
-						$uploadthumb2 = $uploaddir . 'medium/' . $filename;
-												
-						if ($_FILES['picture']['size'] <= $max_mb*1024*1024){
-							if (@move_uploaded_file($_FILES['picture']['tmp_name'], $uploadphoto)) {
-								@img_resize($uploadphoto, $uploadthumb, 96, 96, true);
-								@img_resize($uploadphoto, $uploadthumb2, 600, 600, false);
-                                @unlink($uploadphoto);
-								$sql = "UPDATE cms_user_photos
-										SET imageurl = '$filename'
-										WHERE id = '$photoid' AND user_id = '$id'";
-								$inDB->query($sql) or die(mysql_error()."<br/>".$sql);							
-							}								
-						}
-					}	
-					//INSERT PHOTO TAGS
-					$tags = $_POST['tags'];			
-					cmsInsertTags($tags, 'userphoto', $photoid);
-									
-					//UPDATE ALBUM
-					$sql = "UPDATE cms_user_photos
-							SET title='$title', 
-								description='$description', 
-								allow_who='$allow_who' 
-							WHERE id = $photoid";	
-					$inDB->query($sql) or die(mysql_error()."<br/>".$sql);	
-					
-					echo '<p><strong>'.$_LANG['PHOTO_SAVED'].'</strong></p>';
-					echo '<p>&larr; <a href="/users/'.$id.'/photoalbum.html">'.$_LANG['BACK_TO_PHOTOALBUM'].'</a><br/>';
-					echo '&larr; <a href="'.cmsUser::getProfileURL($inUser->login).'">'.$_LANG['BACK_TO_PROFILE'].'</a></p>';
-					
-				} else { 
-							if(isset($_REQUEST['photoid'])){								
-								$sql = "SELECT * FROM cms_user_photos WHERE id = $photoid AND user_id = $id";
-								$result = $inDB->query($sql);
-								if ($inDB->num_rows($result)){	
-									$photo = $inDB->fetch_assoc($result);		
-									if (isset($photo['id'])) { $photo_tag = cmsTagLine('userphoto', $photo['id'], false); }
-									$photo_max_size = ($max_mb * 1024 * 1024);
-									
-									$smarty = $inCore->initSmarty('components', 'com_photos_edit.tpl');
-									$smarty->assign('photo', $photo);
-									$smarty->assign('input_poto', '<input type="hidden" name="imageurl" value="'.$photo['imageurl'].'" />');
-									$smarty->assign('photo_tag', $photo_tag);
-									$smarty->assign('user_foto', true);
-									$smarty->assign('action', '/users/'.$id.'/editphoto'.$photoid.'.html');
-									$smarty->assign('images', '/images/users/photos/small/'.$photo['imageurl'].'');
-									$smarty->assign('photo_max_size', $photo_max_size);
-									$smarty->display('com_photos_edit.tpl');
-									
-								}//photo exists
-								else { usrAccessDenied(); }
-							} //isset photo id
-							else { usrAccessDenied(); }
-						}//print form
-		} else { usrAccessDenied(); } //user exists
-	}//auth
-	else { usrAccessDenied(); }
+	$photo_id = $inCore->request('photoid', 'int', '');
+
+    $photo    = $model->getPhoto($photo_id);
+
+    if (!$photo) { cmsCore::error404(); }
+
+    if ($photo['user_id'] != $inUser->id && !$inUser->is_admin){ cmsCore::error404(); }
+
+	cmsUser::sessionPut('photos_list', array($photo['id']));
+
+    $inCore->redirect('/users/'.$usr['login'].'/photos/submit-edit');
+
 }
-/////////////////////////////// VIEW ALBUM /////////////////////////////////////////////////////////////////////////////////////////
-if ($do=='viewalbum'){
 
-    $sql = "SELECT * FROM cms_users WHERE id = $id";
-	$result = $inDB->query($sql);
-	
-	if (!$inDB->num_rows($result)){ echo '<p>'.$_LANG['USER_NOT_FOUND_TEXT'].'</p>'; return; }
+//============================================================================//
+//====================== Пакетное редактирование фотографий ==================//
+//============================================================================//
 
-    $usr = $inDB->fetch_assoc($result);
-    $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-    $inPage->addPathway($_LANG['PHOTOALBUM'], $_SERVER['REQUEST_URI']);
+if ($do=='editphotolist'){
 
-    echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; '.$_LANG['PHOTOALBUM'].'</div>';
+    if (!$cfg['sw_photo']) { cmsCore::error404(); }
 
+    if (!$inCore->inRequest('photos')) { cmsCore::error404(); }
+
+    $photo_ids  = $inCore->request('photos', 'array_int');
+    $album_id   = $inCore->request('album_id', 'int');
     $photos     = array();
 
-    //Определяем, друзья мы или нет
-    $we_friends = $inDB->rows_count('cms_user_friends', "(to_id={$id} AND from_id={$inUser->id}) OR (to_id={$inUser->id} AND from_id={$id})", 1);
+    $usr = $model->getUserShort($id);
+    if (!$usr) { cmsCore::error404(); }
+
+    //проверяем доступ
+    foreach($photo_ids as $photo_id){
+
+        $photo      = $model->getPhoto($photo_id);
+
+        if ($photo['user_id'] != $inUser->id && !$inUser->is_admin){ cmsCore::error404(); exit; }
+
+    }
+
+    if ($inCore->inRequest('delete')){
+
+        foreach($photo_ids as $photo_id){
+            $model->deletePhoto($photo_id);
+        }
+
+        $album_has_photos = $inDB->rows_count('cms_user_photos', "album_id = {$album_id}", 1);
+
+        if ($album_has_photos){
+            $inCore->redirectBack();
+        } else {
+            $model->deletePhotoAlbum($album_id);
+            $inCore->redirect(cmsUser::getProfileURL($usr['login']));
+        }
+
+    }
+
+    if ($inCore->inRequest('edit')){
+
+        foreach($photo_ids as $photo_id){
+            $photos[] = $photo_id;
+        }
+
+        if ($photos){ cmsUser::sessionPut('photos_list', $photos); }
+
+        $inCore->redirect('/users/'.$usr['login'].'/photos/submit-edit');
+
+    }
+
+}
+
+//============================================================================//
+//============================ Все фотографии ================================//
+//============================================================================//
+
+if ($do=='viewphotos'){
+
+	if (!$cfg['sw_photo']) { cmsCore::error404(); }
+	
+	$usr = $model->getUserShort($id);
+	
+	if (!$usr){ cmsCore::error404(); }
 
     //Мой профиль или нет
     $my_profile = ($inUser->id == $id);
 
-    //Фильтр приватности
-    $filter = '';
-    if (!$my_profile){ $filter = "AND ( allow_who='all' OR (allow_who='registered' AND ({$inUser->id}>0)) OR (allow_who='friends' AND ({$we_friends}=1)) )"; }
+    //Определяем, друзья мы или нет
+	$we_friends = ($inUser->id && !$my_profile) ? (int)usrIsFriends($usr['id'], $inUser->id) : 0;
+	if (!$we_friends) { $we_friends = 0; }
 
-    //Получаем личные фотографии
-    $private_sql = "SELECT id, DATE_FORMAT(pubdate, '%d-%m-%Y') as fpubdate, imageurl as file, hits
-                    FROM cms_user_photos
-                    WHERE user_id = {$id} $filter";
+    $albums = $model->getPhotoAlbums($id, $we_friends);
 
-    $private_res = $inDB->query($private_sql);
+    $inPage->setTitle($_LANG['PHOTOALBUMS']);
+    $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+    $inPage->addPathway($_LANG['PHOTOALBUMS']);
 
-    if ($inDB->num_rows($private_res)) {
-        while($photo = $inDB->fetch_assoc($private_res)){
-            $photo['file']  = '/images/users/photos/small/'.$photo['file'];
-            $photo['url']   = '/users/'.$id.'/photo'.$photo['id'].'.html';
-            $photos[]       = $photo;
-        }
+    //Отдаем в шаблон
+    $smarty = $inCore->initSmarty('components', 'com_users_albums.tpl');
+	$smarty->assign('albums', $albums);
+	$smarty->assign('my_profile', $my_profile);
+	$smarty->assign('user', $usr);
+    $smarty->display('com_users_albums.tpl');
+
+}
+
+//============================================================================//
+//============================ Один фотоальбом ===============================//
+//============================================================================//
+
+if ($do=='viewalbum'){
+    
+    if (!$id){
+        $login = $inCore->request('login', 'str', '');
+        $login = urldecode($login);
+        $id    = $inDB->get_fields('cms_users', "login='{$login}' AND is_deleted=0", 'id');
+		$id    = ($id['id'] ? $id['id'] : 0);
     }
 
-    //Получаем фотографии из галереи
-    $public_sql = "SELECT id, DATE_FORMAT(pubdate, '%d-%m-%Y') as fpubdate, file, hits
-                    FROM cms_photo_files
-                    WHERE user_id = {$id} AND published = 1";
+    $usr = $model->getUserShort($id);
+    
+    if (!$usr){ cmsCore::error404(); }
 
-    $public_res = $inDB->query($public_sql);
+    $album_type = $inCore->request('album_type', 'str', 'private');
+    $album_id   = $inCore->request('album_id', 'int', '0');
 
-    if ($inDB->num_rows($public_res)) {
-        while($photo = $inDB->fetch_assoc($public_res)){
-            $photo['file']  = '/images/photos/small/'.$photo['file'];
-            $photo['url']   = '/photos/photo'.$photo['id'].'.html';
-            $photos[]       = $photo;
-        }
-    }
+    $album = $model->getPhotoAlbum($album_type, $album_id);
+
+    if (!$album){ cmsCore::error404(); }
+
+    if ($album_type != 'private') { $album['allow_who'] = 'all'; }
+
+    $inPage->setTitle($album['title']);
+    $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+	$inPage->addPathway($_LANG['PHOTOALBUMS'], '/users/'.$usr['id'].'/photoalbum.html');
+    $inPage->addPathway($album['title']);
+
+    $photos     = array();
+    $filter     = '';
+
+    //Мой профиль или нет
+    $my_profile = ($inUser->id == $id);
+
+    //Определяем, друзья мы или нет
+	$we_friends = ($inUser->id && !$my_profile) ? (int)usrIsFriends($usr['id'], $inUser->id) : 0;
+
+	if ($album['allow_who'] == 'all' || $my_profile || ($album['allow_who'] == 'friends' && $we_friends) || ($album['allow_who'] == 'registered' && $inUser->id)) {
+    $photos = $model->getAlbumPhotos($usr['id'], $album_type, $album_id, $we_friends);
+	}
 
     //Делим на страницы
     $total      = sizeof($photos);
@@ -1425,7 +1556,7 @@ if ($do=='viewalbum'){
     if ($total){
         $perpage        = 20;
         $page           = $inCore->request('page', 'int', 1);
-        $pagination     = cmsPage::getPagebar($total, $page, $perpage, '/users/%user_id%/photoalbum%page%.html', array('user_id'=>$id));
+        $pagination     = cmsPage::getPagebar($total, $page, $perpage, '/users/%user%/photos/%album%%id%-%page%.html', array('user'=>$usr['login'], 'album'=>$album_type, 'id'=>$album_id));
         $page_photos    = array();
         $start          = $perpage*($page-1);
         for($p=$start; $p<$start+$perpage; $p++){
@@ -1438,463 +1569,536 @@ if ($do=='viewalbum'){
 
     //Отдаем в шаблон
     $smarty = $inCore->initSmarty('components', 'com_users_photos.tpl');
+	$smarty->assign('page_title', $album['title']);
+	$smarty->assign('album_type', $album_type);
+	$smarty->assign('album', $album);
 	$smarty->assign('photos', $photos);
 	$smarty->assign('user_id', $id);
+	$smarty->assign('usr', $usr);
 	$smarty->assign('my_profile', $my_profile);
+	$smarty->assign('is_admin', $inUser->is_admin);
 	$smarty->assign('pagebar', $pagination);
-	$smarty->assign('_LANG', $_LANG);
     $smarty->display('com_users_photos.tpl');
+    
+}
+
+//============================================================================//
+//============================ Удалить фотоальбом ============================//
+//============================================================================//
+if ($do=='delalbum'){
+
+    $album_id = $inCore->request('album_id', 'int', '0');
+
+    $album = $model->getPhotoAlbum('private', $album_id);
+
+    if (!$album){ cmsCore::error404(); }
+
+    if (!$inUser->is_admin && ($album['user_id'] != $inUser->id)) { cmsCore::error404(); }
+
+    $model->deletePhotoAlbum($id, $album_id);
+
+    $login = $inDB->get_field('cms_users', "id={$album['user_id']}", 'login');
+
+    $inCore->redirect(cmsUser::getProfileURL($login));
 
 }
 
-/////////////////////////////// VIEW BOARD ENTRIES ///////////////////////////////////////////////////////////////////////////////////////////
+//============================================================================//
+//=============================== Объявления =================================//
+//============================================================================//
+
 if ($do=='viewboard'){ 
-	$sql = "SELECT * FROM cms_users WHERE id = $id";
-	$result = $inDB->query($sql);
 	
-	if ($inDB->num_rows($result)>0){
-		$usr = $inDB->fetch_assoc($result);
+	$usr = $model->getUserShort($id);
+
+	if (!$usr) { cmsCore::error404(); }
+	
 		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 		$inPage->addPathway($_LANG['ADVS']);
         $inPage->setTitle($_LANG['ADVS'].' - '.$usr['nickname']);
-        
-		echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; '.$_LANG['ADVS'].'</div>';
-
-		$sql = "SELECT *, IF(DATE_FORMAT(pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(pubdate, '<strong>{$_LANG['TODAY']}</strong>'), DATE_FORMAT(pubdate, '%d-%m-%Y'))  as fpubdate
+		
+		// Загружаем конфигурацию компонента объявления
+		$cfg_board = $inCore->loadComponentConfig('board');
+			
+        // выбираем объявления пользователя по его id
+		if (($inUser->id == $id && $cfg_board['aftertime'] == 'hide' && $cfg_board['extend']) || ($inUser->id == $id && $cfg_board['public'] == 1 && !$cfg_board['extend'] && $cfg_board['aftertime'] != 'hide')) {
+		$sql = "SELECT *
 				FROM cms_board_items
 				WHERE user_id = $id
 				ORDER BY pubdate DESC
 				";
-		
-		$perpage = 10;
-		if (isset($_REQUEST['page'])) { $page = abs((int)$_REQUEST['page']); } else { $page = 1; }
+			// Считаем общее число объявлений
+			$records_total = $inDB->rows_count('cms_board_items', 'user_id = '.$id.''); 
+		} else {
+			$sql = "SELECT *
+					FROM cms_board_items
+					WHERE user_id = $id AND published = 1
+					ORDER BY pubdate DESC
+					";
+			// Считаем общее число объявлений
+			$records_total = $inDB->rows_count('cms_board_items', 'user_id = '.$id.' AND published = 1');
+		}
+		$perpage = 10; // объявлений на странице
+		$page = $inCore->request('page', 'int', 1);
 		$sql .= "LIMIT ".($page-1)*$perpage.", $perpage";
 
 		$result = $inDB->query($sql);
 
-		$col = 1; $maxcols = 1;
+		$is_con = false;
+		$cons = array();
+	
 		if ($inDB->num_rows($result)){				
-				echo '<div class="board_gallery">';
-				echo '<table width="100%" cellpadding="0" cellspacing="0" border="0">';
+
 				while($con = $inDB->fetch_assoc($result)){							
-					$file = 'nopic.jpg';
-					if ($con['file']){
-						if (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/board/small/'.$con['file'])){
-							$file = $con['file'];
-						}
-					}				
-										
-					if ($col==1) { echo '<tr>'; } echo '<td valign="top" width="'.round(100/$maxcols).'%">';
-						echo '<table width="100%" height="" cellspacing="" cellpadding="0" class="bd_item">';
-							echo '<tr>';
-								echo '<td width="64" valign="top">
-										<img class="bd_image_small" src="/images/board/small/'.$file.'" border="0" alt="'.$con['title'].'"/>
-									  </td>';
-								echo '<td valign="top">';
-									echo '<div class="bd_title"><a href="/board/read'.$con['id'].'.html" title="'.$con['title'].'">';
-										echo $con['title'];
-									echo '</a></div>';
-									echo '<div class="bd_text">'.$con['content'].'</div>';	
-									echo '<div class="bd_item_details">';
-											if ($con['published']){
-												echo '<span class="bd_item_status_ok">'.$_LANG['PUBLISHED'].'</span>';
-											} else {
-												echo '<span class="bd_item_status_bad">'.$_LANG['WAIT_MODER'].'</span>';
-											}											
-											echo '<span class="bd_item_date">'.$con['fpubdate'].'</span>';
-											if ($con['city']){
-												echo '<span class="bd_item_city">'.$con['city'].'</span>';
-											}
-											
+					if ($con['file'] && file_exists($_SERVER['DOCUMENT_ROOT'].'/images/board/small/'.$con['file'])){
+							$con['file'] = $con['file'];
+					} else { $con['file'] = 'nopic.jpg'; }				
 											if ($inUser->id){
-												$moderator = ($inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('board/moderate') || $con['user_id'] == $inUser->id);
+					$con['moderator'] = ($inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('board/moderate') || $con['user_id'] == $inUser->id);
 											} else {
-												$moderator = false;
+					$con['moderator'] = false;
 											}											
-											
-											if ($moderator){
-												echo '<span class="bd_item_edit"><a href="/board/edit'.$con['id'].'.html">'.$_LANG['EDIT'].'</span>';
-												echo '<span class="bd_item_delete"><a href="/board/delete'.$con['id'].'.html">'.$_LANG['DELETE'].'</span>';
+					$timedifference    = strtotime("now") - strtotime($con['pubdate']);
+					$con['is_overdue'] = round($timedifference / 86400) > $con['pubdays'] && $con['pubdays'] > 0;
+					$con['pubdate'] = $inCore->dateFormat($con['pubdate']);
+				$cons[] = $con;
 											}
-									echo '</div>';									
-								echo '</td>';
-							echo '</tr>';
-						echo '</table>';
-					echo '</td>'; if ($col==$maxcols) { echo '</tr>'; $col=1; } else { $col++; }
-				}
-				if ($col>1) { echo '<td colspan="'.($maxcols-$col+1).'">&nbsp;</td></tr>'; }
-				echo '</table>';
-				echo '</div>';		
-				echo pageBarBoard($id, $page, $perpage);	
-		} else { 
-				 echo '<p>'.$_LANG['NOT_ADVS'].'</p>';
+				$is_con = true;
+				
 				}					
-	}//END - MY BOARD ITEMS
+		// отдаем в шаблон
+		$smarty = $inCore->initSmarty('components', 'com_users_boards.tpl');
+		$smarty->assign('usr', $usr);
+		$smarty->assign('cons', $cons);
+		$smarty->assign('cfg_board', $cfg_board);
+		$smarty->assign('myprofile', ($inUser->id == $id));
+        $smarty->assign('is_con', $is_con);
+		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/board%page%.html\')'));
+		$smarty->display('com_users_boards.tpl');					
+		if ($inCore->inRequest('of_ajax')) { echo ob_get_clean(); exit; }
+
 }
+
 /////////////////////////////// FRIENDS LIST /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='friendlist'){
-	$sql = "SELECT id, login, nickname FROM cms_users WHERE id = $id LIMIT 1";
-	$result = $inDB->query($sql) ;
 	
-	if ($inDB->num_rows($result)>0){
-		if (usrCheckAuth()){
+	$usr = $model->getUserShort($id);
+	if (!$usr) { cmsCore::error404(); }
+	
+	$page    = $inCore->request('page', 'int', 1);
+	$perpage = 10;
+	
+	if (!usrCheckAuth()) { cmsUser::goToLogin(); }
 
-            $page = $inCore->request('page', 'int', 1);
-			$perpage = 15;
-				
-			$usr = $inDB->fetch_assoc($result);
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 			$inPage->addPathway($_LANG['FRIENDS'], $_SERVER['REQUEST_URI']);
+	$inPage->setTitle($_LANG['FRIENDS']);
+	$inPage->backButton(false);
 
-			echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; '.$_LANG['FRIENDS'].'</div>';
+	$friends = usrFriends($usr['id'], $total, $perpage, $page);
 	
-			echo usrFriends($usr['id'], false);
+    $smarty = $inCore->initSmarty('components', 'com_users_friends.tpl');
+
+   	$smarty->assign('friends', $friends);
+	$smarty->assign('usr', $usr);
+	$smarty->assign('myprofile', ($id == $inUser->id));
+	$smarty->assign('total', $total);
+	$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/friendlist%page%.html\')'));
 		
-		} else { echo usrNeedReg(); }
-	} else { echo '<p>'.$_LANG['USER_NOT_FOUND_TEXT'].'</p>'; }
+    $smarty->display('com_users_friends.tpl');
+	if ($inCore->inRequest('of_ajax')) { echo ob_get_clean(); exit; }
+
 }
 
 /////////////////////////////// VIEW PHOTO /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='viewphoto'){
+
+	if (!$cfg['sw_photo']) { cmsCore::error404(); }
+	
     $photoid = $inCore->request('photoid', 'int', 0);
 
 	$user_id = $inUser->id;
 
-	if ($user_id){
-		$myprofile = ($user_id == $id);
-	} else { $myprofile = false; }
+	$myprofile = ($user_id == $id) ? true : false;
 
-	$sql = "SELECT * FROM cms_users WHERE id = $id";
-	$result = $inDB->query($sql) ;
-	
+	$usr = $model->getUserShort($id);
+	if (!$usr) { cmsCore::error404(); }
 
-	if ($inDB->num_rows($result)>0){
-//		if (usrCheckAuth()){
-			$usr = $inDB->fetch_assoc($result);
-			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-
-			$sql = "SELECT * FROM cms_user_photos WHERE id = $photoid AND user_id = $id";
+	$sql = "SELECT p.*, a.title as album, pr.gender
+            FROM cms_user_photos p
+			INNER JOIN cms_user_albums a ON a.id = p.album_id
+			INNER JOIN cms_user_profiles pr ON pr.user_id = p.user_id
+            WHERE p.id = '$photoid' AND p.user_id = '$id'
+                    LIMIT 1";
 			$result = $inDB->query($sql) ;
 
-			if ($inDB->num_rows($result)>0){
+	if (!$inDB->num_rows($result)){ cmsCore::error404(); }
+
 				$photo = $inDB->fetch_assoc($result);
 				
-				$inDB->query("UPDATE cms_user_photos SET hits = hits + 1 WHERE id = ".$photo['id']) ;
-	
-				$inPage->addPathway($_LANG['PHOTOALBUM'], '/users/'.$id.'/photoalbum.html');
+	$inPage->setTitle($photo['title']);
+	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+	$inPage->addPathway($_LANG['PHOTOALBUMS'], '/users/'.$usr['id'].'/photoalbum.html');
+				$inPage->addPathway($photo['album'], '/users/'.$usr['login'].'/photos/private'.$photo['album_id'].'.html');
 				$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
 
-				if (usrAllowed($photo['allow_who'], $id) || $inCore->userIsAdmin($inUser->id)){
-
-					echo '<div class="con_heading">'.$photo['title'].'</div>';				
-					if ($photo['description']){	echo '<div class="con_description">'.$photo['description'].'</div>'; }
-			
-					echo '<div class="con_description">'.cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, '', $usr['login']).' &mdash; <strong>'.$_LANG['HITS'].':</strong> '.$photo['hits'].' &mdash; <strong>'.$_LANG['SIZE'].':</strong> '.round(filesize($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/medium/'.$photo['imageurl'])/1024, 2).' '.$_LANG['KBITE'].'</div>';
-			
-					echo '<div class="usr_photo_view">
-							<a href="/images/users/photos/medium/'.$photo['imageurl'].'" target="_blank"><img border="0" src="/images/users/photos/medium/'.$photo['imageurl'].'" alt="'.$photo['title'].'" /></a>';
-
-					$bbcode = '[IMG]http://'.$_SERVER['HTTP_HOST'].'/images/users/photos/medium/'.$photo['imageurl'].'[/IMG]';
-					echo '<div style="margin-top:15px"><label for="bbcode">'.$_LANG['CODE_FOR_FORUM'].': </label><input type="text" id="bbcode" name="bbcode" size="50" value="'.$bbcode.'"/></div>';
-							
-					if ($myprofile || $inCore->userIsAdmin($user_id)) {
-						echo '<div style="margin-top:5px">';
-							echo '<a style="height:16px; line-height:16px; margin-right:5px; padding-left:20px; background:url(/components/users/images/edit.gif) no-repeat;" href="/users/'.$usr['id'].'/editphoto'.$photoid.'.html">'.$_LANG['EDIT'].'</a> ';
-							echo '<a style="height:16px; line-height:16px; padding-left:20px; background:url(/components/users/images/delete.gif) no-repeat;"  href="/users/'.$usr['id'].'/delphoto'.$photoid.'.html">'.$_LANG['DELETE'].'</a> ';
-						echo '</div>';
-					}
-					echo '</div>';
+					$photo['pubdate'] = $inCore->dateFormat($photo['pubdate'], true, false, false);
+	$photo['genderlink'] = cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, $photo['gender'], $usr['login']);
+					$photo['filesize'] = round(filesize($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/medium/'.$photo['imageurl'])/1024, 2);
+					//ссылки на предыдущую и следующую фотографии
+					$previd = $inDB->get_fields('cms_user_photos', "id>'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id ASC');
+					$nextid = $inDB->get_fields('cms_user_photos', "id<'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id DESC');
+	// Проверяем права доступа
+	$is_allow = usrAllowed($photo['allow_who'], $id) || $inCore->userIsAdmin($inUser->id) ? true : false;
+	// Если видим фото, обновляем просмотры
+	if ($is_allow) { $inDB->query("UPDATE cms_user_photos SET hits = hits + 1 WHERE id = ".$photo['id']) ; }
 					
-					//links to previous and next photos
-					$previd = dbGetFields('cms_user_photos', 'id<'.$photo['id'].' AND user_id = '.$usr['id'], 'id, title, pubdate', 'id DESC');
-					$nextid = dbGetFields('cms_user_photos', 'id>'.$photo['id'].' AND user_id = '.$usr['id'], 'id, title, pubdate', 'id ASC');
-
-					echo '<div class="usr_photo_nav">';
-						echo '<table cellpadding="5" cellspacing="0" border="0" align="center" style="margin-left:auto;margin-right:auto"><tr>';
-							if ($previd){
-								echo '<td align="right">';
-									echo '<div>&larr; <a href="/users/'.$usr['id'].'/photo'.$previd['id'].'.html">'.$previd['title'].'</a></div>';
-								echo '</td>';
-							}
-							if ($previd && $nextid) { echo '<td>|</td>'; }
-							if ($nextid){
-								echo '<td align="left">';
-									echo '<div><a href="/users/'.$usr['id'].'/photo'.$nextid['id'].'.html">'.$nextid['title'].'</a> &rarr;</div>';
-								echo '</td>';
-							}						
-						echo '</tr></table>';
-					echo '</div>';
-					
+				$smarty = $inCore->initSmarty('components', 'com_users_photos_view.tpl');
+				$smarty->assign('photo', $photo);
+	$smarty->assign('bbcode', '[IMG]'.HOST.'/images/users/photos/medium/'.$photo['imageurl'].'[/IMG]');
+				$smarty->assign('previd', $previd);
+				$smarty->assign('nextid', $nextid);
+				$smarty->assign('usr', $usr);
+				$smarty->assign('myprofile', $myprofile);
+				$smarty->assign('is_admin', $inCore->userIsAdmin($user_id));
+	$smarty->assign('is_allow', $is_allow);
+	if($is_allow){
 					$inCore->loadLib('tags');	
-					echo cmsTagBar('userphoto', $photo['id']);
+					$smarty->assign('tagbar', cmsTagBar('userphoto', $photo['id']));
+				}
+				$smarty->display('com_users_photos_view.tpl');	
 					
 					//show user comments
-					if($inCore->isComponentInstalled('comments')){
+	if($inCore->isComponentInstalled('comments') && $is_allow){
 						$inCore->includeComments();
 						comments('userphoto', $photo['id']);
 					}					
 				
-			//	} else { usrNotAllowed(); }
-							
-			} else {
-				echo '<div class="con_heading">'.$_LANG['PHOTO_NOT_FOUND'].'</div>';
-				echo '<p>'.$_LANG['PHOTO_NOT_FOUND_TEXT'].'</p>';
-			}						
-		} else { echo usrNeedReg(); }
-	} else { 
-		echo '<div class="con_heading">'.$_LANG['USER_NOT_FOUND'].'</div>';
-		echo '<p>'.$_LANG['ACCOUNT_MAYBE_DELETE'].'</p>';
-	}
 }
 /////////////////////////////// ADD FRIEND /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='addfriend'){
 
-    $sql = "SELECT * FROM cms_users WHERE id = $id";
+    $usr = $model->getUserShort($id);
+	if (!$usr) { cmsCore::error404(); }
 
-    $result = $inDB->query($sql);
-    if (!$inDB->num_rows($result)){ $inCore->redirectBack(); }
+    cmsUser::clearSessionFriends();
 
-    $usr = $inDB->fetch_assoc($result);
+	if (!usrCheckAuth() || $inUser->id == $id) { cmsCore::error404(); }
 
-	if (usrCheckAuth() && $inUser->id!=$id){
 	if(!usrIsFriends($id, $inUser->id)){
-		if (!isset($_POST['goadd'])){
-			if ($model->isNewFriends($inUser->id, $id)){
-				$sql = "UPDATE cms_user_friends SET is_accepted = 1 WHERE to_id = ".$inUser->id." AND from_id = $id";
-				$inDB->query($sql);
-				header('location:'.$_SERVER['HTTP_REFERER']);
-			}
+		if (!$inCore->inRequest('goadd')){
 
-			$sql = "SELECT * FROM cms_users WHERE id = $id";
-			
-				$inPage->backButton(false);
+			if ($model->isNewFriends($inUser->id, $id)){
+				$fr_id = $inDB->get_field('cms_user_friends', "to_id = '{$inUser->id}' AND from_id = '$id'", 'id');
+				$sql   = "UPDATE cms_user_friends SET is_accepted = 1 WHERE id = '$fr_id'";
+				$inDB->query($sql);
+					cmsCore::addSessionMessage($_LANG['ADD_FRIEND_OK'] . $usr['nickname'], 'info');
+					//регистрируем событие
+					cmsActions::log('add_friend', array(
+						'object' => $inUser->nickname,
+						'user_id' => $usr['id'],
+						'object_url' => cmsUser::getProfileURL($inUser->login),
+						'object_id' => $fr_id,
+						'target' => '',
+						'target_url' => '',
+						'target_id' => 0, 
+						'description' => ''
+					));
+				cmsUser::clearSessionFriends();
+				$inCore->redirect(cmsUser::getProfileURL($usr['login']));
+			}
+			if(usrIsFriends($id, $inUser->id, false)){ cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND_ERR'], 'error'); $inCore->redirect(cmsUser::getProfileURL($usr['login'])); }
 				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 				$inPage->addPathway($_LANG['ADD_TO_FRIEND']);
                 $inPage->backButton(false);
-				echo '<div class="con_heading">'.$_LANG['ADD_TO_FRIEND'].'</div>';
-				echo '<p><strong>'.$_LANG['SEND_TO_USER'].' '.ucfirst($usr['nickname']).' '.$_LANG['FRIENDSHIP_OFFER'].'?</strong></p>';
-				echo '<p>'.$_LANG['IF'].' '.ucfirst($usr['nickname']).' '.$_LANG['SUCCESS_TEXT'].'</p>';
-				echo '<div><form action="'.$_SERVER['REQUEST_URI'].'" method="POST"><p>
-						<input style="font-size:24px; width:100px" type="button" name="cancel" value="'.$_LANG['NO'].'" onclick="window.history.go(-1)" />
-						<input style="font-size:24px; width:100px" type="submit" name="goadd" value="'.$_LANG['YES'].'" />
-					 </p></form></div>';
+
+				$confirm['title']                   = $_LANG['ADD_TO_FRIEND'];
+				$confirm['text']                    = $_LANG['SEND_TO_USER'].' '.ucfirst($usr['nickname']).' '.$_LANG['FRIENDSHIP_OFFER'].'?<br>'.$_LANG['IF'].' '.ucfirst($usr['nickname']).' '.$_LANG['SUCCESS_TEXT'];
+				$confirm['action']                  = $_SERVER['REQUEST_URI'];
+				$confirm['yes_button']              = array();
+				$confirm['yes_button']['type']      = 'submit';
+				$confirm['yes_button']['name']  	= 'goadd';
+				$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
+				$smarty->assign('confirm', $confirm);
+				$smarty->display('action_confirm.tpl');
 
 		} else {
 				$to_id      = $id;
 				$from_id    = $inUser->id;
-				if (!usrIsFriends($to_id, $from_id, false)){
+			if(!usrIsFriends($id, $inUser->id, false)){
+
 					$sql = "INSERT INTO cms_user_friends (to_id, from_id, logdate, is_accepted) 
 							VALUES ('$to_id', '$from_id', NOW(), '0')";
-					$inDB->query($sql) ;
-				}
+					$inDB->query($sql);
 				
-				cmsUser::sendMessage(USER_UPDATER, $to_id, '[b]'.$_LANG['RECEIVED_F_O'].'[/b]. '.$_LANG['YOU_CAN_SEE'].' [url='.cmsUser::getProfileURL($usr['login']).']'.$_LANG['INPROFILE'].'[/url].');
+				cmsUser::sendMessage(USER_UPDATER, $to_id, '<b>'.$_LANG['RECEIVED_F_O'].'</b>. '.$_LANG['YOU_CAN_SEE'].' <a href="'.cmsUser::getProfileURL($usr['login']).'">'.$_LANG['INPROFILE'].'</a>.');
+				cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND'], 'info');
 				
+			} else {
+				cmsCore::addSessionMessage($_LANG['ADD_TO_FRIEND_SEND_ERR'], 'error');
+			}
 				$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 		}//!goadd
-		} else { $inCore->redirectBack(); }
-	} else { usrAccessDenied(); } //usrCheckAuth
+	} else {
+		$inCore->redirectBack();
+	}
 }//do
 /////////////////////////////// DEL FRIEND /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delfriend'){
-	if (usrCheckAuth() && @$inUser->id!=$id){
+	if (usrCheckAuth() && $inUser->id!=$id){
 
 		$first_id = $inUser->id;
 		$second_id = $id;
+		$usr       = $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
 		
-		$sql = "DELETE FROM cms_user_friends WHERE ((to_id = $first_id AND from_id = $second_id) OR (to_id = $second_id AND from_id = $first_id))";
-		$inDB->query($sql) ;
+		$fr_id = $inDB->get_field('cms_user_friends', "(to_id = $first_id AND from_id = $second_id) OR (to_id = $second_id AND from_id = $first_id)", 'id');
 
-		header('location:'.$_SERVER['HTTP_REFERER']);
+		if ($fr_id) {
+			$sql   = "DELETE FROM cms_user_friends WHERE id = $fr_id";
+			$inDB->query($sql);
+			cmsActions::removeObjectLog('add_friend', $fr_id);
+			cmsUser::clearSessionFriends();
+			cmsCore::addSessionMessage($usr['nickname'] . $_LANG['DEL_FRIEND'], 'info');
+		}
 
-	} else { usrAccessDenied(); } //usrCheckAuth
+		$inCore->redirectBack();
+
+	} else { echo usrAccessDenied(); } //usrCheckAuth
 }//do
 /////////////////////////////// SEND MESSAGE ///////////////////////////////////////////////////////////////////////////////////////
 if ($do=='sendmessage'){
-	if (usrCheckAuth() && $inUser->id!=$id || isset($_POST['massmail'])){
 
-		$from_id    = $inUser->id;
-		$to_id      = $id;
-		
-		$sql        = "SELECT * FROM cms_users WHERE id = $id";
-		$result     = $inDB->query($sql) ;
-        $usr        = $inDB->fetch_assoc($result);
+	if (!$cfg['sw_msg']) { cmsCore::error404(); }
 
-		if ($usr || isset($_POST['massmail'])){
-			if (usrCheckAuth()){
+	if (!$inUser->id || ($inUser->id==$id && !$inCore->inRequest('massmail') && !$inCore->request('send_to_group', 'int', 0))){
+        cmsUser::goToLogin();
+    }
 
-				$inPage->setTitle($_LANG['SEND_MESS']);
-		
-				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-				$inPage->addPathway($_LANG['SEND_MESS'], $_SERVER['REQUEST_URI']);
-					
-				if(!isset($_POST['gosend'])){		
-					if (isset($_REQUEST['replyid'])) { $replyid = (int)$_REQUEST['replyid']; }
-					else { $replyid = 0; }
-					
-					if ($replyid){
-						$sql = "SELECT m.*, u.* 
-								FROM cms_user_msg m, cms_users u
-								WHERE m.id = $replyid AND m.from_id = u.id AND m.to_id = $from_id";
-						$result = $inDB->query($sql) ;
-					
-						if ($inDB->num_rows($result)>0){
-							$msg = $inDB->fetch_assoc($result);
-							echo '<div>';
-								echo '<div class="con_heading">'.$_LANG['ORIGINAL_MESS'].'</div>';
-								echo '<div class="usr_msgreply_source">';
-									echo '<div class="usr_msgreply_sourcetext">'.$msg['message'].'</div>';
-									echo '<div class="usr_msgreply_author"><a href="'.cmsUser::getProfileURL($msg['login']).'">'.$msg['nickname'].'</a>, '.$msg['senddate'].'</div>';
-								echo '</div>';
-							echo '</div>';
-						} else {
-							die();
-						}
-					}
+    $from_id    = $inUser->id;
+    $to_id      = $id;
 
-					echo '<div class="con_heading">'.$_LANG['SEND_MESS'].'</div>';
+    $usr = $model->getUserShort($id);
+    if (!$usr) { cmsCore::error404(); }
 
-					echo '<table width="100%" cellpadding="0" cellspacing="5"><tr>';
-					
-					echo '<td width="200" height="200" valign="top">
-							<div style="background-color:#FFFFFF;padding:5px;border:solid 1px gray;text-align:center">
-								'.usrLink(usrImage($usr['id'], 'big'), $usr['login']).'
-							</div>
-							<div style="padding:5px;width:100%">
-								Кому: '.usrLink($usr['nickname'], $usr['login']).'
-							</div>
-						 </td>';						 
-					echo '<td valign="top">';
-						echo '<form action="" method="POST" name="msgform">';
-							echo '<div class="usr_msg_bbcodebox">';
-								echo cmsPage::getBBCodeToolbar('message');
-							echo '</div>';							
-							echo cmsPage::getSmilesPanel('message');
-							echo '<textarea style="font-size:18px;border:solid 1px gray;width:100%;height:200px;" name="message" id="message"></textarea>';
-							if ($inCore->userIsAdmin($inUser->id)){
-								echo '<input name="massmail" type="checkbox" value="1" /> '.$_LANG['SEND_TO_ALL'];
-							}
-							echo '<div style="margin-top:6px;"><input type="submit" name="gosend" value="'.$_LANG['SEND'].'" style="font-size:18px"/> ';
-							echo '<input type="button" name="gosend" value="'.$_LANG['CANCEL'].'" style="font-size:18px" onclick="window.history.go(-1)"/></div>';
-						echo '</form>';
-					echo '</td>';					
-					echo '</tr></table>';
-				} else {
-				
-					$message = strip_tags($_POST['message'], '<a><img><b><u><i><table><tr><td>');
-					$message = htmlspecialchars($message, ENT_QUOTES, 'cp1251');							
-				
-					if (!isset($_POST['massmail'])){
-						//send private message
-						$sql = "INSERT INTO cms_user_msg (to_id, from_id, senddate, is_new, message)
-								VALUES ('$to_id', '$from_id', NOW(), 1, '$message')";																
-						$inDB->query($sql) ;
-						
-						$msg_id = dbLastId('cms_user_msg'); 
-						
-						//send email notification, if user want it
-						$needmail = dbGetField('cms_user_profiles', "user_id='{$to_id}'", 'email_newmsg');
-						//Проверяем, если юзер онлайн, то уведомление на почту не отправляем.
-						$isonline = dbGetField('cms_online', "user_id='{$to_id}'", 'id');
-						if (!$isonline){
-						if ($needmail){
-								$inConf     = cmsConfig::getInstance();
-														
-								$postdate   = date('d/m/Y H:i:s');
-								$to_email   = dbGetField('cms_users', "id='{$to_id}'", 'email');
-								$from_nick  = dbGetField('cms_users', "id='{$from_id}'", 'nickname');
-								$answerlink = HOST.'/users/'.$from_id.'/reply'.$msg_id.'.html';
-						
-								$letter_path    = PATH.'/includes/letters/newmessage.txt';
-								$letter         = file_get_contents($letter_path);
-								
-								$letter= str_replace('{sitename}', $inConf->sitename, $letter);
-								$letter= str_replace('{answerlink}', $answerlink, $letter);
-								$letter= str_replace('{date}', $postdate, $letter);
-								$letter= str_replace('{from}', $from_nick, $letter);	
-								$inCore->mailText($to_email, $_LANG['YOU_HAVE_NEW_MESS'].'! - '.$inConf->sitename, $letter);
-						}
-						}
-					} else {
-						if ($inUser->is_admin){
-							$userlist = dbGetTable('cms_users', ' id > 0 AND is_locked = 0 AND is_deleted = 0');
-							foreach ($userlist as $key=>$usr){
-								$sql = "INSERT INTO cms_user_msg (to_id, from_id, senddate, is_new, message)
-										VALUES ('".$usr['id']."', '-2', NOW(), 1, '$message')";
-								$inDB->query($sql) ;
-							}
-						}
-					}
-											
-					$inCore->redirect('/users/'.$inUser->id.'/messages-sent.html');
-				}
-			
-			}
-		}
-	} else { 
-        usrAccessDenied();
-        } //usrCheckAuth
+    $inPage->setTitle($_LANG['SEND_MESS']);
+    $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+    $inPage->addPathway($_LANG['SEND_MESS']);
+
+    if(!$inCore->inRequest('gosend')){
+
+        $replyid = $inCore->request('replyid', 'int', 0);
+        $is_reply_user = false;
+
+        if ($replyid){
+
+            $sql = "SELECT m.id as id,
+                           m.senddate, m.message, u.login, u.nickname
+                    FROM cms_user_msg m
+                    LEFT JOIN cms_users u ON u.id = m.from_id
+                    WHERE m.id = '$replyid' AND m.to_id = '$from_id'";
+
+            $result = $inDB->query($sql) ;
+
+            if (!$inDB->num_rows($result)){ $inCore->redirect("/users/{$from_id}/messages.html"); }
+
+            $is_reply_user      = true;
+            $msg                = $inDB->fetch_assoc($result);
+            $msg['senddate']    = $inCore->dateFormat($msg['senddate'], true, true);
+
+            $update_sql = "UPDATE cms_user_msg SET is_new = 0 WHERE id = '{$msg['id']}' LIMIT 1";
+
+            $inDB->query($update_sql);
+
+        }
+
+        $usr['avatar'] = usrImage($usr['id'], 'big');
+
+        $smarty = $inCore->initSmarty('components', 'com_users_messages_add.tpl');
+        $smarty->assign('msg', $msg);
+        $smarty->assign('usr', $usr);
+        $smarty->assign('is_reply_user', $is_reply_user);
+        $smarty->assign('bbcodetoolbar', cmsPage::getBBCodeToolbar('message'));
+        $smarty->assign('smilestoolbar', cmsPage::getSmilesPanel('message'));
+        $smarty->assign('id_admin', $inCore->userIsAdmin($inUser->id));
+        $smarty->display('com_users_messages_add.tpl');
+
+    }
+
+    //
+    // Отправка сообщений
+    //
+    if($inCore->inRequest('gosend')){
+
+        $errors  = false;
+        $message = $inCore->request('message', 'html', '');
+        $message = $inCore->parseSmiles($message, true);
+        $message = $inDB->escape_string($message);
+
+        if (strlen($message)<2) { $inCore->addSessionMessage($_LANG['ERR_SEND_MESS'], 'error'); $errors = true; }
+        if ($errors) { $inCore->redirect($back); }
+
+        $send_to_group  = $inCore->request('send_to_group', 'int', 0);
+        $group_id       = $inCore->request('group_id', 'int', 0);
+
+        //
+        // Обычная отправка (1 получатель)
+        //
+        if (!$inCore->inRequest('massmail') && !$send_to_group){
+            
+            //отправляем сообщение
+            $msg_id = cmsUser::sendMessage($from_id, $to_id, $message);
+
+            //проверяем подписку на уведомления
+            $needmail = $inDB->get_field('cms_user_profiles', "user_id='{$to_id}'", 'email_newmsg');
+
+            //Проверяем, если юзер онлайн, то уведомление на почту не отправляем.
+            $isonline = $inDB->get_field('cms_online', "user_id='{$to_id}'", 'id');
+
+            //если подписан и не онлайн, отправляем уведомление на email
+            if (!$isonline && $needmail){
+                $inConf     = cmsConfig::getInstance();
+
+                $postdate   = date('d/m/Y H:i:s');
+                $to_email   = $inDB->get_field('cms_users', "id='{$to_id}'", 'email');
+                $from_nick  = $inUser->nickname;
+                $answerlink = HOST.'/users/'.$from_id.'/reply'.$msg_id.'.html';
+
+                $letter_path    = PATH.'/includes/letters/newmessage.txt';
+                $letter         = file_get_contents($letter_path);
+
+                $letter= str_replace('{sitename}', $inConf->sitename, $letter);
+                $letter= str_replace('{answerlink}', $answerlink, $letter);
+                $letter= str_replace('{date}', $postdate, $letter);
+                $letter= str_replace('{from}', $from_nick, $letter);
+                $inCore->mailText($to_email, $_LANG['YOU_HAVE_NEW_MESS'].'! - '.$inConf->sitename, $letter);
+            }
+
+            $inCore->addSessionMessage($_LANG['SEND_MESS_OK'], 'info');
+
+            $inCore->redirect('/users/'.$inUser->id.'/messages-sent.html');
+
+        }
+
+        //
+        // далее идут массовые рассылки, доступные только админам
+        //
+        if (!$inUser->is_admin){ $inCore->halt(); }
+
+        // отправить всем: получаем список всех пользователей
+        if ($inCore->inRequest('massmail')) {
+            $userlist    = cmsUser::getAllUsers();
+            $success_msg = $_LANG['SEND_MESS_ALL_OK'];
+        }
+
+        // отправить группе: получаем список членов группы
+        if ($send_to_group) {
+            $userlist    = cmsUser::getGroupMembers($group_id);
+            if ($userlist){
+                $success_msg = sprintf($_LANG['SEND_MESS_GROUP_OK'], cmsUser::getGroupTitle($group_id));
+            }
+        }
+
+        // проверяем что есть кому отправлять
+        if (!$userlist){
+            $inCore->addSessionMessage($_LANG['ERR_SEND_MESS'], 'error');
+            $inCore->redirectBack();
+        }
+
+        // отправляем всем по списку
+        foreach ($userlist as $key=>$usr){
+            cmsUser::sendMessage(USER_MASSMAIL, $usr['id'], $message);
+        }
+
+        $inCore->addSessionMessage($success_msg, 'info');
+
+        $inCore->redirect('/users/'.$inUser->id.'/messages.html');
+        
+    }
+
 }//do
 /////////////////////////////// DEL MESSAGE /////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delmessage'){
-	if (usrCheckAuth()){
-		$sql = "SELECT * FROM cms_user_msg WHERE id = $id LIMIT 1";
-		$result = $inDB->query($sql) ;
-		if ($inDB->num_rows($result)){
-			$msg = $inDB->fetch_assoc($result);
-			if ($msg['to_id']==$inUser->id || ($msg['from_id']==$inUser->id && $msg['is_new'])){
-				$inDB->query("DELETE FROM cms_user_msg WHERE id = $id LIMIT 1") ;
-			}
-		}
-	}
-	header('location:'.$_SERVER['HTTP_REFERER']);
+
+    if (!$cfg['sw_msg']) { cmsCore::error404(); }
+    if (!$inUser->id) { cmsCore::error404(); }
+
+    $msg = $inDB->get_fields('cms_user_msg', "id='$id'", '*');
+
+    if (!$msg){ cmsCore::error404(); }
+
+    if ($msg['to_id']==$inUser->id){
+        $inDB->query("UPDATE cms_user_msg SET to_del=1 WHERE id='{$id}'");
+        $inCore->addSessionMessage($_LANG['MESS_DEL_OK'], 'info');
+    }
+
+    if ($msg['from_id']==$inUser->id && !$msg['is_new']){
+        $inDB->query("UPDATE cms_user_msg SET from_del=1 WHERE id='{$id}'");
+        $inCore->addSessionMessage($_LANG['MESS_DEL_OK'], 'info');
+    }
+
+    if ($msg['from_id']==$inUser->id && $msg['is_new']){
+        $inDB->query("DELETE FROM cms_user_msg WHERE id = '$id' LIMIT 1");
+        $inCore->addSessionMessage($_LANG['MESS_BACK_OK'], 'info');
+    }
+
+    $inDB->query("DELETE FROM cms_user_msg WHERE to_del=1 AND from_del=1");
+
+    $inCore->redirectBack();
+
 }//do
 /////////////////////////////// DELETE ALL INBOX MESSAGES ///////////////////////////////////////////////////////////////////////
 if ($do=='delmessages'){
-	if (usrCheckAuth()){
-		if($inUser->id == $id || $inCore->userIsAdmin($inUser->id)){
-			$sql = "DELETE FROM cms_user_msg WHERE to_id = $id";
-			$inDB->query($sql) ;
-		}
-	}
-	header('location:'.$_SERVER['HTTP_REFERER']);
+
+	if (!$cfg['sw_msg']) { cmsCore::error404(); }
+
+    if ($inUser->id != $id && !$inUser->is_admin){ cmsCore::error404(); }
+
+    $opt        = $inCore->request('opt', 'str', 'in');
+
+    $del_flag   = $opt=='in' ? 'to_del' : 'from_del';
+    $id_flag    = $opt=='in' ? 'to_id' : 'from_id';
+
+    $inDB->query("UPDATE cms_user_msg SET {$del_flag}=1 WHERE {$id_flag}='{$id}'");
+    $inDB->query("DELETE FROM cms_user_msg WHERE to_del=1 AND from_del=1") ;
+
+    $inCore->addSessionMessage($_LANG['MESS_ALL_DEL_OK'], 'info');
+
+	$inCore->redirectBack();
+
 }//do
 ///////////////////////////////////////////// KARMA LOG /////////////////////////////////////////////////////////////////////////
 if ($do=='karma'){
-		$sql = "SELECT * FROM cms_users WHERE id = $id";
-		$result = $inDB->query($sql) ;
 	
-		if ($inDB->num_rows($result)>0){
-				$usr = $inDB->fetch_assoc($result);
+		$usr = $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
 		
 				$inPage->setTitle($_LANG['KARMA_HISTORY']);
-		
 				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 				$inPage->addPathway($_LANG['KARMA_HISTORY'], $_SERVER['REQUEST_URI']);
 				
-				echo '<div class="con_heading">'.$_LANG['KARMA_HISTORY'].' - '.$usr['nickname'].'</div>';
-				
-				$ksql = "SELECT k.*, k.points as kpoints, DATE_FORMAT(k.senddate, '%d-%m-%Y {$_LANG['IN']} %H:%i') fsenddate, u.*
-						 FROM cms_user_karma k, cms_users u
-						 WHERE k.user_id = $id AND k.sender_id = u.id
+		$ksql = "SELECT k.*, k.points as kpoints, u.nickname, u.login
+					 FROM cms_user_karma k
+					 LEFT JOIN cms_users u ON u.id = k.sender_id
+					 WHERE k.user_id = $id
 						 ORDER BY k.senddate DESC
 						 LIMIT 50";
-				$kresult = $inDB->query($ksql) ;
+		$kresult = $inDB->query($ksql);
 				
-				if ($inDB->num_rows($kresult)>0){
-					echo '<table width="">';
-					while($k = $inDB->fetch_assoc($kresult)){
-						echo '<tr>';
-							echo '<td style="border-bottom:solid 1px silver" width="150" valign="middle">'.$k['fsenddate'].'</td>';
-							echo '<td style="border-bottom:solid 1px silver" width="200" valign="middle"><a href="'.cmsUser::getProfileURL($k['login']).'">'.$k['nickname'].'</a></td>';
-							echo '<td style="border-bottom:solid 1px silver" width="100" valign="middle" align="center">'.karmaPoints($k['kpoints']).'</td>';														
-						echo '</tr>';
-					}
-					echo '</table>';
-				
-				} else { echo '<p>'.$_LANG['KARMA_NOT_MODIFY'].'</p><p>'.$_LANG['KARMA_NOT_MODIFY_TEXT'].'</p><p>'.$_LANG['KARMA_DESCRIPTION'].'</p>'; }
+		$karma = array();
 
-		} else { echo '<p>'.$_LANG['USER_NOT_FOUND'].'</p>'; }
+				if ($inDB->num_rows($kresult)>0){
+					while($k = $inDB->fetch_assoc($kresult)){
+				$k['fsenddate'] = $inCore->dateFormat($k['senddate'], true, true);
+				$k['kpoints']   = karmaPoints($k['kpoints']);
+				$karma[]        = $k;
+					}
+		}
+
+		$smarty = $inCore->initSmarty('components', 'com_users_karma.tpl');
+		$smarty->assign('karma', $karma);
+		$smarty->assign('usr', $usr);
+		$smarty->display('com_users_karma.tpl');
 }
 /////////////////////////////// GIVE AWARD ///////////////////////////////////////////////////////////////////////////////////////
 if ($do=='giveaward'){
@@ -1906,45 +2110,23 @@ if ($do=='giveaward'){
 		$from_id = $inUser->id;
 		$to_id = $id;
 		
-		$sql = "SELECT * FROM cms_users WHERE id = $id";
-		$result = $inDB->query($sql) ;
-	
-		if ($inDB->num_rows($result)>0){
-				$usr = $inDB->fetch_assoc($result);
+		$usr = $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
 		
 				$inPage->setTitle($_LANG['AWARD_USER']);
 				$inPage->addHeadJS('components/users/js/awards.js');
-		
 				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 				$inPage->addPathway($_LANG['AWARD'], $_SERVER['REQUEST_URI']);
 					
 				if(!isset($_POST['gosend'])){		
 					
-					echo '<div class="con_heading">'.$_LANG['AWARD_USER'].'</div>';
-					echo '<form action="" method="POST" name="addform" id="addform">';
-						echo '<table width="100%" cellpadding="0" cellspacing="5">';				
-							echo '<tr>';
-								echo '<td width="150" valign="middle">'.$_LANG['AWARD_IMG'].':</td>';
-								echo '<td valign="middle">';
-									echo '<div style="overflow:hidden;_height:1%">'.usrAwardsList('aw.gif').'</div>';
-								echo '</td>';												
-							echo '</tr>';
-							echo '<tr>';
-								echo '<td width="150">'.$_LANG['AWARD_NAME'].':</td>';
-								echo '<td><input type="text" name="title" size="35" /></td>';												
-							echo '</tr>';
-							echo '<tr>';
-								echo '<td width="150">'.$_LANG['AWARD_DESC'].':</td>';
-								echo '<td><textarea name="description" cols="35" rows="4"></textarea></td>';												
-							echo '</tr>';
-						echo '</table>';
-
-						echo '<div style="margin-top:6px;"><input type="submit" name="gosend" value="'.$_LANG['TO_AWARD'].'" style="font-size:18px"/> ';
-						echo '<input type="button" name="gosend" value="'.$_LANG['CANCEL'].'" style="font-size:18px" onclick="window.history.go(-1)"/></div>';
-
-					echo '</form>';
+			$smarty = $inCore->initSmarty('components', 'com_users_awards_give.tpl');
+			$smarty->assign('usr', $usr);
+			$smarty->assign('awardslist', usrAwardsList('aw.gif'));
+			$smarty->display('com_users_awards_give.tpl');
 
 				} else {
+
 					$title = $inCore->request('title', 'str', $_LANG['AWRD']);
 					$description = $inCore->request('description', 'str', '');
 					$imageurl = $inCore->request('imageurl', 'str', $_LANG['AWRD']);
@@ -1952,43 +2134,56 @@ if ($do=='giveaward'){
 					if (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/users/awards/'.$imageurl)){							
 						$sql = "INSERT INTO cms_user_awards (user_id, pubdate, title, description, imageurl, from_id, award_id)
 								VALUES ('$to_id', NOW(), '$title', '$description', '$imageurl', '$from_id', '$award_id')";
-						$inDB->query($sql) ;
-						cmsUser::sendMessage(USER_UPDATER, $to_id, '[b]'.$_LANG['RECEIVED_AWARD'].':[/b] [url='.cmsUser::getProfileURL($usr['login']).']'.$title.'[/url]');
+				$inDB->query($sql);
+				$award_id = $inDB->get_last_id('cms_user_awards');
+				//регистрируем событие
+				cmsActions::log('add_award', array(
+						'object' => '"'.$title.'"',
+						'user_id' => $to_id,
+						'object_url' => '',
+						'object_id' => $award_id,
+						'target' => '',
+						'target_url' => '',
+						'target_id' => 0, 
+						'description' => '<img src="/images/users/awards/'.$imageurl.'" border="0" alt="'.$description.'">'
+				));
+						cmsUser::sendMessage(USER_UPDATER, $to_id, '<b>'.$_LANG['RECEIVED_AWARD'].':</b> <a href="'.cmsUser::getProfileURL($usr['login']).'">'.$title.'</a>');
 					}
 					$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 				}						
-		}
-	} else { usrAccessDenied(); } //usrCheckAuth
+
+	} else { echo usrAccessDenied(); } //usrCheckAuth
 }//do
 /////////////////////////////// DELETE AWARD ///////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delaward'){
 	if (usrCheckAuth()){
-		$sql = "SELECT * FROM cms_user_awards WHERE id = $id LIMIT 1";
+
+		$sql = "SELECT user_id FROM cms_user_awards WHERE id = $id LIMIT 1";
 		$result = $inDB->query($sql) ;
 		if ($inDB->num_rows($result)){
 			$aw = $inDB->fetch_assoc($result);
 			if ($aw['user_id']==$inUser->id || $inCore->userIsAdmin($inUser->id)){
-				$inDB->query("DELETE FROM cms_user_awards WHERE id = $id LIMIT 1") ;
+				$inDB->query("DELETE FROM cms_user_awards WHERE id = $id LIMIT 1");
+				cmsActions::removeObjectLog('add_award', $id);
 			}
 		}
 	}
-	header('location:'.$_SERVER['HTTP_REFERER']);
+	$inCore->redirectBack();
 }//do
 ///////////////////////// DELETE PROFILE /////////////////////////////////////////////////////////////////////////////
 if ($do == 'delprofile'){
+
     $inPage->backButton(false);
+
 	if (usrCheckAuth()){
-		if ($id){	
-			$user_sql = "SELECT id FROM cms_users WHERE id = $id LIMIT 1";
-			$result = $inDB->query($user_sql) ;
 			
-			if ($inDB->num_rows($result)){
-				$data = $inDB->fetch_assoc($result);				
+		$data = $model->getUserShort($id);
+		if (!$data) { cmsCore::error404(); }
+			
 				if (isset($_REQUEST['confirm'])){
 					if ($inUser->id == $data['id'] || $inCore->userIsAdmin($inUser->id)){
-						$inDB->query("UPDATE cms_users SET is_deleted = 1 WHERE id = $id");	
-						$inDB->query("DELETE FROM cms_user_friends WHERE to_id = $id OR from_id = $id");
-						$user_blog_id = dbGetField('cms_blogs', 'user_id='.$id, 'id');
+						$model->deleteUser($id);
+                        $user_blog_id = $inDB->get_field('cms_blogs', 'user_id='.$id, 'id');
 						if ($user_blog_id) {
                             $inCore->loadModel('blogs');
                             $blog_model = new cms_model_blogs();
@@ -1997,9 +2192,12 @@ if ($do == 'delprofile'){
 					}
 					if ($inUser->id == $data['id']){
                         $inCore->redirect('/logout');
-                    } else { $inCore->redirect(cmsUser::getProfileURL($data['login'])); }
+                    } else { $inCore->redirect('/users'); }
 				} else {				
 					//MENU
+					$inPage->setTitle($_LANG['DELETING_PROFILE']);
+					$inPage->addPathway($data['nickname'], $inUser->getProfileURL($data['login']));
+					$inPage->addPathway($_LANG['DELETING_PROFILE'], $_SERVER['REQUEST_URI']);
 					if ($inUser->id == $data['id'] || $inCore->userIsAdmin($inUser->id)){
 						$GLOBALS['ed_menu'][0]['link'] = 'javascript:window.history.go(-1)';
 						$GLOBALS['ed_menu'][0]['title'] = $_LANG['CANCEL'];
@@ -2007,37 +2205,31 @@ if ($do == 'delprofile'){
 						echo '<div class="con_heading">'.$_LANG['DELETING_PROFILE'].'</div>';
 						echo '<p style="margin-bottom:30px">'.$_LANG['REALLY_DEL_PROFILE'].'<br/> '.$_LANG['REALLY_DEL_PROFILE_TEXT'].'</p>';
 						echo '<a href="/users/'.$id.'/delprofile-yes.html" class="usr_btnlink">'.$_LANG['YES'].'</a><a href="javascript:window.history.go(-1)" class="usr_btnlink">'.$_LANG['NO'].'</a>';
-					} else { usrAccessDenied(); }					
+					} else { echo usrAccessDenied(); }					
 				}	
-			}
-		}
-	} else { usrAccessDenied(); }
+
+	} else { echo usrAccessDenied(); }
 }
 /////////////////////////////// RESTORE PROFILE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='restoreprofile'){
+
 	if (usrCheckAuth()){
-		$sql = "SELECT *
-				FROM cms_users
-				WHERE id = $id
-				LIMIT 1
-				";
+
+		$usr = $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
 				
-		$result = $inDB->query($sql) ;
-		
-		if ($inDB->num_rows($result)){
-			$usr = $inDB->fetch_assoc($result);
 			if ($inUser->id==$id || $inCore->userIsAdmin($inUser->id)){
 				$sql = "UPDATE cms_users SET is_deleted = 0 WHERE id = $id";
 				$inDB->query($sql) ;
 			}
-		}
+
 	}
 
 	if (isset($_SERVER['HTTP_REFERER'])){
 		$back = $_SERVER['HTTP_REFERER'];
 	} else { $back = '/'; }
 
-	header('location:'.$back);
+	$inCore->redirectBack();
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// VIEW USER FILES ///////////////////////////////////////////////////////////////////////////////////////	
@@ -2046,20 +2238,16 @@ if ($do=='files'){
     if (!$cfg['sw_files']) { cmsCore::error404(); }
 
 	//get user
-	$sql = "SELECT * FROM cms_users WHERE id = $id";
-	$result = $inDB->query($sql) ;
-	//if user found
-	if ($inDB->num_rows($result)>0){
-			$usr = $inDB->fetch_assoc($result);			
+	$usr = $model->getUserShort($id);
+	if (!$usr) { cmsCore::error404(); }
+
 			//heading
-			echo '<div class="con_heading"><a href="'.cmsUser::getProfileURL($usr['login']).'">'.$usr['nickname'].'</a> &rarr; '.$_LANG['FILES'].'</div>';
 			$inPage->setTitle($usr['nickname'].' - '.$_LANG['FILES']);
 			$inPage->addHeadJS('components/users/js/pageselfiles.js');
 			//pathway			
 			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 			$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
 			//ordering & paging
-			//ordering
 			if (isset($_REQUEST['orderby'])) { 
 				$orderby = $inCore->request('orderby', 'str');
 				$_SESSION['uf_orderby'] = $orderby;
@@ -2068,10 +2256,9 @@ if ($do=='files'){
 			} else {
 				$orderby = 'pubdate'; 
 			}
-
-			if (isset($_REQUEST['orderto'])) { $orderto = htmlspecialchars($_REQUEST['orderto'], ENT_QUOTES, 'cp1251'); } else { $orderto = 'desc'; }
-			if (isset($_REQUEST['page'])) { $page = intval($_REQUEST['page']); } else { $page = 1; }	
-			$perpage = 25;
+			if (isset($_REQUEST['orderto'])) { $orderto = $inCore->request('orderto', 'str', ''); } else { $orderto = 'desc'; }
+			if (isset($_REQUEST['page'])) { $page = $inCore->request('page', 'int', ''); } else { $page = 1; }	
+			$perpage = 20;
 			//get files on page
 			if ($inUser->id!=$id){
 				$allowsql = "AND allow_who='all'";
@@ -2079,122 +2266,53 @@ if ($do=='files'){
 				$allowsql = '';
 			}
 			$sql = "SELECT *
-					FROM cms_user_files f
+			FROM cms_user_files
 					WHERE user_id = $id $allowsql
 					ORDER BY ".$orderby." ".$orderto."
 					LIMIT ".(($page-1)*$perpage).", $perpage";			
 			$result = $inDB->query($sql) ;
 			//get total files count
-			$tsql = "SELECT id FROM cms_user_files WHERE user_id = $id $allowsql";
-			$tres = $inDB->query($tsql) ;
-			$total_files = $inDB->num_rows($tres);
+			$total_files = $inDB->rows_count('cms_user_files', 'user_id = '.$id.' '.$allowsql.'');
 			//calculate free space
 			$max_mb = $cfg['filessize'];
-			$current_bytes = usrFilesSize($id);							
+			$current_bytes = $max_mb ? usrFilesSize($id) : false;							
 			if ($current_bytes) { $current_mb = round(($current_bytes / 1024) / 1024, 2); } else { $current_mb = 0; }
-			$free_mb = round($max_mb - $current_mb, 2);
-			//upload link
-			if ($inUser->id == $id && $free_mb > 0){
-				echo '<div></div>';
-			}	
-			if ($inDB->num_rows($result)){ //if files exists
+			$free_mb = $max_mb ? round($max_mb - $current_mb, 2) : '';
+			$is_files = false;
+			$myprofile = ($inUser->id==$id);
+			if ($inDB->num_rows($result)){ 
+				$is_files = true;
 				//page and ordering select table
-				echo '<div class="usr_files_orderbar">
-					  <table width="100%" cellspacing="0" cellpadding="2">';
-				echo '<tr>';
-					//page select
-					echo pageSelectFiles($total_files, $page, $perpage);
-					echo '<td width="15">&nbsp;</td>';
-					//file statistics
-					echo '<td width="80"><strong>'.$_LANG['FILE_COUNT'].': </strong>'.$total_files.'</td>';
-					if ($inUser->id==$id){
-						echo '<td width="130"><strong>'.$_LANG['FREE'].': </strong>'.$free_mb.' '.$_LANG['MBITE'].'</td>';
-						echo '<td width="16"><img src="/components/users/images/upload.gif" border="0" /></td>';
-						echo '<td width="100"><a href="addfile.html">'.$_LANG['UPLOAD_FILES'].'</a></td>';
-					}
-					//order buttons
-					if ($total_files>1){
-						echo '<td align="right">
-							   <form name="orderform" method="post" action="" style="margin:0px">
-								   <input type="button" class="usr_files_orderbtn" onclick="orderPage(\'pubdate\')" name="order_date" value="'.$_LANG['ORDER_BY_DATE'].'" '.($orderby=='pubdate'?'disabled':'').'/>
-								   <input type="button" class="usr_files_orderbtn" onclick="orderPage(\'filename\')" name="order_title" value="'.$_LANG['ORDER_BY_NAME'].'" '.($orderby=='filename'?'disabled':'').'/>
-								   <input type="button" class="usr_files_orderbtn" onclick="orderPage(\'filesize\')" name="order_size" value="'.$_LANG['ORDER_BY_SIZE'].'" '.($orderby=='filesize'?'disabled':'').'/>
-								   <input type="button" class="usr_files_orderbtn" onclick="orderPage(\'hits\')" name="order_hits" value="'.$_LANG['ORDER_BY_DOWNLOAD'].'" '.($orderby=='hits'?'disabled':'').'/>
-								   <input id="orderby" type="hidden" name="orderby" value="'.$orderby.'"/>
-								</form>
-							  </td>';
-					} else {
-						echo '<td>&nbsp;</td>';						
-					}
-				echo '</tr>';
-				echo '</table></div>';
-				//file list headers	
-				echo '<form name="listform" id="listform" action="" method="post">';		
-				echo '<table width="100%" cellspacing="0" cellpadding="5" style="border:solid 1px gray">';
-					echo '<tr>';
-						echo '<td class="usr_files_head" width="20" align="center">#</td>';
-						echo '<td class="usr_files_head" width="" colspan="2">'.$_LANG['FILE_NAME'].' '.($orderby=='filename'?'&darr;':'').'</td>';
-						if ($inUser->id==$id){
-							echo '<td class="usr_files_head" width="100" align="center">'.$_LANG['VISIBILITY'].'</td>';
-						}
-						echo '<td class="usr_files_head" width="100">'.$_LANG['SIZE'].' '.($orderby=='filesize'?'&darr;':'').'</td>';
-						echo '<td class="usr_files_head" width="120">'.$_LANG['CREATE_DATE'].' '.($orderby=='pubdate'?'&darr;':'').'</td>';
-						echo '<td class="usr_files_head" width="80" align="center">'.$_LANG['DOWNLOAD_HITS'].' '.($orderby=='hits'?'&darr;':'').'</td>';
-						if ($inUser->id==$id){
-							echo '<td class="usr_files_head" width="16">&nbsp;</td>';
-						}
-					echo '</tr>';
+				$pagination = pageSelectFiles($total_files, $page, $perpage);
+
 				$rownum = 0;
 				//build file list rows
+				$files = array();
 				while($file = $inDB->fetch_assoc($result)){
-						$filelink = 'http://'.$_SERVER['HTTP_HOST'].'/users/files/download'.$file['id'].'.html';
-						if ($rownum % 2) { $class = 'usr_list_row1'; } else { $class = 'usr_list_row2'; }
-						echo '<tr>';
-							if ($inUser->id==$id){
-								echo '<td class="'.$class.'" align="center" valign="top"><input id="fileid'.$rownum.'" type="checkbox" name="files[]" value="'.$file['id'].'"/></td>';
-							} else {
-								echo '<td class="'.$class.'" align="center" valign="top">'.$file['id'].'</td>';							
-							}
-							echo '<td class="'.$class.'" width="16" valign="top">'.$inCore->fileIcon($file['filename']).'</td>';
-							echo '<td class="'.$class.'" valign="top"><a href="'.$filelink.'">'.$file['filename'].'</a><div class="usr_files_link">'.$filelink.'</div></td>';
-							
-							if ($inUser->id==$id){
-								if ($file['allow_who'] == 'all'){
-									echo '<td class="'.$class.'" align="center"><img src="/components/users/images/yes.gif" border="0" title="'.$_LANG['FILE_VIS_ALL'].'"/></td>';
-								} else {
-									echo '<td class="'.$class.'" align="center"><img src="/components/users/images/no.gif" border="0" title="'.$_LANG['FILE_HIDEN'].'"/></td>';
-								}
-							}
-							
-							$mb = round(($file['filesize']/1024)/1024, 2);if ($mb == '0') { $mb = '~ 0'; }
-							echo '<td class="'.$class.'">'.$mb.' '.$_LANG['MBITE'].'</td>';
-
-							echo '<td class="'.$class.'">'.$file['pubdate'].'</td>';
-							echo '<td class="'.$class.'" align="center">'.$file['hits'].'</td>';							
-							if ($inUser->id==$id){
-								echo '<td class="'.$class.'" align="center">';
-								echo '<a href="/users/'.$id.'/delfile'.$file['id'].'.html"><img src="/components/users/images/delete.gif" border="0" alt="'.$_LANG['DELETE_FILE'].'"/></a>';
-								echo '</td>';
-							}
-						echo '</tr>';			
+						$file['filelink'] = HOST.'/users/files/download'.$file['id'].'.html';
+						if ($rownum % 2) { $file['class'] = 'usr_list_row1'; } else { $file['class'] = 'usr_list_row2'; }
+						$file['fileicon'] 	= $inCore->fileIcon($file['filename']);
+						$file['mb'] 		= round(($file['filesize']/1024)/1024, 2);if ($mb == '0') { $mb = '~ 0'; }
+						$file['rownum'] 	= $rownum; 
+						$file['pubdate'] 	= $inCore->dateFormat($file['pubdate'], true, true);
 						$rownum++;
-				}
-				echo '</table>';
-				if ($inUser->id==$id){
-					echo '<div style="margin-top:6px">
-							<input type="button" class="usr_files_orderbtn" name="delete_btn" id="delete_btn" onclick="delFiles()" value="'.$_LANG['DELETE'].'"/>
-							<input type="button" class="usr_files_orderbtn" name="hide_btn" id="delete_btn" onclick="pubFiles(0)" value="'.$_LANG['HIDE'].'"/>
-							<input type="button" class="usr_files_orderbtn" name="show_btn" id="delete_btn" onclick="pubFiles(1)" value="'.$_LANG['SHOW'].'"/>
-						  </div>';
-				}
-				echo '</form>';
-			} else { 
-				echo '<p>'.$_LANG['USER_NO_UPLOAD'].'</p>';
-				if ($inUser->id==$id){
-					echo '<a href="addfile.html">'.$_LANG['UPLOAD_FILE_IN_ARCHIVE'].'</a>';
-				}
-			} 
-	} else { echo '<p>'.$_LANG['USERS_NOT_FOUND'].'.</p>'; }
+						$files[] = $file;
+							}
+							
+								}
+
+			$smarty = $inCore->initSmarty('components', 'com_users_file_view.tpl');
+			$smarty->assign('usr', $usr);
+			$smarty->assign('orderby', $orderby);
+			$smarty->assign('orderto', $orderto);
+			$smarty->assign('cfg', $cfg);
+			$smarty->assign('total_files', $total_files);
+			$smarty->assign('is_files', $is_files);
+			$smarty->assign('free_mb', $free_mb);
+			$smarty->assign('pagination', $pagination);
+			$smarty->assign('myprofile', $myprofile);
+			$smarty->assign('files', $files);
+			$smarty->display('com_users_file_view.tpl');
 	
 }
 
@@ -2207,7 +2325,9 @@ if ($do=='download'){
 
     if (!$file_id) { $inCore->redirectBack(); }
 
-	$sql = "SELECT * FROM cms_user_files WHERE id = $file_id LIMIT 1";
+	$allowsql = $inUser->id ? '' : "AND allow_who='all'";
+
+	$sql = "SELECT user_id, filename, allow_who FROM cms_user_files WHERE id = $file_id $allowsql LIMIT 1";
 	$result = $inDB->query($sql);
 
 	if ($inDB->num_rows($result)){
@@ -2215,6 +2335,7 @@ if ($do=='download'){
 		$name       = $file['filename'];
 		$uid        = $file['user_id'];
 		$fileurl    = '/upload/userfiles/'.$uid.'/'.$name;
+		if ($uid != $inUser->id && $file['allow_who'] != 'all') { $inCore->halt($_LANG['FILE_HIDEN']); }
 
 		if (file_exists(PATH.$fileurl)){
 			$sql = "UPDATE cms_user_files SET hits = hits + 1 WHERE id = $file_id";
@@ -2230,252 +2351,257 @@ if ($do=='addfile'){
 
     if (!$cfg['sw_files']) { cmsCore::error404(); }
 
-	if (usrCheckAuth()){
-		if ($inUser->id == $id){
+	if (!$inUser->id) { cmsUser::goToLogin(); }
+
+	if ($inUser->id != $id){ cmsCore::error404(); }
 		
 			$max_mb         = $cfg['filessize'];
 			$current_bytes  = usrFilesSize($id);
 			if ($current_bytes) { $current_mb = round(($current_bytes / 1024) / 1024, 2); } else { $current_mb = 0; }
 			$free_mb = round($max_mb - $current_mb, 2);
 		
-			if (isset($_POST['upload'])){
-				//uploading files
-				$inPage->setTitle($_LANG['FILE_UPLOAD_FINISH']);
-				$inPage->backButton(false);
-				echo '<div class="con_heading">'.$_LANG['FILE_UPLOAD_FINISH'].'</div>';
+	if($inCore->inRequest('upload')){
 				
-				$e = false;
-				
-				$size_mb = 0; $size_limit = false;
+				$size_mb      = 0;
+				$size_limit   = false;
 				$loaded_files = array();
 				
 				foreach ($_FILES as $key => $data_array) {
 					$error = $data_array['error'];
 					if ($error == UPLOAD_ERR_OK) {
-						@mkdir(PATH.'/upload/userfiles/'.$id);
+
+                        $upload_dir = PATH.'/upload/userfiles/'.$id;
+						@mkdir($upload_dir);
+                        file_put_contents($upload_dir.'/index.html', '');
 					
 						$tmp_name   = $data_array["tmp_name"];
-						$name       = strtolower($data_array["name"]);
-						$size       = $data_array["size"];
+                        $name       = $data_array["name"];
+						$size       = $inCore->strClear($data_array["size"]);
 						$size_mb    += round(($size/1024)/1024, 2);
 						
-						if ($size_mb <= $free_mb){
-							if( !strstr($name, '.php') &&
-                                !strstr($name, '.asp') &&
-                                !strstr($name, '.aspx') &&
-                                !strstr($name, '.js') &&
-                                !strstr($name, '.htm') &&
-                                !strstr($name, '.html') &&
-                                !strstr($name, '.phtml') &&
-                                !strstr($name, '.htaccess')
-                              ){
-								if (move_uploaded_file($tmp_name, PATH."/upload/userfiles/$id/$name")){
+				// проверяем тип файла
+						$types 		= $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar';
+						$maytypes 	= explode(',', str_replace(' ', '', $types));  
+						$path_parts = pathinfo($name);
+				// расширение файла
+						$ext        = strtolower($path_parts['extension']);
+				// флаг существования расширения в разрешенных
+				$may        = in_array($ext, $maytypes);
+				if(!$may) { cmsCore::addSessionMessage($_LANG['ERROR_TYPE_FILE'].': '.$types, 'error'); $inCore->redirectBack(); }
+				
+				// Переводим имя файла в транслит
+				// отделяем имя файла от расширения
+				$name  = substr($name, 0, strrpos($name, '.'));
+				// транслитируем
+				$name  = cmsCore::strToURL($name);
+				// присоединяем расширения файла
+				$name .= '.'.$ext;
+				// Обрабатываем получившееся имя файла для записи в БД
+				$name  = $inCore->strClear($name);
+
+				// Проверяем свободное место
+				if ($size_mb > $free_mb && $cfg['filessize']){ cmsCore::addSessionMessage($_LANG['YOUR_FILE_LIMIT'].' ('.$max_mb.' '.$_LANG['MBITE'].') '.$_LANG['IS_OVER_LIMIT'].'<br>'.$_LANG['FOR_NEW_FILE_DEL_OLD'], 'error'); $inCore->redirectBack(); }
+
+				// Загружаем файл	
+				if ($inCore->moveUploadedFile($tmp_name, PATH."/upload/userfiles/$id/$name", $error)) {
+						
 									$loaded_files[] = $name;
+
 									$sql = "INSERT INTO cms_user_files(user_id, filename, pubdate, allow_who, filesize, hits)
 											VALUES ($id, '$name', NOW(), 'all', '$size', 0)";
-									$inDB->query($sql) ;
-								}						
-							}
-						} else { $size_limit = true; }
-					}
-				}
+									$inDB->query($sql);
+									$file_id = $inDB->get_last_id('cms_user_files');
+									cmsActions::log('add_file', array(
+										  'object' => $name,
+										  'object_url' => '/users/files/download'.$file_id.'.html',
+										  'object_id' => $file_id,
+										  'target' => '',
+										  'target_url' => '',
+										  'description' => ''
+									));
 				
-				if ($size_limit) { 
-					echo '<div style="color:#660000;margin-bottom:10px;font-weight:bold">'.$_LANG['YOUR_FILE_LIMIT'].' ('.$max_mb.' '.$_LANG['MBITE'].') '.$_LANG['IS_OVER_LIMIT'].'.</div>';
-					echo '<div style="color:#660000;font-weight:bold">'.$_LANG['FOR_NEW_FILE_DEL_OLD'].'</div>';
+				}						
+
+				}
 				}
 										
 				if (sizeof($loaded_files)){
-					echo '<div><strong>'.$_LANG['UPLOADED_FILES'].':</strong></div>';
-					echo '<ul>';
+			
+			$ok_message  = '<div><strong>'.$_LANG['UPLOADED_FILES'].':</strong></div>';
+			$ok_message .= '<ul>';
+
 						foreach($loaded_files as $k=>$val){
-							echo '<li>'.$val.'</li>';						
+				$ok_message .= '<li>'.$val.'</li>';						
 						}
-					echo '</ul>';
-					
-					echo '<div style="margin-top:10px"><strong>'.$_LANG['FREE_SPACE_LEFT'].':</strong> '.round($free_mb-$size_mb, 2).' '.$_LANG['MBITE'].'</div>';
+
+			$ok_message .= '</ul>';
+
+					if ($cfg['filessize']){
+				$ok_message .= '<div style="margin-top:10px"><strong>'.$_LANG['FREE_SPACE_LEFT'].':</strong> '.round($free_mb-$size_mb, 2).' '.$_LANG['MBITE'].'</div>';
+					}
+
+			cmsCore::addSessionMessage($ok_message, 'info');
+
 				} else {
-					echo '<div style="color:red">'.$_LANG['ERR_BIG_FILE'].'</div>';
-					echo '<div style="color:red">'.$_LANG['ERR_FILE_NAME'].'</div>';
+			
+			cmsCore::addSessionMessage($_LANG['ERR_BIG_FILE'].' '.$_LANG['ERR_FILE_NAME'], 'error');
+
 				}
 				
-				echo '<div><a href="/users/'.$id.'/files.html">'.$_LANG['CONTINUE'].'</a> &rarr;</div>';
+		$inCore->redirect('/users/'.$id.'/files.html');
 							
-			} else {
-				$sql = "SELECT * FROM cms_users WHERE id = $id";
-				$result = $inDB->query($sql) ;
-				
-				if ($inDB->num_rows($result)>0){									
-					$usr = $inDB->fetch_assoc($result);
+	}
+
+	if(!$inCore->inRequest('upload')){
+							
+				$usr = $model->getUserShort($id);
+				if (!$usr) { cmsCore::error404(); }
 		
-					//build upload form
 					$inPage->setTitle($_LANG['UPLOAD_FILES']);
 					$inPage->backButton(false);
                     $inPage->addHeadJS('includes/jquery/multifile/jquery.multifile.js');
 					
-					$multi_js = '<script type="text/javascript">
-												  function startUpload(){
-													$("#upload_btn").attr(\'disabled\', \'true\');
-													$("#upload_btn").attr(\'value\', \''.$_LANG['LOADING'].'...\');
-													$("#cancel_btn").css(\'display\', \'none\');
-													$("#loadergif").css(\'display\', \'block\');
-													document.uploadform.submit();													
-												  }
-											   </script>';
-
-                    $inPage->addHead($multi_js);
-				
 					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
 					$inPage->addPathway($_LANG['UPLOAD_FILES'], $_SERVER['REQUEST_URI']);
 					
-					echo '<div class="con_heading">'.$_LANG['UPLOAD_FILES'].'</div>';
-					
-					if ($free_mb>0){
-					
 						$post_max_b = return_bytes(ini_get('upload_max_filesize'));
 						$post_max_mb = (round($post_max_b/1024)/1024) . ' '.$_LANG['MBITE'];
 					
-						echo '<div>'.$_LANG['SELECT_FILE_TEXT'].'</div>';
-						echo '<div>'.$_LANG['ERR_FILE_NAME'].'</div>';
-						
-						echo '<div style="margin:10px 0px 0px 0px"><strong>'.$_LANG['YOUR_FILE_LIMIT'].':</strong> '.$free_mb.' '.$_LANG['MBITE'].'</div>';
-						echo '<div style="margin:0px 0px 10px 0px"><strong>'.$_LANG['MAX_FILE_SIZE'].':</strong> '.$post_max_mb.'</div>';
-						
-						echo '<form action="" method="post" enctype="multipart/form-data" name="uploadform">';
+					$smarty = $inCore->initSmarty('components', 'com_users_file_add.tpl');
+					$smarty->assign('free_mb', $free_mb);
+					$smarty->assign('post_max_b', $post_max_b);
+					$smarty->assign('post_max_mb', $post_max_mb);
+					$smarty->assign('cfg', $cfg);
+		$smarty->assign('messages', cmsCore::getSessionMessages());
+					$smarty->assign('types', $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar');
+					$smarty->display('com_users_file_add.tpl');
 
-						echo '<input name="MAX_FILE_SIZE" type="hidden" value="'.$post_max_b.'"/>'. "\n";
-						echo '<input type="file" class="multi" name="upfile" id="upfile"/>';														
-						echo '<div style="margin-top:20px;overflow:hidden">';
-							echo '<input style="float:left;margin-right:4px" type="button" name="upload_btn" id="upload_btn" value="'.$_LANG['UPLOAD_FILES'].'" onclick="startUpload()"/> ';
-							echo '<input style="float:left" type="button" name="cancel_btn" id="cancel_btn" value="'.$_LANG['CANCEL'].'" onclick="window.history.go(-1)" />';
-							echo '<div id="loadergif" style="display:none;float:left;margin:6px"><img src="/images/ajax-loader.gif" border="0"/></div>';					
-						echo '</div>';
-							echo '<input type="hidden" name="upload" value="1"/>';							
-						echo '</form>';
-					} else {
-						echo '<div style="color:#660000;margin-bottom:10px;font-weight:bold">'.$_LANG['YOUR_FILE_LIMIT'].' ('.$max_mb.' '.$_LANG['MBITE'].') '.$_LANG['IS_OVER_LIMIT'].'.</div>';
-						echo '<div style="color:#660000;font-weight:bold">'.$_LANG['FOR_NEW_FILE_DEL_OLD'].'</div>';
-						echo '<div style="margin-top:20px">';
-							echo '<input type="button" name="cancel" value="'.$_LANG['CANCEL'].'" onclick="window.history.go(-1)" />';
-						echo '</div>';
-					}
 				}
-			}
 		
-		} else { usrAccessDenied(); }	
-	} else { usrAccessDenied(); }
 }
 
 /////////////////////////////// FILE DELETE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delfile'){
-	$fileid = @intval($_REQUEST['fileid']);	
+
+	if (!$cfg['sw_files']) { cmsCore::error404(); }
 	
-	if (usrCheckAuth() && (@$inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
+	$fileid = $inCore->request('fileid', 'int', 0);	
+	
+	if (usrCheckAuth() && ($inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
 		if (!isset($_POST['godelete'])){
-			$sql = "SELECT * FROM cms_users WHERE id = $id";
-			$result = $inDB->query($sql) ;
-			if ($inDB->num_rows($result)){
+			$usr = $model->getUserShort($id);
+			if (!$usr) { cmsCore::error404(); }
+
 				$inPage->backButton(false);
-				$usr = $inDB->fetch_assoc($result);				
-				$sql = "SELECT * FROM cms_user_files WHERE id = $fileid AND user_id = $id";
+				$sql = "SELECT filename FROM cms_user_files WHERE id = $fileid AND user_id = $id";
 				$result = $inDB->query($sql);
 				if ($inDB->num_rows($result)){
 					$file = $inDB->fetch_assoc($result);				
 					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
 					$inPage->addPathway($_LANG['DELETE_FILE'], $_SERVER['REQUEST_URI']);
-					echo '<div class="con_heading">'.$_LANG['DELETING_FILE'].'</div>';
-					echo '<p>'.$_LANG['YOU_REALLY_DEL_FILE'].' "'.$file['filename'].'"?</p>';
-					echo '<div><form action="'.$_SERVER['REQUEST_URI'].'" method="POST"><p>
-							<input style="font-size:24px; width:100px" type="button" name="cancel" value="'.$_LANG['NO'].'" onclick="window.history.go(-1)" />
-							<input style="font-size:24px; width:100px" type="submit" name="godelete" value="'.$_LANG['YES'].'" />
-						 </p></form></div>';
-				} else { usrAccessDenied(); }
-			}
+					
+					$confirm['title']                   = $_LANG['DELETING_FILE'];
+					$confirm['text']                    = $_LANG['YOU_REALLY_DEL_FILE'].' "'.$file['filename'].'"?';
+					$confirm['action']                  = $_SERVER['REQUEST_URI'];
+					$confirm['yes_button']              = array();
+					$confirm['yes_button']['type']      = 'submit';
+					$confirm['yes_button']['name']  	= 'godelete';
+					$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
+					$smarty->assign('confirm', $confirm);
+					$smarty->display('action_confirm.tpl');
+				} else { echo usrAccessDenied(); }
+
 		} else {
 			$sql = "SELECT filename FROM cms_user_files WHERE id = $fileid AND user_id = $id";
 			$result = $inDB->query($sql) ;
 			if ($inDB->num_rows($result)){
 				$file = $inDB->fetch_assoc($result);
 				@unlink($_SERVER['DOCUMENT_ROOT'].'/upload/userfiles/'.$id.'/'.$file['filename']);
-				$inDB->query("DELETE FROM cms_user_files WHERE id = $fileid") ;
+				$inDB->query("DELETE FROM cms_user_files WHERE id = $fileid");
+				cmsActions::removeObjectLog('add_file', $fileid);
 			}			
 			header('location:/users/'.$id.'/files.html');
 		}
-	} else { usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 }
 
 /////////////////////////////// MULTIPLE FILES DELETE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delfilelist'){
+
+	if (!$cfg['sw_files']) { cmsCore::error404(); }
+	
 	if (sizeof($_POST['files'])) { $files = $_POST['files']; }
 	else { die($_LANG['NOT_SELECTED_FILES']); }
 	
-	if (usrCheckAuth() && (@$inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
+	if (usrCheckAuth() && ($inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
 		if (!isset($_POST['godelete'])){
-			$sql = "SELECT * FROM cms_users WHERE id = $id";
-			$result = $inDB->query($sql);
-			if ($inDB->num_rows($result)){
+			$usr = $model->getUserShort($id);
+			if (!$usr) { cmsCore::error404(); }
+
 				$inPage->backButton(false);
-				$usr = $inDB->fetch_assoc($result);				
 				
 				//build file list sql
 				$t = 0;
 				foreach($files as $key=>$value){
-					$findsql .= "id = ".$value; 
+					$findsql .= "id = ".intval($value); 
 					if ($t<sizeof($files)-1) { $findsql .= " OR "; }
 					$t++;
 				}				
 				
-				$sql = "SELECT * FROM cms_user_files WHERE user_id = $id AND ($findsql)";							
+				$sql = "SELECT id, filename FROM cms_user_files WHERE user_id = $id AND ($findsql)";							
 				$result = $inDB->query($sql);
 				if ($inDB->num_rows($result)){
 					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
 					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
 					$inPage->addPathway($_LANG['DELETE_FILES'], $_SERVER['REQUEST_URI']);
-					echo '<div class="con_heading">'.$_LANG['DELETING_FILES'].'</div>';
-					echo '<p><strong>'.$_LANG['YOU_REALLY_DEL_FILES'].'?</strong></p>';
-
-					echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
-						echo '<ul>';
+					$html = '<ul>';
 						while ($file = $inDB->fetch_assoc($result)){ 
-							echo '<li>';
-								echo $file['filename'] . '<input type="hidden" name="files[]" value="'.$file['id'].'"/>';	
-							echo '</li>';
+							$html .= '<li>';
+								$html .=  $file['filename'] . '<input type="hidden" name="files[]" value="'.$file['id'].'"/>';	
+							$html .= '</li>';
 						}
-						echo '</ul>';
-						echo '<div style="margin-top:10px">';
-							echo '<input style="font-size:24px; width:100px" type="button" name="cancel" value="'.$_LANG['NO'].'" onclick="window.history.go(-1)" /> ';
-							echo '<input style="font-size:24px; width:100px" type="submit" name="godelete" value="'.$_LANG['YES'].'" />';
-						echo '</div>';
-					echo '</form>';
-				} else { usrAccessDenied(); }
-			}
+					$html .= '</ul>';
+					
+					$confirm['title']                   = $_LANG['DELETING_FILES'];
+					$confirm['text']                    = $_LANG['YOU_REALLY_DEL_FILES'].'?';
+					$confirm['action']                  = $_SERVER['REQUEST_URI'];
+					$confirm['yes_button']              = array();
+					$confirm['yes_button']['type']      = 'submit';
+					$confirm['yes_button']['name']  	= 'godelete';
+					$confirm['other']  					= $html;
+					$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
+					$smarty->assign('confirm', $confirm);
+					$smarty->display('action_confirm.tpl');
+
+				} else { echo usrAccessDenied(); }
+
 		} else {
 				//build file list sql
 				$t = 0;
 				foreach($files as $key=>$value){
-					$findsql .= "id = ".$value; 
+					$findsql .= "id = ".intval($value); 
 					if ($t<sizeof($files)-1) { $findsql .= " OR "; }
 					$t++;
 				}				
 				
-				$sql = "SELECT * FROM cms_user_files WHERE user_id = $id AND ($findsql)";							
+				$sql = "SELECT id, filename FROM cms_user_files WHERE user_id = $id AND ($findsql)";							
 				$result = $inDB->query($sql);
 				if ($inDB->num_rows($result)){
 					while ($file = $inDB->fetch_assoc($result)){
 						@unlink($_SERVER['DOCUMENT_ROOT'].'/upload/userfiles/'.$id.'/'.$file['filename']);
+					cmsActions::removeObjectLog('add_file', $file['id']);
 					}
 					$inDB->query("DELETE FROM cms_user_files WHERE $findsql");
 				}			
 				header('location:/users/'.$id.'/files.html');
 		}
-	} else { usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 }
 
 /////////////////////////////// MULTIPLE FILES PUBLISHING /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='pubfilelist'){
-
     if (!$cfg['sw_files']) { cmsCore::error404(); }
 
 	if (sizeof($_POST['files'])) { $files = $_POST['files']; }
@@ -2483,17 +2609,17 @@ if ($do=='pubfilelist'){
 	
 	$allow = $inCore->request('allow', 'str', 'nobody');
 	
-	if (usrCheckAuth() && (@$inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
+	if (usrCheckAuth() && ($inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
 		$t = 0;
 		foreach($files as $key=>$value){
-			$findsql .= "id = ".$value; 
+			$findsql .= "id = ".intval($value); 
 			if ($t<sizeof($files)-1) { $findsql .= " OR "; }
 			$t++;
 		}				
 				
 		$inDB->query("UPDATE cms_user_files SET allow_who = '$allow' WHERE $findsql") ;
 		header('location:/users/'.$id.'/files.html');
-	} else { usrAccessDenied(); }
+	} else { echo usrAccessDenied(); }
 }
 
 /////////////////////////////// VIEW AWARDS LIST ///////////////////////////////////////////////////////////////////////////////////////	
@@ -2502,119 +2628,48 @@ if ($do=='awardslist'){
 	
 	$inPage->addPathway($_LANG['SITE_AWARDS']);
 
-	echo '<div class="con_heading">'.$_LANG['SITE_AWARDS'].'</div>';
-	
 	$sql = "SELECT * 
 			FROM cms_user_autoawards
 			WHERE published = 1
 			ORDER BY title";			
 	$result = $inDB->query($sql) ;
 
+	$is_yes_awards = false;
+			
 	if ($inDB->num_rows($result)){
-			
-		echo '<table width="100%" cellspacing="2" cellpadding="3" class="usr_aw_table">';
+		$is_yes_awards = true;
+		$aws = array();
 		while($aw = $inDB->fetch_assoc($result)){
-			echo '<tr>';
-			
-				//icon
-				echo '<td width="32" valign="top">';
-					echo '<img class="usr_aw_img" src="/images/users/awards/'.$aw['imageurl'].'" border="0"/>';
-				echo '</td>';
-				
-				//description
-				echo '<td width="30%" valign="top">';
-					
-					echo '<div class="usr_aw_title"><strong>'.$aw['title'].'</strong></div>';
-					echo '<div class="usr_aw_desc">'.$aw['description'].'</div>';
-									
-					echo '<table border="0" cellspacing="4" cellpadding="0" class="usr_aw_dettable">';                      
-						if ($aw['p_comment']>0){  
-							echo '<tr>'."\n";
-								echo '<td><img src="/admin/components/autoawards/images/p_comment.gif" width="16" height="16" /></td>'."\n";
-								echo '<td>'."\n";
-								  echo $aw['p_comment']."\n";
-								echo ' '.$_LANG['COMMENTS'].'</td>'."\n";
-							echo '</tr>'."\n";
-						}
-						if ($aw['p_forum']>0){  
-							echo '<tr>'."\n";
-								echo '<td><img src="/admin/components/autoawards/images/p_forum.gif" width="16" height="16" /></td>'."\n";
-								echo '<td>'."\n";
-								  echo $aw['p_forum']."\n";
-								echo ' '.$_LANG['MESS_IN_FORUM'].'</td>'."\n";
-							echo '</tr>'."\n";
-						}
-						if ($aw['p_content']>0){  
-							echo '<tr>'."\n";
-								echo '<td><img src="/admin/components/autoawards/images/p_forum.gif" width="16" height="16" /></td>'."\n";
-								echo '<td>'."\n";
-								  echo $aw['p_content']."\n";
-								echo ' '.$_LANG['PUBLISHED_ARTICLES'].'</td>'."\n";
-							echo '</tr>'."\n";
-						}
-						if ($aw['p_blog']>0){  
-							echo '<tr>'."\n";
-								echo '<td><img src="/admin/components/autoawards/images/p_blog.gif" width="16" height="16" /></td>'."\n";
-								echo '<td>'."\n";
-								  echo $aw['p_blog']."\n";
-								echo ' '.$_LANG['POSTS_IN_BLOG'].'</td>'."\n";
-							echo '</tr>'."\n";
-						}
-						if ($aw['p_karma']>0){  
-							echo '<tr>'."\n";
-								echo '<td><img src="/admin/components/autoawards/images/p_karma.gif" width="16" height="16" /></td>'."\n";
-								echo '<td>'."\n";
-								  echo $aw['p_karma']."\n";
-								echo ' '.$_LANG['KARMA_POINTS'].'</td>'."\n";
-							echo '</tr>'."\n";
-						}
-						if ($aw['p_photo']>0){  
-							echo '<tr>'."\n";
-								echo '<td><img src="/admin/components/autoawards/images/p_photo.gif" width="16" height="16" /></td>'."\n";
-								echo '<td>'."\n";
-								  echo $aw['p_photo']."\n";
-								echo ' '.$_LANG['PHOTOS_IN_ALBUMS'].'</td>'."\n";
-							echo '</tr>'."\n";
-						}
-						if ($aw['p_privphoto']>0){  
-							echo '<tr>'."\n";
-								echo '<td><img src="/admin/components/autoawards/images/p_privphoto.gif" width="16" height="16" /></td>'."\n";
-								echo '<td>'."\n";
-								  echo $aw['p_privphoto']."\n";
-								echo ' '.$_LANG['PHOTOS_IN_PRIVATE_ALBUM'].'</td>'."\n";
-							echo '</tr>'."\n";
-						}
-                    echo '</table>';
-				echo '</td>';
-				
-				//who have this award
-				echo '<td valign="top" class="usr_aw_who">';
+				//Перебираем все награды и ищем пользователей с текущей наградой
 					$sql =  "SELECT u.id as id, u.nickname as nickname, u.login as login, IFNULL(p.gender, 'm') as gender
-							 FROM cms_user_awards aw, cms_users u, cms_user_autoawards a, cms_user_profiles p
-							 WHERE aw.award_id = a.id AND aw.user_id = u.id AND p.user_id = u.id AND aw.award_id = ".$aw['id'];
+							 FROM cms_user_awards aw
+							 LEFT JOIN cms_users u ON u.id = aw.user_id
+							 LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+							 LEFT JOIN cms_user_autoawards a ON a.id = aw.award_id
+							 WHERE aw.award_id = ".$aw['id'];
 					$rs = $inDB->query($sql) ;
 					$total = $inDB->num_rows($rs);
-					$uhtml = '';
+					$aw['uhtml'] = '';
 					if ($total){
 						$row = 0;
 						while ($user = $inDB->fetch_assoc($rs)){
 							$row++;
-							$uhtml .= '<a href="'.cmsUser::getProfileURL($user['login']).'" id="'.$user['gender'].'">'.$user['nickname'].'</a>';
-							if ($row<$total){ $uhtml .= ', '; }
+							$aw['uhtml'] .= '<a href="'.cmsUser::getProfileURL($user['login']).'" id="'.$user['gender'].'">'.$user['nickname'].'</a>';
+							if ($row<$total){ $aw['uhtml'] .= ', '; }
 						}
 					} else {
-						$uhtml = $_LANG['NOT_USERS_WITH_THIS_AWARD'];
+						$aw['uhtml'] = $_LANG['NOT_USERS_WITH_THIS_AWARD'];
+					}
+			$aws[] = $aw;
 					}
 								
-					echo '<div class="usr_aw_users"><strong>'.$_LANG['AWARD_HAVES'].':</strong></div>';
-					echo '<div class="usr_aw_userslist">'.$uhtml.'</div>';
-				echo '</td>';
-				
-			echo '</tr>';			
 		}
-		echo '</table>';
 				
-	} else { echo '<p>'.$_LANG['NOT_AWARDS_ON_SITE'].'</p>'; }
+	$smarty = $inCore->initSmarty('components', 'com_users_awards_site.tpl');
+	$smarty->assign('is_yes_awards', $is_yes_awards);
+	$smarty->assign('uhtml', $uhtml);
+	$smarty->assign('aws', $aws);
+	$smarty->display('com_users_awards_site.tpl');	
 	
 }
 
@@ -2624,8 +2679,9 @@ if ($do=='votekarma'){
     $sign   = $inCore->request('sign', 'str', 'plus');
     $to     = $inCore->request('to', 'int', 0);
     $from   = $inCore->request('from', 'int', 0);
+	$is_ajax = $inCore->request('is_ajax', 'int', 0);
 
-    if (!$to || !$from) { $inCore->redirectBack(); }
+    if (!$to || !$from) { if ($is_ajax) { return; } else { $inCore->redirectBack(); } }
 
     $inCore = cmsCore::getInstance();
 
@@ -2639,8 +2695,17 @@ if ($do=='votekarma'){
 			}
 		}
 	}
+	if (!$is_ajax) { $inCore->redirectBack(); }
+	$points = strip_tags( cmsUser::getKarmaFormat($to, false), '<table><tr><td><img><a>' );
+	$points_int = strip_tags($points);
+	if ($points_int >= 0) {
+		$points = '<div class="value-positive">'.$points.'</div>';
+	} else {
+		$points = '<div class="value-negative">'.$points.'</div>';
+	}
+	echo $points;
 
-	$inCore->redirectBack();
+	exit;
 
 }
 ////////////////////////// DELETE FROM WALL ////////////////////////////////////////////////////////
@@ -2651,53 +2716,82 @@ if ($do=='votekarma'){
 		if ($record_id && $my_id){
 			
 				if ($usertype=='user'){
-					$can_delete = $inDB->rows_count('cms_user_wall', "id=$record_id AND (user_id=$my_id OR author_id=$my_id)");
+					$can_delete = $inDB->get_fields('cms_user_wall', "id = '$record_id' AND (user_id = '$my_id' OR author_id = '$my_id')", 'author_id, user_id');
+					$author_id     = $can_delete['author_id'];
+					$wall_user_id  = $can_delete['user_id'];
 				}
                 elseif ($usertype=='club'){
 					$inCore->loadLib('clubs');
-					$club_id        = $inDB->get_field('cms_user_wall', "id=$record_id", 'user_id');
+					$club_id        = $inDB->get_field('cms_user_wall', "id = '$record_id'", 'user_id');
                     $is_club_admin  = clubUserIsAdmin($club_id, $my_id);
                     $is_club_moder  = clubUserIsRole($club_id, $my_id, 'moderator');
-                    $is_author      = $inDB->rows_count('cms_user_wall', "id=$record_id AND author_id=$my_id");
+                    $is_author      = $inDB->rows_count('cms_user_wall', "id = '$record_id' AND author_id = '$my_id'");
 					$can_delete     = $is_author || $is_club_admin || $is_club_moder;
 				}
 
 				if ($can_delete || $inCore->userIsAdmin( $my_id )){
-					$inDB->query("DELETE FROM cms_user_wall WHERE id = $record_id LIMIT 1") ;
+					$inDB->query("DELETE FROM cms_user_wall WHERE id = '$record_id' LIMIT 1");
+					switch ($usertype){
+						case 'user': ($author_id == $my_id && $wall_user_id == $my_id) ? cmsActions::removeObjectLog('add_wall_my', $record_id) : cmsActions::removeObjectLog('add_wall', $record_id); break;
+						case 'club': cmsActions::removeObjectLog('add_wall_club', $record_id); break;
+					}
 				}
-
+				$inCore->addSessionMessage($_LANG['WALL_MESG_DEL'], 'info');
 		}
         $inCore->redirectBack();
 	}
 
-////////////////////////// ADD TO WALL /////////////////////////////////////////////////////////////
+////////////////////////// ADD TO WALL /////////////////////////////////////////
 	if ($do=='wall_add'){
+
         $usertype   = $inCore->request('usertype', 'str', 'user');
-        $user_id    = $inCore->request('user_id', 'int');
-        $message    = $inCore->request('message', 'str');
+        $user_id    = $inCore->request('user_id', 'int', 0);
         $author_id  = $inUser->id;
+		$message 	= $inCore->request('message', 'html', ''); 
+		$message 	= $inCore->parseSmiles($message, true); 
+		$message 	= $inDB->escape_string($message); 
+		$errors 	= false;
+		if (strlen($message)<2) { $inCore->addSessionMessage($_LANG['ERR_SEND_WALL'], 'error'); $errors = true; }
 
-		if ($message && $user_id && $author_id){
-
-            $result = $inDB->query("SELECT id FROM cms_users WHERE id = $user_id");
-
-            if ($inDB->num_rows($result)===1 || $usertype=='club'){
-
+		if ($message && $user_id && $author_id && !$errors){
+			switch ($usertype){
+				case 'user': 	$usr  = $model->getUserShort($user_id);
+								if (!$usr) { cmsCore::error404(); }
                 $sql = "INSERT INTO cms_user_wall (user_id, author_id, pubdate, content, usertype)
                         VALUES ('$user_id', '$author_id', NOW(), '$message', '$usertype')";
                 $inDB->query($sql);
-
-                if ($usertype=='user'){
+								$wall_id = $inDB->get_last_id('cms_user_wall');
+								if ($author_id != $user_id){
+									//регистрируем событие
+									cmsActions::log('add_wall', array(
+											'object' => $usr['nickname'],
+											'object_url' => cmsUser::getProfileURL($usr['login']),
+											'object_id' => $wall_id,
+											'target' => '',
+											'target_url' => '',
+											'target_id' => 0, 
+											'description' => strlen(strip_tags($message))>100 ? substr(strip_tags($message), 0, 100) : strip_tags($message)
+									));
+								} elseif($author_id == $user_id) {
+									cmsActions::log('add_wall_my', array(
+											'object' => '',
+											'object_url' => '',
+											'object_id' => $wall_id,
+											'target' => '',
+											'target_url' => '',
+											'target_id' => 0, 
+											'description' => strlen(strip_tags($message))>100 ? substr(strip_tags($message), 0, 100) : strip_tags($message)
+									));
+								}
                     //send email notification, if user want it
-                    $user['email_newmsg']   = $inDB->get_field('cms_user_profiles', "user_id='{$user_id}'", 'email_newmsg');
-                    $user['login']          = $inDB->get_field('cms_users', "id='{$user_id}'", 'login');
-                    if ($user['email_newmsg'] && $user_id != $author_id){
+                    $usr['email_newmsg']   = $inDB->get_field('cms_user_profiles', "user_id='{$user_id}'", 'email_newmsg');
+                    if ($usr['email_newmsg'] && $user_id != $author_id){
                             $inConf = cmsConfig::getInstance();
                             //fetch target user
-                            $to_email       = dbGetField('cms_users', 'id='.$user_id, 'email');
+										$to_email       = $inDB->get_field('cms_users', 'id='.$user_id, 'email');
                             $postdate       = date('d/m/Y H:i:s');
-                            $from_nick      = dbGetField('cms_users', "id='{$author_id}'", 'nickname');
-                            $profilelink    = cmsUser::getProfileURL($user['login']);
+										$from_nick      = $inDB->get_field('cms_users', "id='{$author_id}'", 'nickname');
+							$profilelink    = HOST . cmsUser::getProfileURL($usr['login']);
 
                             $letter_path    = PATH.'/includes/letters/newwallpost.txt';
                             $letter         = file_get_contents($letter_path);
@@ -2708,13 +2802,78 @@ if ($do=='votekarma'){
                             $letter= str_replace('{from}', $from_nick, $letter);
                             $inCore->mailText($to_email, $_LANG['NEW_POST_ON_WALL'].'! - '.$inConf->sitename, $letter);
                     }
+						break;
+				
+				case 'club':	$club = $inDB->get_fields('cms_clubs', "id=$user_id", 'id, title');
+								if (!$club) { $inCore->redirectBack(); }
+								$sql = "INSERT INTO cms_user_wall (user_id, author_id, pubdate, content, usertype)
+										VALUES ('$user_id', '$author_id', NOW(), '$message', '$usertype')";
+								$inDB->query($sql);
+								$wall_id = $inDB->get_last_id('cms_user_wall');
+								//регистрируем событие
+								cmsActions::log('add_wall_club', array(
+											'object' => $club['title'],
+											'object_url' => '/clubs/'.$club['id'],
+											'object_id' => $wall_id,
+											'target' => '',
+											'target_url' => '',
+											'target_id' => 0, 
+											'description' => strlen(strip_tags($message))>100 ? substr(strip_tags($message), 0, 100) : strip_tags($message)
+								));
+						break;
                 }
-            }
+
 		}
         $inCore->redirectBack();
 	}
-	
 
+//============================================================================//
+//================================  Инвайты  =================================//
+//============================================================================//
+if ($do=='invites'){
+
+    $reg_cfg = $inCore->loadComponentConfig('registration');
+
+    if ($reg_cfg['reg_type'] != 'invite') { cmsCore::error404(); }
+
+    $invites_count = $model->getUserInvitesCount($inUser->id);
+
+    if (!$invites_count) { cmsCore::error404(); }
+
+    if (!$inCore->inRequest('send_invite')){
+
+        $inPage->addPathway($inUser->nickname, cmsUser::getProfileURL($inUser->login));
+        $inPage->addPathway($_LANG['MY_INVITES']);
+
+        $smarty = $inCore->initSmarty('components', 'com_users_invites.tpl');
+        $smarty->assign('invites_count', $invites_count);
+        $smarty->display('com_users_invites.tpl');
+
+        return;
+
+    }
+    
+    if ($inCore->inRequest('send_invite')){
+        
+        $invite_email = $inCore->request('invite_email', 'email', '');
+
+        if (!$invite_email) { $inCore->redirectBack(); }
+
+        if ($model->sendInvite($inUser->id, $invite_email)){
+
+            cmsCore::addSessionMessage(sprintf($_LANG['INVITE_SENDED'], $invite_email), 'success');
+
+        } else {
+
+            cmsCore::addSessionMessage($_LANG['INVITE_ERROR'], 'error');
+
+        }
+
+        $inCore->redirect(cmsUser::getProfileURL($inUser->login));
+
+    }
+
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 } 
 ?>

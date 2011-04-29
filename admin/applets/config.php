@@ -1,13 +1,17 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
 
 function applet_config(){
 
@@ -33,7 +37,9 @@ function applet_config(){
   
 	include('../includes/config.inc.php');
 
-    if (!isset($_CFG['wmark'])) { $_CFG['wmark'] = 'watermark.png'; }
+    if (!isset($_CFG['wmark']))    { $_CFG['wmark'] = 'watermark.png'; }
+    if (!isset($_CFG['timezone'])) { $_CFG['timezone'] = 'Europe/Moscow'; }
+    if (!isset($_CFG['timediff'])) { $_CFG['timediff'] = '0'; }
 	
 	if ($do == 'save'){
 
@@ -64,6 +70,7 @@ function applet_config(){
 		$newCFG['db_pass'] 		= $_CFG['db_pass'];
 		$newCFG['db_prefix']	= $_CFG['db_prefix'];
 		$newCFG['show_pw']		= $inCore->request('show_pw', 'int');
+		$newCFG['short_pw']		= $inCore->request('short_pw', 'int');
 		$newCFG['index_pw']		= $inCore->request('index_pw', 'int');
 		$newCFG['fastcfg']		= $inCore->request('fastcfg', 'int');
 		
@@ -74,6 +81,9 @@ function applet_config(){
 		$newCFG['smtppass']		= $inCore->request('smtppass', 'str');
 		$newCFG['smtphost']		= $inCore->request('smtphost', 'str');
         $newCFG['lang']         = $_CFG['lang'];
+
+        $newCFG['timezone']		= $inCore->request('timezone', 'str');
+        $newCFG['timediff']		= $inCore->request('timediff', 'str');
 
 		if ($inConf->saveToFile($newCFG)){
            $inCore->redirect('index.php?view=config&msg=ok');
@@ -97,6 +107,7 @@ function applet_config(){
 	  	<li><a href="#basic"><span>Сайт</span></a></li>
 	  	<li><a href="#home"><span>Главная страница</span></a></li>
 		<li><a href="#design"><span>Дизайн</span></a></li>
+		<li><a href="#time"><span>Время</span></a></li>
 		<li><a href="#database"><span>База данных</span></a></li>
 		<li><a href="#mail"><span>Почта</span></a></li>
 		<li><a href="#other"><span>Разное</span></a></li>
@@ -250,15 +261,15 @@ function applet_config(){
                         <div style="margin-top:2px">
                             <strong>Шаблон:</strong><br />
                             <span class="hinttext">Содержимое папки &quot;templates/&quot; </span>
-                        </div>
-                        <div style="margin-top:2px">
-                            <a style="color:#09C" target="_blank" href="http://www.instantcms.ru/design.html">Заказать уникальный шаблон</a>
-                        </div>
+                        </div>                        
 					</td>
 					<td>
                         <select name="template" id="template" style="width:350px" onchange="document.CFGform.submit();">
                             <?php $inCore->templatesList($_CFG['template']); ?>
                         </select>
+                        <div style="margin-top:5px" class="hinttext">
+                            При смене шаблона необходимо очистить папку &laquo;<strong>cache</strong>&raquo; на сервере
+                        </div>
 					</td>
 				</tr>
 				<tr>
@@ -273,6 +284,37 @@ function applet_config(){
 					<td valign="top">
 						<input name="back_btn" type="radio" value="1" <?php if (@$_CFG['back_btn']) { echo 'checked="checked"'; } ?>/> Да
 						<input name="back_btn" type="radio" value="0" <?php if (@!$_CFG['back_btn']) { echo 'checked="checked"'; } ?>/> Нет
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="time">
+			<table width="720" border="0" cellpadding="5">
+				<tr>
+					<td valign="top" width="100">
+                        <div style="margin-top:2px">
+                            <strong>Временная зона:</strong>
+                        </div>
+					</td>
+					<td>
+                        <select name="timezone" id="timezone" style="width:350px">
+                            <?php include(PATH.'/admin/includes/timezones.php'); ?>
+                            <?php foreach($timezones as $tz) { ?>
+                            <option value="<?php echo $tz; ?>" <?php if ($tz == $_CFG['timezone']) { ?>selected="selected"<?php } ?>><?php echo $tz; ?></option>
+                            <?php } ?>
+                        </select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<strong>Смещение в часах:</strong>
+					</td>
+					<td width="350">
+                        <select name="timediff" id="timediff" style="width:60px">
+                            <?php for($h=-12; $h<=12; $h++) { ?>
+                                <option value="<?php echo $h; ?>" <?php if ($h == $_CFG['timediff']) { ?>selected="selected"<?php } ?>><?php echo ($h > 0 ? '+'.$h : $h); ?></option>
+                            <?php } ?>
+                        </select>
 					</td>
 				</tr>
 			</table>
@@ -395,6 +437,13 @@ function applet_config(){
 					<td>
 						<input name="index_pw" type="radio" value="1" <?php if (@$_CFG['index_pw']) { echo 'checked="checked"'; } ?>/> Да
 						<input name="index_pw" type="radio" value="0" <?php if (@!$_CFG['index_pw']) { echo 'checked="checked"'; } ?>/>	Нет 
+					</td>
+				</tr>
+				<tr>
+					<td><strong>Выводить текущую страницу в глубиномере:</strong></td>
+					<td>
+						<input name="short_pw" type="radio" value="0" <?php if (!$_CFG['short_pw']) { echo 'checked="checked"'; } ?>/> Да
+						<input name="short_pw" type="radio" value="1" <?php if ($_CFG['short_pw']) { echo 'checked="checked"'; } ?>/> Нет
 					</td>
 				</tr>
 			</table>

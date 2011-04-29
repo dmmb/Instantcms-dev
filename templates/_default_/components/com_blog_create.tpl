@@ -6,7 +6,8 @@
 
 <p><strong>{$LANG.BLOG}</strong> {$LANG.BLOG_DESCRIPTION}</p>
 <form style="margin-top:15px" action="" method="post" name="addform">
-  <table style="background-color:#EBEBEB" border="0" cellspacing="0" cellpadding="6">
+<div style="background-color:#EBEBEB;padding:10px;width:550px">
+  <table border="0" cellspacing="0" cellpadding="4">
 	<tr>
 	  <td width="180"><strong>{$LANG.BLOG_TITLE}: </strong></td>
 	  <td><input name="title" type="text" id="title" size="40" /></td>
@@ -30,8 +31,9 @@
 		</select>
 	   </td>
 	</tr>
-  </table>			
-  <p>
+  </table>
+</div>
+  <p style="margin-top:20px">
   	<input name="goadd" type="submit" id="goadd" value="{$LANG.CREATE_BLOG}" />
   	<input name="cancel" type="button" onclick="window.history.go(-1)" value="{$LANG.CANCEL}" />
   </p>

@@ -1,12 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 function mod_forum($module_id){
         $inCore = cmsCore::getInstance();
@@ -16,7 +19,9 @@ function mod_forum($module_id){
 		
         $forumcfg = $inCore->loadComponentConfig('forum');
 	
+		if (!function_exists('forumUserAuthSQL') && !function_exists('threadLastMessageData')){ //if not included earlier
 		include_once(PATH.'/components/forum/includes/forumcore.php');
+		}
 		
 		$groupsql = forumUserAuthSQL('f.');
 		
@@ -52,6 +57,7 @@ function mod_forum($module_id){
 					$threads[$next]['topichref']    = '/forum/thread'.$t['id'].'-'.$pages.'.html#new';
 					$threads[$next]['forum']        = ucfirst($t['forum']);
 					$threads[$next]['forumhref']    = '/forum/'.$t['fid'];
+					$threads[$next]['closed']       = $t['closed'];
 
                     $threads[$next]['secret']       = 0;
                     if ($t['auth_group']>0) {

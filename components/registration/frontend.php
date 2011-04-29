@@ -1,14 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
@@ -18,7 +19,7 @@ function sendActivationNotice($send_pass, $user_id){
     $inDB   = cmsDatabase::getInstance();
     $user   = dbGetFields('cms_users', 'id='.$user_id, '*');
     global $_LANG;
-    $code = md5($user['email']);
+    $code = md5($user['email'].substr(md5(rand(0,9999)), 0, 8));
     $codelink = 'http://'.$_SERVER['HTTP_HOST'].'/activate/'.$code;
 
     $sql = "INSERT cms_users_activate (pubdate, user_id, code)
@@ -46,19 +47,28 @@ function registration(){
     $inUser     = cmsUser::getInstance();
     $inConf     = cmsConfig::getInstance();
     
+    $inCore->loadModel('registration');
+    $model = new cms_model_registration();
+
+    $inCore->loadModel('users');
+    $users_model = new cms_model_users();
+	
     global $_LANG;
 
     $cfg = $inCore->loadComponentConfig('registration');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     //config defaults
     if (!isset($cfg['name_mode'])) { $cfg['name_mode'] = 'nickname'; }
     if (!isset($cfg['first_auth_redirect'])) { $cfg['first_auth_redirect'] = 'profile'; }
     if (!isset($cfg['ask_icq'])) { $cfg['ask_icq'] = 1; }
     if (!isset($cfg['ask_birthdate'])) { $cfg['ask_birthdate'] = 1; }
+    if (!isset($cfg['send_greetmsg'])) { $cfg['send_greetmsg'] = 0; }
 
     //request params
-    if (isset($_REQUEST['id'])){ if(is_numeric($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { die('HACKING ATTEMPT BLOCKED'); } } else { $id = 0; }
-    if (isset($_REQUEST['do'])){ $do = htmlentities($_REQUEST['do'], ENT_QUOTES); } else { $do = 'view'; 	}
+	$id     =   $inCore->request('id', 'int', 0);
+	$do     =   $inCore->request('do', 'str', 'view');
 
 //======================================================================================================================//
 
@@ -80,9 +90,9 @@ function registration(){
             echo '</form>';
         } else {
             //SEND NEW PASSWORD TO EMAIL
-            $email = $_POST['email'];
+            $email = $inCore->request('email', 'str');
 
-            if (!eregi("^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$", $email)){
+            if (!preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/i", $email)){
                 echo '<p style="color:red">'.$_LANG['ERR_EMAIL'].'</p>';
             } else {
 
@@ -123,56 +133,58 @@ function registration(){
         $inPage->setTitle($_LANG['REGISTRATION']);
 
         $msg = '';
-        if(strlen($inCore->request('login'))>=2) { $login = $inCore->request('login', 'str', ''); } else { $msg .= $_LANG['TYPE_LOGIN'].'<br/>'; }
-        if($inCore->request('pass')) { $pass = $inCore->request('pass', 'str', ''); } else { $msg .= $_LANG['TYPE_PASS'].'<br/>'; }
-        if($inCore->request('pass2')) { $pass2 = $inCore->request('pass2', 'str', ''); } else { $msg .= $_LANG['TYPE_PASS_TWICE'].'<br/>'; }
+		// Проверяем логин и пароль
+		$login 	= $inCore->request('login', 'str', '');
+		$pass 	= $inCore->request('pass', 'str', '');
+		$pass2	= $inCore->request('pass2', 'str', '');
 
-        if (!eregi("^[a-zA-Z0-9]+\$", $login)){
-            $msg  .= $_LANG['ERR_LOGIN'].'<br/>';
-        }
+        if(strlen($login)<2) 					{ $msg .= $_LANG['TYPE_LOGIN'].'<br/>'; }
+		if ((!preg_match("/^([a-zA-Z0-9])+$/i", $login)) && strlen($login)>=2)	{$msg  .= $_LANG['ERR_LOGIN'].'<br/>'; }
+        if(!$pass) 								{ $msg .= $_LANG['TYPE_PASS'].'<br/>'; }
+        if($pass && !$pass2) 					{ $msg .= $_LANG['TYPE_PASS_TWICE'].'<br/>'; }
+		if($pass && $pass2 && strlen($pass)<6) 	{ $msg .= $_LANG['PASS_SHORT'].'<br/>'; }
+		if($pass && $pass2 && $pass != $pass2) 	{ $msg .= $_LANG['WRONG_PASS'].'<br/>'; }
 
+		// Проверяем nickname или имя и фамилию
         if($cfg['name_mode']=='nickname'){
-            if($inCore->request('nickname', 'str', '')) { $nickname = $inCore->request('nickname', 'str', ''); } else { $msg .= $_LANG['TYPE_NICKNAME'].'<br/>'; }
+			$nickname = $inCore->request('nickname', 'str', '');
+            if(!$nickname) 						{ $msg .= $_LANG['TYPE_NICKNAME'].'<br/>'; }
         } else {
             $namemsg = '';
-            if($inCore->request('realname1', 'str', '')) { $realname1 = $inCore->request('realname1', 'str', ''); } else { $namemsg .= $_LANG['TYPE_NAME'].'<br/>'; }
-            if($inCore->request('realname2', 'str', '')) { $realname2 = $inCore->request('realname2', 'str', ''); } else { $namemsg .= $_LANG['TYPE_SONAME'].'<br/>'; }
+			$realname1 = $inCore->request('realname1', 'str', '');
+			$realname2 = $inCore->request('realname2', 'str', '');
+            if(!$realname1) { $namemsg .= $_LANG['TYPE_NAME'].'<br/>'; }
+            if(!$realname2) { $namemsg .= $_LANG['TYPE_SONAME'].'<br/>'; }
             if (!$namemsg){
                 $nickname = trim($realname1) . ' ' . trim($realname2);
             } else {
                 $msg .= $namemsg;
             }
         }
-
-        if(!$inCore->inRequest('email')) {
-            $msg .= $_LANG['TYPE_EMAIL'].'<br/>';
+		if($model->getBadNickname($nickname)){
+            $msg .= $_LANG['ERR_NICK_EXISTS'].'<br/>';
         }
-
-        if($inCore->inRequest('email')) {
-            $email = $inCore->request('email', 'str', '');
-            if (!eregi("^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$", $email)){
-                $msg  .= $_LANG['ERR_EMAIL'].'<br/>';
-            }
+		// Проверяем email
+        $email = $inCore->request('email', 'email');
+        if(!$email) {
+            $msg  .= $_LANG['ERR_EMAIL'].'<br/>';
         }
-
+		// Если есть опция показывать ДР при регистрации, то проверяем
         if ($cfg['ask_birthdate']){
             $birthdate = (int)$_REQUEST['birthdate']['year'].'-'.(int)$_REQUEST['birthdate']['month'].'-'.(int)$_REQUEST['birthdate']['day'];
         } else { 
             $birthdate = '1980-01-01';
         }
-
+		// Если есть опция показывать icq при регистрации, то проверяем
         if ($cfg['ask_icq']){
             $icq = $inCore->request('icq', 'str', '');
+			$icq = preg_replace('/([^0-9])/i', '', $icq);
         } else {
             $icq = '';
         }
-
-        if($_REQUEST['code']) { $code = $_REQUEST['code']; } else { $msg .= $_LANG['TYPE_CAPTCHA'].'<br/>'; }
-        if(@$pass != @$pass2) { $msg .= $_LANG['WRONG_PASS'].'<br/>'; }
-
-        if($inDB->rows_count('cms_users', 'LOWER(nickname) LIKE "'.strtolower($nickname).'"', 1)){
-            $msg .= $_LANG['ERR_NICK_EXISTS'].'<br/>';
-        }
+		// Проверяем каптчу
+		$code = $inCore->request('code', 'str');
+        if(!$code) { $msg .= $_LANG['TYPE_CAPTCHA'].'<br/>'; }
 
         if($msg==''){
 
@@ -196,8 +208,23 @@ function registration(){
 
                     cmsCore::callEvent('USER_BEFORE_REGISTER', $user_array);
 
-                    $sql = "INSERT INTO cms_users (login, nickname, password, email, icq, regdate, logdate, birthdate, is_locked)
-                            VALUES ('$login', '$nickname', '$pass', '$email', '$icq', NOW(), NOW(), '$birthdate', '$is_locked')";
+                    if (cmsUser::sessionGet('invite_code')){
+
+                        $invite_code    = cmsUser::sessionGet('invite_code');
+                        $invited_by     = (int)$users_model->getInviteOwner($invite_code);
+
+                        if ($invited_by){ $users_model->closeInvite($invite_code); }
+
+                        cmsUser::sessionDel('invite_code');
+
+                    } else {
+                        $invited_by = 0;
+                    }
+
+                    $group_id = $cfg['default_gid'] ? $cfg['default_gid'] : 1;
+
+                    $sql = "INSERT INTO cms_users (group_id, login, nickname, password, email, icq, regdate, logdate, birthdate, is_locked, is_logged_once, invited_by)
+                            VALUES ('$group_id', '$login', '$nickname', '$pass', '$email', '$icq', NOW(), NOW(), '$birthdate', '$is_locked', 0, '{$invited_by}')";
                     $inDB->query($sql) ;
 
                     $new_user_id = dbLastId('cms_users');
@@ -220,14 +247,28 @@ function registration(){
                         $inPage->includeTemplateFile('special/regactivate.php');
                         $inCore->halt();
                     } else {                        
+						// Регистрируем событие
+						cmsActions::log('add_user', array(
+							'object' => '',
+							'user_id' => $new_user_id,
+							'object_url' => '',
+							'object_id' => $new_user_id,
+							'target' => '',
+							'target_url' => '',
+							'target_id' => 0,
+							'description' => ''
+						));                  
                         $inPage->includeTemplateFile('special/regcomplete.php');
+
+                        if ($cfg['send_greetmsg']){ $model->sendGreetsMessage($new_user_id, $cfg['greetmsg']); }
+
                         $inCore->halt();
                     }
 
                 } else {
                     $u = $inDB->fetch_assoc($result);
                     if ($login == $u['login']) { $msg .= $_LANG['LOGIN'].' "'.$login.'" '.$_LANG['IS_BUSY']; }
-                    else { $msg .= $_LANG['EMAIL_IS_BUSY']; }
+                    elseif ($email == $u['email']) { $msg .= $_LANG['EMAIL_IS_BUSY']; }
                 }
             } else {
                 $msg = $_LANG['ERR_CAPTCHA'];
@@ -243,28 +284,38 @@ function registration(){
 
         $inPage->setTitle($_LANG['REGISTRATION']);
 
-        $do = 'view';
-        echo '<div class="con_heading">'.$_LANG['REGISTRATION'].'</div>';
-
-        if ($cfg['is_on']){
-
-            $inPage->addHeadJS('components/registration/js/check.js');
-
-            if (isset($msg)) { if($msg!='') { echo '<p><font color="red">'.$msg.'</font></p>'; } }           
-
-            $smarty = $inCore->initSmarty('components', 'com_registration.tpl');
-                $smarty->assign('cfg', $cfg);
-                if(isset($login)){ $smarty->assign('login', $login); }
-                if(isset($nickname)){ $smarty->assign('nickname', $nickname); }
-                if(isset($realname1)){ $smarty->assign('realname1', $realname1); }
-                if(isset($realname2)){ $smarty->assign('realname2', $realname2); }
-                if(isset($email)){ $smarty->assign('email', $email); }
-                if(isset($icq)){ $smarty->assign('icq', $icq); }
-            $smarty->display('com_registration.tpl');
-
-        } else {
-            echo '<div style="margin-top:10px">'.$cfg['offmsg'].'</div>';
+        $do             = 'view';
+		// Если пользователь авторизован, то не показываем форму регистрации, редирект в профиль.
+        if ($inUser->id && !$inUser->is_admin) {
+            if ($inCore->menuId() == 1) { return; } else {  $inCore->redirect(cmsUser::getProfileURL($inUser->login)); }
         }
+
+        $correct_invite = (cmsUser::sessionGet('invite_code') ? true : false);
+
+        if ($cfg['reg_type']=='invite' && $inCore->inRequest('invite_code')){
+
+            $invite_code    = $inCore->request('invite_code', 'str', '');
+            $correct_invite = $users_model->checkInvite($invite_code);
+
+            if ($correct_invite) {
+                cmsUser::sessionPut('invite_code', $invite_code);
+            } else {
+                $msg = $_LANG['INCORRECT_INVITE'];
+            }
+
+        }
+
+        $smarty = $inCore->initSmarty('components', 'com_registration.tpl');
+            $smarty->assign('cfg', $cfg);
+            if(isset($login)){ $smarty->assign('login', $login); }
+            if(isset($nickname)){ $smarty->assign('nickname', $nickname); }
+            if(isset($realname1)){ $smarty->assign('realname1', $realname1); }
+            if(isset($realname2)){ $smarty->assign('realname2', $realname2); }
+            if(isset($email)){ $smarty->assign('email', $email); }
+            if(isset($icq)){ $smarty->assign('icq', $icq); }
+            if(isset($msg)){ $smarty->assign('msg', $msg); }
+            $smarty->assign('correct_invite', $correct_invite);
+        $smarty->display('com_registration.tpl');
 
     }
 
@@ -284,7 +335,7 @@ function registration(){
             $user_id = $inUser->id;
             $sess_id = session_id();
 
-            cmsUser::updateStats($user_id);
+//            cmsUser::updateStats($user_id);
 
             cmsCore::callEvent('USER_LOGOUT', $user_id);
 
@@ -301,13 +352,28 @@ function registration(){
         }
 
         if( !$inCore->inRequest('logout') ) {
-            
-                if ($inCore->inRequest('login')) { $login = $inCore->request('login', 'str'); } else { $inCore->redirect($back); }
-                if ($inCore->inRequest('pass')) { $passw = $inCore->request('pass', 'str'); } else { $inCore->redirect($back); }
+
+                if ($inCore->inRequest('login')) { $login = $inCore->request('login', 'str'); }
+                if ($inCore->inRequest('pass')) { $passw = $inCore->request('pass', 'str'); }
+
+                if (!$login && !$passw){
+
+                    $_SESSION['back_url'] = $inCore->getBackURL();
+
+                    $inPage->setTitle($_LANG['SITE_LOGIN']);
+                    $inPage->addPathway($_LANG['SITE_LOGIN']);
+
+                    $smarty = $inCore->initSmarty('components', 'com_registration_login.tpl');
+                    $smarty->assign('cfg', $cfg);
+                    $smarty->assign('is_sess_back', isset($_SESSION['auth_back_url']));
+                    $smarty->display('com_registration_login.tpl');
+                    return;
+
+                }
 
                 $remember_pass = $inCore->inRequest('remember');
 
-                if (!eregi("^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$", $login)){
+                if (!preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/i", $login)){
                     $where_login = "login = '{$login}'";
                 } else {
                     $where_login = "email = '{$login}'";
@@ -324,7 +390,6 @@ function registration(){
 
                     if (!cmsUser::isBanned($user['id'])) {
 
-                        session_register('user');
                         $_SESSION['user'] = cmsUser::createUser($user);
                         
                         cmsCore::callEvent('USER_LOGIN', $_SESSION['user']);
@@ -340,25 +405,41 @@ function registration(){
 
                     $inUser->dropStatTimer();
 
-                    cmsUser::updateStats($user['id']);
+                    $first_time_auth = !$user['is_logged_once'];
 
-                    $first_time_auth = ($user['logdate']=='0000-00-00 00:00:00' || intval($user['logdate']==0));
-
-                    $inDB->query("UPDATE cms_users SET logdate = NOW(), last_ip = '$current_ip' WHERE id = ".$user['id']) ;
+                    $inDB->query("UPDATE cms_users SET logdate = NOW(), last_ip = '$current_ip', is_logged_once = 1 WHERE id = ".$user['id']) ;
 
                     $cfg = $inCore->loadComponentConfig('registration');
                     if (!isset($cfg['auth_redirect']))          {  $cfg['auth_redirect'] = 'index';            }
                     if (!isset($cfg['first_auth_redirect']))    {  $cfg['first_auth_redirect'] = 'profile';    }
 
+                    if ($_SESSION['auth_back_url']){
+                        $back = $_SESSION['auth_back_url'];
+                        $is_sess_back = true;
+                        unset($_SESSION['auth_back_url']);
+                    } else {
+                        $is_sess_back = false;
+                        $back = $inCore->getBackURL();
+                    }
+
                     if (!$inCore->userIsAdmin($user['id'])){
-                        if ($first_time_auth) { $cfg['auth_redirect'] = $cfg['first_auth_redirect']; }
-                        switch($cfg['auth_redirect']){
-                            case 'none': $url = $back; break;
-                            case 'index': $url = '/'; break;
-                            case 'profile': $url = cmsUser::getProfileURL($user['login']); break;
-                            case 'editprofile': $url = '/users/'.$user['id'].'/editprofile.html'; break;
+                        if (!$is_sess_back){
+                            if ($first_time_auth) { $cfg['auth_redirect'] = $cfg['first_auth_redirect']; }
+                            switch($cfg['auth_redirect']){
+                                case 'none': $url = $back; break;
+                                case 'index': $url = '/'; break;
+                                case 'profile': $url = cmsUser::getProfileURL($user['login']); break;
+                                case 'editprofile': $url = '/users/'.$user['id'].'/editprofile.html'; break;
+                            }
+                        } else {
+                            $url = $back;
                         }
-                    } else { $url = $back; }
+                    } else {
+                        $admin_back = strstr($back, '/admin/login.php') ? '/admin' : $back;
+                        $url = isset($_SESSION['back_url']) ? $_SESSION['back_url'] : $admin_back;
+                        $url = isset($_SESSION['back_url']) ? $_SESSION['back_url'] : '/';
+                        if (isset($_SESSION['back_url'])) unset($_SESSION['back_url']);
+                    }
 
                     //Редиректим назад
                     $inCore->redirect($url);
@@ -390,6 +471,20 @@ function registration(){
             $inDB->query($sql) or die($_LANG['ERR_ACTIVATION']);
 
             cmsCore::callEvent('USER_ACTIVATED', $user_id);
+
+            if ($cfg['send_greetmsg']){ $model->sendGreetsMessage($user_id, $cfg['greetmsg']); }
+
+			// Регистрируем событие
+			cmsActions::log('add_user', array(
+					'object' => '',
+					'user_id' => $user_id,
+					'object_url' => '',
+					'object_id' => $user_id,
+					'target' => '',
+					'target_url' => '',
+					'target_id' => 0,
+					'description' => ''
+			));   
 
             $inPage->includeTemplateFile('special/regcomplete.php');
             $inCore->halt();

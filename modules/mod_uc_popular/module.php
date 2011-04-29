@@ -1,12 +1,16 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 if (!function_exists('buildRating')){
 	function buildRating($rating){
 		$rating = round($rating, 2);
@@ -28,6 +32,8 @@ function mod_uc_popular($module_id){
 
 		$cfg = $inCore->loadModuleConfig($module_id);
 			
+		global $_LANG;
+		
 		$showtype = $cfg['showtype'];
 		
 		if($cfg['sort']=='rating') { $orderby = 'rating DESC'; }
@@ -41,7 +47,7 @@ function mod_uc_popular($module_id){
 			} else {
 				//select from category and subcategories
 				$rootcat  = $inDB->get_fields('cms_uc_cats', 'id='.$cfg['cat_id'], 'NSLeft, NSRight');
-				$catsql   = "AND (i.category_id = c.id AND c.NSLeft >= {$rootcat['NSLeft']} AND c.NSRight <= {$rootcat['NSRight']})";
+				$catsql   = "AND (c.NSLeft >= {$rootcat['NSLeft']} AND c.NSRight <= {$rootcat['NSRight']})";
 			}
 
 		} else {
@@ -49,75 +55,68 @@ function mod_uc_popular($module_id){
 		}
 
 		$sql = "SELECT i.* , IFNULL(AVG( r.points ), 0) AS rating, c.view_type as viewtype
-				FROM cms_uc_cats c, cms_uc_items i
+				FROM cms_uc_items i
+				LEFT JOIN cms_uc_cats c ON c.id = i.category_id
                 LEFT JOIN cms_uc_ratings r ON r.item_id = i.id
-				WHERE i.category_id = c.id AND i.published = 1 $catsql
+				WHERE i.published = 1 $catsql
 				GROUP BY i.id
 				ORDER BY $orderby 
 				LIMIT ".$cfg['num'];
 
-		$result = $inDB->query($sql) or die(mysql_error()."<br><br>".$sql);
+		$result = $inDB->query($sql);
 		
-		if ($inDB->num_rows($result)){	
-			if ($showtype=='thumb'){
+		$items = array();
+		$is_uc = false;
+		
+		if ($inDB->num_rows($result)){
+            $inCore->includeFile('components/catalog/includes/shopcore.php');
+			$is_uc = true;
+			if ($cfg['showtype']=='thumb'){
 					while($item = $inDB->fetch_assoc($result)){
-						echo '<div class="uc_latest_item">';
-							echo '<table border="0" cellspacing="2" cellpadding="0" width="100%">';
-								echo '<tr><td height="110" align="center" valign="middle">';
-									echo '<a href="/catalog/item'.$item['id'].'.html">';
-									if (strlen($item['imageurl'])>4) {
-										echo '<img alt="'.$item['title'].'" src="/images/catalog/small/'.$item['imageurl'].'.jpg" border="0" />';
-									} else {
-										echo '<img alt="'.$item['title'].'" src="/images/catalog/small/nopic.jpg" border="0" />';								
+						if (strlen($item['imageurl'])<4) {
+							$item['imageurl'] = 'nopic';
+						} elseif (!file_exists(PATH.'/images/catalog/small/'.$item['imageurl'].'.jpg')) {
+							$item['imageurl'] = 'nopic';
 									}
-									echo '</a>';
-								echo '</td></tr>';
-								echo '<tr><td align="center" valign="middle">';
-									echo '<a class="uc_latest_link" href="/catalog/item'.$item['id'].'.html">'.$item['title'].'</a>';								
-								echo '</td></tr>';			
 								if ($item['viewtype']=='shop'){
-									echo '<tr><td align="center" valign="middle">';
-										$price = number_format($item['price'], 2, '.', ' ');
-										echo '<div id="uc_popular_price">'.$price.' руб.</div>';								
-									echo '</td></tr>';	
+							$item['price'] = number_format(shopDiscountPrice($item['id'], $item['category_id'], $item['price']), 2, '.', ' ');
 								}			
-							echo '</table>';
-						echo '</div>';				
+						$items[] = 	$item;												
 					}
 			}
 			
-			if ($showtype='list'){
-				echo '<table width="100%" cellspacing="0" cellpadding="4" class="uc_latest_list">';
+			if ($cfg['showtype']=='list'){
 					while($item = $inDB->fetch_assoc($result)){
+							$item['fieldsdata'] = unserialize($item['fieldsdata']);
+							$item['title'] = substr($item['title'], 0, 40);
+							
+							for($f = 0; $f<$cfg['showf']; $f++){
+								$item['fdata'][] = $inCore->getUCSearchLink($item['category_id'], null, $f, $item['fieldsdata'][$f]);
+							}							
+									
 						if($cfg['sort']=='rating') { 
-							$key = '<a href="/catalog/item'.$item['id'].'.html" title="Рейтинг: '.round($item['rating'], 2).'">'.buildRating(round($item['rating'], 2)).'</a>'; 
+								$item['key'] = '<a href="/catalog/item'.$item['id'].'.html" title="'.$_LANG['UC_POPULAR_RATING'].': '.round($item['rating'], 2).'">'.buildRating(round($item['rating'], 2)).'</a>'; 
 						}
 						else { 
-							$key = 'Просмотры: <a href="/catalog/item'.$item['id'].'.html" title="Просмотры">'.$item['hits'].'</a>'; 
+								$item['key'] = $_LANG['UC_POPULAR_VIEWS'].': <a href="/catalog/item'.$item['id'].'.html" title="'.$_LANG['UC_POPULAR_VIEWS'].'">'.$item['hits'].'</a>'; 
 						}
 			
-						$fdata = unserialize($item['fieldsdata']);
-						echo '<tr>';
-							echo '<td width="" valign="top"><a class="uc_latest_link" href="/catalog/item'.$item['id'].'.html">'.$item['title'].'</a></td>';
-							for($f = 0; $f<$cfg['showf']; $f++){
-								echo '<td valign="top">'.$inCore->getUCSearchLink($item['category_id'], null, $f, $fdata[$f]).'</td>';
-							}							
-							echo '<td width="" align="right" valign="top">'.$key.'</td>';
+							$item['fdate'] = $inCore->dateFormat($item['fdate']);
 							if ($item['viewtype']=='shop'){
-								echo '<td align="right">';
-									$price = number_format($item['price'], 2, '.', ' ');
-									echo '<div id="uc_popular_price">'.$price.' руб.</div>';								
-								echo '</td>';	
+								$item['price'] = number_format(shopDiscountPrice($item['id'], $item['category_id'], $item['price']), 2, '.', ' ');
 							}			
-						echo '</tr>';
+							$items[] = 	$item;	
 					}				
-				echo '</table>';
-				if ($cfg['fulllink']){
-					echo '<div style="margin-top:5px; text-align:right;clear:both"><a href="/catalog">Весь каталог</a> &rarr;</div>';
 				}
 			}
-		} else { echo '<p>Нет объектов для отображения.</p>'; }
+		
+		$smarty = $inCore->initSmarty('modules', 'mod_uc_popular.tpl');			
+		$smarty->assign('items', $items);
+		$smarty->assign('cfg', $cfg);
+		$smarty->assign('is_uc', $is_uc);			
+		$smarty->display('mod_uc_popular.tpl');
 		
 		return true;
+		
 }
 ?>

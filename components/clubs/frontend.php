@@ -1,14 +1,16 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 function clubs(){
@@ -30,12 +32,18 @@ function clubs(){
     $inCore->loadModel('clubs');
     $model = new cms_model_clubs();
 
+    define('IS_BILLING', $inCore->isComponentInstalled('billing'));
+    if (IS_BILLING) { $inCore->loadClass('billing'); }
+
 	$inPage->addHeadJS('components/clubs/js/clubs.js');
 
 	//LOAD CONFIG
 	$cfg = $inCore->loadComponentConfig('clubs');
+	// Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 	
 	//SOME DEFAULT CONFIG VALUES
+	if(!isset($cfg['seo_club'])) { $cfg['seo_club'] = 'title'; }
 	if(!isset($cfg['enabled_blogs'])) { $cfg['enabled_blogs'] = 1; }
 	if(!isset($cfg['enabled_photos'])) { $cfg['enabled_photos'] = 1; }	
 	if(!isset($cfg['thumb1'])) { $cfg['thumb1'] = 48; }	
@@ -45,20 +53,19 @@ function clubs(){
 	if(!isset($cfg['perpage'])) { $cfg['perpage'] = 10; }
     if(!isset($cfg['notify_in'])) { $cfg['notify_in'] = 1; }
     if(!isset($cfg['notify_out'])) { $cfg['notify_out'] = 1; }
+	if(!isset($cfg['every_karma'])) { $cfg['every_karma'] = 100; }
+	
+    //Определяем адрес для редиректа назад
+    $back   = $inCore->getBackURL();
+	
+	$pagetitle = $inCore->menuTitle();
 	
 	//INPUT PARAMETERS
 	$id 		= $inCore->request('id', 'int', 0);
 	$do 		= $inCore->request('do', 'str', 'view');
 
-	$pagetitle = $inCore->menuTitle();
-	if ($pagetitle){
-		$inPage->addPathway($pagetitle);
-	}
-		
 ////////// VIEW ALL CLUBS ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){
-
-	$user_id    = $inUser->id;
 
 	//PAGINATION
     $perpage    = isset($cfg['perpage']) ? $cfg['perpage'] : 10;
@@ -82,16 +89,14 @@ if ($do=='view'){
         $pagination = cmsPage::getPagebar($total, $page, $perpage, '/clubs/page-%page%', array());
 	}
 
-	$can_create = $user_id && ( $inUser->is_admin || ($cfg['cancreate'] && !$inDB->get_field('cms_clubs', 'admin_id='.$user_id, 'id') && cmsUser::getKarma($user_id)>=$cfg['create_min_karma'] && cmsUser::getRating($user_id)>=$cfg['create_min_rating']));
-
 	$smarty = $inCore->initSmarty('components', 'com_clubs_view.tpl');
 	$smarty->assign('pagetitle', $pagetitle);
 	$smarty->assign('clubid', $id);
-	$smarty->assign('can_create', $can_create);
+	// Ссылку на создание клуба показываем всем авторизованным
+	$smarty->assign('can_create', $inUser->id);
 	$smarty->assign('clubs', $clubs);
 	$smarty->assign('total', $total);
 	$smarty->assign('pagination', $pagination);
-    $smarty->assign('messages', cmsCore::getSessionMessages());
 	$smarty->display('com_clubs_view.tpl');
 
 }
@@ -99,27 +104,29 @@ if ($do=='view'){
 if ($do=='club'){
 
 	$club   = $model->getClub($id);
-
-	$smarty = $inCore->initSmarty('components', 'com_clubs_view_club.tpl');			
-				
-	if(!$club){
-		//CLUB NOT FOuND
-		$pagetitle = $_LANG['CLUB_NOT_FOUND'];
-        $inPage->setTitle($_LANG['CLUB_NOT_FOUND']);
-		$inPage->addPathway($_LANG['CLUB_NOT_FOUND']);
-        $inPage->printHeading($_LANG['CLUB_NOT_FOUND']);
-        return;
-	}
+	if(!$club){	cmsCore::error404(); }
+	$club = cmsCore::callEvent('GET_SINGLE_CLUB', $club);
     
     //TITLES
     $pagetitle = $club['title'];
     $inPage->setTitle($pagetitle);
     $inPage->addPathway($club['title']);
 
+	// description
+	switch ($cfg['seo_club']){
+		case 'deskr': 	$inPage->setDescription($inCore->strClear($club['description']));
+						break;
+		
+		case 'title': 	$inPage->setDescription($club['title']);
+		
+						break;
+	}
+
     $user_id    = $inUser->id;
     $is_admin 	= $inUser->is_admin || ($user_id == $club['admin_id']);
     $is_moder 	= clubUserIsRole($id, $user_id, 'moderator');
     $is_member 	= clubUserIsRole($id, $user_id, 'member');
+	$is_member_club	= $is_member || $is_moder;
 
     $is_access = true;
 
@@ -130,7 +137,7 @@ if ($do=='club'){
     $is_karma_enabled = false;
 
     if ($user_id){
-        $is_karma_enabled = (cmsUser::getKarma($user_id) >= $club['album_min_karma']) && clubUserIsMember($club['id'], $user_id) ? true : false;
+        $is_karma_enabled = (cmsUser::getKarma($user_id) >= $club['album_min_karma']) && $is_member_club ? true : false;
     }
 
     //CHECK IMAGE
@@ -140,14 +147,12 @@ if ($do=='club'){
         }
     }
 
-    if (!clubRootAlbumId($id)) { albumCreateRoot($id, 'club'.$id); }
-
     //JOIN/LEAVE LINK
     $club['member_link'] = '';
-    if ( clubUserIsMember($id, $user_id) ){
+    if ( $is_member_club ){
         $club['member_link'] = '<a href="/clubs/'.$id.'/leave.html" class="leave">'.$_LANG['LEAVE_CLUB'].'</a>';;
     } 
-    if ($club['clubtype']=='public' && ($user_id != $club['admin_id']) && !clubUserIsMember($id, $user_id)){
+    if ($club['clubtype']=='public' && ($user_id != $club['admin_id']) && !$is_member_club){
         $club['member_link'] = '<a href="/clubs/'.$id.'/join.html" class="join">'.$_LANG['JOIN_CLUB'].'</a>';
     }
 
@@ -155,23 +160,30 @@ if ($do=='club'){
     $club['admin'] 			= clubAdminLink($id);
     $club['members'] 		= clubTotalMembers($id);
     $club['members_list'] 	= clubMembersList($id);
-    $club['wall_html']		= cmsUser::getUserWall($club['id'], 'club');
+    $club['wall_html']		= cmsUser::getUserWall($club['id'], 'club', 1, $is_moder, $is_admin);
     $club['addwall_html'] 	= cmsUser::getUserAddWall($club['id'], 'club');
-    $club['blog_id']		= clubBlogId($club['id']);
-    $club['blog_content']	= clubBlogContent($club['blog_id'], $is_admin, $is_moder, $is_member);
-
-    $inCore->loadModel('blogs');
-    $blog_model = new cms_model_blogs();
-
-    $club['blog_url']       = $blog_model->getBlogURL(null, $inDB->get_field('cms_blogs', "id={$club['blog_id']}", 'seolink'));
-
-    $club['photo_albums']	= clubPhotoAlbums($club['id'],  $is_admin, $is_moder, $is_member);
-    $club['root_album_id']	= clubRootAlbumId($club['id']);
 
     $club['enabled_blogs']	= $club['enabled_blogs'] == 1 || ($club['enabled_blogs']==0 && $cfg['enabled_blogs']==1);
     $club['enabled_photos']	= $club['enabled_photos'] == 1 || ($club['enabled_photos']==0 && $cfg['enabled_photos']==1);
+
+	if ($club['enabled_blogs']) {
+		$club['blog_id']		= clubBlogId($club['id']);
+		$club['blog_content']	= clubBlogContent($club['blog_id'], $is_admin, $is_moder, $is_member);
+		$inCore->loadModel('blogs');
+		$blog_model = new cms_model_blogs();
+		$club['blog_url']       = $blog_model->getBlogURL(null, $inDB->get_field('cms_blogs', "id={$club['blog_id']}", 'seolink'));
+	}
+
+	if ($club['enabled_photos']) {
+		$club['root_album_id']	= clubRootAlbumId($club['id']);
+		if (!$club['root_album_id']) { $club['root_album_id'] = albumCreateRoot($id, 'club'.$id, $club['title']); }
+		$club['photo_albums']	= clubPhotoAlbums($club['id'],  $is_admin, $is_moder, $is_member);
+		$club['all_albums']	    = $inDB->rows_count('cms_photo_albums', "NSDiffer = 'club{$club['id']}' AND user_id = '{$club['id']}' AND parent_id > 0");
+	}
+
 	$club['pubdate'] = $inCore->dateformat($club['pubdate'], true, true);
 
+	$smarty = $inCore->initSmarty('components', 'com_clubs_view_club.tpl');	
     $smarty->assign('clubid', $id);
     $smarty->assign('club', $club);
     $smarty->assign('is_access', $is_access);
@@ -180,7 +192,6 @@ if ($do=='club'){
     $smarty->assign('is_moder', $is_moder);
     $smarty->assign('is_member', $is_member);
     $smarty->assign('is_karma_enabled', $is_karma_enabled);
-
 	$smarty->assign('pagetitle', $pagetitle);
 	$smarty->display('com_clubs_view_club.tpl');
 	
@@ -189,16 +200,14 @@ if ($do=='club'){
 if ($do == 'create'){
 
 	$inPage->backButton(false);
+	
+	if (!$inUser->id){ cmsUser::goToLogin(); }
 
-    $user_id = $inUser->id;
+    $can_create = $model->canCreate($cfg, true);
 
-	if (!$user_id){ return; }
+    if (!$can_create){ $inCore->redirectBack(); }
 
     $inPage->addPathway($_LANG['CREATE_CLUB']);
-
-    $can_create = $user_id && ( $inUser->is_admin || ($cfg['cancreate'] && !$inDB->get_field('cms_clubs', 'admin_id='.$user_id, 'id') && cmsUser::getKarma($user_id)>=$cfg['create_min_karma'] && cmsUser::getRating($user_id)>=$cfg['create_min_rating']));
-
-    if (!$can_create){ $inCore->redirect('/'); }
 
     if ( !$inCore->inRequest('create') ){
         $inPage->setTitle($_LANG['CREATE_CLUB']);
@@ -213,7 +222,7 @@ if ($do == 'create'){
         $title      = $inCore->request('title', 'str');
         $clubtype   = $inCore->request('clubtype', 'str');
 
-        if (!$title){
+        if (!$title || !$clubtype){
             cmsCore::addSessionMessage($_LANG['CLUB_REQ_TITLE'], 'error');
             $errors = true;
         } else {
@@ -228,11 +237,21 @@ if ($do == 'create'){
         }
 
         if(!$errors){
-            $created_id = $model->addClub(array('user_id'=>$user_id, 'title'=>$title, 'clubtype'=>$clubtype));
+            $created_id = $model->addClub(array('user_id'=>$inUser->id, 'title'=>$title, 'clubtype'=>$clubtype), $cfg);
             if($created_id){ setClubRating($created_id); }
+			//регистрируем событие
+			cmsActions::log('add_club', array(
+						'object' => $title,
+						'object_url' => '/clubs/'.$created_id,
+						'object_id' => $created_id,
+						'target' => '',
+						'target_url' => '',
+						'target_id' => 0, 
+						'description' => ''
+			));
             $inCore->redirect('/clubs/'.$created_id);
         } else {
-            $inCore->redirect('/clubs');
+            $inCore->redirect('/clubs/create.html');
         }
         
     }
@@ -250,10 +269,13 @@ if ($do == 'config'){
 
     if (!$user_id){ return; }
     if (!$club){ return; }
+	if ( !(clubUserIsAdmin($id, $user_id) || $inCore->userIsAdmin($user_id)) ){ return; }
 
     if ( $inCore->inRequest('save') ){
         //save to database
         $description 		= $inCore->request('description', 'html', '');
+        $description 		= $inCore->badTagClear($description);
+        $description 		= $inDB->escape_string($description);
         $admin_id 			= $club['admin_id'];
         $clubtype			= $inCore->request('clubtype', 'str', 'public');
         $maxsize 			= $inCore->request('maxsize', 'int', 0);
@@ -270,18 +292,25 @@ if ($do == 'config'){
         //upload logo
         if ($_FILES['picture']['name']){
             $inCore->includeGraphics();
-            $uploaddir = PATH.'/images/clubs/';
 
+			$uploaddir = PATH.'/images/clubs/';	
             if (!is_dir($uploaddir)) { @mkdir($uploaddir); }
-
             @chmod($uploaddir, 0755);
+
+			$realfile   = $_FILES['picture']['name'];
+			$path_parts = pathinfo($realfile);
+			$ext        = strtolower($path_parts['extension']);
+			if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'png' && $ext != 'bmp') { cmsCore::error404(); }
 
             $filename       = md5($id . $user_id . time()).'.jpg';
             $uploadphoto    = $uploaddir . $filename;
             $uploadthumb    = $uploaddir . 'small/' . $filename;
 
             if ($inCore->moveUploadedFile($_FILES['picture']['tmp_name'], $uploadphoto, $_FILES['picture']['error'])) {
-                    if(!isset($cfg['watermark'])) { $cfg['watermark'] = 0; }
+					if ($club['imageurl'] && $club['imageurl']!='nopic.jpg'){
+						@unlink(PATH.'/images/clubs/'.$club['imageurl']);
+						@unlink(PATH.'/images/clubs/small/'.$club['imageurl']);
+					}
                     @img_resize($uploadphoto, $uploadthumb, $cfg['thumb1'], $cfg['thumb1'], $cfg['thumbsqr']);
                     @img_resize($uploadphoto, $uploadphoto, $cfg['thumb2'], $cfg['thumb2'], $cfg['thumbsqr']);
             } else {
@@ -305,8 +334,14 @@ if ($do == 'config'){
                                         'join_karma_limit'=>$join_karma_limit
                                     ));
 
-        $moders 		= $_POST['moderslist'] ? $_POST['moderslist'] : array();
-        $members 		= $_POST['memberslist'] ? $_POST['memberslist'] : array();
+        if ($inUser->is_admin && IS_BILLING){
+            $is_vip    = $inCore->request('is_vip', 'int', 0);
+            $join_cost = $inCore->request('join_cost', 'int', 0);
+            $model->setVip($id, $is_vip, $join_cost);
+        }
+
+        $moders  = $inCore->request('moderslist', 'array_int', array());
+        $members = $inCore->request('memberslist', 'array_int', array());
 
         if ($moders) { if (array_search($admin_id, $moders)) { unset($moders[array_search($admin_id, $moders)]); }	}
         if ($members) { if (array_search($admin_id, $members)) { unset($members[array_search($admin_id, $members)]); }	}
@@ -314,27 +349,49 @@ if ($do == 'config'){
         clubSaveUsers($id, $members, 'member', $clubtype, $cfg);
         clubSaveUsers($id, $moders, 'moderator', $clubtype, $cfg);
 
+		cmsCore::addSessionMessage($_LANG['CONFIG_SAVE_OK'], 'info');
+
         $inCore->redirect('/clubs/'.$id);
     }
 
     if ( !$inCore->inRequest('save') ){
         
-        if ( !(clubUserIsAdmin($id, $user_id) || $inCore->userIsAdmin($user_id)) ){ return; }
-
-        //show config form
+        // Заголовки и пафвей
         $inPage->addPathway($club['title'], '/clubs/'.$id);
         $inPage->addPathway($_LANG['CONFIG_CLUB']);
         $inPage->setTitle($_LANG['CONFIG_CLUB']);
 
+		// Получаем список друзей владельца клуба
+		$friends     	 = cmsUser::getFriends($club['admin_id']);
+		// Получаем участников клуба, без учета администратора
         $moderators     = clubModerators($id);
         $members        = clubMembers($id);
-
+        $club_users_list = array_merge($moderators, $members);
+		// Проверяем наличие друга в списке участников клуба или является ли он администратором
+		foreach($friends as $key=>$friend){ 
+			if (in_array($friend['id'], $club_users_list) || $friend['id'] == $club['admin_id']) { unset($friends[$key]); }
+		}
+		// Формируем список option друзей, если они есть
+		if ($_SESSION['user']['friends'] && $friends) { 
+			foreach($friends as $friend){ 
+				$friends_list .= '<option value="'.$friend['id'].'">'.$friend['nickname'].'</option>';
+			}		
+		}
+		// Формируем массив id друзей для мержа с участниками клуба
+		// массив друзей берется с уже отфильтрованными участниками
+		$friends_ids = array();
+		foreach($friends as $friend){ 
+			$friends_ids[] = $friend['id'];
+		}
+		// формируем список друзья не в клубе + участники клуба
+		$fr_members = array_merge($club_users_list, $friends_ids);
+		// Проверяем наличие друга или участников клуба в списке модераторов
+		$fr_members = array_diff($fr_members, $moderators);
+		// Формируем список option друзей (которые еще не в этом клубе) и участников
+		if ($fr_members) { $fr_members_list = cmsUser::getAuthorsList($fr_members); } else { $fr_members_list = ''; }
+		// Формируем список option участников клуба
         if ($moderators) { $moders_list = cmsUser::getAuthorsList($moderators); } else { $moders_list = ''; }
-        if ($members) { $members_list = cmsUser::getAuthorsList($members); } else { $members_list = ''; }
-        
-        $userslist      = cmsUser::getUsersList(false, array_merge($moderators, $members, array($user_id)));
-
-        if (array_search($user_nick, $userslist)) { unset($userslist[array_search($user_nick, $userslist)]); }
+        if ($club_users_list) { $members_list = cmsUser::getAuthorsList($club_users_list); } else { $members_list = ''; }
 
         $club['blog_id'] = clubBlogId($id);
 
@@ -352,7 +409,10 @@ if ($do == 'config'){
         $smarty->assign('club', $club);
         $smarty->assign('moders_list', $moders_list);
         $smarty->assign('members_list', $members_list);
-        $smarty->assign('users_list', $userslist);
+        $smarty->assign('friends_list', $friends_list);
+		$smarty->assign('fr_members_list', $fr_members_list);
+		$smarty->assign('is_billing', IS_BILLING);
+		$smarty->assign('is_admin', $inUser->is_admin);
         $smarty->display('com_clubs_config.tpl');
 
     }
@@ -370,17 +430,21 @@ if ($do == 'leave'){
 
     $inPage->addPathway($club['title'], '/clubs/'.$id);
     $inPage->addPathway($_LANG['EXIT_FROM_CLUB']);
+	$inPage->setTitle($_LANG['EXIT_FROM_CLUB']);
+
+	if (!clubUserIsMember($id, $user_id)){ return; }
 
     if ( $inCore->inRequest('confirm') ){
-        clubRemoveUser($id, $inUser->id);
+        clubRemoveUser($id, $user_id);
         setClubsRating($id);
+		cmsActions::removeObjectLog('add_club_user', $id, $user_id);
         $inCore->redirect('/clubs/'.$id);
     }
 
     if ( !$inCore->inRequest('confirm') ){
-        if (!clubUserIsMember($id, $inUser->id)){ return; }
 
         $inPage->setTitle($_LANG['EXIT_FROM_CLUB']);
+		$inPage->backButton(false);
 
         $confirm['title']               = $_LANG['EXIT_FROM_CLUB'];
         $confirm['text']                = $_LANG['REALY_EXIT_FROM_CLUB'];
@@ -405,28 +469,72 @@ if ($do == 'join'){
 
     $inPage->addPathway($club['title'], '/clubs/'.$id);
     $inPage->addPathway($_LANG['JOINING_CLUB']);
+	$inPage->setTitle($_LANG['JOINING_CLUB']);
 
-    if (clubUserIsMember($id, $inUser->id)){ return; }
+    if (clubUserIsMember($id, $user_id)){ return; }
 
-    if ( $inCore->inRequest('confirm') ){        
-        clubAddUser($id, $inUser->id);
+    //
+    // Обработка заявки
+    //
+    if ( $inCore->inRequest('confirm') ){
+
+        //списываем оплату если клуб платный
+        if (IS_BILLING && $club['is_vip'] && $club['join_cost'] && !$inUser->is_admin){
+            if ($inUser->balance >= $club['join_cost']){
+                //если средств на балансе хватает
+                cmsBilling::pay($user_id, $club['join_cost'], sprintf($_LANG['VIP_CLUB_BUY_JOIN'], $club['title']));
+            } else {
+                //недостаточно средств, создаем тикет
+                //и отправляем оплачивать
+                $billing_ticket = array(
+                    'action' => sprintf($_LANG['VIP_CLUB_BUY_JOIN'], $club['title']), 
+                    'cost'   => $club['join_cost'],
+                    'amount' => $club['join_cost'] - $inUser->balance,
+                    'url'    => $_SERVER['REQUEST_URI']
+                );
+                cmsUser::sessionPut('billing_ticket', $billing_ticket);
+                $inCore->redirect('/billing/pay');                
+            }
+        }
+
+        //добавляем пользователя в клуб
+        clubAddUser($id, $user_id);
         setClubsRating($id);
+
+		//регистрируем событие
+		cmsActions::log('add_club_user', array(
+						'object' => $club['title'],
+						'object_url' => '/clubs/'.$id,
+						'object_id' => $id,
+						'target' => '',
+						'target_url' => '',
+						'target_id' => 0, 
+						'description' => ''
+		));
+
         $inCore->redirect('/clubs/'.$id);
+        
     }
 
+    //
+    // Форма подтверждения заявки
+    //
     if ( !$inCore->inRequest('confirm') ) {
 
         $inPage->setTitle($_LANG['JOINING_CLUB']);
 
         $min_karma = $club['join_min_karma'];
-        $user_karma = cmsUser::getKarma($inUser->id);
+        $user_karma = cmsUser::getKarma($user_id);
 
         if(($user_karma >= $min_karma) || !$club['join_karma_limit']){
 
             $inPage->backButton(false);
-            $confirm['title'] = $_LANG['JOINING_CLUB'];
-            $confirm['text'] = $_LANG['YOU_REALY_JOIN_TO'].' <strong>'.$club['title'].'</strong>?';
-            $confirm['action'] = '';
+            $confirm['title']   = $_LANG['JOINING_CLUB'];
+            $confirm['text']    = $_LANG['YOU_REALY_JOIN_TO'].' <strong>'.$club['title'].'</strong>?';
+            if ($club['is_vip'] && $club['join_cost'] && !$inUser->is_admin){
+                $confirm['text'] .= '<br/>'.$_LANG['VIP_CLUB_JOIN_COST'].' &mdash; <strong>'.$club['join_cost'].' '.$_LANG['BILLING_POINT10'].'</strong>';
+            }
+            $confirm['action']  = '';
             $confirm['yes_button']['type'] = 'submit';
             $confirm['yes_button']['name'] = 'confirm';
 
@@ -446,6 +554,113 @@ if ($do == 'join'){
     }
 
 }
+///////////////////// Рассылка сообщения членам клуба /////////////////////////////////////////////////////////
+if ($do == 'send_message'){
+
+    $user_id    = $inUser->id;
+    $club       = $model->getClub($id);
+	$is_admin 	= $inUser->is_admin || ($user_id == $club['admin_id']);
+
+
+	if (!$user_id || !$club || !$is_admin){ cmsCore::error404(); }
+
+    $inPage->addPathway($club['title'], '/clubs/'.$id);
+    $inPage->addPathway($_LANG['SEND_MESSAGE']);
+	$inPage->setTitle($_LANG['SEND_MESSAGE'].' - '.$club['title']);
+	$inPage->backButton(false);
+
+	if(!isset($_POST['gosend'])){
+		$smarty = $inCore->initSmarty('components', 'com_clubs_messages_member.tpl');
+		$smarty->assign('club', $club);
+		$smarty->assign('bbcodetoolbar', cmsPage::getBBCodeToolbar('message'));
+		$smarty->assign('smilestoolbar', cmsPage::getSmilesPanel('message'));
+		$smarty->display('com_clubs_messages_member.tpl');
+	} else {
+		$errors = false;
+		$message = $inCore->request('message', 'html', '');
+		$message = $inCore->parseSmiles($message, true);
+		$message = $inDB->escape_string($message);
+
+		$total_list      = array();
+		$moderators_list = clubModerators($id);
+		$members_list    = clubMembers($id);
+		$total_list 	 = $_POST['only_mod'] ? $moderators_list : array_merge ($moderators_list, $members_list);
+
+		if (strlen($message)<3) { $inCore->addSessionMessage($_LANG['ERR_SEND_MESS'], 'error'); $errors = true; }
+		if (!$total_list) { $inCore->addSessionMessage($_LANG['ERR_SEND_MESS_NO_MEMBERS'], 'error'); $errors = true; }
+		if ($errors) { $inCore->redirect($back); }
+
+		foreach ($total_list as $user_id){
+			cmsUser::sendMessage(USER_UPDATER, $user_id, '<b>Сообщение от <a href="'.cmsUser::getProfileURL($inUser->login).'">Администратора</a> клуба "<a href="/clubs/'.$id.'">'.$club['title'].'</a>":</b><br> '.$message);
+		}
+		$_POST['only_mod'] ? $inCore->addSessionMessage($_LANG['SEND_MESS_TO_MODERS_OK'], 'info') : $inCore->addSessionMessage($_LANG['SEND_MESS_TO_MEMBERS_OK'], 'info');
+		$inCore->redirect('/clubs/'.$id);
+
+	}
+
+}
+
+///////////////////////// Пригласить друзей в группу /////////////////////////////////////////
+if ($do=='join_member'){
+
+    $user_id    = $inUser->id;
+    $club       = $model->getClub($id);
+
+	if (!$user_id || !$club){ cmsCore::error404(); }
+
+	if ( !$inCore->inRequest('join') ){
+
+		// Получаем список друзей
+		$friends     	= cmsUser::getFriends($user_id);
+		// Получаем участников клуба
+        $moderators     = clubModerators($id);
+        $members        = clubMembers($id);
+        $userslist      = array_merge($moderators, $members);
+		// Проверяем наличие друга в списке участников клуба или является ли он администратором
+		foreach($friends as $key=>$friend){ 
+			if (in_array($friend['id'], $userslist) || $friend['id'] == $club['admin_id']) { unset($friends[$key]); }
+		}
+		// Если нет друзей или все друзья уже в этом клубе, то выводим ошибку и возвращаемся назад
+		if (!$_SESSION['user']['friends'] || !$friends) { $inCore->addSessionMessage($_LANG['SEND_INVITE_ERROR'], 'error'); $inCore->redirect($back); }
+		// Формируем список option друзей
+		foreach($friends as $friend){ 
+			$friends_opt .= '<option value="'.$friend['id'].'">'.$friend['nickname'].'</option>';
+		}
+		// Заголовок страницы и пафвей
+		$inPage->setTitle($_LANG['SEND_INVITE_CLUB'].' '.$club['title']);
+		$inPage->addPathway($club['title'], '/clubs/'.$id);
+		$inPage->addPathway($_LANG['SEND_INVITE_CLUB']);
+		$inPage->backButton(false);
+		// Выводим шаблон
+		$smarty = $inCore->initSmarty('components', 'com_clubs_join_member.tpl');			
+		$smarty->assign('club', $club);
+		$smarty->assign('friends', $friends_opt);
+		$smarty->display('com_clubs_join_member.tpl');
+
+	}
+
+	if ( $inCore->inRequest('join') ){
+
+		$usr_to_id = $inCore->request('usr_to_id', 'int');
+		if (!$usr_to_id){ cmsCore::error404(); }
+
+		$club      = '<a href="/clubs/'.$id.'">'.$club['title'].'</a>';
+        $user      = '<a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a>';
+		$link_join = '<a href="/clubs/'.$id.'/join.html">'.$_LANG['JOIN_CLUB'] .'</a>';
+
+        $message   = $_LANG['INVITE_CLUB_TEXT'];
+        $message   = str_replace('%user%', $user, $message);
+        $message   = str_replace('%club%', $club, $message);
+		$message   = str_replace('%link_join%', $link_join, $message);
+
+		cmsUser::sendMessage(USER_UPDATER, $usr_to_id, $message);
+
+		$inCore->addSessionMessage($_LANG['SEND_INVITE_OK'], 'info');
+		$inCore->redirect('/clubs/'.$id);
+
+	}
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 ?>

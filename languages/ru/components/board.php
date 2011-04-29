@@ -1,14 +1,15 @@
 <?php
-/*********************************************************************************************/
-//                                                                                           //											 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 		  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 			    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 /* 
@@ -36,11 +37,12 @@ $_LANG['RETURN_TO_BOARD']         ='¬ернутьс€ к доске объ€влений';
 
 $_LANG['PHOTO_NOT_UPLOAD']        ='‘айл фотографии не был загружен.';
 
-$_LANG['ADV_NOT_ADDED']           ='ќбъ€вление успешно добавлено.';
+$_LANG['ADV_IS_ADDED']            ='ќбъ€вление успешно добавлено.';
 $_LANG['ADV_PREMODER_TEXT']       ='ќбъ€вление будет опубликовано после проверки администратором.';
 $_LANG['ADD_ADV_MORE']            ='ƒобавить еще объ€вление';
 
 $_LANG['ADV_NOT_FOUND']           ='ќбъ€вление не найдено';
+$_LANG['ADV_IS_MODER']            ='ќбъ€вление находитс€ на модерации';
 $_LANG['ADV_NOT_FOUND_TEXT']      ='¬озможно оно было удалено.';
 $_LANG['ADV_NOT_FOUND_TEXT_DEL']  ='¬озможно оно уже было удалено.';
 
@@ -48,11 +50,14 @@ $_LANG['EDIT_ADV']                ='–едактировать объ€вление';
 $_LANG['ADV_NOT_MODIFY']          ='ќбъ€вление не изменено.';
 $_LANG['REPEAT_EDIT']             ='ѕовторить редактирование';
 $_LANG['ADV_MODIFIED']            ='ќбъ€вление изменено.';
+$_LANG['ADV_EXTEND']              ='¬ы можете продлить объ€вление на';
+$_LANG['ADV_EXTEND_SROK']         ='Ќажав "сохранить объ€вление", срок ¬ашего объ€влени€ продлитс€ на';
 $_LANG['ADV_EDIT_PREMODER_TEXT']  ='ќбъ€вление скрыто и будет вновь опубликовано после проверки администратором.';
 
 $_LANG['DELETE_ADV']              ='”далить объ€вление';
 $_LANG['DELETING_ADV']            ='”даление объ€влени€';
 $_LANG['YOU_SURE_DELETE_ADV']     ='¬ы действительно желаете удалить объ€вление';
+$_LANG['ADV_IS_DELETED']          ='ќбъ€вление успешно удалено.';
 //Template
 $_LANG['TITLE']                   ='«аголовок';
 $_LANG['CITY']                    ='√ород';
@@ -60,6 +65,7 @@ $_LANG['OR_SELECTING']            ='или выберите';
 $_LANG['TEXT_ADV']                ='“екст объ€влени€';
 $_LANG['PERIOD_PUBL']             ='—рок публикации';
 $_LANG['DAYS']                    ='дней';
+$_LANG['DAYS_TO']                 ='начина€ с';
 $_LANG['PHOTO']                   ='‘отографи€';
 $_LANG['DEL_PHOTO']               ='”далить фотографию';
 $_LANG['MOVE_TO_CAT']             ='ѕеренести в рубрику';
@@ -80,4 +86,8 @@ $_LANG['ORDERBY_AVTOR']           ='ѕо автору';
 $_LANG['ORDERBY_DESC']            ='по убыванию';
 $_LANG['ORDERBY_ASC']             ='по возрастанию';
 $_LANG['FILTER']                  ='‘ильтр';
+$_LANG['MARK_AS_VIP']             ='—делать VIP';
+$_LANG['VIP_STATUS']              ='VIP-статус';
+$_LANG['VIP_BUY_LOG']             ='VIP-объ€вление';
+$_LANG['VIP_ITEM']                ='VIP-объ€вление';
 ?>

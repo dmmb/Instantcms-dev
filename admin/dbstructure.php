@@ -1,4 +1,16 @@
-<?php 
+<?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 $tables['#_banlist']['0']['Field'] = 'id';
 $tables['#_banlist']['0']['Type'] = 'int(11)';
 $tables['#_banlist']['0']['Null'] = 'NO';
@@ -1937,7 +1949,7 @@ $tables['#_menu']['10']['Null'] = 'NO';
 $tables['#_menu']['10']['Key'] = '';
 $tables['#_menu']['10']['Default'] = '';
 $tables['#_menu']['10']['Extra'] = '';
-$tables['#_menu']['11']['Field'] = 'allow_group';
+$tables['#_menu']['11']['Field'] = 'access_list';
 $tables['#_menu']['11']['Type'] = 'int(11)';
 $tables['#_menu']['11']['Null'] = 'NO';
 $tables['#_menu']['11']['Key'] = '';
@@ -2063,7 +2075,7 @@ $tables['#_modules']['12']['Null'] = 'NO';
 $tables['#_modules']['12']['Key'] = '';
 $tables['#_modules']['12']['Default'] = '';
 $tables['#_modules']['12']['Extra'] = '';
-$tables['#_modules']['13']['Field'] = 'allow_group';
+$tables['#_modules']['13']['Field'] = 'access_list';
 $tables['#_modules']['13']['Type'] = 'int(11)';
 $tables['#_modules']['13']['Null'] = 'NO';
 $tables['#_modules']['13']['Key'] = '';

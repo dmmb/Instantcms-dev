@@ -1,4 +1,15 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
     function routes_blogs(){
 
@@ -41,6 +52,13 @@
                             'ownertype' => 'all'
                          );
 
+        $routes[] = array(
+                            '_uri'  	=> '/^blogs\/all\-([0-9]+).html$/i',
+                            'do'    	=> 'view',
+                            'ownertype' => 'all',
+                            1       	=> 'page'
+                         );
+						 
         //RewriteRule ^blogs/single.html$ /index.php?view=blog&do=view&ownertype=single
         $routes[] = array(
                             '_uri'      => '/^blogs\/single.html$/i',
@@ -48,11 +66,25 @@
                             'ownertype' => 'single'
                          );
 
+        $routes[] = array(
+                            '_uri'  	=> '/^blogs\/single\-([0-9]+).html$/i',
+                            'do'    	=> 'view',
+                            'ownertype' => 'single',
+                            1       	=> 'page'
+                         );
+						 
         //RewriteRule ^blogs/multi.html$ /index.php?view=blog&do=view&ownertype=multi
         $routes[] = array(
                             '_uri'      => '/^blogs\/multi.html$/i',
                             'do'        => 'view',
                             'ownertype' => 'multi'
+                         );
+
+        $routes[] = array(
+                            '_uri'  	=> '/^blogs\/multi\-([0-9]+).html$/i',
+                            'do'    	=> 'view',
+                            'ownertype' => 'multi',
+                            1       	=> 'page'
                          );
 
         //RewriteRule ^blogs/[0-9]*)/moderate.html$ /index.php?view=blog&do=moderate&id=$1

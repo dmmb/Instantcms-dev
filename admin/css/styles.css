@@ -1,4 +1,4 @@
-html{
+html {
 	height:100%;
 }
 body {
@@ -10,16 +10,39 @@ body {
 	background:#FFF;
 }
 
-.button, .button:hover {
-	background:#ECF0F4 url(../images/buttonbg.gif) repeat-x scroll left top;
+#header{ color:#B2D1E8; }
+#header table { background:url(../images/topbg.jpg) repeat-x; }
+
+input[type=text], input[type=password], textarea{
+	border-color:#8E9CAE;
+	border-style:solid;
+	border-width:1px;
+    padding:2px;
+    background:#FFF url(../images/inputbg.jpg) repeat-x scroll left top;
+}
+
+.button {
+	background:#FDFDFE url(../images/buttonbg.gif) repeat-x scroll left bottom;
+	color:#646E7B;
 	border-color:#DFE5EC #8E9CAE #8E9CAE #DFE5EC;
 	border-style:solid;
 	border-width:1px;
-	color:#646E7B;
-	padding:1px 10px !important;
-	font-size:12px;
-	height:22px;
-	line-height:22px;
+	padding:3px 10px !important;
+	font-size:14px;
+    border-radius:15px;
+    -moz-border-radius:15px;
+    text-shadow:0 1px 0px #FFF;
+}
+
+.button:active{
+	border-color:#8E9CAE #DFE5EC #DFE5EC #8E9CAE;
+	border-style:solid;
+	border-width:1px;
+}
+
+.button:hover {
+    color:#333;
+    cursor: pointer;
 }
 
 .maintable_td {
@@ -119,10 +142,14 @@ a:hover{
 	display:block;
 	width:32px;
 	height:32px;
-	background-color:#FFFFFF;
+	background:#FFF;
 	padding:4px;
 	margin-right:2px;
-	border: 1px solid #CCC;
+    border-color:#8E9CAE #DFE5EC #DFE5EC #8E9CAE;
+    border-style:solid;
+    border-width:1px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 h3{
 	padding:8px;
@@ -182,9 +209,14 @@ table {
     height:30px;
     line-height:30px;
 }
+.small_title .attention{
+    padding:1px;
+    padding-left:20px;
+    background:url(../images/icons/attention.png) no-repeat left center
+}
 .small_box{
 	margin-bottom:4px;
-	border:solid 1px #ADB9C2;
+	border:solid 1px #ADB9C2;   
 }
 .small_box ul{
     list-style: none;
@@ -330,9 +362,8 @@ div.juser{
 	background:url(../images/icons/user.png) no-repeat left center;	
 }
 div.juser a, div.jsite a{
-	color:#29B7E4;
-	font-weight:bold;
-	text-decoration:none;	
+	color:#FFF;
+	font-weight:bold;	
 }
 div.jmessages{
 	margin-top:4px;
@@ -355,8 +386,7 @@ div.jlogout{
 	background:url(../images/icons/logout.png) no-repeat left center;
 }
 div.jlogout a{
-	color:red;
-	text-decoration:none;
+	color:yellow;
 }
 
 input._filterText{
@@ -380,7 +410,7 @@ div.filter {
 
 .user_link{
     padding-left:20px;
-    background:url(/components/users/images/male.gif) no-repeat;
+    background:url(/components/users/images/male.png) no-repeat;
 }
 
 .club_link{
@@ -425,18 +455,201 @@ div.filter {
 	margin-bottom:4px;
 }
 
-.advert_design, .advert_inshop{
-    height:21px;
-    line-height:21px;
+.advert_inmaps,
+.advert_inshop,
+.advert_billing{
+    height:32px;
+    line-height:32px;
     padding:1px;
-    padding-left:30px;
-    margin-left:20px;    
+    padding-left:36px;
+    margin-left:15px;
 }
 
-.advert_design{ margin-top:12px; background:url(/admin/images/advert/design.png) no-repeat; }
-.advert_inshop{ margin-top:4px; margin-bottom:12px; background:url(/admin/images/advert/shop.png) no-repeat; }
+.advert_billing{ margin-top:8px; background:url(/admin/images/advert/billing.png) no-repeat; }
+.advert_inmaps{ background:url(/admin/images/advert/maps.png) no-repeat; }
+.advert_inshop{ margin-top:0px; margin-bottom:8px; background:url(/admin/images/advert/shop.png) no-repeat; }
 
 #catalog_advert{
     padding-left:20px;
     background:url(../images/components/shop.png) no-repeat left top;
 }
+
+.pagebar{
+    margin-top:10px;
+    margin-bottom: 15px;
+    font-size:12px;
+    clear:both;
+}
+.pagebar_title{
+    margin:5px;
+    padding:4px;
+}
+.pagebar_page{
+    margin:3px;
+    padding:6px;
+}
+.pagebar_current{
+    margin:3px;
+    padding:6px;
+    border:solid 1px silver;
+    background-color: white;
+}
+.cat_link div{
+    height:17px;
+    line-height:17px;
+    padding: 1px 1px 1px 18px;
+    background: url(/admin/images/icons/hmenu/cats.png) no-repeat;
+    overflow:hidden;
+}
+.cat_link div span{
+    float:right;
+}
+.cat_add_link{
+    margin-bottom:10px;
+    padding-bottom:10px;
+    border-bottom: dotted 1px silver;
+}
+.cat_add_link div{
+    padding: 2px 2px 2px 18px;
+    background: url(/admin/images/icons/hmenu/add.png) no-repeat;
+}
+#slide_cell{
+    width:14px;
+    background:url(/admin/images/tree/slide.gif) no-repeat center center #EEE;
+    cursor:pointer;
+}
+.unslided{
+    background:url(/admin/images/tree/unslide.gif) no-repeat center center #EEE !important;
+}
+#cats_cell{
+    padding:12px;
+    background:url(/admin/images/tree/tree_bg.jpg) repeat-y right top #EEE;
+    width:240px;
+}
+
+/* ========================================================================== */
+/* ======================= Õ¿—“–Œ… » ÃŒƒ”À≈… ================================ */
+/* ========================================================================== */
+.params-form{
+    padding:15px;
+    border:1px solid #CCCCCC;
+    border-top:none;
+}
+
+.param-name{    
+    width:260px;
+    padding:0px;
+    padding:8px 0px;
+    padding-right:20px;
+    vertical-align: top;
+}
+
+.param-value{
+    vertical-align: top;
+}
+
+.param-number{
+    width:60px;
+}
+
+.params-form .param-links{
+    margin-top: 5px;
+    font-size:11px;
+}
+
+.params-form .param-links a{
+    text-decoration: none;
+    border-bottom:dashed 1px #0099CC;
+}
+
+.params-form strong{
+    color:#0099CC;
+}
+
+.params-buttons{
+    margin-top:15px;
+}
+
+/* ========================================================================== */
+/* ======================= À≈Õ“¿ ¿ “»¬ÕŒ—“» ================================= */
+/* ========================================================================== */
+#actions_box{
+    height:414px;
+    overflow:auto;
+}
+#actions{
+    padding:15px;
+}
+
+.action_entry{
+    padding-left:22px;
+    margin-bottom:10px;
+    padding-bottom:10px;
+    border-bottom: solid 1px #BFE5FF;
+    overflow:hidden;
+}
+
+.action_entry .is_new { color:#FF5A00; }
+
+.action_user{
+    color:#375E93;
+    font-weight:bold;
+}
+
+.action_title{
+    font-size:12px;
+    padding:2px 0px;
+    overflow:hidden;
+}
+
+.action_delete{
+    display:block;
+    width:  16px;
+    height: 16px;
+    background: url(/templates/_default_/images/icons/delete.png) no-repeat left 1px;
+    float:right;
+    margin-left: 6px;
+}
+
+.action_date{
+    float:right;
+    margin-left: 15px;
+    margin-bottom: 15px;
+    font-size:11px;
+    color:#5F98BF;
+}
+
+.action_details{
+    clear:both;
+    color:gray;
+}
+
+.action_details .act_photo{
+    overflow:hidden;
+    display:inline-block;
+}
+
+.act_add_comment{ background:url(/templates/_default_/images/icons/actions/add_comment.png) no-repeat left 1px; }
+.act_add_photo{ background:url(/templates/_default_/images/icons/actions/add_photo.png) no-repeat left top; }
+.act_add_article{ background:url(/templates/_default_/images/icons/actions/add_article.png) no-repeat left 1px; }
+.act_set_status{ background:url(/templates/_default_/images/icons/actions/set_status.png) no-repeat left 1px; }
+.act_add_friend{ background:url(/templates/_default_/images/icons/actions/add_friend.png) no-repeat left 1px; }
+.act_add_blog{ background:url(/templates/_default_/images/icons/actions/add_blog.png) no-repeat left 1px; }
+.act_add_post{ background:url(/templates/_default_/images/icons/actions/add_post.png) no-repeat left 1px; }
+.act_add_board{ background:url(/templates/_default_/images/icons/actions/add_board.png) no-repeat left 1px; }
+.act_add_catalog{ background:url(/templates/_default_/images/icons/actions/add_catalog.png) no-repeat left 1px; }
+.act_add_club{ background:url(/templates/_default_/images/icons/actions/add_club.png) no-repeat left 1px; }
+.act_add_club_user{ background:url(/templates/_default_/images/icons/actions/add_club_user.png) no-repeat left 1px; }
+.act_add_quest{ background:url(/templates/_default_/images/icons/actions/add_quest.png) no-repeat left 1px; }
+.act_add_fpost{ background:url(/templates/_default_/images/icons/actions/add_fpost.png) no-repeat left 1px; }
+.act_add_thread{ background:url(/templates/_default_/images/icons/actions/add_thread.png) no-repeat left 1px; }
+.act_add_avatar{ background:url(/templates/_default_/images/icons/actions/add_avatar.png) no-repeat left 1px; }
+.act_add_award{ background:url(/templates/_default_/images/icons/actions/add_award.png) no-repeat left 1px; }
+.act_add_file{ background:url(/templates/_default_/images/icons/actions/add_file.png) no-repeat left 1px; }
+.act_add_wall{ background:url(/templates/_default_/images/icons/actions/add_wall.png) no-repeat left 1px; }
+.act_add_wall_club{ background:url(/templates/_default_/images/icons/actions/add_wall_club.png) no-repeat left 1px; }
+.act_add_post_club{ background:url(/templates/_default_/images/icons/actions/add_post_club.png) no-repeat left 1px; }
+.act_add_user_photo{ background:url(/templates/_default_/images/icons/actions/add_user_photo.png) no-repeat left 1px; }
+.act_add_user_photo_multi{ background:url(/templates/_default_/images/icons/actions/add_user_photo_multi.png) no-repeat left 3px; }
+.act_add_user{ background:url(/templates/_default_/images/icons/actions/add_user.png) no-repeat left 3px; }
+.act_add_wall_my{ background:url(/templates/_default_/images/icons/actions/add_wall_my.png) no-repeat left 3px; }

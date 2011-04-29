@@ -1,14 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 class cmsUser {
 
@@ -49,16 +50,17 @@ class cmsUser {
 
         $inCore = cmsCore::getInstance();
 
-        $user_id    = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : 0;
+        $user_id = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : 0;
 
         if (!$user_id){
-            $this->id   = 0;
+            $this->id       = 0;
+			$this->ip       = $_SERVER['REMOTE_ADDR'];
             $this->is_admin = 0;
             $this->group_id = self::getGuestGroupId();
             return true;
         }
 
-        $info       =   $this->loadUser($user_id);
+        $info = $this->loadUser($user_id);
 
         if (!$info){ return false; }
 
@@ -66,7 +68,11 @@ class cmsUser {
             $this->{$key}   = $value;
         }
 
-        $this->id           = (int)$user_id;
+        if (!file_exists(PATH.'/images/users/avatars/small/'.$this->imageurl) || !$this->imageurl){ $this->imageurl = 'nopic.jpg'; }
+
+        $this->logdate = $_SESSION['user']['logdate'];
+
+        $this->id = (int)$user_id;
 
         $this->checkBan();
 
@@ -87,9 +93,11 @@ class cmsUser {
         $inDB       = cmsDatabase::getInstance();
         $inCore     = cmsCore::getInstance();
 
-        $sql    = "SELECT u.*, g.is_admin is_admin
-                   FROM cms_users u, cms_user_groups g
-                   WHERE u.id={$user_id} AND u.is_deleted = 0 AND u.is_locked = 0 AND u.group_id = g.id";
+        $sql    = "SELECT u.*, g.is_admin is_admin, p.imageurl as imageurl
+                   FROM cms_users u
+				   INNER JOIN cms_user_groups g ON g.id = u.group_id
+				   INNER JOIN cms_user_profiles p ON p.user_id = u.id
+                   WHERE u.id='$user_id' AND u.is_deleted = 0 AND u.is_locked = 0 LIMIT 1";
 
         $result = $inDB->query($sql);
 
@@ -117,7 +125,7 @@ class cmsUser {
         $user['group']  = $_groupdata['alias'];
 
         $access = str_replace(', ', ',', $_groupdata['access']);
-        $access = split(',', $access);
+        $access = explode(',', $access);
 
         $user['access'] = array();
         $user['access'] = $access;
@@ -192,7 +200,9 @@ class cmsUser {
         $inDB       = cmsDatabase::getInstance();
         $inCore     = cmsCore::getInstance();
         
-        if ($inCore->getCookie('userid') && !$this->id){
+        $user_id    = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : 0;
+
+        if ($inCore->getCookie('userid') && !$user_id){
 
             $cookie_code = $inCore->getCookie('userid');
 
@@ -203,7 +213,6 @@ class cmsUser {
 
             if($inDB->num_rows($res)==1){
                 $userrow = $inDB->fetch_assoc($res);
-                session_register('user');
                 $_SESSION['user'] = self::createUser($userrow);
                 cmsCore::callEvent('USER_LOGIN', $_SESSION['user']);
                 $inDB->query("UPDATE cms_users SET logdate = NOW() WHERE id = ".$_SESSION['user']['id']);
@@ -226,8 +235,6 @@ class cmsUser {
      */
     public function resetStatTimer() {
 
-        $_SESSION['user']['s_timer'] = time();
-
         return true;
         
     }
@@ -241,11 +248,7 @@ class cmsUser {
      */
     public function checkStatTimer() {
 
-        if (!isset($_SESSION['user']['s_timer'])) { return true; }
-
-        $user_time = $_SESSION['user']['s_timer'];
-        
-        return (bool)(time()-$user_time >= self::STAT_TIMER_INTERVAL);
+        return true;
 
     }
 
@@ -255,7 +258,6 @@ class cmsUser {
 
     public function dropStatTimer(){
 
-        unset($_SESSION['user']['s_timer']);
         return true;
 
     }
@@ -326,8 +328,8 @@ class cmsUser {
 
         if ($inUser->id && $controls){
             if(usrCanKarma($user_id, $inUser->id)){
-                $plus = '<a href="/users/karma/plus/'.$user_id.'/'.$inUser->id.'" title="Карма +"><img src="/components/users/images/karma_up.gif" border="0" alt="Карма +"/></a>';
-                $minus = '<a href="/users/karma/minus/'.$user_id.'/'.$inUser->id.'" title="Карма -"><img src="/components/users/images/karma_down.gif" border="0" alt="Карма -"/></a>';
+                $plus = '<a href="/users/karma/plus/'.$user_id.'/'.$inUser->id.'" onclick="plusUkarma(\''.$user_id.'\', \''.$inUser->id.'\'); return false;" title="Карма +"><img src="/components/users/images/karma_up.png" border="0" alt="Карма +"/></a>';
+                $minus = '<a href="/users/karma/minus/'.$user_id.'/'.$inUser->id.'" onclick="minusUkarma(\''.$user_id.'\', \''.$inUser->id.'\'); return false;" title="Карма -"><img src="/components/users/images/karma_down.png" border="0" alt="Карма -"/></a>';
             }
         }
 
@@ -358,9 +360,12 @@ class cmsUser {
         $inDB = cmsDatabase::getInstance();
         $inCore = cmsCore::getInstance();
 
+		$today = date("d-m");
+		
         $sql = "SELECT u.id as id, u.nickname as nickname, u.login as login, u.birthdate, p.gender as gender
-                FROM cms_users u, cms_user_profiles p
-                WHERE p.user_id = u.id AND u.is_locked = 0 AND u.is_deleted = 0 AND DATE_FORMAT(u.birthdate, '%d-%m')=DATE_FORMAT(NOW(), '%d-%m')";
+                FROM cms_users u
+				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+                WHERE u.is_locked = 0 AND u.is_deleted = 0 AND p.showbirth = 1 AND DATE_FORMAT(u.birthdate, '%d-%m')='$today'";
 
         $rs     = $inDB->query($sql);
         $total  = $inDB->num_rows($rs);
@@ -369,7 +374,7 @@ class cmsUser {
 
         if (!$total){ return false; }
         
-        while($usr = mysql_fetch_assoc($rs)){
+        while($usr = $inDB->fetch_assoc($rs)){
             $html .= self::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login']);
             if ($now < $total-1) { $html .= ', '; }
             $now ++;
@@ -382,7 +387,7 @@ class cmsUser {
 // ============================================================================ //
 
     /**
-     * Возвращает последние посты в блогах друзей
+     * Возвращает последние комментарии друзей
      * @param int $user_id
      * @param int $limit
      * @return array
@@ -403,11 +408,10 @@ class cmsUser {
             if ($id < sizeof($friends)-1){ $friends_sql .= ' OR '; }
         }
 
-        $sql = "SELECT DISTINCT c.id, c.content, c.target as target, c.target_id as target_id, c.user_id, c.target_link, u.id as user_id, u.nickname as nickname, u.login as login,
-                       IF(DATE_FORMAT(c.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(c.pubdate, '<strong>Cегодня</strong> в %H:%i'),
-                       IF(DATEDIFF(NOW(), c.pubdate)=1, DATE_FORMAT(c.pubdate, 'Вчера в %H:%i'),DATE_FORMAT(c.pubdate, '%d, %M') ))  as pubdate
-                FROM cms_comments c, cms_users u
-                WHERE c.user_id = u.id AND ({$friends_sql})
+        $sql = "SELECT c.id, c.content, c.target as target, c.target_id as target_id, c.user_id, c.target_link, u.id as user_id, u.nickname as nickname, u.login as login, c.pubdate as pubdate
+                FROM cms_comments c
+				LEFT JOIN cms_users u ON u.id = c.user_id
+                WHERE {$friends_sql}
                 ORDER BY c.pubdate DESC
                 ";
 
@@ -420,10 +424,12 @@ class cmsUser {
         if (!$inDB->num_rows($result)){ return false; }
 
         while ($comment = $inDB->fetch_assoc($result)){
-            $comment['pubdate'] = $inCore->getRusDate($comment['pubdate']);
-            if (sizeof($comment['content'])>50){
-                $comment['content'] = substr($comment['content'], 0, 50) . '...';
+            $comment['pubdate'] = $inCore->dateFormat($comment['pubdate']);
+			$comment['content'] = strip_tags($comment['content']);
+			if (strlen($comment['content'])>70) { 
+				$comment['content'] = substr($comment['content'], 0, 70). '...';
             }
+			if (!$comment['content']) { $comment['content'] = '...'; }
             $comments[] = $comment;
         }
 
@@ -456,7 +462,7 @@ class cmsUser {
             if ($id < sizeof($friends)-1){ $friends_sql .= ' OR '; }
         }
 
-        $sql = "SELECT DISTINCT p.id,
+        $sql = "SELECT p.id,
                                 p.title,
                                 p.user_id,
                                 p.blog_id,
@@ -465,10 +471,11 @@ class cmsUser {
                                 u.id as user_id,
                                 u.nickname as nickname,
                                 u.login as login,
-                       IF(DATE_FORMAT(p.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(p.pubdate, '<strong>Cегодня</strong> в %H:%i'),
-                       IF(DATEDIFF(NOW(), p.pubdate)=1, DATE_FORMAT(p.pubdate, 'Вчера в %H:%i'),DATE_FORMAT(p.pubdate, '%d, %M') ))  as pubdate
-                FROM cms_blog_posts p, cms_users u, cms_blogs b
-                WHERE p.blog_id = b.id AND p.user_id = u.id AND ({$friends_sql})
+                       			p.pubdate as pubdate
+                FROM cms_blog_posts p
+				LEFT JOIN cms_blogs b ON b.id = p.blog_id
+				LEFT JOIN cms_users u ON u.id = p.user_id
+                WHERE {$friends_sql}
                 ORDER BY p.pubdate DESC
                 ";
 
@@ -484,7 +491,7 @@ class cmsUser {
         $model = new cms_model_blogs();
 
         while ($post = $inDB->fetch_assoc($result)){
-            $post['pubdate']    = $inCore->getRusDate($post['pubdate']);
+            $post['pubdate']    = $inCore->dateFormat($post['pubdate']);
             $post['url']        = $model->getPostURL(0, $post['bloglink'], $post['seolink']);
             $posts[]            = $post;
         }
@@ -517,28 +524,59 @@ class cmsUser {
             $friends_sql .= 'u.id = '.$friend['id'];
             if ($id < sizeof($friends)-1){ $friends_sql .= ' OR '; }
         }
-
-        $sql = "SELECT DISTINCT p.id, p.title, p.user_id, u.id as user_id, u.nickname as nickname, u.login as login, 
-                       IF(DATE_FORMAT(p.pubdate, '%d-%m-%Y')=DATE_FORMAT(NOW(), '%d-%m-%Y'), DATE_FORMAT(p.pubdate, '<strong>Cегодня</strong> в %H:%i'),
-                       IF(DATEDIFF(NOW(), p.pubdate)=1, DATE_FORMAT(p.pubdate, 'Вчера в %H:%i'),DATE_FORMAT(p.pubdate, '%d, %M') ))  as pubdate
-                FROM cms_photo_files p, cms_users u
-                WHERE p.user_id = u.id AND ({$friends_sql})
+		// Получаем фото из общей галереи
+        $sql = "SELECT p.id, p.title, u.nickname as nickname, u.login as login, p.pubdate as pubdate
+                FROM cms_photo_files p
+				LEFT JOIN cms_users u ON u.id = p.user_id
+                WHERE {$friends_sql}
                 ORDER BY p.pubdate DESC
                 ";
-
-        if ($limit) { $sql .= 'LIMIT '.$limit; }
-        
+		if ($limit) { $sql .= 'LIMIT '.($limit*1.5); }
         $result = $inDB->query($sql);
 
-        $photos = array();
+		//Получаем личные фотографии
+		$private_sql = "SELECT p.id, p.title, p.user_id, u.nickname as nickname, u.login as login, p.pubdate as pubdate
+						FROM cms_user_photos p
+						LEFT JOIN cms_users u ON u.id = p.user_id
+						WHERE {$friends_sql}
+                ORDER BY p.pubdate DESC
+                ";
+		if ($limit) { $private_sql .= 'LIMIT '.($limit*1.5); }
+		$private_res = $inDB->query($private_sql);
 
-        if (!$inDB->num_rows($result)){ return false; }
+		$photos = array();
+        
+		$count_private 	= $inDB->num_rows($private_res);
+		$count_pub 		= $inDB->num_rows($result);
 
+        if (!$count_private && !$count_pub){ return false; }
+
+		if ($count_private) {
+			while($photo = $inDB->fetch_assoc($private_res)){
+				$photos[$photo['id']]       = $photo;
+			}
+		}
+
+		if ($count_pub) {
         while ($photo = $inDB->fetch_assoc($result)){
-            $photo['pubdate'] = $inCore->getRusDate($photo['pubdate']);
-            $photos[] = $photo;
+				$photos[$photo['id']] = $photo;
+			}
         }
+        $photos = cmsCore::sortArray($photos, 'pubdate');
+		//Выбираем последние $limit фото из общего массива
+		$total      = sizeof($photos);
 
+		if ($total){
+			$page_photos    = array();
+			for($p=0; $p<$limit; $p++){
+				if ($photos[$p]){
+					$photos[$p]['pubdate'] = $inCore->dateFormat($photos[$p]['pubdate']);
+					$page_photos[] = $photos[$p];
+				}
+			}
+			
+			$photos = $page_photos; unset($page_photos);
+		}
         return $photos;
         
     }
@@ -558,7 +596,7 @@ class cmsUser {
 
         $html   = '';
 
-        $sql    = "SELECT * FROM cms_users WHERE is_locked = 0 AND is_deleted = 0 ORDER BY nickname";
+        $sql    = "SELECT id, nickname FROM cms_users WHERE is_locked = 0 AND is_deleted = 0 ORDER BY nickname";
         $rs     = $inDB->query($sql);
 
         if (!$inDB->num_rows($rs)){ return; }
@@ -597,15 +635,14 @@ class cmsUser {
         $inDB = cmsDatabase::getInstance();
         $html = '';
 
-        $sql = "SELECT * FROM cms_users WHERE ";
+        $sql = "SELECT id, nickname FROM cms_users WHERE ";
 
-        $a = 1;
-        foreach($authors as $key=>$id){
-            if ($a == 1) { $sql .= 'id = '.$id; }
-            else {
-                $sql .= ' OR id = '.$id;
-            }
-            $a++;
+		$a_list = rtrim(implode(',', $authors), ',');
+
+        if ($a_list){
+            $sql .= "id IN ({$a_list})";
+        } else {
+            $sql .= '1=0';
         }
 
         $rs = $inDB->query($sql);
@@ -694,26 +731,30 @@ class cmsUser {
 
         $html = '';
 
-        $sql = "SELECT f.*
+		$sql = "SELECT
+				CASE
+				WHEN f.from_id = $user_id
+				THEN f.to_id
+				WHEN f.to_id = $user_id
+				THEN f.from_id
+				END AS id, u.nickname as nickname
                 FROM cms_user_friends f
-                WHERE (f.to_id = $user_id OR f.from_id = $user_id) AND f.is_accepted = 1
-                ORDER BY logdate ASC";
+				LEFT JOIN cms_users u ON u.id = CASE WHEN f.from_id = $user_id THEN f.to_id WHEN f.to_id = $user_id THEN f.from_id END
+				WHERE (from_id = $user_id OR to_id = $user_id) AND is_accepted =1";
+			
         $result = $inDB->query($sql);
 
         if ($inDB->num_rows($result)){
+
             while($friend = $inDB->fetch_assoc($result)){
 
-                if ($friend['from_id']==$user_id) { $friend_id = $friend['to_id']; } else { $friend_id = $friend['from_id']; }
-
-                $friend_nickname = $inDB->get_field('cms_users', 'id='.$friend_id, 'nickname');
-
-                if (@$selected==$cat['id']){
+                if (@$selected==$friend['id']){
                     $s = 'selected';
                 } else {
                     $s = '';
                 }
                 
-                $html .= '<option value="'.$friend_id.'" '.$s.'>'.$friend_nickname.'</option>';
+                $html .= '<option value="'.$friend['id'].'" '.$s.'>'.$friend['nickname'].'</option>';
             }
         } else {
             $html = '<option value="0" selected>-- Нет друзей --</option>';
@@ -727,35 +768,54 @@ class cmsUser {
 
     /**
      * Возвращает список друзей пользователя
+	 * и помещает в текущую сессию
      * @param int $user_id
      * @return array
      */
     public static function getFriends($user_id){
 
+        $is_me = ($_SESSION['user']['id'] == $user_id);
+
+		//Если список уже в сессии, возвращаем
+		if ($is_me && $_SESSION['user']['friends']) { return $_SESSION['user']['friends']; }
+
+		//иначе получаем список из базы, кладем в сессию и возвращаем
         $inDB       = cmsDatabase::getInstance();
 
         $friends    = array();
 
-        $sql = "SELECT f.*
+		$sql = "SELECT
+				CASE
+				WHEN f.from_id = $user_id
+				THEN f.to_id
+				WHEN f.to_id = $user_id
+				THEN f.from_id
+				END AS id, u.nickname as nickname, u.login as login
                 FROM cms_user_friends f
-                WHERE (f.to_id = $user_id OR f.from_id = $user_id) AND f.is_accepted = 1
-                ORDER BY logdate ASC";
+				LEFT JOIN cms_users u ON u.id = CASE WHEN f.from_id = $user_id THEN f.to_id WHEN f.to_id = $user_id THEN f.from_id END
+				WHERE (from_id = $user_id OR to_id = $user_id) AND is_accepted =1";
+				
         $result = $inDB->query($sql);
 
         if ($inDB->num_rows($result)){
             while($friend = $inDB->fetch_assoc($result)){
-
-                $f = array();
-
-                $f['id']        = ($friend['from_id']==$user_id) ? $friend['to_id'] : $friend['from_id'];
-                $f['nickname']  = $inDB->get_field('cms_users', 'id='.$f['id'], 'nickname');
-
-                $friends[] = $f;
-
+				$friends[] = $friend;
             }
         }
+
+		if ($is_me) { $_SESSION['user']['friends'] = $friends; }
+		
         return $friends;
 
+    }
+
+// ============================================================================ //
+// ============================================================================ //
+    /*
+     * Очищает список друзей в сессии
+     */
+    public static function clearSessionFriends(){
+        unset($_SESSION['user']['friends']);
     }
 
 // ============================================================================ //
@@ -767,7 +827,7 @@ class cmsUser {
      * @param array $exclude
      * @return html
      */
-    public static function getUserWall($user_id, $usertype='user', $page=1){
+    public static function getUserWall($user_id, $usertype='user', $page=1, $clubUserIsRole=0, $clubUserIsAdmin=0){
 
         $inDB       = cmsDatabase::getInstance();
         $inCore     = cmsCore::getInstance();
@@ -777,11 +837,11 @@ class cmsUser {
 
         $perpage    = 10;
 
-        if ($usertype=='user'){
-            $myprofile = ($inUser->id == $user_id || $inUser->is_admin);
-        } else {
-            $inCore->loadLib('clubs');
-            $myprofile = (clubUserIsRole($user_id, $inUser->id, 'moderator') || clubUserIsAdmin($user_id, $inUser->id) || $inUser->is_admin);
+		switch ($usertype){
+			case 'user': $myprofile = ($inUser->id == $user_id || $inUser->is_admin);  break;
+			case 'club': $inCore->loadLib('clubs');
+            			 $myprofile = ($clubUserIsRole || $clubUserIsAdmin || $inUser->is_admin); break;
+			default: $myprofile = $inUser->is_admin;
         }
 
         $records = array();
@@ -794,22 +854,28 @@ class cmsUser {
         
         if ($total){
             //получаем нужную страницу записей стены
-            $sql = "SELECT w.*, u.nickname as author, u.login as author_login, DATE_FORMAT(w.pubdate, '%d-%m-%Y (%H:%i)') as fpubdate
-                    FROM cms_user_wall w, cms_users u
-                    WHERE w.user_id = $user_id AND w.author_id = u.id AND w.usertype = '$usertype'
+            $sql = "SELECT w.*, g.gender, g.imageurl, u.nickname as author, u.login as author_login, u.is_deleted, w.pubdate
+                    FROM cms_user_wall w
+					INNER JOIN cms_users u ON u.id = w.author_id
+					INNER JOIN cms_user_profiles g ON g.user_id = u.id
+                    WHERE w.user_id = $user_id AND w.usertype = '$usertype'
                     ORDER BY w.pubdate DESC
                     LIMIT ".(($page-1)*$perpage).", $perpage";
 
             $result     = $inDB->query($sql);
-            $total_page = $inDB->num_rows($result);
 
+			if (!function_exists('usrImageNOdb')){
             $inCore->includeFile('components/users/includes/usercore.php');
+			}
 
             while($record = $inDB->fetch_assoc($result)){
-                $record['content']  = nl2br($inCore->parseSmiles($record['content'], true));
-                $record['avatar']   = usrImage($record['author_id'], 'small');
+                $record['is_today'] = time() - strtotime($record['pubdate']) < 86400;
+				$record['fpubdate'] = $record['is_today'] ? $inCore->dateDiffNow($record['pubdate']) : $inCore->dateFormat($record['pubdate']);
+                $record['avatar']   = usrImageNOdb($record['author_id'], 'small', $record['imageurl'], $record['is_deleted']);
                 $records[]          = $record;
             }
+
+            $records = cmsCore::callEvent('GET_WALL_POSTS', $records);
 
             if ($pages>1){
                 $pagebar = cmsPage::getPagebar($total, $page, $perpage, 'javascript:wallPage(%page%)');
@@ -829,7 +895,6 @@ class cmsUser {
         $smarty->assign('pages', $pages);
         $smarty->assign('page', $page);
         $smarty->assign('total', $total);
-        $smarty->assign('total_page', $total_page);
         $smarty->assign('pagebar', $pagebar);
 
         $smarty->display('com_users_wall.tpl');
@@ -852,7 +917,7 @@ class cmsUser {
 
         $my_id      = self::getInstance()->id;
 
-        $bb_toolbar = cmsPage::getBBCodeToolbar('message', true);
+        $bb_toolbar = cmsPage::getBBCodeToolbar('message', true, 'users');
         $smilies    = cmsPage::getSmilesPanel('message');
 
         ob_start();
@@ -958,15 +1023,25 @@ class cmsUser {
      */
     public static function getOnlineCount(){
 
-        $inDB = cmsDatabase::getInstance();
-        $people = array();
+        $inDB   = cmsDatabase::getInstance();
 
-        $sql = "SELECT DISTINCT user_id, id FROM cms_online WHERE user_id = '0' OR user_id = '' GROUP BY user_id";
+        $sql    = "SELECT user_id FROM cms_online";
         $result = $inDB->query($sql);
-        $people['guests'] = $inDB->num_rows($result);
-        $sql = "SELECT DISTINCT user_id, id FROM cms_online WHERE user_id > 0 GROUP BY user_id";
-        $result = $inDB->query($sql);
-        $people['users'] = $inDB->num_rows($result);
+
+		$guests = 0;
+
+		$online = array();
+
+        while($o = $inDB->fetch_assoc($result)){
+			if ($o['user_id'] == 0 || $o['user_id'] == ''){
+				$guests++;
+			} else {
+				$online[$o['user_id']][] = $o;	
+			}
+        }
+
+		$people['guests'] = $guests;
+		$people['users']  = sizeof($online);
 
         return $people;
 
@@ -1017,7 +1092,7 @@ class cmsUser {
         $result = $inDB->query($sql);
 
         if($inDB->num_rows($result)) {
-            $html =	' (<a style="color:red" href="/users/'.$user_id.'/messages.html">'.$inDB->num_rows($result).'</a>)';
+            $html =	$inDB->num_rows($result);
             return $html;
         } else { return false; }
     }
@@ -1036,17 +1111,19 @@ class cmsUser {
             $user = $inDB->get_fields('cms_users', "id={$user_id}", 'login');
 
             $sql = "SELECT * FROM cms_user_autoawards WHERE published = 1";
-            $rs = $inDB->query($sql) or die('Error processing autoawards');
-            if (mysql_num_rows($rs)) {
-                $p_content = dbRowsCount('cms_content', "user_id=$user_id AND published = 1");
-                $p_comment = dbRowsCount('cms_comments', "user_id=$user_id");
-                $p_blog = dbRowsCount('cms_blog_posts', "user_id=$user_id AND published = 1");
-                $p_forum = dbRowsCount('cms_forum_posts', "user_id=$user_id");
-                $p_photo = dbRowsCount('cms_photo_files', "user_id=$user_id AND published = 1");
-                $p_privphoto = dbRowsCount('cms_user_photos', "user_id=$user_id");
-                $p_karma = dbGetField('cms_user_profiles', "user_id=$user_id", 'karma');
-                while ($award = mysql_fetch_assoc($rs)){
-                    if (!dbRowsCount('cms_user_awards', "user_id=$user_id AND award_id={$award['id']}")) {
+            $rs = $inDB->query($sql);
+            if ($inDB->num_rows($rs)) {
+
+                $p_content   = $inDB->rows_count('cms_content', "user_id=$user_id AND published = 1");
+                $p_comment   = $inDB->rows_count('cms_comments', "user_id=$user_id AND published = 1");
+                $p_blog      = $inDB->rows_count('cms_blog_posts', "user_id=$user_id AND published = 1");
+                $p_forum     = $inDB->rows_count('cms_forum_posts', "user_id=$user_id");
+                $p_photo     = $inDB->rows_count('cms_photo_files', "user_id=$user_id AND published = 1");
+                $p_privphoto = $inDB->rows_count('cms_user_photos', "user_id=$user_id");
+                $p_karma     = $inDB->get_field('cms_user_profiles', "user_id=$user_id", 'karma');
+
+                while ($award = $inDB->fetch_assoc($rs)){
+                    if (!$inDB->rows_count('cms_user_awards', "user_id=$user_id AND award_id={$award['id']}")) {
                         $granted = ($award['p_content'] <= $p_content) &&
                                    ($award['p_comment'] <= $p_comment) &&
                                    ($award['p_blog'] <= $p_blog) &&
@@ -1061,8 +1138,20 @@ class cmsUser {
                             $award_id = $award['id'];
                             $sql = "INSERT INTO cms_user_awards (user_id, pubdate, title, description, imageurl, from_id, award_id)
                                     VALUES ('$user_id', NOW(), '$title', '$description', '$imageurl', '0', '$award_id')";
-                            $inDB->query($sql) ;
-                            self::sendMessage(USER_UPDATER, $user_id, '[b]Получена награда:[/b] [url='.cmsUser::getProfileURL($user['login']).']'.$award['title'].'[/url]');
+                            $inDB->query($sql);
+							$award_id = $inDB->get_last_id('cms_user_awards');
+							//регистрируем событие
+							cmsActions::log('add_award', array(
+									'object' => '"'.$title.'"',
+									'user_id' => $user_id,
+									'object_url' => '',
+									'object_id' => $award_id,
+									'target' => '',
+									'target_url' => '',
+									'target_id' => 0, 
+									'description' => '<img src="/images/users/awards/'.$imageurl.'" border="0" alt="'.$description.'">'
+							));
+                            self::sendMessage(USER_UPDATER, $user_id, '<b>Получена награда:</b> <a href="'.cmsUser::getProfileURL($user['login']).'">'.$award['title'].'</a>');
                         }
                     }
                 }
@@ -1082,11 +1171,19 @@ class cmsUser {
      * @return bool
      */
     public static function sendMessage($sender_id, $receiver_id, $message){
+        
         $inDB = cmsDatabase::getInstance();
+
+        $message = $inDB->escape_string(stripslashes(str_replace(array('\r', '\n'), ' ', $message)));
+
         $sql = "INSERT INTO cms_user_msg (to_id, from_id, senddate, is_new, message)
                 VALUES ('$receiver_id', '$sender_id', NOW(), 1, '$message')";
         $inDB->query($sql);
-        return true;
+
+        $msg_id = $inDB->get_last_id('cms_user_msg');
+
+        return $msg_id ? $msg_id : false;
+        
     }
 
 // ============================================================================ //
@@ -1118,7 +1215,7 @@ class cmsUser {
     public static function subscribe($user_id, $target, $target_id, $subscribe=true){
         $inDB = cmsDatabase::getInstance();
         if ($subscribe){
-            if (!dbRowsCount('cms_subscribe', "user_id = $user_id AND target = '$target' AND target_id = $target_id")){
+            if (!$inDB->rows_count('cms_subscribe', "user_id = $user_id AND target = '$target' AND target_id = $target_id")){
                 $sql = "INSERT INTO cms_subscribe (user_id, target, target_id, pubdate)
                         VALUES ('{$user_id}', '{$target}', '{$target_id}', NOW())";
                 $inDB->query($sql) ;
@@ -1205,7 +1302,7 @@ class cmsUser {
             if ($user['id'] == $inUser->id) { continue; }
             
             if ($user['subscribe_type']=='priv' || $user['subscribe_type']=='both'){
-                $message = 'Произошло обновление: [url='.$comment['target_link'].']'.$comment['target_title'].'[/url]';
+                $message = 'Произошло обновление: <a href="'.$comment['target_link'].'">'.$comment['target_title'].'</a>';
                 self::sendMessage(USER_UPDATER, $user['id'], $message);
             }
 
@@ -1240,23 +1337,23 @@ class cmsUser {
      */
     public static function getGenderLink($user_id, $nickname='', $menuid=0, $gender='m', $login='', $css_style=''){
         $inDB = cmsDatabase::getInstance();
-        $gender_img = '/components/users/images/male.gif';
+        $gender_img = '/components/users/images/male.png';
         if (!$gender){
-            $user = $inDB->get_field('cms_user_profiles', 'user_id='.$user_id, 'gender');
+            $user = $inDB->get_field('cms_user_profiles', "user_id = '$user_id'", 'gender');
         }
         if ($gender){
             switch($gender){
-                case 'm': $gender_img = '/components/users/images/male.gif'; break;
-                case 'f': $gender_img = '/components/users/images/female.gif'; break;
-                default : $gender_img = '/components/users/images/male.gif'; break;
+                case 'm': $gender_img = '/components/users/images/male.png'; break;
+                case 'f': $gender_img = '/components/users/images/female.png'; break;
+                default : $gender_img = '/components/users/images/male.png'; break;
             }
         }
         if (!$nickname || !$login){
-            $user       = $inDB->get_fields('cms_users', 'id='.$user_id, 'nickname, login');
+            $user       = $inDB->get_fields('cms_users', "id = '$user_id'", 'nickname, login');
             $nickname   = $user['nickname'];
             $login      = $user['login'];
         }
-        return '<a style="height:16px; line-height:16px; background:url('.$gender_img.') no-repeat left center; padding-left:18px; '.$css_style.'" href="'.cmsUser::getProfileURL($login).'" class="user_gender_link">'.$nickname.'</a>';
+        return '<a style="padding:1px; height:16px; line-height:16px; background:url('.$gender_img.') no-repeat left center; padding-left:18px; '.$css_style.'" href="'.cmsUser::getProfileURL($login).'" class="user_gender_link">'.$nickname.'</a>';
     }
 
 // ============================================================================ //
@@ -1271,7 +1368,7 @@ class cmsUser {
         
         $inDB = cmsDatabase::getInstance();
 
-        $sql = "SELECT *
+        $sql = "SELECT imageurl, title
                 FROM cms_user_photos
                 WHERE user_id = $user_id
                 ORDER BY title ASC";
@@ -1295,7 +1392,7 @@ class cmsUser {
 // ============================================================================ //
 
     public static function getProfileURL($user_login) {
-        return HOST . '/' . self::PROFILE_LINK_PREFIX . urlencode($user_login);
+        return '/' . self::PROFILE_LINK_PREFIX . urlencode($user_login);
     }
 
 // ============================================================================ //
@@ -1329,6 +1426,143 @@ class cmsUser {
         
         $inDB->query("UPDATE cms_user_profiles SET stats = '{$stats_yaml}' WHERE user_id={$user_id}");
         
+    }
+
+// ============================================================================ //
+// ============================================================================ //
+
+    /**
+     * Запоминает текущий URI в сессии и перенаправляет пользователя на форму логина
+     */
+    public static function goToLogin(){
+
+        $inCore = cmsCore::getInstance();
+        $_SESSION['auth_back_url'] = $_SERVER['REQUEST_URI'];
+
+        $inCore->redirect('/login');
+
+    }
+
+// ============================================================================ //
+// ============================================================================ //
+
+    /**
+     * Сохраняет переменную в сессии
+     * @param str $param Название переменной
+     * @param mixed $value Значение
+     * @return bool
+     */
+    public static function sessionPut($param, $value){
+        $_SESSION['icms'][$param] = $value;
+        return true;
+    }
+
+    /**
+     * Извлекает переменную из сессии
+     * @param str $param Название переменной
+     * @return bool
+     */
+    public static function sessionGet($param){
+        if (isset($_SESSION['icms'][$param])){
+            return $_SESSION['icms'][$param];
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Удаляет переменную из сессии
+     * @param str $param Название переменной
+     */
+    public static function sessionDel($param){
+        unset($_SESSION['icms'][$param]);
+    }
+
+// ============================================================================ //
+// ============================================================================ //
+
+    /**
+     * Возвращает список всех активных пользователей
+     * @return array
+     */
+    public static function getAllUsers(){
+
+        $inDB = cmsDatabase::getInstance();
+
+        return $inDB->get_table('cms_users', 'id > 0 AND is_locked = 0 AND is_deleted = 0');
+
+    }
+
+    /**
+     * Возвращает название группы пользователей
+     * @param int $group_id
+     * @return str
+     */
+    public static function getGroupTitle($group_id){
+
+        $inDB = cmsDatabase::getInstance();
+
+        return $inDB->get_field('cms_user_groups', "id='{$group_id}'", 'title');
+
+    }
+
+    /**
+     * Возвращает список групп пользователей
+     * @param bool $no_guests Если TRUE, группа "Гости" не выводится
+     * @return array
+     */
+    public static function getGroups($no_guests=false){
+
+        $inDB = cmsDatabase::getInstance();
+
+        $groups = array();
+
+        $sql = "SELECT id, title, alias, is_admin, access
+                FROM cms_user_groups\n";
+
+        if ($no_guests){
+            $sql .= "WHERE alias <> 'guest'\n";
+        }
+
+        $sql .= "ORDER BY is_admin ASC";
+
+        $result = $inDB->query($sql);
+
+        if ($inDB->num_rows($result)){
+            while($group = $inDB->fetch_assoc($result)){
+				$groups[] = $group;
+            }
+        }
+
+        return $groups;
+
+    }
+
+    /**
+     * Возвращает пользователей в указанной группе
+     * @param int $group_id
+     * @return array 
+     */
+    public static function getGroupMembers($group_id){
+
+        $inDB = cmsDatabase::getInstance();
+
+        $users = array();
+
+        $sql = "SELECT id, nickname, login
+                FROM cms_users
+				WHERE group_id='{$group_id}' AND is_deleted=0";
+
+        $result = $inDB->query($sql);
+
+        if ($inDB->num_rows($result)){
+            while($user = $inDB->fetch_assoc($result)){
+				$users[] = $user;
+            }
+        }
+
+        return $users;
+
     }
 
 // ============================================================================ //

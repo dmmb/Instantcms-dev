@@ -1,14 +1,15 @@
 <?php
-/*********************************************************************************************/
-//                                                                                           //											 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 		  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 			    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 /* 
@@ -16,7 +17,7 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * e-mail: firs.yura@gmail.com
  * site: firs.org.ua
  */
-$_LANG['SORTING_PHOTOS']          ='Сортировка фотографий';
+$_LANG['SORTING_PHOTOS']          ='Сортировать';
 $_LANG['ORDERBY_TITLE']           ='По алфавиту';
 $_LANG['ORDERBY_DATE']            ='По дате';
 $_LANG['ORDERBY_RATING']          ='По рейтингу';
@@ -59,7 +60,6 @@ $_LANG['HAVE_ONLY']               ='а имеется только';
 $_LANG['WANT_SEE']                ='Хотите посмотреть';
 $_LANG['HISTORY_YOUR_KARMA']      ='историю своей кармы';
 $_LANG['YOU_CANT_ADD_PHOTO']      ='Вы не можете добавлять фото в этот альбом.';
-$_LANG['ADD_PHOTO']               ='Добавить фотографию';
 $_LANG['MAX_UPLOAD_IN_DAY']       ='Достигнут предел загрузок в сутки.';
 $_LANG['CAN_UPLOAD_TOMORROW']     ='Вы сможете добавить фотографии в этот альбом завтра.';
 $_LANG['NEED_REGISTRATION']       ='Требуется регистрация';
@@ -76,14 +76,15 @@ $_LANG['PHOTO_SAVED']             ='Фотография успешно cохранена.';
 $_LANG['BACK_TO_PHOTO']           ='Вернуться к фотографии';
 $_LANG['WAIT_MODERING']           ='Ожидает модерации.';
 
-$_LANG['PHOTO_TITLE']             ='Название фото';
+$_LANG['PHOTO_TITLE']             ='Название фотографии';
+$_LANG['PHOTO_TITLES']            ='Название фотографий';
 $_LANG['PHOTO_DESCRIPTION']       ='Описание фото';
 $_LANG['REPLACE_FILE']            ='Заменить файлом';
 
-$_LANG['SHOW']                      ='Показывать';
-$_LANG['EVERYBODY']                 ='Всем';
-$_LANG['REGISTERED']                ='Зарегистрированным';
-$_LANG['MY_FRIENDS']                ='Моим друзьям';
+$_LANG['SHOW']                    ='Показывать';
+$_LANG['EVERYBODY']               ='Всем';
+$_LANG['REGISTERED']              ='Зарегистрированным';
+$_LANG['MY_FRIENDS']              ='Моим друзьям';
 
 $_LANG['MOVE_PHOTO']              ='Перенести фото';
 $_LANG['PHOTO']                   ='Фото';
@@ -102,8 +103,19 @@ $_LANG['SELECT_FILE_TO_UPLOAD']   ='Выберите файл для загрузки';
 $_LANG['ALLOW_FILE_TYPE']         ='Допустимые типы файлов';
 $_LANG['LOAD']                    ='Загрузить';
 $_LANG['PHOTO_DESC']              ='Описание фотографии';
+$_LANG['PHOTO_DESCS']             ='Описание фотографий';
 $_LANG['SHOW']                    ='Показывать';
 $_LANG['TO_ALL']                  ='Всем';
 $_LANG['TO_REGISTERED']           ='Зарегистрированным';
 $_LANG['TO_MY_FRIEND']            ='Моим друзьям';
+$_LANG['YOU_CAN_UPLOAD']          ='Вы можете загрузить максимум';
+$_LANG['UPLOAD_QUEUE']            ='Очередь загрузки';
+$_LANG['UPLOADED']                ='Загружено';
+$_LANG['GO_TO_UPLOAD']            ='перейти к загрузке';
+$_LANG['ADD_MULTY']               ='добавить много фотографий за раз - мультизагрузка фото';
+$_LANG['PHOTO_DELETED']           ='Фотография успешно удалена';
+$_LANG['PHOTO_MOVED']             ='Фотография успешно перенесена';
+$_LANG['PHOTO_MOVED_ERR']         ='Фотография не перенесена, укажите альбом';
+$_LANG['PHOTO_PLEASE_NOTE']       ='Обратите внимание: если вы укажете название фотографий, то оно будет одно на все загруженные с порядковым номером в конце; если поле оставите пустым, то название фотографии будет браться автоматически из имени файла, исключая расширение.';
+
 ?>

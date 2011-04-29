@@ -1,17 +1,18 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-function comments($target='', $target_id=0){
+function comments($target='', $target_id=0, $labels=array()){
 
     $inCore     = cmsCore::getInstance();
     $inPage     = cmsPage::getInstance();
@@ -23,23 +24,107 @@ function comments($target='', $target_id=0){
 
     //Загружаем настройки компонента
 	$cfg = $inCore->loadComponentConfig('comments');
+
+    // Проверяем включени ли компонент
+	if(!$cfg['component_enabled']) { return false; }
+
     if (!isset($cfg['bbcode'])) { $cfg['bbcode'] = 1; }
     if (!isset($cfg['regcap'])) { $cfg['regcap'] = 1; }
+	if (!isset($cfg['min_karma'])) { $cfg['min_karma'] = 0; }
+	if (!isset($cfg['min_karma_add'])) { $cfg['min_karma_add'] = 0; }
+	if (!isset($cfg['min_karma_show'])) { $cfg['min_karma_show'] = 0; }
+	if(!isset($cfg['cmm_ajax'])) { $cfg['cmm_ajax']=0;	}
+    if(!isset($cfg['max_level'])) { $cfg['max_level']=5;       }
+
+    global $_LANG;
+    $inCore->loadLanguage('components/comments');
+
+	// Значения по умолчанию для надписей
+	$def_labels = array('comments' => $_LANG['COMMENTS'], 'add' => $_LANG['ADD_COMM'], 'rss' => $_LANG['RSS_COMM'], 'not_comments' => $_LANG['NOT_COMMENT_TEXT']);
+	if (!$labels) { $labels = $def_labels; }
 
     //Определяем адрес для редиректа назад
     $back   = $inCore->getBackURL();
     
     $do     = $inCore->request('do', 'str', 'view');
-    global $_LANG;
-
-    $inCore->loadLanguage('components/comments');
 
 //========================================================================================================================//
 //========================================================================================================================//
-    if ($do!='add' && $do!='delete'){
+    if ($do == 'view' && !$target && !$target_id){
+		
+		$inPage->addHeadJS('components/comments/js/comments.js');
+		
+		// Загружаем функции профиля
+		$inCore->includeFile('components/users/includes/usercore.php');
+
+		//  Заголовки и глубиномер
+		$inPage->setTitle($_LANG['COMMENTS']);
+		$inPage->addPathway($_LANG['COMMENTS']);
+		$inPage->backButton(false);
+
+		// Пагинация
+		$perpage = $cfg['perpage'] ? $cfg['perpage'] : 20;
+		$page    = $inCore->request('page', 'int', 1);
+
+		$is_admin = $inCore->userIsAdmin($inUser->id);
+
+		//Загружаем комментарии
+		$comments = array();
+		// Считаем общее число количество комментариев
+		$total = $inDB->rows_count('cms_comments', 'published=1');
+		// Если есть комментарии, выбираем и обрабатываем
+		if ($total){
+
+			$comments_list  = $model->getCommentsAll($page, $perpage);
+			
+			foreach($comments_list as $comment){
+				$next = sizeof($comments);
+				$comments[$next] = $comment;
+				if ($comments[$next]['guestname']) {
+					$comments[$next]['author']      = $comments[$next]['guestname'];
+					$comments[$next]['is_profile']  =false;
+					$comments[$next]['ip']  		= (($cfg['cmm_ip'] == 1 || $cfg['cmm_ip'] == 2) && $comments[$next]['ip']) ? '('.$comments[$next]['ip'].')' : false;
+				} else {
+					$comments[$next]['author']['nickname'] = $comments[$next]['nickname'];
+					$comments[$next]['author']['login'] = $comments[$next]['login'];
+					$comments[$next]['is_profile'] 	= true;
+					$comments[$next]['user_image'] 	= usrImageNOdb($comments[$next]['user_id'], 'small', $comments[$next]['imageurl'], $comments[$next]['is_deleted']);
+					$comments[$next]['ip']  		= ($cfg['cmm_ip'] == 2 && $comments[$next]['ip']) ? '('.$comments[$next]['ip'].')' : false;
+				}
+				$comments[$next]['show'] 	   	= ((!$cfg['min_karma'] || $comments[$next]['votes']>=$cfg['min_karma_show']) || $inCore->userIsAdmin($comments[$next]['user_id']));
+				if ($comments[$next]['votes']>0){
+					$comments[$next]['votes'] = '<span class="cmm_good">+'.$comments[$next]['votes'].'</span>';
+				} elseif ($comments[$next]['votes']<0){
+					$comments[$next]['votes'] = '<span class="cmm_bad">'.$comments[$next]['votes'].'</span>';
+				}
+			}
+		}
+		
+		// Отдаем в шаблон
+		$smarty = $inCore->initSmarty('components', 'com_comments_list_all.tpl');
+
+		$smarty->assign('comments_count', $total);
+		$smarty->assign('comments', $comments);
+		$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/comments/page-%page%'));
+		$smarty->assign('is_user', $inUser->id);
+		$smarty->assign('cfg', $cfg);
+		$smarty->assign('is_admin', $is_admin);
+		$smarty->assign('url', $_SERVER['REQUEST_URI']);
+
+		$smarty->display('com_comments_list_all.tpl');
+
+    }
+
+//========================================================================================================================//
+//========================================================================================================================//
+    if ($do!='add' && $do!='edit' && $do!='delete' && $target && $target_id){
 
         $inPage->addHeadJS('includes/jquery/autogrow/jquery.autogrow.js');
         $inPage->addHeadJS('components/comments/js/comments.js');
+
+        if ($cfg['bbcode'] || $cfg['smiles']){
+            $inPage->addHeadJS('core/js/smiles.js');
+        }
 
         $cm_message     = isset($_SESSION['cm_message']) ? $_SESSION['cm_message'] : '';
         $cm_error       = isset($_SESSION['cm_error']) ? $_SESSION['cm_error'] : '';
@@ -47,18 +132,84 @@ function comments($target='', $target_id=0){
         unset($_SESSION['cm_message']);
         unset($_SESSION['cm_error']);
 
-        if ($cfg['bbcode']){
-            $inPage->addHeadJS('core/js/smiles.js');
-        }
+		$comments_count = $model->getCommentsCount($target, $target_id);
+		
+		$is_admin           = $inCore->userIsAdmin($inUser->id);
+		$user_can_delete    = $inCore->isUserCan('comments/delete');
+		$user_can_moderate  = $inCore->isUserCan('comments/moderate');
+
+		if (!$cfg['cmm_ajax']){
+			
+			//activate profiles support
+			$inCore->includeFile('components/users/includes/usercore.php');	
+			
+			//LIST COMMENTS
+	
+			$comments = array();
+			$tree     = array();			
+			
+			$comments_list  = $model->getComments($target, $target_id, $cfg);
+			
+			foreach($comments_list as $comment){
+				$next = sizeof($comments);
+				$comments[$next] = $comment;
+				$comments[$next]['level'] = 0;        
+				if ($comments[$next]['guestname']) {
+					$comments[$next]['author']      = $comments[$next]['guestname'];
+					$comments[$next]['is_profile']  = false;
+					$comments[$next]['ip']  		= (($cfg['cmm_ip'] == 1 || $cfg['cmm_ip'] == 2) && $comments[$next]['ip']) ? '('.$comments[$next]['ip'].')' : false;
+				} else {
+					$comments[$next]['author']['nickname'] = $comments[$next]['nickname'];
+					$comments[$next]['author']['login'] = $comments[$next]['login'];
+					$comments[$next]['is_profile'] 	= true;
+					$comments[$next]['user_image'] 	= usrImageNOdb($comments[$next]['user_id'], 'small', $comments[$next]['imageurl'], $comments[$next]['is_deleted']);
+					$comments[$next]['ip']  		= ($cfg['cmm_ip'] == 2 && $comments[$next]['ip']) ? '('.$comments[$next]['ip'].')' : false;
+				}
+				$comments[$next]['show'] 	   	= ((!$cfg['min_karma'] || $comments[$next]['votes']>=$cfg['min_karma_show']) || $inCore->userIsAdmin($comments[$next]['user_id']));
+				if ($comments[$next]['votes']>0){
+					$comments[$next]['votes'] = '<span class="cmm_good">+'.$comments[$next]['votes'].'</span>';
+				} elseif ($comments[$next]['votes']<0){
+					$comments[$next]['votes'] = '<span class="cmm_bad">'.$comments[$next]['votes'].'</span>';
+				}
+				$comments[$next]['is_my'] = ($inUser->id==$comments[$next]['user_id']);
+				if ($inUser->id){
+					$comments[$next]['is_voted'] = ($comments[$next]['is_my'] || $inDB->rows_count('cms_ratings', 'item_id='.$comments[$next]['id'].' AND target=\'comment\' AND user_id='.$inUser->id, 1));
+				}
+            }
+
+			$model->buildTree(0, 0, $comments, $tree);
+			
+			ob_start();
+		
+			$smarty = $inCore->initSmarty('components', 'com_comments_list.tpl');
+			$smarty->assign('comments_count', $comments_count);
+			$smarty->assign('comments', $tree);
+			$smarty->assign('user_can_moderate', $user_can_moderate);
+			$smarty->assign('user_can_delete', $user_can_delete);
+			$smarty->assign('is_admin', $is_admin);
+			$smarty->assign('is_user', $inUser->id);
+			$smarty->assign('cfg', $cfg);
+			$smarty->assign('labels', $labels);
+			$smarty->assign('target', $target);
+			$smarty->assign('target_id', $target_id);
+			$smarty->assign('url', $_SERVER['REQUEST_URI']);
+		
+			$smarty->display('com_comments_list.tpl');
+		
+			$html = ob_get_clean();
+		}
 
         $smarty = $inCore->initSmarty('components', 'com_comments_view.tpl');
         $smarty->assign('cm_message', $cm_message);
         $smarty->assign('cm_error', $cm_error);
+		$smarty->assign('comments_count', $comments_count);
         $smarty->assign('target', $target);
         $smarty->assign('target_id', $target_id);
         $smarty->assign('is_admin', $is_admin);
+		$smarty->assign('labels', $labels);
         $smarty->assign('is_user', $inUser->id);
         $smarty->assign('cfg', $cfg);
+		$smarty->assign('html', $html);
         $smarty->assign('add_comment_js', "addComment('".md5(session_id())."', '".$target."', '".$target_id."', 0)");
         $smarty->assign('user_subscribed', cmsUser::isSubscribed($inUser->id, $target, $target_id));
         $smarty->display('com_comments_view.tpl');
@@ -75,14 +226,24 @@ function comments($target='', $target_id=0){
         $error          = '';
 
         $captha_code    = $inCore->request('code', 'str', '');
-        $content        = $inCore->request('content', 'str', '');
         $guestname      = $inCore->request('guestname', 'str', '');
         $user_id        = $inCore->request('user_id', 'int', 0);
+		
+		if ($inCore->isUserCan('comments/bbcode') && ($cfg['bbcode'] || $cfg['smiles'])) {	
+            $content        = $inCore->request('content', 'html', '');
+            $content_bb     = $inDB->escape_string($content);
+            $content        = $inCore->parseSmiles($content, true);
+            $content        = $inDB->escape_string($content);
+		} else {
+			$content        = $inCore->request('content', 'str', '');
+            $content_bb     = '';
+		}
 
         $need_captcha   = (!$inUser->id || ($inUser->id && $cfg['regcap']==1));
 
         $target         = $inCore->request('target', 'str', '');
         $target_id      = $inCore->request('target_id', 'int', 0);
+		$ip             = $_SERVER['REMOTE_ADDR'];
 
         if (!$target || !$target_id) { $error = $_LANG['ERR_UNKNOWN_TARGET']; }
 
@@ -90,7 +251,7 @@ function comments($target='', $target_id=0){
         if ($user_id != $inUser->id) { $error = $_LANG['ERR_DEFINE_USER']; }
         if (!$guestname && !$user_id) { $error = $_LANG['ERR_USER_NAME']; }
         if (!$content) { $error = $_LANG['ERR_COMMENT_TEXT']; }
-        if ($need_captcha && !$inCore->checkCaptchaCode($_REQUEST['code'])) { $error = $_LANG['ERR_CAPTCHA']; }
+        if ($need_captcha && !$inCore->checkCaptchaCode($inCore->request('code', 'str'))) { $error = $_LANG['ERR_CAPTCHA']; }
 
         // получаем массив со ссылкой и заголовком цели комментария
         // для этого:
@@ -101,7 +262,9 @@ function comments($target='', $target_id=0){
 
         //  2. подключим модель этого компонента
         $inCore->loadModel($target_component);
-        eval('$target_model = new cms_model_'.$target_component.'();');
+        $model_class  = 'cms_model_'.$target_component;
+	    $target_model = new $model_class();
+
         if (!$target_model) { $error = $_LANG['ERR_UNKNOWN_TARGET'] . ' #2'; }
 
         //  3. запросим массив $target[link, title] у метода getCommentTarget модели
@@ -122,10 +285,23 @@ function comments($target='', $target_id=0){
                                                     'target_id'=>$target_id,
                                                     'guestname'=>$guestname,
                                                     'content'=>$content,
+                                                    'content_bbcode'=>$content_bb,
                                                     'published'=>$cfg['publish'],
                                                     'target_title'=>$target_data['title'], 
-                                                    'target_link'=>$target_data['link']
+                                                    'target_link'=>$target_data['link'], 
+                                                    'ip'=>$ip
                                                   ));
+
+            //регистрируем событие
+            cmsActions::log('add_comment', array(
+                'object' => 'комментарий',
+                'object_url' => $target_data['link'] . '#c' . $comment_id,
+                'object_id' => $comment_id,
+                'target' => $target_data['title'],
+                'target_url' => $target_data['link'],
+                'target_id' => 0, 
+                'description' => strip_tags( strlen(strip_tags($content))>140 ? substr($content, 0, 140) : $content )
+            ));
 
 			//подписываем пользователя на обновления, если нужно
             if ($inUser->id && $inCore->inRequest('subscribe')){
@@ -142,7 +318,7 @@ function comments($target='', $target_id=0){
 			if (!$cfg['publish']){
 				$_SESSION['cm_message'] = $_LANG['COMM_PREMODER_TEXT'];
 			}
-
+			$inConf = cmsConfig::getInstance();
 			//отправляем админу уведомление о комментарии на e-mail, если нужно
 			if($cfg['email']) {
 				$mailmsg = $_LANG['DATE'].": ".date('d m Y (H:i)')."\n";
@@ -150,11 +326,13 @@ function comments($target='', $target_id=0){
                 $mailmsg .= "-------------------------------------------------------\n";
 				$mailmsg .= strip_tags($content);
 				$mailmsg = wordwrap($mailmsg, 70);
-				$inCore->mailText($cfg['email'], $_LANG['EMAIL_SUDJECT_NEW_COMM'], $mailmsg);
+				$email_subj = str_replace('{sitename}', $inConf->sitename, $_LANG['EMAIL_SUDJECT_NEW_COMM']);
+				$inCore->mailText($cfg['email'], $email_subj, $mailmsg);
 			}
 
 			//если коммент для блога или фотографии, отправляем автору уведомление на e-mail
 			if($target=='userphoto' || $target=='blog' || $target=='photo'){
+				
 				switch($target){
 					case 'userphoto':
 						$table      = 'cms_user_photos';
@@ -169,7 +347,7 @@ function comments($target='', $target_id=0){
 					case 'blog':
 						$table      = 'cms_blog_posts';
 						$subj       = $_LANG['YOUR_POST'];
-						$targetlink = 'http://'.$_SERVER['HTTP_HOST'].'/%post_url%#c'.$comment_id;
+						$targetlink = 'http://'.$_SERVER['HTTP_HOST'].'%post_url%#c'.$comment_id;
 					break;
 				}
 
@@ -179,7 +357,6 @@ function comments($target='', $target_id=0){
 				if ($author){
 					$needmail   = $model->isAuthorNeedMail($author['id']);
 					if ($needmail && $user_id != $author['id']){
-							$inConf = cmsConfig::getInstance();
 
 							$postdate   = date('d/m/Y H:i:s');
 							$to_email   = $author['email'];
@@ -212,6 +389,55 @@ function comments($target='', $target_id=0){
         if ($error) { $_SESSION['cm_error'] = $error; }
 
         $inCore->redirect($back.'#c');
+
+	}
+
+//========================================================================================================================//
+//========================================================================================================================//
+	if ($do=='edit'){
+
+        //Удаляем сообщение об ошибках комментариев
+        unset($_SESSION['cm_error']);
+
+        $error          = '';
+
+		if ($inCore->isUserCan('comments/bbcode') && ($cfg['bbcode'] || $cfg['smiles'])) {
+            $content        = $inCore->request('content', 'html', '');
+            $content_bb     = $inDB->escape_string($content);
+            $content        = $inCore->parseSmiles($content, true);
+            $content        = $inDB->escape_string($content);
+		} else {
+			$content        = $inCore->request('content', 'str', '');
+            $content_bb     = '';
+		}
+
+        $comment_id     = $inCore->request('comment_id', 'int', 0);
+
+        //Проверяем ошибки
+        if (!$comment_id) { $error = $_LANG['ERR_UNKNOWN_TARGET']; }
+        if (!$content) { $error = $_LANG['ERR_COMMENT_TEXT']; }
+
+        $comment = $model->getComment($comment_id, $cfg);
+
+        if ((!$comment['is_editable'] || $comment['user_id']!=$inUser->id) && !$inUser->is_admin) {
+            $error = $_LANG['ERR_UNKNOWN_TARGET'];
+        }
+
+		//Если ошибок не было,
+        //обновляем комментарий в базе
+        if(!$error){
+
+			//помещаем комментарий в базу
+            $model->updateComment($comment_id, array(
+                'content'=>$content,
+                'content_bbcode'=>$content_bb
+            ));
+
+		}
+
+        if ($error) { $_SESSION['cm_error'] = $error; }
+
+        $inCore->redirect($back.'#c'.$comment_id);
 
 	}
 

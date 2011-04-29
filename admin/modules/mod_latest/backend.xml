@@ -10,7 +10,8 @@
         <param type="flag" name="showdate" title="Показывать даты и авторов" default="on" />
         <param type="flag" name="showcom" title="Показывать число комментариев" default="on" />
         <param type="flag" name="showrss" title="Показывать ссылку на RSS" default="on" />
-        <param type="list" name="cat_id" title="Материалы из раздела" tree="1" source="cms_category" />
+        <param type="list_db" name="cat_id" title="Материалы из раздела" src="cms_category" src_title="title" src_value="id" tree="1" />
         <param type="flag" name="subs" title="Вместе с подразделами" default="off" />
+		<param type="flag" name="is_pag" title="Использовать пагинацию" default="on" />
     </params>
 </backend>

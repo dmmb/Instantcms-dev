@@ -1,12 +1,15 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
@@ -83,6 +86,9 @@ function search(){
 
 	$menuid     = $inCore->menuId();
 	$cfg        = $inCore->loadComponentConfig('search');
+    
+	// Проверяем включен ли компонент
+	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     $query  = $inCore->request('query', 'str', '');
     $look   = $inCore->request('look', 'str', 'allwords');
@@ -140,7 +146,7 @@ function search(){
             $inCore->includeFile('includes/stemmer/stemmer.php');
             $stemmer = new Lingua_Stem_Ru();
 
-            $words = split(' ', $query);
+            $words = explode(' ', $query);
 
             //SEARCH IN THREADS TITLES
             if ($look == 'anyword' || $look == 'allwords'){
@@ -166,12 +172,13 @@ function search(){
 					if (file_exists($spfile)){
 						if (in_array($component['link'], $cfg['comp'])){
 							include $spfile;
-							eval('search_'.$component['link'].'("'.$against.'", "'.$look.'", "'.$mode.'");');
+							$search_func = 'search_' . $component['link'];
+							call_user_func($search_func, $against, $look, $mode);
 						}
 					}
 				}
 			}
-					
+				
 			//OUTPUT SEARCH RESULTS	
 			$sql = "SELECT DISTINCT *
 					FROM cms_search
@@ -203,7 +210,7 @@ function search(){
                               </div>';
                         echo '<div style="margin-top:4px;margin-left:40px">
                                 <a style="color:gray" href="'.$item['placelink'].'">'.$item['place'].'</a>
-                                &mdash <span style="color:green">http://'.$_SERVER['HTTP_HOST'].$item['link'].'</span>
+                                &mdash; <span style="color:green">http://'.$_SERVER['HTTP_HOST'].$item['link'].'</span>
                               </div>';
                     echo '</div>';
                     
@@ -230,9 +237,11 @@ function search(){
 		if (!strlen($query)){
 			echo '<p>'.$_LANG['EMPTY_QUERY'].'</p>';
 		} else {
+
+            $query = urldecode($query);
 		
 			if (isset($cfg['perpage'])) { $perpage = $cfg['perpage']; } else { $perpage = 20; }				
-			if (isset($_REQUEST['page'])) { $page = abs((int)$_REQUEST['page']); } else { $page = 1; }		
+			if (isset($_REQUEST['page'])) { $page = $inCore->request('page', 'int'); } else { $page = 1; }		
 		
 			echo '<p style="padding:5px;padding-bottom:0px"><strong>'.$_LANG['SEARCH_BY_TAG'].':</strong> &laquo;'.$query.'&raquo;</p>';
 		

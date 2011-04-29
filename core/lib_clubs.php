@@ -1,18 +1,21 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 function clubRootAlbumId($club_id){
     $inDB = cmsDatabase::getInstance();
-	return dbGetField('cms_photo_albums', "parent_id=0 AND NSDiffer='club".$club_id."'", 'id');
+	return $inDB->get_field('cms_photo_albums', "parent_id=0 AND NSDiffer='club".$club_id."'", 'id');
 }
 
 function clubRepairAlbums(){
@@ -23,13 +26,12 @@ function clubRepairAlbums(){
 
 function setClubRating($club_id){
     $inDB = cmsDatabase::getInstance();
-	$sql = "SELECT SUM( r.points ) AS rating
-			FROM cms_user_clubs u, cms_clubs c, cms_ratings r
-			LEFT JOIN cms_photo_files f ON r.item_id = f.id AND r.target = 'photo'
-			LEFT JOIN cms_blog_posts p ON r.item_id = p.id AND r.target = 'blogpost'
-			WHERE u.club_id = $club_id AND (f.user_id = u.user_id OR p.user_id = u.user_id)";
+	$sql = "SELECT SUM( u.rating ) AS rating
+			FROM cms_user_clubs c
+			LEFT JOIN cms_users u ON u.id = c.user_id
+			WHERE c.club_id = '$club_id'";
 	$rs = $inDB->query($sql);
-	if (@$inDB->num_rows($rs)){
+	if ($inDB->num_rows($rs)){
 		$data = $inDB->fetch_assoc($rs);
 		$rating = $data['rating'] * 5;
 	} else {
@@ -84,12 +86,12 @@ function cmsUserClubs($user_id){
 
 function clubBlogId($club_id){
     $inDB = cmsDatabase::getInstance();
-	$id = dbGetField('cms_blogs', "owner='club' AND user_id=$club_id", 'id');	
+	$id   = $inDB->get_field('cms_blogs', "owner='club' AND user_id=$club_id", 'id');	
 	if (!$id){
 			$sql = "INSERT INTO cms_blogs (user_id, title, pubdate, allow_who, view_type, showcats, ownertype, premod, forall, owner)
 					VALUES ('$club_id', 'Блог', NOW(), 'all', 'list', 1, 'multi', 0, 0, 'club')";	
 			$inDB->query($sql);
-			$id = dbGetField('cms_blogs', "owner='club' AND user_id=$club_id", 'id');	
+			$id = $inDB->get_field('cms_blogs', "owner='club' AND user_id=$club_id", 'id');	
 	}
 	return $id;
 }
@@ -107,16 +109,17 @@ function clubBlogContent($blog_id, $is_admin=false, $is_moder=false, $is_member=
 
 	$html = '';
 	$sql = "SELECT p.*, b.seolink as bloglink, p.pubdate as fpubdate
-			FROM cms_blog_posts p, cms_blogs b
-			WHERE p.blog_id = b.id AND p.blog_id = $blog_id AND p.published = 1
+			FROM cms_blog_posts p
+			LEFT JOIN cms_blogs b ON b.id = p.blog_id
+			WHERE p.blog_id = $blog_id AND p.published = 1
 			ORDER BY pubdate DESC
 			LIMIT 10";
 
 	$rs = $inDB->query($sql);
 
-	if ($inDB->num_rows($rs)){
+	if ($inDB->num_rows($rs) || $blog_id){
 
-		$on_moderate = dbRowsCount('cms_blog_posts', 'blog_id='.$blog_id.' AND published = 0');
+		$on_moderate = $inDB->rows_count('cms_blog_posts', 'blog_id='.$blog_id.' AND published = 0');
 		$html = '<ul>';
 		while ($post = $inDB->fetch_assoc($rs)){
             $bloglink = $post['bloglink'];
@@ -128,7 +131,7 @@ function clubBlogContent($blog_id, $is_admin=false, $is_moder=false, $is_member=
 		if (($is_admin || $is_moder) && $on_moderate){
 			$html .= '<li><a class="on_moder" href="/blogs/'.$blog_id.'/moderate.html">Записи на модерацию</a> ('.$on_moderate.')</li>';
 		}
-		$html .= '<li class="all"><a href="'.$model->getBlogURL(null, $bloglink).'">Все записи</a> ('.dbRowsCount('cms_blog_posts', "blog_id=$blog_id AND published=1").')</li>';
+		$html .= '<li class="all"><a href="'.$model->getBlogURL(null, $bloglink).'">Все записи</a> ('.$inDB->rows_count('cms_blog_posts', "blog_id=$blog_id AND published=1").')</li>';
 		$html .= '</ul>';
 
 	} else {
@@ -148,64 +151,76 @@ function clubBlogContent($blog_id, $is_admin=false, $is_moder=false, $is_member=
 }
 
 function clubPhotoAlbums($club_id, $is_admin=false, $is_moder=false, $is_member=false){
+    $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
 	if (!$club_id) { exit; }	
 
-	$html = '';
-	$sql = "SELECT a.id, a.title, IFNULL(COUNT(f.id), 0) as content_count
+	$sql = "SELECT a.id, a.title, a.pubdate, f.file, IFNULL(COUNT(f.id), 0) as content_count
 			FROM cms_photo_albums a
 			LEFT JOIN cms_photo_files f ON f.album_id = a.id AND f.published = 1
-			WHERE a.NSDiffer='club$club_id' AND a.user_id=$club_id AND a.parent_id > 0
+			WHERE a.NSDiffer='club$club_id' AND a.user_id = '$club_id' AND a.parent_id > 0
 			GROUP BY a.id
-			ORDER BY f.pubdate DESC";
+			ORDER BY a.id DESC LIMIT 6";
 					
 	$rs = $inDB->query($sql);
-	$html = '<ul id="albums_list">';
+
+	$albums = array();
+
 		if ($inDB->num_rows($rs)){
 				while ($album = $inDB->fetch_assoc($rs)){
-					$on_moderate = ''; $delete='';
+				$on_moderate  = '';
+				$delete       = '';
+				$add_to_album = '';
 					if ($is_admin || $is_moder){
-						$unpub = dbRowsCount('cms_photo_files', 'album_id='.$album['id'].' AND published = 0');
-						if ($unpub) { $on_moderate = ' <span class="on_moder">(На модерации &mdash; '.$unpub.')</span>'; }
-						$delete = ' <a class="delete" title="Удалить альбом" href="javascript:void(0)" onclick="javascript:deleteAlbum('.$album['id'].', \''.$album['title'].'\', '.$club_id.')">X</a>';
+						$unpub = $inDB->rows_count('cms_photo_files', 'album_id='.$album['id'].' AND published = 0');
+					if ($unpub) { 
+						$album['on_moderate'] = $unpub;
 					}
-					$tday = date("d-m-Y");
-					$today = dbRowsCount('cms_photo_files', 'published=1 AND \''.$tday.'\'=DATE_FORMAT(pubdate, \'%d-%m-%Y\') AND album_id='.$album['id']);
-					if ($today) { $new = ' <span class="new">+'.$today.'</span>'; } else { $new = ''; }
-					$html .= '<li class="club_album" id="'.$album['id'].'"><a href="/photos/'.$album['id'].'">'.$album['title'].'</a> ('.$album['content_count'].$new.') '.$on_moderate.$delete;
 				}
-		} else {
-			$html .= '<li class="no_albums">В клубе нет фотоальбомов.</li>';
+				$album['file']    = $album['file'] ? $album['file'] : 'no_image.png';
+				$album['pubdate'] = $inCore->dateFormat($album['pubdate']);
+				$albums[] = $album;
 		}
-	$html .= '</ul>';	
-	return $html;
+	}
+
+    ob_start();
+
+    $smarty = $inCore->initSmarty('components', 'com_clubs_albums.tpl');
+    $smarty->assign('albums', $albums);
+	$smarty->assign('club_id', $club_id);
+    $smarty->assign('is_admin', $is_admin);
+	$smarty->assign('is_moder', $is_moder);
+	$smarty->assign('is_member', $is_member);
+    $smarty->display('com_clubs_albums.tpl');
+
+    return ob_get_clean();
 }
 
 function clubUserIsRole($club_id, $user_id, $role='member'){
     $inDB = cmsDatabase::getInstance();
 	if (!$club_id) { return; }
-	return $inDB->rows_count('cms_user_clubs', "club_id=$club_id AND user_id=$user_id AND role='$role'")? true: false;
+	return $inDB->rows_count('cms_user_clubs', "club_id = '$club_id' AND user_id = '$user_id' AND role='$role'")? true: false;
 }
 
 function clubUserIsMember($club_id, $user_id){
     $inDB = cmsDatabase::getInstance();
 	if (!$club_id) { return; }
-	return $inDB->rows_count('cms_user_clubs', "club_id=$club_id AND user_id=$user_id")? true: false;
+	return $inDB->rows_count('cms_user_clubs', "club_id = '$club_id' AND user_id = '$user_id'")? true: false;
 }
 
 function clubUserIsAdmin($club_id, $user_id){
     $inDB = cmsDatabase::getInstance();
 	if (!$club_id) { return; }
-	return $inDB->rows_count('cms_clubs', "id=$club_id AND admin_id=$user_id")? true: false;
+	return $inDB->rows_count('cms_clubs', "id = '$club_id' AND admin_id = '$user_id'")? true: false;
 }
 
 function clubModerators($club_id){
     $inDB = cmsDatabase::getInstance();
 	if (!$club_id) { exit; }
 	$moders = array();
-	$sql = "SELECT c.* 
-			FROM cms_user_clubs c, cms_users u
-			WHERE c.club_id = $club_id AND c.user_id = u.id AND u.is_deleted = 0 AND u.is_locked = 0 AND c.role = 'moderator'";
+	$sql = "SELECT c.user_id
+			FROM cms_user_clubs c
+			WHERE c.club_id = '$club_id' AND c.role = 'moderator'";
 	$rs = $inDB->query($sql);
 	if ($inDB->num_rows($rs)){
 		while ($u = $inDB->fetch_assoc($rs)){
@@ -221,10 +236,9 @@ function clubMembers($club_id){
     $inDB = cmsDatabase::getInstance();
 	if (!$club_id) { exit; }
 	$members = array();
-	$sql = "SELECT c.* 
+	$sql = "SELECT c.user_id 
 			FROM cms_user_clubs c
-			LEFT JOIN cms_users u ON u.id=c.user_id AND u.is_deleted = 0 AND u.is_locked = 0
-			WHERE c.club_id = $club_id AND c.role = 'member'";
+			WHERE c.club_id = '$club_id' AND c.role = 'member'";
 	$rs = $inDB->query($sql);
 	if ($inDB->num_rows($rs)){
 		while ($u = $inDB->fetch_assoc($rs)){
@@ -240,10 +254,9 @@ function clubTotalMembers($club_id){
     $inDB = cmsDatabase::getInstance();
 	if (!$club_id) { exit; }
 	$members = array();
-	$sql = "SELECT c.* 
+	$sql = "SELECT 1
 			FROM cms_user_clubs c
-			LEFT JOIN cms_users u ON u.id=c.user_id AND u.is_deleted = 0 AND u.is_locked = 0
-			WHERE c.club_id = $club_id AND c.role = 'member'";
+			WHERE c.club_id = '$club_id' AND c.role = 'member'";
 	$rs = $inDB->query($sql);
 	if ($inDB->num_rows($rs)){
 		return $inDB->num_rows($rs) +1; //+1 потому что считаем еще и админа, не только юзеров
@@ -270,7 +283,7 @@ function clubSaveUsers($club_id, $list, $role, $clubtype='public', $cfg=false){
     $inUser = cmsUser::getInstance();
 	if ($list){
         //get current club users list
-        $current_list = dbGetTable('cms_user_clubs', "club_id={$club_id} AND role='{$role}'", 'user_id');
+        $current_list = $inDB->get_table('cms_user_clubs', "club_id={$club_id} AND role='{$role}'", 'user_id');
 
         //delete users which missed in new list
         foreach ($current_list as $key=>$user){
@@ -278,8 +291,8 @@ function clubSaveUsers($club_id, $list, $role, $clubtype='public', $cfg=false){
                 $inDB->query("DELETE FROM cms_user_clubs WHERE club_id={$club_id} AND user_id={$user['user_id']} AND role='{$role}' LIMIT 1");
                 //send notice
                 if($cfg['notify_out'] && ($user_id != $inUser->id)){
-                    $club_title = dbGetField('cms_clubs', 'id='.$club_id, 'title');
-                    cmsUser::sendMessage(USER_UPDATER, $user_id, 'Пользователь [url='.cmsUser::getProfileURL($inUser->login).']'.$inUser->nickname.'[/url] исключил Вас из числа участников клуба [URL=http://'.$_SERVER['HTTP_HOST'].'/clubs/'.$club_id.']'.$club_title.'[/URL].');
+                    $club_title = $inDB->get_field('cms_clubs', 'id='.$club_id, 'title');
+                    cmsUser::sendMessage(USER_UPDATER, $user_id, 'Пользователь <a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a> исключил Вас из числа участников клуба <a href="http://'.$_SERVER['HTTP_HOST'].'/clubs/'.$club_id.'">'.$club_title.'</a>.');
                 }
             }
         }
@@ -287,7 +300,7 @@ function clubSaveUsers($club_id, $list, $role, $clubtype='public', $cfg=false){
         //add new users and update old
 		foreach ($list as $key=>$user_id){
 			$user_id = (int)$user_id;
-            $already = dbGetField('cms_user_clubs', "user_id={$user_id} AND club_id={$club_id}", 'role');
+            $already = $inDB->get_field('cms_user_clubs', "user_id={$user_id} AND club_id={$club_id}", 'role');
             if (!$already){
                 //user first time in this club
                 $sql = "INSERT INTO cms_user_clubs (user_id, club_id, role)
@@ -296,8 +309,8 @@ function clubSaveUsers($club_id, $list, $role, $clubtype='public', $cfg=false){
 
                 //send notice
                 if($cfg['notify_in'] && ($user_id != $inUser->id)){
-                    $club_title = dbGetField('cms_clubs', 'id='.$club_id, 'title');
-                    cmsUser::sendMessage(USER_UPDATER, $user_id, '[b]Получено приглашение в клуб.[/b] Пользователь [url='.cmsUser::getProfileURL($inUser->login).']'.$inUser->nickname.'[/url] добавил Вас в число участников клуба [URL=http://'.$_SERVER['HTTP_HOST'].'/clubs/'.$club_id.']'.$club_title.'[/URL].');
+                    $club_title = $inDB->get_field('cms_clubs', 'id='.$club_id, 'title');
+                    cmsUser::sendMessage(USER_UPDATER, $user_id, '<b>Получено приглашение в клуб.</b> Пользователь <a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a> добавил Вас в число участников клуба <a href="http://'.$_SERVER['HTTP_HOST'].'/clubs/'.$club_id.'">'.$club_title.'</a>.');
                 }
             } else {
                 //user already in club, update his role if necessary
@@ -319,11 +332,13 @@ function clubAdminLink($club_id){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
 	$sql = "SELECT u.id as id, u.nickname as nickname, u.login as login, p.gender as gender
-			FROM cms_clubs c, cms_users u, cms_user_profiles p
-			WHERE c.id = $club_id AND c.admin_id = u.id AND p.user_id = u.id";
-	$rs = @$inDB->query($sql);
+			FROM cms_clubs c
+			LEFT JOIN cms_users u ON u.id = c.admin_id
+			LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+			WHERE c.id = '$club_id'";
+	$rs     = $inDB->query($sql);
 	$html = '';
-	if (@$inDB->num_rows($rs) == 1){
+	if ($inDB->num_rows($rs) == 1){
 		$usr = $inDB->fetch_assoc($rs);
 		$html .= cmsUser::getGenderLink($usr['id'], $usr['nickname'], null, $usr['gender'], $usr['login']);
 	}
@@ -335,8 +350,10 @@ function clubMembersList($club_id){
     $inDB       = cmsDatabase::getInstance();
 	
 	$sql = "SELECT u.id as id, u.nickname as nickname, u.login as login, p.gender as gender
-			FROM cms_user_clubs c, cms_users u, cms_user_profiles p
-			WHERE c.club_id = $club_id AND c.user_id = u.id AND p.user_id = u.id AND u.is_locked = 0 AND u.is_deleted = 0";
+			FROM cms_user_clubs c
+			LEFT JOIN cms_users u ON u.id = c.user_id
+			LEFT JOIN cms_user_profiles p ON p.user_id = u.id
+			WHERE c.club_id = '$club_id'";
 
 	$rs     = $inDB->query($sql);
 	$total  = $inDB->num_rows($rs);

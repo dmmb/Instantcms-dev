@@ -1,28 +1,19 @@
 <link href="/includes/jquery/treeview/jquery.treeview.css" rel="stylesheet" type="text/css" />
 
 <div>
-    <ul id="{$menu}" class="filetree treeview-famfamfam">
+    <ul id="{$menu}" class="menu">
 
         {if $cfg.show_home}
-            {php}$padding = '0px';{/php}
-            {php}$fileicon   = '/includes/jquery/treeview/images/file.gif';{/php}
-            <li style="padding:{php}echo $padding;{/php}">
-                <span class="file" style="background: url({php}echo $fileicon;{/php}) 0 0 no-repeat;">
-                    {if $menuid==1}
-                        {$LANG.PATH_HOME}
-                    {else}
-                        <a href="/">{$LANG.PATH_HOME}</a>
-                    {/if}
-                </span>
+            <li {if $menuid==1}class="selected"{/if}>
+                <a href="/" {if $menuid==1}class="selected"{/if}><span>{$LANG.PATH_HOME}</span></a>
             </li>
         {/if}
 
 {foreach key=key item=item from=$items}
-    {if $item.allow_group == -1 || $item.allow_group == $user_group || $is_admin}
+    {if $item.is_allow}
         {if $item.published}
             {if $item.parent_id != $hide_parent}
 
-                {if $item.NSLevel > 1} {php}$padding = '0px 0px 0px 15px';{/php} {else} {php}$padding = '0px';{/php} {/if}
                 {if $item.NSLevel < $last_level}                    
                     {math equation="x - y" x=$last_level y=$item.NSLevel assign="tail"}
                     {section name=foo start=0 loop=$tail step=1}
@@ -30,43 +21,19 @@
                     {/section}
                 {/if}
 
-                        {if !$item.iconurl}
-                            {php}
-                                $fileicon   = '/includes/jquery/treeview/images/file.gif';
-                                $foldericon = '/includes/jquery/treeview/images/folder-closed.gif';
-                            {/php}
-                        {else}
-                            {php}
-                                $fileicon   = '/images/menuicons/'.$this->_tpl_vars['item']['iconurl'];
-                                $foldericon = '/images/menuicons/'.$this->_tpl_vars['item']['iconurl'];
-                            {/php}
-                        {/if}
-
-                        {if $menuid != $item.id}
-                            {php}
-                                $this->_tpl_vars['item']['link'] = '<a target="'.$this->_tpl_vars['item']['target'].'" class="" href="'.$this->_tpl_vars['item']['url'].'" >'.$this->_tpl_vars['item']['title'].'</a>';
-                            {/php}
-                        {else}
-                            {php}
-                                $this->_tpl_vars['item']['link'] = $this->_tpl_vars['item']['title'];
-                            {/php}
-                        {/if}
-
                 {if $item.NSRight - $item.NSLeft == 1}
-                    <li style="padding:{php}echo $padding;{/php}">
-                                <span class="file" style="background: url({php}echo $fileicon;{/php}) 0 0 no-repeat;">{$item.link}</span>
+                    <li {if $menuid==$item.id}class="selected"{/if}>
+                        <a href="{$item.link}" target="{$item.target}" {if $menuid==$item.id}class="selected"{/if}><span>{$item.title}</span></a>
                     </li>
                 {else}
-                    <li {if $currentmenu.NSLeft > $item.NSLeft && $currentmenu.NSRight < $item.NSRight}class="open"{/if} style="padding:{php}echo $padding;{/php}">
-                                <span class="folder" style="background: url({php}echo $foldericon;{/php}) 0 0 no-repeat;">
-                                <a href="javascript:">{$item.title}</a>
-                        </span>
+                    <li {if ($menuid==$item.id || ($currentmenu.NSLeft > $item.NSLeft && $currentmenu.NSRight < $item.NSRight)) && $item.NSLevel<=1}class="selected"{/if}>
+                        <a href="{$item.link}" target="{$item.target}" {if ($menuid==$item.id || ($currentmenu.NSLeft > $item.NSLeft && $currentmenu.NSRight < $item.NSRight)) && $item.NSLevel<=1}class="selected"{/if}><span>{$item.title}</span></a>
                         <ul>
                 {/if}
                 {assign var="last_level" value=$item.NSLevel}
             {/if}
         {else}
-                    {php}$this->_tpl_vars['hide_parent'] = $this->_tpl_vars['item']['id'];{/php}
+            {php}$this->_tpl_vars['hide_parent'] = $this->_tpl_vars['item']['id'];{/php}
         {/if}
     {/if}
 {/foreach}
@@ -76,17 +43,3 @@
     </ul>
 </div>
 
-<script type="text/javascript" src="/includes/jquery/treeview/jquery.treeview.js"></script>
-<script type="text/javascript" src="/includes/jquery/treeview/menu.js"></script>
-    <script type="text/javascript">
-        {literal}
-            $(document).ready(function(){
-                 $(".filetree").treeview({
-                    animated: true,
-                    collapsed: true,
-                    unique: false
-                    });
-                }
-            );
-        {/literal}
-     </script>

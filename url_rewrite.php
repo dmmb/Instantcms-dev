@@ -1,4 +1,15 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
     //
     // ВНИМАНИЕ! Если вы хотите добавить собственное правило, то создайте
@@ -25,6 +36,13 @@
         // Вход / Выход
         //
 
+
+        $rules[] = array(
+                            'source'  => '/^admin$/i',
+                            'target'  => '/admin/index.php',
+                            'action'  => 'redirect'
+                         );
+
         $rules[] = array(
                             'source'  => '/^login$/i',
                             'target'  => 'registration/login',
@@ -40,6 +58,18 @@
         $rules[] = array(
                             'source'  => '/^auth\/error.html$/i',
                             'target'  => 'registration/autherror',
+                            'action'  => 'rewrite'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^go\/url=(.+)$/i',
+                            'target'  => 'files/go/{1}',
+                            'action'  => 'rewrite'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^load\/url=(.+)$/i',
+                            'target'  => 'files/load/{1}',
                             'action'  => 'rewrite'
                          );
 
@@ -97,6 +127,12 @@
                             'action'  => 'rewrite'
                          );
 
+        $rules[] = array(
+                            'source'  => '/^r([0-9]+)$/i',
+                            'target'  => 'billing/ref_link/{1}',
+                            'action'  => 'rewrite'
+                         );
+        
         //
         // Баннеры
         //
@@ -147,20 +183,8 @@
                          );
 
         $rules[] = array(
-                            'source'  => '/^content\/(.+).html$/i',
-                            'target'  => '/{1}.html',
-                            'action'  => 'redirect-301'
-                         );
-
-        $rules[] = array(
                             'source'  => '/^content\/(.+)\/page\-([0-9]+)$/i',
                             'target'  => '/{1}/page-{2}',
-                            'action'  => 'redirect-301'
-                         );
-
-        $rules[] = array(
-                            'source'  => '/^content\/(.+)$/i',
-                            'target'  => '/{1}',
                             'action'  => 'redirect-301'
                          );
 
@@ -171,14 +195,20 @@
                          );
 
         $rules[] = array(
-                            'source'  => '/^content\/([0-9]+)\/(.+)\/page\-([0-9]+).html$/i',
-                            'target'  => '/{2}/page-{3}.html',
+                            'source'  => '/^content\/([0-9]+)\/(.+)$/i',
+                            'target'  => '/{2}',
                             'action'  => 'redirect-301'
                          );
 
         $rules[] = array(
-                            'source'  => '/^content\/([0-9]+)\/(.+)$/i',
-                            'target'  => '/{2}',
+                            'source'  => '/^content\/(.+)$/i',
+                            'target'  => '/{1}',
+                            'action'  => 'redirect-301'
+                         );
+
+        $rules[] = array(
+                            'source'  => '/^content\/([0-9]+)\/(.+)\/page\-([0-9]+).html$/i',
+                            'target'  => '/{2}/page-{3}.html',
                             'action'  => 'redirect-301'
                          );
 

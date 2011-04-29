@@ -4,18 +4,29 @@
 
 <h1 class="con_heading" style="margin-bottom:5px;">{$post.title}</h1>
 
-{if $myblog || $is_admin || $is_moder || $is_author}
+{if $is_author || $is_admin || $is_moder}
     <div class="editlinks" >
         <a style="color:gray" href="/blogs/{$post.blog_id}/editpost{$post.id}.html" class="blog_entry_edit">{$LANG.EDIT}</a>
         | <a style="color:gray" href="/blogs/{$post.blog_id}/delpost{$post.id}.html" class="blog_entry_delete">{$LANG.DELETE}</a>
     </div>
 {/if}
 
+{if $ping_result}
+    <p>
+        {foreach key=tid item=result from=$ping_result}
+            <div style="color:gray">{$result}</div>
+        {/foreach}
+    </p>
+{/if}
+
 <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:15px">
 	<tr>
+        <td width="70" valign="top">
+            <div class="blog_post_avatar">{$post.image}</div>
+        </td>
 		<td>
-			<div class="blog_post_data">
-				<div style="margin-bottom:10px"><strong>{$LANG.AVTOR}:</strong> {$post.author}</div>
+			<div class="blog_post_data" valign="top">
+				<div><strong>{$LANG.AVTOR}:</strong> {$post.author}</div>
 				<div><strong>{$LANG.PUBLISHED}:</strong> {$post.fpubdate}</div>
 				<div><strong>{$LANG.BLOG}:</strong> <a href="/blogs/{$blog.seolink}">{$blog.title}</a></div>
 				{if $blog.showcats}

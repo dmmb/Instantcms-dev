@@ -1,4 +1,16 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 class cms_model_board{
@@ -126,6 +138,7 @@ class cms_model_board{
         $records = array();
 		$inCore = cmsCore::getInstance();
         $this->deleteOldRecords();
+        $this->clearOldVips();
 
         $city_filter = isset($_SESSION['board_city']) ? "AND city = '".$_SESSION['board_city']."'" : '';
         $type_filter = isset($_SESSION['board_type']) ? "AND obtype = '".$_SESSION['board_type']."'" : '';
@@ -136,8 +149,7 @@ class cms_model_board{
         $sql = "SELECT i.*, i.pubdate as fpubdate, u.nickname as user, u.login as user_login
                 FROM cms_board_items i, cms_users u, cms_board_cats cat
                 WHERE i.user_id = u.id AND i.published = 1 $city_filter $type_filter $catsql
-                GROUP BY i.id
-                ORDER BY $orderby $orderto
+                ORDER BY is_vip DESC, $orderby $orderto
                 LIMIT ".($page-1)*$perpage.", $perpage";
 
         $result = $this->inDB->query($sql);
@@ -147,7 +159,7 @@ class cms_model_board{
         while($item = $this->inDB->fetch_assoc($result)){
             $item['content']    = nl2br($item['content']);
 			$item['fpubdate']   = $inCore->dateformat($item['fpubdate']);
-            $records[]          = $item;
+            $records[$item['id']] = $item;
         }
 
         $records = cmsCore::callEvent('GET_BOARD_RECORDS', $records);
@@ -162,9 +174,9 @@ class cms_model_board{
     public function getRecord($item_id) {
 
         $this->deleteOldRecords();
+        $this->clearOldVips();
 
         $sql = "SELECT i.*, 
-                       DATE_FORMAT(i.pubdate, '%d-%m-%Y') as pubdate,
                        a.id as cat_id,
                        a.NSLeft as NSLeft,
                        a.NSRight as NSRight,
@@ -176,8 +188,10 @@ class cms_model_board{
                        a.thumbsqr as thumbsqr,
                        u.nickname as user,
                        u.login as user_login
-                FROM cms_board_items i, cms_board_cats a, cms_users u
-                WHERE i.id = $item_id AND i.category_id = a.id AND i.user_id = u.id";
+                FROM cms_board_items i
+				LEFT JOIN cms_board_cats a ON a.id = i.category_id
+				LEFT JOIN cms_users u ON u.id = i.user_id
+                WHERE i.id = '$item_id'";
 
         $result = $this->inDB->query($sql);
 
@@ -185,7 +199,11 @@ class cms_model_board{
 
         $record = $this->inDB->fetch_assoc($result);
 
-        $record['content'] = nl2br($record['content']);
+		$timedifference 	  = strtotime("now") - strtotime($record['pubdate']);
+		$record['is_overdue'] = round($timedifference / 86400) > $record['pubdays'] && $record['pubdays'] > 0;
+		$record['fpubdate']   = $record['pubdate'];
+		$record['pubdate'] 	  = cmsCore::dateFormat($record['pubdate']);
+		$record['vipdate'] 	  = cmsCore::dateFormat($record['vipdate']);
 
         $record = cmsCore::callEvent('GET_BOARD_RECORD', $record);
 
@@ -204,6 +222,7 @@ class cms_model_board{
 /* ==================================================================================================== */
 
     public function addRecord($item){
+
         $item = cmsCore::callEvent('ADD_BOARD_RECORD', $item);
 
         $sql = "INSERT INTO cms_board_items (category_id, user_id, obtype, title , content, city, pubdate, pubdays, published, file, hits) 
@@ -211,7 +230,10 @@ class cms_model_board{
                         '{$item['city']}', NOW(), {$item['pubdays']}, {$item['published']}, '{$item['file']}', 0)";
 
         $this->inDB->query($sql);
-        return true;
+		
+		$item_id = $this->inDB->get_last_id('cms_board_items');
+
+        return $item_id ? $item_id : false;
     }
 
 /* ==================================================================================================== */
@@ -226,6 +248,8 @@ class cms_model_board{
                     title = '{$item['title']}',
                     content = '{$item['content']}',
                     city = '{$item['city']}',
+					pubdate = '{$item['pubdate']}',
+					pubdays = '{$item['pubdays']}',
                     published = '{$item['published']}',
                     file = '{$item['file']}'
                 WHERE id = $id";
@@ -237,6 +261,9 @@ class cms_model_board{
 /* ==================================================================================================== */
 
     public function deleteRecord($item_id) {
+
+		$inCore = cmsCore::getInstance();
+
         cmsCore::callEvent('DELETE_BOARD_RECORD', $item_id);
 
         $item = $this->getRecord($item_id);
@@ -245,6 +272,10 @@ class cms_model_board{
         @unlink(PATH.'/images/board/medium/'.$item['file']);
         $sql = "DELETE FROM cms_board_items WHERE id = $item_id";
         $this->inDB->query($sql);
+
+		$inCore->deleteComments('boarditem', $item_id);
+
+		cmsActions::removeObjectLog('add_board', $item_id);
         return true;
     }
 
@@ -273,7 +304,61 @@ class cms_model_board{
 
     }
 
+    public function clearOldVips() {
 
+        $this->inDB->query("UPDATE cms_board_items SET is_vip=0 WHERE DATE(vipdate) <= CURRENT_DATE");
+
+        return true;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function setVip($id, $days){
+
+        // Установить статус VIP и дату окончания считая от текущей,
+        // если до этого статуса VIP не было
+        $sql = "UPDATE cms_board_items
+                SET is_vip = 1, vipdate = DATE_ADD(NOW(), INTERVAL {$days} DAY)
+                WHERE id='{$id}' AND is_vip=0
+                LIMIT 1";
+
+        $this->inDB->query($sql);
+
+        // Продлить имеющуюся дату VIP, если VIP-статус уже был
+        $sql = "UPDATE cms_board_items
+                SET vipdate = DATE_ADD(vipdate, INTERVAL {$days} DAY)
+                WHERE id='{$id}' AND is_vip=1
+                LIMIT 1";
+                
+        $this->inDB->query($sql);
+
+        return true;
+
+    }
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+	
+	public function uploadPhoto($old_file = '', $cfg, $cat) {
+		
+		$inCore = cmsCore::getInstance();
+
+		// Загружаем класс загрузки фото
+		$inCore->loadClass('upload_photo');
+		$inUploadPhoto = cmsUploadPhoto::getInstance();
+		// Выставляем конфигурационные параметры
+		$inUploadPhoto->upload_dir    = PATH.'/images/board/';
+		$inUploadPhoto->small_size_w  = $cat['thumb1'];
+		$inUploadPhoto->medium_size_w = $cat['thumb2'];
+		$inUploadPhoto->thumbsqr      = $cat['thumbsqr'];
+		$inUploadPhoto->is_watermark  = $cfg['watermark'];
+		// Процесс загрузки фото
+		$file = $inUploadPhoto->uploadPhoto($old_file);
+		
+		return $file;
+
+	}
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 

@@ -1,14 +1,15 @@
 <?php
-/*********************************************************************************************/
-//                                                                                           //											 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 		  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 			    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 /* 
@@ -29,9 +30,19 @@ $_LANG['ARTICLE_SEND']            ='Статья отправлена';
 $_LANG['ARTICLE_PREMODER_TEXT']   ='После проверки администратором она будет опубликована на сайте.';
 $_LANG['PUBLISHED']               ='Одобрена';
 $_LANG['NO_PUBLISHED']            ='На проверке';
+$_LANG['ARTICLE_DELETED']         ='Статья успешно удалена';
+$_LANG['ARTICLE_SAVE']            ='Статья успешно сохранена.';
 $_LANG['NO_YOUR_ARTICL_ON_SITE']  ='На сайте нет ваших статей';
 $_LANG['ARTICLES_RATING']         ='Рейтинг статей';
 $_LANG['NO_ARTICLES_PUBL_ON_SITE']='На сайте нет оцененных статей.';
+$_LANG['MSG_ARTICLE_SUBMIT']      ='Пользователь %user% добавил статью "<b>%link%</b>".'."\n".'Необходима модерация.';
+$_LANG['MSG_ARTICLE_EDITED']      ='Пользователь %user% изменил статью "<b>%link%</b>".'."\n".'Необходима модерация.';
+$_LANG['MSG_ARTICLE_REJECTED']    ='Ваша статья "%link%" не прошла модерацию и удалена';
+$_LANG['MSG_ARTICLE_ACCEPTED']    ='Ваша статья "%link%" прошла модерацию и была опубликована';
+$_LANG['ARTICLE_ALLOW']           ='Разрешить';
+
+$_LANG['ARTICLE_REMOVAL']         ='Удаление статьи';
+$_LANG['ARTICLE_REMOVAL_TEXT']    ='Вы действительно хотите удалить статью';
 
 $_LANG['REQ_TITLE']               ='Нельзя создать статью без заголовка';
 $_LANG['REQ_CONTENT']             ='Нельзя создать статью без текста';
@@ -46,9 +57,9 @@ $_LANG['WHERE_LOCATE_ARTICLE']    ='Куда поместить статью';
 $_LANG['FOR_ADD_ARTICLE_ON']      ='Чтобы добавить раздел в этот список, включите в';
 $_LANG['IN_CONFIG']               ='настройках';
 $_LANG['FOR_ADD_ARTICLE_ON_TEXT'] ='этого раздела опцию "Принимать статьи от пользователей"';
-$_LANG['ARTICLE_ANNOUNCE']        ='Анонс статьи';
+$_LANG['ARTICLE_ANNOUNCE']        ='Краткий анонс статьи';
 $_LANG['NOT_MANDATORY']           ='не обязательно';
-$_LANG['ARTICLE_TEXT']            ='Текст статьи';
+$_LANG['ARTICLE_TEXT']            ='Основной текст статьи';
 $_LANG['SAVE_CHANGES']            ='Сохранить изменения';
 $_LANG['ARTICLE']                 ='Статья';
 $_LANG['STATUS']                  ='Статус';
@@ -65,6 +76,9 @@ $_LANG['COMMENTS']                ='Комментарии';
 $_LANG['COMMENT']                 ='комментарий';
 $_LANG['COMMENT2']                ='комментария';
 $_LANG['COMMENT10']               ='комментариев';
+$_LANG['HIT']                     ='просмотр';
+$_LANG['HIT2']                    ='просмотра';
+$_LANG['HIT10']                   ='просмотров';
 $_LANG['TAGS']                    ='Теги';
 $_LANG['VOTES']                   ='Голосов';
 ?>

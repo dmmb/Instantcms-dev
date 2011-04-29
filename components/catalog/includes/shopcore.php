@@ -1,4 +1,16 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,7 +106,9 @@ function shopUpdateCart($itemcounts){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
 	foreach($itemcounts as $id => $count){
-		$sql = "UPDATE cms_uc_cart SET itemscount = $count WHERE id = $id";
+        $id     = intval($id);
+        $count  = intval($count);
+		$sql = "UPDATE cms_uc_cart SET itemscount = '$count' WHERE id = '$id'";
 		$inDB->query($sql) ;
 	}
 	return true;
@@ -293,7 +307,7 @@ function shopOrder($cfg){
 			echo '<table width="100%" cellspacing="0" cellpadding="5">';
 			echo '<tr>';		
 				echo '<td width="40%" align="right">'.$_LANG['FIO_CUSTOMER'].': </td>';
-				echo '<td width="60%" align="left"><input name="customer_fio" type="text" size="45" /></td>';			
+				echo '<td width="60%" align="left"><input name="customer_fio" type="text" size="45" value="'.$inUser->nickname.'" /></td>';			
 			echo '</tr>';
 			echo '<tr>';		
 				echo '<td width="40%" align="right">'.$_LANG['ORGANIZATION'].': </td>';
@@ -305,7 +319,7 @@ function shopOrder($cfg){
 			echo '</tr>';
 			echo '<tr>';
 				echo '<td width="40%" align="right">'.$_LANG['ADRESS_EMAIL'].': </td>';
-				echo '<td width="60%" align="left"><input name="customer_email" type="text" size="45" /></td>';
+				echo '<td width="60%" align="left"><input name="customer_email" type="text" size="45" value="'.$inUser->email.'" /></td>';
 			echo '</tr>';
 			echo '<tr>';		
 				echo '<td width="40%" align="right">'.$_LANG['CUSTOMER_COMMENT'].': </td>';
@@ -464,7 +478,8 @@ function shopFinishOrder($cfg){
 				$total = number_format($total, 2, '.', '');
                 
 				$mail_message .= "\n" . $_LANG['TOTAL_ORDER_PRICE'].': '.$total.' '.$_LANG['RUB'] . "\n";
-				$inCore->mailText($cfg['email'], $_LANG['EMAIL_SUBJECT'], $mail_message);
+				$email_subj = str_replace('{sitename}', $inConf->sitename, $_LANG['EMAIL_SUBJECT']);
+				$inCore->mailText($cfg['email'], $email_subj, $mail_message);
 
                 if ($cfg['notice'] && $customer['email']){
                     $inCore->mailText($customer['email'], $_LANG['CUSTOMER_EMAIL_SUBJECT'], $mail_message);

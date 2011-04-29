@@ -3,8 +3,9 @@
 {* ================================================================================ *}
 
 <div class="cm_addentry">
-	<form action="/comments/add" id="msgform" method="POST">
+	<form action="/comments/{$do}" id="msgform" method="POST">
         <input type="hidden" name="parent_id" value="{$parent_id}" />
+        <input type="hidden" name="comment_id" value="{$comment.id}" />
 		{if $no_guests && !$is_user}
 			<p>{$LANG.COMMENTS_CAN_ADD_ONLY} <a href="/registration" />{$LANG.REGISTERED}</a> {$LANG.USERS}.</p>
 		{else}
@@ -13,7 +14,7 @@
 				{if $can_by_karma || !$cfg.min_karma}
 
 					{if !$is_user}
-						<div style="margin-bottom:10px"><label>{$LANG.YOUR_NAME}: <input type="text" maxchars="20" size="30" name="guestname"/></label></div>
+						<div class="cm_guest_name"><label>{$LANG.YOUR_NAME}: <input type="text" maxchars="20" size="30" name="guestname"/></label></div>
 					{else}
 						<input type="hidden" name="user_id" value="{$is_user}"/>
 					{/if}
@@ -25,32 +26,33 @@
                         <div class="usr_msg_bbcodebox">{$bb_toolbar}</div>
                     {/if}
 
-					{if $cfg.smiles}
+					{if $cfg.smiles && $smilies}
 						<div class="cm_smiles">{if !$cfg.bbcode}<a href="javascript:void(0);" onclick="$('#smilespanel').toggle()">{$LANG.INSERT_SMILE}</a> &darr;{/if}
 							{$smilies}
 						</div>
 					{/if}
 	
 					<div class="cm_editor">
-						<textarea id="content" name="content" class="ajax_autogrowarea"></textarea>
+						<textarea id="content" name="content" class="ajax_autogrowarea">{$comment.content_bbcode}</textarea>
 					</div>
-	
-					{if $is_user}
+
+					{if $is_user && $do=='add'}
 						{if !$user_subscribed}
 							<div style="margin-top:5px;margin-bottom:5px">
 								<label style="padding:5px"><input name="subscribe" type="checkbox" value="1" /> {$LANG.NOTIFY_NEW_COMM} [<a href="/users/{$is_user}/editprofile.html#notices" target="_blank">{$LANG.CONFIG_NOTIFY}</a>]</label>
 							</div>
 						{/if}
-					{/if}						
+					{/if}
 			
 					<div class="cm_codebar">
-						<table width="100%">
+						<table width="100%" cellpadding="0" cellspacing="0">
 							<tr>
-								{if $need_captcha}
+								{if $need_captcha && $do=='add'}
 									<td width="">{php}echo cmsPage::getCaptcha();{/php}</td>
 								{/if}
 								<td width="" align="right">
 									<input class="cm_submit" type="submit" value="{$LANG.SEND}"/>
+                                    <input class="cm_submit" type="button" onclick="cancelComment({if $do=='add'}{$parent_id}{else}{$comment.id}{/if})" value="{$LANG.CANCEL}"/>
 								</td>
 							</tr>
 						</table>

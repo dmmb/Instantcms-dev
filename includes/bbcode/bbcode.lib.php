@@ -54,7 +54,7 @@ class bbcode {
                     'rbr' => 1,
                     'ends' => array('*','tr','td','th'),
                     'permission_top_level' => true,
-                    'children' => array('align','b','code', 'video', 'audio', 'hide','color','email',
+                    'children' => array('align','b','code', 'video', 'audio', 'color','email',
                         'font','google','h1','h2','h3','hr','i','img','list',
                         'nobb','php','quote','s','size','sub','sup','table','tt','u','url')
                 ),
@@ -63,7 +63,7 @@ class bbcode {
                     'is_close' => false,
                     'lbr' => 0,
                     'rbr' => 0,
-                    'ends' => array('*','align','code', 'video', 'audio', 'hide','h1','h2','h3','hr',
+                    'ends' => array('*','align','code', 'video', 'audio', 'h1','h2','h3','hr',
                         'list','php','quote','table','td','th','tr'),
                     'permission_top_level' => true,
                     'children' => array('b','color','email','font','google','i','img',
@@ -96,15 +96,6 @@ class bbcode {
                     'permission_top_level' => true,
                     'children' => array()
                ),
-            'hide' => array(
-                    'handler' => 'hide_2html',
-                    'is_close' => false,
-                    'lbr' => 0,
-                    'rbr' => 2,
-                    'ends' => array(),
-                    'permission_top_level' => true,
-                    'children' => array()
-                ),			
             'spoiler' => array(
                     'handler' => 'spoiler_2html',
                     'is_close' => false,
@@ -113,14 +104,14 @@ class bbcode {
                     'ends' => array(),
                     'permission_top_level' => true,
                     'children' => array('b','color','email','font','google','i','img', 'video', 
-                    'nobb','s','size','sub','sup','tt','u','url', 'hide')
+                    'nobb','s','size','sub','sup','tt','u','url')
                 ),
             'color' => array(
                     'handler' => 'color_2html',
                     'is_close' => false,
                     'lbr' => 0,
                     'rbr' => 0,
-                    'ends' => array('*','align','code','video', 'audio', 'hide','h1','h2','h3','hr',
+                    'ends' => array('*','align','code','video', 'audio', 'h1','h2','h3','hr',
                         'list','php','quote','table','td','th','tr'),
                     'permission_top_level' => true,
                     'children' => array('b','color','email','font','google','i','img',
@@ -131,7 +122,7 @@ class bbcode {
                     'is_close' => false,
                     'lbr' => 0,
                     'rbr' => 0,
-                    'ends' => array('*','align','code','video', 'audio', 'hide','h1','h2','h3','hr',
+                    'ends' => array('*','align','code','video', 'audio', 'h1','h2','h3','hr',
                         'list','php','quote','table','td','th','tr'),
                     'permission_top_level' => true,
                     'children' => array('b','color','email','font','i','img',
@@ -142,7 +133,7 @@ class bbcode {
                     'is_close' => false,
                     'lbr' => 0,
                     'rbr' => 0,
-                    'ends' => array('*','align','code','video', 'audio', 'hide','h1','h2','h3','hr',
+                    'ends' => array('*','align','code','video', 'audio', 'h1','h2','h3','hr',
                         'list','php','quote','table','td','th','tr'),
                     'permission_top_level' => true,
                     'children' => array('b','color','email','font','font','google','i',
@@ -153,7 +144,7 @@ class bbcode {
                     'is_close' => false,
                     'lbr' => 1,
                     'rbr' => 2,
-                    'ends' => array('*','align','code','video', 'audio', 'hide','h1','h2','h3','hr',
+                    'ends' => array('*','align','code','video', 'audio', 'h1','h2','h3','hr',
                         'list','php','quote','table','td','th','tr'),
                     'permission_top_level' => true,
                     'children' => array('b','color','email','font','google','i','img',
@@ -164,7 +155,7 @@ class bbcode {
                     'is_close' => false,
                     'lbr' => 1,
                     'rbr' => 2,
-                    'ends' => array('*','align','code','video', 'audio', 'hide','h1','h2','h3','hr',
+                    'ends' => array('*','align','code','video', 'audio', 'h1','h2','h3','hr',
                         'list','php','quote','table','td','th','tr'),
                     'permission_top_level' => true,
                     'children' => array('b','color','email','font','google','i','img',
@@ -175,7 +166,7 @@ class bbcode {
                     'is_close' => false,
                     'lbr' => 1,
                     'rbr' => 2,
-                    'ends' => array('*','align','code','video', 'audio', 'hide','h1','h2','h3','hr',
+                    'ends' => array('*','align','code','video', 'audio', 'h1','h2','h3','hr',
                         'list','php','quote','table','td','th','tr'),
                     'permission_top_level' => true,
                     'children' => array('b','color','email','font','google','i','img',
@@ -195,7 +186,7 @@ class bbcode {
                     'is_close' => false,
                     'lbr' => 0,
                     'rbr' => 0,
-                    'ends' => array('*','align','code','video', 'audio', 'hide','h1','h2','h3','hr',
+                    'ends' => array('*','align','code','video', 'audio', 'h1','h2','h3','hr',
                         'list','php','quote','table','td','th','tr'),
                     'permission_top_level' => true,
                     'children' => array('b','color','email','font','google','i','img',
@@ -206,7 +197,7 @@ class bbcode {
                     'is_close' => false,
                     'lbr' => 0,
                     'rbr' => 0,
-                    'ends' => array('*','align','code','video', 'audio', 'hide','h1','h2','h3','hr',
+                    'ends' => array('*','align','code','video', 'audio', 'h1','h2','h3','hr',
                         'list','php','quote','table','td','th','tr'),
                     'permission_top_level' => true,
                     'children' => array('b','color','email','font','google','i','img',
@@ -228,27 +219,16 @@ class bbcode {
                     'rbr' => 1,
                     'ends' => array(),
                     'permission_top_level' => true,
-                    'children' => array('*','align','b','code','video', 'audio', 'hide','color','email',
+                    'children' => array('*','align','b','code','video', 'audio', 'color','email',
                         'font','google','h1','h2','h3','hr','i','img','list',
                         'nobb','php','quote','s','size','sub','sup','table','tt','u','url')
-                ),
-            'size' => array(
-                    'handler' => 'size_2html',
-                    'is_close' => false,
-                    'lbr' => 0,
-                    'rbr' => 0,
-                    'ends' => array('*','align','code','video', 'audio', 'hide','h1','h2','h3','hr',
-                        'list','php','quote','table','td','th','tr'),
-                    'permission_top_level' => true,
-                    'children' => array('b','color','email','font','google','i','img',
-                        'nobb','s','size','sub','sup','tt','u','url')
                 ),
             'u' => array(
                     'handler' => 'u_2html',
                     'is_close' => false,
                     'lbr' => 0,
                     'rbr' => 0,
-                    'ends' => array('*','align','code','video', 'audio', 'hide','h1','h2','h3','hr',
+                    'ends' => array('*','align','code','video', 'audio', 'h1','h2','h3','hr',
                         'list','php','quote','table','td','th','tr'),
                     'permission_top_level' => true,
                     'children' => array('b','color','email','font','google','i','img',
@@ -259,7 +239,7 @@ class bbcode {
                     'is_close' => false,
                     'lbr' => 0,
                     'rbr' => 0,
-                    'ends' => array('*','align','code','video', 'audio', 'hide','h1','h2','h3','hr',
+                    'ends' => array('*','align','code','video', 'audio', 'h1','h2','h3','hr',
                         'list','php','quote','table','td','th','tr'),
                     'permission_top_level' => true,
                     'children' => array('b','color','font','i','img','nobb',
@@ -940,8 +920,8 @@ class bbcode {
                 "'([^\w\d-\.])([\w\d-\.]+@[\w\d-\.]+\.[\w]+[^.,;\s<\"\'\)]+)'si"
             );
         $replace = array(
-                '$1<a href="$2" target="_blank">$2</a>',
-                '$1<a href="http://$2" target="_blank">$2</a>',
+                '$1<a href="/go/url=$2" target="_blank">$2</a>',
+                '$1<a href="/go/url=http://$2" target="_blank">$2</a>',
                 '$1<a href="mailto:$2">$2</a>'
             );
         $text = preg_replace($search, $replace, $text);
@@ -990,45 +970,51 @@ class bbcode {
     }
     // Функция - обработчик тега [b]
     function b_2html($elem) {
-        return '<b>'.$this -> get_html($elem['val']).'</b>';
+        return '<strong>'.$this -> get_html($elem['val']).'</strong>';
     }
     // Функция - обработчик тега [code]
     function code_2html($elem) {
+
         $lang = $elem['attrib']['code'];
         if(!$lang){ $lang = 'php'; }
-        $str = '<div class="bb_tag_code">';
-		$str .= '<b>Код '.strtoupper($lang).':</b><br/>';
-		$str .= '<pre class="brush: '.strtolower($lang).';">';
-        $inPage = cmsPage::getInstance();
-        if (!isset($_SESSION['bbcode']['code_js_added']['main'])){
-            $inPage->addHeadCSS('includes/jquery/syntax/styles/shCore.css');
-            $inPage->addHeadCSS('includes/jquery/syntax/styles/shThemeDefault.css');
-            $inPage->addHeadJS('includes/jquery/syntax/src/shCore.js');
-            $_SESSION['bbcode']['code_js_added']['main'] = 1;
-        }
-        if (!isset($_SESSION['bbcode']['code_js_added'][$lang])){
-            $inPage->addHeadJS('includes/jquery/syntax/scripts/shBrush'.ucfirst(strtolower($lang)).'.js');
-            $_SESSION['bbcode']['code_js_added'][$lang] = 1;
-        }
+
+        $str  = '<div class="bb_tag_code">';
+        $str .= '<strong>Код '.strtoupper($lang).':</strong><br/>';
+        $str .= '<pre>';
+
+        $inCore = cmsCore::getInstance();
+        $inCore->includeFile('includes/geshi/geshi.php');
+
         foreach ($elem['val'] as $item) {
             if ('item'==$item['type']) { continue; }
             $item['str'] = str_replace('&#8217;', "'", $item['str']);
             $item['str'] = str_replace('’', "'", $item['str']);
-            $str .= htmlspecialchars($item['str']);
         }
+
+        $geshi = new GeSHi($item['str'], $lang);
+        $geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
+
+        $str .= $geshi->parse_code();
+
         $str .= '</pre></div>';
-        $str .= '<script type="text/javascript">
-                    SyntaxHighlighter.config.clipboardSwf = \'/includes/jquery/syntax/scripts/clipboard.swf\';
-                    SyntaxHighlighter.all();
-                 </script>';
+
         return $str;
+        
     }
     // Функция - обработчик тега [video]
     function video_2html($elem) {
         $str = '<div class="bb_tag_video">';
         foreach ($elem['val'] as $item) {
+            
             if ('item'==$item['type']) { continue; }
-            $str .= strip_tags($item['str'], '<object><param><embed>');
+
+            $iframe_regexp      = '/<iframe.*?src=(?!"http:\/\/www\.youtube\.com\/embed\/|"http:\/\/vkontakte\.ru\/video_ext\.php\?).*?><\/iframe>/i';
+            $iframe_regexp2     = '/<iframe.*>.+<\/iframe>/i';
+            $item['str']        = preg_replace($iframe_regexp, '', $item['str']);
+            $item['str']        = preg_replace($iframe_regexp2, '', $item['str']);
+
+            $str .= strip_tags($item['str'], '<iframe><object><param><embed>');
+
         }
         $str .= '</div>';
         return $str;
@@ -1047,24 +1033,7 @@ class bbcode {
         $str .= '</div>';
         return $str;
     }
-    // Функция - обработчик тега [hide]
-    function hide_2html($elem) {
-        $inUser = cmsUser::getInstance();
-        $str = '<div class="bb_tag_hide">';
-		if ($inUser->id){
-			$hide = '';
-			foreach ($elem['val'] as $item) {
-				if ('item'==$item['type']) { continue; }
-				$hide .= nl2br($item['str']);
-			}
-			if (substr($hide, 0, 6)=='<br />') { $hide = substr($hide, 6, strlen($hide)-5); }
-			$str .= $hide;
-		} else {
-			$str .= 'Скрытый текст виден только <a href="/registration">зарегистрированным</a> пользователям';
-		}
-        $str .= '</div>';
-        return $str;
-    }
+
     function spoiler_2html($elem) {
         
         global $_LANG;
@@ -1092,6 +1061,7 @@ class bbcode {
         $str .= '</div>';
         return $str;
     }
+    
     // Функция - обработчик тега [color]
     function color_2html($elem) {
         $color = htmlspecialchars($elem['attrib']['color']);
@@ -1140,11 +1110,16 @@ class bbcode {
     // Функция - обработчик тега [img]
     function img_2html($elem) {
         $attr = 'alt=""';
-	$src = '';
+        $src = '';
         foreach ($elem['val'] as $text) {
             if ('text'==$text['type']) { $src .= $text['str']; }
         }
-		$attr .= isset($elem['attrib']['align']) ? ' align="'.$elem['attrib']['align'].'"' : "";		
+        if (isset($elem['attrib']['align'])){
+            $align       = $elem['attrib']['align'];
+            $div_style   = "float:{$align};overflow:hidden;";
+            $div_style  .= "margin-" .($align=='left' ? 'right' : 'left'). ":15px; margin-bottom:15px; ";
+        }
+
 		$width = '';
 		$hegiht = '';
 		$zoom = false;
@@ -1155,14 +1130,14 @@ class bbcode {
 					$size = getimagesize($_SERVER['DOCUMENT_ROOT'].$src);
 					$width = $size[0];
 					$height = $size[1];
-					while ($width > 400 || $height > 400){
+					while ($width > 640 || $height > 640){
 						$width  = round($width*0.9);
 						$height = round($height*0.9);
 						$zoom   = true;
 					}			
 				} 		
 				if (!$zoom){
-					return '<img src="'.htmlspecialchars($src).'" '.$attr.' />';
+					return '<div class="bb_img" style="'.$div_style.'"><img src="'.htmlspecialchars($src).'" '.$attr.' /></div>';
 				} else {
 					$html = '<div class="forum_zoom" style="width:'.$width.'px">'."\n";
 						$html .= '<div><a href="'.htmlspecialchars($src).'" target="_blank"><img src="'.htmlspecialchars($src).'" '.$attr.' width="'.$width.'" height="'.$height.'" border="0"/></a></div>'."\n";
@@ -1174,7 +1149,7 @@ class bbcode {
 				return '<div class="forum_lostimg">Файл "'.$src.'" не найден!</div>';
 			}
 		} else {
-			return '<img src="'.htmlspecialchars($src).'" '.$attr.' />';
+			return '<div class="bb_img" style="'.$div_style.'"><img src="'.htmlspecialchars($src).'" '.$attr.' /></div>';
 		}
     }
     // Функция - обработчик тега [quote]
@@ -1191,15 +1166,14 @@ class bbcode {
     function s_2html($elem) {
         return '<s>'.$this -> get_html($elem['val']).'</s>';
     }
-    // Функция - обработчик тега [size]
-    function size_2html($elem) {
-        $size = isset($elem['attrib']['size']) ? (int) $elem['attrib']['size'] : 0;
-        return '<font size="'.$size.'">'.$this -> get_html($elem['val']).'</font>';
-    }
     // Функция - обработчик тега [u]
     function u_2html($elem) {
         return '<u>'.$this -> get_html($elem['val']).'</u>';
     }
+	// Функция - обработчик тега [email]
+	function email_2html($elem) {
+		return '<a href="mailto:'.$this -> get_html($elem['val']).'">'.$this -> get_html($elem['val']).'</a>';
+	}
     // Функция - обработчик тега [url]
     function url_2html($elem) {
         $attr = '';
@@ -1210,8 +1184,8 @@ class bbcode {
             }
         }
         $protocols = array(
-                'http://','https://','ftp://','file://','#','/','?','./','../'
-            );
+            'http://','https://','ftp://','file://','#','/','?','./','../'
+        );
         $is_http = false;
         foreach ($protocols as $val) {
             if ($val==substr($href,0,strlen($val))) {
@@ -1221,11 +1195,11 @@ class bbcode {
         }
         if (! $is_http) { $href = 'http://'.$href; }
         if ($href) {
-            if (preg_match('/^http:\/\/'.$_SERVER['HTTP_HOST'].'/', $href)){
+            if (preg_match('/^http:\/\/'.$_SERVER['HTTP_HOST'].'/', $href) || substr($href,0,1)=='/'){
                 $url = $href;
                 $local = true;
             } else {
-                $url = '/go/url='.htmlspecialchars($this->process_url($href));
+                $url = '/go/url='.htmlspecialchars($href);
                 $local = false;
             }
             $attr .= ' href="'.$url.'"';
@@ -1242,9 +1216,6 @@ class bbcode {
         return '<a'.$attr.'>'.$this -> get_html($elem['val']).'</a>';
     }
 
-  private function process_url($href){
-  	return str_replace('?', '--q--', $href);
-  }
 }
 
 ?>

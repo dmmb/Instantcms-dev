@@ -3,10 +3,9 @@
 {* ================================================================================ *}
 
 <div class="con_heading">{$LANG.CREATE_CLUB}</div>
-
 <p>
 	<strong>{$LANG.CLUBS}</strong> {$LANG.CLUBS_DESC}
-
+</p>
 <form style="margin-top:15px" action="" method="post" name="addform">
   <table style="background-color:#EBEBEB" border="0" cellspacing="0" cellpadding="10">
 	<tr>
@@ -27,7 +26,7 @@
 	  </td>
 	</tr>
   </table>			
-  <p>
+  <p style="margin-top:20px">
   	<input name="create" type="submit" id="create" value="{$LANG.CREATE_CLUB}" />
   	<input name="cancel" type="button" onclick="window.history.go(-1)" value="{$LANG.CANCEL}" />
   </p>

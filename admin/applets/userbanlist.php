@@ -1,13 +1,17 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-/*********************************************************************************************/
 
 function applet_userbanlist(){
 
@@ -182,7 +186,7 @@ function applet_userbanlist(){
    
 		if ($do=='add'){
 			 echo '<h3>Добавить в бан-лист</h3>';
- 	 		 cpAddPathway('Добавить в бан-лист', 'index.php?view=usergroups&do=add');
+ 	 		 cpAddPathway('Добавить в бан-лист', 'index.php?view=userbanlist&do=add');
 		} else {
 					 if(isset($_REQUEST['multiple'])){				 
 						if (isset($_REQUEST['item'])){					
@@ -214,7 +218,7 @@ function applet_userbanlist(){
 
 	if(isset($mod['access'])){
 		$mod['access'] = str_replace(', ', ',', $mod['access']);
-		$mod['access'] = split(',', $mod['access']);
+		$mod['access'] = explode(',', $mod['access']);
 	}
 	
 	$GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="/includes/jquery/jquery.js"></script>';

@@ -1,31 +1,31 @@
 <?php
-/*********************************************************************************************/
-//																							 //
-//                              InstantCMS v1.6   (c) 2010 FREEWARE                          //
-//	 					  http://www.instantcms.ru/, info@instantcms.ru                      //
-//                                                                                           //
-// 						    written by Vladimir E. Obukhov, 2007-2010                        //
-//                                                                                           //
-//                                   LICENSED BY GNU/GPL v2                                  //
-//                                                                                           //
-/*********************************************************************************************/
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.8                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2010                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
     Error_Reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
-    setlocale(LC_ALL, 'ru');
+    setlocale(LC_ALL, 'ru_RU.CP1251');
 
-    define('PATH', $_SERVER['DOCUMENT_ROOT']);
-    define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
+    define('PATH', $_SERVER['DOCUMENT_ROOT']);    
 
 ////////////////////////////// Проверяем что система установлена /////////////////////////////
 
-//    if(is_dir('install')||is_dir('migrate')) {
-//        if (!file_exists(PATH.'/includes/config.inc.php')){
-//            header('location:/install/');
-//        } else {
-//            include(PATH.'/core/messages/installation.html');
-//            die();
-//        }
-//    }
+    if(is_dir('install')||is_dir('migrate')) {
+        if (!file_exists(PATH.'/includes/config.inc.php')){
+            header('location:/install/');
+        } else {
+            include(PATH.'/core/messages/installation.html');
+            die();
+        }
+    }
 
 /////////////////////////////////// Подготовка //////////////////////////////////////////////
 	
@@ -37,6 +37,8 @@
 
     $inCore = cmsCore::getInstance();
 
+    define('HOST', 'http://' . $inCore->getHost());
+
 /////////////////////////////////// Включаем таймер /////////////////////////////////////////
 
     $inCore->startGenTimer();
@@ -46,18 +48,21 @@
     $inCore->loadClass('page');         //страница    
     $inCore->loadClass('plugin');       //плагины
     $inCore->loadClass('user');         //пользователь
+    $inCore->loadClass('actions');      //лента активности    
 
     $inDB       = cmsDatabase::getInstance();
     $inPage     = cmsPage::getInstance();
     $inConf     = cmsConfig::getInstance();
     $inUser     = cmsUser::getInstance();
 
+    date_default_timezone_set($inConf->timezone);
+
     cmsCore::loadLanguage('lang');      //главный языковый файл
 
 	$inUser->autoLogin();     //автоматически авторизуем пользователя, если найден кукис
 
     //проверяем что пользователь не удален и не забанен
-    if (!$inUser->update() && !$inCore->request('uri', 'str')=='/logout') { $inCore->halt(); }
+    if (!$inUser->update() && !$_SERVER['REQUEST_URI']!=='/logout') { $inCore->halt(); }
 
     //определяем заголовок главной страницы
     $home_title = $inConf->hometitle ? $inConf->hometitle : $inConf->sitename;
@@ -65,24 +70,14 @@
     //устанавливаем заголовок браузера в название сайта
     $inPage->setTitle( $inConf->sitename );
 
-//////////////////////// Определяем каталоги шаблонов //////////////////////////
-
-    //проверяем был ли переопределен шаблон через сессию
-    //например, из модуля "выбор шаблона"
-    if ($_SESSION['template']) { $inConf->template = $_SESSION['template']; }
-
-    define('TEMPLATE', $inConf->template);
-	define('TEMPLATE_DIR', PATH.'/templates/'.$inConf->template.'/');
-	define('DEFAULT_TEMPLATE_DIR', PATH.'/templates/_default_/');
-
 ////////////////////////// Проверяем, включен ли сайт //////////////////////////
 
     //Если сайт выключен и пользователь не администратор,
     //то показываем шаблон сообщения о том что сайт отключен
 	if ( $inConf->siteoff &&
         !$inUser->is_admin &&
-        !$inCore->request('uri', 'str')=='/login' &&
-        !$inCore->request('uri', 'str')=='/logout'
+        $_SERVER['REQUEST_URI']!='/login' &&
+        $_SERVER['REQUEST_URI']!='/logout'
        ) {
             $inPage->includeTemplateFile('special/siteoff.php');
             $inCore->halt();
@@ -100,10 +95,6 @@
 	
 ////////////////////////////// Генерация страницы //////////////////////////////
 	
-	//Загружаем Smarty
-	$inCore->loadSmarty();
-	$smarty = new Smarty();
-
 	//Получаем ID текущего пункта меню
 	$menuid = $inCore->menuId();
 		
@@ -112,13 +103,13 @@
     $inPage->setTitle( $inCore->menuTitle() );
 	if ($menuid > 1) { $inPage->addMenuPathway($menuid); }
 
-	//Строим тело страницы (запускаем текущий компонент)
-    $inCore->proceedBody();
-
 	//Проверяем доступ пользователя
     //Если проверка завершится неудачей, то вывод компонента будет
     //замещен сообщением "Доступ запрещен"
-	$inCore->сheckMenuAccess();
+	
+
+	//Строим тело страницы (запускаем текущий компонент)
+    if ($inCore->checkMenuAccess()) $inCore->proceedBody();
 
 //////////////////////////////////// Вывод шаблона /////////////////////////////
 
