@@ -221,6 +221,7 @@ class cms_model_users{
         $this->inDB->query("DELETE FROM cms_user_friends WHERE to_id = '$user_id' OR from_id = '$user_id'");
 		$this->inDB->query("DELETE FROM cms_user_clubs WHERE user_id = '$user_id'");
 		$this->inDB->query("DELETE FROM cms_user_awards WHERE user_id = '$user_id'");
+		$this->inDB->query("DELETE FROM cms_subscribe WHERE user_id = '$user_id'");
 
 		cmsActions::removeUserLog($user_id);
         
