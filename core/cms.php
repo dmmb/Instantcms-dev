@@ -1464,7 +1464,7 @@ class cmsCore {
 
         $folder = rtrim($uri, '/');
 
-        if (in_array($folder, array('admin', 'install', 'migrate'))) { return; }
+        if (in_array($folder, array('admin', 'install', 'migrate', 'index.php'))) { return; }
 
         //специальный хак для поиска по сайту, для совместимости со старыми шаблонами
         if (strstr($_SERVER['QUERY_STRING'], 'view=search')){ $uri = 'search'; }
