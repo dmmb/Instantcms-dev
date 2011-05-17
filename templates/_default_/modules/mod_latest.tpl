@@ -31,8 +31,8 @@
 		<a href="/rss/content/{$rssid}/feed.rss">{$LANG.LATEST_RSS}</a>
 	</div>
 {/if}
-{if $pagebar}
-    <div class="mod_latest_pagebar">{$pagebar}</div>
+{if $pagebar_module}
+    <div class="mod_latest_pagebar">{$pagebar_module}</div>
 {/if}
 {if !$is_ajax}</div>{/if}
 {else}

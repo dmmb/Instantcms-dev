@@ -130,7 +130,7 @@
 	$smarty->assign('is_ajax', true);
 	$smarty->assign('is_con', $is_con);
 	$smarty->assign('module_id', $module_id);
-	$smarty->assign('pagebar', cmsPage::getPagebar($total_page, $page, $perpage, 'javascript:conPage(%page%, '.$module_id.')'));
+	$smarty->assign('pagebar_module', cmsPage::getPagebar($total_page, $page, $perpage, 'javascript:conPage(%page%, '.$module_id.')'));
 	$smarty->display('mod_latest.tpl');			
 	$html = ob_get_clean();
 	echo $html;
