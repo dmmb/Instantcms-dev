@@ -62,7 +62,7 @@
 	$inUser->autoLogin();     //автоматически авторизуем пользователя, если найден кукис
 
     //проверяем что пользователь не удален и не забанен
-    if (!$inUser->update() && !$_SERVER['REQUEST_URI']!=='/logout') { $inCore->halt(); }
+    if (!$inUser->update() && $_SERVER['REQUEST_URI']!='/logout') { $inCore->halt(); }
 
     //определяем заголовок главной страницы
     $home_title = $inConf->hometitle ? $inConf->hometitle : $inConf->sitename;
