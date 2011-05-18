@@ -172,7 +172,7 @@ class cmsCron {
 
         while($job = $inDB->fetch_assoc($result)){
 
-            $job['hours_ago'] = round((time() - strtotime($job['run_date']))/3600);
+            $job['hours_ago'] = round((time() - strtotime($job['run_date']))/3600, 2);
 
             $jobs[] = $job;
 
