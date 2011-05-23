@@ -104,7 +104,7 @@ class cmsCron {
 
         $enabled = $only_enabled ? 'AND is_enabled=1' : '';
 
-        $job = $inDB->get_fields('cms_cron_jobs', "name='{$job_name}' {$enabled}", '*');
+        $job = $inDB->get_fields('cms_cron_jobs', "job_name='{$job_name}' {$enabled}", '*');
 
         return is_array($job) ? $job : false;
 

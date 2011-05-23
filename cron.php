@@ -20,6 +20,7 @@
     $inDB       = cmsDatabase::getInstance();
 
     $inCore->loadClass('cron');
+	$inCore->loadClass('actions');
 
     $jobs = cmsCron::getJobs();
 
