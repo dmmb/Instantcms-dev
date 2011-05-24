@@ -786,6 +786,8 @@ class cms_model_users{
 
         $users_list = $this->inDB->get_table('cms_users', "DATE_SUB(NOW(), INTERVAL $month MONTH) > logdate", 'id');
 
+		if(!$users_list) { return false; }
+
         foreach($users_list as $usr){
             $this->deleteUser($usr['id'], true);
         }
