@@ -92,33 +92,48 @@ function pageSelect($records, $current, $perpage, $field='page', $form='pageform
 }
 
 function uploadFiles($post_id, $cfg){
+
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
-    global $_LANG;
-	$file_error = false;
-    $c = 0;
 
-    @mkdir($_SERVER['DOCUMENT_ROOT']."/upload/forum/post".$post_id);
+	$file_error = false;
+
+    @mkdir(PATH."/upload/forum/post".$post_id);
+
     foreach ($_FILES["fa"]["error"] as $key => $error) {
+
             if ($error == UPLOAD_ERR_OK) {
+
                     $tmp_name = $_FILES["fa"]["tmp_name"][$key];
-                    $file = $_FILES["fa"]["name"][$key];
-                    $filesize = $_FILES["fa"]["size"][$key];
+                    $file     = $_FILES["fa"]["name"][$key];
+                    $filesize = $inDB->escape_string($_FILES["fa"]["size"][$key]);
+
                     $path_parts = pathinfo($file);
-                    $ext = $path_parts['extension'];
+                    $ext = strtolower($path_parts['extension']);
+
                     //check file extension is allowed
-                    if (strstr($cfg['fa_ext'], $ext)){
-                        $name = basename($file, '.' . $path_parts['extension']);
-                        $name = str_replace(' ', '_', $name);
-                        $file = $name . '_' . substr(session_id(), 0, 5) . '.' . $ext;
-                        $destination = $_SERVER['DOCUMENT_ROOT']."/upload/forum/post".$post_id."/".$file;
-                        move_uploaded_file($tmp_name, $destination);
-                        $sql = "INSERT INTO cms_forum_files (post_id, filename, filesize, hits, pubdate)
-                                VALUES ('$post_id', '$file', '$filesize', 0, NOW())";
-                        @chmod($destination, 0777);
-                        $inDB->query($sql) ;
+                    if (strstr(strtolower($cfg['fa_ext']), $ext)){
+
+						$name = substr($file, 0, strrpos($file, '.'));
+						$name = preg_replace ('/[^a-zA-Z0-9]/i', '', $name);
+                        $file = $inDB->escape_string($name . '_' . substr(session_id(), 0, 5) . '.' . $ext);
+
+                        $destination = PATH.'/upload/forum/post'.$post_id.'/'.$file;
+
+						if ($inCore->moveUploadedFile($tmp_name, $destination, $error)) {
+
+                        	$sql = "INSERT INTO cms_forum_files (post_id, filename, filesize, hits, pubdate)
+                                	VALUES ('$post_id', '$file', '$filesize', 0, NOW())";
+							$inDB->query($sql);
+
+						} else {
+					
+							$file_error = true;
+							
+						}
+
                     } else { $file_error = true; }
-                    $c ++;
+
             } elseif ($error == UPLOAD_ERR_FORM_SIZE) { $file_error = true; }
     }
     

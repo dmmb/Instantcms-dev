@@ -31,7 +31,7 @@ function bannerHitsbyID($id){
 	echo '<h3>Баннеры</h3>';
 	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; }
 	$msg = '';
-	
+	$inDB = cmsDatabase::getInstance();
 	$toolmenu = array();
 
 	if($opt=='list' || $opt=='show_banner' || $opt=='hide_banner'){
@@ -105,28 +105,37 @@ function bannerHitsbyID($id){
 
 	if ($opt == 'submit'){	
 
-			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { $msg .= 'Укажите название баннера!<br>'; }
-			$link = $_REQUEST['link'];
+			$title = $inCore->request('title', 'str', 'Банер без названия');
+			$link  = $inCore->request('link', 'str');
 			
-			$typeimg = $_REQUEST['typeimg'];
-			$maxhits = $_REQUEST['maxhits'];
+			$typeimg = $inCore->request('typeimg', 'str');
+			$maxhits = $inCore->request('maxhits', 'int');
+
 			$maxuser = 0;
 			
-			$published = $_REQUEST['published'];
+			$published = $inCore->request('published', 'int', 0);
 			
-			$position = $_REQUEST['position'];
+			$position = $inCore->request('position', 'str');
 			
-			$uploaddir = $_SERVER['DOCUMENT_ROOT'].'/images/banners/';		
+			$uploaddir = PATH.'/images/banners/';		
 			
 			if (!is_dir($uploaddir)) { @mkdir($uploaddir); }
-			
+
 			$realfile = $_FILES['picture']['name'];
-			$filename = $realfile;
-			$uploadfile = $uploaddir . $realfile;
+			$path_parts = pathinfo($realfile);
+			$ext = strtolower($path_parts['extension']);
+
+			if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'swf') { die('тип файла неверный'); }
+
+			$realfile = substr($realfile, 0, strrpos($realfile, '.'));
+			$realfile = preg_replace ('/[^a-zA-Z0-9]/i', '', $realfile);
+			$filename = $inDB->escape_string($realfile . '.' . $ext);
+
+			$uploadfile = $uploaddir . $filename;
 												
 			if (@move_uploaded_file($_FILES['picture']['tmp_name'], $uploadfile)) {			
 					$sql = "INSERT INTO cms_banners (position, typeimg, fileurl, hits, clicks, maxhits, maxuser, user_id, pubdate, title, link, published)
-							VALUES ('$position', '$typeimg', '$filename', 0, 0, '$maxhits', $maxuser, 1, NOW(), '$title', '$link', $published)";	
+							VALUES ('$position', '$typeimg', '$filename', 0, 0, '$maxhits', '$maxuser', 1, NOW(), '$title', '$link', '$published')";	
 					dbQuery($sql);
 			} else { $msg .= 'Ошибка загрузки баннера или файл не загружен!<br>'; }
 			if ($msg) {$opt = 'add';} else {
@@ -134,29 +143,39 @@ function bannerHitsbyID($id){
 	}	  
 	
 	if ($opt == 'update'){
-		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];
+		if(isset($_REQUEST['item_id'])) {
+
+			$id = $inCore->request('item_id', 'int', 0);
 			
-			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { $msg .= 'Укажите название баннера!<br>'; }
-			$link = $_REQUEST['link'];
+			$title = $inCore->request('title', 'str', 'Банер без названия');
+			$link  = $inCore->request('link', 'str');
 			
-			$typeimg = $_REQUEST['typeimg'];
-			$maxhits = $_REQUEST['maxhits'];
+			$typeimg = $inCore->request('typeimg', 'str');
+			$maxhits = $inCore->request('maxhits', 'int');
 			$maxuser = 0;
 			
-			$published = $_REQUEST['published'];
+			$published = $inCore->request('published', 'int', 0);
 			
-			$position = $_REQUEST['position'];
+			$position = $inCore->request('position', 'str');
 			
-			if (@$_FILES['picture']['size']){
-                $uploaddir = $_SERVER['DOCUMENT_ROOT'].'/images/banners/';
+			if ($_FILES['picture']['size']){
 
-                $realfile = $_FILES['picture']['name'];
-                $filename = $realfile;
-                $uploadfile = $uploaddir . $realfile;
+                $uploaddir = PATH.'/images/banners/';
+
+				$realfile = $_FILES['picture']['name'];
+				$path_parts = pathinfo($realfile);
+				$ext = strtolower($path_parts['extension']);
+	
+				if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'swf') { die('тип файла неверный'); }
+	
+				$realfile = substr($realfile, 0, strrpos($realfile, '.'));
+				$realfile = preg_replace ('/[^a-zA-Z0-9]/i', '', $realfile);
+				$filename = $inDB->escape_string($realfile . '.' . $ext);
+	
+				$uploadfile = $uploaddir . $filename;
 
                 if (@move_uploaded_file($_FILES['picture']['tmp_name'], $uploadfile)) {
-                        $sql = "UPDATE cms_banners SET fileurl = '$filename' WHERE id = $id";
+                        $sql = "UPDATE cms_banners SET fileurl = '$filename' WHERE id = '$id'";
                         dbQuery($sql) ;
                 } else { $msg .= 'Ошибка загрузки баннера!'; }
             }
@@ -185,12 +204,17 @@ function bannerHitsbyID($id){
 	if($opt == 'delete'){
 		if(isset($_REQUEST['item_id'])) { 
 			$id = $_REQUEST['item_id'];		
-			$sql = "SELECT * FROM cms_banners WHERE id = $id LIMIT 1";
+			$sql = "SELECT * FROM cms_banners WHERE id = '$id' LIMIT 1";
 			$result = dbQuery($sql) ;			
 			if (mysql_num_rows($result)){			
 				$f = mysql_fetch_assoc($result);
-				unlink($_SERVER['DOCUMENT_ROOT'].'/images/banners/'.$f['fileurl']);	
-				$sql = "DELETE FROM cms_banners WHERE id = $id";
+
+				$path_parts = pathinfo($f['fileurl']);
+				$ext = strtolower($path_parts['extension']);
+				if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'swf') {
+					unlink(PATH.'/images/banners/'.$f['fileurl']);
+				}
+				$sql = "DELETE FROM cms_banners WHERE id = '$id'";
 				dbQuery($sql) ;			
 				header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
 			}
