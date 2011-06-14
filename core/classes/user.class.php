@@ -198,9 +198,7 @@ class cmsUser {
         $inDB       = cmsDatabase::getInstance();
         $inCore     = cmsCore::getInstance();
         
-        $user_id    = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : 0;
-
-        if ($inCore->getCookie('userid') && !$user_id){
+        if ($inCore->getCookie('userid') && !$this->id){
 
             $cookie_code = $inCore->getCookie('userid');
 

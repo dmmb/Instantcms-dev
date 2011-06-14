@@ -33,8 +33,8 @@
 			// check job interval
 			if (!$job['job_interval'] || ($job['hours_ago'] > $job['job_interval']) || $job['is_new']) {
 
-    	        //run job
-	            cmsCron::executeJob($job);
+            //run job
+            cmsCron::executeJob($job);
 
 			}
 

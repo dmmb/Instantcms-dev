@@ -465,17 +465,17 @@
 		files: {
 			// If you are doing a repack with packer (http://dean.edwards.name/packer/) then append ".packed" onto the js and css files before you pack it.
 			js: {
-				lightbox:	'/includes/jquery/lightbox/js/jquery.lightbox.js',
-				colorBlend:	'/includes/jquery/lightbox/js/jQuery.colorBlend.pack.js'
+				lightbox:	'js/jquery.lightbox.js',
+				colorBlend:	'js/jQuery.colorBlend.pack.js'
 			},
 			css: {
-				lightbox:	'/includes/jquery/lightbox/css/jquery.lightbox.css'
+				lightbox:	'css/jquery.lightbox.css'
 			},
 			images: {
-				prev:		'/includes/jquery/lightbox/images/prev.gif',
-				next:		'/includes/jquery/lightbox/images/next.gif',
-				blank:		'/includes/jquery/lightbox/images/blank.gif',
-				loading:	'/includes/jquery/lightbox/images/loading.gif'
+				prev:		'images/prev.gif',
+				next:		'images/next.gif',
+				blank:		'images/blank.gif',
+				loading:	'images/loading.gif'
 			}
 		},
 		

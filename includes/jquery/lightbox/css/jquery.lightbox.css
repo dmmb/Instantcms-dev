@@ -127,7 +127,7 @@ html, body { margin: 0; padding: 0; height: 100%;}
 	display:block;
 	width:49%;
 	height: 100%;
-	background:transparent url(../../jquery_lightbox/images/blank.gif) no-repeat; /* Trick IE into showing hover */
+	background:transparent url(../../lightbox/images/blank.gif) no-repeat; /* Trick IE into showing hover */
 	/* cursor:pointer; */
 	zoom:1; /* who knows why? */
 	

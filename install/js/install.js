@@ -3,10 +3,10 @@ $().ready(function(){
 			show: function(element) {
 
 				if($(element).is("#install")){
-					$('input[@name=install]').remove();
+					$('input[name=install]').remove();
 					$('.wizardcontrols').append('<input class="wizardnext" type="submit" name="install" style="width:150px" value="Установить">');
 				} else {
-					$('input[@name=install]').remove();
+					$('input[name=install]').remove();
 				}
 
                 if($(element).is("#start")){

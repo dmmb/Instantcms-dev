@@ -1,5 +1,5 @@
 function toggleMembers(){
-	var clubtype = $('select[@name=clubtype]').val();
+	var clubtype = $('select[name=clubtype]').val();
 	if (clubtype == 'public') { 
 		$('#nomembers').show(); $('#members').hide();  $('#minkarma').show(); 
 	} else { 
@@ -36,7 +36,7 @@ $().ready(function() {
 
         while (user_id.length){
             id = user_id.pop();
-            $('#userslist2 option[@value='+id+']').remove();
+            $('#userslist2 option[value='+id+']').remove();
         }
 
   });  
@@ -63,7 +63,7 @@ $().ready(function() {
 
         while (user_id.length){
             id = user_id.pop();
-            $('#moderslist option[@value='+id+']').remove();
+            $('#moderslist option[value='+id+']').remove();
         }
 
   });

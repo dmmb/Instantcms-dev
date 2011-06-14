@@ -66,8 +66,8 @@ function deleteAlbum(id, title, clubid){
 
 function wallPage(page){
 
-    var user_id     = $('div.wall_body input[@name=user_id]').val();
-    var usertype    = $('div.wall_body input[@name=usertype]').val();
+    var user_id     = $('div.wall_body input[name=user_id]').val();
+    var usertype    = $('div.wall_body input[name=usertype]').val();
 
     $('.wall_loading').show();
 
