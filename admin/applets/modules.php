@@ -382,6 +382,7 @@ function applet_modules(){
 			$position       = $inCore->request('position', 'str', '');
 			$showtitle      = $inCore->request('showtitle', 'int', 0);
 			$content        = $inCore->request('content', 'html', '');
+            $content    	= $inDB->escape_string($content);
 			$published      = $inCore->request('published', 'int', 0);
 			$css_prefix     = $inCore->request('css_prefix', 'str', '');
 			$is_strict_bind = $inCore->request('is_strict_bind', 'int', 0);
