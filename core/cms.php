@@ -33,7 +33,7 @@ class cmsCore {
     private         $is_menu_id_strict;
 
     private         $uri;
-    private         $component;
+    public          $component;
     private         $is_content = false;
 
     private         $module_configs = array();
