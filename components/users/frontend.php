@@ -382,6 +382,7 @@ if ($do=='editprofile'){
 					$errors = false;
 					
 					$nickname = $inCore->request('nickname', 'str');
+                    $nickname = strip_tags($nickname);
                     if (strlen($nickname)<2) { cmsCore::addSessionMessage($_LANG['SHORT_NICKNAME'], 'error'); $errors = true; }
 					$inCore->loadModel('registration');
 					$modreg = new cms_model_registration();
@@ -2355,18 +2356,24 @@ if ($do=='addfile'){
 
 	if ($inUser->id != $id){ cmsCore::error404(); }
 		
-			$max_mb         = $cfg['filessize'];
-			$current_bytes  = usrFilesSize($id);
-			if ($current_bytes) { $current_mb = round(($current_bytes / 1024) / 1024, 2); } else { $current_mb = 0; }
-			$free_mb = round($max_mb - $current_mb, 2);
+    $max_mb         = $cfg['filessize'];
+    $current_bytes  = usrFilesSize($id);
+    if ($current_bytes) { $current_mb = round(($current_bytes / 1024) / 1024, 2); } else { $current_mb = 0; }
+    $free_mb = round($max_mb - $current_mb, 2);
 		
 	if($inCore->inRequest('upload')){
-				
+
 				$size_mb      = 0;
 				$size_limit   = false;
 				$loaded_files = array();
-				
-				foreach ($_FILES as $key => $data_array) {
+
+            $list_files = array();
+
+            foreach($_FILES['upfile'] as $key=>$value) {
+                foreach($value as $k=>$v) { $list_files['upfile'.$k][$key] = $v; }
+            }
+
+            foreach ($list_files as $key=>$data_array) {
 					$error = $data_array['error'];
 					if ($error == UPLOAD_ERR_OK) {
 
@@ -2473,7 +2480,7 @@ if ($do=='addfile'){
 					$smarty->assign('post_max_b', $post_max_b);
 					$smarty->assign('post_max_mb', $post_max_mb);
 					$smarty->assign('cfg', $cfg);
-		$smarty->assign('messages', cmsCore::getSessionMessages());
+                    $smarty->assign('messages', cmsCore::getSessionMessages());
 					$smarty->assign('types', $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar');
 					$smarty->display('com_users_file_add.tpl');
 

@@ -161,6 +161,10 @@ function registration(){
                 $msg .= $namemsg;
             }
         }
+
+        $nickname = strip_tags($nickname);
+        if (!$nickname) { $nickname = $login; }
+
 		if($model->getBadNickname($nickname)){
             $msg .= $_LANG['ERR_NICK_EXISTS'].'<br/>';
         }
