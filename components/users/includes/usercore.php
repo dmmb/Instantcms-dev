@@ -117,8 +117,8 @@ function usrPhotos($user_id, $limit=4, $preview=true, $limitfrom=0, $limitmany=0
 		while($photo = $inDB->fetch_assoc($result)){
 			if (usrAllowed($photo['allow_who'], $photo['user_id'])){
 				$html .= '<div class="usr_photo_thumb">';
-					$html .= '<a class="usr_photo_link" href="/users/'.$user_id.'/photo'.$photo['id'].'.html" title="'.$photo['title'].'">';
-					$html .= '<img border="0" src="/images/users/photos/small/'.$photo['imageurl'].'" alt="'.$photo['title'].'"/>';
+					$html .= '<a class="usr_photo_link" href="/users/'.$user_id.'/photo'.$photo['id'].'.html" title="'.htmlspecialchars($photo['title']).'">';
+					$html .= '<img border="0" src="/images/users/photos/small/'.$photo['imageurl'].'" alt="'.htmlspecialchars($photo['title']).'"/>';
 				$html .= '</a>';
 				$html .= '<div style="padding:4px;"><span style="font-size:10px; display:block"><strong>'.$_LANG['DATE'].':</strong> '.$photo['fpubdate'].'</span>';
 				$html .= '<span style="font-size:10px; display:block"><strong>'.$_LANG['HITS'].':</strong> '.$photo['hits'].'</span>';
@@ -459,9 +459,9 @@ function usrAwardsList($selected = 'aw.gif'){
 				 $tag = str_replace('.gif', '', $file);
 				 $dir = '/images/users/awards/';			 
 				 if ($selected != $file){
-				 	$html .= '<td align="center" valign="middle"><img src="'.$dir.$file.'" alt="'.$file.'"/><br/><input type="radio" name="imageurl" value="'.$file.'"/></td>';
+				 	$html .= '<td align="center" valign="middle"><img src="'.$dir.$file.'" alt="'.htmlspecialchars($file).'"/><br/><input type="radio" name="imageurl" value="'.htmlspecialchars($file).'"/></td>';
   				 } else {
-					$html .= '<td align="center" valign="middle"><img src="'.$dir.$file.'" alt="'.$file.'"/><br/><input type="radio" name="imageurl" value="'.$file.'" checked="checked"/></td>';					
+					$html .= '<td align="center" valign="middle"><img src="'.$dir.$file.'" alt="'.htmlspecialchars($file).'"/><br/><input type="radio" name="imageurl" value="'.htmlspecialchars($file).'" checked="checked"/></td>';					
 				 }
 			}
 			$html .= '</tr></table></div>';

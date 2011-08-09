@@ -23,7 +23,7 @@
             {/if}
                 <table border="0" cellpadding="5" cellspacing="0">
                   <tr>
-                    <td valign="top"><img src="/images/users/awards/{$aw.imageurl}" border="0" alt="{$aw.title}"/></td>
+                    <td valign="top"><img src="/images/users/awards/{$aw.imageurl}" border="0" alt="{$aw.title|escape:'html'}"/></td>
                     <td valign="top">{$aw.description}
                       <div class="usr_award_date">{$aw.pubdate}</div></td>
                   </tr>

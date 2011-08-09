@@ -15,8 +15,8 @@
 	{foreach key=tid item=club from=$clubs}
 		<div class="club_entry{if $club.is_vip}_vip{/if}">
 			<div class="image">
-				<a href="/clubs/{$club.id}" title="{$club.title}" class="{$club.clubtype}">
-					<img src="/images/clubs/small/{$club.imageurl}" border="0" alt="{$club.title}"/>
+				<a href="/clubs/{$club.id}" title="{$club.title|escape:'html'}" class="{$club.clubtype}">
+					<img src="/images/clubs/small/{$club.imageurl}" border="0" alt="{$club.title|escape:'html'}"/>
 				</a>
 			</div>					
 			<div class="data">

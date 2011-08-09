@@ -34,9 +34,9 @@
             	<div class="photo_album_tumb">
                 	<div class="photo_container">
                     	{if $cat.iconurl}
-                    	<a href="/photos/{$cat.id}"><img class="photo_album_img" src="/images/photos/small/{$cat.iconurl}" alt="{$cat.title}" border="0" /></a>
+                    	<a href="/photos/{$cat.id}"><img class="photo_album_img" src="/images/photos/small/{$cat.iconurl}" alt="{$cat.title|escape:'html'}" border="0" /></a>
                         {else}
-                        <a href="/photos/{$cat.id}"><img class="photo_album_img" src="/images/photos/no_image.png" alt="{$cat.title}" border="0" width="{$cat.thumb1}px" /></a>
+                        <a href="/photos/{$cat.id}"><img class="photo_album_img" src="/images/photos/no_image.png" alt="{$cat.title|escape:'html'}" border="0" width="{$cat.thumb1}px" /></a>
                         {/if}
                     </div>
                     <div class="photo_txt">
@@ -119,13 +119,13 @@
 							<table width="100%" height="100" cellspacing="0" cellpadding="4">
 							  	<tr>
 							  		<td valign="middle" align="center" >
-										<a class="lightbox-enabled" rel="lightbox-galery" href="{$con.photolink}" title="{$con.title}">
-											<img class="photo_thumb_img" src="/images/photos/small/{$con.file}" alt="{$con.title}" border="0" />
+										<a class="lightbox-enabled" rel="lightbox-galery" href="{$con.photolink}" title="{$con.title|escape:'html'}">
+											<img class="photo_thumb_img" src="/images/photos/small/{$con.file}" alt="{$con.title|escape:'html'}" border="0" />
 										</a>
                                 	</td>
                                 </tr>
 								<tr>
-                                	<td align="center"><a href="{$con.photolink2}" title="{$con.title}">{$con.title}</a></td>
+                                	<td align="center"><a href="{$con.photolink2}" title="{$con.title|escape:'html'}">{$con.title}</a></td>
                                 </tr>
 						{if $con.published == 0}
 								<tr id="moder{$con.id}">

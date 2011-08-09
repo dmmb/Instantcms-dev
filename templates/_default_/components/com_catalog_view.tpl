@@ -52,12 +52,12 @@
 					<table border="0" cellspacing="2" cellpadding="0" id="catalog_item_table"><tr>
 						<td valign="top" align="center" id="catalog_list_itempic" width="110">							
 								{if $item.imageurl}
-									<a class="lightbox-enabled" title="{$item.title}" rel="lightbox" href="/images/catalog/{$item.imageurl}">
-										<img alt="{$item.title}" src="/images/catalog/small/{$item.imageurl}.jpg" border="0" />
+									<a class="lightbox-enabled" title="{$item.title|escape:'html'}" rel="lightbox" href="/images/catalog/{$item.imageurl}">
+										<img alt="{$item.title|escape:'html'}" src="/images/catalog/small/{$item.imageurl}.jpg" border="0" />
 									</a>
 								{else}
 									<a href="/catalog/item{$item.id}.html">
-										<img alt="{$item.title}" src="/images/catalog/small/nopic.jpg" border="0" />								
+										<img alt="{$item.title|escape:'html'}" src="/images/catalog/small/nopic.jpg" border="0" />								
 									</a>										
 								{/if}
 							{if $cat.view_type=='shop'}
@@ -123,9 +123,9 @@
 						<tr><td height="110" align="center" valign="middle">
 							<a href="/catalog/item{$item.id}.html">
 								{if $item.imageurl}
-									<img alt="{$item.title}" src="/images/catalog/small/{$item.imageurl}.jpg" border="0" />
+									<img alt="{$item.title|escape:'html'}" src="/images/catalog/small/{$item.imageurl}.jpg" border="0" />
 								{else}
-									<img alt="{$item.title}" src="/images/catalog/small/nopic.jpg" border="0" />								
+									<img alt="{$item.title|escape:'html'}" src="/images/catalog/small/nopic.jpg" border="0" />								
 								{/if}
 							</a>
 						</td></tr>

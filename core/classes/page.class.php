@@ -114,7 +114,7 @@ public function setTitle($title=''){
  * Выводит заголовок h1 на странице
  */
 public function printHeading($heading=''){
-    echo '<h1 class="con_heading">'.$heading.'</h1>';
+    echo '<h1 class="con_heading">'.htmlspecialchars($heading).'</h1>';
     return true;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -171,13 +171,13 @@ public function printHead(){
     //Заголовок
     $title = strip_tags($this->title);
     $title = ($inCore->menuId()==1 ? $this->homeTitle() : $title.' - '.$inConf->sitename);
-    echo '<title>'.$title.'</title>' ."\n";
+    echo '<title>'.htmlspecialchars($title).'</title>' ."\n";
     //Ключевые слова
     if (!$this->page_keys) { $this->page_keys = $inConf->keywords; }
-    echo '<meta name="keywords" content="'.$this->page_keys.'" />' ."\n";
+    echo '<meta name="keywords" content="'.htmlspecialchars($this->page_keys).'" />' ."\n";
     //Описание
     if (!$this->page_desc) { $this->page_desc = $inConf->metadesc; }
-    echo '<meta name="description" content="'.$this->page_desc.'" />' ."\n";
+    echo '<meta name="description" content="'.htmlspecialchars($this->page_desc).'" />' ."\n";
     //Генератор
     echo '<meta name="generator" content="InstantCMS - www.instantcms.ru"/>' ."\n";
 

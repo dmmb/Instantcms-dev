@@ -80,8 +80,8 @@
 				{if $col==1} <tr> {/if} 				
 				<td valign="top" width="">
 					<div class="usr_photo_thumb">                        
-                        <a class="usr_photo_link" href="{$photo.url}" title="{$photo.title}">
-                            <img border="0" src="{$photo.file}" alt="{$photo.title}"/>
+                        <a class="usr_photo_link" href="{$photo.url}" title="{$photo.title|escape:'html'}">
+                            <img border="0" src="{$photo.file}" alt="{$photo.title|escape:'html'}"/>
                         </a>
                         <div>
                             <span class="usr_photo_date">{$photo.fpubdate}</span>

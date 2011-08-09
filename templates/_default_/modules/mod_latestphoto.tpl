@@ -7,19 +7,19 @@
                 <td align="center" valign="middle" class="mod_lp_photo" width="">
 				<table width="100%" height="100" cellspacing="0" cellpadding="0">
 				{if $cfg.showtype == 'full'}
-					<tr><td align="center"><div class="mod_lp_titlelink"><a href="/photos/photo{$con.id}.html" title="{$con.title}">{$con.title}</a></div></td></tr>
+					<tr><td align="center"><div class="mod_lp_titlelink"><a href="/photos/photo{$con.id}.html" title="{$con.title|escape:'html'}">{$con.title}</a></div></td></tr>
 				{/if}
 				<tr>
 					  <td valign="middle" align="center">
-						<a href="/photos/photo{$con.id}.html" title="{$con.title}">
-							<img class="photo_thumb_img" src="/images/photos/small/{$con.file}" alt="{$con.title}" border="0" />
+						<a href="/photos/photo{$con.id}.html" title="{$con.title|escape:'html'}">
+							<img class="photo_thumb_img" src="/images/photos/small/{$con.file}" alt="{$con.title|escape:'html'}" border="0" />
 						</a>
 				</td></tr>
 				{if $cfg.showtype == 'full'}
 					<tr>
 					<td align="center">
 						{if $cfg.showalbum}
-							<div class="mod_lp_albumlink"><a href="/photos/{$con.album_id}" title="{$con.album}">{$con.album}</a></div>
+							<div class="mod_lp_albumlink"><a href="/photos/{$con.album_id}" title="{$con.album|escape:'html'}">{$con.album}</a></div>
 						{/if}
 						{if $cfg.showcom || $cfg.showdate}
 							<div class="mod_lp_details">

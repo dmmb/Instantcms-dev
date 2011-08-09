@@ -31,7 +31,7 @@
 			<tr>
 				<td width="48">
 					<div style="padding:2px; border: solid 1px silver">
-						<img src="/images/clubs/small/{$club.imageurl}" border="0" alt="{$club.title}"/>
+						<img src="/images/clubs/small/{$club.imageurl}" border="0" alt="{$club.title|escape:'html'}"/>
 					</div>
 				</td>
 				<td width="120">

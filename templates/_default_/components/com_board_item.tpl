@@ -26,7 +26,7 @@
 	<tr>
 		{if $item.file && $cfg.photos}
 			<td width="64">
-					<img class="bd_image_small" src="/images/board/medium/{$item.file}" border="0" alt="{$item.title}"/>
+					<img class="bd_image_small" src="/images/board/medium/{$item.file}" border="0" alt="{$item.title|escape:'html'}"/>
 			 </td>
 		{/if}
 		<td valign="top">

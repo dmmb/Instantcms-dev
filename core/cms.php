@@ -2565,7 +2565,7 @@ class cmsCore {
         }
         if ($list){
             foreach($list as $id=>$type){
-                $type = trim($type);
+                $type = htmlspecialchars(trim($type));
                 if (strtolower($selected) == strtolower($type)) { $sel = 'selected="selected"'; } else { $sel =''; }
                 $html .= '<option value="'.ucfirst($type).'" '.$sel.'>'.ucfirst($type).'</option>';
             }
@@ -2593,7 +2593,7 @@ class cmsCore {
             } else {
                 $s = '';
             }
-            $pretty = ucfirst(strtolower($c['city']));
+            $pretty = htmlspecialchars(ucfirst(strtolower($c['city'])));
             $html .= '<option value="'.$pretty.'" '.$s.'>'.$pretty.'</option>';
         }
         $html .= '</select>';

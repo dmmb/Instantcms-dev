@@ -5,7 +5,7 @@
 				<table border="0" cellspacing="2" cellpadding="0" width="100%">
 					<tr><td height="110" align="center" valign="middle">
 						<a href="/catalog/item{$item.id}.html">
-							<img alt="{$item.title}" src="/images/catalog/small/{$item.imageurl}.jpg" border="0" />
+							<img alt="{$item.title|escape:'html'}" src="/images/catalog/small/{$item.imageurl}.jpg" border="0" />
                         </a>
 					</td></tr>
 	                

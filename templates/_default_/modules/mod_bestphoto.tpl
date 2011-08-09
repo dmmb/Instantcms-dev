@@ -6,9 +6,9 @@
     <td align="center" valign="bottom" class="mod_lp_photo" width="{math equation="100 / z" z=$cfg.maxcols}%">
 
         	{if $cfg.showtype == 'full'}
-	          	<div class="mod_lp_titlelink"><a href="/photos/photo{$con.id}.html" title="{$con.title} ({$con.rating})">{$con.title}</a></div>
+	          	<div class="mod_lp_titlelink"><a href="/photos/photo{$con.id}.html" title="{$con.title|escape:'html'} ({$con.rating})">{$con.title}</a></div>
             {/if}
-        	<a href="/photos/photo{$con.id}.html" title="{$con.title}"> <img class="photo_thumb_img" src="/images/photos/small/{$con.file}" alt="{$con.title} ({$con.rating})" border="0" /></a>
+        	<a href="/photos/photo{$con.id}.html" title="{$con.title|escape:'html'}"> <img class="photo_thumb_img" src="/images/photos/small/{$con.file}" alt="{$con.title|escape:'html'} ({$con.rating})" border="0" /></a>
 
             {if $cfg.showtype == 'full'}
                 	{if $cfg.showalbum}

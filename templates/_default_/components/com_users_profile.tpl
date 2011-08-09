@@ -219,7 +219,7 @@
                         {if $usr.city}
 						<div class="field">
 							<div class="title">{$LANG.CITY}:</div>
-                            <div class="value"><a href="/users/city/{$usr.cityurl}">{$usr.city}</a></div>
+                            <div class="value"><a href="/users/city/{$usr.cityurl|escape:'html'}">{$usr.city}</a></div>
 						</div>
                         {/if}
 						
@@ -333,8 +333,8 @@
                                     {foreach key=key item=album from=$usr.albums}
                                         <li>
                                             <div class="usr_album_thumb">
-                                                <a href="/users/{$usr.login}/photos/{$album.type}{$album.id}.html" title="{$album.title}">
-                                                    <img src="{$album.imageurl}" width="64" height="64" border="0" alt="{$album.title}" />
+                                                <a href="/users/{$usr.login}/photos/{$album.type}{$album.id}.html" title="{$album.title|escape:'html'}">
+                                                    <img src="{$album.imageurl}" width="64" height="64" border="0" alt="{$album.title|escape:'html'}" />
                                                 </a>
                                             </div>
                                             <div class="usr_album">

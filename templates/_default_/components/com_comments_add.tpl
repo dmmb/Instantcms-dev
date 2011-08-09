@@ -3,7 +3,7 @@
 {* ================================================================================ *}
 
 <div class="cm_addentry">
-	<form action="/comments/{$do}" id="msgform" method="POST">
+	<form action="/comments/{$do|escape:'html'}" id="msgform" method="POST">
         <input type="hidden" name="parent_id" value="{$parent_id}" />
         <input type="hidden" name="comment_id" value="{$comment.id}" />
 		{if $no_guests && !$is_user}

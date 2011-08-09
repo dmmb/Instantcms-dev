@@ -14,12 +14,12 @@
 						<tr>
 							{if $cfg.photos}
 								<td width="30" valign="top">
-									<img class="bd_image_small" src="/images/board/small/{$con.file}" border="0" alt="{$con.title}"/>
+									<img class="bd_image_small" src="/images/board/small/{$con.file}" border="0" alt="{$con.title|escape:'html'}"/>
 								</td>
 							{/if}
 							<td valign="top">
 								<div class="bd_title">
-									<a href="/board/read{$con.id}.html" title="{$con.title}">{$con.title}</a>
+									<a href="/board/read{$con.id}.html" title="{$con.title|escape:'html'}">{$con.title}</a>
 								</div>
 								<div class="bd_text">
 									{$con.content}
@@ -27,7 +27,7 @@
 								<div class="bd_item_details">
 										<span class="bd_item_date">{$con.fpubdate}</span>
 										{if $con.city}
-											<span class="bd_item_city"><a href="/board/city/{$con.enc_city}">{$con.city}</a></span>
+											<span class="bd_item_city"><a href="/board/city/{$con.enc_city|escape:'html'}">{$con.city}</a></span>
 										{/if}
 										{if $con.user}
 											<span class="bd_item_user"><a href="{profile_url login=$con.user_login}">{$con.user}</a></span>

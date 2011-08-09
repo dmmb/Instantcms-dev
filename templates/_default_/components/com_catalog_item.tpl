@@ -18,7 +18,7 @@
         <div>
 		{if strlen($item.imageurl)>4}
                 <a class="lightbox-enabled" rel="lightbox" href="/images/catalog/{$item.imageurl}" target="_blank">
-                    <img alt="{$item.title}" src="/images/catalog/medium/{$item.imageurl}.jpg" border="0" />
+                    <img alt="{$item.title|escape:'html'}" src="/images/catalog/medium/{$item.imageurl}.jpg" border="0" />
                 </a>
         {else}
                 <img src="/images/catalog/medium/nopic.jpg" border="0" />

@@ -6,8 +6,8 @@
 {foreach key=tid item=club from=$clubs}
 	<div class="club_entry">
 		<div class="image">
-			<a href="/clubs/{$club.id}" title="{$club.title}">
-				<img src="/images/clubs/small/{$club.imageurl}" border="0" alt="{$club.title}"/>
+			<a href="/clubs/{$club.id}" title="{$club.title|escape:'html'}">
+				<img src="/images/clubs/small/{$club.imageurl}" border="0" alt="{$club.title|escape:'html'}"/>
 			</a>
 		</div>					
 		<div class="data">

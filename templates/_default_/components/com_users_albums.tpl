@@ -19,8 +19,8 @@
             {foreach key=key item=album from=$albums}
                 <li>
                     <div class="usr_album_thumb">
-                        <a href="/users/{$user.login}/photos/{$album.type}{$album.id}.html" title="{$album.title}">
-                            <img src="{$album.imageurl}" width="64" height="64" border="0" alt="{$album.title}" />
+                        <a href="/users/{$user.login}/photos/{$album.type}{$album.id}.html" title="{$album.title|escape:'html'}">
+                            <img src="{$album.imageurl}" width="64" height="64" border="0" alt="{$album.title|escape:'html'}" />
                         </a>
                     </div>
                     <div class="usr_album">

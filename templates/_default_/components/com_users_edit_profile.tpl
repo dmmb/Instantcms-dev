@@ -41,7 +41,7 @@
                             <strong>{$LANG.YOUR_NAME}: </strong><br />
                             <span class="usr_edithint">{$LANG.YOUR_NAME_TEXT}</span>
                         </td>
-                        <td valign="top"><input name="nickname" type="text" class="text-input" id="nickname" style="width:300px" value="{$usr.nickname}"/></td>
+                        <td valign="top"><input name="nickname" type="text" class="text-input" id="nickname" style="width:300px" value="{$usr.nickname|escape:'html'}"/></td>
                     </tr>
                     <tr>
                         <td valign="top"><strong>{$LANG.SEX}:</strong></td>

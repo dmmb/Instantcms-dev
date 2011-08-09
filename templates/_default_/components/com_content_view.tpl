@@ -58,7 +58,7 @@
 							<div class="con_desc">
                                 {if $article.image}
                                     <div class="con_image">
-                                        <img src="/images/photos/small/{$article.image}" border="0" alt="{$article.title}"/>
+                                        <img src="/images/photos/small/{$article.image}" border="0" alt="{$article.title|escape:'html'}"/>
                                     </div>
                                 {/if}
                                 {$article.description}

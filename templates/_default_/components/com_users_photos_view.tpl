@@ -22,7 +22,7 @@
                 
                 <td width="50%">
                     {if $previd}
-                        <a class="usr_photo_prev_link" href="/users/{$usr.id}/photo{$previd.id}.html" title="{$previd.title}"></a>
+                        <a class="usr_photo_prev_link" href="/users/{$usr.id}/photo{$previd.id}.html" title="{$previd.title|escape:'html'}"></a>
                     {else}
                         &nbsp;
                     {/if}
@@ -31,14 +31,14 @@
                 <td>
                     <div class="usr_photo_view">
                         {if $nextid}<a href="/users/{$usr.id}/photo{$nextid.id}.html">{/if}
-                            <img border="0" src="/images/users/photos/medium/{$photo.imageurl}" alt="{$photo.title}" />
+                            <img border="0" src="/images/users/photos/medium/{$photo.imageurl}" alt="{$photo.title|escape:'html'}" />
                         {if $nextid}</a>{/if}
                     </div>
                 </td>
                 
                 <td width="50%">
                     {if $nextid}
-                        <a class="usr_photo_next_link" href="/users/{$usr.id}/photo{$nextid.id}.html" title="{$nextid.title}"></a>
+                        <a class="usr_photo_next_link" href="/users/{$usr.id}/photo{$nextid.id}.html" title="{$nextid.title|escape:'html'}"></a>
                     {else}
                         &nbsp;
                     {/if}
@@ -65,7 +65,7 @@
                 
                 <td width="30%">
                     {if $previd}
-                        <a class="usr_photo_prev_link" href="/users/{$usr.id}/photo{$previd.id}.html" title="{$previd.title}"></a>
+                        <a class="usr_photo_prev_link" href="/users/{$usr.id}/photo{$previd.id}.html" title="{$previd.title|escape:'html'}"></a>
                     {else}
                         &nbsp;
                     {/if}
@@ -81,7 +81,7 @@
                 
                 <td width="30%">
                     {if $nextid}
-                        <a class="usr_photo_next_link" href="/users/{$usr.id}/photo{$nextid.id}.html" title="{$nextid.title}"></a>
+                        <a class="usr_photo_next_link" href="/users/{$usr.id}/photo{$nextid.id}.html" title="{$nextid.title|escape:'html'}"></a>
                     {else}
                         &nbsp;
                     {/if}

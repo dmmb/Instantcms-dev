@@ -12,20 +12,20 @@
 			<table width="100%" height="100" cellspacing="0" cellpadding="0">
 				<tr>
                 	<td align="center">
-                    	<div class="mod_lp_titlelink">{$num} <a href="/photos/photo{$con.id}.html" title="{$con.title}">{$con.title}</a>
+                    	<div class="mod_lp_titlelink">{$num} <a href="/photos/photo{$con.id}.html" title="{$con.title|escape:'html'}">{$con.title}</a>
                         </div>
                     </td>
                 </tr>
 				<tr>
 			  		<td valign="middle" align="center">
-						<a href="/photos/photo{$con.id}.html" title="{$con.title}">
-							<img class="photo_thumb_img" src="/images/photos/small/{$con.file}" alt="{$con.title}" border="0" />
+						<a href="/photos/photo{$con.id}.html" title="{$con.title|escape:'html'}">
+							<img class="photo_thumb_img" src="/images/photos/small/{$con.file}" alt="{$con.title|escape:'html'}" border="0" />
 						</a>
                     </td>
 				</tr>
 				<tr>
 					<td align="center">
-						<div class="mod_lp_albumlink"><a href="/photos/{$con.album_id}" title="{$con.album}">{$con.album}</a></div>
+						<div class="mod_lp_albumlink"><a href="/photos/{$con.album_id}" title="{$con.album|escape:'html'}">{$con.album}</a></div>
 						<div class="mod_lp_details">
 						<table cellpadding="2" cellspacing="2" align="center" border="0"><tr>
 						<td style="font-weight:bold">{$con.rating}</td>

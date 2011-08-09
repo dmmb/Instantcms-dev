@@ -55,7 +55,7 @@
 					{/if}
                             {if $is_user}
                                 <div style="display:block; margin-top:20px;">
-                                    <a href="javascript:void(0)" onclick="addComment('{php}echo md5(session_id());{/php}', '{$target}', '{$target_id}', {$comment.id})">{$LANG.REPLY}</a>
+                                    <a href="javascript:void(0)" onclick="addComment('{php}echo md5(session_id());{/php}', '{$target|escape:'html'}', '{$target_id}', {$comment.id})">{$LANG.REPLY}</a>
                                     {if $is_admin || ($comment.is_my && $comment.is_editable && $comment.content_bbcode)}
                                         {if !$comment.content_bbcode}
                                             | <a href="/admin/index.php?view=components&do=config&id=7&opt=edit&item_id={$comment.id}">{$LANG.EDIT}</a>

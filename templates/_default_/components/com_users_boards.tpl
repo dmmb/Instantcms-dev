@@ -13,10 +13,10 @@
 						<table width="100%" height="" cellspacing="" cellpadding="0">
 							<tr>
 								<td width="64" valign="top">
-										<img class="bd_image_small" src="/images/board/small/{$con.file}" border="0" alt="{$con.title}'"/>
+										<img class="bd_image_small" src="/images/board/small/{$con.file}" border="0" alt="{$con.title|escape:'html'}'"/>
 								</td>
 								<td valign="top">
-									<div class="bd_title"><a href="/board/read{$con.id}.html" title="{$con.title}">{$con.title}</a></div>
+									<div class="bd_title"><a href="/board/read{$con.id}.html" title="{$con.title|escape:'html'}">{$con.title}</a></div>
 									<div class="bd_text">{$con.content}</div>	
 									<div class="bd_item_details">
 											{if $con.published}

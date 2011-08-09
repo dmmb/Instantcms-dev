@@ -1395,7 +1395,7 @@ class cmsUser {
 // ============================================================================ //
 
     public static function getProfileLink($user_login, $user_nickname) {
-        return '<a href="'.self::getProfileURL($user_login).'" title="'.$user_nickname.'">'.$user_nickname.'</a>';
+        return '<a href="'.self::getProfileURL($user_login).'" title="'.htmlspecialchars($user_nickname).'">'.$user_nickname.'</a>';
     }
 
 // ============================================================================ //

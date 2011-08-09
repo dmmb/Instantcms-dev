@@ -6,9 +6,9 @@
 
     function mod_text(){
         if ($('#only_mod').attr('checked')){
-			$('#text_mes').html('{/literal}{$LANG.SEND_MESSAGE_TEXT_MOD} "{$club.title}"{literal}.');
+			$('#text_mes').html('{/literal}{$LANG.SEND_MESSAGE_TEXT_MOD} "{$club.title|escape:'html'}"{literal}.');
         } else {
-			$('#text_mes').html('{/literal}{$LANG.SEND_MESSAGE_TEXT} "{$club.title}".{literal}');
+			$('#text_mes').html('{/literal}{$LANG.SEND_MESSAGE_TEXT} "{$club.title|escape:'html'}".{literal}');
         }
     }
 
@@ -24,6 +24,6 @@
         <div style="margin-top:6px;">
           <input type="submit" name="gosend" value="{$LANG.SEND}" style="font-size:18px"/>
           <input type="button" name="gosend" value="{$LANG.CANCEL}" style="font-size:18px" onclick="window.history.go(-1)"/>
-          <input id="only_mod" name="only_mod" type="checkbox" value="1" onclick="mod_text()" /> {$LANG.MESSAGE_ONLY_MODERS}
+          <label><input id="only_mod" name="only_mod" type="checkbox" value="1" onclick="mod_text()" /> {$LANG.MESSAGE_ONLY_MODERS}</label>
         </div>
 </form>

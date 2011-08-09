@@ -40,7 +40,7 @@
                         <div><small>{$LANG.USED_FOR_AUTH}<br/>{$LANG.ONLY_LAT_SYMBOLS}</small></div>
                     </td>
                     <td valign="top" class="">
-                        <input name="login" id="logininput" class="text-input" type="text" size="30" value="{$login}" onchange="checkLogin()" autocomplete="off"/>
+                        <input name="login" id="logininput" class="text-input" type="text" size="30" value="{$login|escape:'html'}" onchange="checkLogin()" autocomplete="off"/>
                         <span class="regstar">*</span>
                         <div id="logincheck"></div>
                     </td>
@@ -52,7 +52,7 @@
                             <small>{$LANG.NICKNAME_TEXT}</small>
                         </td>
                         <td valign="top" class="">
-                            <input name="nickname" id="nickinput" class="text-input" type="text" size="30" value="{$nickname}" />
+                            <input name="nickname" id="nickinput" class="text-input" type="text" size="30" value="{$nickname|escape:'html'}" />
                             <span class="regstar">*</span>
                         </td>
                     </tr>
@@ -62,7 +62,7 @@
                             <div><strong>{$LANG.NAME}:</strong></div>
                         </td>
                         <td valign="top" class="">
-                            <input name="realname1" id="realname1" class="text-input" type="text" size="30" value="{$realname1}" />
+                            <input name="realname1" id="realname1" class="text-input" type="text" size="30" value="{$realname1|escape:'html'}" />
                             <span class="regstar">*</span>
                         </td>
                     </tr>
@@ -71,7 +71,7 @@
                             <div><strong>{$LANG.SURNAME}:</strong></div>
                         </td>
                         <td valign="top" class="">
-                            <input name="realname2" id="realname2" class="text-input" type="text" size="30" value="{$realname2}" />
+                            <input name="realname2" id="realname2" class="text-input" type="text" size="30" value="{$realname2|escape:'html'}" />
                             <span class="regstar">*</span>
                         </td>
                     </tr>
