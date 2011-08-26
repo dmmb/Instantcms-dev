@@ -16,9 +16,44 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 class cms_model_actions{
 
     private $inDB;
+	public  $config = array();
+
+/* ========================================================================== */
+/* ========================================================================== */
 
     function __construct(){
         $this->inDB = cmsDatabase::getInstance();
+		$this->config = self::getConfig();
+    }
+
+/* ========================================================================== */
+/* ========================================================================== */
+
+    public static function getDefaultConfig() {
+
+        $cfg = array(
+                     'show_target'=>1,
+                     'perpage'=>10,
+                     'action_types'=>''
+               );
+
+        return $cfg;
+
+    }
+
+/* ========================================================================== */
+/* ========================================================================== */
+
+    public static function getConfig() {
+
+        $inCore = cmsCore::getInstance();
+
+        $default_cfg = self::getDefaultConfig();
+        $cfg         = $inCore->loadComponentConfig('actions');
+        $cfg         = array_merge($default_cfg, $cfg);
+
+        return $cfg;
+
     }
 
 /* ==================================================================================================== */

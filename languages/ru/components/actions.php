@@ -11,22 +11,9 @@
 //                                                                            //
 /******************************************************************************/
 
-    function routes_actions(){
+if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-        $routes[] = array(
-                            '_uri'  => '/^actions\/delete\/([0-9]+)$/i',
-                            'do'    => 'delete',
-                            1       => 'id'
-                         );
-
-        $routes[] = array(
-                            '_uri'  => '/^actions\/page\-([0-9]+)$/i',
-                            'do'    => 'view',
-                            1       => 'page'
-                         );
-
-        return $routes;
-
-    }
+$_LANG['FEED_EVENTS']         = 'Лента активности';
+$_LANG['EVENTS_NOT_FOUND']    = 'Записей не найдено';
 
 ?>

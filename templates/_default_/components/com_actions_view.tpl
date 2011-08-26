@@ -1,3 +1,4 @@
+<h1 class="con_heading">{$LANG.FEED_EVENTS}</h1>
 {if $actions}
     <div class="actions_list">
         {foreach key=aid item=action from=$actions}
@@ -21,9 +22,7 @@
             </div>
         {/foreach}
     </div>
-    {if $cfg.show_link}
-    <p>
-        <a href="/actions" class="mod_act_all">{$LANG.ALL_ACTIONS}</a>
-    </p>
-    {/if}
+    {$pagebar}
+{else}
+<p>{$LANG.EVENTS_NOT_FOUND}</p>
 {/if}

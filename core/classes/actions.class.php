@@ -37,6 +37,16 @@ class cmsActions {
 // ============================================================================ //
 // ============================================================================ //
 
+    private function resetConditions(){
+
+        $this->where        = '';
+        $this->limit        = '';
+
+    }
+
+// ============================================================================ //
+// ============================================================================ //
+
     /**
      * –егистрирует новый тип действи€
      * @param str $component
@@ -275,6 +285,35 @@ class cmsActions {
 
     }
 
+// ============================================================================ //
+// ============================================================================ //
+
+    /**
+     * ¬озвращает количество записей по услови€м
+     * @return int
+     */
+    public function getCountActions() {
+
+        $inDB   = cmsDatabase::getInstance();
+        $inUser = cmsUser::getInstance();
+
+        if (!$this->only_friends){ $this->where('log.is_friends_only = 0'); }
+        if (!$inUser->id) { $this->where('log.is_users_only = 0'); }
+
+        $sql = "SELECT 1
+                FROM cms_actions_log log
+				LEFT JOIN cms_actions a ON a.id = log.action_id AND a.is_visible = 1
+                WHERE {$this->where}
+                ";
+
+		$result = $inDB->query($sql);
+
+		return $inDB->num_rows($result);
+
+    }
+
+// ============================================================================ //
+// ============================================================================ //
     /**
      * ¬озвращает массив событий дл€ ленты активности
      * @return array
@@ -315,6 +354,9 @@ class cmsActions {
         $result = $inDB->query($sql);
 
         if (!$inDB->num_rows($result)){ return false; }
+
+		// —брасываем услови€
+        $this->resetConditions();
 
         $actions = array();
 
@@ -361,7 +403,7 @@ class cmsActions {
      * @param int $pubdays
      * @return bool
      */
-    static function removeOldLog($pubdays = 60){
+    public static function removeOldLog($pubdays = 60){
 
         $inDB   = cmsDatabase::getInstance();
 		
@@ -372,13 +414,15 @@ class cmsActions {
         return true;
 
     }
-	
+
+// ============================================================================ //
+// ============================================================================ //
     /**
      * ”дал€ет из ленты записи одного пользовател€
      * @param int $user_id
      * @return bool
      */
-    static function removeUserLog($user_id){
+    public static function removeUserLog($user_id){
 		
 		if (!$user_id) { return false; }
 
@@ -391,7 +435,22 @@ class cmsActions {
         return true;
 
     }
-    
+
+// ============================================================================ //
+// ============================================================================ //
+    /**
+     * ѕолучает массив компонентов, зарегистрированных в ленте активности
+     * @return array
+     */
+    public static function getActionsComponents(){
+
+        $inDB = cmsDatabase::getInstance();
+		
+        $components = $inDB->get_table('cms_components com INNER JOIN cms_actions act ON act.component = com.link', 'com.internal=0 AND com.published=1 GROUP BY com.link', 'com.title, com.link');
+
+        return $components;
+
+    }    
     
 }
 ?>

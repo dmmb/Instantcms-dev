@@ -3573,7 +3573,12 @@ table.feed td.date strong { color:green; }
 /* ========================================================================== */
 /* ======================= À≈Õ“¿ ¿ “»¬ÕŒ—“» ================================= */
 /* ========================================================================== */
-
+.mod_act_all{
+    padding:1px;
+    padding-left:20px;
+    background:url(../images/icons/actions.png) no-repeat;
+    color:#333;
+}
 .actions_list{
     clear:both;
 }

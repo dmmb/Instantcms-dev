@@ -35,6 +35,7 @@ function mod_actions($module_id){
 
         $smarty = $inCore->initSmarty('modules', 'mod_actions.tpl');
         $smarty->assign('actions', $actions);
+		$smarty->assign('cfg', $cfg);
         $smarty->display('mod_actions.tpl');
 			
 		return true;

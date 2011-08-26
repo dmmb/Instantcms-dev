@@ -24,4 +24,8 @@
             </div>
         <?php } ?>
     </div>
-<?php } ?>
+<?php
+	if($pagebar) { echo $pagebar; }
+
+	} else { echo 'Записей не найдено'; }
+?>
