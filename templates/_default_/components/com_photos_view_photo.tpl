@@ -56,9 +56,7 @@
 
                     <div class="photo_date_details">
                         <p>{$photo.pubdate}</p>
-                        {if $photo.public}
-                                 <p>{$photo.genderlink}</p>
-                        {/if}
+                        <p>{$photo.genderlink}</p>
                     </div>
 
                     {if $cfg.link}
