@@ -1084,7 +1084,7 @@ class cmsUser {
     public static function isNewMessages($user_id){
         $inDB = cmsDatabase::getInstance();
 
-        $sql = "SELECT id FROM cms_user_msg WHERE to_id = $user_id AND is_new = 1";
+        $sql = "SELECT id FROM cms_user_msg WHERE to_id = '$user_id' AND to_del = 0 AND is_new = 1";
         $result = $inDB->query($sql);
 
         if($inDB->num_rows($result)) {
@@ -1331,7 +1331,7 @@ class cmsUser {
      * @param string $css_style
      * @return html
      */
-    public static function getGenderLink($user_id, $nickname='', $menuid=0, $gender='m', $login='', $css_style=''){
+    public static function getGenderLink($user_id, $nickname='', $menuid=0, $gender='', $login='', $css_style=''){
         $inDB = cmsDatabase::getInstance();
         $gender_img = '/components/users/images/male.png';
         if (!$gender){

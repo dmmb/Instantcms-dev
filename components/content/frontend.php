@@ -460,8 +460,10 @@ if ($do=='addarticle' || $do=='editarticle'){
         $article['enddate']             = $article['pubdate'];
         $article['is_end']              = 0;
         $article['showtitle']           = $do=='editarticle' ? $mod['showtitle'] : 1;
-        $article['meta_desc']           = strtolower($article['title']);
-        $article['meta_keys']           = $inCore->getKeywords($inCore->strClear($article['content']));
+
+		$article['meta_desc']           = $do=='addarticle' ? strtolower($article['title']) : $inDB->escape_string($mod['meta_desc']);
+		$article['meta_keys']           = $do=='addarticle' ? $inCore->getKeywords($article['content']) : $inDB->escape_string($mod['meta_keys']);
+
         $article['showdate']            = $do=='editarticle' ? $mod['showdate'] : 1;
         $article['showlatest']          = $do=='editarticle' ? $mod['showlatest'] : 1;
         $article['showpath']            = $do=='editarticle' ? $mod['showpath'] : 1;

@@ -1297,6 +1297,7 @@ CREATE TABLE `#__users` (
   `birthdate` date NOT NULL DEFAULT '0000-00-00',
   `is_locked` int(11) NOT NULL,
   `is_deleted` int(11) NOT NULL,
+  `is_logged_once` tinyint(4) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL,
   `points` int(11) NOT NULL,
   `last_ip` varchar(15) NOT NULL,
