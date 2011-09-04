@@ -705,14 +705,6 @@ if ($do=='profile'){
         $usr['new_friends'] 	= $model->getNewFriends($usr['id']);
     }
 
-    if ($usr['friends'] && $inUser->id && $myprofile && $cfg['sw_feed']){
-        $inActions = cmsActions::getInstance();
-        $inActions->showTargets(false);
-        $inActions->onlyMyFriends();
-        $inActions->limitIs(15);
-        $usr['actions'] = $inActions->getActionsLog();
-    }
-
     $usr['awards_html']			 = $cfg['sw_awards'] ? usrAwards($usr['id']) : false;
 	
 	if($cfg['sw_wall']){

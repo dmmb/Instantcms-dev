@@ -3573,6 +3573,34 @@ table.feed td.date strong { color:green; }
 /* ========================================================================== */
 /* ======================= À≈Õ“¿ ¿ “»¬ÕŒ—“» ================================= */
 /* ========================================================================== */
+.action_friends{
+	position:relative;
+	margin:0 0 10px 0;
+	border-collapse: separate;
+}
+.action_friends td {
+    background-color: #ECF2F4;
+	border-left:1px #ECF2F4 solid;
+	border-right:1px #ECF2F4 solid;
+	border-top:1px #ECF2F4 solid;
+    padding: 5px 0;
+	vertical-align:top;
+	text-align:center;
+}
+.action_fr {
+}
+.action_friends td.selected {
+    background-color: #FFFFFF;
+	border-color:#BFE5FF;
+}
+.arr_btn {
+    text-decoration: none;
+	font-size:40px;
+}
+.action_fr img {
+	width:64px;
+	height:64px;
+}
 .mod_act_all{
     padding:1px;
     padding-left:20px;
@@ -3642,3 +3670,5 @@ table.feed td.date strong { color:green; }
 .act_add_user_photo_multi{ background:url(../images/icons/actions/add_user_photo_multi.png) no-repeat left 3px; }
 .act_add_user{ background:url(../images/icons/actions/add_user.png) no-repeat left 3px; }
 .act_add_wall_my{ background:url(../images/icons/actions/add_wall_my.png) no-repeat left 3px; }
+.act_vote_movie{ background:url(../images/icons/actions/film_rate.png) no-repeat left 3px; }
+.act_add_movie{ background:url(../images/icons/actions/film_add.png) no-repeat left 3px; }

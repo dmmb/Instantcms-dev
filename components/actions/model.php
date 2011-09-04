@@ -34,6 +34,7 @@ class cms_model_actions{
         $cfg = array(
                      'show_target'=>1,
                      'perpage'=>10,
+					 'perpage_tab'=>15,
                      'action_types'=>''
                );
 

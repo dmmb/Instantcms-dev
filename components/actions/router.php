@@ -20,6 +20,11 @@
                          );
 
         $routes[] = array(
+                            '_uri'  => '/^actions\/my_friends$/i',
+                            'do'    => 'view_user_feed'
+                         );
+
+        $routes[] = array(
                             '_uri'  => '/^actions\/page\-([0-9]+)$/i',
                             'do'    => 'view',
                             1       => 'page'

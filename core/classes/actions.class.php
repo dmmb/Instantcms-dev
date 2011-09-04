@@ -267,6 +267,22 @@ class cmsActions {
 
 	}
 
+    /**
+     * Показывает события определенного юзера
+     *
+     */
+	public function whereUserIs($user_id){
+
+        if ($user_id){
+            $this->where("log.user_id = '$user_id'");
+        } else {
+            $this->where('1=0');
+        }
+
+		return;
+
+	}
+
     public function onlySelectedTypes($types) {
 
         if (!is_array($types)){ $this->where('1=0'); return; }

@@ -123,6 +123,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
         $cfg['show_target'] = $inCore->request('show_target', 'int', 1);
         $cfg['perpage']     = $inCore->request('perpage', 'int', 10);
+		$cfg['perpage_tab'] = $inCore->request('perpage_tab', 'int', 15);
 		$cfg['is_all']      = $inCore->request('is_all', 'int', 0);
        	$cfg['act_type']    = $inCore->request('act_type', 'array_str', '');
 
@@ -169,6 +170,14 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			</tr>
 			<tr>
 				<td>
+					<strong>Количество событий на странице профиля во вкладке "лента":</strong><br />
+				</td>
+				<td valign="top">
+					<input name="perpage_tab" size=5 value="<?php echo $model->config['perpage_tab'];?>"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
 					<strong>Типы событий:</strong><br />
                     <div class="param-links">
                         <label for="is_all"><input type="checkbox" id="is_all" name="is_all" value="1" <?php if($model->config['is_all']) {?>checked="checked" <?php }?> /> <a href="javascript:" onclick="$('td input[type=checkbox]').attr('checked', 'checked');$('#is_all').attr('checked', 'checked')">Выделить все</a></label> |
@@ -184,7 +193,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 							while($option = $inDB->fetch_assoc($result)){
 								
 								$html .= '<tr>' . "\n" .
-											"\t" . '<td><input type="checkbox" id="act_type_'.$option['name'].'" name="act_type['.$option['name'].']" value="'.$option['id'].'" '.(in_array($option['id'], $model->config['act_type']) ? 'checked="checked"' : '').' />' . "\n" .
+											"\t" . '<td><input type="checkbox" id="act_type_'.$option['name'].'" name="act_type['.$option['name'].']" value="'.$option['id'].'" '.(@in_array($option['id'], $model->config['act_type']) ? 'checked="checked"' : '').' />' . "\n" .
 											"\t" . '<td><label for="act_type_'.$option['name'].'">'.$option['title'].'</label></td>' . "\n" .
 										 '</tr>';
 							}

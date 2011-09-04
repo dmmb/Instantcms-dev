@@ -177,7 +177,7 @@
 				<ul id="tabs"> 
 					<li><a href="#upr_profile"><span>{$LANG.PROFILE}</span></a></li>
 					{if $myprofile && $cfg.sw_feed}
-						<li><a href="#upr_feed"><span>{$LANG.FEED}</span></a></li>
+						<li><a href="/actions/my_friends" title="upr_feed"><span>{$LANG.FEED}</span></a></li>
 					{/if}
 					{if $cfg.sw_clubs}
 						<li><a href="#upr_clubs"><span>{$LANG.CLUBS}</span></a></li>
@@ -405,33 +405,7 @@
 				{* ============================== «¿ À¿ƒ ¿ π2 ============================================== *}
 				{if $myprofile && $cfg.sw_feed}
 					<div id="upr_feed">
-                       {if $usr.actions}
-                            <div class="actions_list">
-                                {foreach key=aid item=action from=$usr.actions}
-                                    <div class="action_entry act_{$action.name}">
-                                        <div class="action_date{if $action.is_new} is_new{/if}">{$action.pubdate} {$LANG.BACK}</div>
-                                        <div class="action_title">
-                                            <a href="{$action.user_url}" class="action_user">{$action.user_nickname}</a>
-                                            {if $action.message}
-                                                {$action.message}{if $action.description}:{/if}
-                                            {else}
-                                                {if $action.description}
-                                                    &rarr; {$action.description}
-                                                {/if}
-                                            {/if}
-                                        </div>
-                                        {if $action.message}
-                                            {if $action.description}
-                                                <div class="action_details">{$action.description}</div>
-                                            {/if}
-                                        {/if}
-                                    </div>
-                                {/foreach}
-                            </div>
-                       {else}
-                            <p>{$LANG.FEED_DESC}</p>
-                            <p>{$LANG.FEED_EMPTY_TEXT}</p>
-                       {/if}
+
 					</div>	
 				{/if}		
 								
