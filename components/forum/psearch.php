@@ -39,7 +39,7 @@ function search_forum($query, $look){
 				$result_array['place']       = $item['forum'];
 				$result_array['placelink']   = "/forum/".$item['forum_id'];
 				$result_array['title']       = $item['title'];
-				$result_array['description'] = $searchModel->getProposalWithSearchWord($item['description']);
+				$result_array['description'] = $searchModel->getProposalWithSearchWord($inCore->parseSmiles($item['description'], true));
 				$result_array['session_id']  = session_id();
 
 				$searchModel->addResult($result_array);				
@@ -62,7 +62,7 @@ function search_forum($query, $look){
 				$result_array['link']        = "/forum/thread".$item['thread_id'].".html";
 				$result_array['place']       = $_LANG['FORUM_POST'];
 				$result_array['placelink']   = $result_array['link'];
-				$result_array['description'] = $searchModel->getProposalWithSearchWord($item['content']);
+				$result_array['description'] = $searchModel->getProposalWithSearchWord($inCore->parseSmiles($item['content'], true));
 				$result_array['title']       = $item['thread'];
 				$result_array['session_id']  = session_id();
 
