@@ -13,32 +13,32 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 	
-function search_catalog($query, $look){ //query sends here already prepared and secured!
+function search_catalog($query, $look){
+
         $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
+        $inDB   = cmsDatabase::getInstance();
+		$searchModel = cms_model_search::initModel();
 
-		//SEARCH IN THREADS TITLES
-		//BUILD SQL QUERY
 		$sql = "SELECT i.*, c.title as cat, c.id as cat_id
-				FROM cms_uc_items i, cms_uc_cats c
-				WHERE MATCH(i.title, i.fieldsdata) AGAINST ('$query' IN BOOLEAN MODE) AND i.category_id = c.id";
+				FROM cms_uc_items i
+				INNER JOIN cms_uc_cats c ON c.id = i.category_id
+				WHERE MATCH(i.title, i.fieldsdata) AGAINST ('$query' IN BOOLEAN MODE) AND i.published = 1 LIMIT 100";
 
-		//QUERY TO GET TOTAL RESULTS COUNT
 		$result = $inDB->query($sql);
-		$found= $inDB->num_rows($result);
 		
-		if ($found){
+		if ($inDB->num_rows($result)){
+
 			while($item = $inDB->fetch_assoc($result)){
-				//build params
-				$link = "/catalog/item".$item['id'].".html";
-				$place = $item['cat'];
-				$placelink = "/catalog/".$item['cat_id'];				
-				//include item to search results
-				if (!dbRowsCount('cms_search', "session_id='".session_id()."' AND link='$link'")){				
-					$sql = "INSERT INTO cms_search (`id`, `session_id`, `title`, `link`, `place`, `placelink`)
-							VALUES ('', '".session_id()."', '".$item['title']."', '$link', '$place', '$placelink')";
-					$inDB->query($sql);				
-				}				
+
+				$result_array = array();
+
+				$result_array['link']        = "/catalog/item".$item['id'].".html";
+				$result_array['place']       = $item['cat'];
+				$result_array['placelink']   = "/catalog/".$item['cat_id'];
+				$result_array['title']       = $item['title'];
+				$result_array['session_id']  = session_id();
+
+				$searchModel->addResult($result_array);			
 			}
 		}
 		

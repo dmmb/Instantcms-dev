@@ -13,33 +13,33 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 	
-function search_board($query, $look){ //query sends here already prepared and secured!
+function search_board($query, $look){
 
         $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
-		
-		//SEARCH IN THREADS TITLES
-		//BUILD SQL QUERY
-		$sql = "SELECT f.*, f.title as title, a.title as cat, a.id as cat_id
-				FROM cms_board_items f, cms_board_cats a
-				WHERE MATCH(f.content) AGAINST ('$query' IN BOOLEAN MODE) AND f.category_id = a.id ";
+        $inDB   = cmsDatabase::getInstance();
+		$searchModel = cms_model_search::initModel();
 
-		//QUERY TO GET TOTAL RESULTS COUNT
+		$sql = "SELECT f.*, f.title as title, a.title as cat, a.id as cat_id
+				FROM cms_board_items f
+				INNER JOIN cms_board_cats a ON a.id = f.category_id
+				WHERE MATCH(f.title, f.content) AGAINST ('$query' IN BOOLEAN MODE) AND f.published = 1 LIMIT 100";
+
 		$result = $inDB->query($sql);
-		$found= $inDB->num_rows($result);
 		
-		if ($found){
+		if ($inDB->num_rows($result)){
+
 			while($item = $inDB->fetch_assoc($result)){
-				//build params
-				$link = "/board/read".$item['id'].".html";
-				$place = $item['cat'];
-				$placelink = '/board/'.$item['cat_id'];
-				//include item to search results
-				if (!dbRowsCount('cms_search', "session_id='".session_id()."' AND link='$link'")){				
-					$sql = "INSERT INTO cms_search (`id`, `session_id`, `title`, `link`, `place`, `placelink`)
-							VALUES ('', '".session_id()."', '".$item['title']."', '$link', '$place', '$placelink')";
-					$inDB->query($sql);				
-				}				
+
+				$result_array = array();
+
+				$result_array['link']        = "/board/read".$item['id'].".html";
+				$result_array['place']       = $item['cat'];
+				$result_array['placelink']   = '/board/'.$item['cat_id'];
+				$result_array['description'] = $searchModel->getProposalWithSearchWord($item['content']);
+				$result_array['title']       = $item['title'];
+				$result_array['session_id']  = session_id();
+
+				$searchModel->addResult($result_array);		
 			}
 		}
 		

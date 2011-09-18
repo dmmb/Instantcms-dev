@@ -13,40 +13,44 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 	
-function search_blogs($query, $look, $mode='text'){ //query sends here already prepared and secured!
+function search_blogs($query, $look){
 
         $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
+        $inDB   = cmsDatabase::getInstance();
+		$searchModel = cms_model_search::initModel();
 
         global $_LANG;
 
-        //BUILD SQL QUERY
-		$sql = "SELECT DISTINCT con.*, cat.title cat_title, cat.id cat_id, cat.owner owner, cat.user_id user_id, cat.seolink as bloglink
-				FROM cms_blog_posts con, cms_blogs cat
-				WHERE MATCH(con.content) AGAINST ('$query' IN BOOLEAN MODE) AND con.blog_id = cat.id";
+		$sql = "SELECT con.*, cat.title cat_title, cat.id cat_id, cat.owner owner, cat.user_id user_id, cat.seolink as bloglink
+				FROM cms_blog_posts con
+				INNER JOIN cms_blogs cat ON cat.id = con.blog_id
+				WHERE MATCH(con.title, con.content) AGAINST ('$query' IN BOOLEAN MODE) AND con.allow_who = 'all' AND con.published = 1 LIMIT 100";
 
-		//QUERY TO GET TOTAL RESULTS COUNT
 		$result = $inDB->query($sql);
-		$found= $inDB->num_rows($result);
 		
-		if ($found){
+		if ($inDB->num_rows($result)){
+
+			$inCore->loadLanguage('components/blog');
+			$inCore->loadModel('blogs');
+			$model = new cms_model_blogs();			
+			
 			while($item = $inDB->fetch_assoc($result)){
-				if ($item['owner'] == 'club') { $item['cat_title'] = dbGetField('cms_clubs','id='.$item['user_id'],'title'); }
-				//build params
-                $inCore->loadLanguage('components/blog');
 
-                $inCore->loadModel('blogs');
-                $model = new cms_model_blogs();
+				$result_array = array();
 
-				$link = $model->getPostURL(0, $item['bloglink'], $item['seolink']);
-				$place = $_LANG['BLOG'].' &laquo;'.$item['cat_title'].'&raquo;';
-				$placelink = $model->getBlogURL(0, $item['bloglink']);
-				//include item to search results
-				if (!dbRowsCount('cms_search', "session_id='".session_id()."' AND link='$link'")){				
-					$sql = "INSERT INTO cms_search (`id`, `session_id`, `title`, `link`, `place`, `placelink`)
-							VALUES ('', '".session_id()."', '".$item['title']."', '$link', '$place', '$placelink')";
-					$inDB->query($sql);				
-				}				
+				if ($item['owner'] == 'club') {
+					$item['cat_title'] = $inDB->get_field('cms_clubs','id='.$item['user_id'],'title');
+				}
+
+				$result_array['link']        = $model->getPostURL(0, $item['bloglink'], $item['seolink']);
+				$result_array['place']       = $_LANG['BLOG'].' &laquo;'.$item['cat_title'].'&raquo;';
+				$result_array['placelink']   = $model->getBlogURL(0, $item['bloglink']);
+				$result_array['description'] = $searchModel->getProposalWithSearchWord($item['content_html']);
+				$result_array['title']       = $item['title'];
+				$result_array['session_id']  = session_id();
+
+				$searchModel->addResult($result_array);
+
 			}
 		}
 		

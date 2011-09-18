@@ -11,12 +11,30 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //                        LICENSED BY GNU/GPL v2                              //
 //                                                                            //
 /******************************************************************************/
+	function getProvidersList() {
+		$pdir = @opendir(PATH.'/components/search/providers/');
+		if(!$pdir){ return false; }
+		$provider_array = array();
+		while ($provider = readdir($pdir)){
+			if (($provider != '.') && ($provider != '..') && !is_dir(PATH.'/components/search/providers/'.$provider)) {
+				$provider = substr($provider, 0, strrpos($provider, '.'));
+				$provider_array[] = $provider;
+			}
+		}
+		closedir($pdir);
+		return $provider_array;
+	}
+    $inDB   = cmsDatabase::getInstance();
+    $inCore->loadLib('tags');
+    $inCore->loadModel('search');
+    $model = cms_model_search::initModel();
 
-	cpAddPathway('Поиск', '?view=components&do=config&id='.$_REQUEST['id']);
+    $opt = $inCore->request('opt', 'str', '');
+	$id  = $inCore->request('id', 'int', 0);
+
+    cpAddPathway('Поиск', '?view=components&do=config&id='.$id);
 	
 	echo '<h3>Поиск</h3>';
-	
-	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; }
 	
 	$toolmenu = array();
 
@@ -30,65 +48,85 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	cpToolMenu($toolmenu);
 
-	//LOAD CURRENT CONFIG
-	$cfg = $inCore->loadComponentConfig('search');
-
 	if($opt=='save'){
+
 		$cfg = array();
-		$cfg['perpage'] = $_REQUEST['perpage'];
-		$cfg['comp'] = $_REQUEST['comp'];
+		$cfg['perpage'] = $inCore->request('perpage', 'int', 15);
+		$cfg['comp']    = $inCore->request('comp', 'array_str');
+		$cfg['search_engine'] = preg_replace('/[^a-z_]/i', '', $inCore->request('search_engine', 'str', ''));
+
+		if(method_exists($model->config['search_engine'], 'getProviderConfig')){
+			foreach($model->getProviderConfig() as $key=>$value){
+				$cfg[$model->config['search_engine']][$value] = $inCore->request($value, 'str', '');
+			}
+		}
+
 		$inCore->saveComponentConfig('search', $cfg);
-		$msg = 'Настройки сохранены.';
+
+		$inCore->redirectBack();
 	}
 	
 	if ($opt=='dropcache'){
-		$sql = "DELETE FROM cms_search";
-		dbQuery($sql);
+		$model->truncateResults();
 	}
 
-	if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
 ?>
-<form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" name="optform" method="post" target="_self">
+<form action="index.php?view=components&do=config&id=<?php echo $id;?>" name="optform" method="post" target="_self">
         <table border="0" cellpadding="10" cellspacing="0" class="proptable">
           <tr>
-            <td width="215"><b>Результатов на странице: </b></td>
-            <td width="289"><input name="perpage" type="text" id="perpage" value="<?php echo @$cfg['perpage'];?>" size="6" /></td>
+            <td width="215"><strong>Результатов на странице: </strong></td>
+            <td width="289"><input name="perpage" type="text" id="perpage" value="<?php echo $model->config['perpage'];?>" size="6" /></td>
           </tr>
+          <tr>
+            <td valign="top"><strong>Провайдер поиска: </strong></td>
+            <td valign="top">
+                <select name="search_engine" style="width:245px">
+                    <option value="" <?php if (!$model->config['search_engine']){?>selected="selected"<?php } ?>>Нативный</option>
+                    <?php $provider_array = getProvidersList();
+					if($provider_array){
+						foreach($provider_array as $provider){
+					?>
+                    	<option value="<?php echo $provider; ?>" <?php if ($model->config['search_engine']==$provider){?>selected="selected"<?php } ?>><?php echo $provider; ?></option>
+                    <?php
+						}
+					}
+					?>
+                </select>
+            </td>
+          </tr>
+          <?php if(method_exists($model->config['search_engine'], 'getProviderConfig')){ 
+		  foreach($model->getProviderConfig() as $key=>$value){
+		  ?>
+              <tr>
+                <td width="215"><strong><?php echo $key; ?>: </strong></td>
+                <td width="289"><input name="<?php echo $value; ?>" type="text" value="<?php echo $model->config[$model->config['search_engine']][$value]; ?>" style="width:245px" /></td>
+              </tr>
+		  <?php } } ?>
           <tr>
             <td valign="top"><strong>Поиск по компонентам:</strong> </td>
             <td valign="top">
 			<?php
-				//get list of components and look for search processor in component folder
-				$sql = "SELECT title, link FROM cms_components";
-				$rs = dbQuery($sql) ;
-				if (mysql_num_rows($rs)){
-					echo '<table border="0" cellpadding="2" cellspacing="0">';
-					while ($component = mysql_fetch_assoc($rs)){
-						echo '<tr>';
-						$spfile = $_SERVER['DOCUMENT_ROOT'].'/components/'.$component['link'].'/psearch.php';
-						if (file_exists($spfile)){
-							$checked = '';
-							if (isset($cfg['comp'])){
-								if (in_array($component['link'], $cfg['comp'])){
-									$checked = 'checked="checked"';	
-								}
-							}
-							echo '<td><input name="comp[]" type="checkbox" value="'.$component['link'].'" '.$checked.'/></td><td>'.$component['title'].'</td>';
-						}
-						echo '</tr>';
+				echo '<table border="0" cellpadding="2" cellspacing="0">';
+				foreach($model->components as $component){
+					echo '<tr>';
+					$checked = '';
+					if (in_array($component['link'], $model->config['comp'])){
+						$checked = 'checked="checked"';	
 					}
-					echo '</table>';
-				}						
-			?>			</td>
+					echo '<td><input name="comp[]" id="'.$component['link'].'" type="checkbox" value="'.$component['link'].'" '.$checked.'/></td><td><label for="'.$component['link'].'">'.$component['title'].'</label></td>';
+					echo '</tr>';
+				}
+				echo '</table>';
+			?></td>
           </tr>
           <tr>
             <td valign="top"><strong>Записей в поисковом кеше:</strong> </td>
             <td valign="top">
 			<?php 
-				$records = dbRowsCount('cms_search', '1=1');
+				$records = $inDB->rows_count('cms_search', "1=1");
 				echo $records . ' шт.';
 				if ($records) {
-					echo ' | <a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=dropcache">Очистить</a>';
+					echo ' | <a href="?view=components&do=config&id='.$id.'&opt=dropcache">Очистить</a>';
 				}
 			?></td>
           </tr>

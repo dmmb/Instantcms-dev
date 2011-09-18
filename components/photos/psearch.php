@@ -13,32 +13,33 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 	
-function search_photos($query, $look){ //query sends here already prepared and secured!			
-		$inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
-		
-		//SEARCH IN THREADS TITLES
-		//BUILD SQL QUERY
-		$sql = "SELECT f.*, a.title as cat, a.id as cat_id
-				FROM cms_photo_files f, cms_photo_albums a
-				WHERE MATCH(f.title, f.description) AGAINST ('$query' IN BOOLEAN MODE) AND f.album_id = a.id ";
+function search_photos($query, $look){
 
-		//QUERY TO GET TOTAL RESULTS COUNT
+        $inCore = cmsCore::getInstance();
+        $inDB   = cmsDatabase::getInstance();
+		$searchModel = cms_model_search::initModel();
+
+		$sql = "SELECT f.*, a.title as cat, a.id as cat_id
+				FROM cms_photo_files f
+				INNER JOIN cms_photo_albums a ON a.id = f.album_id
+				WHERE MATCH(f.title, f.description) AGAINST ('$query' IN BOOLEAN MODE) AND f.published = 1";
+
 		$result = $inDB->query($sql);
-		$found= $inDB->num_rows($result);
 		
-		if ($found){
+		if ($inDB->num_rows($result)){
+
 			while($item = $inDB->fetch_assoc($result)){
-				//build params
-				$link = "/photos/photo".$item['id'].".html";
-				$place = $item['cat'];
-				$placelink = '/photos/'.$item['cat_id'];				
-				//include item to search results
-				if (!dbRowsCount('cms_search', "session_id='".session_id()."' AND link='$link'")){				
-					$sql = "INSERT INTO cms_search (`id`, `session_id`, `title`, `link`, `place`, `placelink`)
-							VALUES ('', '".session_id()."', '".$item['title']."', '$link', '$place', '$placelink')";
-					$inDB->query($sql);				
-				}				
+
+				$result_array = array();
+
+				$result_array['link']        = "/photos/photo".$item['id'].".html";
+				$result_array['place']       = $item['cat'];
+				$result_array['placelink']   = '/photos/'.$item['cat_id'];
+				$result_array['description'] = $searchModel->getProposalWithSearchWord($item['description']);
+				$result_array['title']       = $item['title'];
+				$result_array['session_id']  = session_id();
+
+				$searchModel->addResult($result_array);
 			}
 		}
 		

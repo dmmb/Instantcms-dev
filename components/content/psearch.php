@@ -13,35 +13,37 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 	
-function search_content($query, $look){ //query sends here already prepared and secured!
+function search_content($query, $look){
 
         $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
+        $inDB   = cmsDatabase::getInstance();
+		$searchModel = cms_model_search::initModel();
 
         global $_LANG;
 
-		//BUILD SQL QUERY
-		$sql = "SELECT DISTINCT con.*, cat.title cat_title, cat.id cat_id, cat.seolink as cat_seolink, cat.parent_id as cat_parent_id
-				FROM cms_content con, cms_category cat
-				WHERE MATCH(con.title, con.description, con.content) AGAINST ('$query' IN BOOLEAN MODE) AND con.category_id = cat.id";
+		$sql = "SELECT con.*, cat.title cat_title, cat.id cat_id, cat.seolink as cat_seolink, cat.parent_id as cat_parent_id
+				FROM cms_content con
+				INNER JOIN cms_category cat ON cat.id = con.category_id
+				WHERE MATCH(con.title, con.content) AGAINST ('$query' IN BOOLEAN MODE) AND con.is_end = 0 AND con.published = 1 LIMIT 100";
 
-		//QUERY TO GET TOTAL RESULTS COUNT
 		$result = $inDB->query($sql);
-		$found= $inDB->num_rows($result);
-		
-		if ($found){
+	
+		if ($inDB->num_rows($result)){
+			
+			$inCore->loadLanguage('components/content');
+			
 			while($item = $inDB->fetch_assoc($result)){
-				//build params
-                $inCore->loadLanguage('components/content');
-				$link       = "/".$item['seolink'].".html";
-				$place      = $_LANG['CATALOG_ARTICLES'];
-				$placelink  = $item['cat_parent_id']>0 ? "/".$item['cat_seolink'] : $link;
-				//include item to search results
-				if (!dbRowsCount('cms_search', "session_id='".session_id()."' AND link='$link'")){				
-					$sql = "INSERT INTO cms_search (`id`, `session_id`, `title`, `link`, `place`, `placelink`)
-							VALUES ('', '".session_id()."', '".$item['title']."', '$link', '$place', '$placelink')";
-					$inDB->query($sql);				
-				}				
+
+				$result_array = array();
+
+				$result_array['link']        = "/".$item['seolink'].".html";
+				$result_array['place']       = $_LANG['CATALOG_ARTICLES'];
+				$result_array['placelink']   = $item['cat_parent_id']>0 ? "/".$item['cat_seolink'] : $link;
+				$result_array['description'] = $searchModel->getProposalWithSearchWord($item['content']);
+				$result_array['title']       = $item['title'];
+				$result_array['session_id']  = session_id();
+
+				$searchModel->addResult($result_array);			
 			}
 		}
 		

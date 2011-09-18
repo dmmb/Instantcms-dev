@@ -15,7 +15,6 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 $_LANG = array();
 $_LANG['PATH_HOME']             ='Главная';
-
 $_LANG['DEBUG_TIME_GEN_PAGE']   ='Время генерации страницы:';
 $_LANG['DEBUG_QUERY_DB']        ='Запросы к базе:';
 $_LANG['DEBUG_SEC']             ='сек.';
@@ -66,6 +65,8 @@ $_LANG['IMAGE']                 ='Изображение';
 // For All Modules
 $_LANG['CONFIG_MODULE']         ='Настроить модуль';
 $_LANG['NOT_RESPECT']           ='Нет достойных.';
+$_LANG['SELECT_ALL']            ='выделить все';
+$_LANG['REMOVE_ALL']            ='снять все';
 // Template
 $_LANG['TEMPLATE_AUTH']         ='Авторизация';
 $_LANG['TEMPLATE_LOGIN']        ='Логин';

@@ -395,11 +395,6 @@ span.fast_cfg_link img{ border:none; }
 	width: 100%;
 	border: 1px solid #666666;
 }
-.search_head {
-	background-color:silver;
-	border-bottom:solid 1px gray;
-	font-size:16px;
-}
 .search_row1 {
 	background-color:#FFFFFF;
 }
@@ -565,8 +560,23 @@ span.fast_cfg_link img{ border:none; }
 /*----------------------------- SITE SEARCH ----------------------------------*/
 .search_match{
 	background-color:#66CCFF;
+	color:#FFF;
+    border-radius:2px;
+    -moz-border-radius:2px;
+	padding:0 2px;
 }
-
+#from_search{
+	display:none;
+	margin:10px 0 0 0;
+	border-top:1px #4DA4CF solid;
+	position:relative;
+}
+#from_search label{
+	color: #666;
+}
+#from_search label.selected{
+	color: #000;
+}
 .price_search {
 	width: 60%;
 	border: 1px solid #666666;
@@ -576,7 +586,31 @@ span.fast_cfg_link img{ border:none; }
 	width: 300px;
 	border:solid 1px gray;
 }
-
+.search_block {
+	margin:0 0 7px 0;
+	clear:both;
+	padding:0 4px 4px;
+    border-radius:6px;
+    -moz-border-radius:6px;
+}
+.search_result_title {
+	font-size:16px;
+	font-weight:bold;
+}
+.search_result_title span {
+	width:25px;
+	display:block;
+	float:left;
+}
+.search_result_desc {
+	margin:4px 0 0 20px;
+}
+.search_result_desc p {
+	color:#666;
+}
+.search_result_desc a {
+	color:#666;
+}
 /*------------------------- COMPONENT "CONTENT" ------------------------------*/
 .component {
     padding:20px;
