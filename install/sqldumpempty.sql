@@ -246,6 +246,7 @@ CREATE TABLE `#__board_items` (
   KEY `user_id` (`user_id`),
   KEY `obtype` (`obtype`),
   KEY `city` (`city`),
+  FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `content` (`content`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 

@@ -241,9 +241,9 @@
         $result = $inDB->query($cv_sql);
 
         if ($inDB->num_rows($result)){
-            while($ñv = $inDB->fetch_assoc($result)){
+            while($cv = $inDB->fetch_assoc($result)){
                 $insert_sql  = "INSERT INTO cms_ratings (item_id, points, ip, target, user_id, pubdate)
-                                VALUES ('{$ñv['comment_id']}', '{$ñv['vote']}', '127.0.0.1', 'comment', '{$ñv['user_id']}', NOW())";
+                                VALUES ('{$cv['comment_id']}', '{$cv['vote']}', '127.0.0.1', 'comment', '{$cv['user_id']}', NOW())";
                 $inDB->query($insert_sql);
             }
         }
