@@ -8,11 +8,12 @@
             <option value="anyword" {if $look=='anyword' || $look==''} selected="selected" {/if}>{$LANG.ANY_WORD}</option>
             <option value="phrase" {if $look=='phrase' || $look==''} selected="selected" {/if}>{$LANG.PHRASE}</option>
     </select>
-    <a href="javascript:" onclick="$('#from_search').fadeIn('slow');" class="ajaxlink">{$LANG.WHERE_TO_FIND}</a>
     <input type="submit" value="{$LANG.FIND}"/>
+    <a href="javascript:" onclick="$('#from_search').fadeIn('slow');" class="ajaxlink">{$LANG.SEARCH_PARAMS}</a>
     <div id="from_search">
-        <table width="" border="0" cellspacing="0" cellpadding="3">
-            {assign var="col" value="1"}
+    <strong>{$LANG.WHERE_TO_FIND}:</strong>
+	<table width="" border="0" cellspacing="0" cellpadding="3">
+          {assign var="col" value="1"}
             {foreach key=tid item=enable_component from=$enable_components}
                 {if $col==1} <tr> {/if}
                 <td width="">
@@ -25,6 +26,17 @@
                 <td colspan="{math equation="x - y + 1" x=$col y=5}">&nbsp;</td></tr>
             {/if}
         </table>
+        <p><strong>{$LANG.PUBDATE}:</strong></p>
+        <select name="from_pubdate" style="width:200px">
+          <option value="" {if !$from_pubdate}selected="selected"{/if}>{$LANG.ALL}</option>
+          <option value="d" {if $from_pubdate=='d'}selected="selected"{/if}>{$LANG.F_D}</option>
+          <option value="w" {if $from_pubdate=='w'}selected="selected"{/if}>{$LANG.F_W}</option>
+          <option value="m" {if $from_pubdate=='m'}selected="selected"{/if}>{$LANG.F_M}</option>
+          <option value="y" {if $from_pubdate=='y'}selected="selected"{/if}>{$LANG.F_Y}</option>
+        </select>
+        <label id="order_by_date" {if $order_by_date}class="selected"{/if}>
+                	<input name="order_by_date" onclick="toggleInput('order_by_date')" type="checkbox" value="1" {if $order_by_date}checked="checked"{/if} /> 
+                    {$LANG.SORT_BY_PUBDATE}</label>
         <div style="position:absolute; top:0; right:0; font-size:10px;">
         	<a href="javascript:" onclick="$('#from_search').fadeOut();" class="ajaxlink">{$LANG.HIDE}</a>
         </div>

@@ -36,6 +36,14 @@ $_LANG['BY_TAG']          ='ѕо тегу';
 $_LANG['SEARCH_FOR']      ='искать по';
 $_LANG['ANOTHER_TAG']     ='другому тегу';
 $_LANG['CONTINUE_TO_SEARCH'] ='ѕродолжить поиск по сайту';
-$_LANG['WHERE_TO_FIND']   ='где искать';
+$_LANG['WHERE_TO_FIND']   ='√де искать';
+$_LANG['SEARCH_PARAMS']   ='параметры поиска';
+$_LANG['PUBDATE']         ='ƒата публикации';
+$_LANG['ALL']             ='люба€';
+$_LANG['F_D']             ='сегодн€';
+$_LANG['F_W']             ='последн€€ недел€';
+$_LANG['F_M']             ='последний мес€ц';
+$_LANG['F_Y']             ='последний год';
+$_LANG['SORT_BY_PUBDATE'] ='сортировать по дате публикации';
 
 ?>

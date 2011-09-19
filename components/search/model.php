@@ -17,6 +17,10 @@ class cms_model_search{
 
 	protected static $instance;
 
+    private $where     = '';
+    private $group_by  = '';
+    private $order_by  = '';
+
 	public $query    = ''; // поисковый запрос
 	public $look     = ''; // тип поиска
 	protected $against = ''; // подготовленна€ строка дл€ запроса
@@ -24,6 +28,8 @@ class cms_model_search{
 	public $parametrs_array = array(); // массив параметров запроса
 
 	public $page     = 1; // текуща€ страница
+	public $order_by_date = 0; // сортировка по дате публикации
+	public $from_pubdate  = ''; // интервал вывода результатов
 	public $from_component = array(); // массив линков компонентов, в которых проводить поиск
 
 	public $components = array(); // массив компонентов, в которых есть поддержка поиска фултекст
@@ -40,6 +46,8 @@ class cms_model_search{
 		$this->query  = self::getQuery();
 		$this->look   = $this->inCore->request('look', 'str', 'allwords');
 		$this->page   = $this->inCore->request('page', 'int', 1);
+		$this->from_pubdate = $this->inCore->request('from_pubdate', 'str', '');
+		$this->order_by_date = $this->inCore->request('order_by_date', 'int', 0);
 		$this->from_component = self::getComponentsArrayForSearch();
 		$this->config = self::getConfig();
 		$this->inCore->loadLib('tags');
@@ -146,7 +154,7 @@ class cms_model_search{
 		// декодируем строку с URL
 		$query  = urldecode($query);
 		// оставл€ем только буквы, цифры, - _
-		$query  = preg_replace('/[^\w\s\-]/i', '', $query);
+		$query  = preg_replace('/[^a-zA-Zа-€ј-я0-9\s\-_]/i', '', $query);
 		// убираем пробелы по кра€м
 		$query  = trim($query);
 		// убираем двойные пробелы
@@ -187,7 +195,7 @@ class cms_model_search{
 		$from_component = $inCore->request('from_component', 'array_str');
 		if(!$from_component || !is_array($from_component)) { return array(); }
 		// убираем повтор€ющииес€ элементы
-		$from_component = array_unique($from_component);
+		$from_component = @array_unique($from_component);
 		// удал€ем пустые элементы массива
 		// линки массива должны содержать только буквы
 		if($from_component){
@@ -203,6 +211,53 @@ class cms_model_search{
 		return $from_component;
 
     }
+/* ========================================================================== */
+/* ========================================================================== */
+    protected function resetConditions(){
+
+        $this->where        = '';
+        $this->group_by     = '';
+        $this->order_by     = '';
+
+    }
+/* ========================================================================== */
+/* ========================================================================== */
+
+    public function where($condition){
+        $this->where .= ' AND ('.$condition.')' . "\n";
+    }
+
+    public function wherePeriodIs(){
+		
+		$today = date("d-m-Y");
+
+		switch ($this->from_pubdate){
+
+			case 'd': $this->where("DATE_FORMAT(pubdate, '%d-%m-%Y')='$today'"); break;
+			case 'w': $this->where("DATEDIFF(NOW(), pubdate) <= 7"); break;
+			case 'm': $this->where("DATE_SUB(NOW(), INTERVAL 1 MONTH) < pubdate"); break;
+			case 'y': $this->where("DATE_SUB(NOW(), INTERVAL 1 YEAR) < pubdate"); break;
+			default: return;
+
+		}
+        return;
+    }
+
+    public function whereSessionIs($session_id){
+
+		$this->where("session_id = '{$session_id}'");
+
+        return;
+    }
+
+    public function groupBy($field){
+        $this->group_by = 'GROUP BY '.$field;
+    }
+
+    public function orderBy($field='id', $direction='ASC'){
+        $this->order_by = 'ORDER BY '.$field.' '.$direction;
+    }
+
 /* ==================================================================================================== */
 /* ==================================================================================================== */
     /**
@@ -214,9 +269,14 @@ class cms_model_search{
 
         $sql = "SELECT pubdate, title, description, link, place, placelink
                 FROM cms_search
-                WHERE session_id = '".session_id()."' ORDER BY id ASC LIMIT ".(($this->page-1)*$this->config['perpage']).", {$this->config['perpage']}";
+				WHERE 1=1 {$this->where}
+                {$this->group_by}                      
+                {$this->order_by}
+				LIMIT ".(($this->page-1)*$this->config['perpage']).", {$this->config['perpage']}";
 
 		$result = $this->inDB->query($sql);
+
+		$this->resetConditions();
 
 		if(!$this->inDB->num_rows($result)){ return false; }
 
@@ -246,7 +306,14 @@ class cms_model_search{
      */
     public function getCountResults() {
 
-		return $this->inDB->rows_count('cms_search', "session_id = '".session_id()."'");
+        $sql = "SELECT 1
+                FROM cms_search
+                WHERE 1=1 {$this->where}
+                {$this->group_by}\n";
+
+		$result = $this->inDB->query($sql);
+
+		return $this->inDB->num_rows($result);
         
     }
 // ============================================================================ //
@@ -460,7 +527,7 @@ class cms_model_search{
 			include_once PATH.'/components/'.$component.'/psearch.php';
 			$search_func = 'search_' . $component;
 			if(function_exists($search_func)){
-				call_user_func($search_func, $this->against, $this->look, $this->words);
+				call_user_func($search_func, $this->against, $this->look);
 				return true;
 			}
 		}

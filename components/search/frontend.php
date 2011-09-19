@@ -67,6 +67,15 @@ function search(){
 
 		}
 
+		// формируем условия выборки
+		$model->whereSessionIs(session_id());
+		$model->wherePeriodIs();
+		if($model->order_by_date){
+			$model->orderBy('pubdate', 'DESC');
+		} else {
+			$model->orderBy();
+		}
+
 		// Получаем общее количество результатов
 		$total = $model->getCountResults();
 
@@ -78,6 +87,8 @@ function search(){
 		$smarty = $inCore->initSmarty('components', 'com_search_text.tpl');
 		$smarty->assign('query', $model->query);
 		$smarty->assign('look', $model->look);
+		$smarty->assign('order_by_date', $model->order_by_date);
+		$smarty->assign('from_pubdate', $model->from_pubdate);
 		$smarty->assign('results', $results);
 		$smarty->assign('total', $total);
 		$smarty->assign('enable_components', $model->getEnableComponentsWithSupportSearch());
