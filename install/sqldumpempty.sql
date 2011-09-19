@@ -1117,6 +1117,7 @@ CREATE TABLE `#__search` (
   `id` int(11) NOT NULL auto_increment,
   `session_id` varchar(100) NOT NULL,
   `date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `pubdate` datetime NOT NULL,
   `title` varchar(250) NOT NULL,
   `description` varchar(500) NOT NULL,
   `link` varchar(200) NOT NULL,

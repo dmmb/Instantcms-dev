@@ -36,6 +36,7 @@ function search_catalog($query, $look){
 				$result_array['place']       = $item['cat'];
 				$result_array['placelink']   = "/catalog/".$item['cat_id'];
 				$result_array['title']       = $item['title'];
+				$result_array['pubdate']     = $item['pubdate'];
 				$result_array['session_id']  = session_id();
 
 				$searchModel->addResult($result_array);			

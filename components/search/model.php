@@ -29,7 +29,7 @@ class cms_model_search{
 	public $components = array(); // массив компонентов, в которых есть поддержка поиска фултекст
 	public $config     = array(); // конфигураци€ компонента
 	
-	private $default_array_result = array('session_id'=>'','title'=>'','description'=>'','link'=>'','place'=>'','placelink'=>''); // пол€ результатов поиска
+	private $default_array_result = array('session_id'=>'','pubdate'=>'','title'=>'','description'=>'','link'=>'','place'=>'','placelink'=>''); // пол€ результатов поиска
 
 /* ==================================================================================================== */
 /* ==================================================================================================== */
@@ -185,6 +185,7 @@ class cms_model_search{
 		$inCore = cmsCore::getInstance();
 		// получаем саму строку запроса из GET
 		$from_component = $inCore->request('from_component', 'array_str');
+		if(!$from_component || !is_array($from_component)) { return array(); }
 		// убираем повтор€ющииес€ элементы
 		$from_component = array_unique($from_component);
 		// удал€ем пустые элементы массива
@@ -211,7 +212,7 @@ class cms_model_search{
      */
     public function getResults() {
 
-        $sql = "SELECT title, description, link, place, placelink
+        $sql = "SELECT pubdate, title, description, link, place, placelink
                 FROM cms_search
                 WHERE session_id = '".session_id()."' ORDER BY id ASC LIMIT ".(($this->page-1)*$this->config['perpage']).", {$this->config['perpage']}";
 
@@ -223,6 +224,7 @@ class cms_model_search{
 
 		while ($res = $this->inDB->fetch_assoc($result)){
 
+			$res['pubdate'] = cmsCore::dateFormat($res['pubdate'], true, false, false);
 			// заголовок с учетом подсветки слов поиска
 			$res['s_title'] = $this->getHighlightedText($res['title']);
 			// описание с учетом подсветки слов поиска

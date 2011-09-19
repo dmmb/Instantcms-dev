@@ -41,6 +41,7 @@ function search_content($query, $look){
 				$result_array['placelink']   = $item['cat_parent_id']>0 ? "/".$item['cat_seolink'] : $link;
 				$result_array['description'] = $searchModel->getProposalWithSearchWord($item['content']);
 				$result_array['title']       = $item['title'];
+				$result_array['pubdate']     = $item['pubdate'];
 				$result_array['session_id']  = session_id();
 
 				$searchModel->addResult($result_array);			

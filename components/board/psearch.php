@@ -37,6 +37,7 @@ function search_board($query, $look){
 				$result_array['placelink']   = '/board/'.$item['cat_id'];
 				$result_array['description'] = $searchModel->getProposalWithSearchWord($item['content']);
 				$result_array['title']       = $item['title'];
+				$result_array['pubdate']     = $item['pubdate'];
 				$result_array['session_id']  = session_id();
 
 				$searchModel->addResult($result_array);		

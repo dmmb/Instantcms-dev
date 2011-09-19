@@ -565,6 +565,12 @@ span.fast_cfg_link img{ border:none; }
     -moz-border-radius:2px;
 	padding:0 2px;
 }
+.search_date{
+	float:right;
+	height:14px;
+	font-size:10px;
+	color: #5F98BF;
+}
 #from_search{
 	display:none;
 	margin:10px 0 0 0;

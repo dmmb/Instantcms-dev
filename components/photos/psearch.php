@@ -37,6 +37,7 @@ function search_photos($query, $look){
 				$result_array['placelink']   = '/photos/'.$item['cat_id'];
 				$result_array['description'] = $searchModel->getProposalWithSearchWord($item['description']);
 				$result_array['title']       = $item['title'];
+				$result_array['pubdate']     = $item['pubdate'];
 				$result_array['session_id']  = session_id();
 
 				$searchModel->addResult($result_array);

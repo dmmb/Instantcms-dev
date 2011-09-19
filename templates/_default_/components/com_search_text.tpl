@@ -41,6 +41,9 @@
 	<p class="usr_photos_notice"><strong>{$LANG.FOUND} {$total|spellcount:$LANG.1_MATERIALS:$LANG.2_MATERIALS:$LANG.10_MATERIALS}</strong></p>
     {foreach key=tid item=item from=$results}
 	<div class="search_block">
+            {if $item.pubdate}
+            	<div class="search_date">{$item.pubdate}</div>
+            {/if}
             <div class="search_result_title">
                 <span>{$num}</span>
                 <a href="{$item.link}" target="_blank">{$item.s_title}</a>

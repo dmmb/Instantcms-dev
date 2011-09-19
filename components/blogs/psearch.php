@@ -47,6 +47,7 @@ function search_blogs($query, $look){
 				$result_array['placelink']   = $model->getBlogURL(0, $item['bloglink']);
 				$result_array['description'] = $searchModel->getProposalWithSearchWord($item['content_html']);
 				$result_array['title']       = $item['title'];
+				$result_array['pubdate']     = $item['pubdate'];
 				$result_array['session_id']  = session_id();
 
 				$searchModel->addResult($result_array);
