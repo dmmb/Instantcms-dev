@@ -46,7 +46,9 @@ function search(){
 			$inCore->redirect('/search');
 		}
 
-		$inPage->addPathway($model->query);
+		if($model->query){
+			$inPage->addPathway($model->query);
+		}
 
 		// если параметры запроса изменились
 		// делаем полный поиск, заполняя кеш
@@ -109,7 +111,9 @@ function search(){
 			$inCore->redirect('/search');
 		}
 
-		$inPage->addPathway($_LANG['SEARCH_BY_TAG'].' "'.$model->query.'"');
+		if($model->query){
+			$inPage->addPathway($_LANG['SEARCH_BY_TAG'].' "'.$model->query.'"');
+		}
 		$inPage->initAutocomplete();
 
 		$total   = $model->getCountTags();
