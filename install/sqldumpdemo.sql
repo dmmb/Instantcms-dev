@@ -189,6 +189,7 @@ CREATE TABLE `#__blog_posts` (
   KEY `seolink` (`seolink`),
   KEY `blog_id` (`blog_id`),
   KEY `user_id` (`user_id`),
+  FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `content` (`content`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -526,7 +527,8 @@ INSERT INTO `#__cron_jobs` (`id`, `job_name`, `job_interval`, `job_run_date`, `c
 (3, 'drop_inactive_users', 48, '2011-04-07 12:10:08', 'users', 'deleteInactiveUsers', '', 1, 1, 'Удаление неактивных пользователей (см. настройки компонента "Профили пользователей")', '', ''),
 (4, 'remove_old_log', 48, '2011-04-07 12:10:08', '', '', '', 1, 1, 'Удаляет старые записи ленты событий', 'actions|cmsActions', 'removeOldLog'),
 (5, 'give_invites', 24, '2011-04-07 12:10:08', 'users', 'giveInvitesCron', '', 1, 1, 'Выдача инвайтов пользователям', '', ''),
-(6, 'clear_invites', 24, '2011-04-07 12:10:08', 'users', 'clearInvites', '', 1, 1, 'Удаление использованных инвайтов', '', '');
+(6, 'clear_invites', 24, '2011-04-07 12:10:08', 'users', 'clearInvites', '', 1, 1, 'Удаление использованных инвайтов', '', ''),
+(7, 'deleteOldResults', 24, '2011-04-07 12:10:08', 'search', 'deleteOldResults', '', 1, 1, 'Удаляет записи в кеше поиска старее 1 дня.', '', '');
 
 DROP TABLE IF EXISTS `#__downloads`;
 CREATE TABLE `#__downloads` (
@@ -1212,12 +1214,17 @@ INSERT INTO `#__rating_targets` (`id`, `target`, `component`, `is_user_affect`, 
 
 DROP TABLE IF EXISTS `#__search`;
 CREATE TABLE `#__search` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL auto_increment,
   `session_id` varchar(100) NOT NULL,
+  `date` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `title` varchar(250) NOT NULL,
+  `description` varchar(500) NOT NULL,
   `link` varchar(200) NOT NULL,
   `place` varchar(100) NOT NULL,
-  `placelink` varchar(100) NOT NULL
+  `placelink` varchar(200) NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `session_id` (`session_id`),
+  KEY `date` (`date`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__stats`;

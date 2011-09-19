@@ -27,12 +27,13 @@
     $inCore->loadClass('config');       //конфигурация
     $inCore->loadClass('db');           //база данных
     $inCore->loadClass('user');
+	$inCore->loadClass('cron');
 
     $inConf     = cmsConfig::getInstance();
     $inDB       = cmsDatabase::getInstance();
 
-    $version_prev = '1.7';
-    $version_next = '1.8';
+    $version_prev = '1.8';
+    $version_next = '1.8.1';
 	
 	$is_was_migrate = false;
 
@@ -76,146 +77,49 @@
 
 // ========================================================================== //
 // ========================================================================== //	
-    if (!$inDB->isFieldExists('cms_modules', 'access_list')){
-        $inDB->query("ALTER TABLE `cms_modules` ADD `access_list` TINYTEXT NOT NULL AFTER `css_prefix`");
-        echo '<p>Поле <strong>access_list</strong> добавлено в таблицу <strong>cms_modules</strong></p>';
-		$is_was_migrate = true;
-    }
+	$inDB->query("DROP TABLE IF EXISTS `cms_search`");
+
+	$sql = "CREATE TABLE `cms_search` (
+			  `id` int(11) NOT NULL auto_increment,
+			  `session_id` varchar(100) NOT NULL,
+			  `date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+			  `title` varchar(250) NOT NULL,
+			  `description` varchar(500) NOT NULL,
+			  `link` varchar(200) NOT NULL,
+			  `place` varchar(100) NOT NULL,
+			  `placelink` varchar(200) NOT NULL,
+			  PRIMARY KEY  (`id`),
+			  KEY `session_id` (`session_id`),
+			  KEY `date` (`date`)
+			) ENGINE=MyISAM DEFAULT CHARSET=cp1251;";
+
+	$inDB->query($sql);
+
+	echo '<p>Таблица <strong>cms_search</strong> пересоздана.</p>';
+	$is_was_migrate = true;
+
 // ========================================================================== //
 // ========================================================================== //
-    if ($inDB->isFieldExists('cms_modules', 'allow_group')){
-		$sql    = "SELECT id, allow_group
-				   FROM cms_modules";
-	
-		$result = $inDB->query($sql);
-	
-		if ($inDB->num_rows($result)){
-			while($mod = $inDB->fetch_assoc($result)){
-				if($mod['allow_group'] != -1) {
-	
-					$access_list[]  = $mod['allow_group'];
-					$access_list_ya = $inCore->arrayToYaml($access_list);
-					$inDB->query("UPDATE cms_modules SET `access_list` = '{$access_list_ya}' WHERE id = '{$mod['id']}'");
-					unset ($access_list);
-	
-				}
-			}
-		}
-	
-		echo '<p>Мультидоступ групп к модулям выполнен.</p>';
-		$is_was_migrate = true;
+	if(!$inDB->get_field('cms_cron_jobs', "job_name='deleteOldResults'", 'id')){
+		cmsCron::registerJob('deleteOldResults', array(
+										'interval' => 24,
+										'component' => 'search',
+										'model_method' => 'deleteOldResults',
+										'comment' => 'Удаляет записи в кеше поиска старее 1 дня.',
+										'custom_file' => '',
+										'enabled' => 1,
+										'class_name' => '',
+										'class_method' => ''
+								  ));
 	}
+	echo '<p>Задание CRON deleteOldResults для очистки поискового кеша создано.</p>';
+	$is_was_migrate = true;
 // ========================================================================== //
 // ========================================================================== //
-    if ($inDB->isFieldExists('cms_modules', 'allow_group')){
-        $inDB->query("ALTER TABLE `cms_modules` DROP `allow_group`");
-        echo '<p>Поле <strong>allow_group</strong> удалено из таблицы <strong>cms_modules</strong></p>';
-		$is_was_migrate = true;
-    }
-// ========================================================================== //
-// ========================================================================== //	
-    if (!$inDB->isFieldExists('cms_menu', 'access_list')){
-        $inDB->query("ALTER TABLE `cms_menu` ADD `access_list` TINYTEXT NOT NULL AFTER `template`");
-        echo '<p>Поле <strong>access_list</strong> добавлено в таблицу <strong>cms_menu</strong></p>';
-		$is_was_migrate = true;
-    }
-// ========================================================================== //
-// ========================================================================== //
-    if ($inDB->isFieldExists('cms_menu', 'allow_group')){
-		$sql    = "SELECT id, allow_group
-				   FROM cms_menu";
-	
-		$result = $inDB->query($sql);
-	
-		if ($inDB->num_rows($result)){
-			while($mod = $inDB->fetch_assoc($result)){
-				if($mod['allow_group'] != -1) {
-	
-					$access_list[]  = $mod['allow_group'];
-					$access_list_ya = $inCore->arrayToYaml($access_list);
-					$inDB->query("UPDATE cms_menu SET `access_list` = '{$access_list_ya}' WHERE id = '{$mod['id']}'");
-					unset ($access_list);
-	
-				}
-			}
-		}
-	
-		echo '<p>Мультидоступ групп к пунктам меню выполнен.</p>';
-		$is_was_migrate = true;
-	}
-// ========================================================================== //
-// ========================================================================== //
-    if ($inDB->isFieldExists('cms_menu', 'allow_group')){
-        $inDB->query("ALTER TABLE `cms_menu` DROP `allow_group`");
-        echo '<p>Поле <strong>allow_group</strong> удалено из таблицы <strong>cms_menu</strong></p>';
-		$is_was_migrate = true;
-    }
-// ========================================================================== //
-// ========================================================================== //
-    if (!$inDB->isFieldExists('cms_clubs', 'create_karma')){
-        $inDB->query("ALTER TABLE `cms_clubs` ADD `create_karma` INT( 11 ) NOT NULL AFTER `join_karma_limit`");
-        echo '<p>Поле <strong>create_karma</strong> добавлено в таблицу <strong>cms_clubs</strong></p>';
-		$is_was_migrate = true;
-    }
-    if (!$inDB->isFieldExists('cms_clubs', 'is_vip')){
-        $inDB->query("ALTER TABLE `cms_clubs` ADD `is_vip` TINYINT NOT NULL DEFAULT '0'");
-        echo '<p>Поле <strong>is_vip</strong> добавлено в таблицу <strong>cms_clubs</strong></p>';
-		$is_was_migrate = true;
-    }
-    if (!$inDB->isFieldExists('cms_clubs', 'join_cost')){
-        $inDB->query("ALTER TABLE `cms_clubs` ADD `join_cost` FLOAT NOT NULL");
-        echo '<p>Поле <strong>join_cost</strong> добавлено в таблицу <strong>cms_clubs</strong></p>';
-		$is_was_migrate = true;
-    }
-// ========================================================================== //
-// ========================================================================== //
-    if (!$inDB->isFieldExists('cms_comments', 'content_bbcode')){
-        $inDB->query("ALTER TABLE `cms_comments` ADD `content_bbcode` TEXT NOT NULL AFTER `content`");
-        echo '<p>Поле <strong>content_bbcode</strong> добавлено в таблицу <strong>cms_comments</strong></p>';
-		$is_was_migrate = true;
-    }
-// ========================================================================== //
-// ========================================================================== //
-
-    $inDB->query("ALTER TABLE `cms_search` CHANGE `link` `link` VARCHAR( 200 ) CHARACTER SET cp1251 COLLATE cp1251_general_ci NOT NULL");
-
-// ========================================================================== //
-// ========================================================================== //
-
-    if (!$inDB->isFieldExists('cms_user_msg', 'to_del')){
-        $inDB->query("ALTER TABLE `cms_user_msg` ADD `to_del` TINYINT NOT NULL DEFAULT '0'");
-        $inDB->query("ALTER TABLE `cms_user_msg` ADD `from_del` TINYINT NOT NULL DEFAULT '0'");
-        echo '<p>Поля <strong>to_del</strong>, <strong>from_del</strong> добавлены в таблицу <strong>cms_user_msg</strong></p>';
-        $is_was_migrate = true;
-    }	
-
-    if (!$inDB->isFieldExists('cms_board_items', 'is_vip')){
-        $inDB->query("ALTER TABLE `cms_board_items` ADD `is_vip` TINYINT NOT NULL DEFAULT '0'");
-        $inDB->query("ALTER TABLE `cms_board_items` ADD `vipdate` DATETIME NOT NULL");
-        echo '<p>Поля <strong>is_vip</strong>, <strong>vipdate</strong> добавлены в таблицу <strong>cms_board_items</strong></p>';
-        $is_was_migrate = true;
-    }
-
-    if (!$inDB->isFieldExists('cms_category', 'cost')){
-        $inDB->query("ALTER TABLE `cms_category` ADD `cost` VARCHAR( 5 ) NOT NULL");
-        $is_was_migrate = true;
-    }
-
-    if (!$inDB->isFieldExists('cms_uc_cats', 'cost')){
-        $inDB->query("ALTER TABLE `cms_uc_cats` ADD `cost` VARCHAR( 5 ) NOT NULL");
-        $is_was_migrate = true;
-    }
-
-    if (!$inDB->isFieldExists('cms_forums', 'topic_cost')){
-        $inDB->query("ALTER TABLE `cms_forums` ADD `topic_cost` FLOAT NOT NULL DEFAULT '0'");
-        $is_was_migrate = true;
-    }
-
-    if (!$inDB->isFieldExists('cms_users', 'is_logged_once')){
-        $inDB->query("ALTER TABLE `cms_users` ADD `is_logged_once` TINYINT NOT NULL DEFAULT '1' AFTER `is_deleted`");
-        $is_was_migrate = true;
-    }
-
+	addFultextIndex('cms_blog_posts');
+	addFultextIndex('cms_board_items');
+	echo '<p>Индексы fulltext для таблиц cms_blog_posts и cms_board_items созданы.</p>';
+	$is_was_migrate = true;
 // ========================================================================== //
 // ========================================================================== //
 	if ($is_was_migrate) {
@@ -226,5 +130,24 @@
     echo '<div class="nextlink"><a href="/">Перейти на сайт</a></div>';
     echo '</div>';
 
-    
+// ========================================================================== //
+    function addFultextIndex($table, $pole = 'title'){
+
+		$inDB = cmsDatabase::getInstance();
+
+		$result = $inDB->query("SHOW INDEX FROM `$table`");
+		if ($inDB->num_rows($result)){
+			$is = false;
+			while($index = $inDB->fetch_assoc($result)){
+				if($index['Key_name'] == $pole.'_full') { $is = true; };
+			}
+			if(!$is) { $inDB->query("ALTER TABLE `$table` ADD FULLTEXT `{$pole}_full` (`{$pole}`)"); }
+		} else {
+			$inDB->query("ALTER TABLE `$table` ADD FULLTEXT `{$pole}_full` (`{$pole}`)");
+		}
+
+        return true;
+
+    }
+// ========================================================================== //
 ?>
