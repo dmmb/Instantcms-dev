@@ -119,7 +119,9 @@
 // ========================================================================== //
 	addFultextIndex('cms_blog_posts');
 	addFultextIndex('cms_board_items');
-	echo '<p>Индексы fulltext для таблиц cms_blog_posts и cms_board_items созданы.</p>';
+	addFultextIndex('cms_faq_quests', 'quest');
+	addFultextIndex('cms_faq_quests', 'answer');
+	echo '<p>Индексы fulltext для таблиц cms_blog_posts, cms_faq_quests и cms_board_items созданы.</p>';
 	$is_was_migrate = true;
 // ========================================================================== //
 // ========================================================================== //

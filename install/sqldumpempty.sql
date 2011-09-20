@@ -557,7 +557,8 @@ CREATE TABLE `#__faq_quests` (
   `answerdate` datetime NOT NULL,
   `hits` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `category_id` (`category_id`)
+  KEY `category_id` (`category_id`),
+  FULLTEXT KEY `quest` (`quest`,`answer`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
