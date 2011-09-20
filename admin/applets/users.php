@@ -24,9 +24,8 @@ function applet_users(){
 	$GLOBALS['cp_page_title'] = 'Пользователи';
  	cpAddPathway('Пользователи', 'index.php?view=users');	
 
-	if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
-	if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { $id = -1; }
-	if (isset($_REQUEST['co'])) { $co = $_REQUEST['co']; } else { $co = -1; } //current ordering, while resort
+    $do = $inCore->request('do', 'str', 'list');
+	$id = $inCore->request('id', 'int', -1);
 
     $inDB = cmsDatabase::getInstance();
 
@@ -101,7 +100,12 @@ function applet_users(){
 		$actions[4]['icon']  = 'delete.gif';
 		$actions[4]['confirm'] = 'Удалить пользователя?';
 		$actions[4]['link']  = '?view=users&do=delete&id=%id%';
-				
+
+		$actions[5]['title'] = 'Удалить полностью';
+		$actions[5]['icon']  = 'off.gif';
+		$actions[5]['confirm'] = 'Удалить пользователя без возможности восстановления?';
+		$actions[5]['link']  = '?view=users&do=delete_full&id=%id%';
+
 		//Print table
 		cpListTable('cms_users', $fields, $actions, 'is_deleted = 0', 'regdate DESC');		
 	}
@@ -112,9 +116,14 @@ function applet_users(){
 				$model->deleteUser($id);
 			}
 		} else {
-			$model->deleteUsers($_REQUEST['item']);
+			$model->deleteUsers($inCore->request('item', 'array_int'));
 		}
-		header('location:?view=users');
+		$inCore->redirectBack();
+	}
+
+	if ($do == 'delete_full'){
+		$model->deleteUser($id, true);
+		$inCore->redirectBack();
 	}
 	
 	if ($do == 'submit'){
@@ -164,7 +173,7 @@ function applet_users(){
                 dbQuery($sql);
             }
 
-            header('location:?view=users');
+            $inCore->redirect('?view=users');
 
         }
 
@@ -209,9 +218,9 @@ function applet_users(){
 			dbQuery($sql) ;
 		}
 		if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
-			header('location:?view=users');		
+			$inCore->redirect('?view=users');		
 		} else {
-			header('location:?view=users&do=edit');		
+			$inCore->redirect('?view=users&do=edit');		
 		}
 	}
 

@@ -643,7 +643,7 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 						}
 					}		
 					if ($is_actions){
-						echo '<td width="80" class="'.$row_class.'" align="right" valign="middle"><div style="padding-right:8px">';
+						echo '<td width="110" class="'.$row_class.'" align="right" valign="middle"><div style="padding-right:8px">';
 						foreach($_actions as $key => $value){
 							if (isset($_actions[$key]['condition'])){
 								$print = $_actions[$key]['condition']($item['id']);
