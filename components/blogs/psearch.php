@@ -23,8 +23,8 @@ function search_blogs($query, $look){
 
 		$sql = "SELECT con.*, cat.title cat_title, cat.id cat_id, cat.owner owner, cat.user_id user_id, cat.seolink as bloglink
 				FROM cms_blog_posts con
-				INNER JOIN cms_blogs cat ON cat.id = con.blog_id
-				WHERE MATCH(con.title, con.content) AGAINST ('$query' IN BOOLEAN MODE) AND con.allow_who = 'all' AND con.published = 1 LIMIT 100";
+				INNER JOIN cms_blogs cat ON cat.id = con.blog_id AND cat.allow_who = 'all'
+				WHERE MATCH(con.title, con.content) AGAINST ('$query' IN BOOLEAN MODE) AND con.published = 1 LIMIT 100";
 
 		$result = $inDB->query($sql);
 		
