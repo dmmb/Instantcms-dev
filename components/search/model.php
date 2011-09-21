@@ -154,7 +154,7 @@ class cms_model_search{
 		// декодируем строку с URL
 		$query  = urldecode($query);
 		// оставляем только буквы, цифры, - _
-		$query  = preg_replace('/[^a-zA-Zа-яА-Я0-9\s\-_]/i', '', $query);
+		$query  = preg_replace('/[^a-zA-Zа-яёіїєґА-ЯЁІЇЄҐ0-9\s\-_]/i', '', $query);
 		// убираем пробелы по краям
 		$query  = trim($query);
 		// убираем двойные пробелы
