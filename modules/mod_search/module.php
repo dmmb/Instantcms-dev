@@ -12,20 +12,18 @@
 /******************************************************************************/
 
 	function mod_search(){
+
         $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
-	
-		echo '<form action="/index.php" method="GET">';
-            echo '<input type="hidden" name="view" value="search" />';
-			echo '<input type="text" 
-						 name="query"
-						 class="search_field" 
-						 value="поиск..." 
-						 onClick="this.value=\'\'" 
-						 onFocusOut="if(this.value==\'\'){this.value=\'поиск...\';}"/>';
-			
-		echo '</form>';
-	
+	    $inCore->loadModel('search');
+		cmsCore::loadLanguage('components/search');
+		$model = cms_model_search::initModel();
+		if(!$model->config['component_enabled']) { return false; }
+
+		$smarty = $inCore->initSmarty('modules', 'mod_search.tpl');
+		$smarty->assign('enable_components', $model->getEnableComponentsWithSupportSearch());
+		$smarty->display('mod_search.tpl');
+
 		return true;	
+
 	}
 ?>
