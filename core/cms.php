@@ -13,10 +13,10 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-define('CORE_VERSION', 		'1.8');
+define('CORE_VERSION', 		'1.8.1');
 define('CORE_BUILD', 		'1');
-define('CORE_VERSION_DATE', '2011-04-04');
-define('CORE_BUILD_DATE', 	'2011-04-04');
+define('CORE_VERSION_DATE', '2011-10-03');
+define('CORE_BUILD_DATE', 	'2011-10-03');
 
 if (!defined('USER_UPDATER')) { define('USER_UPDATER', -1); }
 if (!defined('USER_MASSMAIL')) { define('USER_MASSMAIL', -2); }
@@ -33,7 +33,7 @@ class cmsCore {
     private         $is_menu_id_strict;
 
     private         $uri;
-    private         $component;
+    public          $component;
     private         $is_content = false;
 
     private         $module_configs = array();
@@ -1464,7 +1464,13 @@ class cmsCore {
 
         $folder = rtrim($uri, '/');
 
-        if (in_array($folder, array('admin', 'install', 'migrate'))) { return; }
+        if (strstr($uri, "?") && !preg_match('/^admin\/(.*)/i', $uri)){
+            $query_str = substr($uri, strpos($uri, "?")+1);
+            $uri = substr($uri, 0, strpos($uri, "?"));
+            parse_str($query_str, $_REQUEST);
+        }
+
+        if (in_array($folder, array('admin', 'install', 'migrate', 'index.php'))) { return; }
 
         //специальный хак для поиска по сайту, для совместимости со старыми шаблонами
         if (strstr($_SERVER['QUERY_STRING'], 'view=search')){ $uri = 'search'; }

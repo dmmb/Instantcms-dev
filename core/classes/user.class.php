@@ -70,6 +70,8 @@ class cmsUser {
 
         if (!file_exists(PATH.'/images/users/avatars/small/'.$this->imageurl) || !$this->imageurl){ $this->imageurl = 'nopic.jpg'; }
 
+        $this->logdate = $_SESSION['user']['logdate'];
+
         $this->id = (int)$user_id;
 
         $this->checkBan();
@@ -198,7 +200,9 @@ class cmsUser {
         $inDB       = cmsDatabase::getInstance();
         $inCore     = cmsCore::getInstance();
         
-        if ($inCore->getCookie('userid') && !$this->id){
+        $user_id    = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : 0;
+
+        if ($inCore->getCookie('userid') && !$user_id){
 
             $cookie_code = $inCore->getCookie('userid');
 

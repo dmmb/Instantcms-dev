@@ -631,7 +631,7 @@ public function buildForm($form_id, $admin=false, $showtitle=true){
     $html = '';
 
     //GET FORM DATA
-    $sql    = "SELECT * FROM cms_forms WHERE id = $form_id LIMIT 1";
+    $sql    = "SELECT * FROM cms_forms WHERE id = '$form_id' LIMIT 1";
     $result = $inDB->query($sql) ;
 
     if (!$inDB->num_rows($result)) { return false; }
@@ -641,24 +641,11 @@ public function buildForm($form_id, $admin=false, $showtitle=true){
             if ($showtitle) { $html .= '<h3 class="userform_title">'.$form['title'].'</h3>'; }
             if($form['description']) { $html .= '<p>'.$form['description'].'</p>'; }
 
-            //CHECK PREVIOUS FORM SUBMITTION
-            if(isset($_SESSION['form_ok'.$form_id])) {
-                $html .= '<p style="color:green">Форма успешно отправлена</p>';
-                unset($_SESSION['form_ok'.$form_id]);
-                return $html;
-            }
-
-            //CHECK PREVIOUS FORM ERRORS
-            if(isset($_SESSION['form_error'.$form_id])) {
-                $html .= '<p style="color:red">'.$_SESSION['form_error'.$form_id].'</p>';
-                unset($_SESSION['form_error'.$form_id]);
-            }
-
             $html .= '<form name="userform" id="userform" action="/forms/process" method="POST">';
             $html .= '<input type="hidden" name="form_id" value="'.$form_id.'">';
 
                 //GET FIELDS DATA
-                $sql = "SELECT * FROM cms_form_fields WHERE form_id = $form_id ORDER BY ordering ASC";
+                $sql = "SELECT * FROM cms_form_fields WHERE form_id = '$form_id' ORDER BY ordering ASC";
                 $result = $inDB->query($sql) ;
 
                 if ($inDB->num_rows($result)){
@@ -713,11 +700,12 @@ public function buildFormField($form_id, $field, $default=''){
 
     $style  = 'background-color:white';
 
-    if(isset($_SESSION['form_last'.$form_id])){
-        if (isset($_SESSION['form_last'.$form_id][$field['id']])){
-            $cfg['default'] = $_SESSION['form_last'.$form_id][$field['id']];
-        }
-    }
+	$ses_value = cmsUser::sessionGet('form_last_'.$form_id.'_'.$field['id']);
+
+	if ($ses_value){
+		$cfg['default'] = $ses_value;
+		cmsUser::sessionDel('form_last_'.$form_id.'_'.$field['id']);
+	}
 
     if ($default){
         $cfg['default'] = $default;

@@ -57,6 +57,7 @@ function mod_forum($module_id){
 					$threads[$next]['topichref']    = '/forum/thread'.$t['id'].'-'.$pages.'.html#new';
 					$threads[$next]['forum']        = ucfirst($t['forum']);
 					$threads[$next]['forumhref']    = '/forum/'.$t['fid'];
+					$threads[$next]['closed']       = $t['closed'];
 
                     $threads[$next]['secret']       = 0;
                     if ($t['auth_group']>0) {

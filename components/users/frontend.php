@@ -2358,7 +2358,13 @@ if ($do=='addfile'){
 				$size_limit   = false;
 				$loaded_files = array();
 				
-				foreach ($_FILES as $key => $data_array) {
+            $list_files = array();
+
+            foreach($_FILES['upfile'] as $key=>$value) {
+                foreach($value as $k=>$v) { $list_files['upfile'.$k][$key] = $v; }
+            }
+
+            foreach ($list_files as $key=>$data_array) {
 					$error = $data_array['error'];
 					if ($error == UPLOAD_ERR_OK) {
 

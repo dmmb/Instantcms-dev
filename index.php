@@ -18,14 +18,14 @@
 
 ////////////////////////////// Проверяем что система установлена /////////////////////////////
 
-    if(is_dir('install')||is_dir('migrate')) {
-        if (!file_exists(PATH.'/includes/config.inc.php')){
-            header('location:/install/');
-        } else {
-            include(PATH.'/core/messages/installation.html');
-            die();
-        }
-    }
+//    if(is_dir('install')||is_dir('migrate')) {
+//        if (!file_exists(PATH.'/includes/config.inc.php')){
+//            header('location:/install/');
+//        } else {
+//            include(PATH.'/core/messages/installation.html');
+//            die();
+//        }
+//    }
 
 /////////////////////////////////// Подготовка //////////////////////////////////////////////
 	
@@ -62,7 +62,7 @@
 	$inUser->autoLogin();     //автоматически авторизуем пользователя, если найден кукис
 
     //проверяем что пользователь не удален и не забанен
-    if (!$inUser->update() && !$inCore->request('uri', 'str')=='/logout') { $inCore->halt(); }
+    if (!$inUser->update() && !$_SERVER['REQUEST_URI']!=='/logout') { $inCore->halt(); }
 
     //определяем заголовок главной страницы
     $home_title = $inConf->hometitle ? $inConf->hometitle : $inConf->sitename;

@@ -13,6 +13,7 @@
 
 	function getLink($file){		
 		trim($file);
+        $file = str_replace('..', '', $file);
 		$filefull = $_SERVER['DOCUMENT_ROOT'].'/includes/myphp/'.$file;
 		
 		if (file_exists($filefull)){
