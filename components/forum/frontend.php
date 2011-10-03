@@ -181,7 +181,9 @@ function forum(){
 	$id		= $inCore->request('id', 'int', 0);
 	$do		= $inCore->request('do', 'str', 'view');
 	$page	= $inCore->request('page', 'int', 1);
-	
+
+	$is_404 = $inCore->request('is_404', 'str', '');
+	if ($is_404) { cmsCore::error404(); }
 ///////////////////////////// VIEW FORUMS LIST /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){
 

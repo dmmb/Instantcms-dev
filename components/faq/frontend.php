@@ -39,24 +39,27 @@ function faq(){
 	$id 	= $inCore->request('id', 'int', 0);
 	$do		= $inCore->request('do', 'str', 'view');
 
+	$is_404 = $inCore->request('is_404', 'str', '');
+	if ($is_404) { cmsCore::error404(); }
+
 ///////////////////////////////////// VIEW CATEGORY ////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){
 
 	if($id>0){
-	//CURRENT CATEGORY
-	$sql = "SELECT *
-			FROM cms_faq_cats
-			WHERE id = '$id'
-			ORDER BY title ASC LIMIT 1
-			";		
+		//CURRENT CATEGORY
+		$sql = "SELECT *
+				FROM cms_faq_cats
+				WHERE id = '$id'
+				ORDER BY title ASC LIMIT 1
+				";		
 	
-	$result = $inDB->query($sql) ;
+		$result = $inDB->query($sql) ;
 
-	if (!$inDB->num_rows($result)) { cmsCore::error404(); }
+		if (!$inDB->num_rows($result)) { cmsCore::error404(); }
 
-	$cat = $inDB->fetch_assoc($result);	
+		$cat = $inDB->fetch_assoc($result);	
 
-	//PAGE HEADING
+		//PAGE HEADING
 		$pagetitle = $cat['title'];
 		$inPage->setTitle($cat['title']);
 		$inPage->addPathway($cat['title']);

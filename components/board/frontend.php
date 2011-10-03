@@ -120,7 +120,10 @@ function board(){
 	$id         = $inCore->request('id', 'int', $root['id']);
 	$userid     = $inCore->request('userid', 'int');
 	$do         = $inCore->request('do', 'str', 'view');
-	
+
+	$is_404 = $inCore->request('is_404', 'str', '');
+	if ($is_404) { cmsCore::error404(); }
+
 /////////////////////////////// SET CITY ///////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='city'){ 
 	$city = urldecode($inCore->request('city', 'str')); 

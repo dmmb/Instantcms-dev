@@ -280,6 +280,9 @@ function catalog(){
 
     $inCore->includeFile('components/catalog/includes/shopcore.php');
 
+	$is_404 = $inCore->request('is_404', 'str', '');
+	if ($is_404) { cmsCore::error404(); }
+
     //////////////////////////// RATING SUBMISSION ///////////////////////////////////////////////////////////////////
     if ($inCore->inRequest('rating')){
         $points     = $inCore->request('points', 'int', 0);

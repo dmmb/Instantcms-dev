@@ -177,6 +177,11 @@
                             2       => 'page'
                          );
 
+        $routes[] = array(
+                            '_uri'      => '/^forum\/(.*)$/i',
+                            1           => 'is_404'
+                         );
+
         return $routes;
 
     }

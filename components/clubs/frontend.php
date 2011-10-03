@@ -64,6 +64,8 @@ function clubs(){
 	$id 		= $inCore->request('id', 'int', 0);
 	$do 		= $inCore->request('do', 'str', 'view');
 
+	$is_404 = $inCore->request('is_404', 'str', '');
+	if ($is_404) { cmsCore::error404(); }
 ////////// VIEW ALL CLUBS ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){
 

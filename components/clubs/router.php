@@ -61,6 +61,11 @@
                             1       => 'id'
                          );
 
+        $routes[] = array(
+                            '_uri'      => '/^clubs\/(.*)$/i',
+                            1           => 'is_404'
+                         );
+
         return $routes;
 
     }
