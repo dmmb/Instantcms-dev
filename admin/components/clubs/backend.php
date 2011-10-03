@@ -359,7 +359,7 @@ if ($opt == 'add' || $opt == 'edit'){
     require('../includes/jwtabs.php');
     $GLOBALS['cp_page_head'][] = jwHeader();
 
-    $GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="/admin/js/clubs.js"></script>';
+    $GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="/components/clubs/js/clubs.js"></script>';
 
     ob_start(); ?>
     

@@ -7,7 +7,6 @@
 </div>
 
 {add_js file='includes/jquery/tabs/jquery.ui.min.js'}
-{add_js file='admin/js/clubs.js'}
 {add_css file='includes/jquery/tabs/tabs.css'}					
 
 <form name="configform" id="club_config_form" action="" method="post" enctype="multipart/form-data">
