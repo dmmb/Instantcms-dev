@@ -600,18 +600,18 @@ if ($do=='forumposts'){
     $inPage->addPathway($_LANG['POSTS_IN_FORUM']);
 
 	if ($inUser->id == $id) {
-		$sql = "SELECT *, t.title as topic, p.id as id, t.id as thread_id
+		$sql = "SELECT p.*, t.title as topic
 					FROM cms_forum_posts p
-					LEFT JOIN cms_forum_threads t ON t.id = p.thread_id
+					INNER JOIN cms_forum_threads t ON t.id = p.thread_id
 					WHERE p.user_id = '$id'
 					ORDER BY p.pubdate DESC
 					LIMIT ".(($page-1)*$perpage).", $perpage";
 		// —читаем общее число постов на форуме
 		$records_total = $inDB->rows_count('cms_forum_posts', 'user_id = '.$id.'');
 	} else {
-		$sql = "SELECT *, t.title as topic, p.id as id, t.id as thread_id
+		$sql = "SELECT p.*, t.title as topic
 					FROM cms_forum_posts p
-					LEFT JOIN cms_forum_threads t ON t.id = p.thread_id
+					INNER JOIN cms_forum_threads t ON t.id = p.thread_id
 					WHERE p.user_id = '$id' AND t.is_hidden = 0
 					ORDER BY p.pubdate DESC
 					LIMIT ".(($page-1)*$perpage).", $perpage";
