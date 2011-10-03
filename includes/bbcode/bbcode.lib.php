@@ -1154,7 +1154,18 @@ class bbcode {
     }
     // Функция - обработчик тега [quote]
     function quote_2html($elem) {
-        $author = htmlspecialchars($elem['attrib']['quote']);
+        $author = $elem['attrib']['quote'];
+        if ($elem['attrib']){
+            unset($elem['attrib']['quote']);
+            $keys = array_keys($elem['attrib']);
+            foreach($keys as $key){
+                if ($key != 'quote'){
+                    $author .= ' '.$key;
+                }
+            }
+        }
+        $author = trim($author);
+
         $author = $author
             ? '<tr><td class="author"><b>'.$author.':</b></td></tr>'
             : '';
