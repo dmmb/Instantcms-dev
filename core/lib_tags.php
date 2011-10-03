@@ -14,22 +14,23 @@
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 function cmsInsertTags($tagstr, $target, $item_id){
+
     $inDB = cmsDatabase::getInstance();
-	$inDB->query("DELETE FROM cms_tags WHERE target='$target' AND item_id = $item_id");
+	$inDB->query("DELETE FROM cms_tags WHERE target='$target' AND item_id = '$item_id'");
+
+	$tagstr = strtolower($tagstr);
+	$tagstr = preg_replace('/[^a-zA-Zà-ÿ¸³¿º´À-ß¨²¯ª¥0-9\s\-\,_]/i', '', $tagstr);
+	$tagstr = trim($tagstr);
+	$tagstr = preg_replace('/\s+/', ' ', $tagstr);
+	$tagstr = str_replace(', ', ',', $tagstr);
+	$tagstr = str_replace(' ,', ',', $tagstr);
 
 	if ($tagstr){
-		$tagstr = str_replace(', ', ',', $tagstr);
-		$tagstr = str_replace(' ,', ',', $tagstr);
 		$tags = explode(',', $tagstr);
+
 		foreach ($tags as $key=>$tag){
-			if(strlen($tag)>1){
+			if(strlen($tag)>3){
 				if (strlen($tag>15) && !(strstr($tag, ' ') || strstr($tag, '-'))) { $tag = substr($tag, 0, 15); }
-			
-				$tag = str_replace("\\", '', $tag);
-				$tag = str_replace('"', '', $tag);
-				$tag = str_replace("'", '', $tag);
-				$tag = str_replace("&", '', $tag);
-				$tag = strtolower($tag);
 				$sql = "INSERT INTO cms_tags (tag, target, item_id) VALUES ('$tag', '$target', $item_id)";
 				$inDB->query($sql);
 			}
@@ -46,12 +47,13 @@ function cmsClearTags($target, $item_id){
 
 
 function cmsTagLine($target, $item_id, $links=true, $selected=''){
+
     $inDB = cmsDatabase::getInstance();
-	$sql = "SELECT tag
+	$sql  = "SELECT tag
 			FROM cms_tags 
 			WHERE target='$target' AND item_id=$item_id
 			ORDER BY tag DESC";
-	$rs = $inDB->query($sql) or die('Error while building tagline');
+	$rs = $inDB->query($sql);
 	$html = '';
 	$tags = $inDB->num_rows($rs);
 	if ($tags){
