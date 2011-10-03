@@ -1471,9 +1471,12 @@ if ($do=='editphotolist'){
 if ($do=='viewphotos'){
 
 	if (!$cfg['sw_photo']) { cmsCore::error404(); }
+
+	if (!$inUser->id && !$cfg['sw_guest']) {
+        cmsUser::goToLogin(); 
+	}
 	
 	$usr = $model->getUserShort($id);
-	
 	if (!$usr){ cmsCore::error404(); }
 
     //Ìîé ïğîôèëü èëè íåò
@@ -1503,7 +1506,13 @@ if ($do=='viewphotos'){
 //============================================================================//
 
 if ($do=='viewalbum'){
-    
+
+	if (!$cfg['sw_photo']) { cmsCore::error404(); }
+
+	if (!$inUser->id && !$cfg['sw_guest']) {
+        cmsUser::goToLogin(); 
+	}
+
     if (!$id){
         $login = $inCore->request('login', 'str', '');
         $login = urldecode($login);
@@ -1512,7 +1521,6 @@ if ($do=='viewalbum'){
     }
 
     $usr = $model->getUserShort($id);
-    
     if (!$usr){ cmsCore::error404(); }
 
     $album_type = $inCore->request('album_type', 'str', 'private');
@@ -1579,6 +1587,8 @@ if ($do=='viewalbum'){
 //============================================================================//
 if ($do=='delalbum'){
 
+	if (!$cfg['sw_photo']) { cmsCore::error404(); }
+
     $album_id = $inCore->request('album_id', 'int', '0');
 
     $album = $model->getPhotoAlbum('private', $album_id);
@@ -1602,7 +1612,6 @@ if ($do=='delalbum'){
 if ($do=='viewboard'){ 
 	
 	$usr = $model->getUserShort($id);
-
 	if (!$usr) { cmsCore::error404(); }
 	
 		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
@@ -1673,10 +1682,10 @@ if ($do=='viewboard'){
 
 /////////////////////////////// FRIENDS LIST /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='friendlist'){
-	
+
 	$usr = $model->getUserShort($id);
 	if (!$usr) { cmsCore::error404(); }
-	
+
 	$page    = $inCore->request('page', 'int', 1);
 	$perpage = 10;
 	
@@ -1706,7 +1715,11 @@ if ($do=='friendlist'){
 if ($do=='viewphoto'){
 
 	if (!$cfg['sw_photo']) { cmsCore::error404(); }
-	
+
+	if (!$inUser->id && !$cfg['sw_guest']) {
+        cmsUser::goToLogin(); 
+	}
+
     $photoid = $inCore->request('photoid', 'int', 0);
 
 	$user_id = $inUser->id;
