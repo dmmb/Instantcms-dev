@@ -13,9 +13,20 @@
 
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
+function viewAct($value){
+	if (!$value) { 
+		$value = '<span style="color:green;">да</span>';
+	} else {
+		$value = '<span style="color:red;">Нет</span>';	
+	}
+	return $value;
+}
+
 function applet_users(){
 
     $inCore = cmsCore::getInstance();
+	$inCore->loadClass('actions');
+	$inCore->loadClass('plugin');
 
 	//check access
 	global $adminAccess;
@@ -54,9 +65,13 @@ function applet_users(){
 		$toolmenu[6]['title'] = 'Бан-лист';
 		$toolmenu[6]['link'] = "?view=userbanlist";
 
-		$toolmenu[7]['icon'] = 'help.gif';
-		$toolmenu[7]['title'] = 'Помощь';
-		$toolmenu[7]['link'] = "?view=help&topic=users";
+		$toolmenu[7]['icon'] = 'user_go.png';
+		$toolmenu[7]['title'] = 'Активировать выбранных';
+		$toolmenu[7]['link'] = "javascript:if(confirm('Активировать выбранных пользователей?')) { checkSel('?view=users&do=activate&multiple=1'); }";
+
+		$toolmenu[8]['icon'] = 'help.gif';
+		$toolmenu[8]['title'] = 'Помощь';
+		$toolmenu[8]['link'] = "?view=help&topic=users";
 
 		cpToolMenu($toolmenu);
 
@@ -74,14 +89,15 @@ function applet_users(){
 		$fields[3]['title'] = 'Группа';		$fields[3]['field'] = 'group_id';	$fields[3]['width'] = '200';
 		$fields[3]['prc'] = 'cpGroupById';  $fields[3]['filter']= '1';		    $fields[3]['filterlist'] = cpGetList('cms_user_groups');
 
-		$fields[4]['title'] = 'E-Mail';		$fields[4]['field'] = 'email';		$fields[4]['width'] = '160';
+		$fields[4]['title'] = 'E-Mail';		$fields[4]['field'] = 'email';		$fields[4]['width'] = '120';
 
-		$fields[5]['title'] = 'Дата<br/>регистрации';	$fields[5]['field'] = 'regdate';	$fields[5]['width'] = '160';		
+		$fields[5]['title'] = 'Дата<br/>регистрации';	$fields[5]['field'] = 'regdate';	$fields[5]['width'] = '140';		
 
-		$fields[6]['title'] = 'Последний<br/>вход';		$fields[6]['field'] = 'logdate';	$fields[6]['width'] = '160';
+		$fields[6]['title'] = 'Последний<br/>вход';		$fields[6]['field'] = 'logdate';	$fields[6]['width'] = '140';
+		$fields[7]['title'] = 'Последний<br/>IP';		$fields[7]['field'] = 'last_ip';	$fields[7]['width'] = '100';
+		$fields[8]['title'] = 'Активирован?';		$fields[8]['field'] = 'is_locked';	$fields[8]['width'] = '95';
+		$fields[8]['prc'] = 'viewAct';
 		
-		$fields[7]['title'] = 'Последний<br/>IP';		$fields[7]['field'] = 'last_ip';	$fields[7]['width'] = '100';		
-	
 		//ACTIONS
 		$actions = array();
 		$actions[0]['title'] = 'Профиль';
@@ -108,6 +124,41 @@ function applet_users(){
 
 		//Print table
 		cpListTable('cms_users', $fields, $actions, 'is_deleted = 0', 'regdate DESC');		
+	}
+
+	if ($do == 'activate'){
+
+		$user_ids = $inCore->request('item', 'array_int');
+		if(!$user_ids) { $inCore->redirectBack(); }
+
+        foreach($user_ids as $key=>$user_id){
+
+			$code = $inDB->get_field('cms_users_activate', "user_id = '$user_id'", 'code');
+
+			$sql = "UPDATE cms_users SET is_locked = 0 WHERE id = '$user_id'";
+			$inDB->query($sql);
+	
+			$sql = "DELETE FROM cms_users_activate WHERE code = '$code'";
+			$inDB->query($sql);
+	
+			cmsCore::callEvent('USER_ACTIVATED', $user_id);
+	
+			// Регистрируем событие
+			cmsActions::log('add_user', array(
+					'object' => '',
+					'user_id' => $user_id,
+					'object_url' => '',
+					'object_id' => $user_id,
+					'target' => '',
+					'target_url' => '',
+					'target_id' => 0,
+					'description' => ''
+			)); 
+
+        }
+
+		$inCore->redirectBack();
+
 	}
 		
 	if ($do == 'delete'){
