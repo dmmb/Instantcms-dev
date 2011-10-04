@@ -258,18 +258,18 @@ function comments($target='', $target_id=0, $labels=array()){
 
         //  1. узнаем ответственный компонент из cms_comment_targets
         $target_component = $inDB->get_field('cms_comment_targets', "target='{$target}'", 'component');
-        if (!$target_component) { $error = $_LANG['ERR_UNKNOWN_TARGET'] . ' #1'; }
+        if (!$target_component) { $error = true; cmsCore::addSessionMessage($_LANG['ERR_UNKNOWN_TARGET'] . ' #1', 'error'); $inCore->redirect('/comments'); }
 
         //  2. подключим модель этого компонента
         $inCore->loadModel($target_component);
         $model_class  = 'cms_model_'.$target_component;
 	    $target_model = new $model_class();
 
-        if (!$target_model) { $error = $_LANG['ERR_UNKNOWN_TARGET'] . ' #2'; }
+        if (!$target_model) { $error = true; cmsCore::addSessionMessage($_LANG['ERR_UNKNOWN_TARGET'] . ' #2', 'error'); $inCore->redirect('/comments'); }
 
         //  3. запросим массив $target[link, title] у метода getCommentTarget модели
         $target_data = $target_model->getCommentTarget($target, $target_id);
-        if (!$target_data) { $error = $_LANG['ERR_UNKNOWN_TARGET'] . ' #3'; }
+        if (!$target_data) { $error = true; cmsCore::addSessionMessage($_LANG['ERR_UNKNOWN_TARGET'] . ' #3', 'error'); $inCore->redirect('/comments'); }
 
 		//Если ошибок не было,
         //добавляем комментарий в базу
@@ -388,7 +388,7 @@ function comments($target='', $target_id=0, $labels=array()){
 
         if ($error) { $_SESSION['cm_error'] = $error; }
 
-        $inCore->redirect($back.'#c');
+        $inCore->redirect($back.'#c'.$comment_id);
 
 	}
 

@@ -110,7 +110,7 @@ function uploadFiles($post_id, $cfg){
 
                     $path_parts = pathinfo($file);
                     $ext = strtolower($path_parts['extension']);
-
+					if(strstr('php', $ext)) { return false; }
                     //check file extension is allowed
                     if (strstr(strtolower($cfg['fa_ext']), $ext)){
 

@@ -68,19 +68,35 @@ function rss_blogs($item_id, $cfg, &$rssdata){
 				$id = $item['id'];
 				$items[$id] = $item;
                 $items[$id]['link']     = $rooturl . $model->getPostURL(0, $item['bloglink'], $item['seolink']);
-				$items[$id]['description'] = substr(strip_tags($items[$id]['content_html']), 0, 250). '...';
+				$items[$id]['description'] = parseHide(substr(strip_tags($items[$id]['content_html']), 0, 250). '...');
 				$items[$id]['comments'] = $items[$id]['link'].'#c';
 				$items[$id]['category'] = $item['category'];
 			}
 
 		}		
-		
+		$items = cmsCore::callEvent('GET_BLOGS', $items);
 		//RETURN		
 		$rssdata = array();	
 		$rssdata['channel'] = $channel;
 		$rssdata['items'] = $items;
 
 		return;
+
+}
+function parseHide($text){
+
+	$inUser = cmsUser::getInstance();
+
+	$pattern        = '/\[hide\](.*?)\[\/hide\]/i';
+	$hidden_text    = '';
+
+	if (!$inUser->id){
+		$replacement = '<div class="bb_tag_hide">'.$hidden_text.'</div>';
+	} else {
+		$replacement = '<div class="bb_tag_hide">${1}</div>';
+	}
+
+	return preg_replace($pattern, $replacement, $text);
 
 }
 

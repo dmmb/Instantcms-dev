@@ -222,7 +222,7 @@ function applet_main(){
             <div class="advert_billing"><a href="http://www.instantcms.ru/billing/about.html"><strong>Биллинг</strong></a> &mdash; зарабатывайте на своем сайте!</div>
             <div class="advert_inmaps"><a href="http://www.instantmaps.ru/"><strong>InstantMaps</strong></a> &mdash; каталог объектов на карте</div>
             <div class="advert_inshop"><a href="http://www.instantcms.ru/blogs/InstantSoft/professionalnyi-magazin-dlja-InstantCMS.html"><strong>InstantShop</strong></a> &mdash; профессиональный магазин</div>
-            <div class="advert_invideo"><a href="http://www.instantcms.ru/blogs/udarnyi-blog/instantvideo-katalog-video-na-vashem-saite.html"><strong>InstantVideo</strong></a> &mdash; мощная видео-галерея</div>
+            <div class="advert_invideo"><a href="http://www.instantvideo.ru/"><strong>InstantVideo</strong></a> &mdash; мощная видео-галерея</div>
         </div>
 		  </td>
       </tr>
