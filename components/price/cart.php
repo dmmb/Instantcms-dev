@@ -35,8 +35,7 @@
 	}
 
 	if (isset($_REQUEST['clearcart'])){
-		$_SESSION['cart'] = '';
-		session_unregister('cart');
+		unset($_SESSION['cart']);
 		header('location:/price/cart.html');
 	}
 

@@ -343,7 +343,6 @@ function registration(){
             $inDB->query("DELETE FROM cms_online WHERE user_id = ".$user_id);
             $inDB->query("DELETE FROM cms_search WHERE session_id = '".$sess_id."'");
 
-            session_unregister('user');
             session_destroy();
 
             $inUser->dropStatTimer();

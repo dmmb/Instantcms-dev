@@ -251,7 +251,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			 }
 			
 			 echo '<h3>Форма: '.$mod['title'].'</h3>';
- 			 cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&id='.$id);
+ 			 cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id='.$id);
 
 		}
 
