@@ -63,9 +63,9 @@ if ($do=='rss'){
 			$rss .= '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">' ."\n";
 				$rss .= '<channel>' ."\n";
 					//CHANNEL
-					$rss .= '<title>'.$channel['title'].'</title>' ."\n";
+					$rss .= '<title>'.trim($channel['title']).'</title>' ."\n";
 					$rss .= '<link>'.$channel['link'].'</link>' ."\n";
-					$rss .= '<description>'.strip_tags($channel['description']).'</description>' ."\n";			
+					$rss .= '<description>'.trim(htmlspecialchars(strip_tags($channel['description']))).'</description>' ."\n";			
 					//CHANNEL ICON
 					if ($cfg['icon_on']){
 						$rss .= '<image>'."\n";
@@ -78,12 +78,12 @@ if ($do=='rss'){
                     if (is_array($items)){
 					foreach ($items as $key=>$item){
 						$rss .= '<item>' ."\n";
-							$rss .= '<title>'.strip_tags(str_replace('&', '&amp;', $item['title'])).'</title>' ."\n";
+							$rss .= '<title>'.trim(htmlspecialchars(strip_tags($item['title']))).'</title>' ."\n";
 							$rss .= '<pubDate>'.$item['pubdate'].'</pubDate>' ."\n";
 							$rss .= '<guid>'.$item['link'].'</guid>' ."\n";
 							$rss .= '<link>'.$item['link'].'</link>' ."\n";
 							if (isset($item['description'])){
-								$rss .= '<description><![CDATA['.strip_tags($item['description']).']]></description>' ."\n";
+								$rss .= '<description><![CDATA['.trim(htmlspecialchars(strip_tags($item['description']))).']]></description>' ."\n";
 							}
 							$rss .= '<category>'.$item['category'].'</category>' ."\n";
 							$rss .= '<comments>'.$item['comments'].'</comments>' ."\n";                            
@@ -99,7 +99,7 @@ if ($do=='rss'){
 		} else {	
 		$rss = '<p>'.$_LANG['NOT_RSS_GENERATOR'].'</p>';
 	}
-	
+
 	$inCore->halt($rss);
 
 }//RSS
