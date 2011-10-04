@@ -10,11 +10,6 @@ function goForum(){
 	window.location.href = link;
 }
 
-function addNickname(nickname){
-    var quote = '[b]' + nickname + '[/b], ';
-    $('textarea#message').append(quote);
-}
-
 function addQuoteText(author){
     var seltext = '';
     if (window.getSelection()) {

@@ -78,6 +78,13 @@ function addTagEmail(field_id){
    return;
 }
 
+function addNickname(nickname){
+   var txtarea = document.getElementById('message');
+   var pos = getCaretPos(txtarea);
+   txtarea.value = txtarea.value.substring(0,pos) + ' [b]' + nickname + '[/b], ' + txtarea.value.substring(pos+1,txtarea.value.length);
+   return;
+}
+
 function addTagAudio(field_id){
    var txtarea = document.getElementById(field_id);
    var link_url = prompt('—сылка на mp3-файл::');
