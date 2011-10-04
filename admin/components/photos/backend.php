@@ -450,26 +450,6 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //=================================================================================================//
 //=================================================================================================//
 
-	function reorder(){
-		$sql = "SELECT * FROM cms_photo_albums ORDER BY NSLeft";
-		$rs = dbQuery($sql);
-		
-		if (mysql_num_rows($rs)){
-			$level = array();
-			while ($item = mysql_fetch_assoc($rs)){
-				if (isset($level[$item['NSLevel']])){
-					$level[$item['NSLevel']] += 1;
-				} else {
-					$level[] = 1;
-				}
-				dbQuery("UPDATE cms_photo_albums SET ordering = ".$level[$item['NSLevel']]." WHERE id=".$item['id']);
-			}				
-		}
-	}
-
-//=================================================================================================//
-//=================================================================================================//
-
 	if ($opt == 'submit_album'){
 
         $album['title']         = $inCore->request('title', 'str');
@@ -496,7 +476,6 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         $album['is_comments']   = $inCore->request('is_comments', 'int');
 		
 		$model->addAlbum($album);
-		reorder();
 				
 		$inCore->redirect('?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_albums');
 	}	  

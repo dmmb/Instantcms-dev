@@ -18,7 +18,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
     define('IS_BILLING', $inCore->isComponentInstalled('billing'));
     if (IS_BILLING) { $inCore->loadClass('billing'); }
-	
+
+	$inDB = cmsDatabase::getInstance();
+
 	$toolmenu = array();
 
 	if ($opt=='list_forums' || $opt=='list_cats' || $opt=='config' || $opt=='saveconfig'){
@@ -175,7 +177,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	
 	if ($opt == 'update_forum'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];
+			$id = (int)$_REQUEST['item_id'];
 			
 			$category_id    = $inCore->request('category_id', 'int');
 			$title          = $inCore->request('title', 'str');
@@ -186,7 +188,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			$topic_cost     = $inCore->request('topic_cost', 'int', 0);
 			
 			$ns = $inCore->nestedSetsInit('cms_forums');
-			$ns->MoveNode($id, $parent_id);			
+			$old = $inDB->get_fields('cms_forums', "id='$id'", '*');
+			if($parent_id != $old['parent_id']){
+				$ns->MoveNode($id, $parent_id);			
+			}
 
 			$sql = "UPDATE cms_forums
 					SET category_id=$category_id,

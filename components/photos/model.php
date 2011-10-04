@@ -234,12 +234,17 @@ class cms_model_photos{
 /* ==================================================================================================== */
 
 	public function updateAlbum($id, $album){
-        $inCore = cmsCore::getInstance();
+
+		$old = $this->inDB->get_fields('cms_photo_albums', "id='$id'", '*');
+		if(!$old) { return false; }
 
         $album = cmsCore::callEvent('UPDATE_ALBUM', $album);
 
-        $ns = $inCore->nestedSetsInit('cms_photo_albums');
-        $ns->MoveNode($id, $album['parent_id']);
+		if($album['parent_id'] != $old['parent_id']){
+			$inCore = cmsCore::getInstance();
+			$ns = $inCore->nestedSetsInit('cms_photo_albums');
+			$ns->MoveNode($id, $album['parent_id']);
+		}
 
         $sql = "UPDATE cms_photo_albums
                 SET title='{$album['title']}',
