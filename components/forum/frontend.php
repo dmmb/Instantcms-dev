@@ -98,8 +98,6 @@ function uploadFiles($post_id, $cfg){
 
 	$file_error = false;
 
-    @mkdir(PATH."/upload/forum/post".$post_id);
-
     foreach ($_FILES["fa"]["error"] as $key => $error) {
 
             if ($error == UPLOAD_ERR_OK) {
@@ -118,6 +116,7 @@ function uploadFiles($post_id, $cfg){
 						$name = preg_replace ('/[^a-zA-Z0-9]/i', '', $name);
                         $file = $inDB->escape_string($name . '_' . substr(session_id(), 0, 5) . '.' . $ext);
 
+						@mkdir(PATH."/upload/forum/post".$post_id);
                         $destination = PATH.'/upload/forum/post'.$post_id.'/'.$file;
 
 						if ($inCore->moveUploadedFile($tmp_name, $destination, $error)) {
