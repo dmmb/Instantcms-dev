@@ -80,10 +80,6 @@ function applet_cats(){
 		$toolmenu[4]['title'] = 'Удалить выбранные';
 		$toolmenu[4]['link'] = "javascript:checkSel('?view=cats&do=delete&multiple=1');";
 
-		$toolmenu[5]['icon'] = 'reorder.gif';
-		$toolmenu[5]['title'] = 'Сохранить порядок элементов';
-		$toolmenu[5]['link'] = "javascript:checkSel('?view=cats&do=saveorder');";
-
 		$toolmenu[6]['icon'] = 'config.gif';
 		$toolmenu[6]['title'] = 'Настроить каталог статей';
 		$toolmenu[6]['link'] = "?view=components&do=config&link=content";
@@ -126,36 +122,6 @@ function applet_cats(){
 		cpListTable('cms_category', $fields, $actions, 'parent_id>0', 'NSLeft');		
 	}
 	
-	function reorder(){
-		$sql = "SELECT * FROM cms_category ORDER BY NSLeft";
-		$rs = dbQuery($sql) ;
-		
-		if (mysql_num_rows($rs)){
-			$level = array();
-			while ($item = mysql_fetch_assoc($rs)){
-				if (isset($level[$item['NSLevel']])){
-					$level[$item['NSLevel']] += 1;
-				} else {
-					$level[] = 1;
-				}
-				dbQuery("UPDATE cms_category SET ordering = ".$level[$item['NSLevel']]." WHERE id=".$item['id']) ;
-			}				
-		}
-	}
-	
-	if ($do == 'saveorder'){
-		if(isset($_REQUEST['ordering'])) { 
-			$ord = $_REQUEST['ordering'];
-			$ids = $_REQUEST['ids'];
-			
-			foreach ($ord as $id=>$ordering){			
-				dbQuery("UPDATE cms_category SET ordering = $ordering WHERE id = ".$ids[$id]) ;						
-			}
-			header('location:?view=tree');
-
-		}
-	}
-
 	if ($do == 'show'){
 		if (!isset($_REQUEST['item'])){
 			if ($id >= 0){ dbShow('cms_category', $id);  }
@@ -182,7 +148,6 @@ function applet_cats(){
         $is_with_content = $inCore->inRequest('content');
 
         $model->deleteCategory($id, $is_with_content);
-		reorder();
 		header('location:?view=tree');
 	}
 	
@@ -194,7 +159,7 @@ function applet_cats(){
 			$category['url']			= $inCore->request('url', 'str');
 			$category['parent_id']		= $inCore->request('parent_id', 'int');
 			$category['description'] 	= $inCore->request('description', 'html');
-            $category['description']      = $inDB->escape_string($category['description']);
+            $category['description']    = $inDB->escape_string($category['description']);
 			$category['published'] 		= $inCore->request('published', 'int', 0);
 			$category['showdate'] 		= $inCore->request('showdate', 'int', 0);
 			$category['showcomm'] 		= $inCore->request('showcomm', 'int', 0);
@@ -222,10 +187,12 @@ function applet_cats(){
 			
 			$photoalbum = serialize($album);
 
-			$ns = $inCore->nestedSetsInit('cms_category');
-			$ns->MoveNode($category['id'], $category['parent_id']);
-
             $old = $inDB->get_fields('cms_category', "id={$category['id']}", '*');
+
+			$ns = $inCore->nestedSetsInit('cms_category');
+			if($old['parent_id'] != $category['parent_id']){
+				$ns->MoveNode($category['id'], $category['parent_id']);
+			}
 
             if ($category['url']) { $category['url'] = cmsCore::strToURL($category['url']); }
             $seolink    = $model->getCategorySeoLink($category);
@@ -253,7 +220,6 @@ function applet_cats(){
                      WHERE id = {$category['id']}
                      LIMIT 1";
             dbQuery($sql) ;
-            reorder();
             
             //обновляем УРЛы всех вложенных разделов
             if ($seolink != $old['seolink']){
@@ -370,8 +336,6 @@ function applet_cats(){
             }
         }
         
-        reorder();
-
         $inmenu = $inCore->request('createmenu', 'str', '');
 
         if ($inmenu){
