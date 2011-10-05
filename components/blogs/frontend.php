@@ -783,14 +783,14 @@ if ($do=='newpost' || $do=='editpost'){
             if ($do=='newpost'){
 
                 if ($blog['owner']=='user'){
-                    if ($myblog || (!$blog['premod'])){	$published = 1;	} else { $published = 0; }
+                    if ($myblog || !$blog['premod']){	$published = 1;	} else { $published = 0; }
                     if (IS_BILLING){ cmsBilling::process('blogs', 'add_post'); }
                 }
 
                 if ($blog['owner']=='club'){
-                    $club_premod = $inDB->get_field('cms_clubs', 'id='.$blog['user_id'], 'blog_premod');
+                    $club = $inDB->get_fields('cms_clubs', 'id='.$blog['user_id'], '*');
                     $published = 0;
-                    if ($inCore->userIsAdmin($inUser->id) || clubUserIsRole($blog['user_id'], $inUser->id, 'moderator') || clubUserIsAdmin($blog['user_id'], $inUser->id) || (!$club_premod)){
+                    if ($inCore->userIsAdmin($inUser->id) || clubUserIsRole($blog['user_id'], $inUser->id, 'moderator') || clubUserIsAdmin($blog['user_id'], $inUser->id) || (!$club['blog_premod'])){
                         $published = 1;
                     }
                 }
@@ -812,9 +812,9 @@ if ($do=='newpost' || $do=='editpost'){
 
                 $inCore->registerUploadImages(session_id(), $post_id, 'blog');
                 cmsUser::checkAwards($user_id);
+				$post_seolink = $inDB->get_field('cms_blog_posts', "id={$post_id}", 'seolink');
 
                 if ($published) {
-                    $post_seolink = $inDB->get_field('cms_blog_posts', "id={$post_id}", 'seolink');
 					//регистрируем событие
 					if ($blog['owner']=='user' && $blog['allow_who'] != 'nobody'){
 						$is_friends_only = $blog['allow_who'] == 'friends' ? 1 : 0;
@@ -843,6 +843,14 @@ if ($do=='newpost' || $do=='editpost'){
                 }
 
                 if (!$published) {
+					$blog_title = $blog['owner']=='club' ? $club['title'] : $blog['title'];
+					$blog_author_id = $blog['owner']=='club' ? $club['admin_id'] : $blog['user_id'];
+
+					$message = str_replace('%user%', cmsUser::getProfileLink($inUser->login, $inUser->nickname), $_LANG['MSG_POST_SUBMIT']);
+					$message = str_replace('%post%', '<a href="'.$model->getPostURL(null, $blog['seolink'], $post_seolink).'">'.$title.'</a>', $message);
+					$message = str_replace('%blog%', '<a href="'.$model->getBlogURL(null, $blog['seolink']).'">'.$blog_title.'</a>', $message);
+					
+					cmsUser::sendMessage(-1, $blog_author_id, $message);
                     $inPage->backButton(false);
                     $inPage->printHeading($_LANG['POST_CREATED']);
                     echo '<p>'.$_LANG['POST_PREMODER_TEXT'].'</p>';
