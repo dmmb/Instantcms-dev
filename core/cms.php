@@ -2870,13 +2870,19 @@ class cmsCore {
 
 	    global $_LANG;
 
+		// формируем входную $date с учетом смещени€
         $date = date('Y-m-d H:i:s', strtotime($date)+($inConf->timediff*3600));
+
+		// сегодн€шн€€ дата
+		$today     = date('Y-m-d', strtotime(date('Y-m-d H:i:s'))+($inConf->timediff*3600));
+		// вчерашн€€ дата
+		$yesterday = date('Y-m-d', strtotime(date('Y-m-d H:i:s'))-(86400)+($inConf->timediff*3600));
 
 		// получаем значение даты и времени
 		list($day, $time) = explode(' ', $date);
 		switch( $day ) {
 		// ≈сли дата совпадает с сегодн€шней
-		case date('Y-m-d'):
+		case $today:
 					$result = ''.$_LANG['TODAY'].'';
 					if ($is_now_time && $time) {
 						list($h, $m, $s)  = explode(':', $time);
@@ -2884,7 +2890,7 @@ class cmsCore {
 					}
 					break;
 		//≈сли дата совпадает со вчерашней
-		case date( 'Y-m-d', mktime(0, 0, 0, date("m")  , date("d")-1, date("Y")) ):
+		case $yesterday:
 					$result = ''.$_LANG['YESTERDAY'].'';
 					if ($is_now_time && $time) {
 						list($h, $m, $s)  = explode(':', $time);
