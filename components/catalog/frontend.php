@@ -367,7 +367,7 @@ function catalog(){
                 //heading
                 $inPage->addPathway($cat['title'], '/catalog/'.$cat['id']);
                 $inPage->addPathway($_LANG['SEARCH'], '/catalog/'.$cat['id'].'/search.html');
-                $inPage->setTitle($_LANG['SEARCH_IN_CAT'] . ' - ' . $menutitle);
+                $inPage->setTitle($_LANG['SEARCH_IN_CAT']);
 
                 $inPage->addHeadJS('components/catalog/js/search.js');
 
@@ -482,7 +482,7 @@ function catalog(){
             }
            
             $inPage->addPathway($cat['title'], '/catalog/'.$cat['id']);
-            $inPage->setTitle($cat['title'] . ' - ' . $menutitle);
+            $inPage->setTitle($cat['title']);
 
             //subcategories
             $subcats = subCatsList($cat['id'], $cat['NSLeft'], $cat['NSRight']);
@@ -691,7 +691,7 @@ function catalog(){
             }
 
             $inPage->addPathway($item['title'], '/catalog/item'.$item['id'].'.html');
-            $inPage->setTitle($item['title'] . ' - ' . $menutitle);
+            $inPage->setTitle($item['title']);
 
 
             if ($cat['view_type']=='shop'){
