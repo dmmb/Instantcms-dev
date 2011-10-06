@@ -129,7 +129,7 @@ if ($do=='city'){
 				WHERE u.is_deleted = 0 AND u.is_locked = 0 AND p.city LIKE '%$city%'
 				ORDER BY city DESC";
 	
-	$querymsg = '<div class="con_description"><strong>'.$_LANG['SEARCH_BY_CITY'].':</strong> '.$city.' (<a href="/users/all.html">'.$_LANG['CANCEL_SEARCH'].'</a>)</div>';
+	$querymsg = '<div class="con_description"><strong>'.$_LANG['SEARCH_BY_CITY'].':</strong> '.htmlspecialchars($city).' (<a href="/users/all.html">'.$_LANG['CANCEL_SEARCH'].'</a>)</div>';
 	
 	$do = 'view';
 
@@ -161,7 +161,7 @@ if ($do=='hobby'){
 				AND (LOWER(p.description) LIKE '%$hobby%' OR LOWER(p.formsdata) LIKE '%$hobby%')
 				ORDER BY city DESC";
 	
-	$querymsg = '<div class="con_description"><strong>'.$_LANG['SEARCH_BY_HOBBY'].':</strong> '.$hobby.' (<a href="/users/all.html">'.$_LANG['CANCEL_SEARCH_SHOWALL'].'</a>)</div>';
+	$querymsg = '<div class="con_description"><strong>'.$_LANG['SEARCH_BY_HOBBY'].':</strong> '.htmlspecialchars($hobby).' (<a href="/users/all.html">'.$_LANG['CANCEL_SEARCH_SHOWALL'].'</a>)</div>';
 	
 	$do = 'view';
 
@@ -235,7 +235,7 @@ if ($do=='search'){
 	if (sizeof($stext)){
 		$querymsg .= '<ul>';
 			foreach($stext as $value){
-				$querymsg .= '<li>'.$value.';</li>';		
+				$querymsg .= '<li>'.htmlspecialchars($value).';</li>';		
 			}
 		$querymsg .= '</ul>';
 	}
@@ -1222,6 +1222,7 @@ if ($do=='submitphotos'){
             $album['user_id']   = $id;
             $album['title']     = $inCore->request('album_title', 'str', $_LANG['PHOTOALBUM'].' '.date('d.m.Y'));
             $album['allow_who'] = $inCore->request('album_allow_who', 'str', 'all');
+			$album['description'] = $inCore->request('description', 'str', '');
             $album_id = $model->addPhotoAlbum($album);
         } else {
             $album_id = $inCore->request('album_id', 'int');

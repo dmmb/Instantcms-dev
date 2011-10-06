@@ -24,7 +24,7 @@
         <table border="0" cellpadding="0" cellspacing="0">
             {if $albums}
             <tr>
-                <td width="23" height="30"><input type="radio" name="new_album" id="new_album_0" value="0" checked="checked"/></td>
+                <td width="23" height="30"><input type="radio" name="new_album" id="new_album_0" value="0" checked="checked" onclick="$('#description').hide();" /></td>
                 <td><label for="new_album_0">{$LANG.SAVE_TO_ALBUM}:</label></td>
                 <td style="padding-left: 10px" colspan="3">
                     <select name="album_id" class="select-input">
@@ -36,10 +36,10 @@
             </tr>
             {/if}
             <tr>
-                <td width="23" height="30"><input type="radio" name="new_album" id="new_album_1" value="1" {if !$albums}checked="checked"{/if} /></td>
+                <td width="23" height="30"><input type="radio" name="new_album" id="new_album_1" value="1" {if !$albums}checked="checked"{/if} onclick="$('#description').show();" /></td>
                 <td><label for="new_album_1">{$LANG.CREATE_NEW_ALBUM}:</label></td>
                 <td style="padding:0px 10px">
-                    <input type="text" class="text-input" name="album_title" />
+                    <input type="text" class="text-input" name="album_title" onclick="$('#description').show();$('#new_album_1').attr('checked', 'checked');" />
                 </td>
                 <td width="80">{$LANG.SHOW}:</td>
                 <td>
@@ -48,6 +48,13 @@
                         <option value="registered">{$LANG.TO_REGISTERED}</option>
                         <option value="friends">{$LANG.TO_MY_FRIEND}</option>
                     </select>
+                </td>
+            </tr>
+            <tr id="description" {if $albums}style="display:none;"{/if} >
+                <td width="23" height="30"></td>
+                <td><label for="description">{$LANG.ALBUM_DESCRIPTION}:</label></td>
+                <td style="padding-left: 10px" colspan="3">
+					<textarea name="description" class="text-input" style="width:488px; height:45px;"></textarea>
                 </td>
             </tr>
         </table>

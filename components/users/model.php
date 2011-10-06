@@ -521,8 +521,8 @@ class cms_model_users{
 
         if (!$album['allow_who']) { $album['allow_who'] = 'all'; }
 
-        $sql = "INSERT INTO cms_user_albums (user_id, title, pubdate, allow_who)
-                VALUES ({$album['user_id']}, '{$album['title']}', NOW(), '{$album['allow_who']}')";
+        $sql = "INSERT INTO cms_user_albums (user_id, title, pubdate, allow_who, description)
+                VALUES ({$album['user_id']}, '{$album['title']}', NOW(), '{$album['allow_who']}', '{$album['description']}')";
 
         $this->inDB->query($sql);
 

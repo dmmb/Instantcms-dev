@@ -42,7 +42,7 @@
 
 <div class="usr_status_bar">
     <div class="usr_status_text" {if !$usr.status_text}style="display:none"{/if}>
-        <span>{$usr.status_text}</span>
+        <span>{$usr.status_text|escape:'html'}</span>
         <span class="usr_status_date" >// {$usr.status_date} {$LANG.BACK}</span>
     </div>
     {if $myprofile || $is_admin}
@@ -165,7 +165,7 @@
 
                         <div id="user_profile_url">
                             <div>{$LANG.LINK_TO_THIS_PAGE}:</div>
-                            <a href="{$usr.profile_link}" title="{$usr.nickname}">{$usr.profile_link}</a>
+                            <a href="{$usr.profile_link}" title="{$usr.nickname|escape:'html'}">{$usr.profile_link}</a>
                         </div>
 
 					</td>
