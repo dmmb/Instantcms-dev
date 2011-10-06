@@ -18,8 +18,7 @@ function searchForm($query=''){
 	//SEARCH FORM
 	echo '<div class="price_search_form">
 		  <form action="/index.php" method="GET" style="clear:both">';
-		echo '<input type="hidden" name="view" value="price"/>';
-		echo '<input type="hidden" name="do" value="search"/>';					
+		echo '<input type="hidden" name="view" value="search"/>';
 		echo '<label>';							 
 			echo '<b>'.$_LANG['SEARCH_PRODUCT'].':</b> ';
 			echo '<input type="text" name="query" value="'.$query.'" class="price_search">';

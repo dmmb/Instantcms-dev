@@ -1353,7 +1353,10 @@ a.new_messages_link:hover{ color:#F00; background:#Fff; font-weight:bold; paddin
     border-radius:8px;
     -moz-border-radius:8px;
 }
-
+.bb_img {
+	width:550px;
+	overflow:hidden;
+}
 /*----------------------------- COMPONENT "FAQ" ------------------------------*/
 .faq_subcats, .faq_cats{
 	padding:10px;

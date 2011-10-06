@@ -357,6 +357,8 @@ function registration(){
 
                 if (!$login && !$passw){
 
+					if($inUser->id) { $inCore->redirect('/'); }
+
                     $_SESSION['back_url'] = $inCore->getBackURL();
 
                     $inPage->setTitle($_LANG['SITE_LOGIN']);

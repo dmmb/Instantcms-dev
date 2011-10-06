@@ -236,7 +236,7 @@
         <p>
           <input name="opt" type="hidden" id="opt" value="saveconfig" />
           <input name="save" type="submit" id="save" value="Сохранить" />
-          <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='/admin/components.php';"/>
+          <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='/admin/index.php?view=modules&do=config&id=<?php echo $_REQUEST['id']; ?>&opt=list';"/>
         </p>
       </form>
     <?php
