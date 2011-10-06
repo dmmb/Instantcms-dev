@@ -54,7 +54,32 @@ class cms_model_photos{
         return ($result ? $result : false);
 
     }
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+   //
+   // этот метод вызывается компонентом comments при создании нового комментария
+   //
+   // метод должен вернуть 0 или 1
+   //
+   public function getVisibility($target, $target_id) {
 
+        $is_hidden = 0;
+
+        switch($target){
+
+            case 'photo':  	$photo = $this->getPhoto($target_id);
+							$album = $this->getAlbum($photo['album_id']);
+							if(strstr($album['NSDiffer'],'club') && $album['published']) {
+								$clubtype = $this->inDB->get_field('cms_clubs', "id='{$album['user_id']}'", 'clubtype');
+								if($clubtype == 'private') { $is_hidden = 1; }
+							}
+                           	break;
+
+        }
+
+        return $is_hidden;
+
+    }
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 

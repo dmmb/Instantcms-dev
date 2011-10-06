@@ -41,7 +41,7 @@ function rss_comments($item_id, $cfg, &$rssdata){
 		//ITEMS				
 		$sql = "SELECT  c.*, DATE_FORMAT(c.pubdate, '%a, %d %b %Y %H:%i:%s GMT') as pubdate
 				FROM cms_comments c
-				WHERE c.published=1 $catsql
+				WHERE c.published=1 AND c.is_hidden=0 $catsql
 				ORDER by c.pubdate DESC
 				LIMIT $maxitems";
 						

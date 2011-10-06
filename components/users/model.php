@@ -48,7 +48,30 @@ class cms_model_users{
         return ($result ? $result : false);
 
     }
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+   //
+   // этот метод вызывается компонентом comments при создании нового комментария
+   //
+   // метод должен вернуть 0 или 1
+   //
+   public function getVisibility($target, $target_id) {
 
+        $is_hidden = 0;
+
+        switch($target){
+
+            case 'userphoto': 	$photo = $this->inDB->get_fields('cms_user_photos', "id='{$target_id}'", 'album_id, allow_who');
+								if($photo['allow_who'] != 'all') { $is_hidden = 1; }
+								$album = $this->getPhotoAlbum('private', $photo['album_id']);
+								if($album['allow_who'] != 'all') { $is_hidden = 1; }
+                              	break;
+
+        }
+
+        return $is_hidden;
+
+    }
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 

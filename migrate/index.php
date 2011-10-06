@@ -125,6 +125,13 @@
 	$is_was_migrate = true;
 // ========================================================================== //
 // ========================================================================== //
+    if (!$inDB->isFieldExists('cms_comments', 'is_hidden')){
+        $inDB->query("ALTER TABLE `cms_comments` ADD `is_hidden` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `ip`");
+        echo '<p>Поле <strong>is_hidden</strong> добавлено в таблицу <strong>cms_comments</strong></p>';
+		$is_was_migrate = true;
+    }
+// ========================================================================== //
+// ========================================================================== //
 	if ($is_was_migrate) {
 	    echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Миграция завершена. Удалите папку /migrate/ прежде чем продолжить!</div>';
 	} else {

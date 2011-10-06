@@ -62,6 +62,38 @@ class cms_model_blogs{
 
 /* ==================================================================================================== */
 /* ==================================================================================================== */
+   //
+   // этот метод вызывается компонентом comments при создании нового комментария
+   //
+   // метод должен вернуть 0 или 1
+   //
+   public function getVisibility($target, $target_id) {
+
+        $is_hidden = 0;
+
+        switch($target){
+
+            case 'blog': 
+						// получаем массив поста
+						$post = $this->inDB->get_fields('cms_blog_posts', "id='$target_id'", 'blog_id, allow_who, published');
+						if($post['allow_who'] != 'all' || !$post['published']) { $is_hidden = 1; }
+						// получаем массив блога
+						$blog = $this->getBlog($post['blog_id']);
+						if($blog['owner'] == 'user'){
+							if($blog['allow_who'] != 'all') { $is_hidden = 1; }
+						} elseif ($blog['owner'] == 'club'){
+							$clubtype = $this->inDB->get_field('cms_clubs', "id='{$blog['user_id']}'", 'clubtype');
+							if($clubtype == 'private') { $is_hidden = 1; }
+						}
+                        break;
+
+        }
+
+        return $is_hidden;
+
+    }
+/* ==================================================================================================== */
+/* ==================================================================================================== */
 
     // 
     // этот метод является хуком и вызывается при изменении рейтинга объекта blogpost

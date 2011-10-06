@@ -42,11 +42,11 @@ class cms_model_comments{
         $sql = "INSERT INTO cms_comments (parent_id, user_id, target, target_id, 
                                           guestname, content, content_bbcode, pubdate,
                                           published,  target_title, target_link,
-                                          ip)
+                                          ip, is_hidden)
                 VALUES ({$item['parent_id']}, {$item['user_id']}, '{$item['target']}', {$item['target_id']},
                         '{$item['guestname']}', '{$item['content']}', '{$item['content_bbcode']}', NOW(),
                         {$item['published']}, '{$item['target_title']}', '{$item['target_link']}',
-                        '{$item['ip']}')";
+                        '{$item['ip']}', '{$item['is_hidden']}')";
 
         $this->inDB->query($sql);
 
@@ -252,6 +252,8 @@ class cms_model_comments{
     public function getCommentsAll($page=1, $perpage=10){
 		global $_LANG;
         $comments = array();
+		$inUser     = cmsUser::getInstance();
+		$hidden_sql = $inUser->is_admin ? '' : 'AND c.is_hidden=0';
 
         $sql = "SELECT c.id, c.guestname, c.content, c.pubdate as fpubdate, c.target_title, c.target_link, c.ip, c.user_id,
                        IFNULL(v.total_rating, 0) as votes,
@@ -264,7 +266,7 @@ class cms_model_comments{
                 LEFT JOIN cms_ratings_total v ON v.item_id = c.id AND v.target = 'comment'
 				LEFT JOIN cms_users u ON u.id = c.user_id
 				LEFT JOIN cms_user_profiles p ON p.user_id = u.id
-                WHERE c.published=1
+                WHERE c.published=1 {$hidden_sql}
                 ORDER BY c.id DESC
 				LIMIT ".(($page-1)*$perpage).", $perpage";
 

@@ -14,7 +14,8 @@
 function mod_comments($module_id){
     
         $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
+        $inDB   = cmsDatabase::getInstance();
+		$inUser = cmsUser::getInstance();
         global $_LANG;
         
 		$cfg = $inCore->loadModuleConfig($module_id);
@@ -38,6 +39,7 @@ function mod_comments($module_id){
 		$target_where = "AND c.target IN ({$t_list})";
 
         $guest_sql = $cfg['showguest'] ? "OR c.guestname<>''" : "";
+		$hidden_sql = $inUser->is_admin ? '' : 'AND c.is_hidden=0';
 
 		$sql = "SELECT c.id as id,
                        c.target as target,
@@ -54,7 +56,7 @@ function mod_comments($module_id){
 				FROM cms_comments c
 				INNER JOIN cms_users u ON u.id = c.user_id {$guest_sql}
                 LEFT JOIN cms_ratings_total v ON v.item_id=c.id AND v.target='comment'
-				WHERE c.published=1 {$target_where}
+				WHERE c.published=1 {$hidden_sql} {$target_where}
                 GROUP BY c.id
                 ORDER BY c.id DESC
                 LIMIT 70";

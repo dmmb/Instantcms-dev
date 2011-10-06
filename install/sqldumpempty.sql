@@ -355,6 +355,7 @@ CREATE TABLE `#__comments` (
   `target_title` varchar(150) NOT NULL,
   `target_link` varchar(200) NOT NULL,
   `ip` varchar(15) NOT NULL,
+  `is_hidden` tinyint(1) NOT NULL default '0',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `target_id` (`target_id`)

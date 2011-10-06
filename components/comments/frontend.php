@@ -71,7 +71,8 @@ function comments($target='', $target_id=0, $labels=array()){
 		//Загружаем комментарии
 		$comments = array();
 		// Считаем общее число количество комментариев
-		$total = $inDB->rows_count('cms_comments', 'published=1');
+		$hidden_sql = $inUser->is_admin ? '' : 'AND is_hidden=0';
+		$total = $inDB->rows_count('cms_comments', "published=1 {$hidden_sql}");
 		// Если есть комментарии, выбираем и обрабатываем
 		if ($total){
 
@@ -271,6 +272,13 @@ function comments($target='', $target_id=0, $labels=array()){
         $target_data = $target_model->getCommentTarget($target, $target_id);
         if (!$target_data) { $error = true; cmsCore::addSessionMessage($_LANG['ERR_UNKNOWN_TARGET'] . ' #3', 'error'); $inCore->redirect('/comments'); }
 
+		// 4. Узнаем видимость комментария в модели $target_model
+		if(method_exists($target_model, 'getVisibility')){
+			$is_hidden = $target_model->getVisibility($target, $target_id);
+		} else {
+			$is_hidden = 0;
+		}
+
 		//Если ошибок не было,
         //добавляем комментарий в базу
         if(!$error){
@@ -289,19 +297,21 @@ function comments($target='', $target_id=0, $labels=array()){
                                                     'published'=>$cfg['publish'],
                                                     'target_title'=>$target_data['title'], 
                                                     'target_link'=>$target_data['link'], 
-                                                    'ip'=>$ip
+                                                    'ip'=>$ip, 
+                                                    'is_hidden'=>$is_hidden
                                                   ));
-
-            //регистрируем событие
-            cmsActions::log('add_comment', array(
-                'object' => 'комментарий',
-                'object_url' => $target_data['link'] . '#c' . $comment_id,
-                'object_id' => $comment_id,
-                'target' => $target_data['title'],
-                'target_url' => $target_data['link'],
-                'target_id' => 0, 
-                'description' => strip_tags( strlen(strip_tags($content))>140 ? substr($content, 0, 140) : $content )
-            ));
+			if(!$is_hidden){
+				//регистрируем событие
+				cmsActions::log('add_comment', array(
+					'object' => 'комментарий',
+					'object_url' => $target_data['link'] . '#c' . $comment_id,
+					'object_id' => $comment_id,
+					'target' => $target_data['title'],
+					'target_url' => $target_data['link'],
+					'target_id' => 0, 
+					'description' => strip_tags( strlen(strip_tags($content))>140 ? substr(strip_tags($content), 0, 140) : $content )
+				));
+			}
 
 			//подписываем пользователя на обновления, если нужно
             if ($inUser->id && $inCore->inRequest('subscribe')){
@@ -322,7 +332,7 @@ function comments($target='', $target_id=0, $labels=array()){
 			//отправляем админу уведомление о комментарии на e-mail, если нужно
 			if($cfg['email']) {
 				$mailmsg = $_LANG['DATE'].": ".date('d m Y (H:i)')."\n";
-				$mailmsg .= $_LANG['NEW_COMMENT'].': http://'.$_SERVER['HTTP_HOST'].$target_data['link'].'#c'. $comment_id . "\n";
+				$mailmsg .= $_LANG['NEW_COMMENT'].': http://'.HOST.$target_data['link'].'#c'. $comment_id . "\n";
                 $mailmsg .= "-------------------------------------------------------\n";
 				$mailmsg .= strip_tags($content);
 				$mailmsg = wordwrap($mailmsg, 70);
@@ -337,17 +347,17 @@ function comments($target='', $target_id=0, $labels=array()){
 					case 'userphoto':
 						$table      = 'cms_user_photos';
 						$subj       = $_LANG['YOUR_PHOTO'];
-						$targetlink = 'http://'.$_SERVER['HTTP_HOST'].'/users/%author_id%/photo'.$target_id.'.html#c'.$comment_id;
+						$targetlink = 'http://'.HOST.'/users/%author_id%/photo'.$target_id.'.html#c'.$comment_id;
 					break;
 					case 'photo':
 						$table      = 'cms_photo_files';
 						$subj       = $_LANG['YOUR_PHOTO'];
-						$targetlink = 'http://'.$_SERVER['HTTP_HOST'].'/photos/photo'.$target_id.'.html#c'.$comment_id;
+						$targetlink = 'http://'.HOST.'/photos/photo'.$target_id.'.html#c'.$comment_id;
 					break;
 					case 'blog':
 						$table      = 'cms_blog_posts';
 						$subj       = $_LANG['YOUR_POST'];
-						$targetlink = 'http://'.$_SERVER['HTTP_HOST'].'%post_url%#c'.$comment_id;
+						$targetlink = 'http://'.HOST.'%post_url%#c'.$comment_id;
 					break;
 				}
 
