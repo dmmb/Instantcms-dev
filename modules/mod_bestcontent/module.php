@@ -34,7 +34,8 @@ function mod_bestcontent($module_id){
 				$catsql = ' AND c.category_id = '.$cfg['cat_id'];
 			} else {
 				//выбираем из категории и подкатегорий
-				$rootcat = $inDB->get_fields('cms_category', 'id='.$cfg['cat_id'], 'NSLeft, NSRight');
+				$rootcat = $inDB->get_fields('cms_category', "id='{$cfg['cat_id']}'", 'NSLeft, NSRight');
+				if(!$rootcat) { return false; }
 				$catsql = "AND (cat.NSLeft >= {$rootcat['NSLeft']} AND cat.NSRight <= {$rootcat['NSRight']})";
 			}		
 		} else { $catsql = ''; } 

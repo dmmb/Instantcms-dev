@@ -19,7 +19,8 @@ function mod_latestphoto($module_id){
         $catsql = '';
 
 		if ($cfg['album_id'] != 0) {
-            $rootcat = $inDB->get_fields('cms_photo_albums', 'id='.$cfg['album_id'], 'NSLeft, NSRight');
+            $rootcat = $inDB->get_fields('cms_photo_albums', "id='{$cfg['album_id']}'", 'NSLeft, NSRight');
+			if(!$rootcat) { return false; }
             $catsql = " AND a.NSLeft >= {$rootcat['NSLeft']} AND a.NSRight <= {$rootcat['NSRight']}";
         }
 

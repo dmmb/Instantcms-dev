@@ -25,7 +25,8 @@
 				$catsql = ' AND i.category_id = '.$cfg['cat_id'];
 			} else {
 				//select from category and subcategories
-				$rootcat  = $inDB->get_fields('cms_uc_cats', 'id='.$cfg['cat_id'], 'NSLeft, NSRight');
+				$rootcat  = $inDB->get_fields('cms_uc_cats', "id='{$cfg['cat_id']}'", 'NSLeft, NSRight');
+				if(!$rootcat) { return false; }
 				$catsql   = "AND (c.NSLeft >= {$rootcat['NSLeft']} AND c.NSRight <= {$rootcat['NSRight']})";
 			}
 

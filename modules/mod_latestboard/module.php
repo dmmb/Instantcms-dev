@@ -30,7 +30,8 @@ function mod_latestboard($module_id){
 				$catsql  = ' AND i.category_id = '.$cfg['cat_id'];
 			} else {
 				//select from category and subcategories
-				$rootcat = dbGetFields('cms_board_cats', 'id='.$cfg['cat_id'], 'NSLeft, NSRight');
+				$rootcat = dbGetFields('cms_board_cats', "id='{$cfg['cat_id']}'", 'NSLeft, NSRight');
+				if(!$rootcat) { return false; }
 				$catsql  = "AND (cat.NSLeft >= {$rootcat['NSLeft']} AND cat.NSRight <= {$rootcat['NSRight']})";
 			}		
 		} else { $catsql = ''; }

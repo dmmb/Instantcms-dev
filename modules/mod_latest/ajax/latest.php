@@ -64,7 +64,8 @@
 				$catsql = ' AND con.category_id = '.$cfg['cat_id'];
 			} else {
 				//select from category and subcategories
-				$rootcat = $inDB->get_fields('cms_category', 'id='.$cfg['cat_id'], 'NSLeft, NSRight');
+				$rootcat = $inDB->get_fields('cms_category', "id='{$cfg['cat_id']}'", 'NSLeft, NSRight');
+				if(!$rootcat) { exit; }
 				$catsql = "AND (cat.NSLeft >= {$rootcat['NSLeft']} AND cat.NSRight <= {$rootcat['NSRight']})";
 			}		
 			$rssid = $cfg['cat_id'];
