@@ -78,7 +78,7 @@ if ($do=='rss'){
 					foreach ($items as $key=>$item){
 						$rss .= '<item>' ."\n";
 							$rss .= '<title>'.trim(htmlspecialchars(strip_tags($item['title']))).'</title>' ."\n";
-							$rss .= '<pubDate>'.$item['pubdate'].'</pubDate>' ."\n";
+							$rss .= '<pubDate>'.date('r', strtotime($item['pubdate'])+($inConf->timediff*3600)).'</pubDate>' ."\n";
 							$rss .= '<guid>'.$item['link'].'</guid>' ."\n";
 							$rss .= '<link>'.$item['link'].'</link>' ."\n";
 							if (isset($item['description'])){

@@ -46,7 +46,6 @@ function rss_blogs($item_id, $cfg, &$rssdata){
 
 		//ITEMS
 		$sql = "SELECT p.*,
-                       DATE_FORMAT(p.pubdate, '%a, %d %b %Y %H:%i:%s GMT') as pubdate,
                        cat.id as cat_id,
                        cat.title as category,
                        cat.seolink as bloglink

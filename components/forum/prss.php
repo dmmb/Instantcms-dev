@@ -43,7 +43,7 @@ function rss_forum($item_id, $cfg, &$rssdata){
 		}
 
 		//ITEMS
-		$sql = "SELECT c.*, DATE_FORMAT(c.pubdate, '%a, %d %b %Y %H:%i:%s GMT') as pubdate, cat.title as category,
+		$sql = "SELECT c.*, cat.title as category,
                         COUNT(p.id) as posts_count
 				FROM cms_forums cat, cms_forum_threads c
                 LEFT JOIN cms_forum_posts p ON p.thread_id = c.id

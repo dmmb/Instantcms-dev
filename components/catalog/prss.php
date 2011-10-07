@@ -43,7 +43,7 @@ function rss_catalog($item_id, $cfg, &$rssdata){
 		}
 
 		//ITEMS
-		$sql = "SELECT c.*, DATE_FORMAT(c.pubdate, '%a, %d %b %Y %H:%i:%s GMT') as pubdate, cat.title as category
+		$sql = "SELECT c.*, cat.title as category
 				FROM cms_uc_items c, cms_uc_cats cat
 				WHERE c.published=1 AND c.category_id = cat.id $catsql
 				ORDER by c.pubdate DESC
