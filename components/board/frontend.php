@@ -244,6 +244,8 @@ if ($do=='view'){
                 }
             }
             $item['file'] = $file;
+			$item['content'] = $cfg['auto_link'] ? $inCore->convertToLink($item['content']) : $item['content'];
+			$item['title'] = $item['obtype'].' '.$item['title'];
             //Check user access
             if ($inUser->id){
                 $item['moderator'] = ($inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('board/moderate') || $item['user_id'] == $inUser->id);
@@ -279,52 +281,55 @@ if($do=='read'){
 		$inPage->printHeading($_LANG['ADV_IS_MODER']);
         return;
 	}
-		
-		//PATHWAY ENTRY
-		$pagetitle =  $item['title'];
-		$inPage->setTitle($pagetitle  . ' - '.$_LANG['BOARD']);
 
-		//PATHWAY ENTRY
-		$left_key       = $item['NSLeft'];
-		$right_key      = $item['NSRight'];
-		$category_path  = $model->getCategoryPath($left_key, $right_key);
-		foreach($category_path as $pcat){
-            $inPage->addPathway($pcat['title'], '/board/'.$pcat['id']);
+	$item['title'] = $item['obtype'].' '.$item['title'];
+
+	//PATHWAY ENTRY
+	$pagetitle =  $item['title'];
+	$inPage->setTitle($pagetitle  . ' - '.$_LANG['BOARD']);
+
+	//PATHWAY ENTRY
+	$left_key       = $item['NSLeft'];
+	$right_key      = $item['NSRight'];
+	$category_path  = $model->getCategoryPath($left_key, $right_key);
+	foreach($category_path as $pcat){
+		$inPage->addPathway($pcat['title'], '/board/'.$pcat['id']);
+	}
+	$inPage->addPathway($item['title']);
+
+	$inPage->setTitle($item['title']);
+	$inPage->printHeading($item['title']);
+
+	$model->increaseHits($id);
+
+	//encode city
+	$item['enc_city'] = urlencode($item['city']);
+
+	$item['content'] = nl2br($item['content']);
+	$item['content'] = $cfg['auto_link'] ? $inCore->convertToLink($item['content']) : $item['content'];
+
+	//Check user access
+	if ($inUser->id){
+		$moderator = ($inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('board/moderate') || $item['user_id'] == $inUser->id);
+	} else {
+		$moderator = false;		
+	}
+
+	//check photo
+	if ($item['file']){
+		if (!file_exists(PATH.'/images/board/medium/'.$item['file'])){
+			$item['file'] = '';
 		}
-		$inPage->addPathway($item['title']);
-
-		$inPage->setTitle($item['title']);
-		$inPage->printHeading($item['title']);
-
-		$model->increaseHits($id);
-
-        //encode city
-        $item['enc_city']   = urlencode($item['city']);
-
-		$item['content'] 	= nl2br($item['content']);
-
-		//Check user access
-		if ($inUser->id){
-			$moderator = ($inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('board/moderate') || $item['user_id'] == $inUser->id);
-		} else {
-			$moderator = false;		
-		}
-
-		//check photo
-		if ($item['file']){
-			if (!file_exists(PATH.'/images/board/medium/'.$item['file'])){
-				$item['file'] = '';
-			}
-		}
-		
-		//DISPLAY
-		$smarty = $inCore->initSmarty('components', 'com_board_item.tpl');						
-			$smarty->assign('moderator', $moderator);
-			$smarty->assign('item', $item);
-			$smarty->assign('cfg', $cfg);
-			$smarty->assign('is_user', $inUser->id);
-			$smarty->assign('user_id', $inUser->id);
-		$smarty->display('com_board_item.tpl');
+	}
+	
+	//DISPLAY
+	$smarty = $inCore->initSmarty('components', 'com_board_item.tpl');						
+		$smarty->assign('moderator', $moderator);
+		$smarty->assign('item', $item);
+		$smarty->assign('cfg', $cfg);
+		$smarty->assign('is_user', $inUser->id);
+		$smarty->assign('user_id', $inUser->id);
+	$smarty->display('com_board_item.tpl');
         
 }
 /////////////////////////////// NEW BOARD ITEM /////////////////////////////////////////////////////////////////////////////////////////
@@ -386,8 +391,7 @@ if ($do=='additem'){
 
         // входные данные
         $obtype     = $inCore->request('obtype', 'str');
-        $title_r	= $inCore->request('title', 'str', '');
-        $title      = $obtype .' '. $title_r;
+        $title      = $inCore->request('title', 'str', '');
         $content 	= $inCore->request('content', 'str', '');
         $captcha    = $inCore->request('code', 'str', '');
         $city_ed    = $inCore->request('city_ed', 'str', '');
@@ -407,7 +411,7 @@ if ($do=='additem'){
         if (!$cfg['srok']){ $pubdays = isset($cfg['pubdays']) ? $cfg['pubdays'] : 14; }
 
 		$errors = false;
-        if (!$title_r) 	 { cmsCore::addSessionMessage($_LANG['NEED_TITLE'], 'error'); $errors = true; }
+        if (!$title) 	 { cmsCore::addSessionMessage($_LANG['NEED_TITLE'], 'error'); $errors = true; }
         if (!$content) { cmsCore::addSessionMessage($_LANG['NEED_TEXT_ADV'], 'error'); $errors = true; }
         if (!$city)    { cmsCore::addSessionMessage($_LANG['NEED_CITY'], 'error'); $errors = true; }
 
@@ -416,7 +420,7 @@ if ($do=='additem'){
         if ($errors){
 			$item['content'] = $_REQUEST['content'];
 			$item['city']    = $city;
-			$item['title']   = $title_r;
+			$item['title']   = $title;
 			cmsUser::sessionPut('item', $item);
 			$inCore->redirect('/board/'.$id.'/add.html');
         }
@@ -457,7 +461,7 @@ if ($do=='additem'){
 		if ($published == 1) {
 		//регистрируем событие
 		cmsActions::log('add_board', array(
-					'object' => $title,
+					'object' => $obtype.' '.$title,
 					'object_url' => '/board/read'.$item_id.'.html',
 					'object_id' => $item_id,
 					'target' => $cat['title'],
@@ -523,8 +527,7 @@ if ($do=='edititem'){
     if ($inCore->inRequest('submit')){
 
         $obtype     = $inCore->request('obtype', 'str');
-        $title_r	= $inCore->request('title', 'str', '');
-        $title      = $obtype .' '. $title_r;
+        $title      = $inCore->request('title', 'str', '');
         $content 	= $inCore->request('content', 'str', '');
         $captcha    = $inCore->request('code', 'str', '');
         $vipdays    = $inCore->request('vipdays', 'int', 0);
@@ -551,7 +554,7 @@ if ($do=='edititem'){
 		}
 
 		$errors = false;
-        if (!$title_r) { cmsCore::addSessionMessage($_LANG['NEED_TITLE'], 'error'); $errors = true; }
+        if (!$title) { cmsCore::addSessionMessage($_LANG['NEED_TITLE'], 'error'); $errors = true; }
         if (!$content) { cmsCore::addSessionMessage($_LANG['NEED_TEXT_ADV'], 'error'); $errors = true; }
         if (!$city)    { cmsCore::addSessionMessage($_LANG['NEED_CITY'], 'error'); $errors = true; }
         if (!$inCore->checkCaptchaCode($captcha) && !$inUser->is_admin){ cmsCore::addSessionMessage($_LANG['ERR_CAPTCHA'], 'error'); $errors = true; }

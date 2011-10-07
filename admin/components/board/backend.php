@@ -42,6 +42,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$cfg['aftertime'] = $inCore->request('aftertime', 'str');
 		$cfg['comments']  = $inCore->request('comments', 'int');
 		$cfg['extend']    = $inCore->request('extend', 'int');
+		$cfg['auto_link'] = $inCore->request('auto_link', 'int');
 		$cfg['vip_enabled']    = $inCore->request('vip_enabled', 'int', 0);
 		$cfg['vip_prolong']    = $inCore->request('vip_prolong', 'int', 0);
 		$cfg['vip_max_days']   = $inCore->request('vip_max_days', 'int', 30);
@@ -316,6 +317,13 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                 <tr>
                     <td><strong>Количество колонок для вывода списка рубрик: </strong></td>
                     <td width="250"><input name="maxcols" type="text" id="maxcols" size="5" value="<?php echo @$cfg['maxcols'];?>"/> шт</td>
+                </tr>
+                <tr>
+                    <td><strong>Включить автоссылки:</strong></td>
+                    <td width="250">
+                        <input name="auto_link" type="radio" value="1" <?php if (@$cfg['auto_link']) { echo 'checked="checked"'; } ?>/> Да
+                        <input name="auto_link" type="radio" value="0" <?php if (@!$cfg['auto_link']) { echo 'checked="checked"'; } ?>/> Нет
+                    </td>
                 </tr>
             </table>
         </div>

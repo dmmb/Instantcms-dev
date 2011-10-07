@@ -98,9 +98,9 @@
                                             <div title="{$LANG.KARMA}" class="karma{if $usr.karma > 0} pos{/if}{if $usr.karma < 0} neg{/if}">{if $usr.karma > 0}+{/if}{$usr.karma}</div>
                                         {/if}
                                         <div class="status">{$usr.status}</div>
-										<div class="nickname">{$usr.nickname|escape:'html'}</div>
+										<div class="nickname">{$usr.nickname}</div>
                                         {if $usr.microstatus}
-                                            <div class="microstatus">{$usr.microstatus|escape:'html'}</div>
+                                            <div class="microstatus">{$usr.microstatus}</div>
                                         {/if}
 									</td>
                                 </tr>

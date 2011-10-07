@@ -35,7 +35,7 @@ function mod_latestboard($module_id){
 			}		
 		} else { $catsql = ''; }
 		
-		$sql = "SELECT i.title, i.id, i.city as city, u.id as user_id, u.nickname as nickname,
+		$sql = "SELECT i.title, i.obtype, i.id, i.city as city, u.id as user_id, u.nickname as nickname,
 					   i.pubdate as pubdate, i.is_vip as is_vip
 				FROM cms_board_items i
 				LEFT JOIN cms_board_cats cat ON cat.id = i.category_id
@@ -55,6 +55,7 @@ function mod_latestboard($module_id){
 			$is_items = true;
 
 			while($con = $inDB->fetch_assoc($result)){
+				$con['title'] = $con['obtype'].' '.$con['title'];
 				$con['pubdate'] = $inCore->dateFormat($con['pubdate']);
 				$items[] = $con;
 			}
