@@ -47,15 +47,6 @@ class p_loginza extends cmsPlugin {
      */
     public function install(){
 
-//        if (!function_exists('curl_init')){
-//            $curl_error  = '<h4>Ошибка установки плагина</h4>';
-//            $curl_error .= '<p>Библиотека CURL для PHP не найдена либо не включена.<br/>';
-//            $curl_error .= 'Работа плагина без поддержки CURL невозможна.</p>';
-//            $curl_error .= '<p>Обратитесь в техническую поддержку вашего хостинга.</p>';
-//            $curl_error .= '<p><a href="/admin/index.php?view=plugins">Назад</a></p>';
-//            die($curl_error);
-//        }
-
         $inDB = cmsDatabase::getInstance();
 
         if (!$inDB->isFieldExists('cms_users', 'openid')){
@@ -118,10 +109,10 @@ class p_loginza extends cmsPlugin {
 
         $providers = rtrim($providers, ',');
 
-        $html = '<script src="http://loginza.ru/js/widget.js" type="text/javascript"></script>
+        $html  = '<div class="lf_title">Вход через социальный сети</div><p style="margin:15px 0">Если у Вас есть регистрация в других социальных сетях или аккаунт OpenID, то Вы можете войти на сайт без регистрации.</p><p><script src="http://loginza.ru/js/widget.js" type="text/javascript"></script>
                  <a href="http://loginza.ru/api/widget?token_url='.$token_url.'&providers_set='.$providers.'&lang='.$lang.'" class="loginza">
                      <img src="http://loginza.ru/img/sign_in_button_gray.gif" alt="Войти через loginza"/>
-                 </a>';
+                 </a></p>';
 
         echo $html;
 
@@ -137,7 +128,6 @@ class p_loginza extends cmsPlugin {
         $inDB   = cmsDatabase::getInstance();
         
         $token = $inCore->request('token', 'str', '');
-
         if (!$token){ exit; }
 
         $loginza_api_url = 'http://loginza.ru/api/authinfo';
@@ -272,27 +262,24 @@ class p_loginza extends cmsPlugin {
         $email      = $profile->email;
         $birthdate  = $profile->dob;
 
-        $already = $inDB->get_fields('cms_users', "(login='{$login}' OR email='{$email}') AND is_deleted=0", 'login, email');
+        $already_email = $inDB->get_field('cms_users', "email='{$email}' AND is_deleted=0", 'email');
+		$already_login = $inDB->get_field('cms_users', "login='{$login}' AND is_deleted=0", 'login');
 
-        if ($already){
+		//
+		// проверяем наличие и занятость email
+		//
+		if ($email && $already_email == $email){
+			$inCore->redirect('/auth/error.html');  exit;
+		}
 
-            //
-            // проверяем занятость email
-            //
-            if ($already['email']==$email && $email){
-                $inCore->redirect('/auth/error.html');  exit;
-            }
-
-            //
-            // проверяем занятость логина
-            //
-            if ($already['login']==$login){
-                // если логин занят, добавляем к нему ID
-                $max = $inDB->get_fields('cms_users', 'id>0', 'id', 'id DESC');
-                $login .= ($max['id']+1);
-            }
-
-        }
+		//
+		// проверяем занятость логина
+		//
+		if ($already_login == $login){
+			// если логин занят, добавляем к нему ID
+			$max = $inDB->get_fields('cms_users', 'id>0', 'id', 'id DESC');
+			$login .= ($max['id']+1);
+		}
 
         $user_array = array(
                                 'login'=>$login,
@@ -320,30 +307,28 @@ class p_loginza extends cmsPlugin {
                     
                     $inCore->includeGraphics();
 
-                    $uploaddir 		= $_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/';
-
+                    $uploaddir 		= PATH.'/images/users/avatars/';
                     $filename 		= md5($photo_path . '-' . $user_id . '-' . time()).'.jpg';
-                    $uploadfile		= $photo_path;
                     $uploadavatar 	= $uploaddir . $filename;
                     $uploadthumb 	= $uploaddir . 'small/' . $filename;
 
                     $cfg = $inCore->loadComponentConfig('users');
 
-                    if (isset($cfg['smallw'])) { $smallw = $cfg['smallw']; } else { $smallw = 64; }
-                    if (isset($cfg['medw'])) { $medw = $cfg['medw']; } else { $medw = 200; }
+					if (isset($cfg['smallw'])) { $smallw = $cfg['smallw']; } else { $smallw = 64; }
+					if (isset($cfg['medw'])) { 	 $medw = $cfg['medw']; } else { $medw = 200; }
+					if (isset($cfg['medh'])) { 	 $medh = $cfg['medh']; } else { $medh = 200; }
 
-                    @img_resize($uploadfile, $uploadavatar, $medw, $medh);
-                    @img_resize($uploadfile, $uploadthumb, $smallw, $smallw);
+                    @img_resize($photo_path, $uploadavatar, $medw, $medh);
+                    @img_resize($photo_path, $uploadthumb, $smallw, $smallw);
 
                     @unlink($photo_path);
 
                 }
             }
 
-            $usr = $inDB->fetch_assoc($result);
             $sql = "INSERT INTO cms_user_profiles (user_id, city, description, showmail, showbirth, showicq, karma, imageurl, allow_who)
                     VALUES ('{$user_id}', '', '', '0', '0', '1', '0', '{$filename}', 'all')";
-            $inDB->query($sql) ;
+            $inDB->query($sql);
 
             $user_array['id'] = $user_id;
             cmsCore::callEvent('USER_REGISTER', $user_array);
@@ -360,31 +345,40 @@ class p_loginza extends cmsPlugin {
 
     private function downloadAvatar($url){
 
-        $tempfile   = PATH.'/upload/'.  session_id() . '.jpg';
+        $tempfile   = PATH.'/images/users/avatars/'.md5(session_id()).'.jpg';
 
-        $f_remote   = @fopen($url, "rb");
-        $f_local    = @fopen($tempfile, "w");
+        if (function_exists('curl_init')){
 
-        if ($f_remote && $f_local) {
-            
-            while (!feof($f_remote)) {
-                $buff = fread($f_remote, 1024);
-                fwrite($f_local, $buff);
-            }
+            $curl = curl_init();
+            $user_agent = 'Loginza-API/InstantCMS';
 
-            @fclose($f_remote);
-            @fclose($f_local);
-
-            return $tempfile;
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_HEADER, false);
+            curl_setopt($curl, CURLOPT_USERAGENT, $user_agent);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($curl, CURLOPT_URL, $url);
+			curl_setopt($curl, CURLOPT_POST, false);
+            $raw_data = curl_exec($curl);
+            curl_close($curl);
 
         } else {
 
-            @fclose($f_remote);
-            @fclose($f_local);
-
-            return false;
+            $raw_data = file_get_contents($url);
 
         }
+
+		if($f = @fopen($tempfile, 'w')){
+
+			@fwrite($f, $raw_data);
+			@fclose($f);
+
+			return $tempfile;
+
+		} else {
+
+			return false;
+
+		}
         
     }
 

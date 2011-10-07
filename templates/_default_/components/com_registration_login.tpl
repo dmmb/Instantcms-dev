@@ -10,7 +10,7 @@
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%" class="login_form">
     <tr>
-        <td valign="top">
+        <td valign="top" width="50%">
             <form method="post" action="">
                 <div class="lf_title">{$LANG.LOGIN} {$LANG.OR} {$LANG.EMAIL}</div>
                 <div class="lf_field">
@@ -34,6 +34,8 @@
             </form>
         </td>
         <td valign="top">
+
+            {php}cmsCore::callEvent('LOGINZA_BUTTON', array());{/php}
 
         </td>
     </tr>
