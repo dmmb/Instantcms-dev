@@ -2,10 +2,10 @@
 <?php 
 /******************************************************************************/
 //                                                                            //
-//                             InstantCMS v1.8                                //
+//                             InstantCMS v1.8.1                                //
 //                        http://www.instantcms.ru/                           //
 //                                                                            //
-//                   written by InstantCMS Team, 2007-2010                    //
+//                   written by InstantCMS Team, 2007-2011                    //
 //                produced by InstantSoft, (www.instantsoft.ru)               //
 //                                                                            //
 //                        LICENSED BY GNU/GPL v2                              //
@@ -83,7 +83,7 @@
         <tr>
             <td height="50">
                 <div id="footer" style="text-align:center;background:#ECECEC;height:50px;line-height:50px;">
-                    <a href="http://www.instantcms.ru/"><strong>InstantCMS</strong></a><strong> v<?php echo CORE_VERSION?> &copy; 2011</strong><br />
+                    <a href="http://www.instantcms.ru/"><strong>InstantCMS</strong></a><strong> v<?php echo CORE_VERSION?> &copy; 2007-<?php echo date('Y'); ?></strong><br />
                 </div>
             </td>
         </tr>
