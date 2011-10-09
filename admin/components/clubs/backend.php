@@ -369,7 +369,7 @@ if ($opt == 'add' || $opt == 'edit'){
         <tr>
             <td width="298"><strong>Название клуба: </strong><br />
             <span class="hinttext">Отображается на сайте</span>					</td>
-            <td width="308"><input name="title" type="text" id="title" style="width:300px" value="<?php echo @$mod['title'];?>"/></td>
+            <td width="308"><input name="title" type="text" id="title" style="width:300px" value="<?php echo htmlspecialchars($mod['title']);?>"/></td>
         </tr>
         <tr>
             <td><strong>Логотип клуба:</strong><br />

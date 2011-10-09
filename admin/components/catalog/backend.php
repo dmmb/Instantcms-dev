@@ -907,7 +907,7 @@ function cpPriceInput($id){
                                     <div>
                                         <table width="100%" cellpadding="0" cellspacing="0" border="0">
                                             <tr>
-                                                <td><input name="title" type="text" id="title" style="width:98%" value="<?php echo @$mod['title'];?>" /></td>
+                                                <td><input name="title" type="text" id="title" style="width:98%" value="<?php echo htmlspecialchars($mod['title']);?>" /></td>
                                             </tr>
                                         </table>
                                     </div>
@@ -1125,7 +1125,7 @@ function cpPriceInput($id){
                         <td valign="top">
 
                             <div><strong>Название рубрики</strong></div>
-                            <div><input name="title" type="text" id="title" style="width:99%" value="<?php echo @$mod['title'];?>" /></div>
+                            <div><input name="title" type="text" id="title" style="width:99%" value="<?php echo htmlspecialchars($mod['title']);?>" /></div>
 
                             <div style="margin-top:10px"><strong>Характеристики записей</strong></div>
 
@@ -1484,7 +1484,7 @@ function cpPriceInput($id){
                 <table width="584" border="0" cellspacing="5" class="proptable">
                     <tr>
                         <td width="250"><strong>Название: </strong></td>
-                        <td width="315" valign="top"><input name="title" type="text" id="title" style="width:250px" value="<?php echo @$mod['title'];?>"/></td>
+                        <td width="315" valign="top"><input name="title" type="text" id="title" style="width:250px" value="<?php echo htmlspecialchars($mod['title']);?>"/></td>
                     </tr>
                     <tr>
                         <td valign="top"><strong>Рубрика:</strong></td>

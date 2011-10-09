@@ -417,7 +417,7 @@ function applet_cats(){
                         </tr>
                         <tr>
                           <td>
-                        <input name="title" type="text" id="title" style="width:100%" value="<?php echo @$mod['title'];?>" />
+                        <input name="title" type="text" id="title" style="width:100%" value="<?php echo htmlspecialchars($mod['title']);?>" />
                           </td>
                           <td style="padding-left:6px">
                             <input name="tpl" type="text" style="width:98%" value="<?php echo @$mod['tpl'];?>">

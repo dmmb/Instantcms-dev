@@ -435,8 +435,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                     </tr>
                     <?php for($r = 1; $r <= 10; $r++){ ?>
                     <tr>
-                        <td align="center" valign="top"><input type="text" name="rank[<?php echo $r?>][title]" style="width:250px;" value="<?php echo @$cfg['ranks'][$r]['title']?>"></td>
-                        <td align="center" valign="top"><input name="rank[<?php echo $r?>][msg]" type="text" id="" value="<?php echo @$cfg['ranks'][$r]['msg']?>" size="10" /></td>
+                        <td align="center" valign="top"><input type="text" name="rank[<?php echo $r?>][title]" style="width:250px;" value="<?php echo htmlspecialchars($cfg['ranks'][$r]['title']) ?>"></td>
+                        <td align="center" valign="top"><input name="rank[<?php echo $r?>][msg]" type="text" id="" value="<?php echo htmlspecialchars($cfg['ranks'][$r]['msg']) ?>" size="10" /></td>
                     </tr>
                     <?php } ?>
                 </table>
@@ -599,7 +599,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             <table width="600" border="0" cellspacing="5" class="proptable">
                 <tr>
                     <td width="211" valign="top">Заголовок категории: </td>
-                    <td width="195" valign="top"><input name="title" type="text" id="title" size="30" value="<?php echo @$mod['title'];?>"/></td>
+                    <td width="195" valign="top"><input name="title" type="text" id="title" size="30" value="<?php echo htmlspecialchars($mod['title']);?>"/></td>
                     <td width="168" valign="top">&nbsp;</td>
                 </tr>
                 <tr>
@@ -685,7 +685,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             <table width="514" border="0" cellspacing="10" class="proptable">
                 <tr>
                     <td width="236"><strong>Название форума:</strong></td>
-                    <td width="259"><input name="title" type="text" id="title" size="30" value="<?php echo @$mod['title'];?>" style="width:254px"/></td>
+                    <td width="259"><input name="title" type="text" id="title" size="30" value="<?php echo htmlspecialchars($mod['title']);?>" style="width:254px"/></td>
                 </tr>
                 <tr>
                     <td valign="top"><strong>Описание форума:</strong></td>

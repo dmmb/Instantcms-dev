@@ -198,7 +198,7 @@ function applet_usergroups(){
 		<table width="660" border="0" cellspacing="5" class="proptable">
 			<tr>
 				<td width="198" valign="top"><div><strong>Название группы: </strong></div><span class="hinttext">Отображается на сайте и в админке</span></td>
-				<td width="475" valign="top"><input name="title" type="text" id="title" size="30" value="<?php echo @$mod['title'];?>"/></td>
+				<td width="475" valign="top"><input name="title" type="text" id="title" size="30" value="<?php echo htmlspecialchars($mod['title']);?>"/></td>
 			</tr>
 			<tr>
 				<td valign="top"><div><strong>Псевдоним:</strong></div><?php if($do=='edit'){ ?><span class="hinttext">Не рекомендуется изменять</span><?php } ?></td>

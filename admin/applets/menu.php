@@ -532,7 +532,7 @@ function applet_menu(){
                 <td valign="top">
 
                     <div><strong>«аголовок пункта меню</strong> <span class="hinttext">&mdash; отображаетс€ на сайте</span></div>
-                    <div><input name="title" type="text" id="title" style="width:100%" value="<?php echo @$mod['title'];?>" /></div>
+                    <div><input name="title" type="text" id="title" style="width:100%" value="<?php echo htmlspecialchars($mod['title']);?>" /></div>
 
                     <div>
                         <select name="menu" id="menu" style="width:100%">

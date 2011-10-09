@@ -427,7 +427,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			<table width="600" border="0" cellspacing="5" class="proptable">
 			  <tr>
 				<td width="200">Название категории: </td>
-				<td width="213"><input name="title" type="text" id="title" size="30" value="<?php echo @$mod['title'];?>"/></td>
+				<td width="213"><input name="title" type="text" id="title" size="30" value="<?php echo htmlspecialchars($mod['title']);?>"/></td>
 				<td width="173">&nbsp;</td>
 			  </tr>
 			  <tr>

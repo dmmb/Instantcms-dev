@@ -649,7 +649,7 @@ function showMapMarker(){
             <table width="610" border="0" cellspacing="5" class="proptable">
                 <tr>
                     <td width="300">Название альбома:</td>
-                    <td><input name="title" type="text" id="title" size="30" value="<?php echo @$mod['title'];?>"/></td>
+                    <td><input name="title" type="text" id="title" size="30" value="<?php echo htmlspecialchars($mod['title']); ?>"/></td>
                 </tr>
                 <tr>
                     <td valign="top">Родительский альбом:</td>
@@ -906,7 +906,7 @@ function showMapMarker(){
         <table width="600" border="0" cellspacing="5" class="proptable">
         <tr>
             <td width="177">Название фотографии: </td>
-            <td width="311"><input name="title" type="text" id="title" size="30" value="<?php echo @$mod['title'];?>"/></td>
+            <td width="311"><input name="title" type="text" id="title" size="30" value="<?php echo htmlspecialchars($mod['title']);?>"/></td>
         </tr>
         <tr>
             <td valign="top">Фотоальбом:</td>

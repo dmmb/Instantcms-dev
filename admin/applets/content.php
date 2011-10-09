@@ -485,7 +485,7 @@ function applet_content(){
                                 <div>
                                     <table width="100%" cellpadding="0" cellspacing="0" border="0">
                                         <tr>
-                                            <td><input name="title" type="text" id="title" style="width:100%" value="<?php echo @$mod['title'];?>" /></td>
+                                            <td><input name="title" type="text" id="title" style="width:100%" value="<?php echo htmlspecialchars($mod['title']);?>" /></td>
                                             <td style="width:15px;padding-left:10px;padding-right:10px;">
                                                 <input type="checkbox" title="Показывать заголовок" name="showtitle" <?php if ($mod['showtitle'] || $do=='add') { echo 'checked="checked"'; } ?> value="1">
                                             </td>
@@ -712,7 +712,7 @@ function applet_content(){
                         <span class="hinttext">Если не указан, будет совпадать с названием</span>
                     </div>
                     <div>
-                        <input name="pagetitle" type="text" id="pagetitle" style="width:99%" value="<?php if (isset($mod['pagetitle'])) { echo $mod['pagetitle']; } ?>" />
+                        <input name="pagetitle" type="text" id="pagetitle" style="width:99%" value="<?php if (isset($mod['pagetitle'])) { echo htmlspecialchars($mod['pagetitle']); } ?>" />
                     </div>
 
                     <div style="margin-top:20px">
@@ -720,7 +720,7 @@ function applet_content(){
                         <span class="hinttext">Через запятую, 10-15 слов</span>
                     </div>
                     <div>
-                         <textarea name="meta_keys" style="width:97%" rows="2" id="meta_keys"><?php echo @$mod['meta_keys'];?></textarea>
+                         <textarea name="meta_keys" style="width:97%" rows="2" id="meta_keys"><?php echo htmlspecialchars($mod['meta_keys']);?></textarea>
                     </div>
 
                     <div style="margin-top:20px">
@@ -728,7 +728,7 @@ function applet_content(){
                         <span class="hinttext">Не более 250 символов</span>
                     </div>
                     <div>
-                         <textarea name="meta_desc" style="width:97%" rows="4" id="meta_desc"><?php echo @$mod['meta_desc'];?></textarea>
+                         <textarea name="meta_desc" style="width:97%" rows="4" id="meta_desc"><?php echo htmlspecialchars($mod['meta_desc']);?></textarea>
                     </div>
 
                     {tab=Доступ}

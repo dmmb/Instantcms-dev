@@ -633,7 +633,7 @@ function applet_modules(){
                     <div>
                         <table width="100%" cellpadding="0" cellspacing="0" border="0">
                             <tr>
-                                <td><input name="title" type="text" id="title" style="width:100%" value="<?php echo @$mod['title'];?>" /></td>
+                                <td><input name="title" type="text" id="title" style="width:100%" value="<?php echo htmlspecialchars($mod['title']);?>" /></td>
                                 <td style="width:15px;padding-left:10px;padding-right:0px;">
                                     <input type="checkbox" title="Показывать заголовок" name="showtitle" <?php if ($mod['showtitle'] || $do=='add') { echo 'checked="checked"'; } ?> value="1">
                                 </td>
@@ -649,10 +649,10 @@ function applet_modules(){
                                 </div>
                                 <div>
                                     <?php if (!isset($mod['user']) || @$mod['user']==1) { ?>
-                                        <input name="name" type="text" id="name" style="width:99%" value="<?php echo @$mod['name'];?>" />
+                                        <input name="name" type="text" id="name" style="width:99%" value="<?php echo htmlspecialchars($mod['name']);?>" />
                                     <?php } else { ?>
                                         <input name="" type="text" id="name" style="width:99%" value="<?php echo @$mod['name'];?>" disabled="disabled" />
-                                        <input name="name" type="hidden" value="<?php echo @$mod['name'];?>" />
+                                        <input name="name" type="hidden" value="<?php echo htmlspecialchars($mod['name']);?>" />
                                     <?php } ?>
                                 </div>
                             </td>

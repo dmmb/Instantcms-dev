@@ -709,7 +709,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			<table width="610" border="0" cellpadding="0" cellspacing="10" class="proptable">
 			  <tr>
 				<td><strong>Название рубрики: </strong></td>
-				<td width="250"><input name="title" type="text" id="title" style="width:250px" value="<?php echo @$mod['title'];?>"/></td>
+				<td width="250"><input name="title" type="text" id="title" style="width:250px" value="<?php echo htmlspecialchars($mod['title']);?>"/></td>
 			  </tr>
 			  <tr>
                 <td valign="top"><strong>Родительская рубрика:</strong></td>
@@ -904,7 +904,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					  <select name="obtype" id="obtype" style="width:120px">
 					  	<?php echo $inCore->boardTypesList($mod['obtype']); ?>
 				      </select>
-				    <input name="title" type="text" id="title" size="30" value="<?php echo @$mod['title'];?>"/></td>
+				    <input name="title" type="text" id="title" size="30" value="<?php echo htmlspecialchars($mod['title']);?>"/></td>
 				  </tr>
 				  <tr>
                     <td valign="top"><strong>Рубрика:</strong></td>
@@ -922,7 +922,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			      </tr>
 				  <tr>
 				    <td><strong>Город:</strong></td>
-				    <td><input name="city" type="text" id="city" size="30" value="<?php echo @$mod['city'];?>"/></td>
+				    <td><input name="city" type="text" id="city" size="30" value="<?php echo htmlspecialchars($mod['city']);?>"/></td>
 			      </tr>
 					<?php if ($do=='add_item'){ ?>
 				  <?php } ?>				  

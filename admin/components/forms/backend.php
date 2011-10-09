@@ -261,7 +261,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         <table width="605" border="0" cellspacing="5" class="proptable">
           <tr>
             <td width="200"><strong>Название формы: </strong></td>
-            <td width=""><input name="title" type="text" id="title" size="30" value="<?php echo @$mod['title'];?>" style="width:220px;"/></td>
+            <td width=""><input name="title" type="text" id="title" size="30" value="<?php echo htmlspecialchars($mod['title']);?>" style="width:220px;"/></td>
           </tr>
           <tr>
             <td><strong>Куда отправлять форму: </strong></td>
