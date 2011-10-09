@@ -445,10 +445,8 @@ if ($do=='addarticle' || $do=='editarticle'){
 
         $article['description']         = $inCore->request('description', 'html', '');
         $article['content']             = $inCore->request('content', 'html', '');
-
         $article['description']         = $inDB->escape_string($article['description']);
         $article['content']             = $inDB->escape_string($article['content']);
-
         $article['description']         = $inCore->badTagClear($article['description']);
         $article['content']             = $inCore->badTagClear($article['content']);
 
@@ -456,9 +454,9 @@ if ($do=='addarticle' || $do=='editarticle'){
         if ($do=='editarticle'){
            $article['published']           = ($mod['published'] == 0) ? $mod['published'] : $article['published'];
         }
-        $article['pubdate']             = $mod['pubdate'] ? $mod['pubdate'] : date('Y-m-d H:i');
-        $article['enddate']             = $article['pubdate'];
-        $article['is_end']              = 0;
+        $article['pubdate']             = $do=='editarticle' ? $mod['pubdate'] : date('Y-m-d H:i');
+        $article['enddate']             = $do=='editarticle' ? $mod['enddate'] : $article['pubdate'];
+        $article['is_end']              = $do=='editarticle' ? $mod['is_end'] : 0;
         $article['showtitle']           = $do=='editarticle' ? $mod['showtitle'] : 1;
 
 		$article['meta_desc']           = $do=='addarticle' ? strtolower($article['title']) : $inDB->escape_string($mod['meta_desc']);
@@ -470,6 +468,9 @@ if ($do=='addarticle' || $do=='editarticle'){
         $article['comments']            = $do=='editarticle' ? $mod['comments'] : 1;
         $article['canrate']             = $do=='editarticle' ? $mod['canrate'] : 1;
         $article['pagetitle']           = $article['title'];
+        if ($do=='editarticle'){
+           $article['tpl']              = $mod['tpl'];
+        }
 
         if (!$article['title']){ cmsCore::addSessionMessage($_LANG['REQ_TITLE'], 'error'); $errors = true; }
         if (!$article['content']){ cmsCore::addSessionMessage($_LANG['REQ_CONTENT'], 'error'); $errors = true; }

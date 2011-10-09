@@ -51,10 +51,10 @@ function mod_latest($module_id){
                        FROM cms_content con
 				       LEFT JOIN cms_category cat ON cat.id = con.category_id
 				       LEFT JOIN cms_users u ON u.id = con.user_id
-                       WHERE con.published = 1 AND con.showlatest = 1
+                       WHERE con.published = 1 AND con.showlatest = 1 AND con.is_arhive = 0 AND con.pubdate <= '$today'
                       AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today'))
                       ".$catsql."
-				ORDER BY con.id DESC
+				ORDER BY con.pubdate DESC
 				LIMIT ".$cfg['newscount'];
  	
 		$result = $inDB->query($sql);

@@ -277,8 +277,6 @@ class cms_model_content{
 
     public function getArticlesList($only_published=true) {
 
-//        $this->reorder();
-
         $articles = array();
 
 		$today    = date("Y-m-d H:i:s");
@@ -439,7 +437,7 @@ class cms_model_content{
                        u.login as user_login
                 FROM cms_content con
 				LEFT JOIN cms_users u ON u.id = con.user_id
-                WHERE con.category_id = $category_id AND con.published = 1 AND con.is_arhive = 0
+                WHERE con.category_id = $category_id AND con.published = 1 AND con.is_arhive = 0 AND con.pubdate <= '$today'
                       AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today'))
                 ORDER BY con.".$orderby." ".$orderto."
                 LIMIT ".(($page-1)*$perpage).", $perpage";
@@ -560,7 +558,7 @@ class cms_model_content{
 /* ==================================================================================================== */
 
     public function getArticle($article_id) {
-		$today = date("Y-m-d H:i:s");
+
 		$sql = "SELECT  con.*,
 						cat.title cat_title, cat.id cat_id, cat.NSLeft as leftkey, cat.NSRight as rightkey, cat.modgrp_id,
 						cat.showtags as showtags, cat.seolink as catseolink, u.nickname as author, u.login as user_login
@@ -585,6 +583,8 @@ class cms_model_content{
 /* ==================================================================================================== */
 
     public function getArticleByLink($seolink) {
+
+		$today = date("Y-m-d H:i:s");
 
 		$sql = "SELECT con.*,
 						cat.title cat_title, cat.id cat_id, cat.NSLeft as leftkey, cat.NSRight as rightkey, cat.showtags as showtags,
@@ -751,7 +751,7 @@ class cms_model_content{
 				$article['url']  = cmsCore::strToURL($article['url']);
 				$article_url_sql = "url='{$article['url']}',";
 			}
-        $article['seolink'] = $this->getSeoLink($article);
+        	$article['seolink'] = $this->getSeoLink($article);
 			$article_seo_sql = "seolink='{$article['seolink']}',";
 		}
 
@@ -790,21 +790,21 @@ class cms_model_content{
         cmsInsertTags($article['tags'], 'content', $article['id']);
 
 		if(!$not_upd_seo){
-        //обновляем ссылки меню
-        $menuid = $this->inDB->get_field('cms_menu', "linktype='content' AND linkid={$id}", 'id');
-        if ($menuid){
-            $menulink = $inCore->getMenuLink('content', $id, $menuid);
-            $this->inDB->query("UPDATE cms_menu SET link='{$menulink}' WHERE id='{$menuid}'");
-        }
-
-        //обновляем ссылки на комментарии
-        $comments_sql = "UPDATE cms_comments c,
-                                cms_content a
-                         SET c.target_link = CONCAT('/content/', a.seolink, '.html')
-                         WHERE a.id = '$id' AND
-                               c.target = 'article' AND c.target_id = a.id";
-
-        $this->inDB->query($comments_sql);
+			//обновляем ссылки меню
+			$menuid = $this->inDB->get_field('cms_menu', "linktype='content' AND linkid={$id}", 'id');
+			if ($menuid){
+				$menulink = $inCore->getMenuLink('content', $id, $menuid);
+				$this->inDB->query("UPDATE cms_menu SET link='{$menulink}' WHERE id='{$menuid}'");
+			}
+	
+			//обновляем ссылки на комментарии
+			$comments_sql = "UPDATE cms_comments c,
+									cms_content a
+							 SET c.target_link = CONCAT('/content/', a.seolink, '.html')
+							 WHERE a.id = '$id' AND
+								   c.target = 'article' AND c.target_id = a.id";
+	
+			$this->inDB->query($comments_sql);
 		}
 
         return true;
