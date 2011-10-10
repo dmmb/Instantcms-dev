@@ -42,8 +42,8 @@
             <?php } ?>
         </td>
 
-        <td valign="top" id="slide_cell" class="<?php if ($hide_cats){ ?>unslided<?php } ?>" onclick="$('#cats_cell').toggle();$(this).toggleClass('unslided');$('#filter_form input[name=hide_cats]').val(1-$('#cats_cell:visible').length)">
-            &nbsp;
+        <td valign="top" id="slide_cell" class="<?php if ($hide_cats){ ?>unslided<?php } ?>" onclick="$('#cats_cell').toggle();$(this).toggleClass('unslided');$('#filter_form input[name=hide_cats]').val(1-$('#cats_cell:visible').length)">&nbsp;
+            
         </td>
 
         <td valign="top" style="padding-left:2px">
@@ -115,6 +115,7 @@
                             <th class="lt_header" width="80">Дата</th>
                             <th class="lt_header" width="50">Показ</th>
                             <?php if ($category_id && sizeof($items)>1){ ?>
+                            	<th class="lt_header" width="50">Порядок</th>
                                 <th class="lt_header" width="24">&darr;&uarr;</th>
                             <?php } ?>
                             <th class="lt_header" align="center" width="90">Действия</th>
@@ -147,6 +148,7 @@
                                         <?php } ?>                                        
                                     </td>
                                     <?php if ($category_id && sizeof($items)>1){ ?>
+                                    <td class="ordering"><?php echo $item['ordering']; ?></td>
                                         <td>
                                             <?php
                                                 $display_move_down  = ($num<sizeof($items)-1) ? 'inline' : 'none';

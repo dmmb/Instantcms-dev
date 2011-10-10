@@ -1446,7 +1446,7 @@ if ($do=='editphotolist'){
         if ($album_has_photos){
             $inCore->redirectBack();
         } else {
-            $model->deletePhotoAlbum($album_id);
+            $model->deletePhotoAlbum($id, $album_id);
             $inCore->redirect(cmsUser::getProfileURL($usr['login']));
         }
 

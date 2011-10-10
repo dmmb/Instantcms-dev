@@ -134,7 +134,7 @@ if ($opt == 'hide_club'){
 }
 
 if ($opt == 'submit'){	
-    $title 			= $inCore->request('title', 'str');
+    $title 			= $inCore->request('title', 'str', 'Клуб без названия');
     $description 	= $inCore->request('description', 'html');
     $description    = $inDB->escape_string($description);
     $published 		= $inCore->request('published', 'int');
@@ -200,7 +200,7 @@ if ($opt == 'submit'){
 if ($opt == 'update'){
     if(isset($_REQUEST['item_id'])) {
         $id 			= (int)$_REQUEST['item_id'];
-        $title 			= $inCore->request('title', 'str');
+        $title 			= $inCore->request('title', 'str', 'Клуб без названия');
         $description 	= $inCore->request('description', 'html');
         $description    = $inDB->escape_string($description);
         $published 		= $inCore->request('published', 'int');

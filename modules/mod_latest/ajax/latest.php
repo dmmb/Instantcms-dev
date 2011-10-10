@@ -82,7 +82,7 @@
                        WHERE con.published = 1 AND con.showlatest = 1 AND con.is_arhive = 0 AND con.pubdate <= '$today'
                        AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today'))
                        ".$catsql."
-				       ORDER BY con.id DESC
+				       ORDER BY con.pubdate DESC
 	                   LIMIT ".(($page-1)*$perpage).", $perpage";
 
 	$result = $inDB->query($sql);

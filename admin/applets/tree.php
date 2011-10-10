@@ -62,7 +62,7 @@ function applet_tree(){
 
         $def_order  = $category_id ? 'con.ordering' : 'pubdate';
         $orderby    = $inCore->request('orderby', 'str', $def_order);
-        $orderto    = $inCore->request('orderto', 'str', 'desc');
+        $orderto    = $inCore->request('orderto', 'str', 'asc');
         $page       = $inCore->request('page', 'int', 1);
         $perpage    = 20;
 
@@ -108,27 +108,15 @@ function applet_tree(){
 		}
 	}
 
-	if ($do == 'move_up'){
-		if ($id >= 0){ dbMoveUp('cms_content', $id, $co); }
-		header('location:'.$_SERVER['HTTP_REFERER']);
-	}
+	if ($do == 'move'){
 
-	if ($do == 'move_down'){
-		if ($id >= 0){ dbMoveDown('cms_content', $id, $co); }
-		header('location:'.$_SERVER['HTTP_REFERER']);
-	}
+        $item_id = $inCore->request('id', 'int', 0);
+        $cat_id  = $inCore->request('cat_id', 'int', 0);
+        $dir     = $_REQUEST['dir'];
+        $step    = 1;
+        $model->moveItem($item_id, $cat_id, $dir, $step);
+        echo '1'; exit;
 
-	if ($do == 'saveorder'){
-		if(isset($_REQUEST['ordering'])) { 
-			$ord = $_REQUEST['ordering'];
-			$ids = $_REQUEST['ids'];
-			
-			foreach ($ord as $id=>$ordering){			
-				dbQuery("UPDATE cms_content SET ordering = $ordering WHERE id = ".$ids[$id]) ;						
-			}
-			header('location:?view=content');
-
-		}
 	}
 
 	if ($do == 'show'){
@@ -153,7 +141,7 @@ function applet_tree(){
 	}
 	
 	if ($do == 'delete'){
-        if ($cfg['af_delete']){ include_once($_SERVER['DOCUMENT_ROOT'].'/components/forum/includes/forumcore.php'); }
+        if ($cfg['af_delete']){ include_once(PATH.'/components/forum/includes/forumcore.php'); }
 		if (!isset($_REQUEST['item'])){
 			if ($id >= 0){ 
 				$model->deleteArticle($id, $cfg['af_delete']);
@@ -227,23 +215,23 @@ function applet_tree(){
             $file       = 'article'.$id.'.jpg';
 
             if ($inCore->request('delete_image', 'int', 0)){
-                @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file");
-                @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file");
+                @unlink(PATH."/images/photos/small/$file");
+                @unlink(PATH."/images/photos/medium/$file");
             } else {
 
                 if (isset($_FILES["picture"]["name"]) && @$_FILES["picture"]["name"]!=''){
                     //generate image file
                     $tmp_name   = $_FILES["picture"]["tmp_name"];                   
                     //upload image and insert record in db
-                    if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/photos/$file")){
+                    if (@move_uploaded_file($tmp_name, PATH."/images/photos/$file")){
                         $inCore->includeGraphics();
-						if ($cfg['watermark'] && !$cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/$file"); }
-                        @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
-                        @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
-						if ($cfg['watermark'] && $cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file"); }
-                        @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/$file");
-                        @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", 0777);
-                        @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", 0777);
+						if ($cfg['watermark'] && !$cfg['watermark_only_big']) { @img_add_watermark(PATH."/images/photos/$file"); }
+                        @img_resize(PATH."/images/photos/$file", PATH."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
+                        @img_resize(PATH."/images/photos/$file", PATH."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
+						if ($cfg['watermark'] && $cfg['watermark_only_big']) { @img_add_watermark(PATH."/images/photos/medium/$file"); }
+                        @unlink(PATH."/images/photos/$file");
+                        @chmod(PATH."/images/photos/small/$file", 0777);
+                        @chmod(PATH."/images/photos/medium/$file", 0777);
                     }
                 }
 
@@ -327,15 +315,15 @@ function applet_tree(){
             $tmp_name   = $_FILES["picture"]["tmp_name"];
             $file       = 'article'.$article['id'].'.jpg';
             //upload image and insert record in db
-            if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/photos/$file")){
+            if (@move_uploaded_file($tmp_name, PATH."/images/photos/$file")){
                 $inCore->includeGraphics();
-				if ($cfg['watermark'] && !$cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/$file"); }
-                @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
-                @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
-				if ($cfg['watermark'] && $cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file"); }
-                @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/$file");
-                @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", 0755);
-                @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", 0755);
+				if ($cfg['watermark'] && !$cfg['watermark_only_big']) { @img_add_watermark(PATH."/images/photos/$file"); }
+                @img_resize(PATH."/images/photos/$file", PATH."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
+                @img_resize(PATH."/images/photos/$file", PATH."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
+				if ($cfg['watermark'] && $cfg['watermark_only_big']) { @img_add_watermark(PATH."/images/photos/medium/$file"); }
+                @unlink(PATH."/images/photos/$file");
+                @chmod(PATH."/images/photos/small/$file", 0755);
+                @chmod(PATH."/images/photos/medium/$file", 0755);
             }
         }
 
@@ -408,7 +396,7 @@ function applet_tree(){
                                 <div>
                                     <table width="100%" cellpadding="0" cellspacing="0" border="0">
                                         <tr>
-                                            <td><input name="title" type="text" id="title" style="width:100%" value="<?php echo @$mod['title'];?>" /></td>
+                                            <td><input name="title" type="text" id="title" style="width:100%" value="<?php echo htmlspecialchars($mod['title']);?>" /></td>
                                             <td style="width:15px;padding-left:10px;padding-right:10px;">
                                                 <input type="checkbox" title="Показывать заголовок" name="showtitle" <?php if ($mod['showtitle'] || $do=='add') { echo 'checked="checked"'; } ?> value="1">
                                             </td>
@@ -553,7 +541,7 @@ function applet_tree(){
                     <div style="margin-bottom:10px">
                         <?php
                             if ($do=='edit'){
-                                if (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/photos/small/article'.$mod['id'].'.jpg')){
+                                if (file_exists(PATH.'/images/photos/small/article'.$mod['id'].'.jpg')){
                         ?>
                         <div style="margin-top:3px;margin-bottom:3px;padding:10px;border:solid 1px gray;text-align:center">
                             <img src="/images/photos/small/article<?php echo $id; ?>.jpg" border="0" />
@@ -595,11 +583,9 @@ function applet_tree(){
                             <select name="createmenu" id="createmenu" style="width:99%">
                                 <option value="0" selected="selected">-- не создавать --</option>
                                 <option value="mainmenu">Главное меню</option>
-                                <option value="menu1">Дополнительное меню 1</option>
-                                <option value="menu2">Дополнительное меню 2</option>
-                                <option value="menu3">Дополнительное меню 3</option>
-                                <option value="menu4">Дополнительное меню 4</option>
-                                <option value="menu5">Дополнительное меню 5</option>
+                                <?php for($m=1;$m<=15;$m++){ ?>
+                                    <option value="menu<?php echo $m; ?>">Дополнительное меню <?php echo $m; ?></option>
+                                <?php } ?>
                             </select>
                         </div>
                     <?php } ?>

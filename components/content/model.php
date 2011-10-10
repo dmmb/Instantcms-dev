@@ -705,6 +705,10 @@ class cms_model_content{
 
         if ($article['url']) { $article['url'] = cmsCore::strToURL($article['url']); }
 
+		// получаем значение пор€дка последней статьи
+		$last_ordering = (int)$this->inDB->get_field('cms_content', "category_id = '{$article['category_id']}' ORDER BY ordering DESC", 'ordering');
+		$ordering = $last_ordering+1;
+
         $sql = "INSERT INTO cms_content (category_id, user_id, pubdate, enddate, 
                                          is_end, title, description, content,
                                          published, hits, meta_desc, meta_keys,
@@ -714,7 +718,7 @@ class cms_model_content{
 				VALUES ('{$article['category_id']}', '{$article['user_id']}', '{$article['pubdate']}', '{$article['enddate']}',
                          '{$article['is_end']}', '{$article['title']}', '{$article['description']}', '{$article['content']}', '{$article['published']}', 0,
                         '{$article['meta_desc']}', '{$article['meta_keys']}', '{$article['showtitle']}', '{$article['showdate']}', '{$article['showlatest']}',
-                        '{$article['showpath']}', 1, '{$article['comments']}', '',
+                        '{$article['showpath']}', {$ordering}, '{$article['comments']}', '',
                         '{$article['canrate']}', '{$article['pagetitle']}', '{$article['url']}', '{$article['tpl']}')";
 
 		$this->inDB->query($sql) ;

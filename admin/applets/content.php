@@ -677,11 +677,9 @@ function applet_content(){
                             <select name="createmenu" id="createmenu" style="width:99%">
                                 <option value="0" selected="selected">-- не создавать --</option>
                                 <option value="mainmenu">Главное меню</option>
-                                <option value="menu1">Дополнительное меню 1</option>
-                                <option value="menu2">Дополнительное меню 2</option>
-                                <option value="menu3">Дополнительное меню 3</option>
-                                <option value="menu4">Дополнительное меню 4</option>
-                                <option value="menu5">Дополнительное меню 5</option>
+                                <?php for($m=1;$m<=15;$m++){ ?>
+                                    <option value="menu<?php echo $m; ?>">Дополнительное меню <?php echo $m; ?></option>
+                                <?php } ?>
                             </select>
                         </div>
                     <?php } ?>

@@ -332,7 +332,7 @@ function comments($target='', $target_id=0, $labels=array()){
 			//отправляем админу уведомление о комментарии на e-mail, если нужно
 			if($cfg['email']) {
 				$mailmsg = $_LANG['DATE'].": ".date('d m Y (H:i)')."\n";
-				$mailmsg .= $_LANG['NEW_COMMENT'].': http://'.HOST.$target_data['link'].'#c'. $comment_id . "\n";
+				$mailmsg .= $_LANG['NEW_COMMENT'].': '.HOST.$target_data['link'].'#c'. $comment_id . "\n";
                 $mailmsg .= "-------------------------------------------------------\n";
 				$mailmsg .= strip_tags($content);
 				$mailmsg = wordwrap($mailmsg, 70);
@@ -347,17 +347,17 @@ function comments($target='', $target_id=0, $labels=array()){
 					case 'userphoto':
 						$table      = 'cms_user_photos';
 						$subj       = $_LANG['YOUR_PHOTO'];
-						$targetlink = 'http://'.HOST.'/users/%author_id%/photo'.$target_id.'.html#c'.$comment_id;
+						$targetlink = HOST.'/users/%author_id%/photo'.$target_id.'.html#c'.$comment_id;
 					break;
 					case 'photo':
 						$table      = 'cms_photo_files';
 						$subj       = $_LANG['YOUR_PHOTO'];
-						$targetlink = 'http://'.HOST.'/photos/photo'.$target_id.'.html#c'.$comment_id;
+						$targetlink = HOST.'/photos/photo'.$target_id.'.html#c'.$comment_id;
 					break;
 					case 'blog':
 						$table      = 'cms_blog_posts';
 						$subj       = $_LANG['YOUR_POST'];
-						$targetlink = 'http://'.HOST.'%post_url%#c'.$comment_id;
+						$targetlink = HOST.'%post_url%#c'.$comment_id;
 					break;
 				}
 

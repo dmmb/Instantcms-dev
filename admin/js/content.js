@@ -38,14 +38,19 @@ function moveItem(item_id, dir){
 	$.ajax({
 		  type: "POST",
 		  url: "/admin/index.php",
-		  data: "view=content&do=move&id="+item_id+"&cat_id="+cat_id+"&dir="+dir,
+		  data: "view=tree&do=move&id="+item_id+"&cat_id="+cat_id+"&dir="+dir,
 		  success: function(msg){
             var trh = $('#listTable tr#'+item_id).html();
+			var curr_ord = ~~$('#listTable tr#'+item_id+' .ordering').html();
             if (dir == -1){
                 $('#listTable tr#'+item_id).prev('tr').before('<tr id="'+item_id+'">'+trh+'</tr>').next('tr').remove();
+				$('#listTable tr#'+item_id+' .ordering').html(curr_ord-1);
+				$('#listTable tr#'+item_id).next().find('.ordering').html(curr_ord);
             }
             if (dir == 1){
                 $('#listTable tr#'+item_id).next('tr').after('<tr id="'+item_id+'">'+trh+'</tr>').prev('tr').remove();
+				$('#listTable tr#'+item_id+' .ordering').html(curr_ord+1);
+				$('#listTable tr#'+item_id).prev().find('.ordering').html(curr_ord);
             }
             $('#listTable tr').find('.move_item_up').show();
             $('#listTable tr').find('.move_item_down').show();
