@@ -753,10 +753,9 @@ class cms_model_content{
 		if(!$not_upd_seo){
 			if ($article['url']) { 
 				$article['url']  = cmsCore::strToURL($article['url']);
-				$article_url_sql = "url='{$article['url']}',";
 			}
         	$article['seolink'] = $this->getSeoLink($article);
-			$article_seo_sql = "seolink='{$article['seolink']}',";
+			$article_seo_sql = "url='{$article['url']}', seolink='{$article['seolink']}',";
 		}
 
         if (!$article['user_id']) { $article['user_id'] = $inUser->id; }
@@ -783,7 +782,6 @@ class cms_model_content{
                     canrate='{$article['canrate']}',
                     pagetitle='{$article['pagetitle']}',
                     user_id='{$article['user_id']}',
-                    $article_url_sql
                     tpl='{$article['tpl']}'
                 WHERE id = '$id'
                 LIMIT 1";

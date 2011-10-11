@@ -929,7 +929,7 @@ function applet_modules(){
                         </span>
                     </div>
 
-                    <div style="margin-top:10px;padding:5px;padding-right:0px;" id="grp">
+                    <div style="margin-top:10px;padding:5px;padding-right:0px;">
                         <div>
                             <strong>Показывать группам:</strong><br />
                             <span class="hinttext">

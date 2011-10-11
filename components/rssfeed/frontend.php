@@ -64,7 +64,7 @@ if ($do=='rss'){
 					//CHANNEL
 					$rss .= '<title>'.trim($channel['title']).'</title>' ."\n";
 					$rss .= '<link>'.$channel['link'].'</link>' ."\n";
-					$rss .= '<description>'.trim(htmlspecialchars(strip_tags($channel['description']))).'</description>' ."\n";			
+					$rss .= '<description><![CDATA['.trim(htmlspecialchars(strip_tags($channel['description']))).']]></description>' ."\n";			
 					//CHANNEL ICON
 					if ($cfg['icon_on']){
 						$rss .= '<image>'."\n";

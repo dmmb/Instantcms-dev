@@ -157,8 +157,8 @@ function applet_tree(){
 
 			$id                        = $inCore->request('id', 'int', 0);
 			$article['category_id']    = $inCore->request('category_id', 'int', 1);
-			$article['title']          = $inCore->request('title', 'str');
-			$article['url']            = $inCore->request('url', 'str');
+			$article['title']          = $inCore->request('title', 'str', '');
+			$article['url']            = $inCore->request('url', 'str', '');
 			$article['showtitle']      = $inCore->request('showtitle', 'int', 0);
 			$article['description']    = $inCore->request('description', 'html', '');
 			$article['description']    = $inDB->escape_string($article['description']); 
@@ -176,7 +176,7 @@ function applet_tree(){
 			$article['is_end']         = $inCore->request('is_end', 'int', 0);
             $article['pagetitle']      = $inCore->request('pagetitle', 'str', '');
 			
-			$article['tags']           = $inCore->request('tags', 'str');
+			$article['tags']           = $inCore->request('tags', 'str', '');
 
             $olddate                   = $inCore->request('olddate', 'str', '');
 			$pubdate                   = $inCore->request('pubdate', 'str', '');

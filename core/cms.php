@@ -3683,7 +3683,7 @@ class cmsCore {
         $str    = trim($str);        
         $str    = mb_strtolower($str, 'cp1251');
         $str    = str_replace(' ', '-', $str);
-        $string = preg_replace ('/[^a-zA-Zà-ÿÀ-ß0-9\-]/i', '-', $str);
+        $string = preg_replace ('/[^a-zA-Zà-ÿ¸À-ß¨0-9\-]/i', '-', $str);
         $string = rtrim($string, '-');
 
         while(strstr($string, '--')){ $string = str_replace('--', '-', $string); }
