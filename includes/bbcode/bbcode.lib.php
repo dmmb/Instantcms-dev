@@ -36,17 +36,6 @@ class bbcode {
         'children' - список тегов, которым разрешено быть вложенными в данный.
     */
     var $info_about_tags = array(
-//            '*' => array(
-//                    'handler' => 'star_2html',
-//                    'is_close' => false,
-//                    'lbr' => 0,
-//                    'rbr' => 0,
-//                    'ends' => array('*','tr','td','th'),
-//                    'permission_top_level' => false,
-//                    'children' => array('align','b','code','color','email',
-//                        'font','google','h1','h2','h3','hr','i','img','list','nobb',
-//                        'php','quote','s','size','sub','sup','table','tt','u','url')
-//                ),
             'align' => array(
                     'handler' => 'align_2html',
                     'is_close' => false,
@@ -246,15 +235,10 @@ class bbcode {
                         's','size','sub','sup','tt','u')
                 ),
         );
-    /*
-    Масив мнемоник - смайлики и прочие условные обозначения, которые должны
-    заменяться на что-то. Ключ - мнемоника, значение - на что заменяется.
-    Например:
-                      ':-)' => '<img src="smile.gif" />'
-    */
-    var $mnemonics = array();
     // При инициализации объекта положим сюда синтаксический разбор ббкода
     var $syntax = array();
+
+	private $smiles_img = array();
     /*
     Функция парсит BBCode и возвращает масив пар
     "число (тип лексемы) - лексема", где типы лексем могут быть следующие:
@@ -907,29 +891,99 @@ class bbcode {
         }
         return $result;
     }
+    /**
+     * Автоссылки в тексте
+     * @param string $text
+     * @return str
+     */
+    public static function autoLink($text){
+
+		$text = preg_replace('/\s+/', ' ', $text);
+        $search = array(
+                "/(.|^)((?:http|https|ftp):\/\/[^<\s]+[^<.,:;?!\"»'\"+\-])([.,:;?!\"»'\"+\-]*(?:<br ?\/?>)*\s|$)/si",
+                "/(^|[^\/])(www\.[^<\s]+[^<.,:;?!\"»'\"+\-])([.,:;?!\"»'\"+\-]*(?:<br ?\/?>)*\s|$)/si",
+                "'([^\w\d-\.]|^)([\w\d-\.]+@[\w\d-\.]+\.[\w]+[^.,;\s<\"\'\)]+)'si"
+            );
+        $replace = array(
+                '$1<a href="/go/url=$2" target="_blank">$2</a>$3',
+                '$1<a href="/go/url=http://$2" target="_blank">$2</a>$3',
+                '$1<a href="mailto:$2">$2</a>'
+            );
+        $text = preg_replace($search, $replace, $text);
+
+		return $text;
+    }
     /*
-    Функция мнемонизирует HTML-код, вставляет в текст разрывы <br />, смайлики и
+    Функция мнемонизирует HTML-код, вставляет в текст разрывы <br /> и
     "автоматические ссылки".
     */
     function insert_smiles($text) {
         $text = nl2br(htmlspecialchars($text,ENT_NOQUOTES));
-        $text = str_replace('  ', '&nbsp;&nbsp;', $text);
-        $search = array(
-                "'(.|^)((http|https|ftp)://[\w\d-]+\.[\w\d-]+[^\s<\"\']*[^.,;\s<\"\'\)]+)'si",
-                "'([^/]|^)(www\.[\w\d-]+\.[\w\d-]+[^\s<\"\']*[^.,;\s<\"\'\)]+)'si",
-                "'([^\w\d-\.]|^)([\w\d-\.]+@[\w\d-\.]+\.[\w]+[^.,;\s<\"\'\)]+)'si"
-            );
-        $replace = array(
-                '$1<a href="/go/url=$2" target="_blank">$2</a>',
-                '$1<a href="/go/url=http://$2" target="_blank">$2</a>',
-                '$1<a href="mailto:$2">$2</a>'
-            );
-        $text = preg_replace($search, $replace, $text);
-        foreach ($this -> mnemonics as $mnemonic => $value) {
-            $text = str_replace($mnemonic, $value, $text);
-        }
+		$text = self::autoLink($text);
         return $text;
     }
+    /*
+    Функция преобразует смайлы в их изображения
+    */
+	public function replaceEmotionToSmile($text, $smile_dir='/images/smilies/', $ext='gif') {
+
+        //convert emoticons to smileys
+        $smilefix = array();
+        $smilefix[' :) '] = 'smile';
+        $smilefix[' =) '] = 'smile';
+        $smilefix[':-)']  = 'smile';
+        $smilefix[' :( '] = 'sad';
+        $smilefix[':-(']  = 'sad';
+        $smilefix[';-)']  = 'joke';
+        $smilefix[' ;) '] = 'joke';
+        $smilefix[' =0 '] = 'shock';
+        $smilefix['=-0']  = 'shock';
+        $smilefix[' Oo '] = 'shock';
+        $smilefix[':-0']  = 'shock';
+        $smilefix[' :D '] = 'laugh';
+        $smilefix[':-D']  = 'laugh';
+
+        foreach($smilefix as $find=>$tag){
+            $text = str_replace($find, ':'.$tag.':', $text);
+        }
+
+		$smiles_img = $this->getSmilesImg($smile_dir);
+
+		if($smiles_img){
+			foreach($smiles_img as $smile){
+				$file = $smile_dir . $smile .'.'. $ext;
+				if (@file_exists(PATH.$file)){
+					$text = str_replace(':'.$smile.':', ' <img src="'.$file.'" alt="'.$smile.'" border="0"/> ', $text);
+				}
+			}
+		}
+
+		return $text;
+	}
+    /*
+    Функция возвращает массив названий файлов смайлов без расширения.
+    */
+	private function getSmilesImg($path) {
+
+		if($this->smiles_img) { return $this->smiles_img; }
+
+		$pdir = @opendir(PATH.$path);
+		if(!$pdir){ return false; }
+
+		$smiles = array();
+	
+		while ($smile = @readdir($pdir)){
+			if (($smile != '.') && ($smile != '..') && !is_dir(PATH.$path.$smile)) {
+				$smiles[] = substr($smile, 0, strrpos($smile, '.'));
+			}
+		}
+	
+		@closedir($pdir);
+
+		$this->smiles_img = $smiles;
+
+		return $smiles;
+	}
     // Функция конвертит дерево элементов BBCode в HTML и возвращает результат
     function get_html($tree_of_elems=false) {
         if (! is_array($tree_of_elems)) {

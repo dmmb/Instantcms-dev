@@ -3448,53 +3448,24 @@ class cmsCore {
         }
         return true;
     }
-
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public function parseSmiles($text, $parse_bbcode=false){
+
+        include_once PATH.'/includes/bbcode/bbcode.lib.php';
+
         if (!$parse_bbcode){
-            //convert URLs to links
-            $text = ereg_replace("/(?<!http:\\/\\/)(www)(\\S+)/si",'http://www\\2', $text);
-            $text = ereg_replace("/(http:\\/\\/)(\\S+)/si",'<a href="/go/url=http://\\2" target=_blank>http://\\2</a>',$text);
+            $text = bbcode::autoLink($text);
         } else {
             //parse bbcode
-            include_once PATH.'/includes/bbcode/bbcode.lib.php';
             $bb = new bbcode($text);
-            $text = $bb->get_html();            
+            $text = $bb->get_html();
+			// конвертируем в смайлы в изображения
+			$text = $bb->replaceEmotionToSmile($text);
         }
 
-        //convert emoticons to smileys
-        $smilefix = array();
-        $smilefix[' :) '] = 'smile';
-        $smilefix[' =) '] = 'smile';
-        $smilefix[':-)'] = 'smile';
-        $smilefix[' :( '] = 'sad';
-        $smilefix[':-('] = 'sad';
-        $smilefix[';-)'] = 'joke';
-        $smilefix[' ;) '] = 'joke';
-        $smilefix[' =0 '] = 'shock';
-        $smilefix['=-0'] = 'shock';
-        $smilefix[' Oo '] = 'shock';
-        $smilefix[':-0'] = 'shock';
-        $smilefix[' :D '] = 'laugh';
-        $smilefix[':-D'] = 'laugh';
+	    return $text;
 
-        foreach($smilefix as $find=>$tag){
-            $text = str_replace($find, ':'.$tag.':', $text);
-        }
-
-        $tags = explode(':', $text);
-
-        foreach($tags as $key=>$value){
-            if (strlen($value)<15){
-                $file = '/images/smilies/'.$value.'.gif';
-                if (@file_exists(PATH.$file)){
-                    $text = str_replace(':'.$value.':', '<img src="'.$file.'" alt="'.$value.'" border="0"/>', $text);
-                }
-            }
-        }
-
-        return $text;
     }
 
     // PAGE CACHE   /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3658,24 +3629,6 @@ class cmsCore {
         return $html;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static function convertToLink($text) {
-
-        $search = array(
-                "'(.|^)((http|https|ftp)://[\w\d-]+\.[\w\d-]+[^\s<\"\']*[^.,;\s<\"\'\)]+)'si",
-                "'([^/]|^)(www\.[\w\d-]+\.[\w\d-]+[^\s<\"\']*[^.,;\s<\"\'\)]+)'si",
-                "'([^\w\d-\.]|^)([\w\d-\.]+@[\w\d-\.]+\.[\w]+[^.,;\s<\"\'\)]+)'si"
-            );
-        $replace = array(
-                '$1<a href="/go/url=$2" target="_blank">$2</a>',
-                '$1<a href="/go/url=http://$2" target="_blank">$2</a>',
-                '$1<a href="mailto:$2">$2</a>'
-            );
-        $text = preg_replace($search, $replace, $text);
-
-        return $text;
-    }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     static public function strToURL($str){

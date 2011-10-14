@@ -244,7 +244,7 @@ if ($do=='view'){
                 }
             }
             $item['file'] = $file;
-			$item['content'] = $cfg['auto_link'] ? $inCore->convertToLink($item['content']) : $item['content'];
+			$item['content'] = $cfg['auto_link'] ? $inCore->parseSmiles($item['content']) : $item['content'];
 			$item['title'] = $item['obtype'].' '.$item['title'];
             //Check user access
             if ($inUser->id){
@@ -306,7 +306,7 @@ if($do=='read'){
 	$item['enc_city'] = urlencode($item['city']);
 
 	$item['content'] = nl2br($item['content']);
-	$item['content'] = $cfg['auto_link'] ? $inCore->convertToLink($item['content']) : $item['content'];
+	$item['content'] = $cfg['auto_link'] ? $inCore->parseSmiles($item['content']) : $item['content'];
 
 	//Check user access
 	if ($inUser->id){
