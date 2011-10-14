@@ -1391,6 +1391,8 @@ class cmsCore {
         $bots['Yahoo!']             ='Yahoo!';
         $bots['rambler']            ='Rambler';
         $bots['W3C_Validator']      ='W3C Validator';
+		$bots['bingbot']            ='bingbot';
+		$bots['magpie-crawler']     ='magpie-crawler';
 
         //удал€ем старые записи
         $sql = "DELETE FROM cms_online WHERE lastdate <= DATE_SUB(NOW(), INTERVAL 3 MINUTE)";
@@ -1413,16 +1415,15 @@ class cmsCore {
         if (strstr(strtolower($useragent), 'from'))   { return false; }
 
         //провер€ем, есть ли текущий пользователь в таблице "кто онлайн"
-        $sql = "SELECT id FROM cms_online WHERE (sess_id = '$sess_id' AND ip = '$ip')";
-        $result = $inDB->query($sql) ;
+		$online = $inDB->get_field('cms_online', "sess_id = '$sess_id' AND ip = '$ip'", 'id');
 
-        if (!$inDB->num_rows($result)){
+        if (!$online){
             //ѕровер€ем, пользователь это или поисковый бот
             $crawler = false;
-            foreach($bots as $bot=>$uagent){ if (strpos($useragent, $uagent)) { $crawler = true; }	}
+            foreach($bots as $bot=>$uagent){ if (strpos($useragent, $uagent)) { $crawler = true; break; }	}
             //≈сли не бот, вставл€ем запись в "кто онлайн"
             if (!$crawler){
-                $sql = "INSERT INTO cms_online (ip, sess_id, lastdate, user_id, viewurl) VALUES ('$ip', '$sess_id', NOW(), '$user_id', '$page')";
+                $sql = "INSERT INTO cms_online (ip, sess_id, lastdate, user_id, agent, viewurl) VALUES ('$ip', '$sess_id', NOW(), '$user_id', '$useragent', '$page')";
                 $inDB->query($sql) ;
             }
         } else {
