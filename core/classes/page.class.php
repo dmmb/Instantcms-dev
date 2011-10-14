@@ -519,73 +519,74 @@ public function printModules($position){
 
     $result = $inDB->query($sql);
 
-    if($inDB->num_rows($result)){
-        while ($mod = $inDB->fetch_assoc($result)){
+    if(!$inDB->num_rows($result)){ return false; }
+
+	while ($mod = $inDB->fetch_assoc($result)){
+		
+		// Проверяем права доступа
+		if (!$inCore->checkContentAccess($mod['access_list'])) { continue; }
+		
+		$modulefile = PATH.'/modules/'.$mod['content'].'/module.php';
+
+		if (!$mod['user']) { cmsCore::loadLanguage('modules/'.$mod['content']); }
+		
+		if( !$mod['is_external'] ){
+				//PROCESS FILTERS
+				$filters = $inCore->getFilters();
+				if ($filters){
+					foreach($filters as $id=>$_data){
+						require_once 'filters/'.$_data['link'].'/filter.php';
+						$_data['link']($mod['content']);
+					}
+				}
+				$callback = true;
+				$modulebody = $mod['content'];
+		}
+
+		if( $mod['is_external'] ){
+			if (file_exists($modulefile)){
+				//load module file
+				require_once $modulefile;
+				//run module and get its output to $modulebody
+
+				if ($mod['cache'] && $inCore->isCached('module', $mod['mid'], $mod['cachetime'], $mod['cacheint'])){
+
+					$modulebody = $inCore->getCache('module', $mod['mid']);
+					$callback = true;
+
+				} else {
+
+					$config = $inCore->yamlToArray($mod['config']);
+					$inCore->cacheModuleConfig($mod['module_id'], $config);
+
+					ob_start();
+					$callback = $mod['content']($mod['module_id']);
+					$modulebody = ob_get_clean();
+					if($mod['cache']) { $inCore->saveCache('module', $mod['mid'], $modulebody); }
+				}
+
+			}
+		}
+
+		if ( $callback ){ //if module returns TRUE
+			$module             = array();
+			$mod['body']        = $modulebody;
+			$smarty             = $inCore->initSmartyModule();
+			$_CFG['fastcfg']    = isset($_CFG['fastcfg']) ? $_CFG['fastcfg'] : 0;
 			
-			// Проверяем права доступа
-			if (!$inCore->checkContentAccess($mod['access_list'])) { continue; }
-            
-            $modulefile = PATH.'/modules/'.$mod['content'].'/module.php';
+			if ($_CFG['fastcfg'] && $inCore->userIsAdmin($inUser->id)){
+				$smarty->assign('cfglink', '/admin/index.php?view=modules&do=edit&id='.$mod['mid']);
+			}
 
-            if (!$mod['user']) { cmsCore::loadLanguage('modules/'.$mod['content']); }
-            
-            if( !$mod['is_external'] ){
-                    //PROCESS FILTERS
-                    $filters = $inCore->getFilters();
-                    if ($filters){
-                        foreach($filters as $id=>$_data){
-                            require_once 'filters/'.$_data['link'].'/filter.php';
-                            $_data['link']($mod['content']);
-                        }
-                    }
-                    $callback = true;
-                    $modulebody = $mod['content'];
-            }
+			$smarty->assign('mod', $mod);
 
-            if( $mod['is_external'] ){
-                if (file_exists($modulefile)){
-                    //load module file
-                    require_once $modulefile;
-                    //run module and get its output to $modulebody
+			$module_tpl = file_exists($smarty->template_dir.'/'.$mod['tpl']) ? $mod['tpl'] : 'module.tpl';
 
-                    if ($mod['cache'] && $inCore->isCached('module', $mod['mid'], $mod['cachetime'], $mod['cacheint'])){
+			$smarty->display($module_tpl);
+		}
 
-                        $modulebody = $inCore->getCache('module', $mod['mid']);
-                        $callback = true;
+	}//while
 
-                    } else {
-
-                        $config = $inCore->yamlToArray($mod['config']);
-                        $inCore->cacheModuleConfig($mod['module_id'], $config);
-
-                        ob_start();
-                        $callback = $mod['content']($mod['module_id']);
-                        $modulebody = ob_get_clean();
-                        if($mod['cache']) { $inCore->saveCache('module', $mod['mid'], $modulebody); }
-                    }
-
-                }
-            }
-
-            if ( $callback ){ //if module returns TRUE
-                $module             = array();
-                $mod['body']        = $modulebody;
-                $smarty             = $inCore->initSmartyModule();
-                $_CFG['fastcfg']    = isset($_CFG['fastcfg']) ? $_CFG['fastcfg'] : 0;
-                
-                if ($_CFG['fastcfg'] && $inCore->userIsAdmin($inUser->id)){
-                    $smarty->assign('cfglink', '/admin/index.php?view=modules&do=edit&id='.$mod['mid']);
-                }
-
-                $smarty->assign('mod', $mod);
-
-                $module_tpl = file_exists($smarty->template_dir.'/'.$mod['tpl']) ? $mod['tpl'] : 'module.tpl';
-
-                $smarty->display($module_tpl);
-            }
-
-        }//while
-    }//if num rows
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

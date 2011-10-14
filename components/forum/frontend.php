@@ -424,6 +424,9 @@ if ($do=='thread'){
 
 		//TOOLBAR TABLE		
 		ob_start();
+		if($t['description']){
+			echo '<div class="forum_toolbar" style="padding:5px;">'.$t['description'].'</div>';
+		}
 		echo '<table width="100%" cellspacing="0" cellpadding="5"  class="forum_toolbar"><tr>';
 
 		if ($posts_count){

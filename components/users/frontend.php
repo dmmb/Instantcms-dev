@@ -843,96 +843,96 @@ if ($do=='messages'){
 /////////////////////////////// AVATAR UPLOAD /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='avatar'){
 
-	if (usrCheckAuth() && $inUser->id == $id){
+	if (!$inUser->id || ($inUser->id && $inUser->id != $id)){ cmsCore::error404(); }
 
-		$usr = $model->getUserShort($id);
-		if (!$usr) { cmsCore::error404(); }
+	$usr = $model->getUserShort($id);
+	if (!$usr) { cmsCore::error404(); }
 	
-			$inPage->setTitle($_LANG['LOAD_AVATAR']);
-			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-			$inPage->addPathway($_LANG['LOAD_AVATAR'], $_SERVER['REQUEST_URI']);
+	$inPage->setTitle($_LANG['LOAD_AVATAR']);
+	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+	$inPage->addPathway($_LANG['LOAD_AVATAR']);
 	
-			if ($inCore->inRequest('upload')) {
-				$inCore->includeGraphics();
+	if ($inCore->inRequest('upload')) {
+
+		$inCore->includeGraphics();
 		
-			$uploaddir 		= PATH.'/images/users/avatars/';		
-						$realfile		= $_FILES['picture']['name'];
-			$path_parts     = pathinfo($realfile);
-            $ext            = strtolower($path_parts['extension']);
-			if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'bmp' || $ext == 'png'){
-				
-						$filename 		= md5($realfile . '-' . $userid . '-' . time()).'.jpg';
-						$uploadfile		= $uploaddir . $realfile;
-						$uploadavatar 	= $uploaddir . $filename;
-						$uploadthumb 	= $uploaddir . 'small/' . $filename;
-						
-						$source			= $_FILES['picture']['tmp_name'];
-					 	$errorCode 		= $_FILES['picture']['error'];
-						
-			} else {
-				cmsCore::addSessionMessage($_LANG['ERROR_TYPE_FILE'].' jpg, jpeg, gif, bmp, png', 'error');	
-				$inCore->redirect(cmsUser::getProfileURL($usr['login']));
+		$uploaddir 		= PATH.'/images/users/avatars/';		
+		$realfile		= $_FILES['picture']['name'];
+		$path_parts     = pathinfo($realfile);
+		$ext            = strtolower($path_parts['extension']);
+
+		if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'bmp' || $ext == 'png'){
+
+			$filename 		= md5($realfile . '-' . $userid . '-' . time()).'.jpg';
+			$uploadfile		= $uploaddir . $realfile;
+			$uploadavatar 	= $uploaddir . $filename;
+			$uploadthumb 	= $uploaddir . 'small/' . $filename;
+			$source			= $_FILES['picture']['tmp_name'];
+			$errorCode 		= $_FILES['picture']['error'];
+
+		} else {
+
+			cmsCore::addSessionMessage($_LANG['ERROR_TYPE_FILE'].' jpg, jpeg, gif, bmp, png', 'error');	
+			$inCore->redirect('/users/'.$id.'/avatar.html');
+
+		}
+
+		if ($inCore->moveUploadedFile($source, $uploadfile, $errorCode)) {
+
+			//DELETE OLD AVATAR
+			$sql = "SELECT imageurl FROM cms_user_profiles WHERE user_id = '$id'";
+			$result = $inDB->query($sql) ;
+			if ($inDB->num_rows($result)){
+				$old = $inDB->fetch_assoc($result);
+				if ($old['imageurl'] && $old['imageurl']!='nopic.jpg'){
+					@unlink(PATH.'/images/users/avatars/'.$old['imageurl']);
+					@unlink(PATH.'/images/users/avatars/small/'.$old['imageurl']);
+				}
 			}
 
-						if ($inCore->moveUploadedFile($source, $uploadfile, $errorCode)) {
-
-                            //DELETE OLD AVATAR
-					$sql = "SELECT imageurl FROM cms_user_profiles WHERE user_id = '$id'";
-							$result = $inDB->query($sql) ;
-							if ($inDB->num_rows($result)){
-								$old = $inDB->fetch_assoc($result);
-                                if ($old['imageurl'] && $old['imageurl']!='nopic.jpg'){
-							@unlink(PATH.'/images/users/avatars/'.$old['imageurl']);
-							@unlink(PATH.'/images/users/avatars/small/'.$old['imageurl']);
-                                }
-							}
-
-							//CREATE THUMBNAIL
-							if (isset($cfg['smallw'])) { $smallw = $cfg['smallw']; } else { $smallw = 64; }
-							if (isset($cfg['medw'])) { 	 $medw = $cfg['medw']; } else { $medw = 200; }
-							if (isset($cfg['medh'])) { 	 $medh = $cfg['medh']; } else { $medh = 200; }
-							
-							@img_resize($uploadfile, $uploadavatar, $medw, $medh);
-							@img_resize($uploadfile, $uploadthumb, $smallw, $smallw);
-							
-							//DELETE ORIGINAL							
-							@unlink($uploadfile);
-							//MODIFY PROFILE
-							$sql = "UPDATE cms_user_profiles 
-									SET imageurl = '$filename'
-							WHERE user_id = '$id'
-									LIMIT 1";	
-							$inDB->query($sql);
-					// очищаем предыдущую запись о смене аватара
-					cmsActions::removeObjectLog('add_avatar', $id);
-					// выводим сообщение в ленту
-					cmsActions::log('add_avatar', array(
-						  'object' => '',
-						  'object_url' => '',
-						  'object_id' => $id,
-						  'target' => '',
-						  'target_url' => '',
-						  'description' => '<a href="'.cmsUser::getProfileURL($usr['login']).'" class="act_usr_ava">
-                                               <img border="0" src="/images/users/avatars/small/'.$filename.'">
-                                            </a>'
-					));
-							//GO BACK TO PROFILE VIEW			
-							$inCore->redirect(cmsUser::getProfileURL($usr['login']));
-                            
-						} else {
-				cmsCore::addSessionMessage('<strong>'.$_LANG['ERROR'].':</strong> '.$inCore->uploadError().'!', 'error');
-						}
+			//CREATE THUMBNAIL
+			if (isset($cfg['smallw'])) { $smallw = $cfg['smallw']; } else { $smallw = 64; }
+			if (isset($cfg['medw'])) { 	 $medw = $cfg['medw']; } else { $medw = 200; }
+			if (isset($cfg['medh'])) { 	 $medh = $cfg['medh']; } else { $medh = 200; }
 						
-			$smarty = $inCore->initSmarty('components', 'com_users_avatar_upload.tpl');
-    		$smarty->assign('id', $id);
-    		$smarty->display('com_users_avatar_upload.tpl');
-			
-			} else {
-				$smarty = $inCore->initSmarty('components', 'com_users_avatar_upload.tpl');
-    			$smarty->assign('id', $id);
-    			$smarty->display('com_users_avatar_upload.tpl');
-			}	
-	} else { echo usrAccessDenied(); }
+			@img_resize($uploadfile, $uploadavatar, $medw, $medh);
+			@img_resize($uploadfile, $uploadthumb, $smallw, $smallw);
+						
+			//DELETE ORIGINAL							
+			@unlink($uploadfile);
+
+			//MODIFY PROFILE
+			$sql = "UPDATE cms_user_profiles 
+					SET imageurl = '$filename'
+					WHERE user_id = '$id'
+					LIMIT 1";	
+			$inDB->query($sql);
+			// очищаем предыдущую запись о смене аватара
+			cmsActions::removeObjectLog('add_avatar', $id);
+			// выводим сообщение в ленту
+			cmsActions::log('add_avatar', array(
+				  'object' => '',
+				  'object_url' => '',
+				  'object_id' => $id,
+				  'target' => '',
+				  'target_url' => '',
+				  'description' => '<a href="'.cmsUser::getProfileURL($usr['login']).'" class="act_usr_ava">
+									   <img border="0" src="/images/users/avatars/small/'.$filename.'">
+									</a>'
+			));
+			//GO BACK TO PROFILE VIEW			
+			$inCore->redirect(cmsUser::getProfileURL($usr['login']));
+						
+		} else {
+			cmsCore::addSessionMessage('<strong>'.$_LANG['ERROR'].':</strong> '.$inCore->uploadError().'!', 'error');
+			$inCore->redirect('/users/'.$id.'/avatar.html');
+		}
+		
+	} else {
+		$smarty = $inCore->initSmarty('components', 'com_users_avatar_upload.tpl');
+		$smarty->assign('id', $id);
+		$smarty->display('com_users_avatar_upload.tpl');
+	}	
 }
 /////////////////////////////// AVATAR LIBRARY /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='select_avatar'){

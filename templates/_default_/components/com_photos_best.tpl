@@ -12,7 +12,7 @@
 			<table width="100%" height="100" cellspacing="0" cellpadding="0">
 				<tr>
                 	<td align="center">
-                    	<div class="mod_lp_titlelink">{$num} <a href="/photos/photo{$con.id}.html" title="{$con.title|escape:'html'}">{$con.title}</a>
+                    	<div class="mod_lp_titlelink">{$num} <a href="/photos/photo{$con.id}.html" title="{$con.title|escape:'html'}">{$con.title|truncate:18}</a>
                         </div>
                     </td>
                 </tr>

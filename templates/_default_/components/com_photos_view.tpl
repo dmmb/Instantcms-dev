@@ -114,7 +114,7 @@
 				<table cellpadding="0" cellspacing="0" border="0">
 					{foreach key=tid item=con from=$cons}
 						{if $col==1} <tr> {/if}
-                        <td align="center" valign="middle">
+                        <td align="center" valign="middle" width="{math equation="100/x" x=$maxcols_foto}%">
 							<div class="{$album.cssprefix}photo_thumb">
 							<table width="100%" height="100" cellspacing="0" cellpadding="4">
 							  	<tr>
@@ -125,7 +125,7 @@
                                 	</td>
                                 </tr>
 								<tr>
-                                	<td align="center"><a href="{$con.photolink2}" title="{$con.title|escape:'html'}">{$con.title}</a></td>
+                                	<td align="center"><a href="{$con.photolink2}" title="{$con.title|escape:'html'}">{$con.title|truncate:18}</a></td>
                                 </tr>
 						{if $con.published == 0}
 								<tr id="moder{$con.id}">
