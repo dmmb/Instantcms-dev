@@ -98,7 +98,6 @@ class cmsFormGen {
 
         foreach($this->params as $key=>$param){
             $this->params[$key]['title']    = iconv('utf-8', 'cp1251', $param['title']);
-            $this->params[$key]['html']     = iconv('utf-8', 'cp1251', $param['html']);
         }
 
         ob_start();
@@ -165,7 +164,7 @@ class cmsFormGen {
         $name   = (string)$param['name'];
         $value  = (string)$param['value'];
 
-        return '<input type="text" id="'.$name.'" name="'.$name.'" value="'.$value.'" class="param-string" /> ';
+        return '<input type="text" id="'.$name.'" name="'.$name.'" value="'.htmlspecialchars($value).'" class="param-string" /> ';
 
     }
 
@@ -196,7 +195,7 @@ class cmsFormGen {
                 $option['title'] = (string)$option['title'];
                 $option['value'] = (string)$option['value'];
 
-                $html .= "\t" . '<option value="'.$option['value'].'" '.($value == $option['value'] ? 'selected="selected"' : '').'>'.$option['title'].'</option>' . "\n";
+                $html .= "\t" . '<option value="'.htmlspecialchars($option['value']).'" '.($value == $option['value'] ? 'selected="selected"' : '').'>'.$option['title'].'</option>' . "\n";
                 
             }
 
@@ -254,7 +253,7 @@ class cmsFormGen {
                     $option['title'] = (string)$option['title'];
                     $option['value'] = (string)$option['value'];
 
-                    $html .= "\t" . '<option value="'.$option['value'].'" '.($value == $option['value'] ? 'selected="selected"' : '').'>'.$option['title'].'</option>' . "\n";
+                    $html .= "\t" . '<option value="'.htmlspecialchars($option['value']).'" '.($value == $option['value'] ? 'selected="selected"' : '').'>'.$option['title'].'</option>' . "\n";
 
                 }
             }
@@ -265,7 +264,7 @@ class cmsFormGen {
                     if ($option['level'] >= 1){
                         $option['title'] = str_repeat('--', $option['level']-1) . ' ' . $option['title'];
                     }
-                    $html .= "\t" . '<option value="'.$option['value'].'" '.($value == $option['value'] ? 'selected="selected"' : '').'>'.$option['title'].'</option>' . "\n";
+                    $html .= "\t" . '<option value="'.htmlspecialchars($option['value']).'" '.($value == $option['value'] ? 'selected="selected"' : '').'>'.$option['title'].'</option>' . "\n";
                 }
             }
 
@@ -287,7 +286,7 @@ class cmsFormGen {
                     $option['title'] = iconv('cp1251', 'utf-8', $option['title']);
                     
                     $html .= '<tr>' . "\n" .
-                                "\t" . '<td><input type="checkbox" id="'.$name.'_'.$option['value'].'" name="'.$name.'['.$option['value'].']" value="'.$option['value'].'" '.(in_array($option['value'], $values) ? 'checked="checked"' : '').' />' . "\n" .
+                                "\t" . '<td><input type="checkbox" id="'.$name.'_'.$option['value'].'" name="'.$name.'['.$option['value'].']" value="'.htmlspecialchars($option['value']).'" '.(in_array($option['value'], $values) ? 'checked="checked"' : '').' />' . "\n" .
                                 "\t" . '<td><label for="'.$name.'_'.$option['value'].'">'.$option['title'].'</label></td>' . "\n" .
                              '</tr>';
                 }

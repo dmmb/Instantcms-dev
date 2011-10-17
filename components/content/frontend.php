@@ -109,8 +109,6 @@ if ($do=='view'){
             }
         }
     }
-
-	$inPage->addPathway($cat['title'], $_SERVER['REQUEST_URI']);
 	
 	//LIST OF SUBCATEGORIES
     $subcats_list   = $model->getSubCats($cat['id'], $left_key, $right_key);
