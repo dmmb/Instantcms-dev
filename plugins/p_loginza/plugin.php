@@ -126,6 +126,7 @@ class p_loginza extends cmsPlugin {
 
         $inCore = cmsCore::getInstance();
         $inDB   = cmsDatabase::getInstance();
+		$inUser = cmsUser::getInstance();
         
         $token = $inCore->request('token', 'str', '');
         if (!$token){ exit; }
@@ -152,74 +153,17 @@ class p_loginza extends cmsPlugin {
 
         // если пользователь уже был или успешно создан, авторизуем
         if ($user_id){
-            $this->loginUser($user_id);
+			$user = $inDB->get_fields('cms_users', "id = '{$user_id}'", 'login, password');
+			if(!$user) { return false; }
+
+			$back_url = $inUser->signInUser($user['login'], $user['password'], 1, 1);
+	
+			$inCore->redirect($back_url); exit;
+
         }
 
         // если авторизация не удалась, редиректим на сообщение об ошибке
         $inCore->redirect('/auth/error.html');  exit;
-
-    }
-    
-// ==================================================================== //
-
-    private function loginUser($user_id){
-
-        $inCore = cmsCore::getInstance();
-        $inDB   = cmsDatabase::getInstance();
-
-        if (isset($_SESSION['auth_back_url'])){
-            $back = $_SESSION['auth_back_url'];
-            $is_sess_back = true;
-            unset($_SESSION['auth_back_url']);
-        } else {
-            $is_sess_back = false;
-        }
-
-        $sql    = "SELECT *
-                   FROM cms_users
-                   WHERE id = '{$user_id}'";
-
-        $result = $inDB->query($sql);
-
-        if($inDB->num_rows($result)==1) {
-
-            $current_ip     = $_SERVER['REMOTE_ADDR'];
-            $user           = $inDB->fetch_assoc($result);
-
-            if (!cmsUser::isBanned($user['id'])) {
-
-                $_SESSION['user'] = cmsUser::createUser($user);
-
-                cmsCore::callEvent('USER_LOGIN', $_SESSION['user']);
-
-            } else {
-                $inDB->query("UPDATE cms_banlist SET ip = '$current_ip' WHERE user_id = ".$user['id']." AND status = 1");
-            }
-
-            $first_time_auth = ($user['logdate']=='0000-00-00 00:00:00' || intval($user['logdate']==0));
-
-            $inDB->query("UPDATE cms_users SET logdate = NOW(), last_ip = '$current_ip' WHERE id = ".$user['id']) ;
-
-            $cfg = $inCore->loadComponentConfig('registration');
-
-            if (!isset($cfg['auth_redirect']))          {  $cfg['auth_redirect'] = 'index';            }
-            if (!isset($cfg['first_auth_redirect']))    {  $cfg['first_auth_redirect'] = 'profile';    }
-
-            if (!$inCore->userIsAdmin($user['id']) && !$is_sess_back){
-                if ($first_time_auth) { $cfg['auth_redirect'] = $cfg['first_auth_redirect']; }
-                switch($cfg['auth_redirect']){
-                    case 'none': $url = $back; break;
-                    case 'index': $url = '/'; break;
-                    case 'profile': $url = cmsUser::getProfileURL($user['login']); break;
-                    case 'editprofile': $url = '/users/'.$user['id'].'/editprofile.html'; break;
-                }
-            } else { $url = $back; }
-
-            $inCore->redirect($url); exit;
-
-        }
-
-        return false;
 
     }
 

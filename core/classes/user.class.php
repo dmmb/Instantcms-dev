@@ -54,7 +54,7 @@ class cmsUser {
 
         if (!$user_id){
             $this->id       = 0;
-			$this->ip       = $_SERVER['REMOTE_ADDR'];
+			$this->ip       = $inCore->strClear($_SERVER['REMOTE_ADDR']);
             $this->is_admin = 0;
             $this->group_id = self::getGuestGroupId();
             return true;
@@ -105,7 +105,7 @@ class cmsUser {
 
         $info   = $inDB->fetch_assoc($result);
 
-        $info['ip']         = $_SERVER['REMOTE_ADDR'];
+        $info['ip'] = $inCore->strClear($_SERVER['REMOTE_ADDR']);
 
         return $info;
 
@@ -215,7 +215,7 @@ class cmsUser {
                 $userrow = $inDB->fetch_assoc($res);
                 $_SESSION['user'] = self::createUser($userrow);
                 cmsCore::callEvent('USER_LOGIN', $_SESSION['user']);
-                $inDB->query("UPDATE cms_users SET logdate = NOW() WHERE id = ".$_SESSION['user']['id']);
+                $inDB->query("UPDATE cms_users SET logdate = NOW() WHERE id = '{$_SESSION['user']['id']}'");
             } else {
                 $inCore->unsetCookie('user_id');
             }
@@ -1073,7 +1073,7 @@ class cmsUser {
      */
     public static function isBanned($user_id){
         $inDB = cmsDatabase::getInstance();
-        return (bool)$inDB->rows_count('cms_banlist', 'user_id='.$user_id.' AND status=1 LIMIT 1');
+        return (bool)$inDB->rows_count('cms_banlist', "user_id = '$user_id' AND status=1 LIMIT 1");
     }
 
 
@@ -1310,7 +1310,7 @@ class cmsUser {
                 if (!$user['email']) { continue; }
                 $user_letter = $letter;
                 $user_letter = str_replace('{sitename}', $inConf->sitename, $user_letter);
-                $user_letter = str_replace('{answerlink}', 'http://'.$_SERVER['HTTP_HOST'].$comment['target_link'], $user_letter);
+                $user_letter = str_replace('{answerlink}', HOST.$comment['target_link'], $user_letter);
                 $user_letter = str_replace('{pagetitle}', $comment['target_title'], $user_letter);
                 $user_letter = str_replace('{date}', $postdate, $user_letter);
                 $user_letter = str_replace('{author}', $comment['author'], $user_letter);
@@ -1437,7 +1437,7 @@ class cmsUser {
     public static function goToLogin(){
 
         $inCore = cmsCore::getInstance();
-        $_SESSION['auth_back_url'] = $_SERVER['REQUEST_URI'];
+		self::sessionPut('auth_back_url', $inCore->strClear($_SERVER['REQUEST_URI']));
 
         $inCore->redirect('/login');
 
@@ -1565,6 +1565,105 @@ class cmsUser {
 
     }
 
+    /**
+     * Авторизует пользователя
+     * возвращает url для редиректа
+     * @param str $login
+     * @param str $passw
+     * @param int $remember_pass
+     * @return srt $back_url 
+     */
+    public function signInUser($login = '', $passw = '', $remember_pass = 1, $pass_in_md5 = 0){
+
+		$default_back_url = '/auth/error.html';
+
+		if(!$login || !$passw) { return $default_back_url; }
+
+        $inDB   = cmsDatabase::getInstance();
+		$inCore = cmsCore::getInstance();
+
+		// Авторизация по логину или e-mail
+		if (!preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/i", $login)){
+			$where_login = "login = '{$login}'";
+		} else {
+			$where_login = "email = '{$login}'";
+		}
+		$where_pass = $pass_in_md5 ? "password = '$passw'" : "password = md5('$passw')";
+
+		// Проверяем пару логин + пароль
+		$sql    = "SELECT * 
+				   FROM cms_users
+				   WHERE $where_login AND $where_pass AND is_deleted = 0 AND is_locked = 0 LIMIT 1";
+		$result = $inDB->query($sql);
+		if($inDB->num_rows($result) != 1) { return $default_back_url; }
+
+		$user = $inDB->fetch_assoc($result);
+
+		// При наличии пользователя в банлисте - ошиибка авторизации
+		if (self::isBanned($user['id'])) {
+			$inDB->query("UPDATE cms_banlist SET ip = '{$this->ip}' WHERE user_id = '{$user['id']}' AND status = 1");
+			return $default_back_url;
+		}
+
+		$_SESSION['user'] = self::createUser($user);
+
+		cmsCore::callEvent('USER_LOGIN', $_SESSION['user']);
+
+		if ($remember_pass){
+			$cookie_code = md5($user['id'] . $user['password']);
+			$inCore->setCookie('userid', $cookie_code, time()+60*60*24*30);
+		}
+
+		$this->dropStatTimer();
+
+		// Флаг первой авторизации
+		$first_time_auth = !$user['is_logged_once'];
+		// обновляем дату последнего визита, ip
+		$inDB->query("UPDATE cms_users SET logdate = NOW(), last_ip = '{$this->ip}', is_logged_once = 1 WHERE id = '{$user['id']}'") ;
+		//////////////  юзер уже авторизован //////////////////////////
+
+		// Формируем url редиректа после авторизации
+		// Получаем настройки что делать после авторизации
+		$cfg = $inCore->loadComponentConfig('registration');
+		if (!isset($cfg['auth_redirect'])) { $cfg['auth_redirect'] = 'index'; }
+		if (!isset($cfg['first_auth_redirect'])) { $cfg['first_auth_redirect'] = 'profile'; }
+
+		// Получаем URL, предыдущий перед формой логина
+		$auth_back_url = cmsUser::sessionGet('auth_back_url');
+		$auth_back_url = $auth_back_url ? $auth_back_url : $inCore->getBackURL();
+		cmsUser::sessionDel('auth_back_url');
+
+		// Два типа авторизаций: админ, все остальные
+		// Администратор
+		if($_SESSION['user']['is_admin']){
+
+			// если авторизуемся в админке, редиректим туда
+			if($inCore->inRequest('is_admin')){
+				return '/admin/';
+			}
+
+			return $auth_back_url;
+
+		}
+		// Остальные пользователи
+		if($_SESSION['user']['id'] && !$_SESSION['user']['is_admin']){
+
+			if ($first_time_auth) { $cfg['auth_redirect'] = $cfg['first_auth_redirect']; }
+
+			switch($cfg['auth_redirect']){
+				case 'none':        $url = $auth_back_url; break;
+				case 'index':       $url = '/'; break;
+				case 'profile':     $url = cmsUser::getProfileURL($user['login']); break;
+				case 'editprofile': $url = '/users/'.$user['id'].'/editprofile.html'; break;
+			}
+
+			return $url;
+
+		}
+
+        return $default_back_url;
+
+    }
 // ============================================================================ //
 // ============================================================================ //
 

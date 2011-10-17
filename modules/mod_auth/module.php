@@ -21,12 +21,14 @@
 		$cfg = $inCore->loadModuleConfig($module_id);
 
 		if ($inUser->id){ return false; }
-		
+
+		cmsUser::sessionPut('auth_back_url', $inCore->getBackURL());
+
         $smarty = $inCore->initSmarty('modules', 'mod_auth.tpl');
         $smarty->assign('cfg', $cfg);
         $smarty->assign('LANG', $_LANG);
         $smarty->display('mod_auth.tpl');
-		
+
 		return true;
 	}
 ?>

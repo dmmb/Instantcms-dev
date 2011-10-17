@@ -323,24 +323,18 @@ function registration(){
 
     if ($do=='auth'){
 
-        if($inCore->inRequest('is_admin')){
-            $back = '/admin/';
-        } else {
-            $back = $inCore->getBackURL();
-        }
-
+		//====================//
+		//==  разлогивание  ==//
         if( $inCore->inRequest('logout') ) {
             $inCore->unsetCookie('userid');
 
             $user_id = $inUser->id;
             $sess_id = session_id();
 
-//            cmsUser::updateStats($user_id);
-
             cmsCore::callEvent('USER_LOGOUT', $user_id);
 
-            $inDB->query("UPDATE cms_users SET logdate = NOW() WHERE id = ".$user_id);
-            $inDB->query("DELETE FROM cms_online WHERE user_id = ".$user_id);
+            $inDB->query("UPDATE cms_users SET logdate = NOW() WHERE id = '$user_id'");
+            $inDB->query("DELETE FROM cms_online WHERE user_id = '$user_id'");
             $inDB->query("DELETE FROM cms_search WHERE session_id = '".$sess_id."'");
 
             session_destroy();
@@ -350,105 +344,40 @@ function registration(){
             $inCore->redirect('/');
         }
 
+		//====================//
+		//==  авторизаци€  ==//
         if( !$inCore->inRequest('logout') ) {
 
-                if ($inCore->inRequest('login')) { $login = $inCore->request('login', 'str'); }
-                if ($inCore->inRequest('pass')) { $passw = $inCore->request('pass', 'str'); }
+			$login = $inCore->request('login', 'str', '');
+			$passw = $inCore->request('pass', 'str', '');
+			$remember_pass = $inCore->inRequest('remember');
 
-                if (!$login && !$passw){
+			// если нет логина или парол€, показываем форму входа
+			if (!$login || !$passw){
 
-					if($inUser->id) { $inCore->redirect('/'); }
+				if($inUser->id && !$inUser->is_admin) { $inCore->redirect('/'); }
 
-                    $_SESSION['back_url'] = $inCore->getBackURL();
+				$inPage->setTitle($_LANG['SITE_LOGIN']);
+				$inPage->addPathway($_LANG['SITE_LOGIN']);
 
-                    $inPage->setTitle($_LANG['SITE_LOGIN']);
-                    $inPage->addPathway($_LANG['SITE_LOGIN']);
+				$auth_back_url = cmsUser::sessionGet('auth_back_url');
 
-                    $smarty = $inCore->initSmarty('components', 'com_registration_login.tpl');
-                    $smarty->assign('cfg', $cfg);
-                    $smarty->assign('is_sess_back', isset($_SESSION['auth_back_url']));
-                    $smarty->display('com_registration_login.tpl');
-                    return;
+				$smarty = $inCore->initSmarty('components', 'com_registration_login.tpl');
+				$smarty->assign('cfg', $cfg);
+				$smarty->assign('is_sess_back', $auth_back_url);
+				$smarty->display('com_registration_login.tpl');
 
-                }
+				cmsUser::sessionPut('auth_back_url', $inCore->getBackURL());
 
-                $remember_pass = $inCore->inRequest('remember');
+				return;
 
-                if (!preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/i", $login)){
-                    $where_login = "login = '{$login}'";
-                } else {
-                    $where_login = "email = '{$login}'";
-                }
+			}
 
-                $sql    = "SELECT * 
-                           FROM cms_users
-                           WHERE $where_login AND password = md5('$passw') AND is_deleted = 0 AND is_locked = 0";
-                $result = $inDB->query($sql);
+			$back_url = $inUser->signInUser($login, $passw, $remember_pass);
 
-                if($inDB->num_rows($result)==1) {
-                    $current_ip     = $_SERVER['REMOTE_ADDR'];
-                    $user           = $inDB->fetch_assoc($result);
+			$inCore->redirect($back_url);
 
-                    if (!cmsUser::isBanned($user['id'])) {
-
-                        $_SESSION['user'] = cmsUser::createUser($user);
-                        
-                        cmsCore::callEvent('USER_LOGIN', $_SESSION['user']);
-
-                        if ($remember_pass){
-                            $cookie_code = md5($user['id'] . $user['password']);
-                            $inCore->setCookie('userid', $cookie_code, time()+60*60*24*30);
-                        }
-                        
-                    } else {
-                        $inDB->query("UPDATE cms_banlist SET ip = '$current_ip' WHERE user_id = ".$user['id']." AND status = 1");
-                    }
-
-                    $inUser->dropStatTimer();
-
-                    $first_time_auth = !$user['is_logged_once'];
-
-                    $inDB->query("UPDATE cms_users SET logdate = NOW(), last_ip = '$current_ip', is_logged_once = 1 WHERE id = ".$user['id']) ;
-
-                    $cfg = $inCore->loadComponentConfig('registration');
-                    if (!isset($cfg['auth_redirect']))          {  $cfg['auth_redirect'] = 'index';            }
-                    if (!isset($cfg['first_auth_redirect']))    {  $cfg['first_auth_redirect'] = 'profile';    }
-
-                    if ($_SESSION['auth_back_url']){
-                        $back = $_SESSION['auth_back_url'];
-                        $is_sess_back = true;
-                        unset($_SESSION['auth_back_url']);
-                    } else {
-                        $is_sess_back = false;
-                        $back = $inCore->getBackURL();
-                    }
-
-                    if (!$inCore->userIsAdmin($user['id'])){
-                        if (!$is_sess_back){
-                            if ($first_time_auth) { $cfg['auth_redirect'] = $cfg['first_auth_redirect']; }
-                            switch($cfg['auth_redirect']){
-                                case 'none': $url = $back; break;
-                                case 'index': $url = '/'; break;
-                                case 'profile': $url = cmsUser::getProfileURL($user['login']); break;
-                                case 'editprofile': $url = '/users/'.$user['id'].'/editprofile.html'; break;
-                            }
-                        } else {
-                            $url = $back;
-                        }
-                    } else {
-                        $admin_back = strstr($back, '/admin/login.php') ? '/admin' : $back;
-                        $url = isset($_SESSION['back_url']) ? $_SESSION['back_url'] : $admin_back;
-                        if (isset($_SESSION['back_url'])) unset($_SESSION['back_url']);
-                    }
-
-                    //–едиректим назад
-                    $inCore->redirect($url);
-
-                } else {
-                    $inCore->redirect('/auth/error.html');
-                }
-
-            }
+		}
 
     }
 
