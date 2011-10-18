@@ -318,19 +318,30 @@ class cms_model_catalog{
 /* ==================================================================================================== */
 
     public function copyCategory($id, $copies){
+
+		$inCore = cmsCore::getInstance();
+		$ns = $inCore->nestedSetsInit('cms_uc_cats');
+
+		// Данные категории для копирования
+		$item = $this->inDB->get_fields('cms_uc_cats', "id = '$id'", 'parent_id, title, description, published, fieldsstruct, view_type, fields_show, showmore, perpage, showtags, showsort,	is_ratings,	orderby, orderto, showabc, shownew, newint,	filters, is_shop, is_public, can_edit, cost');
+		if(!$item) { return false; }
+
+		// Получаем родительскую категорию
+		$rootid = $this->inDB->get_field('cms_uc_cats', "id = '{$item['parent_id']}'", 'id');
+		if(!$rootid) { return false; }
+
         cmsCore::callEvent('COPY_CATALOG_CAT', $id);
-        $sql = "SELECT * FROM cms_uc_cats WHERE id = $id";
-        $rs = $this->inDB->query($sql) ;
-        if ($this->inDB->num_rows($rs)==1){
-            $item = mysql_fetch_row($rs);
-            for($c=1; $c<=$copies; $c++){
-                $sql = "INSERT INTO cms_uc_cats VALUES (";
-                foreach($item as $key=>$value){
-                    if ($key>0){ $sql .= "'$value'"; } else { $sql .= "''"; }
-                    if ($key<sizeof($item)-1){ $sql .= ", "; } else { $sql .= ')'; }
-                }
-                $this->inDB->query($sql);
-            }
+
+		for($c=1; $c<=$copies; $c++){
+
+			$cat_id = $ns->AddNode($rootid);
+			$set = '';
+			foreach($item as $field=>$value){
+				$set .= "{$field} = '{$this->inDB->escape_string($value)}',";
+			}
+			$set = rtrim($set, ',');
+			$this->inDB->query("UPDATE cms_uc_cats SET {$set} WHERE id = '{$cat_id}' LIMIT 1");
+
         }
     }
 

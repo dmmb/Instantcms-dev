@@ -539,8 +539,9 @@ function cpPriceInput($id){
         if ($inCore->request('copy_parent_struct')){
             $cat['fields'] = $inDB->get_field('cms_uc_cats', "id={$cat['parent_id']}", 'fieldsstruct');
         } else {
-            $fstruct               = $_REQUEST['fstruct'];
+            $fstruct = $_REQUEST['fstruct'];
             foreach ($fstruct as $key=>$value) {
+				$value = trim($value);
     			if ($value=='') { unset($fstruct[$key]); }
         		else {
 					if ($_REQUEST['fformat'][$key]=='html') { $fstruct[$key] .= '/~h~/'; }
@@ -550,6 +551,8 @@ function cpPriceInput($id){
             }
             $cat['fields'] = serialize($fstruct);
         }
+
+		$cat['fields'] = $inDB->escape_string($cat['fields']);
 
         $cat['is_public']   = $inCore->request('is_public', 'int', 0);
         $cat['can_edit']    = $inCore->request('can_edit', 'int', 0);
@@ -621,8 +624,9 @@ function cpPriceInput($id){
                      }
                 }
                 $cat['fields'] = serialize($fstruct);
-				$cat['fields'] = $inDB->escape_string($cat['fields']);
             }
+
+			$cat['fields'] = $inDB->escape_string($cat['fields']);
 
             $cat['is_public'] = $inCore->request('is_public', 'int', 0);
             $cat['can_edit']  = $inCore->request('can_edit', 'int', 0);
