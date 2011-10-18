@@ -132,33 +132,6 @@
     }
 // ========================================================================== //
 // ========================================================================== //
-//    if ($inDB->isFieldExists('cms_comments', 'is_hidden')){
-//		// комменты для блогов
-//        $sql = "SELECT b.* , u.id AS uid, u.nickname AS author, u.login as author_login, 
-//                       b.rating AS points
-//                FROM cms_blogs b
-//                LEFT JOIN cms_blog_posts p ON p.blog_id = b.id ";
-//	
-//		$result = $inDB->query($sql);
-//	
-//		if ($inDB->num_rows($result)){
-//			while($mod = $inDB->fetch_assoc($result)){
-//				if($mod['allow_group'] != -1) {
-//	
-//					$access_list[]  = $mod['allow_group'];
-//					$access_list_ya = $inCore->arrayToYaml($access_list);
-//					$inDB->query("UPDATE cms_menu SET `access_list` = '{$access_list_ya}' WHERE id = '{$mod['id']}'");
-//					unset ($access_list);
-//	
-//				}
-//			}
-//		}
-//
-//
-//		$is_was_migrate = true;
-//    }
-// ========================================================================== //
-// ========================================================================== //
 	if ($is_was_migrate) {
 	    echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Миграция завершена. Удалите папку /migrate/ прежде чем продолжить!</div>';
 	} else {

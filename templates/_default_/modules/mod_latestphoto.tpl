@@ -7,7 +7,7 @@
                 <td align="center" valign="middle" class="mod_lp_photo" width="">
 				<table width="100%" height="100" cellspacing="0" cellpadding="0">
 				{if $cfg.showtype == 'full'}
-					<tr><td align="center"><div class="mod_lp_titlelink"><a href="/photos/photo{$con.id}.html" title="{$con.title|escape:'html'}">{$con.title}</a></div></td></tr>
+					<tr><td align="center"><div class="mod_lp_titlelink"><a href="/photos/photo{$con.id}.html" title="{$con.title|escape:'html'}">{$con.title|truncate:18}</a></div></td></tr>
 				{/if}
 				<tr>
 					  <td valign="middle" align="center">
@@ -19,7 +19,7 @@
 					<tr>
 					<td align="center">
 						{if $cfg.showalbum}
-							<div class="mod_lp_albumlink"><a href="/photos/{$con.album_id}" title="{$con.album|escape:'html'}">{$con.album}</a></div>
+							<div class="mod_lp_albumlink"><a href="/photos/{$con.album_id}" title="{$con.album|escape:'html'}">{$con.album|truncate:18}</a></div>
 						{/if}
 						{if $cfg.showcom || $cfg.showdate}
 							<div class="mod_lp_details">

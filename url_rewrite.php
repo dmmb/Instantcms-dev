@@ -61,18 +61,6 @@
                             'action'  => 'rewrite'
                          );
 
-        $rules[] = array(
-                            'source'  => '/^go\/url=(.+)$/i',
-                            'target'  => 'files/go/{1}',
-                            'action'  => 'rewrite'
-                         );
-
-        $rules[] = array(
-                            'source'  => '/^load\/url=(.+)$/i',
-                            'target'  => 'files/load/{1}',
-                            'action'  => 'rewrite'
-                         );
-
         //
         // Регистрация / Активация
         //

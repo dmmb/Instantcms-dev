@@ -97,7 +97,7 @@ class cmsFormGen {
         $this->xml->module->title = iconv('utf-8', 'cp1251', $this->xml->module->title);
 
         foreach($this->params as $key=>$param){
-            $this->params[$key]['title']    = iconv('utf-8', 'cp1251', $param['title']);
+            $this->params[$key]['title'] = iconv('utf-8', 'cp1251', $param['title']);
         }
 
         ob_start();
@@ -154,6 +154,7 @@ class cmsFormGen {
         $name   = (string)$param['name'];
         $value  = (string)$param['value'];
         $units  = isset($param['units']) ? (string)$param['units'] : '';
+		$units  = iconv('utf-8', 'cp1251', $units);
 
         return '<input type="text" id="'.$name.'" name="'.$name.'" value="'.$value.'" class="param-number" /> '. $units;
 
@@ -178,7 +179,7 @@ class cmsFormGen {
         $html = '<input type="checkbox" '.($value==1 ? 'checked="checked"' : '').' onclick="$(\'#'.$name.'\').val(1-$(\'#'.$name.'\').val())" />' . "\n" .
                 '<input type="hidden" id="'.$name.'" name="'.$name.'" value="'.$value.'" />';
 
-        return iconv('cp1251', 'utf-8', $html);
+        return $html;
 
     }
 
@@ -201,7 +202,7 @@ class cmsFormGen {
 
         $html .= '</select>' . "\n";
 
-        return $html;
+        return iconv('utf-8', 'cp1251', $html);
         
         
     }
@@ -296,7 +297,7 @@ class cmsFormGen {
 
         }
 
-        return $html;
+        return iconv('utf-8', 'cp1251', $html);
 
     }
 

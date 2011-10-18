@@ -1465,7 +1465,7 @@ class cmsCore {
 
         $folder = rtrim($uri, '/');
 
-        if (strstr($uri, "?") && !preg_match('/^admin\/(.*)/i', $uri)){
+        if (strstr($uri, "?") && !preg_match('/^admin\/(.*)/i', $uri) && !strstr($uri, 'go/url=')){
             $query_str = substr($uri, strpos($uri, "?")+1);
             $uri = substr($uri, 0, strpos($uri, "?"));
             parse_str($query_str, $_REQUEST);
