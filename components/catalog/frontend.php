@@ -357,7 +357,7 @@ function catalog(){
             $do = 'cat';
         } else {
             //show search form
-            $sql = "SELECT * FROM cms_uc_cats WHERE id = $id";
+            $sql = "SELECT * FROM cms_uc_cats WHERE id = '$id'";
             $result = $inDB->query($sql) ;
 
             if ($inDB->num_rows($result)==1){
@@ -378,7 +378,7 @@ function catalog(){
                     if (strstr($value, '/~m~/')) {
                         $value = str_replace('/~m~/', '', $value);
                     }
-                    $fstruct_ready[$key] = $value;
+                    $fstruct_ready[stripslashes($key)] = stripslashes($value);
                 }
 
                 $inPage->backButton(false);
@@ -502,8 +502,8 @@ function catalog(){
                         GROUP BY i.id";
             } else {
                 $sql = $findsql;
-                if (!$advsearch){ $inPage->addPathway(ucfirst($query), $_SERVER['REQUEST_URI']); } else
-                { $inPage->addPathway($_LANG['SEARCH_RESULT'], $_SERVER['REQUEST_URI']); }
+                if (!$advsearch){ $inPage->addPathway(ucfirst($query)); } else
+                { $inPage->addPathway($_LANG['SEARCH_RESULT']); }
             }
 
             //ordering
@@ -609,7 +609,7 @@ function catalog(){
                                     if (isset($query)) { if (@strstr($query, $fdata[$key]) || @strstr($fdata[$key], $query)) { $field .= '<span class="uc_findsame"> &larr; <i>'.$_LANG['MATCHE'].'</i></span>';} }
                                     $fields_show++;
 
-                                    $item['fields'][$value] = $field;
+                                    $item['fields'][stripslashes($value)] = stripslashes($field);
 
                                 }
 
@@ -653,7 +653,7 @@ function catalog(){
     //////////////////////////// VIEW ITEM DETAILS ///////////////////////////////////////////////////////////////////////
     if ($do == 'item'){
         $id = $inCore->request('id', 'int');
-        $sql = "SELECT * FROM cms_uc_items WHERE id = $id";
+        $sql = "SELECT * FROM cms_uc_items WHERE id = '$id'";
         $itemres = $inDB->query($sql) ;
 
         $inPage->addHeadJS('includes/jquery/lightbox/js/jquery.lightbox.js');
@@ -673,7 +673,7 @@ function catalog(){
 
             $ratingdata = ratingData($id);
 
-            $sql = "SELECT * FROM cms_uc_cats WHERE id = ".$item['category_id'];
+            $sql = "SELECT * FROM cms_uc_cats WHERE id = '{$item['category_id']}'";
             $catres = $inDB->query($sql) ;
             $cat = $inDB->fetch_assoc($catres);
             $fstruct = unserialize($cat['fieldsstruct']);
@@ -697,11 +697,11 @@ function catalog(){
             if ($cat['view_type']=='shop'){
 
 				$shopCartLink=shopCartLink();
-				
+
             }
 
             //update hits
-            $inDB->query("UPDATE cms_uc_items SET hits = hits + 1 WHERE id = ".$id) ;
+            $inDB->query("UPDATE cms_uc_items SET hits = hits + 1 WHERE id = '$id'") ;
 
             //print item details
 
@@ -734,12 +734,12 @@ function catalog(){
                                         $filters = $inCore->getFilters();
                                         if ($filters){
                                             foreach($filters as $id=>$_data){
-                                                require_once $_SERVER['DOCUMENT_ROOT'].'/filters/'.$_data['link'].'/filter.php';
+                                                require_once PATH.'/filters/'.$_data['link'].'/filter.php';
                                                 $_data['link']($field);
                                             }
                                         }
                                     }
-                                     $field =  str_replace('\"', '"', $field);
+                                     $field =  stripslashes($field);
                                 }
                             } else {
                                 if ($makelink) {
@@ -748,7 +748,7 @@ function catalog(){
                             }
                             
                         }
-						$fields[$value] = $field;
+						$fields[stripslashes($value)] = stripslashes($field);
                     }
                 }
             }
@@ -758,7 +758,7 @@ function catalog(){
             }
 			
 			
-                $user = $inDB->get_fields('cms_users', "id={$item['user_id']}", 'login, nickname');
+                $user = $inDB->get_fields('cms_users', "id='{$item['user_id']}'", 'login, nickname');
                 $getProfileLink = cmsUser::getProfileLink($user['login'], $user['nickname']);
 
             if ($cat['is_ratings']){
@@ -798,7 +798,7 @@ function catalog(){
     ///////////////////////// ADD TO CART /////////////////////////////////////////////////////////////////////////////
     if ($do == 'addcart'){
         shopAddToCart($id, 1);
-        header('location:/catalog/viewcart.html');
+		$inCore->redirect('/catalog/viewcart.html');
     }
     ///////////////////////// VIEW CART /////////////////////////////////////////////////////////////////////////////
     if ($do == 'viewcart'){
@@ -808,12 +808,12 @@ function catalog(){
     ///////////////////////// DELETE FROM CART /////////////////////////////////////////////////////////////////////////////
     if ($do == 'cartremove'){
         shopRemoveFromCart($id);
-        header('location:'.$_SERVER['HTTP_REFERER']);
+		$inCore->redirectBack();
     }
     ///////////////////////// CLEAR CART /////////////////////////////////////////////////////////////////////////////
     if ($do == 'clearcart'){
         shopClearCart();
-        header('location:'.$_SERVER['HTTP_REFERER']);
+        $inCore->redirectBack();
     }
     ///////////////////////// CLEAR CART /////////////////////////////////////////////////////////////////////////////
     if ($do == 'savecart'){
@@ -821,7 +821,7 @@ function catalog(){
         if (is_array($itemcounts)){
             shopUpdateCart($itemcounts);
         }
-        header('location:'.$_SERVER['HTTP_REFERER']);
+        $inCore->redirectBack();
     }
     ///////////////////////// ORDER //////////////////////////////////////////////////////////////////////////////////
     if ($do == 'order'){
@@ -839,7 +839,7 @@ function catalog(){
     if ($do == 'add_item' || $do == 'edit_item'){
 
         $cat_id     = $inCore->request('cat_id', 'int');
-        $cat        = $inDB->get_fields('cms_uc_cats', 'id='.$cat_id, '*');
+        $cat        = $inDB->get_fields('cms_uc_cats', "id='$cat_id'", '*');
 
         if (!$cat){ cmsCore::error404(); }
 
@@ -879,7 +879,7 @@ function catalog(){
             $inPage->addPathway($_LANG['EDIT_ITEM']);
 
             $item_id        = $inCore->request('item_id', 'int', 0);
-            $item           = $inDB->get_fields('cms_uc_items', 'id='.$item_id, '*');
+            $item           = $inDB->get_fields('cms_uc_items', "id='$item_id'", '*');
 
             if (!$item) { $inCore->halt(); }
 
@@ -908,7 +908,7 @@ function catalog(){
             $next['makelink']   = $makelink;
 
             if ($fdata[$f_id]){
-                $next['value']  = str_replace('\"', '"', $fdata[$f_id]);
+                $next['value']  = stripslashes($fdata[$f_id]);
             } else {
                 $next['value']  = '';
             }
@@ -939,7 +939,7 @@ function catalog(){
 
         $opt        = $inCore->request('opt', 'str', 'add');
         $cat_id     = $inCore->request('cat_id', 'int');
-        $cat        = $inDB->get_fields('cms_uc_cats', 'id='.$cat_id, '*');
+        $cat        = $inDB->get_fields('cms_uc_cats', "id='$cat_id'", '*');
         $item_id    = $inCore->request('item_id', 'int');
 
         if ($opt == 'add'){
@@ -949,7 +949,7 @@ function catalog(){
         }
 
         if ($opt == 'edit'){
-            $item = $inDB->get_fields('cms_uc_items', "id={$item_id}", '*');
+            $item = $inDB->get_fields('cms_uc_items', "id='{$item_id}'", '*');
             $is_cat_access  = $model->checkCategoryAccess($cat['id'], $cat['is_public'], $inUser->group_id);
             $is_can_edit    = ($cat['can_edit'] && $is_cat_access && ($inUser->id == $item['user_id'])) || $inUser->is_admin;
             if (!$is_can_edit){ $inCore->halt(); }
@@ -967,11 +967,13 @@ function catalog(){
         $item['on_moderate']    = ($cfg['premod']&&!$inUser->is_admin ? 1 : 0);
 
         $item['fdata']          = $_POST['fdata'];
-        foreach($item['fdata'] as $key=>$value) { $item['fdata'][$key] = trim($value); }
+        foreach($item['fdata'] as $key=>$value) {
+			$item['fdata'][$key] = trim($inCore->badTagClear($value));
+		}
 
         $item['is_comments']    = $cfg['is_comments'];
-        $item['meta_desc']      = $item['title'];
-        $item['meta_keys']      = $item['title'];
+        $item['meta_desc']      = $item['meta_desc'] ? $item['meta_desc'] : $item['title'];
+        $item['meta_keys']      = $item['meta_keys'] ? $item['meta_keys'] : $item['title'];
         $item['tags']           = $inCore->request('tags', 'str');
 
         $item['pubdate']        = date('Y-m-d H:i');
@@ -998,9 +1000,9 @@ function catalog(){
 
         if ($inCore->request('delete_img', 'int', 0)){
             
-            @unlink($_SERVER['DOCUMENT_ROOT']."/images/catalog/".$item['imageurl']);
-            @unlink($_SERVER['DOCUMENT_ROOT']."/images/catalog/small/".$item['imageurl'].".jpg");
-            @unlink($_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/".$item['imageurl'].".jpg");
+            @unlink(PATH."/images/catalog/".$item['imageurl']);
+            @unlink(PATH."/images/catalog/small/".$item['imageurl'].".jpg");
+            @unlink(PATH."/images/catalog/medium/".$item['imageurl'].".jpg");
 
             $item['file'] = '';
             $item['imageurl'] = '';
@@ -1016,18 +1018,18 @@ function catalog(){
                 $file           = md5($file.time()).'.'.$ext;
                 $item['file']   = $file;
                 //upload image and insert record in db
-                if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/catalog/$file")){
+                if (@move_uploaded_file($tmp_name, PATH."/images/catalog/$file")){
                     if ($item['imageurl']) {
-                        @unlink($_SERVER['DOCUMENT_ROOT']."/images/catalog/".$item['imageurl']);
-                        @unlink($_SERVER['DOCUMENT_ROOT']."/images/catalog/small/".$item['imageurl'].".jpg");
-                        @unlink($_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/".$item['imageurl'].".jpg");
+                        @unlink(PATH."/images/catalog/".$item['imageurl']);
+                        @unlink(PATH."/images/catalog/small/".$item['imageurl'].".jpg");
+                        @unlink(PATH."/images/catalog/medium/".$item['imageurl'].".jpg");
                     }
-					if ( $cfg['watermark'] ) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file"); }
-                    @img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", $_SERVER['DOCUMENT_ROOT']."/images/catalog/small/$file.jpg", 100, 100);
-                    @img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", $_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$file.jpg", 250, 250);
-                    @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", 0744);
-                    @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/small/$file.jpg", 0644);
-                    @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$file.jpg", 0644);
+					if ( $cfg['watermark'] ) { @img_add_watermark(PATH."/images/catalog/$file"); }
+                    @img_resize(PATH."/images/catalog/$file", PATH."/images/catalog/small/$file.jpg", 100, 100);
+                    @img_resize(PATH."/images/catalog/$file", PATH."/images/catalog/medium/$file.jpg", 250, 250);
+                    @chmod(PATH."/images/catalog/$file", 0744);
+                    @chmod(PATH."/images/catalog/small/$file.jpg", 0644);
+                    @chmod(PATH."/images/catalog/medium/$file.jpg", 0644);
                 }
             }
 

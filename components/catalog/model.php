@@ -47,17 +47,17 @@ class cms_model_catalog{
         $inCore = cmsCore::getInstance();
         $imageurl = $this->getItemImageUrl($id);
 
-        @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", 0777);
-        @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/small/$file.jpg", 0777);
-        @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$file.jpg", 0777);
+        @chmod(PATH."/images/catalog/$file", 0777);
+        @chmod(PATH."/images/catalog/small/$file.jpg", 0777);
+        @chmod(PATH."/images/catalog/medium/$file.jpg", 0777);
 
-        @unlink($_SERVER['DOCUMENT_ROOT'].'/images/catalog/'.$imageurl);
-        @unlink($_SERVER['DOCUMENT_ROOT'].'/images/catalog/small/'.$imageurl.'.jpg');
-        @unlink($_SERVER['DOCUMENT_ROOT'].'/images/catalog/medium/'.$imageurl.'.jpg');
+        @unlink(PATH.'/images/catalog/'.$imageurl);
+        @unlink(PATH.'/images/catalog/small/'.$imageurl.'.jpg');
+        @unlink(PATH.'/images/catalog/medium/'.$imageurl.'.jpg');
         
-        $this->inDB->query("DELETE FROM cms_uc_items WHERE id={$id}");
-        $this->inDB->query("DELETE FROM cms_tags WHERE target='catalog' AND item_id = {$id}");
-        $this->inDB->query("DELETE FROM cms_uc_ratings WHERE item_id = {$id}");
+        $this->inDB->query("DELETE FROM cms_uc_items WHERE id= '{$id}'");
+        $this->inDB->query("DELETE FROM cms_tags WHERE target='catalog' AND item_id = '{$id}'");
+        $this->inDB->query("DELETE FROM cms_uc_ratings WHERE item_id = '{$id}'");
 		
 		cmsActions::removeObjectLog('add_catalog', $id);
 		
@@ -148,7 +148,7 @@ class cms_model_catalog{
 	public function copyItem($id, $copies){
         cmsCore::callEvent('COPY_CATALOG_ITEM', $id);
 
-        $sql = "SELECT * FROM cms_uc_items WHERE id = $id";
+        $sql = "SELECT * FROM cms_uc_items WHERE id = '$id'";
         $rs = $this->inDB->query($sql);
         if ($this->inDB->num_rows($rs)==1){
             $item = mysql_fetch_row($rs);
@@ -162,7 +162,7 @@ class cms_model_catalog{
                 $this->inDB->query($sql);
                 //COPY ITEM TAGS
                 $id = dbLastId('cms_uc_items');
-                $sql = "SELECT * FROM cms_tags WHERE target='catalog' AND item_id=".$item_id;
+                $sql = "SELECT * FROM cms_tags WHERE target='catalog' AND item_id='$item_id'";
                 $rst = $this->inDB->query($sql);
                 if ($this->inDB->num_rows($rst)){
                     while ($itag = $this->inDB->fetch_assoc($rst)){
@@ -216,8 +216,8 @@ class cms_model_catalog{
 	public function deleteCategory($id){
         $inCore = cmsCore::getInstance();
         cmsCore::callEvent('DELETE_CATALOG_CAT', $id);
-        $sql = "SELECT id FROM cms_uc_items WHERE category_id = $id";
-        $result = dbQuery($sql) ;
+        $sql = "SELECT id FROM cms_uc_items WHERE category_id = '$id'";
+        $result = $this->inDB->query($sql) ;
         if ($this->inDB->num_rows($result)){
             while($item = $this->inDB->fetch_assoc($result)){
                 $this->deleteItem($item['id']);
@@ -232,12 +232,20 @@ class cms_model_catalog{
 /* ==================================================================================================== */
 
 	public function updateCategory($id, $cat){
+
+		$old = $this->inDB->get_fields('cms_uc_cats', "id='$id'", 'parent_id, NSLevel');
+		if(!$old) { return false; }
+
         $inCore = cmsCore::getInstance();
         
         $cat = cmsCore::callEvent('UPDATE_CATALOG_CAT', $cat);
 
         $ns = $inCore->nestedSetsInit('cms_uc_cats');
-        $ns->MoveNode($id, $cat['parent_id']);
+		if($cat['parent_id'] != $old['parent_id'] && $cat['parent_id'] != $id){
+        	$ns->MoveNode($id, $cat['parent_id']);
+		}
+
+		$cat['parent_id'] == $id ? $cat['parent_id'] = $old['parent_id'] : '';
 
         $sql = "UPDATE cms_uc_cats
                 SET parent_id = '{$cat['parent_id']}',
@@ -261,7 +269,7 @@ class cms_model_catalog{
                     is_public = '{$cat['is_public']}',
                     can_edit = '{$cat['can_edit']}',
                     cost = '{$cat['cost']}'
-                WHERE id = $id
+                WHERE id = '$id'
                 LIMIT 1";
         $this->inDB->query($sql);
     }

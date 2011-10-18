@@ -612,6 +612,7 @@ function cpPriceInput($id){
             } else {
                 $fstruct = $_REQUEST['fstruct'];
                 foreach ($fstruct as $key=>$value) {
+					$value = trim($value);
                     if ($value=='') { unset($fstruct[$key]); }
                     else {
                         if ($_REQUEST['fformat'][$key]=='html') { $fstruct[$key] .= '/~h~/'; }
@@ -620,6 +621,7 @@ function cpPriceInput($id){
                      }
                 }
                 $cat['fields'] = serialize($fstruct);
+				$cat['fields'] = $inDB->escape_string($cat['fields']);
             }
 
             $cat['is_public'] = $inCore->request('is_public', 'int', 0);
@@ -958,11 +960,11 @@ function cpPriceInput($id){
                         </div>
                         <div>
                             <?php if ($ftype=='link' || $ftype == 'text') { ?>
-                                <input style="width:99%" name="fdata[<?php echo $key?>]" type="text" id="fdata[]" <?php if (@$fdata) { echo 'value="'.strip_tags($fdata[$key]).'"';} ?>/>
+                                <input style="width:99%" name="fdata[<?php echo $key?>]" type="text" id="fdata[]" <?php if (@$fdata) { echo 'value="'.htmlspecialchars(strip_tags(stripslashes($fdata[$key]))).'"';} ?>/>
                             <?php } else { ?>
                                     <?php
-                                        if (@$fdata[$key]) { $fdata[$key] = str_replace('\"', '"', $fdata[$key]); }
-                                        $inCore->insertEditor('fdata['.$key.']', $fdata[$key], '220', '100%');
+                                        if (@$fdata[$key]) { $fdata[$key] = stripslashes($fdata[$key]); }
+                                        $inCore->insertEditor('fdata['.$key.']', stripslashes($fdata[$key]), '220', '100%');
                                     ?>
                             <?php } ?>
                         </div>
@@ -1187,7 +1189,7 @@ function cpPriceInput($id){
                                         </select>
                                     </td>
                                     <td style="padding-bottom:4px">
-                                        <input name="fstruct[]" class="field" type="text" id="fstruct[]" style="width:99%" <?php if (@$fstruct[$f]) { echo 'value="'.$fstruct[$f].'"'; }?> />
+                                        <input name="fstruct[]" class="field" type="text" id="fstruct[]" style="width:99%" <?php if (@$fstruct[$f]) { echo 'value="'.htmlspecialchars(stripslashes($fstruct[$f])).'"'; }?> />
                                     </td>
                                     <td width="80" align="right" style="padding-bottom:2px">
                                         <strong>Автопоиск:</strong>
@@ -1559,15 +1561,13 @@ function cpPriceInput($id){
 	if($opt=='saveconfig'){	
 		$cfg = array();
 		$cfg['email']       = $inCore->request('email', 'str', '');
-		$cfg['delivery']    = $inCore->request('delivery', 'html', '');
+		$cfg['delivery']    = $inCore->request('delivery', 'str', '');
         $cfg['notice']      = $inCore->request('notice', 'int', 0);
         $cfg['premod']      = $inCore->request('premod', 'int', 1);
         $cfg['premod_msg']  = $inCore->request('premod_msg', 'int', 1);
         $cfg['is_comments'] = $inCore->request('is_comments', 'int', 0);
         $cfg['is_rss']      = $inCore->request('is_rss', 'int', 1);
 		$cfg['watermark']   = $inCore->request('watermark', 'int', 1);
-		$cfg['delivery']    = str_replace('\"', '&quot;', $cfg['delivery']);
-		$cfg['delivery']    = str_replace('"', '&quot;', $cfg['delivery']);
 		
         $inCore->saveComponentConfig('catalog', $cfg);
 
@@ -1588,8 +1588,6 @@ function cpPriceInput($id){
         if (!isset($cfg['is_rss'])) { $cfg['is_rss'] = 1; }
 		
 		cpAddPathway('Настройки', $_SERVER['REQUEST_URI']);
-		
-		$cfg['delivery'] = str_replace('&quot;', '"', $cfg['delivery']);
 			
          ?>
          <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
