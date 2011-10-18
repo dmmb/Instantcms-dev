@@ -860,6 +860,7 @@ if ($do=='avatar'){
 		$realfile		= $_FILES['picture']['name'];
 		$path_parts     = pathinfo($realfile);
 		$ext            = strtolower($path_parts['extension']);
+		$realfile		= md5($realfile. '-' . time()).'.'.$ext;
 
 		if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'bmp' || $ext == 'png'){
 
@@ -937,117 +938,112 @@ if ($do=='avatar'){
 /////////////////////////////// AVATAR LIBRARY /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='select_avatar'){
 
-	if (usrCheckAuth() && $inUser->id==$id){
+	if (!$inUser->id || ($inUser->id && $inUser->id != $id)){ cmsCore::error404(); }
 
-        $avatars_dir        = PATH."/images/users/avatars/library";
-        $avatars_dir_rel    = "/images/users/avatars/library";
+	$avatars_dir        = PATH."/images/users/avatars/library";
+	$avatars_dir_rel    = "/images/users/avatars/library";
 
-        //get avatars list from library directory
-        $avatars_dir_handle = opendir($avatars_dir);
-        $avatars            = array();
+	//get avatars list from library directory
+	$avatars_dir_handle = opendir($avatars_dir);
+	$avatars            = array();
+	
+	while ($nextfile = readdir($avatars_dir_handle)){
+		if(($nextfile!='.')&&($nextfile!='..')&&( strstr($nextfile, '.gif') || strstr($nextfile, '.jpg') || strstr($nextfile, '.jpeg') || strstr($nextfile, '.png')  ) ){
+			$avatars[] = $nextfile;
+		}
+	}
+	
+	closedir($avatars_dir_handle);
 
-        while ($nextfile = readdir($avatars_dir_handle))
-        {
-            if(($nextfile!='.')&&($nextfile!='..')&&( strstr($nextfile, '.gif') || strstr($nextfile, '.jpg') || strstr($nextfile, '.jpeg') || strstr($nextfile, '.png')  ) )
-            {
-                $avatars[] = $nextfile;
-            }
-        }
+	if (!$inCore->inRequest('set_avatar')){
 
-        closedir($avatars_dir_handle);
+		//SHOW AVATARS LIST
+		$inPage->setTitle($_LANG['SELECT_AVATAR']);
+		$inPage->addPathway($inUser->nickname, cmsUser::getProfileURL($inUser->login));
+		$inPage->addPathway($_LANG['SELECT_AVATAR']);
 
-        if (!$inCore->inRequest('set_avatar')){
+		//paging
+		$maxcols = 4;
+		$page    = $inCore->request('page', 'int', 1);
+		$perpage = 20;
 
-            //SHOW AVATARS LIST
-            $inPage->setTitle($_LANG['SELECT_AVATAR']);
-			$inPage->addPathway($inUser->nickname, cmsUser::getProfileURL($inUser->login));
-			$inPage->addPathway($_LANG['SELECT_AVATAR']);
+		//slice only current page from avatars list
+		$total   = sizeof($avatars);
+		$avatars = array_slice($avatars, ($page-1)*$perpage, $perpage);
 
-            //paging
-            $maxcols = 4;
-            $page    = $inCore->request('page', 'int', 1);
-            $perpage = 20;
+		//show page
+		$smarty = $inCore->initSmarty('components', 'com_users_avatars.tpl');
+			$smarty->assign('userid', $id);
+			$smarty->assign('avatars', $avatars);
+			$smarty->assign('avatars_dir', $avatars_dir_rel);
+			$smarty->assign('maxcols', $maxcols);
+			$smarty->assign('page', $page);
+			$smarty->assign('perpage', $perpage);
+			$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/users/%user_id%/select-avatar-%page%.html', array('user_id'=>$id)));
+		$smarty->display('com_users_avatars.tpl');
 
-            //slice only current page from avatars list
-            $total   = sizeof($avatars);
-            $avatars = array_slice($avatars, ($page-1)*$perpage, $perpage);
+	} else {
 
-            //show page
-            $smarty = $inCore->initSmarty('components', 'com_users_avatars.tpl');
-                $smarty->assign('userid', $id);
-                $smarty->assign('avatars', $avatars);
-                $smarty->assign('avatars_dir', $avatars_dir_rel);
-                $smarty->assign('maxcols', $maxcols);
-                $smarty->assign('page', $page);
-                $smarty->assign('perpage', $perpage);
-				$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/users/%user_id%/select-avatar-%page%.html', array('user_id'=>$id)));
-            $smarty->display('com_users_avatars.tpl');
+		//SET AVATAR TO SELECTED
+		$avatar_id  = $inCore->request('avatar_id', 'int', 0);
+		$file       = $avatars[$avatar_id];
 
-        } else {
+		if (file_exists($avatars_dir.'/'.$file)){
 
-            //SET AVATAR TO SELECTED
+			$userid = $id;
 
-            $avatar_id  = $inCore->request('avatar_id', 'int', 0);
-            $file       = $avatars[$avatar_id];
+			$uploaddir 		= PATH.'/images/users/avatars/';
+			$realfile		= $file;
+			$filename 		= md5($realfile . '-' . $userid . '-' . time()).'.jpg';
+			$uploadfile		= $avatars_dir . '/' . $realfile;
+			$uploadavatar 	= $uploaddir . $filename;
+			$uploadthumb 	= $uploaddir . 'small/' . $filename;
 
-            if (file_exists($avatars_dir.'/'.$file)){
+			$sql = "SELECT imageurl FROM cms_user_profiles WHERE user_id = '$userid'";
+			$result = $inDB->query($sql) ;
+			if ($inDB->num_rows($result)){
+				$old = $inDB->fetch_assoc($result);
+				if ($old['imageurl'] && $old['imageurl']!='nopic.jpg'){
+					@unlink(PATH.'/images/users/avatars/'.$old['imageurl']);
+					@unlink(PATH.'/images/users/avatars/small/'.$old['imageurl']);
+				}
+			}
+			//CREATE THUMBNAIL
+			if (isset($cfg['smallw'])) { $smallw = $cfg['smallw']; } else { $smallw = 64; }
+			if (isset($cfg['medw'])) { 	 $medw = $cfg['medw']; } else { $medw = 200; }
 
-                $userid = $id;
+			$inCore->includeGraphics();
+			copy($uploadfile, $uploadavatar);
+			@img_resize($uploadfile, $uploadthumb, $smallw, $smallw);
 
-                $uploaddir 		= $_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/';
-                $realfile		= $file;
-                $filename 		= md5($realfile . '-' . $userid . '-' . time()).'.jpg';
-                $uploadfile		= $avatars_dir . '/' . $realfile;
-                $uploadavatar 	= $uploaddir . $filename;
-                $uploadthumb 	= $uploaddir . 'small/' . $filename;
+			//MODIFY PROFILE
+			$sql = "UPDATE cms_user_profiles
+					SET imageurl = '$filename'
+					WHERE user_id = '$userid'
+					LIMIT 1";
+			$inDB->query($sql);
 
-                $sql = "SELECT imageurl FROM cms_user_profiles WHERE user_id = $userid";
-                $result = $inDB->query($sql) ;
-                if ($inDB->num_rows($result)){
-                    $old = $inDB->fetch_assoc($result);
-                    if ($old['imageurl'] && $old['imageurl']!='nopic.jpg'){
-                        @unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/'.$old['imageurl']);
-                        @unlink($_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/small/'.$old['imageurl']);
-                    }
-                }
-                //CREATE THUMBNAIL
-                if (isset($cfg['smallw'])) { $smallw = $cfg['smallw']; } else { $smallw = 64; }
-                if (isset($cfg['medw'])) { 	 $medw = $cfg['medw']; } else { $medw = 200; }
+			// очищаем предыдущую запись о смене аватара
+			cmsActions::removeObjectLog('add_avatar', $id);
+			// выводим сообщение в ленту
+			cmsActions::log('add_avatar', array(
+				  'object' => '',
+				  'object_url' => '',
+				  'object_id' => $id,
+				  'target' => '',
+				  'target_url' => '',
+				  'description' => '<a href="'.cmsUser::getProfileURL($inUser->login).'" class="act_usr_ava">
+										<img border="0" src="/images/users/avatars/small/'.$filename.'">
+									</a>'
+			));
 
-                $inCore->includeGraphics();
-                copy($uploadfile, $uploadavatar);
-                @img_resize($uploadfile, $uploadthumb, $smallw, $smallw);
+		}
 
-                //MODIFY PROFILE
-                $sql = "UPDATE cms_user_profiles
-                        SET imageurl = '$filename'
-                        WHERE user_id = '$userid'
-                        LIMIT 1";
-                $inDB->query($sql);
+		//GO BACK TO PROFILE VIEW
+		$inCore->redirect(cmsUser::getProfileURL($inUser->login));
+		
+	}
 
-				// очищаем предыдущую запись о смене аватара
-				cmsActions::removeObjectLog('add_avatar', $id);
-				// выводим сообщение в ленту
-				cmsActions::log('add_avatar', array(
-					  'object' => '',
-					  'object_url' => '',
-					  'object_id' => $id,
-					  'target' => '',
-					  'target_url' => '',
-					  'description' => '<a href="'.cmsUser::getProfileURL($inUser->login).'" class="act_usr_ava">
-                                            <img border="0" src="/images/users/avatars/small/'.$filename.'">
-                                        </a>'
-				));
-
-            }
-
-            //GO BACK TO PROFILE VIEW
-            $inCore->redirect(cmsUser::getProfileURL($inUser->login));
-            
-        }
-
-	}//auth
-	else { echo usrAccessDenied(); }
 }
 /////////////////////////////// PHOTO UPLOAD /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='addphoto'){
@@ -1147,7 +1143,9 @@ if ($do=='uploadphotos'){
         if(!isset($cfg['watermark'])) { $cfg['watermark'] = 0; }
         
         @img_resize($uploadphoto, $uploadthumb['small'], 96, 96, true);
-        @img_resize($uploadphoto, $uploadthumb['medium'], 600, 600, false, $cfg['watermark']);
+        @img_resize($uploadphoto, $uploadthumb['medium'], 600, 600, false, false);
+		if ($cfg['watermark']) { @img_add_watermark($uploadthumb['medium']); }
+		@unlink($uploadphoto);
 
         $model->addUploadedPhoto($user_id, array('filename'=>$realfile, 'imageurl'=>$filename));
 		if ($inCore->inRequest('upload')) { $inCore->redirect('/users/'.$inUser->login.'/photos/submit'); }
@@ -1556,7 +1554,7 @@ if ($do=='viewalbum'){
     $total      = sizeof($photos);
 
     if ($total){
-        $perpage        = 20;
+        $perpage        = 21;
         $page           = $inCore->request('page', 'int', 1);
         $pagination     = cmsPage::getPagebar($total, $page, $perpage, '/users/%user%/photos/%album%%id%-%page%.html', array('user'=>$usr['login'], 'album'=>$album_type, 'id'=>$album_id));
         $page_photos    = array();
@@ -1955,31 +1953,8 @@ if ($do=='sendmessage'){
             
             //отправляем сообщение
             $msg_id = cmsUser::sendMessage($from_id, $to_id, $message);
-
-            //проверяем подписку на уведомления
-            $needmail = $inDB->get_field('cms_user_profiles', "user_id='{$to_id}'", 'email_newmsg');
-
-            //Проверяем, если юзер онлайн, то уведомление на почту не отправляем.
-            $isonline = $inDB->get_field('cms_online', "user_id='{$to_id}'", 'id');
-
-            //если подписан и не онлайн, отправляем уведомление на email
-            if (!$isonline && $needmail){
-                $inConf     = cmsConfig::getInstance();
-
-                $postdate   = date('d/m/Y H:i:s');
-                $to_email   = $inDB->get_field('cms_users', "id='{$to_id}'", 'email');
-                $from_nick  = $inUser->nickname;
-                $answerlink = HOST.'/users/'.$from_id.'/reply'.$msg_id.'.html';
-
-                $letter_path    = PATH.'/includes/letters/newmessage.txt';
-                $letter         = file_get_contents($letter_path);
-
-                $letter= str_replace('{sitename}', $inConf->sitename, $letter);
-                $letter= str_replace('{answerlink}', $answerlink, $letter);
-                $letter= str_replace('{date}', $postdate, $letter);
-                $letter= str_replace('{from}', $from_nick, $letter);
-                $inCore->mailText($to_email, $_LANG['YOU_HAVE_NEW_MESS'].'! - '.$inConf->sitename, $letter);
-            }
+			// отправляем уведомление на email если нужно
+			$model->sendNotificationByEmail($to_id, $from_id, $msg_id);
 
             $inCore->addSessionMessage($_LANG['SEND_MESS_OK'], 'info');
 
@@ -2014,7 +1989,8 @@ if ($do=='sendmessage'){
 
         // отправляем всем по списку
         foreach ($userlist as $key=>$usr){
-            cmsUser::sendMessage(USER_MASSMAIL, $usr['id'], $message);
+            $msg_id = cmsUser::sendMessage(USER_MASSMAIL, $usr['id'], $message);
+			$model->sendNotificationByEmail($usr['id'], $from_id, $msg_id);
         }
 
         $inCore->addSessionMessage($success_msg, 'info');

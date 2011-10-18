@@ -844,4 +844,47 @@ class cms_model_users{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
+    public function sendNotificationByEmail($to_id=0, $from_id=0, $msg_id=0) {
+
+		if(!$from_id || !$to_id || !$msg_id) { return false; }
+
+		$inUser = cmsUser::getInstance();
+		$inCore = cmsCore::getInstance();
+		$inConf = cmsConfig::getInstance();
+
+		global $_LANG;
+
+		//проверяем подписку на уведомления
+		$needmail = $this->inDB->get_field('cms_user_profiles', "user_id='{$to_id}'", 'email_newmsg');
+
+		//Проверяем, если юзер онлайн, то уведомление на почту не отправляем.
+		$isonline = $this->inDB->get_field('cms_online', "user_id='{$to_id}'", 'id');
+
+		//если подписан и не онлайн, отправляем уведомление на email
+		if (!$isonline && $needmail){
+
+			$postdate   = date('d/m/Y H:i:s');
+			$to_email   = $this->inDB->get_field('cms_users', "id='{$to_id}'", 'email');
+			$from_nick  = $inUser->nickname;
+			$answerlink = HOST.'/users/'.$from_id.'/reply'.$msg_id.'.html';
+
+			$letter_path    = PATH.'/includes/letters/newmessage.txt';
+			$letter         = file_get_contents($letter_path);
+
+			$letter= str_replace('{sitename}', $inConf->sitename, $letter);
+			$letter= str_replace('{answerlink}', $answerlink, $letter);
+			$letter= str_replace('{date}', $postdate, $letter);
+			$letter= str_replace('{from}', $from_nick, $letter);
+			$inCore->mailText($to_email, $_LANG['YOU_HAVE_NEW_MESS'].'! - '.$inConf->sitename, $letter);
+			
+			return true;
+		}
+
+        return false;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
 }

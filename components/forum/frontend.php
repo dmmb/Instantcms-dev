@@ -928,16 +928,17 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
                         }
                         if (!$file_error){
 							if (!$is_hidden) {
-							//регистрируем событие
-							cmsActions::log('add_thread', array(
-								'object' => $title,
-								'object_url' => '/forum/thread'.$threadlastid.'.html',
-								'object_id' => $threadlastid,
-								'target' => $forum['title'],
-								'target_url' => '/forum/'.$forum['id'],
-								'target_id' => $forum['id'], 
-								'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
-							));	
+								$message = $inCore->parseSmiles($message, true);
+								//регистрируем событие
+								cmsActions::log('add_thread', array(
+									'object' => $title,
+									'object_url' => '/forum/thread'.$threadlastid.'.html',
+									'object_id' => $threadlastid,
+									'target' => $forum['title'],
+									'target_url' => '/forum/'.$forum['id'],
+									'target_id' => $forum['id'], 
+									'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
+								));	
 							}
                             header('location:/forum/thread'.$threadlastid.'.html');
                         } else {

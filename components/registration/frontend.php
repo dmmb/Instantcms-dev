@@ -367,7 +367,9 @@ function registration(){
 				$smarty->assign('is_sess_back', $auth_back_url);
 				$smarty->display('com_registration_login.tpl');
 
-				cmsUser::sessionPut('auth_back_url', $inCore->getBackURL());
+				if(!strstr($inCore->getBackURL(), '/login')){
+					cmsUser::sessionPut('auth_back_url', $inCore->getBackURL());
+				}
 
 				return;
 
@@ -393,7 +395,7 @@ function registration(){
         
         if ($user_id){
 
-            $sql = "UPDATE cms_users SET is_locked = 0 WHERE id = $user_id";
+            $sql = "UPDATE cms_users SET is_locked = 0 WHERE id = '$user_id'";
             $inDB->query($sql) or die($_LANG['ERR_ACTIVATION']);
 
             $sql = "DELETE FROM cms_users_activate WHERE code = '$code'";
@@ -467,7 +469,7 @@ function registration(){
 
             if (!$errors){
                 $pass = md5($pass);
-                $inDB->query("UPDATE cms_users SET password = '{$pass}', logdate = NOW() WHERE id = {$user['id']}");
+                $inDB->query("UPDATE cms_users SET password = '{$pass}', logdate = NOW() WHERE id = '{$user['id']}'");
                 $is_changed = true;
             }
             
