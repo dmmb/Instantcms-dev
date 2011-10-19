@@ -1,32 +1,32 @@
 /**
- * jQuery Lightbox Plugin (balupton edition) - Lightboxes for jQuery
- * Copyright (C) 2008 Benjamin Arthur Lupton
- * http://jquery.com/plugins/project/jquerylightbox_bal
+ * This file is part of jQuery Lightbox
+ * Copyright (C) 2007-2010 Benjamin Arthur Lupton
+ * http://www.balupton.com/projects/jquery-lightbox
  *
- * This file is part of jQuery Lightbox (balupton edition).
+ * jQuery Lightbox is free software; You can redistribute it and/or modify it under the terms of
+ * the GNU Affero General Public License version 3 as published by the Free Software Foundation.
+ * You don't have to do anything special to accept the license and you don’t have to notify
+ * anyone which that you have made that decision.
  * 
- * jQuery Lightbox (balupton edition) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * jQuery Lightbox is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See your chosen license for more details.
  * 
- * jQuery Lightbox (balupton edition) is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
+ * You should have received along with jQuery Lightbox:
+ * - A copy of the license used.
+ *   If not, see <http://www.gnu.org/licenses/agpl-3.0.html>.
+ * - A copy of our interpretation of the license used.
+ *   If not, see <http://github.com/balupton/jquery-lightbox/blob/master/COPYING.txt>.
  * 
- * You should have received a copy of the GNU Affero General Public License
- * along with jQuery Lightbox (balupton edition).  If not, see <http://www.gnu.org/licenses/>.
- *
- * @name jquery_lightbox: jquery.lightbox.js
- * @package jQuery Lightbox Plugin (balupton edition)
- * @version 1.3.0-rc1
- * @date August 24, 2008
- * @category jQuery plugin
+ * @version 1.4.6-final
+ * @date July 28, 2010
+ * @since v0.1.0-dev, December 3, 2007
+ * @category jquery-plugin
+ * @package jquery-lightbox {@link http://www.balupton/projects/jquery-lightbox}
  * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
- * @copyright (c) 2008 Benjamin Arthur Lupton {@link http://www.balupton.com}
- * @license GNU Affero General Public License - {@link http://www.gnu.org/licenses/agpl.html}
- * @example Visit {@link http://jquery.com/plugins/project/jquerylightbox_bal} for more information.
+ * @copyright (c) 2007-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+ * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+ * @example Visit {@link http://www.balupton.com/projects/jquery-lightbox} for more information.
  */
 
 // Start of our jQuery Plugin
@@ -34,30 +34,89 @@
 {	// Create our Plugin function, with $ as the argument (we pass the jQuery object over later)
 	// More info: http://docs.jquery.com/Plugins/Authoring#Custom_Alias
 	
-	// Debug
-	$.log = $.log || function ( options )
-	{	// Can we debug? - Do we have firebug
-		var con = null;
-		if ( typeof console !== 'undefined' && typeof $.log !== 'undefined' )
-		{	con = console;	}
-		else if ( typeof window.console !== 'undefined' && typeof window.$.log !== 'undefined')
-		{	con = window.console;	}
-		
-		// Do the log
-		if ( con )
-		{	// Do we support arguments?
-			if ( typeof arguments !== 'undefined' && arguments.length > 1)
-			{	con.log(arguments);	return arguments;	}
-			else
-			{	con.log(options);	return options;		}
+	/**
+	 * Console Emulator
+	 * We have to convert arguments into arrays, and do this explicitly as webkit (chrome) hates function references, and arguments cannot be passed as is
+	 * @version 1.0.2
+	 * @date August 21, 2010
+	 * @since 0.1.0-dev, December 01, 2009
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	if ( typeof window.console !== 'object' || typeof window.console.emulated === 'undefined' ) {
+		// Check to see if console exists
+		if ( typeof window.console !== 'object' || !(typeof window.console.log === 'function' || typeof window.console.log === 'object') ) {
+			// Console does not exist
+			window.console = {};
+			window.console.log = window.console.debug = window.console.warn = window.console.trace = function(){};
+			window.console.error = function(){
+				var msg = "An error has occured. More information will be available in the console log.";
+				for ( var i = 0; i < arguments.length; ++i ) {
+					if ( typeof arguments[i] !== 'string' ) { break; }
+					msg += "\n"+arguments[i];
+				}
+				if ( typeof Error !== 'undefined' ) {
+					throw new Error(msg);
+				}
+				else {
+					throw(msg);
+				}
+			};
 		}
-	};
+		else {
+			// Console is object, and log does exist
+			// Check Debug
+			if ( typeof window.console.debug === 'undefined' ) {
+				window.console.debug = function(){
+					var arr = ['console.debug:']; for(var i = 0; i < arguments.length; i++) { arr.push(arguments[i]); };
+				    window.console.log.apply(window.console, arr);
+				};
+			}
+			// Check Warn
+			if ( typeof window.console.warn === 'undefined' ) {
+				window.console.warn = function(){
+					var arr = ['console.warn:']; for(var i = 0; i < arguments.length; i++) { arr.push(arguments[i]); };
+				    window.console.log.apply(window.console, arr);
+				};
+			} 
+			// Check Error
+			if ( typeof window.console.error === 'undefined' ) {
+				window.console.error = function(){
+					var arr = ['console.error']; for(var i = 0; i < arguments.length; i++) { arr.push(arguments[i]); };
+				    window.console.log.apply(window.console, arr);
+				};
+			}
+			// Check Trace
+			if ( typeof window.console.trace === 'undefined' ) {
+				window.console.trace = function(){
+				    window.console.error.apply(window.console, ['console.trace does not exist']);
+				};
+			}
+		}
+		// We have been emulated
+		window.console.emulated = true;
+	}
 	
-	// Pre-Req
-	$.params_to_json = $.params_to_json || function ( params )
+	/**
+	 * Return a new JSON object of the old string.
+	 * Turns:
+	 * 		file.js?a=1&amp;b.c=3.0&b.d=four&a_false_value=false&a_null_value=null
+	 * Into:
+	 * 		{"a":1,"b":{"c":3,"d":"four"},"a_false_value":false,"a_null_value":null}
+	 * @version 1.1.0
+	 * @date July 16, 2010
+	 * @since 1.0.0, June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	String.prototype.queryStringToJSON = String.prototype.queryStringToJSON || function ( )
 	{	// Turns a params string or url into an array of params
-		// Adjust
-		params = String(params);
+		// Prepare
+		var params = String(this);
 		// Remove url if need be
 		params = params.substring(params.indexOf('?')+1);
 		// params = params.substring(params.indexOf('#')+1);
@@ -69,7 +128,7 @@
 			return eval(decodeURIComponent(params));
 		}
 		// We have a params string
-		params = params.split(/\&|\&amp\;/);
+		params = params.split(/\&(amp\;)?/);
 		var json = {};
 		// We have params
 		for ( var i = 0, n = params.length; i < n; ++i )
@@ -80,14 +139,14 @@
 			param = param.split('=');
 			if ( param === null ) { continue; }
 			// ^ We now have "var=blah" into ["var","blah"]
-			
+		
 			// Get
 			var key = param[0] || null;
 			if ( key === null ) { continue; }
 			if ( typeof param[1] === 'undefined' ) { continue; }
 			var value = param[1];
 			// ^ We now have the parts
-			
+		
 			// Fix
 			key = decodeURIComponent(key);
 			value = decodeURIComponent(value);
@@ -97,36 +156,524 @@
 			} catch ( e ) {
 			    // value is a normal string
 			}
-			
+		
 			// Set
-			// console.log({'key':key,'value':value}, split);
+			// window.console.log({'key':key,'value':value}, split);
 			var keys = key.split('.');
 			if ( keys.length === 1 )
 			{	// Simple
 				json[key] = value;
 			}
 			else
-			{	// Advanced
-				var path = '';
-				for ( ii in keys )
-				{	//
-					key = keys[ii];
-					path += '.'+key;
-					eval('json'+path+' = json'+path+' || {}');
-				}
-				eval('json'+path+' = value');
+			{	// Advanced (Recreating an object)
+				var path = '',
+					cmd = '';
+				// Ensure Path Exists
+				$.each(keys,function(ii,key){
+					path += '["'+key.replace(/"/g,'\\"')+'"]';
+					jsonCLOSUREGLOBAL = json; // we have made this a global as closure compiler struggles with evals
+					cmd = 'if ( typeof jsonCLOSUREGLOBAL'+path+' === "undefined" ) jsonCLOSUREGLOBAL'+path+' = {}';
+					eval(cmd);
+					json = jsonCLOSUREGLOBAL;
+					delete jsonCLOSUREGLOBAL;
+				});
+				// Apply Value
+				jsonCLOSUREGLOBAL = json; // we have made this a global as closure compiler struggles with evals
+				valueCLOSUREGLOBAL = value; // we have made this a global as closure compiler struggles with evals
+				cmd = 'jsonCLOSUREGLOBAL'+path+' = valueCLOSUREGLOBAL';
+				eval(cmd);
+				json = jsonCLOSUREGLOBAL;
+				delete jsonCLOSUREGLOBAL;
+				delete valueCLOSUREGLOBAL;
 			}
 			// ^ We now have the parts added to your JSON object
 		}
 		return json;
 	};
+
+	/**
+	 * Remove a element, or a set of elements from an array
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @copyright John Resig
+	 * @license MIT License - {@link http://opensource.org/licenses/mit-license.php}
+	 */
+	Array.prototype.remove = function(from, to) {
+		var rest = this.slice((to || from) + 1 || this.length);
+		this.length = from < 0 ? this.length + from : from;
+		return this.push.apply(this, rest);
+	};
+
+	/**
+	 * Get a element from an array at [index]
+	 * if [current] is set, then set this index as the current index (we don't care if it doesn't exist)
+	 * @version 1.0.1
+	 * @date July 09, 2010
+	 * @since 1.0.0 June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.get = function(index, current) {
+		// Determine
+		if ( index === 'first' ) {
+			index = 0;
+		} else if ( index === 'last' ) {
+			index = this.length-1;
+		} else if ( index === 'prev' ) {
+			index = this.index-1;
+		} else if ( index === 'next' ) {
+			index = this.index+1;
+		} else if ( !index && index !== 0 ) {
+			index = this.index;
+		}
 	
+		// Set current?
+		if ( current||false !== false ) {
+			this.setIndex(index);
+		}
+	
+		// Return
+		return this.exists(index) ? this[index] : undefined;
+	};
+
+	/**
+	 * Apply the function [fn] to each element in the array
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.each = function(fn){
+		for (var i = 0; i < this.length; ++i) {
+			if (fn(i, this[i], this) === false) 
+				break;
+		}
+		return this;
+	}
+
+	/**
+	 * Checks whether the index is a valid index
+	 * @version 1.0.0
+	 * @date July 09, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.validIndex = function(index){
+		return index >= 0 && index < this.length;
+	};
+
+	/**
+	 * Set the current index of the array
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.setIndex = function(index){
+		if ( this.validIndex(index) ) {
+			this.index = index;
+		} else {
+			this.index = null;
+		}
+		return this;
+	};
+
+	/**
+	 * Get the current index of the array
+	 * If [index] is passed then set that as the current, and return it's value
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.current = function(index){
+		return this.get(index, true);
+	};
+
+	/**
+	 * Get whether or not the array is empty
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.isEmpty = function(){
+		return this.length === 0;
+	};
+
+	/**
+	 * Get whether or not the array has only one item
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.isSingle = function(){
+		return this.length === 1;
+	};
+
+	/**
+	 * Get whether or not the array is not empty
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.isNotEmpty = function(){
+		return this.length !== 0;
+	};
+
+	/**
+	 * Get whether or not the array has more than one item
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.isNotEmpty = function(){
+		return this.length > 1;
+	};
+
+	/**
+	 * Get whether or not the current index is the last one
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.isLast = function(index){
+		index = typeof index === 'undefined' ? this.index : index;
+		return !this.isEmpty() && index === this.length-1;
+	}
+
+	/**
+	 * Get whether or not the current index is the first one
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.isFirst = function(index){
+		index = typeof index === 'undefined' ? this.index : index;
+		return !this.isEmpty() && index === 0;
+	}
+
+	/**
+	 * Clear the array
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.clear = function(){
+		this.length = 0;
+	};
+
+	/**
+	 * Set the index as the next one, and get the item
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.next = function(update){
+		return this.get(this.index+1, update);
+	};
+
+	/**
+	 * Set the index as the previous one, and get the item
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.prev = function(update){
+		return this.get(this.index-1, update);
+	};
+
+	/**
+	 * Reset the index
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.reset = function(){
+		this.index = null;
+		return this;
+	};
+
+	/**
+	 * Set the [index] to the [item]
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.set = function(index, item){
+		// We want to set the item
+		if ( index < this.length && index >= 0 ) {
+			this[index] = item;
+		} else {
+			throw new Error('Array.prototype.set: [index] above this.length');
+			// return false;
+		}
+		return this;
+	};
+
+	/**
+	 * Set the index as the next item, and return it.
+	 * If we reach the end, then start back at the beginning.
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.loop = function(){
+		if ( !this.index && this.index !== 0 ) {
+			// index is not a valid value
+			return this.current(0);
+		}
+		return this.next();
+	};
+
+	/**
+	 * Add the [arguments] to the array
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.add = function(){
+		this.push.apply(this,arguments);
+		return this;
+	};
+
+	/**
+	 * Insert the [item] at the [index] or at the end of the array
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.insert = function(index, item){
+		if ( typeof index !== 'number' ) {
+			index = this.length;
+		}
+		index = index<=this.length ? index : this.length;
+		var rest = this.slice(index);
+		this.length = index;
+		this.push(item);
+		this.push.apply(this, rest);
+		return this;
+	};
+
+	/**
+	 * Get whether or not the index exists in the array
+	 * @version 1.0.0
+	 * @date July 09, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.exists = Array.prototype.exists || function(index){
+		return typeof this[index] !== 'undefined';
+	};
+
+	/**
+	 * Get whether or not the value exists in the array
+	 * @version 1.0.0
+	 * @date June 30, 2010
+	 * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	Array.prototype.has = Array.prototype.has || function(value){
+		var has = false;
+		for ( var i=0, n=this.length; i<n; ++i ) {
+			if ( value == this[i] ) {
+				has = true;
+				break;
+			}
+		}
+		return has;
+	};
+
+	/**
+	 * Bind a event only once
+	 * @version 1.0.0
+	 * @date June 30, 2010
+     * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	$.fn.once = $.fn.once || function(event, data, callback){
+		// Only apply a event handler once
+		var $this = $(this);
+		// Handle
+		if ( (callback||false) ) {
+			$this.unbind(event, callback);
+			$this.bind(event, data, callback);
+		} else {
+			callback = data;
+			$this.unbind(event, callback);
+			$this.bind(event, callback);
+		}
+		// Chain
+		return $this;
+	};
+	
+	/**
+	 * Bind a event, with or without data
+	 * Benefit over $.bind, is that $.binder(event, callback, false|{}|''|false) works.
+	 * @version 1.0.0
+	 * @date June 30, 2010
+     * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	$.fn.binder = $.fn.binder || function(event, data, callback){
+		// Help us bind events properly
+		var $this = $(this);
+		// Handle
+		if ( (callback||false) ) {
+			$this.bind(event, data, callback);
+		} else {
+			callback = data;
+			$this.bind(event, callback);
+		}
+		// Chain
+		return $this;
+	};
+	
+	/**
+	 * Event for the last click for a series of one or more clicks
+	 * @version 1.0.0
+	 * @date July 16, 2010
+     * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	$.fn.lastclick = $.fn.lastclick || function(data,callback){
+		return $(this).binder('lastclick',data,callback);
+	};
+	$.event.special.lastclick = $.event.special.lastclick || {
+		setup: function( data, namespaces ) {
+			$(this).bind('click', $.event.special.lastclick.handler);
+		},
+		teardown: function( namespaces ) {
+			$(this).unbind('click', $.event.special.lastclick.handler);
+		},
+		handler: function( event ) {
+			// Setup
+			var clear = function(){
+				// Fetch
+				var Me = this;
+				var $el = $(Me);
+				// Fetch Timeout
+				var timeout = $el.data('lastclick-timeout')||false;
+				// Clear Timeout
+				if ( timeout ) {
+					clearTimeout(timeout);
+				}
+				timeout = false;
+				// Store Timeout
+				$el.data('lastclick-timeout',timeout);
+			};
+			var check = function(event){
+				// Fetch
+				var Me = this;
+				clear.call(Me);
+				var $el = $(Me);
+				// Store the amount of times we have been clicked
+				$el.data('lastclick-clicks', ($el.data('lastclick-clicks')||0)+1);
+				// Handle Timeout for when All Clicks are Completed
+				var timeout = setTimeout(function(){
+					// Fetch Clicks Count
+					var clicks = $el.data('lastclick-clicks');
+					// Clear Timeout
+					clear.apply(Me,[event]);
+					// Reset Click Count
+					$el.data('lastclick-clicks',0);
+					// Fire Event
+					event.type = 'lastclick';
+					$.event.handle.apply(Me, [event,clicks])
+				},300);
+				// Store Timeout
+				$el.data('lastclick-timeout',timeout);
+			};
+			// Fire
+			check.apply(this,[event]);
+		}
+	};
+	
+	/**
+	 * Prevent the default action when a click is performed
+	 * @version 1.0.0
+	 * @date August 19, 2010
+	 * @since 1.0.0, August 19, 2010
+     * @package jquery-sparkle {@link http://www.balupton/projects/jquery-sparkle}
+	 * @author Benjamin "balupton" Lupton {@link http://www.balupton.com}
+	 * @copyright (c) 2009-2010 Benjamin Arthur Lupton {@link http://www.balupton.com}
+	 * @license GNU Affero General Public License version 3 {@link http://www.gnu.org/licenses/agpl-3.0.html}
+	 */
+	$.fn.preventDefault = $.fn.preventDefault || function(){
+		return $(this).click(function(event){
+			event.preventDefault();
+			return false;
+		});
+	};
+	
+
 	// Declare our class
 	$.LightboxClass = function ( )
 	{	// This is the handler for our constructor
 		this.construct();
 	};
-
+	
 	// Extend jQuery elements for Lightbox
 	$.fn.lightbox = function ( options )
 	{	// Init a el for Lightbox
@@ -135,7 +682,7 @@
 		// If need be: Instantiate $.LightboxClass to $.Lightbox
 		$.Lightbox = $.Lightbox || new $.LightboxClass();
 		
-		// Handle IE6 appropriatly
+		// Handle IE6
 		if ( $.Lightbox.ie6 && !$.Lightbox.ie6_support )
 		{	// We are IE6 and we want to ignore
 			return this; // chain
@@ -145,27 +692,28 @@
 		options = $.extend({start:false,events:true} /* default options */, options);
 		
 		// Get group
-		var group = $(this);
+		var $group = $(this);
 		
 		// Events?
 		if ( options.events )
 		{	// Add events
-			$(group).unbind().click(function(){
+			$group.preventDefault().once('lastclick',function(event){
 				// Get obj
-				var obj = $(this);
-				// Get rel
-				// var rel = $(obj).attr('rel');
+				var $obj = $(this);
+				// Get position
+				var index = $group.index($obj);
 				// Init group
-				if ( !$.Lightbox.init($(obj)[0], group) )
+				if ( !$.Lightbox.init(index, $group) )
 				{	return false;	}
 				// Display lightbox
 				if ( !$.Lightbox.start() )
 				{	return false;	}
 				// Cancel href
+				event.preventDefault();
 				return false;
 			});
 			// Add style
-			$(group).addClass('lightbox-enabled');
+			$group.addClass('lightbox-enabled');
 		}
 		
 		// Start?
@@ -176,7 +724,7 @@
 			// Get rel
 			// var rel = $(obj).attr('rel');
 			// Init group
-			if ( !$.Lightbox.init($(obj)[0], group) )
+			if ( !$.Lightbox.init(0, $group) )
 			{	return this;	}
 			// Display lightbox
 			if ( !$.Lightbox.start() )
@@ -192,284 +740,40 @@
 	{	// Our LightboxClass definition
 		
 		// -----------------
-		// Everyting to do with images
+		// Everything to do with images
 		
-		images: {
-			
-			// -----------------
-			// Variables
-			
-			// Our array of images
-			list:[], /* [ {
-				src: 'url to image',
-				link: 'a link to a page',
-				title: 'title of the image',
-				name: 'name of the image',
-				description: 'description of the image'
-			} ], */
-			
-			// The current active image
-			image: false,
-			
-			// -----------------
-			// Functions
-			
-			prev: function ( image )
-			{	// Get previous image
-				
-				// Get previous from current?
-				if ( typeof image === 'undefined' )
-				{	image = this.active();
-					if ( !image ) { return image; }
-				}
-				
-				// Is there a previous?
-				if ( this.first(image) )
-				{	return false;	}
-				
-				// Get the previous
-				return this.get(image.index-1);
-			},
-			
-			next: function ( image )
-			{	// Get next image
-				
-				// Get next from current?
-				if ( typeof image === 'undefined' )
-				{	image = this.active();
-					if ( !image ) { return image; }
-				}
-				
-				// Is there a next?
-				if ( this.last(image) )
-				{	return false;	}
-				
-				// Get the next
-				return this.get(image.index+1);
-			},
-			
-			first: function ( image )
-			{	//
-				// Get the first image?
-				if ( typeof image === 'undefined' )
-				{	return this.get(0);	}
-				
-				// Are we the first?
-				return image.index === 0;
-			},
-			
-			last: function ( image )
-			{	//
-				// Get the last image?
-				if ( typeof image === 'undefined' )
-				{	return this.get(this.size()-1);	}
-				
-				// Are we the last?
-				return image.index === this.size()-1;
-			},
+		images: [],
 		
-			single: function ( )
-			{	// Are we only one
-				return this.size() === 1;
-			},
-			
-			size: function ( )
-			{	// How many images do we have
-				return this.list.length;
-			},
-			
-			empty: function ( )
-			{	// Are we empty
-				return this.size() === 0;
-			},
-			
-			clear: function ( )
-			{	// Clear image arrray
-				this.list = [];
-				this.image = false;
-			},
+		// -----------------
+		// Variables
 		
-			active: function ( image )
-			{	// Set or get the active image
-				// Use false to reset
-				
-				// Get the active image?
-				if ( typeof image === 'undefined' )
-				{	return this.image;	}
-				
-				// Set the ative image
-				if ( image !== false )
-				{	// Make sure image exists
-					image = this.get(image);
-					if ( !image )
-					{	// Error
-						return image;
-					}
-				}
-				
-				// Set the active image
-				this.image = image;
-				return true;
-			},
-		
-			add: function ( obj )
-			{
-				// Do we need to recurse?
-				if ( obj[0] )
-				{	// We have a lot of images
-					for ( var i = 0; i < obj.length; i++ )
-					{	this.add(obj[i]);	}
-					return true;
-				}
-				
-				// Default image
-				
-				// Try and create a image
-				var image = this.create(obj);
-				if ( !image ) { return image; }
-				
-				// Set image index
-				image.index = this.size();
-				
-				// Push image
-				this.list.push(image);
-				
-				// Success
-				return true;
-			},
-			
-			create: function ( obj )
-			{	// Create image
-				
-				// Define
-				var image = { // default
-					src:	'',
-					title:	'Untitled',
-					description:	'',
-					name:	'',
-					index:	-1,
-					color:	null,
-					width:	null,
-					height:	null,
-					image:	true
-				};
-				
-				// Create
-				if ( obj.image )
-				{	// Already a image, so copy over values
-					image.src = obj.src || image.src;
-					image.title = obj.title || image.title;
-					image.description = obj.description || image.description;
-					image.name = obj.name || image.name;
-					image.color = obj.color || image.color;
-					image.width = obj.width || image.width;
-					image.height = obj.height || image.height;
-					image.index = obj.index || image.index;
-				}
-				else if ( obj.tagName )
-				{	// We are an element
-					obj = $(obj);
-					if ( obj.attr('src') || obj.attr('href') )
-					{
-						image.src = obj.attr('src') || obj.attr('href');
-						image.title = obj.attr('title') || obj.attr('alt') || image.title;
-						image.name = obj.attr('name') || '';
-						image.color = obj.css('background-color');
-						// Extract description from title
-						var s = image.title.indexOf(': ');
-						if ( s > 0 )
-						{	// Description exists
-							image.description = image.title.substring(s+2) || image.description;
-							image.title = image.title.substring(0,s) || image.title;
-						}
-					}
-					else
-					{	// Unsupported element
-						image = false;
-					}
-				}
-				else
-				{	// Unknown
-					image = false;
-				}
-				
-				if ( !image )
-				{	// Error
-					$.log('ERROR', 'We dont know what we have:', obj);
-					return false;
-				}
-				
-				// Success
-				return image;
-			},
-			
-			get: function ( image )
-			{	// Get the active, or specified image
-				
-				// Establish image
-				if ( typeof image === 'undefined' || image === null )
-				{	// Get the active image
-					return this.active();
-				}
-				else
-				if ( typeof image === 'number' )
-				{	// We have a index
-					
-					// Get image
-					image = this.list[image] || false;
-				}
-				else
-				{	// Create
-					image = this.create(image);
-					if ( !image ) { return false; }
-					
-					// Find
-					var f = false;
-					for ( var i = 0; i < this.size(); i++ )
-					{
-						var c = this.list[i];
-						if ( c.src === image.src && c.title === image.title && c.description === image.description )
-						{	f = c;	}
-					}
-					
-					// Found?
-					image = f;
-				}
-				
-				// Determine image
-				if ( !image )
-				{	// Image doesn't exist
-					$.log('ERROR', 'The desired image doesn\'t exist: ', image, this.list);
-					return false;
-				}
-				
-				// Return image
-				return image;
-			},
-			
-			debug: function ( )
-			{
-				return $.Lightbox.debug(arguments);
-			}
-			
-		},
+		constructed:		false,
+		compressed:			null,
 		
 		// -----------------
 		// Options
-		
-		constructed:		false,
 		
 		src:				null,		// the source location of our js file
 		baseurl:			null,
 		
 		files: {
-			// If you are doing a repack with packer (http://dean.edwards.name/packer/) then append ".packed" onto the js and css files before you pack it.
-			js: {
-				lightbox:	'/includes/jquery/lightbox/js/jquery.lightbox.js',
-				colorBlend:	'/includes/jquery/lightbox/js/jQuery.colorBlend.pack.js'
+			compressed: {
+				scripts: {
+					lightbox:	'/includes/jquery/lightbox/js/jquery.lightbox.min.js',
+					colorBlend:	'/includes/jquery/lightbox/js/jquery.color.min.js'
+				},
+				styles: {
+					lightbox:	'/includes/jquery/lightbox/css/jquery.lightbox.min.css'
+				}
 			},
-			css: {
-				lightbox:	'/includes/jquery/lightbox/css/jquery.lightbox.css'
+			uncompressed: {
+				scripts: {
+					lightbox:	'/includes/jquery/lightbox/js/jquery.lightbox.js',
+					colorBlend:	'/includes/jquery/lightbox/js/jquery.color.js'
+				},
+				styles: {
+					lightbox:	'/includes/jquery/lightbox/css/jquery.lightbox.css'
+				}
 			},
 			images: {
 				prev:		'/includes/jquery/lightbox/images/prev.gif',
@@ -481,22 +785,21 @@
 		
 		text: {
 			// For translating
-			image:		'�����������',
-			of:			'��',
-			close:		'������� [X]',
-			closeInfo:	'',
-			download:	'',
+			image:		'Изображение',
+			of:			'из',
+			close:		'Закрыть X',
+			closeInfo:	'Нажмите на любое место вне изображения чтобы закрыть.',
+			download:	'Скачать.',
 			help: {
-				close:		'',
-				interact:	''
+				close:		'Нажмите, чтобы закрыть',
+				interact:	'Hover to interact'
 			},
 			about: {
-				text: 	'',
-				title:	'',
-				link:	''
+				text: 	'jQuery Lightbox Plugin (balupton edition)',
+				title:	'Licenced under the GNU Affero General Public License.',
+				link:	'http://www.balupton.com/projects/jquery-lightbox'
 			}
 		},
-		show_linkback:	true,
 		
 		keys: {
 			close:	'c',
@@ -512,22 +815,29 @@
 		opacity:		0.9,
 		padding:		null,		// if null - autodetect
 		
-		speed:			400,		// Duration of effect, milliseconds
+		speed:			200,		// Duration of effect, milliseconds
 		
 		rel:			'lightbox',	// What to look for in the rels
 		
 		auto_relify:	true,		// should we automaticly do the rels?
 		
-		scroll:			'follow',	// should the lightbox scroll with the page?
+		auto_scroll:	'follow',	// should the lightbox scroll with the page? follow, disabled, ignore
+		auto_resize:	true,		// true or false
 		
 		ie6:			null,		// are we ie6?
 		ie6_support:	true,		// have ie6 support
-		ie6_upgrade:	true,		// show ie6 upgrade message
 		
-		colorBlend:	null,			// null - auto-detect, true - force, false - no
+		colorBlend:		null,		// null - auto-detect, true - force, false - no
+		
+		download_link:		true,	// Display the download link
+		
+		show_helper_text:	false,	// Display the helper text up the top right
+		show_linkback:		false,	// true, false
+		show_info:			'auto',	// auto - automaticly handle, true - force
+		show_extended_info:	'auto',	// auto - automaticly handle, true - force	
 		
 		// names of the options that can be modified
-		options:	['ie6_support', 'ie6_upgrade', 'colorBlend', 'baseurl', 'files', 'text', 'show_linkback', 'keys', 'opacity', 'padding', 'speed', 'rel', 'auto_relify', 'scroll_with'],
+		options:	['show_helper_text', 'auto_scroll', 'auto_resize', 'download_link', 'show_info', 'show_extended_info', 'ie6_support', 'colorBlend', 'baseurl', 'files', 'text', 'show_linkback', 'keys', 'opacity', 'padding', 'speed', 'rel', 'auto_relify'],
 		
 		// -----------------
 		// Functions
@@ -546,55 +856,143 @@
 			var domReady = initial;
 			
 			// Prepare options
-			options = $.extend({}, options);
+			options = options || {};
 			
 			// -------------------
 			// Handle files
 			
+			// Prepend function to use later
+			var prepend = function(item, value) {
+				if ( typeof item === 'object' ) {
+					for (var i in item) {
+						item[i] = prepend(item[i], value);
+					}
+				} else if ( typeof value === 'array' ) {
+					for (var i=0,n=item.length; i<n; ++i) {
+						item[i] = prepend(item[i], value);
+					}
+				} else {
+					item = value+item;
+				}
+				return item;
+			}
+			
 			// Add baseurl
 			if ( initial && (typeof options.files === 'undefined') )
 			{	// Load the files like default
-			
+				
+				// Reset compressed
+				this.compressed = null;
+				
 				// Get the src of the first script tag that includes our js file (with or without an appendix)
-				this.src = $('script[src*='+this.files.js.lightbox+']:first').attr('src');
+				var $script = $('script[src*='+this.files.compressed.scripts.lightbox+']:first');
+				if ( $script.length !== 0 ) {
+					// Compressed
+					$.extend(true, this.files, this.files.compressed);
+					this.compressed = true;
+				} else {
+					// Uncompressed
+					$script = $('script[src*='+this.files.uncompressed.scripts.lightbox+']:first');
+					if ( $script.length !== 0 ) {
+						// Uncompressed
+						$.extend(true, this.files, this.files.uncompressed);
+						this.compressed = false;
+					} else {
+						// Nothing
+					}
+				}
 				
 				// Make sure we found ourselves
-				if ( !this.src )
+				if ( this.compressed === null )
 				{	// We didn't
-					// $.log('WARNING', 'Lightbox was not able to find it\'s javascript script tag necessary for auto-inclusion.');
+					window.console.error('Lightbox was not able to find it\'s javascript script tag necessary for auto-inclusion.');
 					// We don't work with files anymore, so don't care for domReady
 					domReady = false;
 				}
 				else
 				{	// We found ourself
-				
-					// The baseurl is the src up until the start of our js file
-					this.baseurl = this.src.substring(0, this.src.indexOf(this.files.js.lightbox));
 					
-					// Apply baseurl to files
-					var me = this;
-					$.each(this.files, function(group, val){
-						$.each(this, function(file, val){
-							me.files[group][file] = me.baseurl+val;
-						});
-					});
-					delete me;
+					// Grab the script src
+					this.src = $script.attr('src');
+					
+					// The baseurl is the src up until the start of our js file
+					this.baseurl = this.src.substring(0, this.src.indexOf(this.files.scripts.lightbox));
+					
+					// Prepend baseurl to files
+					this.files = prepend(this.files, this.baseurl);
 					
 					// Now as we have source, we may have more params
-					options = $.extend(options, $.params_to_json(this.src));
+					options = $.extend(options, this.src.queryStringToJSON());
 				}
 				
+				// Create
+				this.images.image = {
+					src:	'',
+					title:	'Без названия',
+					description:	'',
+					name:	'',
+					color:	null,
+					width:	null,
+					height:	null,
+					id: 	null,
+					image:	true
+				};
+				this.images.prepare = function(obj){
+					var image = $.extend({}, this.image);
+					if ( obj.tagName ) {
+						// We are an element
+						obj = $(obj);
+						if ( obj.attr('src') || obj.attr('href') ) {
+							image.src = obj.attr('src') || obj.attr('href');
+							image.title = obj.attr('title') || obj.attr('alt') || image.title;
+							image.name = obj.attr('name') || '';
+							image.color = obj.css('backgroundColor');
+							// Extract description from title
+							var s = image.title.indexOf(': ');
+							if ( s > 0 )
+							{	// Description exists
+								image.description = image.title.substring(s+2) || image.description;
+								image.title = image.title.substring(0,s) || image.title;
+							}
+						} else {
+							image = null;
+						}
+					} else if ( obj.src ) {
+						// We are a image object
+						image = $.extend(this.image,obj);
+					} else {
+						image = null;
+					}
+					if ( image ) {
+						image.id = image.id || image.src+image.title+image.description;
+					}
+					return image;
+				}
+				this.images.create = function(obj){
+					var images = this;
+					if ( obj.each ) {
+						obj.each(function(index,item){
+							images.create(item);
+						});
+						return;
+					}
+					
+					var image = images.prepare(obj);
+					
+					if ( !image ) {
+						window.console.error('We dont know what we have:', obj, image);
+					} else {
+						images.push(image);
+					}
+					
+					return images;
+				};
 			}
 			else
 			if ( typeof options.files === 'object' )
 			{	// We have custom files
-				var me = this;
-				$.each(options.files, function(group, val){
-					$.each(this, function(file, val){
-						this[file] = me.baseurl+val;
-					});
-				});
-				delete me;
+				// Prepend baseurl to files
+				options.files = prepend(options.files, this.baseurl);
 			}
 			else
 			{	// Don't have any files, so no need to perform domReady
@@ -604,18 +1002,18 @@
 			// -------------------
 			// Apply options
 			
-			for ( i in this.options )
+			for ( var i in this.options )
 			{	// Cycle through the options
 				var name = this.options[i];
 				if ( (typeof options[name] === 'object') && (typeof this[name] === 'object') )
 				{	// We have a group like text or files
-					this[name] = $.extend(this[name], options[name]);
+					this[name] = $.extend(true, this[name], options[name]);
 				}
 				else if ( typeof options[name] !== 'undefined' )
 				{	// We have that option, so apply it
 					this[name] = options[name];
 				}
-			}
+			}	delete i;
 			
 			// -------------------
 			// Figure out what to do
@@ -633,7 +1031,7 @@
 			// -------------------
 			// Handle our DOM
 			
-			if ( domReady || typeof options.colorBlend !== 'undefined' || typeof options.files === 'object' || typeof options.text === 'object' || typeof options.show_linkback !== 'undefined' || typeof options.scroll_with !== 'undefined' )
+			if ( domReady || typeof options.download_link !== 'undefined' ||  typeof options.colorBlend !== 'undefined' || typeof options.files === 'object' || typeof options.text === 'object' || typeof options.show_linkback !== 'undefined' || typeof options.scroll_with !== 'undefined' )
 			{	// We have reason to handle the dom
 				$(function() {
 					// DOM is ready, so fire our DOM handler
@@ -655,14 +1053,8 @@
 			
 			// Grab resources
 			var bodyEl = document.getElementsByTagName($.browser.safari ? 'head' : 'body')[0];
-			var stylesheets = this.files.css;
-			var scripts = this.files.js;
-			
-			// Handle IE6 appropriatly
-			if ( this.ie6 && this.ie6_upgrade )
-			{	// Add the upgrade message
-				scripts.ie6 = 'http://www.savethedevelopers.org/say.no.to.ie.6.js';
-			}
+			var stylesheets = this.files.styles;
+			var scripts = this.files.scripts;
 			
 			// colorBlend
 			if ( this.colorBlend === true && typeof $.colorBlend === 'undefined' )
@@ -691,6 +1083,7 @@
 			}
 			
 			// Include javascripts
+			delete scripts.lightbox; // prevent us from including ourself
 			for ( script in scripts )
 			{
 				var scriptEl = document.createElement('script');
@@ -711,7 +1104,7 @@
 			
 			// Append markup
 			$('#lightbox,#lightbox-overlay').remove();
-			$('body').append('<div id="lightbox-overlay"><div id="lightbox-overlay-text">'+(this.show_linkback?'<p><span id="lightbox-overlay-text-about"><a href="#" title="'+this.text.about.title+'">'+this.text.about.text+'</a></span></p><p>&nbsp;</p>':'')+'<p><span id="lightbox-overlay-text-close">'+this.text.help.close+'</span><br/>&nbsp;<span id="lightbox-overlay-text-interact">'+this.text.help.interact+'</span></p></div></div><div id="lightbox"><div id="lightbox-imageBox"><div id="lightbox-imageContainer"><img id="lightbox-image" /><div id="lightbox-nav"><a href="#" id="lightbox-nav-btnPrev"></a><a href="#" id="lightbox-nav-btnNext"></a></div><div id="lightbox-loading"><a href="#" id="lightbox-loading-link"><img src="' + this.files.images.loading + '" /></a></div></div></div><div id="lightbox-infoBox"><div id="lightbox-infoContainer"><div id="lightbox-infoHeader"><span id="lightbox-caption"><a id="lightbox-caption-title" href="#" title="' + this.text.download + '"></a><span id="lightbox-caption-seperator"></span><span id="lightbox-caption-description"></span></span></div><div id="lightbox-infoFooter"><span id="lightbox-currentNumber"></span><span id="lightbox-close"><a href="#" id="lightbox-close-button" title="'+this.text.closeInfo+'">' + this.text.close + '</a></span></div><div id="lightbox-infoContainer-clear"></div></div></div></div>');
+			$('body').append('<div id="lightbox-overlay"><div id="lightbox-overlay-text">'+(this.show_linkback?'<p><span id="lightbox-overlay-text-about"><a href="#" title="'+this.text.about.title+'">'+this.text.about.text+'</a></span></p><p>&nbsp;</p>':'')+(this.show_helper_text?'<p><span id="lightbox-overlay-text-close">'+this.text.help.close+'</span><br/>&nbsp;<span id="lightbox-overlay-text-interact">'+this.text.help.interact+'</span></p>':'')+'</div></div><div id="lightbox"><div id="lightbox-imageBox"><div id="lightbox-imageContainer"><img id="lightbox-image" /><div id="lightbox-nav"><a href="#" id="lightbox-nav-btnPrev"></a><a href="#" id="lightbox-nav-btnNext"></a></div><div id="lightbox-loading"><a href="#" id="lightbox-loading-link"><img src="' + this.files.images.loading + '" /></a></div></div></div><div id="lightbox-infoBox"><div id="lightbox-infoContainer"><div id="lightbox-infoHeader"><span id="lightbox-caption">'+(this.download_link ? '<a href="#" title="' + this.text.download + '" id="lightbox-caption-title"></a>' : '<span id="lightbox-caption-title"></span>')+'<span id="lightbox-caption-seperator"></span><span id="lightbox-caption-description"></span></span></div><div id="lightbox-infoFooter"><span id="lightbox-currentNumber"></span><span id="lightbox-close"><a href="#" id="lightbox-close-button" title="'+this.text.closeInfo+'">' + this.text.close + '</a></span></div><div id="lightbox-infoContainer-clear"></div></div></div></div>');
 			
 			// Update Boxes - for some crazy reason this has to be before the hide in safari and konqueror
 			this.resizeBoxes();
@@ -752,7 +1145,7 @@
 			// Apply events
 			
 			// If the window resizes, act appropriatly
-			$(window).unbind().resize(function ()
+			$(window).unbind('resize').resize(function ()
 			{	// The window has been resized
 				$.Lightbox.resizeBoxes('resized');
 			});
@@ -767,29 +1160,29 @@
 			}
 			
 			// Prev
-			$('#lightbox-nav-btnPrev').unbind().hover(function() { // over
+			$('#lightbox-nav-btnPrev').unbind().preventDefault().hover(function() { // over
 				$(this).css({ 'background' : 'url(' + $.Lightbox.files.images.prev + ') left 45% no-repeat' });
 			},function() { // out
 				$(this).css({ 'background' : 'transparent url(' + $.Lightbox.files.images.blank + ') no-repeat' });
-			}).click(function() {
-				$.Lightbox.showImage($.Lightbox.images.prev());
+			}).lastclick(function() {
+				$.Lightbox.showImage('prev');
 				return false;
 			});
 					
 			// Next
-			$('#lightbox-nav-btnNext').unbind().hover(function() { // over
+			$('#lightbox-nav-btnNext').unbind().preventDefault().hover(function() { // over
 				$(this).css({ 'background' : 'url(' + $.Lightbox.files.images.next + ') right 45% no-repeat' });
 			},function() { // out
 				$(this).css({ 'background' : 'transparent url(' + $.Lightbox.files.images.blank + ') no-repeat' });
-			}).click(function() {
-				$.Lightbox.showImage($.Lightbox.images.next());
+			}).lastclick(function() {
+				$.Lightbox.showImage('next');
 				return false;
 			});
 			
 			// Help
 			if ( this.show_linkback )
 			{	// Linkback exists so add handler
-				$('#lightbox-overlay-text-about a').click(function(){window.open($.Lightbox.text.about.link); return false;});
+				$('#lightbox-overlay-text-about a').preventDefault().lastclick(function(){window.open($.Lightbox.text.about.link); return false;});
 			}
 			$('#lightbox-overlay-text-close').unbind().hover(
 				function(){
@@ -801,10 +1194,12 @@
 			);
 			
 			// Image link
-			$('#lightbox-caption-title').click(function(){window.open($(this).attr('href')); return false;});
+			if ( this.download_link ) {
+				$('#lightbox-caption-title').preventDefault().lastclick(function(){window.open($(this).attr('href')); return false;});
+			}
 			
 			// Assign close clicks
-			$('#lightbox-overlay, #lightbox, #lightbox-loading-link, #lightbox-btnClose').unbind().click(function() {
+			$('#lightbox-overlay, #lightbox, #lightbox-loading-link, #lightbox-btnClose').unbind().preventDefault().lastclick(function() {
 				$.Lightbox.finish();
 				return false;	
 			});
@@ -859,29 +1254,30 @@
 		{	// Init a batch of lightboxes
 			
 			// Establish images
-			if ( typeof images === 'undefined' )
-			{
+			if ( typeof images === 'undefined' ) {
 				images = image;
 				image = 0;
 			}
 			
 			// Clear
 			this.images.clear();
-			
+				
 			// Add images
-			if ( !this.images.add(images) )
-			{	return false;	}
+			this.images.create(images);
 			
 			// Do we need to bother
-			if ( this.images.empty() )
-			{	// No images
-				$.log('WARNING', 'Lightbox started, but no images: ', image, images);
+			if ( this.images.isEmpty() ) {
+				// No images
+				window.console.warn('WARNING', 'Lightbox started, but no images: ', image, images);
 				return false;
 			}
 			
-			// Set active
-			if ( !this.images.active(image) )
-			{	return false;	}
+			// Set current
+			if ( !this.images.current(image) ) {
+				// No images
+				window.console.warn('WARNING', 'Could not find current image: ', image, this.images);
+				return false;
+			}
 			
 			// Done
 			return true;
@@ -918,8 +1314,10 @@
 				$('#lightbox').fadeIn(300);
 				
 				// Display first image
-				if ( !$.Lightbox.showImage($.Lightbox.images.active()) )
-				{	$.Lightbox.finish();	return false;	}
+				if ( !$.Lightbox.showImage() ) {
+					$.Lightbox.finish();
+					return false;
+				}
 			});
 			
 			// All done
@@ -936,8 +1334,8 @@
 			// Fix attention seekers
 			$('embed, object, select').css({ 'visibility' : 'visible' });//.show();
 			
-			// Kill active image
-			this.images.active(false);
+			// Kill current image
+			this.images.reset();
 			
 			// Adjust scrolling
 			if ( this.scroll === 'disable' )
@@ -965,17 +1363,29 @@
 				delete $body;
 			}
 			
-			// We no longer care if we are general
-			if ( type === 'general' )
-			{	// Done
-				return true;
+			// Handle cases
+			switch ( type )
+			{
+				case 'general': // general resize (start of lightbox)
+					return true;
+					break;
+				case 'resized': // window was resized
+					if ( this.auto_resize === false )
+					{	// Stop
+						// Reposition
+						this.repositionBoxes({'nHeight':nHeight, 'speed':this.speed});
+						return true;
+					}
+				case 'transition': // transition between images
+				default: // unknown
+					break;
 			}
 			
 			// Get image
-			var image = this.images.active();
+			var image = this.images.current();
 			if ( !image || !image.width || !this.visible )
 			{	// No image or no visible lightbox, so we don't care
-				$.log('WARNING', 'A resize occured while no image or no lightbox...');
+				//window.console.warn('A resize occured while no image or no lightbox...');
 				return false;
 			}
 			
@@ -992,22 +1402,25 @@
 			
 			// Check if we are in size
 			// Lightbox can take up 4/5 of size
-			var maxWidth  = Math.floor(wWidth*(4/5));
-			var maxHeight = Math.floor(wHeight*(4/5));
-			var resizeRatio;
-			while ( iWidth > maxWidth || iHeight > maxHeight )
-			{	// We need to resize
-				if ( iWidth > maxWidth )
-				{	// Resize width, then height proportionally
-					resizeRatio = maxWidth/iWidth;
-					iWidth = maxWidth;
-					iHeight = Math.floor(iHeight*resizeRatio);
-				}
-				if ( iHeight > maxHeight )
-				{	// Resize height, then width proportionally
-					resizeRatio = maxHeight/iHeight;
-					iHeight = maxHeight;
-					iWidth = Math.floor(iWidth*resizeRatio);
+			if ( this.auto_resize !== false )
+			{	// We want to auto resize
+				var maxWidth  = Math.floor(wWidth*(4/5));
+				var maxHeight = Math.floor(wHeight*(4/5));
+				var resizeRatio;
+				while ( iWidth > maxWidth || iHeight > maxHeight )
+				{	// We need to resize
+					if ( iWidth > maxWidth )
+					{	// Resize width, then height proportionally
+						resizeRatio = maxWidth/iWidth;
+						iWidth = maxWidth;
+						iHeight = Math.floor(iHeight*resizeRatio);
+					}
+					if ( iHeight > maxHeight )
+					{	// Resize height, then width proportionally
+						resizeRatio = maxHeight/iHeight;
+						iHeight = maxHeight;
+						iWidth = Math.floor(iWidth*resizeRatio);
+					}
 				}
 			}
 			
@@ -1043,7 +1456,6 @@
 					// Animate
 					$('#lightbox-image').width(iWidth).height(iHeight);
 					$('#lightbox-imageBox').animate({width: nWidth, height: nHeight}, this.speed, function ( ) { $.Lightbox.showImage(null, 3); } );
-					this.repositionBoxes({'nHeight':nHeight, 'speed':this.speed});
 				}
 			}
 			else
@@ -1051,8 +1463,10 @@
 				// Animate Lightbox
 				$('#lightbox-image').animate({width:iWidth, height:iHeight}, this.speed);
 				$('#lightbox-imageBox').animate({width: nWidth, height: nHeight}, this.speed);
-				this.repositionBoxes({'nHeight':nHeight, 'speed':this.speed});
 			}
+			
+			// Reposition
+			this.repositionBoxes({'nHeight':nHeight, 'speed':this.speed});
 			
 			// Done
 			return true;
@@ -1129,22 +1543,14 @@
 		},
 		
 		visible: false,
-		showImage: function ( image, step )
-		{
-			// Establish image
-			image = this.images.get(image);
-			if ( !image ) { return image; }
-			
+		showImage: function ( image, step ){
 			// Default step
 			step = step || 1;
 			
-			// Split up below for jsLint compliance
-			var skipped_step_1 = step > 1 && this.images.active().src !== image.src;
-			var skipped_step_2 = step > 2 && $('#lightbox-image').attr('src') !== image.src;
-			if ( skipped_step_1 || skipped_step_2 )
-			{	// Force step 1
-				$.log('We wanted to skip a few steps: ', image, step, skipped_step_1, skipped_step_2);
-				step = 1;
+			// Make the image the current image, or get the current
+			image = this.images.current(image) || this.images.get('first',true);
+			if ( !image ) {
+				return;
 			}
 			
 			// What do we need to do
@@ -1166,9 +1572,6 @@
 					// Remove show info events
 					$('#lightbox-imageBox').unbind();
 					// ^ Why? Because otherwise when the image is changing, the info pops out, not good!
-					
-					// Make the image the active image
-					if ( !this.images.active(image) ) { return false; }
 					
 					// Check if we need to preload
 					if ( image.width && image.height )
@@ -1216,13 +1619,10 @@
 					// Use colorBlend?
 					if ( this.colorBlend )
 					{	// We have colorBlend
-						$('#lightbox-overlay').colorBlend([{
-							param:			'background-color',
-							fromColor:		$('#lightbox-overlay').css('background-color'),
-							toColor:		image.color,
-							cycles:			1,
-							isFade:			false
-						}]);
+						// Background
+						$('#lightbox-overlay').animate({'backgroundColor':image.color}, this.speed*2);
+						// Border
+						$('#lightbox-imageBox').css('borderColor', image.color);
 					}
 					
 					// Resize boxes
@@ -1241,7 +1641,9 @@
 					$('#lightbox-loading').hide();
 					
 					// Animate image
-					$('#lightbox-image').fadeIn(500, function() {$.Lightbox.showImage(null, 4); });
+					$('#lightbox-image').fadeIn(this.speed*1.5, function() {
+						$.Lightbox.showImage(null, 4);
+					});
 					
 					// Start the proloading of other images
 					this.preloadNeighbours();
@@ -1264,14 +1666,18 @@
 					// Set image info
 					
 					// Hide and set image info
-					$('#lightbox-caption-title').html(image.title || 'Untitled').attr('href', image.src);
+					var $title = $('#lightbox-caption-title').html(image.title || 'Untitled');
+					if ( this.download_link ) {
+						$title.attr('href', this.download_link ? image.src : '');
+					}
+					delete $title;
 					$('#lightbox-caption-seperator').html(image.description ? ': ' : '');
 					$('#lightbox-caption-description').html(image.description || '&nbsp;');
 					
 					// If we have a set, display image position
-					if ( this.images.size() > 1 )
+					if ( this.images.length > 1 )
 					{	// Display
-						$('#lightbox-currentNumber').html(this.text.image + '&nbsp;' + ( image.index + 1 ) + '&nbsp;' + this.text.of + '&nbsp;' + this.images.size());
+						$('#lightbox-currentNumber').html(this.text.image + '&nbsp;' + ( this.images.index + 1 ) + '&nbsp;' + this.text.of + '&nbsp;' + this.images.length);
 					} else
 					{	// Empty
 						$('#lightbox-currentNumber').html('&nbsp;');
@@ -1282,13 +1688,24 @@
 					
 					// Apply event
 					$('#lightbox-imageBox').unbind('mouseover').mouseover(function(){
-						 $('#lightbox-infoBox').slideDown('fast');
-					 });
+						$('#lightbox-infoBox:not(:visible)').stop().slideDown('fast');
+					});
 					
 					// Apply event
 					$('#lightbox-infoBox').unbind('mouseover').mouseover(function(){
-						 $('#lightbox-infoFooter').slideDown('fast');
-					 });
+						$('#lightbox-infoFooter:not(:visible)').stop().slideDown('fast');
+					});
+					
+					// Forced show?
+					if ( this.show_extended_info === true )
+					{	// Force show
+						$('#lightbox-imageBox').trigger('mouseover');
+						$('#lightbox-infoBox').trigger('mouseover');
+					}
+					else if ( this.show_info === true )
+					{	// Force show
+						$('#lightbox-imageBox').trigger('mouseover');
+					}
 					
 					// ---------------------------------
 					// Set navigation
@@ -1297,18 +1714,18 @@
 					$('#lightbox-nav-btnPrev, #lightbox-nav-btnNext').css({ 'background' : 'transparent url(' + this.files.images.blank + ') no-repeat' });
 					
 					// If not first, show previous button
-					if ( !this.images.first(image) ) {
+					if ( !this.images.isFirst() ) {
 						// Not first, show button
 						$('#lightbox-nav-btnPrev').show();
 					}
 					
 					// If not last, show next button
-					if ( !this.images.last(image) ) {
+					if ( !this.images.isLast() ) {
 						// Not first, show button
 						$('#lightbox-nav-btnNext').show();
 					}
 					
-					// Make navigation active / show it
+					// Make navigation current / show it
 					$('#lightbox-nav').show();
 					
 					// Enable keyboard navigation
@@ -1321,7 +1738,7 @@
 				// ---------------------------------
 				// Error handling
 				default:
-					$.log('ERROR', 'Don\'t know what to do: ', image, step);
+					window.console.error('Don\'t know what to do: ', image, step);
 					return this.showImage(image, 1);
 					// break;
 				
@@ -1335,27 +1752,30 @@
 		{	// Preload all neighbour images
 			
 			// Do we need to do this?
-			if ( this.images.single() || this.images.empty() )
+			if ( this.images.isSingle() || this.images.isEmpty() )
 			{	return true;	}
 			
-			// Get active image
-			var image = this.images.active();
+			// Get current image
+			var image = this.images.current();
+			var index = this.images.index;
 			if ( !image ) { return image; }
+			var objNext;
 			
 			// Load previous
-			var prev = this.images.prev(image);
-			var objNext;
+			var prev = this.images.prev();
 			if ( prev ) {
 				objNext = new Image();
 				objNext.src = prev.src;
 			}
+			this.images.setIndex(index); // reset
 			
 			// Load next
-			var next = this.images.next(image);
+			var next = this.images.next();
 			if ( next ) {
 				objNext = new Image();
 				objNext.src = next.src;
 			}
+			this.images.setIndex(index); // reset
 		},
 		
 		// --------------------------------------------------
@@ -1368,7 +1788,7 @@
 		},
 		
 		KeyboardNav_Disable: function ( ) {
-			$(document).unbind();
+			$(document).unbind('keydown');
 		},
 		
 		KeyboardNav_Action: function ( objEvent ) {
@@ -1389,13 +1809,13 @@
 			// Prev?
 			if ( key === this.keys.prev || keycode === 37 )
 			{	// We want previous
-				return $.Lightbox.showImage($.Lightbox.images.prev());
+				return $.Lightbox.showImage('prev');
 			}
 			
 			// Next?
 			if ( key === this.keys.next || keycode === 39 )
 			{	// We want next
-				return $.Lightbox.showImage($.Lightbox.images.next());
+				return $.Lightbox.showImage('next');
 			}
 			
 			// Unknown
