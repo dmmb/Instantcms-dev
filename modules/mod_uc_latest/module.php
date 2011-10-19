@@ -70,7 +70,7 @@ function mod_uc_latest($module_id){
 							$item['title'] = substr($item['title'], 0, 40);
 							
 							for($f = 0; $f<$cfg['showf']; $f++){
-								$item['fdata'][] = $inCore->getUCSearchLink($item['category_id'], null, $f, $item['fieldsdata'][$f]);
+								$item['fdata'][] = $inCore->getUCSearchLink($item['category_id'], null, $f, stripslashes($item['fieldsdata'][$f]));
 							}							
 													
 							$item['fdate'] = $inCore->dateFormat($item['fdate']);

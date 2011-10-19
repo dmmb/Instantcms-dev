@@ -174,7 +174,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$quest = $_REQUEST['quest'];
 		$answer = $_REQUEST['answer'];
 		$answeruser_id = $_SESSION['user']['id'];
-		$user_id = (int)$_REQUEST['user_id'];;
+		$user_id = (int)$_REQUEST['user_id'];
 						
 		$pubdate = $_REQUEST['pubdate'];
 		$answerdate = $_REQUEST['answerdate'];
@@ -200,6 +200,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			$quest = $_REQUEST['quest'];
 			$answer = $_REQUEST['answer'];
 			$answeruser_id = $_SESSION['user']['id'];
+			$user_id = (int)$_REQUEST['user_id'];
 
 			$pubdate = $_REQUEST['pubdate'];
 			$answerdate = $_REQUEST['answerdate'];
@@ -213,6 +214,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					SET category_id = $category_id,
 						quest='$quest', 
 						answer='$answer',
+						user_id='$user_id',
 						published=$published,
 						answeruser_id=$answeruser_id,
 						pubdate='$pubdate',

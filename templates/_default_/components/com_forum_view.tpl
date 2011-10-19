@@ -1,7 +1,16 @@
 {* ================================================================================ *}
 {* =========================== Список форумов и категорий ========================= *}
 {* ================================================================================ *}
-
+<div class="float_bar">
+        {if $user_id}
+                <table cellspacing="2" cellpadding="2">
+                    <tr>
+                        <td width="16"><img src="/components/forum/images/toolbar/newthread.gif"/></td>
+                        <td><a href="/forum/{$forum.id}/newthread.html"><strong>{$LANG.NEW_THREAD}</strong></a></td>
+                    </tr>
+                </table>
+        {/if}
+</div>
 {if $cfg.is_rss}
 	{* ============================== Заголовок + RSS ==================================== *}
 	<table cellpadding="0" cellspacing="0" border="0">
@@ -27,7 +36,7 @@
         {foreach key=id item=subf from=$subforums}
             {php}
                 if ($row % 2) {
-                    $class='row1';
+                    $class='row11';
                 } else {
                     $class='row2';
                 }
@@ -51,37 +60,16 @@
     </table>
 {/if}
 
-
-{* ------ Тулбар с кнопками -------- *}
-
-<table width="100%" cellspacing="0" cellpadding="5"  class="forum_toolbar">
-    <tr>
-        {if $user_id}
-            <td class="forum_toollinks">
-                <table cellspacing="2" cellpadding="2">
-                    <tr>
-                        <td width="16"><img src="/components/forum/images/toolbar/newthread.gif"/></td>
-                        <td><a href="/forum/{$forum.id}/newthread.html"><strong>{$LANG.NEW_THREAD}</strong></a></td>
-                    </tr>
-                </table>
-            </td>
-        {/if}
-        {if $threads_count}
-            <td width="5">&nbsp;</td>
-            {$threads_page_select}
-        {/if}
-    </tr>
-</table>
-
 {* ------ Cписок тем -------- *}
 
 {if $threads_count}
+
     {php}$row=1;{/php}
     <table class="threads_table" width="100%" cellspacing="0" cellpadding="5" border="0">
-        <tr style="background:#375E93; color:#FFF;">
-          <td colspan="2">Темы</td>
-          <td>Автор</td>
-          <td>Активность</td>
+        <tr class="darkBlue-LightBlue">
+          <td colspan="2">{$LANG.THREADS}</td>
+          <td>{$LANG.AUTHOR}</td>
+          <td>{$LANG.FORUM_ACT}</td>
           <td>{$LANG.LAST_POST}</td>
         </tr>
     {foreach key=id item=thread from=$threads}

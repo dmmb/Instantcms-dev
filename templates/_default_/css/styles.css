@@ -2546,16 +2546,16 @@ div.con_forum_link a{
 /* ========================================================================== */
 /* ============================== ‘Œ–”Ã ===================================== */
 /* ========================================================================== */
-
+.darkBlue-LightBlue { background-color:#003366; background-image: -webkit-gradient(linear,left bottom,left top,from(#003366),to(#0D6E98)); background-image: -moz-linear-gradient(bottom, #003366, #0D6E98); background-image: -o-linear-gradient(bottom, #003366, #0D6E98); filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr=#0D6E98, endColorStr=#003366); color: #FFF;   }
 .forum_cattitle{
 	font-size: 18px;
 	margin-bottom:6px;
 	margin-top:10px;
 	color:#5186B8;
 }
-
 .forums_table{
     border:solid 1px #A8C2CF;
+	box-shadow:0 0 20px rgba(0,0,0,0.3);
 }
 
 .forum_link{
@@ -2568,6 +2568,7 @@ div.con_forum_link a{
 
 .threads_table{
 	border:solid 1px #A8C2CF;
+	box-shadow:0 0 20px rgba(0,0,0,0.3);
 }
 .thread_link{
 	font-weight:bold;
@@ -2589,9 +2590,11 @@ div.con_forum_link a{
 }
 
 .row1{
-	background-color:#E0EAEF;
+background-color:#E0EAEF; background-image: -webkit-gradient(linear,left bottom,left top,from(#E0EAEF),to(#FFF)); background-image: -moz-linear-gradient(bottom, #E0EAEF, #FFF); background-image: -o-linear-gradient(bottom, #E0EAEF, #FFF); filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr=#FFF, endColorStr=#E0EAEF);
 }
-
+.row11{
+background-color:#E0EAEF;
+}
 .row2{
 	background-color:#FFF;
 }
@@ -2685,9 +2688,6 @@ div.con_forum_link a{
 	margin:2px;
 	font-size:10px;
 }
-.posts_table{
-}
-
 .post_msgcell{
 	background-color:#FFFFFF;
 /*	border:solid 1px #A8C2CF;*/
@@ -2702,9 +2702,6 @@ div.con_forum_link a{
 	color:#5F98BF;
 	margin-bottom:10px;
 	border-bottom:dotted 1px #A8C2CF;
-}
-.post_content{
-
 }
 .post_editdate{
 	color:#999999;

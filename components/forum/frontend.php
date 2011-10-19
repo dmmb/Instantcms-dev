@@ -229,7 +229,7 @@ if ($do=='view'){
                         $subforums = '';
                     }
                     //PRINT FORUM DATA
-                    if ($row % 2) { $class='row1'; } else { $class = 'row2'; }
+                    if ($row % 2) { $class='row11'; } else { $class = 'row2'; }
                     echo '<tr>';
                         echo '<td width="32" class="'.$class.'" align="center" valign="top"><img src="/components/forum/images/forum.gif" border="0" /></td>';
                         echo '<td width="" class="'.$class.'" align="left" valign="top">';

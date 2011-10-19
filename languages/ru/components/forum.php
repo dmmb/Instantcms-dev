@@ -157,6 +157,8 @@ $_LANG['IN THREAD']                  ='в теме';
 $_LANG['ADMINISTRATOR']              ='Администратор';
 $_LANG['USER']                       ='Посетитель';
 $_LANG['MODER']                      ='Модератор';
+$_LANG['AUTHOR']                     ='Автор';
+$_LANG['FORUM_ACT']                  ='Активность';
 // Templates
 $_LANG['ATTACHED_THREAD']            ='Прикрепленная тема';
 $_LANG['HAVE_NEW_MESS']              ='Есть новые сообщения';
