@@ -256,7 +256,7 @@ function clubTotalMembers($club_id){
 	$members = array();
 	$sql = "SELECT 1
 			FROM cms_user_clubs c
-			WHERE c.club_id = '$club_id' AND c.role = 'member'";
+			WHERE c.club_id = '$club_id'";
 	$rs = $inDB->query($sql);
 	if ($inDB->num_rows($rs)){
 		return $inDB->num_rows($rs) +1; //+1 потому что считаем еще и админа, не только юзеров
