@@ -49,7 +49,7 @@ class cmsFormGen {
             //если это массив, склеиваем в строку
             if (is_array($value)){ $value = implode('|', $value); }
 
-            $param['value'] = $value;
+            $param['value'] = iconv('cp1251', 'utf-8', $value);
 
             $param['html']  = $this->getParamHTML($param);
 
@@ -98,6 +98,7 @@ class cmsFormGen {
 
         foreach($this->params as $key=>$param){
             $this->params[$key]['title'] = iconv('utf-8', 'cp1251', $param['title']);
+            $this->params[$key]['html']     = iconv('utf-8', 'cp1251', $param['html']);
         }
 
         ob_start();
@@ -154,7 +155,6 @@ class cmsFormGen {
         $name   = (string)$param['name'];
         $value  = (string)$param['value'];
         $units  = isset($param['units']) ? (string)$param['units'] : '';
-		$units  = iconv('utf-8', 'cp1251', $units);
 
         return '<input type="text" id="'.$name.'" name="'.$name.'" value="'.$value.'" class="param-number" /> '. $units;
 
@@ -179,7 +179,7 @@ class cmsFormGen {
         $html = '<input type="checkbox" '.($value==1 ? 'checked="checked"' : '').' onclick="$(\'#'.$name.'\').val(1-$(\'#'.$name.'\').val())" />' . "\n" .
                 '<input type="hidden" id="'.$name.'" name="'.$name.'" value="'.$value.'" />';
 
-        return $html;
+        return iconv('cp1251', 'utf-8', $html);
 
     }
 
@@ -202,7 +202,7 @@ class cmsFormGen {
 
         $html .= '</select>' . "\n";
 
-        return iconv('utf-8', 'cp1251', $html);
+        return $html;
         
         
     }
@@ -262,7 +262,7 @@ class cmsFormGen {
             if ($inDB->num_rows($result)){
                 while($option = $inDB->fetch_assoc($result)){
                     $option['title'] = iconv('cp1251', 'utf-8', $option['title']);
-                    if ($option['level'] >= 1){
+                    if (isset($option['level']) && $option['level'] >= 1){
                         $option['title'] = str_repeat('--', $option['level']-1) . ' ' . $option['title'];
                     }
                     $html .= "\t" . '<option value="'.htmlspecialchars($option['value']).'" '.($value == $option['value'] ? 'selected="selected"' : '').'>'.$option['title'].'</option>' . "\n";
@@ -297,7 +297,7 @@ class cmsFormGen {
 
         }
 
-        return iconv('utf-8', 'cp1251', $html);
+        return $html;
 
     }
 
