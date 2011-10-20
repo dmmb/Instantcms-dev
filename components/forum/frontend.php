@@ -19,11 +19,10 @@ function forumsList($selected=0){
 	$html = '';
 	$html .= '<select name="goforum" id="goforum" style="width:220px; margin:0px" onchange="goForum()">';
 	$nested_sets = $inCore->nestedSetsInit('cms_forums');
-	$rootid = dbGetField('cms_forums', 'parent_id=0', 'id');
 	
 	$groupsql = forumUserAuthSQL();	
 	
-	$fsql = "SELECT * 
+	$fsql = "SELECT id, parent_id, NSLevel, title
 			 FROM cms_forums 
 			 WHERE published = 1 $groupsql
 			 ORDER BY NSLeft";
@@ -85,10 +84,6 @@ function createPoll($thread_id, $poll, $cfg){
 	}
 	
 	return $poll_error;	
-}
-
-function pageSelect($records, $current, $perpage, $field='page', $form='pageform'){
-	return;
 }
 
 function uploadFiles($post_id, $cfg){
@@ -198,26 +193,30 @@ if ($do=='view'){
 
     if ($inDB->num_rows($result)){
         while ($cat = $inDB->fetch_assoc($result)){
-            echo '<div class="forum_cattitle">'.$cat['title'].'</div>';
+			echo '<table class="forums_table" width="100%" cellspacing="0" cellpadding="8" border="0" bordercolor="#999999" >';
+			echo '<tr class="darkBlue-LightBlue">
+			  <td colspan="2" width="">'.$cat['title'].'</td>
+			  <td width="120">'.$_LANG['FORUM_ACT'].'</td>
+			  <td width="250">'.$_LANG['LAST_POST'].'</td>
+			</tr>';
             //FORUMS LIST IN CATEGORY
             $rootid = $inDB->get_field('cms_forums', 'parent_id=0', 'id');
             $fsql = "SELECT *
                      FROM cms_forums
-                     WHERE published = 1 AND category_id = '".$cat['id']."' AND parent_id = $rootid $groupsql
+                     WHERE published = 1 AND category_id = '{$cat['id']}' AND parent_id = '$rootid' $groupsql
                      ORDER BY ordering";
             $fresult = $inDB->query($fsql) ;
             if ($inDB->num_rows($fresult)){
                 $row = 1;
                 //print forums list in category
-                echo '<table class="forums_table" width="100%" cellspacing="0" cellpadding="8" border="0" bordercolor="#999999" >';
                 while ($f = $inDB->fetch_assoc($fresult)){
                     //GET SUBFORUMS LIST
                     $subforums = '';
                     $sql = "SELECT id, title
                             FROM cms_forums
-                            WHERE parent_id = {$f['id']} $groupsql
+                            WHERE parent_id = '{$f['id']}' $groupsql
                             ORDER BY title";
-                    $rs = $inDB->query($sql) or die('ERROR BUILDING SUBFORUMS LIST FOR ID='.$f['id']);
+                    $rs = $inDB->query($sql);
                     $sub = $inDB->num_rows($rs);
                     if ($sub){
                         $s = 1;
@@ -242,15 +241,15 @@ if ($do=='view'){
                                 echo '<div class="forum_subs"><span class="forum_subs_title">'.$_LANG['SUBFORUMS'].':</span> '.$subforums.'</div>';
                             }
                         echo '</td>';
-                        echo '<td width="120" class="'.$class.'" style="font-size:10px" valign="top">'.forumMessages($f['id']).'</td>';
-                        echo '<td width="250" style="font-size:10px" class="'.$class.'" valign="top">'.forumLastMessage($f['id'], $cfg['pp_thread']).'</td>';
+                        echo '<td class="'.$class.'" style="font-size:11px" valign="top">'.forumMessages($f['id']).'</td>';
+                        echo '<td style="font-size:11px" class="'.$class.'" valign="top">'.forumLastMessage($f['id'], $cfg['pp_thread']).'</td>';
                     echo '</tr>';
                     $row++;
                 }
-                echo '</table>';
             } else {
-                echo '<p>'.$_LANG['NOT_FORUMS_IN_CAT'].'</p>';
+                echo '<td colspan="4"><p>'.$_LANG['NOT_FORUMS_IN_CAT'].'</p></td>';
             }
+			echo '</table>';
         }
     } else {
         echo '<p>'.$_LANG['NOT_CATS_OF_FORUM'].'</p>';
@@ -289,7 +288,7 @@ if ($do=='forum'){
     
     $subforums_sql      = "SELECT *
                            FROM cms_forums
-                           WHERE published = 1 AND parent_id = $id $groupsql
+                           WHERE published = 1 AND parent_id = '$id' $groupsql
                            ORDER BY ordering";
 
     $subforums_result   = $inDB->query($subforums_sql);
@@ -302,7 +301,7 @@ if ($do=='forum'){
 
             $inner_forums = '';
 
-            $inner_sql    = "SELECT id, title FROM cms_forums WHERE parent_id = {$subforum['id']} ORDER BY title";
+            $inner_sql    = "SELECT id, title FROM cms_forums WHERE parent_id = '{$subforum['id']}' ORDER BY title";
             $inner_result = $inDB->query($sql);
             $inner_count  = $inDB->num_rows($rs);
 
@@ -327,13 +326,8 @@ if ($do=='forum'){
     $perpage = $cfg['pp_forum'] ? $cfg['pp_forum'] : 25;
 
     // считаем количество тем и делим на страницы
-    
     $threads_count          = $inDB->rows_count('cms_forum_threads', "forum_id = {$f['id']}");
     $threads_page_select    = '';
-
-    if ($threads_count){
-        $threads_page_select = pageSelect($threads_count, $page, $perpage);
-    }
 
     if ($inUser->id){
         $logdate = $_SESSION['user']['logdate'];
@@ -359,7 +353,7 @@ if ($do=='forum'){
             $thread['author']       = forumThreadAuthor($thread['id']);
             $thread['pages']        = ceil($thread['postsnum'] / $cfg['pp_thread']);
             $thread['answers']      = $thread['postsnum']-1;
-            $thread['last_message'] = threadLastMessage($thread['id']);
+            $thread['last_message'] = threadLastMessage($thread['id'], $thread['pages']);
 
             $threads[]              = $thread;
 
@@ -394,6 +388,17 @@ if ($do=='thread'){
 	$result = $inDB->query($sql);
 	
 	if ($inDB->num_rows($result)){
+		
+		// ћассив пользователей онлайн
+		$online_users = array();
+		$sql_online    = "SELECT user_id FROM cms_online WHERE user_id > 0";
+		$result_online = $inDB->query($sql_online);
+		if ($inDB->num_rows($result_online)){
+			while($data = $inDB->fetch_assoc($result_online)){
+				$online_users[] = $data['user_id'];
+			}
+		} 
+		
 		$t = $inDB->fetch_assoc($result);
 		
 		$mythread = ($inUser->id==$t['user_id']);
@@ -431,7 +436,6 @@ if ($do=='thread'){
 
 		if ($posts_count){
 			echo '<td width="5">&nbsp;</td>';
-			echo pageSelect($posts_count, $page, $perpage);
 		} else {
 			echo '<td width=="">&nbsp;</td>';
 		}
@@ -556,10 +560,13 @@ if ($do=='thread'){
 											echo '<img src="/images/icons/award.gif" border="0" alt="'.$title.'" title="'.$title.'"/>';
 										}
 									echo '</div>';
-								}							
+								}
 							echo '</div>';
 							
 							echo '<div class="post_usermsgcnt">'.$_LANG['MESSAGES'].': '.$user_messages.'</div>';
+							if(in_array($p['uid'], $online_users)){
+								echo '<span class="online" style="font-size:10px;">'.$_LANG['ONLINE'].'</span>';
+							}
 														
 						echo '</td>';
 						//message column

@@ -20,7 +20,7 @@ function forumMessages($forum_id){
 	$html = '';
 	global $_LANG;
 	
-	$sql = "SELECT 1 FROM cms_forum_threads WHERE forum_id = $forum_id";
+	$sql = "SELECT 1 FROM cms_forum_threads WHERE forum_id = '$forum_id'";
 	$result = $inDB->query($sql) ;
 	
 	if ($inDB->num_rows($result)){
@@ -30,7 +30,7 @@ function forumMessages($forum_id){
 	$tsql = "SELECT p.id
 			 FROM cms_forum_threads t
 			 LEFT JOIN cms_forum_posts p ON p.thread_id = t.id
-			 WHERE t.forum_id = $forum_id";
+			 WHERE t.forum_id = '$forum_id'";
 	$tresult = $inDB->query($tsql);
 		if ($inDB->num_rows($tresult)){
 			$html .= '<br/><strong>'.$_LANG['MESSAGES'].':</strong> '.$inDB->num_rows($tresult);
@@ -40,50 +40,47 @@ function forumMessages($forum_id){
 }
 
 function forumPollVote(){
+
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
-	if (isset($_REQUEST['answer'])){
-		$answer = $inCore->request('answer', 'html');
-		if (isset($_REQUEST['poll_id'])){
-			$poll_id = $inCore->request('poll_id', 'int');
-		} else { die(); }
-	} else { die();  }
-	if(is_numeric($poll_id)){
-		$sql = "SELECT *
-				FROM cms_forum_polls
-				WHERE id = $poll_id
-				";
-		$result = $inDB->query($sql) ;
-	} else { die("HACKING ATTEMPT BLOCKED!"); }
-		
-	if ($inDB->num_rows($result)){
-		$poll=$inDB->fetch_assoc($result);		
-		$answers = unserialize($poll['answers']);
-		
-		//SUBMIT NEW VOTE
-		$answer_id = 0;
-		foreach($answers as $key=>$value){
-			$answer_id ++;
-			if (stripslashes(urldecode($key)) == $answer){
-				$answers[$key] += 1;
-				break;
-			}
+
+	$answer = $inCore->request('answer', 'html');
+	$poll_id = $inCore->request('poll_id', 'int');
+
+	if(!$answer || !$poll_id) { die(); }
+
+	$sql = "SELECT *
+			FROM cms_forum_polls
+			WHERE id = '$poll_id' LIMIT 1";
+	$result = $inDB->query($sql) ;
+	if ($inDB->num_rows($result)){ $inCore->redirect($_SERVER['REQUEST_URI']); return; }
+
+	$poll=$inDB->fetch_assoc($result);		
+	$answers = unserialize($poll['answers']);
+	
+	//SUBMIT NEW VOTE
+	$answer_id = 0;
+	foreach($answers as $key=>$value){
+		$answer_id ++;
+		if (stripslashes(urldecode($key)) == $answer){
+			$answers[$key] += 1;
+			break;
 		}
-		
-		//SAVE POLL DATA		
-		$sql = "UPDATE cms_forum_polls SET answers = '".serialize($answers)."' WHERE id = $poll_id";
-		$inDB->query($sql) ;
-		
-		//MARK USER VOTING
-		$user_id = $inUser->id;
-		$sql = "INSERT cms_forum_votes (poll_id, answer_id, user_id, pubdate)
-				VALUES ('$poll_id', '$answer_id', '$user_id', NOW())";
-		
-		$inDB->query($sql) ;
 	}
+	
+	//SAVE POLL DATA		
+	$sql = "UPDATE cms_forum_polls SET answers = '".serialize($answers)."' WHERE id = '$poll_id'";
+	$inDB->query($sql) ;
+	
+	//MARK USER VOTING
+	$user_id = $inUser->id;
+	$sql = "INSERT cms_forum_votes (poll_id, answer_id, user_id, pubdate)
+			VALUES ('$poll_id', '$answer_id', '$user_id', NOW())";
+	
+	$inDB->query($sql) ;
 		
-	header('location:'.$_SERVER['REQUEST_URI']);
+	$inCore->redirect($_SERVER['REQUEST_URI']);
 	return;
 }
 
@@ -95,20 +92,20 @@ function forumUserVote($poll_id, $thread_id){
 	if ( isset($_REQUEST['viewpoll'])) { return true; }
 
 	//guests not vote
-	if (!isset($inUser->id)){ return false;	 }
+	if (!$inUser->id){ return false;	 }
 
 	$uid = $inUser->id;
 
 	//user revoting event
-	if ( isset($_REQUEST['revote'])) {
+	if (isset($_REQUEST['revote'])) {
         
 		//get previous answer id
-		$sql = "SELECT answer_id FROM cms_forum_votes WHERE user_id = $uid AND poll_id = $poll_id";
+		$sql = "SELECT answer_id FROM cms_forum_votes WHERE user_id = '$uid' AND poll_id = '$poll_id'";
 		$result = $inDB->query($sql);		
 		$data = $inDB->fetch_assoc($result);
 		$answer_id = $data['answer_id'];
 		//get all poll answers
-		$sql = "SELECT answers FROM cms_forum_polls WHERE id = $poll_id";
+		$sql = "SELECT answers FROM cms_forum_polls WHERE id = '$poll_id'";
 		$result = $inDB->query($sql);		
 		$data = $inDB->fetch_assoc($result);
 		$answers = unserialize($data['answers']);
@@ -121,15 +118,15 @@ function forumUserVote($poll_id, $thread_id){
 			$aid++;
 		}
 		//update poll log
-		$inDB->query("UPDATE cms_forum_polls SET answers = '".serialize($answers)."' WHERE id = $poll_id") ;
+		$inDB->query("UPDATE cms_forum_polls SET answers = '".serialize($answers)."' WHERE id = '$poll_id'") ;
 		//clean vote mark
-		$inDB->query("DELETE FROM cms_forum_votes WHERE poll_id = $poll_id AND user_id = $uid") ;
+		$inDB->query("DELETE FROM cms_forum_votes WHERE poll_id = '$poll_id' AND user_id = '$uid'") ;
 
         $inCore->redirect('/forum/thread'.$thread_id.'.html');
 
 	}
 
-	$sql = "SELECT id FROM cms_forum_votes WHERE user_id = $uid AND poll_id = $poll_id";
+	$sql = "SELECT id FROM cms_forum_votes WHERE user_id = '$uid' AND poll_id = '$poll_id'";
 	$result = $inDB->query($sql);
 	
 	return $inDB->num_rows($result);
@@ -137,18 +134,16 @@ function forumUserVote($poll_id, $thread_id){
 }
 
 function forumUserAnswer($poll_id){
+
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
-	if (!isset($inUser->id)){
-		return 0;		
-	}
-	
-	$uid = $inUser->id;
 
-	$sql = "SELECT answer_id FROM cms_forum_votes WHERE user_id = $uid AND poll_id = $poll_id";
+	if (!$inUser->id){ return 0; }
+
+	$sql = "SELECT answer_id FROM cms_forum_votes WHERE user_id = '{$inUser->id}' AND poll_id = '$poll_id'";
 	$result = $inDB->query($sql);
-	
+
 	if ($inDB->num_rows($result)){
 		$data = $inDB->fetch_assoc($result);
 		return $data['answer_id'];
@@ -166,10 +161,10 @@ function forumAttachedPoll($thread_id, $thread){
 		forumPollVote();
 		unset($_POST);
 	}
-	
+
 	$sql = "SELECT *, (TO_DAYS(enddate) - TO_DAYS(CURDATE())) as daysleft, DATE_FORMAT(enddate, '%d-%m-%Y') as fenddate
 			FROM cms_forum_polls 
-			WHERE thread_id = $thread_id";
+			WHERE thread_id = '$thread_id'";
 	$result = $inDB->query($sql) ;
 	
 	if ($inDB->num_rows($result)){
@@ -314,7 +309,7 @@ function forumAttachedFiles($post_id, $mypost, $showimg=false){
 	
 	$sql = "SELECT f.*, u.id as uid
 			FROM cms_forum_files f, cms_users u, cms_forum_posts p
-			WHERE f.post_id = $post_id AND f.post_id = p.id AND p.user_id = u.id";
+			WHERE f.post_id = '$post_id' AND f.post_id = p.id AND p.user_id = u.id";
 	$result = $inDB->query($sql) ;
 	
 	if ($inDB->num_rows($result)){
@@ -486,18 +481,6 @@ function forumPollForm($cfg){
 
 }
 
-function forumDate($datestr, $daysleft){
-        global $_LANG;
-	if ($daysleft == '0'){
-		return '<strong>'.$_LANG['TODAY'].'</strong>';
-	}
-	if ($daysleft == '1'){
-		return '<strong>'.$_LANG['YESTERDAY'].'</strong>';
-	}
-	return $datestr;
-
-}
-
 function forumLastMessage($forum_id, $perpage_thread){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
@@ -508,7 +491,7 @@ function forumLastMessage($forum_id, $perpage_thread){
 
 	$groupsql = forumUserAuthSQL("f.");
 	
-	$sql = "SELECT p.pubdate, 
+	$sql = "SELECT p.pubdate, p.id as post_id,
 				   u.id as uid, u.nickname as author,
                    u.login as author_login, 
 				   t.title as threadtitle, t.id as threadid
@@ -529,13 +512,12 @@ function forumLastMessage($forum_id, $perpage_thread){
 		$lastpage = ceil($pcount / $perpage_thread);
 		
 		if ($lastpage==1) {
-			$link = '/forum/thread'.$post['threadid'].'.html#new';
+			$link = '/forum/thread'.$post['threadid'].'.html#'.$post['post_id'];
 		} else {
-			$link = '/forum/thread'.$post['threadid'].'-'.$lastpage.'.html#new';		
+			$link = '/forum/thread'.$post['threadid'].'-'.$lastpage.'.html#'.$post['post_id'];		
 		}
 	
-		$html .= '<strong>'.$_LANG['LAST_POST'].' <br/>';
-		$html .= $_LANG['IN THREAD'].': <a href="'.$link.'">'.$post['threadtitle'].'</a></strong><br/>';
+		$html .= '<strong>'.$_LANG['IN THREAD'].': <a href="'.$link.'">'.$post['threadtitle'].'</a></strong><br/>';
 		$html .= $inCore->dateFormat($post['pubdate'], true, true).' '.$_LANG['FROM'].' <a href="'.cmsUser::getProfileURL($post['author_login']).'">'.$post['author'].'</a>';
 	} else { $html .= $_LANG['NOT_POSTS']; }
 	
@@ -543,9 +525,10 @@ function forumLastMessage($forum_id, $perpage_thread){
 
 }
 
-function threadLastMessage($thread_id){
+function threadLastMessage($thread_id, $thread_pages=1){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
+	$thread_pages = ($thread_pages > 1) ? '-'.$thread_pages : '';
 	$html = '';
 	global $_LANG;
 	$sql = "SELECT p.id, p.pubdate, t.id as tr_id, u.id as uid, u.nickname as author, u.login as author_login
@@ -561,7 +544,7 @@ function threadLastMessage($thread_id){
 		$post = $inDB->fetch_assoc($result);
 		$html = $_LANG['FROM'].' <a href="'.cmsUser::getProfileURL($post['author_login']).'">'.$post['author'].'</a><br>';
 		$html .= $inCore->dateFormat($post['pubdate'], true, true);
-		$html .= ' <a href="/forum/thread'.$post['tr_id'].'.html#'.$post['id'].'">»»</a> ';		
+		$html .= ' <a href="/forum/thread'.$post['tr_id'].$thread_pages.'.html#'.$post['id'].'">»»</a> ';		
 	} else { $html .= $_LANG['NOT_POSTS']; }
 	
 	return $html;
@@ -576,7 +559,7 @@ function threadLastMessageData($thread_id){
 			FROM cms_forum_threads t
 			LEFT JOIN cms_forum_posts p ON p.thread_id = t.id
 			LEFT JOIN cms_users u ON u.id = p.user_id
-			WHERE t.id = $thread_id
+			WHERE t.id = '$thread_id'
 			ORDER BY p.pubdate DESC
 			LIMIT 1";
 	$result = $inDB->query($sql) ;
@@ -598,33 +581,27 @@ function threadLastMessageData($thread_id){
 
 function forumUserMsgNum($user_id){
     $inDB   = cmsDatabase::getInstance();
-	$html = '';
-	
-	$sql = "SELECT id FROM cms_forum_posts WHERE user_id = $user_id";
+	$sql    = "SELECT id FROM cms_forum_posts WHERE user_id = '$user_id'";
 	$result = $inDB->query($sql) ;
-	$count = $inDB->num_rows($result);
-	$html .= $count;
-	
-	return $html;
+	return $inDB->num_rows($result);
 }
 
 function forumThreadAuthor($thread_id){
     $inDB   = cmsDatabase::getInstance();
 	$author = array();
-	
+
 	$sql = "SELECT u.id as id, u.nickname as nickname, u.login as login
 			FROM cms_forum_posts p, cms_users u
-			WHERE p.thread_id = $thread_id AND p.user_id = u.id
+			WHERE p.thread_id = '$thread_id' AND p.user_id = u.id
 			ORDER BY p.pubdate ASC
 			LIMIT 1";
 	$result = $inDB->query($sql) ;
 	
 	if ($inDB->num_rows($result)){
 		$item = $inDB->fetch_assoc($result);
-		$author = $item;
 	} else { return false; }
 	
-	return $author;
+	return $item;
 
 }
 
@@ -636,15 +613,15 @@ function uploadDelete($id){
 
 	$sql = "SELECT f.*, p.thread_id as tid, u.id as uid
 			FROM cms_forum_files f, cms_users u, cms_forum_posts p
-			WHERE f.id = $id AND f.post_id = p.id AND p.user_id = u.id";
+			WHERE f.id = '$id' AND f.post_id = p.id AND p.user_id = u.id";
 	$result = $inDB->query($sql) ;
 	
 	if ($inDB->num_rows($result)){
 		$file = $inDB->fetch_assoc($result);			
-		if ($file['uid'] == @$inUser->id || @$inCore->userIsAdmin(@$inUser->id) || $inCore->isUserCan('forum/moderate')){		
-			@unlink($_SERVER['DOCUMENT_ROOT'].'/upload/forum/post'.$file['post_id'].'/'.$file['filename']);
-			@rmdir($_SERVER['DOCUMENT_ROOT'].'/upload/forum/post'.$file['post_id']);	
-			$inDB->query("DELETE FROM cms_forum_files WHERE id = $id") ;
+		if ($file['uid'] == $inUser->id || @$inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('forum/moderate')){		
+			@unlink(PATH.'/upload/forum/post'.$file['post_id'].'/'.$file['filename']);
+			@rmdir(PATH.'/upload/forum/post'.$file['post_id']);	
+			$inDB->query("DELETE FROM cms_forum_files WHERE id = '$id'") ;
 			return $file;
 		}		
 	}
@@ -657,14 +634,14 @@ function uploadDeletePost($postid){
 
 	$sql = "SELECT f.*, p.thread_id as tid, u.id as uid
 			FROM cms_forum_files f, cms_users u, cms_forum_posts p
-			WHERE f.post_id = $postid AND f.post_id = p.id AND p.user_id = u.id";
+			WHERE f.post_id = '$postid' AND f.post_id = p.id AND p.user_id = u.id";
 	$result = $inDB->query($sql) ;
 	if ($inDB->num_rows($result)){
 		while($file = $inDB->fetch_assoc($result)){
-			@unlink($_SERVER['DOCUMENT_ROOT'].'/upload/forum/post'.$postid.'/'.$file['filename']);
-			$inDB->query("DELETE FROM cms_forum_files WHERE id = ".$file['id']) ;
+			@unlink(PATH.'/upload/forum/post'.$postid.'/'.$file['filename']);
+			$inDB->query("DELETE FROM cms_forum_files WHERE id = '{$file['id']}'") ;
 		}
-		@rmdir($_SERVER['DOCUMENT_ROOT'].'/upload/forum/post'.$postid);	
+		@rmdir(PATH.'/upload/forum/post'.$postid);	
 	}	
 	return;
 }
@@ -673,14 +650,14 @@ function uploadDeleteThread($threadid){
     $inDB   = cmsDatabase::getInstance();
 	$sql = "SELECT f.*, p.thread_id as tid, u.id as uid
 			FROM cms_forum_files f, cms_users u, cms_forum_posts p
-			WHERE p.thread_id = $threadid AND f.post_id = p.id AND p.user_id = u.id";
+			WHERE p.thread_id = '$threadid' AND f.post_id = p.id AND p.user_id = u.id";
 	$result = $inDB->query($sql) ;
 	
 	if ($inDB->num_rows($result)){
 		while($file = $inDB->fetch_assoc($result)){
-			@unlink($_SERVER['DOCUMENT_ROOT'].'/upload/forum/post'.$file['post_id'].'/'.$file['filename']);
-			@rmdir($_SERVER['DOCUMENT_ROOT'].'/upload/forum/post'.$file['post_id']);
-			$inDB->query("DELETE FROM cms_forum_files WHERE id = ".$file['id']) ;
+			@unlink(PATH.'/upload/forum/post'.$file['post_id'].'/'.$file['filename']);
+			@rmdir(PATH.'/upload/forum/post'.$file['post_id']);
+			$inDB->query("DELETE FROM cms_forum_files WHERE id = '{$file['id']}'") ;
 		}
 	}
 	
@@ -696,7 +673,7 @@ function forumUserAuthSQL($tablepreffix=''){
 			$groupsql = '';
 		} else {
 			$ug = $_SESSION['user']['group_id'];
-			$groupsql = "AND (".$tablepreffix."auth_group = 0 OR ".$tablepreffix."auth_group = $ug)";
+			$groupsql = "AND ".$tablepreffix."auth_group IN (0, $ug)";
 		}
 	} else {
 		$groupsql = "AND ".$tablepreffix."auth_group = 0";
@@ -711,30 +688,30 @@ function forumUserRank($uid, $messages, $ranks, $modrank=true){
     global $_LANG;
 	$userrank = '';
 	if ($inUser->id) {
-	//check is admin
-	if ($inCore->userIsAdmin($uid)){
-		$userrank = '<span id="admin">'.$_LANG['ADMINISTRATOR'].'</span>';
-	} else {
-		//rank by messages
-		if(is_array($ranks)){
-			foreach($ranks as $k=>$rank){
-				if ($messages >= $rank['msg'] && $rank['msg'] != ''){
-					$userrank = '<span id="rank">'.$rank['title'].'</span>';
+		//check is admin
+		if ($inCore->userIsAdmin($uid)){
+			$userrank = '<span id="admin">'.$_LANG['ADMINISTRATOR'].'</span>';
+		} else {
+			//rank by messages
+			if(is_array($ranks)){
+				foreach($ranks as $k=>$rank){
+					if ($messages >= $rank['msg'] && $rank['msg'] != ''){
+						$userrank = '<span id="rank">'.$rank['title'].'</span>';
+					}
+				}
+			} else {
+				$userrank = '<span id="rank">'.$_LANG['USER'].'</span>';
+			}
+			//check is moderator
+			$rights = dbGetFields('cms_user_groups g, cms_users u', "u.group_id = g.id AND u.id = $uid", 'g.id, g.access as access');
+			if (strstr($rights['access'], 'forum/moderate')){
+				if ($modrank){
+					$userrank .= '<span id="moder">'.$_LANG['MODER'].'</span>';
+				} else {
+					$userrank = '<span id="moder">'.$_LANG['MODER'].'</span>';
 				}
 			}
-		} else {
-			$userrank = '<span id="rank">'.$_LANG['USER'].'</span>';
 		}
-		//check is moderator
-		$rights = dbGetFields('cms_user_groups g, cms_users u', "u.group_id = g.id AND u.id = $uid", 'g.id, g.access as access');
-		if (strstr($rights['access'], 'forum/moderate')){
-			if ($modrank){
-				$userrank .= '<span id="moder">'.$_LANG['MODER'].'</span>';
-			} else {
-				$userrank = '<span id="moder">'.$_LANG['MODER'].'</span>';
-			}
-		}
-	}
 	}
 	return $userrank;
 }

@@ -33,6 +33,11 @@
 {if $subforums_count}
     <table class="forums_table" width="100%" cellspacing="0" cellpadding="8" border="0" bordercolor="#999999" >
         {php}$row=1;{/php}
+        <tr class="darkBlue-LightBlue">
+          <td colspan="2">{$LANG.SUBFORUMS}</td>
+          <td>{$LANG.FORUM_ACT}</td>
+          <td>{$LANG.LAST_POST}</td>
+        </tr>
         {foreach key=id item=subf from=$subforums}
             {php}
                 if ($row % 2) {

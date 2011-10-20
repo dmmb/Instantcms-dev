@@ -169,4 +169,6 @@ $_LANG['NOT_THREADS_IN_FORUM']       ='Нет тем в этом форуме';
 
 $_LANG['TOPIC_FIXED_LABEL']          ='Проблема решена, закрыть тему';
 $_LANG['TOPIC_FIXED_PREFIX']         ='[РЕШЕНО]';
+$_LANG['ONLINE']                    ='Онлайн';
+$_LANG['OFFLINE']                   ='Оффлайн';
 ?>
