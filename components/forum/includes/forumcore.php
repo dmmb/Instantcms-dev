@@ -542,9 +542,9 @@ function threadLastMessage($thread_id, $thread_pages=1){
 	
 	if ($inDB->num_rows($result)){
 		$post = $inDB->fetch_assoc($result);
-		$html = $_LANG['FROM'].' <a href="'.cmsUser::getProfileURL($post['author_login']).'">'.$post['author'].'</a><br>';
+		$html = '<a href="/forum/thread'.$post['tr_id'].$thread_pages.'.html#'.$post['id'].'"><img class="last_post_img" title="Последний ответ" alt="Последний ответ" src="/templates/_default_/images/icons/anchor.png"></a> ';
+		$html .= $_LANG['FROM'].' <a href="'.cmsUser::getProfileURL($post['author_login']).'">'.$post['author'].'</a><br>';
 		$html .= $inCore->dateFormat($post['pubdate'], true, true);
-		$html .= ' <a href="/forum/thread'.$post['tr_id'].$thread_pages.'.html#'.$post['id'].'">»»</a> ';		
 	} else { $html .= $_LANG['NOT_POSTS']; }
 	
 	return $html;

@@ -132,6 +132,13 @@
     }
 // ========================================================================== //
 // ========================================================================== //
+    if (!$inDB->isFieldExists('cms_forums', 'icon')){
+        $inDB->query("ALTER TABLE `cms_forums` ADD `icon` VARCHAR( 200 ) NOT NULL AFTER `NSLevel`");
+        echo '<p>Поле <strong>icon</strong> добавлено в таблицу <strong>cms_forums</strong></p>';
+		$is_was_migrate = true;
+    }
+// ========================================================================== //
+// ========================================================================== //
 	if ($is_was_migrate) {
 	    echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Миграция завершена. Удалите папку /migrate/ прежде чем продолжить!</div>';
 	} else {

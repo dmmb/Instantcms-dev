@@ -11,6 +11,28 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //                        LICENSED BY GNU/GPL v2                              //
 //                                                                            //
 /******************************************************************************/
+    function uploadCategoryIcon($file='') {
+
+        $inCore = cmsCore::getInstance();
+
+		// Загружаем класс загрузки фото
+		$inCore->loadClass('upload_photo');
+		$inUploadPhoto = cmsUploadPhoto::getInstance();
+		// Выставляем конфигурационные параметры
+		$inUploadPhoto->upload_dir    = PATH.'/upload/forum/';
+		$inUploadPhoto->dir_medium    = 'cat_icons/';
+		$inUploadPhoto->medium_size_w = 32;
+		$inUploadPhoto->medium_size_h = 32;
+		$inUploadPhoto->only_medium   = true;
+		$inUploadPhoto->is_watermark  = false;
+		// Процесс загрузки фото
+		$files = $inUploadPhoto->uploadPhoto($file);
+
+		$icon = $files['filename'] ? $files['filename'] : $file;
+
+        return $icon;
+
+    }
 
 	cpAddPathway('Форум', '?view=components&do=config&id='.$_REQUEST['id']);
 	echo '<h3>Форум</h3>';
@@ -108,9 +130,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$cfg['fa_max']      = $inCore->request('fa_max', 'int');
 		$cfg['fa_ext']      = $inCore->request('fa_ext', 'str');
 		$cfg['fa_size']     = $inCore->request('fa_size', 'int');
-			
+
 		$inCore->saveComponentConfig('forum', $cfg);
-		
+
 		$msg = 'Настройки сохранены.';
 		$opt = 'config';
 
@@ -161,15 +183,18 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 			$ns = $inCore->nestedSetsInit('cms_forums');
 			$myid = $ns->AddNode($parent_id);
-			
+
+			$icon = uploadCategoryIcon();
+
 			$sql = "UPDATE cms_forums 
 					SET category_id=$category_id, 
 						title='$title', 
 						description='$description', 
 						auth_group='$auth_group', 
-						published=$published,
+						published='$published',
+						icon='$icon',
                         topic_cost='$topic_cost'
-					WHERE id = $myid";
+					WHERE id = '$myid'";
 
 			dbQuery($sql) ;	
 			header('location:?view=components&do=config&opt=list_forums&id='.$_REQUEST['id']);		
@@ -189,6 +214,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			
 			$ns = $inCore->nestedSetsInit('cms_forums');
 			$old = $inDB->get_fields('cms_forums', "id='$id'", '*');
+
+			$icon = uploadCategoryIcon($old['icon']);
+
 			if($parent_id != $old['parent_id']){
 				$ns->MoveNode($id, $parent_id);			
 			}
@@ -199,6 +227,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 						description='$description',
 						auth_group='$auth_group',
 						published=$published,
+						icon='$icon',
                         topic_cost='$topic_cost'
 					WHERE id = $id
 					LIMIT 1";
@@ -237,23 +266,27 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		include($_SERVER['DOCUMENT_ROOT'].'/components/forum/includes/forumcore.php');
 		
 		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];		
+			$id = (int)$_REQUEST['item_id'];		
 			//DELETE POSTS WITH ALL DATA
-			$sql = "SELECT p.* 
+			$sql = "SELECT p.*, f.icon as f_icon
 					FROM cms_forum_posts p, cms_forum_threads t, cms_forums f
-					WHERE p.thread_id = t.id AND t.forum_id = f.id AND f.id = $id";
+					WHERE p.thread_id = t.id AND t.forum_id = f.id AND f.id = '$id'";
 			$rs = dbQuery($sql);
 			if (mysql_num_rows($rs)){
 				while ($post = mysql_fetch_assoc($rs)){
 					uploadDeletePost(0, $post['id']);
-					$inCore->deleteUploadImages($post['id'], 'forum');	
+					$inCore->deleteUploadImages($post['id'], 'forum');
 				}
 			}
+			$f_icon = dbGetField('cms_forums', "id = '$id'", 'icon');
 			//DELETE THREADS
-			dbQuery("DELETE FROM cms_forum_threads WHERE forum_id = $id");
+			dbQuery("DELETE FROM cms_forum_threads WHERE forum_id = '$id'");
 			//DELETE FORUM
 			dbDeleteNS('cms_forums', $id);
-			dbQuery($sql) ;			
+			if(file_exists(PATH.'/upload/forum/cat_icons/'.$f_icon)){
+				@chmod(PATH.'/upload/forum/cat_icons/'.$f_icon, 0777);
+				@unlink(PATH.'/upload/forum/cat_icons/'.$f_icon);
+			}
 		}
 		header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_forums');
 	}
@@ -470,9 +503,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	
 	if ($opt == 'submit_cat'){	
 		if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("Укажите заголовок категории!"); }
-		$published = $_REQUEST['published'];
+		$published  = (int)$_REQUEST['published'];
 		$auth_group = $_REQUEST['auth_group'];
-		$ordering = $_REQUEST['ordering'];		
+		$ordering   = (int)$_REQUEST['ordering'];		
 				
 		$sql = "INSERT INTO cms_forum_cats (title, published, auth_group, ordering)
 				VALUES ('$title', '$published', '$auth_group', '$ordering')";
@@ -492,19 +525,19 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	
 	if ($opt == 'update_cat'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];
+			$id = (int)$_REQUEST['item_id'];
 			
 			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("Укажите заголовок категории!"); }
-			$published = $_REQUEST['published'];
+			$published  = (int)$_REQUEST['published'];
 			$auth_group = $_REQUEST['auth_group'];
-			$ordering = $_REQUEST['ordering'];		
-				
+			$ordering   = (int)$_REQUEST['ordering'];		
+
 			$sql = "UPDATE cms_forum_cats
 					SET title='$title', 
-						published=$published,
-						auth_group=$auth_group,
-						ordering=$ordering
-					WHERE id = $id
+						published='$published',
+						auth_group='$auth_group',
+						ordering='$ordering'
+					WHERE id = '$id'
 					LIMIT 1";
 			dbQuery($sql) ;
 							
@@ -681,7 +714,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 						
 			}
 		?>
-        <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="addform" id="addform">
+        <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="addform" id="addform" enctype="multipart/form-data">
             <table width="514" border="0" cellspacing="10" class="proptable">
                 <tr>
                     <td width="236"><strong>Название форума:</strong></td>
@@ -748,9 +781,16 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                     </td>
                 </tr>
                 <tr>
+                    <td><strong>Иконка форума:</strong><br/>
+                        <span class="hinttext">файл размером 32px и менее вставляется оригиналом</span></td>
+                    <td valign="middle"> <?php if (@$mod['icon']) { ?><img src="/upload/forum/cat_icons/<?php echo @$mod['icon'];?>" border="0" /><?php } ?> 
+                        <input name="Filedata" type="file" style="width:215px; margin:0 0 0 5px; vertical-align:top" />
+                    </td>
+                </tr>
+                <tr>
                     <td width="236">
                         <strong>Стоимость создания темы:</strong><br/>
-                        <span class="hinttext">0 &mdash бесплатно</span>
+                        <span class="hinttext">0 &mdash; бесплатно</span>
                     </td>
                     <td width="259">
                         <?php if (IS_BILLING) { ?>

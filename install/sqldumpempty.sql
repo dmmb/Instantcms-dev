@@ -635,6 +635,7 @@ CREATE TABLE `#__forums` (
   `NSDiffer` varchar(15) NOT NULL,
   `NSIgnore` int(11) NOT NULL,
   `NSLevel` int(11) NOT NULL,
+  `icon` varchar(200) NOT NULL,
   `topic_cost` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),

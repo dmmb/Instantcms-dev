@@ -48,7 +48,7 @@
             {/php}
             <tr>
                 <td width="32" class="{php}echo $class{/php}" align="center" valign="middle">
-                    <img src="/templates/_default_/images/icons/forum/forum.png" border="0" />
+                    <img src="{if $subf.icon}/upload/forum/cat_icons/{$subf.icon}{else}/templates/_default_/images/icons/forum/forum.png{/if}" border="0" />
                 </td>
                 <td width="" class="{php}echo $class{/php}" align="left" valign="middle">
                     <div class="forum_link"><a href="/forum/{$subf.id}">{$subf.title}</a></div>

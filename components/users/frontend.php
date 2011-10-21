@@ -256,7 +256,11 @@ if ($do=='view'){
 	if ($orderto != 'asc' && $orderto != 'desc' ){ $orderto = 'desc'; }
 	if ($page <= 0) { $page = 1; }
 	
-	if ($inCore->inRequest('online')) { $_SESSION['usr_online'] = $inCore->request('online', 'int'); $page = 1; }
+	if ($inCore->inRequest('online')) {
+		$_SESSION['usr_online'] = $inCore->request('online', 'int'); $page = 1;
+	} else {
+		unset($_SESSION['usr_online']);
+	}
 	
 	$perpage = 10;
 
