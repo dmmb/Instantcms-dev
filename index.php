@@ -123,12 +123,15 @@
 		$inPage->showTemplate();
 	}
 
-//////////////////////// ¬ычисл€ем и выводим врем€ генерации ///////////////////
+////////////// ¬ычисл€ем и выводим врем€ генерации, запросы к базе /////////////
 
-	$time = $inCore->getGenTime();
-
-    echo '<!-- '.$_LANG['DEBUG_TIME_GEN_PAGE'].': '.number_format($time, 4).' '.$_LANG['DEBUG_SEC'].' -->';
-
+	if ($inDB->q_count && $inConf->debug) {
+		$time = $inCore->getGenTime();
+		echo $_LANG['DEBUG_TIME_GEN_PAGE'].' '.number_format($time, 4).' '.$_LANG['DEBUG_SEC'];
+		echo '<br />'.$_LANG['DEBUG_QUERY_DB'];
+		echo ' '.$inDB->q_count.'<br />';
+		echo $inDB->q_dump;
+	}
 //////////////////////// ќчищаем временные переменные //////////////////////////
 
     $inCore->clearSessionTrash();

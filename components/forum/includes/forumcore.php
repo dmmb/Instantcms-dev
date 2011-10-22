@@ -531,18 +531,17 @@ function threadLastMessage($thread_id, $thread_pages=1){
 	$thread_pages = ($thread_pages > 1) ? '-'.$thread_pages : '';
 	$html = '';
 	global $_LANG;
-	$sql = "SELECT p.id, p.pubdate, t.id as tr_id, u.id as uid, u.nickname as author, u.login as author_login
-			FROM cms_forum_threads t
-			LEFT JOIN cms_forum_posts p ON p.thread_id = t.id
-			LEFT JOIN cms_users u ON u.id = p.user_id
-			WHERE t.id = '$thread_id'
-			ORDER BY p.id DESC
+	$sql = "SELECT p.id, p.pubdate, p.thread_id as tr_id, u.id as uid, u.nickname as author, u.login as author_login
+			FROM cms_forum_posts p
+			INNER JOIN cms_users u ON u.id = p.user_id
+			WHERE p.thread_id = '$thread_id'
+			ORDER BY p.pubdate DESC
 			LIMIT 1";
 	$result = $inDB->query($sql) ;
 	
 	if ($inDB->num_rows($result)){
 		$post = $inDB->fetch_assoc($result);
-		$html = '<a href="/forum/thread'.$post['tr_id'].$thread_pages.'.html#'.$post['id'].'"><img class="last_post_img" title="Последний ответ" alt="Последний ответ" src="/templates/_default_/images/icons/anchor.png"></a> ';
+		$html = '<a href="/forum/thread'.$post['tr_id'].$thread_pages.'.html#'.$post['id'].'"><img class="last_post_img" title="'.$_LANG['GO_LAST_POST'].'" alt="'.$_LANG['GO_LAST_POST'].'" src="/templates/_default_/images/icons/anchor.png"></a> ';
 		$html .= $_LANG['FROM'].' <a href="'.cmsUser::getProfileURL($post['author_login']).'">'.$post['author'].'</a><br>';
 		$html .= $inCore->dateFormat($post['pubdate'], true, true);
 	} else { $html .= $_LANG['NOT_POSTS']; }
@@ -555,11 +554,10 @@ function threadLastMessageData($thread_id){
     $inDB   = cmsDatabase::getInstance();
 	$data = array();
 	
-	$sql = "SELECT p.pubdate, p.content as msg, u.id as uid, u.nickname as author, u.login as login
-			FROM cms_forum_threads t
-			LEFT JOIN cms_forum_posts p ON p.thread_id = t.id
-			LEFT JOIN cms_users u ON u.id = p.user_id
-			WHERE t.id = '$thread_id'
+	$sql = "SELECT p.id, p.pubdate, p.content as msg, u.id as uid, u.nickname as author, u.login as login
+			FROM cms_forum_posts p
+			INNER JOIN cms_users u ON u.id = p.user_id
+			WHERE p.thread_id = '$thread_id'
 			ORDER BY p.pubdate DESC
 			LIMIT 1";
 	$result = $inDB->query($sql) ;
@@ -567,11 +565,12 @@ function threadLastMessageData($thread_id){
 	if ($inDB->num_rows($result)){
 		$post = $inDB->fetch_assoc($result);
 
-		$data['date'] = '<div style="text-align:center">'.$inCore->dateFormat($post['pubdate']).'</div>';
-		$data['user']       = $post['author'];
-        $data['login']      = $post['login'];
-		$data['user_id']    = $post['uid'];
-		$data['msg']        = $post['msg'];
+		$data['date']    = $inCore->dateFormat($post['pubdate']);
+		$data['user']    = $post['author'];
+        $data['login']   = $post['login'];
+		$data['user_id'] = $post['uid'];
+		$data['id']      = $post['id'];
+		$data['msg']     = $post['msg'];
 
 	} else { return false; }
 	

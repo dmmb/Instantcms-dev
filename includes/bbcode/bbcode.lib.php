@@ -1237,7 +1237,7 @@ class bbcode {
     }
 	// Функция - обработчик тега [email]
 	function email_2html($elem) {
-		return '<a href="mailto:'.$this -> get_html($elem['val']).'">'.$this -> get_html($elem['val']).'</a>';
+		return $this -> get_html($elem['val']);
 	}
     // Функция - обработчик тега [url]
     function url_2html($elem) {

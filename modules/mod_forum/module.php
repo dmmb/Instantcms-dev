@@ -12,82 +12,90 @@
 /******************************************************************************/
 
 function mod_forum($module_id){
+
         $inCore = cmsCore::getInstance();
         $inDB = cmsDatabase::getInstance();
+
         global $_LANG;
+
 		$cfg = $inCore->loadModuleConfig($module_id);
-		
+		if (!isset($cfg['showtype'])) { $cfg['showtype']='web2'; }
+		if (!isset($cfg['showforum'])) { $cfg['showforum']='0'; }
+		if (!isset($cfg['showlink'])) { $cfg['showlink']='0'; }
+		if (!isset($cfg['forum_id'])) { $cfg['forum_id']='0'; }
+		if (!isset($cfg['subs'])) { $cfg['subs'] = 1; }
         $forumcfg = $inCore->loadComponentConfig('forum');
-	
-		if (!function_exists('forumUserAuthSQL') && !function_exists('threadLastMessageData')){ //if not included earlier
-		include_once(PATH.'/components/forum/includes/forumcore.php');
+
+		$catsql = '';
+
+		if($cfg['forum_id']){
+			if (!$cfg['subs']){
+				$catsql = " AND t.forum_id = '{$cfg['forum_id']}'";
+			} else {
+				$rootcat = $inDB->get_fields('cms_forums', "id='{$cfg['forum_id']}'", 'NSLeft, NSRight');
+				if(!$rootcat) { return false; }
+				$catsql = " AND (f.NSLeft >= {$rootcat['NSLeft']} AND f.NSRight <= {$rootcat['NSRight']})";
+			}
 		}
-		
+
+		include_once(PATH.'/components/forum/includes/forumcore.php');
+
 		$groupsql = forumUserAuthSQL('f.');
-		
-		$tsql = "SELECT t.*, COUNT(p.id) as postsnum, f.id as fid, f.title as forum, u.id as uid, u.nickname as starter, u.login as login, f.auth_group as auth_group
-						 FROM cms_forum_threads t, cms_forum_posts p, cms_forums f, cms_users u
-						 WHERE p.thread_id = t.id AND t.user_id = u.id AND t.forum_id = f.id $groupsql
-						 GROUP BY p.thread_id
-						 ORDER BY t.pubdate DESC
-						 LIMIT ".$cfg['shownum'];		
+
+		$tsql = "SELECT t.id, t.forum_id, t.user_id, t.title, t.description, t.description, t.pubdate, t.hits, t.closed, t.pinned, f.id as fid, f.title as forum,
+						f.auth_group as auth_group, u.id as uid, u.nickname as starter, u.login as login
+						FROM cms_forum_threads t
+						INNER JOIN cms_forums f ON f.id = t.forum_id {$groupsql} {$catsql}
+						INNER JOIN cms_users u ON u.id = t.user_id
+						WHERE t.is_hidden = 0
+						ORDER BY t.pubdate DESC
+						LIMIT ".$cfg['shownum'];
 		
 		$result = $inDB->query($tsql) ;
 		
-		if ($inDB->num_rows($result)){
-			if (!isset($cfg['showtype'])) { $cfg['showtype']='web2'; }
-			if (!isset($cfg['showforum'])) { $cfg['showforum']='0'; }
-			if (!isset($cfg['showlink'])) { $cfg['showlink']='0'; }
-		
-				$threads = array();
+		if (!$inDB->num_rows($result)){ echo '<p>'.$_LANG['FORUM_NOT_THREAD'].'</p>'; return; }
 
-				while ($t = $inDB->fetch_assoc($result)){
-					$next = sizeof($threads);							
+		$threads = array();
 
-					$pages = ceil($t['postsnum'] / $forumcfg['pp_thread']);				
-					$lastmessage = threadLastMessageData($t['id']);							
+		while ($t = $inDB->fetch_assoc($result)){
 
-					$threads[$next]['date']         = strip_tags($lastmessage['date']);
-					$threads[$next]['author']       = $lastmessage['user'];
-					$threads[$next]['authorhref']   = cmsUser::getProfileURL($lastmessage['login']);
-					$threads[$next]['starter']      = $t['starter'];
-					$threads[$next]['starterhref']  = cmsUser::getProfileURL($t['login']);
-					$threads[$next]['topic']        = ucfirst($t['title']);
-					$threads[$next]['topicdesc']    = ucfirst($t['description']);
-					$threads[$next]['topichref']    = '/forum/thread'.$t['id'].'-'.$pages.'.html#new';
-					$threads[$next]['forum']        = ucfirst($t['forum']);
-					$threads[$next]['forumhref']    = '/forum/'.$t['fid'];
-					$threads[$next]['closed']       = $t['closed'];
+			$t['postsnum'] = $inDB->rows_count('cms_forum_posts', "thread_id = '{$t['id']}'");
+			$pages = ceil($t['postsnum'] / $forumcfg['pp_thread']);
+			$lastmessage = threadLastMessageData($t['id']);
 
-                    $threads[$next]['secret']       = 0;
-                    if ($t['auth_group']>0) {
-                        $threads[$next]['secret']   = 1;
-                    }
+			$t['date']         = $lastmessage['date'];
+			$t['author']       = $lastmessage['user'];
+			$t['authorhref']   = cmsUser::getProfileURL($lastmessage['login']);
+			$t['starterhref']  = cmsUser::getProfileURL($t['login']);
+			$t['topic']        = ucfirst($t['title']);
+			$t['topicdesc']    = ucfirst($t['description']);
+			$t['topichref']    = '/forum/thread'.$t['id'].'-'.$pages.'.html#'.$lastmessage['id'];
+			$t['forum']        = ucfirst($t['forum']);
+			$t['forumhref']    = '/forum/'.$t['fid'];
+			$t['closed']       = $t['closed'];
 
-					if (strlen($lastmessage['msg'])>70) { $lastmessage['msg'] = substr($lastmessage['msg'], 0, 70).'...'; }
+			$t['secret']       = 0;
+			if ($t['auth_group']>0) {
+				$t['secret']   = 1;
+			}
 
-                    $msg = $lastmessage['msg'];
+			if ($cfg['showtype'] == 'web2'){
+				$t['msg'] = strip_tags($inCore->parseSmiles($lastmessage['msg'], true));
+				if (strlen($lastmessage['msg'])>70) { $lastmessage['msg'] = substr($lastmessage['msg'], 0, 70).'...'; }
+			}
 
-                    if ($cfg['showtype'] == 'web2'){
-                        $msg = strip_tags($inCore->parseSmiles($msg, true));
-                        $msg = str_replace("&amp;", '&', $msg);
-                    }
-
-                    $threads[$next]['msg'] = $msg;
-
-					if ($t['postsnum']==1) {
-						$threads[$next]['act'] = $_LANG['FORUM_START_THREAD'];
-					} else { 
-						$threads[$next]['act'] = $_LANG['FORUM_REPLY_THREAD'];
-					}										
-				}
-			
-				$smarty = $inCore->initSmarty('modules', 'mod_forum_'.$cfg['showtype'].'.tpl');			
-				$smarty->assign('threads', $threads);
-				$smarty->assign('cfg', $cfg);				
-				$smarty->display('mod_forum_'.$cfg['showtype'].'.tpl');	
-														
-		} else { echo '<p>'.$_LANG['FORUM_NOT_THREAD'].'</p>'; }
+			if ($t['postsnum']==1) {
+				$t['act'] = $_LANG['FORUM_START_THREAD'];
+			} else { 
+				$t['act'] = $_LANG['FORUM_REPLY_THREAD'];
+			}
+			$threads[] = $t;
+		}
+	
+		$smarty = $inCore->initSmarty('modules', 'mod_forum_'.$cfg['showtype'].'.tpl');			
+		$smarty->assign('threads', $threads);
+		$smarty->assign('cfg', $cfg);				
+		$smarty->display('mod_forum_'.$cfg['showtype'].'.tpl');	
 
 		return true;	
 	}

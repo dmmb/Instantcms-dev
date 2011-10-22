@@ -152,6 +152,7 @@ $_LANG['ADD_OPTION']                 ='Добавить вариант';
 $_LANG['HIDE_OPTION']                ='Убрать вариант';
 
 $_LANG['LAST_POST']                  ='Последнее сообщение';
+$_LANG['GO_LAST_POST']               ='Перейти к последнему сообщению';
 $_LANG['NOT_POSTS']                  ='Нет сообщений';
 $_LANG['IN THREAD']                  ='в теме';
 $_LANG['ADMINISTRATOR']              ='Администратор';

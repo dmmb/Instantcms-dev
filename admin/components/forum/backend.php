@@ -111,7 +111,6 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if($opt=='saveconfig'){	
         
-		$cfg['is_on']       = $inCore->request('is_on', 'int', 1);
 		$cfg['karma']       = $inCore->request('karma', 'int', 1);
 		$cfg['is_rss']      = $inCore->request('is_rss', 'int', 1);
 		$cfg['pp_thread']   = $inCore->request('pp_thread', 'int', 15);
@@ -129,6 +128,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$cfg['fa_allow']    = $inCore->request('fa_allow', 'int');
 		$cfg['fa_max']      = $inCore->request('fa_max', 'int');
 		$cfg['fa_ext']      = $inCore->request('fa_ext', 'str');
+		$cfg['fa_ext']      = str_replace('htm', '', $cfg['fa_ext']);
+		$cfg['fa_ext']      = str_replace('php', '', $cfg['fa_ext']);
 		$cfg['fa_size']     = $inCore->request('fa_size', 'int');
 
 		$inCore->saveComponentConfig('forum', $cfg);
@@ -300,19 +301,6 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		?>
         <form action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id'];?>" method="post" name="addform" target="_self" id="form1" style="margin-top:10px">
             <?php ob_start(); ?>
-            {tab=Общие}
-            <table width="609" border="0" cellpadding="10" cellspacing="0" class="proptable">                
-                <tr>
-                    <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Общие настройки </h4></td>
-                </tr>
-                <tr>
-                    <td width="259" valign="top"><strong>Форум включен: </strong></td>
-                    <td width="310" valign="top">
-                        <input name="is_on" type="radio" value="1" <?php if (@$cfg['is_on']) { echo 'checked="checked"'; } ?> /> Да
-                        <input name="is_on" type="radio" value="0" <?php if (@!$cfg['is_on']) { echo 'checked="checked"'; } ?>/> Нет
-                    </td>
-                </tr>
-           </table>
            {tab=Просмотр}
            <table width="609" border="0" cellpadding="10" cellspacing="0" class="proptable">
                 <tr>

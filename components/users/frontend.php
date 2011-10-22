@@ -2341,43 +2341,47 @@ if ($do=='addfile'){
 	if (!$inUser->id) { cmsUser::goToLogin(); }
 
 	if ($inUser->id != $id){ cmsCore::error404(); }
-		
-			$max_mb         = $cfg['filessize'];
-			$current_bytes  = usrFilesSize($id);
-			if ($current_bytes) { $current_mb = round(($current_bytes / 1024) / 1024, 2); } else { $current_mb = 0; }
-			$free_mb = round($max_mb - $current_mb, 2);
+
+	$max_mb         = $cfg['filessize'];
+	$current_bytes  = usrFilesSize($id);
+	if ($current_bytes) { $current_mb = round(($current_bytes / 1024) / 1024, 2); } else { $current_mb = 0; }
+	$free_mb = round($max_mb - $current_mb, 2);
 		
 	if($inCore->inRequest('upload')){
 				
-				$size_mb      = 0;
-				$size_limit   = false;
-				$loaded_files = array();
-				
-            $list_files = array();
+		$size_mb      = 0;
+		$size_limit   = false;
+		$loaded_files = array();
 
-            foreach($_FILES['upfile'] as $key=>$value) {
-                foreach($value as $k=>$v) { $list_files['upfile'.$k][$key] = $v; }
-            }
+		$list_files = array();
 
-            foreach ($list_files as $key=>$data_array) {
-					$error = $data_array['error'];
-					if ($error == UPLOAD_ERR_OK) {
+		foreach($_FILES['upfile'] as $key=>$value) {
+			foreach($value as $k=>$v) { $list_files['upfile'.$k][$key] = $v; }
+		}
 
-                        $upload_dir = PATH.'/upload/userfiles/'.$id;
-						@mkdir($upload_dir);
-                        file_put_contents($upload_dir.'/index.html', '');
-					
-						$tmp_name   = $data_array["tmp_name"];
-                        $name       = $data_array["name"];
-						$size       = $inCore->strClear($data_array["size"]);
-						$size_mb    += round(($size/1024)/1024, 2);
-						
+		foreach ($list_files as $key=>$data_array) {
+
+			$error = $data_array['error'];
+
+			if ($error == UPLOAD_ERR_OK) {
+
+				$upload_dir = PATH.'/upload/userfiles/'.$id;
+				@mkdir($upload_dir);
+				file_put_contents($upload_dir.'/index.html', '');
+
+				$tmp_name   = $data_array["tmp_name"];
+				$name       = $data_array["name"];
+				$size       = $inCore->strClear($data_array["size"]);
+				$size_mb    += round(($size/1024)/1024, 2);
+
 				// проверяем тип файла
-						$types 		= $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar';
-						$maytypes 	= explode(',', str_replace(' ', '', $types));  
-						$path_parts = pathinfo($name);
+				$types 		= $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar';
+				$types 		= str_replace('php', '', $types);
+				$types 		= str_replace('htm', '', $types);
+				$maytypes 	= explode(',', str_replace(' ', '', $types));  
+				$path_parts = pathinfo($name);
 				// расширение файла
-						$ext        = strtolower($path_parts['extension']);
+				$ext        = strtolower($path_parts['extension']);
 				// флаг существования расширения в разрешенных
 				$may        = in_array($ext, $maytypes);
 				if(!$may) { cmsCore::addSessionMessage($_LANG['ERROR_TYPE_FILE'].': '.$types, 'error'); $inCore->redirectBack(); }

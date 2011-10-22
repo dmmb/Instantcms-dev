@@ -104,6 +104,8 @@ function uploadFiles($post_id, $cfg){
                     $path_parts = pathinfo($file);
                     $ext = strtolower($path_parts['extension']);
 					if(strstr('php', $ext)) { return false; }
+					if(strstr('htm', $ext)) { return false; }
+					if(strstr('htaccess', $ext)) { return false; }
                     //check file extension is allowed
                     if (strstr(strtolower($cfg['fa_ext']), $ext)){
 
@@ -163,11 +165,6 @@ function forum(){
 
     $menutitle = $inCore->menuTitle();
     global $_LANG;
-	if (!$cfg['is_on']){
-		echo '<div class="con_heading">'.$_LANG['FORUM_NOT_ACCESS'].'</div>';
-		echo '<p>'.$_LANG['FORUM_NOT_ACCESS_TEXT'].'</p>';
-		return;
-	}
 
     $inCore->includeFile("/components/users/includes/usercore.php");
 	$inCore->includeFile("/components/forum/includes/forumcore.php");
@@ -336,10 +333,12 @@ if ($do=='forum'){
         $logdate = '9999-01-01 12:00:00';
     }
 
-    $tsql = "SELECT t.*, COUNT(p.id) as postsnum, IF(t.pubdate > '$logdate', 1, 0) as is_new
-             FROM cms_forum_threads t, cms_forum_posts p
-             WHERE t.forum_id = '".$f['id']."' AND p.thread_id = t.id
-             GROUP BY p.thread_id
+    $tsql = "SELECT t.*, COUNT(p.id) as postsnum, IF(t.pubdate > '$logdate', 1, 0) as is_new, u.nickname, u.login
+             FROM cms_forum_threads t
+			 INNER JOIN cms_forum_posts p ON p.thread_id = t.id
+			 LEFT JOIN cms_users u ON u.id = t.user_id
+             WHERE t.forum_id = '{$f['id']}'
+             GROUP BY t.id
              ORDER BY t.pinned DESC, t.pubdate DESC
              LIMIT ".(($page-1)*$perpage).", $perpage";
 
@@ -351,7 +350,7 @@ if ($do=='forum'){
 
         while ($thread = $inDB->fetch_assoc($tresult)){
 
-            $thread['author']       = forumThreadAuthor($thread['id']);
+            $thread['author']       = array('nickname'=>$thread['nickname'], 'login'=>$thread['login']);
             $thread['pages']        = ceil($thread['postsnum'] / $cfg['pp_thread']);
             $thread['answers']      = $thread['postsnum']-1;
             $thread['last_message'] = threadLastMessage($thread['id'], $thread['pages']);
@@ -401,6 +400,7 @@ if ($do=='thread'){
 		} 
 		
 		$t = $inDB->fetch_assoc($result);
+		$t = cmsCore::callEvent('GET_FORUM_THREAD', $t);
 		
 		$mythread = ($inUser->id==$t['user_id']);
 		$is_admin = $inUser->is_admin;
@@ -1207,7 +1207,9 @@ if ($do=='reloadfile'){
 						$filesize = $_FILES["newfile"]["size"];																	
 						$path_parts = pathinfo($filename);
 						$ext = $path_parts['extension'];	
-						
+						if(strstr('php', $ext)) { echo usrAccessDenied(); }
+						if(strstr('htm', $ext)) { echo usrAccessDenied(); }
+						if(strstr('htaccess', $ext)) { echo usrAccessDenied(); }
 						//check file size
 						if ($filesize <= $cfg['fa_size']*1024){
 								

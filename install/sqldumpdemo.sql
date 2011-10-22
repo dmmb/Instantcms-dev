@@ -753,7 +753,7 @@ CREATE TABLE `#__forum_posts` (
   `edittimes` int(11) NOT NULL,
   `content` text NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `thread_id` (`thread_id`),
+  KEY `thread_id` (`thread_id`,`pubdate`),
   KEY `user_id` (`user_id`),
   FULLTEXT KEY `content` (`content`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;

@@ -15,6 +15,12 @@
             <option title="Web 2.0" value="web2" />
         </param>
 
+		<param type="list_db" name="forum_id" title="Темы из форума" src="cms_forums" src_title="title" src_value="id" tree="1" >
+            <option title="-- Все форумы --" value="0" />
+        </param>
+
+		<param type="flag" name="subs" title="Вместе с подфорумами" default="off" />
+
         <param type="flag" name="showtext" title="Показывать часть сообщения" default="off" hint="Только для режима Web 2.0" />
 
         <param type="flag" name="showforum" title="Показывать название форума" default="off" hint="Только для режима Web 2.0" />

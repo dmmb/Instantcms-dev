@@ -247,8 +247,13 @@ function applet_users(){
             $login      = htmlspecialchars($_REQUEST['login'], ENT_QUOTES);
             $nickname   = htmlspecialchars($_REQUEST['nickname'], ENT_QUOTES, 'cp1251');
             $email      = $inCore->request('email', 'str');
-            $group_id   = $inCore->request('group_id', 'int');
-            $is_locked  = $inCore->request('is_locked', 'int');
+			if($id == 1) {
+				$group_id   = 2;
+				$is_locked  = 0;
+			} else {
+				$group_id   = $inCore->request('group_id', 'int');
+				$is_locked  = $inCore->request('is_locked', 'int');
+			}
 
 			if (isset($_REQUEST['pass']) && isset($_REQUEST['pass2'])){
 				$pass = $_REQUEST['pass'];
@@ -269,7 +274,7 @@ function applet_users(){
 			dbQuery($sql) ;
 		}
 		if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
-			$inCore->redirect('?view=users');		
+			$inCore->redirect('?view=users');
 		} else {
 			$inCore->redirect('?view=users&do=edit');		
 		}
