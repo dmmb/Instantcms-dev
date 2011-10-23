@@ -487,19 +487,17 @@ function forumLastMessage($forum_id, $perpage_thread){
 	global $_LANG;
 	$html = '';
 	
-	$forumNS = dbGetFields('cms_forums', 'id='.$forum_id, 'NSLeft, NSRight');
+	$forumNS = dbGetFields('cms_forums', "id='$forum_id'", 'NSLeft, NSRight');
 
-	$groupsql = forumUserAuthSQL("f.");
-	
 	$sql = "SELECT p.pubdate, p.id as post_id,
 				   u.id as uid, u.nickname as author,
                    u.login as author_login, 
 				   t.title as threadtitle, t.id as threadid
 			FROM cms_forum_posts p
-			LEFT JOIN cms_forum_threads t ON t.id = p.thread_id
+			LEFT JOIN cms_forum_threads t ON t.id = p.thread_id AND t.is_hidden=0
 			INNER JOIN cms_forums f ON f.id = t.forum_id
 			LEFT JOIN cms_users u ON u.id = p.user_id
-			WHERE (f.NSLeft >= {$forumNS['NSLeft']} AND f.NSRight <= {$forumNS['NSRight']}) $groupsql
+			WHERE (f.NSLeft >= {$forumNS['NSLeft']} AND f.NSRight <= {$forumNS['NSRight']})
 			ORDER BY p.id DESC
 			LIMIT 1";
 			

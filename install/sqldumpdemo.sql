@@ -674,7 +674,7 @@ CREATE TABLE `#__forums` (
   `category_id` int(11) NOT NULL,
   `title` varchar(250) NOT NULL,
   `description` varchar(250) NOT NULL,
-  `auth_group` int(11) NOT NULL DEFAULT '-1',
+  `access_list` tinytext NOT NULL,
   `ordering` int(11) NOT NULL,
   `published` int(11) NOT NULL DEFAULT '1',
   `parent_id` int(11) NOT NULL,
@@ -690,11 +690,11 @@ CREATE TABLE `#__forums` (
   KEY `parent_id` (`parent_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__forums` (`id`, `category_id`, `title`, `description`, `auth_group`, `ordering`, `published`, `parent_id`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`, `topic_cost`) VALUES
-(1000, 0, '-- Корень форумов --', '', 0, 1, 0, 0, 1, 8, '', 0, 1, 0),
-(1, 1, 'Общий форум', '', 0, 1, 1, 1000, 2, 7, '', 0, 2, 0),
-(1002, 1, 'Подфорум1', '', 0, 2, 1, 1, 5, 6, '', 0, 3, 0),
-(1004, 1, 'Подфорум2', '', 0, 1, 1, 1, 3, 4, '', 0, 3, 0);
+INSERT INTO `#__forums` (`id`, `category_id`, `title`, `description`, `access_list`, `ordering`, `published`, `parent_id`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`, `topic_cost`) VALUES
+(1000, 0, '-- Корень форумов --', '', '', 1, 0, 0, 1, 8, '', 0, 1, 0),
+(1, 1, 'Общий форум', '', '', 1, 1, 1000, 2, 7, '', 0, 2, 0),
+(1002, 1, 'Подфорум1', '', '', 2, 1, 1, 5, 6, '', 0, 3, 0),
+(1004, 1, 'Подфорум2', '', '', 1, 1, 1, 3, 4, '', 0, 3, 0);
 
 DROP TABLE IF EXISTS `#__forum_cats`;
 CREATE TABLE `#__forum_cats` (

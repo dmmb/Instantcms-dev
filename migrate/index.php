@@ -139,6 +139,44 @@
     }
 // ========================================================================== //
 // ========================================================================== //
+    if (!$inDB->isFieldExists('cms_forums', 'access_list')){
+        $inDB->query("ALTER TABLE `cms_forums` ADD `access_list` TINYTEXT NOT NULL AFTER `description`");
+        echo '<p>Поле <strong>access_list</strong> добавлено в таблицу <strong>cms_forums</strong></p>';
+		$is_was_migrate = true;
+    }
+// ========================================================================== //
+// ========================================================================== //
+    if ($inDB->isFieldExists('cms_forums', 'auth_group') && $inDB->isFieldExists('cms_forums', 'access_list')){
+		$sql    = "SELECT id, auth_group
+				   FROM cms_forums";
+	
+		$result = $inDB->query($sql);
+	
+		if ($inDB->num_rows($result)){
+			while($mod = $inDB->fetch_assoc($result)){
+				if($mod['auth_group'] && $mod['auth_group'] != -1) {
+	
+					$access_list[]  = $mod['auth_group'];
+					$access_list_ya = $inCore->arrayToYaml($access_list);
+					$inDB->query("UPDATE cms_forums SET `access_list` = '{$access_list_ya}' WHERE id = '{$mod['id']}'");
+					unset ($access_list);
+	
+				}
+			}
+		}
+	
+		echo '<p>Мультидоступ групп к форумам выполнен.</p>';
+		$is_was_migrate = true;
+	}
+// ========================================================================== //
+// ========================================================================== //
+    if ($inDB->isFieldExists('cms_forums', 'auth_group')){
+        $inDB->query("ALTER TABLE `cms_forums` DROP `auth_group`");
+        echo '<p>Поле <strong>auth_group</strong> удалено из таблицы <strong>cms_forums</strong></p>';
+		$is_was_migrate = true;
+    }
+// ========================================================================== //
+// ========================================================================== //
 	if ($is_was_migrate) {
 	    echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Миграция завершена. Удалите папку /migrate/ прежде чем продолжить!</div>';
 	} else {

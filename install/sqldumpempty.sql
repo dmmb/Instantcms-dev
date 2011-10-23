@@ -626,7 +626,7 @@ CREATE TABLE `#__forums` (
   `category_id` int(11) NOT NULL,
   `title` varchar(250) NOT NULL,
   `description` varchar(250) NOT NULL,
-  `auth_group` int(11) NOT NULL DEFAULT '-1',
+  `access_list` tinytext NOT NULL,
   `ordering` int(11) NOT NULL,
   `published` int(11) NOT NULL DEFAULT '1',
   `parent_id` int(11) NOT NULL,
@@ -642,8 +642,8 @@ CREATE TABLE `#__forums` (
   KEY `parent_id` (`parent_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__forums` (`id`, `category_id`, `title`, `description`, `auth_group`, `ordering`, `published`, `parent_id`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`, `topic_cost`) VALUES
-(1000, 0, '-- Корень форумов --', '', 0, 1, 0, 0, 1, 8, '', 0, 1, 0);
+INSERT INTO `#__forums` (`id`, `category_id`, `title`, `description`, `access_list`, `ordering`, `published`, `parent_id`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`, `topic_cost`) VALUES
+(1000, 0, '-- Корень форумов --', '', '', 1, 0, 0, 1, 8, '', 0, 1, 0);
 
 DROP TABLE IF EXISTS `#__forum_cats`;
 CREATE TABLE `#__forum_cats` (

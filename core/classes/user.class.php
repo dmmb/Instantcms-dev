@@ -951,7 +951,7 @@ class cmsUser {
 
         $list   = false;
 
-        $sql    = "SELECT title FROM cms_user_awards WHERE user_id = $user_id";
+        $sql    = "SELECT title FROM cms_user_awards WHERE user_id = '$user_id'";
         $result = $inDB->query($sql);
 
         if ($inDB->num_rows($result)){

@@ -23,7 +23,7 @@ function search_forum($query, $look){
 		$inCore->loadLanguage('components/forum');
 
 		// »щем в названи€х тем
-		$sql = "SELECT t.*, f.title as forum, f.id as forum_id
+		$sql = "SELECT t.*, f.title as forum, f.id as forum_id, f.access_list
 				FROM cms_forum_threads t
 				INNER JOIN cms_forums f ON f.id = t.forum_id
 				WHERE MATCH(t.title) AGAINST ('$query' IN BOOLEAN MODE) AND t.is_hidden=0 LIMIT 50";
@@ -32,6 +32,8 @@ function search_forum($query, $look){
 		
 		if ($inDB->num_rows($result)){
 			while($item = $inDB->fetch_assoc($result)){
+
+				if(!$inCore->checkContentAccess($item['access_list'])) { continue; }
 
 				$result_array = array();
 
@@ -50,7 +52,7 @@ function search_forum($query, $look){
 		// »щем в тексте постов
 		$sql = "SELECT p.*, t.title as thread, t.id as thread_id
 				FROM cms_forum_posts p
-				INNER JOIN cms_forum_threads t ON t.id = p.thread_id
+				INNER JOIN cms_forum_threads t ON t.id = p.thread_id AND t.is_hidden=0
 				WHERE MATCH(p.content) AGAINST ('$query' IN BOOLEAN MODE) LIMIT 50";
 
 		$result = $inDB->query($sql); 

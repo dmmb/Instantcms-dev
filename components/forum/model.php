@@ -33,9 +33,7 @@ class cms_model_forum{
 
     public function getForum($id){
 
-		$groupsql = forumUserAuthSQL();
-
-        $sql      = "SELECT * FROM cms_forums WHERE id = $id $groupsql LIMIT 1";
+        $sql      = "SELECT * FROM cms_forums WHERE id = '$id' LIMIT 1";
 
         $result   = $this->inDB->query($sql);
 

@@ -14,23 +14,22 @@
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 function forumsList($selected=0){
+
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
+
 	$html = '';
 	$html .= '<select name="goforum" id="goforum" style="width:220px; margin:0px" onchange="goForum()">';
-	$nested_sets = $inCore->nestedSetsInit('cms_forums');
 	
-	$groupsql = forumUserAuthSQL();	
-	
-	$fsql = "SELECT id, parent_id, NSLevel, title
+	$fsql = "SELECT id, parent_id, NSLevel, title, access_list
 			 FROM cms_forums 
-			 WHERE published = 1 $groupsql
+			 WHERE published = 1
 			 ORDER BY NSLeft";
 	$rs_rows = $inDB->query($fsql);
 	
 	while($cat = $inDB->fetch_assoc($rs_rows)){
-		if ($cat['parent_id']>0){
-			if (@$selected==$cat['id']){
+		if ($cat['parent_id']>0 && $inCore->checkContentAccess($cat['access_list'])){
+			if ($selected==$cat['id']){
 				$s = 'selected';
 			} else {
 				$s = '';
@@ -189,6 +188,7 @@ if ($do=='view'){
     $result = $inDB->query($sql) ;
 
     if ($inDB->num_rows($result)){
+		$rootid = $inDB->get_field('cms_forums', 'parent_id=0', 'id');
         while ($cat = $inDB->fetch_assoc($result)){
 			echo '<table class="forums_table" width="100%" cellspacing="0" cellpadding="8" border="0" bordercolor="#999999" >';
 			echo '<tr class="darkBlue-LightBlue">
@@ -197,30 +197,30 @@ if ($do=='view'){
 			  <td width="250">'.$_LANG['LAST_POST'].'</td>
 			</tr>';
             //FORUMS LIST IN CATEGORY
-            $rootid = $inDB->get_field('cms_forums', 'parent_id=0', 'id');
             $fsql = "SELECT *
                      FROM cms_forums
-                     WHERE published = 1 AND category_id = '{$cat['id']}' AND parent_id = '$rootid' $groupsql
+                     WHERE published = 1 AND category_id = '{$cat['id']}' AND parent_id = '$rootid'
                      ORDER BY ordering";
             $fresult = $inDB->query($fsql) ;
             if ($inDB->num_rows($fresult)){
                 $row = 1;
                 //print forums list in category
                 while ($f = $inDB->fetch_assoc($fresult)){
+					if(!$inCore->checkContentAccess($f['access_list'])) { continue; }
                     //GET SUBFORUMS LIST
                     $subforums = '';
-                    $sql = "SELECT id, title
+                    $sql = "SELECT id, title, access_list
                             FROM cms_forums
-                            WHERE parent_id = '{$f['id']}' $groupsql
+                            WHERE parent_id = '{$f['id']}'
                             ORDER BY title";
                     $rs = $inDB->query($sql);
                     $sub = $inDB->num_rows($rs);
                     if ($sub){
-                        $s = 1;
                         while ($sf=$inDB->fetch_assoc($rs)){
-                            $subforums .= '<a href="/forum/'.$sf['id'].'">'.$sf['title'].'</a>';
-                            if ($s < $sub) { $subforums .= ', '; $s++; }
+							if(!$inCore->checkContentAccess($sf['access_list'])) { continue; }
+                            $subforums .= '<a href="/forum/'.$sf['id'].'">'.$sf['title'].'</a>, ';
                         }
+						$subforums = rtrim($subforums, ', ');
                     } else {
                         $subforums = '';
                     }
@@ -258,35 +258,36 @@ if ($do=='view'){
 if ($do=='forum'){
 
     $f = $model->getForum($id);
-
-	if (!$f){
-        echo '<h1 class="con_heading">'.$_LANG['FORUM_NOT_FOUND'].'</h1>';
-        echo '<p>'.$_LANG['FORUM_NOT_FOUND_TEXT'].'</p>';
-        return;
-    }
+	if (!$f){ cmsCore::error404(); }
+	// права доступа к форуму
+	if(!$inCore->checkContentAccess($f['access_list'])) {
+		$inPage->includeTemplateFile('special/accessdenied.php');
+		return;
+	}
         
     $inPage->setTitle($f['title']);
-    $inPage->addHeadJS('core/js/pagesel.js');
 
     //PATHWAY ENTRY
     $left_key   = $f['NSLeft'];
     $right_key  = $f['NSRight'];
-    $sql        = "SELECT id, title, NSLevel FROM cms_forums WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0 ORDER BY NSLeft";
+    $sql        = "SELECT id, title, NSLevel, access_list FROM cms_forums WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0 ORDER BY NSLeft";
     $rs_rows    = $inDB->query($sql);
 
     while($pcat = $inDB->fetch_assoc($rs_rows)){
-        
+		// если в цепочке родителей форума встречаются
+		// форумы с ограниченным доступом, запрещаем доступ
+		if(!$inCore->checkContentAccess($pcat['access_list'])) {
+			$inPage->includeTemplateFile('special/accessdenied.php');
+			return;
+		}
         $inPage->addPathway($pcat['title'], '/forum/'.$pcat['id']);
-
     }
 
     // --------- Список подфорумов ---------------
-
-    $groupsql           = forumUserAuthSQL();
     
     $subforums_sql      = "SELECT *
                            FROM cms_forums
-                           WHERE published = 1 AND parent_id = '$id' $groupsql
+                           WHERE published = 1 AND parent_id = '$id'
                            ORDER BY ordering";
 
     $subforums_result   = $inDB->query($subforums_sql);
@@ -297,18 +298,20 @@ if ($do=='forum'){
     if ($subforums_count){
         while ($subforum = $inDB->fetch_assoc($subforums_result)){
 
+			if(!$inCore->checkContentAccess($subforum['access_list'])) { continue; }
+
             $inner_forums = '';
 
-            $inner_sql    = "SELECT id, title FROM cms_forums WHERE parent_id = '{$subforum['id']}' ORDER BY title";
-            $inner_result = $inDB->query($sql);
-            $inner_count  = $inDB->num_rows($rs);
+            $inner_sql    = "SELECT id, title, access_list FROM cms_forums WHERE parent_id = '{$subforum['id']}' ORDER BY title";
+            $inner_result = $inDB->query($inner_sql);
+            $inner_count  = $inDB->num_rows($inner_result);
 
             if ($inner_count){
-                $s = 1;
                 while ($sf=$inDB->fetch_assoc($inner_result)){
-                    $inner_forums .= '<a href="/forum/'.$sf['id'].'">'.$sf['title'].'</a>';
-                    if ($s < $sub) { $inner_forums .= ', '; $s++; }
+					if(!$inCore->checkContentAccess($sf['access_list'])) { continue; }
+                    $inner_forums .= '<a href="/forum/'.$sf['id'].'">'.$sf['title'].'</a>, ';
                 }
+				$inner_forums = rtrim($inner_forums, ', ');
             }
 
             $subforum['subforums']      = $inner_forums;
@@ -380,608 +383,616 @@ if ($do=='forum'){
 ///////////////////////////// READ THREAD /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='thread'){
 
-	$groupsql = forumUserAuthSQL("f.");
-
-	$sql = "SELECT t.*, f.title as forum, f.id as fid, f.NSLeft as forum_left, f.NSRight as forum_right
-			FROM cms_forum_threads t, cms_forums f
-			WHERE t.id = $id AND t.forum_id = f.id $groupsql";
+	$sql = "SELECT t.*, f.title as forum, f.id as fid, f.NSLeft as forum_left, f.NSRight as forum_right, f.access_list
+			FROM cms_forum_threads t
+			INNER JOIN cms_forums f ON f.id = t.forum_id
+			WHERE t.id = '$id' LIMIT 1";
 	$result = $inDB->query($sql);
-	
-	if ($inDB->num_rows($result)){
-		
-		// Массив пользователей онлайн
-		$online_users = array();
-		$sql_online    = "SELECT user_id FROM cms_online WHERE user_id > 0";
-		$result_online = $inDB->query($sql_online);
-		if ($inDB->num_rows($result_online)){
-			while($data = $inDB->fetch_assoc($result_online)){
-				$online_users[] = $data['user_id'];
-			}
-		} 
-		
-		$t = $inDB->fetch_assoc($result);
-		$t = cmsCore::callEvent('GET_FORUM_THREAD', $t);
-		
-		$mythread = ($inUser->id==$t['user_id']);
-		$is_admin = $inUser->is_admin;
-		$is_adm   = $inCore->userIsAdmin($inUser->id);
-		$is_moder = $inCore->isUserCan('forum/moderate');
-		
-		$inDB->query("UPDATE cms_forum_threads SET hits = hits + 1 WHERE id = ".$t['id']) ;
-		
-        $inPage->setTitle($t['title']);
-        $inPage->printHeading($t['title']);
+	if (!$inDB->num_rows($result)){ cmsCore::error404(); }
 
-        $inPage->addHeadJS('core/js/pagesel.js');
-        $inPage->addHeadJS('components/forum/js/common.js');
+	$t = $inDB->fetch_assoc($result);
+	if(!$inCore->checkContentAccess($t['access_list'])) {
+		$inPage->includeTemplateFile('special/accessdenied.php');
+		return;
+	}
+	$t = cmsCore::callEvent('GET_FORUM_THREAD', $t);
 
-		//Calculate posts count
-		$csql = "SELECT id FROM cms_forum_posts WHERE thread_id = ".$t['id'];
-		$cres = $inDB->query($csql);			
-		$posts_count = $inDB->num_rows($cres);
-
-		$perpage=$cfg['pp_thread'];
-		
-		$lastpage = ceil($posts_count / $perpage);
-
-        if ($inCore->request('go_last_post', 'int', 0)){
-            $inCore->redirect('/forum/thread'.$t['id'].'-'.$lastpage.'.html#new');
-        }
-
-		//TOOLBAR TABLE		
-		ob_start();
-		if($t['description']){
-			echo '<div class="forum_toolbar" style="padding:5px;">'.$t['description'].'</div>';
+	// Массив пользователей онлайн
+	$online_users = array();
+	$sql_online    = "SELECT user_id FROM cms_online WHERE user_id > 0";
+	$result_online = $inDB->query($sql_online);
+	if ($inDB->num_rows($result_online)){
+		while($data = $inDB->fetch_assoc($result_online)){
+			$online_users[] = $data['user_id'];
 		}
-		echo '<table width="100%" cellspacing="0" cellpadding="5"  class="forum_toolbar"><tr>';
+	}
+	
+	$mythread = ($inUser->id==$t['user_id']);
+	$is_admin = $inUser->is_admin;
+	$is_adm   = $inCore->userIsAdmin($inUser->id);
+	$is_moder = $inCore->isUserCan('forum/moderate');
+	
+	$inDB->query("UPDATE cms_forum_threads SET hits = hits + 1 WHERE id = ".$t['id']) ;
+	
+	$inPage->setTitle($t['title']);
+	$inPage->setDescription($t['title']);
+	$inPage->printHeading($t['title']);
 
-		if ($posts_count){
-			echo '<td width="5">&nbsp;</td>';
+	$inPage->addHeadJS('components/forum/js/common.js');
+
+	//Calculate posts count
+	$csql = "SELECT id FROM cms_forum_posts WHERE thread_id = '{$t['id']}'";
+	$cres = $inDB->query($csql);			
+	$posts_count = $inDB->num_rows($cres);
+
+	$perpage=$cfg['pp_thread'];
+	
+	$lastpage = ceil($posts_count / $perpage);
+
+	if ($inCore->request('go_last_post', 'int', 0)){
+		$inCore->redirect('/forum/thread'.$t['id'].'-'.$lastpage.'.html#new');
+	}
+
+	//TOOLBAR TABLE		
+	ob_start();
+	if($t['description']){
+		echo '<div class="forum_toolbar" style="padding:5px;">'.$t['description'].'</div>';
+	}
+	echo '<table width="100%" cellspacing="0" cellpadding="5"  class="forum_toolbar"><tr>';
+
+	if ($posts_count){
+		echo '<td width="5">&nbsp;</td>';
+	} else {
+		echo '<td width=="">&nbsp;</td>';
+	}
+	$toolbar_pages = ob_get_clean();
+
+	ob_start();
+	if($inUser->id){
+		echo '<td class="forum_toollinks">';
+		echo '<table cellspacing="2" cellpadding="2" align="right"><tr>';
+		if (!$t['closed']){
+			echo '<td width="16"><img src="/components/forum/images/toolbar/newpost.gif"/></td>
+				  <td><a href="/forum/reply'.$t['id'].'.html"><strong>'.$_LANG['NEW_MESSAGE'].'</strong></a></td>';
 		} else {
-			echo '<td width=="">&nbsp;</td>';
+			echo '<td><strong>'.$_LANG['THREAD_CLOSE'].'</td>';
 		}
-		$toolbar_pages = ob_get_clean();
-
-		ob_start();
-		if($inUser->id){
-			echo '<td class="forum_toollinks">';
-			echo '<table cellspacing="2" cellpadding="2" align="right"><tr>';
+		
+		if($is_admin || $is_moder) { 
 			if (!$t['closed']){
-				echo '<td width="16"><img src="/components/forum/images/toolbar/newpost.gif"/></td>
-					  <td><a href="/forum/reply'.$t['id'].'.html"><strong>'.$_LANG['NEW_MESSAGE'].'</strong></a></td>';
+				echo '<td width="16"><img src="/components/forum/images/toolbar/closethread.gif"/></td>
+					  <td><a href="/forum/closethread'.$t['id'].'.html">'.$_LANG['CLOSE'].'</a></td>';
 			} else {
-				echo '<td><strong>'.$_LANG['THREAD_CLOSE'].'</td>';
+				echo '<td width="16"><img src="/components/forum/images/toolbar/openthread.gif"/></td>
+					  <td><a href="/forum/openthread'.$t['id'].'.html">'.$_LANG['OPEN'].'</a></td>';
 			}
-			
-			if($is_admin || $is_moder) { 
-				if (!$t['closed']){
-					echo '<td width="16"><img src="/components/forum/images/toolbar/closethread.gif"/></td>
-						  <td><a href="/forum/closethread'.$t['id'].'.html">'.$_LANG['CLOSE'].'</a></td>';
+		}
+		if(usrCheckAuth()) {
+			if (!cmsUser::isSubscribed($inUser->id, 'forum', $t['id'])){
+					echo '<td width="16"><img src="/components/forum/images/toolbar/subscribe.gif"/></td>
+						  <td><a href="/forum/subscribe'.$t['id'].'.html">'.$_LANG['SUBSCRIBE_THEME'].'</a></td>';
+			} else {
+				echo '<td width="16"><img src="/components/forum/images/toolbar/unsubscribe.gif"/></td>
+					  <td><a href="/forum/unsubscribe'.$t['id'].'.html">'.$_LANG['UNSUBSCRIBE'].'</a></td>';
+			}
+			if ($is_admin || $is_moder){					
+				if (!$t['pinned']){
+					echo '<td width="16"><img src="/components/forum/images/toolbar/pinthread.gif"/></td>
+						  <td><a href="/forum/pinthread'.$t['id'].'.html">'.$_LANG['PIN'].'</a></td>';
 				} else {
-					echo '<td width="16"><img src="/components/forum/images/toolbar/openthread.gif"/></td>
-						  <td><a href="/forum/openthread'.$t['id'].'.html">'.$_LANG['OPEN'].'</a></td>';
+					echo '<td width="16"><img src="/components/forum/images/toolbar/unpinthread.gif"/></td>
+						  <td><a href="/forum/unpinthread'.$t['id'].'.html">'.$_LANG['UNPIN'].'</a></td>';
 				}
+				echo '<td width="16"><img src="/components/forum/images/toolbar/movethread.gif"/></td>
+					  <td><a href="/forum/movethread'.$t['id'].'.html">'.$_LANG['MOVE'].'</a></td>';
+				echo '<td width="16"><img src="/components/forum/images/toolbar/edit.gif"/></td>
+					  <td><a href="/forum/renamethread'.$t['id'].'.html">'.$_LANG['RENAME'].'</a></td>';
 			}
-			if(usrCheckAuth()) {
-				if (!cmsUser::isSubscribed($inUser->id, 'forum', $t['id'])){
-						echo '<td width="16"><img src="/components/forum/images/toolbar/subscribe.gif"/></td>
-							  <td><a href="/forum/subscribe'.$t['id'].'.html">'.$_LANG['SUBSCRIBE_THEME'].'</a></td>';
-				} else {
-					echo '<td width="16"><img src="/components/forum/images/toolbar/unsubscribe.gif"/></td>
-						  <td><a href="/forum/unsubscribe'.$t['id'].'.html">'.$_LANG['UNSUBSCRIBE'].'</a></td>';
-				}
-				if ($is_admin || $is_moder){					
-					if (!$t['pinned']){
-						echo '<td width="16"><img src="/components/forum/images/toolbar/pinthread.gif"/></td>
-							  <td><a href="/forum/pinthread'.$t['id'].'.html">'.$_LANG['PIN'].'</a></td>';
-					} else {
-						echo '<td width="16"><img src="/components/forum/images/toolbar/unpinthread.gif"/></td>
-							  <td><a href="/forum/unpinthread'.$t['id'].'.html">'.$_LANG['UNPIN'].'</a></td>';
-					}
-					echo '<td width="16"><img src="/components/forum/images/toolbar/movethread.gif"/></td>
-						  <td><a href="/forum/movethread'.$t['id'].'.html">'.$_LANG['MOVE'].'</a></td>';
-					echo '<td width="16"><img src="/components/forum/images/toolbar/edit.gif"/></td>
-						  <td><a href="/forum/renamethread'.$t['id'].'.html">'.$_LANG['RENAME'].'</a></td>';
-				}
-				if ($is_adm || $mythread){
-					echo '<td width="16"><img src="/components/forum/images/toolbar/delete.gif"/></td>
-						  <td><a href="javascript:deleteThread(\'/forum/deletethread'.$t['id'].'.html\')">'.$_LANG['DELETE'].'</a></td>';
-				}
+			if ($is_adm || $mythread){
+				echo '<td width="16"><img src="/components/forum/images/toolbar/delete.gif"/></td>
+					  <td><a href="javascript:deleteThread(\'/forum/deletethread'.$t['id'].'.html\')">'.$_LANG['DELETE'].'</a></td>';
 			}
-			echo '<td width="16"><img src="/components/forum/images/toolbar/back.gif"/></td>
-				  <td><a href="/forum/'.$t['fid'].'">'.$_LANG['BACKB'].'</a></td>';
-			echo '</tr></table>';
-			echo '</td>';
-		} else { echo '<td>&nbsp;</td>'; }
-		
+		}
+		echo '<td width="16"><img src="/components/forum/images/toolbar/back.gif"/></td>
+			  <td><a href="/forum/'.$t['fid'].'">'.$_LANG['BACKB'].'</a></td>';
 		echo '</tr></table>';
-		$toolbar = ob_get_clean();
+		echo '</td>';
+	} else { echo '<td>&nbsp;</td>'; }
 	
-		//BUILD PAGE
-		//PATHWAY ENTRY
-		$left_key = $t['forum_left'];
-		$right_key = $t['forum_right'];
-		$sql = "SELECT id, title, NSLevel FROM cms_forums WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0 ORDER BY NSLeft";
-		$rs_rows = $inDB->query($sql) or die('Error while building forum path');
-		while($pcat=$inDB->fetch_assoc($rs_rows)){
-				$inPage->addPathway($pcat['title'], '/forum/'.$pcat['id']);
-		}			
+	echo '</tr></table>';
+	$toolbar = ob_get_clean();
+
+	//BUILD PAGE
+	//PATHWAY ENTRY
+	$left_key = $t['forum_left'];
+	$right_key = $t['forum_right'];
+	$sql = "SELECT id, title, NSLevel, access_list FROM cms_forums WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0 ORDER BY NSLeft";
+	$rs_rows = $inDB->query($sql);
+	while($pcat=$inDB->fetch_assoc($rs_rows)){
+		// если в цепочке родителей форума встречаются
+		// форумы с ограниченным доступом, запрещаем доступ
+		if(!$inCore->checkContentAccess($pcat['access_list'])) {
+			$inPage->includeTemplateFile('special/accessdenied.php');
+			return;
+		}
+		$inPage->addPathway($pcat['title'], '/forum/'.$pcat['id']);
+	}			
+	$inPage->addPathway($t['title'], '/forum/thread'.$t['id'].'.html');
 	
-		$inPage->addPathway($t['title'], '/forum/thread'.$t['id'].'.html');
-		
-			$psql = "SELECT p.*, u.id as uid, u.nickname author, u.login author_login, u.is_deleted deleted, up.imageurl imageurl, up.signature signature
-					 FROM cms_forum_posts p
-					 LEFT JOIN cms_users u ON u.id = p.user_id
-					 LEFT JOIN cms_user_profiles up ON up.user_id = u.id
-					 WHERE p.thread_id = $id 
-					 ORDER BY p.pubdate ASC
-					 LIMIT ".(($page-1)*$perpage).", $perpage";
-					 
-			$presult = $inDB->query($psql);
-			if ($inDB->num_rows($presult)){
+	$psql = "SELECT p.*, u.id as uid, u.nickname author, u.login author_login, u.is_deleted deleted, up.imageurl imageurl, up.signature signature
+			 FROM cms_forum_posts p
+			 LEFT JOIN cms_users u ON u.id = p.user_id
+			 LEFT JOIN cms_user_profiles up ON up.user_id = u.id
+			 WHERE p.thread_id = '$id'
+			 ORDER BY p.pubdate ASC
+			 LIMIT ".(($page-1)*$perpage).", $perpage";
+			 
+	$presult = $inDB->query($psql);
+	if ($inDB->num_rows($presult)){
 
-				$num = (($page-1)*$perpage)+1;
+		$num = (($page-1)*$perpage)+1;
 
-                $posts = array();
+		$posts = array();
 
-				while ($p = $inDB->fetch_assoc($presult)){
-                    $p['content'] = $inCore->parseSmiles($p['content'], true);
-                    $p['content'] = str_replace("&amp;", '&', $p['content']);
-                    $posts[] = $p;
-                }
+		while ($p = $inDB->fetch_assoc($presult)){
+			$p['content'] = $inCore->parseSmiles($p['content'], true);
+			$p['content'] = str_replace("&amp;", '&', $p['content']);
+			$posts[] = $p;
+		}
 
-                $posts = cmsCore::callEvent('GET_FORUM_POSTS', $posts);
+		$posts = cmsCore::callEvent('GET_FORUM_POSTS', $posts);
 
-				//print posts in thread
-				echo $toolbar_pages . $toolbar;
+		//print posts in thread
+		echo $toolbar_pages . $toolbar;
 
-				//ATTACHED POLL
-				echo forumAttachedPoll($id, $t);
-	
-				//THREAD MESSAGES LIST
-				echo '<table class="posts_table" width="100%" cellspacing="2" cellpadding="5" border="0" bordercolor="#999999" >';
+		//ATTACHED POLL
+		echo forumAttachedPoll($id, $t);
 
-				foreach ($posts as $p){
-					$mypost = $inUser->id ? (@$inUser->id==$p['user_id'] || $is_adm) : false;
-					$user_messages = forumUserMsgNum($p['uid']);
-					echo '<tr>';
-						//user column
-						echo '<td class="post_usercell" width="140" align="center" valign="top" height="150">';
-							echo '<div><a class="post_userlink" href="javascript:addNickname(\''.$p['author'].'\');" title="'.$_LANG['ADD_NICKNAME'].'"/>'.$p['author'].'</a></div>';
-														
-							echo '<div class="post_userrank">'.forumUserRank($p['uid'], $user_messages, $cfg['ranks'], $cfg['modrank']).'</div>';
+		//THREAD MESSAGES LIST
+		echo '<table class="posts_table" width="100%" cellspacing="2" cellpadding="5" border="0" bordercolor="#999999" >';
+
+		foreach ($posts as $p){
+			$mypost = $inUser->id ? (@$inUser->id==$p['user_id'] || $is_adm) : false;
+			$user_messages = forumUserMsgNum($p['uid']);
+			echo '<tr>';
+				//user column
+				echo '<td class="post_usercell" width="140" align="center" valign="top" height="150">';
+					echo '<div><a class="post_userlink" href="javascript:addNickname(\''.$p['author'].'\');" title="'.$_LANG['ADD_NICKNAME'].'"/>'.$p['author'].'</a></div>';
+												
+					echo '<div class="post_userrank">'.forumUserRank($p['uid'], $user_messages, $cfg['ranks'], $cfg['modrank']).'</div>';
+				
+					echo '<div class="post_userimg">';
+						echo '<a href="'.cmsUser::getProfileURL($p['author_login']).'" title="'.$_LANG['GOTO_PROFILE'].'">'.usrImageNOdb($p['uid'], 'small', $p['imageurl'], $p['is_deleted']).'</a>';
 						
-							echo '<div class="post_userimg">';
-								echo '<a href="'.cmsUser::getProfileURL($p['author_login']).'" title="'.$_LANG['GOTO_PROFILE'].'">'.usrImageNOdb($p['uid'], 'small', $p['imageurl'], $p['is_deleted']).'</a>';
-								
-								$awards = cmsUser::getAwardsList($p['uid']);
-								if ($awards){
-									echo '<div class="post_userawards">'; 
-										foreach($awards as $uid=>$title){
-											echo '<img src="/images/icons/award.gif" border="0" alt="'.$title.'" title="'.$title.'"/>';
-										}
-									echo '</div>';
+						$awards = cmsUser::getAwardsList($p['uid']);
+						if ($awards){
+							echo '<div class="post_userawards">'; 
+								foreach($awards as $uid=>$title){
+									echo '<img src="/images/icons/award.gif" border="0" alt="'.htmlspecialchars($title).'" title="'.htmlspecialchars($title).'"/>';
 								}
 							echo '</div>';
-							
-							echo '<div class="post_usermsgcnt">'.$_LANG['MESSAGES'].': '.$user_messages.'</div>';
-							if(in_array($p['uid'], $online_users)){
-								echo '<span class="online" style="font-size:10px;">'.$_LANG['ONLINE'].'</span>';
-							}
-														
-						echo '</td>';
-						//message column
-						echo '<td width="" class="post_msgcell" align="left" valign="top">';
-							echo '<a name="'.$p['id'].'"></a>';
-							//date & actions
-							echo '<table width="100%" class="post_date"><tr>';								
-							echo '<td><strong>#'.$num.'</strong> - '.$inCore->dateFormat($p['pubdate'], true, true).'</td>';
-							echo '<td align="right">';
-							if (usrCheckAuth() && !$t['closed']){ 
-								echo '<table cellpadding="1" cellspacing="2" border="0">
-                                        <tr>';
-
-                                        echo '<td width="15"><img src="/components/forum/images/toolbar/post-quote.gif"/></td>
-                                              <td><a href="javascript:addQuoteText(\''.$p['author'].'\')" title="'.$_LANG['ADD_SELECTED_QUOTE'].'">'.$_LANG['ADD_QUOTE_TEXT'].'</a></td>';
-
-                                        echo '<td width="15"><img style="margin-left:5px" src="/components/forum/images/toolbar/post-reply.gif"/></td>';
-                                        echo '<td><a href="/forum/thread'.$t['id'].'-quote'.$p['id'].'.html" title="'.$_LANG['REPLY_FULL_QUOTE'].'">'.$_LANG['REPLY'].'</a></td>';
-
-                                        if ($mypost || ($is_moder && !$inCore->userIsAdmin($p['uid']))){
-                                            echo '<td width="15"><img style="margin-left:5px" src="/components/forum/images/toolbar/post-edit.gif"/></td>
-                                                  <td><a href="/forum/editpost'.$p['id'].'.html">'.$_LANG['EDIT'].'</a></td>';
-                                            if ($num > 1){
-                                                echo '<td width="15"><img style="margin-left:5px" src="/components/forum/images/toolbar/post-delete.gif"/></td>
-                                                      <td><a href="/forum/deletepost'.$p['id'].'.html">'.$_LANG['DELETE'].'</a></td>';
-                                            }
-                                        }
-                                echo '</tr></table>';
-							}
-                            
-							echo '</td></tr></table>';
-                            
-							echo '<div class="post_content">'.$p['content'].'</div>';
-													
-							if ($cfg['fa_on']){
-								echo forumAttachedFiles($p['id'], $mypost, @$cfg['showimg']);
-							}
-							//edit details
-							if ($p['edittimes']){
-								echo '<div class="post_editdate">'.$_LANG['EDITED'].': '.$p['edittimes'].' '.$_LANG['COUNT'].' ('.$_LANG['LAST_EDIT'].': '.$inCore->dateFormat($p['editdate'], true, true).')</div>';
-							}
-							//user signature
-							if ($p['signature']){
-								echo '<div class="post_signature">'.$inCore->parseSmiles($p['signature'], true).'</div>';
-							}
-						echo '</td>';
-					echo '</tr>';
-					$num++;
-				} 				
-				echo '</table>';
-				
-				//BOTTOM TOOLBAR
-				if ($page == $lastpage) { echo '<a name="new"></a>'; }
-				echo '<table width="100%" cellspacing="0" cellpadding="5"  class="forum_toolbar"><tr><td><a href="#">'.$_LANG['GOTO_BEGIN_PAGE'].'</a></td>'. $toolbar;
-				
-				//NAV BAR
-				$previd = $inDB->get_fields('cms_forum_threads', 'id<'.$t['id'].' AND forum_id = '.$t['forum_id'], 'id, title', 'id DESC');
-				$nextid = $inDB->get_fields('cms_forum_threads', 'id>'.$t['id'].' AND forum_id = '.$t['forum_id'], 'id, title', 'id ASC');			
-				
-				echo '<div class="forum_navbar">';
-					echo '<table width="100%"><tr>';
-						echo '<td align="left">';
-							echo '<table cellpadding="5" cellspacing="0" border="0" align="center" style="margin-left:auto;margin-right:auto"><tr>';
-								if ($previd){
-									echo '<td align="right" width="">';
-										echo '<div>&larr; <a href="/forum/thread'.$previd['id'].'.html">'.$_LANG['PREVIOUS_THREAD'].'</a></div>';
-									echo '</td>';
-								}
-								if ($previd && $nextid) { echo '<td>|</td>'; }
-								if ($nextid){
-									echo '<td align="left" width="">';
-										echo '<div><a href="/forum/thread'.$nextid['id'].'.html">'.$_LANG['NEXT_THREAD'].'</a> &rarr;</div>';
-									echo '</td>';
-								}			
-							echo '</tr></table>';				
-						echo '</td>';
-						echo '<td width="150" align="right">'.$_LANG['GOTO_FORUM'].': </td>';
-						echo '<td width="220" align="right">';			
-							echo forumsList($t['forum_id']);
-						echo '</td>';
-					echo '</tr></table>';											
-				echo '</div>';
-				
-				//PAGINATION
-                $total = $inDB->rows_count('cms_forum_posts', 'thread_id='.$id);
-
-                echo cmsPage::getPagebar($total, $page, $perpage, '/forum/thread'.$id.'-%page%.html');
-				
-				//FAST ANSWER FORM
-				if (!isset($cfg['fast_on'])) { $cfg['fast_on'] = 1; }				
-				if (!isset($cfg['fast_bb'])) { $cfg['fast_bb'] = 1; }				
-				if ($cfg['fast_on'] && !$t['closed']){
-					echo '<div class="forum_fast">';
-						echo '<div class="forum_fast_header">'.$_LANG['FAST_ANSWER'].'</div>';
-						if ($inUser->id){
-							if ($cfg['fast_bb']){
-                                $inPage->addHeadJS('core/js/smiles.js');
-								echo '<div class="usr_msg_bbcodebox">';
-									echo cmsPage::getBBCodeToolbar('message', true);
-								echo '</div>';
-								echo cmsPage::getSmilesPanel('message');
-							}
-							echo '<div class="forum_fast_form">';
-								echo '<form action="/forum/reply'.$id.'.html" method="post">';
-									echo '<textarea id="message" name="message" rows="5"></textarea>';
-									echo '<div class="forum_fast_submit" style="float:right;padding:5px;"><input type="submit" name="gosend" value="'.$_LANG['SEND'].'"/></div>';
-                                    if ($mythread || $is_admin){
-                                        echo '<div style="float:right;padding:8px;">
-                                                <label><input type="checkbox" name="fixed" value="1" /> '.$_LANG['TOPIC_FIXED_LABEL'].'</label>
-                                              </div>';
-                                    }
-								echo '</form>';
-							echo '</div>';
-						} else {
-							echo '<div style="padding:5px">'.$_LANG['FOR_WRITE_ON_FORUM'].', <a href="/registration">'.$_LANG['REGISTER'].'</a> '.$_LANG['OR_LOGIN'].'.</div>';
 						}
 					echo '</div>';
-				}
-				
-			} else {
-				echo '<p>'.$_LANG['NO_MESS_IN_THREAD'].'</p>';
-			}					
-	} else { echo '<p>'.$_LANG['THREAD_NOT_FOUND_TEXT'].'</p>'; }
+					
+					echo '<div class="post_usermsgcnt">'.$_LANG['MESSAGES'].': '.$user_messages.'</div>';
+					if(in_array($p['uid'], $online_users)){
+						echo '<span class="online" style="font-size:10px;">'.$_LANG['ONLINE'].'</span>';
+					}
+												
+				echo '</td>';
+				//message column
+				echo '<td width="" class="post_msgcell" align="left" valign="top">';
+					echo '<a name="'.$p['id'].'"></a>';
+					//date & actions
+					echo '<table width="100%" class="post_date"><tr>';								
+					echo '<td><strong>#'.$num.'</strong> - '.$inCore->dateFormat($p['pubdate'], true, true).'</td>';
+					echo '<td align="right">';
+					if (usrCheckAuth() && !$t['closed']){ 
+						echo '<table cellpadding="1" cellspacing="2" border="0">
+								<tr>';
 
+								echo '<td width="15"><img src="/components/forum/images/toolbar/post-quote.gif"/></td>
+									  <td><a href="javascript:addQuoteText(\''.$p['author'].'\')" title="'.$_LANG['ADD_SELECTED_QUOTE'].'">'.$_LANG['ADD_QUOTE_TEXT'].'</a></td>';
+
+								echo '<td width="15"><img style="margin-left:5px" src="/components/forum/images/toolbar/post-reply.gif"/></td>';
+								echo '<td><a href="/forum/thread'.$t['id'].'-quote'.$p['id'].'.html" title="'.$_LANG['REPLY_FULL_QUOTE'].'">'.$_LANG['REPLY'].'</a></td>';
+
+								if ($mypost || ($is_moder && !$inCore->userIsAdmin($p['uid']))){
+									echo '<td width="15"><img style="margin-left:5px" src="/components/forum/images/toolbar/post-edit.gif"/></td>
+										  <td><a href="/forum/editpost'.$p['id'].'.html">'.$_LANG['EDIT'].'</a></td>';
+									if ($num > 1){
+										echo '<td width="15"><img style="margin-left:5px" src="/components/forum/images/toolbar/post-delete.gif"/></td>
+											  <td><a href="/forum/deletepost'.$p['id'].'.html">'.$_LANG['DELETE'].'</a></td>';
+									}
+								}
+						echo '</tr></table>';
+					}
+					
+					echo '</td></tr></table>';
+					
+					echo '<div class="post_content">'.$p['content'].'</div>';
+											
+					if ($cfg['fa_on']){
+						echo forumAttachedFiles($p['id'], $mypost, @$cfg['showimg']);
+					}
+					//edit details
+					if ($p['edittimes']){
+						echo '<div class="post_editdate">'.$_LANG['EDITED'].': '.$p['edittimes'].' '.$_LANG['COUNT'].' ('.$_LANG['LAST_EDIT'].': '.$inCore->dateFormat($p['editdate'], true, true).')</div>';
+					}
+					//user signature
+					if ($p['signature']){
+						echo '<div class="post_signature">'.$inCore->parseSmiles($p['signature'], true).'</div>';
+					}
+				echo '</td>';
+			echo '</tr>';
+			$num++;
+		} 				
+		echo '</table>';
+		
+		//BOTTOM TOOLBAR
+		if ($page == $lastpage) { echo '<a name="new"></a>'; }
+		echo '<table width="100%" cellspacing="0" cellpadding="5"  class="forum_toolbar"><tr><td><a href="#">'.$_LANG['GOTO_BEGIN_PAGE'].'</a></td>'. $toolbar;
+		
+		//NAV BAR
+		$previd = $inDB->get_fields('cms_forum_threads', 'id<'.$t['id'].' AND forum_id = '.$t['forum_id'], 'id, title', 'id DESC');
+		$nextid = $inDB->get_fields('cms_forum_threads', 'id>'.$t['id'].' AND forum_id = '.$t['forum_id'], 'id, title', 'id ASC');			
+		
+		echo '<div class="forum_navbar">';
+			echo '<table width="100%"><tr>';
+				echo '<td align="left">';
+					echo '<table cellpadding="5" cellspacing="0" border="0" align="center" style="margin-left:auto;margin-right:auto"><tr>';
+						if ($previd){
+							echo '<td align="right" width="">';
+								echo '<div>&larr; <a href="/forum/thread'.$previd['id'].'.html">'.$_LANG['PREVIOUS_THREAD'].'</a></div>';
+							echo '</td>';
+						}
+						if ($previd && $nextid) { echo '<td>|</td>'; }
+						if ($nextid){
+							echo '<td align="left" width="">';
+								echo '<div><a href="/forum/thread'.$nextid['id'].'.html">'.$_LANG['NEXT_THREAD'].'</a> &rarr;</div>';
+							echo '</td>';
+						}			
+					echo '</tr></table>';				
+				echo '</td>';
+				echo '<td width="150" align="right">'.$_LANG['GOTO_FORUM'].': </td>';
+				echo '<td width="220" align="right">';			
+					echo forumsList($t['forum_id']);
+				echo '</td>';
+			echo '</tr></table>';											
+		echo '</div>';
+		
+		//PAGINATION
+		$total = $inDB->rows_count('cms_forum_posts', 'thread_id='.$id);
+
+		echo cmsPage::getPagebar($total, $page, $perpage, '/forum/thread'.$id.'-%page%.html');
+		
+		//FAST ANSWER FORM
+		if (!isset($cfg['fast_on'])) { $cfg['fast_on'] = 1; }				
+		if (!isset($cfg['fast_bb'])) { $cfg['fast_bb'] = 1; }				
+		if ($cfg['fast_on'] && !$t['closed']){
+			echo '<div class="forum_fast">';
+				echo '<div class="forum_fast_header">'.$_LANG['FAST_ANSWER'].'</div>';
+				if ($inUser->id){
+					if ($cfg['fast_bb']){
+						$inPage->addHeadJS('core/js/smiles.js');
+						echo '<div class="usr_msg_bbcodebox">';
+							echo cmsPage::getBBCodeToolbar('message', true);
+						echo '</div>';
+						echo cmsPage::getSmilesPanel('message');
+					}
+					echo '<div class="forum_fast_form">';
+						echo '<form action="/forum/reply'.$id.'.html" method="post">';
+							echo '<textarea id="message" name="message" rows="5"></textarea>';
+							echo '<div class="forum_fast_submit" style="float:right;padding:5px;"><input type="submit" name="gosend" value="'.$_LANG['SEND'].'"/></div>';
+							if ($mythread || $is_admin){
+								echo '<div style="float:right;padding:8px;">
+										<label><input type="checkbox" name="fixed" value="1" /> '.$_LANG['TOPIC_FIXED_LABEL'].'</label>
+									  </div>';
+							}
+						echo '</form>';
+					echo '</div>';
+				} else {
+					echo '<div style="padding:5px">'.$_LANG['FOR_WRITE_ON_FORUM'].', <a href="/registration">'.$_LANG['REGISTER'].'</a> '.$_LANG['OR_LOGIN'].'.</div>';
+				}
+			echo '</div>';
+		}
+		
+	} else {
+		echo '<p>'.$_LANG['NO_MESS_IN_THREAD'].'</p>';
+	}					
 }
 ///////////////////////////// NEW THREAD / POST /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 
-	if (usrCheckAuth()){
+	if (!$inUser->id){ cmsUser::goToLogin(); }
 
-		$inPage->addHeadJS('core/js/smiles.js');
-		
-		$forum = $model->getForum($id);
-		
-		if ($do == 'newthread') {
+	$inPage->addHeadJS('core/js/smiles.js');
+	
+	$forum = $model->getForum($id);
+	// права доступа к форуму
+	if(!$inCore->checkContentAccess($forum['access_list'])) {
+		$inPage->includeTemplateFile('special/accessdenied.php');
+		return;
+	}
 
-            if (IS_BILLING && $forum['topic_cost']){
-                cmsBilling::checkBalance('forum', 'add_thread', false, $forum['topic_cost']);
-            }
+	if ($do == 'newthread') {
 
-			$inPage->setTitle($_LANG['NEW_THREAD']);
-			$inPage->addPathway($_LANG['NEW_THREAD'], $_SERVER['REQUEST_URI']);
-			echo '<div class="con_heading">'.$_LANG['NEW_THREAD'].'</div>';
+		if (IS_BILLING && $forum['topic_cost']){
+			cmsBilling::checkBalance('forum', 'add_thread', false, $forum['topic_cost']);
+		}
 
-		} else {
-			if ($do == 'newpost'){
-				$sql = "SELECT * FROM cms_forum_threads WHERE id = '$id'";
-				$res = $inDB->query($sql);
-				if ($inDB->num_rows($res)){		
-					$t = $inDB->fetch_assoc($res);
-					if($t['closed'] == 1) { $inCore->halt(); }
-					$inPage->setTitle($_LANG['NEW_POST']);
-					$inPage->addPathway($_LANG['NEW_POST'], $_SERVER['REQUEST_URI']);
-					echo '<div class="con_heading">'.$_LANG['NEW_POST'].'</div>';
-					echo '<div style="margin-bottom:10px">
-							<strong>'.$_LANG['THREAD'].': </strong><a href="/forum/thread'.$t['id'].'.html">'.$t['title'].'</a>
-						  </div>';
-                    $is_topic_starter = ($t['user_id'] == $inUser->id);
-				} else {
-					die($_LANG['THREAD_NOT_FOUND']);
-				}
-			} else { //edit post				
-					$sql = "SELECT content, thread_id
-							FROM cms_forum_posts
-							WHERE id = $id";
-							
-					if(!$inCore->userIsAdmin($inUser->id) && !$inCore->isUserCan('forum/moderate')) { $sql .= " AND user_id=".$inUser->id; }
+		$inPage->setTitle($_LANG['NEW_THREAD']);
+		$inPage->addPathway($_LANG['NEW_THREAD'], $_SERVER['REQUEST_URI']);
+		echo '<div class="con_heading">'.$_LANG['NEW_THREAD'].'</div>';
+
+	} else {
+		if ($do == 'newpost'){
+			$sql = "SELECT * FROM cms_forum_threads WHERE id = '$id'";
+			$res = $inDB->query($sql);
+			if ($inDB->num_rows($res)){		
+				$t = $inDB->fetch_assoc($res);
+				if($t['closed'] == 1) { $inCore->halt(); }
+				$inPage->setTitle($_LANG['NEW_POST']);
+				$inPage->addPathway($_LANG['NEW_POST'], $_SERVER['REQUEST_URI']);
+				echo '<div class="con_heading">'.$_LANG['NEW_POST'].'</div>';
+				echo '<div style="margin-bottom:10px">
+						<strong>'.$_LANG['THREAD'].': </strong><a href="/forum/thread'.$t['id'].'.html">'.$t['title'].'</a>
+					  </div>';
+				$is_topic_starter = ($t['user_id'] == $inUser->id);
+			} else {
+				die($_LANG['THREAD_NOT_FOUND']);
+			}
+		} else { //edit post				
+			$sql = "SELECT content, thread_id
+					FROM cms_forum_posts
+					WHERE id = '$id'";
 					
-					$result = $inDB->query($sql) ;
+			if(!$inCore->userIsAdmin($inUser->id) && !$inCore->isUserCan('forum/moderate')) { $sql .= " AND user_id=".$inUser->id; }
+			
+			$result = $inDB->query($sql) ;
+		
+			if ($inDB->num_rows($result)>0){
+				$inPage->setTitle($_LANG['EDIT_POST']);
+				$inPage->addPathway($_LANG['EDIT_POST'], $_SERVER['REQUEST_URI']);
+				echo '<div class="con_heading">'.$_LANG['EDIT_POST'].'</div>';
+			
+				$msg = $inDB->fetch_assoc($result);
+				$oldmsg = str_replace('<br/>', "\r\n", $msg['content']);	
+			} else { die(); }
+		}
+	}
+		
+	$replyid = $inCore->request('replyid', 'int', 0);
+
+	if(!isset($_POST['gosend'])){		
 				
-					if ($inDB->num_rows($result)>0){
-						$inPage->setTitle($_LANG['EDIT_POST']);
-						$inPage->addPathway($_LANG['EDIT_POST'], $_SERVER['REQUEST_URI']);
-						echo '<div class="con_heading">'.$_LANG['EDIT_POST'].'</div>';
-					
-						$msg = $inDB->fetch_assoc($result);
-						$oldmsg = str_replace('<br/>', "\r\n", $msg['content']);	
-					} else { die(); }
+		$inDB->query("DELETE FROM cms_upload_images WHERE session_id='".session_id()."'");
+				
+		if ($replyid){
+			$sql = "SELECT p.*, u.*, DATE_FORMAT(p.pubdate, '%d-%m-%Y в %H:%i') senddate
+					FROM cms_forum_posts p, cms_users u
+					WHERE p.id = '$replyid' AND p.user_id = u.id";
+			$result = $inDB->query($sql) ;
+			if ($inDB->num_rows($result)>0){
+				$msg = $inDB->fetch_assoc($result);
+				$oldmsg = '[quote='.$msg['nickname'].']'."\r\n".
+							strip_tags(str_replace('<br/>', "\n", $msg['content']))."\r\n".
+						  '[/quote]'."\r\n\r\n";
 			}
 		}
-			
-		$replyid = $inCore->request('replyid', 'int', 0);
+		
+		echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" name="msgform" id="msgform" enctype="multipart/form-data">';
+		echo '<table width="100%" cellpadding="0" cellspacing="0"><tr><td>';		
+				if ($do == 'newthread') { 
+					echo '<input type="hidden" name="forum_id" value="'.$id.'" />'; 
+					echo '<div class="forum_postinfo"><table width="100%">';
+						echo '<tr>';
+							echo '<td width="150">'.$_LANG['THREAD_TITLE'].':</td>';
+							echo '<td width=""><input type="text" name="title" size="30"/></td>';								
+						echo '</tr>';
+						echo '<tr>';
+							echo '<td width="">'.$_LANG['THREAD_DESCRIPTION'].':</td>';
+							echo '<td width=""><input type="text" name="description" size="50"/></td>';								
+						echo '</tr>';
+					echo '</table></div>';
+				}		
 
-		if(!isset($_POST['gosend'])){		
-					
-			$inDB->query("DELETE FROM cms_upload_images WHERE session_id='".session_id()."'");
-					
-			if ($replyid){
-				$sql = "SELECT p.*, u.*, DATE_FORMAT(p.pubdate, '%d-%m-%Y в %H:%i') senddate
-						FROM cms_forum_posts p, cms_users u
-						WHERE p.id = $replyid AND p.user_id = u.id";
-				$result = $inDB->query($sql) ;
-				if ($inDB->num_rows($result)>0){
-					$msg = $inDB->fetch_assoc($result);
-					$oldmsg = '[quote='.$msg['nickname'].']'."\r\n".
-								strip_tags(str_replace('<br/>', "\n", $msg['content']))."\r\n".
-							  '[/quote]'."\r\n\r\n";
+				echo '<div class="usr_msg_bbcodebox">';
+					if (!isset($cfg['img_on'])) { $cfg['img_on'] = 1; }
+					echo cmsPage::getBBCodeToolbar('message', $cfg['img_on'], 'forum');
+				echo '</div>';
+
+				echo cmsPage::getSmilesPanel('message');
+				
+				$inCore->initAutoGrowText('#message');
+				echo '<div><textarea class="ajax_autogrowarea" name="message" id="message">'.(@$oldmsg).'</textarea></div>';						
+
+				if (($do=='newpost' || $do=='newthread') && $cfg['fa_on']) { //File attach form
+					echo forumAttachForm($cfg);
 				}
+
+				if ($do=='newthread') { //Polls attach form
+					echo forumPollForm($cfg);
+				}
+
+				if (($do=='newpost' && !cmsUser::isSubscribed($inUser->id, 'forum', @$id)) || ($do=='newthread')){
+					echo '<div style="margin-top:16px;"><label><input name="subscribe" type="checkbox" value="1" /> '.$_LANG['SUBSCRIBE_THREAD'].'</label></div>';
+				}
+
+				if ($do=='newpost' && ($inUser->is_admin || $is_topic_starter)){
+					echo '<div style="margin-top:3px;margin-bottom:15px"><label><input name="fixed" type="checkbox" value="1" /> '.$_LANG['TOPIC_FIXED_LABEL'].'</label></div>';
+				}
+				
+				echo '<div style="margin-top:6px;"><input type="submit" name="gosend" value="'.$_LANG['SEND'].'" style="font-size:18px"/> ';
+				echo '<input type="button" name="gosend" value="'.$_LANG['CANCEL'].'" style="font-size:18px" onclick="window.history.go(-1)"/></div>';
+		echo '</td>';	
+						
+		echo '</tr></table>';
+		
+
+		echo '</form>';
+		
+	} else {
+		$message_post = $inCore->request('message', 'html');
+		$message = $inCore->badTagClear($message);
+		$message = $inDB->escape_string($message_post);                
+		if (!$message) { echo '<p>'.$_LANG['NEED_TEXT_POST'].'</p>'; return; }
+
+		if($do=='newpost'){												
+			//NEW POST
+			//insert new post
+			$lastid = $model->addPost(array(
+					'thread_id' => $id,
+					'user_id' => $inUser->id,
+					'message' => $message
+				));
+
+			$ts_id = $inDB->get_field('cms_forum_threads', "id='{$id}'", 'user_id');
+			$is_topic_starter = ($ts_id == $inUser->id);
+
+			$is_fixed = $inCore->request('fixed', 'int', 0);
+
+			if ($is_fixed && ($inUser->is_admin || $is_topic_starter)){
+				$inDB->query("UPDATE cms_forum_threads SET title = CONCAT('{$_LANG['TOPIC_FIXED_PREFIX']} ', title), closed=1 WHERE id = $id");
 			}
-			
-			echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" name="msgform" id="msgform" enctype="multipart/form-data">';
-			echo '<table width="100%" cellpadding="0" cellspacing="0"><tr><td>';		
-					if ($do == 'newthread') { 
-						echo '<input type="hidden" name="forum_id" value="'.$id.'" />'; 
-						echo '<div class="forum_postinfo"><table width="100%">';
-							echo '<tr>';
-								echo '<td width="150">'.$_LANG['THREAD_TITLE'].':</td>';
-								echo '<td width=""><input type="text" name="title" size="30"/></td>';								
-							echo '</tr>';
-							echo '<tr>';
-								echo '<td width="">'.$_LANG['THREAD_DESCRIPTION'].':</td>';
-								echo '<td width=""><input type="text" name="description" size="50"/></td>';								
-							echo '</tr>';
-						echo '</table></div>';
-					}		
 
-					echo '<div class="usr_msg_bbcodebox">';
-						if (!isset($cfg['img_on'])) { $cfg['img_on'] = 1; }
-						echo cmsPage::getBBCodeToolbar('message', $cfg['img_on'], 'forum');
-					echo '</div>';
+			cmsUser::checkAwards($inUser->id);
 
-					echo cmsPage::getSmilesPanel('message');
-					
-					$inCore->initAutoGrowText('#message');
-					echo '<div><textarea class="ajax_autogrowarea" name="message" id="message">'.(@$oldmsg).'</textarea></div>';						
-
-					if (($do=='newpost' || $do=='newthread') && $cfg['fa_on']) { //File attach form
-						echo forumAttachForm($cfg);
-					}
-
-					if ($do=='newthread') { //Polls attach form
-						echo forumPollForm($cfg);
-					}
-
-					if (($do=='newpost' && !cmsUser::isSubscribed($inUser->id, 'forum', @$id)) || ($do=='newthread')){
-						echo '<div style="margin-top:16px;"><label><input name="subscribe" type="checkbox" value="1" /> '.$_LANG['SUBSCRIBE_THREAD'].'</label></div>';
-					}
-
-                    if ($do=='newpost' && ($inUser->is_admin || $is_topic_starter)){
-                        echo '<div style="margin-top:3px;margin-bottom:15px"><label><input name="fixed" type="checkbox" value="1" /> '.$_LANG['TOPIC_FIXED_LABEL'].'</label></div>';
-                    }
-					
-					echo '<div style="margin-top:6px;"><input type="submit" name="gosend" value="'.$_LANG['SEND'].'" style="font-size:18px"/> ';
-					echo '<input type="button" name="gosend" value="'.$_LANG['CANCEL'].'" style="font-size:18px" onclick="window.history.go(-1)"/></div>';
-			echo '</td>';	
-							
-			echo '</tr></table>';
-			
-
-			echo '</form>';
-			
-		} else {
-                $message_post = $inCore->request('message', 'html');
-                $message = $inCore->badTagClear($message);
-                $message = $inDB->escape_string($message_post);                
-                if (!$message) { echo '<p>'.$_LANG['NEED_TEXT_POST'].'</p>'; return; }
-
-			if($do=='newpost'){												
-				//NEW POST
-				//insert new post
-				$lastid = $model->addPost(array(
-						'thread_id' => $id,
-						'user_id' => $inUser->id,
-						'message' => $message
+			$inCore->registerUploadImages(session_id(), $lastid, 'forum');
+										
+			//refresh forum thread
+			$sql = "UPDATE cms_forum_threads SET pubdate = NOW() WHERE id = $id";
+			$inDB->query($sql);
+			//upload attached files
+			$file_error = false;
+			if ($cfg['fa_on'] && $_FILES['fa']) {                    
+				$file_error = uploadFiles($lastid, $cfg);		
+			}
+			//subscribe thread
+			if ($_POST['subscribe']){
+				cmsUser::subscribe($inUser->id, 'forum', $id);
+			}
+			cmsUser::sendUpdateNotify('forum', $id);
+			//redirect to last page of thread
+			if (!$file_error){
+				if (!$t['is_hidden']){
+					$title = $t['title'];
+					//регистрируем событие
+					$message_post = $inCore->parseSmiles($message_post, true);
+					cmsActions::log('add_fpost', array(
+						'object' => 'пост',
+						'object_url' => '/forum/thread-last'.$id.'.html#'.$lastid,
+						'object_id' => $lastid,
+						'target' => $title,
+						'target_url' => '/forum/thread-last'.$id.'.html',
+						'target_id' => $id,
+						'description' => strip_tags( strlen(strip_tags($message_post))>100 ? substr($message_post, 0, 100) : $message_post )
 					));
-
-                $ts_id = $inDB->get_field('cms_forum_threads', "id='{$id}'", 'user_id');
-                $is_topic_starter = ($ts_id == $inUser->id);
-
-                $is_fixed = $inCore->request('fixed', 'int', 0);
-
-                if ($is_fixed && ($inUser->is_admin || $is_topic_starter)){
-                    $inDB->query("UPDATE cms_forum_threads SET title = CONCAT('{$_LANG['TOPIC_FIXED_PREFIX']} ', title), closed=1 WHERE id = $id");
-                }
-
-				cmsUser::checkAwards($inUser->id);
-
-				$inCore->registerUploadImages(session_id(), $lastid, 'forum');
-											
-				//refresh forum thread
-				$sql = "UPDATE cms_forum_threads SET pubdate = NOW() WHERE id = $id";
-				$inDB->query($sql);
-				//upload attached files
-				$file_error = false;
-				if ($cfg['fa_on'] && $_FILES['fa']) {                    
-					$file_error = uploadFiles($lastid, $cfg);		
 				}
-				//subscribe thread
-				if ($_POST['subscribe']){
-					cmsUser::subscribe($inUser->id, 'forum', $id);
-				}
-				cmsUser::sendUpdateNotify('forum', $id);
-				//redirect to last page of thread
-				if (!$file_error){
-					if (!$t['is_hidden']){
-                        $title = $t['title'];
-                        //регистрируем событие
-                        $message_post = $inCore->parseSmiles($message_post, true);
-                        cmsActions::log('add_fpost', array(
-                            'object' => 'пост',
-                            'object_url' => '/forum/thread-last'.$id.'.html#'.$lastid,
-                            'object_id' => $lastid,
-                            'target' => $title,
-                            'target_url' => '/forum/thread-last'.$id.'.html',
-                            'target_id' => $id,
-                            'description' => strip_tags( strlen(strip_tags($message_post))>100 ? substr($message_post, 0, 100) : $message_post )
-                        ));
-					}
-					$posts_in_thread = $inDB->rows_count('cms_forum_posts', 'thread_id='.$id);
-					$pages = ceil($posts_in_thread / $cfg['pp_thread']);
-					if ($pages==1){
-						header('location:/forum/thread'.$id.'.html#new');				
-					} else {
-						header('location:/forum/thread'.$id.'-'.$pages.'.html#new');
-					}
+				$posts_in_thread = $inDB->rows_count('cms_forum_posts', 'thread_id='.$id);
+				$pages = ceil($posts_in_thread / $cfg['pp_thread']);
+				if ($pages==1){
+					header('location:/forum/thread'.$id.'.html#new');				
 				} else {
-					uploadError($id, $post_id, $cfg['fa_size'], $cfg['fa_ext']);
+					header('location:/forum/thread'.$id.'-'.$pages.'.html#new');
 				}
 			} else {
+				uploadError($id, $post_id, $cfg['fa_size'], $cfg['fa_ext']);
+			}
+		} else {
 
-				if ($do=='newthread'){
-					//NEW THREAD
-					$title          = $inCore->request('title', 'str');
-					$description    = $inCore->request('description', 'str');
+			if ($do=='newthread'){
+				//NEW THREAD
+				$title          = $inCore->request('title', 'str');
+				$description    = $inCore->request('description', 'str');
 
-					if($title && $message){	
+				if($title && $message){	
+				
+					$is_hidden = $forum['auth_group'] ? 1 : 0;
 					
-						$is_hidden = $forum['auth_group'] ? 1 : 0;
-						
-						$threadlastid = $model->addThread(array(
-								'forum_id' => $id,
-								'user_id' => $inUser->id,
-								'title' => $title,
-								'description' => $description,
-								'is_hidden' => $is_hidden
-							));
-						
-						$lastid = $model->addPost(array(
-								'thread_id' => $threadlastid,
-								'user_id' => $inUser->id,
-								'message' => $message
-							));
-						
-						cmsUser::checkAwards($inUser->id);
+					$threadlastid = $model->addThread(array(
+							'forum_id' => $id,
+							'user_id' => $inUser->id,
+							'title' => $title,
+							'description' => $description,
+							'is_hidden' => $is_hidden
+						));
+					
+					$lastid = $model->addPost(array(
+							'thread_id' => $threadlastid,
+							'user_id' => $inUser->id,
+							'message' => $message
+						));
+					
+					cmsUser::checkAwards($inUser->id);
 
-						$inCore->registerUploadImages(session_id(), $lastid, 'forum');
-						
-						//subscribe thread
-						if ($_POST['subscribe']){
-							cmsUser::subscribe($inUser->id, 'forum', $threadlastid);
-						}
-									
-						//create attached poll
-						$poll_error = false;
-						if (@$_POST['poll']['title']){
-							$poll_error = createPoll($threadlastid, $_POST['poll'], $cfg);
-                            if ($poll_error) { echo $poll_error; }
-						}
-						
-                        //if poll created without errors
-                        //upload attached files
-                        $file_error = false;
-                        if ($cfg['fa_on'] && sizeof($_FILES['fa'])) {
-                            //upload
-                            $file_error = uploadFiles($lastid, $cfg);
-                        }
-                        if (!$file_error){
-							if (!$is_hidden) {
-								$message = $inCore->parseSmiles($message, true);
-								//регистрируем событие
-								cmsActions::log('add_thread', array(
-									'object' => $title,
-									'object_url' => '/forum/thread'.$threadlastid.'.html',
-									'object_id' => $threadlastid,
-									'target' => $forum['title'],
-									'target_url' => '/forum/'.$forum['id'],
-									'target_id' => $forum['id'], 
-									'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
-								));	
-							}
-                            header('location:/forum/thread'.$threadlastid.'.html');
-                        } else {
-                            uploadError($threadlastid, $post_id, $cfg['fa_size'], $cfg['fa_ext']);
-                        }
-
-                        if (IS_BILLING && $forum['topic_cost']){
-                            cmsBilling::process('forum', 'add_thread', $forum['topic_cost']);
-                        }
-
-					} else {
-						echo '<p>'.$_LANG['NEED_TITLE_THREAD_YOUR_POST'].'</p>';
+					$inCore->registerUploadImages(session_id(), $lastid, 'forum');
+					
+					//subscribe thread
+					if ($_POST['subscribe']){
+						cmsUser::subscribe($inUser->id, 'forum', $threadlastid);
 					}
-				} else { //edit post
-					if($message){
-						$posts_in_thread = $inDB->rows_count('cms_forum_posts', 'thread_id='.$msg['thread_id']);
-						$pages = ceil($posts_in_thread / $cfg['pp_thread']);
-						$sql = "UPDATE cms_forum_posts 
-								SET content = '$message',
-									editdate = NOW(),
-									edittimes = edittimes + 1
-								WHERE id = $id";
-						$inDB->query($sql) ;
-						$inCore->registerUploadImages(session_id(), $id, 'forum');						
-						if ($pages==1){
-                            header('location:/forum/thread'.$msg['thread_id'].'.html');
-						} else {
-							header('location:/forum/thread'.$msg['thread_id'].'-'.$pages.'.html');
-						}					
-					} else { echo '<p>'.$_LANG['NEED_TEXT_POST'].'</p>'; }
+								
+					//create attached poll
+					$poll_error = false;
+					if (@$_POST['poll']['title']){
+						$poll_error = createPoll($threadlastid, $_POST['poll'], $cfg);
+						if ($poll_error) { echo $poll_error; }
+					}
+					
+					//if poll created without errors
+					//upload attached files
+					$file_error = false;
+					if ($cfg['fa_on'] && sizeof($_FILES['fa'])) {
+						//upload
+						$file_error = uploadFiles($lastid, $cfg);
+					}
+					if (!$file_error){
+						if (!$is_hidden) {
+							$message = $inCore->parseSmiles($message, true);
+							//регистрируем событие
+							cmsActions::log('add_thread', array(
+								'object' => $title,
+								'object_url' => '/forum/thread'.$threadlastid.'.html',
+								'object_id' => $threadlastid,
+								'target' => $forum['title'],
+								'target_url' => '/forum/'.$forum['id'],
+								'target_id' => $forum['id'], 
+								'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
+							));	
+						}
+						header('location:/forum/thread'.$threadlastid.'.html');
+					} else {
+						uploadError($threadlastid, $post_id, $cfg['fa_size'], $cfg['fa_ext']);
+					}
+
+					if (IS_BILLING && $forum['topic_cost']){
+						cmsBilling::process('forum', 'add_thread', $forum['topic_cost']);
+					}
+
+				} else {
+					echo '<p>'.$_LANG['NEED_TITLE_THREAD_YOUR_POST'].'</p>';
 				}
+			} else { //edit post
+				if($message){
+					$posts_in_thread = $inDB->rows_count('cms_forum_posts', 'thread_id='.$msg['thread_id']);
+					$pages = ceil($posts_in_thread / $cfg['pp_thread']);
+					$sql = "UPDATE cms_forum_posts 
+							SET content = '$message',
+								editdate = NOW(),
+								edittimes = edittimes + 1
+							WHERE id = $id";
+					$inDB->query($sql) ;
+					$inCore->registerUploadImages(session_id(), $id, 'forum');						
+					if ($pages==1){
+						header('location:/forum/thread'.$msg['thread_id'].'.html');
+					} else {
+						header('location:/forum/thread'.$msg['thread_id'].'-'.$pages.'.html');
+					}					
+				} else { echo '<p>'.$_LANG['NEED_TEXT_POST'].'</p>'; }
 			}
 		}
-		
-	} else { echo usrNeedReg(); } //usrCheckAuth
+	}
 	
 }
 ///////////////////////////// DELETE POST /////////////////////////////////////////////////////////////////////////////////////////////////

@@ -34,14 +34,20 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
     }
 
-	cpAddPathway('Форум', '?view=components&do=config&id='.$_REQUEST['id']);
-	echo '<h3>Форум</h3>';
-	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'config'; }
-
     define('IS_BILLING', $inCore->isComponentInstalled('billing'));
     if (IS_BILLING) { $inCore->loadClass('billing'); }
 
-	$inDB = cmsDatabase::getInstance();
+    $inDB   = cmsDatabase::getInstance();
+	$inUser = cmsUser::getInstance();
+
+	$opt = $inCore->request('opt', 'str', 'config');
+	$id  = $inCore->request('id', 'int', 0);
+
+    $cfg = $inCore->loadComponentConfig('forum');
+    if (!isset($cfg['is_rss'])) { $cfg['is_rss'] = 1; }
+
+	cpAddPathway('Форум', '?view=components&do=config&id='.$id);
+	echo '<h3>Форум</h3>';
 
 	$toolmenu = array();
 
@@ -49,38 +55,38 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	
 		$toolmenu[0]['icon'] = 'newfolder.gif';
 		$toolmenu[0]['title'] = 'Новая категория';
-		$toolmenu[0]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_cat';
+		$toolmenu[0]['link'] = '?view=components&do=config&id='.$id.'&opt=add_cat';
 	
 		$toolmenu[2]['icon'] = 'newforum.gif';
 		$toolmenu[2]['title'] = 'Новый форум';
-		$toolmenu[2]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_forum';
+		$toolmenu[2]['link'] = '?view=components&do=config&id='.$id.'&opt=add_forum';
 	
 		$toolmenu[1]['icon'] = 'folders.gif';
 		$toolmenu[1]['title'] = 'Категории форумов';
-		$toolmenu[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats';
+		$toolmenu[1]['link'] = '?view=components&do=config&id='.$id.'&opt=list_cats';
 	
 		$toolmenu[3]['icon'] = 'listforums.gif';
 		$toolmenu[3]['title'] = 'Все форумы';
-		$toolmenu[3]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_forums';
+		$toolmenu[3]['link'] = '?view=components&do=config&id='.$id.'&opt=list_forums';
 
 		$toolmenu[4]['icon'] = 'ranks.gif';
 		$toolmenu[4]['title'] = 'Звания на форуме';
-		$toolmenu[4]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_ranks';
+		$toolmenu[4]['link'] = '?view=components&do=config&id='.$id.'&opt=list_ranks';
 
 	}
 	if($opt=='list_forums'){
 
 		$toolmenu[11]['icon'] = 'edit.gif';
 		$toolmenu[11]['title'] = 'Редактировать выбранные';
-		$toolmenu[11]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=edit_forum&multiple=1');";
+		$toolmenu[11]['link'] = "javascript:checkSel('?view=components&do=config&id=".$id."&opt=edit_forum&multiple=1');";
 
 		$toolmenu[12]['icon'] = 'show.gif';
 		$toolmenu[12]['title'] = 'Публиковать выбранные';
-		$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=show_forum&multiple=1');";
+		$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".$id."&opt=show_forum&multiple=1');";
 
 		$toolmenu[13]['icon'] = 'hide.gif';
 		$toolmenu[13]['title'] = 'Скрыть выбранные';
-		$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=hide_forum&multiple=1');";
+		$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".$id."&opt=hide_forum&multiple=1');";
 
 	}
 	
@@ -103,11 +109,6 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	}
 
 	cpToolMenu($toolmenu);
-
-	//LOAD CURRENT CONFIG
-    $cfg = $inCore->loadComponentConfig('forum');
-
-    if (!isset($cfg['is_rss'])) { $cfg['is_rss'] = 1; }
 
 	if($opt=='saveconfig'){	
         
@@ -142,7 +143,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if($opt=='saveranks'){	
 		
 		$cfg['ranks']   = $_REQUEST['rank'];
-		$cfg['modrank'] = $_REQUEST['modrank'];
+		$cfg['modrank'] = $inCore->request('modrank', 'int');
 		
 		$inCore->saveComponentConfig('forum', $cfg);
 
@@ -159,7 +160,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			echo '1'; exit;
 		} else {
 			dbShowList('cms_forums', $_REQUEST['item']);				
-			header('location:'.$_SERVER['HTTP_REFERER']);
+			$inCore->redirectBack();
 		}			
 	}
 
@@ -169,7 +170,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			echo '1'; exit;
 		} else {
 			dbHideList('cms_forums', $_REQUEST['item']);				
-			header('location:'.$_SERVER['HTTP_REFERER']);
+			$inCore->redirectBack();
 		}			
 	}
 
@@ -182,6 +183,12 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			$description    = $inCore->request('description', 'str');
 			$topic_cost     = $inCore->request('topic_cost', 'int', 0);
 
+			$is_access = $inCore->request('is_access', 'int', '');
+			if (!$is_access){
+				$access_list = $inCore->request('access_list', 'array_int');
+				$group_access = $access_list ? $inCore->arrayToYaml($access_list) : '';
+			} else { $group_access = ''; }
+
 			$ns = $inCore->nestedSetsInit('cms_forums');
 			$myid = $ns->AddNode($parent_id);
 
@@ -191,19 +198,19 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					SET category_id=$category_id, 
 						title='$title', 
 						description='$description', 
-						auth_group='$auth_group', 
+						access_list='$group_access', 
 						published='$published',
 						icon='$icon',
                         topic_cost='$topic_cost'
 					WHERE id = '$myid'";
 
-			dbQuery($sql) ;	
-			header('location:?view=components&do=config&opt=list_forums&id='.$_REQUEST['id']);		
+			dbQuery($sql);
+			$inCore->redirect('?view=components&do=config&opt=list_forums&id='.$id);
 	}	  
 	
 	if ($opt == 'update_forum'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = (int)$_REQUEST['item_id'];
+			$item_id = (int)$_REQUEST['item_id'];
 			
 			$category_id    = $inCore->request('category_id', 'int');
 			$title          = $inCore->request('title', 'str');
@@ -212,32 +219,38 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			$parent_id      = $inCore->request('parent_id', 'int');
 			$description    = $inCore->request('description', 'str');
 			$topic_cost     = $inCore->request('topic_cost', 'int', 0);
-			
+
+			$is_access = $inCore->request('is_access', 'int', '');
+			if (!$is_access){
+				$access_list = $inCore->request('access_list', 'array_int');
+				$group_access = $access_list ? $inCore->arrayToYaml($access_list) : '';
+			} else { $group_access = ''; }
+
 			$ns = $inCore->nestedSetsInit('cms_forums');
-			$old = $inDB->get_fields('cms_forums', "id='$id'", '*');
+			$old = $inDB->get_fields('cms_forums', "id='$item_id'", '*');
 
 			$icon = uploadCategoryIcon($old['icon']);
 
 			if($parent_id != $old['parent_id']){
-				$ns->MoveNode($id, $parent_id);			
+				$ns->MoveNode($item_id, $parent_id);			
 			}
 
 			$sql = "UPDATE cms_forums
 					SET category_id=$category_id,
 						title='$title',
 						description='$description',
-						auth_group='$auth_group',
+						access_list='$group_access', 
 						published=$published,
 						icon='$icon',
                         topic_cost='$topic_cost'
-					WHERE id = $id
+					WHERE id = '$item_id'
 					LIMIT 1";
 
 			dbQuery($sql) ;		
 
 			$sql = "SELECT id
 					FROM cms_forum_threads
-					WHERE forum_id = '$id'";
+					WHERE forum_id = '$item_id'";
 			$result = dbQuery($sql);
 			if(mysql_num_rows($result)){
 				if ($auth_group){
@@ -257,21 +270,21 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 		}
 		if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
-			header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_forums');
+			$inCore->redirect('?view=components&do=config&id='.$id.'&opt=list_forums');
 		} else {
-			header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_forum');
+			$inCore->redirect('?view=components&do=config&id='.$id.'&opt=edit_forum');
 		}
 	}
 
 	if($opt == 'delete_forum'){
-		include($_SERVER['DOCUMENT_ROOT'].'/components/forum/includes/forumcore.php');
+		include(PATH.'/components/forum/includes/forumcore.php');
 		
 		if(isset($_REQUEST['item_id'])) { 
-			$id = (int)$_REQUEST['item_id'];		
+			$item_id = (int)$_REQUEST['item_id'];		
 			//DELETE POSTS WITH ALL DATA
 			$sql = "SELECT p.*, f.icon as f_icon
 					FROM cms_forum_posts p, cms_forum_threads t, cms_forums f
-					WHERE p.thread_id = t.id AND t.forum_id = f.id AND f.id = '$id'";
+					WHERE p.thread_id = t.id AND t.forum_id = f.id AND f.id = '$item_id'";
 			$rs = dbQuery($sql);
 			if (mysql_num_rows($rs)){
 				while ($post = mysql_fetch_assoc($rs)){
@@ -279,17 +292,17 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					$inCore->deleteUploadImages($post['id'], 'forum');
 				}
 			}
-			$f_icon = dbGetField('cms_forums', "id = '$id'", 'icon');
+			$f_icon = dbGetField('cms_forums', "id = '$item_id'", 'icon');
 			//DELETE THREADS
-			dbQuery("DELETE FROM cms_forum_threads WHERE forum_id = '$id'");
+			dbQuery("DELETE FROM cms_forum_threads WHERE forum_id = '$item_id'");
 			//DELETE FORUM
-			dbDeleteNS('cms_forums', $id);
+			dbDeleteNS('cms_forums', $item_id);
 			if(file_exists(PATH.'/upload/forum/cat_icons/'.$f_icon)){
 				@chmod(PATH.'/upload/forum/cat_icons/'.$f_icon, 0777);
 				@unlink(PATH.'/upload/forum/cat_icons/'.$f_icon);
 			}
 		}
-		header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_forums');
+		$inCore->redirect('?view=components&do=config&id='.$id.'&opt=list_forums');
 	}
 
 
@@ -299,7 +312,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$GLOBALS['cp_page_head'][] = jwHeader();
 
 		?>
-        <form action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id'];?>" method="post" name="addform" target="_self" id="form1" style="margin-top:10px">
+        <form action="index.php?view=components&amp;do=config&amp;id=<?php echo $id;?>" method="post" name="addform" target="_self" id="form1" style="margin-top:10px">
             <?php ob_start(); ?>
            {tab=Просмотр}
            <table width="609" border="0" cellpadding="10" cellspacing="0" class="proptable">
@@ -439,7 +452,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		if(!isset($cfg['ranks'])) { $cfg['ranks'] = array(); }
 		if(!isset($cfg['modrank'])) { $cfg['modrank'] = 1; }
 		?>
-            <form action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id'];?>" method="post" name="addform" target="_self" id="form1">
+            <form action="index.php?view=components&amp;do=config&amp;id=<?php echo $id;?>" method="post" name="addform" target="_self" id="form1">
                 <table width="500" border="0" cellpadding="10" cellspacing="0" class="proptable" style="margin-bottom:2px">
                     <tr>
                         <td align="center" valign="middle"><strong>Показывать звания для модераторов: </strong></td>
@@ -464,7 +477,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                 <p>
                     <input name="opt" type="hidden" id="do" value="saveranks" />
                     <input name="save" type="submit" id="save" value="Сохранить" />
-                    <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id'];?>';"/>
+                    <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components&amp;do=config&amp;id=<?php echo $id;?>';"/>
                 </p>
             </form>
 		<?php
@@ -473,8 +486,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	
 	if ($opt == 'show_cat'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];
-			$sql = "UPDATE cms_forum_cats SET published = 1 WHERE id = $id";
+			$item_id = $_REQUEST['item_id'];
+			$sql = "UPDATE cms_forum_cats SET published = 1 WHERE id = $item_id";
 			dbQuery($sql) ;
 			echo '1'; exit;
 		}
@@ -482,8 +495,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if ($opt == 'hide_cat'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];
-			$sql = "UPDATE cms_forum_cats SET published = 0 WHERE id = $id";
+			$item_id = $_REQUEST['item_id'];
+			$sql = "UPDATE cms_forum_cats SET published = 0 WHERE id = $item_id";
 			dbQuery($sql) ;
 			echo '1'; exit;
 		}
@@ -498,22 +511,21 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$sql = "INSERT INTO cms_forum_cats (title, published, auth_group, ordering)
 				VALUES ('$title', '$published', '$auth_group', '$ordering')";
 		dbQuery($sql) ;
-		
-		header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
+		$inCore->redirect('?view=components&do=config&id='.$id.'&opt=list_cats');
 	}	  
 	
 	if($opt == 'delete_cat'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = $_REQUEST['item_id'];
-			dbQuery("DELETE FROM cms_forums WHERE category_id = $id");			
-			dbQuery("DELETE FROM cms_forum_cats WHERE id = $id");			
+			$item_id = $_REQUEST['item_id'];
+			dbQuery("DELETE FROM cms_forums WHERE category_id = $item_id");			
+			dbQuery("DELETE FROM cms_forum_cats WHERE id = $item_id");			
 		}
-		header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
+		$inCore->redirect('?view=components&do=config&id='.$id.'&opt=list_cats');
 	}
 	
 	if ($opt == 'update_cat'){
 		if(isset($_REQUEST['item_id'])) { 
-			$id = (int)$_REQUEST['item_id'];
+			$item_id = (int)$_REQUEST['item_id'];
 			
 			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("Укажите заголовок категории!"); }
 			$published  = (int)$_REQUEST['published'];
@@ -525,17 +537,15 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 						published='$published',
 						auth_group='$auth_group',
 						ordering='$ordering'
-					WHERE id = '$id'
+					WHERE id = '$item_id'
 					LIMIT 1";
 			dbQuery($sql) ;
-							
-			header('location:?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
-		
+			$inCore->redirect('?view=components&do=config&id='.$id.'&opt=list_cats');
 		}
 	}
 	
 	if ($opt == 'list_cats'){
-		cpAddPathway('Категории форумов', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
+		cpAddPathway('Категории форумов', '?view=components&do=config&id='.$id.'&opt=list_cats');
 		echo '<h3>Категории форумов</h3>';
 
 		//TABLE COLUMNS
@@ -544,30 +554,27 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 		
 		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
-		$fields[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id=%id%';
+		$fields[1]['link'] = '?view=components&do=config&id='.$id.'&opt=edit_cat&item_id=%id%';
 
 		$fields[2]['title'] = 'Показ';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
 		$fields[2]['do'] = 'opt'; $fields[2]['do_suffix'] = '_cat'; //Чтобы вместо 'do=hide&id=1' было 'opt=hide_albun&item_id=1'
 		
-	//	$fields[3]['title'] = 'Порядок';	$fields[3]['field'] = 'ordering';	$fields[3]['width'] = '100';
-
 		//ACTIONS
 		$actions = array();
 		$actions[0]['title'] = 'Редактировать';
 		$actions[0]['icon']  = 'edit.gif';
-		$actions[0]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id=%id%';
+		$actions[0]['link']  = '?view=components&do=config&id='.$id.'&opt=edit_cat&item_id=%id%';
 
 		$actions[1]['title'] = 'Удалить';
 		$actions[1]['icon']  = 'delete.gif';
 		$actions[1]['confirm'] = 'Вместе с категорией будут удалены все ее форумы. Удалить категорию?';
-		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete_cat&item_id=%id%';
+		$actions[1]['link']  = '?view=components&do=config&id='.$id.'&opt=delete_cat&item_id=%id%';
 				
 		//Print table
 		cpListTable('cms_forum_cats', $fields, $actions);		
 	}
 
 	if ($opt == 'list_forums'){
-		cpAddPathway('Форумы', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_forums');
 		echo '<h3>Форумы</h3>';
 		
 		//TABLE COLUMNS
@@ -577,7 +584,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
 		$fields[1]['filter'] = 15;
-		$fields[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_forum&item_id=%id%';
+		$fields[1]['link'] = '?view=components&do=config&id='.$id.'&opt=edit_forum&item_id=%id%';
 
 		$fields[2]['title'] = 'Показ';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
 		$fields[2]['do'] = 'opt'; $fields[2]['do_suffix'] = '_forum';
@@ -589,12 +596,12 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$actions = array();
 		$actions[0]['title'] = 'Редактировать';
 		$actions[0]['icon']  = 'edit.gif';
-		$actions[0]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_forum&item_id=%id%';
+		$actions[0]['link']  = '?view=components&do=config&id='.$id.'&opt=edit_forum&item_id=%id%';
 
 		$actions[1]['title'] = 'Удалить';
 		$actions[1]['icon']  = 'delete.gif';
 		$actions[1]['confirm'] = 'Удалить форум?';
-		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete_forum&item_id=%id%';
+		$actions[1]['link']  = '?view=components&do=config&id='.$id.'&opt=delete_forum&item_id=%id%';
 				
 		//Print table
 		cpListTable('cms_forums', $fields, $actions, 'parent_id>0', 'NSLeft');		
@@ -605,8 +612,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			 echo '<h3>Добавить категорию</h3>';
 		} else {
 					 if(isset($_REQUEST['item_id'])){
-						 $id = $_REQUEST['item_id'];
-						 $sql = "SELECT * FROM cms_forum_cats WHERE id = $id LIMIT 1";
+						 $item_id = (int)$_REQUEST['item_id'];
+						 $sql = "SELECT * FROM cms_forum_cats WHERE id = $item_id LIMIT 1";
 						 $result = dbQuery($sql) ;
 						 if (mysql_num_rows($result)){
 							$mod = mysql_fetch_assoc($result);
@@ -616,7 +623,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					 echo '<h3>Редактировать категорию</h3>';
 			   }
 		?>
-        <form id="addform" name="addform" method="post" action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id'];?>">
+        <form id="addform" name="addform" method="post" action="index.php?view=components&amp;do=config&amp;id=<?php echo $id;?>">
             <table width="600" border="0" cellspacing="5" class="proptable">
                 <tr>
                     <td width="211" valign="top">Заголовок категории: </td>
@@ -684,25 +691,24 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					 $ostatok = '';
 					
 					 if (isset($_SESSION['editlist'])){
-						$id = array_shift($_SESSION['editlist']);
+						$item_id = array_shift($_SESSION['editlist']);
 						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
 						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
-					 } else { $id = $_REQUEST['item_id']; }
+					 } else { $item_id = $_REQUEST['item_id']; }
 		
 		
-					 $sql = "SELECT * FROM cms_forums WHERE id = $id LIMIT 1";
+					 $sql = "SELECT * FROM cms_forums WHERE id = '$item_id' LIMIT 1";
 					 $result = dbQuery($sql) ;
 					 if (mysql_num_rows($result)){
 						$mod = mysql_fetch_assoc($result);
 					 }
 
 					 echo '<h3>'.$mod['title'].' '.$ostatok.'</h3>';
-					 cpAddPathway('форумы', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_forums');
-					 cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_forum&item_id='.$id);		
+					 cpAddPathway($mod['title'], '?view=components&do=config&id='.$id.'&opt=edit_forum&item_id='.$item_id);		
 						
 			}
 		?>
-        <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="addform" id="addform" enctype="multipart/form-data">
+        <form action="index.php?view=components&do=config&id=<?php echo $id;?>" method="post" name="addform" id="addform" enctype="multipart/form-data">
             <table width="514" border="0" cellspacing="10" class="proptable">
                 <tr>
                     <td width="236"><strong>Название форума:</strong></td>
@@ -754,18 +760,49 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Показывать группе:</strong></td>
+                    <td><strong>Показывать группе:</strong><br />
+                      <span class="hinttext">
+                          Можно выбрать несколько, удерживая CTRL.
+                      </span>
+                    </td>
                     <td>
-                        <select name="auth_group" id="auth_group" style="width:260px">
-                            <option value="0" <?php if (@$mod['auth_group']=='0') { echo "selected"; }?>>Всем группам</option>
-                            <?php
-                                if (isset($mod['auth_group'])) {
-                                    echo $inCore->getListItems('cms_user_groups', $mod['auth_group']);
-                                } else {
-                                    echo $inCore->getListItems('cms_user_groups');
+					<?php
+                    $groups = cmsUser::getGroups();
+                    
+                    $style  = 'disabled="disabled"';
+                    $public = 'checked="checked"';
+                    
+                    if ($mod['access_list']){
+                        $public = '';
+                        $style  = '';
+                        
+                        $access_list = $inCore->yamlToArray($mod['access_list']);
+                    
+                    }
+                    
+                    echo '<select style="width: 260px" name="access_list[]" id="showin" size="6" multiple="multiple" '.$style.'>';
+                    
+                    if ($groups){
+                        foreach($groups as $group){
+                            if(!$group['is_admin']){
+                                echo '<option value="'.$group['id'].'"';
+                                if ($access_list){
+                                    if (inArray($access_list, $group['id'])){
+                                        echo 'selected';
+                                    }
                                 }
-                            ?>
-                        </select>
+                    
+                                echo '>';
+                                echo $group['title'].'</option>';
+                            }
+                        }
+                    
+                    }
+                    
+                    echo '</select>';
+                    ?>
+                    
+                    <label><input name="is_access" type="checkbox" id="is_access" onclick="checkAccesList()" value="1" <?php echo $public?> /> <strong>Всем группам</strong></label>
                     </td>
                 </tr>
                 <tr>
@@ -800,6 +837,16 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             ?>
         </p>
         </form>
+<script type="text/javascript">
+function checkAccesList(){
+	if(document.addform.is_access.checked){
+		$('select#showin').attr('disabled', 'disabled');
+	} else {
+		$('select#showin').attr('disabled', '');
+	}
+
+}
+</script>
 	 <?php	
 	}
 ?>

@@ -40,12 +40,10 @@ function mod_forum($module_id){
 
 		include_once(PATH.'/components/forum/includes/forumcore.php');
 
-		$groupsql = forumUserAuthSQL('f.');
-
 		$tsql = "SELECT t.id, t.forum_id, t.user_id, t.title, t.description, t.description, t.pubdate, t.hits, t.closed, t.pinned, f.id as fid, f.title as forum,
-						f.auth_group as auth_group, u.id as uid, u.nickname as starter, u.login as login
+						u.id as uid, u.nickname as starter, u.login as login
 						FROM cms_forum_threads t
-						INNER JOIN cms_forums f ON f.id = t.forum_id {$groupsql} {$catsql}
+						INNER JOIN cms_forums f ON f.id = t.forum_id {$catsql}
 						INNER JOIN cms_users u ON u.id = t.user_id
 						WHERE t.is_hidden = 0
 						ORDER BY t.pubdate DESC
