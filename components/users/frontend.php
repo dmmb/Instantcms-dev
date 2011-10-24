@@ -100,7 +100,10 @@ function users(){
     if (!isset($cfg['sw_awards'])) { $cfg['sw_awards']  = 1; }
     if (!isset($cfg['sw_search'])) { $cfg['sw_search'] = 1;  }
     if (!isset($cfg['sw_guest']))  { $cfg['sw_guest'] = 1; }
-	
+
+	$is_404 = $inCore->request('is_404', 'str', '');
+	if ($is_404) { cmsCore::error404(); }
+
     //Определяем адрес для редиректа назад
     $back   = $inCore->getBackURL();
 	

@@ -22,7 +22,6 @@ function rss_forum($item_id, $cfg, &$rssdata){
 		global $_LANG;
 
 		$maxitems   = $cfg['maxitems'];
-		$rooturl    = 'http://'.$_SERVER['HTTP_HOST'];
 
 		if ($item_id == 'all') { $item_id = 0; }	
 		
@@ -30,29 +29,30 @@ function rss_forum($item_id, $cfg, &$rssdata){
 
 		//CHANNEL
 		if ($item_id){
-			$cat = dbGetFields('cms_forums', "id='$item_id'", 'id, title, description, NSLeft, NSRight');
+			$cat = $inDB->get_fields('cms_forums', "id='$item_id'", 'id, title, description, NSLeft, NSRight');
 			$catsql = "AND cat.NSLeft >= {$cat['NSLeft']} AND cat.NSRight <= {$cat['NSRight']}";
 			$channel['title']       = $cat['title'] ;
 			$channel['description'] = $cat['description'];
-			$channel['link']        = $rooturl . '/forum/' . $item_id;
+			$channel['link']        = HOST . '/forum/' . $item_id;
 		} else {
 			$catsql = '';		
 			$channel['title']       = $_LANG['LAST_THREADS'];
 			$channel['description'] = $_LANG['LAST_THREADS'];
-			$channel['link']        = $rooturl . '/forum';
+			$channel['link']        = HOST . '/forum';
 		}
 
 		//ITEMS
 		$sql = "SELECT c.*, cat.title as category,
-                        COUNT(p.id) as posts_count
-				FROM cms_forums cat, cms_forum_threads c
-                LEFT JOIN cms_forum_posts p ON p.thread_id = c.id
-				WHERE c.forum_id = cat.id $catsql
+                        COUNT(p.id) as posts_count, p.id as p_id
+				FROM cms_forum_threads c
+                INNER JOIN cms_forum_posts p ON p.thread_id = c.id
+				INNER JOIN cms_forums cat ON cat.id = c.forum_id
+				WHERE c.is_hidden = 0 $catsql
                 GROUP BY c.id
 				ORDER by c.pubdate DESC
 				LIMIT $maxitems";
 
-		$rs = $inDB->query($sql) or die('RSS building error!');
+		$rs = $inDB->query($sql);
 
 		$items = array();
 
@@ -65,7 +65,7 @@ function rss_forum($item_id, $cfg, &$rssdata){
                 $item['title'] .= ' '.$item['posts_count'];
                 $pages = ceil($item['posts_count'] / $forumcfg['pp_thread']);
 				$items[$id] = $item;
-                $items[$id]['link']     = $rooturl . '/forum/thread'.$id.'-'.$pages.'.html#new';
+                $items[$id]['link']     = HOST . '/forum/thread'.$id.'-'.$pages.'.html';
 				$items[$id]['category'] = $item['category'];                
 			}
 

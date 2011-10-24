@@ -1,16 +1,16 @@
 {* ================================================================================ *}
 {* =========================== Список форумов и категорий ========================= *}
 {* ================================================================================ *}
+{if $user_id}
 <div class="float_bar">
-        {if $user_id}
-                <table cellspacing="2" cellpadding="2">
-                    <tr>
-                        <td width="16"><img src="/components/forum/images/toolbar/newthread.gif"/></td>
-                        <td><a href="/forum/{$forum.id}/newthread.html"><strong>{$LANG.NEW_THREAD}</strong></a></td>
-                    </tr>
-                </table>
-        {/if}
+        <table cellspacing="2" cellpadding="2">
+            <tr>
+                <td width="16"><img src="/components/forum/images/toolbar/newthread.gif"/></td>
+                <td><a href="/forum/{$forum.id}/newthread.html"><strong>{$LANG.NEW_THREAD}</strong></a></td>
+            </tr>
+        </table>
 </div>
+{/if}
 {if $cfg.is_rss}
 	{* ============================== Заголовок + RSS ==================================== *}
 	<table cellpadding="0" cellspacing="0" border="0">

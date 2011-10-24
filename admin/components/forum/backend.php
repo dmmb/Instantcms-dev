@@ -183,14 +183,16 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			$description    = $inCore->request('description', 'str');
 			$topic_cost     = $inCore->request('topic_cost', 'int', 0);
 
+			$ns = $inCore->nestedSetsInit('cms_forums');
+			$myid = $ns->AddNode($parent_id);
+
 			$is_access = $inCore->request('is_access', 'int', '');
 			if (!$is_access){
 				$access_list = $inCore->request('access_list', 'array_int');
 				$group_access = $access_list ? $inCore->arrayToYaml($access_list) : '';
-			} else { $group_access = ''; }
-
-			$ns = $inCore->nestedSetsInit('cms_forums');
-			$myid = $ns->AddNode($parent_id);
+			} else {
+				$group_access = '';
+			}
 
 			$icon = uploadCategoryIcon();
 
@@ -215,7 +217,6 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			$category_id    = $inCore->request('category_id', 'int');
 			$title          = $inCore->request('title', 'str');
 			$published      = $inCore->request('published', 'int');
-			$auth_group     = $inCore->request('auth_group', 'int');
 			$parent_id      = $inCore->request('parent_id', 'int');
 			$description    = $inCore->request('description', 'str');
 			$topic_cost     = $inCore->request('topic_cost', 'int', 0);
@@ -224,7 +225,11 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			if (!$is_access){
 				$access_list = $inCore->request('access_list', 'array_int');
 				$group_access = $access_list ? $inCore->arrayToYaml($access_list) : '';
-			} else { $group_access = ''; }
+				$inDB->query("UPDATE cms_forum_threads SET is_hidden = 1 WHERE forum_id = '$item_id'");
+			} else {
+				$group_access = '';
+				$inDB->query("UPDATE cms_forum_threads SET is_hidden = 0 WHERE forum_id = '$item_id'");
+			}
 
 			$ns = $inCore->nestedSetsInit('cms_forums');
 			$old = $inDB->get_fields('cms_forums', "id='$item_id'", '*');
@@ -246,27 +251,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					WHERE id = '$item_id'
 					LIMIT 1";
 
-			dbQuery($sql) ;		
-
-			$sql = "SELECT id
-					FROM cms_forum_threads
-					WHERE forum_id = '$item_id'";
-			$result = dbQuery($sql);
-			if(mysql_num_rows($result)){
-				if ($auth_group){
-					while($msg = mysql_fetch_assoc($result)){
-			
-						dbQuery("UPDATE cms_forum_threads SET is_hidden = 1 WHERE id = '{$msg['id']}'");
-			
-					}
-				} else {
-					while($msg = mysql_fetch_assoc($result)){
-			
-						dbQuery("UPDATE cms_forum_threads SET is_hidden = 0 WHERE id = '{$msg['id']}'");
-			
-					}
-				}
-			}
+			dbQuery($sql);		
 
 		}
 		if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){

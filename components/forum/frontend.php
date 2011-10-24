@@ -747,23 +747,17 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 
 	}
 	// редактирование поста
-	if ($do == 'editpost'){			
-		$sql = "SELECT content, thread_id
-				FROM cms_forum_posts
-				WHERE id = '$id'";
-				
-		if(!$inCore->userIsAdmin($inUser->id) && !$inCore->isUserCan('forum/moderate')) { $sql .= " AND user_id=".$inUser->id; }
-		
-		$result = $inDB->query($sql) ;
+	if ($do == 'editpost'){	
+
+		$msg = $model->getPost($id);
+		if(!$msg) { cmsCore::error404(); }
+		if(!$inUser->is_admin && !$inCore->isUserCan('forum/moderate') && $inUser->id != $msg['user_id']) { cmsCore::error404(); }
 	
-		if ($inDB->num_rows($result)>0){
-			$inPage->setTitle($_LANG['EDIT_POST']);
-			$inPage->addPathway($_LANG['EDIT_POST'], $_SERVER['REQUEST_URI']);
-			echo '<div class="con_heading">'.$_LANG['EDIT_POST'].'</div>';
-		
-			$msg = $inDB->fetch_assoc($result);
-			$oldmsg = str_replace('<br/>', "\r\n", $msg['content']);	
-		} else { die(); }
+		$inPage->setTitle($_LANG['EDIT_POST']);
+		$inPage->addPathway($_LANG['EDIT_POST'], $_SERVER['REQUEST_URI']);
+		echo '<div class="con_heading">'.$_LANG['EDIT_POST'].'</div>';
+		$oldmsg = $msg['content'];	
+
 	}
 		
 	$replyid = $inCore->request('replyid', 'int', 0);
@@ -786,49 +780,50 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 		}
 		
 		echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST" name="msgform" id="msgform" enctype="multipart/form-data">';
-		echo '<table width="100%" cellpadding="0" cellspacing="0"><tr><td>';		
-				if ($do == 'newthread') { 
-					echo '<input type="hidden" name="forum_id" value="'.$id.'" />'; 
-					echo '<div class="forum_postinfo"><table width="100%">';
-						echo '<tr>';
-							echo '<td width="150">'.$_LANG['THREAD_TITLE'].':</td>';
-							echo '<td width=""><input type="text" name="title" size="30"/></td>';								
-						echo '</tr>';
-						echo '<tr>';
-							echo '<td width="">'.$_LANG['THREAD_DESCRIPTION'].':</td>';
-							echo '<td width=""><input type="text" name="description" size="50"/></td>';								
-						echo '</tr>';
-					echo '</table></div>';
-				}		
+		echo '<table width="100%" cellpadding="0" cellspacing="0"><tr><td>';
 
-				echo '<div class="usr_msg_bbcodebox">';
-					if (!isset($cfg['img_on'])) { $cfg['img_on'] = 1; }
-					echo cmsPage::getBBCodeToolbar('message', $cfg['img_on'], 'forum');
-				echo '</div>';
+		if ($do == 'newthread') {
+			echo '<input type="hidden" name="forum_id" value="'.$id.'" />'; 
+			echo '<div class="forum_postinfo"><table width="100%">';
+				echo '<tr>';
+					echo '<td width="150">'.$_LANG['THREAD_TITLE'].':</td>';
+					echo '<td width=""><input type="text" name="title" size="30"/></td>';								
+				echo '</tr>';
+				echo '<tr>';
+					echo '<td width="">'.$_LANG['THREAD_DESCRIPTION'].':</td>';
+					echo '<td width=""><input type="text" name="description" size="50"/></td>';								
+				echo '</tr>';
+			echo '</table></div>';
+		}		
 
-				echo cmsPage::getSmilesPanel('message');
-				
-				$inCore->initAutoGrowText('#message');
-				echo '<div><textarea class="ajax_autogrowarea" name="message" id="message">'.(@$oldmsg).'</textarea></div>';						
+		echo '<div class="usr_msg_bbcodebox">';
+			if (!isset($cfg['img_on'])) { $cfg['img_on'] = 1; }
+			echo cmsPage::getBBCodeToolbar('message', $cfg['img_on'], 'forum');
+		echo '</div>';
 
-				if (($do=='newpost' || $do=='newthread') && $cfg['fa_on']) { //File attach form
-					echo forumAttachForm($cfg);
-				}
+		echo cmsPage::getSmilesPanel('message');
+		
+		$inCore->initAutoGrowText('#message');
+		echo '<div><textarea class="ajax_autogrowarea" name="message" id="message">'.(@$oldmsg).'</textarea></div>';						
 
-				if ($do=='newthread') { //Polls attach form
-					echo forumPollForm($cfg);
-				}
+		if (($do=='newpost' || $do=='newthread') && $cfg['fa_on']) { //File attach form
+			echo forumAttachForm($cfg);
+		}
 
-				if (($do=='newpost' && !cmsUser::isSubscribed($inUser->id, 'forum', @$id)) || ($do=='newthread')){
-					echo '<div style="margin-top:16px;"><label><input name="subscribe" type="checkbox" value="1" /> '.$_LANG['SUBSCRIBE_THREAD'].'</label></div>';
-				}
+		if ($do=='newthread') { //Polls attach form
+			echo forumPollForm($cfg);
+		}
 
-				if ($do=='newpost' && ($inUser->is_admin || $is_topic_starter)){
-					echo '<div style="margin-top:3px;margin-bottom:15px"><label><input name="fixed" type="checkbox" value="1" /> '.$_LANG['TOPIC_FIXED_LABEL'].'</label></div>';
-				}
-				
-				echo '<div style="margin-top:6px;"><input type="submit" name="gosend" value="'.$_LANG['SEND'].'" style="font-size:18px"/> ';
-				echo '<input type="button" name="gosend" value="'.$_LANG['CANCEL'].'" style="font-size:18px" onclick="window.history.go(-1)"/></div>';
+		if (($do=='newpost' && !cmsUser::isSubscribed($inUser->id, 'forum', @$id)) || ($do=='newthread')){
+			echo '<div style="margin-top:16px;"><label><input name="subscribe" type="checkbox" value="1" /> '.$_LANG['SUBSCRIBE_THREAD'].'</label></div>';
+		}
+
+		if ($do=='newpost' && ($inUser->is_admin || $is_topic_starter)){
+			echo '<div style="margin-top:3px;margin-bottom:15px"><label><input name="fixed" type="checkbox" value="1" /> '.$_LANG['TOPIC_FIXED_LABEL'].'</label></div>';
+		}
+		
+		echo '<div style="margin-top:6px;"><input type="submit" name="gosend" value="'.$_LANG['SEND'].'" style="font-size:18px"/> ';
+		echo '<input type="button" name="gosend" value="'.$_LANG['CANCEL'].'" style="font-size:18px" onclick="window.history.go(-1)"/></div>';
 		echo '</td>';	
 						
 		echo '</tr></table>';
@@ -837,9 +832,10 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 		echo '</form>';
 		
 	} else {
+
 		$message_post = $inCore->request('message', 'html');
-		$message = $inCore->badTagClear($message);
-		$message = $inDB->escape_string($message_post);                
+		$message      = $inCore->badTagClear($message_post);
+		$message      = $inDB->escape_string($message_post);                
 		if (!$message) { echo '<p>'.$_LANG['NEED_TEXT_POST'].'</p>'; return; }
 
 		if($do=='newpost'){												
@@ -851,13 +847,12 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 					'message' => $message
 				));
 
-			$ts_id = $inDB->get_field('cms_forum_threads', "id='{$id}'", 'user_id');
-			$is_topic_starter = ($ts_id == $inUser->id);
+			$is_topic_starter = ($t['user_id'] == $inUser->id);
 
 			$is_fixed = $inCore->request('fixed', 'int', 0);
 
 			if ($is_fixed && ($inUser->is_admin || $is_topic_starter)){
-				$inDB->query("UPDATE cms_forum_threads SET title = CONCAT('{$_LANG['TOPIC_FIXED_PREFIX']} ', title), closed=1 WHERE id = $id");
+				$inDB->query("UPDATE cms_forum_threads SET title = CONCAT('{$_LANG['TOPIC_FIXED_PREFIX']} ', title), closed=1 WHERE id = '$id'");
 			}
 
 			cmsUser::checkAwards($inUser->id);
@@ -865,7 +860,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 			$inCore->registerUploadImages(session_id(), $lastid, 'forum');
 										
 			//refresh forum thread
-			$sql = "UPDATE cms_forum_threads SET pubdate = NOW() WHERE id = $id";
+			$sql = "UPDATE cms_forum_threads SET pubdate = NOW() WHERE id = '$id'";
 			$inDB->query($sql);
 			//upload attached files
 			$file_error = false;
@@ -882,7 +877,6 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 				$posts_in_thread = $inDB->rows_count('cms_forum_posts', 'thread_id='.$id);
 				$pages = ceil($posts_in_thread / $cfg['pp_thread']);
 				if (!$t['is_hidden']){
-					$title = $t['title'];
 					//регистрируем событие
 					$message_post = $inCore->parseSmiles($message_post, true);
 					$message_post = strip_tags($message_post);
@@ -890,7 +884,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 						'object' => 'пост',
 						'object_url' => '/forum/thread'.$id.'-'.$pages.'.html#'.$lastid,
 						'object_id' => $lastid,
-						'target' => $title,
+						'target' => $t['title'],
 						'target_url' => '/forum/thread'.$id.'-'.$pages.'.html',
 						'target_id' => $id,
 						'description' => ( strlen($message_post)>100 ? substr($message_post, 0, 100) : $message_post )
@@ -909,9 +903,10 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 				$title          = $inCore->request('title', 'str');
 				$description    = $inCore->request('description', 'str');
 
-				if($title && $message){	
-				
-					$is_hidden = $forum['auth_group'] ? 1 : 0;
+				if($title && $message){
+
+					$access_list = $inCore->yamlToArray($forum['access_list']);
+					$is_hidden = $access_list ? 1 : 0;
 					
 					$threadlastid = $model->addThread(array(
 							'forum_id' => $id,
@@ -953,6 +948,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 					if (!$file_error){
 						if (!$is_hidden) {
 							$message = $inCore->parseSmiles($message, true);
+							$message = strip_tags($message);
 							//регистрируем событие
 							cmsActions::log('add_thread', array(
 								'object' => $title,
@@ -961,7 +957,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 								'target' => $forum['title'],
 								'target_url' => '/forum/'.$forum['id'],
 								'target_id' => $forum['id'], 
-								'description' => strip_tags( strlen(strip_tags($message))>100 ? substr($message, 0, 100) : $message )
+								'description' => ( strlen($message)>100 ? substr($message, 0, 100) : $message )
 							));	
 						}
 						$inCore->redirect('/forum/thread'.$threadlastid.'.html');
@@ -1021,41 +1017,35 @@ if ($do=='movethread'){
 			$inPage->addPathway($_LANG['MOVE_THREAD'], $_SERVER['REQUEST_URI']);
 
 			echo '<div class="con_heading">'.$_LANG['MOVE_THREAD'].'</div>';
-				
-			$sql = "SELECT * FROM cms_forum_threads WHERE id = $id LIMIT 1";
-			$result = $inDB->query($sql) ;
 		
-			if ($inDB->num_rows($result)>0){
-				$t = $inDB->fetch_assoc($result);											
-				
-				echo '<div style="margin-top:10px"><strong>'.$_LANG['THREAD'].':</strong> <a href="/forum/thread'.$t['id'].'.html">'.$t['title'].'</a></div>';
-				echo '<div><form action="" method="POST">';
-				echo '<table border="0" cellpadding="10" style="background-color:#EBEBEB"><tr><td valign="top">'.$_LANG['MOVE_THREAD_IN_FORUM'].':</td>';
-				
-					echo '<td valign="top"><select name="forum_id">';
+			$t = $model->getThread($id);
+			if(!$t) { cmsCore::error404(); }
+			
+			echo '<div style="margin-top:10px"><strong>'.$_LANG['THREAD'].':</strong> <a href="/forum/thread'.$t['id'].'.html">'.$t['title'].'</a></div>';
+			echo '<div><form action="" method="POST">';
+			echo '<table border="0" cellpadding="10" style="background-color:#EBEBEB"><tr><td valign="top">'.$_LANG['MOVE_THREAD_IN_FORUM'].':</td>';
+			echo '<td valign="top"><select name="forum_id">';
 
-						$fsql = "SELECT * FROM cms_forums";
-						$fresult = $inDB->query($fsql) ;
-						if ($inDB->num_rows($fresult)){
-							while ($f = $inDB->fetch_assoc($fresult)){
-								echo '<option value="'.$f['id'].'" ';
-								if ($t['forum_id'] == $f['id']) { echo 'selected'; }
-								echo '>'.$f['category_id'].' --- '.$f['title'].'</option>';
-							}
-						}
-					
-					echo '</select></td>';
-
-				echo '<td valign="top"><input type="submit" name="gomove" value="'.$_LANG['MOVE'].'"/></td></tr></table>';
-				echo '</form></div>';				
+			$fsql = "SELECT * FROM cms_forums";
+			$fresult = $inDB->query($fsql) ;
+			if ($inDB->num_rows($fresult)){
+				while ($f = $inDB->fetch_assoc($fresult)){
+					echo '<option value="'.$f['id'].'" ';
+					if ($t['forum_id'] == $f['id']) { echo 'selected'; }
+					echo '>'.$f['category_id'].' --- '.$f['title'].'</option>';
+				}
+			}
+			
+			echo '</select></td>';
+			echo '<td valign="top"><input type="submit" name="gomove" value="'.$_LANG['MOVE'].'"/></td></tr></table>';
+			echo '</form></div>';				
 				
-			} else { echo $_LANG['THREAD_NOT_FOUND']; }
 		} else { //DO MOVE
 		
 			if (@$_POST['forum_id']){				
 				$fid = intval($_POST['forum_id']);
 				if (usrCheckAuth() && $inCore->userIsAdmin(@$inUser->id) || $inCore->isUserCan('forum/moderate')){		
-					$inDB->query("UPDATE cms_forum_threads SET forum_id = $fid WHERE id = $id") ;
+					$inDB->query("UPDATE cms_forum_threads SET forum_id = '$fid' WHERE id = '$id'") ;
 				}									
 			}
 			$inCore->redirect('/forum/'.$fid);			
@@ -1077,36 +1067,32 @@ if ($do=='renamethread'){
 			$inPage->addPathway($_LANG['RENAME_THREAD'], $_SERVER['REQUEST_URI']);
 
 			echo '<div class="con_heading">'.$_LANG['RENAME_THREAD'].'</div>';
-				
-			$sql = "SELECT * FROM cms_forum_threads WHERE id = $id LIMIT 1";
-			$result = $inDB->query($sql) ;
-		
-			if ($inDB->num_rows($result)>0){
-				$t = $inDB->fetch_assoc($result);											
-				
-				echo '<div style="margin-top:10px"><strong>'.$_LANG['THREAD'].':</strong> <a href="/forum/thread'.$t['id'].'.html">'.$t['title'].'</a></div>';
-				
-				echo '<div style="margin-top:5px"><form action="" method="POST">';
-				
-				echo '<table border="0" cellpadding="5" style="background-color:#EBEBEB">
-					  <tr><td valign="top">'.$_LANG['THREAD_TITLE'].':</td>';
-				
-					echo '<td valign="top">
-							<input type="hidden" name="tid" value="'.$t['id'].'"/>
-							<input type="text" size="45" value="'.$t['title'].'" name="title" id="title"/>
-						 </td>';
 
-				echo '</tr><tr><td valign="top">'.$_LANG['DESCRIPTION'].':</td>';
+			$t = $model->getThread($id);
+			if(!$t) { cmsCore::error404(); }										
+
+			echo '<div style="margin-top:10px"><strong>'.$_LANG['THREAD'].':</strong> <a href="/forum/thread'.$t['id'].'.html">'.$t['title'].'</a></div>';
+			
+			echo '<div style="margin-top:5px"><form action="" method="POST">';
+			
+			echo '<table border="0" cellpadding="5" style="background-color:#EBEBEB">
+				  <tr><td valign="top">'.$_LANG['THREAD_TITLE'].':</td>';
+			
+				echo '<td valign="top">
+						<input type="hidden" name="tid" value="'.$t['id'].'"/>
+						<input type="text" size="45" value="'.htmlspecialchars($t['title']).'" name="title" id="title"/>
+					 </td>';
+
+			echo '</tr><tr><td valign="top">'.$_LANG['DESCRIPTION'].':</td>';
+			
+				echo '<td valign="top">
+						<input type="text" size="45" value="'.htmlspecialchars($t['description']).'" name="description" id="title"/>
+					 </td>';
 				
-					echo '<td valign="top">
-							<input type="text" size="45" value="'.$t['description'].'" name="description" id="title"/>
-						 </td>';
-					
-				echo '</tr></table>';
+			echo '</tr></table>';
+			
+			echo '<div style="margin-top:5px"><input type="submit" name="gorename" value="'.$_LANG['SAVE'].'"/> <input type="button" onclick="window.history.go(-1);" name="cancel" value="'.$_LANG['CANCEL'].'"/></div></form></div>';
 				
-				echo '<div style="margin-top:5px"><input type="submit" name="gorename" value="'.$_LANG['SAVE'].'"/> <input type="button" onclick="window.history.go(-1);" name="cancel" value="'.$_LANG['CANCEL'].'"/></div></form></div>';
-				
-			} else { echo $_LANG['THREAD_NOT_FOUND']; }
 		} else { //DO RENAME
 		
 			if (@$_POST['title']){				
@@ -1139,20 +1125,14 @@ if ($do=='pin'){
 	
 	if (!$inUser->id){ cmsUser::goToLogin(); }
 
-	$sql = "SELECT user_id FROM cms_forum_threads WHERE id = '$id' LIMIT 1";
-	$result = $inDB->query($sql) ;
+	$msg = $model->getThread($id);
+	if(!$msg) { cmsCore::error404(); }
 
-	if ($inDB->num_rows($result)>0){
-		$msg = $inDB->fetch_assoc($result);
-		if ($msg['user_id']==$inUser->id || $inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('forum/moderate')){
-			$inDB->query("UPDATE cms_forum_threads SET pinned = '$pinned' WHERE id = '$id'") ;
-		}
-	}	
+	if ($msg['user_id']==$inUser->id || $inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('forum/moderate')){
+		$inDB->query("UPDATE cms_forum_threads SET pinned = '$pinned' WHERE id = '$id'") ;
+	}
 
 	$inCore->redirectBack();
-}
-///////////////////////////// SUBSCRIBE THREAD ////////////////////////////////////////////////////////////////////////////////////////////
-if ($do=='subscribe'){
 }
 ///////////////////////////// CLOSE/OPEN THREAD ////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='close'){
@@ -1160,15 +1140,12 @@ if ($do=='close'){
 	
 	if (!$inUser->id){ cmsUser::goToLogin(); }
 
-	$sql = "SELECT user_id FROM cms_forum_threads WHERE id = '$id' LIMIT 1";
-	$result = $inDB->query($sql) ;
+	$msg = $model->getThread($id);
+	if(!$msg) { cmsCore::error404(); }
 
-	if ($inDB->num_rows($result)>0){
-		$msg = $inDB->fetch_assoc($result);
-		if ($msg['user_id']==$inUser->id || $inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('forum/moderate')){
-			$inDB->query("UPDATE cms_forum_threads SET closed = '$closed' WHERE id = '$id'") ;
-		}
-	}	
+	if ($msg['user_id']==$inUser->id || $inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('forum/moderate')){
+		$inDB->query("UPDATE cms_forum_threads SET closed = '$closed' WHERE id = '$id'") ;
+	}
 
 	$inCore->redirectBack();
 }
