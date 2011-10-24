@@ -27,7 +27,7 @@ function cmsAutoCreateThread($article, $content_cfg){
 
     $seolink    = $inDB->get_field('cms_content', "id={$article['id']}", 'seolink');
 
-    $link       = '[URL=http://'.$_SERVER['HTTP_HOST'].'/'.$seolink.'.html]'.$article['title'].'[/URL]';
+    $link       = '[URL='.HOST.'/'.$seolink.'.html]'.$article['title'].'[/URL]';
 
     $post   = 'В этой теме форума обсуждаем статью &quot;'.$link.'&quot;';
 
@@ -56,7 +56,7 @@ function cmsAutoCreateThread($article, $content_cfg){
 				'target' => $forum_title,
 				'target_url' => '/forum/'.$content_cfg['af_forum_id'],
 				'target_id' => $content_cfg['af_forum_id'], 
-				'description' => 'В этой теме форума обсуждаем статью &quot;<a href="http://'.$_SERVER['HTTP_HOST'].'/'.$seolink.'.html">'.$article['title'].'</a>&quot;'
+				'description' => 'В этой теме форума обсуждаем статью &quot;<a href="'.HOST.'/'.$seolink.'.html">'.$article['title'].'</a>&quot;'
 	));	
 
     return $threadlastid;

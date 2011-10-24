@@ -294,68 +294,6 @@ function forumAttachedPoll($thread_id, $thread){
 	return $html;
 }
 
-function forumAttachedFiles($post_id, $mypost, $showimg=false){
-    $inCore = cmsCore::getInstance();
-    $inDB   = cmsDatabase::getInstance();
-	$html = '';
-
-    global $_LANG;
-
-	$graphic_ext[] = 'jpg';
-	$graphic_ext[] = 'jpeg';
-	$graphic_ext[] = 'gif';
-	$graphic_ext[] = 'bmp';
-	$graphic_ext[] = 'png';
-	
-	$sql = "SELECT f.*, u.id as uid
-			FROM cms_forum_files f, cms_users u, cms_forum_posts p
-			WHERE f.post_id = '$post_id' AND f.post_id = p.id AND p.user_id = u.id";
-	$result = $inDB->query($sql) ;
-	
-	if ($inDB->num_rows($result)){
-		$html .= '<div class="fa_attach">';
-		$html .= '<div class="fa_attach_title">'.$_LANG['ATTACHED_FILE'].':</div>';
-		while($file = $inDB->fetch_assoc($result)){		
-			$filename = $file['filename'];
-			$filesize = $file['filesize'];
-			$path_parts = pathinfo($filename);
-			$ext = $path_parts['extension'];	
-			//make link to file
-			$html .= '<div class="fa_filebox">';
-				$html .= '<table class="fa_file"><tr>';
-					if (!in_array($ext, $graphic_ext) || (in_array($ext, $graphic_ext) && !$showimg)){
-						$html .= '<td width="16">'.$inCore->fileIcon($filename).'</td>';
-						$html .= '<td>';
-							$html .= '<a class="fa_file_link" href="/forum/download'.$file['id'].'.html">'.$filename.'</a> |
-									  <span class="fa_file_desc">'.round(($filesize/1024),2).' '.$_LANG['KBITE'].' | '.$_LANG['DOWNLOADED'].': '.$file['hits'].'</span>';
-									  
-							if ($mypost){
-								$html .= ' <a href="/forum/reloadfile'.$file['id'].'.html" title="'.$_LANG['RELOAD_FILE'].'"><img src="/images/icons/reload.gif" border="0"/></a>';
-								$html .= ' <a href="/forum/delfile'.$file['id'].'.html" title="'.$_LANG['DELETE_FILE'].'"><img src="/images/icons/delete.gif" border="0"/></a>';
-							}								  
-						$html .= '</td>';
-					} else {
-						$html .= '<td><img src="/upload/forum/post'.$post_id.'/'.$filename.'" border="1" width="160" height="120" /></td>';
-						$html .= '<td>';
-							$html .= '<a class="fa_file_link" href="/forum/download'.$file['id'].'.html">'.$filename.'</a> | 
-									  <span class="fa_file_desc">'.round(($filesize/1024),2).' '.$_LANG['KBITE'].' | '.$_LANG['DOWNLOADED'].': '.$file['hits'].'</span>';
-									  
-							if ($mypost){
-								$html .= ' <a href="/forum/reloadfile'.$file['id'].'.html" title="'.$_LANG['RELOAD_FILE'].'"><img src="/images/icons/reload.gif" border="0"/></a>';
-								$html .= ' <a href="/forum/delfile'.$file['id'].'.html" title="'.$_LANG['DELETE_FILE'].'"><img src="/images/icons/delete.gif" border="0"/></a>';
-							}								  
-						$html .= '</td>';
-					}
-				$html .= '</tr></table>';
-			$html .= '</div>';
-					
-		}	
-		$html .= '</div>';
-	}	
-	
-	return $html;
-}
-
 function forumAttachForm($cfg){
     
     $inCore = cmsCore::getInstance();
@@ -575,14 +513,6 @@ function threadLastMessageData($thread_id){
 	return $data;
 }
 
-
-function forumUserMsgNum($user_id){
-    $inDB   = cmsDatabase::getInstance();
-	$sql    = "SELECT id FROM cms_forum_posts WHERE user_id = '$user_id'";
-	$result = $inDB->query($sql) ;
-	return $inDB->num_rows($result);
-}
-
 function forumThreadAuthor($thread_id){
     $inDB   = cmsDatabase::getInstance();
 	$author = array();
@@ -676,41 +606,6 @@ function forumUserAuthSQL($tablepreffix=''){
 		$groupsql = "AND ".$tablepreffix."auth_group = 0";
 	}
 	return $groupsql;	
-}
-
-function forumUserRank($uid, $messages, $ranks, $modrank=true){
-    $inDB   = cmsDatabase::getInstance();
-    $inCore = cmsCore::getInstance();
-	$inUser = cmsUser::getInstance();
-    global $_LANG;
-	$userrank = '';
-	if ($inUser->id) {
-		//check is admin
-		if ($inCore->userIsAdmin($uid)){
-			$userrank = '<span id="admin">'.$_LANG['ADMINISTRATOR'].'</span>';
-		} else {
-			//rank by messages
-			if(is_array($ranks)){
-				foreach($ranks as $k=>$rank){
-					if ($messages >= $rank['msg'] && $rank['msg'] != ''){
-						$userrank = '<span id="rank">'.$rank['title'].'</span>';
-					}
-				}
-			} else {
-				$userrank = '<span id="rank">'.$_LANG['USER'].'</span>';
-			}
-			//check is moderator
-			$rights = dbGetFields('cms_user_groups g, cms_users u', "u.group_id = g.id AND u.id = $uid", 'g.id, g.access as access');
-			if (strstr($rights['access'], 'forum/moderate')){
-				if ($modrank){
-					$userrank .= '<span id="moder">'.$_LANG['MODER'].'</span>';
-				} else {
-					$userrank = '<span id="moder">'.$_LANG['MODER'].'</span>';
-				}
-			}
-		}
-	}
-	return $userrank;
 }
 
 ?>

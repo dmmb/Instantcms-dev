@@ -14,6 +14,8 @@
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 class cms_model_forum{
+	
+	public $abstract_array = array(); // для хранения временных данных
 
 	function __construct(){
         $this->inDB = cmsDatabase::getInstance();
@@ -27,7 +29,155 @@ class cms_model_forum{
         return true;
 
     }
+// ============================================================================ //
+// ============================================================================ //
+    public function resetAbstractArray($array_param=0){
 
+		if(!$array_param){
+			$this->abstract_array = array();
+		} else {
+        	$this->abstract_array[$array_param] = array();
+		}
+
+    }
+// ========================================================================================================= //
+// ========================================================================================================= //
+	public function getUserPostsCount($user_id){
+
+		if(!isset($this->abstract_array['users_post_count'][$user_id])){
+
+			$user_count = $this->inDB->rows_count('cms_forum_posts', "user_id = '$user_id'");
+			// заносим в кеш
+			$this->abstract_array['users_post_count'][$user_id] = $user_count;
+			
+		}
+
+		return $this->abstract_array['users_post_count'][$user_id];
+	}
+// ========================================================================================================= //
+// ========================================================================================================= //
+	public function getUserAwardsList($user_id){
+
+		if(!isset($this->abstract_array['users_awards'][$user_id])){
+
+			$awards = cmsUser::getAwardsList($user_id);
+			// заносим в кеш
+			$this->abstract_array['users_awards'][$user_id] = $awards;
+			
+		}
+
+		return $this->abstract_array['users_awards'][$user_id];
+	}
+// ========================================================================================================= //
+// ========================================================================================================= //
+	public function getForumUserRank($user_id, $messages, $ranks, $modrank=true){
+
+		$inCore = cmsCore::getInstance();
+		$inUser = cmsUser::getInstance();
+
+		if (!$inUser->id) { return ''; }
+
+		global $_LANG;
+
+		if(!isset($this->abstract_array['userrank'][$user_id])){
+
+			$userrank = '';
+
+			if ($inCore->userIsAdmin($user_id)){
+				$userrank = '<span id="admin">'.$_LANG['ADMINISTRATOR'].'</span>';
+				// временное решение, чтобы два раза не проверять на админа
+				$this->abstract_array['is_admin'][$user_id] = 1;
+			} else {
+				// временное решение, чтобы два раза не проверять на админа
+				$this->abstract_array['is_admin'][$user_id] = 0;
+				//rank by messages
+				if(is_array($ranks)){
+					foreach($ranks as $k=>$rank){
+						if ($messages >= $rank['msg'] && $rank['msg'] != ''){
+							$userrank = '<span id="rank">'.$rank['title'].'</span>';
+						}
+					}
+				} else {
+					$userrank = '<span id="rank">'.$_LANG['USER'].'</span>';
+				}
+				//check is moderator
+				$rights = $this->inDB->get_fields('cms_user_groups g, cms_users u', "u.group_id = g.id AND u.id = '$user_id'", 'g.id, g.access as access');
+				if (strstr($rights['access'], 'forum/moderate')){
+					if ($modrank){
+						$userrank .= '<span id="moder">'.$_LANG['MODER'].'</span>';
+					} else {
+						$userrank = '<span id="moder">'.$_LANG['MODER'].'</span>';
+					}
+				}
+			}
+			$this->abstract_array['userrank'][$user_id] = $userrank;
+		}
+
+		return $this->abstract_array['userrank'][$user_id];;
+	}
+// ========================================================================================================= //
+// ========================================================================================================= //
+	public function getPostAttachedFiles($post_id, $mypost, $showimg=false){
+
+		$inCore = cmsCore::getInstance();
+	
+		global $_LANG;
+	
+		$graphic_ext[] = 'jpg';
+		$graphic_ext[] = 'jpeg';
+		$graphic_ext[] = 'gif';
+		$graphic_ext[] = 'bmp';
+		$graphic_ext[] = 'png';
+		
+		$sql = "SELECT f.*
+				FROM cms_forum_files f
+				WHERE f.post_id = '$post_id'";
+		$result = $this->inDB->query($sql) ;
+		
+		if (!$this->inDB->num_rows($result)){ return ''; }
+
+		$html .= '<div class="fa_attach">';
+		$html .= '<div class="fa_attach_title">'.$_LANG['ATTACHED_FILE'].':</div>';
+
+		while($file = $this->inDB->fetch_assoc($result)){		
+
+			$path_parts = pathinfo($file['filename']);
+			$ext = $path_parts['extension'];	
+
+			//make link to file
+			$html .= '<div class="fa_filebox">';
+			$html .= '<table class="fa_file"><tr>';
+			if (!in_array($ext, $graphic_ext) || (in_array($ext, $graphic_ext) && !$showimg)){
+				$html .= '<td width="16">'.$inCore->fileIcon($file['filename']).'</td>';
+				$html .= '<td>';
+				$html .= '<a class="fa_file_link" href="/forum/download'.$file['id'].'.html">'.$file['filename'].'</a> |
+							  <span class="fa_file_desc">'.round(($file['filesize']/1024),2).' '.$_LANG['KBITE'].' | '.$_LANG['DOWNLOADED'].': '.$file['hits'].'</span>';
+							  
+				if ($mypost){
+					$html .= ' <a href="/forum/reloadfile'.$file['id'].'.html" title="'.$_LANG['RELOAD_FILE'].'"><img src="/images/icons/reload.gif" border="0"/></a>';
+					$html .= ' <a href="/forum/delfile'.$file['id'].'.html" title="'.$_LANG['DELETE_FILE'].'"><img src="/images/icons/delete.gif" border="0"/></a>';
+				}								  
+				$html .= '</td>';
+			} else {
+				$html .= '<td><img src="/upload/forum/post'.$post_id.'/'.$file['filename'].'" border="1" width="160" height="120" /></td>';
+				$html .= '<td>';
+				$html .= '<a class="fa_file_link" href="/forum/download'.$file['id'].'.html">'.$file['filename'].'</a> | 
+							  <span class="fa_file_desc">'.round(($file['filesize']/1024),2).' '.$_LANG['KBITE'].' | '.$_LANG['DOWNLOADED'].': '.$file['hits'].'</span>';
+							  
+				if ($mypost){
+					$html .= ' <a href="/forum/reloadfile'.$file['id'].'.html" title="'.$_LANG['RELOAD_FILE'].'"><img src="/images/icons/reload.gif" border="0"/></a>';
+					$html .= ' <a href="/forum/delfile'.$file['id'].'.html" title="'.$_LANG['DELETE_FILE'].'"><img src="/images/icons/delete.gif" border="0"/></a>';
+				}								  
+				$html .= '</td>';
+			}
+			$html .= '</tr></table>';
+			$html .= '</div>';
+					
+		}	
+		$html .= '</div>';
+		
+		return $html;
+	}
 // ========================================================================================================= //
 // ========================================================================================================= //
 
@@ -43,7 +193,21 @@ class cms_model_forum{
 
         return $forum;
     }
+// ========================================================================================================= //
+// ========================================================================================================= //
 
+    public function getThread($id){
+
+        $sql      = "SELECT * FROM cms_forum_threads WHERE id = '$id' LIMIT 1";
+
+        $result   = $this->inDB->query($sql);
+
+        if (!$this->inDB->num_rows($result)){ return false; }
+
+        $thread   = $this->inDB->fetch_assoc($result);
+
+        return $thread;
+    }
 // ========================================================================================================= //
 // ========================================================================================================= //
 
