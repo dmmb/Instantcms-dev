@@ -51,8 +51,10 @@
 					{/if}
 				{/if}	
 			{/if}
-            <td width="16"><img src="/templates/_default_/images/icons/rss.png" border="0" alt="{$LANG.RSS}"/></td>
-            <td><a href="/rss/comments/{$target}-{$target_id}/feed.rss">{$labels.rss}</a></td>
+            {if $comments_count}
+                <td width="16"><img src="/templates/_default_/images/icons/rss.png" border="0" alt="{$LANG.RSS}"/></td>
+                <td><a href="/rss/comments/{$target}-{$target_id}/feed.rss">{$labels.rss}</a></td>
+            {/if}
 		</tr>
 	</table>	
 </div>
