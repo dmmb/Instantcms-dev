@@ -205,7 +205,9 @@ class cms_model_content{
 
         if ($rs_rows){
             while($node = $this->inDB->fetch_assoc($rs_rows)){
-                if($node['is_public']) { $subcats[] = $node; }
+                if($node['is_public'] && $inCore->checkUserAccess('category', $node['id'])){
+					$subcats[] = $node;
+				}
             }
         }
 

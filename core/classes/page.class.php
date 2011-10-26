@@ -230,12 +230,11 @@ public function printFooter(){
 public function printBody(){
     global $_CFG;
     if ($_CFG['slight']){
-        if (isset($_SESSION['searchquery'])){
+		$searchquery = cmsUser::sessionGet('searchquery');
+        if ($searchquery){
             if ($_REQUEST['view']!='search'){
-                $this->page_body = str_replace($_SESSION['searchquery'], '<span class="search_match">'.$_SESSION['searchquery'].'</span>', $this->page_body);
-                $this->page_body = str_replace(ucfirst($_SESSION['searchquery']), '<span class="search_match">'.ucfirst($_SESSION['searchquery']).'</span>', $this->page_body);
-                $this->page_body = str_replace(strtolower($_SESSION['searchquery']), '<span class="search_match">'.strtolower($_SESSION['searchquery']).'</span>', $this->page_body);
-                unset($_SESSION['searchquery']);
+                $this->page_body = str_ireplace($searchquery, '<span class="search_match">'.$searchquery.'</span>', $this->page_body);
+                cmsUser::sessionDel('searchquery');
             }
         }
     }
@@ -430,22 +429,6 @@ public function getUserLinks(){
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/**
- * Возвращает количество модулей, назначенных на указанную позицию для текущего пункта меню
- * @param string $position
- * @return int
- */
-public function countModules_old($position){
-    $inCore = cmsCore::getInstance();
-    $inDB   = cmsDatabase::getInstance();
-    $menuid = $inCore->menuId();
-    $sql = "SELECT m.id
-            FROM cms_modules m, cms_modules_bind mb
-            WHERE m.position = '$position' AND m.published = 1 AND m.id = mb.module_id AND (mb.menu_id = $menuid OR mb.menu_id = 0)
-            ";
-    $result = $inDB->query($sql) ;
-    return mysql_num_rows($result);
-}
 
 public function countModules($position){
 
@@ -893,25 +876,35 @@ public static function getBBCodeToolbar($field_id, $images=0, $placekind='forum'
                     <img src="/includes/bbcode/images/image_link.png" border="0" alt="Вставить картинку из Сети" />
                  </a>';
 		if ($inUser->id) {
+			
+			$users_cfg = $inCore->loadComponentConfig('users');
+
+			if ($users_cfg['sw_photo']){
+				$html .= '<a class="usr_bb_button" href="javascript:addAlbumImage()" title="Вставить фото из личных альбомов">
+							<img src="/includes/bbcode/images/albumimage.png" border="0" alt="Вставить фото из личных альбомов" />
+						 </a>';
+			}
+
 			$html .= '<a class="usr_bb_button" href="javascript:addImage(\''.$field_id.'\')" title="Загрузить и вставить фото">
-                    <img src="/includes/bbcode/images/image.png" border="0" alt="Загрузить и вставить фото" />
-                 </a>
-                 <a class="usr_bb_button" href="javascript:addAlbumImage()" title="Вставить фото из личных альбомов">
-                    <img src="/includes/bbcode/images/albumimage.png" border="0" alt="Вставить фото из личных альбомов" />
-                 </a>
-                <div class="usr_bb_button" id="imginsert" style="display:none">
-                    <strong>Загрузить фото:</strong> <input type="file" id="attach_img" name="attach_img"/>
-                     <input type="button" name="goinsert" value="Вставить" onclick="loadImage(\''.$field_id.'\', \''.session_id().'\', \''.$placekind.'\')" />
-                 </div>
-                 <div class="usr_bb_button" id="imgloading" style="display:none">
-                    Загрузка изображения...
-                 </div>
-                <div class="usr_bb_button" id="albumimginsert" style="display:none">
-                    <strong>Вставить фото:</strong> '.cmsUser::getPhotosList($inUser->id).'
-                     <input type="button" name="goinsert" value="Вставить" onclick="insertAlbumImage(\''.$field_id.'\')" />
-                 </div>';
+						<img src="/includes/bbcode/images/image.png" border="0" alt="Загрузить и вставить фото" />
+					 </a>
+					 <div class="usr_bb_button" id="imginsert" style="display:none">
+						<strong>Загрузить фото:</strong> <input type="file" id="attach_img" name="attach_img"/>
+						 <input type="button" name="goinsert" value="Вставить" onclick="loadImage(\''.$field_id.'\', \''.session_id().'\', \''.$placekind.'\')" />
+					 </div>
+					 <div class="usr_bb_button" id="imgloading" style="display:none">
+						Загрузка изображения...
+					 </div>';
+			if ($users_cfg['sw_photo']){
+				$html .= '<div class="usr_bb_button" id="albumimginsert" style="display:none">
+						<strong>Вставить фото:</strong> '.cmsUser::getPhotosList($inUser->id).'
+						 <input type="button" name="goinsert" value="Вставить" onclick="insertAlbumImage(\''.$field_id.'\')" />
+					 </div>';
+			}
+    	}
     }
-    }
+	
+	$html = cmsCore::callEvent('GET_BBCODE_BUTTON', $html);
 
     return $html;
 }

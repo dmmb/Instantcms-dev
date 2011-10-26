@@ -350,11 +350,7 @@ if ($do=='addarticle' || $do=='editarticle'){
 	$is_admin    = $inUser->is_admin;                     // админ
 	$user_id     = $inUser->id;                           // id текущего юзера
 	
-	if (!$is_add && !$is_auto_add){
-        $inPage->printHeading($_LANG['ACCESS_DENIED']);
-        echo '<p>'.$_LANG['ACCESS_DENIED'].'</p>';
-        return;
-    }
+	if (!$is_add && !$is_auto_add){ cmsCore::error404(); }
 
     $smarty     = $inCore->initSmarty('components', 'com_content_edit.tpl');
 
@@ -381,7 +377,7 @@ if ($do=='addarticle' || $do=='editarticle'){
             $inPage->addPathway($_LANG['ADD_ARTICLE']);
             $pagetitle = $_LANG['ADD_ARTICLE'];
 
-            $pubcats        = $model->getPublicCats();
+            $pubcats = $model->getPublicCats();
 
             // поддержка биллинга
             $dynamic_cost = false;
@@ -396,6 +392,8 @@ if ($do=='addarticle' || $do=='editarticle'){
                 }
                 cmsBilling::checkBalance('content', 'add_content', $dynamic_cost);
             }
+			
+			if(!$pubcats) { cmsCore::addSessionMessage($_LANG['ADD_ARTICLE_ERR_CAT'], 'error'); $inCore->redirectBack();  }
 
         }
 

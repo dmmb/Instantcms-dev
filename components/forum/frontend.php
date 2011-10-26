@@ -982,13 +982,13 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 							SET content = '$message',
 								editdate = NOW(),
 								edittimes = edittimes + 1
-							WHERE id = $id";
+							WHERE id = '$id'";
 					$inDB->query($sql) ;
 					$inCore->registerUploadImages(session_id(), $id, 'forum');						
 					if ($pages==1){
-						$inCore->redirect('/forum/thread'.$msg['thread_id'].'.html');
+						$inCore->redirect('/forum/thread'.$msg['thread_id'].'.html#'.$id);
 					} else {
-						$inCore->redirect('/forum/thread'.$msg['thread_id'].'-'.$pages.'.html');
+						$inCore->redirect('/forum/thread'.$msg['thread_id'].'-'.$pages.'.html#'.$id);
 					}					
 				} else { echo '<p>'.$_LANG['NEED_TEXT_POST'].'</p>'; }
 			}

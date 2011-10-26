@@ -36,6 +36,7 @@
     $inCore->loadClass('db');
     $inCore->loadClass('page');
     $inCore->loadClass('user');
+	$inCore->loadClass('plugin');
 
     $inPage     = cmsPage::getInstance();
     $inUser     = cmsUser::getInstance();
