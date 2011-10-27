@@ -23,11 +23,17 @@ function mod_forum($module_id){
 		if (!isset($cfg['showforum'])) { $cfg['showforum']='0'; }
 		if (!isset($cfg['showlink'])) { $cfg['showlink']='0'; }
 		if (!isset($cfg['forum_id'])) { $cfg['forum_id']='0'; }
+		if (!isset($cfg['cat_id'])) { $cfg['cat_id']='0'; }
 		if (!isset($cfg['subs'])) { $cfg['subs'] = 1; }
+		if (!isset($cfg['show_hidden'])) { $cfg['show_hidden'] = 0; }
+		if (!isset($cfg['show_pinned'])) { $cfg['show_pinned'] = 0; }
         $forumcfg = $inCore->loadComponentConfig('forum');
 
-		$catsql = '';
+		// категории форумов
+		$cats_sql = $cfg['cat_id'] ? "INNER JOIN cms_forum_cats cat ON cat.id = f.category_id AND cat.id = '{$cfg['cat_id']}'" : '';
 
+		// форумы
+		$catsql = '';
 		if($cfg['forum_id']){
 			if (!$cfg['subs']){
 				$catsql = " AND t.forum_id = '{$cfg['forum_id']}'";
@@ -38,20 +44,25 @@ function mod_forum($module_id){
 			}
 		}
 
-		include_once(PATH.'/components/forum/includes/forumcore.php');
+		$where  = '';
+		$where .= $cfg['show_hidden'] ? '1=1' : 't.is_hidden = 0';
+		$where .= $cfg['show_pinned'] ? ' AND t.pinned = 1' : '';
 
 		$tsql = "SELECT t.id, t.forum_id, t.user_id, t.title, t.description, t.description, t.pubdate, t.hits, t.closed, t.pinned, f.id as fid, f.title as forum,
 						u.id as uid, u.nickname as starter, u.login as login
 						FROM cms_forum_threads t
 						INNER JOIN cms_forums f ON f.id = t.forum_id {$catsql}
+						{$cats_sql}
 						INNER JOIN cms_users u ON u.id = t.user_id
-						WHERE t.is_hidden = 0
+						WHERE {$where}
 						ORDER BY t.pubdate DESC
 						LIMIT ".$cfg['shownum'];
 		
 		$result = $inDB->query($tsql) ;
 		
 		if (!$inDB->num_rows($result)){ echo '<p>'.$_LANG['FORUM_NOT_THREAD'].'</p>'; return; }
+
+		include_once(PATH.'/components/forum/includes/forumcore.php');
 
 		$threads = array();
 
