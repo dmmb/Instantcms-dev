@@ -323,4 +323,59 @@ class cms_model_forum{
 // ========================================================================================================= //
 // ========================================================================================================= //
 
+    public function getCountThreadsFromForum($left_key, $right_key) {
+
+		$sql = "SELECT t.id
+				FROM cms_forum_threads t
+				INNER JOIN cms_forums f ON f.id = t.forum_id AND f.NSLeft >= '$left_key' AND f.NSRight <= '$right_key' AND f.published = 1";
+
+        $result = $this->inDB->query($sql);
+
+        return $this->inDB->num_rows($result);
+
+    }
+// ========================================================================================================= //
+// ========================================================================================================= //
+
+    public function getCountPostsFromForum($left_key, $right_key) {
+
+		$sql = "SELECT p.id
+				FROM cms_forum_posts p
+				INNER JOIN cms_forum_threads t ON t.id = p.thread_id
+				INNER JOIN cms_forums f ON f.id = t.forum_id AND f.NSLeft >= '$left_key' AND f.NSRight <= '$right_key' AND f.published = 1";
+
+        $result = $this->inDB->query($sql);
+
+        return $this->inDB->num_rows($result);
+
+    }
+// ========================================================================================================= //
+// ========================================================================================================= //
+	public function getForumMessages($left_key, $right_key){
+
+		$html = '';
+		global $_LANG;
+		
+		$count_thr = $this->getCountThreadsFromForum($left_key, $right_key);
+		
+		if ($count_thr){
+			$html .= '<strong>'.$_LANG['THREADS'].':</strong> '.$count_thr;
+		} else {
+			$html .= $_LANG['NOT_THREADS'];
+		}
+
+		$count_posts = $this->getCountPostsFromForum($left_key, $right_key);
+
+		if ($count_posts){
+			$html .= '<br/><strong>'.$_LANG['MESSAGES'].':</strong> '.$count_posts;
+		} else {
+			$html .= '<br/><strong>'.$_LANG['MESSAGES'].':</strong> 0';
+		}
+
+		return $html;
+
+	}
+// ========================================================================================================= //
+// ========================================================================================================= //
+
 }

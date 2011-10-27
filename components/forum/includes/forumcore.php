@@ -13,32 +13,6 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-//////////////////////////////////////////////////////////////////////////////
-function forumMessages($forum_id){
-    $inCore = cmsCore::getInstance();
-    $inDB   = cmsDatabase::getInstance();
-	$html = '';
-	global $_LANG;
-	
-	$sql = "SELECT 1 FROM cms_forum_threads WHERE forum_id = '$forum_id'";
-	$result = $inDB->query($sql) ;
-	
-	if ($inDB->num_rows($result)){
-		$html .= '<strong>'.$_LANG['THREADS'].':</strong> '.$inDB->num_rows($result);
-	} else { $html .= $_LANG['NOT_THREADS']; }
-	
-	$tsql = "SELECT p.id
-			 FROM cms_forum_threads t
-			 LEFT JOIN cms_forum_posts p ON p.thread_id = t.id
-			 WHERE t.forum_id = '$forum_id'";
-	$tresult = $inDB->query($tsql);
-		if ($inDB->num_rows($tresult)){
-			$html .= '<br/><strong>'.$_LANG['MESSAGES'].':</strong> '.$inDB->num_rows($tresult);
-		} else { $html .= '<br/><strong>'.$_LANG['MESSAGES'].':</strong> 0'; }
-	
-	return $html;
-}
-
 function forumPollVote(){
 
     $inCore = cmsCore::getInstance();

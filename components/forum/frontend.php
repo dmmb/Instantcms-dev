@@ -229,7 +229,7 @@ if ($do=='view'){
                                 echo '<div class="forum_subs"><span class="forum_subs_title">'.$_LANG['SUBFORUMS'].':</span> '.$subforums.'</div>';
                             }
                         echo '</td>';
-                        echo '<td class="'.$class.'" style="font-size:11px" valign="top">'.forumMessages($f['id']).'</td>';
+                        echo '<td class="'.$class.'" style="font-size:11px" valign="top">'.$model->getForumMessages($f['NSLeft'], $f['NSRight']).'</td>';
                         echo '<td style="font-size:11px" class="'.$class.'" valign="top">'.forumLastMessage($f['id'], $cfg['pp_thread']).'</td>';
                     echo '</tr>';
                     $row++;
@@ -305,7 +305,7 @@ if ($do=='forum'){
             }
 
             $subforum['subforums']      = $inner_forums;
-            $subforum['messages']       = forumMessages($subforum['id']);
+            $subforum['messages']       = $model->getForumMessages($subforum['NSLeft'], $subforum['NSRight']);
             $subforum['last_message']   = forumLastMessage($subforum['id'], $cfg['pp_thread']);
             $subforums[]                = $subforum;
 
