@@ -14,10 +14,11 @@
     Error_Reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
     setlocale(LC_ALL, 'ru_RU.CP1251');
 
-    define('PATH', $_SERVER['DOCUMENT_ROOT']);    
+    define('PATH', $_SERVER['DOCUMENT_ROOT']);
 
 ////////////////////////////// Проверяем что система установлена /////////////////////////////
 
+/*
     if(is_dir('install')||is_dir('migrate')) {
         if (!file_exists(PATH.'/includes/config.inc.php')){
             header('location:/install/');
@@ -26,11 +27,12 @@
             die();
         }
     }
+*/
 
 /////////////////////////////////// Подготовка //////////////////////////////////////////////
-	
-	define("VALID_CMS", 1);	
-	session_start();    
+
+	define("VALID_CMS", 1);
+	session_start();
 
 	include('core/cms.php');                        //ядро
     include(PATH.'/includes/config.inc.php');       //конфиг, оставлен для старых плагинов
@@ -42,13 +44,13 @@
 /////////////////////////////////// Включаем таймер /////////////////////////////////////////
 
     $inCore->startGenTimer();
-    
+
 ////////////////////////// Загружаем нужные классы //////////////////////////////////////////
-   
-    $inCore->loadClass('page');         //страница    
+
+    $inCore->loadClass('page');         //страница
     $inCore->loadClass('plugin');       //плагины
     $inCore->loadClass('user');         //пользователь
-    $inCore->loadClass('actions');      //лента активности    
+    $inCore->loadClass('actions');      //лента активности
 
     $inDB       = cmsDatabase::getInstance();
     $inPage     = cmsPage::getInstance();
@@ -90,14 +92,14 @@
     }
 
 //////////////////////////// Мониторинг пользователей //////////////////////////
-	
+
 	$inCore->onlineStats();   //обновляем статистику посещений сайта
-	
+
 ////////////////////////////// Генерация страницы //////////////////////////////
-	
+
 	//Получаем ID текущего пункта меню
 	$menuid = $inCore->menuId();
-		
+
 	//Строим глубиномер
 	$inPage->addPathway($_LANG['PATH_HOME'], '/');
     $inPage->setTitle( $inCore->menuTitle() );
@@ -106,7 +108,7 @@
 	//Проверяем доступ пользователя
     //Если проверка завершится неудачей, то вывод компонента будет
     //замещен сообщением "Доступ запрещен"
-	
+
 
 	//Строим тело страницы (запускаем текущий компонент)
     if ($inCore->checkMenuAccess()) $inCore->proceedBody();

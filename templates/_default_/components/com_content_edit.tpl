@@ -37,7 +37,7 @@
 							<strong>{$LANG.CAT}:</strong><br />
 							<div><span class="hinttext">{$LANG.WHERE_LOCATE_ARTICLE}</span></div>
 							{if $is_admin}
-								<div style="margin-top:10px"><span class="hinttext">{$LANG.FOR_ADD_ARTICLE_ON} <a href="/admin/index.php?view=cats">{$LANG.IN_CONFIG}</a> {$LANG.FOR_ADD_ARTICLE_ON_TEXT}</span></div>
+								<div style="margin-top:10px"><span class="hinttext">{$LANG.FOR_ADD_ARTICLE_ON} <a href="/{$adminDir}/index.php?view=cats">{$LANG.IN_CONFIG}</a> {$LANG.FOR_ADD_ARTICLE_ON_TEXT}</span></div>
 							{/if}
 						</td>
 						<td valign="top">
@@ -94,7 +94,7 @@
 			</td>
 		</tr>
 	</table>
-				  
+
 	{if $do=='editarticle'}
 		{$add_notice}
 	{/if}

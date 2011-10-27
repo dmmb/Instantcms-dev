@@ -33,14 +33,15 @@ function cpComponentCanRemove($id){
 function applet_components(){
 
     $inCore = cmsCore::getInstance();
+    $inUser = cmsUser::getInstance();
 
 	//check access
 	global $adminAccess;
 	if (!$inCore->isAdminCan('admin/components', $adminAccess)) { cpAccessDenied(); }
 
 	$GLOBALS['cp_page_title'] = 'Компоненты';
- 	cpAddPathway('Компоненты', 'index.php?view=components');	
-	
+ 	cpAddPathway('Компоненты', 'index.php?view=components');
+
 	if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
 
 	if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else {
@@ -76,14 +77,14 @@ function applet_components(){
 
 	if (isset($_REQUEST['co'])) { $co = $_REQUEST['co']; } else { $co = -1; }
 
-	if ($do == 'config'){			
+	if ($do == 'config'){
 		$com = cpComponentById($id);
-		
+
 		//check access for component
 		if (!$inCore->isAdminCan('admin/com_'.$com, $adminAccess)) { cpAccessDenied(); }
-			
+
 		if ($com) {
-			$file = $_SERVER['DOCUMENT_ROOT'].'/admin/components/'.$com.'/backend.php';
+			$file = ADMIN_PATH.'/components/'.$com.'/backend.php';
 			//die($file);
 			if (file_exists($file)){
 				include $file;
@@ -93,9 +94,9 @@ function applet_components(){
 		} else {
 			header('location:index.php?view=components');
 		}
-	
+
 	}
-		
+
 	if ($do == 'list'){
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'install.gif';
@@ -156,9 +157,9 @@ function applet_components(){
 		$fields[3]['title'] = 'Включен';	$fields[3]['field'] = 'published';		$fields[3]['width'] = '65';
 
 		$fields[4]['title'] = 'Автор';		$fields[4]['field'] = 'author';		$fields[4]['width'] = '200';
-		
+
 		$fields[5]['title'] = 'Ссылка';		$fields[5]['field'] = 'link';		$fields[5]['width'] = '100';
-		
+
 		//ACTIONS
 		$actions = array();
 		$actions[0]['title'] = 'Настроить';
@@ -166,7 +167,7 @@ function applet_components(){
 		$actions[0]['link']  = '?view=components&do=config&id=%id%';
 		// Функция, которой передается ID объекта, и если она вернет TRUE то только тогда отобразится значок
 		$actions[0]['condition'] = 'cpComponentHasConfig';
-		
+
 		$actions[1]['title'] = 'Удалить компонент';
 		$actions[1]['icon']  = 'delete.gif';
 		$actions[1]['link']  = '?view=install&do=remove_component&id=%id%';
@@ -185,11 +186,11 @@ function applet_components(){
                 }
             }
         }
-		
+
 		if (!$where) { $where = 'id>0'; }
-			
+
 		//Print table
-		cpListTable('cms_components', $fields, $actions, $where);		
+		cpListTable('cms_components', $fields, $actions, $where);
 	}
 
 }

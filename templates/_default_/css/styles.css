@@ -111,7 +111,7 @@ a:hover { color:#375E93; }
 #topmenu .menu{ list-style:none; margin:0; padding:0; }
 #topmenu .menu li a{ text-decoration:none; }
 #topmenu .menu li{
-    list-style:none; 
+    list-style:none;
     margin:0;
     padding:0;
     height:40px;
@@ -143,7 +143,7 @@ a:hover { color:#375E93; }
 #topmenu .menu li a{
     padding:0px 10px;
     color:#1F3451;
-    height:40px; 
+    height:40px;
     line-height:40px;
     display:inline-block;
 }
@@ -248,7 +248,7 @@ a:hover { color:#375E93; }
     height:40px;
     line-height:40px;
     background:url(../images/modtop.jpg) repeat-x left;
-    margin-top:-11px;    
+    margin-top:-11px;
     margin-bottom:10px;
     padding-left:14px;
     text-shadow:0 1px 0 #1F3147;
@@ -289,6 +289,7 @@ a:hover { color:#375E93; }
 /********************************** Футер *************************************/
 
 #footer{
+	position:relative;
     height:50px;
     line-height:50px;
     background: #19283B;
@@ -408,7 +409,7 @@ span.fast_cfg_link img{ border:none; }
 }
 
 /*------------------------ MODULE "AUTHORIZATION" ----------------------------*/
-.authtable input#login, 
+.authtable input#login,
 .authtable input#pass{
     width:200px;
     border:solid 1px #4DA4CF;
@@ -459,11 +460,11 @@ span.fast_cfg_link img{ border:none; }
 	height:16px;
 	line-height:16px;
 	text-decoration:underline;
-	color:#333;    
+	color:#333;
 }
 
 .mod_latest_rss a{
-	text-decoration: underline; 
+	text-decoration: underline;
 	color: #333;
 }
 
@@ -515,7 +516,7 @@ span.fast_cfg_link img{ border:none; }
 
 .lf_field{ margin-bottom: 10px; }
 
-.lf_field input { 
+.lf_field input {
     width:250px; padding:3px; padding-left:20px; font-size:16px; border:solid 1px #4DA4CF; }
 
 .lf_field input:focus {
@@ -540,8 +541,8 @@ span.fast_cfg_link img{ border:none; }
 
 /*------------------------------ PAGES BAR -----------------------------------*/
 .pagebar{
-	margin-top:10px; 
-	margin-bottom: 15px; 
+	margin-top:10px;
+	margin-bottom: 15px;
 	font-size:12px;
 	clear:both;
 }
@@ -550,12 +551,12 @@ span.fast_cfg_link img{ border:none; }
     color:#375E93;
 }
 .pagebar_page{
-	margin:3px; 
+	margin:3px;
 	padding:6px;
 }
 .pagebar_current{
-	margin:3px; 
-	padding:6px; 	
+	margin:3px;
+	padding:6px;
 	background-color: #375E93;
     color:#FFF;
     border-radius:5px;
@@ -638,7 +639,7 @@ h3 {
 .con_icon{
 	margin-top:4px;
 }
-.con_details{	
+.con_details{
     margin-bottom:10px;
 	color:#999999;
 }
@@ -696,7 +697,7 @@ h3 {
 	background-color:#EBEBEB;
 	margin-bottom:2px;
 }
-.photo_toolbar{	
+.photo_toolbar{
     float:right;
     -moz-border-radius:8px 8px 8px 8px;
     background-color:#E0EAEF;
@@ -840,15 +841,15 @@ h3 {
 	font-weight:bold
 }
 .cart_detaillink{
-	clear:both; 
-	border-bottom:solid 1px gray; 
-	margin-bottom:10px; 
+	clear:both;
+	border-bottom:solid 1px gray;
+	margin-bottom:10px;
 	padding-bottom:5px
 }
 .cart_total{
-	clear:both; 
-	border-top:solid 1px gray; 
-	margin-top:10px; 
+	clear:both;
+	border-top:solid 1px gray;
+	margin-top:10px;
 	padding-top:5px
 }
 .cart_price{
@@ -867,7 +868,7 @@ h3 {
 	background-color:#EBEBEB;
 }
 .pricerow2{
-	background-color:#FFFFFF;	
+	background-color:#FFFFFF;
 }
 
 /*----------------------- MODULE "LATEST COMMENTS" ---------------------------*/
@@ -884,7 +885,7 @@ h3 {
     font-size:10px;
     margin-bottom:6px;
 }
-.mod_com_details a{    
+.mod_com_details a{
     text-decoration:none;
 }
 .mod_com_all{
@@ -967,7 +968,7 @@ h3 {
 	color:#FF0000;
 	font-style:italic;
 	padding:5px;
-	vertical-align: super;	
+	vertical-align: super;
 }
 .uc_list_item{
 	padding: 2px;
@@ -1039,7 +1040,7 @@ h3 {
     border:1px solid #C3D6DF;
     padding:4px;
 }
-.uc_detailimg{	
+.uc_detailimg{
 }
 .uc_detailrating{
 	margin:0px;
@@ -1151,7 +1152,7 @@ a.tag:hover{
 /*---------------------------PERSONAL MENU -----------------------------------*/
 .mod_user_menu { text-align:right; }
 
-.mod_user_menu span{    
+.mod_user_menu span{
     margin-right:0px;
 }
 .mod_user_menu span a{
@@ -1232,7 +1233,7 @@ a.tag:hover{
 	float:left;
 }
 .usr_bb_button:hover{
-	display:block;	
+	display:block;
 	margin:2px;
     border: solid 1px #83BBD9;
 	padding:6px;
@@ -1259,8 +1260,8 @@ a.new_messages_link:hover{ color:#F00; background:#Fff; font-weight:bold; paddin
     line-height:36px;
     margin-bottom:5px;
 }
-.mod_new_user_avatar { 
-    float:left; 
+.mod_new_user_avatar {
+    float:left;
     margin-right:10px;
     padding:1px;
     background:#FFF;
@@ -1280,7 +1281,7 @@ a.new_messages_link:hover{ color:#F00; background:#Fff; font-weight:bold; paddin
 	border:solid 1px gray;
 	width:100%;
 	height:108px;
-	min-height:180px;	
+	min-height:180px;
 	max-height:702px;
 	line-height:18px;
     margin:0px;
@@ -1356,7 +1357,7 @@ a.new_messages_link:hover{ color:#F00; background:#Fff; font-weight:bold; paddin
 	padding:2px;
 	font-size:11px;
 	text-align:center;
-	background-color:#EBEBEB;    
+	background-color:#EBEBEB;
 	width:100px;
 	float:right;
 }
@@ -1450,7 +1451,7 @@ a.new_messages_link:hover{ color:#F00; background:#Fff; font-weight:bold; paddin
 .tagsearch_bar{
 	font-size:10px;
 	text-align:right;
-	float:right;	
+	float:right;
 }
 .tagsearch_item{
 	float:left;
@@ -1547,7 +1548,7 @@ span.user_karma_point{
 	clear:both;
 }
 .blog_toolbar{
-	
+
 	background-color:#E0EAEF;
     padding:5px 8px;
     border-radius:8px;
@@ -1791,7 +1792,7 @@ span.user_karma_point{
     -moz-border-radius:8px;
 }
 .blog_type_num{
-	
+
 }
 .blog_full_list .blog_title_td{
     padding-left:0px;
@@ -2038,7 +2039,7 @@ div.bd_cat_main_obtypes a{
 }
 #shop_addlink{
 	float:left;
-	background:url(../images/icons/add.png) no-repeat 2px 2px;	
+	background:url(../images/icons/add.png) no-repeat 2px 2px;
 	padding-left:22px;
 	padding-right:5px;
 }
@@ -2173,7 +2174,7 @@ ul.uc_cat_list li.uc_cat_item{
 
 input.button { font-size:18px; }
 
-div.new_club { 
+div.new_club {
    margin-bottom:15px;
    padding:9px;
    padding-left:30px;
@@ -2277,7 +2278,7 @@ table.club_full_entry .clubmenu div a.config{ padding-left: 32px; background:url
 table.club_full_entry .wall .header{ background:#E0EAEF; padding:10px; border-top:solid 1px #789DAF; font-size:16px; color:#375E93; }
 table.club_full_entry .wall .body{ padding:10px; }
 table.club_full_entry .wall #addwall{ padding:0px; padding-right:10px;}
-table.club_full_entry .wall #addwall textarea{ 
+table.club_full_entry .wall #addwall textarea{
     border:1px solid gray;
     font-size:18px;
     height:150px;
@@ -2448,7 +2449,7 @@ border:thin dashed #999999;
     font-size:18px;
 }
 
-div.cm_smiles{    
+div.cm_smiles{
 }
 div.cm_smiles a{
 	text-decoration:none;
@@ -2879,7 +2880,7 @@ div.con_forum_link a{
     padding:1px;
     padding-left:20px;
     background:url(../images/icons/search.png) no-repeat;
-    text-decoration:none;    
+    text-decoration:none;
 }
 
 #users_search_link a span{
@@ -2916,9 +2917,9 @@ div.con_forum_link a{
 .users_search_results li{ margin-left:0px;}
 
 div.users_list_buttons{ overflow: hidden; }
-div.users_list_buttons .button{ 
+div.users_list_buttons .button{
     border-radius:8px;
-    -moz-border-radius:8px;    
+    -moz-border-radius:8px;
     display:block;
     float:left;
     font-size:18px;
@@ -2939,7 +2940,7 @@ div.users_list_buttons .selected a{
     color:#000000;
 }
 
-div.users_list { 
+div.users_list {
     margin:15px 0px; padding:15px; border:1px solid #C3D6DF;
     border-radius:8px;
     -moz-border-radius:8px;
@@ -2974,7 +2975,7 @@ table.users_list div.rating{
     background:#E0EAEF;
 }
 table.users_list div.karma{
-    margin-right:5px;    
+    margin-right:5px;
 }
 table.users_list .pos{
     color: green;
@@ -2986,7 +2987,7 @@ table.users_list .neg{
 table.users_list div.city { clear:both; }
 table.users_list div.city a{ color:#666; }
 table.users_list div.status { float:right; padding:2px; margin-right:5px; }
-table.users_list div.status .online{ 
+table.users_list div.status .online{
     padding:1px 5px; background-color:#00CC00; color:#FFF; font-size:11px;
     border-radius:4px;
     -moz-border-radius:4px;
@@ -3010,11 +3011,11 @@ table.users_list div.status .offline{ color:#999999; font-size:11px; background:
 
 div#user_ratings { float:right; }
 
-div#user_ratings div.karma, div#user_ratings div.rating { 
+div#user_ratings div.karma, div#user_ratings div.rating {
     float:left; text-align:center;
 }
 
-div#user_ratings .value,  div#user_ratings .value-positive, div#user_ratings .value-negative{ 
+div#user_ratings .value,  div#user_ratings .value-positive, div#user_ratings .value-negative{
     font-size:14px; padding: 4px; margin: 2px;
     border-radius:18px;
     -moz-border-radius:18px;
@@ -3141,7 +3142,7 @@ div.user_profile_data .field .value {  }
 .usr_wall_entry {
     border-radius:8px;
     -moz-border-radius:8px;
-    
+
     margin:5px 0;
     padding:5px 0px;
 }
@@ -3158,7 +3159,7 @@ div.user_profile_data .field .value {  }
 }
 .usr_wall_title{ float:left; color:#5F98BF; margin-bottom:10px; }
 .usr_wall_delete { float:right; padding:5px; }
-.usr_wall_delete a { 
+.usr_wall_delete a {
     background:url(../images/icons/delete.png) no-repeat left center;
     padding:1px;
     padding-left:20px;
@@ -3529,7 +3530,7 @@ table.feed td.date strong { color:green; }
 
 .usr_friend_cell .friend_link{
     font-size:14px;
-    
+
 }
 
 .usr_friend_cell span{ font-size:11px; }
@@ -3580,7 +3581,7 @@ table.feed td.date strong { color:green; }
 
 .action_entry{
     padding-left:25px;
-    margin-bottom:15px;    
+    margin-bottom:15px;
 }
 
 .action_entry .is_new { color:#FF5A00; }

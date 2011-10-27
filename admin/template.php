@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<?php 
+<?php
 /******************************************************************************/
 //                                                                            //
 //                             InstantCMS v1.8                                //
@@ -11,7 +11,7 @@
 //                        LICENSED BY GNU/GPL v2                              //
 //                                                                            //
 /******************************************************************************/
-	defined('VALID_CMS_ADMIN') or die('Доступ запрещен'); 	
+	defined('VALID_CMS_ADMIN') or die('Доступ запрещен');
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -41,7 +41,7 @@
                         <table width="100%" height="69" border="0" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td width="230" align="left" valign="middle" style="padding-left:20px; padding-top:5px;">
-                                    <a href="/admin/">
+                                    <a href="<?php echo '/'.$inCore->adminDir;?>">
                                         <img src="images/toplogo.png" alt="InstantCMS - Панель управления" border="0" />
                                     </a>
                                 </td>

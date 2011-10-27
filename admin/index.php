@@ -12,19 +12,21 @@
 /******************************************************************************/
 
 	session_start();
-	
+
 	define("VALID_CMS", 1);
 	define("VALID_CMS_ADMIN", 1);
 
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
+    define('ADMIN_PATH', getcwd());
     define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
+	define('ADMIN_DIR', basename(dirname(__FILE__)));
 
 	require("../core/cms.php");
 	require("includes/cp.php");
-					
-	require("../includes/config.inc.php");	
+
+	require("../includes/config.inc.php");
 	require("../includes/database.inc.php");
-	require("../includes/tools.inc.php");	
+	require("../includes/tools.inc.php");
 
     $inCore = cmsCore::getInstance();
 
@@ -42,15 +44,15 @@
 
     date_default_timezone_set($inConf->timezone);
 
-    if ( !$inUser->update() ) { $inCore->redirect('/404'); }
+    if ( !$inUser->update() ) { cmsCore::error404(); }
 
-    define('TEMPLATE_DIR', PATH.'/templates/'.$inConf->template.'/');
-    define('DEFAULT_TEMPLATE_DIR', PATH.'/templates/_default_/');
+    if(!defined('TEMPLATE_DIR'))define('TEMPLATE_DIR', PATH.'/templates/'.$inConf->template.'/');
+    if(!defined('DEFAULT_TEMPLATE_DIR'))define('DEFAULT_TEMPLATE_DIR', PATH.'/templates/_default_/');
 
 	//-------CHECK AUTHENTICATION--------------------------------------//
 	if (!$inUser->id ) {
-		$inCore->redirect('/admin/login.php');
-	} else {	
+		$inCore->redirect('login.php');
+	} else {
 		if (!$inCore->userIsAdmin($inUser->id)){
 			if ($inCore->userIsEditor($inUser->id)){
 				$inCore->redirect('editor/index.php');
@@ -58,8 +60,8 @@
 		}
 	}
 	//--------LOAD ACCESS OPTIONS LIST---------------------------------//
-	
-	$adminAccess = $inCore->checkAdminAccess();	
+
+	$adminAccess = $inCore->checkAdminAccess();
 
 	//------------------------------------------------------------------//
 
@@ -67,21 +69,23 @@
 
 	if (isset($_REQUEST['view'])){
         $applet = $inCore->request('view', 'str');
-        if (!preg_match('/([a-z0-9]+)/i', $applet)) { $inCore->halt(); }
+        if (!preg_match('/^([a-z0-9]+)$/i', $applet)) { $inCore->halt('WRONG PARAMETER'); }
 		$GLOBALS['applet'] = $applet;
 	} else {
 		$GLOBALS['applet'] = 'main';
 	}
-	
+
 	$GLOBALS['cp_page_title'] = '';
 	$GLOBALS['cp_page_head'] = array();
 	$GLOBALS['cp_page_body'] = '';
-	
+
 	$GLOBALS['cp_pathway'] = array();
 	$GLOBALS['cp_pathway'][0]['title'] = 'Главная';
 	$GLOBALS['cp_pathway'][0]['link'] = 'index.php';
-	
+
 	$GLOBALS['mainmenu'] = array();
+
+	$GLOBALS['cp_page_head'][] = '<script type="text/javascript">var adminDir = "'.$inCore->adminDir.'";</script>';
 
     $inCore->loadLanguage('lang');
 

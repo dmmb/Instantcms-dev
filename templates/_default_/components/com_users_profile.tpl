@@ -4,7 +4,7 @@
 
 {add_js file='includes/jquery/tabs/jquery.ui.min.js'}
 {add_js file="components/users/js/profile.js"}
-{add_css file='includes/jquery/tabs/tabs.css'}					
+{add_css file='includes/jquery/tabs/tabs.css'}
 
 {literal}
 	<script type="text/javascript">
@@ -142,7 +142,7 @@
                                     </tr>
                                     <tr>
                                         <td><img src="/templates/_default_/images/icons/profile/ban.png" border="0"/></td>
-                                        <td><a href="/admin/index.php?view=userbanlist&do=add&to={$usr.id}" title="{$LANG.TO_BANN}">{$LANG.TO_BANN}</a></td>
+                                        <td><a href="/{$adminDir}/index.php?view=userbanlist&do=add&to={$usr.id}" title="{$LANG.TO_BANN}">{$LANG.TO_BANN}</a></td>
                                     </tr>
                                     {/if}
                                 <tr>
@@ -155,7 +155,7 @@
                             </table></div>
                             </div>
 {* ================================================================================ *}
-						{/if}                        
+						{/if}
 					</td>
 				</tr>
 			</table>
@@ -172,9 +172,9 @@
 				</tr>
 			</table>
 	    </td>
-    	<td valign="top" style="padding-left:10px">	
+    	<td valign="top" style="padding-left:10px">
 			<div id="profiletabs">
-				<ul id="tabs"> 
+				<ul id="tabs">
 					<li><a href="#upr_profile"><span>{$LANG.PROFILE}</span></a></li>
 					{if $myprofile && $cfg.sw_feed}
 						<li><a href="#upr_feed"><span>{$LANG.FEED}</span></a></li>
@@ -188,20 +188,20 @@
                     {foreach key=id item=plugin from=$plugins}
                         <li><a href="#upr_{$plugin.name}"><span>{$plugin.title}</span></a></li>
                     {/foreach}
-				</ul> 
-				
+				</ul>
+
 				{* ============================== «¿ À¿ƒ ¿ π1 ============================================== *}
 				<div id="upr_profile">
 					<div class="user_profile_data">
-					
+
 						<div class="field">
 							<div class="title">{$LANG.STATUS}:</div>
 							<div class="value">{$usr.status}</div>
-						</div>						
+						</div>
 						<div class="field">
 							<div class="title">{$LANG.LAST_VISIT}:</div>
 							<div class="value">{$usr.flogdate}</div>
-						</div>						
+						</div>
 						<div class="field">
 							<div class="title">{$LANG.DATE_REGISTRATION}:</div>
 							<div class="value">
@@ -222,28 +222,28 @@
                             <div class="value"><a href="/users/city/{$usr.cityurl}">{$usr.city}</a></div>
 						</div>
                         {/if}
-						
+
 						{if $usr.showbirth && $usr.birthdate}
 						<div class="field">
 							<div class="title">{$LANG.BIRTH}:</div>
 							<div class="value">{$usr.birthdate}</div>
 						</div>
 						{/if}
-						
+
 						{if $usr.gender}
 						<div class="field">
 							<div class="title">{$LANG.SEX}:</div>
 							<div class="value">{$usr.gender}</div>
 						</div>
 						{/if}
-						
+
 						{if $usr.showicq && $usr.icq}
 						<div class="field">
 							<div class="title">ICQ:</div>
 							<div class="value">{$usr.icq}</div>
 						</div>
-						{/if}				
-						
+						{/if}
+
 						{if $usr.showmail}
 							{add_js file='includes/jquery/jquery.nospam.js'}
 							<div class="field">
@@ -251,11 +251,11 @@
 								<div class="value"><a href="#" rel="{$usr.email|NoSpam}" class="email">{$usr.email}</a></div>
 							</div>
 							{literal}
-								<script>						
+								<script>
 										$('.email').nospam({ replaceText: true });
 								</script>
-							{/literal}			
-						{/if}				
+							{/literal}
+						{/if}
 
                         {if $cfg.sw_comm}
 						<div class="field">
@@ -274,17 +274,17 @@
                             </div>
 						</div>
                         {/if}
-						
+
 						<div class="field">
 							<div class="title">{$LANG.HOBBY} ({$LANG.TAGSS}):</div>
 							<div class="value">{$usr.description}</div>
-						</div>					
+						</div>
 					</div>
-					
+
 					<div>
 						{if $cfg.privforms}
 							{$usr.privforms}
-						{/if}												
+						{/if}
 
                         <div class="usr_profile_block">
                             <div class="usr_wall_header">
@@ -375,7 +375,7 @@
                                                     <div align="center">{$friend.flogdate}</div>
                                                 </div>
                                             </td>
-                                              
+
                                       {if $col==6} </tr> {assign var="col" value="1"} {else} {math equation="x + 1" x=$col assign="col"} {/if}
                                   {/foreach}
                                   {if $col>1}<td colspan="{math equation="x - y + 1" x=$col y=$maxcols}">&nbsp;</td></tr>{/if}
@@ -401,7 +401,7 @@
 						{/if}
 					</div>
 				</div>
-				
+
 				{* ============================== «¿ À¿ƒ ¿ π2 ============================================== *}
 				{if $myprofile && $cfg.sw_feed}
 					<div id="upr_feed">
@@ -432,9 +432,9 @@
                             <p>{$LANG.FEED_DESC}</p>
                             <p>{$LANG.FEED_EMPTY_TEXT}</p>
                        {/if}
-					</div>	
-				{/if}		
-								
+					</div>
+				{/if}
+
 				{* ============================== «¿ À¿ƒ ¿ π5 ============================================== *}
 				{if $cfg.sw_clubs}
 					<div id="upr_clubs">
@@ -462,7 +462,7 @@
 										<a class="usr_club_link" href="/clubs/{$club.id}">{$club.title}</a>
 									{/foreach}
 								</div>
-							{/if}													
+							{/if}
 						{else}
                             {if !$myprofile}
                                 <p><strong>{$usr.nickname}</strong> {$LANG.USET_NOT_IN_CLUBS}</p>
@@ -472,7 +472,7 @@
 						{/if}
 					</div>
 				{/if}
-				
+
 				{* ============================== «¿ À¿ƒ ¿ π6 ============================================== *}
 
                 {if $cfg.sw_awards}
@@ -490,7 +490,7 @@
                     <div id="upr_{$plugin.name}">{$plugin.html}</div>
                 {/foreach}
 
-			</div>						
+			</div>
 	</td>
   </tr>
 </table>

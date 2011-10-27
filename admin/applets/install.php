@@ -25,7 +25,7 @@ function pluginsList($new_plugins, $action_name, $action){
         if ($action == 'upgrade_plugin') { $version = $inCore->getPluginVersion($plugin) . ' &rarr; '. $plugin_obj->info['version']; }
 
         echo '<tr>';
-            echo '<td width="16"><img src="/admin/images/icons/hmenu/plugins.png" /></td>';
+            echo '<td width="16"><img src="images/icons/hmenu/plugins.png" /></td>';
             echo '<td><a style="font-weight:bold;font-size:14px" title="'.$action_name.' '.$plugin_obj->info['title'].'" href="index.php?view=install&do='.$action.'&id='.$plugin.'">'.$plugin_obj->info['title'].'</a> v'.$version.'</td>';
         echo '<tr>';
         echo '<tr>';
@@ -48,7 +48,7 @@ function componentsList($new_components, $action_name, $action){
     $inCore = cmsCore::getInstance();
 
     echo '<table cellpadding="3" cellspacing="0" border="0" style="margin-left:40px">';
-    foreach($new_components as $component){        
+    foreach($new_components as $component){
         if ($inCore->loadComponentInstaller($component)) {
 
             $_component = call_user_func('info_component_'.$component);
@@ -57,7 +57,7 @@ function componentsList($new_components, $action_name, $action){
             if ($action == 'upgrade_component') { $version = $inCore->getComponentVersion($component) . ' &rarr; '. $_component['version']; }
 
             echo '<tr>';
-                echo '<td width="16"><img src="/admin/images/icons/hmenu/plugins.png" /></td>';
+                echo '<td width="16"><img src="images/icons/hmenu/plugins.png" /></td>';
                 echo '<td><a style="font-weight:bold;font-size:14px" title="'.$action_name.' '.$_component['title'].'" href="index.php?view=install&do='.$action.'&id='.$component.'">'.$_component['title'].'</a> v'.$version.'</td>';
             echo '<tr>';
             echo '<tr>';
@@ -91,7 +91,7 @@ function modulesList($new_modules, $action_name, $action){
             if ($action == 'upgrade_module') { $version = $inCore->getModuleVersion($module) . ' &rarr; '. $_module['version']; }
 
             echo '<tr>';
-                echo '<td width="16"><img src="/admin/images/icons/hmenu/plugins.png" /></td>';
+                echo '<td width="16"><img src="images/icons/hmenu/plugins.png" /></td>';
                 echo '<td><a style="font-weight:bold;font-size:14px" title="'.$action_name.' '.$_module['title'].'" href="index.php?view=install&do='.$action.'&id='.$module.'">'.$_module['title'].'</a> v'.$version.'</td>';
             echo '<tr>';
             echo '<tr>';
@@ -184,7 +184,7 @@ function applet_install(){
 
         if ($error === true) {
             $inCore->installModule($_module, $_module['config']);
-            $inCore->redirect('/admin/index.php?view=install&do=finish_module&id='.$module_id.'&task=install');
+            $inCore->redirect('index.php?view=install&do=finish_module&id='.$module_id.'&task=install');
         } else {
 
             echo '<p style="color:red">'.$error.'</p>';
@@ -218,7 +218,7 @@ function applet_install(){
 
         if ($error === true) {
             $inCore->upgradeModule($_module, $_module['config']);
-            $inCore->redirect('/admin/index.php?view=install&do=finish_module&id='.$module_id.'&task=upgrade');
+            $inCore->redirect('index.php?view=install&do=finish_module&id='.$module_id.'&task=upgrade');
         } else {
 
             echo '<p style="color:red">'.$error.'</p>';
@@ -241,7 +241,7 @@ function applet_install(){
 
         $inCore->removeModule($module_id);
 
-        $inCore->redirect('/admin/index.php?view=install&do=finish_module&id='.$module_id.'&task=remove');
+        $inCore->redirect('index.php?view=install&do=finish_module&id='.$module_id.'&task=remove');
 
     }
 
@@ -252,7 +252,7 @@ function applet_install(){
         $module_id      = $inCore->request('id', 'str', '');
         $task           = $inCore->request('task', 'str', 'install');
 
-        $inCore->redirect('/admin/index.php?view=modules&installed='.$module_id.'&task='.$task);
+        $inCore->redirect('index.php?view=modules&installed='.$module_id.'&task='.$task);
 
     }
 
@@ -319,11 +319,11 @@ function applet_install(){
 
         if ($error === true) {
             $inCore->installComponent($_component, $_component['config']);
-            $inCore->redirect('/admin/index.php?view=install&do=finish_component&id='.$component_id.'&task=install');
+            $inCore->redirect('index.php?view=install&do=finish_component&id='.$component_id.'&task=install');
         } else {
 
             echo '<p style="color:red">'.$error.'</p>';
-            
+
         }
 
         echo '<p><a href="index.php?view=install&do=component">Назад</a></p>';
@@ -353,11 +353,11 @@ function applet_install(){
 
         if ($error === true) {
             $inCore->upgradeComponent($_component, $_component['config']);
-            $inCore->redirect('/admin/index.php?view=install&do=finish_component&id='.$component_id.'&task=upgrade');
+            $inCore->redirect('index.php?view=install&do=finish_component&id='.$component_id.'&task=upgrade');
         } else {
 
             echo '<p style="color:red">'.$error.'</p>';
-            
+
         }
 
         echo '<p><a href="index.php?view=install&do=component">Назад</a></p>';
@@ -376,7 +376,7 @@ function applet_install(){
 
         $inCore->removeComponent($component_id);
 
-        $inCore->redirect('/admin/index.php?view=install&do=finish_component&id='.$component_id.'&task=remove');
+        $inCore->redirect('index.php?view=install&do=finish_component&id='.$component_id.'&task=remove');
 
     }
 
@@ -387,7 +387,7 @@ function applet_install(){
         $component_id   = $inCore->request('id', 'str', '');
         $task           = $inCore->request('task', 'str', 'install');
 
-        $inCore->redirect('/admin/index.php?view=components&installed='.$component_id.'&task='.$task);
+        $inCore->redirect('index.php?view=components&installed='.$component_id.'&task='.$task);
 
     }
 
@@ -451,7 +451,7 @@ function applet_install(){
         if (!$plugin) { $error = 'Не удалось загрузить файл плагина.'; }
 
         if (!$error && $plugin->install()) {
-            $inCore->redirect('/admin/index.php?view=install&do=finish_plugin&id='.$plugin_id.'&task=install');
+            $inCore->redirect('index.php?view=install&do=finish_plugin&id='.$plugin_id.'&task=install');
         }
 
         if ($error){
@@ -481,7 +481,7 @@ function applet_install(){
         if (!$plugin) { $error = 'Не удалось загрузить файл плагина.'; }
 
         if (!$error && $plugin->upgrade()) {
-            $inCore->redirect('/admin/index.php?view=install&do=finish_plugin&id='.$plugin_id.'&task=upgrade');
+            $inCore->redirect('index.php?view=install&do=finish_plugin&id='.$plugin_id.'&task=upgrade');
         }
 
         if ($error){
@@ -504,7 +504,7 @@ function applet_install(){
 
         $inCore->removePlugin($plugin_id);
 
-        $inCore->redirect('/admin/index.php?view=install&do=finish_plugin&id='.$plugin_id.'&task=remove');
+        $inCore->redirect('index.php?view=install&do=finish_plugin&id='.$plugin_id.'&task=remove');
 
     }
 
@@ -515,7 +515,7 @@ function applet_install(){
         $plugin_id  = $inCore->request('id', 'str', '');
         $task       = $inCore->request('task', 'str', 'install');
 
-        $inCore->redirect('/admin/index.php?view=plugins&installed='.$plugin_id.'&task='.$task);
+        $inCore->redirect('index.php?view=plugins&installed='.$plugin_id.'&task='.$task);
 
     }
 

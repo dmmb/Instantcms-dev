@@ -7,24 +7,24 @@
 </div>
 
 {add_js file='includes/jquery/tabs/jquery.ui.min.js'}
-{add_js file='admin/js/clubs.js'}
-{add_css file='includes/jquery/tabs/tabs.css'}					
+{add_js file='components/clubs/js/config.js'}
+{add_css file='includes/jquery/tabs/tabs.css'}
 
 <form name="configform" id="club_config_form" action="" method="post" enctype="multipart/form-data">
 
 <div id="configtabs" style="margin-top:20px">
-	<ul id="tabs"> 
+	<ul id="tabs">
 		<li><a href="#about"><span>{$LANG.CLUB_DESC}</span></a></li>
 		<li><a href="#moders"><span>{$LANG.MODERATORS}</span></a></li>
-		<li><a href="#members"><span>{$LANG.MEMBERS}</span></a></li>
+		<li><a href="#club_members"><span>{$LANG.MEMBERS}</span></a></li>
 		{if $club.enabled_photos || $club.enabled_blogs}
             <li><a href="#limits"><span>{$LANG.LIMITS}</span></a></li>
 		{/if}
         {if $is_admin}
             <li><a href="#vip"><span>VIP</span></a></li>
         {/if}
-	</ul> 
-	
+	</ul>
+
 	{* ============================== «¿ À¿ƒ ¿ π1 ============================================== *}
 	<div id="about">
 		<table width="100%" border="0" cellspacing="0" cellpadding="10" style="border-bottom:solid 1px silver;margin-bottom:20px">
@@ -39,9 +39,9 @@
 				</td>
 				<td>
 					<input name="picture" type="file" id="picture" />
-				</td>			
-			</tr>	
-		</table>	
+				</td>
+			</tr>
+		</table>
 		{wysiwyg name='description' value=$club.description height=350 width='100%' toolbar='Admin'}
 	</div>
 
@@ -51,8 +51,8 @@
 				<td colspan="3">
 					<div class="hint">{$LANG.MODERATE_TEXT}</div>
 				</td>
-			</tr>	
-			<tr>			
+			</tr>
+			<tr>
 				<td align="center" valign="top">
 					<p><strong>{$LANG.CLUB_MODERATORS}: </strong></p>
 					<select name="moderslist[]" size="10" multiple id="moderslist" style="width:200px">
@@ -69,11 +69,11 @@
 						{$fr_members_list}
 					</select>
 				</td>
-			</tr> 
+			</tr>
 		</table>
 	</div>
 
-	<div id="members">
+	<div id="club_members">
 		<table width="550" border="0" cellspacing="0" cellpadding="10">
 			<tr>
 			  <td>{$LANG.MAX_MEMBERS}:<br/><span style="color:#5F98BF">{$LANG.MAX_MEMBERS_TEXT}</span> </td>
@@ -88,8 +88,8 @@
                         <option value="public" {if $club.clubtype=='public'}selected="selected"{/if}>{$LANG.PUBLIC} (public)</option>
                         <option value="private" {if $club.clubtype=='private'}selected="selected"{/if}>{$LANG.PRIVATE} (private)</option>
                      </select>
-				</td>			
-			</tr>	
+				</td>
+			</tr>
 		</table>
 		<table width="550" border="0" cellspacing="0" id="minkarma" cellpadding="10" style="display: {if $club.clubtype!='public'}none;{else}table;{/if}">
 			<tr>
@@ -105,9 +105,9 @@
 				</td>
 				<td width="200" valign="top">
 					&ge; <input name="join_min_karma" type="text" style="width:60px" value="{$club.join_min_karma}"/> {$LANG.POINTS}
-				</td>			
-			</tr>	
-		</table>		
+				</td>
+			</tr>
+		</table>
 		<table width="550" border="0" cellspacing="0" cellpadding="10" id="members" style="display: {if $club.clubtype=='public'}none;{else}table;{/if}">
 			<tr>
 				<td align="center" valign="top">
@@ -126,10 +126,10 @@
 						{$friends_list}
 					</select>
 				</td>
-			</tr>  
+			</tr>
 		</table>
 	</div>
-	
+
 	{if $club.enabled_photos || $club.enabled_blogs}
 	<div id="limits">
 		<table width="500" border="0" cellspacing="0" cellpadding="10">
@@ -141,8 +141,8 @@
 				<td width="150">
 					<input name="blog_premod" type="radio" value="1" {if $club.blog_premod}checked{/if}/> {$LANG.YES}
 					<input name="blog_premod" type="radio" value="0" {if !$club.blog_premod}checked{/if}/> {$LANG.NO}
-				</td>			
-			</tr>	
+				</td>
+			</tr>
 			{/if}
 			{if $club.enabled_photos}
 			<tr>
@@ -152,8 +152,8 @@
 				<td width="150">
 					<input name="photo_premod" type="radio" value="1" {if $club.photo_premod}checked{/if}/> {$LANG.YES}
 					<input name="photo_premod" type="radio" value="0" {if !$club.photo_premod}checked{/if}/> {$LANG.NO}
-				</td>			
-			</tr>	
+				</td>
+			</tr>
 			{/if}
 			{if $club.enabled_blogs}
 			<tr>
@@ -161,7 +161,7 @@
 					<label>{$LANG.KARMA_LIMITS_FOR_NEW_POSTS}:</label>
 				</td>
 				<td width="150">&ge; <input name="blog_min_karma" type="text" style="width:60px" value="{$club.blog_min_karma}"/> {$LANG.POINTS}
-			  </td></tr>	
+			  </td></tr>
 			{/if}
 			{if $club.enabled_photos}
 			<tr>
@@ -169,25 +169,25 @@
 					<label>{$LANG.KARMA_LIMITS_FOR_ADD_PHOTOS}:</label>
 				</td>
 				<td width="150">
-					&ge;  
+					&ge;
 					<input name="photo_min_karma" type="text" style="width:60px" value="{$club.photo_min_karma}"/> {$LANG.POINTS}
-				</td>			
-			</tr>	
+				</td>
+			</tr>
 			{/if}
-			{if $club.enabled_photos}	
+			{if $club.enabled_photos}
 			<tr>
 				<td>
 					<label>{$LANG.KARMA_LIMITS_NEW_PHOTOALBUM}:</label>
 				</td>
 				<td width="150">
 					&ge; <input name="album_min_karma" type="text" style="width:60px" value="{$club.album_min_karma}"/> {$LANG.POINTS}
-			  </td>			
-			</tr>	
-			{/if}							
+			  </td>
+			</tr>
+			{/if}
 		</table>
 	</div>
 	{/if}
-	
+
 	{if $is_admin}
 	<div id="vip">
         {if !$is_billing}
@@ -233,13 +233,13 @@
 {literal}
 	<script type="text/javascript">
 		$("#configtabs > ul#tabs").tabs();
-		$("#club_config_form").submit(function() { 
+		$("#club_config_form").submit(function() {
 		$('#moderslist').each(function(){
 				$('#moderslist option').attr("selected","selected");
-			});  
+			});
 			$('#memberslist').each(function(){
 				$('#memberslist option').attr("selected","selected");
-			});  
+			});
 		});
 	</script>
 {/literal}

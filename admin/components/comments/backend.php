@@ -39,7 +39,7 @@ function cpStripComment($text){
 		$toolmenu[3]['icon'] = 'cancel.gif';
 		$toolmenu[3]['title'] = 'Отмена';
 		$toolmenu[3]['link'] = '?view=components';
-	
+
 		cpToolMenu($toolmenu);
 
 	//LOAD CURRENT CONFIG
@@ -48,7 +48,7 @@ function cpStripComment($text){
     $model = new cms_model_comments();
 	$inDB  = cmsDatabase::getInstance();
 
-	if($opt=='saveconfig'){	
+	if($opt=='saveconfig'){
 		$cfg = array();
 		$cfg['email']           = $inCore->strClear($_REQUEST['email']);
 		$cfg['canguests']       = (int)$_REQUEST['canguests'];
@@ -68,14 +68,14 @@ function cpStripComment($text){
 		$cfg['cmm_ip'] 		    = (int)$_REQUEST['cmm_ip'];
 		$cfg['max_level'] 		= (int)$_REQUEST['max_level'];
 		$cfg['edit_minutes'] 	= (int)$_REQUEST['edit_minutes'];
-			
+
 		$inCore->saveComponentConfig('comments', $cfg);
-        
+
         $inCore->redirect('index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
 	}
 
 	if ($opt == 'show_comment'){
-		if(isset($_REQUEST['item_id'])) { 
+		if(isset($_REQUEST['item_id'])) {
 			$id = $_REQUEST['item_id'];
 			$sql = "UPDATE cms_comments SET published = 1 WHERE id = $id";
 			dbQuery($sql) ;
@@ -84,7 +84,7 @@ function cpStripComment($text){
 	}
 
 	if ($opt == 'hide_comment'){
-		if(isset($_REQUEST['item_id'])) { 
+		if(isset($_REQUEST['item_id'])) {
 			$id = $_REQUEST['item_id'];
 			$sql = "UPDATE cms_comments SET published = 0 WHERE id = $id";
 			dbQuery($sql) ;
@@ -93,38 +93,38 @@ function cpStripComment($text){
 	}
 
 	if ($opt == 'update'){
-		if(isset($_REQUEST['item_id'])) { 
-			
+		if(isset($_REQUEST['item_id'])) {
+
 			$id = $inCore->request('item_id', 'int');
 
 			if (isset($_REQUEST['guestname']) && @!empty($_REQUEST['guestname'])) { $guestname = $inCore->request('guestname', 'str'); }
 			else { $guestname = ''; }
-			
+
 			$pubdate   = $inCore->request('pubdate', 'str');
 			$published = $inCore->request('published', 'int');
 			$content   = $inCore->request('content', 'html');
 			$content   = $inDB->escape_string($content);
-						
+
 			$sql = "UPDATE cms_comments
 					SET guestname = '$guestname',
-						pubdate = '$pubdate', 						
+						pubdate = '$pubdate',
 						published=$published,
 						content='$content'
 					WHERE id = $id
 					LIMIT 1";
 			dbQuery($sql) ;
-			header('location:index.php?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list');				
+			header('location:index.php?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list');
 		}
 	}
 
 	if($opt == 'delete'){
-		if(isset($_REQUEST['item_id'])) { 
-			$id = (int)$_REQUEST['item_id'];		
+		if(isset($_REQUEST['item_id'])) {
+			$id = (int)$_REQUEST['item_id'];
             $model->deleteComment($id);
-			header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');	
+			header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
 		}
 	}
-	
+
 	if ($opt == 'list'){
 		cpAddPathway('Все комментарии', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
 		echo '<h3>Все комментарии</h3>';
@@ -136,10 +136,10 @@ function cpStripComment($text){
 
 		$fields[1]['title'] = 'Дата';		$fields[1]['field'] = 'pubdate';	$fields[1]['width'] = '100';
 
-		$fields[2]['title'] = 'Текст';		$fields[2]['field'] = 'content';	$fields[2]['width'] = ''; 
+		$fields[2]['title'] = 'Текст';		$fields[2]['field'] = 'content';	$fields[2]['width'] = '';
         $fields[2]['prc'] = 'cpStripComment';
 
-		$fields[3]['title'] = 'IP';			$fields[3]['field'] = 'ip';			$fields[3]['width'] = '80'; 
+		$fields[3]['title'] = 'IP';			$fields[3]['field'] = 'ip';			$fields[3]['width'] = '80';
 
 		$fields[4]['title'] = 'Показ';      $fields[4]['field'] = 'published';	$fields[4]['width'] = '50';
         $fields[4]['do'] = 'opt';           $fields[4]['do_suffix'] = '_comment';
@@ -160,24 +160,24 @@ function cpStripComment($text){
 		$actions[1]['icon']  = 'delete.gif';
 		$actions[1]['confirm'] = 'Удалить комментарий?';
 		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete&item_id=%id%';
-				
+
 		//Print table
-		cpListTable('cms_comments', $fields, $actions, '', 'pubdate DESC');		
+		cpListTable('cms_comments', $fields, $actions, '', 'pubdate DESC');
 	}
-	
-	if($opt=='edit'){	
+
+	if($opt=='edit'){
 			 if(isset($_REQUEST['item_id'])){
 				 $id = $_REQUEST['item_id'];
 				 $sql = "SELECT * FROM cms_comments WHERE id = $id LIMIT 1";
 				 $result = dbQuery($sql) ;
 				 if (mysql_num_rows($result)){
-					$mod = mysql_fetch_assoc($result);				 
+					$mod = mysql_fetch_assoc($result);
 					if($mod['user_id']==0) { $author = '<input name="guestname" type="text" id="title" size="30" value="'.@$mod['guestname'].'"/>'; }
 					else {
 						$usersql = "SELECT * FROM cms_users WHERE id = ".$mod['user_id'];
 						$userres = dbQuery($usersql) ;
 						$u = mysql_fetch_assoc($userres);
-						$author = $u['nickname'].' (<a target="_blank" href="/admin/index.php?view=users&do=edit&id='.$u['id'].'">'.$u['login'].'</a>)';
+						$author = $u['nickname'].' (<a target="_blank" href="index.php?view=users&do=edit&id='.$u['id'].'">'.$u['login'].'</a>)';
 					}
 					$target='N/A';
 					switch($mod['target']){
@@ -186,12 +186,12 @@ function cpStripComment($text){
 						case 'user': $target = '<a href="/index.php?view=profile&do=view&id='.$mod['target_id'].'">Пользователь</a> (ID='.$mod['user_id'].')'; break;
 					}
 				}
-								 
+
 			 }
 
 			cpAddPathway('Редактировать комментарий', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add');
 		    echo '<h3>Редактировать комментарий</h3>';
-		
+
 ?>
 
 	<form id="addform" name="addform" method="post" action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>">
@@ -216,7 +216,7 @@ function cpStripComment($text){
             <?php
 
                     $inCore->insertEditor('content', $mod['content'], '250', '100%');
-                
+
             ?>
         <p>
           <label>
@@ -229,7 +229,7 @@ function cpStripComment($text){
 		  <input name="item_id" type="hidden" value="<?php echo $mod['id']?>" />
         </p>
 </form>
-        <?php	
+        <?php
 
 	}//if (add || edit)
 
@@ -250,9 +250,9 @@ function cpStripComment($text){
     $GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/includes/jquery/tabs/jquery.ui.min.js"></script>';
     $GLOBALS['cp_page_head'][] = '<link href="/includes/jquery/tabs/tabs.css" rel="stylesheet" type="text/css" />';
 
-	cpAddPathway('Настройки', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config');	
+	cpAddPathway('Настройки', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config');
 	echo '<h3>Настройки комментариев</h3>';
-	
+
 	?>
 
 <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
@@ -396,7 +396,7 @@ function cpStripComment($text){
                         <option value="10" <?php if(@$cfg['edit_minutes']==10) { echo 'selected'; } ?>>10 минут</option>
                         <option value="15" <?php if(@$cfg['edit_minutes']==15) { echo 'selected'; } ?>>15 минут</option>
                         <option value="30" <?php if(@$cfg['edit_minutes']==30) { echo 'selected'; } ?>>30 минут</option>
-                        <option value="60" <?php if(@$cfg['edit_minutes']==60) { echo 'selected'; } ?>>1 час</option>                        
+                        <option value="60" <?php if(@$cfg['edit_minutes']==60) { echo 'selected'; } ?>>1 час</option>
                     </select>
                 </td>
             </tr>
@@ -436,8 +436,8 @@ function cpStripComment($text){
         </table>
     </div>
 
-</div>                  
-          
+</div>
+
 <p>
   <input name="opt" type="hidden" id="do" value="saveconfig" />
   <input name="save" type="submit" id="save" value="Сохранить" />
@@ -447,6 +447,6 @@ function cpStripComment($text){
 
 <script type="text/javascript">$('#config_tabs > ul#tabs').tabs();</script>
 
-<?php	
+<?php
 	}
 ?>

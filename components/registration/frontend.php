@@ -46,13 +46,13 @@ function registration(){
     $inDB       = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
     $inConf     = cmsConfig::getInstance();
-    
+
     $inCore->loadModel('registration');
     $model = new cms_model_registration();
 
     $inCore->loadModel('users');
     $users_model = new cms_model_users();
-	
+
     global $_LANG;
 
     $cfg = $inCore->loadComponentConfig('registration');
@@ -172,7 +172,7 @@ function registration(){
 		// Если есть опция показывать ДР при регистрации, то проверяем
         if ($cfg['ask_birthdate']){
             $birthdate = (int)$_REQUEST['birthdate']['year'].'-'.(int)$_REQUEST['birthdate']['month'].'-'.(int)$_REQUEST['birthdate']['day'];
-        } else { 
+        } else {
             $birthdate = '1980-01-01';
         }
 		// Если есть опция показывать icq при регистрации, то проверяем
@@ -246,7 +246,7 @@ function registration(){
                         sendActivationNotice($send_pass, $new_user_id);
                         $inPage->includeTemplateFile('special/regactivate.php');
                         $inCore->halt();
-                    } else {                        
+                    } else {
 						// Регистрируем событие
 						cmsActions::log('add_user', array(
 							'object' => '',
@@ -257,7 +257,7 @@ function registration(){
 							'target_url' => '',
 							'target_id' => 0,
 							'description' => ''
-						));                  
+						));
                         $inPage->includeTemplateFile('special/regcomplete.php');
 
                         if ($cfg['send_greetmsg']){ $model->sendGreetsMessage($new_user_id, $cfg['greetmsg']); }
@@ -322,12 +322,7 @@ function registration(){
 //======================================================================================================================//
 
     if ($do=='auth'){
-
-        if($inCore->inRequest('is_admin')){
-            $back = '/admin/';
-        } else {
-            $back = $inCore->getBackURL();
-        }
+		$back_url = $inCore->getBackURL();
 
         if( $inCore->inRequest('logout') ) {
             $inCore->unsetCookie('userid');
@@ -352,13 +347,13 @@ function registration(){
         }
 
         if( !$inCore->inRequest('logout') ) {
-
+				if($inUser->id)$inCore->redirect('/');
                 if ($inCore->inRequest('login')) { $login = $inCore->request('login', 'str'); }
                 if ($inCore->inRequest('pass')) { $passw = $inCore->request('pass', 'str'); }
 
                 if (!$login && !$passw){
 
-                    $_SESSION['back_url'] = $inCore->getBackURL();
+                    if(!preg_match('/\/login$/', $back_url))$_SESSION['back_url'] = $back_url;
 
                     $inPage->setTitle($_LANG['SITE_LOGIN']);
                     $inPage->addPathway($_LANG['SITE_LOGIN']);
@@ -379,7 +374,7 @@ function registration(){
                     $where_login = "email = '{$login}'";
                 }
 
-                $sql    = "SELECT * 
+                $sql    = "SELECT *
                            FROM cms_users
                            WHERE $where_login AND password = md5('$passw') AND is_deleted = 0 AND is_locked = 0";
                 $result = $inDB->query($sql);
@@ -391,14 +386,14 @@ function registration(){
                     if (!cmsUser::isBanned($user['id'])) {
 
                         $_SESSION['user'] = cmsUser::createUser($user);
-                        
+
                         cmsCore::callEvent('USER_LOGIN', $_SESSION['user']);
 
                         if ($remember_pass){
                             $cookie_code = md5($user['id'] . $user['password']);
                             $inCore->setCookie('userid', $cookie_code, time()+60*60*24*30);
                         }
-                        
+
                     } else {
                         $inDB->query("UPDATE cms_banlist SET ip = '$current_ip' WHERE user_id = ".$user['id']." AND status = 1");
                     }
@@ -419,7 +414,8 @@ function registration(){
                         unset($_SESSION['auth_back_url']);
                     } else {
                         $is_sess_back = false;
-                        $back = $inCore->getBackURL();
+                        $back = (isset($_SESSION['back_url'])) ? $_SESSION['back_url'] : $back_url;
+                        $back = (preg_match('/\/login$/', $back)) ? '/' : $back;
                     }
 
                     if (!$inCore->userIsAdmin($user['id'])){
@@ -435,9 +431,8 @@ function registration(){
                             $url = $back;
                         }
                     } else {
-                        $admin_back = strstr($back, '/admin/login.php') ? '/admin' : $back;
-                        $url = isset($_SESSION['back_url']) ? $_SESSION['back_url'] : $admin_back;
-                        $url = isset($_SESSION['back_url']) ? $_SESSION['back_url'] : '/';
+                        if(strstr($back_url, '/'.$inCore->adminDir.'/login.php'))$url = '/'.$inCore->adminDir;
+                        else $url = $back;
                         if (isset($_SESSION['back_url'])) unset($_SESSION['back_url']);
                     }
 
@@ -461,7 +456,7 @@ function registration(){
         if (!$code) { $inCore->redirect('/'); }
 
         $user_id = $inDB->get_field('cms_users_activate', "code = '$code'", 'user_id');
-        
+
         if ($user_id){
 
             $sql = "UPDATE cms_users SET is_locked = 0 WHERE id = $user_id";
@@ -484,11 +479,11 @@ function registration(){
 					'target_url' => '',
 					'target_id' => 0,
 					'description' => ''
-			));   
+			));
 
             $inPage->includeTemplateFile('special/regcomplete.php');
             $inCore->halt();
-            
+
         } else {
             $inCore->redirect('/');
         }
@@ -541,7 +536,7 @@ function registration(){
                 $inDB->query("UPDATE cms_users SET password = '{$pass}', logdate = NOW() WHERE id = {$user['id']}");
                 $is_changed = true;
             }
-            
+
         }
 
         $inPage->backButton(false);

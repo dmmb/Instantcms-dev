@@ -1304,6 +1304,7 @@ CREATE TABLE `#__users` (
   `status_date` datetime NOT NULL,
   `invited_by` int(11) DEFAULT NULL,
   `invdate` datetime DEFAULT NULL,
+  `is_logged_once` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `login` (`login`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 ROW_FORMAT=DYNAMIC;

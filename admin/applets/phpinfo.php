@@ -22,16 +22,16 @@ function applet_phpinfo(){
 	if (!$inCore->isAdminCan('admin/config', $adminAccess)) { cpAccessDenied(); }
 
 	$GLOBALS['cp_page_title'] = 'Информация PHP';
- 	
-	cpAddPathway('Настройки сайта', 'index.php?view=config');	
+
+	cpAddPathway('Настройки сайта', 'index.php?view=config');
 	cpAddPathway('Информация PHP', 'index.php?view=phpinfo');
-			
+
 ?>
 <div>
 
 	<h3>Информация PHP</h3>
 
-    <iframe src="/admin/includes/phpinfo.php" style="border:none;width:100%;height:600px" />
+    <iframe src="includes/phpinfo.php" style="border:none;width:100%;height:600px" />
 
 </div>
 <?php } ?>

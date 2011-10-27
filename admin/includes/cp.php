@@ -18,15 +18,15 @@ function dbQuery($sql){
     $inDB = cmsDatabase::getInstance();
 
     return $inDB->query($sql);
-    
+
 }
 
 function cpAccessDenied(){
-	header('location:/admin/index.php?view=noaccess');
+	header('location:index.php?view=noaccess');
 }
 
 function cpWarning($text){
-	return '<div id="warning"><span>Внимание: </span>'.$text.'</div>';	
+	return '<div id="warning"><span>Внимание: </span>'.$text.'</div>';
 }
 
 function cpWritable($file){ //relative path with starting "/"
@@ -34,16 +34,16 @@ function cpWritable($file){ //relative path with starting "/"
 		return true;
 	} else {
 		return @chmod($_SERVER['DOCUMENT_ROOT'].$file, 0755);
-	}	
+	}
 }
 
-function cpCheckWritable($file, $type='file'){	
-	if (!cpWritable($file)){	
+function cpCheckWritable($file, $type='file'){
+	if (!cpWritable($file)){
 		if ($type=='file'){
 			echo cpWarning('Файл "<strong>'.$file.'</strong>" не доступен для записи! Установите права 755 на этот файл.');
 		} else {
 			echo cpWarning('Папка "<strong>'.$file.'</strong>" не доступна для записи! Установите права 755 на эту папку.');
-		}	
+		}
 	}
 }
 
@@ -53,8 +53,8 @@ function cpUpdates(){
 	$userid = $inUser->id;
 
 	$html = '';
-	
-	### COMMENTS 
+
+	### COMMENTS
 	$sql = "SELECT *, DATE_FORMAT(pubdate, '%d-%m-%Y - %H:%i') as fpubdate
 			FROM cms_comments
 			ORDER BY pubdate DESC
@@ -86,23 +86,23 @@ function cpUpdates(){
 function cpWhoOnline(){
     $inCore = cmsCore::getInstance();
 	$people = cmsUser::getOnlineCount();
-	
+
 	$html .= '<div>';
-	
+
 		$html .= '<table width="100%" cellpadding="2" cellspacing="2"><tr>';
-			
+
 			$html .= '<td width="24" valign="top">';
 				$html .= '<img src="images/user.gif"/>';
 			$html .= '</td>';
-			
+
 			$html .= '<td width="" valign="top">';
 				$html .= '<div><strong>Пользователей: </strong>'.$people['users'].'</div>';
-				$html .= '<div><strong>Гостей: </strong>'.$people['guests'].'</div>';	
+				$html .= '<div><strong>Гостей: </strong>'.$people['guests'].'</div>';
 			$html .= '</td>';
 
 		$html .= '</tr></table>';
 	$html .= '</div>';
-	
+
 	return $html;
 
 }
@@ -112,64 +112,64 @@ function cpHead(){
 	if ($GLOBALS['cp_page_title']){
 		echo '<title>'.$GLOBALS['cp_page_title'].' - Панель управления InstantCMS</title>';
 	} else {
-		echo '<title>Панель управления InstantCMS</title>';	
+		echo '<title>Панель управления InstantCMS</title>';
 	}
-	
-	echo '<script language="JavaScript" type="text/javascript" src="js/common.js"></script>' ."\n";	
-	echo '<script language="JavaScript" type="text/javascript" src="/includes/jquery/jquery.js"></script>' ."\n";	
+
+	echo '<script language="JavaScript" type="text/javascript" src="js/common.js"></script>' ."\n";
+	echo '<script language="JavaScript" type="text/javascript" src="/includes/jquery/jquery.js"></script>' ."\n";
 
 
-	foreach($GLOBALS['cp_page_head'] as $key=>$value) { 
-		echo $GLOBALS['cp_page_head'][$key] ."\n"; 
+	foreach($GLOBALS['cp_page_head'] as $key=>$value) {
+		echo $GLOBALS['cp_page_head'][$key] ."\n";
 		unset ($GLOBALS['cp_page_head'][$key]);
 	}
-	
+
 	return;
 }
 
 function cpGenerateMenu(){
-	$GLOBALS['mainmenu'][0]['title'] = 'Меню'; 
-	$GLOBALS['mainmenu'][0]['link'] = 'index.php?view=menu'; 
+	$GLOBALS['mainmenu'][0]['title'] = 'Меню';
+	$GLOBALS['mainmenu'][0]['link'] = 'index.php?view=menu';
 	$GLOBALS['mainmenu'][0]['img'] = 'menu.gif';
-	$GLOBALS['mainmenu'][0]['view'] = 'menu'; 
+	$GLOBALS['mainmenu'][0]['view'] = 'menu';
 
-	$GLOBALS['mainmenu'][1]['title'] = 'Модули'; 
-	$GLOBALS['mainmenu'][1]['link'] = 'index.php?view=modules'; 
+	$GLOBALS['mainmenu'][1]['title'] = 'Модули';
+	$GLOBALS['mainmenu'][1]['link'] = 'index.php?view=modules';
 	$GLOBALS['mainmenu'][1]['img'] = 'modules.gif';
-	$GLOBALS['mainmenu'][1]['view'] = 'modules'; 
+	$GLOBALS['mainmenu'][1]['view'] = 'modules';
 
-	$GLOBALS['mainmenu'][2]['title'] = 'Разделы'; 
-	$GLOBALS['mainmenu'][2]['link'] = 'index.php?view=cats'; 
+	$GLOBALS['mainmenu'][2]['title'] = 'Разделы';
+	$GLOBALS['mainmenu'][2]['link'] = 'index.php?view=cats';
 	$GLOBALS['mainmenu'][2]['img'] = 'category.gif';
-	$GLOBALS['mainmenu'][2]['view'] = 'cats'; 
-	
-	$GLOBALS['mainmenu'][3]['title'] = 'Статьи'; 
-	$GLOBALS['mainmenu'][3]['link'] = 'index.php?view=content'; 
-	$GLOBALS['mainmenu'][3]['img'] = 'content.gif';
-	$GLOBALS['mainmenu'][3]['view'] = 'content'; 
+	$GLOBALS['mainmenu'][2]['view'] = 'cats';
 
-	$GLOBALS['mainmenu'][4]['title'] = 'Компоненты'; 
-	$GLOBALS['mainmenu'][4]['link'] = 'index.php?view=components'; 
+	$GLOBALS['mainmenu'][3]['title'] = 'Статьи';
+	$GLOBALS['mainmenu'][3]['link'] = 'index.php?view=content';
+	$GLOBALS['mainmenu'][3]['img'] = 'content.gif';
+	$GLOBALS['mainmenu'][3]['view'] = 'content';
+
+	$GLOBALS['mainmenu'][4]['title'] = 'Компоненты';
+	$GLOBALS['mainmenu'][4]['link'] = 'index.php?view=components';
 	$GLOBALS['mainmenu'][4]['img'] = 'components.gif';
-	$GLOBALS['mainmenu'][4]['view'] = 'components'; 
+	$GLOBALS['mainmenu'][4]['view'] = 'components';
 
 	$GLOBALS['mainmenu'][5]['title'] = 'Плагины';
-	$GLOBALS['mainmenu'][5]['link'] = 'index.php?view=filters'; 
+	$GLOBALS['mainmenu'][5]['link'] = 'index.php?view=filters';
 	$GLOBALS['mainmenu'][5]['img'] = 'filters.gif';
-	$GLOBALS['mainmenu'][5]['view'] = 'filters'; 
+	$GLOBALS['mainmenu'][5]['view'] = 'filters';
 
-	$GLOBALS['mainmenu'][6]['title'] = 'Пользователи'; 
-	$GLOBALS['mainmenu'][6]['link'] = 'index.php?view=users'; 
+	$GLOBALS['mainmenu'][6]['title'] = 'Пользователи';
+	$GLOBALS['mainmenu'][6]['link'] = 'index.php?view=users';
 	$GLOBALS['mainmenu'][6]['img'] = 'users.gif';
-	$GLOBALS['mainmenu'][6]['view'] = 'users'; 
+	$GLOBALS['mainmenu'][6]['view'] = 'users';
 
-	$GLOBALS['mainmenu'][7]['title'] = 'Настройки'; 
-	$GLOBALS['mainmenu'][7]['link'] = 'index.php?view=config'; 
+	$GLOBALS['mainmenu'][7]['title'] = 'Настройки';
+	$GLOBALS['mainmenu'][7]['link'] = 'index.php?view=config';
 	$GLOBALS['mainmenu'][7]['img'] = 'config.gif';
-	$GLOBALS['mainmenu'][7]['view'] = 'config'; 
+	$GLOBALS['mainmenu'][7]['view'] = 'config';
 
-	$GLOBALS['mainmenu'][8]['title'] = 'Сайт &rarr;'; 
-	$GLOBALS['mainmenu'][8]['link'] = '/'; 
+	$GLOBALS['mainmenu'][8]['title'] = 'Сайт &rarr;';
+	$GLOBALS['mainmenu'][8]['link'] = '/';
 	$GLOBALS['mainmenu'][8]['img'] = 'site.gif';
 	$GLOBALS['mainmenu'][8]['target'] = '_blank';
 	$GLOBALS['mainmenu'][8]['view'] = 'site';
@@ -235,7 +235,7 @@ function cpMenu(){
                                 if ($com['published'] && $inCore->isAdminCan('admin/com_'.$com['link'], $adminAccess)){ ?>
 
                                     <li>
-                                        <a style="margin-left:5px; background:url(/admin/images/components/<?php echo $com['link']; ?>.png) no-repeat 6px 6px;" href="index.php?view=components&do=config&link=<?php echo $com['link']; ?>">
+                                        <a style="margin-left:5px; background:url(images/components/<?php echo $com['link']; ?>.png) no-repeat 6px 6px;" href="index.php?view=components&do=config&link=<?php echo $com['link']; ?>">
                                             <?php echo $com['title']; ?>
                                         </a>
                                     </li>
@@ -284,11 +284,11 @@ function cpMenu(){
                     <li><a class="add" href="index.php?view=usergroups&do=add">Создать группу</a></li>
                     <li><a class="config" href="index.php?view=components&do=config&link=users">Настройки профилей</a></li>
                 </ul>
-			</li>			
+			</li>
 			<?php } ?>
-			<?php if ($inCore->isAdminCan('admin/config', $adminAccess)){ ?>	
+			<?php if ($inCore->isAdminCan('admin/config', $adminAccess)){ ?>
 			<li>
-				<a href="index.php?view=config" class="config">Настройки</a>			
+				<a href="index.php?view=config" class="config">Настройки</a>
 				<ul>
 					<li><a class="config" href="index.php?view=config">Настройки сайта</a></li>
 					<li><a class="backup" href="index.php?view=backup">Резервные копии БД</a></li>
@@ -296,15 +296,15 @@ function cpMenu(){
 					<li><a class="repairnested" href="index.php?view=repairnested">Проверка деревьев</a></li>
                     <li><a class="cron" href="index.php?view=cron">Задачи CRON</a></li>
                     <li><a class="phpinfo" href="index.php?view=phpinfo">Информация PHP</a></li>
-				</ul>	
-			</li>		
-			<?php } ?>					
+				</ul>
+			</li>
+			<?php } ?>
 			<li>
 				<a href="http://www.instantcms.ru/wiki" target="_blank" class="help">Документация</a>
 			</li>
 		</ul>
 	</div>
-	
+
 	<?php echo ob_get_clean();
 
 	return;
@@ -314,7 +314,7 @@ function cpToolMenu($toolmenu){
 
 	if (sizeof($toolmenu)>0){
 		echo '<table width="100%" cellpadding="2" border="0" class="toolmenu" style="margin:0px"><tr><td>';
-		foreach($toolmenu as $key => $value){			
+		foreach($toolmenu as $key => $value){
 			$icon = $toolmenu[$key]['icon'];
 			$link = $toolmenu[$key]['link'];
 			$title = $toolmenu[$key]['title'];
@@ -327,23 +327,23 @@ function cpToolMenu($toolmenu){
 }
 
 function cpProceedBody(){
-	
+
 	ob_start();
-	
+
 	$link = str_replace('/', '', $GLOBALS['applet']);
 	$link = str_replace(':', '', $link);
 	$link = str_replace('-', '', $link);
 	$file = $link . '.php';
 
-    if (!file_exists(PATH.'/admin/applets/'.$file)){
+    if (!file_exists(ADMIN_PATH.'/applets/'.$file)){
         echo "Апплет <strong>&laquo;{$link}&raquo;</strong> не найден"; exit;
     }
 
 	include('applets/'.$file);
 	eval('applet_'.$link.'();');
-	
+
 	$GLOBALS['cp_page_body'] = ob_get_clean();
-	
+
 }
 
 function cpBody(){
@@ -356,13 +356,13 @@ function cpPathway($separator='&raquo;'){
 
 	echo '<div class="pathway">';
 	foreach($GLOBALS['cp_pathway'] as $key => $value){
-	
+
 		echo '<a href="'.$GLOBALS['cp_pathway'][$key]['link'].'" class="pathwaylink">'.$GLOBALS['cp_pathway'][$key]['title'].'</a> ';
-		
+
 		if ($key<sizeof($GLOBALS['cp_pathway'])-1) {
 			echo ' '.$separator.' ';
 		}
-	
+
 	}
 	echo '</div>';
 
@@ -370,13 +370,13 @@ function cpPathway($separator='&raquo;'){
 
 function cpAddPathway($title, $link){
 	$already = false;
-	
+
 	foreach($GLOBALS['cp_pathway'] as $key => $val){
 	 if ($GLOBALS['cp_pathway'][$key]['title'] == $title || $GLOBALS['cp_pathway'][$key]['link'] == $link){
 	 	$already = true;
 	 }
 	}
-	
+
 	if(!$already){
 		$next = sizeof($GLOBALS['cp_pathway']);
 		$GLOBALS['cp_pathway'][$next]['title'] = $title;
@@ -387,11 +387,11 @@ function cpAddPathway($title, $link){
 }
 
 function cpModulePositions($template){
-	
+
 	$pos = array();
-	
+
 	$posfile = $_SERVER['DOCUMENT_ROOT'].'/templates/'.$template.'/positions.txt';
-	
+
 	if(file_exists($posfile)){
 		$file = fopen($posfile, 'r');
 		while(!feof($file)){
@@ -407,7 +407,7 @@ function cpModulePositions($template){
 	} else {
 		return false;
 	}
-	
+
 }
 
 function cpAddParam($query, $param, $value){
@@ -418,10 +418,10 @@ function cpAddParam($query, $param, $value){
 		$l ++;
 		if ($key != $param && $key!='nofilter'){ $new_query .= $key .'='.$val; } else {	$new_query .= $key .'='.$value; $added = true;	}
 		if ($l<sizeof($params)) { $new_query .= '&'; }
-	}	
-	if (!$added) {  
+	}
+	if (!$added) {
 		if (strlen($new_query)>1){ $new_query .= '&'.$param . '=' . $value; } else {$new_query .= $param . '=' . $value; }
-	}	
+	}
 	return $new_query;
 }
 
@@ -431,75 +431,85 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 
 	$sql = 'SELECT *';
 	$is_actions = sizeof($_actions);
-	
+
 	foreach($_fields as $key => $value){
 		if (isset($_fields[$key]['fdate'])){
 			$sql .= ", DATE_FORMAT(".$_fields[$key]['field'].", '".$_fields[$key]['fdate']."') as `".$_fields[$key]['field']."`" ;
 		}
 	}
-	
+
 	$sql .= ' FROM '.$table;
-	
+
+	if(isset($_SESSION['filter_table']) && $_SESSION['filter_table']!=$table)
+	{
+		unset($_SESSION['filter']);
+	}
+
 	if (isset($_REQUEST['nofilter'])){
 		unset($_SESSION['filter']);
 		header('Location:index.php?'.str_replace('&nofilter', '', $_SERVER['QUERY_STRING']));
 	}
-	
+
 	$filter = false;
-	
-	if (isset($_REQUEST['filter'])) { 
+
+	if (isset($_REQUEST['filter'])) {
 		$filter = $_REQUEST['filter'];
 		$_SESSION['filter'] = $filter;
+	} elseif (isset($_SESSION['filter'])) {
+		$filter = $_SESSION['filter'];
 	}
-	
+
 	if ($filter){
 		$f = 0;
 		$sql .= ' WHERE 1=1';
 		foreach($filter as $key => $value){
-			if($filter[$key]!=-100){
+			if($filter[$key] && $filter[$key]!=-100){
                 $sql .= ' AND ';
 				if ($key != 'category_id'){
 				$sql .= $key . " LIKE '%" . $filter[$key] . "%'";
 				} else {
 					$sql .= $key . " = '" . $filter[$key] . "'";
 				}
-			}				
+				$f++;
+			}
 		}
 		if (!isset($_SESSION['filter'])) { $_SESSION['filter'] = $filter; }
 	}
-	
-	if (strlen($where)>3) {	
+
+	if (strlen($where)>3) {
 		if (strstr($sql, 'WHERE')){ $sql .= ' AND '.$where; }
 		else { $sql .= ' WHERE '.$where; }
 	}
-	
+
 	if (isset($_REQUEST['sort'])) { $sort = $_REQUEST['sort']; } else { $sort = false; }
-	
+
 	if ($sort == false){
 		if ($orderby) { $sort = $orderby; } else {
 			foreach($_fields as $key => $value){
 				if ($_fields[$key]['field'] == 'ordering' && $sort!='NSLeft'){ $sort = 'ordering'; $so = 'asc';}
-			}	
+			}
 		}
 	}
-	
-	if ($sort) { 	
-		$sql .= ' ORDER BY '.$sort; 
+
+	if ($sort) {
+		$sql .= ' ORDER BY '.$sort;
 		if (isset($_REQUEST['so'])) { $sql .= ' '. $_REQUEST['so']; }
 	}
-	
-	if (isset($_REQUEST['page'])) { 
-		$page = abs((int)$_REQUEST['page']); 
+
+	if (isset($_REQUEST['page'])) {
+		$page = abs((int)$_REQUEST['page']);
 	} else { $page = 1; }
-	
+
 	$total_rs = dbQuery($sql);
 	$total = mysql_num_rows($total_rs);
-	
+
 	$sql .= " LIMIT ".($page-1)*$perpage.", $perpage";
-	
+
 	$result = dbQuery($sql);
-	
-	if (mysql_error()) { 
+
+	$_SESSION['filter_table'] = $table;
+
+	if (mysql_error()) {
 		unset($_SESSION['filter']);
 		header('Location:index.php?'.$_SERVER['QUERY_STRING']);
 	}
@@ -518,7 +528,7 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 					} else {
 						$f_html .= cpBuildList($inputname, $_fields[$key]['filterlist'], $initval);
 					}
-				$f_html .= '</td>';					
+				$f_html .= '</td>';
 				$filters += 1;
 		 }
 	}
@@ -527,10 +537,10 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 		echo '<div class="filter">';
 		echo '<form name="filterform" action="index.php?'.$_SERVER['QUERY_STRING'].'" method="POST">';
 		echo '<table width="250"><tr>';
-		echo $f_html;		
-		echo '<td width="80"><input type="submit" class="filter_submit" value="Фильтр" /></td>';			
+		echo $f_html;
+		echo '<td width="80"><input type="submit" class="filter_submit" value="Фильтр" /></td>';
 		if (@$f>0){
-			echo '<td width="80"><input type="button" onclick="window.location.href=\'index.php?'.$_SERVER['QUERY_STRING'].'&nofilter\'" class="filter_submit" value="Все" /></td>';					
+			echo '<td width="80"><input type="button" onclick="window.location.href=\'index.php?'.$_SERVER['QUERY_STRING'].'&nofilter\'" class="filter_submit" value="Все" /></td>';
 		}
 		echo '</tr></table>';
 		echo '</form>';
@@ -539,18 +549,18 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 
 	if (mysql_num_rows($result)){
 
-		//DRAW LIST TABLE	
+		//DRAW LIST TABLE
 		echo '<form name="selform" action="index.php?view='.$GLOBALS['applet'].'&do=saveorder" method="post">';
 		echo '<table id="listTable" border="0" class="tablesorter" width="100%" cellpadding="0" cellspacing="0">';
 			//TABLE HEADING
 			echo '<thead>'."\n";
-				echo '<tr>'."\n";		
-					echo '<th width="20" class="lt_header" align="center"><a class="lt_header_link" href="javascript:invert();" title="Инвертировать выделение">#</a></th>'. "\n";		
-					foreach($_fields as $key => $value){		
+				echo '<tr>'."\n";
+					echo '<th width="20" class="lt_header" align="center"><a class="lt_header_link" href="javascript:invert();" title="Инвертировать выделение">#</a></th>'. "\n";
+					foreach($_fields as $key => $value){
 						echo '<th width="'.$_fields[$key]['width'].'" class="lt_header">';
 							echo $_fields[$key]['title'];
-						echo '</th>'. "\n";		
-					}		
+						echo '</th>'. "\n";
+					}
 					if ($is_actions){
 						echo '<th width="80" class="lt_header" align="center">Действия</th>'. "\n";
 					}
@@ -558,43 +568,43 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 			echo '</thead><tbody>'."\n";
 			//TABLE BODY
 			$r = 0;
-			while ($item = mysql_fetch_assoc($result)){			
+			while ($item = mysql_fetch_assoc($result)){
 				$r++;
 				if ($r % 2) { $row_class = 'lt_row1'; } else { $row_class = 'lt_row2'; }
-				echo '<tr id="lt_row2">'."\n";		
+				echo '<tr id="lt_row2">'."\n";
 					echo '<td class="'.$row_class.'" align="center" valign="middle"><input type="checkbox" name="item[]" value="'.$item['id'].'" /></td>'. "\n";
-					foreach($_fields as $key => $value){								
+					foreach($_fields as $key => $value){
 						if (isset($_fields[$key]['link'])){
-							 $link = str_replace('%id%', $item['id'], $_fields[$key]['link']); 
+							 $link = str_replace('%id%', $item['id'], $_fields[$key]['link']);
 							 $data = $item[$_fields[$key]['field']];
-							 
+
 							 if (isset($_fields[$key]['maxlen'])){
 								if (strlen($data)>$_fields[$key]['maxlen']){
 									$data = substr($data, 0, $_fields[$key]['maxlen']).'...';
 								}
 							 }
 							 //nested sets otstup
-							if (isset($item['NSLevel']) && $_fields[$key]['field']=='title'){ 
-								$otstup = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', ($item['NSLevel']-1)); 
+							if (isset($item['NSLevel']) && $_fields[$key]['field']=='title'){
+								$otstup = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', ($item['NSLevel']-1));
 								if ($item['NSLevel']-1 > 0){ $otstup .=  ' &raquo; '; }
 							} else { $otstup = ''; }
                             if ($table != 'cms_components'){
                                 echo '<td class="'.$row_class.'" valign="middle">'.$otstup.'<a class="lt_link" href="'.$link.'">'.$data.'</a></td>'. "\n";
                             } else {
                                 echo '<td class="'.$row_class.'" valign="middle">
-                                            <a class="lt_link" style="padding:1px; padding-left:24px; background:url(/admin/images/components/'.$item['link'].'.png) no-repeat" href="'.$link.'">'.$data.'</a>
+                                            <a class="lt_link" style="padding:1px; padding-left:24px; background:url(images/components/'.$item['link'].'.png) no-repeat" href="'.$link.'">'.$data.'</a>
                                       </td>'. "\n";
                             }
-						} else {						
+						} else {
 							if ($_fields[$key]['field'] != 'ordering'){
 								if ($_fields[$key]['field'] == 'published'){
 									if (isset($_fields[$key]['do'])) { $do = $_fields[$key]['do']; } else { $do = 'do'; }
 									if (isset($_fields[$key]['do_suffix'])) { $dos = $_fields[$key]['do_suffix']; $ids = 'item_id'; } else { $dos = ''; $ids = 'id'; }
 									if ($item['published']){
 										$qs = cpAddParam($_SERVER['QUERY_STRING'], $do, 'hide'.$dos);
-										$qs = cpAddParam($qs, $ids, $item['id']);										
+										$qs = cpAddParam($qs, $ids, $item['id']);
 											$qs2 = cpAddParam($_SERVER['QUERY_STRING'], $do, 'show'.$dos);
-											$qs2 = cpAddParam($qs2, $ids, $item['id']);										
+											$qs2 = cpAddParam($qs2, $ids, $item['id']);
 										$qs = "pub(".$item['id'].", '".$qs."', '".$qs2."', 'off', 'on');";
 										echo '<td class="'.$row_class.'" valign="middle">
 												<a title="Скрыть" id="publink'.$item['id'].'" href="javascript:'.$qs.'"><img id="pub'.$item['id'].'" src="images/actions/on.gif" border="0"/></a>
@@ -603,11 +613,11 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 										$qs = cpAddParam($_SERVER['QUERY_STRING'], $do, 'show'.$dos);
 										$qs = cpAddParam($qs, $ids, $item['id']);
 											$qs2 = cpAddParam($_SERVER['QUERY_STRING'], $do, 'hide'.$dos);
-											$qs2 = cpAddParam($qs2, $ids, $item['id']);																				
+											$qs2 = cpAddParam($qs2, $ids, $item['id']);
 										$qs = "pub(".$item['id'].", '".$qs."', '".$qs2."', 'on', 'off');";
 										echo '<td class="'.$row_class.'" valign="middle">
 												<a title="Показать" id="publink'.$item['id'].'" href="javascript:'.$qs.'"><img id="pub'.$item['id'].'" src="images/actions/off.gif" border="0"/></a>
-											 </td>'. "\n";								
+											 </td>'. "\n";
 									}
 								} else {
 											if (isset($_fields[$key]['prc'])) {
@@ -622,8 +632,8 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 												 }
 											}
 											 //nested sets otstup
-											if (isset($item['NSLevel']) && $_fields[$key]['field']=='title'){ 
-												$otstup = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', ($item['NSLevel']-1)); 
+											if (isset($item['NSLevel']) && $_fields[$key]['field']=='title'){
+												$otstup = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', ($item['NSLevel']-1));
 												if ($item['NSLevel']-1 > 0){ $otstup .=  ' &raquo; '; }
 											} else { $otstup = ''; }
 											echo '<td class="'.$row_class.'" valign="middle">'.$otstup.$data.'</td>'. "\n";
@@ -641,7 +651,7 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 								'</td>'. "\n";
 							}
 						}
-					}		
+					}
 					if ($is_actions){
 						echo '<td width="80" class="'.$row_class.'" align="right" valign="middle"><div style="padding-right:8px">';
 						foreach($_actions as $key => $value){
@@ -656,7 +666,7 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
                                 foreach($item as $f=>$v){
                                     $link = str_replace('%'.$f.'%', $v, $link);
                                 }
-								
+
 								if (!isset($_actions[$key]['confirm'])){
 									echo '<a href="'.$link.'" title="'.$title.'"><img hspace="2" src="images/actions/'.$icon.'" border="0" alt="'.$title.'"/></a>';
 								} else {
@@ -664,26 +674,26 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 								}
 							}
 						}
-						echo '</div></td>'. "\n";						
-					}					
-				echo '</tr>'."\n";			
+						echo '</div></td>'. "\n";
+					}
+				echo '</tr>'."\n";
 			}
-			
+
 		echo '</tbody></table></form>';
-		
+
 		echo '<script type="text/javascript">highlightTableRows("listTable","hoverRow","clickedRow");</script>';
 		echo '<script type="text/javascript">activateListTable("listTable");</script>';
-			
-		$link = '?view='.$GLOBALS['applet'];		
+
+		$link = '?view='.$GLOBALS['applet'];
 
 		if ($sort){
-			$link .= '&sort='.$sort; 
+			$link .= '&sort='.$sort;
 			if (isset($_REQUEST['so'])) { $link .= '&so='.$_REQUEST['so']; }
 		}
-		
-		cpPageLinks($total, $perpage, $page, $link);		
-	
-	} else {	
+
+		cpPageLinks($total, $perpage, $page, $link);
+
+	} else {
 		echo '<p class="cp_message">Нет объектов для отображения.</p>';
 	}
 }
@@ -693,13 +703,13 @@ function cpPageLinks($records, $perpage, $current, $first_url=''){
 	if ($records){
 		$pages = ceil($records / $perpage);
 			echo '<div style="margin-top:10px; margin-bottom: 15px; font-size:10px">';
-			echo '<span style="margin:5px; padding:4px"><strong>Страницы: </strong></span>';	
+			echo '<span style="margin:5px; padding:4px"><strong>Страницы: </strong></span>';
 			for ($p=1; $p<=$pages; $p++){
-				if ($p != $current) {			
+				if ($p != $current) {
 					$qs = $_SERVER['QUERY_STRING'];
 					$qs = cpAddParam($qs, 'page', $p);
 					$link = $_SERVER['PHP_SELF'].'?'.$qs;
-					echo ' <a href="'.$link.'" style="margin:5px; padding:5px">'.$p.'</a> ';		
+					echo ' <a href="'.$link.'" style="margin:5px; padding:5px">'.$p.'</a> ';
 				} else {
 					echo '<span style="margin:5px; padding:5px; border:solid 1px silver; background-color: white">'.$p.'</span>';
 				}
@@ -707,7 +717,7 @@ function cpPageLinks($records, $perpage, $current, $first_url=''){
 			$from = (($current-1) * $perpage) + 1;
 			$to = $from+$perpage - 1;
 			if ($records < $to) { $to = $records; }
-			echo '<span style="margin:5px; padding:4px">Показаны '.$from.'-'.$to.' из '.$records.'</span>';	
+			echo '<span style="margin:5px; padding:4px">Показаны '.$from.'-'.$to.' из '.$records.'</span>';
 			echo '</div>';
 	}
 }
@@ -719,15 +729,15 @@ function cpCommentAuthor($comment_id){
 			WHERE id = $comment_id";
 	$result = dbQuery($sql);
 	$mod = mysql_fetch_assoc($result);
-	
+
 	if($mod['user_id']==0) { $author = $mod['guestname']; }
 	else {
 		$usersql = "SELECT * FROM cms_users WHERE id = ".$mod['user_id'];
 		$userres = dbQuery($usersql);
 		$u = mysql_fetch_assoc($userres);
-		$author = $u['nickname'].' (<a href="/admin/users.php?do=edit_user&id='.$u['id'].'">'.$u['login'].'</a>)';
+		$author = $u['nickname'].' (<a href="index.php?view=users&do=edit&id='.$u['id'].'">'.$u['login'].'</a>)';
 	}
-	
+
 	return $author;
 }
 
@@ -752,9 +762,9 @@ function cpCommentIsNew($is_new){
 function cpForumCatById($id){
 
 	$result = dbQuery("SELECT title FROM cms_forum_cats WHERE id = $id") ;
-	
-	if (mysql_num_rows($result)) { 
-		$cat = mysql_fetch_assoc($result);		
+
+	if (mysql_num_rows($result)) {
+		$cat = mysql_fetch_assoc($result);
 		return '<a href="index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id='.$id.'">'.$cat['title'].'</a> ('.$id.')';
 	} else { return '--'; }
 
@@ -763,9 +773,9 @@ function cpForumCatById($id){
 function cpPriceCatById($id){
 
 	$result = dbQuery("SELECT title FROM cms_price_cats WHERE id = $id") ;
-	
-	if (mysql_num_rows($result)) { 
-		$cat = mysql_fetch_assoc($result);		
+
+	if (mysql_num_rows($result)) {
+		$cat = mysql_fetch_assoc($result);
 		return '<a href="index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id='.$id.'">'.$cat['title'].'</a> ('.$id.')';
 	} else { return '--'; }
 
@@ -774,9 +784,9 @@ function cpPriceCatById($id){
 function cpFaqCatById($id){
 
 	$result = dbQuery("SELECT title FROM cms_faq_cats WHERE id = $id") ;
-	
-	if (mysql_num_rows($result)) { 
-		$cat = mysql_fetch_assoc($result);		
+
+	if (mysql_num_rows($result)) {
+		$cat = mysql_fetch_assoc($result);
 		return '<a href="index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id='.$id.'">'.$cat['title'].'</a>';
 	} else { return '--'; }
 
@@ -786,8 +796,8 @@ function cpFaqCatById($id){
 function cpCatalogCatById($id){
 
 	$result = dbQuery("SELECT title, parent_id FROM cms_uc_cats WHERE id = $id") ;
-	
-	if (mysql_num_rows($result)) { 
+
+	if (mysql_num_rows($result)) {
 		$cat = mysql_fetch_assoc($result);
         if ($cat['parent_id']){
             return '<a href="index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id='.$id.'">'.$cat['title'].'</a> ('.$id.')';
@@ -801,9 +811,9 @@ function cpCatalogCatById($id){
 function cpPhotoAlbumById($id){
 
 	$result = dbQuery("SELECT title FROM cms_photo_albums WHERE id = $id") ;
-	
-	if (mysql_num_rows($result)) { 
-		$cat = mysql_fetch_assoc($result);		
+
+	if (mysql_num_rows($result)) {
+		$cat = mysql_fetch_assoc($result);
 		return '<a href="index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_album&item_id='.$id.'">'.$cat['title'].'</a> ('.$id.')';
 	} else { return '--'; }
 
@@ -812,9 +822,9 @@ function cpPhotoAlbumById($id){
 function cpBoardCatById($id){
 
 	$result = dbQuery("SELECT title FROM cms_board_cats WHERE id = $id") ;
-	
-	if (mysql_num_rows($result)) { 
-		$cat = mysql_fetch_assoc($result);		
+
+	if (mysql_num_rows($result)) {
+		$cat = mysql_fetch_assoc($result);
 		return '<a href="index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id='.$id.'">'.$cat['title'].'</a> ('.$id.')';
 	} else { return '--'; }
 
@@ -824,9 +834,9 @@ function cpBoardCatById($id){
 function cpGroupById($id){
 
 	$result = dbQuery("SELECT title FROM cms_user_groups WHERE id = $id") ;
-	
-	if (mysql_num_rows($result)) { 
-		$cat = mysql_fetch_assoc($result);		
+
+	if (mysql_num_rows($result)) {
+		$cat = mysql_fetch_assoc($result);
 		return '<a href="index.php?view=usergroups&do=edit&id='.$id.'">'.$cat['title'].'</a> ('.$id.')';
 	} else { return '--'; }
 
@@ -835,7 +845,7 @@ function cpGroupById($id){
 function cpCatById($id){
 
 	$result = dbQuery("SELECT title, parent_id FROM cms_category WHERE id = $id") ;
-	
+
 	if (mysql_num_rows($result)) {
 		$cat = mysql_fetch_assoc($result);
         if ($cat['parent_id']){
@@ -850,7 +860,7 @@ function cpCatById($id){
 function cpComponentById($id){
 	$sql = "SELECT link FROM cms_components WHERE id = $id";
 	$result = dbQuery($sql);
-	
+
 	if (mysql_num_rows($result)) { $mod = mysql_fetch_assoc($result); return $mod['link']; }
 	else { return false; }
 }
@@ -878,16 +888,16 @@ function cpTemplateById($template_id){
 function cpModuleHasConfig($id){
 
 	$mod = cpModuleById($id);
-	
+
 	if ($mod) {
 		$file = 'modules/'.$mod.'/backend.php';
 		if (file_exists($file)){ return true; }
 		$file = 'modules/'.$mod.'/backend.xml';
 		if (file_exists($file)){ return true; }
 	}
-	
+
 	return false;
-    
+
 }
 
 function cpUserNick($user_id=0){
@@ -902,7 +912,7 @@ function cpUserNick($user_id=0){
 }
 
 function cpYesNo($option){
-	if ($option) { return 'Да'; } else { return 'Нет'; } 
+	if ($option) { return 'Да'; } else { return 'Нет'; }
 }
 
 //////////////////////////////////////////////// DATABASE //////////////////////////////////////////////////////////
@@ -964,7 +974,7 @@ function dbDelete($table, $id){
         $inCore->deleteRatings('content', $id);
         $inCore->deleteComments('article', $id);
 		dbQuery("DELETE FROM cms_tags WHERE target='content' AND item_id=$id");
-	}	
+	}
 	if ($table=='cms_modules'){
 		dbQuery("DELETE FROM cms_modules_bind WHERE module_id=$id");
 	}
@@ -995,7 +1005,7 @@ function dbDeleteList($table, $list){
 ///////////////////////////////////////////// HTML GENERATORS ////////////////////////////////////////////////
 function insertPanel(){
     $inCore=cmsCore::getInstance();
-    
+
     $submit_btn = '<input type="button" value="Вставить" style="width:100px" onClick="insertTag(document.addform.ins.options[document.addform.ins.selectedIndex].value)">';
 
 echo '<table width="100%" border="0" cellspacing="0" cellpadding="8" class="proptable"><tr><td>';
@@ -1007,8 +1017,8 @@ echo '<table width="100%" border="0" cellspacing="0" cellpadding="8" class="prop
 		echo '<td width="">';
 			echo '<select name="ins" id="ins" style="width:99%" onChange="showIns()">
 					<option value="frm" selected="selected">форма с заголовком</option>
-					<option value="blank">форма без заголовка</option>	
-					<option value="include">внешний скрипт</option>	
+					<option value="blank">форма без заголовка</option>
+					<option value="include">внешний скрипт</option>
 					<option value="filelink">ссылка "Скачать файл"</option>';
                     if ($inCore->isComponentInstalled('banners')){
                         echo '<option value="banpos">баннерная позиция</option>';
@@ -1093,21 +1103,21 @@ echo '<table width="100%" border="0" cellspacing="0" cellpadding="8" class="prop
    echo '</td></tr></table>';
 
    echo '<script type="text/javascript">showIns();</script>';
-		
+
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function cpBuildList($attr_name, $list, $selected_id=false){
 	$html = '';
-	
+
 	$html .= '<select name="'.$attr_name.'" id="'.$attr_name.'">' . "\n";
-	
+
 	$html .= '<option value="-100">-- Все --</option>'."\n";
-	
-	foreach($list as $key=>$value){	
+
+	foreach($list as $key=>$value){
 		if ($selected_id == $list[$key]['id']) { $sel = 'selected'; } else { $sel = ''; }
-		$html .= '<option value="'.$list[$key]['id'].'" '.$sel.'>'.$list[$key]['title'].'</option>' . "\n";	
+		$html .= '<option value="'.$list[$key]['id'].'" '.$sel.'>'.$list[$key]['title'].'</option>' . "\n";
 	}
-	
+
 	$html .= '</select>' . "\n";
 
 	return $html;
@@ -1117,7 +1127,7 @@ function cpGetList($listtype){
 
     global $_CFG;
 
-	$list = array();	
+	$list = array();
 	//Module positions
 	if ($listtype == 'positions'){
 
@@ -1142,15 +1152,15 @@ function cpGetList($listtype){
 	//...or table records
 	$sql = "SELECT id, title FROM $listtype ORDER BY title ASC";
 	$result = dbQuery($sql) ;
-	
-	if (mysql_num_rows($result)>0) { 
+
+	if (mysql_num_rows($result)>0) {
 		while($item = mysql_fetch_assoc($result)){
 			$next = sizeof($list);
 			$list[$next]['title'] = $item['title'];
 			$list[$next]['id'] = $item['id'];
-		}		
+		}
 	}
-	
+
 	return $list;
 
 }
@@ -1160,10 +1170,10 @@ function cpMenutypeById($id){
 
 	$html   = '';
 	$maxlen = 35;
-	
+
 	$item   = $inDB->get_fields('cms_menu', 'id='.$id, 'linktype, linkid, link');
 
-	switch($item['linktype']){	
+	switch($item['linktype']){
 		case 'link':  			$html = '<span id="menutype"><a href="'.$item['link'].'">Cсылка</a></span> - '.$item['linkid'];
 								break;
 		case 'component':		$html = '<span id="menutype"><a href="'.$item['link'].'">Компонент</a></span> - '.$inDB->get_field('cms_components', "link='".$item['linkid']."'", 'title');
@@ -1180,7 +1190,7 @@ function cpMenutypeById($id){
 					 			break;
 		case 'photoalbum':		$html = '<span id="menutype"><a href="'.$item['link'].'">Фотоальбом</a></span> - '.$inDB->get_field('cms_photo_albums', 'id='.$item['linkid'], 'title');
 					 			break;
-	}	
+	}
 	$clear = strip_tags($html);
 	$r = strlen($html) - strlen($clear);
 	if (strlen($clear)>$maxlen) { $html = substr($html, 0, $maxlen+$r).'...'; }

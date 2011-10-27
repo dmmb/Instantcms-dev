@@ -22,15 +22,15 @@ function applet_backup(){
 	if (!$inCore->isAdminCan('admin/config', $adminAccess)) { cpAccessDenied(); }
 
 	$GLOBALS['cp_page_title'] = 'Резервное копирование';
- 	
-	cpAddPathway('Настройки сайта', 'index.php?view=config');	
-	cpAddPathway('Резервное копирование', 'index.php?view=backup');	
-	
+
+	cpAddPathway('Настройки сайта', 'index.php?view=config');
+	cpAddPathway('Резервное копирование', 'index.php?view=backup');
+
 	$GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="js/content.js"></script>';
-	$GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/admin/js/config.js"></script>';
+	$GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="js/config.js"></script>';
 	$GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/includes/jquery/jquery.form.js"></script>';
 	$GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/includes/jquery/tabs/jquery.ui.min.js"></script>';
-		
+
 ?>
 <div style="width:800px">
 
@@ -58,8 +58,8 @@ function applet_backup(){
 					</div>
 				</td>
 			</tr>
-		</table>			
-		
+		</table>
+
 	<h3>Восстановление базы данных</h3>
 		<?php cpCheckWritable('/backups', 'folder'); ?>
 		<table width="650" border="0" cellpadding="10" style="border:solid 1px gray; background:#FCFCFC">

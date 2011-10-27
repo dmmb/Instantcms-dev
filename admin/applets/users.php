@@ -20,9 +20,9 @@ function applet_users(){
 	//check access
 	global $adminAccess;
 	if (!$inCore->isAdminCan('admin/users', $adminAccess)) { cpAccessDenied(); }
-	
+
 	$GLOBALS['cp_page_title'] = 'Пользователи';
- 	cpAddPathway('Пользователи', 'index.php?view=users');	
+ 	cpAddPathway('Пользователи', 'index.php?view=users');
 
 	if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
 	if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { $id = -1; }
@@ -32,7 +32,7 @@ function applet_users(){
 
     $inCore->loadModel('users');
     $model = new cms_model_users();
-		
+
 	if ($do == 'list'){
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'useradd.gif';
@@ -77,12 +77,12 @@ function applet_users(){
 
 		$fields[4]['title'] = 'E-Mail';		$fields[4]['field'] = 'email';		$fields[4]['width'] = '160';
 
-		$fields[5]['title'] = 'Дата<br/>регистрации';	$fields[5]['field'] = 'regdate';	$fields[5]['width'] = '160';		
+		$fields[5]['title'] = 'Дата<br/>регистрации';	$fields[5]['field'] = 'regdate';	$fields[5]['width'] = '160';
 
 		$fields[6]['title'] = 'Последний<br/>вход';		$fields[6]['field'] = 'logdate';	$fields[6]['width'] = '160';
-		
-		$fields[7]['title'] = 'Последний<br/>IP';		$fields[7]['field'] = 'last_ip';	$fields[7]['width'] = '100';		
-	
+
+		$fields[7]['title'] = 'Последний<br/>IP';		$fields[7]['field'] = 'last_ip';	$fields[7]['width'] = '100';
+
 		//ACTIONS
 		$actions = array();
 		$actions[0]['title'] = 'Профиль';
@@ -95,17 +95,17 @@ function applet_users(){
 
 		$actions[3]['title'] = 'Забанить';
 		$actions[3]['icon']  = 'ban.gif';
-		$actions[3]['link']  = '/admin/index.php?view=userbanlist&do=add&to=%id%';
+		$actions[3]['link']  = 'index.php?view=userbanlist&do=add&to=%id%';
 
 		$actions[4]['title'] = 'Удалить';
 		$actions[4]['icon']  = 'delete.gif';
 		$actions[4]['confirm'] = 'Удалить пользователя?';
 		$actions[4]['link']  = '?view=users&do=delete&id=%id%';
-				
+
 		//Print table
-		cpListTable('cms_users', $fields, $actions, 'is_deleted = 0', 'regdate DESC');		
+		cpListTable('cms_users', $fields, $actions, 'is_deleted = 0', 'regdate DESC');
 	}
-		
+
 	if ($do == 'delete'){
         if (!isset($_REQUEST['item'])){
 			if ($id >= 0){
@@ -116,7 +116,7 @@ function applet_users(){
 		}
 		header('location:?view=users');
 	}
-	
+
 	if ($do == 'submit'){
 
 		$login      = htmlspecialchars($_REQUEST['login'], ENT_QUOTES);
@@ -175,15 +175,15 @@ function applet_users(){
             $mod['email']       = $email;
 
             $do = 'add';
-            
+
         }
-        
+
 	}
-	
+
 	if ($do == 'update'){
-		if(isset($_REQUEST['id'])) { 
+		if(isset($_REQUEST['id'])) {
 			$id = (int)$_REQUEST['id'];
-			
+
             $login      = htmlspecialchars($_REQUEST['login'], ENT_QUOTES);
             $nickname   = htmlspecialchars($_REQUEST['nickname'], ENT_QUOTES, 'cp1251');
             $email      = $inCore->request('email', 'str');
@@ -192,12 +192,12 @@ function applet_users(){
 
 			if (isset($_REQUEST['pass']) && isset($_REQUEST['pass2'])){
 				$pass = $_REQUEST['pass'];
-				$pass2 = $_REQUEST['pass2'];				
-				if (($pass == $pass2) && ($pass!='')) { 
-					$pass_sql = ", password = '".md5($pass)."' "; 
+				$pass2 = $_REQUEST['pass2'];
+				if (($pass == $pass2) && ($pass!='')) {
+					$pass_sql = ", password = '".md5($pass)."' ";
 				} else {$pass_sql = ' ';	}
 			}
-			
+
 			$sql = "UPDATE cms_users
 					SET login = '$login',
 						nickname = '$nickname',
@@ -209,9 +209,9 @@ function applet_users(){
 			dbQuery($sql) ;
 		}
 		if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
-			header('location:?view=users');		
+			header('location:?view=users');
 		} else {
-			header('location:?view=users&do=edit');		
+			header('location:?view=users&do=edit');
 		}
 	}
 
@@ -230,34 +230,34 @@ function applet_users(){
 
 		if ($do=='edit'){
 
-					 if(isset($_REQUEST['multiple'])){				 
-						if (isset($_REQUEST['item'])){					
+					 if(isset($_REQUEST['multiple'])){
+						if (isset($_REQUEST['item'])){
 							$_SESSION['editlist'] = $_REQUEST['item'];
 						} else {
 							echo '<p class="error">Нет выбранных объектов!</p>';
 							return;
-						}				 
+						}
 					 }
-						
+
 					 $ostatok = '';
-					
+
 					 if (isset($_SESSION['editlist'])){
 						$id = array_shift($_SESSION['editlist']);
-						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
+						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else
 						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
 					 } else { $id = (int)$_REQUEST['id']; }
-	
+
 					 $sql = "SELECT * FROM cms_users WHERE id = $id LIMIT 1";
 					 $result = dbQuery($sql) ;
 					 if (mysql_num_rows($result)){
 						$mod = mysql_fetch_assoc($result);
 					 }
-					
-					 echo '<h3>Редактировать пользователя '.$ostatok.'</h3>';					 
+
+					 echo '<h3>Редактировать пользователя '.$ostatok.'</h3>';
 					 cpAddPathway($mod['nickname'], 'index.php?view=users&do=edit&id='.$mod['id']);
-		
+
 		} else {
-					 echo '<h3>Создать пользователя</h3>';					 
+					 echo '<h3>Создать пользователя</h3>';
 					 cpAddPathway('Создать пользователя', 'index.php?view=users&do=add');
 		}
 		$GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/components/registration/js/check.js"></script>';
@@ -297,7 +297,7 @@ function applet_users(){
 		  	<?php if($do=='edit') { ?>
 	            <td valign="middle"><strong>Новый пароль:</strong></td>
 			<?php } else { ?>
-	            <td valign="middle"><strong>Пароль:</strong> </td>		
+	            <td valign="middle"><strong>Пароль:</strong> </td>
 			<?php } ?>
             <td><input name="pass" type="password" id="pass" style="width:220px"/></td>
             <td>&nbsp;</td>
@@ -345,14 +345,14 @@ function applet_users(){
 	          <input name="do" type="hidden" id="do" value="update" />
 	          <input name="add_mod" type="submit" id="add_mod" value="Сохранить профиль" />
 		  <?php } else { ?>
-	          <input name="do" type="hidden" id="do" value="submit" />	  
+	          <input name="do" type="hidden" id="do" value="submit" />
 	          <input name="add_mod" type="submit" id="add_mod" value="Создать профиль" />
 		  <?php } ?>
           <span style="margin-top:15px">
           <input name="back2" type="button" id="back2" value="Отмена" onclick="window.history.back();"/>
           </span>
           <?php
-		  	if ($do=='edit'){ 
+		  	if ($do=='edit'){
 			 echo '<input name="id" type="hidden" value="'.$mod['id'].'" />';
 			 }
 		  ?>

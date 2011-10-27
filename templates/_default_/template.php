@@ -26,7 +26,7 @@
     <?php cmsPrintHead(); ?>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1251"/>
     <?php if($inUser->is_admin){ ?>
-        <script src="/admin/js/modconfig.js" type="text/javascript"></script>
+        <script src="/<?php echo $inCore->adminDir;?>/js/modconfig.js" type="text/javascript"></script>
         <script src="/templates/_default_/js/nyromodal.js" type="text/javascript"></script>
         <link href="/templates/_default_/css/modconfig.css" rel="stylesheet" type="text/css" />
         <link href="/templates/_default_/css/nyromodal.css" rel="stylesheet" type="text/css" />

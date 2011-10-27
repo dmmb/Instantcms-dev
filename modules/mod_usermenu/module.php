@@ -12,11 +12,11 @@
 /******************************************************************************/
 
 	function mod_usermenu($module_id){
-        
+
         $inCore     = cmsCore::getInstance();
         $inDB       = cmsDatabase::getInstance();
         $inUser     = cmsUser::getInstance();
-						
+
         if (!$inUser->id){ return false; }
 
         $cfg            = $inCore->loadModuleConfig($module_id);
@@ -33,7 +33,7 @@
 
         $blog_href  = ($blog['id']) ? '/blogs/'.$blog['seolink'] : '/blogs/createblog.html';
         $avatar     = '<img src="/images/users/avatars/small/'.$inUser->imageurl.'" />';
-        
+
         $is_billing = $inCore->isComponentInstalled('billing');
         $balance    = $is_billing ? $inUser->balance : 0;
 

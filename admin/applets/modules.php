@@ -22,11 +22,11 @@ function applet_modules(){
 	//check access
 	global $adminAccess;
 	if (!$inCore->isAdminCan('admin/modules', $adminAccess)) { cpAccessDenied(); }
-	
-	$GLOBALS['cp_page_title'] = 'Модули сайта';	
-	cpAddPathway('Модули сайта', 'index.php?view=modules');	
+
+	$GLOBALS['cp_page_title'] = 'Модули сайта';
+	cpAddPathway('Модули сайта', 'index.php?view=modules');
 	$GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="js/modules.js"></script>';
-	
+
 	if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
 	if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { $id = -1; }
 	if (isset($_REQUEST['co'])) { $co = $_REQUEST['co']; } else { $co = -1; } //current ordering, while resort
@@ -36,25 +36,25 @@ function applet_modules(){
 //============================================================================//
 
 	if ($do == 'config'){
-	
+
 		$module_name    = cpModuleById($id);
 		$module_title   = cpModuleTitleById($id);
-		
+
 		if (!$module_name) { header('location:index.php?view=modules&do=edit&id='.$id); }
 
-        $xml_file = PATH.'/admin/modules/'.$module_name.'/backend.xml';
+        $xml_file = ADMIN_PATH.'/modules/'.$module_name.'/backend.xml';
         $php_file = 'modules/'.$module_name.'/backend.php';
 
         if (!file_exists($xml_file)){
             if (file_exists($php_file)){ include $php_file; return; }
-            $inCore->halt();
+            $inCore->halt('WRONG PARAMETER');
         }
 
         $cfg = $inCore->loadModuleConfig($id);
 
         $inCore->loadClass('formgen');
 
-        $formGen = new cmsFormGen($xml_file, $cfg);       
+        $formGen = new cmsFormGen($xml_file, $cfg);
 
         cpAddPathway($module_title, '?view=modules&do=edit&id='.$id);
     	cpAddPathway('Настройки', '?view=modules&do=config&id='.$id);
@@ -88,7 +88,7 @@ function applet_modules(){
         return;
 
 	}
-		
+
 //============================================================================//
 //============================================================================//
 
@@ -112,8 +112,8 @@ function applet_modules(){
             $inCore->redirectBack();
         }
 
-        $xml_file = PATH.'/admin/modules/'.$module_name.'/backend.xml';
-        if (!file_exists($xml_file)){ $inCore->halt(); }
+        $xml_file = ADMIN_PATH.'/modules/'.$module_name.'/backend.xml';
+        if (!file_exists($xml_file)){ $inCore->halt('WRONG_PARAMETER'); }
 
         $cfg = array();
 
@@ -127,15 +127,15 @@ function applet_modules(){
 
             if ($type == 'flag' && $default === 'on') { $default = 1; }
             if ($type == 'flag' && $default === 'off') { $default = 0; }
-            
+
             switch($param['type']){
-                
+
                 case 'number':  $value = $inCore->request($name, 'int', $default); break;
                 case 'string':  $value = $inCore->request($name, 'str', $default); break;
                 case 'flag':    $value = $inCore->request($name, 'int', $default); break;
                 case 'list':    $value = $inCore->request($name, 'str', $default); break;
                 case 'list_db': $value = (is_array($_POST[$name]) ? $inCore->request($name, 'array', $default) : $inCore->request($name, 'str', $default)); break;
-                
+
             }
 
             $cfg[$name] = $value;
@@ -205,12 +205,12 @@ function applet_modules(){
 
 		$fields[2]['title'] = 'Название';	$fields[2]['field'] = 'name';		$fields[2]['width'] = '300';
 		$fields[2]['filter'] = 15;
-				
-		$fields[3]['title'] = 'Показ';		$fields[3]['field'] = 'published';	$fields[3]['width'] = '100';	
-		$fields[4]['title'] = 'Порядок';	$fields[4]['field'] = 'ordering';	$fields[4]['width'] = '100';	
-		$fields[5]['title'] = 'Позиция';	$fields[5]['field'] = 'position';	$fields[5]['width'] = '100';	
+
+		$fields[3]['title'] = 'Показ';		$fields[3]['field'] = 'published';	$fields[3]['width'] = '100';
+		$fields[4]['title'] = 'Порядок';	$fields[4]['field'] = 'ordering';	$fields[4]['width'] = '100';
+		$fields[5]['title'] = 'Позиция';	$fields[5]['field'] = 'position';	$fields[5]['width'] = '100';
 		$fields[5]['filter'] = 10; 			$fields[5]['filterlist'] = cpGetList('positions');
-		
+
 		//ACTIONS
 		$actions = array();
 		$actions[0]['title'] = 'Настроить';
@@ -218,7 +218,7 @@ function applet_modules(){
 		$actions[0]['link']  = '?view=modules&do=config&id=%id%';
 		// Функция, которой передается ID объекта, и если она вернет TRUE то только тогда отобразится значок
 		$actions[0]['condition'] = 'cpModuleHasConfig';
-		
+
 		$actions[1]['title'] = 'Редактировать';
 		$actions[1]['icon']  = 'edit.gif';
 		$actions[1]['link']  = '?view=modules&do=edit&id=%id%';
@@ -297,15 +297,15 @@ function applet_modules(){
 	if ($do == 'autoorder'){
 		$sql = "SELECT * FROM cms_modules ORDER BY ordering";
 		$rs = dbQuery($sql) ;
-		
+
 		if (mysql_num_rows($rs)){
 			$ord = 1;
 			while ($item = mysql_fetch_assoc($rs)){
 				dbQuery("UPDATE cms_modules SET ordering = ".$ord." WHERE id=".$item['id']) ;
 				$ord += 1;
-			}				
+			}
 		}
-		header('location:index.php?view=modules&sort=ordering');		
+		header('location:index.php?view=modules&sort=ordering');
 	}
 
 //============================================================================//
@@ -325,12 +325,12 @@ function applet_modules(){
 //============================================================================//
 
 	if ($do == 'saveorder'){
-		if(isset($_REQUEST['ordering'])) { 
+		if(isset($_REQUEST['ordering'])) {
 			$ord = $_REQUEST['ordering'];
 			$ids = $_REQUEST['ids'];
-			
-			foreach ($ord as $id=>$ordering){			
-				dbQuery("UPDATE cms_modules SET ordering = $ordering WHERE id = ".$ids[$id]) ;						
+
+			foreach ($ord as $id=>$ordering){
+				dbQuery("UPDATE cms_modules SET ordering = $ordering WHERE id = ".$ids[$id]) ;
 			}
 			header('location:?view=modules');
 
@@ -345,10 +345,10 @@ function applet_modules(){
 			if ($id >= 0){ dbShow('cms_modules', $id);  }
 			echo '1'; exit;
 		} else {
-			dbShowList('cms_modules', $_REQUEST['item']);	
-			$inCore->redirectBack();			
+			dbShowList('cms_modules', $_REQUEST['item']);
+			$inCore->redirectBack();
 		}
-		
+
 	}
 
 	if ($do == 'hide'){
@@ -356,9 +356,9 @@ function applet_modules(){
 			if ($id >= 0){ dbHide('cms_modules', $id);  }
 			echo '1'; exit;
 		} else {
-			dbHideList('cms_modules', $_REQUEST['item']);	
-			$inCore->redirectBack();			
-		}		
+			dbHideList('cms_modules', $_REQUEST['item']);
+			$inCore->redirectBack();
+		}
 	}
 
 //============================================================================//
@@ -368,15 +368,15 @@ function applet_modules(){
 		if (!isset($_REQUEST['item'])){
 			if ($id >= 0){ dbDelete('cms_modules', $id);  }
 		} else {
-			dbDeleteList('cms_modules', $_REQUEST['item']);				
+			dbDeleteList('cms_modules', $_REQUEST['item']);
 		}
 		header('location:?view=modules');
 	}
-	
+
 	if ($do == 'update'){
 
 			$id             = $inCore->request('id', 'int', 0);
-			
+
 			$name           = $inCore->request('name', 'str', '');
 			$title          = $inCore->request('title', 'str', '');
 			$position       = $inCore->request('position', 'str', '');
@@ -397,18 +397,18 @@ function applet_modules(){
 			$cache          = $inCore->request('cache', 'int', 0);
 			$cachetime      = $inCore->request('cachetime', 'int', 0);
 			$cacheint       = $inCore->request('cacheint', 'str', '');
-			
-			$sql = "UPDATE cms_modules 
-					SET name='$name', 
-						title='$title', 
+
+			$sql = "UPDATE cms_modules
+					SET name='$name',
+						title='$title',
 						position='$position',
-                        template='$template', 
+                        template='$template',
 						showtitle=$showtitle,";
-						
-					if ($content){	
+
+					if ($content){
 						$sql .= "content='$content',";
 					}
-						
+
 			$sql .=	"
 						published=$published,
 						css_prefix='$css_prefix',
@@ -423,12 +423,12 @@ function applet_modules(){
 
 			$sql = "DELETE FROM cms_modules_bind WHERE module_id = $id";
 			dbQuery($sql) ;
-			
+
 			if ($inCore->request('show_all', 'int', 0)){
 				$sql = "INSERT INTO cms_modules_bind (module_id, menu_id, position)
 						VALUES ($id, 0, '{$position}')";
-				dbQuery($sql) ;	
-			} else {		
+				dbQuery($sql) ;
+			} else {
 				$showin = $_REQUEST['showin'];
 				$showpos = $_REQUEST['showpos'];
 				if (sizeof($showin)>0){
@@ -437,15 +437,15 @@ function applet_modules(){
 								VALUES ($id, $value, '{$showpos[$value]}')";
 						dbQuery($sql) ;
 					}
-				}	
+				}
 			}
-					
+
 			if (!isset($_SESSION['editlist']) || @sizeof($_SESSION['editlist'])==0){
-				header('location:?view=modules');		
+				header('location:?view=modules');
 			} else {
-				header('location:?view=modules&do=edit');		
+				header('location:?view=modules&do=edit');
 			}
-						
+
 	}
 
 //============================================================================//
@@ -463,10 +463,10 @@ function applet_modules(){
         $position       = $inCore->request('position', 'str', '');
         $showtitle      = $inCore->request('showtitle', 'int', 0);
         $content        = $inCore->request('content', 'html', '');
-		$content    	= $inDB->escape_string($content); 
+		$content    	= $inDB->escape_string($content);
         $published      = $inCore->request('published', 'int', 0);
         $css_prefix     = $inCore->request('css_prefix', 'str', '');
-		
+
 		$is_public      = $inCore->request('is_public', 'int', '');
 		if (!$is_public){
 			$access_list = $inCore->request('allow_group', 'array_int');
@@ -482,17 +482,17 @@ function applet_modules(){
 		$operate        = $inCore->request('operate', 'str', '');
 
         $is_strict_bind = $inCore->request('is_strict_bind', 'int', 0);
-		
+
 		if ($operate == 'user'){ //USER MODULE
 			$sql = "INSERT INTO cms_modules (id, position, name, title, is_external, content, ordering, showtitle, published, original, css_prefix, access_list, cache, cachetime, cacheint, template, is_strict_bind)
 					VALUES ('', '$position', '$name', '$title', 0, '$content', $maxorder, $showtitle, $published, 1, '$css_prefix', '$access_list', 0, 24, 'HOUR', '$template', '$is_strict_bind')";
-			dbQuery($sql) ;			
+			dbQuery($sql) ;
 		}
-		
+
 		if ($operate == 'clone'){ //DUPLICATE MODULE
 
 			$mod_id     = $inCore->request('clone_id', 'int', 0);
-					
+
 			$sql        = "SELECT * FROM cms_modules WHERE id = $mod_id LIMIT 1";
 			$result     = dbQuery($sql) ;
 			$original   = mysql_fetch_assoc($result);
@@ -517,27 +517,27 @@ function applet_modules(){
 							'$css_prefix',
                             '{$template}',
                             '{$access_list}',
-                            '{$is_strict_bind}', 
+                            '{$is_strict_bind}',
                             0, 24, 'HOUR'
                             )";
 			dbQuery($sql);
-						
+
 			if ($inCore->request('del_orig', 'int', 0)){
 				$sql = "DELETE FROM cms_modules WHERE id = $mod_id";
 				dbQuery($sql) ;
 			}
 		}
-		
+
 		$sql     = "SELECT LAST_INSERT_ID() as lastid FROM cms_modules";
 		$result  = dbQuery($sql) ;
 		$row     = mysql_fetch_assoc($result);
 		$lastid  = $row['lastid'];
-		
+
 		if (isset($_REQUEST['show_all'])){
 			$sql = "INSERT INTO cms_modules_bind (module_id, menu_id, position)
 					VALUES ($lastid, 0, '{$position}')";
-			dbQuery($sql) ;	
-		} else {		
+			dbQuery($sql) ;
+		} else {
 			$showin = $_REQUEST['showin'];
             $showpos = $_REQUEST['showpos'];
 			if (sizeof($showin)>0){
@@ -545,12 +545,12 @@ function applet_modules(){
 					$sql = "INSERT INTO cms_modules_bind (module_id, menu_id, position)
 							VALUES ($lastid, $value, '{$showpos[$value]}')";
 					dbQuery($sql) ;
-				}			
-			}	
+				}
+			}
 		}
 
-		header('location:?view=modules');		
-	}	  
+		header('location:?view=modules');
+	}
 
 //============================================================================//
 //============================================================================//
@@ -565,38 +565,38 @@ function applet_modules(){
 			 echo '<h3>Добавить модуль</h3>';
              $show_all = false;
 		} else {
-					 if(isset($_REQUEST['multiple'])){				 
-						if (isset($_REQUEST['item'])){					
+					 if(isset($_REQUEST['multiple'])){
+						if (isset($_REQUEST['item'])){
 							$_SESSION['editlist'] = $_REQUEST['item'];
 						} else {
 							echo '<p class="error">Нет выбранных объектов!</p>';
 							return;
-						}				 
+						}
 					 }
-						
+
 					 $ostatok = '';
-					
+
 					 if (isset($_SESSION['editlist'])){
 						$id = array_shift($_SESSION['editlist']);
-						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
+						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else
 						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
 					 } else { $id = (int)$_REQUEST['id']; }
-	
+
 					 $sql = "SELECT * FROM cms_modules WHERE id = $id LIMIT 1";
 					 $result = dbQuery($sql) ;
 					 if (mysql_num_rows($result)){
 						$mod = mysql_fetch_assoc($result);
 					 }
-					 
+
 					 $sql = "SELECT id FROM cms_modules_bind WHERE module_id = $id AND menu_id = 0 LIMIT 1";
-					 $result = dbQuery($sql) ;			 
-					 
+					 $result = dbQuery($sql) ;
+
 					 if(mysql_num_rows($result)) { $show_all = true; } else { $show_all = false; }
-					 					
+
 					 echo '<h3>Редактировать модуль '.$ostatok.'</h3>';
  					 cpAddPathway($mod['name'], 'index.php?view=modules&do=edit&id='.$mod['id']);
-			}   
-			
+			}
+
  		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'save.gif';
 		$toolmenu[0]['title'] = 'Сохранить';
@@ -615,7 +615,7 @@ function applet_modules(){
 				$toolmenu[1]['link'] = '?view=modules&do=config&id='.$mod['id'];
 			}
 		}
-		
+
 		cpToolMenu($toolmenu);
 
 	?>
@@ -659,7 +659,7 @@ function applet_modules(){
                                 <div>
                                     <strong>CSS префикс</strong>
                                 </div>
-                                <div>                                    
+                                <div>
                                     <input name="css_prefix" type="text" id="css_prefix" value="<?php echo @$mod['css_prefix'];?>" style="width:154px" />
                                 </div>
                             </td>
@@ -724,7 +724,7 @@ function applet_modules(){
                                 <strong>Содержимое модуля</strong>
                             </div>
                             <div><?php insertPanel(); ?></div>
-                            <div>                             
+                            <div>
                                 <?php
                                         $inCore->insertEditor('content', $mod['content'], '250', '100%');
                                 ?>
@@ -747,8 +747,8 @@ function applet_modules(){
                                     <td width="20"><input type="checkbox" name="del_orig" id="del_orig" value="1" /></td>
                                     <td><label for="del_orig">Удалить оригинал</label></td>
                                 </tr>
-                            </table>    
-                        </div>                        
+                            </table>
+                        </div>
                 </div>
 
                 </td>
@@ -843,7 +843,7 @@ function applet_modules(){
 
                     </div>
 
-                    
+
 
                     {tab=Кеширование}
 
@@ -900,7 +900,7 @@ function applet_modules(){
                         <tr>
                             <td width="20">
                                 <?php
-								
+
 									$groups = cmsUser::getGroups();
 
                                     $style  = 'disabled="disabled"';
@@ -911,7 +911,7 @@ function applet_modules(){
                                         if ($mod['access_list']){
                                             $public = '';
                                             $style  = '';
-											
+
 											$access_list = $inCore->yamlToArray($mod['access_list']);
 
                                         }
@@ -953,7 +953,7 @@ function applet_modules(){
 									}
 
                                 }
-                                
+
                                 echo '</select>';
                             ?>
                         </div>
@@ -962,7 +962,7 @@ function applet_modules(){
                     {/tabs}
 
                     <?php echo jwTabs(ob_get_clean()); ?>
-                    
+
                 </td>
 
             </tr>

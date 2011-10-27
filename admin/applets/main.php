@@ -43,41 +43,41 @@ function applet_main(){
 	<table width="100%" border="0" align="center" cellpadding="5" cellspacing="0">
       <tr>
         <td><a href="index.php?view=tree">Статьи</a> <?php if($new['content']) { ?><span class="new_content">+<?php echo $new['content']?></span><?php } ?></td>
-        <td width="20" align="center"><a href="index.php?view=cats&amp;do=add"><img src="/admin/images/mainpage/folder_add.png" alt="Создать раздел" width="16" height="16" border="0" /></a></td>
-        <td width="20" align="center"><a href="index.php?view=content&amp;do=add"><img src="/admin/images/mainpage/page_add.png" alt="Создать статью" width="16" height="16" border="0" /></a></td>
+        <td width="20" align="center"><a href="index.php?view=cats&amp;do=add"><img src="images/mainpage/folder_add.png" alt="Создать раздел" width="16" height="16" border="0" /></a></td>
+        <td width="20" align="center"><a href="index.php?view=content&amp;do=add"><img src="images/mainpage/page_add.png" alt="Создать статью" width="16" height="16" border="0" /></a></td>
         </tr>
       <tr>
 	    <?php $cid = dbGetField('cms_components', "link='photos'", 'id'); ?>
         <td><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>">Фотогалерея</a> <?php if($new['photos']) { ?><span class="new_content">+<?php echo $new['photos']?></span><?php } ?></td>
-        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_album"><img src="/admin/images/mainpage/folder_add.png" alt="Создать альбом" width="16" height="16" border="0" /></a></td>
-        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_photo"><img src="/admin/images/mainpage/page_add.png" alt="Загрузить фото" width="16" height="16" border="0" /></a></td>
+        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_album"><img src="images/mainpage/folder_add.png" alt="Создать альбом" width="16" height="16" border="0" /></a></td>
+        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_photo"><img src="images/mainpage/page_add.png" alt="Загрузить фото" width="16" height="16" border="0" /></a></td>
       </tr>
       <tr>
  	    <?php $cid = dbGetField('cms_components', "link='faq'", 'id'); ?>
         <td><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>">Вопросы и ответы</a> <?php if($new['faq']) { ?><span class="new_content">+<?php echo $new['faq']?></span><?php } ?></td>
-        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_cat"><img src="/admin/images/mainpage/folder_add.png" alt="Создать категорию" width="16" height="16" border="0" /></a></td>
-        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_item"><img src="/admin/images/mainpage/page_add.png" alt="Создать вопрос" width="16" height="16" border="0" /></a></td>
+        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_cat"><img src="images/mainpage/folder_add.png" alt="Создать категорию" width="16" height="16" border="0" /></a></td>
+        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_item"><img src="images/mainpage/page_add.png" alt="Создать вопрос" width="16" height="16" border="0" /></a></td>
       </tr>
       <tr>
 	    <?php $cid = dbGetField('cms_components', "link='board'", 'id'); ?>
         <td><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>">Доска объявлений</a> <?php if($new['board']) { ?><span class="new_content">+<?php echo $new['board']?></span><?php } ?></td>
-        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_cat"><img src="/admin/images/mainpage/folder_add.png" alt="Создать рубрику" width="16" height="16" border="0" /></a></td>
-        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_item"><img src="/admin/images/mainpage/page_add.png" alt="Создать объявление" width="16" height="16" border="0" /></a></td>
-      </tr>  
+        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_cat"><img src="images/mainpage/folder_add.png" alt="Создать рубрику" width="16" height="16" border="0" /></a></td>
+        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_item"><img src="images/mainpage/page_add.png" alt="Создать объявление" width="16" height="16" border="0" /></a></td>
+      </tr>
       <tr>
 	    <?php $cid = dbGetField('cms_components', "link='catalog'", 'id'); ?>
         <td><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>">Универсальный каталог</a> <?php if($new['catalog']) { ?><span class="new_content">+<?php echo $new['catalog']?></span><?php } ?></td>
-        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_cat"><img src="/admin/images/mainpage/folder_add.png" alt="Создать рубрику" width="16" height="16" border="0" /></a></td>
-        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_item"><img src="/admin/images/mainpage/page_add.png" alt="Создать запись" width="16" height="16" border="0" /></a></td>
+        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_cat"><img src="images/mainpage/folder_add.png" alt="Создать рубрику" width="16" height="16" border="0" /></a></td>
+        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_item"><img src="images/mainpage/page_add.png" alt="Создать запись" width="16" height="16" border="0" /></a></td>
       </tr>
       <tr>
 	    <?php $cid = dbGetField('cms_components', "link='forum'", 'id'); ?>
         <td><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=list_forums">Форумы</a> <?php if($new['forum']) { ?><span class="new_content">+<?php echo $new['forum']?></span><?php } ?></td>
-        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_cat"><img src="/admin/images/mainpage/folder_add.png" alt="Создать категорию" width="16" height="16" border="0" /></a></td>
-        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_forum"><img src="/admin/images/mainpage/page_add.png" alt="Создать форум" width="16" height="16" border="0" /></a></td>
+        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_cat"><img src="images/mainpage/folder_add.png" alt="Создать категорию" width="16" height="16" border="0" /></a></td>
+        <td align="center"><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $cid?>&amp;opt=add_forum"><img src="images/mainpage/page_add.png" alt="Создать форум" width="16" height="16" border="0" /></a></td>
       </tr>
-    </table>	 
-	</div>  
+    </table>
+	</div>
 	</div>
 	<div class="small_box">
 		<div class="small_title">Пользователи</div>
@@ -101,7 +101,7 @@ function applet_main(){
             </tr>
           </table>
 		</div>
-	</div>	
+	</div>
 	<div class="small_box">
 		<div class="small_title"><strong>Сейчас на сайте</strong></div>
 		<div style="font-size:10px;margin:8px;">
@@ -126,10 +126,10 @@ function applet_main(){
                     $tpl_dir    = file_exists(TEMPLATE_DIR.$tpl_file) ? TEMPLATE_DIR : DEFAULT_TEMPLATE_DIR;
 
                     include($tpl_dir.$tpl_file);
-                    
+
                 ?>
             </div>
-		</div>			
+		</div>
 	</div>
 
     </td>
@@ -201,7 +201,7 @@ function applet_main(){
               <tr>
                 <td><img src="/images/markers/rssfeed.png" width="16" height="16" /></td>
                 <td><a href="/rss/content/all/feed.rss" id="rss_link">Лента материалов</a> </td>
-                <td><img src="/admin/images/icons/config.png" width="16" height="16" /></td>
+                <td><img src="images/icons/config.png" width="16" height="16" /></td>
                 <td><a href="index.php?view=components&amp;do=config&amp;id=<?php echo dbGetField('cms_components', "link='rssfeed'", 'id'); ?>" id="rss_link">Настройки RSS </a></td>
               </tr>
             </table>

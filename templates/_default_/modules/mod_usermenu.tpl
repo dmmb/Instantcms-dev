@@ -44,7 +44,7 @@
 
     {if $is_admin || $is_editor}
     <span class="admin">
-        <a href="/admin" target="_blank">{$LANG.USERMENU_ADMININTER}</a>
+        <a href="/{$adminDir}" target="_blank">{$LANG.USERMENU_ADMININTER}</a>
     </span>
     {/if}
 

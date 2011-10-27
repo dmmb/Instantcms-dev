@@ -22,13 +22,13 @@ function applet_repair(){
 	global $adminAccess;
 	if (!$inCore->isAdminCan('admin/config', $adminAccess)) { cpAccessDenied(); }
 
-	include_once($_SERVER['DOCUMENT_ROOT'].'/admin/dbstructure.php');					//correct database structure
+	include_once(ADMIN_PATH.'/dbstructure.php');					//correct database structure
 
-	if (isset($_POST['runsql'])){	
-		include_once($_SERVER['DOCUMENT_ROOT'].'/includes/dbimport.inc.php');					//correct database structure
+	if (isset($_POST['runsql'])){
+		include_once(PATH.'/includes/dbimport.inc.php');					//correct database structure
 		$sql = $_POST['sql'];
-		$file = $_SERVER['DOCUMENT_ROOT'].'/backups/repair.sql';		
-		file_put_contents($file, $sql);			
+		$file = PATH.'/backups/repair.sql';
+		file_put_contents($file, $sql);
 		dbRunSQL($file, $inConf->db_prefix);
 	}
 
@@ -37,21 +37,21 @@ function applet_repair(){
 	$errors = false;
 	$repair_sql = '';
 
-	$tables_sql = "SHOW TABLES";	
-	$tables_result = dbQuery($tables_sql);	
+	$tables_sql = "SHOW TABLES";
+	$tables_result = dbQuery($tables_sql);
 
 	ob_start();
-	
+
 	while($table = mysql_fetch_row($tables_result)){
 
 		$current_table = $table[0];
         $current_table = str_replace($inConf->db_prefix, '#', $current_table);
-		
-		$fields_sql = "SHOW COLUMNS FROM {$table[0]}";	
+
+		$fields_sql = "SHOW COLUMNS FROM {$table[0]}";
 		$fields_result = dbQuery($fields_sql);
-		
+
 		$f = 0;
-        
+
 		while($field = mysql_fetch_assoc($fields_result)){
 			foreach($field as $key=>$value){
 				$mytables[$current_table][$f][$key] = $value;
@@ -66,7 +66,7 @@ function applet_repair(){
 		$diff = @array_diff_key($tables[$current_table], $mytables[$current_table]);
 
         //echo '<pre>'; print_r($diff); echo '</pre>';
-		
+
 		if ($diff){
 			$errors = true;
 			echo '<div style="margin:3px; padding:20px; border:solid 1px silver">';
@@ -77,38 +77,38 @@ function applet_repair(){
 
 	$text = ob_get_clean();
 
-/* -------------- Check missed tables ---------------------------------------------------------------- */	
-	
+/* -------------- Check missed tables ---------------------------------------------------------------- */
+
 	ob_start();
-	
+
 	$missed = '';
 
 	$diff   = @array_diff_key($tables, $mytables);
-	
+
 	if ($diff){
 		echo '<div style="margin:3px; padding:20px; border:solid 1px silver">';
 		foreach($diff as $key=>$data){
 			$errors = true;
             $key    = str_replace('#', $inConf->db_prefix, $key);
 			echo '<li style="list-style:none">Таблица <strong>"'.$key.'"</strong> не существует!</li>';
-			$repair_sql .= "CREATE TABLE `$key` (" . "\n";			
+			$repair_sql .= "CREATE TABLE `$key` (" . "\n";
 				$f = 0; $is_id = false;
 				foreach($data as $item){
 					$f++;
-					if ($item['Field']=='id') { 
-						$is_id = true; 
+					if ($item['Field']=='id') {
+						$is_id = true;
 						$auto_inc = 'auto_increment';
-					} else { 
+					} else {
 						$auto_inc = '';
 					}
-					
-					$null = ($item['Null'] == 'NO') ? 'NOT NULL' : 'NULL'; 
+
+					$null = ($item['Null'] == 'NO') ? 'NOT NULL' : 'NULL';
 					$default = ($item['Default']) ? "DEFAULT '{$item['Default']}'" : '';
-					
+
 					$repair_sql .= "`".$item['Field']."` ".$item['Type']." ".$default." ".$null." ".$auto_inc;
 					if ($f < sizeof($data) || $is_id) { $repair_sql .= ", "; }
 					$repair_sql .= "\n";
-				}			
+				}
 			if ($is_id){
 				$repair_sql .= "PRIMARY KEY  (`id`)" . "\n";
 			}
@@ -116,17 +116,17 @@ function applet_repair(){
 		}
 		echo '</div>';
 	}
-	
+
 	$missed = ob_get_clean();
-	
-/* -------------- Show resume ---------------------------------------------------------------- */	
+
+/* -------------- Show resume ---------------------------------------------------------------- */
 
 	echo '<h3>Проверка целостности БД</h3>';
-	
+
 	cpAddPathway('Проверка БД', 'index.php?view=repair');
 
-	if (!$errors) { 
-		echo '<h3 style="color:green">Структура БД совпадает с эталоном.</h3>'; 
+	if (!$errors) {
+		echo '<h3 style="color:green">Структура БД совпадает с эталоном.</h3>';
 		echo '<div style="margin-top:3px;margin-bottom:30px">
 				Все таблицы имеют нужные поля. Изменения не требуются.
 			  </div>';
@@ -137,7 +137,7 @@ function applet_repair(){
 		}
 		if ($missed){
 			echo '<h3 style="color:red">Отсутствуют таблицы!</h3>';
-			echo $missed;	
+			echo $missed;
 		}
 		if ($repair_sql){
 			echo '<h3>Следующие SQL-запросы добавят отсутствующие таблицы БД:</h3>';

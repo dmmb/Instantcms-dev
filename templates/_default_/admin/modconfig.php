@@ -1,5 +1,5 @@
 <?php global $mod, $cfg_form, $mode, $inCore; ?>
-<form action="/admin/index.php?view=modules&do=save_auto_config&id=<?php echo $mod['id']; ?>&ajax=1<?php if($mode!='xml'){?>&title_only=1<?php } ?>" method="post" name="optform" target="_self" id="optform">
+<form action="/<?php echo $inCore->adminDir;?>/index.php?view=modules&do=save_auto_config&id=<?php echo $mod['id']; ?>&ajax=1<?php if($mode!='xml'){?>&title_only=1<?php } ?>" method="post" name="optform" target="_self" id="optform">
     <div id="mc_module_title">
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
             <tr>
@@ -25,14 +25,14 @@
             <?php echo $cfg_form; ?>
         <?php } elseif($mode == 'php') { ?>
             <div class="params-form">
-                Этот модуль можно настроить только в <a href="/admin/index.php?view=modules&do=config&id=<?php echo $mod['id']; ?>" target="blank">панели управления</a>.
+                Этот модуль можно настроить только в <a href="/<?php echo $inCore->adminDir;?>/index.php?view=modules&do=config&id=<?php echo $mod['id']; ?>" target="blank">панели управления</a>.
             </div>
             <div class="params-buttons">
                 <input type="submit" name="save" value="Сохранить" />
             </div>
         <?php } elseif($mode == 'none') { ?>
             <div class="params-form">
-                Этот модуль можно настроить только в <a href="/admin/index.php?view=modules&do=edit&id=<?php echo $mod['id']; ?>" target="blank">панели управления</a>.
+                Этот модуль можно настроить только в <a href="/<?php echo $inCore->adminDir;?>/index.php?view=modules&do=edit&id=<?php echo $mod['id']; ?>" target="blank">панели управления</a>.
             </div>
             <div class="params-buttons">
                 <input type="submit" name="save" value="Сохранить" />

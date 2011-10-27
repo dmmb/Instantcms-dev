@@ -37,7 +37,7 @@ function moveItem(item_id, dir){
 
 	$.ajax({
 		  type: "POST",
-		  url: "/admin/index.php",
+		  url: "index.php",
 		  data: "view=content&do=move&id="+item_id+"&cat_id="+cat_id+"&dir="+dir,
 		  success: function(msg){
             var trh = $('#listTable tr#'+item_id).html();

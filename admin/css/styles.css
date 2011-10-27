@@ -6,7 +6,7 @@ body {
 	font-size: 12px;
 	color: #000000;
 	margin: 0px;
-	height:100%;	
+	height:100%;
 	background:#FFF;
 }
 
@@ -216,7 +216,7 @@ table {
 }
 .small_box{
 	margin-bottom:4px;
-	border:solid 1px #ADB9C2;   
+	border:solid 1px #ADB9C2;
 }
 .small_box ul{
     list-style: none;
@@ -224,7 +224,7 @@ table {
     margin-left:22px;
     padding:0px;
 }
-.small_box ul li{ 
+.small_box ul li{
     padding:0px;
     padding-left:20px;
     height:17px;
@@ -352,18 +352,18 @@ div.jclock{
 	padding-left:20px;
 	line-height:16px;
 	height:16px;
-	background:url(../images/icons/clock.png) no-repeat left center;	
+	background:url(../images/icons/clock.png) no-repeat left center;
 }
 
 div.juser{
 	padding-left:20px;
 	line-height:16px;
 	height:16px;
-	background:url(../images/icons/user.png) no-repeat left center;	
+	background:url(../images/icons/user.png) no-repeat left center;
 }
 div.juser a, div.jsite a{
 	color:#FFF;
-	font-weight:bold;	
+	font-weight:bold;
 }
 div.jmessages{
 	margin-top:4px;
@@ -376,7 +376,7 @@ div.jsite{
 	padding-left:20px;
 	line-height:16px;
 	height:16px;
-	background:url(../images/icons/site.png) no-repeat left center;	
+	background:url(../images/icons/site.png) no-repeat left center;
 }
 div.jlogout{
 	margin-top:4px;
@@ -393,7 +393,7 @@ input._filterText{
 	display:table;
 	width:92%;
 	_width:10px;
-	border:1px solid #ccc;	
+	border:1px solid #ccc;
 }
 
 .new_content{
@@ -465,9 +465,9 @@ div.filter {
     margin-left:15px;
 }
 
-.advert_billing{ margin-top:8px; background:url(/admin/images/advert/billing.png) no-repeat; }
-.advert_inmaps{ background:url(/admin/images/advert/maps.png) no-repeat; }
-.advert_inshop{ margin-top:0px; margin-bottom:8px; background:url(/admin/images/advert/shop.png) no-repeat; }
+.advert_billing{ margin-top:8px; background:url(../images/advert/billing.png) no-repeat; }
+.advert_inmaps{ background:url(../images/advert/maps.png) no-repeat; }
+.advert_inshop{ margin-top:0px; margin-bottom:8px; background:url(../images/advert/shop.png) no-repeat; }
 
 #catalog_advert{
     padding-left:20px;
@@ -498,7 +498,7 @@ div.filter {
     height:17px;
     line-height:17px;
     padding: 1px 1px 1px 18px;
-    background: url(/admin/images/icons/hmenu/cats.png) no-repeat;
+    background: url(../images/icons/hmenu/cats.png) no-repeat;
     overflow:hidden;
 }
 .cat_link div span{
@@ -511,19 +511,19 @@ div.filter {
 }
 .cat_add_link div{
     padding: 2px 2px 2px 18px;
-    background: url(/admin/images/icons/hmenu/add.png) no-repeat;
+    background: url(../images/icons/hmenu/add.png) no-repeat;
 }
 #slide_cell{
     width:14px;
-    background:url(/admin/images/tree/slide.gif) no-repeat center center #EEE;
+    background:url(../images/tree/slide.gif) no-repeat center center #EEE;
     cursor:pointer;
 }
 .unslided{
-    background:url(/admin/images/tree/unslide.gif) no-repeat center center #EEE !important;
+    background:url(../images/tree/unslide.gif) no-repeat center center #EEE !important;
 }
 #cats_cell{
     padding:12px;
-    background:url(/admin/images/tree/tree_bg.jpg) repeat-y right top #EEE;
+    background:url(../images/tree/tree_bg.jpg) repeat-y right top #EEE;
     width:240px;
 }
 
@@ -536,7 +536,7 @@ div.filter {
     border-top:none;
 }
 
-.param-name{    
+.param-name{
     width:260px;
     padding:0px;
     padding:8px 0px;

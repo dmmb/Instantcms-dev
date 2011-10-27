@@ -14,7 +14,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	require('../includes/jwtabs.php');
 
-	$GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="js/forms.js"></script>';									
+	$GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="js/forms.js"></script>';
 	$GLOBALS['cp_page_head'][] = jwHeader();
 
 	cpAddPathway('Конструктор форм', '?view=components&do=config&id='.$_REQUEST['id']);
@@ -40,14 +40,14 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	//LOAD CURRENT CONFIG
 	$cfg = $inCore->loadComponentConfig('forms');
 
-	if($opt=='saveconfig'){	
+	if($opt=='saveconfig'){
 		$cfg = array();
 		$cfg['email'] = $_REQUEST['email'];
 		$cfg['delivery'] = $_REQUEST['delivery'];
-			
+
 		$inCore->saveComponentConfig('forms', $cfg);
-        
-		header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');	
+
+		header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
 	}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	function autoOrder($form_id){
@@ -58,18 +58,18 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			while ($item = mysql_fetch_assoc($rs)){
 				dbQuery("UPDATE cms_form_fields SET ordering = ".$ord." WHERE id=".$item['id']);
 				$ord += 1;
-			}				
+			}
 		}
 		return true;
 	}
 
 	if($opt == 'up_field'){
-		if(isset($_REQUEST['item_id'])) { 
+		if(isset($_REQUEST['item_id'])) {
 			$id = $_REQUEST['item_id'];
 			$form_id = $_REQUEST['form_id'];
-			$ord = dbGetField('cms_form_fields', 'id = '.$id, 'ordering');		
+			$ord = dbGetField('cms_form_fields', 'id = '.$id, 'ordering');
 			$sql = "SELECT * FROM cms_form_fields WHERE form_id = $form_id AND ordering < $ord ORDER BY ordering DESC LIMIT 1";
-			$rs = dbQuery($sql);			
+			$rs = dbQuery($sql);
 			if (mysql_num_rows($rs)){
 				$prev = mysql_fetch_assoc($rs);
 				$sql = "UPDATE cms_form_fields SET ordering = $ord WHERE id = ".$prev['id'];
@@ -79,16 +79,16 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 				autoOrder($form_id);
 			}
 		}
-		header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id='.$form_id);	
+		header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id='.$form_id);
 	}
 
 	if($opt == 'down_field'){
-		if(isset($_REQUEST['item_id'])) { 
+		if(isset($_REQUEST['item_id'])) {
 			$id = $_REQUEST['item_id'];
 			$form_id = $_REQUEST['form_id'];
-			$ord = dbGetField('cms_form_fields', 'id = '.$id, 'ordering');		
+			$ord = dbGetField('cms_form_fields', 'id = '.$id, 'ordering');
 			$sql = "SELECT * FROM cms_form_fields WHERE form_id = $form_id AND ordering > $ord ORDER BY ordering ASC LIMIT 1";
-			$rs = dbQuery($sql);			
+			$rs = dbQuery($sql);
 			if (mysql_num_rows($rs)){
 				$next = mysql_fetch_assoc($rs);
 				$sql = "UPDATE cms_form_fields SET ordering = $ord WHERE id = ".$next['id'];
@@ -98,31 +98,31 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 				autoOrder($form_id);
 			}
 		}
-		header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id='.$form_id);	
+		header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id='.$form_id);
 	}
-	
+
 	if($opt == 'del_field'){
-		if(isset($_REQUEST['item_id'])) { 
+		if(isset($_REQUEST['item_id'])) {
 			$id = $_REQUEST['item_id'];
 			$form_id = $_REQUEST['form_id'];
 			//DELETE FIELD
 			$sql = "DELETE FROM cms_form_fields WHERE id = $id";
-			dbQuery($sql) ;			
+			dbQuery($sql) ;
 		}
 		header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id='.$form_id);
 	}
-	
+
 	if ($opt == 'add_field'){
-			
+
 		$kind = $_REQUEST['kind'];
 		$title = $_REQUEST['f_title'];
 		$order = $_REQUEST['f_order'];
 		$form_id = $_REQUEST['form_id'];
 		$mustbe = $_REQUEST['mustbe'];
-		
+
 		$cfg = array();
-		
-		switch($kind){		
+
+		switch($kind){
 			case 'text': $cfg['max'] = $_REQUEST['f_text_max'];
 						 $cfg['size'] = $_REQUEST['f_text_size'];
 						 $cfg['default'] = $_REQUEST['f_text_default'];
@@ -133,66 +133,66 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 							 $cfg['default'] = $_REQUEST['f_ta_default'];
 							 break;
 			case 'checkbox': $cfg['checked'] = $_REQUEST['f_checked'];
-							 break;		
+							 break;
 			case 'radiogroup': $cfg['items'] = $_REQUEST['f_rg_list'];
-							   break;		
+							   break;
 			case 'list': $cfg['items'] = $_REQUEST['f_list_list'];
-						 break;		
+						 break;
 			case 'menu': $cfg['items'] = $_REQUEST['f_menu_list'];
-						 break;				
+						 break;
 		}
-		
+
 		$config = serialize($cfg);
-		
+
 		$sql = "INSERT INTO cms_form_fields (form_id, title, ordering, kind, mustbe, config)
 				VALUES ($form_id, '$title', $order, '$kind', $mustbe, '$config')";
 		dbQuery($sql) ;
-		
-		header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id='.$form_id);	
+
+		header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id='.$form_id);
 	}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	if ($opt == 'submit'){
-			
+
 		$title = $inCore->request('title', 'str', 'Форма без названия');
 		$description = $_REQUEST['description'];
 
-		$sendto = $_REQUEST['sendto']; 
+		$sendto = $_REQUEST['sendto'];
 		$email = $_REQUEST['email'];
 		$user_id = $_REQUEST['user_id'];
-		
+
 		$sql = "INSERT INTO cms_forms (title, description, email, sendto, user_id)
 				VALUES ('$title', '$description', '$email', '$sendto', '$user_id')";
 		dbQuery($sql);
-		
-		header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');	
-	}	  
-	
+
+		header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
+	}
+
 	if($opt == 'delete'){
-		if(isset($_REQUEST['item_id'])) { 
+		if(isset($_REQUEST['item_id'])) {
 			$id = $_REQUEST['item_id'];
 			//DELETE FIELDS
 			$sql = "DELETE FROM cms_form_fields WHERE form_id = $id";
-			dbQuery($sql) ;			
+			dbQuery($sql) ;
 			//DELETE FORM
 			$sql = "DELETE FROM cms_forms WHERE id = $id LIMIT 1";
-			dbQuery($sql) ;			
+			dbQuery($sql) ;
 		}
-		header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');	
+		header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
 	}
-	
+
 	if ($opt == 'update'){
-		if(isset($_REQUEST['item_id'])) { 
+		if(isset($_REQUEST['item_id'])) {
 			$id = $_REQUEST['item_id'];
-			
-			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("Укажите название формы!"); }	
+
+			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("Укажите название формы!"); }
 			$description = $_REQUEST['description'];
 
-			$sendto = $_REQUEST['sendto']; 
+			$sendto = $_REQUEST['sendto'];
 			$email = $_REQUEST['email'];
 			$user_id = $_REQUEST['user_id'];
-			
+
 			$sql = "UPDATE cms_forms
-					SET title='$title', 
+					SET title='$title',
 						description='$description',
 						email='$email',
 						sendto='$sendto',
@@ -200,15 +200,15 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					WHERE id = $id
 					LIMIT 1";
 			dbQuery($sql) ;
-							
-			header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');	
+
+			header('location:index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
 		}
 	}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	if ($opt == 'list'){
 		cpAddPathway('Формы', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
 		echo '<h3>Формы</h3>';
-		
+
 		//TABLE COLUMNS
 		$fields = array();
 
@@ -216,7 +216,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = ''; $fields[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id=%id%';
 
-		$fields[2]['title'] = 'E-Mail';		$fields[2]['field'] = 'email';		$fields[2]['width'] = '150'; 	
+		$fields[2]['title'] = 'E-Mail';		$fields[2]['field'] = 'email';		$fields[2]['width'] = '150';
 
 		//ACTIONS
 		$actions = array();
@@ -228,18 +228,18 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$actions[1]['icon']  = 'delete.gif';
 		$actions[1]['confirm'] = 'Удалить форму?';
 		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete&item_id=%id%';
-				
+
 		//Print table
-		cpListTable('cms_forms', $fields, $actions);		
+		cpListTable('cms_forms', $fields, $actions);
 	}
 
 	if($opt=='add' || $opt=='edit'){
-					
+
 		if ($opt=='add'){
 
 			 cpAddPathway('Добавить форму', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add');
 			 echo '<h3>Добавить форму</h3>';
-			 
+
 		} else {
 			 if(isset($_REQUEST['item_id'])){
 				 $id = $_REQUEST['item_id'];
@@ -249,7 +249,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					$mod = mysql_fetch_assoc($result);
 				 }
 			 }
-			
+
 			 echo '<h3>Форма: '.$mod['title'].'</h3>';
  			 cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&id='.$id);
 
@@ -275,7 +275,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		<div id="sendto_mail" <?php if(@$mod['sendto']=='mail' || !isset($mod['sendto'])) { echo 'style="display:block"'; } else { echo 'style="display:none"'; }?>>
 		<table width="605" border="0" cellspacing="5" class="proptable">
           <tr>
-            <td width="16"><img src="/admin/components/forms/email.gif" width="16" height="16"></td>
+            <td width="16"><img src="components/forms/email.gif" width="16" height="16"></td>
             <td width="178"><strong>Адрес e-mail: </strong></td>
             <td><input name="email" type="text" id="email" size="30" value="<?php echo @$mod['email'];?>" style="width:220px;"/></td>
           </tr>
@@ -284,7 +284,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		<div id="sendto_user" <?php if(@$mod['sendto']=='user') { echo 'style="display:block"'; } else { echo 'style="display:none"'; }?>>
 		<table width="605" border="0" cellspacing="5" class="proptable">
           <tr>
-            <td width="16"><img src="/admin/components/forms/user.gif" width="16" height="16"></td>
+            <td width="16"><img src="components/forms/user.gif" width="16" height="16"></td>
             <td width="178"><strong>Получатель: </strong></td>
             <td>
                 <select name="user_id" id="user_id" style="width:220px">
@@ -307,12 +307,12 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 				echo '<p><strong>Пояснения к форме:</strong></p>';
 
                 $inCore->insertEditor('description', $mod['description'], '280', '100%');
-				
+
 				echo '</td>';
 			?>
           </tr>
-        </table>	
-        <?php if ($opt=='add') { echo '<p><b>Примечание: </b>После создания формы вернитесь в режим ее редактирования, чтобы добавить поля. </p>'; } 
+        </table>
+        <?php if ($opt=='add') { echo '<p><b>Примечание: </b>После создания формы вернитесь в режим ее редактирования, чтобы добавить поля. </p>'; }
 		else {echo '<p><b>Примечание: </b> Чтобы вставить форму в материал (статью/новость), укажите в нужном<br/> месте статьи выражение {ФОРМА=Название формы}, либо воспользуйтесь панелью вставки,<br/> расположенной над окном редактора материала.';} ?>
         <p>
           <label>
@@ -330,10 +330,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         </p>
       </form>
       <p>
-        <?php	
-	
+        <?php
+
 	if ($opt=='edit'){
-?>	
+?>
 	{tab=Поля формы}
 	<table width="761" cellpadding="8" cellspacing="5">
 	<tr>
@@ -371,18 +371,18 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                                     </select></td>
                 </tr>
               </table>
-			    		
+
 			<div id="kind_text">
 			  <table width="100%" border="0" cellspacing="2" cellpadding="0">
 
                 <tr>
                   <td width="100">Макс. длина :</td>
-                  <td><input name="f_text_max" type="text" id="f_text_max" value="200" size="6" /> 
+                  <td><input name="f_text_max" type="text" id="f_text_max" value="200" size="6" />
                     символов </td>
                 </tr>
                 <tr>
                   <td>Размер:</td>
-                  <td><input name="f_text_size" type="text" id="f_text_size" value="30" size="6" /> 
+                  <td><input name="f_text_size" type="text" id="f_text_size" value="30" size="6" />
                     символов </td>
                 </tr>
                 <tr>
@@ -396,12 +396,12 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
                 <tr>
                   <td width="100">Макс. длина :</td>
-                  <td><input name="f_ta_max" type="text" id="f_ta_max" value="200" size="6" /> 
+                  <td><input name="f_ta_max" type="text" id="f_ta_max" value="200" size="6" />
                     символов </td>
                 </tr>
                 <tr>
                   <td>Размер:</td>
-                  <td><input name="f_ta_size" type="text" id="f_ta_size" value="30" size="6" /> 
+                  <td><input name="f_ta_size" type="text" id="f_ta_size" value="30" size="6" />
                     символов </td>
                 </tr>
                 <tr>
@@ -413,7 +413,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                   <td><input name="f_ta_default" type="text" id="f_ta_default" size="25" /></td>
                 </tr>
               </table>
-			</div>			
+			</div>
 			<div id="kind_checkbox" style="display:none">
 			  <div id="div" >
                 <table width="100%" border="0" cellspacing="2" cellpadding="0">
@@ -427,7 +427,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                   </tr>
                 </table>
 		      </div>
-			</div>			
+			</div>
 			<div id="kind_radiogroup" style="display:none">
 			  <table width="100%" border="0" cellspacing="2" cellpadding="0">
                 <tr>
@@ -454,13 +454,13 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                   <td><textarea name="f_menu_list" cols="20" rows="5" id="f_menu_list"></textarea></td>
                 </tr>
               </table>
-			</div>	
-						
+			</div>
+
 			<p>
 			  <input type="submit" name="Submit" value="Добавить поле" />
 			</p>
-			</form>			
-			
+			</form>
+
 	  </td>
 		<td width="440" valign="top" class="proptable"><p style="border-bottom:solid 1px black"><b>Предварительный просмотр </b></p>
           <?php echo $inPage->buildForm($id, true); ?></td>
@@ -469,13 +469,13 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	{/tabs}
 	<?php
 	 echo jwTabs(ob_get_clean());
-	
+
 	?>
 	<?php
 	}
-	
+
 	}
-	
+
 
 
 ?>

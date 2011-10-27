@@ -80,7 +80,7 @@ public function addHeadCSS($src){
     $css_tag = '<link href="/'.$src.'" rel="stylesheet" type="text/css" />';
 
     if (!in_array($css_tag, $this->page_head)){ $this->page_head[] = $css_tag; }
-    
+
     return true;
 
 }
@@ -93,7 +93,7 @@ public function addHeadCSS($src){
  */
 public function homeTitle(){
     $inConf = cmsConfig::getInstance();
-    if (isset($inConf->hometitle)) { 
+    if (isset($inConf->hometitle)) {
         if ($inConf->hometitle) { return $inConf->hometitle; }
         else { return $inConf->sitename; }
     }
@@ -163,11 +163,12 @@ public function printHead(){
 
     $inCore = cmsCore::getInstance();
     $inConf = cmsConfig::getInstance();
+    $inUser = cmsUser::getInstance();
 
     $this->page_head = cmsCore::callEvent('PRINT_PAGE_HEAD', $this->page_head);
 
     ob_start();
-    
+
     //Заголовок
     $title = strip_tags($this->title);
     $title = ($inCore->menuId()==1 ? $this->homeTitle() : $title.' - '.$inConf->sitename);
@@ -186,6 +187,8 @@ public function printHead(){
     //JS-функции ядра
     echo '<script type="text/javascript" src="/core/js/common.js"></script>' ."\n";
 
+    if($inUser->is_admin)echo '<script type="text/javascript">var adminDir = "'.$inCore->adminDir.'";</script>' ."\n";
+
     //Остальные JS-файлы
     foreach($this->page_head as $key=>$value) {
         if(strstr($this->page_head[$key], '<script')) {
@@ -202,7 +205,7 @@ public function printHead(){
 
     //Оставшиеся теги
     foreach($this->page_head as $key=>$value) { echo $this->page_head[$key] ."\n"; }
-    
+
     echo ob_get_clean();
 
 }
@@ -259,7 +262,7 @@ public function printPathway($separator='&rarr;'){
     if (($inCore->menuId()==1 && !$inConf->index_pw) || !$inConf->show_pw) { return false; }
 
     if ($inConf->short_pw){ unset($this->pathway[sizeof($this->pathway)-1]); }
-    
+
     if (is_array($this->pathway)){
         echo '<div class="pathway">';
         foreach($this->pathway as $key => $value){
@@ -312,7 +315,7 @@ public function addMenuPathway($menuid){
 
     if ($inDB->num_rows($rs_item)){
         $current_item   = $inDB->fetch_assoc($rs_item);
-        
+
         $left_key       = $current_item['NSLeft'];
         $right_key      = $current_item['NSRight'];
 
@@ -327,7 +330,7 @@ public function addMenuPathway($menuid){
             if ($item['id']>1){
                 $this->addPathway($item['title'], $inCore->menuSeoLink($item['link'], $item['linktype'], $item['id']));
             }
-        }        
+        }
     }
 
     return true;
@@ -353,9 +356,9 @@ public function showTemplate(){
 
     if (file_exists(TEMPLATE_DIR.'template.php')){
         require(TEMPLATE_DIR.'template.php');
-        return; 
+        return;
     }
-    
+
     $inCore->halt('Шаблон "'.TEMPLATE.'" не найден.');
 
 }
@@ -395,7 +398,7 @@ public function showSplash(){
         $inCore->setCookie('splash', md5('splash'), time()+60*60*24*30);
         $_SESSION['splash'] = 1;
         return true;
-        
+
     }
 
     return false;
@@ -451,7 +454,7 @@ public function countModules($position){
 
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
-	
+
     if (!$inCore->isMenuIdStrict()){ $strict_sql = "AND (m.is_strict_bind = 0)"; } else { $strict_sql = ""; }
 
 	$menuid = $inCore->menuId();
@@ -468,7 +471,7 @@ public function countModules($position){
 	$result = $inDB->query($sql);
 
     if (!$inDB->num_rows($result)){ return 0; }
-	
+
 	$mods = array();
 
     while($mod = $inDB->fetch_assoc($result)){
@@ -476,7 +479,7 @@ public function countModules($position){
 		// Проверяем права доступа
 		if (!$inCore->checkContentAccess($mod['access_list'])) { continue; }
 		$mods[] = $mod;
-		
+
 	}
 
     return sizeof($mods);
@@ -521,14 +524,14 @@ public function printModules($position){
 
     if($inDB->num_rows($result)){
         while ($mod = $inDB->fetch_assoc($result)){
-			
+
 			// Проверяем права доступа
 			if (!$inCore->checkContentAccess($mod['access_list'])) { continue; }
-            
+
             $modulefile = PATH.'/modules/'.$mod['content'].'/module.php';
 
             if (!$mod['user']) { cmsCore::loadLanguage('modules/'.$mod['content']); }
-            
+
             if( !$mod['is_external'] ){
                     //PROCESS FILTERS
                     $filters = $inCore->getFilters();
@@ -572,9 +575,9 @@ public function printModules($position){
                 $mod['body']        = $modulebody;
                 $smarty             = $inCore->initSmartyModule();
                 $_CFG['fastcfg']    = isset($_CFG['fastcfg']) ? $_CFG['fastcfg'] : 0;
-                
+
                 if ($_CFG['fastcfg'] && $inCore->userIsAdmin($inUser->id)){
-                    $smarty->assign('cfglink', '/admin/index.php?view=modules&do=edit&id='.$mod['mid']);
+                    $smarty->assign('cfglink', '/'.$inCore->adminDir.'/index.php?view=modules&do=edit&id='.$mod['mid']);
                 }
 
                 $smarty->assign('mod', $mod);
@@ -670,9 +673,9 @@ public function buildForm($form_id, $admin=false, $showtitle=true){
                             $html .= $field['title'];
                             if ($field['mustbe']) { $html .= '<span style="color:red;font-size:20px">*</span>'; }
                             if($admin) {
-                                $html .= '<a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=del_field&form_id='.$form_id.'&item_id='.$field['id'].'" title="Удалить"><img src="/admin/images/actions/delete.gif" border="0" /></a>';
-                                $html .= '<a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=up_field&form_id='.$form_id.'&item_id='.$field['id'].'" title="Переместить вверх"><img src="/admin/images/actions/top.gif" border="0" /></a>';
-                                $html .= '<a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=down_field&form_id='.$form_id.'&item_id='.$field['id'].'" title="Переместить вниз"><img src="/admin/images/actions/down.gif" border="0" /></a>';
+                                $html .= '<a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=del_field&form_id='.$form_id.'&item_id='.$field['id'].'" title="Удалить"><img src="images/actions/delete.gif" border="0" /></a>';
+                                $html .= '<a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=up_field&form_id='.$form_id.'&item_id='.$field['id'].'" title="Переместить вверх"><img src="images/actions/top.gif" border="0" /></a>';
+                                $html .= '<a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=down_field&form_id='.$form_id.'&item_id='.$field['id'].'" title="Переместить вниз"><img src="images/actions/down.gif" border="0" /></a>';
                             }
                         $html .= '</td></tr>';
                         $html .= '<tr><td>'.$this->buildFormField($form_id, $field).'</td></tr>';
@@ -1122,7 +1125,7 @@ public static function getModuleTemplates() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public function siteOffNotify() {
     return '<div style="margin:4px; padding:5px; border:solid 1px red; background:#FFF; position:absolute; z-index:999">
-                <strong style="color:red">Сайт отключен.</strong> 
+                <strong style="color:red">Сайт отключен.</strong>
                 Только администраторы видят его содержимое.
             </div>';
 }

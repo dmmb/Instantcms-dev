@@ -37,11 +37,13 @@
         //
 
 
+/*
         $rules[] = array(
                             'source'  => '/^admin$/i',
                             'target'  => '/admin/index.php',
                             'action'  => 'redirect'
                          );
+*/
 
         $rules[] = array(
                             'source'  => '/^login$/i',
@@ -132,7 +134,7 @@
                             'target'  => 'billing/ref_link/{1}',
                             'action'  => 'rewrite'
                          );
-        
+
         //
         // Баннеры
         //

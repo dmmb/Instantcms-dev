@@ -91,7 +91,7 @@ if ($opt=='list' || $opt=='config'){
 
 }
 
-if($opt=='saveconfig'){	
+if($opt=='saveconfig'){
     $cfg = array();
 	$cfg['seo_club']        = $inCore->request('seo_club', 'str');
     $cfg['enabled_blogs']   = $inCore->request('enabled_blogs', 'str');
@@ -133,7 +133,7 @@ if ($opt == 'hide_club'){
     }
 }
 
-if ($opt == 'submit'){	
+if ($opt == 'submit'){
     $title 			= $inCore->request('title', 'str');
     $description 	= $inCore->request('description', 'html');
     $description    = $inDB->escape_string($description);
@@ -195,7 +195,7 @@ if ($opt == 'submit'){
     clubSaveUsers($id, $members, 'member');
 
     header('location:?view=components&do=config&opt=list&id='.$_REQUEST['id']);
-}	  
+}
 
 if ($opt == 'update'){
     if(isset($_REQUEST['item_id'])) {
@@ -274,7 +274,7 @@ if($opt == 'delete'){
         $id     = (int)$_REQUEST['item_id'];
         $model->deleteClub($id);
     }
-    $inCore->redirect('index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');    
+    $inCore->redirect('index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
 }
 
 cpToolMenu($toolmenu);
@@ -316,7 +316,7 @@ if ($opt == 'list'){
     cpListTable('cms_clubs', $fields, $actions, '', 'pubdate DESC');
 }
 
-if ($opt == 'add' || $opt == 'edit'){	
+if ($opt == 'add' || $opt == 'edit'){
 
     if ($opt=='add'){
         echo '<h3>Добавить клуб</h3>';
@@ -359,10 +359,10 @@ if ($opt == 'add' || $opt == 'edit'){
     require('../includes/jwtabs.php');
     $GLOBALS['cp_page_head'][] = jwHeader();
 
-    $GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="/admin/js/clubs.js"></script>';
+    $GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="js/clubs.js"></script>';
 
     ob_start(); ?>
-    
+
 <form action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id'];?>" method="post" enctype="multipart/form-data" name="addform" id="addform">
     {tab=Обшие настройки}
     <table width="625" border="0" cellspacing="5" class="proptable">
@@ -448,7 +448,7 @@ if ($opt == 'add' || $opt == 'edit'){
                 <?php
 
                     $inCore->insertEditor('description', $mod['description'], '400', '100%');
-                
+
                 ?>
             </td>
         </tr>
@@ -660,6 +660,6 @@ if ($opt=='config') {
         <input name="save" type="submit" id="save" value="Сохранить" />
         <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
     </p>
-</form>	
+</form>
 
 <?php } ?>

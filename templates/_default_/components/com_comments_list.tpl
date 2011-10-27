@@ -4,7 +4,7 @@
 
 {if $comments_count}
 	{foreach key=cid item=comment from=$comments}
-        {math equation="x+1" x=$cid assign="next"}        
+        {math equation="x+1" x=$cid assign="next"}
 		<a name="c{$comment.id}"></a>
         {if $comment.level < $cfg.max_level-1}
             <div style="margin-left:{math equation="x*35" x=$comment.level}px;">
@@ -58,7 +58,7 @@
                                     <a href="javascript:void(0)" onclick="addComment('{php}echo md5(session_id());{/php}', '{$target}', '{$target_id}', {$comment.id})">{$LANG.REPLY}</a>
                                     {if $is_admin || ($comment.is_my && $comment.is_editable && $comment.content_bbcode)}
                                         {if !$comment.content_bbcode}
-                                            | <a href="/admin/index.php?view=components&do=config&id=7&opt=edit&item_id={$comment.id}">{$LANG.EDIT}</a>
+                                            | <a href="/{$adminDir}/index.php?view=components&do=config&id=7&opt=edit&item_id={$comment.id}">{$LANG.EDIT}</a>
                                         {else}
                                             | <a href="javascript:" onclick="editComment('{php}echo md5(session_id());{/php}', '{$comment.id}')">{$LANG.EDIT}</a>
                                         {/if}
@@ -68,7 +68,7 @@
                                     {/if}
                                 </div>
                             {/if}
-						
+
 						{if $comment.is_profile}
 							</div></td></tr></table>
 						{/if}

@@ -1,11 +1,12 @@
 AddDefaultCharset windows-1251
+Options -Indexes
 
 RewriteEngine On
 RewriteBase /
 RewriteRule ^.htaccess$ - [F]
 
 RewriteCond %{REQUEST_URI} !\.(jpg|jpeg|ico|gif|png|css|xml|js|pl|txt)$ [NC]
-RewriteCond %{REQUEST_FILENAME} !^/admin
+#RewriteCond %{REQUEST_FILENAME} !^/admin
 RewriteCond %{REQUEST_FILENAME} !^/migrate
 RewriteCond %{REQUEST_FILENAME} !^/install
 RewriteCond %{REQUEST_FILENAME} !-f

@@ -19,10 +19,10 @@ function cpPriceInput($id){
 	$rs = dbQuery($sql) ;
 	$show = mysql_fetch_assoc($rs);
 	$show = $show['view_type'];
-	
+
 	if ($show == 'shop'){
 		$price = dbGetField('cms_uc_items', 'id='.$id, 'price');
-		$price = number_format($price, 2, '.', '');	
+		$price = number_format($price, 2, '.', '');
 		$html = '<input type="text" name="price['.$id.']" value="'.$price.'" id="priceinput"/>';
 	} else {
 		$html = '&mdash;';
@@ -46,13 +46,13 @@ function cpPriceInput($id){
 	cpAddPathway('Универсальный каталог', '?view=components&do=config&id='.$_REQUEST['id']);
     echo '<h3>Универсальный каталог</h3>';
 
-    $GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/admin/components/catalog/js/common.js"></script>';
+    $GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="components/catalog/js/common.js"></script>';
 
 //=================================================================================================//
 //=================================================================================================//
 
 	$toolmenu = array();
-	
+
 	if ($opt=='list_items' || $opt=='list_cats' || $opt=='list_discount'){
 
         $toolmenu[0]['icon'] = 'newfolder.gif';
@@ -107,7 +107,7 @@ function cpPriceInput($id){
 
 		$toolmenu[16]['icon'] = 'saveprices.gif';
 		$toolmenu[16]['title'] = 'Сохранить цены';
-		$toolmenu[16]['link'] = "javascript:sendForm('index.php?view=components&do=config&id=".$_REQUEST['id']."&opt=saveprices');";	
+		$toolmenu[16]['link'] = "javascript:sendForm('index.php?view=components&do=config&id=".$_REQUEST['id']."&opt=saveprices');";
 	}
 
 //=================================================================================================//
@@ -118,9 +118,9 @@ function cpPriceInput($id){
 		$toolmenu[15]['icon'] = 'cancel.gif';
 		$toolmenu[15]['title'] = 'Отмена';
 		$toolmenu[15]['link'] = '?view=components';
-	
+
 	} else {
-	
+
 		$toolmenu[20]['icon'] = 'save.gif';
 		$toolmenu[20]['title'] = 'Сохранить';
 		$toolmenu[20]['link'] = 'javascript:document.addform.submit();';
@@ -128,7 +128,7 @@ function cpPriceInput($id){
 		$toolmenu[21]['icon'] = 'cancel.gif';
 		$toolmenu[21]['title'] = 'Отмена';
 		$toolmenu[21]['link'] = 'javascript:history.go(-1);';
-	
+
 	}
 
 	cpToolMenu($toolmenu);
@@ -185,7 +185,7 @@ function cpPriceInput($id){
                     $price = '';
 
                     //get each cell in row by user coordinates
-                    foreach($cells as $cell_id=>$pos){                        
+                    foreach($cells as $cell_id=>$pos){
                         if (isset($pos['ignore'])){
                             $celldata = $pos['other'];
                         } else {
@@ -199,7 +199,7 @@ function cpPriceInput($id){
                         } else {
                             $fields[] = $celldata;
                         }
-                    }                    
+                    }
 
                     $fields = serialize($fields);
 
@@ -227,14 +227,14 @@ function cpPriceInput($id){
 //=================================================================================================//
 
 	if($opt=='saveprices'){
-		$prices = $_REQUEST['price'];		
-		if (is_array($prices)){		
+		$prices = $_REQUEST['price'];
+		if (is_array($prices)){
 			foreach($prices as $id=>$price){
 				$price = str_replace(',', '.', $price);
 				$price = number_format($price, 2, '.', '');
 				$sql = "UPDATE cms_uc_items SET price='$price' WHERE id = $id";
 				dbQuery($sql);
-			}		
+			}
 		}
 		header('location:'.$_SERVER['HTTP_REFERER']);
 	}
@@ -244,7 +244,7 @@ function cpPriceInput($id){
 
 	if ($opt == 'show_item'){
 		if (!isset($_REQUEST['item'])){
-			if (isset($_REQUEST['item_id'])){ 
+			if (isset($_REQUEST['item_id'])){
                 dbShow('cms_uc_items', $_REQUEST['item_id']);
                 dbQuery('UPDATE cms_uc_items SET on_moderate = 0 WHERE id='.$_REQUEST['item_id']);
             }
@@ -255,7 +255,7 @@ function cpPriceInput($id){
                 dbQuery('UPDATE cms_uc_items SET on_moderate = 0 WHERE id='.$id);
             }
 			header('location:'.$_SERVER['HTTP_REFERER']);
-		}			
+		}
 	}
 
 //=================================================================================================//
@@ -266,27 +266,27 @@ function cpPriceInput($id){
 			if (isset($_REQUEST['item_id'])){ dbHide('cms_uc_items', $_REQUEST['item_id']);  }
 			echo '1'; exit;
 		} else {
-			dbHideList('cms_uc_items', $_REQUEST['item']);				
-			header('location:'.$_SERVER['HTTP_REFERER']);			
-		}			
+			dbHideList('cms_uc_items', $_REQUEST['item']);
+			header('location:'.$_SERVER['HTTP_REFERER']);
+		}
 	}
 
 //=================================================================================================//
 //=================================================================================================//
 
-	if ($opt == 'submit_item'){	
+	if ($opt == 'submit_item'){
         $inCore->includeGraphics();
-        
+
         $item = array();
 
 		//get variables
 		$item['cat_id']         = $inCore->request('cat_id', 'int', 0);
 		$item['title']          = $inCore->request('title', 'str');
 		$item['published']      = $inCore->request('published', 'int', 0);
-		
+
         $item['fdata']          = $_REQUEST['fdata'];
 		foreach($item['fdata'] as $key=>$value) { $item['fdata'][$key] = trim($value); }
-		
+
         $item['is_comments']    = $inCore->request('is_comments', 'int', 0);
 		$item['meta_desc']      = $inCore->request('meta_desc', 'str');
 		$item['meta_keys']      = $inCore->request('meta_keys', 'str');
@@ -307,22 +307,22 @@ function cpPriceInput($id){
             $item['price']      = $price;
             $item['canmany']    = $canmany;
 		}
-				
+
 		//get fields data
 		$item['fields']     = serialize($item['fdata']);
 		$item['fields']     = mysql_escape_string($item['fields']);
 
         $item['file']   = '';
 
-		if (isset($_FILES["imgfile"]["name"]) && @$_FILES["imgfile"]["name"]!=''){			
-			//generate image file			
+		if (isset($_FILES["imgfile"]["name"]) && @$_FILES["imgfile"]["name"]!=''){
+			//generate image file
 			$tmp_name = $_FILES["imgfile"]["tmp_name"];
-			$file = $_FILES["imgfile"]["name"];			
+			$file = $_FILES["imgfile"]["name"];
 			$path_parts = pathinfo($file);
-			$ext = $path_parts['extension'];	
+			$ext = $path_parts['extension'];
 			$file = md5($file.time()).'.'.$ext;
             $item['file'] = $file;
-			//upload image and insert record in db		
+			//upload image and insert record in db
 			if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/catalog/$file")){
 				@img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", $_SERVER['DOCUMENT_ROOT']."/images/catalog/small/$file.jpg", 100, 100);
 				@img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", $_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$file.jpg", 250, 250);
@@ -331,14 +331,14 @@ function cpPriceInput($id){
 				@chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$file.jpg", 0644);
 			}
 		}
-		
+
         $model->addItem($item);
         $inCore->redirect('?view=components&do=config&opt=list_items&id='.$_REQUEST['id']);
 	}
 
 //=================================================================================================//
 //=================================================================================================//
-	
+
 	if ($opt == 'renew_item'){
 		if($inCore->inRequest('item_id')) {
 			$id = $inCore->request('item_id', 'int');
@@ -349,11 +349,11 @@ function cpPriceInput($id){
 
 //=================================================================================================//
 //=================================================================================================//
-	
+
 	if ($opt == 'update_item'){
 		if($inCore->inRequest('item_id')) {
 			$id = $inCore->request('item_id', 'int');
-			
+
 			$item['cat_id']     = $inCore->request('cat_id', 'int');
 			$item['title']      = $inCore->request('title', 'str');
 			$item['published']  = $inCore->request('published', 'int');
@@ -390,7 +390,7 @@ function cpPriceInput($id){
             }
 
 			if (isset($_FILES["imgfile"]["name"]) && @$_FILES["imgfile"]["name"]!=''){
-                
+
                 $inCore->includeGraphics();
 				$tmp_name   = $_FILES["imgfile"]["tmp_name"];
                 $imageurl   = $model->getItemImageUrl($id);
@@ -408,7 +408,7 @@ function cpPriceInput($id){
                 $path_parts         = pathinfo($file);
                 $ext                = $path_parts['extension'];
                 $file               = md5($file.time()).'.'.$ext;
-                
+
                 $item['imageurl']   = $file;
 
 				if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/catalog/$file")){
@@ -419,8 +419,8 @@ function cpPriceInput($id){
                     @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", 0644);
                     @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/small/$file.jpg", 0644);
                     @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$file.jpg", 0644);
-				} else { $msg = 'Ошибка загрузки изображения!'; }				
-			}					
+				} else { $msg = 'Ошибка загрузки изображения!'; }
+			}
 
 			$model->updateItem($id, $item);
 		}
@@ -436,7 +436,7 @@ function cpPriceInput($id){
 
 	if($opt == 'delete_item'){
 		if ($inCore->inRequest('item_id')){
-			$id = $inCore->request('item_id', 'int');			
+			$id = $inCore->request('item_id', 'int');
 			$model->deleteItem($id);
 		}
 		$inCore->redirect('?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
@@ -470,7 +470,7 @@ function cpPriceInput($id){
             $item['value']  = $inCore->request('value', 'str');
             $item['unit']   = $inCore->request('unit', 'str');
             $item['if_limit']   = $inCore->request('if_limit', 'int', 0);
-            
+
             $model->updateDiscount($id, $item);
 
             $inCore->redirect('?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_discount');
@@ -565,13 +565,13 @@ function cpPriceInput($id){
                 $model->setCategoryAccess($cat['id'], $showfor);
             }
 		}
-        
+
 		$inCore->redirect('?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
     }
 
 //=================================================================================================//
 //=================================================================================================//
-	
+
 	if($opt == 'delete_cat'){
 		if($inCore->inRequest('item_id')) {
 			$id = $inCore->request('item_id', 'int');
@@ -586,7 +586,7 @@ function cpPriceInput($id){
 	if ($opt == 'update_cat'){
 		if($inCore->inRequest('item_id')) {
 			$id = $inCore->request('item_id', 'int');
-			
+
 			$cat['parent_id']      = $inCore->request('parent_id', 'int');
             $cat['title']          = $inCore->request('title', 'str');
             $cat['description']    = $inCore->request('description', 'html');
@@ -638,7 +638,7 @@ function cpPriceInput($id){
             }
 
             $model->updateCategory($id, $cat);
-							
+
 			$inCore->redirect('?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
 		}
 	}
@@ -683,11 +683,11 @@ function cpPriceInput($id){
 		$actions[3]['icon']  = 'delete.gif';
 		$actions[3]['confirm'] = 'Удалить рубрику из каталога?';
 		$actions[3]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete_cat&item_id=%id%';
-				
+
 		//Print table
 		echo '<script type="text/javascript">function openCat(id){ $("#catform input").val(id); $("#catform").submit(); } </script>';
 		echo '<form id="catform" method="post" action="index.php?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items"><input type="hidden" id="filter[category_id]" name="filter[category_id]" value=""></form>';
-		
+
         cpListTable('cms_uc_cats', $fields, $actions, 'parent_id>0', 'NSLeft');
 
 	}
@@ -696,8 +696,8 @@ function cpPriceInput($id){
 //=================================================================================================//
 
 	if ($opt == 'list_items'){
-		$GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/admin/components/catalog/js/common.js"></script>';
-	
+		$GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="components/catalog/js/common.js"></script>';
+
 		cpAddPathway('Записи', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
 
         if ($inCore->inRequest('on_moderate')){
@@ -705,7 +705,7 @@ function cpPriceInput($id){
         } else {
             echo '<h3>Записи</h3>';
         }
-		
+
 		//TABLE COLUMNS
 		$fields = array();
 
@@ -720,16 +720,16 @@ function cpPriceInput($id){
         }
 
 		$fields[1]['filter'] = 15;
-		
+
 		$fields[2]['title'] = 'Показ';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
 		$fields[2]['do'] = 'opt'; $fields[2]['do_suffix'] = '_item';
-		
+
 		$fields[3]['title'] = 'Рубрика';	$fields[3]['field'] = 'category_id';$fields[3]['width'] = '200';
 		$fields[3]['prc'] = 'cpCatalogCatById';  $fields[3]['filter'] = 1;  $fields[3]['filterlist'] = cpGetList('cms_uc_cats');
 
 		$fields[4]['title'] = 'Цена';		$fields[4]['field'] = 'id';	$fields[4]['width'] = '150';
 		$fields[4]['prc'] = 'cpPriceInput';
-		
+
 		//ACTIONS
 		$actions = array();
 		$actions[0]['title'] = 'Обновить дату';
@@ -799,7 +799,7 @@ function cpPriceInput($id){
 
 //=================================================================================================//
 //=================================================================================================//
-	
+
 	if ($opt == 'copy_item'){
 		$item_id    = $inCore->request('item_id', 'int');
 		$copies     = $inCore->request('copies', 'int');
@@ -868,11 +868,11 @@ function cpPriceInput($id){
 //=================================================================================================//
 //=================================================================================================//
 
-		if ($opt == 'edit_item' || isset($_REQUEST['cat_id'])) {		
-			if ($opt=='edit_item') { 
+		if ($opt == 'edit_item' || isset($_REQUEST['cat_id'])) {
+			if ($opt=='edit_item') {
 				$cat_id  = $mod['category_id'];
 				$is_shop = ($mod['viewtype']=='shop');
-			} else { 
+			} else {
 				$cat_id  = $_REQUEST['cat_id'];
 				$is_shop = (dbGetField('cms_uc_cats', 'id='.$cat_id, 'view_type')=='shop');
 			}
@@ -1075,17 +1075,17 @@ function cpPriceInput($id){
                             WHERE parent_id > 0
                             ORDER BY NSLeft";
 					$result = dbQuery($sql);
-					
+
 					if (mysql_num_rows($result)>0){
                         echo '<div style="padding:10px">';
                             while ($cat = mysql_fetch_assoc($result)){
-                                echo '<div style="padding:2px;padding-left:18px;margin-left:'.(($cat['NSLevel']-1)*15).'px;background:url(/admin/images/icons/hmenu/cats.png) no-repeat">
+                                echo '<div style="padding:2px;padding-left:18px;margin-left:'.(($cat['NSLevel']-1)*15).'px;background:url(images/icons/hmenu/cats.png) no-repeat">
                                           <a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_item&cat_id='.$cat['id'].'">'.$cat['title'].'</a>
                                       </div>';
                             }
                         echo '</div>';
 					}
-					
+
 		}
 	}
 
@@ -1099,7 +1099,7 @@ function cpPriceInput($id){
 
 		if ($opt=='add_cat'){
 			 echo '<h3>Добавить рубрику</h3>';
-			 cpAddPathway('Добавить рубрику', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_cat');	 
+			 cpAddPathway('Добавить рубрику', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_cat');
 			} else {
 				 if(isset($_REQUEST['item_id'])){
 					 $id = $_REQUEST['item_id'];
@@ -1110,10 +1110,10 @@ function cpPriceInput($id){
 						$fstruct = unserialize($mod['fieldsstruct']);
 					 }
 				 }
-				
+
 				 echo '<h3>Рубрика: '.$mod['title'].'</h3>';
 	 	 		 cpAddPathway('Рубрики каталога', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
-				 cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id='.$_REQUEST['item_id']);	 
+				 cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id='.$_REQUEST['item_id']);
 			}
 			?>
 
@@ -1278,7 +1278,7 @@ function cpPriceInput($id){
                                     <td><label for="showabc">Алфавитный указатель</label></td>
                                 </tr>
                             </table>
-                            
+
                             {tab=Записи}
 
                             <div style="margin-top:5px;">
@@ -1455,7 +1455,7 @@ function cpPriceInput($id){
                 </p>
             </form>
 
-		 <?php	
+		 <?php
 	}
 
 //=================================================================================================//
@@ -1471,7 +1471,7 @@ function cpPriceInput($id){
 					 $sql = "SELECT * FROM cms_uc_discount WHERE id = $id LIMIT 1";
 					 $result = dbQuery($sql) ;
 					 if (mysql_num_rows($result)){
-						$mod = mysql_fetch_assoc($result);					
+						$mod = mysql_fetch_assoc($result);
 					 }
 				 }
 
@@ -1556,7 +1556,7 @@ function cpPriceInput($id){
 //=================================================================================================//
 //=================================================================================================//
 
-	if($opt=='saveconfig'){	
+	if($opt=='saveconfig'){
 		$cfg = array();
 		$cfg['email']       = $inCore->request('email', 'str', '');
 		$cfg['delivery']    = $inCore->request('delivery', 'html', '');
@@ -1568,7 +1568,7 @@ function cpPriceInput($id){
 		$cfg['watermark']   = $inCore->request('watermark', 'int', 1);
 		$cfg['delivery']    = str_replace('\"', '&quot;', $cfg['delivery']);
 		$cfg['delivery']    = str_replace('"', '&quot;', $cfg['delivery']);
-		
+
         $inCore->saveComponentConfig('catalog', $cfg);
 
 		header('location:index.php?view=components&do=config&id='.$_REQUEST['id']);
@@ -1582,15 +1582,15 @@ function cpPriceInput($id){
 		if (!isset($cfg['email'])) { $cfg['email'] = 'shop@site.ru'; }
 		if (!isset($cfg['delivery'])) { $cfg['delivery'] = 'Сведения о доставке'; }
         if (!isset($cfg['notice'])) { $cfg['notice'] = 0; }
-        if (!isset($cfg['premod'])) { $cfg['premod'] = 1; }        
+        if (!isset($cfg['premod'])) { $cfg['premod'] = 1; }
         if (!isset($cfg['premod_msg'])) { $cfg['premod_msg'] = 1; }
         if (!isset($cfg['is_comments'])) { $cfg['is_comments'] = 0; }
         if (!isset($cfg['is_rss'])) { $cfg['is_rss'] = 1; }
-		
+
 		cpAddPathway('Настройки', $_SERVER['REQUEST_URI']);
-		
+
 		$cfg['delivery'] = str_replace('&quot;', '"', $cfg['delivery']);
-			
+
          ?>
          <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
              <table width="600" border="0" cellpadding="10" cellspacing="0" class="proptable">
@@ -1630,7 +1630,7 @@ function cpPriceInput($id){
                  </tr>
                  <tr>
                      <td><strong>Наносить водяной знак:</strong>  <br />Если включено, то на все загружаемые
-			      фотографии к записям каталога будет наносится изображение 
+			      фотографии к записям каталога будет наносится изображение
 			      из файла "<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>"</td>
                      <td width="260">
                          <input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?> /> Да
@@ -1738,7 +1738,7 @@ function cpPriceInput($id){
                 elseif (strstr($value, '/~l~/')) { $value=str_replace('/~l~/', '', $value); } else { $ftype='text'; }
                 if (strstr($value, '/~m~/')) { $value=str_replace('/~m~/', '', $value); }
                 //show field inputs
-                ?>                
+                ?>
                     <tr id="row_<?php echo $current; ?>">
                         <td width="150"><strong><?php echo $value; ?>:</strong></td>
                         <td>Столбец:</td>
@@ -1816,7 +1816,7 @@ function cpPriceInput($id){
                     <td>
                         <input type="file" name="imgfile" />
                     </td>
-                </tr>                
+                </tr>
             </table>
 
             <p>
@@ -1842,7 +1842,7 @@ function cpPriceInput($id){
             if (mysql_num_rows($result)>0){
                 echo '<div style="padding:10px">';
                     while ($cat = mysql_fetch_assoc($result)){
-                        echo '<div style="padding:2px;padding-left:18px;margin-left:'.(($cat['NSLevel']-1)*15).'px;background:url(/admin/images/icons/hmenu/cats.png) no-repeat">
+                        echo '<div style="padding:2px;padding-left:18px;margin-left:'.(($cat['NSLevel']-1)*15).'px;background:url(images/icons/hmenu/cats.png) no-repeat">
                                   <a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=import_xls&cat_id='.$cat['id'].'">'.$cat['title'].'</a>
                               </div>';
                     }
@@ -1866,5 +1866,5 @@ function cpPriceInput($id){
 
 //=================================================================================================//
 //=================================================================================================//
-			
+
 ?>

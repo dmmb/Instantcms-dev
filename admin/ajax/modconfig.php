@@ -11,16 +11,17 @@
 //                                                                            //
 /******************************************************************************/
 
-    if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
+    if(@$_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
 
     session_start();
 
 	define("VALID_CMS", 1);
 	define("VALID_CMS_ADMIN", 1);
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
+    define('ADMIN_PATH', dirname(__DIR__));//fix me.. или может быть относительные пути для инклудов
 
 	include(PATH.'/core/cms.php');
-	include(PATH.'/admin/includes/cp.php');
+	include(ADMIN_PATH.'/includes/cp.php');
 
     $inCore = cmsCore::getInstance();
 
@@ -56,8 +57,8 @@
 
     if (!$mod) { $inCore->halt(); }
 
-    $xml_file = PATH.'/admin/modules/'.$mod['content'].'/backend.xml';
-    $php_file = PATH.'/admin/modules/'.$mod['content'].'/backend.php';
+    $xml_file = ADMIN_PATH.'/modules/'.$mod['content'].'/backend.xml';
+    $php_file = ADMIN_PATH.'/modules/'.$mod['content'].'/backend.php';
 
     $mode       = 'none';
     $cfg_form   = '';

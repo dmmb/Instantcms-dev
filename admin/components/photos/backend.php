@@ -35,7 +35,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	$toolmenu = array();
 
-	if($opt=='saveconfig'){	
+	if($opt=='saveconfig'){
 		$cfg = array();
 		$cfg['link']        = $_REQUEST['link'];
 		$cfg['saveorig']    = $_REQUEST['saveorig'];
@@ -50,20 +50,20 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$cfg['is_today']   	= $_REQUEST['is_today'];
 
 		$inCore->saveComponentConfig('photos', $cfg);
-        
+
 		$msg = 'Настройки сохранены.';
-		$opt = 'config';				
+		$opt = 'config';
 	}
 
 //=================================================================================================//
 //=================================================================================================//
 
 	if ($opt=='list_photos' || $opt=='list_albums' || $opt=='config'){
-	
+
 		$toolmenu[0]['icon'] = 'newfolder.gif';
 		$toolmenu[0]['title'] = 'Новый альбом';
 		$toolmenu[0]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_album';
-	
+
 		$toolmenu[1]['icon'] = 'newphoto.gif';
 		$toolmenu[1]['title'] = 'Новая фотография';
 		$toolmenu[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_photo';
@@ -71,11 +71,11 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$toolmenu[2]['icon'] = 'newphotomulti.gif';
 		$toolmenu[2]['title'] = 'Массовая загрузка фото';
 		$toolmenu[2]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_photo_multi';
-	
+
 		$toolmenu[3]['icon'] = 'folders.gif';
 		$toolmenu[3]['title'] = 'Фотоальбомы';
 		$toolmenu[3]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_albums';
-	
+
 		$toolmenu[4]['icon'] = 'listphoto.gif';
 		$toolmenu[4]['title'] = 'Все фотографии';
 		$toolmenu[4]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_photos';
@@ -117,9 +117,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$toolmenu[15]['icon'] = 'cancel.gif';
 		$toolmenu[15]['title'] = 'Отмена';
 		$toolmenu[15]['link'] = '?view=components';
-	
+
 	} else {
-	
+
 		$toolmenu[20]['icon'] = 'save.gif';
 		$toolmenu[20]['title'] = 'Сохранить';
 		$toolmenu[20]['link'] = 'javascript:document.addform.submit();';
@@ -127,7 +127,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$toolmenu[21]['icon'] = 'cancel.gif';
 		$toolmenu[21]['title'] = 'Отмена';
 		$toolmenu[21]['link'] = 'javascript:history.go(-1);';
-	
+
 	}
 
 	cpToolMenu($toolmenu);
@@ -140,9 +140,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			if (isset($_REQUEST['item_id'])){ dbShow('cms_photo_files', $_REQUEST['item_id']);  }
 			echo '1'; exit;
 		} else {
-			dbShowList('cms_photo_files', $_REQUEST['item']);				
-			header('location:'.$_SERVER['HTTP_REFERER']);				
-		}			
+			dbShowList('cms_photo_files', $_REQUEST['item']);
+			header('location:'.$_SERVER['HTTP_REFERER']);
+		}
 	}
 
 //=================================================================================================//
@@ -153,9 +153,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			if (isset($_REQUEST['item_id'])){ dbHide('cms_photo_files', $_REQUEST['item_id']);  }
 			echo '1'; exit;
 		} else {
-			dbHideList('cms_photo_files', $_REQUEST['item']);				
-			header('location:'.$_SERVER['HTTP_REFERER']);			
-		}			
+			dbHideList('cms_photo_files', $_REQUEST['item']);
+			header('location:'.$_SERVER['HTTP_REFERER']);
+		}
 	}
 
 //=================================================================================================//
@@ -182,33 +182,33 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             $photo['filename']      = $filename;
 
             $album                  = $model->getAlbumThumbsData($photo['album_id']);
-										
-			if (@move_uploaded_file($_FILES['picture']['tmp_name'], $uploadphoto)) {								
+
+			if (@move_uploaded_file($_FILES['picture']['tmp_name'], $uploadphoto)) {
                 @img_resize($uploadphoto, $uploadthumb, $album['thumb1'], $album['thumb1'], $album['thumbsqr']);
                 @img_resize($uploadphoto, $uploadthumb2, $album['thumb2'], $album['thumb2'], false, $cfg['watermark']);
                 if ($cfg['watermark']) { @img_add_watermark($uploadphoto);	}
 				if (@!$cfg['saveorig']){ @unlink($uploadphoto); }
-                
+
                 $model->addPhoto($photo);
 
 			} else { $msg = 'Ошибка загрузки фотографии!'; }
-			
+
             $inCore->redirect('?view=components&do=config&opt=list_photos&id='.$_REQUEST['id']);
-	}	  
+	}
 
 //=================================================================================================//
 //=================================================================================================//
 
-	if ($opt == 'submit_photo_multi'){	
+	if ($opt == 'submit_photo_multi'){
 			echo '<h3>Загрузка файлов завершена</h3>';
 
-            $photo['album_id']     = $inCore->request('album_id', 'int');			
+            $photo['album_id']     = $inCore->request('album_id', 'int');
 			$photo['description']  = $inCore->request('description', 'html');
             $photo['description']  = $inDB->escape_string($photo['description']);
 			$photo['published']    = $inCore->request('published', 'int');
 			$photo['showdate']     = $inCore->request('showdate', 'int');
             $photo['tags']         = $inCore->request('tags', 'str');
-			
+
 			$uploaddir             = $_SERVER['DOCUMENT_ROOT'].'/images/photos/';
 
             $album                 = $model->getAlbumThumbsData($photo['album_id']);
@@ -219,28 +219,28 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 				foreach ($_FILES as $key => $data_array) {
 					$error = $data_array['error'];
 					if ($error == UPLOAD_ERR_OK) {
-						
+
 						$realfile = $data_array['name'];
 						$tmp_name = $data_array['tmp_name'];
-			
+
 						$lid = dbGetFields('cms_photo_files', 'id>0', 'id', 'id DESC');
-						$lastid = $lid['id']+1;	
+						$lastid = $lid['id']+1;
 						$filename = md5($realfile . '-' . $inUser->id . '-' . time()).'.jpg';
-			
+
 						$uploadfile = $uploaddir . $realfile;
 						$uploadphoto = $uploaddir . $filename;
 						$uploadthumb = $uploaddir . 'small/' . $filename;
 						$uploadthumb2 = $uploaddir . 'medium/' . $filename;
 
                         $photo['filename'] = $filename;
-						
+
                         if (move_uploaded_file($tmp_name, $uploadphoto)){
                             $loaded_files[] = $realfile;
 
                             @img_resize($uploadphoto, $uploadthumb, $album['thumb1'], $album['thumb1'], $album['thumbsqr']);
                             @img_resize($uploadphoto, $uploadthumb2, $album['thumb2'], $album['thumb2'], false, $cfg['watermark']);
                             if ($cfg['watermark']) { @img_add_watermark($uploadphoto);	}
-                            
+
                             if (@!$inCore->inRequest('saveorig')){ @unlink($uploadphoto); }
 
                             if($titlemode == 'number'){
@@ -253,8 +253,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                         }
 					}
 				}
-					
-				echo '<div style="padding:20px">';	
+
+				echo '<div style="padding:20px">';
                     if (sizeof($loaded_files)){
                         echo '<div><strong>Загруженные файлы:</strong></div>';
                         echo '<ul>';
@@ -266,9 +266,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                         echo '<div style="color:red">Ни один файл не был загружен. Может файлы слишком большие?</div>';
                         echo '<div style="color:red">Имена файлов не должны содержать пробелов и русских букв.</div>';
                     }
-                    echo '<div><a href="/admin/index.php?view=components&do=config&opt=list_photos&id='.$_REQUEST['id'].'">Продолжить</a> &rarr;</div>';
+                    echo '<div><a href="index.php?view=components&do=config&opt=list_photos&id='.$_REQUEST['id'].'">Продолжить</a> &rarr;</div>';
 				echo '</div>';
-	}	  
+	}
 
 //=================================================================================================//
 //=================================================================================================//
@@ -276,7 +276,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if ($opt == 'update_photo'){
 		if($inCore->inRequest('item_id')) {
 			$id = $inCore->request('item_id', 'int');
-			
+
             $photo['album_id']     = $inCore->request('album_id', 'int');
             $photo['title']        = $inCore->request('title', 'str');
 			$photo['description']  = $inCore->request('description', 'html');
@@ -299,7 +299,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //=================================================================================================//
 
 	if($opt == 'delete_photo'){
-        
+
 		if (!isset($_REQUEST['item'])){
             $id = (int)$_REQUEST['item_id'];
 			if ($id >= 0){
@@ -321,17 +321,17 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         cpAddPathway('Настройки', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config');
 
 		if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
-			
-		if (!isset($cfg['showlat'])) { $cfg['showlat'] = 1; }		
-		if (!isset($cfg['orderto'])) { $cfg['orderto'] = 'title'; }		
-		if (!isset($cfg['orderby'])) { $cfg['orderby'] = 'ASC'; }		
+
+		if (!isset($cfg['showlat'])) { $cfg['showlat'] = 1; }
+		if (!isset($cfg['orderto'])) { $cfg['orderto'] = 'title'; }
+		if (!isset($cfg['orderby'])) { $cfg['orderby'] = 'ASC'; }
 		if (!isset($cfg['tumb_view'])) { $cfg['tumb_view'] = 1; }
-		if (!isset($cfg['tumb_from'])) { $cfg['tumb_from'] = 1; }	
-		
+		if (!isset($cfg['tumb_from'])) { $cfg['tumb_from'] = 1; }
+
 		?>
 		<?php cpCheckWritable('/images/photos', 'folder'); ?>
 		<?php cpCheckWritable('/images/photos/medium', 'folder'); ?>
-		<?php cpCheckWritable('/images/photos/small', 'folder'); ?>				
+		<?php cpCheckWritable('/images/photos/small', 'folder'); ?>
 
 			<form action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id']; ?>" method="post" enctype="multipart/form-data" name="optform">
 			  <table width="" border="0" cellpadding="10" cellspacing="0" class="proptable">
@@ -342,7 +342,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 				  <input name="link" type="radio" value="0" <?php if (@!$cfg['link']) { echo 'checked="checked"'; } ?>/> Нет				  </td>
 				</tr>
 				<tr>
-				  <td><strong>Сохранять оригиналы при загрузке<br /> 
+				  <td><strong>Сохранять оригиналы при загрузке<br />
 			      фотографий пользователями:</strong> </td>
 				  <td>
 					  <input name="saveorig" type="radio" value="1" <?php if (@$cfg['saveorig']) { echo 'checked="checked"'; } ?>/> Да
@@ -427,7 +427,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //=================================================================================================//
 
 	if ($opt == 'show_album'){
-		if(isset($_REQUEST['item_id'])) { 
+		if(isset($_REQUEST['item_id'])) {
 			$id = $_REQUEST['item_id'];
 			$sql = "UPDATE cms_photo_albums SET published = 1 WHERE id = $id";
 			dbQuery($sql) ;
@@ -439,7 +439,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //=================================================================================================//
 
 	if ($opt == 'hide_album'){
-		if(isset($_REQUEST['item_id'])) { 
+		if(isset($_REQUEST['item_id'])) {
 			$id = $_REQUEST['item_id'];
 			$sql = "UPDATE cms_photo_albums SET published = 0 WHERE id = $id";
 			dbQuery($sql) ;
@@ -453,7 +453,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	function reorder(){
 		$sql = "SELECT * FROM cms_photo_albums ORDER BY NSLeft";
 		$rs = dbQuery($sql);
-		
+
 		if (mysql_num_rows($rs)){
 			$level = array();
 			while ($item = mysql_fetch_assoc($rs)){
@@ -463,7 +463,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					$level[] = 1;
 				}
 				dbQuery("UPDATE cms_photo_albums SET ordering = ".$level[$item['NSLevel']]." WHERE id=".$item['id']);
-			}				
+			}
 		}
 	}
 
@@ -494,12 +494,12 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$album['showtags']      = $inCore->request('showtags', 'int');
 		$album['bbcode']        = $inCore->request('bbcode', 'int');
         $album['is_comments']   = $inCore->request('is_comments', 'int');
-		
+
 		$model->addAlbum($album);
 		reorder();
-				
+
 		$inCore->redirect('?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_albums');
-	}	  
+	}
 
 //=================================================================================================//
 //=================================================================================================//
@@ -518,7 +518,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if ($opt == 'update_album'){
 		if($inCore->inRequest('item_id')) {
 			$id = $inCore->request('item_id', 'int');
-			
+
             $album['title']         = $inCore->request('title', 'str');
             $album['description']   = $inCore->request('description', 'html');
             $album['description']   = $inDB->escape_string($album['description']);
@@ -542,9 +542,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             $album['showtags']      = $inCore->request('showtags', 'int');
             $album['bbcode']        = $inCore->request('bbcode', 'int');
 			$album['iconurl']       = $inCore->request('iconurl', 'str');
-								
+
             $model->updateAlbum($id, $album);
-							
+
 			$inCore->redirect('?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_albums');
 		}
 	}
@@ -553,14 +553,14 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //=================================================================================================//
 
 	if ($opt == 'list_albums'){
-		
+
 		echo '<h3>Фотоальбомы</h3>';
 
 		//TABLE COLUMNS
 		$fields = array();
 
 		$fields[0]['title'] = 'Lt';			$fields[0]['field'] = 'NSLeft';			$fields[0]['width'] = '30';
-		
+
 		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
 		$fields[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_album&item_id=%id%';
 
@@ -577,9 +577,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$actions[1]['icon']  = 'delete.gif';
 		$actions[1]['confirm'] = 'Вместе с альбомом будут удалены все фотографии. Удалить фотоальбом?';
 		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete_album&item_id=%id%';
-				
+
 		//Print table
-		cpListTable('cms_photo_albums', $fields, $actions, 'parent_id>0 AND NSDiffer=""', 'NSLeft');		
+		cpListTable('cms_photo_albums', $fields, $actions, 'parent_id>0 AND NSDiffer=""', 'NSLeft');
 	}
 
 //=================================================================================================//
@@ -588,7 +588,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if ($opt == 'list_photos'){
 		cpAddPathway('Фотографии', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_photos');
 		echo '<h3>Фотографии</h3>';
-		
+
 		//TABLE COLUMNS
 		$fields = array();
 
@@ -605,10 +605,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$fields[3]['do'] = 'opt'; $fields[3]['do_suffix'] = '_photo';
 
 		$fields[4]['title'] = 'Просмотров';	$fields[4]['field'] = 'hits';		$fields[4]['width'] = '90';
-		
+
 		$fields[5]['title'] = 'Альбом';		$fields[5]['field'] = 'album_id';	$fields[5]['width'] = '250';
 		$fields[5]['prc'] = 'cpPhotoAlbumById';  $fields[5]['filter'] = 1;  $fields[5]['filterlist'] = cpGetList('cms_photo_albums');
-	
+
 		//ACTIONS
 		$actions = array();
 		$actions[0]['title'] = 'Редактировать';
@@ -619,14 +619,14 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$actions[1]['icon']  = 'delete.gif';
 		$actions[1]['confirm'] = 'Удалить фотографию?';
 		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete_photo&item_id=%id%';
-				
+
 		//Print table
-		cpListTable('cms_photo_files', $fields, $actions, '', 'id DESC');		
+		cpListTable('cms_photo_files', $fields, $actions, '', 'id DESC');
 	}
 
 //=================================================================================================//
 //=================================================================================================//
-	
+
 	if ($opt == 'add_album' || $opt == 'edit_album'){
 		if ($opt=='add_album'){
 			 cpAddPathway('Фотоальбомы', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_albums');
@@ -639,7 +639,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 						 $result = dbQuery($sql) ;
 						 if (mysql_num_rows($result)){
 							$mod = mysql_fetch_assoc($result);
-							
+
 						 }
 					 }
 					 cpAddPathway('Фотоальбомы', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_albums');
@@ -657,7 +657,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                if (!isset($mod['perpage'])) { $mod['perpage'] = '20'; }
                if (!isset($mod['uplimit'])) { $mod['uplimit'] = 20; }
                if (!isset($mod['published'])) { $mod['published'] = 1; }
-        
+
 		?>
 <script type="text/javascript">
 function showMapMarker(){
@@ -665,7 +665,7 @@ function showMapMarker(){
     $('img#marker_demo').attr('src', '/images/photos/small/'+file);
 }
 </script>
-		
+
         <form id="addform" name="addform" method="post" action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>">
             <table width="610" border="0" cellspacing="5" class="proptable">
                 <tr>
@@ -683,7 +683,7 @@ function showMapMarker(){
                                     if (isset($mod['parent_id'])){
                                         echo $inCore->getListItemsNS('cms_photo_albums', $mod['parent_id']);
                                     } else {
-                                        echo $inCore->getListItemsNS('cms_photo_albums');                                        
+                                        echo $inCore->getListItemsNS('cms_photo_albums');
                                     }
                                 ?>
                             </select>
@@ -839,14 +839,14 @@ function showMapMarker(){
                     <?php  } ?>
                     </td>
                     <td valign="top">
-                    <?php if (dbRowsCount('cms_photo_files', 'album_id = '.$id.'')) { ?>	
+                    <?php if (dbRowsCount('cms_photo_files', 'album_id = '.$id.'')) { ?>
                             <select name="iconurl" id="iconurl" style="width:285px" onchange="showMapMarker()">
                                 <?php
                                     if ($mod['iconurl']){
                                         echo $inCore->getListItems('cms_photo_files', $mod['iconurl'], 'id', 'ASC', 'album_id = '.$id.' AND published = 1', 'file');
                                     } else {
 										echo '<option value="" selected>Выберите мини-эскиз</option>';
-                                        echo $inCore->getListItems('cms_photo_files', 0, 'id', 'ASC', 'album_id = '.$id.' AND published = 1', 'file');                                        
+                                        echo $inCore->getListItems('cms_photo_files', 0, 'id', 'ASC', 'album_id = '.$id.' AND published = 1', 'file');
                                     }
                                 ?>
                             </select>
@@ -883,29 +883,29 @@ function showMapMarker(){
 //=================================================================================================//
 //=================================================================================================//
 
-	if ($opt == 'add_photo' || $opt == 'edit_photo'){	
-			
+	if ($opt == 'add_photo' || $opt == 'edit_photo'){
+
 		if ($opt=='add_photo'){
 			 echo '<h3>Добавить фотографию</h3>';
 		} else {
-					if(isset($_REQUEST['multiple'])){				 
-						if (isset($_REQUEST['item'])){					
+					if(isset($_REQUEST['multiple'])){
+						if (isset($_REQUEST['item'])){
 							$_SESSION['editlist'] = $_REQUEST['item'];
 						} else {
 							echo '<p class="error">Нет выбранных объектов!</p>';
 							return;
-						}				 
+						}
 					 }
-						
+
 					 $ostatok = '';
-					
+
 					 if (isset($_SESSION['editlist'])){
 						$id = array_shift($_SESSION['editlist']);
-						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
+						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else
 						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
 					 } else { $id = $_REQUEST['item_id']; }
-		
-		
+
+
 					 $sql = "SELECT f.*, a.NSDiffer as NSDiffer, a.title as album
                              FROM cms_photo_files f, cms_photo_albums a
                              WHERE f.id = $id AND f.album_id = a.id LIMIT 1";
@@ -916,13 +916,13 @@ function showMapMarker(){
 
 					 echo '<h3>'.$mod['title'].' '.$ostatok.'</h3>';
 					 cpAddPathway('Фотографии', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_photos');
-					 cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_photo&item_id='.$id);		
-						
+					 cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_photo&item_id='.$id);
+
 			}
 		?>
 		<?php cpCheckWritable('/images/photos', 'folder'); ?>
 		<?php cpCheckWritable('/images/photos/medium', 'folder'); ?>
-		<?php cpCheckWritable('/images/photos/small', 'folder'); ?>				
+		<?php cpCheckWritable('/images/photos/small', 'folder'); ?>
         <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" enctype="multipart/form-data" name="addform" id="addform">
         <table width="600" border="0" cellspacing="5" class="proptable">
         <tr>
@@ -999,7 +999,7 @@ function showMapMarker(){
                     echo 'Описание фотографии:<br/>';
 
                     $inCore->insertEditor('description', $mod['description'], '260', '605');
-                    
+
                     echo '</td>';
                 }
                 ?>
@@ -1016,13 +1016,13 @@ function showMapMarker(){
             ?>
         </p>
         </form>
-	 <?php	
+	 <?php
 	}
 
 //=================================================================================================//
 //=================================================================================================//
 
-	if ($opt == 'add_photo_multi'){	
+	if ($opt == 'add_photo_multi'){
 			$GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/includes/jquery/jquery.js"></script>';
 			$GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/includes/jquery/multifile/jquery.multifile.js"></script>';
 
@@ -1032,17 +1032,17 @@ function showMapMarker(){
 											$("#upload_btn").attr(\'value\', \'Идет загрузка...\');
 											$("#cancel_btn").css(\'display\', \'none\');
 											$("#loadergif").css(\'display\', \'block\');
-											document.addform.submit();													
+											document.addform.submit();
 										  }
 									   </script>';
 
-	
+
 			 echo '<h3>Массовая загрузка фото</h3>';
 
 			 cpAddPathway('Массовая загрузка фото', $_SERVER['REQUEST_URI']);
-						
+
 		?>
-         <form action="/admin/index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" enctype="multipart/form-data" name="addform" id="addform">
+         <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" enctype="multipart/form-data" name="addform" id="addform">
          <table width="600" border="0" cellspacing="5" class="proptable">
          <tr>
              <td width="177">Названия фотографий: </td>
@@ -1113,10 +1113,10 @@ function showMapMarker(){
              <input name="opt" type="hidden" id="opt" value="submit_photo_multi" />
          </p>
          </form>
-	 <?php	
+	 <?php
 	}
-	
+
 //=================================================================================================//
 //=================================================================================================//
-		
+
 ?>
