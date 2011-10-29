@@ -74,7 +74,7 @@
 				<div class="usr_msg_bbcodebox">{$bb_toolbar}</div>
 				{$smilies}
 				{$autogrow}
-				<div><textarea class="ajax_autogrowarea" name="content" id="message">{$mod.content}</textarea></div>
+				<div><textarea class="ajax_autogrowarea" name="content" id="message">{$mod.content|escape:'html'}</textarea></div>
                 <div style="margin-top:12px;margin-bottom:15px;" class="hinttext">
                     <strong>{$LANG.IMPORTANT}:</strong> {$LANG.CUT_TEXT},<br/>
                     <a href="javascript:addTagCut('message');" class="ajaxlink">{$LANG.ADD_CUT_TAG}</a> {$LANG.BETWEEN}.

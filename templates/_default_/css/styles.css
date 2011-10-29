@@ -3580,7 +3580,7 @@ table.feed td.date strong { color:green; }
 }
 
 .usr_friend_cell span{ font-size:11px; }
-.usr_friend_cell span.offline{ color:#5F98BF; }
+.usr_friend_cell span.offline{ color:#5F98BF; background:none; }
 
 .usr_albums_list{
     margin:10px 0;
@@ -3631,10 +3631,11 @@ table.feed td.date strong { color:green; }
 	border-right:1px #ECF2F4 solid;
 	border-top:1px #ECF2F4 solid;
     padding: 5px 0;
-	vertical-align:top;
+	vertical-align: middle;
 	text-align:center;
 }
 .action_fr {
+	vertical-align: middle;
 }
 .action_friends td.selected {
     background-color: #FFFFFF;
@@ -3645,8 +3646,6 @@ table.feed td.date strong { color:green; }
 	font-size:40px;
 }
 .action_fr img {
-	width:64px;
-	height:64px;
 }
 .mod_act_all{
     padding:1px;

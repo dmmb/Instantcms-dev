@@ -144,7 +144,7 @@ if ($do=='club'){
 
     //CHECK IMAGE
     if (!$club['imageurl']) { $club['imageurl'] = 'nopic.jpg'; } else {
-        if (!file_exists($_SERVER['DOCUMENT_ROOT'].'/images/clubs/'.$club['imageurl'])){
+        if (!file_exists(PATH.'/images/clubs/'.$club['imageurl'])){
             $club['imageurl'] = 'nopic.jpg';
         }
     }
@@ -275,6 +275,7 @@ if ($do == 'config'){
 
     if ( $inCore->inRequest('save') ){
         //save to database
+		$title 		        = $inCore->request('title', 'str', '');
         $description 		= $inCore->request('description', 'html', '');
         $description 		= $inCore->badTagClear($description);
         $description 		= $inDB->escape_string($description);
@@ -324,6 +325,7 @@ if ($do == 'config'){
 
         $model->updateClub($id, array(
                                         'admin_id'=>$admin_id,
+										'title'=>$title,
                                         'description'=>$description,
                                         'clubtype'=>$clubtype,
                                         'maxsize'=>$maxsize,
@@ -335,6 +337,8 @@ if ($do == 'config'){
                                         'join_min_karma'=>$join_min_karma,
                                         'join_karma_limit'=>$join_karma_limit
                                     ));
+
+		cmsActions::updateLog('add_club', array('object' => $title), $id);
 
         if ($inUser->is_admin && IS_BILLING){
             $is_vip    = $inCore->request('is_vip', 'int', 0);
@@ -399,7 +403,7 @@ if ($do == 'config'){
 
         //CHECK IMAGE
         if (!$club['imageurl']) { $club['imageurl'] = 'nopic.jpg'; } else {
-            if (!file_exists($_SERVER['DOCUMENT_ROOT'].'/images/clubs/'.$club['imageurl'])){
+            if (!file_exists(PATH.'/images/clubs/'.$club['imageurl'])){
                 $club['imageurl'] = 'nopic.jpg';
             }
         }

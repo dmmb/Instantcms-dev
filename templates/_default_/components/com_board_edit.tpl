@@ -24,7 +24,7 @@
 				<span>{$LANG.TEXT_ADV}:</span>
 			</td>
 			<td height="100" valign="top">
-				<textarea name="content" style="width:400px" rows="5" id="content">{$item.content}</textarea>
+				<textarea name="content" style="width:400px" rows="5" id="content">{$item.content|escape:'html'}</textarea>
 			</td>
 		</tr>
 		{if $item.cat_id}
@@ -151,12 +151,6 @@
 			</tr>
 		{/if}
 
-        {if !$is_admin}
-		<tr>
-			<td valign="top">{$LANG.ANTISPAM}:</td>
-			<td>{php}echo cmsPage::getCaptcha();{/php}</td>
-		</tr>
-        {/if}
 		<tr>
 			<td height="40" colspan="2" valign="middle">
 				<input name="submit" type="submit" id="submit" style="margin-top:10px;font-size:18px" value="{$LANG.SAVE_ADV}" {if $is_admin || ($is_billing && $cfg.vip_enabled)}onclick="if(!checkBalance())return false;"{/if} />

@@ -984,7 +984,8 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 								edittimes = edittimes + 1
 							WHERE id = '$id'";
 					$inDB->query($sql) ;
-					$inCore->registerUploadImages(session_id(), $id, 'forum');						
+					$inCore->registerUploadImages(session_id(), $id, 'forum');
+					cmsActions::updateLog('add_fpost', array('description' => $message), $id);
 					if ($pages==1){
 						$inCore->redirect('/forum/thread'.$msg['thread_id'].'.html#'.$id);
 					} else {
@@ -1009,49 +1010,53 @@ if ($do=='movethread'){
 
 	if (!$inUser->id){ cmsUser::goToLogin(); }
 
-	if ($inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('forum/moderate')){
-		
-		if (!isset($_POST['gomove'])){ //SHOW MOVE FORM
-					
-			$inPage->setTitle($_LANG['MOVE_THREAD']);
-			$inPage->addPathway($_LANG['MOVE_THREAD'], $_SERVER['REQUEST_URI']);
+	if (!$inUser->is_admin && !$inCore->isUserCan('forum/moderate')){ cmsCore::error404(); }
 
-			echo '<div class="con_heading">'.$_LANG['MOVE_THREAD'].'</div>';
-		
-			$t = $model->getThread($id);
-			if(!$t) { cmsCore::error404(); }
-			
-			echo '<div style="margin-top:10px"><strong>'.$_LANG['THREAD'].':</strong> <a href="/forum/thread'.$t['id'].'.html">'.$t['title'].'</a></div>';
-			echo '<div><form action="" method="POST">';
-			echo '<table border="0" cellpadding="10" style="background-color:#EBEBEB"><tr><td valign="top">'.$_LANG['MOVE_THREAD_IN_FORUM'].':</td>';
-			echo '<td valign="top"><select name="forum_id">';
+	$t = $model->getThread($id);
+	if(!$t) { cmsCore::error404(); }
 
-			$fsql = "SELECT * FROM cms_forums";
-			$fresult = $inDB->query($fsql) ;
-			if ($inDB->num_rows($fresult)){
-				while ($f = $inDB->fetch_assoc($fresult)){
-					echo '<option value="'.$f['id'].'" ';
-					if ($t['forum_id'] == $f['id']) { echo 'selected'; }
-					echo '>'.$f['category_id'].' --- '.$f['title'].'</option>';
-				}
-			}
-			
-			echo '</select></td>';
-			echo '<td valign="top"><input type="submit" name="gomove" value="'.$_LANG['MOVE'].'"/></td></tr></table>';
-			echo '</form></div>';				
+	if (!isset($_POST['gomove'])){ //SHOW MOVE FORM
 				
-		} else { //DO MOVE
-		
-			if (@$_POST['forum_id']){				
-				$fid = intval($_POST['forum_id']);
-				if (usrCheckAuth() && $inCore->userIsAdmin(@$inUser->id) || $inCore->isUserCan('forum/moderate')){		
-					$inDB->query("UPDATE cms_forum_threads SET forum_id = '$fid' WHERE id = '$id'") ;
-				}									
+		$inPage->setTitle($_LANG['MOVE_THREAD']);
+		$inPage->addPathway($_LANG['MOVE_THREAD']);
+
+		echo '<div class="con_heading">'.$_LANG['MOVE_THREAD'].'</div>';
+	
+		echo '<div style="margin-top:10px"><strong>'.$_LANG['THREAD'].':</strong> <a href="/forum/thread'.$t['id'].'.html">'.$t['title'].'</a></div>';
+		echo '<div><form action="" method="POST">';
+		echo '<table border="0" cellpadding="10" style="background-color:#EBEBEB"><tr><td valign="top">'.$_LANG['MOVE_THREAD_IN_FORUM'].':</td>';
+		echo '<td valign="top"><select name="forum_id">';
+
+		$fsql = "SELECT * FROM cms_forums";
+		$fresult = $inDB->query($fsql) ;
+		if ($inDB->num_rows($fresult)){
+			while ($f = $inDB->fetch_assoc($fresult)){
+				echo '<option value="'.$f['id'].'" ';
+				if ($t['forum_id'] == $f['id']) { echo 'selected'; }
+				echo '>'.$f['category_id'].' --- '.$f['title'].'</option>';
 			}
-			$inCore->redirect('/forum/'.$fid);			
 		}
 		
-	} else { echo usrAccessDenied(); }
+		echo '</select></td>';
+		echo '<td valign="top"><input type="submit" name="gomove" value="'.$_LANG['MOVE'].'"/></td></tr></table>';
+		echo '</form></div>';				
+			
+	} else { //DO MOVE
+
+		$fid = $inCore->request('forum_id', 'int', 0);
+
+		$f = $model->getForum($fid);
+		if(!$f) { cmsCore::error404(); }
+
+		$access_list = $inCore->yamlToArray($f['access_list']);
+		$is_hidden = $access_list ? 1 : 0;
+
+		$inDB->query("UPDATE cms_forum_threads SET forum_id = '$fid', is_hidden = '{$is_hidden}' WHERE id = '$id'") ;
+
+		cmsActions::updateLog('add_thread', array('target' => $f['title'], 'target_url' => '/forum/'.$f['id'], 'target_id' => $f['id']), $id);
+
+		$inCore->redirect('/forum/'.$fid);			
+	}
 
 }
 ///////////////////////////// RENAME THREAD /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1059,54 +1064,53 @@ if ($do=='renamethread'){
 
 	if (!$inUser->id){ cmsUser::goToLogin(); }
 
-	if ($inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('forum/moderate')){
-		
-		if (!isset($_POST['gorename'])){ //SHOW MOVE FORM
-					
-			$inPage->setTitle($_LANG['RENAME_THREAD']);
-			$inPage->addPathway($_LANG['RENAME_THREAD'], $_SERVER['REQUEST_URI']);
+	if (!$inUser->is_admin && !$inCore->isUserCan('forum/moderate')){ cmsCore::error404(); }
 
-			echo '<div class="con_heading">'.$_LANG['RENAME_THREAD'].'</div>';
+	$t = $model->getThread($id);
+	if(!$t) { cmsCore::error404(); }
 
-			$t = $model->getThread($id);
-			if(!$t) { cmsCore::error404(); }										
-
-			echo '<div style="margin-top:10px"><strong>'.$_LANG['THREAD'].':</strong> <a href="/forum/thread'.$t['id'].'.html">'.$t['title'].'</a></div>';
-			
-			echo '<div style="margin-top:5px"><form action="" method="POST">';
-			
-			echo '<table border="0" cellpadding="5" style="background-color:#EBEBEB">
-				  <tr><td valign="top">'.$_LANG['THREAD_TITLE'].':</td>';
-			
-				echo '<td valign="top">
-						<input type="hidden" name="tid" value="'.$t['id'].'"/>
-						<input type="text" size="45" value="'.htmlspecialchars($t['title']).'" name="title" id="title"/>
-					 </td>';
-
-			echo '</tr><tr><td valign="top">'.$_LANG['DESCRIPTION'].':</td>';
-			
-				echo '<td valign="top">
-						<input type="text" size="45" value="'.htmlspecialchars($t['description']).'" name="description" id="title"/>
-					 </td>';
+	if (!isset($_POST['gorename'])){ //SHOW MOVE FORM
 				
-			echo '</tr></table>';
-			
-			echo '<div style="margin-top:5px"><input type="submit" name="gorename" value="'.$_LANG['SAVE'].'"/> <input type="button" onclick="window.history.go(-1);" name="cancel" value="'.$_LANG['CANCEL'].'"/></div></form></div>';
-				
-		} else { //DO RENAME
+		$inPage->setTitle($_LANG['RENAME_THREAD']);
+		$inPage->addPathway($_LANG['RENAME_THREAD'], $_SERVER['REQUEST_URI']);
+
+		echo '<div class="con_heading">'.$_LANG['RENAME_THREAD'].'</div>';
+
+		echo '<div style="margin-top:10px"><strong>'.$_LANG['THREAD'].':</strong> <a href="/forum/thread'.$t['id'].'.html">'.$t['title'].'</a></div>';
 		
-			if (@$_POST['title']){				
-				$title          = $inCore->request('title', 'str');
-				$description    = $inCore->request('description', 'str');
-				$tid 			= $inCore->request('tid', 'int');
-				if (usrCheckAuth() && $inCore->userIsAdmin(@$inUser->id) || $inCore->isUserCan('forum/moderate')){		
-					$inDB->query("UPDATE cms_forum_threads SET title = '$title', description = '$description' WHERE id = $id") 	;
-				}									
-			}
-			$inCore->redirect('/forum/thread'.$tid.'.html');			
+		echo '<div style="margin-top:5px"><form action="" method="POST">';
+		
+		echo '<table border="0" cellpadding="5" style="background-color:#EBEBEB">
+			  <tr><td valign="top">'.$_LANG['THREAD_TITLE'].':</td>';
+		
+			echo '<td valign="top">
+					<input type="hidden" name="tid" value="'.$t['id'].'"/>
+					<input type="text" size="45" value="'.htmlspecialchars($t['title']).'" name="title" id="title"/>
+				 </td>';
+
+		echo '</tr><tr><td valign="top">'.$_LANG['DESCRIPTION'].':</td>';
+		
+			echo '<td valign="top">
+					<input type="text" size="45" value="'.htmlspecialchars($t['description']).'" name="description" id="title"/>
+				 </td>';
+			
+		echo '</tr></table>';
+		
+		echo '<div style="margin-top:5px"><input type="submit" name="gorename" value="'.$_LANG['SAVE'].'"/> <input type="button" onclick="window.history.go(-1);" name="cancel" value="'.$_LANG['CANCEL'].'"/></div></form></div>';
+			
+	} else { //DO RENAME
+	
+		if (@$_POST['title']){				
+			$title       = $inCore->request('title', 'str');
+			$description = $inCore->request('description', 'str');
+
+			$inDB->query("UPDATE cms_forum_threads SET title = '$title', description = '$description' WHERE id = '$id'");
+			cmsActions::updateLog('add_fpost', array('target' => $title), 0, $id);
+			cmsActions::updateLog('add_thread', array('object' => $title), $id);
+
 		}
-		
-	} else { echo usrAccessDenied(); }
+		$inCore->redirect('/forum/thread'.$id.'.html');			
+	}
 
 }
 ///////////////////////////// DELETE THREAD /////////////////////////////////////////////////////////////////////////////////////////////////

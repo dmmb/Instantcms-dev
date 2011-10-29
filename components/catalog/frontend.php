@@ -903,9 +903,9 @@ function catalog(){
             if (strstr($value, '/~m~/')) { $makelink = true; $value=str_replace('/~m~/', '', $value); }
             else { $makelink = false; }
 
-            $next['ftype']      = $ftype;
-            $next['title']      = $value;
-            $next['makelink']   = $makelink;
+            $next['ftype']      = stripslashes($ftype);
+            $next['title']      = stripslashes($value);
+            $next['makelink']   = stripslashes($makelink);
 
             if ($fdata[$f_id]){
                 $next['value']  = stripslashes($fdata[$f_id]);
@@ -1057,7 +1057,10 @@ function catalog(){
 					));
 				}
 		}
-        if ($opt=='edit'){ $model->updateItem($item_id, $item); }
+        if ($opt=='edit'){
+			$model->updateItem($item_id, $item);
+			cmsActions::updateLog('add_catalog', array('object' => $item['title']), $item_id);
+		}
 
         if ($inUser->id != 1 && $cfg['premod'] && $cfg['premod_msg']){
 

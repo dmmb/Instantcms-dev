@@ -393,7 +393,6 @@ if ($do=='additem'){
         $obtype     = $inCore->request('obtype', 'str');
         $title      = $inCore->request('title', 'str', '');
         $content 	= $inCore->request('content', 'str', '');
-        $captcha    = $inCore->request('code', 'str', '');
         $city_ed    = $inCore->request('city_ed', 'str', '');
         $city       = $inCore->request('city', 'str', '');
         $city       = $city ? $city : $city_ed;
@@ -414,8 +413,6 @@ if ($do=='additem'){
         if (!$title) 	 { cmsCore::addSessionMessage($_LANG['NEED_TITLE'], 'error'); $errors = true; }
         if (!$content) { cmsCore::addSessionMessage($_LANG['NEED_TEXT_ADV'], 'error'); $errors = true; }
         if (!$city)    { cmsCore::addSessionMessage($_LANG['NEED_CITY'], 'error'); $errors = true; }
-
-        if (!$inCore->checkCaptchaCode($captcha) && !$inUser->is_admin){ cmsCore::addSessionMessage($_LANG['ERR_CAPTCHA'], 'error'); $errors = true; }
 
         if ($errors){
 			$item['content'] = $_REQUEST['content'];
@@ -529,7 +526,6 @@ if ($do=='edititem'){
         $obtype     = $inCore->request('obtype', 'str');
         $title      = $inCore->request('title', 'str', '');
         $content 	= $inCore->request('content', 'str', '');
-        $captcha    = $inCore->request('code', 'str', '');
         $vipdays    = $inCore->request('vipdays', 'int', 0);
 
         $new_cat_id     = $inCore->request('category_id', 'int', 0);
@@ -557,7 +553,6 @@ if ($do=='edititem'){
         if (!$title) { cmsCore::addSessionMessage($_LANG['NEED_TITLE'], 'error'); $errors = true; }
         if (!$content) { cmsCore::addSessionMessage($_LANG['NEED_TEXT_ADV'], 'error'); $errors = true; }
         if (!$city)    { cmsCore::addSessionMessage($_LANG['NEED_CITY'], 'error'); $errors = true; }
-        if (!$inCore->checkCaptchaCode($captcha) && !$inUser->is_admin){ cmsCore::addSessionMessage($_LANG['ERR_CAPTCHA'], 'error'); $errors = true; }
 
 		if ($errors){ $inCore->redirect('/board/edit'.$id.'.html'); }
 
@@ -576,6 +571,8 @@ if ($do=='edititem'){
                                     'published'=>$published,
                                     'file'=>$file['filename']
                                 ));
+
+		cmsActions::updateLog('add_board', array('object' => $obtype.' '.$title), $id);
 
         if ($inUser->is_admin && $vipdays){
             $model->setVip($id, $vipdays);

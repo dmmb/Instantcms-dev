@@ -146,15 +146,13 @@ if ($do=='create'){
         if ($cfg['min_karma'] && !$inCore->userIsAdmin($inUser->id)){
             $user_karma = cmsUser::getKarma($inUser->id);
             if ($ownertype=='single' && ($user_karma < $cfg['min_karma_private']))
-                $error_msg = '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/'.$user_id.'/karma.html">'.$_LANG['BLOG_KARMS'].'</a> '.$_LANG['FOR_CREATE_PERSON_BLOG'].' &mdash; '.$cfg['min_karma_private'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
+                $error_msg .= '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/'.$user_id.'/karma.html">'.$_LANG['BLOG_KARMS'].'</a> '.$_LANG['FOR_CREATE_PERSON_BLOG'].' &mdash; '.$cfg['min_karma_private'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
             if ($ownertype=='multi' && ($user_karma < $cfg['min_karma_public']))
-                $error_msg = '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/'.$user_id.'/karma.html">'.$_LANG['BLOG_KARMS'].'</a> '.$_LANG['FOR_CREATE_TEAM_BLOG'].' &mdash; '.$cfg['min_karma_public'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
+                $error_msg .= '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/'.$user_id.'/karma.html">'.$_LANG['BLOG_KARMS'].'</a> '.$_LANG['FOR_CREATE_TEAM_BLOG'].' &mdash; '.$cfg['min_karma_public'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
         }
 
         //Если ошибки не были найдены
         if(!$error_msg){
-            $inPage->backButton(false);
-            $inPage->setTitle($_LANG['BLOG_CREATED']);
             //Добавляем блог в базу
             $blog_id = $model->addBlog(array('user_id'=>$user_id, 'title'=>$title, 'allow_who'=>$allow_who, 'ownertype'=>$ownertype));
             $blog_link = $inDB->get_field('cms_blogs', "id={$blog_id}", 'seolink');
@@ -171,21 +169,15 @@ if ($do=='create'){
             
             if (IS_BILLING){ cmsBilling::process('blogs', 'add_blog'); }
 
-            //Выводим сообщение о том что блог создан
-            $smarty  = $inCore->initSmarty('components', 'com_blog_create_ok.tpl');
-            $smarty->assign('blogid', $blog_id);
-            $smarty->assign('url', $model->getBlogURL(null, $blog_link));
-            $smarty->assign('profile_url', cmsUser::getProfileURL($inUser->login)); 
-            $smarty->assign('userid', $user_id);
-            $smarty->display('com_blog_create_ok.tpl');
+			cmsCore::addSessionMessage($_LANG['BLOG_CREATED_TEXT'], 'info');
+			$inCore->redirect($model->getBlogURL(null, $blog_link));
+
         }
 
         //Если найдены ошибки
         if($error_msg){
-            $inPage->setTitle($_LANG['ERR_BLOG_CREATE']);
-            $smarty = $inCore->initSmarty('components', 'com_blog_create_error.tpl');
-            $smarty->assign('error_msg', $error_msg);
-            $smarty->display('com_blog_create_error.tpl');
+			cmsCore::addSessionMessage($error_msg, 'error');
+			$inCore->redirect('/blogs/createblog.html');
         }
     }
 	
@@ -250,9 +242,9 @@ if ($do=='config'){
         if ($cfg['min_karma'] && !$inCore->userIsAdmin($inUser->id)){
             $user_karma = cmsUser::getKarma($inUser->id);
             if ($ownertype=='single' && ($user_karma < $cfg['min_karma_private']))
-                $error_msg = '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/'.$user_id.'/karma.html">'.$_LANG['KARMS'].'</a> '.$_LANG['FOR_CREATE_PERSON_BLOG'].' &mdash; '.$cfg['min_karma_private'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
+                $error_msg .= '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/'.$user_id.'/karma.html">'.$_LANG['KARMS'].'</a> '.$_LANG['FOR_CREATE_PERSON_BLOG'].' &mdash; '.$cfg['min_karma_private'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
             if ($ownertype=='multi' && ($user_karma < $cfg['min_karma_public']))
-                $error_msg = '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/'.$user_id.'/karma.html">'.$_LANG['KARMS'].'</a> '.$_LANG['FOR_CREATE_TEAM_BLOG'].' &mdash; '.$cfg['min_karma_public'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
+                $error_msg .= '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/'.$user_id.'/karma.html">'.$_LANG['KARMS'].'</a> '.$_LANG['FOR_CREATE_TEAM_BLOG'].' &mdash; '.$cfg['min_karma_public'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
         }
 
         //Если ошибки не найдены
@@ -263,6 +255,9 @@ if ($do=='config'){
             $model->updateBlogAuthors($blog['id'], $authors);
             //сохраняем настройки блога
             $blog['seolink_new'] = $model->updateBlog($blog['id'], array('title'=>$title, 'allow_who'=>$allow_who, 'showcats'=>$showcats, 'ownertype'=>$ownertype, 'premod'=>$premod, 'forall'=>$forall), $cfg['update_seo_link_blog']);
+			
+			cmsActions::updateLog('add_post', array('target' => $title), 0, $blog['id']);
+			
             //Перенаправляем на главную страницу блога
 			$blog_url = $cfg['update_seo_link_blog'] ? $model->getBlogURL(null, $blog['seolink_new']) : $model->getBlogURL(null, $blog['seolink']);
             $inCore->redirect($blog_url);
@@ -270,11 +265,8 @@ if ($do=='config'){
 
         //Если найдены ошибки
         if($error_msg) {
-            //Показываем сообщение об ошибках
-            $inPage->setTitle($_LANG['ERR_CONFIG_BLOG']);
-            $smarty = $inCore->initSmarty('components', 'com_blog_create_ok.tpl');
-            $smarty->assign('error_msg', $error_msg);
-            $smarty->display('com_blog_save_error.tpl');
+			cmsCore::addSessionMessage($error_msg, 'error');
+			$inCore->redirect('/blogs/'.$blog['id'].'/editblog.html');
         }
 
     }
@@ -877,6 +869,12 @@ if ($do=='newpost' || $do=='editpost'){
                 if ($cfg['update_date']){
                     $inDB->query("UPDATE cms_blog_posts SET pubdate = NOW() WHERE id={$post_id}");
                 }
+
+				if ($blog['owner']=='user'){
+					cmsActions::updateLog('add_post', array('object' => $title), $post_id);
+				} elseif ($blog['owner']=='club'){
+					cmsActions::updateLog('add_post_club', array('object' => $title), $post_id);
+				}
 
                 $inCore->redirect($model->getBlogURL(null, $blog['seolink']));
                 

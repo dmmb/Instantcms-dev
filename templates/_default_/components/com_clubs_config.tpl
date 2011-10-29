@@ -28,6 +28,14 @@
 	<div id="about">
 		<table width="100%" border="0" cellspacing="0" cellpadding="10" style="border-bottom:solid 1px silver;margin-bottom:20px">
 			<tr>
+				<td colspan="2">
+				  <strong>{$LANG.CLUB_NAME}: </strong>
+				  </td>
+				<td>
+					<input name="title"  type="text" style="width:270px;" value="{$club.title|escape:'html'}" />
+				</td>			
+			</tr>
+			<tr>
 				<td width="48">
 					<div style="padding:2px; border: solid 1px silver">
 						<img src="/images/clubs/small/{$club.imageurl}" border="0" alt="{$club.title|escape:'html'}"/>
@@ -37,7 +45,7 @@
 					<label>{$LANG.UPLOAD_LOGO}:</label>
 				</td>
 				<td>
-					<input name="picture" type="file" id="picture" />
+					<input name="picture" type="file" id="picture" style="width:270px;" />
 				</td>			
 			</tr>	
 		</table>	

@@ -144,7 +144,7 @@ class cms_model_clubs{
 /* ==================================================================================================== */
 
     public function updateClubImage($club_id, $filename) {
-        $sql = "UPDATE cms_clubs SET imageurl = '$filename' WHERE id=$club_id";
+        $sql = "UPDATE cms_clubs SET imageurl = '$filename' WHERE id='$club_id'";
         $this->inDB->query($sql);
         return true;
     }
@@ -156,6 +156,7 @@ class cms_model_clubs{
         $item = cmsCore::callEvent('UPDATE_CLUB', $item);
         $sql = "UPDATE cms_clubs
                 SET admin_id = '{$item['admin_id']}',
+					title = '{$item['title']}',
                     description = '{$item['description']}',
                     clubtype = '{$item['clubtype']}',
                     maxsize = '{$item['maxsize']}',
@@ -168,7 +169,7 @@ class cms_model_clubs{
                     join_karma_limit = {$item['join_karma_limit']},
                     is_vip = '{$item['is_vip']}',
                     join_cost = '{$item['join_cost']}'
-                WHERE id = $club_id";
+                WHERE id = '$club_id'";
         $this->inDB->query($sql);
         return true;
     }

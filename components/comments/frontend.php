@@ -442,6 +442,8 @@ function comments($target='', $target_id=0, $labels=array()){
                 'content'=>$content,
                 'content_bbcode'=>$content_bb
             ));
+			$content = strip_tags( strlen(strip_tags($content))>140 ? substr(strip_tags($content), 0, 140) : $content );
+			cmsActions::updateLog('add_comment', array('description' => $content), $comment_id);
 
 		}
 

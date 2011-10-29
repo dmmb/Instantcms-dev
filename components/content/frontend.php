@@ -532,6 +532,8 @@ if ($do=='addarticle' || $do=='editarticle'){
 
             $model->updateArticle($id, $article, true);
 
+			cmsActions::updateLog('add_article', array('object' => $article['title']), $id);
+
 			if (!$article['published'] && !$is_auto_add){
                 $article['seolink']  = $inDB->get_field('cms_content', "id='$id'", 'seolink');
                 $article['category'] = $inDB->get_fields('cms_category', "id='{$article['category_id']}'", 'title, seolink');

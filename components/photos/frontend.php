@@ -622,6 +622,10 @@ if ($do=='editphoto'){
 									
 		$model->updatePhoto($photo['id'], $photo);
 
+		$description = '<a href="/photos/photo'.$photo['id'].'.html" class="act_photo"><img border="0" src="/images/photos/small/'.$photo['filename'].'" /></a>';
+
+		cmsActions::updateLog('add_photo', array('object' => $photo['title'], 'description' => $description), $photo['id']);
+
 		$inCore->redirect('/photos/photo'.$photo['id'].'.html');
 					
 	} else { 
@@ -687,9 +691,14 @@ if ($do=='movephoto'){
 		if ($inCore->inRequest('album_id')){
 
 			$album_id = $inCore->request('album_id', 'int');
+			
+			$new_album = $model->getAlbum($album_id);
+			if (!$new_album) { cmsCore::error404(); }
 
 			$inDB->query("UPDATE cms_photo_files SET album_id = '$album_id' WHERE id = '{$photo['id']}'");
-			
+
+			cmsActions::updateLog('add_photo', array('target' => $new_album['title'], 'target_url' => '/photos/'.$new_album['id'], 'target_id' => $new_album['id']), $photo['id']);
+
 			cmsCore::addSessionMessage($_LANG['PHOTO_MOVED'], 'info');
 
 		} else {

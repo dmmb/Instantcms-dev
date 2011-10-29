@@ -15,6 +15,8 @@ class cmsActions {
 
     private static $instance;
 
+	private static $defaultLogArray = array('user_id'=>'','object'=>'','object_url'=>'','object_id'=>'','target'=>'','target_url'=>'','target_id'=>'','description'=>'','is_friends_only'=>'','is_users_only'=>'');
+
     private $show_targets = true;
 	private $where = '';
     private $limit = 100;
@@ -41,6 +43,27 @@ class cmsActions {
 
         $this->where        = '';
         $this->limit        = '';
+
+    }
+
+// ============================================================================ //
+// ============================================================================ //
+
+    public static function checkLogArrayValues($input_array = array()) {
+
+		if(!$input_array || !is_array($input_array)) { return array(); }
+
+		$inDB = cmsDatabase::getInstance();
+
+		// убираем ненужные ячейки массива
+		foreach($input_array as $k=>$v){
+		   	if (!isset(self::$defaultLogArray[$k])) { unset($input_array[$k]); continue; }
+			$input_array[$k] =  $inDB->escape_string(stripslashes(str_replace(array('\r', '\n'), ' ', $input_array[$k])));
+			$input_array[$k] =  preg_replace('/\[hide\](.*?)\[\/hide\]/i', '', $input_array[$k]);
+			$input_array[$k] =  preg_replace('/\[hide\](.*?)$/i', '', $input_array[$k]);
+		}
+
+		return $input_array;
 
     }
 
@@ -102,21 +125,18 @@ class cmsActions {
      */
     public static function log($action_name, $params){
 
-        $inDB = cmsDatabase::getInstance();
+		$params = self::checkLogArrayValues($params);
+		if(!$params) { return false; }
+
+        $inDB   = cmsDatabase::getInstance();
         $inUser = cmsUser::getInstance();
 
         if (!$inUser->id && $action_name != 'add_user'){ return false; }
 
         $action = self::getAction($action_name);
-
         if (!$action) { return false; }
 
-		$params['object']      =  $inDB->escape_string(stripslashes(str_replace(array('\r', '\n'), ' ', $params['object'])));
-		$params['target']      =  $inDB->escape_string(stripslashes(str_replace(array('\r', '\n'), ' ', $params['target'])));
-		$params['description'] =  $inDB->escape_string(stripslashes(str_replace(array('\r', '\n'), ' ', $params['description'])));
-        $params['description'] =  preg_replace('/\[hide\](.*?)\[\/hide\]/i', '', $params['description']);
-        $params['description'] =  preg_replace('/\[hide\](.*?)$/i', '', $params['description']);
-		$params['user_id']     =  $params['user_id'] ? $params['user_id'] : $inUser->id;
+		$params['user_id'] =  $params['user_id'] ? $params['user_id'] : $inUser->id;
 		
         $sql = "INSERT INTO cms_actions_log (action_id, pubdate, user_id, object, object_url, object_id,
                                              target, target_url, target_id, description, is_friends_only, is_users_only)
@@ -184,6 +204,42 @@ class cmsActions {
         $inDB = cmsDatabase::getInstance();
 
         $inDB->query("DELETE FROM cms_actions_log WHERE id = '{$id}'");
+
+    }
+
+    /**
+     * Обновляет запись ленты
+     * @return bool
+     */
+    public static function updateLog($action_name, $params, $object_id=0, $target_id=0){
+
+		$inDB = cmsDatabase::getInstance();
+
+		$params = self::checkLogArrayValues($params);
+
+		if(!$params) { return false; }
+		if(!$object_id && !$target_id) { return false; }
+
+		// Получаем id записи 
+		$action = self::getAction($action_name);
+		if (!$action) { return false; }
+
+		// формируем запрос на вставку в базу
+		foreach($params as $field=>$value){
+			$set .= "{$field} = '{$value}',";
+		}
+		$set = rtrim($set, ',');
+
+		// если обновляем сам объект
+		if($object_id){
+			$inDB->query("UPDATE cms_actions_log SET {$set} WHERE action_id='{$action['id']}' AND object_id='{$object_id}' LIMIT 1");
+		}
+		// если обновляем все место назначения
+		if($target_id){
+			$inDB->query("UPDATE cms_actions_log SET {$set} WHERE action_id='{$action['id']}' AND target_id='{$target_id}'");
+		}
+
+		return true;
 
     }
 
