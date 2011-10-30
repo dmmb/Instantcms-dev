@@ -34,6 +34,7 @@ class cmsCore {
 
     private         $uri;
     public          $component;
+	public          $components = array();
     private         $is_content = false;
 
     private         $module_configs = array();
@@ -67,6 +68,9 @@ class cmsCore {
 
         //определим компонент
         $this->component = $this->detectComponent();
+
+        //загрузим все компоненты в память
+        $this->components = $this->getAllComponents();
 
     }
 
@@ -514,6 +518,25 @@ class cmsCore {
 
     }
 
+    /**
+     * Задает полный список включенных компонентов
+     * @return array
+     */
+    public function getAllComponents() {
+
+        $inDB = cmsDatabase::getInstance();
+
+		// если уже получали, возвращаемся
+		if($this->components && is_array($this->components)) { return $this->components; }
+
+		// Получаем список компонентов
+		$this->components = $inDB->get_table('cms_components', '', 'id, title, link, config, internal, published, version, system');
+		if (!$this->components){ die('kernel panic'); }
+
+        return $this->components;
+
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * Устанавливает компонент
@@ -659,8 +682,7 @@ class cmsCore {
 
             if (file_exists($installer_file)){
 
-                $installed = $inDB->rows_count('cms_components', "link='{$component}'", 1);
-                if (!$installed){
+                if (!$this->isComponentInstalled($component)){
                     $new_components[] = $component;
                 }
 
@@ -684,11 +706,8 @@ class cmsCore {
         $inDB = cmsDatabase::getInstance();
 
         $upd_components    = array();
-        $all_components    = $inDB->get_table('cms_components');
 
-        if (!$all_components) { return false; }
-
-        foreach($all_components as $component){            
+        foreach($this->components as $component){            
             if($this->loadComponentInstaller($component['link'])){
                 $version    = $component['version'];
                 $_component = call_user_func('info_component_'.$component['link']);
@@ -742,9 +761,15 @@ class cmsCore {
      */
     public function getComponentId($component){
 
-        $inDB = cmsDatabase::getInstance();
+		$component_id = 0;
 
-        return $inDB->get_field('cms_components', "link='{$component}'", 'id');
+		foreach ($this->components as $inst_component){
+		   if($inst_component['link'] == $component){
+			  $component_id = $inst_component['id']; break;
+		   }
+		}
+
+        return $component_id;
 
     }
 
@@ -757,9 +782,13 @@ class cmsCore {
      */
     public function getComponentById($component_id){
 
-        $inDB = cmsDatabase::getInstance();
+		$link = '';
 
-        $link = $inDB->get_field('cms_components', "id={$component_id}", 'link');
+		foreach ($this->components as $inst_component){
+		   if($inst_component['id'] == $component_id){
+			  $link = $inst_component['link']; break;
+		   }
+		}
 
         return $link;
 
@@ -774,9 +803,15 @@ class cmsCore {
      */
     public function getComponentVersion($component){
 
-        $inDB = cmsDatabase::getInstance();
+		$version = '';
 
-        return $inDB->get_field('cms_components', "link='{$component}'", 'version');
+		foreach ($this->components as $inst_component){
+		   if($inst_component['link'] == $component){
+			  $version = $inst_component['version']; break;
+		   }
+		}
+
+        return $version;
 
     }
 
@@ -2017,16 +2052,17 @@ class cmsCore {
      */
     public function loadComponentConfig($component){
 
-        $inDB = cmsDatabase::getInstance();
-
-        $config = array();
-
         if (isset($this->component_configs[$component])) { return $this->component_configs[$component]; }
 
-        $config_yaml = $inDB->get_fields('cms_components', "link='{$component}'", 'config, published');
+		$config = array();
 
-        $config = $this->yamlToArray($config_yaml['config']);
-		$config['component_enabled'] = $config_yaml['published'];
+		foreach ($this->components as $inst_component){
+		   if($inst_component['link'] == $component){
+			  $config = $this->yamlToArray($inst_component['config']);
+			  $config['component_enabled'] = $inst_component['published'];
+			  break;
+		   }
+		}
 
         $this->cacheComponentConfig($component, $config);
 
@@ -2830,8 +2866,16 @@ class cmsCore {
      * @return bool
      */
     public function isComponentInstalled($component){
-        $inDB = cmsDatabase::getInstance();
-        return (bool)$inDB->rows_count('cms_components', "link='{$component}'", 1);
+
+		$is_installed = false;
+
+		foreach ($this->components as $inst_component){
+		   if($inst_component['link'] == $component){
+			  $is_installed = true; break;
+		   }
+		}
+
+        return $is_installed;
     }
 
     public function isModuleInstalled($module) {
