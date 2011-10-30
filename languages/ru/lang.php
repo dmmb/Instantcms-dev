@@ -124,4 +124,17 @@ $_LANG['BILLING_POINT1']        ='балл';
 $_LANG['BILLING_POINT2']        ='балла';
 $_LANG['BILLING_POINT10']       ='баллов';
 $_LANG['ANTISPAM']              ='Защита от спама';
+$_LANG['LESS_MINUTE']           ='меньше минуты';
+$_LANG['MANY_YARS']             ='много лет';
+$_LANG['MINUTE1']               ='минута';
+$_LANG['MINUTU1']               ='минуту';
+$_LANG['MINUTE2']               ='минуты';
+$_LANG['MINUTE10']              ='минут';
+$_LANG['DAY1']                  ='день';
+$_LANG['DAY2']                  ='дня';
+$_LANG['DAY10']                 ='дней';
+$_LANG['HOUR1']                 ='час';
+$_LANG['HOUR2']                 ='часа';
+$_LANG['HOUR10']                ='часов';
+
 ?>

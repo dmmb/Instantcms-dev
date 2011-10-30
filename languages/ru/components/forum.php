@@ -170,6 +170,10 @@ $_LANG['NOT_THREADS_IN_FORUM']       ='Нет тем в этом форуме';
 
 $_LANG['TOPIC_FIXED_LABEL']          ='Проблема решена, закрыть тему';
 $_LANG['TOPIC_FIXED_PREFIX']         ='[РЕШЕНО]';
-$_LANG['ONLINE']                    ='Онлайн';
-$_LANG['OFFLINE']                   ='Оффлайн';
+$_LANG['ONLINE']                     ='Онлайн';
+$_LANG['OFFLINE']                    ='Оффлайн';
+$_LANG['EDIT_IS_DISABLE']            ='Редактирование сообщения запрещено';
+$_LANG['EDIT_INFO']                  ='Для редактирования сообщения у Вас осталось {min}';
+$_LANG['MSG_IS_DELETED']             ='Сообщение успешно удалено';
+
 ?>

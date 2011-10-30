@@ -585,14 +585,17 @@ if ($do=='thread'){
 									  <td><a href="javascript:addQuoteText(\''.$p['author'].'\')" title="'.$_LANG['ADD_SELECTED_QUOTE'].'">'.$_LANG['ADD_QUOTE_TEXT'].'</a></td>';
 								echo '<td width="15"><img style="margin-left:5px" src="/components/forum/images/toolbar/post-reply.gif"/></td>';
 								echo '<td><a href="/forum/thread'.$t['id'].'-quote'.$p['id'].'.html" title="'.$_LANG['REPLY_FULL_QUOTE'].'">'.$_LANG['REPLY'].'</a></td>';
-								if ($mypost || ($is_moder && !$model->abstract_array['is_admin'][$p['uid']])){
-									echo '<td width="15"><img style="margin-left:5px" src="/components/forum/images/toolbar/post-edit.gif"/></td>
-										  <td><a href="/forum/editpost'.$p['id'].'.html">'.$_LANG['EDIT'].'</a></td>';
-									if ($num > 1){
-										echo '<td width="15"><img style="margin-left:5px" src="/components/forum/images/toolbar/post-delete.gif"/></td>
-											  <td><a href="/forum/deletepost'.$p['id'].'.html">'.$_LANG['DELETE'].'</a></td>';
-									}
-								}
+
+$end_min = $model->checkEditTime($p['pubdate'], $cfg['edit_minutes']);
+
+if (($is_moder && !$model->abstract_array['is_admin'][$p['uid']]) || $inUser->is_admin || ($mypost && ($end_min>0 && $cfg['edit_minutes']>0)) || ($mypost && !$cfg['edit_minutes'])){
+	echo '<td width="15"><img style="margin-left:5px" src="/components/forum/images/toolbar/post-edit.gif"/></td>
+		  <td><a href="/forum/editpost'.$p['id'].'.html">'.$_LANG['EDIT'].'</a></td>';
+	if ($num > 1){
+		echo '<td width="15"><img style="margin-left:5px" src="/components/forum/images/toolbar/post-delete.gif"/></td>
+			  <td><a href="/forum/deletepost'.$p['id'].'.html">'.$_LANG['DELETE'].'</a></td>';
+	}
+}
 						echo '</tr></table>';
 					}
 					
@@ -752,7 +755,24 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 		$msg = $model->getPost($id);
 		if(!$msg) { cmsCore::error404(); }
 		if(!$inUser->is_admin && !$inCore->isUserCan('forum/moderate') && $inUser->id != $msg['user_id']) { cmsCore::error404(); }
-	
+
+		// Получаем тему
+		$t = $model->getThread($msg['thread_id']);
+		if(!$t) { cmsCore::error404(); }
+		if($t['closed'] == 1) { cmsCore::error404(); }
+
+		if(!$inUser->is_admin && !$inCore->isUserCan('forum/moderate') && $cfg['edit_minutes']){
+
+			$end_min  = $model->checkEditTime($msg['pubdate'], $cfg['edit_minutes']);
+
+			if($cfg['edit_minutes'] == -1 || $end_min <= 0){
+				cmsCore::addSessionMessage($_LANG['EDIT_IS_DISABLE'], 'error');
+				$inCore->redirectBack();
+			} else {
+				$msg_minute = str_replace('{min}', cmsCore::spellCount($end_min, $_LANG['MINUTE1'], $_LANG['MINUTE2'], $_LANG['MINUTE10']), $_LANG['EDIT_INFO']);
+				cmsCore::addSessionMessage($msg_minute, 'info');
+			}
+		}
 		$inPage->setTitle($_LANG['EDIT_POST']);
 		$inPage->addPathway($_LANG['EDIT_POST'], $_SERVER['REQUEST_URI']);
 		echo '<div class="con_heading">'.$_LANG['EDIT_POST'].'</div>';
@@ -999,11 +1019,27 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 }
 ///////////////////////////// DELETE POST /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='deletepost'){
-	$post_user_id = $inDB->get_field('cms_forum_posts', "id = '$id'", 'user_id');
-	if (usrCheckAuth() && ($inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('forum/moderate') || $inUser->id == $post_user_id)){
-		$model->deletePost($id, $inUser->id);
-	}	
+
+	if (!$inUser->id){ cmsUser::goToLogin(); }
+
+	$msg = $model->getPost($id);
+	if(!$msg) { cmsCore::error404(); }
+	if(!$inUser->is_admin && !$inCore->isUserCan('forum/moderate') && $inUser->id != $msg['user_id']) { cmsCore::error404(); }
+
+	if(!$inUser->is_admin && !$inCore->isUserCan('forum/moderate') && $cfg['edit_minutes']){
+
+		$end_min  = $model->checkEditTime($msg['pubdate'], $cfg['edit_minutes']);
+		if($cfg['edit_minutes'] == -1 || $end_min <= 0){
+			cmsCore::error404();
+		}
+
+	}
+
+	cmsCore::addSessionMessage($_LANG['MSG_IS_DELETED'], 'info');
+	$model->deletePost($id, $inUser->id);
+
 	$inCore->redirectBack();
+
 }
 ///////////////////////////// MOVE THREAD /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='movethread'){

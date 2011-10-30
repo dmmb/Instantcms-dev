@@ -3724,7 +3724,21 @@ class cmsCore {
     public function clearSessionTrash(){
         unset($_SESSION['bbcode']);
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	public static function spellCount($num, $one, $two, $many) {
 
+		if ($num%10==1 && $num%100!=11){
+			$str = $one;
+		}elseif($num%10>=2 && $num%10<=4 && ($num%100<10 || $num%100>=20)){
+			$str = $two;
+		}else{
+			$str = $many;
+		}
+
+		return $num.' '.$str;
+
+	}
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
@@ -3734,65 +3748,37 @@ class cmsCore {
      */
     public static function dateDiffNow($date) {
 
+		global $_LANG;
+
         $diff_str   = '';
 
         $now        = time();
         $date       = strtotime($date);
 
-        if ($date == 0) { return 'не известно'; }
+        if ($date == 0) { return $_LANG['MANY_YARS']; }
 
         $diff_sec   = $now - $date;
 
-        $diff_day   = (string)round($diff_sec/60/60/24);
-        $diff_hour  = (string)round(($diff_sec/60/60) - ($diff_day*24));
-        $diff_min   = (string)round(($diff_sec/60)-($diff_hour*60));
+        $diff_day   = round($diff_sec/60/60/24);
+        $diff_hour  = round(($diff_sec/60/60) - ($diff_day*24));
+        $diff_min   = round(($diff_sec/60)-($diff_hour*60));
 
         //Выводим разницу в днях
         if ($diff_day > 0){
-
-            if ($diff_day == 11 || $diff_day == 12 || $diff_day == 13 || $diff_day == 14) {
-                $diff_str = $diff_day. " дней";
-            } elseif ($diff_day[strlen($diff_day)-1] == "2" || $diff_day[strlen($diff_day)-1] == "3" || $diff_day[strlen($diff_day)-1] == "4") {
-                $diff_str = $diff_day." дня";
-            } elseif($diff_day[strlen($diff_day)-1] == "1") {
-                $diff_str = $diff_day. " день";
-            } else {
-                $diff_str = $diff_day. " дней";
-            }
-
-            return $diff_str;
-
+            return self::spellCount($diff_day, $_LANG['DAY1'], $_LANG['DAY2'], $_LANG['DAY10']);
         }
 
         //Выводим разницу в часах
         if ($diff_hour > 0){
-
-            if ($diff_hour == 1 || $diff_hour == 21) $diff_str = $diff_hour." час"; else
-            if ($diff_hour == 2 || $diff_hour == 3 or $diff_hour == 4 || $diff_hour == 22 || $diff_hour == 23) $diff_str = $diff_hour." часа";
-            else $diff_str = $diff_hour." часов";
-
-            return $diff_str;
-
+            return self::spellCount($diff_hour, $_LANG['HOUR1'], $_LANG['HOUR2'], $_LANG['HOUR10']);
         }
 
         //Выводим разницу в минутах
         if ($diff_min > 0){
-
-            if ($diff_min == "11" || $diff_min == "12" || $diff_min == "13" || $diff_min == "14") {
-                $diff_str = $diff_min. " минут";
-            } elseif ($diff_min[strlen($diff_min)-1] == "2" || $diff_min[strlen($diff_min)-1] == "3" || $diff_min[strlen($diff_min)-1] == "4") {
-                $diff_str = $diff_min." минуты";
-            } elseif($diff_min[strlen($diff_min)-1] == "1") {
-                $diff_str = $diff_min. " минуту";
-            } else {
-                $diff_str = $diff_min. " минут";
-            }
-
-            return $diff_str;
-
+            return self::spellCount($diff_min, $_LANG['MINUTU1'], $_LANG['MINUTE2'], $_LANG['MINUTE10']);
         }
 
-        $diff_str = 'меньше минуты';
+        $diff_str = $_LANG['LESS_MINUTE'];
 
         return $diff_str;
 

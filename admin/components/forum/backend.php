@@ -132,6 +132,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$cfg['fa_ext']      = str_replace('htm', '', $cfg['fa_ext']);
 		$cfg['fa_ext']      = str_replace('php', '', $cfg['fa_ext']);
 		$cfg['fa_size']     = $inCore->request('fa_size', 'int');
+		$cfg['edit_minutes'] = $inCore->request('edit_minutes', 'int');
 
 		$inCore->saveComponentConfig('forum', $cfg);
 
@@ -341,6 +342,23 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                     <td valign="top">
                         <input name="fast_bb" type="radio" value="1" <?php if (@$cfg['fast_bb'] || !isset($cfg['fast_bb'])) { echo 'checked="checked"'; } ?> /> Вкл
                         <input name="fast_bb" type="radio" value="0" <?php if (@!$cfg['fast_bb']) { echo 'checked="checked"'; } ?>/> Выкл
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top"><strong>Запрещать редактирование/удаление через:</strong><br />
+                        <span class="hinttext">Спустя указанное время после добавления поста его редактирование/удаление станет невозможным для пользователя</span>
+                    </td>
+                    <td valign="top">
+                        <select name="edit_minutes" style="width:200px">
+                            <option value="0" <?php if(!$cfg['edit_minutes']) { echo 'selected'; } ?>>не запрещать</option>
+                            <option value="-1" <?php if(@$cfg['edit_minutes']==-1) { echo 'selected'; } ?>>запрещать сразу</option>
+                            <option value="1" <?php if(@$cfg['edit_minutes']==1) { echo 'selected'; } ?>>1 минуту</option>
+                            <option value="5" <?php if(@$cfg['edit_minutes']==5) { echo 'selected'; } ?>>5 минут</option>
+                            <option value="10" <?php if(@$cfg['edit_minutes']==10) { echo 'selected'; } ?>>10 минут</option>
+                            <option value="15" <?php if(@$cfg['edit_minutes']==15) { echo 'selected'; } ?>>15 минут</option>
+                            <option value="30" <?php if(@$cfg['edit_minutes']==30) { echo 'selected'; } ?>>30 минут</option>
+                            <option value="60" <?php if(@$cfg['edit_minutes']==60) { echo 'selected'; } ?>>1 час</option>                        
+                        </select>
                     </td>
                 </tr>
            </table>
