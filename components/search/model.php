@@ -284,7 +284,7 @@ class cms_model_search{
 
 		while ($res = $this->inDB->fetch_assoc($result)){
 
-			$res['pubdate'] = cmsCore::dateFormat($res['pubdate'], true, false, false);
+			$res['pubdate'] = $res['pubdate'] ? cmsCore::dateFormat($res['pubdate'], true, false, false) : '';
 			// заголовок с учетом подсветки слов поиска
 			$res['s_title'] = $this->getHighlightedText($res['title']);
 			// описание с учетом подсветки слов поиска
