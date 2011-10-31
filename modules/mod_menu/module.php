@@ -21,14 +21,18 @@
 
 		if (!isset($cfg['menu'])) { $menu = 'mainmenu'; } else { $menu = $cfg['menu']; }
 		if (!isset($cfg['show_home'])) { $cfg['show_home'] = 1; }
+		if (!isset($cfg['is_sub_menu'])) { $cfg['is_sub_menu'] = 0; }
 
 		// “екущий пункт меню
 		$currentmenu = $inDB->get_fields('cms_menu', "id = '$menuid'", 'NSLeft, NSRight, NSLevel');
-		// id корн€ меню
-		$root_id     = $inDB->get_field('cms_menu', 'parent_id=0', 'id');
+		// id корн€ меню если обычный вывод меню, $menuid если режим подменю
+		$root_id = $cfg['is_sub_menu'] ? $menuid : $inDB->get_field('cms_menu', 'parent_id=0', 'id');
 
 		$nested_sets = $inCore->nestedSetsInit('cms_menu');
 		$rs_rows     = $nested_sets->SelectSubNodes($root_id);
+
+		if(!$rs_rows) { return false; }
+		if(!$inDB->num_rows($rs_rows)) { return false; }
 
         $items       = array();
         
@@ -38,6 +42,8 @@
                 $items[]    = $row;
             }
         }
+
+		if(!$items) { return false; }
 
         $template = ($cfg['tpl'] ? $cfg['tpl'] : 'mod_menu.tpl');
 

@@ -29,5 +29,7 @@
 
         <param type="string" name="tpl" title="Использовать шаблон" default="mod_menu.tpl" />
 
+		<param type="flag" name="is_sub_menu" title="Режим подменю" hint="Выводятся дочерние пункты меню от текущего" default="off" />
+
     </params>
 </backend>
