@@ -430,4 +430,5 @@ $_LANG['SEND_INVITE']               ='Отправить';
 $_LANG['INVITE_EMAIL']              ='Отправить инвайт на E-mail';
 $_LANG['INVITE_NOTICE']             ='На указанный адрес будет выслан код приглашения';
 $_LANG['INVITE_SUBJECT']            ='%s приглашает Вас';
+$_LANG['ADRESS_EMAIL_IS_BUSY']      ='Указанный  адрес e-mail занят';
 ?>

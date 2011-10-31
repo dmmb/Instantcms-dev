@@ -403,6 +403,7 @@ if ($do=='editprofile'){
 
 					$email = $inCore->request('email', 'str');
 					if (!preg_match('/^([a-z0-9\._-]+)@([a-z0-9\._-]+)\.([a-z]{2,4})$/i', $email)) { cmsCore::addSessionMessage($_LANG['REALY_ADRESS_EMAIL'], 'error'); $errors = true; }
+					if ($inDB->get_field('cms_users', "email='{$email}'", 'id')) { cmsCore::addSessionMessage($_LANG['ADRESS_EMAIL_IS_BUSY'], 'error'); $errors = true; }
 					
 					$showmail       = $inCore->request('showmail', 'int');
 					$email_newmsg   = $inCore->request('email_newmsg', 'int');

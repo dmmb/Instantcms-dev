@@ -155,7 +155,7 @@ function applet_cats(){
 		if(isset($_REQUEST['id'])) { 
 
 			$category['id']				= (int)$_REQUEST['id'];
-			$category['title']			= $inCore->request('title', 'str');
+			$category['title']			= $inCore->request('title', 'str', 'Категория без названия');
 			$category['url']			= $inCore->request('url', 'str');
 			$category['parent_id']		= $inCore->request('parent_id', 'int');
 			$category['description'] 	= $inCore->request('description', 'html');
@@ -261,7 +261,7 @@ function applet_cats(){
 	
 	if ($do == 'submit'){
 
-        $category['title']          = $inCore->request('title', 'str');
+        $category['title']          = $inCore->request('title', 'str', 'Категория без названия');
         $category['url']            = $inCore->request('url', 'str');
         $category['parent_id']      = $inCore->request('parent_id', 'int');
         $category['description']    = $inCore->request('description', 'html');
