@@ -25,7 +25,7 @@
             <option title="Дополнительное меню 15" value="menu15" />
         </param>
 
-        <param type="flag" name="show_home" title="Показывать пункт &amp;laquo;Главная&amp;raquo;" default="on" />
+        <param type="flag" name="show_home" title="Показывать пункт &amp;laquo;Главная&amp;raquo;" hint="Кроме режима подменю" default="on" />
 
         <param type="string" name="tpl" title="Использовать шаблон" default="mod_menu.tpl" />
 

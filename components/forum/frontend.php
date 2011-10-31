@@ -717,7 +717,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 
 		$inPage->setTitle($_LANG['NEW_THREAD']);
 		$inPage->addPathway($forum['title'], '/forum/'.$forum['id']);
-		$inPage->addPathway($_LANG['NEW_THREAD'], $_SERVER['REQUEST_URI']);
+		$inPage->addPathway($_LANG['NEW_THREAD']);
 		echo '<div class="con_heading">'.$_LANG['NEW_THREAD'].'</div>';
 
 	}
@@ -740,7 +740,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 		$inPage->setTitle($_LANG['NEW_POST']);
 		$inPage->addPathway($forum['title'], '/forum/'.$forum['id']);
 		$inPage->addPathway($t['title'], '/forum/thread'.$t['id'].'.html');
-		$inPage->addPathway($_LANG['NEW_POST'], $_SERVER['REQUEST_URI']);
+		$inPage->addPathway($_LANG['NEW_POST']);
 
 		echo '<div class="con_heading">'.$_LANG['NEW_POST'].'</div>';
 		echo '<div style="margin-bottom:10px">
@@ -774,7 +774,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 			}
 		}
 		$inPage->setTitle($_LANG['EDIT_POST']);
-		$inPage->addPathway($_LANG['EDIT_POST'], $_SERVER['REQUEST_URI']);
+		$inPage->addPathway($_LANG['EDIT_POST']);
 		echo '<div class="con_heading">'.$_LANG['EDIT_POST'].'</div>';
 		$oldmsg = $msg['content'];	
 
@@ -1108,7 +1108,7 @@ if ($do=='renamethread'){
 	if (!isset($_POST['gorename'])){ //SHOW MOVE FORM
 				
 		$inPage->setTitle($_LANG['RENAME_THREAD']);
-		$inPage->addPathway($_LANG['RENAME_THREAD'], $_SERVER['REQUEST_URI']);
+		$inPage->addPathway($_LANG['RENAME_THREAD']);
 
 		echo '<div class="con_heading">'.$_LANG['RENAME_THREAD'].'</div>';
 
@@ -1230,7 +1230,7 @@ if ($do=='reloadfile'){
 	if ($inDB->num_rows($result)){
 	//if file found		
 
-		$inPage->addPathway($_LANG['RELOAD_FILE'], $_SERVER['REQUEST_URI']);
+		$inPage->addPathway($_LANG['RELOAD_FILE']);
 		echo '<div class="con_heading">'.$_LANG['RELOAD_FILE'].'</div>';
 			
 		$file = $inDB->fetch_assoc($result);			
@@ -1258,9 +1258,9 @@ if ($do=='reloadfile'){
 							$name = basename($filename, '.' . $path_parts['extension']);
 									
 							$filename = $name . '_' . substr(session_id(), 0, 5) . '.' . $ext;
-							$destination = $_SERVER['DOCUMENT_ROOT']."/upload/forum/post".$post_id."/".$filename;
+							$destination = PATH."/upload/forum/post".$post_id."/".$filename;
 							
-							@unlink($_SERVER['DOCUMENT_ROOT']."/upload/forum/post".$post_id."/".$file['filename']);
+							@unlink(PATH."/upload/forum/post".$post_id."/".$file['filename']);
 							
 							move_uploaded_file($tmp_name, $destination);
 							

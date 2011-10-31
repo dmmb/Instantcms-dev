@@ -130,6 +130,32 @@ function applet_repairnested(){
 	$tables[4]['title']		= 'Дерево разделов каталога';
 	$tables[4]['differ']	= '';
 
+	$tables[5]['name']	    = 'cms_menu';
+	$tables[5]['title']	    = 'Дерево меню';
+	$tables[5]['differ']	= '';
+
+	$tables[6]['name']	    = 'cms_forums';
+	$tables[6]['title']	    = 'Дерево форумов';
+	$tables[6]['differ']	= '';
+
+	if($inCore->isComponentInstalled('maps')){
+		$tables[7]['name']	    = 'cms_map_cats';
+		$tables[7]['title']	    = 'Дерево категорий InstantMaps';
+		$tables[7]['differ']	= '';
+	}
+
+	if($inCore->isComponentInstalled('video')){
+		$tables[8]['name']	    = 'cms_video_category';
+		$tables[8]['title']	    = 'Дерево категорий InstantVideo';
+		$tables[8]['differ']	= '';
+	}
+
+	if($inCore->isComponentInstalled('shop')){
+		$tables[9]['name']	    = 'cms_shop_cats';
+		$tables[9]['title']	    = 'Дерево категорий InstantShop';
+		$tables[9]['differ']	= '';
+	}
+
 	if (isset($_POST['go_repair']) && isset($_POST['tables'])){
 		if (is_array($_POST['tables'])){
 			foreach ($_POST['tables'] as $key=>$table_id){

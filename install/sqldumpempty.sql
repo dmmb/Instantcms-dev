@@ -500,7 +500,8 @@ INSERT INTO `#__cron_jobs` (`id`, `job_name`, `job_interval`, `job_run_date`, `c
 (4, 'remove_old_log', 48, '2010-12-06 21:11:26', '', '', '', 1, 1, 'Удаляет старые записи ленты событий', 'actions|cmsActions', 'removeOldLog'),
 (5, 'give_invites', 24, '2010-12-06 21:11:26', 'users', 'giveInvitesCron', '', 1, 1, 'Выдача инвайтов пользователям', '', ''),
 (6, 'clear_invites', 24, '2010-12-06 21:11:26', 'users', 'clearInvites', '', 1, 1, 'Удаление использованных инвайтов', '', ''),
-(7, 'deleteOldResults', 24, '2011-04-07 12:10:08', 'search', 'deleteOldResults', '', 1, 1, 'Удаляет записи в кеше поиска старее 1 дня.', '', '');
+(7, 'deleteOldResults', 24, '2011-04-07 12:10:08', 'search', 'deleteOldResults', '', 1, 1, 'Удаляет записи в кеше поиска старее 1 дня.', '', ''),
+(8, 'deleteOldNotification', 48, '2011-10-31 23:19:42', 'users', 'deleteOldNotification', '', 1, 1, 'Удаляет сообщения службы обновлений и рассылки старее 1 месяца', '', '');
 
 DROP TABLE IF EXISTS `#__downloads`;
 CREATE TABLE `#__downloads` (
@@ -643,7 +644,7 @@ CREATE TABLE `#__forums` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__forums` (`id`, `category_id`, `title`, `description`, `access_list`, `ordering`, `published`, `parent_id`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`, `topic_cost`) VALUES
-(1000, 0, '-- Корень форумов --', '', '', 1, 0, 0, 1, 8, '', 0, 1, 0);
+(1000, 0, '-- Корневой форум --', '', '', 1, 0, 0, 1, 8, '', 0, 1, 0);
 
 DROP TABLE IF EXISTS `#__forum_cats`;
 CREATE TABLE `#__forum_cats` (
@@ -766,7 +767,7 @@ CREATE TABLE `#__menu` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__menu` (`id`, `menu`, `title`, `link`, `linktype`, `linkid`, `target`, `component`, `ordering`, `published`, `template`, `access_list`, `iconurl`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `parent_id`) VALUES
-(1, 'root', '-- Главная страница --', '-1', 'link', '-1', '_self', '', 1, 0, '0', '', '', 1, 2, 0, '', 0, 0);
+(1, 'root', '-- Корневая страница --', '-1', 'link', '-1', '_self', '', 1, 0, '0', '', '', 1, 2, 0, '', 0, 0);
 
 DROP TABLE IF EXISTS `#__modules`;
 CREATE TABLE `#__modules` (

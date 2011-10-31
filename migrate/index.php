@@ -117,6 +117,22 @@
 	$is_was_migrate = true;
 // ========================================================================== //
 // ========================================================================== //
+	if(!$inDB->get_field('cms_cron_jobs', "job_name='deleteOldNotification'", 'id')){
+		cmsCron::registerJob('deleteOldNotification', array(
+										'interval' => 48,
+										'component' => 'users',
+										'model_method' => 'deleteOldNotification',
+										'comment' => 'Удаляет сообщения службы обновлений и рассылки старее 1 месяца',
+										'custom_file' => '',
+										'enabled' => 1,
+										'class_name' => '',
+										'class_method' => ''
+								  ));
+	}
+	echo '<p>Задание CRON deleteOldNotification для очистки сообщений службы обновлений и рассылки создано.</p>';
+	$is_was_migrate = true;
+// ========================================================================== //
+// ========================================================================== //
 	addFultextIndex('cms_blog_posts');
 	addFultextIndex('cms_board_items');
 	addFultextIndex('cms_faq_quests', 'quest');
