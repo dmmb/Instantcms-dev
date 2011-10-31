@@ -1,7 +1,7 @@
 <?php
 /******************************************************************************/
 //                                                                            //
-//                             InstantCMS v1.8.1                                //
+//                             InstantCMS v1.9                                //
 //                        http://www.instantcms.ru/                           //
 //                                                                            //
 //                   written by InstantCMS Team, 2007-2011                    //
@@ -13,8 +13,8 @@
 
 	function getLink($file){		
 		trim($file);
-        $file = str_replace('..', '', $file);
-		$filefull = $_SERVER['DOCUMENT_ROOT'].'/includes/myphp/'.$file;
+		$file = preg_replace('/\.+\//', '', $file); 
+		$filefull = PATH.'/includes/myphp/'.$file;
 		
 		if (file_exists($filefull)){
 			ob_start();

@@ -1,7 +1,7 @@
 <?php
 /******************************************************************************/
 //                                                                            //
-//                             InstantCMS v1.8.1                                //
+//                             InstantCMS v1.9                                //
 //                        http://www.instantcms.ru/                           //
 //                                                                            //
 //                   written by InstantCMS Team, 2007-2011                    //
@@ -475,12 +475,6 @@ if ($do=='addarticle' || $do=='editarticle'){
 
             $article['id'] = $model->addArticle($article);
 
-            if (IS_BILLING){            
-                $category_cost = $inDB->get_field('cms_category', "id='{$article['category_id']}'", 'cost');
-                $category_cost = $category_cost==='' ? false : (int)$category_cost;
-                cmsBilling::process('content', 'add_content', $category_cost);
-            }
-
             $id = $article['id'];
 
             cmsUser::checkAwards($user_id);
@@ -521,6 +515,12 @@ if ($do=='addarticle' || $do=='editarticle'){
                     'target_id' =>  $article['category_id'],
                     'description' => ''
                 ));
+
+                if (IS_BILLING){
+                    $category_cost = $inDB->get_field('cms_category', "id='{$article['category_id']}'", 'cost');
+                    $category_cost = $category_cost==='' ? false : (int)$category_cost;
+                    cmsBilling::process('content', 'add_content', $category_cost);
+                }
 
             }
 
@@ -606,6 +606,13 @@ if ($do == 'publisharticle'){
 
 	cmsCore::callEvent('ADD_ARTICLE_DONE', $article);
 
+    if (IS_BILLING){
+        $author = $inDB->get_fields('cms_users', "id='{$article['user_id']}'", '*');
+        $category_cost = $inDB->get_field('cms_category', "id='{$article['category_id']}'", 'cost');
+        $category_cost = $category_cost==='' ? false : (int)$category_cost;
+        cmsBilling::process('content', 'add_content', $category_cost, $author);
+    }
+    
     //регистрируем событие
     cmsActions::log('add_article', array(
            'object' => $article['title'],

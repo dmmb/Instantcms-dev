@@ -1,7 +1,7 @@
 <?php
 /******************************************************************************/
 //                                                                            //
-//                             InstantCMS v1.8.1                                //
+//                             InstantCMS v1.9                                //
 //                        http://www.instantcms.ru/                           //
 //                                                                            //
 //                   written by InstantCMS Team, 2007-2011                    //
@@ -15,7 +15,8 @@
         $inCore = cmsCore::getInstance();
 
 		trim($file);
-		$filefull = $_SERVER['DOCUMENT_ROOT'].$file;	
+		$file = preg_replace('/\.+\//', '', $file);
+		$filefull = PATH.$file;	
 		if (file_exists($filefull)){
 			$downloaded = $inCore->fileDownloadCount($file);
 		

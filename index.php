@@ -1,7 +1,7 @@
 <?php
 /******************************************************************************/
 //                                                                            //
-//                             InstantCMS v1.8.1                                //
+//                             InstantCMS v1.9                                //
 //                        http://www.instantcms.ru/                           //
 //                                                                            //
 //                   written by InstantCMS Team, 2007-2011                    //
@@ -18,14 +18,14 @@
 
 ////////////////////////////// Проверяем что система установлена /////////////////////////////
 
-//    if(is_dir('install')||is_dir('migrate')) {
-//        if (!file_exists(PATH.'/includes/config.inc.php')){
-//            header('location:/install/');
-//        } else {
-//            include(PATH.'/core/messages/installation.html');
-//            die();
-//        }
-//    }
+    if(is_dir('install')||is_dir('migrate')) {
+        if (!file_exists(PATH.'/includes/config.inc.php')){
+            header('location:/install/');
+        } else {
+            include(PATH.'/core/messages/installation.html');
+            die();
+        }
+    }
 
 /////////////////////////////////// Подготовка //////////////////////////////////////////////
 	
@@ -50,10 +50,10 @@
     $inCore->loadClass('user');         //пользователь
     $inCore->loadClass('actions');      //лента активности    
 
-    $inDB       = cmsDatabase::getInstance();
-    $inPage     = cmsPage::getInstance();
-    $inConf     = cmsConfig::getInstance();
-    $inUser     = cmsUser::getInstance();
+    $inDB   = cmsDatabase::getInstance();
+    $inPage = cmsPage::getInstance();
+    $inConf = cmsConfig::getInstance();
+    $inUser = cmsUser::getInstance();
 
     date_default_timezone_set($inConf->timezone);
 

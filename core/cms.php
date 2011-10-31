@@ -1,7 +1,7 @@
 <?php
 /******************************************************************************/
 //                                                                            //
-//                             InstantCMS v1.8.1                                //
+//                             InstantCMS v1.9                                //
 //                        http://www.instantcms.ru/                           //
 //                                                                            //
 //                   written by InstantCMS Team, 2007-2011                    //
@@ -13,10 +13,10 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-define('CORE_VERSION', 		'1.8.1');
+define('CORE_VERSION', 		'1.9');
 define('CORE_BUILD', 		'1');
-define('CORE_VERSION_DATE', '2011-10-03');
-define('CORE_BUILD_DATE', 	'2011-10-03');
+define('CORE_VERSION_DATE', '2011-10-31');
+define('CORE_BUILD_DATE', 	'2011-10-31');
 
 if (!defined('USER_UPDATER')) { define('USER_UPDATER', -1); }
 if (!defined('USER_MASSMAIL')) { define('USER_MASSMAIL', -2); }
