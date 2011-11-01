@@ -48,8 +48,8 @@ function mod_bestcontent($module_id){
 				LEFT JOIN cms_category cat ON cat.id = c.category_id
 				LEFT JOIN cms_users u ON u.id = c.user_id
 				LEFT JOIN cms_ratings_total r ON r.item_id=c.id AND r.target='content'
-				WHERE c.published = 1 AND c.canrate = 1
-                AND (c.is_end=0 OR (c.is_end=1 AND c.enddate >= '$today' AND c.pubdate <= '$today')) 
+				WHERE c.published = 1 AND c.canrate = 1 AND c.is_arhive = 0 AND c.pubdate <= '$today'
+                AND (c.is_end=0 OR (c.is_end=1 AND c.enddate >= '$today')) 
 				".$catsql."
 				ORDER BY points DESC";
 		

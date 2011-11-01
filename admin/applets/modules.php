@@ -797,8 +797,7 @@ function applet_modules(){
                                         $item['position'] = $bind_pos[$item['id']];
                                     }
                                 }
-                                $item['title'] = ltrim($item['title'], '- ');
-                                $item['title'] = rtrim($item['title'], '- ');
+								$item['title'] = str_replace('-- Корневая страница --', 'Главная страница', $item['title']);
                                 $menu_items[] = $item;
                             }
                         }

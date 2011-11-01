@@ -822,22 +822,22 @@ CREATE TABLE `#__menu` (
 
 INSERT INTO `#__menu` (`id`, `menu`, `title`, `link`, `linktype`, `linkid`, `target`, `component`, `ordering`, `published`, `template`, `access_list`, `iconurl`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `parent_id`) VALUES
 (1, 'root', '-- Корневая страница --', '-1', 'link', '-1', '_self', '', 1, 0, '0', '', '', 1, 34, 0, '', 0, 0),
-(10, 'mainmenu', 'Новости', '/novosti', 'category', '2', '_self', '', 1, 1, '0', '', '01.gif', 2, 3, 1, '', 0, 1),
-(13, 'mainmenu', 'Q&A', '/faq', 'component', 'faq', '_self', '', 6, 1, '0', '', '27.gif', 24, 25, 1, '', 0, 1),
-(15, 'mainmenu', 'Люди', '/users', 'component', 'users', '_self', '', 9, 1, '0', '', 'group.gif', 30, 31, 1, '', 0, 1),
-(17, 'mainmenu', 'Блоги', '/blogs', 'component', 'blogs', '_self', '', 4, 1, '0', '', 'blog.gif', 20, 21, 1, '', 0, 1),
-(18, 'mainmenu', 'Форум', '/forum', 'component', 'forum', '_self', '', 10, 1, '0', '', '29.gif', 32, 33, 1, '', 0, 1),
-(20, 'mainmenu', 'Фото', '/photos', 'component', 'photos', '_self', '', 3, 1, '0', '', '20.gif', 14, 19, 1, '', 0, 1),
-(21, 'mainmenu', 'Статьи', '/stati', 'category', '6', '_self', '', 2, 1, '0', '', '22.gif', 4, 13, 1, '', 0, 1),
-(23, 'mainmenu', 'Каталог', '/catalog', 'component', 'catalog', '_self', '', 7, 1, '0', '', 'objects048.gif', 26, 27, 1, '', 0, 1),
-(44, 'mainmenu', 'Маркетинг', '/stati/marketing', 'category', '13', '_self', '', 4, 1, '0', '', '', 11, 12, 2, '', 0, 21),
-(37, 'mainmenu', 'Объявления', '/board', 'component', 'board', '_self', '', 8, 1, '0', '', 'objects038.gif', 28, 29, 1, '', 0, 1),
-(38, 'mainmenu', 'Клубы', '/clubs', 'component', 'clubs', '_self', '', 5, 1, '0', '', '45.gif', 22, 23, 1, '', 0, 1),
-(39, 'mainmenu', 'Астрономия', '/stati/astronomija', 'category', '11', '_self', '', 1, 1, '0', '', '', 5, 6, 2, '', 0, 21),
-(40, 'mainmenu', 'Геология', '/stati/geologija', 'category', '12', '_self', '', 2, 1, '0', '', '', 7, 8, 2, '', 0, 21),
-(41, 'mainmenu', 'Психология', '/stati/psihologija', 'category', '14', '_self', '', 3, 1, '0', '', '', 9, 10, 2, '', 0, 21),
-(42, 'mainmenu', 'Новые фото', '/photos/latest.html', 'link', '/photos/latest.html', '_self', '', 1, 1, '0', '', '', 15, 16, 2, '', 0, 20),
-(43, 'mainmenu', 'Лучшие фото', '/photos/top.html', 'link', '/photos/top.html', '_self', '', 2, 1, '0', '', '', 17, 18, 2, '', 0, 20);
+(10, 'mainmenu', 'Новости', '/novosti', 'category', '2', '_self', '', 1, 1, '0', '', '', 2, 3, 1, '', 0, 1),
+(13, 'mainmenu', 'Q&A', '/faq', 'component', 'faq', '_self', '', 6, 1, '0', '', '', 24, 25, 1, '', 0, 1),
+(15, 'mainmenu', 'Люди', '/users', 'component', 'users', '_self', '', 9, 1, '0', '', '', 30, 31, 1, '', 0, 1),
+(17, 'mainmenu', 'Блоги', '/blogs', 'component', 'blogs', '_self', '', 4, 1, '0', '', '', 20, 21, 1, '', 0, 1),
+(18, 'mainmenu', 'Форум', '/forum', 'component', 'forum', '_self', '', 10, 1, '0', '', '', 32, 33, 1, '', 0, 1),
+(20, 'mainmenu', 'Фото', '/photos', 'component', 'photos', '_self', '', 3, 1, '0', '', '', 14, 19, 1, '', 0, 1),
+(21, 'mainmenu', 'Статьи', '/stati', 'category', '6', '_self', '', 2, 1, '0', '', '', 4, 13, 1, '', 0, 1),
+(23, 'mainmenu', 'Каталог', '/catalog', 'component', 'catalog', '_self', '', 7, 1, '0', '', '', 26, 27, 1, '', 0, 1),
+(42, 'mainmenu', 'Новые фото', '/photos/latest.html', 'link', '/photos/latest.html', '_self', '', 1, 1, '0', '', 'starcons20.gif', 15, 16, 2, '', 0, 20),
+(41, 'mainmenu', 'Психология', '/stati/psihologija', 'category', '14', '_self', '', 3, 1, '0', '', '07.gif', 9, 10, 2, '', 0, 21),
+(40, 'mainmenu', 'Геология', '/stati/geologija', 'category', '12', '_self', '', 2, 1, '0', '', 'objects035.gif', 7, 8, 2, '', 0, 21),
+(39, 'mainmenu', 'Астрономия', '/stati/astronomija', 'category', '11', '_self', '', 1, 1, '0', '', 'objects049.gif', 5, 6, 2, '', 0, 21),
+(38, 'mainmenu', 'Клубы', '/clubs', 'component', 'clubs', '_self', '', 5, 1, '0', '', '', 22, 23, 1, '', 0, 1),
+(37, 'mainmenu', 'Объявления', '/board', 'component', 'board', '_self', '', 8, 1, '0', '', '', 28, 29, 1, '', 0, 1),
+(44, 'mainmenu', 'Маркетинг', '/stati/marketing', 'category', '13', '_self', '', 4, 1, '0', '', 'objects067.gif', 11, 12, 2, '', 0, 21),
+(43, 'mainmenu', 'Лучшие фото', '/photos/top.html', 'link', '/photos/top.html', '_self', '', 2, 1, '0', '', 'voteyes.gif', 17, 18, 2, '', 0, 20);
 
 DROP TABLE IF EXISTS `#__modules`;
 CREATE TABLE `#__modules` (

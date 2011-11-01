@@ -80,7 +80,7 @@
 				       LEFT JOIN cms_category cat ON cat.id = con.category_id
 				       LEFT JOIN cms_users u ON u.id = con.user_id
                        WHERE con.published = 1 AND con.showlatest = 1 AND con.is_arhive = 0 AND con.pubdate <= '$today'
-                       AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today'))
+                       AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today'))
                        ".$catsql."
 				       ORDER BY con.pubdate DESC
 	                   LIMIT ".(($page-1)*$perpage).", $perpage";
@@ -93,7 +93,7 @@
 	$sql_total = "SELECT 1
 			FROM cms_content con
 			LEFT JOIN cms_category cat ON cat.id = con.category_id
-			WHERE con.published = 1 AND con.showlatest = 1 AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today')) ".$catsql."";
+			WHERE con.published = 1 AND con.showlatest = 1 AND con.is_arhive = 0 AND con.pubdate <= '$today' AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today')) ".$catsql."";
 	$result_total = $inDB->query($sql_total) ;
 	$total_page = $inDB->num_rows($result_total);
 

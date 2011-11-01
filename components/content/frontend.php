@@ -155,7 +155,8 @@ if ($do=='view'){
 		$is_articles = false;
 	}
 
-	$total      = $inDB->rows_count('cms_content', 'published=1 AND category_id='.$cat['id']);
+	$model->whereCatIs($cat['id']);
+	$total      = $model->getArticlesCount();
     $pagelink   = $model->getCategoryURL($inCore->menuId(), $cat['seolink'], 0, true);
     $pagebar    = cmsPage::getPagebar($total, $page, $perpage, $pagelink);
 

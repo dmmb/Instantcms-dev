@@ -331,7 +331,8 @@ class cms_model_content{
 		$today    = date("Y-m-d H:i:s");
 
         if ($only_published){
-            $this->where("con.published = 1 AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today'))");
+            $this->where("con.published = 1 AND con.pubdate <= '$today'
+                      AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today'))");
         }
 
         $sql = "SELECT 1
@@ -439,8 +440,8 @@ class cms_model_content{
                        u.login as user_login
                 FROM cms_content con
 				LEFT JOIN cms_users u ON u.id = con.user_id
-                WHERE con.category_id = $category_id AND con.published = 1 AND con.is_arhive = 0 AND con.pubdate <= '$today'
-                      AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today'))
+                WHERE con.category_id = '$category_id' AND con.published = 1 AND con.is_arhive = 0 AND con.pubdate <= '$today'
+                      AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today'))
                 ORDER BY con.".$orderby." ".$orderto."
                 LIMIT ".(($page-1)*$perpage).", $perpage";
 
@@ -594,7 +595,7 @@ class cms_model_content{
 				FROM cms_content con
 				LEFT JOIN cms_category cat ON cat.id = con.category_id
 				LEFT JOIN cms_users u ON u.id = con.user_id
-				WHERE con.seolink = '$seolink' AND (con.is_end=0 OR (con.is_end=1 AND con.enddate >= '$today' AND con.pubdate <= '$today')) LIMIT 1";
+				WHERE con.seolink = '$seolink' AND con.pubdate <= '$today' LIMIT 1";
 
 		$result = $this->inDB->query($sql);
 

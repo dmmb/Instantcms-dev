@@ -104,10 +104,12 @@ class p_morecontent extends cmsPlugin {
 			
 			$morecontent = '';
 	        foreach ($id_target as $n) {
-	        	$morecontent .= '<p>'.cmsTagItemLink('content', $n)."</p>";
+				$con = cmsTagItemLink('content', $n);
+				if($con){
+	        		$morecontent .= '<p>'.$con."</p>";
+				}
 	        }
-			
-		    $item['content'] .= '<h4>Похожие статьи:</h4>'.$morecontent;
+			if($morecontent) { $item['content'] .= '<h4>Похожие статьи:</h4>'.$morecontent; }
         }
         return $item;
 	}

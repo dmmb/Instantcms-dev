@@ -52,7 +52,7 @@
 					<td width=""><a class="blog_moderate_link" href="/blogs/{$blog.id}/moderate.html">{$LANG.MODERATING}</a> ({$on_moderate})</td>
 				{/if}						
 				<td width="16"><img src="/templates/_default_/images/icons/edit.png" border="0"/></td>
-				<td width=""><a href="/blogs/{$blog.id}/newpost.html">{$LANG.NEW_POST}</a></td>
+				<td width=""><a href="/blogs/{$blog.id}/newpost{if $cat_id>0}{$cat_id}{/if}.html">{$LANG.NEW_POST}</a></td>
                 {if $blog.owner=='user' || $is_moder || $is_admin}
                     <td width="16"><img src="/templates/_default_/images/icons/addcat.png" border="0"/></td>
                     <td width=""><a href="/blogs/{$blog.id}/newcat.html">{$LANG.NEW_CAT}</a></td>
@@ -74,7 +74,7 @@
 		<table cellspacing="0" cellpadding="5">
 			<tr>
 				<td width="16"><img src="/components/blogs/images/record_add.gif" border="0"/></td>
-				<td width=""><a href="/blogs/{$blog.id}/newpost.html">{$LANG.NEW_POST}</a></td>
+				<td width=""><a href="/blogs/{$blog.id}/newpost.html{if $cat_id>0}{$cat_id}{/if}">{$LANG.NEW_POST}</a></td>
 			</tr>
 		</table>
 	{/if}

@@ -41,7 +41,7 @@ function cmsInsertTags($tagstr, $target, $item_id){
 
 function cmsClearTags($target, $item_id){
     $inDB = cmsDatabase::getInstance();
-	$inDB->query("DELETE FROM cms_tags WHERE target='$target' AND item_id = $item_id");
+	$inDB->query("DELETE FROM cms_tags WHERE target='$target' AND item_id = '$item_id'");
 	return;
 }
 
@@ -51,7 +51,7 @@ function cmsTagLine($target, $item_id, $links=true, $selected=''){
     $inDB = cmsDatabase::getInstance();
 	$sql  = "SELECT tag
 			FROM cms_tags 
-			WHERE target='$target' AND item_id=$item_id
+			WHERE target='$target' AND item_id='$item_id'
 			ORDER BY tag DESC";
 	$rs = $inDB->query($sql);
 	$html = '';
@@ -77,7 +77,6 @@ function cmsTagLine($target, $item_id, $links=true, $selected=''){
 }
 
 function cmsTagBar($target, $item_id, $selected=''){
-    $inDB = cmsDatabase::getInstance();
 	if ($tagline = cmsTagLine($target, $item_id, true, $selected)){
 		return '<div class="taglinebar"><span class="label">Теги: </span><span class="tags">'.$tagline.'</span></div>';
 	} else {
@@ -87,11 +86,13 @@ function cmsTagBar($target, $item_id, $selected=''){
 
 function cmsTagItemLink($target, $item_id){
     $inDB = cmsDatabase::getInstance();
+	$link = '';
 	switch ($target){
-		case 'content': $sql = "SELECT i.title as title, c.title as cat, i.seolink as seolink, c.seolink as cat_seolink
+		case 'content': $today = date("Y-m-d H:i:s");
+						$sql = "SELECT i.title as title, c.title as cat, i.seolink as seolink, c.seolink as cat_seolink
 								FROM cms_content i
-								LEFT JOIN cms_category c ON c.id = i.category_id
-								WHERE i.id = '$item_id' AND i.published = 1";
+								INNER JOIN cms_category c ON c.id = i.category_id
+								WHERE i.id = '$item_id' AND i.published = 1  AND i.is_arhive = 0 AND i.pubdate <= '$today' AND (i.is_end=0 OR (i.is_end=1 AND i.enddate >= '$today')) LIMIT 1";
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
@@ -102,7 +103,7 @@ function cmsTagItemLink($target, $item_id){
 		case 'blogpost': $sql = "SELECT i.title as title, i.id as item_id, c.title as cat, c.id as cat_id, c.owner as owner, c.user_id user_id, i.seolink as seolink, c.seolink as bloglink
 								FROM cms_blog_posts i
 								LEFT JOIN cms_blogs c ON c.id = i.blog_id
-								WHERE i.id = '$item_id'";
+								WHERE i.id = '$item_id' AND i.published = 1";
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
@@ -114,7 +115,7 @@ function cmsTagItemLink($target, $item_id){
 		case 'photo': $sql = "SELECT i.title as title, i.id as item_id, c.title as cat, c.id as cat_id
 								FROM cms_photo_files i
 								LEFT JOIN cms_photo_albums c ON c.id = i.album_id
-								WHERE i.id = '$item_id'";
+								WHERE i.id = '$item_id' AND i.published = 1";
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
@@ -136,7 +137,7 @@ function cmsTagItemLink($target, $item_id){
 		case 'catalog': $sql = "SELECT i.title as title, i.id as item_id, c.title as cat, c.id as cat_id
 								FROM cms_uc_items i
 								LEFT JOIN cms_uc_cats c ON c.id = i.category_id
-								WHERE i.id = '$item_id'";
+								WHERE i.id = '$item_id' AND i.published = 1";
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);

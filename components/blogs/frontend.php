@@ -676,6 +676,8 @@ if ($do=='newpost' || $do=='editpost'){
         $inPage->addPathway($_LANG['NEW_POST'], $_SERVER['REQUEST_URI']);
 		$inPage->setTitle($_LANG['NEW_POST']);
 		$inPage->printHeading($_LANG['NEW_POST']);
+		
+		$post['cat_id'] = $inCore->request('cat_id', 'int', 0);
 	} 
 
     //для редактирования поста

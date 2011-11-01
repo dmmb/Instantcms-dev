@@ -165,11 +165,17 @@
                             'confirm'   => 'yes'
                          );
 
-        //RewriteRule ^blogs/([0-9]*)/newpost.html$ /index.php?view=blog&do=newpost&id=$1
         $routes[] = array(
                             '_uri'  => '/^blogs\/([0-9]+)\/newpost.html$/i',
                             'do'    => 'newpost',
                             1       => 'id'
+                         );
+
+        $routes[] = array(
+                            '_uri'  => '/^blogs\/([0-9]+)\/newpost([0-9]+).html$/i',
+                            'do'    => 'newpost',
+                            1       => 'id',
+                            2       => 'cat_id'
                          );
 
         //RewriteRule ^blogs/([0-9]*)/newcat.html$ /index.php?view=blog&do=newcat&id=$1

@@ -2331,15 +2331,18 @@ class cmsCore {
         }
 
         //перевернем массив меню чтобы перебирать от последнего пункта к первому
-        $menu       = array_reverse($this->menu_struct);
+        $menu = array_reverse($this->menu_struct);
 
         //перебираем меню в поисках текущего пункта
         foreach($menu as $item){
 
             if (!$item['link']) { continue; }
 
+			// uri с учетом имени хоста
+			$full_uri = HOST . $uri;
+
             //полное совпадение ссылки и адреса?
-            if ($uri == $item['link']){
+            if ($uri == $item['link'] || $full_uri == $item['link']){
                 $menuid = $item['id'];
                 $is_strict = true; //полное совпадение
                 break;
@@ -2369,8 +2372,6 @@ class cmsCore {
      */
     public function getMenuItem($menuid){
 
-        $inDB = cmsDatabase::getInstance();
-
         return $this->menu_struct[$menuid];
         
     }
@@ -2387,7 +2388,7 @@ class cmsCore {
 
         $inDB = cmsDatabase::getInstance();
 
-        $sql    = "SELECT * FROM cms_menu";
+        $sql    = "SELECT * FROM cms_menu ORDER BY id ASC";
         $result = $inDB->query($sql);
 
         if (!$inDB->num_rows($result)){ return; }
@@ -3324,14 +3325,17 @@ class cmsCore {
      * @param string $content
      */
     public function mailText($email, $subject, $message, $content='text/plain'){
+
         $inConf = cmsConfig::getInstance();
-        $headers = 'MIME-Version: 1.0' . "\r\n" .
-                   'Content-type: '.$content.'; charset=windows-1251;' . "\r\n" .
-                   'From: '.$inConf->sitename.' <'.$inConf->sitemail.'>' . "\r\n" .
-                   'Reply-To: '.$inConf->sitename.' <'.$inConf->sitemail.'>' . "\r\n" .
-                   'X-Mailer: PHP/' . phpversion();
+
         $message = wordwrap($message, 70);
-        $this->sendMail( $inConf->sitemail, $inConf->sitename, $email, $subject, $message );
+
+		if ($content="text/html") {
+			$this->sendMail($inConf->sitemail, $inConf->sitename, $email, $subject, $message, 1);
+		} else {
+			$this->sendMail($inConf->sitemail, $inConf->sitename, $email, $subject, $message);
+		}
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

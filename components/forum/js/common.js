@@ -11,16 +11,21 @@ function goForum(){
 }
 
 function addQuoteText(author){
+
     var seltext = '';
-    if (window.getSelection()) {
-        var seltext = window.getSelection();
-    } else if (window.selection && window.selection.createRange) {
-        var seltext = window.selection.createRange().text;
-    }
-   
-   if (seltext){
-        var quote = '[quote='+author+']' + seltext + '[/quote]' + "\n";
-        var msg = $('textarea#message').val() + quote;
-        $('textarea#message').val(msg);
-   }
+
+	if (window.getSelection) {
+		var seltext = window.getSelection();
+	} else if (document.getSelection) {
+		var seltext = document.getSelection();
+	} else if (document.selection) {
+		var seltext = document.selection.createRange().text;
+	}
+
+	if (seltext){
+		var quote = '[quote='+author+']' + seltext + '[/quote]' + "\n";
+		var msg = $('textarea#message').val() + quote;
+		$('textarea#message').val(msg);
+	}
+
 }
