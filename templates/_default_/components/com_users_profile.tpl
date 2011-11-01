@@ -378,7 +378,7 @@
                                               
                                       {if $col==6} </tr> {assign var="col" value="1"} {else} {math equation="x + 1" x=$col assign="col"} {/if}
                                   {/foreach}
-                                  {if $col>1}<td colspan="{math equation="x - y + 1" x=$col y=$maxcols}">&nbsp;</td></tr>{/if}
+                                  {if $col>1}<td colspan="{math equation="x - 6 + 1" x=$col}">&nbsp;</td></tr>{/if}
                                 </table>
                             </div>
                         {/if}

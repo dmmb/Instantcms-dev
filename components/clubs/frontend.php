@@ -94,8 +94,8 @@ if ($do=='view'){
 	$smarty = $inCore->initSmarty('components', 'com_clubs_view.tpl');
 	$smarty->assign('pagetitle', $pagetitle);
 	$smarty->assign('clubid', $id);
-	// —сылку на создание клуба показываем всем авторизованным
-	$smarty->assign('can_create', $inUser->id);
+	// —сылку на создание клуба показываем всем авторизованным, если включено создание клуба
+	$smarty->assign('can_create', ($inUser->id && $cfg['cancreate'] || $inUser->is_admin));
 	$smarty->assign('clubs', $clubs);
 	$smarty->assign('total', $total);
 	$smarty->assign('pagination', $pagination);

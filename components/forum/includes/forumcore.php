@@ -28,7 +28,7 @@ function forumPollVote(){
 			FROM cms_forum_polls
 			WHERE id = '$poll_id' LIMIT 1";
 	$result = $inDB->query($sql) ;
-	if ($inDB->num_rows($result)){ $inCore->redirect($_SERVER['REQUEST_URI']); return; }
+	if (!$inDB->num_rows($result)){ $inCore->redirect($_SERVER['REQUEST_URI']); return; }
 
 	$poll=$inDB->fetch_assoc($result);		
 	$answers = unserialize($poll['answers']);
@@ -177,9 +177,9 @@ function forumAttachedPoll($thread_id, $thread){
 					$html .= '<table class="forum_poll_answers">';
 					foreach($answers_title as $key=>$value){
 						  $html .= '<tr>';
-						  $html .= '<td><input name="answer" type="radio" value="'.htmlspecialchars($value).'"></td>';
-						  $html .= '<td class="mod_poll_answer">'.$value;
-						  $html .= '</td>';
+						  $html .= '<td><input name="answer" id="an_'.$key.'" type="radio" value="'.htmlspecialchars($value).'"></td>';
+						  $html .= '<td class="mod_poll_answer"><label for="an_'.$key.'">'.$value;
+						  $html .= '</label></td>';
 						  $html .= '</tr>';
 						  $total += $answers_num[$key];
 					  }
