@@ -3451,7 +3451,7 @@ class cmsCore {
         $text = strip_tags($text);
         $text = trim($text);
         if (!strstr($text, ',')){
-            $html .= '<a href="/catalog/'.$cat_id.'/find/'.urlencode($text).'">'.$text.'</a>';
+            $html .= '<a href="/catalog/'.$cat_id.'/find/'.urlencode(urlencode($text)).'">'.$text.'</a>';
         } else {
             $text = str_replace(', ', ',', $text);
             $words = array();
@@ -3465,7 +3465,7 @@ class cmsCore {
                 $value = str_replace("\n", '', $value);
                 $value = trim($value);
 
-                $html .= '<a href="/catalog/'.$cat_id.'/find/'.urlencode($value).'">'.$value.'</a>';
+                $html .= '<a href="/catalog/'.$cat_id.'/find/'.urlencode(urlencode($text)).'">'.$value.'</a>';
                 if ($n<sizeof($words)) { $html .= ', '; } else { $html .= '.'; }
             }
 

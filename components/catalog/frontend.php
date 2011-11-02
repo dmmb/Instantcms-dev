@@ -422,8 +422,7 @@ function catalog(){
     if ($do == 'find') {
         $id = $inCore->request('cat_id', 'int');
 
-        $query = urldecode($inCore->request('text', 'str'));
-        $query = str_replace("'", '?', $query);
+        $query = urldecode(urldecode($inCore->request('text', 'str')));
         $query = str_replace("{", '?', $query);
         $query = str_replace("}", '?', $query);
         $query = str_replace(":", '?', $query);
@@ -436,6 +435,8 @@ function catalog(){
 
         $do = 'cat';
         $advsearch = 0;
+
+		$query = stripslashes($query);
 
         $pagemode = 'find';
     }
