@@ -2360,7 +2360,7 @@ if ($do=='addfile'){
 	$free_mb = round($max_mb - $current_mb, 2);
 		
 	if($inCore->inRequest('upload')){
-				
+
 		$size_mb      = 0;
 		$size_limit   = false;
 		$loaded_files = array();
@@ -2463,30 +2463,31 @@ if ($do=='addfile'){
 
 	if(!$inCore->inRequest('upload')){
 							
-				$usr = $model->getUserShort($id);
-				if (!$usr) { cmsCore::error404(); }
+		$usr = $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
 		
-					$inPage->setTitle($_LANG['UPLOAD_FILES']);
-					$inPage->backButton(false);
-                    $inPage->addHeadJS('includes/jquery/multifile/jquery.multifile.js');
-					
-					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
-					$inPage->addPathway($_LANG['UPLOAD_FILES'], $_SERVER['REQUEST_URI']);
-					
-						$post_max_b = return_bytes(ini_get('upload_max_filesize'));
-						$post_max_mb = (round($post_max_b/1024)/1024) . ' '.$_LANG['MBITE'];
-					
-					$smarty = $inCore->initSmarty('components', 'com_users_file_add.tpl');
-					$smarty->assign('free_mb', $free_mb);
-					$smarty->assign('post_max_b', $post_max_b);
-					$smarty->assign('post_max_mb', $post_max_mb);
-					$smarty->assign('cfg', $cfg);
+		$inPage->setTitle($_LANG['UPLOAD_FILES']);
+		$inPage->backButton(false);
+		$inPage->addHeadJS('includes/jquery/multifile/jquery.multifile.js');
+		$inPage->addHeadJS('includes/jquery/jquery.blockUI.js');
+		
+		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+		$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
+		$inPage->addPathway($_LANG['UPLOAD_FILES'], $_SERVER['REQUEST_URI']);
+		
+		$post_max_b = return_bytes(ini_get('upload_max_filesize'));
+		$post_max_mb = (round($post_max_b/1024)/1024) . ' '.$_LANG['MBITE'];
+		
+		$smarty = $inCore->initSmarty('components', 'com_users_file_add.tpl');
+		$smarty->assign('free_mb', $free_mb);
+		$smarty->assign('post_max_b', $post_max_b);
+		$smarty->assign('post_max_mb', $post_max_mb);
+		$smarty->assign('cfg', $cfg);
 		$smarty->assign('messages', cmsCore::getSessionMessages());
-					$smarty->assign('types', $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar');
-					$smarty->display('com_users_file_add.tpl');
+		$smarty->assign('types', $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar');
+		$smarty->display('com_users_file_add.tpl');
 
-				}
+	}
 		
 }
 

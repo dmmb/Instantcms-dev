@@ -4,13 +4,13 @@
 
 {literal} 
 <script type="text/javascript">
-				  function startUpload(){
-						$("#upload_btn").attr('disabled', 'true');
-						$("#upload_btn").attr('value', '{/literal}{$LANG.LOADING}{literal} ...');
-						$("#cancel_btn").css('display', 'none');
-						$("#loadergif").css('display', 'block');
-						document.uploadform.submit();													
-				  }
+	  function startUpload(){
+			$("#upload_btn").attr('disabled', 'true');
+			$("#upload_btn").attr('value', '{/literal}{$LANG.LOADING}{literal} ...');
+			$("#cancel_btn").css('display', 'none');
+			$("#loadergif").css('display', 'block');
+			document.uploadform.submit();													
+	  }
 </script> 
 {/literal}
 <div class="con_heading">{$LANG.UPLOAD_FILES}</div>
@@ -23,7 +23,7 @@
 <div style="margin:0px 0px 10px 0px"><strong>{$LANG.TYPE_FILE}:</strong> {$types}</div>
 <form action="" method="post" enctype="multipart/form-data" name="uploadform">
   <input name="MAX_FILE_SIZE" type="hidden" value="{$post_max_b}"/>
-  <input type="file" class="multi" name="upfile" id="upfile"/>
+  <input type="file" class="multi" name="upfile[]" id="upfile" accept="{$types}" />
   <div style="margin-top:20px;overflow:hidden">
     <input style="float:left;margin-right:4px" type="button" name="upload_btn" id="upload_btn" value="{$LANG.UPLOAD_FILES}" onclick="startUpload()"/>
     <input style="float:left" type="button" name="cancel_btn" id="cancel_btn" value="{$LANG.CANCEL}" onclick="window.history.go(-1)" />

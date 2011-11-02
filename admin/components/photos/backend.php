@@ -216,7 +216,13 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 			$loaded_files = array();
 			//////////
-				foreach ($_FILES as $key => $data_array) {
+            $list_files = array();
+
+            foreach($_FILES['upfile'] as $key=>$value) {
+                foreach($value as $k=>$v) { $list_files['upfile'.$k][$key] = $v; }
+            }
+
+            foreach ($list_files as $key=>$data_array) {
 					$error = $data_array['error'];
 					if ($error == UPLOAD_ERR_OK) {
 						
@@ -1004,6 +1010,7 @@ function showMapMarker(){
 	if ($opt == 'add_photo_multi'){	
 			$GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/includes/jquery/jquery.js"></script>';
 			$GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/includes/jquery/multifile/jquery.multifile.js"></script>';
+			$GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/includes/jquery/jquery.blockUI.js"></script>';
 
 			$GLOBALS['cp_page_head'][] = '<script type="text/javascript">
 										  function startUpload(){
@@ -1081,7 +1088,7 @@ function showMapMarker(){
              <td valign="top">Ôאיכû פמעמדנאפטי: <br />
              <span class="hinttext">Âûבטנאיעו גסו פמעמ ןמ מקונוהט </span></td>
              <td valign="top">
-                 <input type="file" class="multi" name="upfile" id="upfile"/>
+                 <input type="file" class="multi" name="upfile[]" id="upfile" accept="jpeg,gif,png,jpg,bmp"/>
                  <div id="loadergif" style="display:none;float:left;margin:6px"><img src="/images/ajax-loader.gif" border="0"/></div>
              </td>
          </tr>
