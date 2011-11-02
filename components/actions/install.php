@@ -9,7 +9,7 @@
         $_component['link']         = 'actions';
         $_component['author']       = 'InstantCMS Team';
         $_component['internal']     = '0';
-        $_component['version']      = '1.8';
+        $_component['version']      = '1.9';
 
 		$inCore = cmsCore::getInstance();
 		$inCore->loadModel('actions');

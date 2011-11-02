@@ -20,7 +20,7 @@ function mod_actions($module_id){
 
         $cfg = $inCore->loadModuleConfig($module_id);
 
-		if (!isset($cfg['show_target'])) { $cfg['show_target'] = 0; }
+		if (!isset($cfg['show_target'])) { $cfg['show_target'] = 1; }
 		if (!isset($cfg['limit'])) { $cfg['limit'] = 15; }
         if (!isset($cfg['action_types'])) { echo $_LANG['MODULE_NOT_CONFIGURED']; return true; }
 

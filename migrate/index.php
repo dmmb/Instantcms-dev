@@ -76,6 +76,16 @@
     echo "<h2>Миграция InstantCMS {$version_prev} &rarr; {$version_next}</h2>";
 
 // ========================================================================== //
+// ========================================================================== //
+	if(!$inDB->get_field('cms_components', "link='actions'", 'id')){
+		$sql = "INSERT INTO `cms_components` (`title`, `link`, `config`, `internal`, `author`, `published`, `version`, `system`) VALUES
+		('Лента активности', 'actions', '---\r\nshow_target: 1\r\nperpage: 10\r\nperpage_tab: 15\r\nis_all: 1\r\nact_type: \r\n  add_quest: 16\r\n  add_club_user: 15\r\n  vote_movie: 31\r\n  add_movie: 30\r\n  add_friend: 20\r\n  add_post: 10\r\n  add_post_club: 25\r\n  add_catalog: 13\r\n  add_wall_my: 29\r\n  add_wall: 23\r\n  add_wall_club: 24\r\n  add_comment: 2\r\n  add_user_photo_multi: 27\r\n  add_board: 12\r\n  add_fpost: 17\r\n  add_article: 8\r\n  add_thread: 18\r\n  add_photo: 7\r\n  add_user_photo: 26\r\n  add_avatar: 19\r\n  add_file: 22\r\n  set_status: 11\r\n  add_award: 21\r\n  add_user: 28\r\n  add_blog: 9\r\n  add_club: 14\r\n', 0, 'InstantCMS Team', 1, '1.9', 1);";
+		$inDB->query($sql);
+	
+		echo '<p>Компонент <strong>Лента активности</strong> установлен.</p>';
+		$is_was_migrate = true;
+	}
+// ========================================================================== //
 // ========================================================================== //	
 	$inDB->query("DROP TABLE IF EXISTS `cms_search`");
 

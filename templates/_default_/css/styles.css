@@ -2546,7 +2546,7 @@ div.con_forum_link a{
 /* ========================================================================== */
 /* ============================== ‘Œ–”Ã ===================================== */
 /* ========================================================================== */
-.darkBlue-LightBlue { background-color:#385c89; background-image: -webkit-gradient(linear,left bottom,left top,from(#385c89),to(#4a79a9)); background-image: -moz-linear-gradient(bottom, #385c89, #4a79a9); background-image: -o-linear-gradient(bottom, #385c89, #4a79a9); filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr=#4a79a9, endColorStr=#385c89); color: #FFF; font-size:14px; }
+.darkBlue-LightBlue { background-color:#385c89; background-image: -webkit-gradient(linear,left bottom,left top,from(#385c89),to(#4a79a9)); background-image: -moz-linear-gradient(bottom, #385c89, #4a79a9); background-image: -o-linear-gradient(bottom, #385c89, #4a79a9); color: #FFF; font-size:14px; }
 .forum_cattitle{
 	font-size: 18px;
 	margin-bottom:6px;
@@ -2594,7 +2594,7 @@ div.con_forum_link a{
 }
 
 .row1{
-background-color:#E0EAEF; background-image: -webkit-gradient(linear,left bottom,left top,from(#E0EAEF),to(#FFF)); background-image: -moz-linear-gradient(bottom, #E0EAEF, #FFF); background-image: -o-linear-gradient(bottom, #E0EAEF, #FFF); filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr=#FFF, endColorStr=#E0EAEF);
+background-color:#E0EAEF; background-image: -webkit-gradient(linear,left bottom,left top,from(#E0EAEF),to(#FFF)); background-image: -moz-linear-gradient(bottom, #E0EAEF, #FFF); background-image: -o-linear-gradient(bottom, #E0EAEF, #FFF); 
 	border-bottom:#A8C2CF 1px solid;
 }
 .row11{

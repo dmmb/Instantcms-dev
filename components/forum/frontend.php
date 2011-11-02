@@ -181,10 +181,10 @@ if ($do=='view'){
 		$rootid = $inDB->get_field('cms_forums', 'parent_id=0', 'id');
         while ($cat = $inDB->fetch_assoc($result)){
 			echo '<table class="forums_table" width="100%" cellspacing="0" cellpadding="8" border="0" bordercolor="#999999" >';
-			echo '<tr class="darkBlue-LightBlue">
-			  <td colspan="2" width="">'.$cat['title'].'</td>
-			  <td width="120">'.$_LANG['FORUM_ACT'].'</td>
-			  <td width="250">'.$_LANG['LAST_POST'].'</td>
+			echo '<tr>
+			  <td colspan="2" width="" class="darkBlue-LightBlue">'.$cat['title'].'</td>
+			  <td width="120" class="darkBlue-LightBlue">'.$_LANG['FORUM_ACT'].'</td>
+			  <td width="250" class="darkBlue-LightBlue">'.$_LANG['LAST_POST'].'</td>
 			</tr>';
             //FORUMS LIST IN CATEGORY
             $fsql = "SELECT *
@@ -539,12 +539,12 @@ if ($do=='thread'){
 		echo forumAttachedPoll($id, $t);
 
 		//THREAD MESSAGES LIST
-		echo '<table class="posts_table" width="100%" cellspacing="2" cellpadding="5" border="0" bordercolor="#999999" >';
+		echo '<table class="posts_table" width="100%" cellspacing="2" cellpadding="5" border="0" bordercolor="#999999">';
 
 		foreach ($posts as $p){
 			$mypost = $inUser->id ? ($inUser->id==$p['user_id'] || $is_adm) : false;
 			$user_messages = $model->getUserPostsCount($p['uid']);
-			echo '<tr>';
+			echo '<tr class="posts_table_tr">';
 				//user column
 				echo '<td class="post_usercell" width="140" align="center" valign="top" height="150">';
 					echo '<div><a class="post_userlink" href="javascript:addNickname(\''.$p['author'].'\');" title="'.$_LANG['ADD_NICKNAME'].'"/>'.$p['author'].'</a></div>';
@@ -578,7 +578,7 @@ if ($do=='thread'){
 					echo '<td><strong>#'.$num.'</strong> - '.$inCore->dateFormat($p['pubdate'], true, true).'</td>';
 					echo '<td align="right">';
 					if (usrCheckAuth() && !$t['closed']){ 
-						echo '<table cellpadding="1" cellspacing="2" border="0">
+						echo '<table cellpadding="1" cellspacing="2" border="0" class="msg_links">
 								<tr>';
 
 								echo '<td width="15"><img src="/components/forum/images/toolbar/post-quote.gif"/></td>
@@ -688,7 +688,19 @@ if (($is_moder && !$model->abstract_array['is_admin'][$p['uid']]) || $inUser->is
 				}
 			echo '</div>';
 		}
-		
+		echo '<script type="text/javascript" language="JavaScript">
+				$(document).ready(function(){
+					$(\'.posts_table_tr .msg_links\').css({opacity:0.4, filter:\'alpha(opacity=40)\'});
+					$(\'.posts_table_tr\').hover(
+						function() {
+							$(this).find(\'.msg_links\').css({opacity:1.0, filter:\'alpha(opacity=100)\'});
+						},
+						function() {
+							$(this).find(\'.msg_links\').css({opacity:0.4, filter:\'alpha(opacity=40)\'});
+						}
+					);
+				});
+		</script>';
 	} else {
 		echo '<p>'.$_LANG['NO_MESS_IN_THREAD'].'</p>';
 	}					
