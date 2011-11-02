@@ -1659,7 +1659,7 @@ if ($do=='viewboard'){
 		if ($inDB->num_rows($result)){				
 
 				while($con = $inDB->fetch_assoc($result)){							
-					if ($con['file'] && file_exists($_SERVER['DOCUMENT_ROOT'].'/images/board/small/'.$con['file'])){
+					if ($con['file'] && file_exists(PATH.'/images/board/small/'.$con['file'])){
 							$con['file'] = $con['file'];
 					} else { $con['file'] = 'nopic.jpg'; }				
 											if ($inUser->id){
@@ -1757,7 +1757,7 @@ if ($do=='viewphoto'){
 
 					$photo['pubdate'] = $inCore->dateFormat($photo['pubdate'], true, false, false);
 	$photo['genderlink'] = cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, $photo['gender'], $usr['login']);
-					$photo['filesize'] = round(filesize($_SERVER['DOCUMENT_ROOT'].'/images/users/photos/medium/'.$photo['imageurl'])/1024, 2);
+					$photo['filesize'] = round(filesize(PATH.'/images/users/photos/medium/'.$photo['imageurl'])/1024, 2);
 					//ссылки на предыдущую и следующую фотографии
 					$previd = $inDB->get_fields('cms_user_photos', "id>'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id ASC');
 					$nextid = $inDB->get_fields('cms_user_photos', "id<'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id DESC');
@@ -2122,7 +2122,7 @@ if ($do=='giveaward'){
 					$description = $inCore->request('description', 'str', '');
 					$imageurl = $inCore->request('imageurl', 'str', $_LANG['AWRD']);
 					$award_id = 0;					
-					if (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/users/awards/'.$imageurl)){							
+					if (file_exists(PATH.'/images/users/awards/'.$imageurl)){							
 						$sql = "INSERT INTO cms_user_awards (user_id, pubdate, title, description, imageurl, from_id, award_id)
 								VALUES ('$to_id', NOW(), '$title', '$description', '$imageurl', '$from_id', '$award_id')";
 				$inDB->query($sql);
@@ -2519,7 +2519,7 @@ if ($do=='delfile'){
 			$result = $inDB->query($sql) ;
 			if ($inDB->num_rows($result)){
 				$file = $inDB->fetch_assoc($result);
-				@unlink($_SERVER['DOCUMENT_ROOT'].'/upload/userfiles/'.$id.'/'.$file['filename']);
+				@unlink(PATH.'/upload/userfiles/'.$id.'/'.$file['filename']);
 				$inDB->query("DELETE FROM cms_user_files WHERE id = $fileid");
 				cmsActions::removeObjectLog('add_file', $fileid);
 			}			
@@ -2591,7 +2591,7 @@ if ($do=='delfilelist'){
 				$result = $inDB->query($sql);
 				if ($inDB->num_rows($result)){
 					while ($file = $inDB->fetch_assoc($result)){
-						@unlink($_SERVER['DOCUMENT_ROOT'].'/upload/userfiles/'.$id.'/'.$file['filename']);
+						@unlink(PATH.'/upload/userfiles/'.$id.'/'.$file['filename']);
 					cmsActions::removeObjectLog('add_file', $file['id']);
 					}
 					$inDB->query("DELETE FROM cms_user_files WHERE $findsql");

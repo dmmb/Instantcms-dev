@@ -103,12 +103,12 @@
 									
                 $sql_file = ((int)$_REQUEST['demodata']==1 ?'sqldumpdemo.sql' : 'sqldumpempty.sql');
 				
-                include($_SERVER['DOCUMENT_ROOT'].'/includes/database.inc.php');
-                include($_SERVER['DOCUMENT_ROOT'].'/includes/dbimport.inc.php');
+                include(PATH.'/includes/database.inc.php');
+                include(PATH.'/includes/dbimport.inc.php');
 
                 mysql_query("SET NAMES cp1251");
 
-                dbRunSQL($_SERVER['DOCUMENT_ROOT'].'/install/'.$sql_file, $db_prefix);
+                dbRunSQL(PATH.'/install/'.$sql_file, $db_prefix);
 
                 $sql = "UPDATE {$db_prefix}_users
                         SET password = md5('{$admin_password}'),
@@ -155,8 +155,8 @@ function installCheckFolders(){
 
 	foreach($folders as $key=>$folder){	
 		$right = true;
-		if(!@is_writable($_SERVER['DOCUMENT_ROOT'].$folder)){
-			if (!@chmod($_SERVER['DOCUMENT_ROOT'].$folder, 0777)){
+		if(!@is_writable(PATH.$folder)){
+			if (!@chmod(PATH.$folder, 0777)){
 				$right = false;;
 			}
 		}

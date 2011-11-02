@@ -22,7 +22,7 @@ function rss_blogs($item_id, $cfg, &$rssdata){
         global $_LANG;
 	
 		$maxitems = $cfg['maxitems'];
-		$rooturl = 'http://'.$_SERVER['HTTP_HOST'];
+		$rooturl = HOST;
 		if ($item_id == 'all') { $item_id = 0; }
 
 		//CHANNEL
@@ -50,7 +50,7 @@ function rss_blogs($item_id, $cfg, &$rssdata){
                        cat.title as category,
                        cat.seolink as bloglink
 				FROM cms_blog_posts p, cms_blogs cat
-				WHERE p.published = 1 AND p.blog_id = cat.id $catsql
+				WHERE p.published = 1 AND p.blog_id = cat.id AND cat.allow_who = 'all' $catsql
 				ORDER by p.pubdate DESC
 				LIMIT $maxitems";
 

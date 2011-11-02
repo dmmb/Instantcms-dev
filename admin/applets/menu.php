@@ -14,7 +14,7 @@
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 function iconList(){
-	if ($handle = opendir($_SERVER['DOCUMENT_ROOT'].'/images/menuicons')) {
+	if ($handle = opendir(PATH.'/images/menuicons')) {
 		$n = 0;
 		while (false !== ($file = readdir($handle))) {
 			if ($file != '.' && $file != '..' && strstr($file, '.gif')){

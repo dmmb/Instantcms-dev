@@ -35,7 +35,7 @@
 			if (isset($inUser->id)){ $user_id = $inUser->id; } else { $user_id = 0; }	
 			$sid = session_id();
 			if (!function_exists('shopOrder')){
-				include $_SERVER['DOCUMENT_ROOT'].'/components/catalog/includes/shopcore.php';
+				include PATH.'/components/catalog/includes/shopcore.php';
 			}
 			$totalitems = shopIsInCart();
 			$cartlink = '/catalog/viewcart.html';

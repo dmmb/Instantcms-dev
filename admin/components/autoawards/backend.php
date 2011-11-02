@@ -203,7 +203,7 @@ function error($msg){
 	
 	if ($opt == 'add' || $opt == 'edit'){	
 			
-		include($_SERVER['DOCUMENT_ROOT'].'/components/users/includes/usercore.php');
+		include(PATH.'/components/users/includes/usercore.php');
 			
 		if ($opt=='add'){
 			 cpAddPathway('Добавить награду', $_SERVER['REQUEST_URI']);

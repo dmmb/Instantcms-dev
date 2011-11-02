@@ -16,11 +16,11 @@
         $inDB = cmsDatabase::getInstance();
 		$cfg = $inCore->loadModuleConfig($module_id);
 	
-		include_once $_SERVER['DOCUMENT_ROOT'].'/includes/rss/lastRSS.php';
+		include_once PATH.'/includes/rss/lastRSS.php';
 		
 		$rss = new lastRSS;
 		
-		$rss->cache_dir = $_SERVER['DOCUMENT_ROOT'].'/includes/rss/cache';
+		$rss->cache_dir = PATH.'/includes/rss/cache';
 		$rss->cache_time = 3600; // one hour
 		$rss->cp = 'cp1251';
 

@@ -883,7 +883,7 @@ function applet_modules(){
                                 if ($do=='edit'){
                                     if ($inCore->isCached('module', $mod['id'], $mod['cachetime'], $mod['cacheint'])){
                                         $t = 'module'.$mod['id'];
-                                        $cfile = $_SERVER['DOCUMENT_ROOT'].'/cache/'.md5($t).'.html';
+                                        $cfile = PATH.'/cache/'.md5($t).'.html';
                                         if (file_exists($cfile)){
                                             $kb = round(filesize($cfile)/1024, 2);
                                             echo '<a href="index.php?view=cache&do=delcache&target=module&id='.$mod['id'].'">”далить кеш</a> ('.$kb.'  б)';

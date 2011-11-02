@@ -1179,9 +1179,9 @@ class bbcode {
 		$zoom = false;
 					
 		if (!strstr($src, 'http://')){				
-			if(file_exists($_SERVER['DOCUMENT_ROOT'].$src)){
+			if(file_exists(PATH.$src)){
 				if (function_exists('getimagesize')){
-					$size = getimagesize($_SERVER['DOCUMENT_ROOT'].$src);
+					$size = getimagesize(PATH.$src);
 					$width = $size[0];
 					$height = $size[1];
 					while ($width > 640 || $height > 640){

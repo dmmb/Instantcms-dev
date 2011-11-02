@@ -30,10 +30,10 @@ function cpWarning($text){
 }
 
 function cpWritable($file){ //relative path with starting "/"
-	if (is_writable($_SERVER['DOCUMENT_ROOT'].$file)){
+	if (is_writable(PATH.$file)){
 		return true;
 	} else {
-		return @chmod($_SERVER['DOCUMENT_ROOT'].$file, 0755);
+		return @chmod(PATH.$file, 0755);
 	}	
 }
 
@@ -390,7 +390,7 @@ function cpModulePositions($template){
 	
 	$pos = array();
 	
-	$posfile = $_SERVER['DOCUMENT_ROOT'].'/templates/'.$template.'/positions.txt';
+	$posfile = PATH.'/templates/'.$template.'/positions.txt';
 	
 	if(file_exists($posfile)){
 		$file = fopen($posfile, 'r');

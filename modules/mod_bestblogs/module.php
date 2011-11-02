@@ -16,7 +16,7 @@ function mod_bestblogs($module_id){
         $inDB = cmsDatabase::getInstance();
         global $_LANG;
 		if (!function_exists('cmsKarmaFormat')){ //if not included earlier
-			include($_SERVER['DOCUMENT_ROOT'].'/core/lib_karma.php');
+			include(PATH.'/core/lib_karma.php');
 		}		
 		
 		$cfg = $inCore->loadModuleConfig($module_id);

@@ -285,7 +285,8 @@ if ($do=='view'){
     //—читаем количество персональных и коллективных блогов
 	$single_blogs	= $model->getSingleBlogsCount();
 	$multi_blogs 	= $model->getMultiBlogsCount();
-	$total_blogs 	= $single_blogs + $multi_blogs;
+	$club_blogs 	= $model->getClubsBlogsCount();
+	$total_blogs 	= $single_blogs + $multi_blogs + $club_blogs;
 
     //ѕолучаем список блогов
     $blogs_list     = $model->getBlogs($ownertype, $page, $perpage);

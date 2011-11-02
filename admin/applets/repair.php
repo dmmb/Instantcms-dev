@@ -22,12 +22,12 @@ function applet_repair(){
 	global $adminAccess;
 	if (!$inCore->isAdminCan('admin/config', $adminAccess)) { cpAccessDenied(); }
 
-	include_once($_SERVER['DOCUMENT_ROOT'].'/admin/dbstructure.php');					//correct database structure
+	include_once(PATH.'/admin/dbstructure.php');					//correct database structure
 
 	if (isset($_POST['runsql'])){	
-		include_once($_SERVER['DOCUMENT_ROOT'].'/includes/dbimport.inc.php');					//correct database structure
+		include_once(PATH.'/includes/dbimport.inc.php');					//correct database structure
 		$sql = $_POST['sql'];
-		$file = $_SERVER['DOCUMENT_ROOT'].'/backups/repair.sql';		
+		$file = PATH.'/backups/repair.sql';		
 		file_put_contents($file, $sql);			
 		dbRunSQL($file, $inConf->db_prefix);
 	}

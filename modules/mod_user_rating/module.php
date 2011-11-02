@@ -40,7 +40,7 @@
 				$is_usr=true;
 				
 				if (!function_exists('usrImageNOdb')){ //if not included earlier
-				include_once($_SERVER['DOCUMENT_ROOT'].'/components/users/includes/usercore.php');
+				include_once(PATH.'/components/users/includes/usercore.php');
 				}
 			
 				while($usr = $inDB->fetch_assoc($result)){

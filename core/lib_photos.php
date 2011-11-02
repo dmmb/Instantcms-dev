@@ -94,8 +94,8 @@ function albumDelete($album_id, $differ=''){
 			$inDB->query("DELETE FROM cms_photo_files WHERE id = ".$photo['id']) ;
             $inCore->deleteComments('photo', $photo['id']);
             $inCore->deleteRatings('photo', $photo['id']);
-			@unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/'.$photo['file']);	
-			@unlink($_SERVER['DOCUMENT_ROOT'].'/images/photos/thumb/'.$photo['file'].'.jpg');	
+			@unlink(PATH.'/images/photos/'.$photo['file']);	
+			@unlink(PATH.'/images/photos/thumb/'.$photo['file'].'.jpg');	
 		}			
 	}
 	//DELETE ALBUM

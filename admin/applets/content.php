@@ -231,7 +231,7 @@ function applet_content(){
 	}
 	
 	if ($do == 'delete'){
-        if ($cfg['af_delete']){ include_once($_SERVER['DOCUMENT_ROOT'].'/components/forum/includes/forumcore.php'); }
+        if ($cfg['af_delete']){ include_once(PATH.'/components/forum/includes/forumcore.php'); }
 		if (!isset($_REQUEST['item'])){
 			if ($id >= 0){ 
 				$model->deleteArticle($id, $cfg['af_delete']);
@@ -307,23 +307,23 @@ function applet_content(){
             $file       = 'article'.$id.'.jpg';
 
             if ($inCore->request('delete_image', 'int', 0)){
-                @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file");
-                @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file");
+                @unlink(PATH."/images/photos/small/$file");
+                @unlink(PATH."/images/photos/medium/$file");
             } else {
 
                 if (isset($_FILES["picture"]["name"]) && @$_FILES["picture"]["name"]!=''){
                     //generate image file
                     $tmp_name   = $_FILES["picture"]["tmp_name"];                   
                     //upload image and insert record in db
-                    if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/photos/$file")){
+                    if (@move_uploaded_file($tmp_name, PATH."/images/photos/$file")){
                         $inCore->includeGraphics();
-						if ($cfg['watermark'] && !$cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/$file"); }
-                        @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
-                        @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
-						if ($cfg['watermark'] && $cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file"); }
-                        @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/$file");
-                        @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", 0777);
-                        @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", 0777);
+						if ($cfg['watermark'] && !$cfg['watermark_only_big']) { @img_add_watermark(PATH."/images/photos/$file"); }
+                        @img_resize(PATH."/images/photos/$file", PATH."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
+                        @img_resize(PATH."/images/photos/$file", PATH."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
+						if ($cfg['watermark'] && $cfg['watermark_only_big']) { @img_add_watermark(PATH."/images/photos/medium/$file"); }
+                        @unlink(PATH."/images/photos/$file");
+                        @chmod(PATH."/images/photos/small/$file", 0777);
+                        @chmod(PATH."/images/photos/medium/$file", 0777);
                     }
                 }
 
@@ -409,15 +409,15 @@ function applet_content(){
             $tmp_name   = $_FILES["picture"]["tmp_name"];
             $file       = 'article'.$article['id'].'.jpg';
             //upload image and insert record in db
-            if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/photos/$file")){
+            if (@move_uploaded_file($tmp_name, PATH."/images/photos/$file")){
                 $inCore->includeGraphics();
-				if ($cfg['watermark'] && !$cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/$file"); }
-                @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
-                @img_resize($_SERVER['DOCUMENT_ROOT']."/images/photos/$file", $_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
-				if ($cfg['watermark'] && $cfg['watermark_only_big']) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file"); }
-                @unlink($_SERVER['DOCUMENT_ROOT']."/images/photos/$file");
-                @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/small/$file", 0755);
-                @chmod($_SERVER['DOCUMENT_ROOT']."/images/photos/medium/$file", 0755);
+				if ($cfg['watermark'] && !$cfg['watermark_only_big']) { @img_add_watermark(PATH."/images/photos/$file"); }
+                @img_resize(PATH."/images/photos/$file", PATH."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
+                @img_resize(PATH."/images/photos/$file", PATH."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
+				if ($cfg['watermark'] && $cfg['watermark_only_big']) { @img_add_watermark(PATH."/images/photos/medium/$file"); }
+                @unlink(PATH."/images/photos/$file");
+                @chmod(PATH."/images/photos/small/$file", 0755);
+                @chmod(PATH."/images/photos/medium/$file", 0755);
             }
         }
 
@@ -635,7 +635,7 @@ function applet_content(){
                     <div style="margin-bottom:10px">
                         <?php
                             if ($do=='edit'){
-                                if (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/photos/small/article'.$mod['id'].'.jpg')){
+                                if (file_exists(PATH.'/images/photos/small/article'.$mod['id'].'.jpg')){
                         ?>
                         <div style="margin-top:3px;margin-bottom:3px;padding:10px;border:solid 1px gray;text-align:center">
                             <img src="/images/photos/small/article<?php echo $id; ?>.jpg" border="0" />

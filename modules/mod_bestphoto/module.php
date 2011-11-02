@@ -52,7 +52,7 @@ function mod_bestphoto($module_id){
 		$is_best = false;	
 
 		if (!function_exists('cmsKarmaFormat') && $cfg['showrating']){ //if not included earlier
-			include_once($_SERVER['DOCUMENT_ROOT'].'/core/lib_karma.php');
+			include_once(PATH.'/core/lib_karma.php');
 		}
 
 		if ($inDB->num_rows($result)){	

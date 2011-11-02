@@ -440,6 +440,13 @@ class cms_model_blogs{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
+    public function getClubsBlogsCount(){
+        return $this->inDB->rows_count('cms_blogs', "owner='club'");
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
     public function getBlogs($ownertype, $page, $perpage){
         $list = array();
 
@@ -455,7 +462,7 @@ class cms_model_blogs{
         if ($ownertype!='all') { 
             $sql .= "WHERE ownertype='$ownertype' AND owner='user'\n";
         } else {
-            $sql .= "WHERE owner='user'";
+            $sql .= "WHERE 1=1 ";
         }
 
         $sql .= "GROUP BY b.id

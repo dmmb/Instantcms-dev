@@ -62,7 +62,7 @@ function rss_catalog($item_id, $cfg, &$rssdata){
 				$items[$id]['comments'] = $items[$id]['link'].'#c';
 				$items[$id]['category'] = $item['category'];
                 
-                $image_file = $_SERVER['DOCUMENT_ROOT'].'/images/catalog/medium/'.$item['imageurl'].'.jpg';
+                $image_file = PATH.'/images/catalog/medium/'.$item['imageurl'].'.jpg';
                 $image_url  = $rooturl . '/images/catalog/medium/'.$item['imageurl'].'.jpg';
 
                 $items[$id]['image'] = file_exists($image_file) ? $image_url : '';

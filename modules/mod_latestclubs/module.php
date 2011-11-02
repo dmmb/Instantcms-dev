@@ -41,7 +41,7 @@ function mod_latestclubs($module_id){
 			
 			while ($club = $inDB->fetch_assoc($result)){
 				if (!$club['imageurl']) { $club['imageurl'] = 'nopic.jpg'; } else {
-					if (!file_exists($_SERVER['DOCUMENT_ROOT'].'/images/clubs/small/'.$club['imageurl'])){
+					if (!file_exists(PATH.'/images/clubs/small/'.$club['imageurl'])){
 						$club['imageurl'] = 'nopic.jpg';
 					}
 				}

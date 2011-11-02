@@ -37,7 +37,7 @@ function img_watermark(&$img, $w, $h){
 
     if (!$inConf->wmark) { return; }
 
-	$wm_file = 	$_SERVER['DOCUMENT_ROOT'].'/images/'.$inConf->wmark;
+	$wm_file = 	PATH.'/images/'.$inConf->wmark;
 
     if (!file_exists($wm_file)) { return; }
 

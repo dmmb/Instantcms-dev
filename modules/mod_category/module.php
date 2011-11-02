@@ -36,7 +36,7 @@ function mod_category($module_id){
 			while($con = $inDB->fetch_assoc($result)){
                 $link = $model->getCategoryURL(null, $con['seolink']);
 				if (strstr($_SERVER['REQUEST_URI'], $link)){ $is_current = true; } else { $is_current = false; }			
-				$is_icon = ($cfg['icon'] && file_exists($_SERVER['DOCUMENT_ROOT'].$cfg['icon']));
+				$is_icon = ($cfg['icon'] && file_exists(PATH.$cfg['icon']));
 				echo '<tr>';
 					if ($is_icon){
 						echo '<td width="12" valign="top"><img src="'.$cfg['icon'].'" border="0" /></td>';

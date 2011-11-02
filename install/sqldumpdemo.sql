@@ -133,7 +133,7 @@ CREATE TABLE `#__blogs` (
 
 INSERT INTO `#__blogs` (`id`, `user_id`, `title`, `pubdate`, `allow_who`, `view_type`, `showcats`, `ownertype`, `premod`, `forall`, `owner`, `seolink`, `rating`) VALUES
 (1, 1, 'Пример блога админа', '2008-06-03 13:26:55', 'all', 'list', 1, 'single', 0, 1, 'user', 'primer-bloga-admina', 2),
-(24, 14, 'Блог', '2010-10-20 00:02:41', 'all', 'list', 1, 'multi', 0, 0, 'club', 'instantcms-lovers', 0);
+(24, 14, 'Блог клуба любителей InstantCMS', '2010-10-20 00:02:41', 'all', 'list', 1, 'multi', 0, 0, 'club', 'instantcms-lovers', 0);
 
 DROP TABLE IF EXISTS `#__blog_authors`;
 CREATE TABLE `#__blog_authors` (

@@ -207,7 +207,7 @@ function usrImage($user_id, $small='small'){
 				return '<img border="0" class="usr_img" src="/images/users/avatars/noprofile.jpg" />';
 			}	
 		} else {
-			if ($usr['imageurl'] && @file_exists($_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/'.$usr['imageurl'])){
+			if ($usr['imageurl'] && @file_exists(PATH.'/images/users/avatars/'.$usr['imageurl'])){
 				if ($small=='small'){
 					return '<img border="0" class="usr_img_small" src="/images/users/avatars/small/'.$usr['imageurl'].'" />';
 				} else {
@@ -236,7 +236,7 @@ function usrImageNOdb($user_id, $small='small', $usr_imageurl, $usr_is_deleted){
 				return '<img border="0" class="usr_img" src="/images/users/avatars/noprofile.jpg" />';
 			}	
 		} else {
-			if ($usr_imageurl && @file_exists($_SERVER['DOCUMENT_ROOT'].'/images/users/avatars/'.$usr_imageurl)){
+			if ($usr_imageurl && @file_exists(PATH.'/images/users/avatars/'.$usr_imageurl)){
 				if ($small=='small'){
 					return '<img border="0" class="usr_img_small" src="/images/users/avatars/small/'.$usr_imageurl.'" />';
 				} else {

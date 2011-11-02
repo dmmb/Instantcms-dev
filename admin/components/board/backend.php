@@ -156,7 +156,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 												
 			if (isset($_FILES['picture']['tmp_name'])){
 				if (@move_uploaded_file($_FILES['picture']['tmp_name'], $uploadphoto)) {
-						$uploaddir = $_SERVER['DOCUMENT_ROOT'].'/images/board/';		
+						$uploaddir = PATH.'/images/board/';		
 						$realfile = $_FILES['picture']['name'];
 			
 						$lid = dbGetFields('cms_board_items', 'id>0', 'id', 'id DESC');

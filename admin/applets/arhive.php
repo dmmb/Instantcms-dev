@@ -82,7 +82,7 @@ function applet_arhive(){
 	}
 	
 	if ($do == 'delete'){
-		if ($cfg['af_delete']){ include_once($_SERVER['DOCUMENT_ROOT'].'/components/forum/includes/forumcore.php'); }
+		if ($cfg['af_delete']){ include_once(PATH.'/components/forum/includes/forumcore.php'); }
 		if (!isset($_REQUEST['item'])){
 			if ($id >= 0){
 				$model->deleteArticle($id, $cfg['af_delete']);

@@ -171,7 +171,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			$photo['showdate']      = $inCore->request('showdate', 'int', 1);
 			$photo['tags']          = $inCore->request('tags', 'str');
 
-			$uploaddir              = $_SERVER['DOCUMENT_ROOT'].'/images/photos/';
+			$uploaddir              = PATH.'/images/photos/';
 			$realfile               = $_FILES['picture']['name'];
 			$filename               = md5($realfile . time()).'.jpg';
 			$uploadfile             = $uploaddir . $realfile;
@@ -209,7 +209,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			$photo['showdate']     = $inCore->request('showdate', 'int');
             $photo['tags']         = $inCore->request('tags', 'str');
 			
-			$uploaddir             = $_SERVER['DOCUMENT_ROOT'].'/images/photos/';
+			$uploaddir             = PATH.'/images/photos/';
 
             $album                 = $model->getAlbumThumbsData($photo['album_id']);
 			$titlemode             = $inCore->request('titlemode', 'str');

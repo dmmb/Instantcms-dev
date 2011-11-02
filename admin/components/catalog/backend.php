@@ -155,7 +155,7 @@ function cpPriceInput($id){
 
         //upload image
         if (isset($_FILES["imgfile"]["name"]) && @$_FILES["imgfile"]["name"]!=''){
-            require($_SERVER['DOCUMENT_ROOT'].'/includes/graphic.inc.php');
+            require(PATH.'/includes/graphic.inc.php');
 			//generate image file
 			$tmp_name = $_FILES["imgfile"]["tmp_name"];
 			$imgfile = $_FILES["imgfile"]["name"];
@@ -163,9 +163,9 @@ function cpPriceInput($id){
 			$ext = $path_parts['extension'];
 			$imgfile = md5($imgfile.time()).'.'.$ext;
 			//upload image and insert record in db
-			if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/catalog/$imgfile")){
-				@img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$imgfile", $_SERVER['DOCUMENT_ROOT']."/images/catalog/small/$imgfile.jpg", 100, 100);
-				@img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$imgfile", $_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$imgfile.jpg", 250, 250);
+			if (@move_uploaded_file($tmp_name, PATH."/images/catalog/$imgfile")){
+				@img_resize(PATH."/images/catalog/$imgfile", PATH."/images/catalog/small/$imgfile.jpg", 100, 100);
+				@img_resize(PATH."/images/catalog/$imgfile", PATH."/images/catalog/medium/$imgfile.jpg", 250, 250);
 			} else { $msg .= 'Ошибка загрузки изображения!'; }
 		} else { $imgfile = ''; }
 
@@ -174,7 +174,7 @@ function cpPriceInput($id){
 			//upload xls file
 			$tmp_name = $_FILES["xlsfile"]["tmp_name"];
 			$file = $_FILES["xlsfile"]["name"];
-			$file = $_SERVER['DOCUMENT_ROOT']."/upload/". md5($file . time()). '.xls';
+			$file = PATH."/upload/". md5($file . time()). '.xls';
 			if (@move_uploaded_file($tmp_name, $file)){
                 $inCore->includeFile('includes/excel/excel_reader2.php');
                 $data = new Spreadsheet_Excel_Reader($file, true, $charset);
@@ -323,12 +323,12 @@ function cpPriceInput($id){
 			$file = md5($file.time()).'.'.$ext;
             $item['file'] = $file;
 			//upload image and insert record in db		
-			if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/catalog/$file")){
-				@img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", $_SERVER['DOCUMENT_ROOT']."/images/catalog/small/$file.jpg", 100, 100);
-				@img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", $_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$file.jpg", 250, 250);
-                @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", 0644);
-				@chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/small/$file.jpg", 0644);
-				@chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$file.jpg", 0644);
+			if (@move_uploaded_file($tmp_name, PATH."/images/catalog/$file")){
+				@img_resize(PATH."/images/catalog/$file", PATH."/images/catalog/small/$file.jpg", 100, 100);
+				@img_resize(PATH."/images/catalog/$file", PATH."/images/catalog/medium/$file.jpg", 250, 250);
+                @chmod(PATH."/images/catalog/$file", 0644);
+				@chmod(PATH."/images/catalog/small/$file.jpg", 0644);
+				@chmod(PATH."/images/catalog/medium/$file.jpg", 0644);
 			}
 		}
 		
@@ -396,12 +396,12 @@ function cpPriceInput($id){
                 $imageurl   = $model->getItemImageUrl($id);
 
 				if($imageurl){
-					@chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", 0777);
-					@chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/small/$file.jpg", 0777);
-					@chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$file.jpg", 0777);
-					@unlink($_SERVER['DOCUMENT_ROOT']."/images/catalog/$imageurl");
-					@unlink($_SERVER['DOCUMENT_ROOT']."/images/catalog/small/$imageurl.jpg");
-					@unlink($_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$imageurl.jpg");
+					@chmod(PATH."/images/catalog/$file", 0777);
+					@chmod(PATH."/images/catalog/small/$file.jpg", 0777);
+					@chmod(PATH."/images/catalog/medium/$file.jpg", 0777);
+					@unlink(PATH."/images/catalog/$imageurl");
+					@unlink(PATH."/images/catalog/small/$imageurl.jpg");
+					@unlink(PATH."/images/catalog/medium/$imageurl.jpg");
 				}
 
                 $file               = $_FILES["imgfile"]["name"];
@@ -411,14 +411,14 @@ function cpPriceInput($id){
                 
                 $item['imageurl']   = $file;
 
-				if (@move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT']."/images/catalog/$file")){
+				if (@move_uploaded_file($tmp_name, PATH."/images/catalog/$file")){
                     //create image thumbnails
-					if ( $cfg['watermark'] ) { @img_add_watermark($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file"); }
-                    @img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", $_SERVER['DOCUMENT_ROOT']."/images/catalog/small/$file.jpg", 100, 100);
-                    @img_resize($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", $_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$file.jpg", 250, 250);
-                    @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/$file", 0644);
-                    @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/small/$file.jpg", 0644);
-                    @chmod($_SERVER['DOCUMENT_ROOT']."/images/catalog/medium/$file.jpg", 0644);
+					if ( $cfg['watermark'] ) { @img_add_watermark(PATH."/images/catalog/$file"); }
+                    @img_resize(PATH."/images/catalog/$file", PATH."/images/catalog/small/$file.jpg", 100, 100);
+                    @img_resize(PATH."/images/catalog/$file", PATH."/images/catalog/medium/$file.jpg", 250, 250);
+                    @chmod(PATH."/images/catalog/$file", 0644);
+                    @chmod(PATH."/images/catalog/small/$file.jpg", 0644);
+                    @chmod(PATH."/images/catalog/medium/$file.jpg", 0644);
 				} else { $msg = 'Ошибка загрузки изображения!'; }				
 			}					
 
@@ -1014,7 +1014,7 @@ function cpPriceInput($id){
                         <div style="margin-bottom:10px">
                             <?php
                                 if ($opt=='edit_item'){
-                                    if (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/catalog/small/'.$mod['imageurl'].'.jpg')){
+                                    if (file_exists(PATH.'/images/catalog/small/'.$mod['imageurl'].'.jpg')){
                             ?>
                             <div style="margin-top:3px;margin-bottom:3px;padding:10px;border:solid 1px gray;text-align:center">
                                 <img src="/images/catalog/small/<?php echo $mod['imageurl']; ?>.jpg" border="0" />

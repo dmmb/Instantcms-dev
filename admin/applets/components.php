@@ -83,7 +83,7 @@ function applet_components(){
 		if (!$inCore->isAdminCan('admin/com_'.$com, $adminAccess)) { cpAccessDenied(); }
 			
 		if ($com) {
-			$file = $_SERVER['DOCUMENT_ROOT'].'/admin/components/'.$com.'/backend.php';
+			$file = PATH.'/admin/components/'.$com.'/backend.php';
 			//die($file);
 			if (file_exists($file)){
 				include $file;

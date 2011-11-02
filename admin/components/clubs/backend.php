@@ -149,8 +149,8 @@ if ($opt == 'submit'){
 
     //upload logo
     if (isset($_FILES['picture'])){
-        require($_SERVER['DOCUMENT_ROOT'].'/includes/graphic.inc.php');
-        $uploaddir = $_SERVER['DOCUMENT_ROOT'].'/images/clubs/';
+        require(PATH.'/includes/graphic.inc.php');
+        $uploaddir = PATH.'/images/clubs/';
         if (!is_dir($uploaddir)) { @mkdir($uploaddir); }
 
         $realfile = $_FILES['picture']['name'];
@@ -222,8 +222,8 @@ if ($opt == 'update'){
 
         //upload logo
         if ($_FILES['picture']['name']){
-            require($_SERVER['DOCUMENT_ROOT'].'/includes/graphic.inc.php');
-            $uploaddir = $_SERVER['DOCUMENT_ROOT'].'/images/clubs/';
+            require(PATH.'/includes/graphic.inc.php');
+            $uploaddir = PATH.'/images/clubs/';
             if (!is_dir($uploaddir)) { @mkdir($uploaddir); }
 
             $filename = md5($id).'.jpg';

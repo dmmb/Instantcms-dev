@@ -42,7 +42,7 @@
     $inDB = cmsDatabase::getInstance();
 
 	if ($opt=='export'){
-		include($_SERVER['DOCUMENT_ROOT'].'/includes/dbexport.inc.php');
+		include(PATH.'/includes/dbexport.inc.php');
 		if (is_writable($dir)){	
 			$dumper = new MySQLDump($inConf->db_base,$file,false,false);
 			$dumper->doDump();
@@ -61,7 +61,7 @@
 	if ($opt=='import'){
 		$uploaddump = $dir.'/import.sql';
 		if (@move_uploaded_file($_FILES['dumpfile']['tmp_name'], $uploaddump)) {
-			include($_SERVER['DOCUMENT_ROOT'].'/includes/dbimport.inc.php');
+			include(PATH.'/includes/dbimport.inc.php');
 			$errors = 'Ошибка импорта базы';
 			if(dbRunSQL($uploaddump, $inConf->db_prefix)){
 				@unlink($uploaddump);

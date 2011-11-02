@@ -37,7 +37,7 @@
 			
 			if ($cfg['view_type']=='table' || $cfg['view_type']=='hr_table'){
 				if (!function_exists('usrImageNOdb')){ //if not included earlier
-				include_once($_SERVER['DOCUMENT_ROOT'].'/components/users/includes/usercore.php');
+				include_once(PATH.'/components/users/includes/usercore.php');
 				}	
 				while($usr = $inDB->fetch_assoc($result)){
 					$usr['avatar'] = usrImageNOdb($usr['id'], 'small', $usr['imageurl'], $usr['is_deleted']);
