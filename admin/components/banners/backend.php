@@ -329,16 +329,9 @@ function bannerHitsbyID($id){
 				  <tr>
 				    <td><strong>Позиция для показа: </strong></td>
 				    <td><select name="position" id="position">
-						  <option value="banner1" <?php if(@$mod['position']=='banner1') { echo 'selected'; } ?>>banner1</option>
-						  <option value="banner2" <?php if(@$mod['position']=='banner2') { echo 'selected'; } ?>>banner2</option>
-						  <option value="banner3" <?php if(@$mod['position']=='banner3') { echo 'selected'; } ?>>banner3</option>
-						  <option value="banner4" <?php if(@$mod['position']=='banner4') { echo 'selected'; } ?>>banner4</option>
-						  <option value="banner5" <?php if(@$mod['position']=='banner5') { echo 'selected'; } ?>>banner5</option>
-						  <option value="banner6" <?php if(@$mod['position']=='banner6') { echo 'selected'; } ?>>banner6</option>
-						  <option value="banner7" <?php if(@$mod['position']=='banner7') { echo 'selected'; } ?>>banner7</option>
-						  <option value="banner8" <?php if(@$mod['position']=='banner8') { echo 'selected'; } ?>>banner8</option>
-						  <option value="banner9" <?php if(@$mod['position']=='banner9') { echo 'selected'; } ?>>banner9</option>
-						  <option value="banner10" <?php if(@$mod['position']=='banner10') { echo 'selected'; } ?>>banner10</option>
+							<?php for($m=1;$m<=30;$m++){ ?>
+                                <option value="banner<?php echo $m; ?>" <?php if(@$mod['position']=='banner'.$m) { echo 'selected'; } ?>>banner<?php echo $m; ?></option>
+                            <?php } ?>
                     </select></td>
 			      </tr>
 				  <tr>
