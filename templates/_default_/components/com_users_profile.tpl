@@ -266,7 +266,7 @@
 						</div>
                         {/if}
 
-                        {if $cfg.sw_forum}
+                        {if $cfg.sw_forum && $cfg_forum.component_enabled}
 						<div class="field">
 							<div class="title">{$LANG.MESS_IN_FORUM}:</div>
 							<div class="value">{$usr.forum_count}

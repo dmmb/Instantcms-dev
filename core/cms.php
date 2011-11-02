@@ -1636,7 +1636,7 @@ class cmsCore {
         $this->includeFile('components/'.$component.'/router.php');
 
         $routes = call_user_func('routes_'.$component);
-
+		$routes = self::callEvent('GET_ROUTE_'.$component, $routes);
         //перебираем все маршруты
         foreach($routes as $route_id=>$route){
 

@@ -379,168 +379,171 @@ if ($do=='view'){
 /////////////////////////////// EDIT PROFILE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='editprofile'){
 
+	if (!$inUser->id) { cmsUser::goToLogin(); }
+
+	if ($inUser->id!=$id && !$inUser->is_admin){ cmsCore::error404(); }
+
 	$opt = $inCore->request('opt', 'str', 'edit');
 
-	if (usrCheckAuth()){
+	$cfg_forum = $inCore->loadComponentConfig('forum');
 	
-		if ($inUser->id==$id || $inCore->userIsAdmin($inUser->id)){
+	if ($opt == 'save'){
+
+		$errors = false;
 		
-				if ($opt == 'save'){
-					$errors = false;
-					
-					$nickname = $inCore->request('nickname', 'str');
-                    if (strlen($nickname)<2) { cmsCore::addSessionMessage($_LANG['SHORT_NICKNAME'], 'error'); $errors = true; }
-					$inCore->loadModel('registration');
-					$modreg = new cms_model_registration();
-					if (!$inCore->userIsAdmin($inUser->id)){
-						if($modreg->getBadNickname($nickname)) { cmsCore::addSessionMessage($_LANG['ERR_NICK_EXISTS'], 'error'); $errors = true; }
-					}
+		$nickname = $inCore->request('nickname', 'str');
+		if (strlen($nickname)<2) { cmsCore::addSessionMessage($_LANG['SHORT_NICKNAME'], 'error'); $errors = true; }
+		$inCore->loadModel('registration');
+		$modreg = new cms_model_registration();
+		if (!$inCore->userIsAdmin($inUser->id)){
+			if($modreg->getBadNickname($nickname)) { cmsCore::addSessionMessage($_LANG['ERR_NICK_EXISTS'], 'error'); $errors = true; }
+		}
 
-					$gender = $inCore->request('gender', 'str');
-					
-					$city = $inCore->request('city', 'str');
-					if (strlen($city)>25) { cmsCore::addSessionMessage($_LANG['LONG_CITY_NAME'], 'error'); $errors = true; }
-
-					$email = $inCore->request('email', 'str');
-					if (!preg_match('/^([a-z0-9\._-]+)@([a-z0-9\._-]+)\.([a-z]{2,4})$/i', $email)) { cmsCore::addSessionMessage($_LANG['REALY_ADRESS_EMAIL'], 'error'); $errors = true; }
-					if ($inDB->get_field('cms_users', "email='{$email}'", 'id')) { cmsCore::addSessionMessage($_LANG['ADRESS_EMAIL_IS_BUSY'], 'error'); $errors = true; }
-					
-					$showmail       = $inCore->request('showmail', 'int');
-					$email_newmsg   = $inCore->request('email_newmsg', 'int');
-					
-					$showbirth      = $inCore->request('showbirth', 'int');
-					$description    = $inCore->request('description', 'str');
-					
-					$birthdate      = (int)$_REQUEST['birthdate']['year'].'-'.(int)$_REQUEST['birthdate']['month'].'-'.(int)$_REQUEST['birthdate']['day'];
-					$signature      = $inCore->request('signature', 'str');
-
-					$allow_who      = $inCore->request('allow_who', 'str');
-                                        if (!preg_match('/^([a-zA-Z]+)$/i', $allow_who)) { $errors = true; }
-
-					$icq            = $inCore->request('icq', 'str');
-                                         $icq            = preg_replace('/([^0-9])/i', '', $icq);
-                    
-					$showicq        = $inCore->request('showicq', 'int');
-					
-					$cm_subscribe   = $inCore->request('cm_subscribe', 'str');
-					if (!preg_match('/^([a-zA-Z]+)$/i', $cm_subscribe)) { $errors = true; }
-					
-					if ($inCore->inRequest('field')){
-						foreach($_POST['field'] as $k=>$val){
-							$_POST['field'][$k] = $inCore->strClear($_POST['field'][$k]);
-						}					
-						$formsdata = $inCore->arrayToYaml($_POST['field']);
-						$forms_sql = ", formsdata='$formsdata'";
-					} else {
-						$forms_sql = '';
-					}
-					
-					if (!$errors){
-                       
-						$sql = "UPDATE cms_user_profiles 
-						 		SET city = '$city',
-									description = '$description',
-									showmail='$showmail',
-									showbirth='$showbirth',
-									showicq='$showicq',
-									allow_who='$allow_who',
-									signature='$signature',
-									gender='$gender' $forms_sql,
-									email_newmsg='$email_newmsg',
-									cm_subscribe='$cm_subscribe'
-								WHERE user_id = $id";
-						$inDB->query($sql) ;
-
-						$sql = "UPDATE cms_users 
-								SET birthdate='$birthdate',
-									email='$email',
-									icq='$icq',
-									nickname='$nickname'
-								WHERE id = $id";
-						$inDB->query($sql) ;
-
-                        cmsCore::addSessionMessage($_LANG['PROFILE_SAVED'], 'info');
-					$inCore->redirect(cmsUser::getProfileURL($inUser->login));
-					}
-                    
-				}				
-				
-				if ($opt == 'changepass'){
-					$errors = false;
-
-					$oldpass 	= $inCore->request('oldpass', 'str');
-					$newpass 	= $inCore->request('newpass', 'str');
-					$newpass2 	= $inCore->request('newpass2', 'str');
-					
-					if ($inUser->password != md5($oldpass)) { cmsCore::addSessionMessage($_LANG['OLD_PASS_WRONG'], 'error'); $errors = true;}
-					if ($newpass != $newpass2) { cmsCore::addSessionMessage($_LANG['WRONG_PASS'], 'error'); $errors = true; }
-					if($oldpass && $newpass && $newpass2 && strlen($newpass )<6) { cmsCore::addSessionMessage($_LANG['PASS_SHORT'], 'error'); $errors = true; }
-
-					if (!$errors){
-						$sql = "UPDATE cms_users SET password='".md5($newpass)."' WHERE id = $id AND password='".md5($oldpass)."'";
-						$inDB->query($sql);
-						cmsCore::addSessionMessage($_LANG['PASS_CHANGED'], 'info');
-					$inCore->redirect(cmsUser::getProfileURL($inUser->login));
-				}
-				}
+		$gender = $inCore->request('gender', 'str');
 		
+		$city = $inCore->request('city', 'str');
+		if (strlen($city)>25) { cmsCore::addSessionMessage($_LANG['LONG_CITY_NAME'], 'error'); $errors = true; }
+
+		$email = $inCore->request('email', 'str');
+		if (!preg_match('/^([a-z0-9\._-]+)@([a-z0-9\._-]+)\.([a-z]{2,4})$/i', $email)) { cmsCore::addSessionMessage($_LANG['REALY_ADRESS_EMAIL'], 'error'); $errors = true; }
+		$old_email = $inDB->get_field('cms_users', "id='{$id}'", 'email');
+		if($old_email != $email){
+			$is_set_email = $inDB->get_field('cms_users', "email='{$email}'", 'id');
+			if ($is_set_email) { cmsCore::addSessionMessage($_LANG['ADRESS_EMAIL_IS_BUSY'], 'error'); $errors = true; }
+		}
 		
-			$sql = "SELECT u.*, p.*, u.id as id, 
-							DATE_FORMAT(u.regdate, '%d-%m-%Y') as fregdate, 
-							DATE_FORMAT(u.logdate, '%d-%m-%Y') as flogdate,
-							DATE_FORMAT(u.birthdate, '%d') as bday,
-							DATE_FORMAT(u.birthdate, '%m') as bmonth,
-							DATE_FORMAT(u.birthdate, '%Y') as byear,
-							IFNULL(p.gender, 0) as gender
-				    FROM cms_users u
-					INNER JOIN cms_user_profiles p ON p.user_id = u.id
-					WHERE u.id = '$id' AND u.is_locked = 0
-					LIMIT 1
-					";					
-			$result = $inDB->query($sql);
-			
-			if ($inDB->num_rows($result)){
-				$usr = $inDB->fetch_assoc($result);
+		$showmail       = $inCore->request('showmail', 'int');
+		$email_newmsg   = $inCore->request('email_newmsg', 'int');
 		
-				$inPage->setTitle($_LANG['CONFIG_PROFILE'].' - '.$usr['nickname']);
-				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-				$inPage->addPathway($_LANG['CONFIG_PROFILE']);
-																				
-				if ($opt == 'edit'||$opt=='save'||$opt=='changepass'){
-					
-					$private_forms = '';
-					if(isset($cfg['privforms'])){						
-						if (is_array($cfg['privforms'])){
-							if ($usr['formsdata']==''){
-								$formsdata = array();
-							} else {
-                                $formsdata = $inCore->yamlToArray($usr['formsdata']);
-							}
-							foreach($cfg['privforms'] as $num=>$form_id){								
-								$private_forms .= usrFormEditor($id, $form_id, $formsdata);								
-							}							
-						}						
-					}				
-				
-					$inPage->initAutocomplete();
-					$autocomplete_js = $inPage->getAutocompleteJS('citysearch', 'city', false);
-									
-					$smarty = $inCore->initSmarty('components', 'com_users_edit_profile.tpl');
-				
-					$smarty->assign('opt', $opt);
-					$smarty->assign('usr', $usr);			
-					$smarty->assign('dateform', $inCore->getDateForm('birthdate', false, $usr['bday'], $usr['bmonth'], $usr['byear']));
-					$smarty->assign('private_forms', $private_forms);		
-					$smarty->assign('autocomplete_js', $autocomplete_js);
-					
-					$smarty->display('com_users_edit_profile.tpl');
-				}
-				
-			} else { echo usrAccessDenied(); }
+		$showbirth      = $inCore->request('showbirth', 'int');
+		$description    = $inCore->request('description', 'str', '');
 		
-		} else { echo usrAccessDenied(); }
+		$birthdate      = (int)$_REQUEST['birthdate']['year'].'-'.(int)$_REQUEST['birthdate']['month'].'-'.(int)$_REQUEST['birthdate']['day'];
+		$signature      = $inCore->request('signature', 'str', '');
+
+		$allow_who      = $inCore->request('allow_who', 'str');
+		if (!preg_match('/^([a-zA-Z]+)$/i', $allow_who)) { $errors = true; }
+
+		$icq            = $inCore->request('icq', 'str');
+		$icq            = preg_replace('/([^0-9])/i', '', $icq);
+		
+		$showicq        = $inCore->request('showicq', 'int');
+		
+		$cm_subscribe   = $inCore->request('cm_subscribe', 'str');
+		if (!preg_match('/^([a-zA-Z]+)$/i', $cm_subscribe)) { $errors = true; }
+		
+		if ($inCore->inRequest('field')){
+			foreach($_POST['field'] as $k=>$val){
+				$_POST['field'][$k] = $inCore->strClear($_POST['field'][$k]);
+			}					
+			$formsdata = $inCore->arrayToYaml($_POST['field']);
+			$forms_sql = ", formsdata='$formsdata'";
+		} else {
+			$forms_sql = '';
+		}
+		
+		if (!$errors){
+		   
+			$sql = "UPDATE cms_user_profiles 
+					SET city = '$city',
+						description = '$description',
+						showmail='$showmail',
+						showbirth='$showbirth',
+						showicq='$showicq',
+						allow_who='$allow_who',
+						signature='$signature',
+						gender='$gender' $forms_sql,
+						email_newmsg='$email_newmsg',
+						cm_subscribe='$cm_subscribe'
+					WHERE user_id = '$id'";
+			$inDB->query($sql) ;
+
+			$sql = "UPDATE cms_users 
+					SET birthdate='$birthdate',
+						email='$email',
+						icq='$icq',
+						nickname='$nickname'
+					WHERE id = '$id'";
+			$inDB->query($sql) ;
+
+			cmsCore::addSessionMessage($_LANG['PROFILE_SAVED'], 'info');
+			$inCore->redirect(cmsUser::getProfileURL($inUser->login));
+		}
+		
+	}				
 	
-	} else { cmsUser::goToLogin(); }
+	if ($opt == 'changepass'){
+		$errors = false;
+
+		$oldpass 	= $inCore->request('oldpass', 'str');
+		$newpass 	= $inCore->request('newpass', 'str');
+		$newpass2 	= $inCore->request('newpass2', 'str');
+		
+		if ($inUser->password != md5($oldpass)) { cmsCore::addSessionMessage($_LANG['OLD_PASS_WRONG'], 'error'); $errors = true;}
+		if ($newpass != $newpass2) { cmsCore::addSessionMessage($_LANG['WRONG_PASS'], 'error'); $errors = true; }
+		if($oldpass && $newpass && $newpass2 && strlen($newpass )<6) { cmsCore::addSessionMessage($_LANG['PASS_SHORT'], 'error'); $errors = true; }
+
+		if (!$errors){
+			$sql = "UPDATE cms_users SET password='".md5($newpass)."' WHERE id = '$id' AND password='".md5($oldpass)."'";
+			$inDB->query($sql);
+			cmsCore::addSessionMessage($_LANG['PASS_CHANGED'], 'info');
+			$inCore->redirect(cmsUser::getProfileURL($inUser->login));
+		}
+	}
+
+
+	$sql = "SELECT u.*, p.*, u.id as id, 
+					DATE_FORMAT(u.regdate, '%d-%m-%Y') as fregdate, 
+					DATE_FORMAT(u.logdate, '%d-%m-%Y') as flogdate,
+					DATE_FORMAT(u.birthdate, '%d') as bday,
+					DATE_FORMAT(u.birthdate, '%m') as bmonth,
+					DATE_FORMAT(u.birthdate, '%Y') as byear,
+					IFNULL(p.gender, 0) as gender
+			FROM cms_users u
+			INNER JOIN cms_user_profiles p ON p.user_id = u.id
+			WHERE u.id = '$id' AND u.is_locked = 0
+			LIMIT 1
+			";
+	$result = $inDB->query($sql);
+	
+	if (!$inDB->num_rows($result)){ cmsCore::error404(); }
+
+	$usr = $inDB->fetch_assoc($result);
+
+	$inPage->setTitle($_LANG['CONFIG_PROFILE'].' - '.$usr['nickname']);
+	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+	$inPage->addPathway($_LANG['CONFIG_PROFILE']);
+																	
+	if ($opt == 'edit'||$opt=='save'||$opt=='changepass'){
+		
+		$private_forms = '';
+		if(isset($cfg['privforms'])){						
+			if (is_array($cfg['privforms'])){
+				if ($usr['formsdata']==''){
+					$formsdata = array();
+				} else {
+					$formsdata = $inCore->yamlToArray($usr['formsdata']);
+				}
+				foreach($cfg['privforms'] as $num=>$form_id){								
+					$private_forms .= usrFormEditor($id, $form_id, $formsdata);								
+				}							
+			}						
+		}				
+	
+		$inPage->initAutocomplete();
+		$autocomplete_js = $inPage->getAutocompleteJS('citysearch', 'city', false);
+						
+		$smarty = $inCore->initSmarty('components', 'com_users_edit_profile.tpl');
+	
+		$smarty->assign('opt', $opt);
+		$smarty->assign('usr', $usr);			
+		$smarty->assign('dateform', $inCore->getDateForm('birthdate', false, $usr['bday'], $usr['bmonth'], $usr['byear']));
+		$smarty->assign('private_forms', $private_forms);
+		$smarty->assign('cfg_forum', $inCore->loadComponentConfig('forum'));
+		$smarty->assign('autocomplete_js', $autocomplete_js);
+		
+		$smarty->display('com_users_edit_profile.tpl');
+	}
 
 }
 /////////////////////////////// VIEW USER COMMENTS /////////////////////////////////////////////////////////////////////////////////////
@@ -596,6 +599,10 @@ if ($do=='comments'){
 }
 /////////////////////////////// VIEW USER POSTS /////////////////////////////////////////////////////////////////////////////////////
 if ($do=='forumposts'){
+
+	// Проверяем включени ли компонент форум
+	$cfg_forum = $inCore->loadComponentConfig('forum');
+	if(!$cfg_forum['component_enabled']) { cmsCore::error404(); }
 
 	$usr = $model->getUserShort($id);
 	if (!$usr) { cmsCore::error404(); }
@@ -824,6 +831,7 @@ if ($do=='profile'){
     $smarty->assign('plugins', $plugins);
     $smarty->assign('cfg', $cfg);
     $smarty->assign('myprofile', $myprofile);
+	$smarty->assign('cfg_forum', $inCore->loadComponentConfig('forum'));
 	$smarty->assign('is_admin', $inUser->is_admin);
     $smarty->assign('is_auth', $inUser->id);
 

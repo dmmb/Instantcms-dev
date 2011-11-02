@@ -311,6 +311,46 @@ class cms_model_clubs{
 
     }
 
+/* ========================================================================== */
+/* ========================================================================== */
+    /**
+     * Отрабатывает плагины на событие $plugin_title
+     * @return array $plugins_list
+     */
+    public function getPluginsOutput($item, $plugin_title = 'GET_SINGLE_CLUB'){
+
+        $inCore = cmsCore::getInstance();
+
+        $plugins_list = array();
+
+        $plugins = $inCore->getEventPlugins($plugin_title);
+
+        foreach($plugins as $plugin_name){
+
+            $html   = '';
+            $plugin = $inCore->loadPlugin($plugin_name);
+
+            if ($plugin!==false){                
+                $html = $plugin->execute($plugin_title, $item);
+            }
+
+            if ($html){
+
+                $p['name']  = $plugin_name;
+                $p['html']  = $html;
+
+                $plugins_list[] = $p;
+
+                $inCore->unloadPlugin($plugin);
+
+            }
+
+        }
+
+        return $plugins_list;
+
+    }
+
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 

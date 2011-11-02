@@ -107,7 +107,6 @@ if ($do=='club'){
 
 	$club   = $model->getClub($id);
 	if(!$club){	cmsCore::error404(); }
-	$club = cmsCore::callEvent('GET_SINGLE_CLUB', $club);
     
     //TITLES
     $pagetitle = $club['title'];
@@ -185,6 +184,9 @@ if ($do=='club'){
 
 	$club['pubdate'] = $inCore->dateformat($club['pubdate'], true, true);
 
+	// Получаем плагины
+	$plugins = $model->getPluginsOutput($club);
+
 	$smarty = $inCore->initSmarty('components', 'com_clubs_view_club.tpl');	
     $smarty->assign('clubid', $id);
     $smarty->assign('club', $club);
@@ -192,6 +194,7 @@ if ($do=='club'){
     $smarty->assign('uid', $user_id);
     $smarty->assign('is_admin', $is_admin);
     $smarty->assign('is_moder', $is_moder);
+	$smarty->assign('plugins', $plugins);
     $smarty->assign('is_member', $is_member);
     $smarty->assign('is_karma_enabled', $is_karma_enabled);
 	$smarty->assign('pagetitle', $pagetitle);

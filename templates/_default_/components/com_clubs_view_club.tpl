@@ -83,6 +83,11 @@
 							</div>
 						</div>
 						{/if}
+                        {if $plugins}
+                            {foreach key=id item=plugin from=$plugins}
+                                <div id="plugin_{$plugin.name}">{$plugin.html}</div>
+                            {/foreach}
+                        {/if}
 					</div>
 					<div class="wall">
 						<div class="header">{$LANG.CLUB_WALL}</div>

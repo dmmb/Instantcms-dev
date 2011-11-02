@@ -337,7 +337,7 @@ if ($do=='read'){
     $smarty->display($template);
 
     //show user comments
-    if($article['comments'] && $inCore->isComponentInstalled('comments')){
+    if($article['published'] && $article['comments'] && $inCore->isComponentInstalled('comments')){
         $inCore->includeComments();
         comments('article', $article['id']);
     }

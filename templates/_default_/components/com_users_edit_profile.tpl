@@ -81,6 +81,7 @@
                             <textarea name="description" class="text-input" style="width:300px" rows="2" id="description">{$usr.description}</textarea>
                         </td>
                     </tr>
+                    {if $cfg_forum.component_enabled}
                     <tr>
                         <td valign="top">
                             <strong>{$LANG.SIGNED_FORUM}:</strong><br />
@@ -90,6 +91,7 @@
                             <textarea name="signature" class="text-input" style="width:300px" rows="2" id="signature">{$usr.signature}</textarea>
                         </td>
                     </tr>
+                    {/if}
                 </table>
                 <p>	{$private_forms} </p>
             </div>
