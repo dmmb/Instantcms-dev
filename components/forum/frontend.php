@@ -169,6 +169,8 @@ function forum(){
 ///////////////////////////// VIEW FORUMS LIST /////////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){
 
+	echo '<div class="float_bar"><a href="/forum/latest_posts">'.$_LANG['LATEST_POSTS'].'</a> | <a href="/forum/latest_thread">'.$_LANG['NEW_THREADS'].'</a></div>';
+
     $inPage->printHeading($_LANG['FORUMS']);
     $inPage->setTitle($_LANG['FORUMS']);
 
@@ -1310,6 +1312,74 @@ if ($do=='reloadfile'){
 		} else 	{ echo usrAccessDenied(); }
 	} else { echo '<p>'.$_LANG['FILE_NOT_FOUND'].'!</p>'; }
 	
+}
+///////////////////////////// последние сообщения //////////////////////////////////////////////////////////////////////////////////////////
+if ($do=='latest_posts'){
+
+	$page = $inCore->request('page', 'int', 1);
+
+    $inActions = cmsActions::getInstance();
+
+	echo '<div class="float_bar"><a href="/forum/latest_thread">'.$_LANG['NEW_THREADS'].'</a> | <a href="/forum">'.$_LANG['FORUMS'].'</a></div>';
+
+    $inPage->printHeading($_LANG['LATEST_POSTS_ON_FORUM']);
+
+	$inPage->setTitle($_LANG['LATEST_POSTS_ON_FORUM']);
+	$inPage->addPathway($_LANG['FORUMS'], '/forum');
+	$inPage->addPathway($_LANG['LATEST_POSTS_ON_FORUM']);
+
+	$inActions->showTargets(true);
+
+	$action = $inActions->getAction('add_fpost');
+
+	$inActions->onlySelectedTypes(array($action['id']));
+
+	$total = $inActions->getCountActions();
+
+	$inActions->limitPage($page, 15);
+
+	$actions = $inActions->getActionsLog();
+
+	$smarty = $inCore->initSmarty('components', 'com_actions_view.tpl');
+	$smarty->assign('actions', $actions);
+	$smarty->assign('total', $total);
+	$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, 15, '/forum/latest_posts/page-%page%'));
+	$smarty->display('com_actions_view.tpl');
+
+}
+///////////////////////////// последние темы ///////////////////////////////////////////////////////////////////////////////////////////////
+if ($do=='latest_thread'){
+
+	$page = $inCore->request('page', 'int', 1);
+
+    $inActions = cmsActions::getInstance();
+
+	echo '<div class="float_bar"><a href="/forum/latest_posts">'.$_LANG['LATEST_POSTS'].'</a> | <a href="/forum">'.$_LANG['FORUMS'].'</a></div>';
+
+    $inPage->printHeading($_LANG['NEW_THREADS_ON_FORUM']);
+
+	$inPage->setTitle($_LANG['NEW_THREADS_ON_FORUM']);
+	$inPage->addPathway($_LANG['FORUMS'], '/forum');
+	$inPage->addPathway($_LANG['NEW_THREADS_ON_FORUM']);
+
+	$inActions->showTargets(true);
+
+	$action = $inActions->getAction('add_thread');
+
+	$inActions->onlySelectedTypes(array($action['id']));
+
+	$total = $inActions->getCountActions();
+
+	$inActions->limitPage($page, 15);
+
+	$actions = $inActions->getActionsLog();
+
+	$smarty = $inCore->initSmarty('components', 'com_actions_view.tpl');
+	$smarty->assign('actions', $actions);
+	$smarty->assign('total', $total);
+	$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, 15, '/forum/latest_thread/page-%page%'));
+	$smarty->display('com_actions_view.tpl');
+
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 } //function

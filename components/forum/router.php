@@ -14,6 +14,28 @@
     function routes_forum(){
 
         $routes[] = array(
+                            '_uri'  => '/^forum\/latest_posts$/i',
+                            'do'    => 'latest_posts'
+                         );
+
+        $routes[] = array(
+                            '_uri'  => '/^forum\/latest_posts\/page\-([0-9]+)$/i',
+                            'do'    => 'latest_posts',
+                            1       => 'page'
+                         );
+
+        $routes[] = array(
+                            '_uri'  => '/^forum\/latest_thread$/i',
+                            'do'    => 'latest_thread'
+                         );
+
+        $routes[] = array(
+                            '_uri'  => '/^forum\/latest_thread\/page\-([0-9]+)$/i',
+                            'do'    => 'latest_thread',
+                            1       => 'page'
+                         );
+
+        $routes[] = array(
                             '_uri'  => '/^forum\/unpinthread([0-9]+).html$/i',
                             'do'    => 'pin',
                             1       => 'id',
