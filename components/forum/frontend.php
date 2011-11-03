@@ -90,6 +90,8 @@ function uploadFiles($post_id, $cfg){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
 
+	if (!$inCore->checkContentAccess($cfg['group_access'])){ return; }
+
 	$file_error = false;
 
     foreach ($_FILES["fa"]["error"] as $key => $error) {

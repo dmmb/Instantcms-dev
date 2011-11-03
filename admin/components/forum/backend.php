@@ -126,13 +126,18 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$cfg['fast_bb']     = $inCore->request('fast_bb', 'int', 1);
 		
 		$cfg['fa_on']       = $inCore->request('fa_on', 'int');
-		$cfg['fa_allow']    = $inCore->request('fa_allow', 'int');
 		$cfg['fa_max']      = $inCore->request('fa_max', 'int');
 		$cfg['fa_ext']      = $inCore->request('fa_ext', 'str');
 		$cfg['fa_ext']      = str_replace('htm', '', $cfg['fa_ext']);
 		$cfg['fa_ext']      = str_replace('php', '', $cfg['fa_ext']);
 		$cfg['fa_size']     = $inCore->request('fa_size', 'int');
 		$cfg['edit_minutes'] = $inCore->request('edit_minutes', 'int');
+
+		$is_access = $inCore->request('is_access', 'int', '');
+		if (!$is_access){
+			$access_list = $inCore->request('allow_group', 'array_int');
+			$cfg['group_access'] = $access_list ? $inCore->arrayToYaml($access_list) : '';
+		} else { $cfg['group_access'] = ''; }
 
 		$inCore->saveComponentConfig('forum', $cfg);
 
@@ -396,21 +401,82 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                 </tr>
                 <tr>
                     <td valign="top">
-                        <strong>Доступно для группы:</strong><br/>
-                        <span class="hinttext">Какой группе должен принадлежать пользователь, чтобы иметь возможность прикреплять файлы</span>
+                        <strong>Доступно для групп:</strong><br/>
+                        <span class="hinttext">Какой из групп должен принадлежать пользователь, чтобы иметь возможность прикреплять файлы</span>
                     </td>
                     <td valign="top">
-                        <select name="fa_allow" id="fa_allow">
-                            <option value="-1" <?php if (@$cfg['fa_allow']==-1 || !isset($cfg['fa_allow'])) { echo 'selected="selected"'; } ?>>-- Все группы --</option>
-                            <?php
-                                if (isset($cfg['fa_allow'])) {
-                                    echo $inCore->getListItems('cms_user_groups', $cfg['fa_allow']);
-                                } else {
-                                    echo $inCore->getListItems('cms_user_groups');
-                                }
-                            ?>
-                        </select>
-                    </td>
+                      <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist" style="margin-top:5px">
+                          <tr>
+                              <td width="20">
+                                  <?php
+									$groups = cmsUser::getGroups();
+
+                                    $style  = 'disabled="disabled"';
+                                    $public = 'checked="checked"';
+
+									if ($cfg['group_access']){
+										$public = '';
+										$style  = '';
+										
+										$access_list = $inCore->yamlToArray($cfg['group_access']);
+
+									}
+
+                                  ?>
+                                  <input name="is_access" type="checkbox" id="is_access" onclick="checkGroupList()" value="1" <?php echo $public?> />
+                              </td>
+                              <td><label for="is_access"><strong>Все группы</strong></label></td>
+                          </tr>
+                      </table>
+                      <div style="padding:5px">
+                          <span class="hinttext">
+                              Если отмечено, все группы пользователей смогут прикреплять файлы.
+                          </span>
+                      </div>
+  
+                      <div style="margin-top:10px;padding:5px;padding-right:0px;" id="grp">
+                          <div>
+                              <strong>Могут прикреплять только группы:</strong><br />
+                              <span class="hinttext">
+                                  Можно выбрать несколько, удерживая CTRL.
+                              </span>
+                          </div>
+                          <div>
+                              <?php
+                                  echo '<select style="width: 245px" name="allow_group[]" id="showin" size="6" multiple="multiple" '.$style.'>';
+  
+									if ($groups){
+										foreach($groups as $group){
+											if($group['alias'] != 'guest' && !$group['is_admin']){
+												echo '<option value="'.$group['id'].'"';
+												if ($access_list){
+													if (inArray($access_list, $group['id'])){
+														echo 'selected';
+													}
+												}
+		
+												echo '>';
+												echo $group['title'].'</option>';
+											}
+										}
+	
+									}
+                                  
+                                  echo '</select>';
+                              ?>
+                          </div>
+                      </div>
+<script type="text/javascript">
+function checkGroupList(){
+	if($('input#is_access').attr('checked')){
+		$('select#showin').attr('disabled', 'disabled');
+	} else {
+		$('select#showin').attr('disabled', '');
+	}
+
+}
+</script>
+                   </td>
                 </tr>
                 <tr>
                     <td valign="top">

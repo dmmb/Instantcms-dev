@@ -196,6 +196,20 @@
 	}
 // ========================================================================== //
 // ========================================================================== //
+    $forum_cfg = $inCore->loadComponentConfig('forum');
+	if($forum_cfg['fa_allow'] && $forum_cfg['fa_allow']!=-1){
+
+		$access_list[] = $forum_cfg['fa_allow'];
+		$forum_cfg['group_access'] = $access_list ? $inCore->arrayToYaml($access_list) : '';
+		$inCore->saveComponentConfig('forum', $forum_cfg);
+
+	} elseif(!$forum_cfg['group_access']) { $forum_cfg['group_access'] = ''; $inCore->saveComponentConfig('forum', $forum_cfg); }
+
+	echo '<p>Мультидоступ групп к прикреплению вложений на форуме выполнен.</p>';
+	$is_was_migrate = true;
+
+// ========================================================================== //
+// ========================================================================== //
     if ($inDB->isFieldExists('cms_forums', 'auth_group')){
         $inDB->query("ALTER TABLE `cms_forums` DROP `auth_group`");
         echo '<p>Поле <strong>auth_group</strong> удалено из таблицы <strong>cms_forums</strong></p>';

@@ -275,7 +275,7 @@ function forumAttachForm($cfg){
     $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
 
-    if ($inUser->group_id != $cfg['fa_allow'] && $cfg['fa_allow']!=-1){ return; }
+	if (!$inCore->checkContentAccess($cfg['group_access'])){ return; }
 
     $inPage->addHeadJS('components/forum/js/attach.js');
     global $_LANG;
