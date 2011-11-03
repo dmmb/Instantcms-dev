@@ -179,5 +179,6 @@ $_LANG['LATEST_POSTS']               ='Последние сообщения';
 $_LANG['LATEST_POSTS_ON_FORUM']      ='Последние сообщения на форуме';
 $_LANG['NEW_THREADS']                ='Новые темы';
 $_LANG['NEW_THREADS_ON_FORUM']       ='Новые темы на форуме';
+$_LANG['THREADS_ACT']                ='Активные темы категории';
 
 ?>

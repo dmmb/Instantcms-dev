@@ -93,7 +93,7 @@ class cms_model_banners{
      */
     public function getBannersListHTML($selected=0){
         $html = '';
-        for($bp=1; $bp<=10; $bp++){
+        for($bp=1; $bp<=30; $bp++){
             if (@$selected==$bp){
                 $s = 'selected';
             } else {

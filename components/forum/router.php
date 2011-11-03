@@ -178,6 +178,12 @@
                          );
 
         $routes[] = array(
+                            '_uri'  => '/^forum\/([a-zA-Z0-9\-]+)$/i',
+                            'do'    => 'view_cat',
+                            1       => 'seolink'
+                         );
+
+        $routes[] = array(
                             '_uri'      => '/^forum\/(.*)$/i',
                             1           => 'is_404'
                          );

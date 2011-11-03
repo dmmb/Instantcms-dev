@@ -704,12 +704,14 @@ CREATE TABLE `#__forum_cats` (
   `published` int(11) NOT NULL DEFAULT '1',
   `auth_group` int(11) NOT NULL,
   `ordering` int(11) NOT NULL,
+  `seolink` varchar(200) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `auth_group` (`auth_group`)
+  KEY `auth_group` (`auth_group`),
+  KEY `seolink` (`seolink`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__forum_cats` (`id`, `title`, `published`, `auth_group`, `ordering`) VALUES
-(1, 'Общие вопросы', 1, 0, 1);
+INSERT INTO `#__forum_cats` (`id`, `title`, `published`, `auth_group`, `ordering`, `seolink`) VALUES
+(1, 'Общие вопросы', 1, 0, 1, 'obschie-voprosi');
 
 
 DROP TABLE IF EXISTS `#__forum_files`;

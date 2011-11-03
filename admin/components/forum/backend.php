@@ -46,6 +46,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
     $cfg = $inCore->loadComponentConfig('forum');
     if (!isset($cfg['is_rss'])) { $cfg['is_rss'] = 1; }
 
+	$inCore->loadModel('forum');
+	$model = new cms_model_forum();
+
 	cpAddPathway('Форум', '?view=components&do=config&id='.$id);
 	echo '<h3>Форум</h3>';
 
@@ -576,9 +579,11 @@ function checkGroupList(){
 		$published  = (int)$_REQUEST['published'];
 		$auth_group = $_REQUEST['auth_group'];
 		$ordering   = (int)$_REQUEST['ordering'];		
-				
-		$sql = "INSERT INTO cms_forum_cats (title, published, auth_group, ordering)
-				VALUES ('$title', '$published', '$auth_group', '$ordering')";
+
+		$seolink = $model->getCatSeoLink($title);
+
+		$sql = "INSERT INTO cms_forum_cats (title, published, auth_group, ordering, seolink)
+				VALUES ('$title', '$published', '$auth_group', '$ordering', '$seolink')";
 		dbQuery($sql) ;
 		$inCore->redirect('?view=components&do=config&id='.$id.'&opt=list_cats');
 	}	  
@@ -601,11 +606,14 @@ function checkGroupList(){
 			$auth_group = $_REQUEST['auth_group'];
 			$ordering   = (int)$_REQUEST['ordering'];		
 
+			$seolink = $model->getCatSeoLink($title, $item_id);
+
 			$sql = "UPDATE cms_forum_cats
 					SET title='$title', 
 						published='$published',
 						auth_group='$auth_group',
-						ordering='$ordering'
+						ordering='$ordering',
+						seolink='$seolink'
 					WHERE id = '$item_id'
 					LIMIT 1";
 			dbQuery($sql) ;

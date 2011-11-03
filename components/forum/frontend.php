@@ -186,7 +186,7 @@ if ($do=='view'){
         while ($cat = $inDB->fetch_assoc($result)){
 			echo '<table class="forums_table" width="100%" cellspacing="0" cellpadding="8" border="0" bordercolor="#999999" >';
 			echo '<tr>
-			  <td colspan="2" width="" class="darkBlue-LightBlue">'.$cat['title'].'</td>
+			  <td colspan="2" width="" class="darkBlue-LightBlue"><a href="/forum/'.$cat['seolink'].'">'.$cat['title'].'</a></td>
 			  <td width="120" class="darkBlue-LightBlue">'.$_LANG['FORUM_ACT'].'</td>
 			  <td width="250" class="darkBlue-LightBlue">'.$_LANG['LAST_POST'].'</td>
 			</tr>';
@@ -921,7 +921,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 						'object_url' => '/forum/thread'.$id.'-'.$pages.'.html#'.$lastid,
 						'object_id' => $lastid,
 						'target' => $t['title'],
-						'target_url' => '/forum/thread'.$id.'-'.$pages.'.html',
+						'target_url' => '/forum/thread'.$id.'.html',
 						'target_id' => $id,
 						'description' => ( strlen($message_post)>100 ? substr($message_post, 0, 100) : $message_post )
 					));
@@ -1379,6 +1379,127 @@ if ($do=='latest_thread'){
 	$smarty->assign('total', $total);
 	$smarty->assign('pagebar', cmsPage::getPagebar($total, $page, 15, '/forum/latest_thread/page-%page%'));
 	$smarty->display('com_actions_view.tpl');
+
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+if ($do=='view_cat'){
+
+	$seolink = $inCore->request('seolink', 'str', '');
+
+    $groupsql = forumUserAuthSQL();
+    $sql = "SELECT *
+            FROM cms_forum_cats
+            WHERE seolink = '{$seolink}' AND published = 1 $groupsql
+            LIMIT 1";
+    $result = $inDB->query($sql) ;
+	if (!$inDB->num_rows($result)) { cmsCore::error404(); }
+    $cat = $inDB->fetch_assoc($result);
+
+    $inPage->printHeading($cat['title']);
+	$inPage->addPathway($_LANG['FORUMS'], '/forum');
+	$inPage->addPathway($cat['title']);
+
+	$rootid = $inDB->get_field('cms_forums', 'parent_id=0', 'id');
+
+	echo '<table class="forums_table" width="100%" cellspacing="0" cellpadding="8" border="0" bordercolor="#999999" >';
+	echo '<tr>
+	  <td colspan="2" width="" class="darkBlue-LightBlue">'.$_LANG['FORUMS'].'</td>
+	  <td width="120" class="darkBlue-LightBlue">'.$_LANG['FORUM_ACT'].'</td>
+	  <td width="250" class="darkBlue-LightBlue">'.$_LANG['LAST_POST'].'</td>
+	</tr>';
+	//FORUMS LIST IN CATEGORY
+	$fsql = "SELECT *
+			 FROM cms_forums
+			 WHERE published = 1 AND category_id = '{$cat['id']}' AND parent_id = '$rootid'
+			 ORDER BY ordering";
+	$fresult = $inDB->query($fsql) ;
+	if ($inDB->num_rows($fresult)){
+		$row = 1;
+		//print forums list in category
+		while ($f = $inDB->fetch_assoc($fresult)){
+			if(!$inCore->checkContentAccess($f['access_list'])) { continue; }
+			//GET SUBFORUMS LIST
+			$subforums = '';
+			$sql = "SELECT id, title, access_list
+					FROM cms_forums
+					WHERE parent_id = '{$f['id']}'
+					ORDER BY title";
+			$rs = $inDB->query($sql);
+			$sub = $inDB->num_rows($rs);
+			if ($sub){
+				while ($sf=$inDB->fetch_assoc($rs)){
+					if(!$inCore->checkContentAccess($sf['access_list'])) { continue; }
+					$subforums .= '<a href="/forum/'.$sf['id'].'">'.$sf['title'].'</a>, ';
+				}
+				$subforums = rtrim($subforums, ', ');
+			} else {
+				$subforums = '';
+			}
+			//PRINT FORUM DATA
+			if ($row % 2) { $class='row11'; } else { $class = 'row2'; }
+			$icon = $f['icon'] ? '/upload/forum/cat_icons/'.$f['icon'] : '/components/forum/images/forum.gif';
+			echo '<tr>';
+				echo '<td width="32" class="'.$class.'" align="center" valign="top"><img src="'.$icon.'" border="0" /></td>';
+				echo '<td width="" class="'.$class.'" align="left" valign="top">';
+					//FORUM TITLE
+					echo '<div class="forum_link"><a href="/forum/'.$f['id'].'">'.$f['title'].'</a></div>';
+					//FORUM DESCRIPTION
+					echo '<div class="forum_desc">'.$f['description'].'</div>';
+					//SUBFORUMS
+					if ($sub){
+						echo '<div class="forum_subs"><span class="forum_subs_title">'.$_LANG['SUBFORUMS'].':</span> '.$subforums.'</div>';
+					}
+				echo '</td>';
+				echo '<td class="'.$class.'" style="font-size:11px" valign="top">'.$model->getForumMessages($f['NSLeft'], $f['NSRight']).'</td>';
+				echo '<td style="font-size:11px" class="'.$class.'" valign="top">'.forumLastMessage($f['id'], $cfg['pp_thread']).'</td>';
+			echo '</tr>';
+			$row++;
+		}
+	} else {
+		echo '<td colspan="4"><p>'.$_LANG['NOT_FORUMS_IN_CAT'].'</p></td>';
+	}
+	echo '</table>';
+
+    if ($inUser->id){
+        $logdate = $_SESSION['user']['logdate'];
+    } else {
+        $logdate = '9999-01-01 12:00:00';
+    }
+
+    $tsql = "SELECT t.*, COUNT(p.id) as postsnum, IF(t.pubdate > '$logdate', 1, 0) as is_new, u.nickname, u.login
+             FROM cms_forum_threads t
+			 INNER JOIN cms_forums f ON f.id = t.forum_id
+			 INNER JOIN cms_forum_cats cat ON cat.id = f.category_id AND cat.id = '{$cat['id']}'
+			 INNER JOIN cms_forum_posts p ON p.thread_id = t.id
+			 LEFT JOIN cms_users u ON u.id = t.user_id
+             WHERE t.is_hidden = 0 AND t.closed = 0
+             GROUP BY t.id
+             ORDER BY t.pubdate DESC, t.hits DESC
+             LIMIT 15";
+
+    $tresult = $inDB->query($tsql) ;
+
+    $threads = array();
+
+    if ($inDB->num_rows($tresult)){
+
+        while ($thread = $inDB->fetch_assoc($tresult)){
+
+            $thread['author']       = array('nickname'=>$thread['nickname'], 'login'=>$thread['login']);
+            $thread['pages']        = ceil($thread['postsnum'] / $cfg['pp_thread']);
+            $thread['answers']      = $thread['postsnum']-1;
+            $thread['last_message'] = threadLastMessage($thread['id'], $thread['pages']);
+
+            $threads[]              = $thread;
+
+        }
+        
+    }
+
+    $smarty = $inCore->initSmarty('components', 'com_forum_view_act.tpl');
+    $smarty->assign('cfg', $cfg);
+    $smarty->assign('threads', $threads);
+    $smarty->display('com_forum_view_act.tpl');
 
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

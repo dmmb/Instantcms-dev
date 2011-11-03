@@ -158,6 +158,38 @@
     }
 // ========================================================================== //
 // ========================================================================== //
+    if (!$inDB->isFieldExists('cms_forum_cats', 'seolink')){
+        $inDB->query("ALTER TABLE `cms_forum_cats`  ADD `seolink` VARCHAR(200) NOT NULL AFTER `ordering`,  ADD INDEX (`seolink`) ");
+        echo '<p>Поле <strong>seolink</strong> добавлено в таблицу <strong>cms_forum_cats</strong></p>';
+		$is_was_migrate = true;
+    }
+// ========================================================================================== //
+// ========================================================================================== //
+    if ($inDB->isFieldExists('cms_forum_cats', 'seolink')){
+		$sql = "SELECT * FROM cms_forum_cats";
+	
+		$result = $inDB->query($sql);
+	
+		if ($inDB->num_rows($result)){
+	
+			$inCore->loadModel('forum');
+			$model = new cms_model_forum();
+	
+			while($cat = $inDB->fetch_assoc($result)){
+	
+				$seolink = $model->getCatSeoLink($cat['title']);
+	
+				$inDB->query("UPDATE cms_forum_cats SET seolink='{$seolink}' WHERE id='{$cat['id']}'");
+	
+			}
+	
+		}
+	
+		echo '<p>Генерация SEO-ЧПУ для категорий форума завершена...</p>';
+		$is_was_migrate = true;
+	}
+// ========================================================================== //
+// ========================================================================== //
     if (!$inDB->isFieldExists('cms_forums', 'icon')){
         $inDB->query("ALTER TABLE `cms_forums` ADD `icon` VARCHAR( 200 ) NOT NULL AFTER `NSLevel`");
         echo '<p>Поле <strong>icon</strong> добавлено в таблицу <strong>cms_forums</strong></p>';
