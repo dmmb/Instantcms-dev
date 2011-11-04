@@ -53,10 +53,6 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$toolmenu[14]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=delete_item&multiple=1');";
 	}
 
-	$toolmenu[15]['icon'] = 'cancel.gif';
-	$toolmenu[15]['title'] = 'Отмена';
-	$toolmenu[15]['link'] = '?view=components';
-
 	cpToolMenu($toolmenu);
 
 	//LOAD CURRENT CONFIG
@@ -170,7 +166,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         <p>
           <input name="opt" type="hidden" id="do" value="saveconfig" />
           <input name="save" type="submit" id="save" value="Сохранить" />
-          <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+          <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
         </p>
       </form>		
 		<?php
@@ -391,7 +387,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
           <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_item') { echo 'value="Добавить товар"'; } else { echo 'value="Сохранить изменения"'; } ?> />
           </label>
           <label>
-          <input name="back2" type="button" id="back2" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+          <input name="back2" type="button" id="back2" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
           </label>
           <input name="opt" type="hidden" id="do" <?php if ($opt=='add_item') { echo 'value="submit_item"'; } else { echo 'value="update_item"'; } ?> />
           <?php
@@ -459,7 +455,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			  <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add_cat') { echo 'value="Создать категорию"'; } else { echo 'value="Сохранить изменения"'; } ?> />
 			  </label>
 			  <label>
-			  <input name="back3" type="button" id="back3" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+			  <input name="back3" type="button" id="back3" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
 			  </label>
 			  <input name="opt" type="hidden" id="do" <?php if ($opt=='add_cat') { echo 'value="submit_cat"'; } else { echo 'value="update_cat"'; } ?> />
 			  <?php

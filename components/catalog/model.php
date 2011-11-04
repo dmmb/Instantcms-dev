@@ -135,7 +135,7 @@ class cms_model_catalog{
                         '{$item['meta_desc']}', '{$item['meta_keys']}', '{$item['price']}', {$item['canmany']}, {$inUser->id}, {$item['on_moderate']})";
 		$this->inDB->query($sql);
 
-        $item_id = dbLastId('cms_uc_items');
+        $item_id = $this->inDB->get_last_id('cms_uc_items');
 
 		cmsInsertTags($item['tags'], 'catalog', $item_id);
 
@@ -146,32 +146,28 @@ class cms_model_catalog{
 /* ==================================================================================================== */
 
 	public function copyItem($id, $copies){
+
         cmsCore::callEvent('COPY_CATALOG_ITEM', $id);
 
-        $sql = "SELECT * FROM cms_uc_items WHERE id = '$id'";
-        $rs = $this->inDB->query($sql);
-        if ($this->inDB->num_rows($rs)==1){
-            $item = mysql_fetch_row($rs);
-            for($c=1; $c<=$copies; $c++){
-                //COPY ITEM
-                $sql = "INSERT INTO cms_uc_items VALUES (";
-                foreach($item as $key=>$value){
-                    if ($key>0){ $sql .= "'$value'"; } else { $sql .= "''"; }
-                    if ($key<sizeof($item)-1){ $sql .= ", "; } else { $sql .= ')'; }
-                }
-                $this->inDB->query($sql);
-                //COPY ITEM TAGS
-                $id = dbLastId('cms_uc_items');
-                $sql = "SELECT * FROM cms_tags WHERE target='catalog' AND item_id='$item_id'";
-                $rst = $this->inDB->query($sql);
-                if ($this->inDB->num_rows($rst)){
-                    while ($itag = $this->inDB->fetch_assoc($rst)){
-                        $sql = "INSERT INTO cms_tags VALUES ('', '{$itag['tag']}', 'catalog', '$id')";
-                        $this->inDB->query($sql);
-                    }
-                }
-            }
-        }
+		$item = $this->inDB->get_fields('cms_uc_items', "id = '$id'", 'category_id, title, pubdate, published, imageurl, fieldsdata, is_comments, tags, rating, meta_desc, meta_keys, price, canmany, user_id, on_moderate');
+		if(!$item) { return false; }
+
+		for($c=1; $c<=$copies; $c++){
+
+			$set = '';
+			foreach($item as $field=>$value){
+				$set .= "{$field} = '{$this->inDB->escape_string($value)}',";
+			}
+			$set = rtrim($set, ',');
+
+			$this->inDB->query("INSERT INTO cms_uc_items SET {$set}");
+
+			$id = $this->inDB->get_last_id('cms_uc_items');
+
+			cmsInsertTags($item['tags'], 'catalog', $id);
+
+		}
+
     }
 
 /* ==================================================================================================== */

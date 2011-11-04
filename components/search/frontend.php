@@ -111,6 +111,8 @@ function search(){
 			$inCore->redirect('/search');
 		}
 
+		$inPage->setTitle($_LANG['SEARCH_BY_TAG'].' "'.$model->query.'"');
+
 		if($model->query){
 			$inPage->addPathway($_LANG['SEARCH_BY_TAG'].' "'.$model->query.'"');
 		}

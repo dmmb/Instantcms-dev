@@ -58,7 +58,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //=================================================================================================//
 //=================================================================================================//
 
-	if ($opt=='list_photos' || $opt=='list_albums' || $opt=='config'){
+	if ($opt=='list_photos' || $opt=='list_albums'){
 	
 		$toolmenu[0]['icon'] = 'newfolder.gif';
 		$toolmenu[0]['title'] = 'Новый альбом';
@@ -112,12 +112,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //=================================================================================================//
 //=================================================================================================//
 
-	if ($opt=='list_photos' || $opt=='list_albums' || $opt=='config'){
-
-		$toolmenu[15]['icon'] = 'cancel.gif';
-		$toolmenu[15]['title'] = 'Отмена';
-		$toolmenu[15]['link'] = '?view=components';
-	
+	if ($opt=='list_photos' || $opt=='list_albums'){
 	} else {
 	
 		$toolmenu[20]['icon'] = 'save.gif';
@@ -126,7 +121,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 		$toolmenu[21]['icon'] = 'cancel.gif';
 		$toolmenu[21]['title'] = 'Отмена';
-		$toolmenu[21]['link'] = 'javascript:history.go(-1);';
+		$toolmenu[21]['link'] = '?view=components&do=config&id='.$_REQUEST['id'];
 	
 	}
 
@@ -379,7 +374,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 				<tr>
 				  <td>
                       <strong>Наносить водяной знак:</strong><br />
-                      <span class="hinttext">Если включено, то на все загружаемые фотографии будет наносится изображение из файла "<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>"</td>
+                      <span class="hinttext">Если включено, то на все загружаемые фотографии будет наносится изображение из файла "<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>"</span></td>
 				  <td>
 					<input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Да
 					<input name="watermark" type="radio" value="0" <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Нет				  </td>
@@ -854,7 +849,7 @@ function showMapMarker(){
         <p>
             <input name="opt" type="hidden" id="opt" <?php if ($opt=='add_album') { echo 'value="submit_album"'; } else { echo 'value="update_album"'; } ?> />
             <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_album') { echo 'value="Создать альбом"'; } else { echo 'value="Сохранить альбом"'; } ?> />
-            <input name="back2" type="button" id="back2" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+            <input name="back2" type="button" id="back2" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
             <?php
                 if ($opt=='edit_album'){
                     echo '<input name="item_id" type="hidden" value="'.$mod['id'].'" />';
@@ -992,7 +987,7 @@ function showMapMarker(){
         </table>
         <p>
             <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_photo') { echo 'value="Загрузить фото"'; } else { echo 'value="Сохранить фото"'; } ?> />
-            <input name="back3" type="button" id="back3" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+            <input name="back3" type="button" id="back3" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
             <input name="opt" type="hidden" id="opt" <?php if ($opt=='add_photo') { echo 'value="submit_photo"'; } else { echo 'value="update_photo"'; } ?> />
             <?php
             if ($opt=='edit_photo'){
@@ -1095,7 +1090,7 @@ function showMapMarker(){
          </table>
          <p>
              <input name="upload_btn" type="button" id="upload_btn" value="Загрузить фото" onclick="startUpload()"/>
-             <input name="back3" type="button" id="cancel_btn" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+             <input name="back3" type="button" id="cancel_btn" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
              <input name="opt" type="hidden" id="opt" value="submit_photo_multi" />
          </p>
          </form>

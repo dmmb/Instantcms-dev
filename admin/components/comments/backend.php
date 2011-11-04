@@ -35,10 +35,6 @@ function cpStripComment($text){
             $toolmenu[2]['title'] = 'Настройки компонента';
             $toolmenu[2]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config';
         }
-
-		$toolmenu[3]['icon'] = 'cancel.gif';
-		$toolmenu[3]['title'] = 'Отмена';
-		$toolmenu[3]['link'] = '?view=components';
 	
 		cpToolMenu($toolmenu);
 
@@ -441,7 +437,7 @@ function cpStripComment($text){
 <p>
   <input name="opt" type="hidden" id="do" value="saveconfig" />
   <input name="save" type="submit" id="save" value="Сохранить" />
-  <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+  <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
 </p>
 </form>
 

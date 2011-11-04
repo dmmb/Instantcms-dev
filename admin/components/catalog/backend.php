@@ -114,11 +114,6 @@ function cpPriceInput($id){
 //=================================================================================================//
 
 	if ($opt=='list_items' || $opt=='list_cats' || $opt=='list_discount'){
-
-		$toolmenu[15]['icon'] = 'cancel.gif';
-		$toolmenu[15]['title'] = 'Отмена';
-		$toolmenu[15]['link'] = '?view=components';
-	
 	} else {
 	
 		$toolmenu[20]['icon'] = 'save.gif';
@@ -127,7 +122,7 @@ function cpPriceInput($id){
 
 		$toolmenu[21]['icon'] = 'cancel.gif';
 		$toolmenu[21]['title'] = 'Отмена';
-		$toolmenu[21]['link'] = 'javascript:history.go(-1);';
+		$toolmenu[21]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'];
 	
 	}
 
@@ -319,7 +314,8 @@ function cpPriceInput($id){
 			$tmp_name = $_FILES["imgfile"]["tmp_name"];
 			$file = $_FILES["imgfile"]["name"];			
 			$path_parts = pathinfo($file);
-			$ext = $path_parts['extension'];	
+			$ext = $path_parts['extension'];
+			if(strstr($ext, 'php')) { die(); }
 			$file = md5($file.time()).'.'.$ext;
             $item['file'] = $file;
 			//upload image and insert record in db		
@@ -407,6 +403,7 @@ function cpPriceInput($id){
                 $file               = $_FILES["imgfile"]["name"];
                 $path_parts         = pathinfo($file);
                 $ext                = $path_parts['extension'];
+				if(strstr($ext, 'php')) { die(); }
                 $file               = md5($file.time()).'.'.$ext;
                 
                 $item['imageurl']   = $file;
@@ -959,7 +956,7 @@ function cpPriceInput($id){
 
                         ?>
                         <div>
-                            <strong><?php echo $value; ?></strong>
+                            <strong><?php echo stripslashes($value); ?></strong>
                             <?php if ($makelink) { echo ' <span class="hinttext" style="float:right">Через запятую, если несколько</span>'; } ?>
                         </div>
                         <div>
@@ -1742,7 +1739,7 @@ function cpPriceInput($id){
                 //show field inputs
                 ?>                
                     <tr id="row_<?php echo $current; ?>">
-                        <td width="150"><strong><?php echo $value; ?>:</strong></td>
+                        <td width="150"><strong><?php echo stripslashes($value); ?>:</strong></td>
                         <td>Столбец:</td>
                         <td><input type="text" class="col" id="<?php echo $current; ?>" name="cells[<?php echo $current; ?>][col]" style="width:40px" /></td>
                         <td>Строка:</td>

@@ -82,7 +82,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 		$toolmenu[17]['icon'] = 'cancel.gif';
 		$toolmenu[17]['title'] = 'Отмена';
-		$toolmenu[17]['link'] = '?view=components';	
+		$toolmenu[17]['link'] = '?view=components&do=config&id='.$id;	
 		cpToolMenu($toolmenu);	
 	}
 

@@ -55,11 +55,6 @@ function bannerHitsbyID($id){
 	}
 	
 	if ($opt=='list' || $opt=='config' || $opt=='show_banner' || $opt=='hide_banner'){
-
-		$toolmenu[15]['icon'] = 'cancel.gif';
-		$toolmenu[15]['title'] = 'Отмена';
-		$toolmenu[15]['link'] = '?view=components';
-	
 	} else {
 	
 		$toolmenu[20]['icon'] = 'save.gif';
@@ -68,7 +63,7 @@ function bannerHitsbyID($id){
 
 		$toolmenu[21]['icon'] = 'cancel.gif';
 		$toolmenu[21]['title'] = 'Отмена';
-		$toolmenu[21]['link'] = 'javascript:history.go(-1);';
+		$toolmenu[21]['link'] = '?view=components&do=config&id='.$_REQUEST['id'];
 	
 	}
 

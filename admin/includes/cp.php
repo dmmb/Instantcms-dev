@@ -195,6 +195,7 @@ function cpMenu(){
 			<li>
 				<a href="index.php?view=modules" class="modules">Модули</a>
 				<ul>
+                	<li><a class="install" href="index.php?view=install&do=module">Установить модули</a></li>
 					<li><a class="add" href="index.php?view=modules&do=add">Создать модуль</a></li>
 					<li><a class="list" href="index.php?view=modules">Показать все</a></li>
 				</ul>
@@ -215,6 +216,7 @@ function cpMenu(){
 			<li>
 				<a href="index.php?view=components" class="components">Компоненты</a>
 				<ul>
+                <li><a class="install" href="index.php?view=install&do=component">Установить компоненты</a></li>
                     <?php
 
                         $inDB = cmsDatabase::getInstance();
@@ -267,6 +269,7 @@ function cpMenu(){
 			<li>
 				<a class="plugins">Дополнения</a>
 				<ul>
+                	<li><a class="install" href="index.php?view=install&do=plugin">Установить плагины</a></li>
                     <li><a href="index.php?view=plugins" class="plugins">Плагины</a></li>
                     <?php if ($inCore->isAdminCan('admin/filters', $adminAccess)){ ?>
                         <li><a href="index.php?view=filters" class="filters">Фильтры</a></li>
@@ -440,6 +443,11 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 	
 	$sql .= ' FROM '.$table;
 	
+	if(isset($_SESSION['filter_table']) && $_SESSION['filter_table']!=$table)
+	{
+		unset($_SESSION['filter']);
+	}
+
 	if (isset($_REQUEST['nofilter'])){
 		unset($_SESSION['filter']);
 		header('Location:index.php?'.str_replace('&nofilter', '', $_SERVER['QUERY_STRING']));
@@ -450,19 +458,22 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 	if (isset($_REQUEST['filter'])) { 
 		$filter = $_REQUEST['filter'];
 		$_SESSION['filter'] = $filter;
+	} elseif (isset($_SESSION['filter'])) {
+		$filter = $_SESSION['filter'];
 	}
 	
 	if ($filter){
 		$f = 0;
 		$sql .= ' WHERE 1=1';
 		foreach($filter as $key => $value){
-			if($filter[$key]!=-100){
+			if($filter[$key] && $filter[$key]!=-100){
                 $sql .= ' AND ';
 				if ($key != 'category_id'){
 				$sql .= $key . " LIKE '%" . $filter[$key] . "%'";
 				} else {
 					$sql .= $key . " = '" . $filter[$key] . "'";
 				}
+				$f++;
 			}				
 		}
 		if (!isset($_SESSION['filter'])) { $_SESSION['filter'] = $filter; }
@@ -499,6 +510,8 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 	
 	$result = dbQuery($sql);
 	
+	$_SESSION['filter_table'] = $table;
+
 	if (mysql_error()) { 
 		unset($_SESSION['filter']);
 		header('Location:index.php?'.$_SERVER['QUERY_STRING']);

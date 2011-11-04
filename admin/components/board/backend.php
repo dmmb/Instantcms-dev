@@ -100,7 +100,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 		$toolmenu[21]['icon'] = 'cancel.gif';
 		$toolmenu[21]['title'] = 'Отмена';
-		$toolmenu[21]['link'] = 'javascript:history.go(-1);';
+		$toolmenu[21]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'];
 	
 	} else {
 

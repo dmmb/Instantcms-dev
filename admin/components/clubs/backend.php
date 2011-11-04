@@ -74,11 +74,6 @@ if($opt=='list'){
 }
 
 if ($opt=='list' || $opt=='config'){
-
-    $toolmenu[15]['icon'] = 'cancel.gif';
-    $toolmenu[15]['title'] = 'Отмена';
-    $toolmenu[15]['link'] = '?view=components';
-
 } else {
 
     $toolmenu[20]['icon'] = 'save.gif';
@@ -87,7 +82,7 @@ if ($opt=='list' || $opt=='config'){
 
     $toolmenu[21]['icon'] = 'cancel.gif';
     $toolmenu[21]['title'] = 'Отмена';
-    $toolmenu[21]['link'] = 'javascript:history.go(-1);';
+    $toolmenu[21]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'];
 
 }
 
@@ -658,7 +653,7 @@ if ($opt=='config') {
     <p>
         <input name="opt" type="hidden" value="saveconfig" />
         <input name="save" type="submit" id="save" value="Сохранить" />
-        <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+        <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>'"/>
     </p>
 </form>	
 

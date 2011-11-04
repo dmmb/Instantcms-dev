@@ -43,10 +43,6 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         $toolmenu[0]['title'] = 'Сохранить';
         $toolmenu[0]['link'] = 'javascript:document.optform.submit();';
 
-        $toolmenu[1]['icon'] = 'cancel.gif';
-        $toolmenu[1]['title'] = 'Отмена';
-        $toolmenu[1]['link'] = '?view=components';
-
         $toolmenu[2]['icon'] = 'listblogs.gif';
         $toolmenu[2]['title'] = 'Список блогов';
         $toolmenu[2]['link'] = '?view=components&do=config&link=blogs&opt=list_blogs';

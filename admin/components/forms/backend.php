@@ -29,9 +29,11 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	$toolmenu[1]['title'] = 'Формы';
 	$toolmenu[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list';
 
-	$toolmenu[3]['icon'] = 'cancel.gif';
-	$toolmenu[3]['title'] = 'Отмена';
-	$toolmenu[3]['link'] = '?view=components';
+	if($opt!='list'){
+		$toolmenu[3]['icon'] = 'cancel.gif';
+		$toolmenu[3]['title'] = 'Отмена';
+		$toolmenu[3]['link'] = '?view=components&do=config&id='.$_REQUEST['id'];
+	}
 
 	cpToolMenu($toolmenu);
 

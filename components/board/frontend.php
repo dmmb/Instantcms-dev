@@ -392,6 +392,8 @@ if ($do=='additem'){
         // входные данные
         $obtype     = $inCore->request('obtype', 'str');
         $title      = $inCore->request('title', 'str', '');
+		$title      = str_ireplace($obtype, '', $title);
+		$title      = trim($title);
         $content 	= $inCore->request('content', 'str', '');
         $city_ed    = $inCore->request('city_ed', 'str', '');
         $city       = $inCore->request('city', 'str', '');
@@ -525,6 +527,8 @@ if ($do=='edititem'){
 
         $obtype     = $inCore->request('obtype', 'str');
         $title      = $inCore->request('title', 'str', '');
+		$title      = str_ireplace($obtype, '', $title);
+		$title      = trim($title);
         $content 	= $inCore->request('content', 'str', '');
         $vipdays    = $inCore->request('vipdays', 'int', 0);
 

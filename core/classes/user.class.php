@@ -1106,57 +1106,58 @@ class cmsUser {
      * @return bool
      */
     public static function checkAwards($user_id=0){
+
         $inDB = cmsDatabase::getInstance();
-        if ($user_id>0){
-            $user = $inDB->get_fields('cms_users', "id={$user_id}", 'login');
 
-            $sql = "SELECT * FROM cms_user_autoawards WHERE published = 1";
-            $rs = $inDB->query($sql);
-            if ($inDB->num_rows($rs)) {
+        if (!$user_id){ return false; }
 
-                $p_content   = $inDB->rows_count('cms_content', "user_id=$user_id AND published = 1");
-                $p_comment   = $inDB->rows_count('cms_comments', "user_id=$user_id AND published = 1");
-                $p_blog      = $inDB->rows_count('cms_blog_posts', "user_id=$user_id AND published = 1");
-                $p_forum     = $inDB->rows_count('cms_forum_posts', "user_id=$user_id");
-                $p_photo     = $inDB->rows_count('cms_photo_files', "user_id=$user_id AND published = 1");
-                $p_privphoto = $inDB->rows_count('cms_user_photos', "user_id=$user_id");
-                $p_karma     = $inDB->get_field('cms_user_profiles', "user_id=$user_id", 'karma');
+		$user = $inDB->get_fields('cms_users', "id={$user_id}", 'login');
 
-                while ($award = $inDB->fetch_assoc($rs)){
-                    if (!$inDB->rows_count('cms_user_awards', "user_id=$user_id AND award_id={$award['id']}")) {
-                        $granted = ($award['p_content'] <= $p_content) &&
-                                   ($award['p_comment'] <= $p_comment) &&
-                                   ($award['p_blog'] <= $p_blog) &&
-                                   ($award['p_forum'] <= $p_forum) &&
-                                   ($award['p_photo'] <= $p_photo) &&
-                                   ($award['p_privphoto'] <= $p_privphoto) &&
-                                   ($award['p_karma'] <= $p_karma);
-                        if ($granted){
-                            $title = $award['title'];
-                            $description = $award['description'];
-                            $imageurl = $award['imageurl'];
-                            $award_id = $award['id'];
-                            $sql = "INSERT INTO cms_user_awards (user_id, pubdate, title, description, imageurl, from_id, award_id)
-                                    VALUES ('$user_id', NOW(), '$title', '$description', '$imageurl', '0', '$award_id')";
-                            $inDB->query($sql);
-							$award_id = $inDB->get_last_id('cms_user_awards');
-							//регистрируем событие
-							cmsActions::log('add_award', array(
-									'object' => '"'.$title.'"',
-									'user_id' => $user_id,
-									'object_url' => '',
-									'object_id' => $award_id,
-									'target' => '',
-									'target_url' => '',
-									'target_id' => 0, 
-									'description' => '<img src="/images/users/awards/'.$imageurl.'" border="0" alt="'.$description.'">'
-							));
-                            self::sendMessage(USER_UPDATER, $user_id, '<b>ѕолучена награда:</b> <a href="'.cmsUser::getProfileURL($user['login']).'">'.$award['title'].'</a>');
-                        }
-                    }
-                }
-            }
-        }
+		$sql = "SELECT * FROM cms_user_autoawards WHERE published = 1";
+		$rs = $inDB->query($sql);
+		if (!$inDB->num_rows($rs)) { return false; }
+
+		$p_content   = $inDB->rows_count('cms_content', "user_id=$user_id AND published = 1");
+		$p_comment   = $inDB->rows_count('cms_comments', "user_id=$user_id AND published = 1");
+		$p_blog      = $inDB->rows_count('cms_blog_posts', "user_id=$user_id AND published = 1");
+		$p_forum     = $inDB->rows_count('cms_forum_posts', "user_id=$user_id");
+		$p_photo     = $inDB->rows_count('cms_photo_files', "user_id=$user_id AND published = 1");
+		$p_privphoto = $inDB->rows_count('cms_user_photos', "user_id=$user_id");
+		$p_karma     = $inDB->get_field('cms_user_profiles', "user_id=$user_id", 'karma');
+
+		while ($award = $inDB->fetch_assoc($rs)){
+
+			if ($inDB->rows_count('cms_user_awards', "user_id = '$user_id' AND award_id = '{$award['id']}'")) { continue; }
+
+			$granted = ($award['p_content'] <= $p_content) &&
+					   ($award['p_comment'] <= $p_comment) &&
+					   ($award['p_blog'] <= $p_blog) &&
+					   ($award['p_forum'] <= $p_forum) &&
+					   ($award['p_photo'] <= $p_photo) &&
+					   ($award['p_privphoto'] <= $p_privphoto) &&
+					   ($award['p_karma'] <= $p_karma);
+
+			if (!$granted){ continue; }
+
+			$sql = "INSERT INTO cms_user_awards (user_id, pubdate, title, description, imageurl, from_id, award_id)
+					VALUES ('$user_id', NOW(), '{$award['title']}', '{$award['description']}', '{$award['imageurl']}', '0', '{$award['id']}')";
+			$inDB->query($sql);
+			$award_id = $inDB->get_last_id('cms_user_awards');
+			//регистрируем событие
+			cmsActions::log('add_award', array(
+					'object' => '"'.$title.'"',
+					'user_id' => $user_id,
+					'object_url' => '',
+					'object_id' => $award_id,
+					'target' => '',
+					'target_url' => '',
+					'target_id' => 0, 
+					'description' => '<img src="/images/users/awards/'.$imageurl.'" border="0" alt="'.htmlspecialchars($description).'">'
+			));
+			self::sendMessage(USER_UPDATER, $user_id, '<b>ѕолучена награда:</b> <a href="'.cmsUser::getProfileURL($user['login']).'">'.$award['title'].'</a>');
+
+		}
+
         return true;
     }
 

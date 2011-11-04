@@ -81,7 +81,7 @@
 				if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'bmp' || $ext == 'png'){
 		
 					$filename       = md5($realfile.time()).'.'.$ext;
-                    $filename_jpg   = md5($realfile.time()).'.'.$ext.'.jpg';
+                    $filename_jpg   = md5($realfile.time()).'.jpg';
 					
 					$uploadfile     = $uploaddir . $realfile;
 					$uploadphoto    = $uploaddir . $filename;

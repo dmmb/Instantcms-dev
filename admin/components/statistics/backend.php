@@ -144,10 +144,6 @@ function getAgent($agent){
 		$toolmenu[9]['icon'] = 'config.gif';
 		$toolmenu[9]['title'] = 'Настройки компонента';
 		$toolmenu[9]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config';
-
-		$toolmenu[10]['icon'] = 'cancel.gif';
-		$toolmenu[10]['title'] = 'Отмена';
-		$toolmenu[10]['link'] = '?view=components';
 	
 		cpToolMenu($toolmenu);
 
@@ -411,7 +407,7 @@ function getAgent($agent){
         </table>
         <p>
           <input name="opt" type="hidden" id="do" value="saveconfig" />
-          <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+          <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
         </p>
 </form>    <?php
 	
