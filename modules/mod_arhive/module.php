@@ -12,29 +12,38 @@
 /******************************************************************************/
 
 function mod_arhive($module_id){
-        $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
-	global $_LANG;
-		$cfg = $inCore->loadModuleConfig($module_id);
 
-		$sql = "SELECT DATE_FORMAT( pubdate, '%M, %Y' ) fdate, DATE_FORMAT( pubdate, '%Y' ) year, DATE_FORMAT( pubdate, '%m' ) month, COUNT( id ) num
-				FROM cms_content"."\n";
+        $inCore = cmsCore::getInstance();
+        $inDB   = cmsDatabase::getInstance();
+		$cfg    = $inCore->loadModuleConfig($module_id);
+
+		global $_LANG;
+
+		$rootcat = $inDB->get_fields('cms_category', "id='{$cfg['cat_id']}'", 'NSLeft, NSRight');
+		if(!$rootcat) { return false; }
+		$catsql = "AND (cat.NSLeft >= {$rootcat['NSLeft']} AND cat.NSRight <= {$rootcat['NSRight']})";
+
+		$today = date("Y-m-d H:i:s");
+
+		$sql = "SELECT DATE_FORMAT( con.pubdate, '%M, %Y' ) fdate, DATE_FORMAT( con.pubdate, '%Y' ) year, DATE_FORMAT( con.pubdate, '%m' ) month, COUNT( con.id ) num
+				FROM cms_content con
+				INNER JOIN cms_category cat ON cat.id = con.category_id {$catsql}"."\n";
 				
 		if($cfg['cat_id']>0){
-			$sql .= "WHERE published = 1 AND category_id = '{$cfg['cat_id']}'";
+			$sql .= "WHERE con.published = 1  AND con.pubdate <= '$today'";
 			if ($cfg['source']!='both'){
 				if ($cfg['source']=='arhive'){
-					$sql .= " AND is_arhive = 1". "\n";
+					$sql .= " AND con.is_arhive = 1". "\n";
 				} else {
-					$sql .= " AND is_arhive = 0". "\n";
+					$sql .= " AND con.is_arhive = 0". "\n";
 				}				
 			} else {
 				$sql .= "\n";
 			}
 		}
 		
-		$sql .= "GROUP BY DATE_FORMAT(pubdate, '%M, %Y')"."\n";
-		$sql .= "ORDER BY pubdate DESC";
+		$sql .= "GROUP BY DATE_FORMAT(con.pubdate, '%M, %Y')"."\n";
+		$sql .= "ORDER BY con.pubdate DESC";
 		
 		$result = $inDB->query($sql) ;
 		

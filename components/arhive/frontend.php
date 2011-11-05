@@ -30,24 +30,34 @@ function arhive(){
     $year       = $inCore->request('y', 'int', 'all');
     $month      = $inCore->request('m', 'int', 'all');
     $day        = $inCore->request('d', 'int', 'all');
-    
+    $today = date("Y-m-d H:i:s");
     global $_LANG;
 
 	$inPage->setTitle($_LANG['ARCHIVE_MATERIALS']);
+	$inPage->addPathway($_LANG['ARCHIVE_MATERIALS'], '/arhive');
+
+	if ($cfg['source']!='both'){
+		if ($cfg['source']=='arhive'){
+			$cfg_sql = " AND con.is_arhive = 1";
+		} else {
+			$cfg_sql = " AND con.is_arhive = 0";
+		}				
+	} else {
+		$cfg_sql = '';
+	}
 
  //======================================================================================================//
-    //echo $_LANG['ARCHIVE_MATERIALS'];
 
 	if ($year == 'all'){
 
-		$sql = "SELECT DATE_FORMAT( pubdate, '%M, %Y' ) fdate,
-                       DATE_FORMAT( pubdate, '%Y' ) year,
-                       DATE_FORMAT( pubdate, '%m' ) month,
-                       COUNT( id ) num
-				FROM cms_content
-                WHERE published = 1
-				GROUP BY DATE_FORMAT(pubdate, '%M, %Y') 
-				ORDER BY pubdate DESC";
+		$sql = "SELECT DATE_FORMAT( con.pubdate, '%M, %Y' ) fdate,
+                       DATE_FORMAT( con.pubdate, '%Y' ) year,
+                       DATE_FORMAT( con.pubdate, '%m' ) month,
+                       COUNT( con.id ) num
+				FROM cms_content con
+                WHERE con.published = 1 AND con.pubdate <= '$today' {$cfg_sql}
+				GROUP BY DATE_FORMAT(con.pubdate, '%M, %Y') 
+				ORDER BY con.pubdate DESC";
 
 		$result         = $inDB->query($sql);
         $items_count    = $inDB->num_rows($result);
@@ -77,11 +87,11 @@ function arhive(){
 
         $inPage->addPathway($year, '/arhive/'.$year);
 
-        $sql = "SELECT DATE_FORMAT( pubdate, '%M' ) fdate, DATE_FORMAT( pubdate, '%Y' ) year, DATE_FORMAT( pubdate, '%m' ) month, COUNT( id ) num
-                FROM cms_content
-                WHERE published = 1 AND DATE_FORMAT(pubdate, '%Y') LIKE '$year' 
-                GROUP BY DATE_FORMAT(pubdate, '%M')
-                ORDER BY pubdate DESC
+        $sql = "SELECT DATE_FORMAT( con.pubdate, '%M' ) fdate, DATE_FORMAT( con.pubdate, '%Y' ) year, DATE_FORMAT( con.pubdate, '%m' ) month, COUNT( con.id ) num
+                FROM cms_content con
+                WHERE con.published = 1 AND con.pubdate <= '$today' AND DATE_FORMAT(con.pubdate, '%Y') LIKE '$year' {$cfg_sql}
+                GROUP BY DATE_FORMAT(con.pubdate, '%M')
+                ORDER BY con.pubdate DESC
                 ";
         $result = $inDB->query($sql);
 
@@ -129,12 +139,12 @@ function arhive(){
     }
 
     $sql = "SELECT con.*,
-                   DATE_FORMAT(con.pubdate, '%d-%m-%Y') fdate,
                    cat.title category,
                    cat.seolink as cat_seolink, 
                    cat.id cid
-            FROM cms_content con, cms_category cat
-            WHERE $date_where AND con.published = 1 AND con.category_id = cat.id
+            FROM cms_content con
+			INNER JOIN cms_category cat ON cat.id = con.category_id
+            WHERE $date_where AND con.published = 1 AND con.pubdate <= '$today' {$cfg_sql}
             ORDER BY con.pubdate DESC";
 
     $result         = $inDB->query($sql);
@@ -149,6 +159,7 @@ function arhive(){
             if($inCore->checkUserAccess('material', $item['id'])){
                 $item['url'] = $content_model->getArticleURL(0, $item['seolink']);
                 $item['category_url'] = $content_model->getCategoryURL(0, $item['cat_seolink']);
+				$item['fdate'] = $inCore->dateFormat($item['pubdate'], true, true);
                 $items[] = $item;
             }
         }

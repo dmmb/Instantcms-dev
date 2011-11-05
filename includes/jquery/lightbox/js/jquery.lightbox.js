@@ -5,7 +5,7 @@
  *
  * jQuery Lightbox is free software; You can redistribute it and/or modify it under the terms of
  * the GNU Affero General Public License version 3 as published by the Free Software Foundation.
- * You don't have to do anything special to accept the license and you donвЂ™t have to notify
+ * You don't have to do anything special to accept the license and you don’t have to notify
  * anyone which that you have made that decision.
  * 
  * jQuery Lightbox is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -785,13 +785,13 @@
 		
 		text: {
 			// For translating
-			image:		'РР·РѕР±СЂР°Р¶РµРЅРёРµ',
-			of:			'РёР·',
-			close:		'Р—Р°РєСЂС‹С‚СЊ X',
-			closeInfo:	'РќР°Р¶РјРёС‚Рµ РЅР° Р»СЋР±РѕРµ РјРµСЃС‚Рѕ РІРЅРµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ С‡С‚РѕР±С‹ Р·Р°РєСЂС‹С‚СЊ.',
-			download:	'РЎРєР°С‡Р°С‚СЊ.',
+			image:		'Изображение',
+			of:			'из',
+			close:		'Закрыть X',
+			closeInfo:	'Нажмите на любое место вне изображения чтобы закрыть.',
+			download:	'Скачать.',
 			help: {
-				close:		'РќР°Р¶РјРёС‚Рµ, С‡С‚РѕР±С‹ Р·Р°РєСЂС‹С‚СЊ',
+				close:		'Нажмите, чтобы закрыть',
 				interact:	'Hover to interact'
 			},
 			about: {
@@ -928,7 +928,7 @@
 				// Create
 				this.images.image = {
 					src:	'',
-					title:	'Р‘РµР· РЅР°Р·РІР°РЅРёСЏ',
+					title:	'Без названия',
 					description:	'',
 					name:	'',
 					color:	null,

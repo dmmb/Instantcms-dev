@@ -20,6 +20,7 @@ function applet_arhive(){
 	$GLOBALS['cp_page_title'] = 'Архив статей';
 	
 	$cfg = $inCore->loadComponentConfig('content');
+	$cfg_arhive = $inCore->loadComponentConfig('arhive');
     $inCore->loadModel('content');
     $model = new cms_model_content();
 
@@ -29,12 +30,49 @@ function applet_arhive(){
 	if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
 	if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { $id = -1; }
 	if (isset($_REQUEST['co'])) { $co = $_REQUEST['co']; } else { $co = -1; } //current ordering, while resort
-		
+
+	if($do=='saveconfig'){	
+		$cfg = array();
+		$cfg['source'] = $inCore->request('source', 'str');
+		$inCore->saveComponentConfig('arhive', $cfg);
+        header('location:?view=arhive&do=config');
+	}
+
+    if ($do=='config'){
+		$toolmenu = array();
+		$toolmenu[0]['icon'] = 'folders.gif';
+		$toolmenu[0]['title'] = 'Список статей в архиве';
+		$toolmenu[0]['link'] = '?view=arhive';
+	
+		cpToolMenu($toolmenu);
+		cpAddPathway('Настройки', 'index.php?view=arhive&do=config');
+?>
+<form action="index.php?view=arhive&do=saveconfig" method="post" name="optform" target="_self" id="form1">
+    <table width="609" border="0" cellpadding="10" cellspacing="0" class="proptable">
+        <tr>
+            <td valign="top"><strong>Источник материалов при просмотре архива на сайте: </strong></td>
+            <td width="100" valign="top">
+                <select name="source" id="source" style="width:285px">
+                    <option value="content" <?php if($cfg_arhive['source']=='content') { echo 'selected'; } ?>>Каталог статей</option>
+                    <option value="arhive" <?php if($cfg_arhive['source']=='arhive') { echo 'selected'; } ?>>Архив статей</option>
+                    <option value="both" <?php if($cfg_arhive['source']=='both') { echo 'selected'; } ?>>Каталог и архив</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <p>
+        <input name="opt" type="hidden" value="saveconfig" />
+        <input name="save" type="submit" id="save" value="Сохранить" />
+        <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=arhive';"/>
+    </p>
+</form>
+<?php }
+
 	if ($do == 'list'){
 		$toolmenu = array();
-		$toolmenu[0]['icon'] = 'cancel.gif';
-		$toolmenu[0]['title'] = 'Отмена';
-		$toolmenu[0]['link'] = "?view=content";
+		$toolmenu[0]['icon'] = 'config.gif';
+		$toolmenu[0]['title'] = 'Настройки';
+		$toolmenu[0]['link'] = '?view=arhive&do=config';
 
 		$toolmenu[1]['icon'] = 'delete.gif';
 		$toolmenu[1]['title'] = 'Удалить выбранные';

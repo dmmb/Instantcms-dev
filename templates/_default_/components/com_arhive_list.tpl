@@ -20,7 +20,7 @@
                 <td width="200" align="left">
                     <a href="{$item.category_url}">{$item.category}</a>
                 </td>
-                <td width="80" align="right">{$item.fdate}</td>
+                <td width="150">{$item.fdate}</td>
             </tr>
         {/foreach}
     </table>
