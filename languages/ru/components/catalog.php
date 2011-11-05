@@ -105,6 +105,8 @@ $_LANG['TOTAL_ORDER_PRICE']       ='Общая сумма заказа';
 $_LANG['EMAIL_SUBJECT']           ='{sitename}: ЗАКАЗ ИЗ КАТАЛОГА';
 $_LANG['CUSTOMER_EMAIL_SUBJECT']  ='Ваш заказ поступил в обработку';
 $_LANG['CUSTOMER_EMAIL_TEXT']     ='Наши менеджеры свяжутся с вами по указанному вами телефону в самое ближайшее время.';
+$_LANG['NEED_TITLE']              ='Необходимо указать название';
+
 //Template
 $_LANG['ADVICE']                  ='Совет';
 $_LANG['ADVICE_TEXT']             ='Вы можете использовать символы подстановки';

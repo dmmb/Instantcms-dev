@@ -1399,15 +1399,17 @@ function cpPriceInput($id){
 
                                         if (mysql_num_rows($result)){
                                             while ($item=mysql_fetch_assoc($result)){
-                                                echo '<option value="'.$item['id'].'"';
-                                                if ($opt=='edit_cat'){
-                                                    if (inArray($ord, $item['id'])){
-                                                        echo 'selected';
-                                                    }
-                                                }
-
-                                                echo '>';
-                                                echo $item['title'].'</option>';
+												if($item['alias'] != 'guest'){
+													echo '<option value="'.$item['id'].'"';
+													if ($opt=='edit_cat'){
+														if (inArray($ord, $item['id'])){
+															echo 'selected';
+														}
+													}
+	
+													echo '>';
+													echo $item['title'].'</option>';
+												}
                                             }
                                         }
 

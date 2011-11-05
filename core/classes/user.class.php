@@ -387,204 +387,6 @@ class cmsUser {
 // ============================================================================ //
 
     /**
-     * Возвращает последние комментарии друзей
-     * @param int $user_id
-     * @param int $limit
-     * @return array
-     */
-    public static function getUserFriendsComments($user_id, $limit=10){
-
-        $inDB           = cmsDatabase::getInstance();
-        $inCore         = cmsCore::getInstance();
-
-        $friends        = self::getFriends($user_id);
-
-        if (!$friends) { return false; }
-
-        $friends_sql    = '';
-
-        foreach($friends as $id=>$friend){
-            $friends_sql .= 'u.id = '.$friend['id'];
-            if ($id < sizeof($friends)-1){ $friends_sql .= ' OR '; }
-        }
-
-        $sql = "SELECT c.id, c.content, c.target as target, c.target_id as target_id, c.user_id, c.target_link, u.id as user_id, u.nickname as nickname, u.login as login, c.pubdate as pubdate
-                FROM cms_comments c
-				LEFT JOIN cms_users u ON u.id = c.user_id
-                WHERE {$friends_sql}
-                ORDER BY c.pubdate DESC
-                ";
-
-        if ($limit) { $sql .= 'LIMIT '.$limit; }
-
-        $result = $inDB->query($sql);
-
-        $comments = array();
-
-        if (!$inDB->num_rows($result)){ return false; }
-
-        while ($comment = $inDB->fetch_assoc($result)){
-            $comment['pubdate'] = $inCore->dateFormat($comment['pubdate']);
-			$comment['content'] = strip_tags($comment['content']);
-			if (strlen($comment['content'])>70) { 
-				$comment['content'] = substr($comment['content'], 0, 70). '...';
-            }
-			if (!$comment['content']) { $comment['content'] = '...'; }
-            $comments[] = $comment;
-        }
-
-        return $comments;
-
-    }
-
-// ============================================================================ //
-// ============================================================================ //
-
-    /**
-     * Возвращает последние посты в блогах друзей
-     * @param int $user_id
-     * @param int $limit
-     * @return array
-     */
-    public static function getUserFriendsPosts($user_id, $limit=10){
-        
-        $inDB           = cmsDatabase::getInstance();
-        $inCore         = cmsCore::getInstance();
-
-        $friends        = self::getFriends($user_id);
-
-        if (!$friends) { return false; }
-
-        $friends_sql    = '';
-
-        foreach($friends as $id=>$friend){
-            $friends_sql .= 'u.id = '.$friend['id'];
-            if ($id < sizeof($friends)-1){ $friends_sql .= ' OR '; }
-        }
-
-        $sql = "SELECT p.id,
-                                p.title,
-                                p.user_id,
-                                p.blog_id,
-                                p.seolink as seolink,
-                                b.seolink as bloglink, 
-                                u.id as user_id,
-                                u.nickname as nickname,
-                                u.login as login,
-                       			p.pubdate as pubdate
-                FROM cms_blog_posts p
-				LEFT JOIN cms_blogs b ON b.id = p.blog_id
-				LEFT JOIN cms_users u ON u.id = p.user_id
-                WHERE {$friends_sql}
-                ORDER BY p.pubdate DESC
-                ";
-
-        if ($limit) { $sql .= 'LIMIT '.$limit; }
-
-        $result = $inDB->query($sql);
-
-        $posts = array();
-
-        if (!$inDB->num_rows($result)){ return false; }
-
-        $inCore->loadModel('blogs');
-        $model = new cms_model_blogs();
-
-        while ($post = $inDB->fetch_assoc($result)){
-            $post['pubdate']    = $inCore->dateFormat($post['pubdate']);
-            $post['url']        = $model->getPostURL(0, $post['bloglink'], $post['seolink']);
-            $posts[]            = $post;
-        }
-
-        return $posts;
-        
-    }
-
-// ============================================================================ //
-// ============================================================================ //
-
-    /**
-     * Возвращает последние фотографии друзей
-     * @param int $user_id
-     * @param int $limit
-     * @return array
-     */
-    public static function getUserFriendsPhotos($user_id, $limit=10){
-
-        $inDB           = cmsDatabase::getInstance();
-        $inCore         = cmsCore::getInstance();
-
-        $friends        = self::getFriends($user_id);
-
-        if (!$friends) { return false; }
-
-        $friends_sql    = '';
-
-        foreach($friends as $id=>$friend){
-            $friends_sql .= 'u.id = '.$friend['id'];
-            if ($id < sizeof($friends)-1){ $friends_sql .= ' OR '; }
-        }
-		// Получаем фото из общей галереи
-        $sql = "SELECT p.id, p.title, u.nickname as nickname, u.login as login, p.pubdate as pubdate
-                FROM cms_photo_files p
-				LEFT JOIN cms_users u ON u.id = p.user_id
-                WHERE {$friends_sql}
-                ORDER BY p.pubdate DESC
-                ";
-		if ($limit) { $sql .= 'LIMIT '.($limit*1.5); }
-        $result = $inDB->query($sql);
-
-		//Получаем личные фотографии
-		$private_sql = "SELECT p.id, p.title, p.user_id, u.nickname as nickname, u.login as login, p.pubdate as pubdate
-						FROM cms_user_photos p
-						LEFT JOIN cms_users u ON u.id = p.user_id
-						WHERE {$friends_sql}
-                ORDER BY p.pubdate DESC
-                ";
-		if ($limit) { $private_sql .= 'LIMIT '.($limit*1.5); }
-		$private_res = $inDB->query($private_sql);
-
-		$photos = array();
-        
-		$count_private 	= $inDB->num_rows($private_res);
-		$count_pub 		= $inDB->num_rows($result);
-
-        if (!$count_private && !$count_pub){ return false; }
-
-		if ($count_private) {
-			while($photo = $inDB->fetch_assoc($private_res)){
-				$photos[$photo['id']]       = $photo;
-			}
-		}
-
-		if ($count_pub) {
-        while ($photo = $inDB->fetch_assoc($result)){
-				$photos[$photo['id']] = $photo;
-			}
-        }
-        $photos = cmsCore::sortArray($photos, 'pubdate');
-		//Выбираем последние $limit фото из общего массива
-		$total      = sizeof($photos);
-
-		if ($total){
-			$page_photos    = array();
-			for($p=0; $p<$limit; $p++){
-				if ($photos[$p]){
-					$photos[$p]['pubdate'] = $inCore->dateFormat($photos[$p]['pubdate']);
-					$page_photos[] = $photos[$p];
-				}
-			}
-			
-			$photos = $page_photos; unset($page_photos);
-		}
-        return $photos;
-        
-    }
-
-// ============================================================================ //
-// ============================================================================ //
-
-    /**
      * Возвращает элементы <option> для списка пользователей
      * @param int $selected
      * @param array $exclude
@@ -1107,11 +909,11 @@ class cmsUser {
      */
     public static function checkAwards($user_id=0){
 
+		if (!$user_id){ return false; }
+
+		if(cmsCore::callEvent('CHECK_AWARDS', $user_id) != $user_id) { return true; }
+
         $inDB = cmsDatabase::getInstance();
-
-        if (!$user_id){ return false; }
-
-		$user = $inDB->get_fields('cms_users', "id={$user_id}", 'login');
 
 		$sql = "SELECT * FROM cms_user_autoawards WHERE published = 1";
 		$rs = $inDB->query($sql);
@@ -1139,26 +941,47 @@ class cmsUser {
 
 			if (!$granted){ continue; }
 
-			$sql = "INSERT INTO cms_user_awards (user_id, pubdate, title, description, imageurl, from_id, award_id)
-					VALUES ('$user_id', NOW(), '{$award['title']}', '{$award['description']}', '{$award['imageurl']}', '0', '{$award['id']}')";
-			$inDB->query($sql);
-			$award_id = $inDB->get_last_id('cms_user_awards');
-			//регистрируем событие
-			cmsActions::log('add_award', array(
-					'object' => '"'.$title.'"',
-					'user_id' => $user_id,
-					'object_url' => '',
-					'object_id' => $award_id,
-					'target' => '',
-					'target_url' => '',
-					'target_id' => 0, 
-					'description' => '<img src="/images/users/awards/'.$imageurl.'" border="0" alt="'.htmlspecialchars($description).'">'
-			));
-			self::sendMessage(USER_UPDATER, $user_id, '<b>Получена награда:</b> <a href="'.cmsUser::getProfileURL($user['login']).'">'.$award['title'].'</a>');
+			self::giveAward($award, $user_id);
 
 		}
 
         return true;
+    }
+
+// ============================================================================ //
+// ============================================================================ //
+
+    /**
+     * Выдает награду
+     * @return int $award_id
+     */
+    public static function giveAward($award, $user_id){
+
+		if(!$award || !$user_id) { return false; }
+
+        $inDB = cmsDatabase::getInstance();
+
+		$user = $inDB->get_fields('cms_users', "id = '{$user_id}'", 'login');
+
+		$sql = "INSERT INTO cms_user_awards (user_id, pubdate, title, description, imageurl, from_id, award_id)
+				VALUES ('$user_id', NOW(), '{$inDB->escape_string($award['title'])}', '{$inDB->escape_string($award['description'])}', '{$award['imageurl']}', '{$award['from_id']}', '{$award['id']}')";
+		$inDB->query($sql);
+		$award_id = $inDB->get_last_id('cms_user_awards');
+		//регистрируем событие
+		cmsActions::log('add_award', array(
+				'object' => '"'.$award['title'].'"',
+				'user_id' => $user_id,
+				'object_url' => '',
+				'object_id' => $award['id'],
+				'target' => '',
+				'target_url' => '',
+				'target_id' => 0, 
+				'description' => '<img src="/images/users/awards/'.$award['imageurl'].'" border="0" alt="'.htmlspecialchars($award['description']).'">'
+		));
+		self::sendMessage(USER_UPDATER, $user_id, '<b>Получена награда:</b> <a href="'.cmsUser::getProfileURL($user['login']).'">'.$award['title'].'</a>');
+
+        return $award_id ? $award_id : false;
+        
     }
 
 // ============================================================================ //

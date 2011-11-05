@@ -14,7 +14,7 @@
     Error_Reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
     setlocale(LC_ALL, 'ru_RU.CP1251');
 
-    define('PATH', $_SERVER['DOCUMENT_ROOT']);    
+    define('PATH', dirname(__FILE__));
 
 ////////////////////////////// Проверяем что система установлена /////////////////////////////
 

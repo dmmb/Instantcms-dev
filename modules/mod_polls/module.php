@@ -12,9 +12,10 @@
 /******************************************************************************/
 
 	function mod_polls($module_id){
+
         $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
-		$cfg = $inCore->loadModuleConfig($module_id);
+        $inDB   = cmsDatabase::getInstance();
+		$cfg    = $inCore->loadModuleConfig($module_id);
 	
 		if ($cfg['poll_id']!=0){
 			$sql = "SELECT *
@@ -56,12 +57,12 @@
 				echo '<table class="mod_poll_answers">';
 				foreach($answers_title as $key=>$value){
 					  echo '<tr>';
-					  echo '<td><input name="answer" type="radio" value="'.$value.'"></td>';
-					  echo '<td class="mod_poll_answer">'.$value;
+					  echo '<td><input name="answer" id="answer'.$module_id . $key.'" type="radio" value="'.$value.'"></td>';
+					  echo '<td class="mod_poll_answer"><label for="answer'.$module_id . $key.'">'.$value;
 					  if ($cfg['shownum']){
 						  echo ' ('.$answers_num[$key].')';
 					  }
-					  echo '</td>';
+					  echo '</label></td>';
 					  echo '</tr>';
 					  $total += $answers_num[$key];
 				  }
