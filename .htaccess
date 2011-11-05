@@ -1,4 +1,5 @@
 AddDefaultCharset windows-1251
+Options -Indexes
 
 RewriteEngine On
 RewriteBase /
