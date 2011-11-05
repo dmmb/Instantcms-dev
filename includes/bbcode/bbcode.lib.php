@@ -900,12 +900,12 @@ class bbcode {
 
 		$text = preg_replace('/\s+/', ' ', $text);
         $search = array(
-                "/(.|^)((?:http|https|ftp):\/\/[^<\s]+[^<.,:;?!\"»'\"+\-])([.,:;?!\"»'\"+\-]*(?:<br ?\/?>)*\s|$)/si",
+                "/((?:http|https|ftp):\/\/[^<\s]+[^<.,:;?!\"»'\"+\-])([.,:;?!\"»'\"+\-]*(?:<br ?\/?>)*\s|$)/si",
                 "/(^|[^\/])(www\.[^<\s]+[^<.,:;?!\"»'\"+\-])([.,:;?!\"»'\"+\-]*(?:<br ?\/?>)*\s|$)/si",
                 "'([^\w\d-\.]|^)([\w\d-\.]+@[\w\d-\.]+\.[\w]+[^.,;\s<\"\'\)]+)'si"
             );
         $replace = array(
-                '$1<a href="/go/url=$2" target="_blank">$2</a>$3',
+                '<a href="/go/url=$2" target="_blank">$1</a>$2',
                 '$1<a href="/go/url=http://$2" target="_blank">$2</a>$3',
                 '$1<a href="mailto:$2">$2</a>'
             );
