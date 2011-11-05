@@ -13,7 +13,7 @@
 
 	define('VALID_CMS', 1);
 
-    define('PATH', $_SERVER['DOCUMENT_ROOT']);
+    define('PATH', str_replace('/install', '', dirname(__FILE__)));
     define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
 
     include('../core/cms.php');
@@ -432,7 +432,7 @@ function installCheckExtensions(){
 		?>
 	
 		<div id="footer">
-			<a href="http://www.instantcms.ru/" target="_blank"><strong>InstantCMS</strong></a> &copy; 2007-2011
+			<a href="http://www.instantcms.ru/" target="_blank"><strong>InstantCMS</strong></a> &copy; 2007-<?php echo date('Y'); ?>
 		</div>
 		
 	</div>

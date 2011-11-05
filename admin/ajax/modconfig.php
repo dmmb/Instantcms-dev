@@ -17,7 +17,7 @@
 
 	define("VALID_CMS", 1);
 	define("VALID_CMS_ADMIN", 1);
-    define('PATH', $_SERVER['DOCUMENT_ROOT']);
+	define('PATH', str_replace('/admin/ajax', '', dirname(__FILE__)));
 
 	include(PATH.'/core/cms.php');
 	include(PATH.'/admin/includes/cp.php');

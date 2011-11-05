@@ -15,7 +15,7 @@
     if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
 
 	define("VALID_CMS", 1);
-    define('PATH', $_SERVER['DOCUMENT_ROOT']);
+    define('PATH', str_replace('/core/ajax', '', dirname(__FILE__)));
 
 	include(PATH.'/core/cms.php');
 

@@ -14,7 +14,7 @@
 	session_start();
 
     define("VALID_CMS", 1);
-    define('PATH', $_SERVER['DOCUMENT_ROOT']);
+    define('PATH', str_replace('/components/comments', '', dirname(__FILE__)));
 
 	//PROTECT FROM DIRECT RUN
 	if (isset($_REQUEST['cd'])){

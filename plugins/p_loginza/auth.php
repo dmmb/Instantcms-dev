@@ -3,7 +3,7 @@
 	session_start();
 
 	define("VALID_CMS", 1);
-    define('PATH', $_SERVER['DOCUMENT_ROOT']);   	
+    define('PATH', str_replace('/plugins/p_loginza', '', dirname(__FILE__)));	
 
 	include(PATH.'/core/cms.php');
 

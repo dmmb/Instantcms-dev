@@ -15,7 +15,7 @@
 
     define('VALID_CMS', 1);
     
-    define('PATH', $_SERVER['DOCUMENT_ROOT']);
+    define('PATH', str_replace('/migrate', '', dirname(__FILE__)));
 
     require(PATH."/core/cms.php");
     include(PATH."/includes/config.inc.php");
@@ -33,7 +33,7 @@
     $inDB       = cmsDatabase::getInstance();
 
     $version_prev = '1.8';
-    $version_next = '1.8.1';
+    $version_next = '1.9';
 	
 	$is_was_migrate = false;
 

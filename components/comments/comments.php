@@ -11,7 +11,7 @@
 //                                                                            //
 /******************************************************************************/
 
-    define('PATH', $_SERVER['DOCUMENT_ROOT']);
+    define('PATH', str_replace('/components/comments', '', dirname(__FILE__)));
     
 	session_start();
 

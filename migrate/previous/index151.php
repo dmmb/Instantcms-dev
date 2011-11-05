@@ -12,7 +12,7 @@
 
     define('VALID_CMS', 1);
     
-    define('PATH', str_replace('migrate', '', dirname(__FILE__)));
+    define('PATH', str_replace('/migrate/previous', '', dirname(__FILE__)));
     define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
 
     require(PATH."/core/cms.php");
