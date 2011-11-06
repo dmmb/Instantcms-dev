@@ -17,8 +17,8 @@
     
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
 
-    require(PATH."/core/cms.php");
-    include(PATH."/includes/config.inc.php");
+    include(PATH.'/core/cms.php');
+    include(PATH.'/includes/config.inc.php');
 
     $inCore     = cmsCore::getInstance();
 
@@ -122,9 +122,9 @@
 										'class_name' => '',
 										'class_method' => ''
 								  ));
+		echo '<p>«адание CRON deleteOldResults дл€ очистки поискового кеша создано.</p>';
+		$is_was_migrate = true;
 	}
-	echo '<p>«адание CRON deleteOldResults дл€ очистки поискового кеша создано.</p>';
-	$is_was_migrate = true;
 // ========================================================================== //
 // ========================================================================== //
 	if(!$inDB->get_field('cms_cron_jobs', "job_name='deleteOldNotification'", 'id')){
@@ -138,9 +138,9 @@
 										'class_name' => '',
 										'class_method' => ''
 								  ));
+		echo '<p>«адание CRON deleteOldNotification дл€ очистки сообщений службы обновлений и рассылки создано.</p>';
+		$is_was_migrate = true;
 	}
-	echo '<p>«адание CRON deleteOldNotification дл€ очистки сообщений службы обновлений и рассылки создано.</p>';
-	$is_was_migrate = true;
 // ========================================================================== //
 // ========================================================================== //
 	addFultextIndex('cms_blog_posts');

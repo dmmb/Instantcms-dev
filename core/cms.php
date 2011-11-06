@@ -3465,7 +3465,7 @@ class cmsCore {
                 $value = str_replace("\n", '', $value);
                 $value = trim($value);
 
-                $html .= '<a href="/catalog/'.$cat_id.'/find/'.urlencode(urlencode($text)).'">'.$value.'</a>';
+                $html .= '<a href="/catalog/'.$cat_id.'/find/'.urlencode(urlencode($value)).'">'.$value.'</a>';
                 if ($n<sizeof($words)) { $html .= ', '; } else { $html .= '.'; }
             }
 
