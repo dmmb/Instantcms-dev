@@ -2188,6 +2188,7 @@ if ($do == 'delprofile'){
                             $blog_model = new cms_model_blogs();
                             $blog_model->deleteBlog($user_blog_id);
                         }
+						session_destroy();
 					}
 					if ($inUser->id == $data['id']){
                         $inCore->redirect('/logout');
