@@ -905,7 +905,7 @@ class bbcode {
                 "'([^\w\d-\.]|^)([\w\d-\.]+@[\w\d-\.]+\.[\w]+[^.,;\s<\"\'\)]+)'si"
             );
         $replace = array(
-                '<a href="/go/url=$2" target="_blank">$1</a>$2',
+                '<a href="/go/url=$1" target="_blank">$1</a>$2',
                 '$1<a href="/go/url=http://$2" target="_blank">$2</a>$3',
                 '$1<a href="mailto:$2">$2</a>'
             );
