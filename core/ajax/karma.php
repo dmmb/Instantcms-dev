@@ -20,7 +20,7 @@
 	if (!isset($_REQUEST['opt'])) { die(4); }
 
 	define("VALID_CMS", 1);
-    define('PATH', str_replace('/core/ajax', '', dirname(__FILE__)));
+    define('PATH', $_SERVER['DOCUMENT_ROOT']);
 
 	include(PATH.'/core/cms.php');
 

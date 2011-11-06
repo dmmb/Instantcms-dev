@@ -15,7 +15,7 @@
 
     define('VALID_CMS', 1);
     
-    define('PATH', str_replace('/migrate/previous', '', dirname(__FILE__)));
+    define('PATH', $_SERVER['DOCUMENT_ROOT']);
 
     require(PATH."/core/cms.php");
     include(PATH."/includes/config.inc.php");

@@ -3,7 +3,7 @@
 
 	define("VALID_CMS", 1);
 
-	define('PATH', str_replace('/components/clubs/ajax', '', dirname(__FILE__)));
+	define('PATH', $_SERVER['DOCUMENT_ROOT']);
 
 	include(PATH.'/core/cms.php');
 

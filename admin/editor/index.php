@@ -17,7 +17,7 @@
 	define("VALID_CMS_ADMIN", 1);
 	define("VALID_CMS_EDITOR", 1);
 
-	define('PATH', str_replace('/admin/editor', '', dirname(__FILE__)));
+	define('PATH', $_SERVER['DOCUMENT_ROOT']);
     define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
 
 	require("../../core/cms.php");

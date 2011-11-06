@@ -19,7 +19,7 @@
 	if (!isset($_REQUEST['page'])) { die(4); }
 
 	define("VALID_CMS", 1);
-    define('PATH', str_replace('/modules/mod_latest/ajax', '', dirname(__FILE__)));
+    define('PATH', $_SERVER['DOCUMENT_ROOT']);
 
 	// Грузим ядро и классы
 	include(PATH.'/core/cms.php');

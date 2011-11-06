@@ -13,10 +13,10 @@
 
 	define('VALID_CMS', 1);
 
-    define('PATH', str_replace('/install', '', dirname(__FILE__)));
+    define('PATH', $_SERVER['DOCUMENT_ROOT']);
     define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
 
-    include('../core/cms.php');
+    include(PATH.'/core/cms.php');
 
     $inCore     = cmsCore::getInstance(true);
     

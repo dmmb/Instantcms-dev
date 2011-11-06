@@ -14,7 +14,7 @@
     session_start();
 	if (!isset($_REQUEST['id'])) { die(100); } else { $id = (int)$_REQUEST['id']; }
 	define("VALID_CMS", 1);	
-    define('PATH', str_replace('/components/photos/ajax', '', dirname(__FILE__)));
+    define('PATH', $_SERVER['DOCUMENT_ROOT']);
 
 	include(PATH.'/core/cms.php');
     

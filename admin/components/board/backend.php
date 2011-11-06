@@ -144,9 +144,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			$city      = $inCore->request('city', 'str');
 			$obtype    = $inCore->request('obtype', 'str');
 
+			$title     = str_ireplace($obtype, '', $title);
+
 			$pubdays   = $inCore->request('pubdays', 'int');	
-			
-			$title     = $obtype .' '. $title;
 
 			$pubdate   = $inCore->request('pubdate', 'str');
 			$pubdate   = explode('.', $pubdate);
@@ -202,7 +202,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 			$pubdays   = $inCore->request('pubdays', 'int');
 			
-			$title = $obtype .' '. $title;	
+			$title     = str_ireplace($obtype, '', $title);
 			
 			$pubdate = $inCore->request('pubdate', 'str');
 			if(!strstr($pubdate, '-')){
@@ -646,17 +646,19 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$fields[1]['title'] = 'Дата';		$fields[1]['field'] = 'pubdate';		$fields[1]['width'] = '80';		$fields[1]['filter'] = 15;
 		$fields[1]['fdate'] = '%d/%m/%Y';
 
-		$fields[2]['title'] = 'Заголовок';	$fields[2]['field'] = 'title';		$fields[2]['width'] = '';
-		$fields[2]['filter'] = 15;
-		$fields[2]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
+		$fields[2]['title'] = 'Тип';		$fields[2]['field'] = 'obtype';		$fields[2]['width'] = '80';		$fields[2]['filter'] = 15;
 
-		$fields[3]['title'] = 'Показ';		$fields[3]['field'] = 'published';	$fields[3]['width'] = '100';
-		$fields[3]['do'] = 'opt'; $fields[3]['do_suffix'] = '_item';
+		$fields[3]['title'] = 'Заголовок';	$fields[3]['field'] = 'title';		$fields[3]['width'] = '';
+		$fields[3]['filter'] = 15;
+		$fields[3]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
 
-		$fields[4]['title'] = 'Просмотров';	$fields[4]['field'] = 'hits';		$fields[4]['width'] = '90';
+		$fields[4]['title'] = 'Показ';		$fields[4]['field'] = 'published';	$fields[4]['width'] = '100';
+		$fields[4]['do'] = 'opt'; $fields[4]['do_suffix'] = '_item';
+
+		$fields[5]['title'] = 'Просмотров';	$fields[5]['field'] = 'hits';		$fields[5]['width'] = '90';
 		
-		$fields[5]['title'] = 'Рубрика';		$fields[5]['field'] = 'category_id';	$fields[5]['width'] = '250';
-		$fields[5]['prc'] = 'cpBoardCatById';  $fields[5]['filter'] = 1;  $fields[5]['filterlist'] = cpGetList('cms_board_cats');
+		$fields[6]['title'] = 'Рубрика';		$fields[6]['field'] = 'category_id';	$fields[6]['width'] = '250';
+		$fields[6]['prc'] = 'cpBoardCatById';  $fields[6]['filter'] = 1;  $fields[6]['filterlist'] = cpGetList('cms_board_cats');
 	
 		//ACTIONS
 		$actions = array();
