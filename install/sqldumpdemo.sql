@@ -62,7 +62,7 @@ INSERT INTO `#__actions_log` (`id`, `action_id`, `pubdate`, `user_id`, `object`,
 (2, 11, '2011-10-13 23:09:34', 2, '', '', 0, '', '', 0, 'I love InstantCMS', 0, 0),
 (3, 2, '2011-10-13 23:11:00', 2, 'комментарий', '/stati/marketing/yelastichnost-sprosa.html#c13', 13, 'Эластичность спроса', '/stati/marketing/yelastichnost-sprosa.html', 0, 'Спасибо автору за такую отличную статью!', 0, 0),
 (4, 27, '2011-10-13 23:13:37', 1, '2', '', 0, 'Мои картинки', '/users/admin/photos/private5.html', 5, ' <a href="/users/1/photo6.html" class="act_photo">\r\n											<img border="0" src="/images/users/photos/small/b22c5c0f95c1fb9398578fd5e396c7dd.jpg" />\r\n									</a>  <a href="/users/1/photo7.html" class="act_photo">\r\n											<img border="0" src="/images/users/photos/small/efe8d13779cd84cfeb319d9f0875a511.jpg" />\r\n									</a> ', 0, 0),
-(5, 20, '2011-10-13 23:18:39', 3, 'Администратор', 'http://icms/users/admin', 11, '', '', 0, '', 0, 0),
+(5, 20, '2011-10-13 23:18:39', 3, 'Администратор', '/users/admin', 11, '', '', 0, '', 0, 0),
 (6, 2, '2011-10-13 23:19:19', 3, 'комментарий', '/stati/marketing/yelastichnost-sprosa.html#c14', 14, 'Эластичность спроса', '/stati/marketing/yelastichnost-sprosa.html', 0, 'Полностью согласен с Вами, коллега.', 0, 0),
 (7, 15, '2011-10-13 23:21:43', 3, 'Клуб любителей InstantCMS', '/clubs/14', 14, '', '', 0, '', 0, 0);
 
