@@ -784,7 +784,7 @@ function applet_modules(){
                             }
                         }
 
-                        $menu_sql = "SELECT * FROM cms_menu";
+                        $menu_sql = "SELECT * FROM cms_menu ORDER BY NSLeft";
                         $menu_res = dbQuery($menu_sql) ;
 
                         $menu_items = array();
@@ -821,7 +821,7 @@ function applet_modules(){
                                 <td width="20" height="25">
                                     <input type="checkbox" name="showin[]" id="mid<?php echo $i['id']; ?>" value="<?php echo $i['id']; ?>" <?php if ($i['selected']){ ?>checked="checked"<?php } ?> onclick="$('#p<?php echo $i['id']; ?>').toggle()"/>
                                 </td>
-                                <td><label for="mid<?php echo $i['id']; ?>"><?php echo $i['title']; ?></label></td>
+                                <td style="padding-left:<?php echo ($i['NSLevel'])*6-6; ?>px"><label for="mid<?php echo $i['id']; ?>"><?php echo $i['title']; ?></label></td>
                                 <td align="center">
                                     <select id="p<?php echo $i['id']; ?>" name="showpos[<?php echo $i['id']; ?>]" style="<?php if (!$i['selected']) { ?>display:none<?php } ?>">
                                         <?php foreach($pos as $position){ ?>

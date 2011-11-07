@@ -34,9 +34,10 @@ function wallPage(page){
     var usertype    = $('div.wall_body input[name=usertype]').val();
 
     $('.wall_loading').show();
-
+	$('div.wall_body').css({opacity:0.5, filter:'alpha(opacity=50)'});
     $.post('/components/users/ajax/wall.php', {'user_id': user_id, 'usertype': usertype, 'page':page}, function(data){
 		$('div.wall_body').html(data);
+		$('div.wall_body').css({opacity:1.0, filter:'alpha(opacity=100)'});
 	});
 
 }

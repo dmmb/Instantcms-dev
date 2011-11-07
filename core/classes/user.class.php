@@ -634,7 +634,8 @@ class cmsUser {
         $inDB       = cmsDatabase::getInstance();
         $inCore     = cmsCore::getInstance();
         $inUser     = self::getInstance();
-        
+		$inCore->loadLanguage('components/users');
+        global $_LANG;
         $myprofile  = false;
 
         $perpage    = 10;
