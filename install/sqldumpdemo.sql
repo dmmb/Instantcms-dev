@@ -1463,8 +1463,14 @@ CREATE TABLE `#__users` (
   `status_date` datetime NOT NULL,
   `invited_by` int(11) DEFAULT NULL,
   `invdate` datetime DEFAULT NULL,
+  `openid` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `login` (`login`)
+  KEY `login` (`login`),
+  KEY `email` (`email`),
+  KEY `birthdate` (`birthdate`),
+  KEY `group_id` (`group_id`),
+  KEY `invited_by` (`invited_by`),
+  KEY `openid` (`openid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 ROW_FORMAT=DYNAMIC;
 
 INSERT INTO `#__users` (`id`, `group_id`, `login`, `nickname`, `password`, `email`, `icq`, `regdate`, `logdate`, `birthdate`, `is_locked`, `is_deleted`, `is_logged_once`, `rating`, `points`, `last_ip`, `status`, `status_date`, `invited_by`, `invdate`) VALUES
@@ -1556,7 +1562,8 @@ CREATE TABLE `#__user_files` (
   `allow_who` varchar(50) NOT NULL,
   `filesize` int(11) NOT NULL,
   `hits` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `#__user_friends`;

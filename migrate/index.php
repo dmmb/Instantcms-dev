@@ -87,6 +87,14 @@
 	}
 // ========================================================================== //
 // ========================================================================== //	
+	if (!$inDB->isFieldExists('cms_users', 'openid')){
+
+		$inDB->query("ALTER TABLE `cms_users` ADD `openid` VARCHAR( 250 ) NULL, ADD INDEX ( `openid` )");
+        echo '<p>Поле <strong>openid</strong> добавлено в таблицу <strong>cms_users</strong></p>';
+		$is_was_migrate = true;
+	}
+// ========================================================================== //
+// ========================================================================== //	
 	$inDB->query("DROP TABLE IF EXISTS `cms_search`");
 
 	$sql = "CREATE TABLE `cms_search` (
