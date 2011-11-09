@@ -46,11 +46,6 @@
                             1       => 'category_id'
                          );
 
-        $routes[] = array(
-                            '_uri'      => '/^faq\/(.*)$/i',
-                            1           => 'is_404'
-                         );
-
         return $routes;
 
     }

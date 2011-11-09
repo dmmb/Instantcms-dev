@@ -152,11 +152,6 @@
                             'do'    => 'finish'
                          );
 
-        $routes[] = array(
-                            '_uri'      => '/^catalog\/(.*)$/i',
-                            1           => 'is_404'
-                         );
-
         return $routes;
 
     }

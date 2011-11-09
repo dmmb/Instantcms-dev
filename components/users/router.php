@@ -504,11 +504,6 @@
                             1       => 'login'
                          );
 
-        $routes[] = array(
-                            '_uri'      => '/^users\/(.*)$/i',
-                            1           => 'is_404'
-                         );
-
         return $routes;
 
     }

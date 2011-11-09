@@ -132,7 +132,7 @@ function search(){
 		$smarty->display('com_search_tag.tpl');
 
 	}
-	
+	$inCore->executePluginRoute($mode);
 	return true;
 }
 ?>

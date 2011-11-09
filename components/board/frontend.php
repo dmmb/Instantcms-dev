@@ -121,9 +121,6 @@ function board(){
 	$userid     = $inCore->request('userid', 'int');
 	$do         = $inCore->request('do', 'str', 'view');
 
-	$is_404 = $inCore->request('is_404', 'str', '');
-	if ($is_404) { cmsCore::error404(); }
-
 /////////////////////////////// SET CITY ///////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='city'){ 
 	$city = urldecode($inCore->request('city', 'str')); 
@@ -642,5 +639,6 @@ if ($do == 'delete'){
 
 }
 /////////////////////////////// /////////////////////////////// /////////////////////////////// /////////////////////////////// //////
+$inCore->executePluginRoute($do);
 } //function
 ?>

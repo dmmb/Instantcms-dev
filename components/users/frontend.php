@@ -101,14 +101,12 @@ function users(){
     if (!isset($cfg['sw_search'])) { $cfg['sw_search'] = 1;  }
     if (!isset($cfg['sw_guest']))  { $cfg['sw_guest'] = 1; }
 
-	$is_404 = $inCore->request('is_404', 'str', '');
-	if ($is_404) { cmsCore::error404(); }
-
     //Определяем адрес для редиректа назад
     $back   = $inCore->getBackURL();
 	
 	$id     =   $inCore->request('id', 'int', 0);
 	$do     =   $inCore->request('do', 'str', 'view');
+	$do     = preg_replace ('/[^a-z_]/i', '', $do);
 
     $inPage->setTitle($_LANG['USERS']);
 	
@@ -2327,12 +2325,12 @@ if ($do=='download'){
 
 	$allowsql = $inUser->id ? '' : "AND allow_who='all'";
 
-	$sql = "SELECT user_id, filename, allow_who FROM cms_user_files WHERE id = $file_id $allowsql LIMIT 1";
+	$sql = "SELECT user_id, filename, allow_who FROM cms_user_files WHERE id = '$file_id' $allowsql LIMIT 1";
 	$result = $inDB->query($sql);
 
 	if ($inDB->num_rows($result)){
 		$file       = $inDB->fetch_assoc($result);
-		$name       = $file['filename'];
+		$name       = preg_replace('/\.+\//', '', $file['filename']);
 		$uid        = $file['user_id'];
 		$fileurl    = '/upload/userfiles/'.$uid.'/'.$name;
 		if ($uid != $inUser->id && $file['allow_who'] != 'all') { $inCore->halt($_LANG['FILE_HIDEN']); }
@@ -2376,87 +2374,84 @@ if ($do=='addfile'){
 
 			$error = $data_array['error'];
 
-			if ($error == UPLOAD_ERR_OK) {
+			if ($error != UPLOAD_ERR_OK) { continue; }
 
-				$upload_dir = PATH.'/upload/userfiles/'.$id;
-				@mkdir($upload_dir);
-				file_put_contents($upload_dir.'/index.html', '');
+			$upload_dir = PATH.'/upload/userfiles/'.$id;
+			@mkdir($upload_dir);
 
-				$tmp_name   = $data_array["tmp_name"];
-				$name       = $data_array["name"];
-				$size       = $inCore->strClear($data_array["size"]);
-				$size_mb    += round(($size/1024)/1024, 2);
+			$tmp_name   = $data_array["tmp_name"];
+			$name       = $data_array["name"];
+			$size       = $inCore->strClear($data_array["size"]);
+			$size_mb    += round(($size/1024)/1024, 2);
 
-				// проверяем тип файла
-				$types 		= $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar';
-				$types 		= str_replace('php', '', $types);
-				$types 		= str_replace('htm', '', $types);
-				$maytypes 	= explode(',', str_replace(' ', '', $types));  
-				$path_parts = pathinfo($name);
-				// расширение файла
-				$ext        = strtolower($path_parts['extension']);
-				// флаг существования расширения в разрешенных
-				$may        = in_array($ext, $maytypes);
-				if(!$may) { cmsCore::addSessionMessage($_LANG['ERROR_TYPE_FILE'].': '.$types, 'error'); $inCore->redirectBack(); }
-				
-				// Переводим имя файла в транслит
-				// отделяем имя файла от расширения
-				$name  = substr($name, 0, strrpos($name, '.'));
-				// транслитируем
-				$name  = cmsCore::strToURL($name);
-				// присоединяем расширения файла
-				$name .= '.'.$ext;
-				// Обрабатываем получившееся имя файла для записи в БД
-				$name  = $inCore->strClear($name);
+			// проверяем тип файла
+			$types 		= $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar';
+			$types 		= str_replace('php', '', $types);
+			$types 		= str_replace('htm', '', $types);
+			$types 		= str_replace('htaccess', '', $types);
+			$maytypes 	= explode(',', str_replace(' ', '', $types));  
+			$path_parts = pathinfo($name);
+			// расширение файла
+			$ext        = strtolower($path_parts['extension']);
+			// флаг существования расширения в разрешенных
+			$may        = in_array($ext, $maytypes);
+			if(!$may) { cmsCore::addSessionMessage($_LANG['ERROR_TYPE_FILE'].': '.$types, 'error'); $inCore->redirectBack(); }
+			
+			// Переводим имя файла в транслит
+			// отделяем имя файла от расширения
+			$name  = substr($name, 0, strrpos($name, '.'));
+			// транслитируем
+			$name  = cmsCore::strToURL($name);
+			// присоединяем расширения файла
+			$name .= '.'.$ext;
+			// Обрабатываем получившееся имя файла для записи в БД
+			$name  = $inCore->strClear($name);
 
-				// Проверяем свободное место
-				if ($size_mb > $free_mb && $cfg['filessize']){ cmsCore::addSessionMessage($_LANG['YOUR_FILE_LIMIT'].' ('.$max_mb.' '.$_LANG['MBITE'].') '.$_LANG['IS_OVER_LIMIT'].'<br>'.$_LANG['FOR_NEW_FILE_DEL_OLD'], 'error'); $inCore->redirectBack(); }
+			// Проверяем свободное место
+			if ($size_mb > $free_mb && $cfg['filessize']){ cmsCore::addSessionMessage($_LANG['YOUR_FILE_LIMIT'].' ('.$max_mb.' '.$_LANG['MBITE'].') '.$_LANG['IS_OVER_LIMIT'].'<br>'.$_LANG['FOR_NEW_FILE_DEL_OLD'], 'error'); $inCore->redirectBack(); }
 
-				// Загружаем файл	
-				if ($inCore->moveUploadedFile($tmp_name, PATH."/upload/userfiles/$id/$name", $error)) {
-						
-									$loaded_files[] = $name;
+			// Загружаем файл	
+			if ($inCore->moveUploadedFile($tmp_name, PATH."/upload/userfiles/$id/$name", $error)) {
+					
+				$loaded_files[] = $name;
 
-									$sql = "INSERT INTO cms_user_files(user_id, filename, pubdate, allow_who, filesize, hits)
-											VALUES ($id, '$name', NOW(), 'all', '$size', 0)";
-									$inDB->query($sql);
-									$file_id = $inDB->get_last_id('cms_user_files');
-									cmsActions::log('add_file', array(
-										  'object' => $name,
-										  'object_url' => '/users/files/download'.$file_id.'.html',
-										  'object_id' => $file_id,
-										  'target' => '',
-										  'target_url' => '',
-										  'description' => ''
-									));
-				
-				}						
+				$sql = "INSERT INTO cms_user_files(user_id, filename, pubdate, allow_who, filesize, hits)
+						VALUES ($id, '$name', NOW(), 'all', '$size', 0)";
+				$inDB->query($sql);
+				$file_id = $inDB->get_last_id('cms_user_files');
+				cmsActions::log('add_file', array(
+					  'object' => $name,
+					  'object_url' => '/users/files/download'.$file_id.'.html',
+					  'object_id' => $file_id,
+					  'target' => '',
+					  'target_url' => '',
+					  'description' => ''
+				));
+			
+			}						
 
-				}
-				}
+		}
 										
-				if (sizeof($loaded_files)){
+		if (sizeof($loaded_files)){
 			
 			$ok_message  = '<div><strong>'.$_LANG['UPLOADED_FILES'].':</strong></div>';
 			$ok_message .= '<ul>';
 
-						foreach($loaded_files as $k=>$val){
+			foreach($loaded_files as $k=>$val){
 				$ok_message .= '<li>'.$val.'</li>';						
-						}
+			}
 
 			$ok_message .= '</ul>';
 
-					if ($cfg['filessize']){
+			if ($cfg['filessize']){
 				$ok_message .= '<div style="margin-top:10px"><strong>'.$_LANG['FREE_SPACE_LEFT'].':</strong> '.round($free_mb-$size_mb, 2).' '.$_LANG['MBITE'].'</div>';
-					}
+			}
 
 			cmsCore::addSessionMessage($ok_message, 'info');
 
-				} else {
-			
+		} else {
 			cmsCore::addSessionMessage($_LANG['ERR_BIG_FILE'].' '.$_LANG['ERR_FILE_NAME'], 'error');
-
-				}
+		}
 				
 		$inCore->redirect('/users/'.$id.'/files.html');
 							
@@ -2496,46 +2491,51 @@ if ($do=='addfile'){
 if ($do=='delfile'){
 
 	if (!$cfg['sw_files']) { cmsCore::error404(); }
-	
-	$fileid = $inCore->request('fileid', 'int', 0);	
-	
-	if (usrCheckAuth() && ($inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
-		if (!isset($_POST['godelete'])){
-			$usr = $model->getUserShort($id);
-			if (!$usr) { cmsCore::error404(); }
 
-				$inPage->backButton(false);
-				$sql = "SELECT filename FROM cms_user_files WHERE id = $fileid AND user_id = $id";
-				$result = $inDB->query($sql);
-				if ($inDB->num_rows($result)){
-					$file = $inDB->fetch_assoc($result);				
-					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
-					$inPage->addPathway($_LANG['DELETE_FILE'], $_SERVER['REQUEST_URI']);
-					
-					$confirm['title']                   = $_LANG['DELETING_FILE'];
-					$confirm['text']                    = $_LANG['YOU_REALLY_DEL_FILE'].' "'.$file['filename'].'"?';
-					$confirm['action']                  = $_SERVER['REQUEST_URI'];
-					$confirm['yes_button']              = array();
-					$confirm['yes_button']['type']      = 'submit';
-					$confirm['yes_button']['name']  	= 'godelete';
-					$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
-					$smarty->assign('confirm', $confirm);
-					$smarty->display('action_confirm.tpl');
-				} else { echo usrAccessDenied(); }
+	if (!$inUser->id) { cmsUser::goToLogin(); }
 
-		} else {
-			$sql = "SELECT filename FROM cms_user_files WHERE id = $fileid AND user_id = $id";
-			$result = $inDB->query($sql) ;
-			if ($inDB->num_rows($result)){
-				$file = $inDB->fetch_assoc($result);
-				@unlink(PATH.'/upload/userfiles/'.$id.'/'.$file['filename']);
-				$inDB->query("DELETE FROM cms_user_files WHERE id = $fileid");
-				cmsActions::removeObjectLog('add_file', $fileid);
-			}			
-			header('location:/users/'.$id.'/files.html');
-		}
-	} else { echo usrAccessDenied(); }
+	if (($inUser->id != $id) && !$inUser->is_admin){ cmsCore::error404(); }
+
+	$fileid = $inCore->request('fileid', 'int', 0);
+	
+	if (!isset($_POST['godelete'])){
+		$usr = $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
+
+		$inPage->backButton(false);
+		$sql = "SELECT filename FROM cms_user_files WHERE id = '$fileid' AND user_id = '$id' LIMIT 1";
+		$result = $inDB->query($sql);
+		if (!$inDB->num_rows($result)){ cmsCore::error404(); }
+
+		$file = $inDB->fetch_assoc($result);				
+		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+		$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
+		$inPage->addPathway($_LANG['DELETE_FILE']);
+		
+		$confirm['title']                   = $_LANG['DELETING_FILE'];
+		$confirm['text']                    = $_LANG['YOU_REALLY_DEL_FILE'].' "'.$file['filename'].'"?';
+		$confirm['action']                  = $_SERVER['REQUEST_URI'];
+		$confirm['yes_button']              = array();
+		$confirm['yes_button']['type']      = 'submit';
+		$confirm['yes_button']['name']  	= 'godelete';
+		$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
+		$smarty->assign('confirm', $confirm);
+		$smarty->display('action_confirm.tpl');
+
+	} else {
+		$sql = "SELECT filename FROM cms_user_files WHERE id = '$fileid' AND user_id = '$id'";
+		$result = $inDB->query($sql) ;
+		if (!$inDB->num_rows($result)){ cmsCore::error404(); }
+
+		$file = $inDB->fetch_assoc($result);
+		$file['filename'] = preg_replace('/\.+\//', '', $file['filename']); 
+		@unlink(PATH.'/upload/userfiles/'.$id.'/'.$file['filename']);
+		$inDB->query("DELETE FROM cms_user_files WHERE id = $fileid");
+		cmsActions::removeObjectLog('add_file', $fileid);
+
+		$inCore->redirect('/users/'.$id.'/files.html');
+	}
+
 }
 
 /////////////////////////////// MULTIPLE FILES DELETE /////////////////////////////////////////////////////////////////////////////////////////
@@ -2543,72 +2543,76 @@ if ($do=='delfilelist'){
 
 	if (!$cfg['sw_files']) { cmsCore::error404(); }
 	
-	if (sizeof($_POST['files'])) { $files = $_POST['files']; }
-	else { die($_LANG['NOT_SELECTED_FILES']); }
-	
-	if (usrCheckAuth() && ($inUser->id==$id || $inCore->userIsAdmin($inUser->id))){
-		if (!isset($_POST['godelete'])){
-			$usr = $model->getUserShort($id);
-			if (!$usr) { cmsCore::error404(); }
+	$files = $inCore->request('files', 'array_int');
+	if (!$files) { cmsCore::error404(); }
 
-				$inPage->backButton(false);
-				
-				//build file list sql
-				$t = 0;
-				foreach($files as $key=>$value){
-					$findsql .= "id = ".intval($value); 
-					if ($t<sizeof($files)-1) { $findsql .= " OR "; }
-					$t++;
-				}				
-				
-				$sql = "SELECT id, filename FROM cms_user_files WHERE user_id = $id AND ($findsql)";							
-				$result = $inDB->query($sql);
-				if ($inDB->num_rows($result)){
-					$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-					$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
-					$inPage->addPathway($_LANG['DELETE_FILES'], $_SERVER['REQUEST_URI']);
-					$html = '<ul>';
-						while ($file = $inDB->fetch_assoc($result)){ 
-							$html .= '<li>';
-								$html .=  $file['filename'] . '<input type="hidden" name="files[]" value="'.$file['id'].'"/>';	
-							$html .= '</li>';
-						}
-					$html .= '</ul>';
-					
-					$confirm['title']                   = $_LANG['DELETING_FILES'];
-					$confirm['text']                    = $_LANG['YOU_REALLY_DEL_FILES'].'?';
-					$confirm['action']                  = $_SERVER['REQUEST_URI'];
-					$confirm['yes_button']              = array();
-					$confirm['yes_button']['type']      = 'submit';
-					$confirm['yes_button']['name']  	= 'godelete';
-					$confirm['other']  					= $html;
-					$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
-					$smarty->assign('confirm', $confirm);
-					$smarty->display('action_confirm.tpl');
+	if (!$inUser->id) { cmsUser::goToLogin(); }
 
-				} else { echo usrAccessDenied(); }
+	if (($inUser->id != $id) && !$inUser->is_admin){ cmsCore::error404(); }
 
-		} else {
-				//build file list sql
-				$t = 0;
-				foreach($files as $key=>$value){
-					$findsql .= "id = ".intval($value); 
-					if ($t<sizeof($files)-1) { $findsql .= " OR "; }
-					$t++;
-				}				
-				
-				$sql = "SELECT id, filename FROM cms_user_files WHERE user_id = $id AND ($findsql)";							
-				$result = $inDB->query($sql);
-				if ($inDB->num_rows($result)){
-					while ($file = $inDB->fetch_assoc($result)){
-						@unlink(PATH.'/upload/userfiles/'.$id.'/'.$file['filename']);
-					cmsActions::removeObjectLog('add_file', $file['id']);
-					}
-					$inDB->query("DELETE FROM cms_user_files WHERE $findsql");
-				}			
-				header('location:/users/'.$id.'/files.html');
+	if (!isset($_POST['godelete'])){
+
+		$usr = $model->getUserShort($id);
+		if (!$usr) { cmsCore::error404(); }
+		$inPage->backButton(false);
+			
+		//build file list sql
+		$t = 0;
+		foreach($files as $key=>$value){
+			$findsql .= "id = '$value'";
+			if ($t<sizeof($files)-1) { $findsql .= " OR "; }
+			$t++;
+		}				
+		
+		$sql = "SELECT id, filename FROM cms_user_files WHERE user_id = '$id' AND ($findsql)";							
+		$result = $inDB->query($sql);
+		if (!$inDB->num_rows($result)){ cmsCore::error404(); }
+
+		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+		$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
+		$inPage->addPathway($_LANG['DELETE_FILES']);
+
+		$html = '<ul>';
+			while ($file = $inDB->fetch_assoc($result)){ 
+				$html .= '<li>';
+					$html .=  $file['filename'] . '<input type="hidden" name="files[]" value="'.$file['id'].'"/>';	
+				$html .= '</li>';
+			}
+		$html .= '</ul>';
+		
+		$confirm['title']                   = $_LANG['DELETING_FILES'];
+		$confirm['text']                    = $_LANG['YOU_REALLY_DEL_FILES'].'?';
+		$confirm['action']                  = $_SERVER['REQUEST_URI'];
+		$confirm['yes_button']              = array();
+		$confirm['yes_button']['type']      = 'submit';
+		$confirm['yes_button']['name']  	= 'godelete';
+		$confirm['other']  					= $html;
+		$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
+		$smarty->assign('confirm', $confirm);
+		$smarty->display('action_confirm.tpl');
+
+	} else {
+
+		$t = 0;
+		foreach($files as $key=>$value){
+			$findsql .= "id = '$value'";
+			if ($t<sizeof($files)-1) { $findsql .= " OR "; }
+			$t++;
+		}				
+		
+		$sql = "SELECT id, filename FROM cms_user_files WHERE user_id = '$id' AND ($findsql)";							
+		$result = $inDB->query($sql);
+		if ($inDB->num_rows($result)){
+			while ($file = $inDB->fetch_assoc($result)){
+				$file['filename'] = preg_replace('/\.+\//', '', $file['filename']); 
+				@unlink(PATH.'/upload/userfiles/'.$id.'/'.$file['filename']);
+				cmsActions::removeObjectLog('add_file', $file['id']);
+			}
+			$inDB->query("DELETE FROM cms_user_files WHERE $findsql");
 		}
-	} else { echo usrAccessDenied(); }
+		$inCore->redirect('/users/'.$id.'/files.html');
+	}
+
 }
 
 /////////////////////////////// MULTIPLE FILES PUBLISHING /////////////////////////////////////////////////////////////////////////////////////////
@@ -2885,6 +2889,12 @@ if ($do=='invites'){
     }
 
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * для плагинов роутера
+     */
+	$inCore->executePluginRoute($do);
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 } 
 ?>

@@ -71,11 +71,6 @@
                             1       => 'city'
                          );
 
-        $routes[] = array(
-                            '_uri'      => '/^board\/(.*)$/i',
-                            1           => 'is_404'
-                         );
-
         return $routes;
 
     }

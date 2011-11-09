@@ -490,6 +490,6 @@ function price(){
 						echo '<p style="clear:both"><b>'.$_LANG['ON_REQUEST'].'</b> "'.$query.'" <b>'.$_LANG['NOT_SEARCHED_ITEMS'].'.</b></p>';
 					}	
 	}
-
+$inCore->executePluginRoute($do);
 } //function
 ?>

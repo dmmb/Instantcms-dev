@@ -172,5 +172,6 @@ function arhive(){
     $smarty->display('com_arhive_list.tpl');
 
 //======================================================================================================//
+$inCore->executePluginRoute($do);
 } //function
 ?>

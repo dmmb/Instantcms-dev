@@ -35,6 +35,7 @@ class cmsCore {
     private         $uri;
     public          $component;
 	public          $components = array();
+	public          $plugins = array();
     private         $is_content = false;
 
     private         $module_configs = array();
@@ -71,6 +72,9 @@ class cmsCore {
 
         //загрузим все компоненты в память
         $this->components = $this->getAllComponents();
+
+        //загрузим все события плагинов в память
+        $this->plugins = $this->getAllPlugins();
 
     }
 
@@ -192,7 +196,27 @@ class cmsCore {
         return $array;
 
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Задает полный список зарегистрированных
+	 * событий в соответствии с включенными плагинами
+     * @return array
+     */
+    public function getAllPlugins() {
 
+        $inDB = cmsDatabase::getInstance();
+
+		// если уже получали, возвращаемся
+		if($this->plugins && is_array($this->plugins)) { return $this->plugins; }
+
+		// Получаем список компонентов
+		$this->plugins = $inDB->get_table('cms_plugins p, cms_event_hooks e', 'p.published = 1 AND e.plugin_id = p.id', 'p.id, p.plugin, p.config, e.event');
+		if (!$this->plugins){ $this->plugins = array(); }
+
+        return $this->plugins;
+
+    }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
@@ -229,7 +253,23 @@ class cmsCore {
         return $item;
 
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Инклюдит файл плагина из папки /plugins компонента, содержимое файла выполняется
+     */
+    public function executePluginRoute($do){
 
+		$do = preg_replace ('/[^a-z_]/i', '', $do);
+		if(!$do) { return false; }
+
+		if (file_exists(PATH.'/components/'.$this->component.'/plugins/'.$do.'.php')){
+			include 'components/'.$this->component.'/plugins/'.$do.'.php';
+		}
+
+        return true;
+
+    }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
@@ -238,24 +278,17 @@ class cmsCore {
      * @return array
      */
     public function getEventPlugins($event) {
-        $inDB = cmsDatabase::getInstance();
-
-        $plugins_sql = "SELECT p.plugin as plugin
-                        FROM cms_plugins p, cms_event_hooks e
-                        WHERE p.published = 1 AND e.plugin_id = p.id AND e.event = '{$event}'
-                        LIMIT 10";
-
-        $result = $inDB->query($plugins_sql);
-
-        if ( !$inDB->num_rows($result) ) { return false; }
 
         $plugins_list = array();
 
-        while($plugin = $inDB->fetch_assoc($result)){
-            $plugins_list[] = $plugin['plugin'];
-        }
+		foreach ($this->plugins as $plugin){
+		   if($plugin['event'] == $event){
+			  $plugins_list[] = $plugin['plugin'];
+		   }
+		}
 
         return $plugins_list;
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -519,7 +552,7 @@ class cmsCore {
     }
 
     /**
-     * Задает полный список включенных компонентов
+     * Задает полный список компонентов
      * @return array
      */
     public function getAllComponents() {
@@ -1139,13 +1172,18 @@ class cmsCore {
      * @param string $plugin
      * @return float
      */
-    public function loadPluginConfig($plugin){
+    public function loadPluginConfig($plugin_name){
 
-        $inDB = cmsDatabase::getInstance();
+		$config = array();
 
-        $config_yaml = $inDB->get_field('cms_plugins', "plugin='{$plugin}'", 'config');
+		foreach ($this->plugins as $plugin){
+		   if($plugin['plugin'] == $plugin_name){
+			  $config = $this->yamlToArray($plugin['config']);
+			  break;
+		   }
+		}
 
-        return $this->yamlToArray($config_yaml);
+        return $config;
 
     }
 
@@ -1637,6 +1675,8 @@ class cmsCore {
 
         $routes = call_user_func('routes_'.$component);
 		$routes = self::callEvent('GET_ROUTE_'.mb_strtoupper($component), $routes);
+		// Флаг удачного перебора
+		$is_found = false;
         //перебираем все маршруты
         foreach($routes as $route_id=>$route){
 
@@ -1659,13 +1699,20 @@ class cmsCore {
                         $_REQUEST[$key]   = $value;
                     }
                 }
-
+				// совпадение есть
+				$is_found = true;
                 //раз найдено совпадение, прерываем цикл
                 break;
 
             }
 
         }
+
+		// если uri совпадает с названием компонента, флаг удачного перебора истина
+		if($this->uri == $component) { $is_found = true; }
+
+		// Если в маршруте нет совпадений
+		if(!$is_found) { return false; }
 
         return true;
 
@@ -1701,7 +1748,7 @@ class cmsCore {
         }
 
         //парсим адрес и заполняем массив $_REQUEST (временное решение)
-        $this->parseComponentRoute();
+        if(!$this->parseComponentRoute()) { self::error404(); }
 
         ob_start();
 

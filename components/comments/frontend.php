@@ -481,5 +481,6 @@ function comments($target='', $target_id=0, $labels=array()){
 	}
 
 //========================================================================================================================//
+$inCore->executePluginRoute($do);
 } //function
 ?>

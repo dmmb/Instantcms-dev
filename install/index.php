@@ -16,7 +16,7 @@
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
     define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
 
-    include(PATH.'/core/cms.php');
+    include('../core/cms.php');
 
     $inCore     = cmsCore::getInstance(true);
     
@@ -66,10 +66,10 @@
 			$_CFG['tooltips']   = '1';
 			$_CFG['index_pw']   = '0';
 			$_CFG['show_pw']    = '1';
-			$_CFG['short_pw']   = '1';
+			$_CFG['short_pw']   = '0';
 			$_CFG['splash']     = '0';
 			$_CFG['stats']      = '0';
-			$_CFG['slight']     = '0';
+			$_CFG['slight']     = '1';
 			$_CFG['siteoff']    = '0';
 			$_CFG['offtext']    = 'Производится обновление сайта';
 			$_CFG['keywords']   = 'InstantCMS, система управления сайтом, бесплатная CMS, движок сайта, CMS, движок социальной сети';

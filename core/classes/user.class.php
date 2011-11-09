@@ -689,7 +689,6 @@ class cmsUser {
 
         $smarty = $inCore->initSmarty('components', 'com_users_wall.tpl');
 
-        $smarty->assign('total', $total);
         $smarty->assign('records', $records);
         $smarty->assign('user_id', $inUser->id);
         $smarty->assign('wall_user_id', $user_id);

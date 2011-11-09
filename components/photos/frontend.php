@@ -49,8 +49,6 @@ function photos(){
 	$user_id = $inCore->request('userid', 'int');
 	$do      = $inCore->request('do', 'str', 'view');
 
-	$is_404 = $inCore->request('is_404', 'str', '');
-	if ($is_404) { cmsCore::error404(); }
 /////////////////////////////// Просмотр альбома ///////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){ 
 
@@ -825,5 +823,6 @@ if ($do=='best'){
 	$smarty->display('com_photos_best.tpl');
 }
 /////////////////////////////// /////////////////////////////// /////////////////////////////// /////////////////////////////// //////
+$inCore->executePluginRoute($do);
 } //function
 ?>
