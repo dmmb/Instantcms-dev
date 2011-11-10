@@ -427,84 +427,89 @@ function shopFinishOrder($cfg){
 	if (isset($inUser->id)){ $user_id = $inUser->id; } else { $user_id = 0; }	
 	$sid = session_id();
 	
-		$inPage->backButton(false);
-	 	$inPage->setTitle($_LANG['ORDER_COMPLETE']);
-		
-		if ($user_id){ $user_sql = "(c.user_id=$user_id OR session_id='$sid')"; } else { $user_sql = "(c.user_id=0 AND c.session_id='$sid')"; }
-		
-		$sql = "SELECT i.title as title, i.id as id, i.canmany as canmany, i.price as price, 
-						c.id as cid, c.itemscount as itemscount,
-						cat.id as category_id, cat.title as category
-				FROM cms_uc_items i, cms_uc_cart c, cms_uc_cats cat
-				WHERE $user_sql AND c.item_id = i.id AND i.category_id = cat.id
-				ORDER BY c.pubdate";
-		$rs = $inDB->query($sql) ;
-		
-		if ($inDB->num_rows($rs)){
-			//check user data
-			$customer = array();
-			if(!empty($_REQUEST['customer_fio'])) { $customer['fio'] = $inCore->request('customer_fio', 'str'); } else { $error .= $_LANG['EMPTY_NAME'].'<br/>'; }
-			if(!empty($_REQUEST['customer_phone'])) { $customer['phone'] = $inCore->request('customer_phone', 'str'); } else { $error .= $_LANG['EMPTY_PHONE'].'<br/>'; }
-			$customer['company'] = $inCore->request('customer_company', 'str');
-            $customer['email']   = $inCore->request('customer_email', 'str');
-			$customer['comment'] = $inCore->request('customer_comment', 'str');
-			if(!$inCore->checkCaptchaCode($_REQUEST['code'])) { $error .= $_LANG['ERR_CAPTCHA'].'<br/>'; }
+	$inPage->backButton(false);
+	$inPage->setTitle($_LANG['ORDER_COMPLETE']);
+	
+	if ($user_id){ $user_sql = "(c.user_id=$user_id OR session_id='$sid')"; } else { $user_sql = "(c.user_id=0 AND c.session_id='$sid')"; }
+	
+	$sql = "SELECT i.title as title, i.id as id, i.canmany as canmany, i.price as price, 
+					c.id as cid, c.itemscount as itemscount,
+					cat.id as category_id, cat.title as category
+			FROM cms_uc_items i, cms_uc_cart c, cms_uc_cats cat
+			WHERE $user_sql AND c.item_id = i.id AND i.category_id = cat.id
+			ORDER BY c.pubdate";
+	$rs = $inDB->query($sql) ;
+	
+	if ($inDB->num_rows($rs)){
+		//check user data
+		$customer = array();
+		if(!empty($_REQUEST['customer_fio'])) { $customer['fio'] = $inCore->request('customer_fio', 'str'); } else { $error .= $_LANG['EMPTY_NAME'].'<br/>'; }
+		if(!empty($_REQUEST['customer_phone'])) { $customer['phone'] = $inCore->request('customer_phone', 'str'); } else { $error .= $_LANG['EMPTY_PHONE'].'<br/>'; }
+		$customer['company'] = $inCore->request('customer_company', 'str');
+		$customer['email']   = $inCore->request('customer_email', 'str');
+		$customer['comment'] = $inCore->request('customer_comment', 'str');
+		if(!$inCore->checkCaptchaCode($_REQUEST['code'])) { $error .= $_LANG['ERR_CAPTCHA'].'<br/>'; }
 
-			//BUILD MESSAGE
-			if($error==''){
-				//message heading
-				$mail_message = '';				
-				$mail_message .= $_LANG['GET_ORDER_FROM_CATALOG']." \"".$inConf->sitename."\".\n\n";
-				$mail_message .= $_LANG['CUSTOMER']."\n-----------------------------\n";
-				$mail_message .= $_LANG['FIO'].": " . $customer['fio'] . "\n";
-				$mail_message .= $_LANG['COMPANY'].": " . $customer['company'] . "\n";
-				$mail_message .= $_LANG['PHONE'].": " . $customer['phone'] . "\n";
-                $mail_message .= "EMAIL: " . $customer['email'] . "\n";
-				$mail_message .= $_LANG['ORDER_COMMENT'].": " . @$customer['comment'] . "\n\n";
-				//list of items
-				$mail_message .= $_LANG['ORDER']."\n---------------------------------\n";
-				$row=0; $total = 0;
-				while($item = $inDB->fetch_assoc($rs)){
-					$row++;
-                    $item['price']          = shopDiscountPrice($item['id'], $item['category_id'], $item['price']);
-                    $item['totalprice']     = $item['price'] * $item['itemscount'];
-                    $item['price']          = number_format($item['price'], 2, '.', '');
-                    $item['totalprice']     = number_format($item['totalprice'], 2, '.', '');
-                    $total += $item['totalprice'];
-					$mail_message .= $row . '. ' . $item['title'] . ' (' . $item['itemscount'] . '  x ' . $item['price'] . ' '.$_LANG['RUB'].') = ' . $item['totalprice'] . ' '.$_LANG['RUB'] . "\n";
-				}
-
-                ob_start(); shopDiscountsInfo($total); ob_clean();
-				$total = number_format($total, 2, '.', '');
-                
-				$mail_message .= "\n" . $_LANG['TOTAL_ORDER_PRICE'].': '.$total.' '.$_LANG['RUB'] . "\n";
-				$email_subj = str_replace('{sitename}', $inConf->sitename, $_LANG['EMAIL_SUBJECT']);
-				$inCore->mailText($cfg['email'], $email_subj, $mail_message);
-
-                if ($cfg['notice'] && $customer['email']){
-                    $inCore->mailText($customer['email'], $_LANG['CUSTOMER_EMAIL_SUBJECT'], $mail_message);
-                }
-				//order completed							
-				echo '<div class="con_heading">'.$_LANG['THANK'].'!</div>';
-				echo '<p style="clear:both"><b>'.$_LANG['CUSTOMER_EMAIL_SUBJECT'].'.</b><br/>'.$_LANG['CUSTOMER_EMAIL_TEXT'].'</p>';
-				echo '<p><a href="/">'.$_LANG['CONTINUE'].'</a></p>';
-				shopClearCart();	
-			} else {			
-				//order failed
-				echo '<div class="con_heading">'.$_LANG['ERROR'].'!</div>';
-				echo '<p style="clear:both; color:red">'.$error.'</p>';		
-				echo '<p><a href="#" onClick="window.history.back()">'.$_LANG['BACK'].'</a></p>';
+		//BUILD MESSAGE
+		if($error==''){
+			// письмо администратору
+			$a_mail_message  = $_LANG['GET_ORDER_FROM_CATALOG']." \"".$inConf->sitename."\".\n\n";
+			$a_mail_message .= $_LANG['CUSTOMER']."\n-----------------------------\r\n";
+			$a_mail_message .= $_LANG['FIO'].": " . $customer['fio'] . "\n";
+			if($customer['company']){
+				$a_mail_message .= $_LANG['COMPANY'].": " . $customer['company'] . "\n";
 			}
-		} else {
-			//NO ITEMS
-			echo '<p>'.$_LANG['NOITEMS_IN_CART'].'</p>';
-			echo '<div id="cart_buttons2">';
-				echo '<a href="/catalog" title="'.$_LANG['BACK_TO_SHOP'].'">';
-					echo '<img src="/components/catalog/images/shop/cartback.jpg" border="0" alt="'.$_LANG['BACK_TO_SHOP'].'"/>';
-				echo '</a> ';
-			echo '</div>';
+			$a_mail_message .= $_LANG['PHONE'].": " . $customer['phone'] . "\n";
+			$a_mail_message .= "EMAIL: " . $customer['email'] . "\n";
+			if($customer['comment']){
+				$a_mail_message .= $_LANG['ORDER_COMMENT'].": " . @$customer['comment'] . "\n\n";
+			}
+			$a_mail_message .= $_LANG['ORDER']."\n---------------------------------\n";
+			//////////////////////////////////////////////////////////////////////////////////////
+			// список покупок
+			$row=0; $total = 0;
+			$item_mail_message = '';
+			while($item = $inDB->fetch_assoc($rs)){
+				$row++;
+				$item['price']          = shopDiscountPrice($item['id'], $item['category_id'], $item['price']);
+				$item['totalprice']     = $item['price'] * $item['itemscount'];
+				$item['price']          = number_format($item['price'], 2, '.', '');
+				$item['totalprice']     = number_format($item['totalprice'], 2, '.', '');
+				$total += $item['totalprice'];
+				$item_mail_message .= $row . '. ' . $item['title'] . ' (' . $item['itemscount'] . '  x ' . $item['price'] . ' '.$_LANG['RUB'].') = ' . $item['totalprice'] . ' '.$_LANG['RUB'] . "\n";
+			}
+			ob_start(); shopDiscountsInfo($total); ob_clean();
+			$total = number_format($total, 2, '.', '');
+			$item_mail_message .= "\n" . $_LANG['TOTAL_ORDER_PRICE'].': '.$total.' '.$_LANG['RUB'] . "\n";
+			//////////////////////////////////////////////////////////////////////////////////////
 
+			$email_subj = str_replace('{sitename}', $inConf->sitename, $_LANG['EMAIL_SUBJECT']);
+			$inCore->mailText($cfg['email'], $_LANG['ADMIN_EMAIL_SUBJECT'], $a_mail_message . $item_mail_message);
+
+			if ($cfg['notice'] && $customer['email']){
+				$inCore->mailText($customer['email'], $_LANG['CUSTOMER_EMAIL_SUBJECT'], $item_mail_message);
+			}
+			//order completed							
+			echo '<div class="con_heading">'.$_LANG['THANK'].'!</div>';
+			echo '<p style="clear:both"><b>'.$_LANG['CUSTOMER_EMAIL_SUBJECT'].'.</b><br/>'.$_LANG['CUSTOMER_EMAIL_TEXT'].'</p>';
+			echo '<p><a href="/">'.$_LANG['CONTINUE'].'</a></p>';
+			shopClearCart();	
+		} else {			
+			//order failed
+			echo '<div class="con_heading">'.$_LANG['ERROR'].'!</div>';
+			echo '<p style="clear:both; color:red">'.$error.'</p>';		
+			echo '<p><a href="#" onClick="window.history.back()">'.$_LANG['BACK'].'</a></p>';
 		}
+	} else {
+		//NO ITEMS
+		echo '<p>'.$_LANG['NOITEMS_IN_CART'].'</p>';
+		echo '<div id="cart_buttons2">';
+			echo '<a href="/catalog" title="'.$_LANG['BACK_TO_SHOP'].'">';
+				echo '<img src="/components/catalog/images/shop/cartback.jpg" border="0" alt="'.$_LANG['BACK_TO_SHOP'].'"/>';
+			echo '</a> ';
+		echo '</div>';
+
+	}
 }
 
 function shopItemsCounter($cartitem_id, $count, $canmany=1){

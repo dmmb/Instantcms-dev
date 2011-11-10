@@ -1663,8 +1663,10 @@ class cmsCore {
 
         $component = $this->component;
 
-        //проверяем что компонент и адрес указаны
-        if (!$component || !$this->uri) { return false; }
+        //проверяем что компонент указаны
+        if (!$component) { return false; }
+		//если uri нет, все равно возвращаем истину - для опции "компонент на главной"
+        if (!$this->uri) { return true; }
 
         if(!file_exists('components/'.$component.'/router.php')){ return false; }
 		/**

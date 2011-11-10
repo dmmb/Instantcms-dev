@@ -1016,6 +1016,8 @@ function catalog(){
                 $path_parts     = pathinfo($file);
                 $ext            = $path_parts['extension'];
 				if(strstr($ext, 'php')) { $inCore->halt(); }
+				if(strstr($ext, 'htm')) { $inCore->halt(); }
+				if(strstr($ext, 'htaccess')) { $inCore->halt(); }
                 $file           = md5($file.time()).'.'.$ext;
                 $item['file']   = $file;
                 //upload image and insert record in db
