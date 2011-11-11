@@ -12,7 +12,20 @@
 //                        LICENSED BY GNU/GPL v2                              //
 //                                                                            //
 /******************************************************************************/
-
+	define("VALID_CMS", 1);	
+	define('PATH', $_SERVER['DOCUMENT_ROOT']);
+	require("../core/cms.php");
+    $inCore = cmsCore::getInstance();
+    define('HOST', 'http://' . $inCore->getHost());
+	$inCore->loadClass('user');
+	$inCore->loadClass('db');
+	$inCore->loadClass('config');
+	$inConf = cmsConfig::getInstance();
+	$inUser = cmsUser::getInstance();
+	if ( !$inUser->update() ) { cmsCore::error404(); }
+	// проверяем доступ по Ip
+	if(!$inCore->checkAccessByIp($inConf->allow_ip)) { $inCore->halt('ACCESS DENIED'); }
+	date_default_timezone_set($inConf->timezone);
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>

@@ -44,6 +44,9 @@
 
     if ( !$inUser->update() ) { $inCore->redirect('/404'); }
 
+	// проверяем доступ по Ip
+	if(!$inCore->checkAccessByIp($inConf->allow_ip)) { cmsCore::error404(); }
+
     define('TEMPLATE_DIR', PATH.'/templates/'.$inConf->template.'/');
     define('DEFAULT_TEMPLATE_DIR', PATH.'/templates/_default_/');
 

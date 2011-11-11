@@ -84,6 +84,8 @@ function applet_config(){
 
         $newCFG['timezone']		= $inCore->request('timezone', 'str');
         $newCFG['timediff']		= $inCore->request('timediff', 'str');
+		
+		$newCFG['allow_ip']		= $inCore->request('allow_ip', 'str', '');
 
 		if ($inConf->saveToFile($newCFG)){
            $inCore->redirect('index.php?view=config&msg=ok');
@@ -196,6 +198,13 @@ function applet_config(){
 				<td valign="top">
 					<input name="fastcfg" type="radio" value="1" <?php if (@$_CFG['fastcfg']) { echo 'checked="checked"'; } ?>/> Вкл
 					<input name="fastcfg" type="radio" value="0" <?php if (@!$_CFG['fastcfg']) { echo 'checked="checked"'; } ?>/> Выкл				</td>
+				</tr>
+				<tr>
+					<td>
+						<strong>IP адреса, с которых разрешен доступ в админку:</strong> <br />
+						<span class="hinttext">Введите ip адреса через запятую, с которых разрешен доступ в админку. Если не заданы, доступ разрешен всем. </span>					</td>
+				<td valign="top">
+					<input name="allow_ip" type="text" id="allow_ip" value="<?php echo @$_CFG['allow_ip'];?>" style="width:358px" /></td>
 				</tr>
 			</table>
         </div>
@@ -451,10 +460,11 @@ function applet_config(){
 	</div>		
 
 	<script type="text/javascript">$('#config_tabs > ul#tabs').tabs();</script>
-	<div align="left" style="margin-top:15px">
+	<div align="left">
+    <p><strong>Внимание:</strong> после конфигурирования в целях безопасности необходимо сменить владельца файла /includes/config.inc.php и выставить права доступа на него 644.</p>
 		<input name="do" type="hidden" id="do" value="save" />
 		<input name="save" type="submit" id="save" value="Сохранить" />
-		<input name="back" type="button" id="back" value="Отмена" onclick="window.history.back();"/>
+		<input name="back" type="button" id="back" value="Отмена" onclick="window.history.back();"/> 
 	</div>
 </form>
 </div>

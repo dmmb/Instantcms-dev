@@ -81,6 +81,7 @@
             $_CFG['back_btn']   = '0';
             $_CFG['timezone']   = 'Europe/Moscow';
             $_CFG['timediff']   = '0';
+			$_CFG['allow_ip']   = '';
 
             $inConf->saveToFile($_CFG);
 			
