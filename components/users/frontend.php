@@ -441,7 +441,10 @@ if ($do=='editprofile'){
 		}
 		
 		if (!$errors){
-		   
+
+			$usr = $model->getUserShort($id);
+			if (!$usr) { cmsCore::error404(); }
+
 			$sql = "UPDATE cms_user_profiles 
 					SET city = '$city',
 						description = '$description',
@@ -465,7 +468,7 @@ if ($do=='editprofile'){
 			$inDB->query($sql) ;
 
 			cmsCore::addSessionMessage($_LANG['PROFILE_SAVED'], 'info');
-			$inCore->redirect(cmsUser::getProfileURL($inUser->login));
+			$inCore->redirect(cmsUser::getProfileURL($usr['login']));
 		}
 		
 	}				

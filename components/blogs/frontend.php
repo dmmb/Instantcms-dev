@@ -569,6 +569,10 @@ if ($do=='moderate'){
         $post['tagline']    = cmsTagLine('blogpost', $post['id']);
 		$post['fpubdate']	= $inCore->dateFormat($post['pubdate']);
         $post['url']        = $model->getPostURL(null, $post['bloglink'], $post['seolink']);
+		//Разбиваем текст поста на 2 части по тегу [cut=...] и оставляем только первую из них
+		if (strstr($post['msg'], '[cut')){
+			$post['msg'] = $model->getPostShort($post['msg'], $post['url']);                        
+		}
         $posts[]            = $post;
     }
 

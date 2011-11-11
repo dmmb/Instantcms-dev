@@ -68,7 +68,7 @@ function buildRating($rating){
     global $_LANG;
     $rating     = round($rating, 2);
     $html = '<a href="#" title="'.$_LANG['RATING'].': '.$rating.'">';
-    for($r = 1; $r < 5; $r++){
+    for($r = 0; $r < 5; $r++){
         if (round($rating) > $r){
             $html .= '<img src="/images/ratings/starfull.gif" border="0" />';
         } else {

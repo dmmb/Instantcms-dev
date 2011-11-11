@@ -118,7 +118,7 @@ function applet_main(){
 
                     $inActions = cmsActions::getInstance();
 
-                    $inActions->showTargets(false);
+                    $inActions->showTargets(true);
 
                     $actions = $inActions->getActionsLog();
 
@@ -197,6 +197,13 @@ function applet_main(){
                 <td><a href="/rss/comments/all/feed.rss" id="rss_link">Лента комментариев </a></td>
                 <td width="16"><img src="/images/markers/rssfeed.png" width="16" height="16" /></td>
                 <td><a href="/rss/blogs/all/feed.rss" id="rss_link">Лента блогов</a></td>
+              </tr>
+              <tr>
+              <tr>
+                <td width="16"><img src="/images/markers/rssfeed.png" width="16" height="16" /></td>
+                <td><a href="/rss/forum/all/feed.rss" id="rss_link">Лента форума </a></td>
+                <td width="16"><img src="/images/markers/rssfeed.png" width="16" height="16" /></td>
+                <td><a href="/rss/catalog/all/feed.rss" id="rss_link">Лента каталога</a></td>
               </tr>
               <tr>
                 <td><img src="/images/markers/rssfeed.png" width="16" height="16" /></td>

@@ -211,7 +211,7 @@ function shopCart(){
 					echo '</a> ';
 				echo '</div>';
 				echo '<div id="cart_buttons2">';
-					echo '<a href="/catalog" title="'.$_LANG['BACK_TO_SHOP'].'">';
+					echo '<a href="'.$inCore->getBackURL().'" title="'.$_LANG['BACK_TO_SHOP'].'">';
 						echo '<img src="/components/catalog/images/shop/cartback.jpg" border="0" alt="'.$_LANG['BACK_TO_SHOP'].'"/>';
 					echo '</a> ';
 					echo '<a href="/catalog/order.html" title="'.$_LANG['CART_ORDER'].'">';
