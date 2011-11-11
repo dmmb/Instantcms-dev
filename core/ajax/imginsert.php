@@ -71,7 +71,8 @@
 			$rs     = $inDB->query($sql);
 			$loaded = $inDB->num_rows($rs);
 			
-			if ($loaded < $cfg['img_max']){			
+			if ($loaded < $cfg['img_max']){
+
 				$uploaddir  = PATH.'/upload/'.$place.'/';
 				$realfile   = $_FILES['attach_img']['name'];
 			
@@ -79,37 +80,36 @@
                 $ext        = strtolower($path_parts['extension']);
 				
 				if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'bmp' || $ext == 'png'){
-		
-					$filename       = md5($realfile.time()).'.'.$ext;
+
+					// оригинальный файл
+					$filename       = md5($realfile.time()).'-orig.'.$ext;
+					$uploadfile     = $uploaddir . $filename;
+					// сконверченый файл
                     $filename_jpg   = md5($realfile.time()).'.jpg';
-					
-					$uploadfile     = $uploaddir . $realfile;
-					$uploadphoto    = $uploaddir . $filename;
-			
-					if (@move_uploaded_file($_FILES['attach_img']['tmp_name'], $uploadphoto)) {		
+					$uploadphoto    = $uploaddir . $filename_jpg;
+					// url файла
+					$fileurl = '/upload/'.$place.'/'.$filename_jpg;
+
+					if ($inCore->moveUploadedFile($_FILES['attach_img']['tmp_name'], $uploadfile, $_FILES['attach_img']['error'])) {
+
 						$inCore->includeGraphics();
 						$sql = "INSERT INTO cms_upload_images (post_id, session_id, fileurl, target)
-								VALUES ('0', '".session_id()."', '/upload/".$place."/$filename_jpg', '$place')";
+								VALUES ('0', '".session_id()."', '{$fileurl}', '$place')";
 						$inDB->query($sql);
 
-					    $filepath       = PATH."/upload/".$place."/".$filename;
-					    $filepath_jpg	= PATH."/upload/".$place."/".$filename_jpg;
-						$filedir        = PATH."/upload/".$place;
+                        @img_resize($uploadfile, $uploadphoto, $cfg['img_w'], $cfg['img_h']);
 
-                        @img_resize($filepath, $filepath_jpg, $cfg['img_w'], $cfg['img_h']);
+						if ($cfg['watermark']) { @img_add_watermark($uploadphoto); }
 
-						if ($cfg['watermark']) { @img_add_watermark($filepath_jpg); }
-	                    @chmod(dirname($filedir), 0755);
-
-                        @unlink($filepath);
+                        @unlink($uploadfile);
 
 						echo "{";
 						echo	"error: '',\n";
-						echo	"msg: '".$filename.".jpg'\n";
+						echo	"msg: '".$filename_jpg."'\n";
 						echo "}";
 					} else { 
 						echo "{";
-						echo	"error: 'Файл не загружен! Проверьте его тип и размер.',\n";
+						echo	"error: 'Файл не загружен! Проверьте его тип, размер и права на запись в папку /upload/$place.',\n";
 						echo	"msg: ''\n";
 						echo "}";
 					} 

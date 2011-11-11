@@ -143,7 +143,7 @@ class MySQLDump {
 		$structure .= 'DROP TABLE IF EXISTS `'.$table.'`;'."\n";
 		$structure .= "CREATE TABLE `".$table."` (\n";
 		$records = $inDB->query('SHOW FIELDS FROM `'.$table.'`');
-		if ( $inDB->num_rows($records) == 0 )
+		if ( @$inDB->num_rows($records) == 0 )
 			return false;
 		while ( $record = $inDB->fetch_assoc($records) ) {
 			$structure .= '`'.$record['Field'].'` '.$record['Type'];

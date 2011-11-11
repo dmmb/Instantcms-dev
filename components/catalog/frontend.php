@@ -817,7 +817,7 @@ function catalog(){
     }
     ///////////////////////// CLEAR CART /////////////////////////////////////////////////////////////////////////////
     if ($do == 'savecart'){
-        $itemcounts =  $inCore->request('kolvo', 'array');
+        $itemcounts =  $inCore->request('kolvo', 'array_int');
         if (is_array($itemcounts)){
             shopUpdateCart($itemcounts);
         }

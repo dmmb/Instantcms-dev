@@ -250,7 +250,7 @@ if ($do=='config'){
         //Если ошибки не найдены
         if(!$error_msg){
             //Получаем новый список авторов блога
-            $authors = $inCore->request('authorslist', 'array');
+            $authors = $inCore->request('authorslist', 'array_int');
             //сохраняем авторов
             $model->updateBlogAuthors($blog['id'], $authors);
             //сохраняем настройки блога
