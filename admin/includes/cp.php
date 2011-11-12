@@ -294,8 +294,6 @@ function cpMenu(){
 				<a href="index.php?view=config" class="config">Настройки</a>			
 				<ul>
 					<li><a class="config" href="index.php?view=config">Настройки сайта</a></li>
-					<li><a class="backup" href="index.php?view=backup">Резервные копии БД</a></li>
-					<!-- <li><a class="repair" href="index.php?view=repair">Проверка БД</a></li> -->
 					<li><a class="repairnested" href="index.php?view=repairnested">Проверка деревьев</a></li>
                     <li><a class="cron" href="index.php?view=cron">Задачи CRON</a></li>
                     <li><a class="phpinfo" href="index.php?view=phpinfo">Информация PHP</a></li>
