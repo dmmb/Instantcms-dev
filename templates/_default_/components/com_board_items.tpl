@@ -3,7 +3,7 @@
 {* ================================================================================ *}
 
 <div class="board_gallery">
-	{if $is_items}
+	{if $items}
 		<table width="100%" cellpadding="0" cellspacing="0" border="0">
 			{assign var="col" value="1"}	
 			{foreach key=tid item=con from=$items}									

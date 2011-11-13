@@ -13,260 +13,176 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-function obTypesLinks($cat_id, $types){
-    $inCore     = cmsCore::getInstance();
-    $inDB       = cmsDatabase::getInstance();
-    $inUser     = cmsUser::getInstance();
-	$html = '';
-	$types = explode("\n", $types);
-	$total = sizeof($types); $c = 0;
-	foreach($types as $id=>$type){
-		$c++;
-		$type = trim($type);
-		$html .= '<a href="/board/'.$cat_id.'/type/'.urlencode(ucfirst($type)).'">'.ucfirst($type).'</a>';
-		if ($c < $total){
-			$html .= ', ';
-		}
-	}			
-	return $html;
-}
-
-function obTypesOptions($types, $selected=''){
-    $inCore     = cmsCore::getInstance();
-    $inDB       = cmsDatabase::getInstance();
-    $inUser     = cmsUser::getInstance();
-	$html = '';
-	$types = explode("\n", $types);
-	$total = sizeof($types); $c = 0;
-	foreach($types as $id=>$type){
-		$c++;
-		$type = trim($type);
-        if ($selected == $type){ $sel = 'selected="selected"'; } else { $sel = ''; }
-		$html .= '<option value="'.ucfirst($type).'" '.$sel.'>'.ucfirst($type).'</option>';
-		if ($c < $total){
-			$html .= ', ';
-		}
-	}
-	return $html;
-}
-
-function orderForm($orderby, $orderto, $obtypes){
-    $inCore = cmsCore::getInstance();
-    $inDB = cmsDatabase::getInstance();
-    $inUser     = cmsUser::getInstance();
-	if (isset($_SESSION['board_type'])) { $btype = $_SESSION['board_type']; } else { $btype = ''; }
-	if (isset($_SESSION['board_city'])) { $bcity = $_SESSION['board_city']; } else { $bcity = ''; }	
-	$smarty = $inCore->initSmarty('components', 'com_board_order_form.tpl');				
-		$smarty->assign('btype', $btype);
-		$smarty->assign('btypes', $inCore->boardTypesList($btype, $obtypes));
-		$smarty->assign('bcity', $bcity);
-		$smarty->assign('bcities', $inCore->boardCities($bcity));
-		$smarty->assign('orderby', $orderby);
-		$smarty->assign('orderto', $orderto);		
-		$smarty->assign('action_url', $_SERVER['REQUEST_URI']);
-	ob_start();
-		$smarty->display('com_board_order_form.tpl');
-	return ob_get_clean();
-}
-
-function loadedByUser24h($user_id, $album_id){
-    $inCore = cmsCore::getInstance();
-    $inDB = cmsDatabase::getInstance();
-    $inUser     = cmsUser::getInstance();
-	$sql = "SELECT id FROM cms_board_items WHERE user_id = $user_id AND category_id = $album_id AND pubdate >= DATE_SUB(NOW(), INTERVAL 1 DAY)";
-	$result = $inDB->query($sql) ;
-	$loaded = $inDB->num_rows($result);	
-	return $loaded;
-}
-
 function board(){
 
-    $inCore     = cmsCore::getInstance();
-    $inPage     = cmsPage::getInstance();
-    $inDB       = cmsDatabase::getInstance();
-    $inUser     = cmsUser::getInstance();
-
-	$cfg        = $inCore->loadComponentConfig('board');
-	// Проверяем включени ли компонент
-	if(!$cfg['component_enabled']) { cmsCore::error404(); }
+    $inCore = cmsCore::getInstance();
+    $inPage = cmsPage::getInstance();
+    $inDB   = cmsDatabase::getInstance();
+    $inUser = cmsUser::getInstance();
 
     global $_LANG;
-
-    //DEFAULT VALUES
-	if (!isset($cfg['showlat'])) { $cfg['showlat'] = 1; }		
-	if (!isset($cfg['photos'])) { $cfg['photos'] = 1; }
-	if (!isset($cfg['photos'])) { $cfg['photos'] = 1; }
-	if (!isset($cfg['maxcols'])) { $cfg['maxcols'] = 1; }
-	if (!isset($cfg['public'])) { $cfg['public'] = 1; }
-	if (!isset($cfg['srok'])) { $cfg['srok'] = 1; }
-	if (!isset($cfg['pubdays'])) { $cfg['pubdays'] = 14; }
-    if(!isset($cfg['watermark'])) { $cfg['watermark'] = 0; }
-    if(!isset($cfg['comments'])) { $cfg['comments'] = 1; }
-    if (!isset($cfg['aftertime'])) { $cfg['aftertime'] = ''; }
-	if (!isset($cfg['extend'])) { $cfg['extend'] = 0; }
-    if (!isset($cfg['vip_enabled'])) { $cfg['vip_enabled'] = 0; }
-    if (!isset($cfg['vip_prolong'])) { $cfg['vip_prolong'] = 0; }
-    if (!isset($cfg['vip_max_days'])) { $cfg['vip_max_days'] = 30; }
-    if (!isset($cfg['vip_day_cost'])) { $cfg['vip_day_cost'] = 5; }
 
     define('IS_BILLING', $inCore->isComponentInstalled('billing'));
     if (IS_BILLING) { $inCore->loadClass('billing'); }
 
     $inCore->loadModel('board');
-    $model      = new cms_model_board();
+    $model = new cms_model_board();
 
-	$root       = $model->getRootCategory();
-	
-	$id         = $inCore->request('id', 'int', $root['id']);
-	$userid     = $inCore->request('userid', 'int');
-	$do         = $inCore->request('do', 'str', 'view');
+	// Проверяем включен ли компонент
+	if(!$model->config['component_enabled']) { cmsCore::error404(); }
 
-/////////////////////////////// SET CITY ///////////////////////////////////////////////////////////////////////////////////////////
-if ($do=='city'){ 
-	$city = urldecode($inCore->request('city', 'str')); 
+	$do = $inCore->request('do', 'str', 'view');
 
-	if (!empty($city)){ $_SESSION['board_city'] = $city; } else { unset($_SESSION['board_city']); }
-    $inCore->redirectBack();
-}
+	if ($inCore->menuId()==0){
+        $inPage->addPathway($_LANG['BOARD'], '/board');
+	}
 
 /////////////////////////////// VIEW CATEGORY ///////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){ 
 
-   	$col        = 1;
-    $maxcols    = isset($cfg['maxcols']) ? $cfg['maxcols'] : 1;
-
-	//SHOW CATEGORY LIST
-	$category   = $model->getCategory($id);
+	//Получаем текущую категорию
+	$category = $model->getCategory();
 	if (!$category) { cmsCore::error404(); }
-    $perpage    = $category['perpage'] ? $category['perpage'] : 20;
-    $page       = $inCore->request('page', 'int', 1);	
-    if ( $category['public'] == -1 ) { $category['public'] = $cfg['public']; }
 
-	//PAGE HEADING		
-	if ($id == $root['id']){
-		$pagetitle  = $inCore->menuTitle();
-		if ($pagetitle) { $inPage->setTitle($pagetitle); } 
-		if (!$pagetitle) { $inPage->setTitle($_LANG['BOARD']); $pagetitle = $_LANG['BOARD']; }
+	// Заголовки страницы	
+	if ($category['id'] == $model->root_cat['id']){
+
+		$pagetitle = $inCore->menuTitle();
+		$pagetitle = $pagetitle ? $pagetitle : $_LANG['BOARD'];
+
 	}
+    if ($category['id'] != $model->root_cat['id']) {
 
-    if ($id != $root['id']) {
-		$pagetitle      =  $category['title'];		
+		$pagetitle = $category['title'];		
 
-        $left_key       = $category['NSLeft'];
-		$right_key      = $category['NSRight'];
-        $category_path  = $model->getCategoryPath($left_key, $right_key);
+        $category_path  = $model->getCategoryPath($category['NSLeft'], $category['NSRight']);
 		foreach($category_path as $pcat){
             $inPage->addPathway($pcat['title'], '/board/'.$pcat['id']);
 		}        
-        
-        $inPage->setTitle($pagetitle  . ' - '.$_LANG['BOARD']);
-		$inPage->addPathway($category['title']);
-	}		
-	
-	$inPage->printHeading($pagetitle);
 
-	//BUILD SUB-CATS LIST	
-	$subcats_list   = $model->getSubCats($id);
-    $is_subcats     = (bool)sizeof($subcats_list);
+		$category['ob_links'] = $model->getTypesLinks($category['id'], $category['obtypes']);
 
-	if ($is_subcats){
-		$cats = array();
-		foreach($subcats_list as $cat) {
-            $sub                = $model->getSubCatsCount($cat['id']);
-			$cat['subtext']     = $sub ? '/'.$sub : '';
-			$cat['ob_links']    = obTypesLinks($cat['id'], $cat['obtypes']);
-            $cats[]             = $cat;
-		}
 	}
 
-	$smarty = $inCore->initSmarty('components', 'com_board_cats.tpl');			
-		$smarty->assign('is_subcats', $is_subcats);
-		$smarty->assign('cats', $cats);
-		$smarty->assign('maxcols', $maxcols);
-	$smarty->display('com_board_cats.tpl');
-	
-	//SHOW CAT CONTENT
+	//Формируем категории
+	//$cats = $model->getAllCats();
 
-    //ORDERING
-    if ($inCore->inRequest('orderby')) {
-        $orderby                = $inCore->request('orderby', 'str');
-        $_SESSION['ph_orderby'] = $orderby;
-    } elseif(isset($_SESSION['ph_orderby'])) {
-        $orderby                = $_SESSION['ph_orderby'];
-    } else {
-        $orderby                = $category['orderby'];
-    }
-    if ($inCore->inRequest('orderto')) {
-        $orderto                = $inCore->request('orderto', 'str');
-        $_SESSION['ph_orderto'] = $orderto;
-    } elseif(isset($_SESSION['ph_orderto'])) {
-        $orderto                = $_SESSION['ph_orderto'];
-    } else {
-        $orderto                = $category['orderto'];
-    }
+	// Формируем список объявлений
+	// Устанавливаем категорию
+	if ($category['id'] != $model->root_cat['id']) {
+		$model->whereCatIs($category['id']);
+	}
 
-    if (!$orderby) { $orderby = 'pubdate'; }
+	//Город
+	if ($model->city) {
+    	$model->whereCityIs($model->city);
+		$pagetitle .= ': '.$model->city;
+	}
+
+    // Типы объявлений
+	if ($model->obtype) {
+    	$model->whereTypeIs($model->obtype);
+		$pagetitle .= ': '.$model->obtype;
+	}
+
+	// Проставляем заголовки страницы и описание согласно выборки
+	$inPage->setDescription($pagetitle);
+	$inPage->setTitle($pagetitle);
+
+    // Общее количество объявлений по заданным выше условиям
+    $total = $model->getAdvertsCount();
+
+    //устанавливаем сортировку
+	$orderby = $model->getOrder('orderby', $category['orderby']); 
+	$orderto = $model->getOrder('orderto', $category['orderto']);
+    if (!$orderby) { $orderby = 'id'; }
     if (!$orderto) { $orderto = 'DESC'; }
+    $model->orderBy($orderby, $orderto);
 
-    //CITY FILTER
-    if ($inCore->inRequest('city')) {
-        $city = urldecode($inCore->request('city', 'str'));
-        if (!empty($city)){ $_SESSION['board_city'] = $city; } else { unset($_SESSION['board_city']); }
-    }
+    //устанавливаем номер текущей страницы и кол-во объявлений на странице
+    $model->limitPage($model->page, $category['perpage']);
 
-    //OBTYPE FILTER
-    if ($inCore->inRequest('obtype')) {
-        $obtype = urldecode($inCore->request('obtype', 'str'));
-        if (!empty($obtype)){ $_SESSION['board_type'] = $obtype; } else { unset($_SESSION['board_type']); }
-    }
+	// Получаем объявления
+	$items = $model->getAdverts(false, true);
 
-    //DISPLAY ORDER FORM
-    if ($category['orderform']){
-        echo orderForm($orderby, $orderto, $category['obtypes']);
-    }
+    // Отдаем в шаблон категории
+	$smarty = $inCore->initSmarty('components', 'com_board_cats.tpl');			
+	$smarty->assign('title', $pagetitle);
+	$smarty->assign('cats', $cats);
+	$smarty->assign('root_id', $root['id']);
+	$smarty->assign('category', $category);
+	$smarty->assign('total', $total);
+	$smarty->assign('city', $city);
+	$smarty->assign('obtype', $obtype);
+	$smarty->assign('maxcols', $maxcols);
+	$smarty->display('com_board_cats.tpl');
 
-    $items      = array();
-    $items_list = $model->getRecords($id, $page, $perpage, $orderby, $orderto);
-    $is_items   = (bool)sizeof($items_list);
-
-    //FETCH ITEMS
-    if ($is_items){        
-        foreach($items_list as $item) {
-            $item['enc_city'] = urlencode($item['city']);
-            //Check item image
-            $file = 'nopic.jpg';
-            if ($item['file']){
-                if (file_exists(PATH.'/images/board/small/'.$item['file'])){
-                    $file = $item['file'];
-                }
-            }
-            $item['file'] = $file;
-			$item['content'] = $cfg['auto_link'] ? $inCore->parseSmiles($item['content']) : $item['content'];
-			$item['title'] = $item['obtype'].' '.$item['title'];
-            //Check user access
-            if ($inUser->id){
-                $item['moderator'] = ($inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('board/moderate') || $item['user_id'] == $inUser->id);
-            } else {
-                $item['moderator'] = false;
-            }
-            $items[] = $item;
-        }
-    }
-
-    $col = 1; $maxcols = $category['maxcols']; $colwidth = round(100/$maxcols);
-    $total = $inDB->rows_count('cms_board_items', 'category_id = '.$id.' AND published = 1');
-    //DISPLAY
+	// Отдаем в шаблон объявления
     $smarty = $inCore->initSmarty('components', 'com_board_items.tpl');
-        $smarty->assign('is_items', $is_items);
-        $smarty->assign('cfg', $cfg);
-        $smarty->assign('cat', $category);
-        $smarty->assign('root_id', $root['id']);
-        $smarty->assign('items', $items);
-        $smarty->assign('maxcols', $maxcols);
-        $smarty->assign('colwidth', $colwidth);		
-        $smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/board/%catid%-%page%', array('catid'=>$id)));
-        $smarty->assign('is_user', $inUser->id);
+    // Если необходимо, отдаем в шаблон html формы сортировки
+    if ($category['orderform']){
+		 $smarty->assign('order_form', $model->orderForm($orderby, $orderto, $category['obtypes']));
+    }
+
+	$pagebar = ($category['id'] != $model->root_cat['id']) ? cmsPage::getPagebar($total, $model->page, $category['perpage'], '/board/%catid%-%page%', array('catid'=>$category['id'])) : false;
+
+    $smarty->assign('cfg', $model->config);
+    $smarty->assign('root_id', $root['id']);
+    $smarty->assign('items', $items);
+    $smarty->assign('maxcols', $category['maxcols']);
+    $smarty->assign('colwidth', round(100/$maxcols));
+	$smarty->assign('pagetitle', $pagetitle);
+    $smarty->assign('pagebar', $pagebar);
+    $smarty->assign('is_user', $inUser->id);
     $smarty->display('com_board_items.tpl');
+
+
+
+
+
+
+
+
+
+
+
+//	//BUILD SUB-CATS LIST	
+//	$subcats_list   = $model->getSubCats($id);
+//    $is_subcats     = (bool)sizeof($subcats_list);
+//
+//	if ($is_subcats){
+//		$cats = array();
+//		foreach($subcats_list as $cat) {
+//            $sub                = $model->getSubCatsCount($cat['id']);
+//			$cat['subtext']     = $sub ? '/'.$sub : '';
+//			$cat['ob_links']    = obTypesLinks($cat['id'], $cat['obtypes']);
+//            $cats[]             = $cat;
+//		}
+//	}
+//
+//	$smarty = $inCore->initSmarty('components', 'com_board_cats.tpl');			
+//		$smarty->assign('is_subcats', $is_subcats);
+//		$smarty->assign('cats', $cats);
+//		$smarty->assign('maxcols', $maxcols);
+//	$smarty->display('com_board_cats.tpl');
+//	
+//	//SHOW CAT CONTENT
+//
+//
+//    $col = 1; $maxcols = $category['maxcols']; $colwidth = round(100/$maxcols);
+//
+//    //DISPLAY
+//    $smarty = $inCore->initSmarty('components', 'com_board_items.tpl');
+//        $smarty->assign('is_items', $is_items);
+//        $smarty->assign('cfg', $cfg);
+//        $smarty->assign('cat', $category);
+//        $smarty->assign('root_id', $root['id']);
+//        $smarty->assign('items', $items);
+//        $smarty->assign('maxcols', $maxcols);
+//        $smarty->assign('colwidth', $colwidth);		
+//        $smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/board/%catid%-%page%', array('catid'=>$id)));
+//        $smarty->assign('is_user', $inUser->id);
+//    $smarty->display('com_board_items.tpl');
 						
 }
 /////////////////////////////// VIEW ITEM ///////////////////////////////////////////////////////////////////////////////////////////

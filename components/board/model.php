@@ -15,17 +15,26 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 class cms_model_board{
 
-	function __construct(){
-        $this->inDB = cmsDatabase::getInstance();
-    }
+    private $where    = '';
+    private $group_by = '';
+    private $order_by = '';
+    private $limit    = '100';
+	public $root_cat  = array();
+	public $config    = array();
 
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function install(){
-
-        return true;
-
+	public function __construct(){
+        $this->inDB        = cmsDatabase::getInstance();
+		$this->inCore      = cmsCore::getInstance();
+		$this->config      = self::getConfig();
+		$this->root_cat    = $this->inDB->get_fields('cms_board_cats', 'parent_id=0', '*');
+		$this->category_id = $this->inCore->request('category_id', 'int', $this->root_cat['id']);
+		$this->item_id     = $this->inCore->request('id', 'int', 0);
+		$this->page        = $this->inCore->request('page', 'int', 1);
+		$this->city        = $this->detectCriteria('city');
+		$this->obtype      = $this->detectCriteria('obtype');
     }
 
 /* ==================================================================================================== */
@@ -37,7 +46,7 @@ class cms_model_board{
 
         switch($target){
 
-            case 'boarditem': $item               = $this->inDB->get_fields('cms_board_items', "id={$target_id}", 'title');
+            case 'boarditem': $item               = $this->inDB->get_fields('cms_board_items', "id='{$target_id}'", 'title');
                               if (!$item) { return false; }
                               $result['link']     = '/board/read'.$target_id.'.html';
                               $result['title']    = $item['title'];
@@ -49,25 +58,124 @@ class cms_model_board{
 
     }
 
-/* ==================================================================================================== */
-/* ==================================================================================================== */
+/* ========================================================================== */
+/* ========================================================================== */
 
-    public function getRootCategory() {
-       return $this->inDB->get_fields('cms_board_cats', 'parent_id=0', 'id, title');
+    public static function getDefaultConfig() {
+
+        $cfg = array(
+                     'showlat'=>1,
+                     'photos'=>1,
+                     'maxcols'=>1,
+                     'public'=>1,
+                     'srok'=>1,
+                     'pubdays'=>14,
+                     'watermark'=>0,
+                     'comments'=>1,
+                     'aftertime'=>'',
+                     'extend'=>0,
+                     'vip_enabled'=>0,
+                     'vip_prolong'=>0,
+                     'vip_max_days'=>30,
+                     'vip_day_cost'=>5
+               );
+
+        return $cfg;
+
+    }
+
+/* ========================================================================== */
+/* ========================================================================== */
+
+    public static function getConfig() {
+
+        $inCore = cmsCore::getInstance();
+
+        $default_cfg = self::getDefaultConfig();
+        $cfg         = $inCore->loadComponentConfig('board');
+        $cfg         = array_merge($default_cfg, $cfg);
+
+        return $cfg;
+
+    }
+
+// ============================================================================ //
+// ============================================================================ //
+
+    private function resetConditions(){
+
+        $this->where        = '';
+        $this->group_by     = '';
+        $this->order_by     = '';
+        $this->limit        = '';
+
+    }
+// ============================================================================ //
+// ============================================================================ //
+    public function where($condition){
+        $this->where .= ' AND ('.$condition.')' . "\n";
+    }
+
+    public function whereCatIs($cat_id){
+        $this->where("i.category_id = '$cat_id'");
+        return;
+    }
+
+    public function whereCityIs($city) {
+        $this->where("i.city = '$city'");
+    }
+
+    public function whereTypeIs($type) {
+        $this->where("i.obtype = '$type'");
+    }
+
+    public function whereUserIs($user_id) {
+        $this->where("i.user_id = '$user_id'");
+    }
+
+    public function groupBy($field){
+        $this->group_by = 'GROUP BY '.$field;
+    }
+
+    public function orderBy($field, $direction='ASC'){
+        $this->order_by = 'ORDER BY is_vip DESC, '.$field.' '.$direction;
+    }
+
+    public function limit($howmany) {
+        $this->limitIs(0, $howmany);
+    }
+
+    public function limitIs($from, $howmany='') {
+        $this->limit = (int)$from;
+        if ($howmany){
+            $this->limit .= ', '.$howmany;
+        }
+    }
+
+    public function limitPage($page, $perpage) {
+        $this->limitIs(($page-1)*$perpage, $perpage);
     }
 
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function getCategory($category_id) {
+    public function getCategory() {
 
-        $this->deleteOldRecords();
+		if($this->category_id == $this->root_cat['id']){
+			$category = $this->root_cat;
+		} else {
+	        $category = $this->inDB->get_fields('cms_board_cats', "id = '{$this->category_id}'", '*');
+		}
+		if(!$category) { return false; }
 
-        $category   = $this->inDB->get_fields('cms_board_cats', 'id='.$category_id, '*');
-        $category   = cmsCore::callEvent('GET_BOARD_CAT', $category);
+        $category = cmsCore::callEvent('GET_BOARD_CAT', $category);
+
+		$category['perpage'] = $category['perpage'] ? $category['perpage'] : 20;
+		if ($category['public'] == -1) { $category['public'] = $this->config['public']; }
 
         if (!$category['obtypes']){
             $category['obtypes'] = $this->inDB->get_field('cms_board_cats', "NSLeft <= {$category['NSLeft']} AND NSRight >= {$category['NSRight']} AND obtypes <> ''", 'obtypes');
+			if(!$category['obtypes']) { $category['obtypes'] = $this->config['obtypes']; }
         }
 
         return $category;
@@ -77,6 +185,7 @@ class cms_model_board{
 /* ==================================================================================================== */
 
     public function getCategoryPath($left_key, $right_key) {
+
         $path = array();
 
         $sql = "SELECT id, title, NSLevel
@@ -93,6 +202,7 @@ class cms_model_board{
         }
 
         return $path;
+
     }
 
 /* ==================================================================================================== */
@@ -127,44 +237,95 @@ class cms_model_board{
 /* ==================================================================================================== */
 
     public function getSubCatsCount($category_id) {
-        return $this->inDB->rows_count('cms_board_cats', 'parent_id='.$category_id);
+        return $this->inDB->rows_count('cms_board_cats', "parent_id = '$category_id'");
     }
 
 /* ==================================================================================================== */
 /* ==================================================================================================== */
+	public function getAdverts($show_all = false, $is_users = false, $is_coments = false, $is_cats = false){
 
-    public function getRecords($category_id, $page=1, $perpage=1000, $orderby='pubdate', $orderto='DESC') {
-        
-        $records = array();
-		$inCore = cmsCore::getInstance();
         $this->deleteOldRecords();
         $this->clearOldVips();
 
-        $city_filter = isset($_SESSION['board_city']) ? "AND city = '".$_SESSION['board_city']."'" : '';
-        $type_filter = isset($_SESSION['board_type']) ? "AND obtype = '".$_SESSION['board_type']."'" : '';
+        //подготовим условия
+        $pub_where = ($show_all ? '1=1' : 'i.published = 1');
+        $r_join    = $is_users ? "LEFT JOIN cms_users u ON u.id = i.user_id" : '';
+		$r_join   .= $is_cats ? "INNER JOIN cms_board_cats cat ON cat.id = i.category_id" : '';
 
-        $rootcat = $this->inDB->get_fields('cms_board_cats', 'id='.$category_id, 'NSLeft, NSRight');
-        $catsql  = "AND (i.category_id = cat.id AND (i.category_id=$category_id OR (cat.NSLeft >= {$rootcat['NSLeft']} AND cat.NSRight <= {$rootcat['NSRight']})))";
+		$r_select  = $is_users ? ', u.login, u.nickname' : '';
+		$r_select .= $is_cats ? ', cat.title, cat.obtypes' : '';
 
-        $sql = "SELECT i.*, i.pubdate as fpubdate, u.nickname as user, u.login as user_login
-                FROM cms_board_items i, cms_users u, cms_board_cats cat
-                WHERE i.user_id = u.id AND i.published = 1 $city_filter $type_filter $catsql
-                ORDER BY is_vip DESC, $orderby $orderto
-                LIMIT ".($page-1)*$perpage.", $perpage";
+        $sql = "SELECT i.*{$r_select}
 
-        $result = $this->inDB->query($sql);
+                FROM cms_board_items i
+				{$r_join}
+                WHERE {$pub_where}
+                      {$this->where}
 
-        if (!$this->inDB->num_rows($result)){ return false; }
+                {$this->group_by}                      
 
-        while($item = $this->inDB->fetch_assoc($result)){
-            $item['content']    = nl2br($item['content']);
-			$item['fpubdate']   = $inCore->dateformat($item['fpubdate']);
-            $records[$item['id']] = $item;
+                {$this->order_by}\n";
+
+        if ($this->limit){
+            $sql .= "LIMIT {$this->limit}";
         }
 
-        $records = cmsCore::callEvent('GET_BOARD_RECORDS', $records);
+		$result = $this->inDB->query($sql);
 
-        return $records;
+		if(!$this->inDB->num_rows($result)){ return false; }
+
+		$records = array();
+
+		while ($item = $this->inDB->fetch_assoc($result)){
+
+			if($is_coments){
+				$item['comments'] = $this->inCore->getCommentsCount('boarditem', $item['id']);
+			}
+            $item['content']  = nl2br($item['content']);
+			$item['content']  = $this->config['auto_link'] ? $this->inCore->parseSmiles($item['content']) : $item['content'];
+			$item['title']    = $item['obtype'].' '.$item['title'];
+			$item['fpubdate'] = $this->inCore->dateformat($item['pubdate']);
+			$item['enc_city'] = urlencode($item['city']);
+            if (!$item['file'] || !file_exists(PATH.'/images/board/small/'.$item['file'])){
+				$item['file'] = 'nopic.jpg';
+			}
+            // Права доступа
+            $item['moderator'] = $this->checkAccess($item['user_id']);
+			$timedifference    = strtotime("now") - strtotime($item['pubdate']);
+			$item['is_overdue'] = round($timedifference / 86400) > $item['pubdays'] && $item['pubdays'] > 0;
+
+			$records[] = $item;
+
+		}
+
+		$this->resetConditions();
+
+		$records = cmsCore::callEvent('GET_BOARD_RECORDS', $records);
+
+		return $records;
+
+	}
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function getAdvertsCount($show_all = false){
+
+        //подготовим условия
+        $pub_where = ($show_all ? '1=1' : 'i.published = 1');
+
+        $sql = "SELECT 1
+
+                FROM cms_board_items i
+
+                WHERE {$pub_where}
+                      {$this->where}
+
+                {$this->group_by}\n";
+
+		$result = $this->inDB->query($sql);
+
+		return $this->inDB->num_rows($result);
 
     }
 
@@ -189,7 +350,7 @@ class cms_model_board{
                        u.nickname as user,
                        u.login as user_login
                 FROM cms_board_items i
-				LEFT JOIN cms_board_cats a ON a.id = i.category_id
+				INNER JOIN cms_board_cats a ON a.id = i.category_id
 				LEFT JOIN cms_users u ON u.id = i.user_id
                 WHERE i.id = '$item_id'";
 
@@ -204,6 +365,7 @@ class cms_model_board{
 		$record['fpubdate']   = $record['pubdate'];
 		$record['pubdate'] 	  = cmsCore::dateFormat($record['pubdate']);
 		$record['vipdate'] 	  = cmsCore::dateFormat($record['vipdate']);
+		$record['enc_city']   = urlencode($record['city']);
 
         $record = cmsCore::callEvent('GET_BOARD_RECORD', $record);
 
@@ -214,7 +376,7 @@ class cms_model_board{
 /* ==================================================================================================== */
 
     public function increaseHits($item_id) {
-        $this->inDB->query("UPDATE cms_board_items SET hits = hits + 1 WHERE id = $item_id");
+        $this->inDB->query("UPDATE cms_board_items SET hits = hits + 1 WHERE id = '$item_id'");
         return true;
     }
 
@@ -252,7 +414,8 @@ class cms_model_board{
 					pubdays = '{$item['pubdays']}',
                     published = '{$item['published']}',
                     file = '{$item['file']}'
-                WHERE id = $id";
+                WHERE id = '$id'";
+
         $this->inDB->query($sql);
         return true;
     }
@@ -270,7 +433,7 @@ class cms_model_board{
         @unlink(PATH.'/images/board/'.$item['file']);
         @unlink(PATH.'/images/board/small/'.$item['file']);
         @unlink(PATH.'/images/board/medium/'.$item['file']);
-        $sql = "DELETE FROM cms_board_items WHERE id = $item_id";
+        $sql = "DELETE FROM cms_board_items WHERE id = '$item_id'";
         $this->inDB->query($sql);
 
 		$inCore->deleteComments('boarditem', $item_id);
@@ -284,19 +447,14 @@ class cms_model_board{
 
     public function deleteOldRecords() {
 
-        $inCore = cmsCore::getInstance();
-
-        $cfg = $inCore->loadComponentConfig('board');
-        if (!isset($cfg['aftertime'])) { $cfg['aftertime'] = ''; }
-
-        if ($cfg['aftertime']){            
+        if ($this->config['aftertime']){            
             $time_sql = '';
-            switch ($cfg['aftertime']){
+            switch ($this->config['aftertime']){
                 case 'delete':  $time_sql = "DELETE FROM cms_board_items WHERE DATEDIFF(NOW(), pubdate) > pubdays AND pubdays > 0"; break;
                 case 'hide':    $time_sql = "UPDATE cms_board_items SET published = 0 WHERE DATEDIFF(NOW(), pubdate) > pubdays AND pubdays > 0"; break;
             }          
             if ($time_sql){
-                $this->inDB->query($time_sql) or die(mysql_error());
+                $this->inDB->query($time_sql);
             }
         }
 
@@ -341,11 +499,9 @@ class cms_model_board{
 /* ==================================================================================================== */
 	
 	public function uploadPhoto($old_file = '', $cfg, $cat) {
-		
-		$inCore = cmsCore::getInstance();
 
 		// Загружаем класс загрузки фото
-		$inCore->loadClass('upload_photo');
+		$this->inCore->loadClass('upload_photo');
 		$inUploadPhoto = cmsUploadPhoto::getInstance();
 		// Выставляем конфигурационные параметры
 		$inUploadPhoto->upload_dir    = PATH.'/images/board/';
@@ -357,6 +513,149 @@ class cms_model_board{
 		$file = $inUploadPhoto->uploadPhoto($old_file);
 		
 		return $file;
+
+	}
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function getOrder($order='', $default='') {
+
+		if ($this->inCore->inRequest($order)) { 
+			$orders = $inCore->request($order, 'str');
+			cmsUser::sessionPut('ad_'.$order, $orders);
+		} elseif(cmsUser::sessionGet('ad_'.$order)) { 
+			$orders = cmsUser::sessionGet('ad_'.$order);
+		} else {
+			$orders = $default; 
+		}
+		
+		return $orders;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function detectCriteria($search = '') {
+
+		$value = urldecode($this->inCore->request($search, 'str'));
+		if ($value) {
+			if($value == 'all'){
+				cmsUser::sessionDel('board_'.$search);
+				$value = '';
+			} else {
+				cmsUser::sessionPut('board_'.$search, $value);
+			}
+		} elseif(cmsUser::sessionGet('board_'.$search)) { 
+			$value = cmsUser::sessionGet('board_'.$search);
+		} else {
+			$value = ''; 
+		}
+		
+		return $value;
+
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function getBoardCities($selected='', $cat_id = 0){
+
+		global $_LANG;
+
+		$cat_sql = $cat_id ? "category_id = '$cat_id'" : '1=1';
+
+        $sql = "SELECT city FROM cms_board_items WHERE published = 1 AND {$cat_sql} GROUP BY city";
+        $result = $this->inDB->query($sql);
+
+        $html = '<select name="city">';
+        $html .= '<option value="">'.$_LANG['ALL_CITY'].'</option>';
+		if ($this->inDB->num_rows($result)){
+			while($c = $this->inDB->fetch_assoc($result)){
+				if (strtolower($selected)==strtolower($c['city'])){
+					$s = 'selected="selected"';
+				} else {
+					$s = '';
+				}
+				$pretty = htmlspecialchars(ucfirst(strtolower($c['city'])));
+				$html .= '<option value="'.$pretty.'" '.$s.'>'.$pretty.'</option>';
+			}
+		}
+        $html .= '</select>';
+        return $html;
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+	public function getTypesLinks($cat_id, $types){
+	
+		$html  = '';
+		$types = explode("\n", $types);
+		foreach($types as $id=>$type){
+			$type = trim($type);
+			$html .= '<a class="board_cats_a" href="/board/'.$cat_id.'/type/'.urlencode(ucfirst($type)).'">'.ucfirst($type).'</a>';
+		}
+		$html = rtrim($html, ',');
+		return $html;
+	
+	}
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+	public function getTypesOptions($types='', $selected=''){
+
+		$html  = '';
+
+        if (!$types){
+            $types = explode("\n", $this->config['obtypes']);
+        } else {
+            $types = explode("\n", $types);
+        }
+
+		foreach($types as $id=>$type){
+			$type = ucfirst(htmlspecialchars(trim($type)));
+			if (strtolower($selected) == strtolower($type)){ $sel = 'selected="selected"'; } else { $sel = ''; }
+			$html .= '<option value="'.$type.'" '.$sel.'>'.$type.'</option>';
+		}
+		return $html;
+	}
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+	public function orderForm($orderby, $orderto, $obtypes){
+	
+		if (isset($_SESSION['board_type'])) { $btype = $_SESSION['board_type']; } else { $btype = ''; }
+		if (isset($_SESSION['board_city'])) { $bcity = $_SESSION['board_city']; } else { $bcity = ''; }	
+	
+		$smarty = $this->inCore->initSmarty('components', 'com_board_order_form.tpl');				
+		$smarty->assign('btype', $btype);
+		$smarty->assign('btypes', $this->getTypesOptions($btype, $obtypes));
+		$smarty->assign('bcity', $bcity);
+		$smarty->assign('bcities', $this->getBoardCities($bcity));
+		$smarty->assign('orderby', $orderby);
+		$smarty->assign('orderto', $orderto);		
+		$smarty->assign('action_url', $_SERVER['REQUEST_URI']);
+		ob_start();
+		$smarty->display('com_board_order_form.tpl');
+		return ob_get_clean();
+	}
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+	public function loadedByUser24h($user_id, $album_id){
+		return $this->inDB->rows_count('cms_board_items', "user_id = '$user_id' AND category_id = '$album_id' AND pubdate >= DATE_SUB(NOW(), INTERVAL 1 DAY)");
+	}
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+	public function checkAccess($user_id){
+	
+		$inUser = cmsUser::getInstance();
+
+		if ($inUser->id){	
+			$access = ($inUser->is_admin || $this->inCore->isUserCan('board/moderate') || $user_id == $inUser->id);
+		} else {
+			$access = false;
+		}
+		return $access;
 
 	}
 

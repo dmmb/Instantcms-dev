@@ -77,6 +77,7 @@ $_LANG['ADVS_NOT_FOUND']          ='Объявления не найдены.';
 $_LANG['ADD_ADV_TO_CAT']          ='Добавить объявление в эту рубрику';
 $_LANG['TYPE']                    ='Тип';
 $_LANG['ALL_TYPE']                ='Все типы';
+$_LANG['ALL_CITY']                ='Все города';
 $_LANG['ORDER']                   ='Сортировать';
 $_LANG['ORDERBY_TITLE']           ='По алфавиту';
 $_LANG['ORDERBY_DATE']            ='По дате';

@@ -2643,59 +2643,6 @@ class cmsCore {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * Возвращает элементы <option> для списка типов доски объявлений
-     * @param int $selected
-     * @return html
-     */
-    public function boardTypesList($selected, $list=false){
-        $inDB = cmsDatabase::getInstance();
-        $html = '';
-        if (!$list){
-            $cfg = $this->loadComponentConfig('board');
-            $list = explode("\n", $cfg['obtypes']);
-        } else {
-            $list = explode("\n", $list);
-        }
-        if ($list){
-            foreach($list as $id=>$type){
-                $type = htmlspecialchars(trim($type));
-                if (strtolower($selected) == strtolower($type)) { $sel = 'selected="selected"'; } else { $sel =''; }
-                $html .= '<option value="'.ucfirst($type).'" '.$sel.'>'.ucfirst($type).'</option>';
-            }
-        }
-        return $html;
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Возвращает элементы <option> для списка городов доски объявлений
-     * @param string $selected
-     * @param string $none_label
-     * @return html
-     */
-    public function boardCities($selected='', $none_label = 'Все города'){
-        $inDB = cmsDatabase::getInstance();
-        $sql = "SELECT city FROM cms_board_items WHERE published = 1 GROUP BY city";
-        $result = $inDB->query($sql) ;
-        $html = '<select name="city">';
-        $html .= '<option value="">'.$none_label.'</option>';
-        while($c = $inDB->fetch_assoc($result)){
-            if (strtolower($selected)==strtolower($c['city'])){
-                $s = 'selected';
-            } else {
-                $s = '';
-            }
-            $pretty = htmlspecialchars(ucfirst(strtolower($c['city'])));
-            $html .= '<option value="'.$pretty.'" '.$s.'>'.$pretty.'</option>';
-        }
-        $html .= '</select>';
-        return $html;
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /**
      * Возвращает элементы <option> для списка шаблонов
      * @param string $selected
      */

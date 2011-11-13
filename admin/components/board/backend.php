@@ -904,7 +904,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					<td width="177"><strong>Заголовок объявления: </strong></td>
 					<td width="311">
 					  <select name="obtype" id="obtype" style="width:120px">
-					  	<?php echo $inCore->boardTypesList($mod['obtype']); ?>
+					  	<?php echo $model->getTypesOptions($mod['obtype']); ?>
 				      </select>
 				    <input name="title" type="text" id="title" size="30" value="<?php echo htmlspecialchars($mod['title']);?>"/></td>
 				  </tr>

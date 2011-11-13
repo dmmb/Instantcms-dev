@@ -15,41 +15,40 @@
 
         $routes[] = array(
                             '_uri'  => '/^board\/([0-9]+)$/i',
-                            1       => 'id'
+                            1       => 'category_id'
                          );
 
         $routes[] = array(
                             '_uri'  => '/^board\/([0-9]+)\/type\/(.+)$/i',
-                            1       => 'id',
+                            1       => 'category_id',
                             2       => 'obtype'
                          );
 
         $routes[] = array(
-                            '_uri'  => '/^board\/([0-9]+)\-([0-9]+)$/i',
-                            1       => 'id',
-                            2       => 'page'
+                            '_uri'  => '/^board\/type\/(.+)$/i',
+                               1       => 'obtype'
                          );
 
         $routes[] = array(
-                            '_uri'  => '/^board\/latest.html$/i',
-                            'do'    => 'latest'
+                            '_uri'  => '/^board\/([0-9]+)\-([0-9]+)$/i',
+                            1       => 'category_id',
+                            2       => 'page'
                          );
 
         $routes[] = array(
                             '_uri'  => '/^board\/([0-9]+)\/add.html$/i',
                             'do'    => 'additem',
-                            1       => 'id'
+                            1       => 'category_id'
+                         );
+
+        $routes[] = array(
+                            '_uri'  => '/^board\/add.html$/i',
+                            'do'    => 'additem'
                          );
 
         $routes[] = array(
                             '_uri'  => '/^board\/edit([0-9]+).html$/i',
                             'do'    => 'edititem',
-                            1       => 'id'
-                         );
-
-        $routes[] = array(
-                            '_uri'  => '/^board\/moveitem([0-9]+).html$/i',
-                            'do'    => 'moveitem',
                             1       => 'id'
                          );
 
@@ -67,7 +66,6 @@
 
         $routes[] = array(
                             '_uri'  => '/^board\/city\/(.+)$/i',
-                            'do'    => 'city',
                             1       => 'city'
                          );
 

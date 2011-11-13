@@ -883,7 +883,7 @@ if ($do=='newpost' || $do=='editpost'){
 					cmsActions::updateLog('add_post_club', array('object' => $title), $post_id);
 				}
 
-                $inCore->redirect($model->getBlogURL(null, $blog['seolink']));
+                $inCore->redirect($model->getPostURL(null, $blog['seolink'], $post['postlink']));
                 
             }
         } 
