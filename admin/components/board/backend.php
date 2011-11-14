@@ -12,6 +12,29 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //                                                                            //
 /******************************************************************************/
 
+    function uploadCategoryIcon($file='') {
+
+        $inCore = cmsCore::getInstance();
+
+		// Загружаем класс загрузки фото
+		$inCore->loadClass('upload_photo');
+		$inUploadPhoto = cmsUploadPhoto::getInstance();
+		// Выставляем конфигурационные параметры
+		$inUploadPhoto->upload_dir    = PATH.'/upload/board/';
+		$inUploadPhoto->dir_medium    = 'cat_icons/';
+		$inUploadPhoto->medium_size_w = 32;
+		$inUploadPhoto->medium_size_h = 32;
+		$inUploadPhoto->only_medium   = true;
+		$inUploadPhoto->is_watermark  = false;
+		// Процесс загрузки фото
+		$files = $inUploadPhoto->uploadPhoto($file);
+
+		$icon = $files['filename'] ? $files['filename'] : $file;
+
+        return $icon;
+
+    }
+
 	//LOAD CURRENT CONFIG
 	$cfg = $inCore->loadComponentConfig('board');
     $inCore->loadModel('board');
@@ -469,24 +492,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		}
 	}
 	
-	function reorder(){
-		$sql = "SELECT * FROM cms_board_cats ORDER BY NSLeft";
-		$rs = dbQuery($sql);
-		if (mysql_num_rows($rs)){
-			$level = array();
-			while ($item = mysql_fetch_assoc($rs)){
-				if (isset($level[$item['NSLevel']])){
-					$level[$item['NSLevel']] += 1;
-				} else {
-					$level[] = 1;
-				}
-				dbQuery("UPDATE cms_board_cats SET ordering = ".$level[$item['NSLevel']]." WHERE id=".$item['id']);
-			}				
-		}
-	}
-	
 	if ($opt == 'submit_cat'){	
-		if (!empty($_REQUEST['title'])) { $title = $inCore->request('title', 'str'); }
+		$title = $inCore->request('title', 'str', 'рубрика без названия');
 		$description = $inCore->request('description', 'str');
 		$published   = $inCore->request('published', 'int');
 		$showdate    = $inCore->request('showdate', 'int');
@@ -504,8 +511,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$maxcols     = $inCore->request('maxcols', 'int');
 		$orderform   = $inCore->request('orderform', 'int');	
 	
-        $obtypes     = $inCore->request('obtypes', 'str');
-	
+        $obtypes     = $inCore->request('obtypes', 'str', '');
+
+		$icon = uploadCategoryIcon();
+
 		$ns = $inCore->nestedSetsInit('cms_board_cats');
 		$myid = $ns->AddNode($parent_id);
 		
@@ -520,18 +529,18 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 						orderto='$orderto', 
 						public='$public', 
 						perpage='$perpage', 
-						thumb1=$thumb1, 
-						thumb2=$thumb2, 
+						thumb1='$thumb1', 
+						thumb2='$thumb2', 
 						thumbsqr=$thumbsqr,
 						uplimit='$uplimit', 
 						is_photos='$is_photos',
 						maxcols='$maxcols', 
-						orderform=$orderform,
+						orderform='$orderform',
+						icon='$icon',
                         obtypes='$obtypes'
-					WHERE id = $myid";
+					WHERE id = '$myid'";
 			dbQuery($sql) ;
 		}
-		reorder();
 				
 		header('location:?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats');
 	}	  
@@ -540,15 +549,20 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		if(isset($_REQUEST['item_id'])) { 
 			$id = (int)$_REQUEST['item_id'];
 			$sql = "SELECT id, file FROM cms_board_items WHERE category_id = $id";
-			$result = dbQuery($sql) ;
+			$result = dbQuery($sql);
 			//DELETE ALL PHOTOS IN ALBUM
 			if (mysql_num_rows($result)){
 				while($photo = mysql_fetch_assoc($result)){
 					$model->deleteRecord($photo['id']);
 				}			
 			}
+			$f_icon = dbGetField('cms_board_cats', "id = '$id'", 'icon');
 			//DELETE ALBUM
-			dbDeleteNS('cms_board_cats', $id);	
+			dbDeleteNS('cms_board_cats', $id);
+			if(file_exists(PATH.'/upload/board/cat_icons/'.$f_icon)){
+				@chmod(PATH.'/upload/board/cat_icons/'.$f_icon, 0777);
+				@unlink(PATH.'/upload/board/cat_icons/'.$f_icon);
+			}
 		}
 		header('location:?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats');
 	}
@@ -557,7 +571,14 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		if(isset($_REQUEST['item_id'])) { 
 			$id = (int)$_REQUEST['item_id'];
 
-			if (!empty($_REQUEST['title'])) { $title = $inCore->request('title', 'str'); } else { error("Заголовок рубрикиа не может быть пустым!"); }
+			 $sql = "SELECT * FROM cms_board_cats WHERE id = '$id' LIMIT 1";
+			 $result = dbQuery($sql) ;
+			 if (mysql_num_rows($result)){
+				$mod = mysql_fetch_assoc($result);
+				$mod['icon'] = $mod['icon'] == 'folder_grey.png' ? '' : $mod['icon'];
+			 }
+
+			$title = $inCore->request('title', 'str', 'рубрика без названия');
 			$description = $inCore->request('description', 'str');
 			$published   = $inCore->request('published', 'int');
 			$showdate    = $inCore->request('showdate', 'int');
@@ -576,28 +597,29 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			$orderform   = $inCore->request('orderform', 'int');	
 		
 			$obtypes     = $inCore->request('obtypes', 'str');
-								
+			$icon = uploadCategoryIcon($mod['icon']);					
 			$ns = $inCore->nestedSetsInit('cms_board_cats');
 			$ns->MoveNode($id, $parent_id);									
 								
 			$sql = "UPDATE cms_board_cats
 					SET title='$title', 
 						description='$description',
-						published=$published,
-						showdate=$showdate,
+						published='$published',
+						showdate='$showdate',
 						public='$public',
 						orderby='$orderby',
 						orderto='$orderto',
 						perpage='$perpage',
 						thumb1='$thumb1',
 						thumb2='$thumb2',
-						thumbsqr=$thumbsqr,
-						uplimit=$uplimit,
+						thumbsqr='$thumbsqr',
+						uplimit='$uplimit',
 						is_photos='$is_photos',
-						maxcols=$maxcols,
-						orderform=$orderform,
+						maxcols='$maxcols',
+						orderform='$orderform',
+						icon='$icon',
                         obtypes='$obtypes'
-					WHERE id = $id
+					WHERE id = '$id'
 					LIMIT 1";
 			dbQuery($sql);							
 			header('location:?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats');
@@ -677,19 +699,21 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	
 	if ($opt == 'add_cat' || $opt == 'edit_cat'){
 		if ($opt=='add_cat'){
+			cpAddPathway('Добавить рубрику', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_cat');
 			 echo '<h3>Добавить рубрику</h3>';
 		} else {
-					 if(isset($_REQUEST['item_id'])){
-						 $id = (int)$_REQUEST['item_id'];
-						 $sql = "SELECT * FROM cms_board_cats WHERE id = $id LIMIT 1";
-						 $result = dbQuery($sql) ;
-						 if (mysql_num_rows($result)){
-							$mod = mysql_fetch_assoc($result);
-							
-						 }
-					 }
+			 if(isset($_REQUEST['item_id'])){
+				 $id = (int)$_REQUEST['item_id'];
+				 $sql = "SELECT * FROM cms_board_cats WHERE id = $id LIMIT 1";
+				 $result = dbQuery($sql) ;
+				 if (mysql_num_rows($result)){
+					$mod = mysql_fetch_assoc($result);
 					
-					 echo '<h3>Редактировать рубрику</h3>';
+				 }
+			 }
+			
+			 echo '<h3>Редактировать рубрику</h3>';
+			 cpAddPathway('Редактировать рубрику '.$mod['title'], '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_cat&item_id='.(int)$_REQUEST['item_id']);
 			   }
 
 		//DEFAULT VALUES
@@ -707,7 +731,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		if (!isset($mod['orderto'])) { $mod['orderto'] = 'desc'; }				
 		?>
 		
-		<form id="addform" name="addform" method="post" action="index.php?view=components&amp;do=config&amp;id=<?php echo (int)$_REQUEST['id'];?>">
+		<form id="addform" name="addform" enctype="multipart/form-data" method="post" action="index.php?view=components&amp;do=config&amp;id=<?php echo (int)$_REQUEST['id'];?>">
 			<table width="610" border="0" cellpadding="0" cellspacing="10" class="proptable">
 			  <tr>
 				<td><strong>Название рубрики: </strong></td>
@@ -729,6 +753,13 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					?>
                 </select></td>
 		      </tr>
+                <tr>
+                    <td><strong>Иконка рубрики:</strong><br/>
+                        <span class="hinttext">файл размером 32px и менее вставляется оригиналом</span></td>
+                    <td valign="middle"> <?php if (@$mod['icon']) { ?><img src="/upload/board/cat_icons/<?php echo @$mod['icon'];?>" border="0" /><?php } ?> 
+                        <input name="Filedata" type="file" style="width:215px; margin:0 0 0 5px; vertical-align:top" />
+                    </td>
+                </tr>
 			  <tr>
 				<td><strong>Публиковать рубрику?</strong></td>
 				<td><input name="published" type="radio" value="1" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> />

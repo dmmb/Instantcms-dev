@@ -65,7 +65,7 @@ if ($do=='view'){
 	}
 
 	//Формируем категории
-	//$cats = $model->getAllCats();
+	$cats = $model->getSubCats($category['id']);
 
 	// Формируем список объявлений
 	// Устанавливаем категорию
@@ -74,15 +74,15 @@ if ($do=='view'){
 	}
 
 	//Город
-	if ($model->city) {
+	if ($model->city && in_array($model->city, $category['cat_city'])) {
     	$model->whereCityIs($model->city);
-		$pagetitle .= ': '.$model->city;
+		$pagetitle .= ' :: '.$model->city;
 	}
 
     // Типы объявлений
-	if ($model->obtype) {
+	if ($model->obtype && stristr($category['obtypes'], $model->obtype)) {
     	$model->whereTypeIs($model->obtype);
-		$pagetitle .= ': '.$model->obtype;
+		$pagetitle .= ' :: '.$model->obtype;
 	}
 
 	// Проставляем заголовки страницы и описание согласно выборки
@@ -107,21 +107,22 @@ if ($do=='view'){
 
     // Отдаем в шаблон категории
 	$smarty = $inCore->initSmarty('components', 'com_board_cats.tpl');			
-	$smarty->assign('title', $pagetitle);
+	$smarty->assign('pagetitle', $pagetitle);
 	$smarty->assign('cats', $cats);
-	$smarty->assign('root_id', $root['id']);
+	$smarty->assign('cat', $category);
+	$smarty->assign('root_id', $model->root_cat['id']);
 	$smarty->assign('category', $category);
-	$smarty->assign('total', $total);
 	$smarty->assign('city', $city);
 	$smarty->assign('obtype', $obtype);
-	$smarty->assign('maxcols', $maxcols);
+    $smarty->assign('is_user', $inUser->id);
+	$smarty->assign('maxcols', $model->config['maxcols']);
 	$smarty->display('com_board_cats.tpl');
 
 	// Отдаем в шаблон объявления
     $smarty = $inCore->initSmarty('components', 'com_board_items.tpl');
     // Если необходимо, отдаем в шаблон html формы сортировки
     if ($category['orderform']){
-		 $smarty->assign('order_form', $model->orderForm($orderby, $orderto, $category['obtypes']));
+		 $smarty->assign('order_form', $model->orderForm($orderby, $orderto, $category));
     }
 
 	$pagebar = ($category['id'] != $model->root_cat['id']) ? cmsPage::getPagebar($total, $model->page, $category['perpage'], '/board/%catid%-%page%', array('catid'=>$category['id'])) : false;
@@ -129,11 +130,10 @@ if ($do=='view'){
     $smarty->assign('cfg', $model->config);
     $smarty->assign('root_id', $root['id']);
     $smarty->assign('items', $items);
+	$smarty->assign('cat', $category);
     $smarty->assign('maxcols', $category['maxcols']);
     $smarty->assign('colwidth', round(100/$maxcols));
-	$smarty->assign('pagetitle', $pagetitle);
     $smarty->assign('pagebar', $pagebar);
-    $smarty->assign('is_user', $inUser->id);
     $smarty->display('com_board_items.tpl');
 
 

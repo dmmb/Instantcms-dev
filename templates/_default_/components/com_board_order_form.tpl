@@ -2,14 +2,14 @@
 {* ==================== Форма сортировки на доске объявлений ====================== *}
 {* ================================================================================ *}
 
-<form action="{$action_url}" method="POST">
+<form action="{$action_url}" method="POST" id="obform">
 	<div class="photo_sortform">
 		<table cellspacing="2" cellpadding="2" >
 			<tr>
 				<td >{$LANG.TYPE}: </td>
 				<td >
-					<select name="obtype" id="obtype">
-						<option value="" {if (empty($btype))} selected {/if}>{$LANG.ALL_TYPE}</option>
+					<select name="obtype" id="obtype" onchange="$('form#obform').submit();">
+						<option value="all" {if (empty($btype))} selected {/if}>{$LANG.ALL_TYPE}</option>
 						{$btypes}
 					</select>
 				</td>

@@ -214,7 +214,7 @@ CREATE TABLE `#__board_cats` (
   `thumbsqr` int(11) NOT NULL,
   `uplimit` int(11) NOT NULL DEFAULT '10',
   `is_photos` int(11) NOT NULL DEFAULT '1',
-  `icon` varchar(25) DEFAULT 'folder_grey.png',
+  `icon` varchar(200) DEFAULT 'folder_grey.png',
   `obtypes` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;

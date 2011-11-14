@@ -178,6 +178,8 @@ class cms_model_board{
 			if(!$category['obtypes']) { $category['obtypes'] = $this->config['obtypes']; }
         }
 
+		$category['cat_city'] = $this->getCatCity($category['id']);
+
         return $category;
     }
 
@@ -214,7 +216,7 @@ class cms_model_board{
         $sql = "SELECT c.*, IFNULL(COUNT(i.id), 0) as content_count
                 FROM cms_board_cats c
                 LEFT JOIN cms_board_items i ON i.category_id = c.id AND i.published = 1
-                WHERE c.published = 1 AND c.parent_id = $category_id
+                WHERE c.published = 1 AND c.parent_id = '$category_id'
                 GROUP BY c.id
                 ORDER BY title ASC";
         $result = $this->inDB->query($sql);
@@ -225,6 +227,7 @@ class cms_model_board{
             if (!$cat['obtypes']){
                 $cat['obtypes'] = $this->inDB->get_field('cms_board_cats', "NSLeft <= {$cat['NSLeft']} AND NSRight >= {$cat['NSRight']} AND obtypes <> ''", 'obtypes');
             }
+			$cat['ob_links'] = $this->getTypesLinks($cat['id'], $cat['obtypes']);
             $cats[] = $cat;
         }
 
@@ -522,7 +525,7 @@ class cms_model_board{
     public function getOrder($order='', $default='') {
 
 		if ($this->inCore->inRequest($order)) { 
-			$orders = $inCore->request($order, 'str');
+			$orders = $this->inCore->request($order, 'str');
 			cmsUser::sessionPut('ad_'.$order, $orders);
 		} elseif(cmsUser::sessionGet('ad_'.$order)) { 
 			$orders = cmsUser::sessionGet('ad_'.$order);
@@ -560,25 +563,42 @@ class cms_model_board{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function getBoardCities($selected='', $cat_id = 0){
+    public function getCatCity($cat_id = 0){
 
-		global $_LANG;
+		$cat_city = array();
 
+		$cat_id = ($cat_id == $this->root_cat['id']) ? 0 : $cat_id;
 		$cat_sql = $cat_id ? "category_id = '$cat_id'" : '1=1';
 
         $sql = "SELECT city FROM cms_board_items WHERE published = 1 AND {$cat_sql} GROUP BY city";
         $result = $this->inDB->query($sql);
 
-        $html = '<select name="city">';
-        $html .= '<option value="">'.$_LANG['ALL_CITY'].'</option>';
 		if ($this->inDB->num_rows($result)){
 			while($c = $this->inDB->fetch_assoc($result)){
-				if (strtolower($selected)==strtolower($c['city'])){
+				$cat_city[] = $c['city'];
+			}
+		}
+
+        return $cat_city;
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function getBoardCities($selected='', $cat){
+
+		global $_LANG;
+
+        $html = '<select name="city" onchange="$(\'form#obform\').submit();">';
+        $html .= '<option value="all">'.$_LANG['ALL_CITY'].'</option>';
+		if ($cat['cat_city']){
+			foreach($cat['cat_city'] as $cat_city){
+				if (strtolower($selected)==strtolower($cat_city)){
 					$s = 'selected="selected"';
 				} else {
 					$s = '';
 				}
-				$pretty = htmlspecialchars(ucfirst(strtolower($c['city'])));
+				$pretty = htmlspecialchars(ucfirst(strtolower($cat_city)));
 				$html .= '<option value="'.$pretty.'" '.$s.'>'.$pretty.'</option>';
 			}
 		}
@@ -594,9 +614,9 @@ class cms_model_board{
 		$types = explode("\n", $types);
 		foreach($types as $id=>$type){
 			$type = trim($type);
-			$html .= '<a class="board_cats_a" href="/board/'.$cat_id.'/type/'.urlencode(ucfirst($type)).'">'.ucfirst($type).'</a>';
+			$html .= '<a class="board_cats_a" href="/board/'.$cat_id.'/type/'.urlencode(ucfirst($type)).'">'.ucfirst($type).'</a>, ';
 		}
-		$html = rtrim($html, ',');
+		$html = rtrim($html, ', ');
 		return $html;
 	
 	}
@@ -621,16 +641,13 @@ class cms_model_board{
 	}
 /* ==================================================================================================== */
 /* ==================================================================================================== */
-	public function orderForm($orderby, $orderto, $obtypes){
-	
-		if (isset($_SESSION['board_type'])) { $btype = $_SESSION['board_type']; } else { $btype = ''; }
-		if (isset($_SESSION['board_city'])) { $bcity = $_SESSION['board_city']; } else { $bcity = ''; }	
-	
+	public function orderForm($orderby, $orderto, $category){
+
 		$smarty = $this->inCore->initSmarty('components', 'com_board_order_form.tpl');				
-		$smarty->assign('btype', $btype);
-		$smarty->assign('btypes', $this->getTypesOptions($btype, $obtypes));
-		$smarty->assign('bcity', $bcity);
-		$smarty->assign('bcities', $this->getBoardCities($bcity));
+		$smarty->assign('btype', $this->obtype);
+		$smarty->assign('btypes', $this->getTypesOptions($category['obtypes'], $this->obtype));
+		$smarty->assign('bcity', $this->city);
+		$smarty->assign('bcities', $this->getBoardCities($this->city, $category));
 		$smarty->assign('orderby', $orderby);
 		$smarty->assign('orderto', $orderto);		
 		$smarty->assign('action_url', $_SERVER['REQUEST_URI']);

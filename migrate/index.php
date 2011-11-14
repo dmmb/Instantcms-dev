@@ -89,6 +89,7 @@
 // ========================================================================== //	
 	$inDB->query("UPDATE `cms_forums` SET `title` = '-- Корневой форум --' WHERE `parent_id` = 0 LIMIT 1");
 	$inDB->query("UPDATE `cms_menu` SET `title` = '-- Корневая страница --' WHERE `parent_id` = 0 LIMIT 1");
+	$inDB->query("ALTER TABLE `cms_board_cats` CHANGE `icon` `icon` VARCHAR( 200 ) CHARACTER SET cp1251 COLLATE cp1251_general_ci NULL DEFAULT 'folder_grey.png'");
 // ========================================================================== //
 // ========================================================================== //	
 	if (!$inDB->isFieldExists('cms_users', 'openid')){

@@ -200,11 +200,12 @@ class p_loginza extends cmsPlugin {
             $nickname = 'user' . ($max['id'] + 1);
 
         }
+		$nickname   = $inDB->escape_string($nickname);
 
         $login      = str_replace('-', '', cmsCore::strToURL($nickname));
         $pass       = md5(substr(md5(rand(0, 9999)), 0, 8));
-        $email      = $profile->email;
-        $birthdate  = $profile->dob;
+        $email      = $inDB->escape_string($profile->email);
+        $birthdate  = $inDB->escape_string($profile->dob);
 
         $already_email = $inDB->get_field('cms_users', "email='{$email}' AND is_deleted=0", 'email');
 		$already_login = $inDB->get_field('cms_users', "login='{$login}' AND is_deleted=0", 'login');
@@ -271,7 +272,7 @@ class p_loginza extends cmsPlugin {
             }
 
             $sql = "INSERT INTO cms_user_profiles (user_id, city, description, showmail, showbirth, showicq, karma, imageurl, allow_who)
-                    VALUES ('{$user_id}', '', '', '0', '0', '1', '0', '{$filename}', 'all')";
+                    VALUES ('{$user_id}', '', '', '0', '0', '1', '0', '{$inDB->escape_string($filename)}', 'all')";
             $inDB->query($sql);
 
             $user_array['id'] = $user_id;
@@ -332,7 +333,7 @@ class p_loginza extends cmsPlugin {
         
         $inDB   = cmsDatabase::getInstance();
 
-        return $inDB->get_field('cms_users', "openid='{$identity}'", 'id');
+        return $inDB->get_field('cms_users', "openid='{$inDB->escape_string($identity)}'", 'id');
         
     }
     

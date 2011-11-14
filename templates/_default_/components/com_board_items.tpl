@@ -1,7 +1,7 @@
 {* ================================================================================ *}
 {* ==================== Cписок объ€влений (на доске объ€влений) =================== *}
 {* ================================================================================ *}
-
+{$order_form}
 <div class="board_gallery">
 	{if $items}
 		<table width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -25,7 +25,9 @@
 									{$con.content}
 								</div>																													
 								<div class="bd_item_details">
+                                		{if $cat.showdate}
 										<span class="bd_item_date">{$con.fpubdate}</span>
+                                        {/if}
 										{if $con.city}
 											<span class="bd_item_city"><a href="/board/city/{$con.enc_city|escape:'html'}">{$con.city}</a></span>
 										{/if}
@@ -52,11 +54,4 @@
 	{elseif $cat.id != $root_id}
 		<p>{$LANG.ADVS_NOT_FOUND}</p>
 	{/if}
-</div>
-
-{if $cat.public && $is_user}
-	<table cellpadding="2" cellspacing="0" style="margin-bottom:10px">
-		<tr><td><img src="/components/board/images/add.gif" border="0"/></td>
-		<td><a style="text-decoration:underline" href="/board/{$cat.id}/add.html">{$LANG.ADD_ADV_TO_CAT}</a></td></tr>
-	</table>
-{/if}						
+</div>						
