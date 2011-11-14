@@ -56,11 +56,11 @@ if ($do=='view'){
 		$pagetitle = $category['title'];		
 
         $category_path  = $model->getCategoryPath($category['NSLeft'], $category['NSRight']);
-		foreach($category_path as $pcat){
-            $inPage->addPathway($pcat['title'], '/board/'.$pcat['id']);
-		}        
-
-		$category['ob_links'] = $model->getTypesLinks($category['id'], $category['obtypes']);
+		if($category_path){
+			foreach($category_path as $pcat){
+				$inPage->addPathway($pcat['title'], '/board/'.$pcat['id']);
+			}
+		}
 
 	}
 
@@ -102,8 +102,11 @@ if ($do=='view'){
     //устанавливаем номер текущей страницы и кол-во объявлений на странице
     $model->limitPage($model->page, $category['perpage']);
 
+	// модератор или админ
+	$is_moder = $inUser->is_admin || $this->inCore->isUserCan('board/moderate');
+
 	// Получаем объявления
-	$items = $model->getAdverts(false, true);
+	$items = $model->getAdverts($is_moder, true);
 
     // Отдаем в шаблон категории
 	$smarty = $inCore->initSmarty('components', 'com_board_cats.tpl');			
@@ -111,9 +114,6 @@ if ($do=='view'){
 	$smarty->assign('cats', $cats);
 	$smarty->assign('cat', $category);
 	$smarty->assign('root_id', $model->root_cat['id']);
-	$smarty->assign('category', $category);
-	$smarty->assign('city', $city);
-	$smarty->assign('obtype', $obtype);
     $smarty->assign('is_user', $inUser->id);
 	$smarty->assign('maxcols', $model->config['maxcols']);
 	$smarty->display('com_board_cats.tpl');
@@ -128,120 +128,42 @@ if ($do=='view'){
 	$pagebar = ($category['id'] != $model->root_cat['id']) ? cmsPage::getPagebar($total, $model->page, $category['perpage'], '/board/%catid%-%page%', array('catid'=>$category['id'])) : false;
 
     $smarty->assign('cfg', $model->config);
-    $smarty->assign('root_id', $root['id']);
+    $smarty->assign('root_id', $model->root_cat['id']);
     $smarty->assign('items', $items);
 	$smarty->assign('cat', $category);
     $smarty->assign('maxcols', $category['maxcols']);
-    $smarty->assign('colwidth', round(100/$maxcols));
+    $smarty->assign('colwidth', round(100/$category['maxcols']));
     $smarty->assign('pagebar', $pagebar);
     $smarty->display('com_board_items.tpl');
-
-
-
-
-
-
-
-
-
-
-
-//	//BUILD SUB-CATS LIST	
-//	$subcats_list   = $model->getSubCats($id);
-//    $is_subcats     = (bool)sizeof($subcats_list);
-//
-//	if ($is_subcats){
-//		$cats = array();
-//		foreach($subcats_list as $cat) {
-//            $sub                = $model->getSubCatsCount($cat['id']);
-//			$cat['subtext']     = $sub ? '/'.$sub : '';
-//			$cat['ob_links']    = obTypesLinks($cat['id'], $cat['obtypes']);
-//            $cats[]             = $cat;
-//		}
-//	}
-//
-//	$smarty = $inCore->initSmarty('components', 'com_board_cats.tpl');			
-//		$smarty->assign('is_subcats', $is_subcats);
-//		$smarty->assign('cats', $cats);
-//		$smarty->assign('maxcols', $maxcols);
-//	$smarty->display('com_board_cats.tpl');
-//	
-//	//SHOW CAT CONTENT
-//
-//
-//    $col = 1; $maxcols = $category['maxcols']; $colwidth = round(100/$maxcols);
-//
-//    //DISPLAY
-//    $smarty = $inCore->initSmarty('components', 'com_board_items.tpl');
-//        $smarty->assign('is_items', $is_items);
-//        $smarty->assign('cfg', $cfg);
-//        $smarty->assign('cat', $category);
-//        $smarty->assign('root_id', $root['id']);
-//        $smarty->assign('items', $items);
-//        $smarty->assign('maxcols', $maxcols);
-//        $smarty->assign('colwidth', $colwidth);		
-//        $smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/board/%catid%-%page%', array('catid'=>$id)));
-//        $smarty->assign('is_user', $inUser->id);
-//    $smarty->display('com_board_items.tpl');
 						
 }
 /////////////////////////////// VIEW ITEM ///////////////////////////////////////////////////////////////////////////////////////////
 if($do=='read'){
-	$item   = $model->getRecord($id);
 
+	$item = $model->getRecord($model->item_id);
 	if (!$item){ cmsCore::error404(); }
+
 	if ($item['published'] != 1) {
 		$inPage->printHeading($_LANG['ADV_IS_MODER']);
         return;
 	}
 
-	$item['title'] = $item['obtype'].' '.$item['title'];
-
-	//PATHWAY ENTRY
-	$pagetitle =  $item['title'];
-	$inPage->setTitle($pagetitle  . ' - '.$_LANG['BOARD']);
-
-	//PATHWAY ENTRY
-	$left_key       = $item['NSLeft'];
-	$right_key      = $item['NSRight'];
-	$category_path  = $model->getCategoryPath($left_key, $right_key);
-	foreach($category_path as $pcat){
-		$inPage->addPathway($pcat['title'], '/board/'.$pcat['id']);
+	$category_path = $model->getCategoryPath($item['NSLeft'], $item['NSRight']);
+	if($category_path){
+		foreach($category_path as $pcat){
+			$inPage->addPathway($pcat['title'], '/board/'.$pcat['id']);
+		}
 	}
 	$inPage->addPathway($item['title']);
-
 	$inPage->setTitle($item['title']);
-	$inPage->printHeading($item['title']);
 
 	$model->increaseHits($id);
 
-	//encode city
-	$item['enc_city'] = urlencode($item['city']);
-
-	$item['content'] = nl2br($item['content']);
-	$item['content'] = $cfg['auto_link'] ? $inCore->parseSmiles($item['content']) : $item['content'];
-
-	//Check user access
-	if ($inUser->id){
-		$moderator = ($inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('board/moderate') || $item['user_id'] == $inUser->id);
-	} else {
-		$moderator = false;		
-	}
-
-	//check photo
-	if ($item['file']){
-		if (!file_exists(PATH.'/images/board/medium/'.$item['file'])){
-			$item['file'] = '';
-		}
-	}
-	
 	//DISPLAY
 	$smarty = $inCore->initSmarty('components', 'com_board_item.tpl');						
-		$smarty->assign('moderator', $moderator);
-		$smarty->assign('item', $item);
-		$smarty->assign('cfg', $cfg);
-		$smarty->assign('is_user', $inUser->id);
-		$smarty->assign('user_id', $inUser->id);
+	$smarty->assign('item', $item);
+	$smarty->assign('cfg', $model->config);
+	$smarty->assign('user_id', $inUser->id);
 	$smarty->display('com_board_item.tpl');
         
 }

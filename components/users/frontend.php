@@ -2070,165 +2070,161 @@ if ($do=='delmessages'){
 ///////////////////////////////////////////// KARMA LOG /////////////////////////////////////////////////////////////////////////
 if ($do=='karma'){
 	
-		$usr = $model->getUserShort($id);
-		if (!$usr) { cmsCore::error404(); }
-		
-				$inPage->setTitle($_LANG['KARMA_HISTORY']);
-				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-				$inPage->addPathway($_LANG['KARMA_HISTORY'], $_SERVER['REQUEST_URI']);
-				
-		$ksql = "SELECT k.*, k.points as kpoints, u.nickname, u.login
-					 FROM cms_user_karma k
-					 LEFT JOIN cms_users u ON u.id = k.sender_id
-					 WHERE k.user_id = $id
-						 ORDER BY k.senddate DESC
-						 LIMIT 50";
-		$kresult = $inDB->query($ksql);
-				
-		$karma = array();
+	$usr = $model->getUserShort($id);
+	if (!$usr) { cmsCore::error404(); }
+	
+	$inPage->setTitle($_LANG['KARMA_HISTORY']);
+	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+	$inPage->addPathway($_LANG['KARMA_HISTORY']);
+			
+	$ksql = "SELECT k.*, k.points as kpoints, u.nickname, u.login
+				 FROM cms_user_karma k
+				 LEFT JOIN cms_users u ON u.id = k.sender_id
+				 WHERE k.user_id = $id
+				 ORDER BY k.senddate DESC
+				 LIMIT 50";
+	$kresult = $inDB->query($ksql);
+			
+	$karma = array();
 
-				if ($inDB->num_rows($kresult)>0){
-					while($k = $inDB->fetch_assoc($kresult)){
-				$k['fsenddate'] = $inCore->dateFormat($k['senddate'], true, true);
-				$k['kpoints']   = karmaPoints($k['kpoints']);
-				$karma[]        = $k;
-					}
+	if ($inDB->num_rows($kresult)>0){
+		while($k = $inDB->fetch_assoc($kresult)){
+			$k['fsenddate'] = $inCore->dateFormat($k['senddate'], true, true);
+			$k['kpoints']   = karmaPoints($k['kpoints']);
+			$karma[]        = $k;
 		}
+	}
 
-		$smarty = $inCore->initSmarty('components', 'com_users_karma.tpl');
-		$smarty->assign('karma', $karma);
-		$smarty->assign('usr', $usr);
-		$smarty->display('com_users_karma.tpl');
+	$smarty = $inCore->initSmarty('components', 'com_users_karma.tpl');
+	$smarty->assign('karma', $karma);
+	$smarty->assign('usr', $usr);
+	$smarty->display('com_users_karma.tpl');
 }
 /////////////////////////////// GIVE AWARD ///////////////////////////////////////////////////////////////////////////////////////
 if ($do=='giveaward'){
 
     if (!$inUser->is_admin) { $inCore->halt(); }
 
-	if (usrCheckAuth()){
+	$from_id = $inUser->id;
+	$to_id = $id;
+	
+	$usr = $model->getUserShort($id);
+	if (!$usr) { cmsCore::error404(); }
+	
+	$inPage->setTitle($_LANG['AWARD_USER']);
+	$inPage->addHeadJS('components/users/js/awards.js');
+	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+	$inPage->addPathway($_LANG['AWARD']);
+				
+	if(!isset($_POST['gosend'])){		
+				
+		$smarty = $inCore->initSmarty('components', 'com_users_awards_give.tpl');
+		$smarty->assign('usr', $usr);
+		$smarty->assign('awardslist', usrAwardsList('aw.gif'));
+		$smarty->display('com_users_awards_give.tpl');
 
-		$from_id = $inUser->id;
-		$to_id = $id;
-		
-		$usr = $model->getUserShort($id);
-		if (!$usr) { cmsCore::error404(); }
-		
-				$inPage->setTitle($_LANG['AWARD_USER']);
-				$inPage->addHeadJS('components/users/js/awards.js');
-				$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-				$inPage->addPathway($_LANG['AWARD'], $_SERVER['REQUEST_URI']);
-					
-				if(!isset($_POST['gosend'])){		
-					
-			$smarty = $inCore->initSmarty('components', 'com_users_awards_give.tpl');
-			$smarty->assign('usr', $usr);
-			$smarty->assign('awardslist', usrAwardsList('aw.gif'));
-			$smarty->display('com_users_awards_give.tpl');
+	} else {
 
-				} else {
+		$title = $inCore->request('title', 'str', $_LANG['AWRD']);
+		$description = $inCore->request('description', 'str', '');
+		$imageurl = $inCore->request('imageurl', 'str', $_LANG['AWRD']);
+		$award_id = 0;					
+		if (file_exists(PATH.'/images/users/awards/'.$imageurl)){
 
-					$title = $inCore->request('title', 'str', $_LANG['AWRD']);
-					$description = $inCore->request('description', 'str', '');
-					$imageurl = $inCore->request('imageurl', 'str', $_LANG['AWRD']);
-					$award_id = 0;					
-					if (file_exists(PATH.'/images/users/awards/'.$imageurl)){							
-						$sql = "INSERT INTO cms_user_awards (user_id, pubdate, title, description, imageurl, from_id, award_id)
-								VALUES ('$to_id', NOW(), '$title', '$description', '$imageurl', '$from_id', '$award_id')";
-				$inDB->query($sql);
-				$award_id = $inDB->get_last_id('cms_user_awards');
-				//регистрируем событие
-				cmsActions::log('add_award', array(
-						'object' => '"'.$title.'"',
-						'user_id' => $to_id,
-						'object_url' => '',
-						'object_id' => $award_id,
-						'target' => '',
-						'target_url' => '',
-						'target_id' => 0, 
-						'description' => '<img src="/images/users/awards/'.$imageurl.'" border="0" alt="'.$description.'">'
-				));
-						cmsUser::sendMessage(USER_UPDATER, $to_id, '<b>'.$_LANG['RECEIVED_AWARD'].':</b> <a href="'.cmsUser::getProfileURL($usr['login']).'">'.$title.'</a>');
-					}
-					$inCore->redirect(cmsUser::getProfileURL($usr['login']));
-				}						
+			$sql = "INSERT INTO cms_user_awards (user_id, pubdate, title, description, imageurl, from_id, award_id)
+					VALUES ('$to_id', NOW(), '$title', '$description', '$imageurl', '$from_id', '$award_id')";
+			$inDB->query($sql);
+			$award_id = $inDB->get_last_id('cms_user_awards');
+			//регистрируем событие
+			cmsActions::log('add_award', array(
+					'object' => '"'.$title.'"',
+					'user_id' => $to_id,
+					'object_url' => '',
+					'object_id' => $award_id,
+					'target' => '',
+					'target_url' => '',
+					'target_id' => 0, 
+					'description' => '<img src="/images/users/awards/'.$imageurl.'" border="0" alt="'.htmlspecialchars($description).'">'
+			));
+			cmsUser::sendMessage(USER_UPDATER, $to_id, '<b>'.$_LANG['RECEIVED_AWARD'].':</b> <a href="'.cmsUser::getProfileURL($usr['login']).'">'.$title.'</a>');
+		}
+		$inCore->redirect(cmsUser::getProfileURL($usr['login']));
+	}						
 
-	} else { echo usrAccessDenied(); } //usrCheckAuth
 }//do
 /////////////////////////////// DELETE AWARD ///////////////////////////////////////////////////////////////////////////////////////
 if ($do=='delaward'){
-	if (usrCheckAuth()){
 
-		$sql = "SELECT user_id FROM cms_user_awards WHERE id = $id LIMIT 1";
-		$result = $inDB->query($sql) ;
-		if ($inDB->num_rows($result)){
-			$aw = $inDB->fetch_assoc($result);
-			if ($aw['user_id']==$inUser->id || $inCore->userIsAdmin($inUser->id)){
-				$inDB->query("DELETE FROM cms_user_awards WHERE id = $id LIMIT 1");
-				cmsActions::removeObjectLog('add_award', $id);
-			}
-		}
-	}
+	$sql = "SELECT user_id FROM cms_user_awards WHERE id = '$id' LIMIT 1";
+	$result = $inDB->query($sql);
+	if (!$inDB->num_rows($result)){ cmsCore::error404(); }
+
+	$aw = $inDB->fetch_assoc($result);
+
+	if (!$inUser->id || ($inUser->id!=$aw['user_id'] && !$inUser->is_admin)){ cmsCore::error404(); }
+
+	$inDB->query("DELETE FROM cms_user_awards WHERE id = '$id' LIMIT 1");
+	cmsActions::removeObjectLog('add_award', $id);
+
 	$inCore->redirectBack();
-}//do
+
+}
 ///////////////////////// DELETE PROFILE /////////////////////////////////////////////////////////////////////////////
 if ($do == 'delprofile'){
 
     $inPage->backButton(false);
 
-	if (usrCheckAuth()){
-			
-		$data = $model->getUserShort($id);
-		if (!$data) { cmsCore::error404(); }
-			
-				if (isset($_REQUEST['confirm'])){
-					if ($inUser->id == $data['id'] || $inCore->userIsAdmin($inUser->id)){
-						$model->deleteUser($id);
-                        $user_blog_id = $inDB->get_field('cms_blogs', 'user_id='.$id, 'id');
-						if ($user_blog_id) {
-                            $inCore->loadModel('blogs');
-                            $blog_model = new cms_model_blogs();
-                            $blog_model->deleteBlog($user_blog_id);
-                        }
-						session_destroy();
-					}
-					if ($inUser->id == $data['id']){
-                        $inCore->redirect('/logout');
-                    } else { $inCore->redirect('/users'); }
-				} else {				
-					//MENU
-					$inPage->setTitle($_LANG['DELETING_PROFILE']);
-					$inPage->addPathway($data['nickname'], $inUser->getProfileURL($data['login']));
-					$inPage->addPathway($_LANG['DELETING_PROFILE'], $_SERVER['REQUEST_URI']);
-					if ($inUser->id == $data['id'] || $inCore->userIsAdmin($inUser->id)){
-						$GLOBALS['ed_menu'][0]['link'] = 'javascript:window.history.go(-1)';
-						$GLOBALS['ed_menu'][0]['title'] = $_LANG['CANCEL'];
-						$GLOBALS['ed_page_title'] = $_LANG['DELETING_PROFILE'];
-						echo '<div class="con_heading">'.$_LANG['DELETING_PROFILE'].'</div>';
-						echo '<p style="margin-bottom:30px">'.$_LANG['REALLY_DEL_PROFILE'].'<br/> '.$_LANG['REALLY_DEL_PROFILE_TEXT'].'</p>';
-						echo '<a href="/users/'.$id.'/delprofile-yes.html" class="usr_btnlink">'.$_LANG['YES'].'</a><a href="javascript:window.history.go(-1)" class="usr_btnlink">'.$_LANG['NO'].'</a>';
-					} else { echo usrAccessDenied(); }					
-				}	
+	if (!$inUser->id) { cmsUser::goToLogin(); }
 
-	} else { echo usrAccessDenied(); }
+	$data = $model->getUserShort($id);
+	if (!$data) { cmsCore::error404(); }
+
+	if ($inUser->id != $data['id'] && !$inUser->is_admin){ cmsCore::error404(); }
+
+	if (isset($_REQUEST['confirm'])){
+
+		$model->deleteUser($id);
+		$user_blog_id = $inDB->get_field('cms_blogs', "user_id = '$id'", 'id');
+		if ($user_blog_id) {
+			$inCore->loadModel('blogs');
+			$blog_model = new cms_model_blogs();
+			$blog_model->deleteBlog($user_blog_id);
+		}
+
+		if ($inUser->id == $data['id']){
+			session_destroy();
+			$inCore->redirect('/logout');
+		} else { $inCore->redirect('/users'); }
+
+	} else {				
+
+		$inPage->setTitle($_LANG['DELETING_PROFILE']);
+		$inPage->addPathway($data['nickname'], $inUser->getProfileURL($data['login']));
+		$inPage->addPathway($_LANG['DELETING_PROFILE']);
+
+		$confirm['title'] = $_LANG['DELETING_PROFILE'];
+		$confirm['text'] = '<p>'.$_LANG['REALLY_DEL_PROFILE'].'<br/> '.$_LANG['REALLY_DEL_PROFILE_TEXT'].'</p>';
+		$confirm['action'] = 'javascript:void(0);';
+		$confirm['yes_button'] = array();
+		$confirm['yes_button']['type'] = 'button';
+		$confirm['yes_button']['onclick'] = "window.location.href='/users/$id/delprofile-yes.html';";
+		$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
+		$smarty->assign('confirm', $confirm);
+		$smarty->display('action_confirm.tpl');
+				
+	}	
+
 }
 /////////////////////////////// RESTORE PROFILE /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='restoreprofile'){
 
-	if (usrCheckAuth()){
+    if (!$inUser->is_admin) { $inCore->halt(); }
 
-		$usr = $model->getUserShort($id);
-		if (!$usr) { cmsCore::error404(); }
+	$usr = $model->getUserShort($id);
+	if (!$usr) { cmsCore::error404(); }
 				
-			if ($inUser->id==$id || $inCore->userIsAdmin($inUser->id)){
-				$sql = "UPDATE cms_users SET is_deleted = 0 WHERE id = $id";
-				$inDB->query($sql) ;
-			}
-
-	}
-
-	if (isset($_SERVER['HTTP_REFERER'])){
-		$back = $_SERVER['HTTP_REFERER'];
-	} else { $back = '/'; }
+	$sql = "UPDATE cms_users SET is_deleted = 0 WHERE id = '$id'";
+	$inDB->query($sql) ;
 
 	$inCore->redirectBack();
 }

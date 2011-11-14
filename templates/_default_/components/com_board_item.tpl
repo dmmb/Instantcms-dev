@@ -1,6 +1,7 @@
 {* ================================================================================ *}
 {* ==================== Просмотр объявления (на доске объявлений) ================= *}
 {* ================================================================================ *}
+<h1 class="con_heading">{$item.title}</h1>
 <div class="bd_item_details_full">
     {if $item.is_vip}
         <span class="bd_item_is_vip">{$LANG.VIP_ITEM}</span>
@@ -16,7 +17,7 @@
 			<a href="{profile_url login=$item.user_login}">{$item.user}</a>
 		</span>
 	{/if}
-	{if $moderator}
+	{if $item.moderator}
 		<span class="bd_item_edit"><a href="/board/edit{$item.id}.html">{$LANG.EDIT}</a></span>
 		<span class="bd_item_delete"><a href="/board/delete{$item.id}.html">{$LANG.DELETE}</a></span>
 	{/if}				
@@ -36,7 +37,7 @@
 </table>		
 
 <div class="bd_links">
-	{if $is_user}
+	{if $user_id}
 		{if $item.user_id != $user_id}
 			<span class="bd_message"><a href="/users/{$item.user_id}/sendmessage.html">{$LANG.WRITE_MESS_TO_AVTOR}</a></span>
 		{/if}

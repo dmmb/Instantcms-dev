@@ -1,11 +1,11 @@
 {* ================================================================================ *}
 {* ==================== Cписок [под]рубрик доски объявлений ======================= *}
 {* ================================================================================ *}
-{if $cat.public && $is_user}
+{if $cat.public || $root_id==$cat.id}
 <div class="float_bar">
 	<table cellpadding="2" cellspacing="0">
 		<tr><td><img src="/components/board/images/add.gif" border="0"/></td>
-		<td><a style="text-decoration:underline" href="/board/{$cat.id}/add.html">{$LANG.ADD_ADV}</a></td></tr>
+		<td><a href="/board/{if $root_id!=$cat.id}{$cat.id}/{/if}add.html">{$LANG.ADD_ADV}</a></td></tr>
 	</table>
 </div>
 {/if}

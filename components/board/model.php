@@ -180,6 +180,8 @@ class cms_model_board{
 
 		$category['cat_city'] = $this->getCatCity($category['id']);
 
+		$category['ob_links'] = $this->getTypesLinks($category['id'], $category['obtypes']);
+
         return $category;
     }
 
@@ -234,13 +236,6 @@ class cms_model_board{
         $cats = cmsCore::callEvent('GET_BOARD_SUBCATS', $cats);
             
         return $cats;
-    }
-
-/* ==================================================================================================== */
-/* ==================================================================================================== */
-
-    public function getSubCatsCount($category_id) {
-        return $this->inDB->rows_count('cms_board_cats', "parent_id = '$category_id'");
     }
 
 /* ==================================================================================================== */
@@ -369,6 +364,13 @@ class cms_model_board{
 		$record['pubdate'] 	  = cmsCore::dateFormat($record['pubdate']);
 		$record['vipdate'] 	  = cmsCore::dateFormat($record['vipdate']);
 		$record['enc_city']   = urlencode($record['city']);
+		$record['title']      = $record['obtype'].' '.$record['title'];
+		$record['content']    = nl2br($record['content']);
+		$record['content']    = $this->config['auto_link'] ? $this->inCore->parseSmiles($record['content']) : $record['content'];
+		$record['moderator']  = $this->checkAccess($record['user_id']);
+		if (!$record['file'] || !file_exists(PATH.'/images/board/small/'.$record['file'])){
+			$record['file'] = '';
+		}
 
         $record = cmsCore::callEvent('GET_BOARD_RECORD', $record);
 
@@ -650,7 +652,7 @@ class cms_model_board{
 		$smarty->assign('bcities', $this->getBoardCities($this->city, $category));
 		$smarty->assign('orderby', $orderby);
 		$smarty->assign('orderto', $orderto);		
-		$smarty->assign('action_url', $_SERVER['REQUEST_URI']);
+		$smarty->assign('action_url', '/board/'.$category['id']);
 		ob_start();
 		$smarty->display('com_board_order_form.tpl');
 		return ob_get_clean();
