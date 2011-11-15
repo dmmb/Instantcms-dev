@@ -4,7 +4,7 @@
 {$order_form}
 <div class="board_gallery">
 	{if $items}
-		<table width="100%" cellpadding="0" cellspacing="0" border="0">
+		<table width="100%" cellpadding="3" cellspacing="0" border="0">
 			{assign var="col" value="1"}	
 			{foreach key=tid item=con from=$items}									
 				{if $col==1} <tr> {/if} 				
@@ -25,8 +25,13 @@
 									{$con.content}
 								</div>																													
 								<div class="bd_item_details">
-                                		{if $cat.showdate}
-										<span class="bd_item_date">{$con.fpubdate}</span>
+                                		{if $cat.showdate && $con.published}
+											<span class="bd_item_date">{$con.fpubdate}</span>
+                                        {/if}
+                                        {if !$con.published && $con.is_overdue}
+                                            <span class="bd_item_status_bad">{$LANG.ADV_EXTEND_INFO}</span>
+                                        {elseif !$con.published}
+                                            <span class="bd_item_status_bad">{$LANG.WAIT_MODER}</span>
                                         {/if}
 										{if $con.city}
 											<span class="bd_item_city"><a href="/board/city/{$con.enc_city|escape:'html'}">{$con.city}</a></span>

@@ -159,12 +159,12 @@ class cms_model_board{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function getCategory() {
+    public function getCategory($category_id = 0) {
 
-		if($this->category_id == $this->root_cat['id']){
+		if($category_id == $this->root_cat['id']){
 			$category = $this->root_cat;
 		} else {
-	        $category = $this->inDB->get_fields('cms_board_cats', "id = '{$this->category_id}'", '*');
+	        $category = $this->inDB->get_fields('cms_board_cats', "id = '{$category_id}'", '*');
 		}
 		if(!$category) { return false; }
 
@@ -364,9 +364,6 @@ class cms_model_board{
 		$record['pubdate'] 	  = cmsCore::dateFormat($record['pubdate']);
 		$record['vipdate'] 	  = cmsCore::dateFormat($record['vipdate']);
 		$record['enc_city']   = urlencode($record['city']);
-		$record['title']      = $record['obtype'].' '.$record['title'];
-		$record['content']    = nl2br($record['content']);
-		$record['content']    = $this->config['auto_link'] ? $this->inCore->parseSmiles($record['content']) : $record['content'];
 		$record['moderator']  = $this->checkAccess($record['user_id']);
 		if (!$record['file'] || !file_exists(PATH.'/images/board/small/'.$record['file'])){
 			$record['file'] = '';
@@ -390,11 +387,12 @@ class cms_model_board{
 
     public function addRecord($item){
 
+		$inUser = cmsUser::getInstance();
         $item = cmsCore::callEvent('ADD_BOARD_RECORD', $item);
 
-        $sql = "INSERT INTO cms_board_items (category_id, user_id, obtype, title , content, city, pubdate, pubdays, published, file, hits) 
+        $sql = "INSERT INTO cms_board_items (category_id, user_id, obtype, title , content, city, pubdate, pubdays, published, file, hits, ip) 
                 VALUES ({$item['category_id']}, {$item['user_id']}, '{$item['obtype']}', '{$item['title']}', '{$item['content']}',
-                        '{$item['city']}', NOW(), {$item['pubdays']}, {$item['published']}, '{$item['file']}', 0)";
+                        '{$item['city']}', NOW(), {$item['pubdays']}, {$item['published']}, '{$item['file']}', 0, INET_ATON('{$inUser->ip}'))";
 
         $this->inDB->query($sql);
 		
@@ -503,7 +501,7 @@ class cms_model_board{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 	
-	public function uploadPhoto($old_file = '', $cfg, $cat) {
+	public function uploadPhoto($old_file = '', $cat) {
 
 		// Загружаем класс загрузки фото
 		$this->inCore->loadClass('upload_photo');
@@ -513,7 +511,7 @@ class cms_model_board{
 		$inUploadPhoto->small_size_w  = $cat['thumb1'];
 		$inUploadPhoto->medium_size_w = $cat['thumb2'];
 		$inUploadPhoto->thumbsqr      = $cat['thumbsqr'];
-		$inUploadPhoto->is_watermark  = $cfg['watermark'];
+		$inUploadPhoto->is_watermark  = $this->config['watermark'];
 		// Процесс загрузки фото
 		$file = $inUploadPhoto->uploadPhoto($old_file);
 		
@@ -659,8 +657,25 @@ class cms_model_board{
 	}
 /* ==================================================================================================== */
 /* ==================================================================================================== */
-	public function loadedByUser24h($user_id, $album_id){
-		return $this->inDB->rows_count('cms_board_items', "user_id = '$user_id' AND category_id = '$album_id' AND pubdate >= DATE_SUB(NOW(), INTERVAL 1 DAY)");
+	public function checkLoadedByUser24h($cat){
+
+		$inUser = cmsUser::getInstance();
+
+		if(!$cat['uplimit']) { return true; }
+
+		if($inUser->id){
+			$where = " AND user_id = '{$inUser->id}'";
+		} elseif ($inUser->ip && $inUser->ip != '127.0.0.1'){
+			$where = " AND ip = INET_ATON('{$inUser->ip}')";
+		} else {
+			return false;
+		}
+
+		$u_count = $this->inDB->rows_count('cms_board_items', "category_id = '$album_id' {$where} AND pubdate >= DATE_SUB(NOW(), INTERVAL 1 DAY)");
+
+		if($u_count<=$cat['uplimit']) { return true; }
+
+		return false;
 	}
 /* ==================================================================================================== */
 /* ==================================================================================================== */

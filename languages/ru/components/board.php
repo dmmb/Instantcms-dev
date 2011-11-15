@@ -43,6 +43,9 @@ $_LANG['ADD_ADV_MORE']            ='Добавить еще объявление';
 
 $_LANG['ADV_NOT_FOUND']           ='Объявление не найдено';
 $_LANG['ADV_IS_MODER']            ='Объявление находится на модерации';
+$_LANG['ADV_IS_EXTEND']           ='Объявление просрочено';
+$_LANG['WAIT_MODER']              ='Ожидает модерации';
+$_LANG['ADV_EXTEND_INFO']         ='Просрочено';
 $_LANG['ADV_NOT_FOUND_TEXT']      ='Возможно оно было удалено.';
 $_LANG['ADV_NOT_FOUND_TEXT_DEL']  ='Возможно оно уже было удалено.';
 

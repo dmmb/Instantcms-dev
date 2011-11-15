@@ -1,3 +1,4 @@
+<h1 class="con_heading">{$LANG.EDIT_ADV}</h1>
 <form action="{$action}" method="post" enctype="multipart/form-data">
 	<table cellpadding="2">
 		<tr>

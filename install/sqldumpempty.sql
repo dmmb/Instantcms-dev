@@ -241,11 +241,13 @@ CREATE TABLE `#__board_items` (
   `hits` int(11) NOT NULL,
   `is_vip` tinyint(4) NOT NULL DEFAULT '0',
   `vipdate` datetime NOT NULL,
+  `ip` int(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   KEY `user_id` (`user_id`),
   KEY `obtype` (`obtype`),
   KEY `city` (`city`),
+  KEY `ip` (`ip`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `content` (`content`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;

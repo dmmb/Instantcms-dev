@@ -100,6 +100,14 @@
 	}
 // ========================================================================== //
 // ========================================================================== //	
+	if (!$inDB->isFieldExists('cms_board_items', 'ip')){
+
+		$inDB->query("ALTER TABLE `cms_board_items` ADD `ip` INT( 10 ) UNSIGNED NOT NULL AFTER `vipdate` , ADD INDEX ( `ip` )");
+        echo '<p>Поле <strong>ip</strong> добавлено в таблицу <strong>cms_board_items</strong></p>';
+		$is_was_migrate = true;
+	}
+// ========================================================================== //
+// ========================================================================== //	
 	$inDB->query("DROP TABLE IF EXISTS `cms_search`");
 
 	$sql = "CREATE TABLE `cms_search` (

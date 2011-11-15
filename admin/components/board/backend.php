@@ -204,8 +204,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 						@unlink($uploadphoto);											
 				}		
 			}										
-			$sql = "INSERT INTO cms_board_items (category_id, user_id, obtype, title , content, city, pubdate, pubdays, published, file)
-					VALUES ('$category_id', '$user_id', '$obtype', '$title', '$content', '$city', '$pubdate', '$pubdays', '$published', '$filename')";	
+			$sql = "INSERT INTO cms_board_items (category_id, user_id, obtype, title , content, city, pubdate, pubdays, published, file, ip)
+					VALUES ('$category_id', '$user_id', '$obtype', '$title', '$content', '$city', '$pubdate', '$pubdays', '$published', '$filename', INET_ATON('{$inUser->ip}'))";	
 			dbQuery($sql) or die(mysql_error().'<pre>'.$sql.'</pre>');
 										
 			header('location:?view=components&do=config&opt=list_items&id='.(int)$_REQUEST['id']);		
@@ -674,13 +674,15 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$fields[3]['filter'] = 15;
 		$fields[3]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
 
-		$fields[4]['title'] = 'Показ';		$fields[4]['field'] = 'published';	$fields[4]['width'] = '100';
+		$fields[4]['title'] = 'Показ';		$fields[4]['field'] = 'published';	$fields[4]['width'] = '50';
 		$fields[4]['do'] = 'opt'; $fields[4]['do_suffix'] = '_item';
 
-		$fields[5]['title'] = 'Просмотров';	$fields[5]['field'] = 'hits';		$fields[5]['width'] = '90';
-		
-		$fields[6]['title'] = 'Рубрика';		$fields[6]['field'] = 'category_id';	$fields[6]['width'] = '250';
-		$fields[6]['prc'] = 'cpBoardCatById';  $fields[6]['filter'] = 1;  $fields[6]['filterlist'] = cpGetList('cms_board_cats');
+		$fields[5]['title'] = 'Просмотров';	$fields[5]['field'] = 'hits';		$fields[5]['width'] = '80';
+
+		$fields[6]['title'] = 'IP';	$fields[6]['field'] = 'ip';		$fields[6]['width'] = '80'; $fields[6]['prc'] = 'long2ip';
+
+		$fields[7]['title'] = 'Рубрика';		$fields[7]['field'] = 'category_id';	$fields[7]['width'] = '230';
+		$fields[7]['prc'] = 'cpBoardCatById';  $fields[7]['filter'] = 1;  $fields[7]['filterlist'] = cpGetList('cms_board_cats');
 	
 		//ACTIONS
 		$actions = array();
@@ -814,7 +816,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		      </tr>
 			  <tr>
 			    <td><strong>Максимум объявлений </strong> <br />
-		        <span class="hinttext">От одного пользователя в сутки</span></td>
+		        <span class="hinttext">От одного пользователя в сутки, 0 неограничено</span></td>
 			    <td><input name="uplimit" type="text" id="uplimit" size="5" value="<?php echo @$mod['uplimit'];?>"/>
 шт</td>
 		      </tr>

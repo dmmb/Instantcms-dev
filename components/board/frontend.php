@@ -41,7 +41,7 @@ function board(){
 if ($do=='view'){ 
 
 	//Получаем текущую категорию
-	$category = $model->getCategory();
+	$category = $model->getCategory($model->category_id);
 	if (!$category) { cmsCore::error404(); }
 
 	// Заголовки страницы	
@@ -89,8 +89,11 @@ if ($do=='view'){
 	$inPage->setDescription($pagetitle);
 	$inPage->setTitle($pagetitle);
 
+	// модератор или админ
+	$is_moder = $inUser->is_admin || $inCore->isUserCan('board/moderate');
+
     // Общее количество объявлений по заданным выше условиям
-    $total = $model->getAdvertsCount();
+    $total = $model->getAdvertsCount($is_moder);
 
     //устанавливаем сортировку
 	$orderby = $model->getOrder('orderby', $category['orderby']); 
@@ -101,9 +104,6 @@ if ($do=='view'){
 
     //устанавливаем номер текущей страницы и кол-во объявлений на странице
     $model->limitPage($model->page, $category['perpage']);
-
-	// модератор или админ
-	$is_moder = $inUser->is_admin || $this->inCore->isUserCan('board/moderate');
 
 	// Получаем объявления
 	$items = $model->getAdverts($is_moder, true);
@@ -143,10 +143,18 @@ if($do=='read'){
 	$item = $model->getRecord($model->item_id);
 	if (!$item){ cmsCore::error404(); }
 
-	if ($item['published'] != 1) {
-		$inPage->printHeading($_LANG['ADV_IS_MODER']);
-        return;
+	if (!$item['published'] && !$item['moderator']) { cmsCore::error404(); } 
+
+	if (!$item['published']) {
+		$info_text = $item['is_overdue'] ? $_LANG['ADV_IS_EXTEND'] : $_LANG['ADV_IS_MODER'];
+		cmsCore::addSessionMessage($info_text, 'info');
+	} else {
+		$model->increaseHits($model->item_id);
 	}
+
+	$item['title']   = $item['obtype'].' '.$item['title'];
+	$item['content'] = nl2br($item['content']);
+	$item['content'] = $model->config['auto_link'] ? $inCore->parseSmiles($item['content']) : $item['content'];
 
 	$category_path = $model->getCategoryPath($item['NSLeft'], $item['NSRight']);
 	if($category_path){
@@ -156,10 +164,8 @@ if($do=='read'){
 	}
 	$inPage->addPathway($item['title']);
 	$inPage->setTitle($item['title']);
+	$inPage->setDescription($item['title']);
 
-	$model->increaseHits($id);
-
-	//DISPLAY
 	$smarty = $inCore->initSmarty('components', 'com_board_item.tpl');						
 	$smarty->assign('item', $item);
 	$smarty->assign('cfg', $model->config);
@@ -170,31 +176,14 @@ if($do=='read'){
 /////////////////////////////// NEW BOARD ITEM /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='additem'){
 
-    if ( !$inUser->id ) { cmsUser::goToLogin();	}
+	if($model->category_id){
+		$cat = $model->getCategory($model->category_id);
+		if (!$cat) { cmsCore::error404(); }
+	    $inPage->addPathway($cat['title'], '/board/'.$cat['id']);
+	}
 
-	$inPage->backButton(false);
-
-    $cat = $model->getCategory($id);
-
-    if (!$cat) { cmsCore::error404(); }
-	
-    if ( $cat['public'] == -1 ) { $cat['public'] = $cfg['public']; }
-
-    $inPage->addPathway($cat['title'], '/board/'.$cat['id']);
 	$inPage->addPathway($_LANG['ADD_ADV']);
-    $inPage->printHeading($_LANG['ADD_ADV']);
 
-	// Проверяем права доступа
-    if ( !(loadedByUser24h($inUser->id, $cat['id'])<$cat['uplimit'] || $cat['uplimit'] == 0) ){       
-		cmsCore::addSessionMessage($_LANG['MAX_VALUE_OF_ADD_ADV'], 'error');
-		$inCore->redirect('/board/'.$id);      
-    }
-   
-    if ( !$cat['public'] ){
-		cmsCore::addSessionMessage($_LANG['YOU_CANT_ADD_ADV'], 'error');
-		$inCore->redirect('/board/'.$id);  
-    }
-    
     if ( !$inCore->inRequest('submit') ) {
 
         if (IS_BILLING) { cmsBilling::checkBalance('board', 'add_item'); }
@@ -208,13 +197,13 @@ if ($do=='additem'){
         $smarty = $inCore->initSmarty('components', 'com_board_edit.tpl');
         $smarty->assign('action', "/board/{$cat['id']}/add.html");
         $smarty->assign('form_do', 'add');
-        $smarty->assign('cfg', $cfg);
+        $smarty->assign('cfg', $model->config);
 		$smarty->assign('cat', $cat);
 		$smarty->assign('item', $item);
-        $smarty->assign('obtypes', obTypesOptions($cat['obtypes']));
-        $smarty->assign('cities', $inCore->boardCities('', '-- '.$_LANG['NOT_SELECT'].' --'));
+        $smarty->assign('obtypes', $model->getTypesOptions($cat['obtypes'], $item['obtype']));
+        $smarty->assign('cities', $model->getBoardCities($item['city'], $cat));
         $smarty->assign('is_admin', $inUser->is_admin);
-        $smarty->assign('catslist', $inCore->getListItemsNS('cms_board_cats'));
+        $smarty->assign('catslist', $inCore->getListItemsNS('cms_board_cats', $model->category_id));
 		$smarty->assign('is_billing', IS_BILLING);
         if (IS_BILLING){ $smarty->assign('balance', $inUser->balance); }
         $smarty->display('com_board_edit.tpl');
@@ -223,6 +212,17 @@ if ($do=='additem'){
     }
 
     if ( $inCore->inRequest('submit') ) {
+
+		// Проверяем количество добавленных за сутки
+		if (!$model->checkLoadedByUser24h($cat)){       
+			cmsCore::addSessionMessage($_LANG['MAX_VALUE_OF_ADD_ADV'], 'error');
+			$inCore->redirect('/board/'.$model->category_id);      
+		}
+		// Можем ли добавлять в эту рубрику
+		if (!$cat['public'] && !$inUser->is_admin){
+			cmsCore::addSessionMessage($_LANG['YOU_CANT_ADD_ADV'], 'error');
+			$inCore->redirect('/board/'.$model->category_id);  
+		}
 
         // входные данные
         $obtype     = $inCore->request('obtype', 'str');
@@ -238,13 +238,13 @@ if ($do=='additem'){
 
         $published  = 0;
 
-        if ($cat['public']==-1) { $cat['public'] = $cfg['public']; }
+        if ($cat['public']==-1) { $cat['public'] = $model->config['public']; }
 
         $published  = ($cat['public']==2 && $inCore->isUserCan('board/autoadd')) ? 1 : 0;
         if ($inUser->is_admin || $inCore->isUserCan('board/moderate')) { $published = 1; }
 
-        if ($cfg['srok']){  $pubdays = ($inCore->request('pubdays', 'int') <= 50) ? $inCore->request('pubdays', 'int') : 50; }
-        if (!$cfg['srok']){ $pubdays = isset($cfg['pubdays']) ? $cfg['pubdays'] : 14; }
+        if ($model->config['srok']){  $pubdays = ($inCore->request('pubdays', 'int') <= 50) ? $inCore->request('pubdays', 'int') : 50; }
+        if (!$model->config['srok']){ $pubdays = isset($model->config['pubdays']) ? $model->config['pubdays'] : 14; }
 
 		$errors = false;
         if (!$title) 	 { cmsCore::addSessionMessage($_LANG['NEED_TITLE'], 'error'); $errors = true; }
@@ -256,16 +256,16 @@ if ($do=='additem'){
 			$item['city']    = $city;
 			$item['title']   = $title;
 			cmsUser::sessionPut('item', $item);
-			$inCore->redirect('/board/'.$id.'/add.html');
+			$inCore->redirect('/board/'.$model->category_id.'/add.html');
         }
 
 		// Загружаем фото
-        $file = $model->uploadPhoto('', $cfg, $cat);
+        $file = $model->uploadPhoto('', $cat);
 		
 		if(!$file) { cmsCore::addSessionMessage($_LANG['PHOTO_NOT_UPLOAD'], 'info'); }
 
         $item_id = $model->addRecord(array(
-                                    'category_id'=>$id,
+                                    'category_id'=>$model->category_id,
                                     'user_id'=>$inUser->id,
                                     'obtype'=>$obtype,
                                     'title'=>$title,
@@ -282,9 +282,9 @@ if ($do=='additem'){
 
         if (IS_BILLING) {
             cmsBilling::process('board', 'add_item');
-            if ($cfg['vip_enabled'] && $vipdays && $cfg['vip_day_cost']){
-                if ($vipdays > $cfg['vip_max_days']) { $vipdays = $cfg['vip_max_days']; }
-                $summ = $vipdays * $cfg['vip_day_cost'];
+            if ($model->config['vip_enabled'] && $vipdays && $model->config['vip_day_cost']){
+                if ($vipdays > $model->config['vip_max_days']) { $vipdays = $model->config['vip_max_days']; }
+                $summ = $vipdays * $model->config['vip_day_cost'];
                 if ($inUser->balance >= $summ){
                     cmsBilling::pay($inUser->id, $summ, $_LANG['VIP_BUY_LOG']);
                     $model->setVip($item_id, $vipdays);
@@ -308,7 +308,7 @@ if ($do=='additem'){
         //finish
 		if (!$published) { $prmoder = '<p>'.$_LANG['ADV_PREMODER_TEXT'].'</p>'; }
 		cmsCore::addSessionMessage('<p><strong>'.$_LANG['ADV_IS_ADDED'].'</strong></p>'.$prmoder, 'info');
-		$inCore->redirect('/board/'.$id);
+		$inCore->redirect('/board/'.$model->category_id);
 
     }
 	
@@ -316,8 +316,7 @@ if ($do=='additem'){
 /////////////////////////////// EDIT BOARD ITEM /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='edititem'){
 
-	//Load data
-    $item = $model->getRecord($id);
+    $item = $model->getRecord($model->item_id);
     $cat  = $model->getCategory($item['category_id']);
 	if (!$cat) { cmsCore::error404(); }
 	if (!$item) { cmsCore::error404(); }
@@ -326,30 +325,20 @@ if ($do=='edititem'){
     $inPage->addPathway($item['category'], '/board/'.$item['cat_id']);
     $inPage->addPathway($_LANG['EDIT_ADV']);
 
-    $inPage->printHeading($_LANG['EDIT_ADV']);
-
-	//Check user access
-	if ($inUser->id){	
-        $moderator = ($inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('board/moderate') || $item['user_id'] == $inUser->id);
-    } else {
-        $moderator = false;
-    }
-				
-	//Show data only for moderators and owners
-	if (!$moderator){
+	if (!$item['moderator']){
 		cmsCore::addSessionMessage($_LANG['YOU_HAVENT_ACCESS'], 'error');
-		$inCore->redirect('/board/'.$item['cat_id']);  
+		$inCore->redirect('/board/read'.$item['id'].'.html');
 	}
 
     if (!$inCore->inRequest('submit')){
-        //show form
+
         $smarty = $inCore->initSmarty('components', 'com_board_edit.tpl');
-        $smarty->assign('action', "/board/edit{$id}.html");
+        $smarty->assign('action', "/board/edit{$item['id']}.html");
         $smarty->assign('form_do', 'edit');
-        $smarty->assign('cfg', $cfg);
+        $smarty->assign('cfg', $model->config);
         $smarty->assign('cat', $cat);
-        $smarty->assign('obtypes', obTypesOptions($cat['obtypes'], $item['obtype']));
-        $smarty->assign('cities', $inCore->boardCities('', '-- '.$_LANG['NOT_SELECT'].' --'));
+        $smarty->assign('obtypes', $model->getTypesOptions($cat['obtypes'], $item['obtype']));
+        $smarty->assign('cities', $model->getBoardCities($item['city'], $cat));
         $smarty->assign('item', $item);
         $smarty->assign('is_admin', $inUser->is_admin);
 		$smarty->assign('is_billing', IS_BILLING);
@@ -367,39 +356,40 @@ if ($do=='edititem'){
         $content 	= $inCore->request('content', 'str', '');
         $vipdays    = $inCore->request('vipdays', 'int', 0);
 
-        $new_cat_id     = $inCore->request('category_id', 'int', 0);
+        $new_cat_id = $inCore->request('category_id', 'int', 0);
         if ($new_cat_id){ $item['category_id'] = $new_cat_id; }
 
         $city_ed    = $inCore->request('city_ed', 'str', '');
         $city       = $inCore->request('city', 'str', '');
-        $city       = $city ? $city : $city_ed;
-
-        if ($cat['public']==-1) { $cat['public'] = $cfg['public']; }
+        $city       = ($city && $city!='all') ? $city : $city_ed;
 
         $published  = ($cat['public']==2 && $inCore->isUserCan('board/autoadd')) ? 1 : 0;
         if ($inUser->is_admin || $inCore->isUserCan('board/moderate')) { $published = 1; }
 
 		if ($item['is_overdue'] && !$item['published']) {
-			if ($cfg['srok']){  $pubdays = ($inCore->request('pubdays', 'int') <= 50) ? $inCore->request('pubdays', 'int') : 50; }
-        if (!$cfg['srok']){ $pubdays = isset($cfg['pubdays']) ? $cfg['pubdays'] : 14; }
+			if ($model->config['srok']){
+				$pubdays = ($inCore->request('pubdays', 'int') <= 50) ? $inCore->request('pubdays', 'int') : 50;
+			}
+        	if (!$model->config['srok']){
+				$pubdays = isset($model->config['pubdays']) ? $model->config['pubdays'] : 14;
+			}
 			$pubdate = date("Y-m-d H:i:s");
 		} else {
 			$pubdays = $item['pubdays'];
 			$pubdate = $item['fpubdate'];
 		}
 
-		$errors = false;
         if (!$title) { cmsCore::addSessionMessage($_LANG['NEED_TITLE'], 'error'); $errors = true; }
         if (!$content) { cmsCore::addSessionMessage($_LANG['NEED_TEXT_ADV'], 'error'); $errors = true; }
         if (!$city)    { cmsCore::addSessionMessage($_LANG['NEED_CITY'], 'error'); $errors = true; }
 
-		if ($errors){ $inCore->redirect('/board/edit'.$id.'.html'); }
+		if ($errors){ $inCore->redirect('/board/edit'.$item['id'].'.html'); }
 
 		// Загружаем фото
-        $file = $model->uploadPhoto($item['file'], $cfg, $cat);
+        $file = $model->uploadPhoto($item['file'], $cat);
 		$file['filename'] = $file['filename'] ? $file['filename'] : $item['file'];
 
-        $model->updateRecord($id, array(
+        $model->updateRecord($model->item_id, array(
                                     'category_id'=>$item['category_id'],
                                     'obtype'=>$obtype,
                                     'title'=>$title,
@@ -411,19 +401,19 @@ if ($do=='edititem'){
                                     'file'=>$file['filename']
                                 ));
 
-		cmsActions::updateLog('add_board', array('object' => $obtype.' '.$title), $id);
+		cmsActions::updateLog('add_board', array('object' => $obtype.' '.$title), $item['id']);
 
         if ($inUser->is_admin && $vipdays){
-            $model->setVip($id, $vipdays);
+            $model->setVip($item['id'], $vipdays);
         }
 
         if (IS_BILLING) {
-            if ($cfg['vip_enabled'] && $cfg['vip_prolong'] && $vipdays && $cfg['vip_day_cost']){
-                if ($vipdays > $cfg['vip_max_days']) { $vipdays = $cfg['vip_max_days']; }
-                $summ = $vipdays * $cfg['vip_day_cost'];
+            if ($model->config['vip_enabled'] && $model->config['vip_prolong'] && $vipdays && $model->config['vip_day_cost']){
+                if ($vipdays > $model->config['vip_max_days']) { $vipdays = $model->config['vip_max_days']; }
+                $summ = $vipdays * $model->config['vip_day_cost'];
                 if ($inUser->balance >= $summ){
                     cmsBilling::pay($inUser->id, $summ, $_LANG['VIP_BUY_LOG']);
-                    $model->setVip($id, $vipdays);
+                    $model->setVip($item['id'], $vipdays);
                 }
             }
         }
@@ -431,49 +421,42 @@ if ($do=='edititem'){
         //finish
 		if (!$published) { $prmoder = '<p>'.$_LANG['ADV_EDIT_PREMODER_TEXT'].'</p>'; }
 		cmsCore::addSessionMessage('<p><strong>'.$_LANG['ADV_MODIFIED'].'</strong></p>'.$prmoder, 'info');
-		$inCore->redirect('/board/read'.$id.'.html');
+		$inCore->redirect('/board/read'.$item['id'].'.html');
 
     }
 }
 /////////////////////////////// DELETE BOARD ITEM /////////////////////////////////////////////////////////////////////////////////////////
 if ($do == 'delete'){
-	//Check user access
-	$item = $model->getRecord($id);
+
+	$item = $model->getRecord($model->item_id);
     if (!$item){ cmsCore::error404(); }
 
-	if ($inUser->id){
-        $moderator = ($inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('board/moderate') || $item['user_id'] == $inUser->id);
-    } else {
-        $moderator = false;
-    }
-
-	if (!$moderator){
+	if (!$item['moderator']){
 		cmsCore::addSessionMessage($_LANG['YOU_HAVENT_ACCESS'], 'error');
 		$inCore->redirect('/board/'.$item['cat_id']);  
 	}
 
-        if (!$inCore->inRequest('godelete')){
-			//confirmation
-            $inPage->setTitle($_LANG['DELETE_ADV']);
-            $inPage->addPathway($item['category'], '/board/'.$item['cat_id']);
-            $inPage->addPathway($_LANG['DELETE_ADV']);
+	if (!$inCore->inRequest('godelete')){
 
-            $confirm['title']               = $_LANG['DELETING_ADV'];
-            $confirm['text']                = $_LANG['YOU_SURE_DELETE_ADV'].' "'.$item['title'].'"?';
-            $confirm['action']              = $_SERVER['REQUEST_URI'];
-            $confirm['yes_button']['name']  = 'godelete';
+		$inPage->setTitle($_LANG['DELETE_ADV']);
+		$inPage->addPathway($item['category'], '/board/'.$item['cat_id']);
+		$inPage->addPathway($_LANG['DELETE_ADV']);
 
-            $smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
-            $smarty->assign('confirm', $confirm);
-            $smarty->display('action_confirm.tpl');
-		}
+		$confirm['title']               = $_LANG['DELETING_ADV'];
+		$confirm['text']                = $_LANG['YOU_SURE_DELETE_ADV'].' "'.$item['title'].'"?';
+		$confirm['action']              = $_SERVER['REQUEST_URI'];
+		$confirm['yes_button']['name']  = 'godelete';
 
-        if ($inCore->inRequest('godelete')){
-			//deleting
-            $model->deleteRecord($id);
-			cmsCore::addSessionMessage($_LANG['ADV_IS_DELETED'], 'info');
-            $inCore->redirect('/board/'.$item['cat_id']);
-		}
+		$smarty = $inCore->initSmarty('components', 'action_confirm.tpl');
+		$smarty->assign('confirm', $confirm);
+		$smarty->display('action_confirm.tpl');
+	}
+
+	if ($inCore->inRequest('godelete')){
+		$model->deleteRecord($model->item_id);
+		cmsCore::addSessionMessage($_LANG['ADV_IS_DELETED'], 'info');
+		$inCore->redirect('/board/'.$item['cat_id']);
+	}
 
 }
 /////////////////////////////// /////////////////////////////// /////////////////////////////// /////////////////////////////// //////

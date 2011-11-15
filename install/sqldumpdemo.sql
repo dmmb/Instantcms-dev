@@ -249,19 +249,21 @@ CREATE TABLE `#__board_items` (
   `hits` int(11) NOT NULL,
   `is_vip` tinyint(4) NOT NULL DEFAULT '0',
   `vipdate` datetime NOT NULL,
+  `ip` int(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   KEY `user_id` (`user_id`),
   KEY `obtype` (`obtype`),
   KEY `city` (`city`),
+  KEY `ip` (`ip`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `content` (`content`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO `#__board_items` (`id`, `category_id`, `user_id`, `obtype`, `title`, `content`, `city`, `pubdate`, `pubdays`, `published`, `file`, `hits`, `is_vip`, `vipdate`) VALUES
-(4, 10, 1, 'Предлагаю', 'свои услуги', 'Могу выносить мусор и мыть пол.', 'Москва', '2009-10-26 14:11:18', 10, 1, '550de8a5de9b5301133a815de31be00d.jpg', 7, 0, '0000-00-00 00:00:00'),
-(5, 9, 1, 'Обменяю', 'ВАЗ-2107 на Nissan Skyline GTR', 'Желательно новый и без доплаты.', 'Москва', '2009-10-26 14:14:24', 10, 1, '931f90c50adcea1ff18177bc22d4ceac.jpg', 34, 0, '0000-00-00 00:00:00'),
-(6, 8, 2, 'Сдам', '2-х комнатную квартиру', 'Семье из 2-3 человек', 'Москва', '2010-10-28 15:57:22', 10, 1, '80204e6bad519060bca9d456949158dc.jpg', 2, 0, '0000-00-00 00:00:00');
+INSERT INTO `#__board_items` (`id`, `category_id`, `user_id`, `obtype`, `title`, `content`, `city`, `pubdate`, `pubdays`, `published`, `file`, `hits`, `is_vip`, `vipdate`, `ip`) VALUES
+(4, 10, 1, 'Предлагаю', 'свои услуги', 'Могу выносить мусор и мыть пол.', 'Москва', '2011-11-11 14:11:18', 10, 1, '550de8a5de9b5301133a815de31be00d.jpg', 7, 0, '0000-00-00 00:00:00', 2130706433),
+(5, 9, 1, 'Обменяю', 'ВАЗ-2107 на Nissan Skyline GTR', 'Желательно новый и без доплаты.', 'Москва', '2011-11-12 14:14:24', 10, 1, '931f90c50adcea1ff18177bc22d4ceac.jpg', 34, 0, '0000-00-00 00:00:00', 2130706433),
+(6, 8, 2, 'Сдам', '2-х комнатную квартиру', 'Семье из 2-3 человек', 'Москва', '2011-11-13 15:57:22', 10, 1, '80204e6bad519060bca9d456949158dc.jpg', 2, 0, '0000-00-00 00:00:00', 2130706433);
 
 DROP TABLE IF EXISTS `#__cache`;
 CREATE TABLE `#__cache` (

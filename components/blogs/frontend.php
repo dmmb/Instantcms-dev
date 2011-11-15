@@ -726,6 +726,7 @@ if ($do=='newpost' || $do=='editpost'){
 		if ($do=='newpost'){
 			$post = cmsUser::sessionGet('mod');
 			if ($post) { cmsUser::sessionDel('mod'); }
+			if (!$post) { $post['comments'] = 1; }
 		}
 
         //показываем форму
