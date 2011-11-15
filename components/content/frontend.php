@@ -370,11 +370,10 @@ if ($do=='addarticle' || $do=='editarticle'){
 
     if ( !$inCore->inRequest('add_mod') ){
 
-        $inPage->addPathway($inUser->nickname, cmsUser::getProfileURL($inUser->login));
-        $inPage->addPathway($_LANG['MY_ARTICLES'], '/content/my.html');
-
         if ($do=='addarticle'){
             $inPage->setTitle($_LANG['ADD_ARTICLE']);
+			$inPage->addPathway($inUser->nickname, cmsUser::getProfileURL($inUser->login));
+			$inPage->addPathway($_LANG['MY_ARTICLES'], '/content/my.html');
             $inPage->addPathway($_LANG['ADD_ARTICLE']);
             $pagetitle = $_LANG['ADD_ARTICLE'];
 
@@ -400,6 +399,12 @@ if ($do=='addarticle' || $do=='editarticle'){
 
         if ($do=='editarticle'){
             $inPage->setTitle($_LANG['EDIT_ARTICLE']);
+			if(!$is_author){
+				$user = $inDB->get_fields('cms_users', "id='{$mod['user_id']}'", 'login, nickname');
+        		$inPage->addPathway($user['nickname'], cmsUser::getProfileURL($user['login']));
+			} else {
+				$inPage->addPathway($inUser->nickname, cmsUser::getProfileURL($inUser->login));
+			}
             $inPage->addPathway($_LANG['EDIT_ARTICLE']);
             $pagetitle = $_LANG['EDIT_ARTICLE'];
 
@@ -472,31 +477,53 @@ if ($do=='addarticle' || $do=='editarticle'){
         if (!$article['title']){ cmsCore::addSessionMessage($_LANG['REQ_TITLE'], 'error'); $errors = true; }
         if (!$article['content']){ cmsCore::addSessionMessage($_LANG['REQ_CONTENT'], 'error'); $errors = true; }
 
-        if ($do=='addarticle' && !$errors){
+		if($errors) { $inCore->redirectBack(); }
+
+		// загрузка фото
+		$file = 'article'.$id.'.jpg';
+
+		if ($inCore->request('delete_image', 'int', 0)){
+			@unlink(PATH."/images/photos/small/$file");
+			@unlink(PATH."/images/photos/medium/$file");
+		}
+
+		if (isset($_FILES["picture"]["name"]) && @$_FILES["picture"]["name"]!=''){
+			//generate image file
+			$tmp_name   = $_FILES["picture"]["tmp_name"];
+			//upload image and insert record in db
+			if (@move_uploaded_file($tmp_name, PATH."/images/photos/$file")){
+				@unlink(PATH."/images/photos/small/$file");
+				@unlink(PATH."/images/photos/medium/$file");
+				$inCore->includeGraphics();
+				if ($cfg['watermark'] && !$cfg['watermark_only_big']) { @img_add_watermark(PATH."/images/photos/$file"); }
+				@img_resize(PATH."/images/photos/$file", PATH."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
+				@img_resize(PATH."/images/photos/$file", PATH."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
+				if ($cfg['watermark'] && $cfg['watermark_only_big']) { @img_add_watermark(PATH."/images/photos/medium/$file"); }
+				
+				@unlink(PATH."/images/photos/$file");
+				@chmod(PATH."/images/photos/small/$file", 0755);
+				@chmod(PATH."/images/photos/medium/$file", 0755);
+			}
+		}
+
+		// добавление статьи
+        if ($do=='addarticle'){
 
             $article['id'] = $model->addArticle($article);
 
             $id = $article['id'];
 
-            cmsUser::checkAwards($user_id);
-
             //autoforum
             if ($cfg['af_on'] && $category_id != $cfg['af_hidecat_id'] && $article['published']){
                 cmsAutoCreateThread($article, $cfg);
             }
-
-            //MESSAGE
-            $inPage->setTitle($_LANG['ARTICLE_SEND']);
-            $inPage->backButton(false);
-            $inPage->addPathway($_LANG['ARTICLE_SEND']);
-            $inPage->printHeading($_LANG['ARTICLE_SEND']);
 			
             $article['seolink']     = $inDB->get_field('cms_content', "id='$id'", 'seolink');
             $article['category']    = $inDB->get_fields('cms_category', "id='{$article['category_id']}'", 'title, seolink');
             
 			if (!$article['published']){
 			
-                echo '<p>'.$_LANG['ARTICLE_PREMODER_TEXT'].'</p>';
+				cmsCore::addSessionMessage($_LANG['ARTICLE_PREMODER_TEXT'], 'info');
 
 				$link = '<a href="/'.$article['seolink'].'.html">'.$article['title'].'</a>';
 				$user = '<a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a>';
@@ -523,21 +550,25 @@ if ($do=='addarticle' || $do=='editarticle'){
                     cmsBilling::process('content', 'add_content', $category_cost);
                 }
 
+				cmsUser::checkAwards($user_id);
+
             }
 
-            echo '<p><a href="/">'.$_LANG['CONTINUE'].'</a></p>';
+			cmsCore::addSessionMessage($_LANG['ARTICLE_SAVE'], 'info');
+            $inCore->redirect('/my.html');
 
         }
 
-        if ($do=='editarticle' && !$errors){
+        if ($do=='editarticle'){
 
             $model->updateArticle($id, $article, true);
 
 			cmsActions::updateLog('add_article', array('object' => $article['title']), $id);
 
+			$article['seolink']  = $inDB->get_field('cms_content', "id='$id'", 'seolink');
+			$article['category'] = $inDB->get_fields('cms_category', "id='{$article['category_id']}'", 'title, seolink');
+
 			if (!$article['published'] && !$is_auto_add){
-                $article['seolink']  = $inDB->get_field('cms_content', "id='$id'", 'seolink');
-                $article['category'] = $inDB->get_fields('cms_category', "id='{$article['category_id']}'", 'title, seolink');
 				$link = '<a href="/'.$article['seolink'].'.html">'.$article['title'].'</a>';
 				$user = '<a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a>';
 				$message = str_replace('%user%', $user, $_LANG['MSG_ARTICLE_EDITED']);
@@ -547,42 +578,10 @@ if ($do=='addarticle' || $do=='editarticle'){
 
             cmsInsertTags($article['tags'], 'content', $id);
 
-        }
-
-        if (!$errors){
-
-            $file       = 'article'.$id.'.jpg';
-
-            if ($inCore->request('delete_image', 'int', 0)){
-                @unlink(PATH."/images/photos/small/$file");
-                @unlink(PATH."/images/photos/medium/$file");
-            } else {
-
-                if (isset($_FILES["picture"]["name"]) && @$_FILES["picture"]["name"]!=''){
-                    //generate image file
-                    $tmp_name   = $_FILES["picture"]["tmp_name"];
-                    //upload image and insert record in db
-                    if (@move_uploaded_file($tmp_name, PATH."/images/photos/$file")){
-                        $inCore->includeGraphics();
-						if ($cfg['watermark'] && !$cfg['watermark_only_big']) { @img_add_watermark(PATH."/images/photos/$file"); }
-                        @img_resize(PATH."/images/photos/$file", PATH."/images/photos/small/$file", $cfg['img_small_w'], $cfg['img_small_w'], $cfg['img_sqr']);
-                        @img_resize(PATH."/images/photos/$file", PATH."/images/photos/medium/$file", $cfg['img_big_w'], $cfg['img_big_w'], $cfg['img_sqr']);
-						if ($cfg['watermark'] && $cfg['watermark_only_big']) { @img_add_watermark(PATH."/images/photos/medium/$file"); }
-						
-                        @unlink(PATH."/images/photos/$file");
-                        @chmod(PATH."/images/photos/small/$file", 0755);
-                        @chmod(PATH."/images/photos/medium/$file", 0755);
-                    }
-                }
-
-            }
-
-        }
-
-        if ($do=='editarticle' || $errors){
 			$mess = ($article['published'] || $is_auto_add) ? $_LANG['ARTICLE_SAVE'] : $_LANG['ARTICLE_SAVE'].' '.$_LANG['ARTICLE_PREMODER_TEXT'];
 			cmsCore::addSessionMessage($mess, 'info');
-            $inCore->redirect('/content/my.html');
+            $inCore->redirect('/'.$article['seolink'].'.html');
+
         }
 
     }
@@ -629,6 +628,8 @@ if ($do == 'publisharticle'){
 	$link = '<a href="/'.$article['seolink'].'.html">'.$article['title'].'</a>';
 	$message = str_replace('%link%', $link, $_LANG['MSG_ARTICLE_ACCEPTED']);
     cmsUser::sendMessage(USER_UPDATER, $article['user_id'], $message);
+
+	cmsUser::checkAwards($article['user_id']);
 
     $inCore->redirectBack();
 
