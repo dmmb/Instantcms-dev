@@ -137,14 +137,65 @@ if ($do=='view'){
     $smarty->display('com_board_items.tpl');
 						
 }
+/////////////////////////////// VIEW USER ADV ///////////////////////////////////////////////////////////////////////////////////////
+if ($do=='by_user'){
+
+	// логин пользовател€
+	$login = $inCore->request('login', 'str', ''.$inUser->login.'');
+	// получаем данные пользовател€
+	$user = cmsUser::getUserBylogin($login);
+	if (!$user) { cmsCore::error404(); }
+
+	$myprofile = $model->checkAccess($user['id']);
+
+	$inPage->addPathway($user['nickname']);
+    $inPage->setTitle($_LANG['BOARD'].' - '.$user['nickname']);
+	$inPage->setDescription($_LANG['BOARD'].' - '.$user['nickname']);
+
+	// ‘ормируем список объ€влений
+	$model->whereUserIs($user['id']);
+
+    // ќбщее количество объ€влений по заданным выше услови€м
+    $total = $model->getAdvertsCount($myprofile);
+
+    //устанавливаем сортировку
+    $model->orderBy('pubdate', 'DESC');
+
+    //устанавливаем номер текущей страницы и кол-во объ€влений на странице
+    $model->limitPage($model->page, 15);
+
+	// ѕолучаем объ€влени€
+	$items = $model->getAdverts($myprofile, true, false, true);
+
+	// ѕагинаци€
+	$pagebar = cmsPage::getPagebar($total, $model->page, 15, '/board/by_user_'.$login.'/page-%page%');
+
+	// ѕоказываем даты
+	$category['showdate'] = 1;
+
+	$smarty = $inCore->initSmarty('components', 'com_board_items.tpl');
+    $smarty->assign('cfg', $model->config);
+	$smarty->assign('page_title', $_LANG['BOARD'].' - '.$user['nickname']);
+    $smarty->assign('root_id', $model->root_cat['id']);
+    $smarty->assign('items', $items);
+	$smarty->assign('cat', $category);
+    $smarty->assign('maxcols', 1);
+    $smarty->assign('colwidth', 100);
+    $smarty->assign('pagebar', $pagebar);
+    $smarty->display('com_board_items.tpl');
+
+}
 /////////////////////////////// VIEW ITEM ///////////////////////////////////////////////////////////////////////////////////////////
 if($do=='read'){
 
+	// получаем объ€вление
 	$item = $model->getRecord($model->item_id);
 	if (!$item){ cmsCore::error404(); }
 
+	// неопубликованные показываем админам, модераторам и автору
 	if (!$item['published'] && !$item['moderator']) { cmsCore::error404(); } 
 
+	// дл€ неопубликованного показываем инфо: просрочено/на модерации
 	if (!$item['published']) {
 		$info_text = $item['is_overdue'] ? $_LANG['ADV_IS_EXTEND'] : $_LANG['ADV_IS_MODER'];
 		cmsCore::addSessionMessage($info_text, 'info');
@@ -152,6 +203,7 @@ if($do=='read'){
 		$model->increaseHits($model->item_id);
 	}
 
+	// формируем заголовок и тело сообщени€
 	$item['title']   = $item['obtype'].' '.$item['title'];
 	$item['content'] = nl2br($item['content']);
 	$item['content'] = $model->config['auto_link'] ? $inCore->parseSmiles($item['content']) : $item['content'];
@@ -170,6 +222,8 @@ if($do=='read'){
 	$smarty->assign('item', $item);
 	$smarty->assign('cfg', $model->config);
 	$smarty->assign('user_id', $inUser->id);
+	$smarty->assign('is_admin', $inUser->is_admin);
+	$smarty->assign('is_moder', $inCore->isUserCan('board/moderate'));
 	$smarty->display('com_board_item.tpl');
         
 }
@@ -418,7 +472,8 @@ if ($do=='edititem'){
 
 		$file['filename'] = $file['filename'] ? $file['filename'] : $item['file'];
 
-        $model->updateRecord($model->item_id, array(
+		// обновл€ем объ€вление
+        $model->updateRecord($item['id'], array(
                                     'category_id'=>$item['category_id'],
                                     'obtype'=>$obtype,
                                     'title'=>$title,
@@ -429,7 +484,7 @@ if ($do=='edititem'){
                                     'published'=>$published,
                                     'file'=>$file['filename']
                                 ));
-
+		// обновл€ем запись в ленте активности
 		cmsActions::updateLog('add_board', array('object' => $obtype.' '.$title), $item['id']);
 
         if ($inUser->is_admin && $vipdays){
@@ -449,11 +504,62 @@ if ($do=='edititem'){
 
 		cmsUser::sessionClearAll();
 
-		if (!$published) { $prmoder = '<p>'.$_LANG['ADV_EDIT_PREMODER_TEXT'].'</p>'; }
-		cmsCore::addSessionMessage('<p><strong>'.$_LANG['ADV_MODIFIED'].'</strong></p>'.$prmoder, 'info');
+		if (!$published) {
+
+			$link = '<a href="/board/read'.$item['id'].'.html">'.$obtype.' '.$title.'</a>';
+			$user = '<a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a>';
+
+			$message = str_replace('%user%', $user, $_LANG['MSG_ADV_EDITED']);
+			$message = str_replace('%link%', $link, $message);
+			cmsUser::sendMessage(USER_UPDATER, 1, $message);
+
+			cmsCore::addSessionMessage($_LANG['ADV_EDIT_PREMODER_TEXT'], 'info');
+
+		}
+
+		cmsCore::addSessionMessage($_LANG['ADV_MODIFIED'], 'success');
 		$inCore->redirect('/board/read'.$item['id'].'.html');
 
     }
+}
+///////////////////////// PUBLISH BOARD ITEM /////////////////////////////////////////////////////////////////////////////
+if ($do == 'publish'){
+
+	$item = $model->getRecord($model->item_id);
+    if (!$item){ cmsCore::error404(); }
+
+	// если уже опубликовано, 404
+	if ($item['published']) { cmsCore::error404(); }
+
+	// публиковать могут админы и модераторы доски
+	if(!$inUser->is_admin && !$inCore->isUserCan('board/moderate')) { cmsCore::error404(); }
+
+    $model->publishRecord($model->item_id);
+
+	cmsCore::callEvent('ADD_BOARD_DONE', $item);
+    
+    //регистрируем событие
+	cmsActions::log('add_board', array(
+				'object' => $item['obtype'].' '.$item['title'],
+				'user_id' => $item['user_id'],
+				'object_url' => '/board/read'.$item['id'].'.html',
+				'object_id' => $item['id'],
+				'target' => $item['category'],
+				'target_url' => '/board/'.$item['cat_id'],
+				'target_id' => $item['cat_id'], 
+				'description' => ''
+	));
+
+	if($item['user_id']){
+		$link = '<a href="/board/read'.$item['id'].'.html">'.$item['obtype'].' '.$item['title'].'</a>';
+		$message = str_replace('%link%', $link, $_LANG['MSG_ADV_ACCEPTED']);
+		cmsUser::sendMessage(USER_UPDATER, $item['user_id'], $message);
+	}
+
+	cmsCore::addSessionMessage($_LANG['ADV_IS_ACCEPTED'], 'success');
+
+    $inCore->redirect('/board/read'.$item['id'].'.html');
+
 }
 /////////////////////////////// DELETE BOARD ITEM /////////////////////////////////////////////////////////////////////////////////////////
 if ($do == 'delete'){

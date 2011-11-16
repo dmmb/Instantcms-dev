@@ -1,11 +1,13 @@
 {* ================================================================================ *}
 {* ==================== Cписок объ€влений (на доске объ€влений) =================== *}
 {* ================================================================================ *}
-{$order_form}
+{if $page_title}<h1 class="con_heading">{$page_title}</h1>{/if}
+{if $order_form}{$order_form}{/if}
 <div class="board_gallery">
 	{if $items}
 		<table width="100%" cellpadding="3" cellspacing="0" border="0">
-			{assign var="col" value="1"}	
+			{assign var="col" value="1"}
+            {assign var="is_moder" value="0"}
 			{foreach key=tid item=con from=$items}									
 				{if $col==1} <tr> {/if} 				
 				<td valign="top" width="{$colwidth}%">
@@ -19,6 +21,7 @@
 							{/if}
 							<td valign="top">
                                 {if $con.moderator}
+                                {assign var="is_moder" value="1"}
                                 <div class="bd_moderate_link">
                                     <span class="bd_item_edit"><a href="/board/edit{$con.id}.html">{$LANG.EDIT}</a></span>
                                     <span class="bd_item_delete"><a href="/board/delete{$con.id}.html">{$LANG.DELETE}</a></span>
@@ -47,6 +50,9 @@
                                         {else}
                                         	<span class="bd_item_user">{$LANG.BOARD_GUEST}</span>
 										{/if}
+                                        {if $con.cat_title}
+                                        	<span class="bd_item_cat"><a href="/board/{$con.category_id}">{$con.cat_title}</a></span>
+                                        {/if}
 								</div>										
 							</td>
 						</tr>
@@ -64,7 +70,7 @@
 		<p>{$LANG.ADVS_NOT_FOUND}</p>
 	{/if}
 </div>
-{if $con.moderator}
+{if $is_moder}
 {literal}
 <script type="text/javascript" language="JavaScript">
 	$(document).ready(function(){

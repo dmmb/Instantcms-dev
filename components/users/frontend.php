@@ -1621,82 +1621,13 @@ if ($do=='delalbum'){
     $inCore->redirect(cmsUser::getProfileURL($login));
 
 }
-
-//============================================================================//
-//=============================== ќбъ€влени€ =================================//
-//============================================================================//
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// оставлено дл€ 301 редиректа по старым ссылкам
 if ($do=='viewboard'){ 
-	
 	$usr = $model->getUserShort($id);
 	if (!$usr) { cmsCore::error404(); }
-	
-		$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-		$inPage->addPathway($_LANG['ADVS']);
-        $inPage->setTitle($_LANG['ADVS'].' - '.$usr['nickname']);
-		
-		// «агружаем конфигурацию компонента объ€влени€
-		$cfg_board = $inCore->loadComponentConfig('board');
-			
-        // выбираем объ€влени€ пользовател€ по его id
-		if (($inUser->id == $id && $cfg_board['aftertime'] == 'hide' && $cfg_board['extend']) || ($inUser->id == $id && $cfg_board['public'] == 1 && !$cfg_board['extend'] && $cfg_board['aftertime'] != 'hide')) {
-		$sql = "SELECT *
-				FROM cms_board_items
-				WHERE user_id = $id
-				ORDER BY pubdate DESC
-				";
-			// —читаем общее число объ€влений
-			$records_total = $inDB->rows_count('cms_board_items', 'user_id = '.$id.''); 
-		} else {
-			$sql = "SELECT *
-					FROM cms_board_items
-					WHERE user_id = $id AND published = 1
-					ORDER BY pubdate DESC
-					";
-			// —читаем общее число объ€влений
-			$records_total = $inDB->rows_count('cms_board_items', 'user_id = '.$id.' AND published = 1');
-		}
-		$perpage = 10; // объ€влений на странице
-		$page = $inCore->request('page', 'int', 1);
-		$sql .= "LIMIT ".($page-1)*$perpage.", $perpage";
-
-		$result = $inDB->query($sql);
-
-		$is_con = false;
-		$cons = array();
-	
-		if ($inDB->num_rows($result)){				
-
-				while($con = $inDB->fetch_assoc($result)){							
-					if ($con['file'] && file_exists(PATH.'/images/board/small/'.$con['file'])){
-							$con['file'] = $con['file'];
-					} else { $con['file'] = 'nopic.jpg'; }				
-											if ($inUser->id){
-					$con['moderator'] = ($inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('board/moderate') || $con['user_id'] == $inUser->id);
-											} else {
-					$con['moderator'] = false;
-											}											
-					$timedifference    = strtotime("now") - strtotime($con['pubdate']);
-					$con['is_overdue'] = round($timedifference / 86400) > $con['pubdays'] && $con['pubdays'] > 0;
-					$con['pubdate'] = $inCore->dateFormat($con['pubdate']);
-				$cons[] = $con;
-											}
-				$is_con = true;
-				
-				}					
-		// отдаем в шаблон
-		$smarty = $inCore->initSmarty('components', 'com_users_boards.tpl');
-		$smarty->assign('usr', $usr);
-		$smarty->assign('cons', $cons);
-		$smarty->assign('cfg_board', $cfg_board);
-		$smarty->assign('myprofile', ($inUser->id == $id));
-        $smarty->assign('is_con', $is_con);
-		$smarty->assign('pagebar', cmsPage::getPagebar($records_total, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/board%page%.html\')'));
-		$smarty->display('com_users_boards.tpl');					
-		if ($inCore->inRequest('of_ajax')) { echo ob_get_clean(); exit; }
-
+	$inCore->redirect('/board/by_user_'.$usr['login'], '301');
 }
-
 /////////////////////////////// FRIENDS LIST /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='friendlist'){
 

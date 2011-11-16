@@ -126,10 +126,6 @@ $_LANG['REGISTERED']                ='Зарегистрированным';
 $_LANG['MY_FRIENDS']                ='Мои друзья';
 
 $_LANG['ADVS']                      ='Объявления';
-$_LANG['PUBLISHED']                 ='Опубликовано';
-$_LANG['WAIT_MODER']                ='Ожидает модерации';
-$_LANG['ADV_EXTEND']                ='Просрочено';
-$_LANG['NOT_ADVS']                  ='Нет объявлений.';
 
 $_LANG['FRIENDS']                   ='Друзья';
 $_LANG['ALL_FRIENDS']               ='Все друзья';

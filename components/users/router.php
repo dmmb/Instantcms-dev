@@ -45,15 +45,7 @@
         $routes[] = array(
                             '_uri'  => '/^users\/([0-9]+)\/board.html$/i',
                             'do'    => 'viewboard',
-                            1       => 'id',
-                            'page'  => '1'
-                         );
-
-        $routes[] = array(
-                            '_uri'  => '/^users\/([0-9]+)\/board([0-9]+).html$/i',
-                            'do'    => 'viewboard',
-                            1       => 'id',
-                            2       => 'page'
+                            1       => 'id'
                          );
 
         $routes[] = array(

@@ -309,7 +309,7 @@
                                 {/if}
                                 {if $cfg.sw_board}
                                     <div id="usr_board">
-                                        <a href="/users/{$usr.id}/board.html">{$LANG.ADVS}</a> <sup>{$usr.board_count}</sup>
+                                        <a href="/board/by_user_{$usr.login}">{$LANG.ADVS}</a> <sup>{$usr.board_count}</sup>
                                     </div>
                                 {/if}
                             </div>

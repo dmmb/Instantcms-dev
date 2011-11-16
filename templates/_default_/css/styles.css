@@ -2022,13 +2022,17 @@ span.bd_item_edit{
 }
 
 span.bd_item_delete{
-	background:url(../images/icons/delete.png) no-repeat;
+	background:url(../images/icons/no.png) no-repeat;
 }
-
+span.bd_item_publish{
+	background:url(../images/icons/yes.png) no-repeat;
+}
 span.bd_item_user{
 	background:url(../images/icons/user.png) no-repeat;
 }
-
+span.bd_item_cat{
+	background:url(../images/icons/folder_table.png) no-repeat;
+}
 span.bd_item_status_ok{
 	color:green;
 	background:url(/components/board/images/status_ok.gif) no-repeat;

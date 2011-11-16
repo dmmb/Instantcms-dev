@@ -1324,6 +1324,37 @@ class cmsUser {
     }
 
     /**
+     * Возвращает данные пользователя по логину
+     * @return array
+     */
+    public static function getUserBylogin($login = ''){
+
+		$inDB   = cmsDatabase::getInstance();
+		$inUser = self::getInstance();
+
+		$user   = array();
+				
+		if ($inUser->login == $login) { 
+		
+			$user['id'] 	  = $inUser->id;
+			$user['login'] 	  = $login;
+			$user['nickname'] = $inUser->nickname;
+			$user['email'] 	  = $inUser->email;
+			$user['group_id'] = $inUser->group_id;
+		
+		} else {
+				
+			$user = $inDB->get_fields('cms_users', "login = '$login'", 'id, group_id, nickname, login, email');
+        
+		}
+        
+		if (!$user){ return false; }
+
+        return $user;
+
+    }
+
+    /**
      * Возвращает название группы пользователей
      * @param int $group_id
      * @return str

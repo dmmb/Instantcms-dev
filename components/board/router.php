@@ -59,6 +59,12 @@
                          );
 
         $routes[] = array(
+                            '_uri'  => '/^board\/publish([0-9]+).html$/i',
+                            'do'    => 'publish',
+                            1       => 'id'
+                         );
+
+        $routes[] = array(
                             '_uri'  => '/^board\/read([0-9]+).html$/i',
                             'do'    => 'read',
                             1       => 'id'
@@ -67,6 +73,19 @@
         $routes[] = array(
                             '_uri'  => '/^board\/city\/(.+)$/i',
                             1       => 'city'
+                         );
+
+        $routes[] = array(
+                            '_uri'  => '/^board\/by_user_([a-zA-z0-9\.]+)$/i',
+                            'do'    => 'by_user',
+                            1       => 'login'
+                         );
+
+        $routes[] = array(
+                            '_uri'      => '/^board\/by_user_([a-zA-z0-9\.]+)\/page\-([0-9]+)$/i',
+                            'do'        => 'by_user',
+                            1           => 'login',
+                            2           => 'page'
                          );
 
         return $routes;

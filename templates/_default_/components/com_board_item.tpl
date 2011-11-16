@@ -21,6 +21,9 @@
 	{/if}
 	{if $item.moderator}
 		<span class="bd_item_edit"><a href="/board/edit{$item.id}.html">{$LANG.EDIT}</a></span>
+        {if !$item.published && ($is_admin || $is_moder)}
+        	<span class="bd_item_publish"><a href="/board/publish{$item.id}.html">{$LANG.PUBLISH}</a></span>
+        {/if}
 		<span class="bd_item_delete"><a href="/board/delete{$item.id}.html">{$LANG.DELETE}</a></span>
 	{/if}				
 </div>

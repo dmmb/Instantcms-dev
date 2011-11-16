@@ -38,6 +38,7 @@ $_LANG['EDIT']                  ='Редактировать';
 $_LANG['MOVE']                  ='Переместить';
 $_LANG['DELETE']                ='Удалить';
 $_LANG['CANCEL']                ='Отмена';
+$_LANG['PUBLISH']               ='Публиковать';
 $_LANG['SAVE']                  ='Сохранить';
 $_LANG['THANK']                 ='Спасибо';
 $_LANG['ERROR']                 ='Ошибка';

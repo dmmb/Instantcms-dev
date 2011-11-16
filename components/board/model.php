@@ -247,11 +247,11 @@ class cms_model_board{
 
         //ןמהדמעמגטל ףסכמגטÿ
         $pub_where = ($show_all ? '1=1' : 'i.published = 1');
-        $r_join    = $is_users ? "LEFT JOIN cms_users u ON u.id = i.user_id" : '';
-		$r_join   .= $is_cats ? "INNER JOIN cms_board_cats cat ON cat.id = i.category_id" : '';
+        $r_join    = $is_users ? " LEFT JOIN cms_users u ON u.id = i.user_id \n" : '';
+		$r_join   .= $is_cats ? " INNER JOIN cms_board_cats cat ON cat.id = i.category_id" : '';
 
 		$r_select  = $is_users ? ', u.login, u.nickname' : '';
-		$r_select .= $is_cats ? ', cat.title, cat.obtypes' : '';
+		$r_select .= $is_cats ? ', cat.title as cat_title, cat.obtypes' : '';
 
         $sql = "SELECT i.*{$r_select}
 
@@ -443,6 +443,16 @@ class cms_model_board{
 
 		cmsActions::removeObjectLog('add_board', $item_id);
         return true;
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function publishRecord($item_id){
+
+        $this->inDB->query("UPDATE cms_board_items SET published = '1' WHERE id = '$item_id'");
+        return true;
+        
     }
 
 /* ==================================================================================================== */
