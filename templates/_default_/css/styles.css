@@ -1937,15 +1937,22 @@ div.board_gallery{
     margin-top: 10px;
 }
 
-bd_text{
+.bd_text{
 	margin:0px;
+	clear:both;
 }
-
+.bd_moderate_link{
+	float:right;
+}
+.bd_moderate_link span{
+	float:right;
+	padding:0 5px 0 18px;
+}
 div.bd_item_details{
 	margin-top:20px;
 	float:right;
 }
-div.bd_item_details a{
+div.bd_item_details a, .bd_moderate_link a{
 	color:#666;
 }
 
