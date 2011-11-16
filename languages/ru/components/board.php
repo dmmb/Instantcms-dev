@@ -20,34 +20,23 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 $_LANG['BOARD']                   ='Доска объявлений';
 $_LANG['ADD_ADV']                 ='Добавить объявление';
 $_LANG['CAT_NOT_FOUND']           ='Рубрика не найдена';
-$_LANG['NEED_REGISTRATION']       ='Требуется регистрация';
-$_LANG['NEED_REGISTRATION_TEXT']  ='Возможность добавления объявлений есть только у зарегистрированных пользователей.';
-$_LANG['GOTO_REGISTRATION']       ='Перейти к регистрации';
+$_LANG['CAT_BOARD']               ='Рубрика';
 $_LANG['MAX_VALUE_OF_ADD_ADV']    ='Достигнут предел добавлений в сутки. Вы сможете добавить объявление в эту рубрику через 24 часа.';
 $_LANG['YOU_CANT_ADD_ADV']        ='Вы не можете добавлять объявления в эту рубрику';
 
 $_LANG['NEED_TITLE']              ='Необходимо указать заголовок объявления!';
 $_LANG['NEED_TEXT_ADV']           ='Необходимо указать текст объявления!';
+$_LANG['NEED_CAT_ADV']            ='Необходимо выбрать рубрику!';
 $_LANG['NEED_CITY']               ='Необходимо указать город!';
 $_LANG['ERR_CAPTCHA']             ='Неправильно указан код с картинки!';
-$_LANG['ADV_NOT_ADDED']           ='Объявление не добавлено.';
-$_LANG['REPEAT_ADD']              ='Повторить добавление';
-
-$_LANG['RETURN_TO_BOARD']         ='Вернуться к доске объявлений';
-
-$_LANG['PHOTO_NOT_UPLOAD']        ='Файл фотографии не был загружен.';
 
 $_LANG['ADV_IS_ADDED']            ='Объявление успешно добавлено.';
 $_LANG['ADV_PREMODER_TEXT']       ='Объявление будет опубликовано после проверки администратором.';
-$_LANG['ADD_ADV_MORE']            ='Добавить еще объявление';
 
-$_LANG['ADV_NOT_FOUND']           ='Объявление не найдено';
 $_LANG['ADV_IS_MODER']            ='Объявление находится на модерации';
 $_LANG['ADV_IS_EXTEND']           ='Объявление просрочено';
 $_LANG['WAIT_MODER']              ='Ожидает модерации';
 $_LANG['ADV_EXTEND_INFO']         ='Просрочено';
-$_LANG['ADV_NOT_FOUND_TEXT']      ='Возможно оно было удалено.';
-$_LANG['ADV_NOT_FOUND_TEXT_DEL']  ='Возможно оно уже было удалено.';
 
 $_LANG['EDIT_ADV']                ='Редактировать объявление';
 $_LANG['ADV_NOT_MODIFY']          ='Объявление не изменено.';
@@ -62,6 +51,7 @@ $_LANG['DELETING_ADV']            ='Удаление объявления';
 $_LANG['YOU_SURE_DELETE_ADV']     ='Вы действительно желаете удалить объявление';
 $_LANG['ADV_IS_DELETED']          ='Объявление успешно удалено.';
 //Template
+$_LANG['BOARD_GUEST']             ='Гость';
 $_LANG['TITLE']                   ='Заголовок';
 $_LANG['CITY']                    ='Город';
 $_LANG['OR_SELECTING']            ='или выберите';
@@ -71,8 +61,7 @@ $_LANG['DAYS']                    ='дней';
 $_LANG['DAYS_TO']                 ='начиная с';
 $_LANG['PHOTO']                   ='Фотография';
 $_LANG['DEL_PHOTO']               ='Удалить фотографию';
-$_LANG['MOVE_TO_CAT']             ='Перенести в рубрику';
-$_LANG['DONT_MOVE']               ='не переносить';
+$_LANG['SELECT_CAT']              ='выберите рубрику';
 $_LANG['SAVE_ADV']                ='Сохранить объявление';
 $_LANG['WRITE_MESS_TO_AVTOR']     ='Написать сообщение автору';
 $_LANG['ALL_AVTOR_ADVS']          ='Все объявления автора';
@@ -94,4 +83,6 @@ $_LANG['MARK_AS_VIP']             ='Сделать VIP';
 $_LANG['VIP_STATUS']              ='VIP-статус';
 $_LANG['VIP_BUY_LOG']             ='VIP-объявление';
 $_LANG['VIP_ITEM']                ='VIP-объявление';
+$_LANG['SECUR_SPAM']              ='Защита от спама';
+$_LANG['SECUR_SPAM_TEXT']         ='Введите число, изображенное на картинке';
 ?>

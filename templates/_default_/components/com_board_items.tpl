@@ -10,7 +10,7 @@
 				{if $col==1} <tr> {/if} 				
 				<td valign="top" width="{$colwidth}%">
                     <div class="bd_item{if $con.is_vip}_vip{/if}">
-					<table width="100%" height="" cellspacing="" cellpadding="0">
+					<table width="100%" height="" cellspacing="" cellpadding="0" class="b_table_tr">
 						<tr>
 							{if $cfg.photos}
 								<td width="30" valign="top">
@@ -18,6 +18,12 @@
 								</td>
 							{/if}
 							<td valign="top">
+                                {if $con.moderator}
+                                <div class="bd_moderate_link">
+                                    <span class="bd_item_edit"><a href="/board/edit{$con.id}.html">{$LANG.EDIT}</a></span>
+                                    <span class="bd_item_delete"><a href="/board/delete{$con.id}.html">{$LANG.DELETE}</a></span>
+                                </div>
+                                {/if}
 								<div class="bd_title">
 									<a href="/board/read{$con.id}.html" title="{$con.title|escape:'html'}">{$con.title}</a>
 								</div>
@@ -36,12 +42,10 @@
 										{if $con.city}
 											<span class="bd_item_city"><a href="/board/city/{$con.enc_city|escape:'html'}">{$con.city}</a></span>
 										{/if}
-										{if $con.user}
-											<span class="bd_item_user"><a href="{profile_url login=$con.user_login}">{$con.user}</a></span>
-										{/if}
-										{if $con.moderator}
-											<span class="bd_item_edit"><a href="/board/edit{$con.id}.html">{$LANG.EDIT}</a></span>
-											<span class="bd_item_delete"><a href="/board/delete{$con.id}.html">{$LANG.DELETE}</a></span>
+										{if $con.nickname}
+											<span class="bd_item_user"><a href="{profile_url login=$con.login}">{$con.nickname}</a></span>
+                                        {else}
+                                        	<span class="bd_item_user">{$LANG.BOARD_GUEST}</span>
 										{/if}
 								</div>										
 							</td>
@@ -59,4 +63,21 @@
 	{elseif $cat.id != $root_id}
 		<p>{$LANG.ADVS_NOT_FOUND}</p>
 	{/if}
-</div>						
+</div>
+{if $con.moderator}
+{literal}
+<script type="text/javascript" language="JavaScript">
+	$(document).ready(function(){
+		$('.b_table_tr .bd_moderate_link').css({opacity:0.3, filter:'alpha(opacity=30)'});
+		$('.b_table_tr').hover(
+			function() {
+				$(this).find('.bd_moderate_link').css({opacity:1.0, filter:'alpha(opacity=100)'});
+			},
+			function() {
+				$(this).find('.bd_moderate_link').css({opacity:0.3, filter:'alpha(opacity=30)'});
+			}
+		);
+	});
+</script>
+{/literal}
+{/if}

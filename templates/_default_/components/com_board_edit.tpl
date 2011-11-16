@@ -1,16 +1,31 @@
-<h1 class="con_heading">{$LANG.EDIT_ADV}</h1>
+<h1 class="con_heading">{$pagetitle}</h1>
 <form action="{$action}" method="post" enctype="multipart/form-data">
-	<table cellpadding="2">
+	<table cellpadding="5">
 		<tr>
-			<td width="150">
+			<td width="180">
 				<span>{$LANG.TITLE}:</span>
 			</td>
 			<td height="35">
 				<select name="obtype" id="obtype" style="width:120px">
-					{$obtypes}
+					<option value="0">-- {$LANG.SELECT_CAT} --</option>
 				</select>
 				<input name="title" type="text" id="title" style="width:280px" maxlength="250"  value="{$item.title|escape:'html'}"/>
 			</td>
+		</tr>
+		<tr id="from_search">
+			<td></td>
+			<td height="35">
+				<input name="title_fake" type="text" id="title_fake" maxlength="250"  value=""/>
+			</td>
+		</tr>
+		<tr>
+            <td height="30"><span>{$LANG.CAT_BOARD}:</span></td>
+            <td>
+                <select name="category_id" id="category_id" style="width:406px" onchange="getRubric();">
+                    <option value="0">-- {$LANG.SELECT_CAT} --</option>
+                    {$catslist}
+                </select>
+            </td>
 		</tr>
 		<tr class="proptable">
 			<td>
@@ -28,17 +43,6 @@
 				<textarea name="content" style="width:400px" rows="5" id="content">{$item.content|escape:'html'}</textarea>
 			</td>
 		</tr>
-		{if $item.cat_id}
-			<tr>
-				<td height="30"><span>{$LANG.MOVE_TO_CAT}:</span></td>
-				<td>
-					<select name="category_id" id="category_id" style="width:406px">
-						<option value="0">-- {$LANG.DONT_MOVE} --</option>
-						{$catslist}
-					</select>
-				</td>
-			</tr>
-		{/if}
 		{if $cfg.photos && $cat.is_photos}
 			<tr>
 				<td><span>{$LANG.PHOTO}:</span></td>
@@ -151,7 +155,17 @@
 				</td>
 			</tr>
 		{/if}
-
+        {if !$is_user}
+        <tr>
+            <td valign="top" class="">
+                <div><strong>{$LANG.SECUR_SPAM}: </strong></div>
+                <div><small>{$LANG.SECUR_SPAM_TEXT}</small></div>
+            </td>
+            <td valign="top" class="">
+                {php}echo cmsPage::getCaptcha();{/php}
+            </td>
+        </tr>
+        {/if}
 		<tr>
 			<td height="40" colspan="2" valign="middle">
 				<input name="submit" type="submit" id="submit" style="margin-top:10px;font-size:18px" value="{$LANG.SAVE_ADV}" {if $is_admin || ($is_billing && $cfg.vip_enabled)}onclick="if(!checkBalance())return false;"{/if} />
@@ -159,3 +173,25 @@
 		</tr>
 	</table>
 </form>
+{literal}
+<script type="text/javascript">
+	function getRubric(){
+		$("#category_id").attr("disabled", "");
+		$("#obtype").attr("disabled", "disabled");
+		var category_id = $('select[name=category_id]').val();
+		if(category_id != 0){
+			$.post("/components/board/ajax/get_rubric.php", {value: category_id, obtype: '{/literal}{$item.obtype}{literal}'}, function(data) {
+				$("#obtype").attr("disabled", "");
+				$("#obtype").html(data);
+			});
+		} else {
+			$("#obtype").html('<option value="0">-- {/literal}{$LANG.SELECT_CAT}{literal} --</option>');
+			$("#obtype").attr("disabled", "disabled");
+		}
+	}
+	$(document).ready(function() {
+		$('#title').focus();
+		getRubric();
+	});
+</script>
+{/literal}

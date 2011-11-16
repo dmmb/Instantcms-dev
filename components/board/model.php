@@ -585,12 +585,13 @@ class cms_model_board{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
 
-    public function getBoardCities($selected='', $cat){
+    public function getBoardCities($selected='', $cat=array()){
 
 		global $_LANG;
 
-        $html = '<select name="city" onchange="$(\'form#obform\').submit();">';
+        $html = '<select name="city" onchange="$(\'form#obform\').submit();" style="width:130px">';
         $html .= '<option value="all">'.$_LANG['ALL_CITY'].'</option>';
+		if(!$cat['cat_city']) { $cat['cat_city'] = $this->getCatCity(); }
 		if ($cat['cat_city']){
 			foreach($cat['cat_city'] as $cat_city){
 				if (strtolower($selected)==strtolower($cat_city)){

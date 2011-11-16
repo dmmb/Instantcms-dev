@@ -16,6 +16,8 @@
 		<span class="bd_item_user">
 			<a href="{profile_url login=$item.user_login}">{$item.user}</a>
 		</span>
+	{else}
+    	<span class="bd_item_user">{$LANG.BOARD_GUEST}</span>
 	{/if}
 	{if $item.moderator}
 		<span class="bd_item_edit"><a href="/board/edit{$item.id}.html">{$LANG.EDIT}</a></span>
