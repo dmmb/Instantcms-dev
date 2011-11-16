@@ -2624,7 +2624,7 @@ class cmsCore {
             while($node = $inDB->fetch_assoc($rs_rows)){
                 if (!$need_field || $node[$need_field]){
                     if (@$selected==$node['id']){
-                        $s = 'selected';
+                        $s = 'selected="selected"';
                     } else {
                         $s = '';
                     }

@@ -1198,7 +1198,11 @@ if ($do=='close'){
 	if(!$msg) { cmsCore::error404(); }
 
 	if ($msg['user_id']==$inUser->id || $inCore->userIsAdmin($inUser->id) || $inCore->isUserCan('forum/moderate')){
-		$inDB->query("UPDATE cms_forum_threads SET closed = '$closed' WHERE id = '$id'") ;
+		$inDB->query("UPDATE cms_forum_threads SET closed = '$closed' WHERE id = '$id'");
+		if(!$closed) {
+			$title = str_ireplace($_LANG['TOPIC_FIXED_PREFIX'], '', $msg['title']);
+			$inDB->query("UPDATE cms_forum_threads SET title = '{$inDB->escape_string($title)}' WHERE id = '$id'");
+		}
 	}
 
 	$inCore->redirectBack();

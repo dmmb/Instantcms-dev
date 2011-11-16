@@ -9,7 +9,7 @@
 				<select name="obtype" id="obtype" style="width:120px">
 					<option value="0">-- {$LANG.SELECT_CAT} --</option>
 				</select>
-				<input name="title" type="text" id="title" style="width:280px" maxlength="250"  value="{$item.title|escape:'html'}"/>
+				<input name="title" type="text" id="title" class="text-input" style="width:280px" maxlength="250"  value="{$item.title|escape:'html'}"/>
 			</td>
 		</tr>
 		<tr id="from_search">
@@ -21,7 +21,7 @@
 		<tr>
             <td height="30"><span>{$LANG.CAT_BOARD}:</span></td>
             <td>
-                <select name="category_id" id="category_id" style="width:406px" onchange="getRubric();">
+                <select name="category_id" id="category_id" class="text-input" style="width:407px" onchange="getRubric();">
                     <option value="0">-- {$LANG.SELECT_CAT} --</option>
                     {$catslist}
                 </select>
@@ -32,7 +32,7 @@
 				<span>{$LANG.CITY}:</span>
 			</td>
 			<td height="35" valign="top">
-				<input name="city_ed" type="text" id="city_ed" style="width:182px" value="{$item.city|escape:'html'}"/> {$LANG.OR_SELECTING} {$cities}
+				<input name="city_ed" class="text-input" type="text" id="city_ed" style="width:184px" value="{$item.city|escape:'html'}"/> {$LANG.OR_SELECTING} {$cities}
 			</td>
 		</tr>
 		<tr>
@@ -40,13 +40,13 @@
 				<span>{$LANG.TEXT_ADV}:</span>
 			</td>
 			<td height="100" valign="top">
-				<textarea name="content" style="width:400px" rows="5" id="content">{$item.content|escape:'html'}</textarea>
+				<textarea name="content" class="text-input" style="width:403px" rows="5" id="content">{$item.content|escape:'html'}</textarea>
 			</td>
 		</tr>
 		{if $cfg.photos && $cat.is_photos}
 			<tr>
 				<td><span>{$LANG.PHOTO}:</span></td>
-				<td><input name="Filedata" type="file" id="picture" style="width:400px;" /></td>
+				<td><input name="Filedata" type="file" id="picture" style="width:407px;" /></td>
 			</tr>
 		{/if}
 		{if $form_do == 'edit'}

@@ -75,7 +75,9 @@ function files(){
         if (strstr($url, 'http:/')){
             if (!strstr($url, 'http://')){ $url = str_replace('http:/', 'http://', $url); }
         }
-       
+        if (strstr($url, 'https:/')){
+            if (!strstr($url, 'https://')){ $url = str_replace('https:/', 'https://', $url); }
+        }
         $inCore->redirect($url);
 
     }

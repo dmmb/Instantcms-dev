@@ -176,6 +176,11 @@ if($do=='read'){
 /////////////////////////////// NEW BOARD ITEM /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='additem'){
 
+	$cat['is_photos'] = 1;
+	if ($model->category_id && $model->category_id != $model->root_cat['id']) {
+		$cat = $model->getCategory($model->category_id);
+	}
+
 	$inPage->addPathway($_LANG['ADD_ADV']);
 
     if ( !$inCore->inRequest('submit') ) {
@@ -216,8 +221,7 @@ if ($do=='additem'){
 		$errors = false;
 
 		// проверяем наличие категории
-		$cat = $model->getCategory($model->category_id);
-		if (!$cat) { cmsCore::addSessionMessage($_LANG['NEED_CAT_ADV'], 'error'); $errors = true; }
+		if (!$cat['id']) { cmsCore::addSessionMessage($_LANG['NEED_CAT_ADV'], 'error'); $errors = true; }
 
 		// Проверяем количество добавленных за сутки
 		if (!$model->checkLoadedByUser24h($cat)){       
@@ -262,8 +266,13 @@ if ($do=='additem'){
 			$inCore->redirect('/board/'.$model->category_id.'/add.html');
         }
 
-		// Загружаем фото
-        $file = $model->uploadPhoto('', $cat);
+		if($cat['is_photos']){
+			// Загружаем фото
+			$file = $model->uploadPhoto('', $cat);
+		} else {
+			$file['filename'] = '';
+			cmsCore::addSessionMessage($_LANG['INFO_CAT_NO_PHOTO'], 'info');
+		}
 
         $item_id = $model->addRecord(array(
                                     'category_id'=>$model->category_id,
@@ -293,7 +302,7 @@ if ($do=='additem'){
             }
         }
 
-		unset($_SESSION['icms']);
+		cmsUser::sessionClearAll();
 
 		if ($published) {
 			//регистрируем событие
@@ -306,12 +315,23 @@ if ($do=='additem'){
 						'target_id' => $cat['id'], 
 						'description' => ''
 			));
-			cmsCore::addSessionMessage($_LANG['ADV_IS_ADDED'], 'info');
+			cmsCore::addSessionMessage($_LANG['ADV_IS_ADDED'], 'success');
 			$inCore->redirect('/board/read'.$item_id.'.html');
 		}
 
 		if (!$published) {
-			cmsCore::addSessionMessage($_LANG['ADV_IS_ADDED'].'<br>'.$_LANG['ADV_PREMODER_TEXT'], 'info');
+
+			$link = '<a href="/board/read'.$item_id.'.html">'.$obtype.' '.$title.'</a>';
+			if($inUser->id){
+				$user = '<a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a>';
+			} else {
+				$user = $_LANG['BOARD_GUEST'].', ip: '.$inUser->ip;
+			}
+			$message = str_replace('%user%', $user, $_LANG['MSG_ADV_SUBMIT']);
+			$message = str_replace('%link%', $link, $message);
+			cmsUser::sendMessage(USER_UPDATER, 1, $message);
+
+			cmsCore::addSessionMessage($_LANG['ADV_IS_ADDED'].'<br>'.$_LANG['ADV_PREMODER_TEXT'], 'success');
 			$inCore->redirect('/board/'.$model->category_id);
 		}
 
@@ -342,14 +362,14 @@ if ($do=='edititem'){
         $smarty->assign('form_do', 'edit');
         $smarty->assign('cfg', $model->config);
         $smarty->assign('cat', $cat);
-        $smarty->assign('obtypes', $model->getTypesOptions($cat['obtypes'], $item['obtype']));
         $smarty->assign('cities', $model->getBoardCities($item['city'], $cat));
         $smarty->assign('item', $item);
 		$smarty->assign('pagetitle', $_LANG['EDIT_ADV']);
         $smarty->assign('is_admin', $inUser->is_admin);
+        $smarty->assign('catslist', $inCore->getListItemsNS('cms_board_cats', $item['category_id']));
+		$smarty->assign('is_user', $inUser->id);
 		$smarty->assign('is_billing', IS_BILLING);
         if (IS_BILLING){ $smarty->assign('balance', $inUser->balance); }
-        $smarty->assign('catslist',  $inCore->getListItemsNS('cms_board_cats'));
         $smarty->display('com_board_edit.tpl');
     }
 
@@ -391,8 +411,11 @@ if ($do=='edititem'){
 
 		if ($errors){ $inCore->redirect('/board/edit'.$item['id'].'.html'); }
 
-		// Загружаем фото
-        $file = $model->uploadPhoto($item['file'], $cat);
+		if($cat['is_photos']){
+			// Загружаем фото
+			$file = $model->uploadPhoto($item['file'], $cat);
+		}
+
 		$file['filename'] = $file['filename'] ? $file['filename'] : $item['file'];
 
         $model->updateRecord($model->item_id, array(
@@ -424,7 +447,8 @@ if ($do=='edititem'){
             }
         }
 
-        //finish
+		cmsUser::sessionClearAll();
+
 		if (!$published) { $prmoder = '<p>'.$_LANG['ADV_EDIT_PREMODER_TEXT'].'</p>'; }
 		cmsCore::addSessionMessage('<p><strong>'.$_LANG['ADV_MODIFIED'].'</strong></p>'.$prmoder, 'info');
 		$inCore->redirect('/board/read'.$item['id'].'.html');
@@ -460,7 +484,7 @@ if ($do == 'delete'){
 
 	if ($inCore->inRequest('godelete')){
 		$model->deleteRecord($model->item_id);
-		cmsCore::addSessionMessage($_LANG['ADV_IS_DELETED'], 'info');
+		cmsCore::addSessionMessage($_LANG['ADV_IS_DELETED'], 'success');
 		$inCore->redirect('/board/'.$item['cat_id']);
 	}
 

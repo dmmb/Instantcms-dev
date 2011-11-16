@@ -40,7 +40,7 @@
 
 <div class="bd_links">
 	{if $user_id}
-		{if $item.user_id != $user_id}
+		{if $item.user_id && $item.user_id != $user_id}
 			<span class="bd_message"><a href="/users/{$item.user_id}/sendmessage.html">{$LANG.WRITE_MESS_TO_AVTOR}</a></span>
 		{/if}
 	{/if}

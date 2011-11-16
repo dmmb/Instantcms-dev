@@ -29,7 +29,6 @@
 	$inCore->loadClass('config');
 	$inCore->loadClass('db');
 	$inCore->loadClass('user');
-	$inDB = cmsDatabase::getInstance();
 
     $inCore->loadModel('board');
     $model = new cms_model_board();
