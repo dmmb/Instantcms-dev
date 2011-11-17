@@ -2169,78 +2169,79 @@ if ($do=='files'){
 	$usr = $model->getUserShort($id);
 	if (!$usr) { cmsCore::error404(); }
 
-			//heading
-			$inPage->setTitle($usr['nickname'].' - '.$_LANG['FILES']);
-			$inPage->addHeadJS('components/users/js/pageselfiles.js');
-			//pathway			
-			$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
-			$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
-			//ordering & paging
-			if (isset($_REQUEST['orderby'])) { 
-				$orderby = $inCore->request('orderby', 'str');
-				$_SESSION['uf_orderby'] = $orderby;
-			} elseif(isset($_SESSION['uf_orderby'])) { 
-				$orderby = $_SESSION['uf_orderby'];
-			} else {
-				$orderby = 'pubdate'; 
-			}
-			if (isset($_REQUEST['orderto'])) { $orderto = $inCore->request('orderto', 'str', ''); } else { $orderto = 'desc'; }
-			if (isset($_REQUEST['page'])) { $page = $inCore->request('page', 'int', ''); } else { $page = 1; }	
-			$perpage = 20;
-			//get files on page
-			if ($inUser->id!=$id){
-				$allowsql = "AND allow_who='all'";
-			} else {
-				$allowsql = '';
-			}
-			$sql = "SELECT *
-			FROM cms_user_files
-					WHERE user_id = $id $allowsql
-					ORDER BY ".$orderby." ".$orderto."
-					LIMIT ".(($page-1)*$perpage).", $perpage";			
-			$result = $inDB->query($sql) ;
-			//get total files count
-			$total_files = $inDB->rows_count('cms_user_files', 'user_id = '.$id.' '.$allowsql.'');
-			//calculate free space
-			$max_mb = $cfg['filessize'];
-			$current_bytes = $max_mb ? usrFilesSize($id) : false;							
-			if ($current_bytes) { $current_mb = round(($current_bytes / 1024) / 1024, 2); } else { $current_mb = 0; }
-			$free_mb = $max_mb ? round($max_mb - $current_mb, 2) : '';
-			$is_files = false;
-			$myprofile = ($inUser->id==$id);
-			if ($inDB->num_rows($result)){ 
-				$is_files = true;
-				//page and ordering select table
-				$pagination = pageSelectFiles($total_files, $page, $perpage);
+	//heading
+	$inPage->setTitle($usr['nickname'].' - '.$_LANG['FILES']);
+	$inPage->addHeadJS('components/users/js/pageselfiles.js');
+	//pathway			
+	$inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
+	$inPage->addPathway($_LANG['FILES_ARCHIVE'], '/users/'.$id.'/files.html');
+	//ordering & paging
+	if (isset($_REQUEST['orderby'])) { 
+		$orderby = $inCore->request('orderby', 'str');
+		$_SESSION['uf_orderby'] = $orderby;
+	} elseif(isset($_SESSION['uf_orderby'])) { 
+		$orderby = $_SESSION['uf_orderby'];
+	} else {
+		$orderby = 'pubdate'; 
+	}
+	if (isset($_REQUEST['orderto'])) { $orderto = $inCore->request('orderto', 'str', ''); } else { $orderto = 'desc'; }
+	if (isset($_REQUEST['page'])) { $page = $inCore->request('page', 'int', ''); } else { $page = 1; }	
+	$perpage = 20;
+	//get files on page
+	if ($inUser->id!=$id){
+		$allowsql = "AND allow_who='all'";
+	} else {
+		$allowsql = '';
+	}
+	$sql = "SELECT *
+	FROM cms_user_files
+			WHERE user_id = '$id' $allowsql
+			ORDER BY ".$orderby." ".$orderto."
+			LIMIT ".(($page-1)*$perpage).", $perpage";			
+	$result = $inDB->query($sql) ;
+	//get total files count
+	$total_files = $inDB->rows_count('cms_user_files', 'user_id = '.$id.' '.$allowsql.'');
+	//calculate free space
+	$max_mb = $cfg['filessize'];
+	$current_bytes = $max_mb ? usrFilesSize($id) : false;							
+	if ($current_bytes) { $current_mb = round(($current_bytes / 1024) / 1024, 2); } else { $current_mb = 0; }
+	$free_mb = $max_mb ? round($max_mb - $current_mb, 2) : '';
+	$is_files = false;
+	$myprofile = ($inUser->id==$id);
+	if ($inDB->num_rows($result)){ 
+		$is_files = true;
+		//page and ordering select table
+		$pagination = pageSelectFiles($total_files, $page, $perpage);
 
-				$rownum = 0;
-				//build file list rows
-				$files = array();
-				while($file = $inDB->fetch_assoc($result)){
-						$file['filelink'] = HOST.'/users/files/download'.$file['id'].'.html';
-						if ($rownum % 2) { $file['class'] = 'usr_list_row1'; } else { $file['class'] = 'usr_list_row2'; }
-						$file['fileicon'] 	= $inCore->fileIcon($file['filename']);
-						$file['mb'] 		= round(($file['filesize']/1024)/1024, 2);if ($mb == '0') { $mb = '~ 0'; }
-						$file['rownum'] 	= $rownum; 
-						$file['pubdate'] 	= $inCore->dateFormat($file['pubdate'], true, true);
-						$rownum++;
-						$files[] = $file;
-							}
-							
-								}
+		$rownum = 0;
+		//build file list rows
+		$files = array();
+		while($file = $inDB->fetch_assoc($result)){
+				$file['filelink'] = HOST.'/users/files/download'.$file['id'].'.html';
+				if ($rownum % 2) { $file['class'] = 'usr_list_row1'; } else { $file['class'] = 'usr_list_row2'; }
+				$file['fileicon'] 	= $inCore->fileIcon($file['filename']);
+				$file['mb'] 		= round(($file['filesize']/1024)/1024, 2);if ($mb == '0') { $mb = '~ 0'; }
+				$file['rownum'] 	= $rownum; 
+				$file['pubdate'] 	= $inCore->dateFormat($file['pubdate'], true, true);
+				$rownum++;
+				$files[] = $file;
+		}
+					
+	}
 
-			$smarty = $inCore->initSmarty('components', 'com_users_file_view.tpl');
-			$smarty->assign('usr', $usr);
-			$smarty->assign('orderby', $orderby);
-			$smarty->assign('orderto', $orderto);
-			$smarty->assign('cfg', $cfg);
-			$smarty->assign('total_files', $total_files);
-			$smarty->assign('is_files', $is_files);
-			$smarty->assign('free_mb', $free_mb);
-			$smarty->assign('pagination', $pagination);
-			$smarty->assign('myprofile', $myprofile);
-			$smarty->assign('files', $files);
-			$smarty->display('com_users_file_view.tpl');
+	$smarty = $inCore->initSmarty('components', 'com_users_file_view.tpl');
+	$smarty->assign('usr', $usr);
+	$smarty->assign('orderby', $orderby);
+	$smarty->assign('orderto', $orderto);
+	$smarty->assign('cfg', $cfg);
+	$smarty->assign('total_files', $total_files);
+	$smarty->assign('is_files', $is_files);
+	$smarty->assign('free_mb', $free_mb);
+	$smarty->assign('pagination', $pagination);
+	$smarty->assign('myprofile', $myprofile);
+	$smarty->assign('is_admin', $inUser->is_admin);
+	$smarty->assign('files', $files);
+	$smarty->display('com_users_file_view.tpl');
 	
 }
 

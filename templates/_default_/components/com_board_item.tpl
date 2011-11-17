@@ -7,6 +7,7 @@
         <span class="bd_item_is_vip">{$LANG.VIP_ITEM}</span>
     {/if}
 	<span class="bd_item_date">{$item.pubdate}</span>
+    <span class="bd_item_hits">{$item.hits}</span>
 	{if $item.city}
 		<span class="bd_item_city">
 			<a href="/board/city/{$item.enc_city}">{$item.city}</a>

@@ -45,7 +45,7 @@
       <td class="usr_files_head" width="100">{$LANG.SIZE} {if $orderby=='filesize'}&darr;{/if}</td>
       <td class="usr_files_head" width="120">{$LANG.CREATE_DATE} {if $orderby=='pubdate'}&darr;{/if}</td>
       <td class="usr_files_head" width="80" align="center">{$LANG.DOWNLOAD_HITS} {if $orderby=='hits'}&darr;{/if}</td>
-      {if $myprofile}
+      {if $myprofile || $is_admin}
       <td class="usr_files_head" width="16">&nbsp;</td>
       {/if}
       </tr>
@@ -71,7 +71,7 @@
           <td class="{$file.class}">{$file.mb} {$LANG.MBITE}</td>
           <td class="{$file.class}">{$file.pubdate}</td>
           <td class="{$file.class}" align="center">{$file.hits}</td>
-          {if $myprofile}
+          {if $myprofile || $is_admin}
           <td class="{$file.class}" align="center"><a href="/users/{$usr.id}/delfile{$file.id}.html"><img src="/components/users/images/delete.gif" border="0" alt="{$LANG.DELETE_FILE}"/></a></td>
           {/if}
           </tr>

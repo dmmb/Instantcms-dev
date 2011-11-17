@@ -2016,7 +2016,9 @@ span.bd_item_date{
 span.bd_item_city{
 	background:url(../images/icons/city.png) no-repeat;
 }
-
+span.bd_item_hits{
+	background:url(../images/icons/eye.png) no-repeat scroll center left;
+}
 span.bd_item_edit{
 	background:url(../images/icons/edit.png) no-repeat;
 }

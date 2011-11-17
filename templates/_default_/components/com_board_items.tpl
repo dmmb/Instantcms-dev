@@ -42,6 +42,7 @@
                                         {elseif !$con.published}
                                             <span class="bd_item_status_bad">{$LANG.WAIT_MODER}</span>
                                         {/if}
+                                        <span class="bd_item_hits">{$con.hits}</span>
 										{if $con.city}
 											<span class="bd_item_city"><a href="/board/city/{$con.enc_city|escape:'html'}">{$con.city}</a></span>
 										{/if}

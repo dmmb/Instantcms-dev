@@ -17,6 +17,5 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * e-mail: firs.yura@gmail.com
  * site: firs.org.ua
  */
-$_LANG['LATESTBOARD_CONFIG_TEXT']     ='Задайте настройки модуля в панели управления.';
 $_LANG['LATESTBOARD_NOT_ADV']         ='Нет объявлений для отображения.';
 ?>

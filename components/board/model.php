@@ -121,8 +121,16 @@ class cms_model_board{
         return;
     }
 
+    public function whereThisAndNestedCats($left_key, $right_key) {
+        $this->where("cat.NSLeft >= $left_key AND cat.NSRight <= $right_key AND cat.parent_id > 0");
+    }
+
     public function whereCityIs($city) {
         $this->where("i.city = '$city'");
+    }
+
+    public function whereVip($flag) {
+        $this->where("i.is_vip = $flag");
     }
 
     public function whereTypeIs($type) {

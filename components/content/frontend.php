@@ -268,17 +268,6 @@ if ($do=='read'){
     //PROCESS FILTERS
     $inCore->processFilters($article_content);
 
-    //HIGHLIGHT USER LAST SEARCH QUERY IF NECCESSARY
-    if (isset($_SESSION['squery'])){
-        $regex = '/('.$_SESSION['squery'].')\s*(.*?)/i';
-        $matches = array();
-        preg_match_all( $regex, $article_content, $matches, PREG_SET_ORDER );
-        foreach ($matches as $elm) {
-            $article_content = preg_replace( $regex, '<span class="search_match">'.$_SESSION['squery'].'</span>', $article_content );
-        }
-        unset($_SESSION['squery']);
-    }
-    
     $cfg['showtitle'] = (isset($cfg['showtitle']) || @$cfg['showtitle']);
 
     //CHECK RELATED FORUM THREAD, create if neccessary
@@ -474,8 +463,8 @@ if ($do=='addarticle' || $do=='editarticle'){
            $article['tpl']              = $mod['tpl'];
         }
 
-        if (!$article['title']){ cmsCore::addSessionMessage($_LANG['REQ_TITLE'], 'error'); $errors = true; }
-        if (!$article['content']){ cmsCore::addSessionMessage($_LANG['REQ_CONTENT'], 'error'); $errors = true; }
+        if (strlen($article['title'])<2){ cmsCore::addSessionMessage($_LANG['REQ_TITLE'], 'error'); $errors = true; }
+        if (strlen($article['content'])<10){ cmsCore::addSessionMessage($_LANG['REQ_CONTENT'], 'error'); $errors = true; }
 
 		if($errors) { $inCore->redirectBack(); }
 
@@ -555,6 +544,7 @@ if ($do=='addarticle' || $do=='editarticle'){
             }
 
 			cmsCore::addSessionMessage($_LANG['ARTICLE_SAVE'], 'info');
+
             $inCore->redirect('/my.html');
 
         }
@@ -739,11 +729,8 @@ if ($do=='my'){
 		$articles[$row]['status']           = $articles[$row]['published'] ? '<span style="color:green">'.$_LANG['PUBLISHED'].'</span>' : '<span style="color:#CC0000">'.$_LANG['NO_PUBLISHED'].'</span>';
     }
 
-    $messages = cmsCore::getSessionMessages();
-
     $smarty = $inCore->initSmarty('components', 'com_content_my.tpl');
         $smarty->assign('articles', $articles);
-        $smarty->assign('messages', $messages);
 		$smarty->assign('total', $total);
         $smarty->assign('user_can_delete', $inCore->isUserCan('content/delete'));
         $smarty->assign('pagebar', cmsPage::getPagebar($total, $page, $perpage, '/content/my%page%.html'));

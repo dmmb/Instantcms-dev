@@ -2,6 +2,15 @@
 <form action="{$action}" method="post" enctype="multipart/form-data">
 	<table cellpadding="5">
 		<tr>
+            <td height="30"><span>{$LANG.CAT_BOARD}:</span></td>
+            <td>
+                <select name="category_id" id="category_id" class="text-input" style="width:407px" onchange="getRubric();">
+                    <option value="0">-- {$LANG.SELECT_CAT} --</option>
+                    {$catslist}
+                </select>
+            </td>
+		</tr>
+		<tr>
 			<td width="180">
 				<span>{$LANG.TITLE}:</span>
 			</td>
@@ -17,15 +26,6 @@
 			<td height="35">
 				<input name="title_fake" type="text" id="title_fake" maxlength="250"  value=""/>
 			</td>
-		</tr>
-		<tr>
-            <td height="30"><span>{$LANG.CAT_BOARD}:</span></td>
-            <td>
-                <select name="category_id" id="category_id" class="text-input" style="width:407px" onchange="getRubric();">
-                    <option value="0">-- {$LANG.SELECT_CAT} --</option>
-                    {$catslist}
-                </select>
-            </td>
 		</tr>
 		<tr class="proptable">
 			<td>

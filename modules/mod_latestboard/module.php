@@ -14,59 +14,42 @@
 function mod_latestboard($module_id){	
 
         $inCore = cmsCore::getInstance();
-        $inDB = cmsDatabase::getInstance();
-		$cfg = $inCore->loadModuleConfig($module_id);
+        $inDB   = cmsDatabase::getInstance();
+		$cfg    = $inCore->loadModuleConfig($module_id);
+
+		$inCore->loadModel('board');
+		$model = new cms_model_board();
 
         global $_LANG;
 
-		if (!isset($cfg['shownum'])){
-			echo '<p>'.$_LANG['LATESTBOARD_CONFIG_TEXT'].'</p>';
-			return true;
-		}
+		if (!isset($cfg['shownum'])){ $cfg['shownum'] = 5; }
+		if (!isset($cfg['onlyvip'])){ $cfg['onlyvip'] = 0; }
 		
 		if ($cfg['cat_id'] != '-1') {
 			if (!$cfg['subs']){
-				//select from category
-				$catsql  = ' AND i.category_id = '.$cfg['cat_id'];
+				$model->whereCatIs($cfg['cat_id']);
 			} else {
-				//select from category and subcategories
-				$rootcat = dbGetFields('cms_board_cats', "id='{$cfg['cat_id']}'", 'NSLeft, NSRight');
-				if(!$rootcat) { return false; }
-				$catsql  = "AND (cat.NSLeft >= {$rootcat['NSLeft']} AND cat.NSRight <= {$rootcat['NSRight']})";
+				$cat = $inDB->get_fields('cms_board_cats', "id='{$cfg['cat_id']}'", 'NSLeft, NSRight');
+				if(!$cat) { return false; }
+				$model->whereThisAndNestedCats($cat['NSLeft'], $cat['NSRight']);
 			}		
-		} else { $catsql = ''; }
-		
-		$sql = "SELECT i.title, i.obtype, i.id, i.city as city, u.id as user_id, u.nickname as nickname,
-					   i.pubdate as pubdate, i.is_vip as is_vip
-				FROM cms_board_items i
-				LEFT JOIN cms_board_cats cat ON cat.id = i.category_id
-				LEFT JOIN cms_users u ON u.id = i.user_id
-				WHERE i.published=1 $catsql
-				ORDER BY i.id DESC";
-		
-		$sql .= "\n" . "LIMIT ".$cfg['shownum'];
-	
-		$result = $inDB->query($sql);
-		
-		$items = array();
-		$is_items = false;
-
-		if ($inDB->num_rows($result)){	
-		
-			$is_items = true;
-
-			while($con = $inDB->fetch_assoc($result)){
-				$con['title'] = $con['obtype'].' '.$con['title'];
-				$con['pubdate'] = $inCore->dateFormat($con['pubdate']);
-				$items[] = $con;
-			}
-	
 		}
+		// òîëüêî ÂÈÏ
+		if($cfg['onlyvip'] && !$cfg['butvip']){
+			$model->whereVip(1);
+		}
+		// êðîìå ÂÈÏ
+		if($cfg['butvip'] && !$cfg['onlyvip']){
+			$model->whereVip(0);
+		}
+		$model->orderBy('pubdate', 'DESC');
+	    $model->limitPage(1, $cfg['shownum']);
+
+		$items = $model->getAdverts(false, true, false, true);
 
         $smarty = $inCore->initSmarty('modules', 'mod_latestboard.tpl');
         $smarty->assign('items', $items);
         $smarty->assign('cfg', $cfg);
-		$smarty->assign('is_items', $is_items);
         $smarty->display('mod_latestboard.tpl');
 			
 		return true;				

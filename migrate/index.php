@@ -123,6 +123,28 @@
 		$is_was_migrate = true;
 	}
 // ========================================================================== //
+// ========================================================================== //
+		$sql = "SELECT * FROM cms_board_items";
+
+		$result = $inDB->query($sql);
+
+		if ($inDB->num_rows($result)){
+
+			while($item = $inDB->fetch_assoc($result)){
+
+				$title = str_ireplace($item['obtype'], '', $item['title']);
+				$title = $inDB->escape_string(trim($title));
+
+				$inDB->query("UPDATE cms_board_items SET title='{$title}' WHERE id='{$item['id']}'");
+
+			}
+
+		}
+
+		echo '<p>“ипы объ€влений удалены из пол€ заголовков.</p>';
+		$is_was_migrate = true;
+
+// ========================================================================== //
 // ========================================================================== //	
 	$inDB->query("DROP TABLE IF EXISTS `cms_search`");
 
