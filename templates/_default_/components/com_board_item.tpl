@@ -36,7 +36,23 @@
 			 </td>
 		{/if}
 		<td valign="top">
-			<div class="bd_text_full">{$item.content}</div>
+			<div class="bd_text_full">
+            	<p>{$item.content}</p>
+                {if $formsdata}
+                    <table width="100%" cellspacing="0" cellpadding="2" style="border-top:1px solid #C3D6DF; margin:5px 0 0 0">
+                        {foreach key=tid item=form from=$formsdata}
+                        <tr>
+                            <td valign="top" width="80px">
+                                <strong>{$form.title}:</strong>
+                            </td>
+                            <td valign="top">
+                                {$form.value}
+                            </td>
+                        </tr>
+                        {/foreach}
+                     </table>
+                {/if}
+            </div>
 		</td>
 	</tr>
 </table>		
@@ -47,7 +63,7 @@
 			<span class="bd_message"><a href="/users/{$item.user_id}/sendmessage.html">{$LANG.WRITE_MESS_TO_AVTOR}</a></span>
 		{/if}
 	{/if}
-	<span class="bd_author"><a href="/users/{$item.user_id}/board.html">{$LANG.ALL_AVTOR_ADVS}</a></span>
+	<span class="bd_author"><a href="/board/by_user_{$item.user_login}">{$LANG.ALL_AVTOR_ADVS}</a></span>
 </div>
 
 {if $cfg.comments}

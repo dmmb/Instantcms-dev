@@ -230,6 +230,7 @@ class cms_model_board{
                 $cat['obtypes'] = $this->inDB->get_field('cms_board_cats', "NSLeft <= {$cat['NSLeft']} AND NSRight >= {$cat['NSRight']} AND obtypes <> ''", 'obtypes');
             }
 			$cat['ob_links'] = $this->getTypesLinks($cat['id'], $cat['obtypes']);
+			$cat['icon'] = $cat['icon'] ? $cat['icon'] : 'folder_grey.png';
             $cats[] = $cat;
         }
 
@@ -337,6 +338,7 @@ class cms_model_board{
 
         $sql = "SELECT i.*, 
                        a.id as cat_id,
+					   a.form_id,
                        a.NSLeft as NSLeft,
                        a.NSRight as NSRight,
                        a.title as cat_title,
@@ -369,6 +371,12 @@ class cms_model_board{
 			$record['file'] = '';
 		}
 
+		if (!$record['formsdata']){
+			$record['form_array'] = array();
+		} else {
+			$record['form_array'] = $this->inCore->yamlToArray($record['formsdata']);
+		}
+
         $record = cmsCore::callEvent('GET_BOARD_RECORD', $record);
 
         return $record;
@@ -390,8 +398,8 @@ class cms_model_board{
 		$inUser = cmsUser::getInstance();
         $item = cmsCore::callEvent('ADD_BOARD_RECORD', $item);
 
-        $sql = "INSERT INTO cms_board_items (category_id, user_id, obtype, title , content, city, pubdate, pubdays, published, file, hits, ip) 
-                VALUES ({$item['category_id']}, {$item['user_id']}, '{$item['obtype']}', '{$item['title']}', '{$item['content']}',
+        $sql = "INSERT INTO cms_board_items (category_id, user_id, obtype, title , content, formsdata, city, pubdate, pubdays, published, file, hits, ip) 
+                VALUES ({$item['category_id']}, {$item['user_id']}, '{$item['obtype']}', '{$item['title']}', '{$item['content']}', '{$item['formsdata']}',
                         '{$item['city']}', NOW(), {$item['pubdays']}, {$item['published']}, '{$item['file']}', 0, INET_ATON('{$inUser->ip}'))";
 
         $this->inDB->query($sql);
@@ -412,6 +420,7 @@ class cms_model_board{
                     obtype = '{$item['obtype']}',
                     title = '{$item['title']}',
                     content = '{$item['content']}',
+					formsdata = '{$item['formsdata']}',
                     city = '{$item['city']}',
 					pubdate = '{$item['pubdate']}',
 					pubdays = '{$item['pubdays']}',
@@ -687,6 +696,63 @@ class cms_model_board{
 		if($u_count<=$cat['uplimit']) { return true; }
 
 		return false;
+	}
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+	public function getFormData($form_id, $formsdata=array()){
+
+		if(!is_array($formsdata)){ return false; }
+
+		$sql = "SELECT * FROM cms_form_fields WHERE form_id = '$form_id' ORDER BY ordering ASC";
+		$result = $this->inDB->query($sql);
+		if (!$this->inDB->num_rows($result)){ return false; }
+
+		$fields = array();
+
+		while($field = $this->inDB->fetch_assoc($result)){
+
+			if (array_key_exists($field['id'], $formsdata)){
+				if ($formsdata[$field['id']]){
+					$default = $formsdata[$field['id']];
+					$field['value'] = nl2br($default);
+					$fields[] = $field;
+				}
+			}
+
+		}					
+
+		return $fields;
+	}
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+	public function getFormDataEdit($form_id, $formsdata=array()){
+
+		$inPage = cmsPage::getInstance();
+
+		if(!is_array($formsdata)){ return false; }
+
+		$sql = "SELECT * FROM cms_form_fields WHERE form_id = '$form_id' ORDER BY ordering ASC";
+		$result = $this->inDB->query($sql);
+		if (!$this->inDB->num_rows($result)){ return false; }
+
+		$fields = array();
+
+		while($field = $this->inDB->fetch_assoc($result)){
+
+			if (array_key_exists($field['id'], $formsdata)){
+				$default = $formsdata[$field['id']];
+			} else {
+				$default = '';
+			}
+
+			$field['value'] = $inPage->buildFormField(1, $field, $default);
+
+			$fields[] = $field;
+
+		}
+
+		return $fields;
+
 	}
 /* ==================================================================================================== */
 /* ==================================================================================================== */

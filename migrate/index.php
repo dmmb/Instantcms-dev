@@ -108,6 +108,22 @@
 	}
 // ========================================================================== //
 // ========================================================================== //	
+	if (!$inDB->isFieldExists('cms_board_cats', 'form_id')){
+
+		$inDB->query("ALTER TABLE `cms_board_cats` ADD `form_id` INT( 11 ) NOT NULL AFTER `obtypes`");
+        echo '<p>Поле <strong>form_id</strong> добавлено в таблицу <strong>cms_board_cats</strong></p>';
+		$is_was_migrate = true;
+	}
+// ========================================================================== //
+// ========================================================================== //	
+	if (!$inDB->isFieldExists('cms_board_items', 'formsdata')){
+
+		$inDB->query("ALTER TABLE `cms_board_items` ADD `formsdata` TEXT CHARACTER SET cp1251 COLLATE cp1251_general_ci NOT NULL AFTER `content`");
+        echo '<p>Поле <strong>formsdata</strong> добавлено в таблицу <strong>cms_board_items</strong></p>';
+		$is_was_migrate = true;
+	}
+// ========================================================================== //
+// ========================================================================== //	
 	$inDB->query("DROP TABLE IF EXISTS `cms_search`");
 
 	$sql = "CREATE TABLE `cms_search` (

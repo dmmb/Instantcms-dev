@@ -700,7 +700,7 @@ public function buildFormField($form_id, $field, $default=''){
                                       name="field['.$field['id'].']"
                                       maxlength="'.$cfg['max'].'"
                                       size="'.$cfg['size'].'"
-                                      value="'.$cfg['default'].'"
+                                      value="'.htmlspecialchars($cfg['default']).'"
                                       style="'.$style.'"
                                       class="text-input"
                                       />';
@@ -709,13 +709,13 @@ public function buildFormField($form_id, $field, $default=''){
                                              class="text-input"
                                              maxlength="'.$cfg['max'].'"
                                              cols="'.$cfg['size'].'"
-                                             rows="'.$cfg['rows'].'" style="'.$style.'">'.$cfg['default'].'</textarea>';
+                                             rows="'.$cfg['rows'].'" style="'.$style.'">'.htmlspecialchars($cfg['default']).'</textarea>';
                          break;
         case 'checkbox':  $html .= '<label><input type="radio" name="field['.$field['id'].']" value="Да" ';
-                          if($cfg['checked']) { $html .= 'checked'; }
+                          if($cfg['default']=='Да') { $html .= 'checked'; }
                           $html .= '/>Да</label> ';
                           $html .= '<label><input type="radio" name="field['.$field['id'].']" value="Нет" ';
-                          if(!$cfg['checked']) { $html .= 'checked'; }
+                          if($cfg['default']=='Нет') { $html .= 'checked'; }
                           $html .= '/>Нет</label> ';
                          break;
         case 'radiogroup': $items = explode('/', $cfg['items']);
@@ -730,7 +730,7 @@ public function buildFormField($form_id, $field, $default=''){
                      $html .= '<select style="'.$style.'" name="field['.$field['id'].']">';
                      foreach($items as $i){
                           $i = str_replace('_', ' ', $i);
-                          $html .= '<option value="'.$i.'"';
+                          $html .= '<option value="'.htmlspecialchars($i).'"';
                           if($i == @$cfg['default']) { $html .= 'selected'; }
                           $html .= ' >'.$i.'</option>';
                      }
@@ -740,7 +740,8 @@ public function buildFormField($form_id, $field, $default=''){
                      $html .= '<select style="'.$style.'" name="field['.$field['id'].']" size="8">';
                      foreach($items as $i){
                           $i = str_replace('_', ' ', $i);
-                          $html .= '<option value="'.$i.'">'.$i.'</option>';
+						  if($i == @$cfg['default']) { $sel = 'selected'; } else { $sel = ''; }
+                          $html .= '<option value="'.htmlspecialchars($i).'" '.$sel.'>'.$i.'</option>';
                      }
                      $html .= '</select>';
                      break;

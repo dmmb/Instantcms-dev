@@ -224,7 +224,10 @@ CREATE TABLE `#__board_cats` (
   `is_photos` int(11) NOT NULL DEFAULT '1',
   `icon` varchar(200) DEFAULT 'folder_grey.png',
   `obtypes` text NOT NULL,
-  PRIMARY KEY (`id`)
+  `form_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `parent_id` (`parent_id`),
+  KEY `NSLeft` (`NSLeft`,`NSRight`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__board_cats` (`id`, `parent_id`, `ordering`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`, `title`, `description`, `published`, `orderform`, `showdate`, `pubdate`, `orderby`, `orderto`, `public`, `perpage`, `maxcols`, `thumb1`, `thumb2`, `thumbsqr`, `uplimit`, `is_photos`, `icon`, `obtypes`) VALUES
@@ -241,6 +244,7 @@ CREATE TABLE `#__board_items` (
   `obtype` varchar(50) NOT NULL,
   `title` varchar(250) NOT NULL,
   `content` text NOT NULL,
+  `formsdata` text NOT NULL,
   `city` varchar(100) NOT NULL,
   `pubdate` datetime DEFAULT NULL,
   `pubdays` int(11) NOT NULL,

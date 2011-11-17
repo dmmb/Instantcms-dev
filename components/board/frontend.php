@@ -223,6 +223,7 @@ if($do=='read'){
 	$smarty->assign('cfg', $model->config);
 	$smarty->assign('user_id', $inUser->id);
 	$smarty->assign('is_admin', $inUser->is_admin);
+	$smarty->assign('formsdata', $model->getFormData($item['form_id'], $item['form_array']));
 	$smarty->assign('is_moder', $inCore->isUserCan('board/moderate'));
 	$smarty->display('com_board_item.tpl');
         
@@ -246,6 +247,7 @@ if ($do=='additem'){
 		if ($item) { cmsUser::sessionDel('item'); }
 
 		$item['city'] = $item['city'] ? $item['city'] : $inDB->get_field('cms_user_profiles', 'id='.$inUser->id, 'city');
+		$item['form_array'] = $item['form_array'] ? $item['form_array'] : array();
 
         $smarty = $inCore->initSmarty('components', 'com_board_edit.tpl');
         $smarty->assign('action', "/board/add.html");
@@ -255,12 +257,15 @@ if ($do=='additem'){
 		$smarty->assign('item', $item);
 		$smarty->assign('pagetitle', $_LANG['ADD_ADV']);
         $smarty->assign('cities', $model->getBoardCities($item['city']));
+		$smarty->assign('formsdata', $model->getFormDataEdit($cat['form_id'], $item['form_array']));
         $smarty->assign('is_admin', $inUser->is_admin);
 		$smarty->assign('is_user', $inUser->id);
         $smarty->assign('catslist', $inCore->getListItemsNS('cms_board_cats', $model->category_id));
 		$smarty->assign('is_billing', IS_BILLING);
         if (IS_BILLING){ $smarty->assign('balance', $inUser->balance); }
         $smarty->display('com_board_edit.tpl');
+
+		cmsUser::sessionClearAll();
         return;
 
     }
@@ -296,6 +301,9 @@ if ($do=='additem'){
         $city       = $inCore->request('city', 'str', '');
         $city       = ($city && $city!='all') ? $city : $city_ed;
 
+		$form_array = $inCore->request('field', 'array');
+		$formsdata  = $inCore->strClear($inCore->arrayToYaml($form_array));
+
         $vipdays    = $inCore->request('vipdays', 'int', 0);
 
         $published  = 0;
@@ -316,6 +324,7 @@ if ($do=='additem'){
 			$item['city']    = stripslashes($city);
 			$item['title']   = stripslashes($title);
 			$item['obtype']  = $obtype;
+			$item['form_array'] = $form_array;
 			cmsUser::sessionPut('item', $item);
 			$inCore->redirect('/board/'.$model->category_id.'/add.html');
         }
@@ -334,6 +343,7 @@ if ($do=='additem'){
                                     'obtype'=>$obtype,
                                     'title'=>$title,
                                     'content'=>$content,
+									'formsdata'=>$formsdata,
                                     'city'=>$city,
                                     'pubdays'=>$pubdays,
                                     'published'=>$published,
@@ -421,10 +431,14 @@ if ($do=='edititem'){
 		$smarty->assign('pagetitle', $_LANG['EDIT_ADV']);
         $smarty->assign('is_admin', $inUser->is_admin);
         $smarty->assign('catslist', $inCore->getListItemsNS('cms_board_cats', $item['category_id']));
+		$smarty->assign('formsdata', $model->getFormDataEdit($cat['form_id'], $item['form_array']));
 		$smarty->assign('is_user', $inUser->id);
 		$smarty->assign('is_billing', IS_BILLING);
         if (IS_BILLING){ $smarty->assign('balance', $inUser->balance); }
         $smarty->display('com_board_edit.tpl');
+
+		cmsUser::sessionClearAll();
+
     }
 
     if ($inCore->inRequest('submit')){
@@ -442,6 +456,9 @@ if ($do=='edititem'){
         $city_ed    = $inCore->request('city_ed', 'str', '');
         $city       = $inCore->request('city', 'str', '');
         $city       = ($city && $city!='all') ? $city : $city_ed;
+
+		$form_array = $inCore->request('field', 'array');
+		$formsdata  = $inCore->strClear($inCore->arrayToYaml($form_array));
 
         $published  = ($cat['public']==2 && $inCore->isUserCan('board/autoadd')) ? 1 : 0;
         if ($inUser->is_admin || $inCore->isUserCan('board/moderate')) { $published = 1; }
@@ -478,6 +495,7 @@ if ($do=='edititem'){
                                     'obtype'=>$obtype,
                                     'title'=>$title,
                                     'content'=>$content,
+									'formsdata'=>$formsdata,
                                     'city'=>$city,
 									'pubdate'=>$pubdate,
 									'pubdays'=>$pubdays,

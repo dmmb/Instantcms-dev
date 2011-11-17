@@ -509,7 +509,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$thumbsqr    = $inCore->request('thumbsqr', 'int');
 		$uplimit     = $inCore->request('uplimit', 'int');
 		$maxcols     = $inCore->request('maxcols', 'int');
-		$orderform   = $inCore->request('orderform', 'int');	
+		$orderform   = $inCore->request('orderform', 'int');
+		$form_id     = $inCore->request('form_id', 'int');	
 	
         $obtypes     = $inCore->request('obtypes', 'str', '');
 
@@ -537,6 +538,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 						maxcols='$maxcols', 
 						orderform='$orderform',
 						icon='$icon',
+						form_id='$form_id',
                         obtypes='$obtypes'
 					WHERE id = '$myid'";
 			dbQuery($sql) ;
@@ -594,10 +596,12 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			$thumbsqr    = $inCore->request('thumbsqr', 'int');
 			$uplimit     = $inCore->request('uplimit', 'int');
 			$maxcols     = $inCore->request('maxcols', 'int');
-			$orderform   = $inCore->request('orderform', 'int');	
+			$orderform   = $inCore->request('orderform', 'int');
+			$form_id     = $inCore->request('form_id', 'int');
 		
 			$obtypes     = $inCore->request('obtypes', 'str');
-			$icon = uploadCategoryIcon($mod['icon']);					
+			$icon = uploadCategoryIcon($mod['icon']);
+			$icon = $icon ? $icon : $mod['icon'];
 			$ns = $inCore->nestedSetsInit('cms_board_cats');
 			$ns->MoveNode($id, $parent_id);									
 								
@@ -618,6 +622,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 						maxcols='$maxcols',
 						orderform='$orderform',
 						icon='$icon',
+						form_id='$form_id',
                         obtypes='$obtypes'
 					WHERE id = '$id'
 					LIMIT 1";
@@ -762,6 +767,27 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                         <input name="Filedata" type="file" style="width:215px; margin:0 0 0 5px; vertical-align:top" />
                     </td>
                 </tr>
+			  <tr>
+				<td><strong>Привязать форму</strong><br/>
+                    <span class="hinttext">Поля формы будут присутствовать в объявлениях данной рубрики</span></td>
+				<td>
+                    <select name="form_id" style="width:250px">
+                    	<option value="" <?php if (@!$mod['form_id']) { echo 'selected'; }?>>-- не привязывать --</option>
+                        <?php
+                        $sql = "SELECT id, title FROM cms_forms";
+                        $rs = dbQuery($sql);
+
+                        if (mysql_num_rows($rs)){
+                            while($f = mysql_fetch_assoc($rs)){
+                                if ($f['id']==$mod['form_id']) { $selected='selected="selected"'; } else { $selected = ''; }
+                                echo '<option value="'.$f['id'].'" '.$selected.'>'.$f['title'].'</option>';
+                            }
+                        }
+
+                        ?>
+                    </select>
+                </td>
+			  </tr>
 			  <tr>
 				<td><strong>Публиковать рубрику?</strong></td>
 				<td><input name="published" type="radio" value="1" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> />

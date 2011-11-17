@@ -37,7 +37,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	cpToolMenu($toolmenu);
 
-    $inPage     = cmsPage::getInstance();
+    $inPage = cmsPage::getInstance();
+	$inDB = cmsDatabase::getInstance();
 
 	//LOAD CURRENT CONFIG
 	$cfg = $inCore->loadComponentConfig('forms');
@@ -335,6 +336,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         <?php	
 	
 	if ($opt=='edit'){
+		$last_order = 1 + $inDB->get_field('cms_form_fields', "form_id='{$mod['id']}' ORDER BY ordering DESC", 'ordering');
 ?>	
 	{tab=Поля формы}
 	<table width="761" cellpadding="8" cellspacing="5">
@@ -363,7 +365,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                 </tr>
                 <tr>
                   <td>Порядок:</td>
-                  <td><input name="f_order" type="text" id="f_order" value="1" size="6" /></td>
+                  <td><input name="f_order" type="text" id="f_order" value="<?php echo $last_order?>" size="6" /></td>
                 </tr>
                 <tr>
                   <td>Заполнение:</td>

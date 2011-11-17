@@ -43,6 +43,18 @@
 				<textarea name="content" class="text-input" style="width:403px" rows="5" id="content">{$item.content|escape:'html'}</textarea>
 			</td>
 		</tr>
+        {if $formsdata}
+        	{foreach key=tid item=form from=$formsdata}
+            <tr>
+                <td valign="top">
+                    <span>{$form.title}:</span>
+                </td>
+                <td valign="top">
+                    {$form.value}
+                </td>
+            </tr>
+            {/foreach}
+        {/if}
 		{if $cfg.photos && $cat.is_photos}
 			<tr>
 				<td><span>{$LANG.PHOTO}:</span></td>
