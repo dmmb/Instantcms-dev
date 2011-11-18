@@ -71,6 +71,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$cfg['vip_prolong']    = $inCore->request('vip_prolong', 'int', 0);
 		$cfg['vip_max_days']   = $inCore->request('vip_max_days', 'int', 30);
 		$cfg['vip_day_cost']   = $inCore->request('vip_day_cost', 'str', 5);
+		$cfg['home_perpage']   = $inCore->request('home_perpage', 'int', 15);
 
         $cfg['vip_day_cost'] = str_replace(',', '.', trim($cfg['vip_day_cost']));
         
@@ -294,6 +295,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		if (!isset($cfg['vip_prolong'])) { $cfg['vip_prolong'] = 0; }
 		if (!isset($cfg['vip_max_days'])) { $cfg['vip_max_days'] = 30; }
 		if (!isset($cfg['vip_day_cost'])) { $cfg['vip_day_cost'] = 5; }
+		if (!isset($cfg['home_perpage'])) { $cfg['home_perpage'] = 15; }
         
 		?>
 		<?php cpCheckWritable('/images/board', 'folder'); ?>
@@ -337,6 +339,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                         <input name="comments" type="radio" value="1" <?php if (@$cfg['comments']) { echo 'checked="checked"'; } ?>/> Да
                         <input name="comments" type="radio" value="0" <?php if (@!$cfg['comments']) { echo 'checked="checked"'; } ?>/> Нет
                     </td>
+                </tr>
+                <tr>
+                    <td><strong>Количество объявлений на главной странице компонента: </strong></td>
+                    <td width="250"><input name="home_perpage" type="text" id="home_perpage" size="5" value="<?php echo @$cfg['home_perpage'];?>"/> шт</td>
                 </tr>
                 <tr>
                     <td><strong>Количество колонок для вывода списка рубрик: </strong></td>

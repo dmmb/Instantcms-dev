@@ -68,6 +68,7 @@ class cms_model_board{
                      'photos'=>1,
                      'maxcols'=>1,
                      'public'=>1,
+					 'home_perpage'=>15,
                      'srok'=>1,
                      'pubdays'=>14,
                      'watermark'=>0,
@@ -169,8 +170,11 @@ class cms_model_board{
 
     public function getCategory($category_id = 0) {
 
+		$inUser = cmsUser::getInstance();
+
 		if($category_id == $this->root_cat['id']){
 			$category = $this->root_cat;
+			$category['perpage'] = $this->config['home_perpage'];
 		} else {
 	        $category = $this->inDB->get_fields('cms_board_cats', "id = '{$category_id}'", '*');
 		}
@@ -178,8 +182,9 @@ class cms_model_board{
 
         $category = cmsCore::callEvent('GET_BOARD_CAT', $category);
 
-		$category['perpage'] = $category['perpage'] ? $category['perpage'] : 20;
+		$category['perpage'] = $category['perpage'] ? $category['perpage'] : $this->config['home_perpage'];
 		if ($category['public'] == -1) { $category['public'] = $this->config['public']; }
+		if($inUser->is_admin) { $category['public'] = 1; }
 
         if (!$category['obtypes']){
             $category['obtypes'] = $this->inDB->get_field('cms_board_cats', "NSLeft <= {$category['NSLeft']} AND NSRight >= {$category['NSRight']} AND obtypes <> ''", 'obtypes');
@@ -245,6 +250,36 @@ class cms_model_board{
         $cats = cmsCore::callEvent('GET_BOARD_SUBCATS', $cats);
             
         return $cats;
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function getPublicCats($sel = '') {
+
+		$inUser = cmsUser::getInstance();
+
+        $nested_sets = $this->inCore->nestedSetsInit('cms_board_cats');
+        $rs_rows     = $nested_sets->SelectSubNodes($this->root_cat['id']);
+
+        if ($rs_rows){
+			$html = '';
+            while($node = $this->inDB->fetch_assoc($rs_rows)){
+				if ($node['public'] == -1) { $node['public'] = $this->config['public']; }
+                if($node['public'] || $inUser->is_admin){
+                    if ($sel==$node['id']){
+                        $s = 'selected="selected"';
+                    } else {
+                        $s = '';
+                    }
+                    $padding = str_repeat('--', $node['NSLevel']) . ' ';
+                    $html .= '<option value="'.$node['id'].'" '.$s.'>'.$padding.$node['title'].'</option>';
+				}
+            }
+        }
+
+        return $html;
+
     }
 
 /* ==================================================================================================== */

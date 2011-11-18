@@ -231,6 +231,13 @@ if($do=='read'){
 /////////////////////////////// NEW BOARD ITEM /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='additem'){
 
+	// Получаем категории, в которые может загружать пользователь
+	$catslist = $model->getPublicCats($model->category_id);
+	if(!$catslist) { 
+		cmsCore::addSessionMessage($_LANG['YOU_CANT_ADD_ADV'], 'error');
+		$inCore->redirect('/board');
+	}
+
 	$cat['is_photos'] = 1;
 	if ($model->category_id && $model->category_id != $model->root_cat['id']) {
 		$cat = $model->getCategory($model->category_id);
@@ -260,7 +267,7 @@ if ($do=='additem'){
 		$smarty->assign('formsdata', $model->getFormDataEdit($cat['form_id'], $item['form_array']));
         $smarty->assign('is_admin', $inUser->is_admin);
 		$smarty->assign('is_user', $inUser->id);
-        $smarty->assign('catslist', $inCore->getListItemsNS('cms_board_cats', $model->category_id));
+        $smarty->assign('catslist', $catslist);
 		$smarty->assign('is_billing', IS_BILLING);
         if (IS_BILLING){ $smarty->assign('balance', $inUser->balance); }
         $smarty->display('com_board_edit.tpl');
@@ -430,7 +437,7 @@ if ($do=='edititem'){
         $smarty->assign('item', $item);
 		$smarty->assign('pagetitle', $_LANG['EDIT_ADV']);
         $smarty->assign('is_admin', $inUser->is_admin);
-        $smarty->assign('catslist', $inCore->getListItemsNS('cms_board_cats', $item['category_id']));
+        $smarty->assign('catslist', $model->getPublicCats($item['category_id']));
 		$smarty->assign('formsdata', $model->getFormDataEdit($cat['form_id'], $item['form_array']));
 		$smarty->assign('is_user', $inUser->id);
 		$smarty->assign('is_billing', IS_BILLING);

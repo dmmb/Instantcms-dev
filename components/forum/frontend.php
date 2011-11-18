@@ -203,7 +203,7 @@ if ($do=='view'){
                     $subforums = '';
                     $sql = "SELECT id, title, access_list
                             FROM cms_forums
-                            WHERE parent_id = '{$f['id']}'
+                            WHERE NSLeft > {$f['NSLeft']} AND NSRight < {$f['NSRight']} AND parent_id > 0
                             ORDER BY title";
                     $rs = $inDB->query($sql);
                     $sub = $inDB->num_rows($rs);

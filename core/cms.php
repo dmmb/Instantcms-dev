@@ -3811,11 +3811,6 @@ class cmsCore {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function dbGetField($table, $where, $field){
-    $inDB = cmsDatabase::getInstance();
-    return $inDB->get_field($table, $where, $field);
-}
-
 function dbGetFields($table, $where, $fields, $order='id ASC'){
     $inDB = cmsDatabase::getInstance();
     return $inDB->get_fields($table, $where, $fields, $order);
