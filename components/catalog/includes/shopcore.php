@@ -21,7 +21,7 @@ function shopAddToCart($item_id, $itemscount=1){
     
 	$user_id    = $inUser->id;
     $sid        = session_id();
-    $can_many   = dbGetField('cms_uc_items', "id={$item_id}", 'canmany');
+    $can_many   = $inDB->get_field('cms_uc_items', "id={$item_id}", 'canmany');
     $in_cart    = shopIsInCart($item_id);
 
 	shopCheckCarts();
@@ -72,9 +72,9 @@ function shopIsInCart($item_id=0){
 	if ($user_id){ $user_sql = "(user_id=$user_id OR session_id='$sid')"; } else { $user_sql = "(user_id=0 AND session_id='$sid')"; }
 
 	if ($item_id){        
-		$isin = dbRowsCount('cms_uc_cart', "item_id = $item_id AND $user_sql");
+		$isin = $inDB->rows_count('cms_uc_cart', "item_id = $item_id AND $user_sql");
 	} else {        
-		$isin = dbRowsCount('cms_uc_cart', "$user_sql");
+		$isin = $inDB->rows_count('cms_uc_cart', "$user_sql");
 	}
 
 	return $isin;

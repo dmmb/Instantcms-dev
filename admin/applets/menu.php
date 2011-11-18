@@ -37,6 +37,7 @@ function iconList(){
 function applet_menu(){
 
     $inCore = cmsCore::getInstance();
+	$inDB   = cmsDatabase::getInstance();
 
 	//check access
 	global $adminAccess;
@@ -546,7 +547,7 @@ function applet_menu(){
                     <div><strong>Родительский пункт</strong></div>
                     <div>
                         <?php
-                            $rootid = dbGetField('cms_menu', 'parent_id=0', 'id');
+                            $rootid = $inDB->get_field('cms_menu', 'parent_id=0', 'id');
                         ?>
                         <select name="parent_id" size="10" id="parent_id" style="width:100%">
                             <option value="<?php echo $rootid?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- Корень меню --</option>

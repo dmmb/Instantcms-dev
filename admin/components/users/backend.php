@@ -13,7 +13,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 /******************************************************************************/
 
 cpAddPathway('Профили пользователей', '?view=components&do=config&id='.$_REQUEST['id']);
-
+$inDB = cmsDatabase::getInstance();
 echo '<h3>Профили пользователей</h3>';
 
 if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; }
@@ -279,7 +279,7 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
                             </select>
                         </p>
                         <p>Можно выбрать несколько форм, удерживая CTRL.</p>
-                        <p>Формы можно редактировать в настройках компонента <a href="index.php?view=components&do=config&id=<?php echo dbGetField('cms_components', "link='forms'", 'id');?>">Конструктор форм</a>.</p>
+                        <p>Формы можно редактировать в настройках компонента <a href="index.php?view=components&do=config&id=<?php echo $inDB->get_field('cms_components', "link='forms'", 'id');?>">Конструктор форм</a>.</p>
                     </td>
                 </tr>
             </table>

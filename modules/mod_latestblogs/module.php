@@ -76,7 +76,7 @@ function mod_latestblogs($module_id){
                     }
 
                     if ($con['owner']=='club'){
-                        $con['blog'] = dbGetField('cms_clubs', 'id='.$con['uid'], 'title');
+                        $con['blog'] = $inDB->get_field('cms_clubs', 'id='.$con['uid'], 'title');
                     }
 
                     $con['href'] 	 = $model->getPostURL(null, $con['bloglink'], $con['seolink']);

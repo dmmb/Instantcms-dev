@@ -15,8 +15,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 function createMenuItem($menu, $id, $title){
     $inCore = cmsCore::getInstance();
+	$inDB = cmsDatabase::getInstance();
 
-	$rootid = dbGetField('cms_menu', 'parent_id=0', 'id');
+	$rootid = $inDB->get_field('cms_menu', 'parent_id=0', 'id');
 
 	$ns = $inCore->nestedSetsInit('cms_menu');
 	$myid = $ns->AddNode($rootid);
@@ -429,7 +430,7 @@ function applet_cats(){
                     <div>
                         <div class="parent_notice" style="color:red;margin:4px 0px;display:none">Раздел будет вложен сам в себя. Выберите другого родителя.</div>
                         <select name="parent_id" size="12" id="parent_id" style="width:100%" onchange="if($(this).val()=='<?php echo $mod['id']; ?>'){ $('.parent_notice').show(); } else { $('.parent_notice').hide(); }">
-                            <?php $rootid = dbGetField('cms_category', 'parent_id=0', 'id'); ?>
+                            <?php $rootid = $inDB->get_field('cms_category', 'parent_id=0', 'id'); ?>
                             <option value="<?php echo $rootid; ?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- Корневой раздел --</option>
                             <?php
                                 if (isset($mod['parent_id'])){
@@ -577,7 +578,7 @@ function applet_cats(){
                             <select name="album_id" id="album_id" style="width:100%">
                                 <option value="0" <?php if (!isset($mod['photoalbum']['id']) || @$mod['photoalbum']['id']==-1) { echo 'selected'; }?>>-- не привязывать --</option>
                                 <?php  //FIND ROOT
-                                    $rootid = dbGetField('cms_photo_albums', 'parent_id=0', 'id');
+                                    $rootid = $inDB->get_field('cms_photo_albums', 'parent_id=0', 'id');
                                     if (isset($mod['photoalbum']['id'])){
                                         echo $inCore->getListItemsNS('cms_photo_albums', $mod['photoalbum']['id']);
                                     } else {

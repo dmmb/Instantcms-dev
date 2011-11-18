@@ -50,7 +50,7 @@
 				while($usr = $inDB->fetch_assoc($result)){				
 					$usrs[] = $usr;
 				}
-				$total_all = dbRowsCount('cms_users', 'is_deleted=0 AND is_locked=0');
+				$total_all = $inDB->rows_count('cms_users', 'is_deleted=0 AND is_locked=0');
 				}
 			}
 		

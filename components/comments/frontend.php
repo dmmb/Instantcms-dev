@@ -370,7 +370,7 @@ function comments($target='', $target_id=0, $labels=array()){
 
 							$postdate   = date('d/m/Y H:i:s');
 							$to_email   = $author['email'];
-                            $from_nick  = $user_id ? dbGetField('cms_users', "id='{$user_id}'", 'nickname') : $guestname;
+                            $from_nick  = $user_id ? $inDB->get_field('cms_users', "id='{$user_id}'", 'nickname') : $guestname;
 
 							$targetlink = str_replace('%author_id%', $author['id'], $targetlink);
 

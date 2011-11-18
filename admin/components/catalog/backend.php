@@ -13,6 +13,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 /******************************************************************************/
 
 function cpPriceInput($id){
+	$inDB = cmsDatabase::getInstance();
 	$sql = "SELECT c.view_type as view_type
 			FROM cms_uc_cats c, cms_uc_items i
 			WHERE i.id = $id AND i.category_id=c.id";
@@ -21,7 +22,7 @@ function cpPriceInput($id){
 	$show = $show['view_type'];
 	
 	if ($show == 'shop'){
-		$price = dbGetField('cms_uc_items', 'id='.$id, 'price');
+		$price = $inDB->get_field('cms_uc_items', 'id='.$id, 'price');
 		$price = number_format($price, 2, '.', '');	
 		$html = '<input type="text" name="price['.$id.']" value="'.$price.'" id="priceinput"/>';
 	} else {
@@ -374,7 +375,7 @@ function cpPriceInput($id){
 			$item['price']      = 0;
             $item['canmany']    = 1;
 
-            $item['imageurl']   = dbGetField('cms_uc_items', "id={$id}", 'imageurl');
+            $item['imageurl']   = $inDB->get_field('cms_uc_items', "id={$id}", 'imageurl');
 
             if ($inCore->inRequest('price')) {
                 $canmany        = $inCore->request('canmany', 'int', 0);
@@ -877,7 +878,7 @@ function cpPriceInput($id){
 				$is_shop = ($mod['viewtype']=='shop');
 			} else { 
 				$cat_id  = $_REQUEST['cat_id'];
-				$is_shop = (dbGetField('cms_uc_cats', 'id='.$cat_id, 'view_type')=='shop');
+				$is_shop = ($inDB->get_field('cms_uc_cats', 'id='.$cat_id, 'view_type')=='shop');
 			}
 
             $sql = "SELECT title, fieldsstruct FROM cms_uc_cats WHERE id = $cat_id"; $result = dbQuery($sql);
@@ -1232,7 +1233,7 @@ function cpPriceInput($id){
 
                             <div style="margin-top:7px">
                                 <select name="parent_id" size="8" id="parent_id" style="width:99%;height:200px">
-                                    <?php $rootid = dbGetField('cms_uc_cats', 'parent_id=0', 'id'); ?>
+                                    <?php $rootid = $inDB->get_field('cms_uc_cats', 'parent_id=0', 'id'); ?>
                                     <option value="<?php echo $rootid; ?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- Корень каталога --</option>
                                     <?php
                                         if (isset($mod['parent_id'])){

@@ -54,6 +54,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	function autoOrder($form_id){
+		$inDB = cmsDatabase::getInstance();
 		$sql = "SELECT * FROM cms_form_fields WHERE form_id = $form_id ORDER BY ordering";
 		$rs = dbQuery($sql);
 		if (mysql_num_rows($rs)){
@@ -70,7 +71,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		if(isset($_REQUEST['item_id'])) { 
 			$id = $_REQUEST['item_id'];
 			$form_id = $_REQUEST['form_id'];
-			$ord = dbGetField('cms_form_fields', 'id = '.$id, 'ordering');		
+			$ord = $inDB->get_field('cms_form_fields', 'id = '.$id, 'ordering');		
 			$sql = "SELECT * FROM cms_form_fields WHERE form_id = $form_id AND ordering < $ord ORDER BY ordering DESC LIMIT 1";
 			$rs = dbQuery($sql);			
 			if (mysql_num_rows($rs)){
@@ -89,7 +90,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		if(isset($_REQUEST['item_id'])) { 
 			$id = $_REQUEST['item_id'];
 			$form_id = $_REQUEST['form_id'];
-			$ord = dbGetField('cms_form_fields', 'id = '.$id, 'ordering');		
+			$ord = $inDB->get_field('cms_form_fields', 'id = '.$id, 'ordering');		
 			$sql = "SELECT * FROM cms_form_fields WHERE form_id = $form_id AND ordering > $ord ORDER BY ordering ASC LIMIT 1";
 			$rs = dbQuery($sql);			
 			if (mysql_num_rows($rs)){

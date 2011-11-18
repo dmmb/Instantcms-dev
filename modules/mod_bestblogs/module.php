@@ -63,7 +63,7 @@ function mod_bestblogs($module_id){
 				$next = sizeof($posts);
 
                 if ($con['owner']=='club'){
-                    $con['blog'] = dbGetField('cms_clubs', 'id='.$con['uid'], 'title');
+                    $con['blog'] = $inDB->get_field('cms_clubs', 'id='.$con['uid'], 'title');
                 }
 
 				$text = strip_tags($con['title']);							

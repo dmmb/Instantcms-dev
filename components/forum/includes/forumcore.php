@@ -418,7 +418,7 @@ function forumLastMessage($forum_id, $perpage_thread){
 	if ($inDB->num_rows($result)){
 		$post = $inDB->fetch_assoc($result);
 		
-		$pcount = dbRowsCount('cms_forum_posts', 'thread_id='.$post['threadid']);
+		$pcount = $inDB->rows_count('cms_forum_posts', 'thread_id='.$post['threadid']);
 		$lastpage = ceil($pcount / $perpage_thread);
 		
 		if ($lastpage==1) {

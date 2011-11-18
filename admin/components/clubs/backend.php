@@ -17,7 +17,8 @@ function error($msg){
 }
 
 function usersClubByID($id){
-    $b = dbRowsCount('cms_user_clubs', 'club_id='.$id);
+	$inDB = cmsDatabase::getInstance();
+    $b = $inDB->rows_count('cms_user_clubs', 'club_id='.$id);
     return($b);
 }
 
@@ -44,7 +45,6 @@ if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; 
 $inCore->loadLib('clubs');
 
 $inCore->loadModel('clubs');
-
 $model = new cms_model_clubs();
 
 if($opt=='list'){

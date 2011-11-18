@@ -16,7 +16,7 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 function blogAuthors($blogid){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
-	$owner = dbGetField('cms_blogs', 'id='.$blogid, 'user_id');
+	$owner = $inDB->get_field('cms_blogs', 'id='.$blogid, 'user_id');
 	
 	$authors = array();
 	$authors[] = $owner;
@@ -41,7 +41,7 @@ function blogCats($blog_id, $bloglink, $cat_id){
 
 	$html = '';
 	
-	$rootposts = dbRowsCount('cms_blog_posts', "blog_id = $blog_id AND published = 1");
+	$rootposts = $inDB->rows_count('cms_blog_posts', "blog_id = $blog_id AND published = 1");
 			
 	$sql = "SELECT cat.*, IFNULL(COUNT(p.id), 0) as num
 			FROM cms_blog_cats cat
@@ -160,7 +160,7 @@ function blogComments($blog_id){
 	
 	if ($posts){
 		foreach($posts as $key=>$data){
-			$comments += dbRowsCount('cms_comments', "target='blog' AND target_id=".$data['id']);
+			$comments += $inDB->rows_count('cms_comments', "target='blog' AND target_id=".$data['id']);
 		}
 	}
 	

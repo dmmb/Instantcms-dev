@@ -65,8 +65,8 @@ function albumCreate($differ='', $parent_id, $title, $description, $user_id){
 
 function albumEdit($album_id, $parent_id, $title, $description, $differ=''){
     $inCore = cmsCore::getInstance();
-    $inDB = cmsDatabase::getInstance();
-	$old_parent = dbGetField('cms_photo_albums', 'id='.$album_id, 'parent_id');
+    $inDB   = cmsDatabase::getInstance();
+	$old_parent = $inDB->get_field('cms_photo_albums', 'id='.$album_id, 'parent_id');
 	
 	if ($old_parent!=$parent_id){
 		$ns = $inCore->nestedSetsInit('cms_photo_albums');

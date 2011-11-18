@@ -906,30 +906,30 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 				cmsUser::subscribe($inUser->id, 'forum', $id);
 			}
 			cmsUser::sendUpdateNotify('forum', $id);
-			//redirect to last page of thread
-			if (!$file_error){
-				$posts_in_thread = $inDB->rows_count('cms_forum_posts', 'thread_id='.$id);
-				$pages = ceil($posts_in_thread / $cfg['pp_thread']);
-				if (!$t['is_hidden']){
-					//регистрируем событие
-					$message_post = $inCore->parseSmiles($message_post, true);
-					$message_post = strip_tags($message_post);
-					cmsActions::log('add_fpost', array(
-						'object' => 'пост',
-						'object_url' => '/forum/thread'.$id.'-'.$pages.'.html#'.$lastid,
-						'object_id' => $lastid,
-						'target' => $t['title'],
-						'target_url' => '/forum/thread'.$id.'.html',
-						'target_id' => $id,
-						'description' => ( strlen($message_post)>100 ? substr($message_post, 0, 100) : $message_post )
-					));
-				}
-				$inCore->redirect('/forum/thread'.$id.'-'.$pages.'.html#'.$lastid);
-			} else {
+
+			if ($file_error){
 				$err_msg = $_LANG['ERR_UPLOAD_FILE'].'<div><strong>'.$_LANG['UPLOAD_MAXSIZE'].':</strong> '.$cfg['fa_size'].' '.$_LANG['KBITE'].'.</div><div><strong>'.$_LANG['UPLOAD_FILETYPE'].':</strong> .'.strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</div><p>'.$_LANG['NOT_ALL_FILE_ATTACH'].'</p>';
 				cmsCore::addSessionMessage($err_msg, 'error');
-				$inCore->redirect('/forum/thread'.$id.'.html#'.$post_id);
 			}
+
+			$posts_in_thread = $inDB->rows_count('cms_forum_posts', 'thread_id='.$id);
+			$pages = ceil($posts_in_thread / $cfg['pp_thread']);
+			if (!$t['is_hidden']){
+				//регистрируем событие
+				$message_post = $inCore->parseSmiles($message_post, true);
+				$message_post = strip_tags($message_post);
+				cmsActions::log('add_fpost', array(
+					'object' => 'пост',
+					'object_url' => '/forum/thread'.$id.'-'.$pages.'.html#'.$lastid,
+					'object_id' => $lastid,
+					'target' => $t['title'],
+					'target_url' => '/forum/thread'.$id.'.html',
+					'target_id' => $id,
+					'description' => ( strlen($message_post)>100 ? substr($message_post, 0, 100) : $message_post )
+				));
+			}
+			$inCore->redirect('/forum/thread'.$id.'-'.$pages.'.html#'.$lastid);
+
 		} else {
 
 			if ($do=='newthread'){
@@ -979,31 +979,31 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 						//upload
 						$file_error = uploadFiles($lastid, $cfg);
 					}
-					if (!$file_error){
-						if (!$is_hidden) {
-							$message = $inCore->parseSmiles($message, true);
-							$message = strip_tags($message);
-							//регистрируем событие
-							cmsActions::log('add_thread', array(
-								'object' => $title,
-								'object_url' => '/forum/thread'.$threadlastid.'.html',
-								'object_id' => $threadlastid,
-								'target' => $forum['title'],
-								'target_url' => '/forum/'.$forum['id'],
-								'target_id' => $forum['id'], 
-								'description' => ( strlen($message)>100 ? substr($message, 0, 100) : $message )
-							));	
-						}
-						$inCore->redirect('/forum/thread'.$threadlastid.'.html');
-					} else {
+
+					if ($file_error){
 						$err_msg = $_LANG['ERR_UPLOAD_FILE'].'<div><strong>'.$_LANG['UPLOAD_MAXSIZE'].':</strong> '.$cfg['fa_size'].' '.$_LANG['KBITE'].'.</div><div><strong>'.$_LANG['UPLOAD_FILETYPE'].':</strong> .'.strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</div><p>'.$_LANG['NOT_ALL_FILE_ATTACH'].'</p>';
 						cmsCore::addSessionMessage($err_msg, 'error');
-						$inCore->redirect('/forum/thread'.$threadlastid.'.html#'.$post_id);
 					}
 
 					if (IS_BILLING && $forum['topic_cost']){
 						cmsBilling::process('forum', 'add_thread', $forum['topic_cost']);
 					}
+
+					if (!$is_hidden) {
+						$message = $inCore->parseSmiles($message, true);
+						$message = strip_tags($message);
+						//регистрируем событие
+						cmsActions::log('add_thread', array(
+							'object' => $title,
+							'object_url' => '/forum/thread'.$threadlastid.'.html',
+							'object_id' => $threadlastid,
+							'target' => $forum['title'],
+							'target_url' => '/forum/'.$forum['id'],
+							'target_id' => $forum['id'], 
+							'description' => ( strlen($message)>100 ? substr($message, 0, 100) : $message )
+						));	
+					}
+					$inCore->redirect('/forum/thread'.$threadlastid.'.html#'.$lastid);
 
 				} else {
 					echo '<p>'.$_LANG['NEED_TITLE_THREAD_YOUR_POST'].'</p>';

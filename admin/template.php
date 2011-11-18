@@ -11,7 +11,8 @@
 //                        LICENSED BY GNU/GPL v2                              //
 //                                                                            //
 /******************************************************************************/
-	defined('VALID_CMS_ADMIN') or die('Доступ запрещен'); 	
+	defined('VALID_CMS_ADMIN') or die('Доступ запрещен');
+	$inDB = cmsDatabase::getInstance();
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -58,7 +59,7 @@
                                             $msg_link = '<span>Нет новых сообщений</span>';
                                         }
                                     ?>
-                                    <div class="juser">Вы &mdash; <a href="<?php echo cmsUser::getProfileURL($inUser->login); ?>" target="_blank" title="Перейти в профиль"><?php echo dbGetField('cms_users', 'id='.$inUser->id, 'nickname'); ?></a></div>
+                                    <div class="juser">Вы &mdash; <a href="<?php echo cmsUser::getProfileURL($inUser->login); ?>" target="_blank" title="Перейти в профиль"><?php echo $inDB->get_field('cms_users', 'id='.$inUser->id, 'nickname'); ?></a></div>
                                     <div class="jmessages"><?php echo $msg_link; ?></div>
                                 </td>
                                 <td width="120">

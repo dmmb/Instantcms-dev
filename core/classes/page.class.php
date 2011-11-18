@@ -619,54 +619,56 @@ public function buildForm($form_id, $admin=false, $showtitle=true){
     $result = $inDB->query($sql) ;
 
     if (!$inDB->num_rows($result)) { return false; }
-    else {
-            $form = $inDB->fetch_assoc($result);
-            //BUILD FORM
-            if ($showtitle) { $html .= '<h3 class="userform_title">'.$form['title'].'</h3>'; }
-            if($form['description']) { $html .= '<p>'.$form['description'].'</p>'; }
 
-            $html .= '<form name="userform" id="userform" action="/forms/process" method="POST">';
-            $html .= '<input type="hidden" name="form_id" value="'.$form_id.'">';
+	$form = $inDB->fetch_assoc($result);
+	//BUILD FORM
+	if ($showtitle) { $html .= '<h3 class="userform_title">'.$form['title'].'</h3>'; }
+	if($form['description']) { $html .= '<p>'.$form['description'].'</p>'; }
 
-                //GET FIELDS DATA
-                $sql = "SELECT * FROM cms_form_fields WHERE form_id = '$form_id' ORDER BY ordering ASC";
-                $result = $inDB->query($sql) ;
+	$html .= '<form name="userform" id="userform" action="/forms/process" method="POST">';
+	$html .= '<input type="hidden" name="form_id" value="'.$form_id.'">';
 
-                if ($inDB->num_rows($result)){
-                    //BUILD FORM FIELDS
-                    $html .= '<table class="userform_table">';
-                    while($field = $inDB->fetch_assoc($result)){
-                        $html .= '<tr><td class="userform_fieldtitle">';
-                            if ($admin) { $html .= '[<font color="gray">'.$field['ordering'].'</font>] '; }
-                            $html .= $field['title'];
-                            if ($field['mustbe']) { $html .= '<span style="color:red;font-size:20px">*</span>'; }
-                            if($admin) {
-                                $html .= '<a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=del_field&form_id='.$form_id.'&item_id='.$field['id'].'" title="Удалить"><img src="/admin/images/actions/delete.gif" border="0" /></a>';
-                                $html .= '<a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=up_field&form_id='.$form_id.'&item_id='.$field['id'].'" title="Переместить вверх"><img src="/admin/images/actions/top.gif" border="0" /></a>';
-                                $html .= '<a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=down_field&form_id='.$form_id.'&item_id='.$field['id'].'" title="Переместить вниз"><img src="/admin/images/actions/down.gif" border="0" /></a>';
-                            }
-                        $html .= '</td></tr>';
-                        $html .= '<tr><td>'.$this->buildFormField($form_id, $field).'</td></tr>';
-                    }
-                    if (!$admin){
-                        //CAPTCHA
-                        $html .= '<tr><td>';
-                            $html .= cmsPage::getCaptcha();
-                        $html .= '</td></tr>';
-                        //Submit buttons
-                        $html .= '<tr><td><div style="margin-top:10px">';
-                            $html .= '<input type="submit" value="Отправить" /> ';
-                            $html .= '<input type="reset" value="Очистить" />';
-                        $html .= '</div></td></tr>';
-                    }
-                    $html .= '</table>';
+	//GET FIELDS DATA
+	$sql = "SELECT * FROM cms_form_fields WHERE form_id = '$form_id' ORDER BY ordering ASC";
+	$result = $inDB->query($sql) ;
 
-                } else { $html .= '<p>В форме нет полей.</p>'; }
+	if ($inDB->num_rows($result)){
+		//BUILD FORM FIELDS
+		$html .= '<table class="userform_table">';
+		while($field = $inDB->fetch_assoc($result)){
+			$html .= '<tr><td class="userform_fieldtitle">';
+				if ($admin) { $html .= '[<font color="gray">'.$field['ordering'].'</font>] '; }
+				$html .= $field['title'];
+				if ($field['mustbe']) { $html .= '<span style="color:red;font-size:20px">*</span>'; }
+				if($admin) {
+					$html .= '<a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=del_field&form_id='.$form_id.'&item_id='.$field['id'].'" title="Удалить"><img src="/admin/images/actions/delete.gif" border="0" /></a>';
+					$html .= '<a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=up_field&form_id='.$form_id.'&item_id='.$field['id'].'" title="Переместить вверх"><img src="/admin/images/actions/top.gif" border="0" /></a>';
+					$html .= '<a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=down_field&form_id='.$form_id.'&item_id='.$field['id'].'" title="Переместить вниз"><img src="/admin/images/actions/down.gif" border="0" /></a>';
+				}
+			$html .= '</td></tr>';
+			$html .= '<tr><td>'.$this->buildFormField($form_id, $field).'</td></tr>';
+		}
+		if (!$admin){
+			//CAPTCHA
+			$html .= '<tr><td>';
+				$html .= cmsPage::getCaptcha();
+			$html .= '</td></tr>';
+			//Submit buttons
+			$html .= '<tr><td><div style="margin-top:10px">';
+				$html .= '<input type="submit" value="Отправить" /> ';
+				$html .= '<input type="reset" value="Очистить" />';
+			$html .= '</div></td></tr>';
+		}
+		$html .= '</table>';
 
-            $html .= '</form>';
-    }
-    if(isset($_SESSION['form_last'.$form_id])){ unset($_SESSION['form_last'.$form_id]); }
+	} else { $html .= '<p>В форме нет полей.</p>'; }
+
+	$html .= '</form>';
+
+	if(cmsUser::sessionGet('form_last_'.$form_id)) { cmsUser::sessionDel('form_last_'.$form_id); }
+
     return $html;
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

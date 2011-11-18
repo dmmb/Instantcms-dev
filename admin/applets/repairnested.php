@@ -59,10 +59,11 @@ function checkNestedSet($table){
 // ===================================================================================================================================== //
 
 function repairNestedSet($table){
+	$inDB   = cmsDatabase::getInstance();
 	$differ = $table['differ'];
 	$table	= $table['name'];
 	
-	$root_id = dbGetField($table, "NSDiffer = '$differ' AND (title LIKE '%Корнев%')", 'id');
+	$root_id = $inDB->get_field($table, "NSDiffer = '$differ' AND (title LIKE '%Корнев%')", 'id');
 	
 	$sql = "SELECT id
 			FROM $table

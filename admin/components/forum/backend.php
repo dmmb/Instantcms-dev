@@ -281,7 +281,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					$inCore->deleteUploadImages($post['id'], 'forum');
 				}
 			}
-			$f_icon = dbGetField('cms_forums', "id = '$item_id'", 'icon');
+			$f_icon = $inDB->get_field('cms_forums', "id = '$item_id'", 'icon');
 			//DELETE THREADS
 			dbQuery("DELETE FROM cms_forum_threads WHERE forum_id = '$item_id'");
 			//DELETE FORUM
@@ -799,7 +799,7 @@ function checkGroupList(){
                 <tr>
                     <td><strong>Родительский форум:</strong></td>
                     <td>
-                        <?php $rootid = dbGetField('cms_forums', 'parent_id=0', 'id'); ?>
+                        <?php $rootid = $inDB->get_field('cms_forums', 'parent_id=0', 'id'); ?>
                         <select name="parent_id" id="parent_id" style="width:260px">
                                 <option value="<?php echo $rootid?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- Корень форумов --</option>
                         <?php

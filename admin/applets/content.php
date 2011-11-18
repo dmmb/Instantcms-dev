@@ -15,7 +15,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 function createMenuItem($menu, $id, $title){
     $inCore = cmsCore::getInstance();
-	$rootid = dbGetField('cms_menu', 'parent_id=0', 'id');
+	$inDB 	= cmsDatabase::getInstance();
+	$rootid = $inDB->get_field('cms_menu', 'parent_id=0', 'id');
 
 	$ns     = $inCore->nestedSetsInit('cms_menu');
 	$myid   = $ns->AddNode($rootid);

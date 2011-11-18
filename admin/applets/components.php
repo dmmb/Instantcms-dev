@@ -33,6 +33,7 @@ function cpComponentCanRemove($id){
 function applet_components(){
 
     $inCore = cmsCore::getInstance();
+	$inDB = cmsDatabase::getInstance();
 
 	//check access
 	global $adminAccess;
@@ -46,7 +47,7 @@ function applet_components(){
 	if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else {
 		if (isset($_REQUEST['link'])) {
 			$link = htmlspecialchars($_REQUEST['link'], ENT_QUOTES);
-			$id = dbGetField('cms_components', "link='$link'", 'id');
+			$id = $inDB->get_field('cms_components', "link='$link'", 'id');
 			$_REQUEST['id'] = $id;
 		} else {
 			$id = -1;

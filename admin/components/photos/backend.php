@@ -285,7 +285,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			$photo['published']    = $inCore->request('published', 'int');
 			$photo['showdate']     = $inCore->request('showdate', 'int');
             $photo['tags']         = $inCore->request('tags', 'str');
-            $photo['filename']     = dbGetField('cms_photo_files', "id={$id}", 'file');
+            $photo['filename']     = $inDB->get_field('cms_photo_files', "id={$id}", 'file');
 
             $model->updatePhoto($id, $photo);
 		}
@@ -656,7 +656,7 @@ function showMapMarker(){
                     <td valign="top">Родительский альбом:</td>
                     <td valign="top">
                         <?php if($opt=='add_album' || ($opt=='edit_album' && @$mod['NSDiffer']=='')){ ?>
-                            <?php $rootid = dbGetField('cms_photo_albums', "parent_id=0 AND NSDiffer=''", 'id'); ?>
+                            <?php $rootid = $inDB->get_field('cms_photo_albums', "parent_id=0 AND NSDiffer=''", 'id'); ?>
                             <select name="parent_id" size="8" id="parent_id" style="width:285px">
                                 <option value="<?php echo $rootid; ?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- Корневой альбом --</option>
                                 <?php
@@ -669,7 +669,7 @@ function showMapMarker(){
                             </select>
                         <?php } else {
                                 $club['id']     = substr($mod['NSDiffer'], 4);
-                                $club['title']  = dbGetField('cms_clubs', "id={$club['id']}", 'title');
+                                $club['title']  = $inDB->get_field('cms_clubs', "id={$club['id']}", 'title');
                         ?>
                             <input type="hidden" name="parent_id" value="<?php echo $mod['parent_id']; ?>" />
                             Клуб <a href="index.php?view=components&do=config&id=23&opt=edit&item_id=<?php echo $club['id']; ?>"><?php echo $club['title'];?></a>
@@ -819,7 +819,7 @@ function showMapMarker(){
                     <?php  } ?>
                     </td>
                     <td valign="top">
-                    <?php if (dbRowsCount('cms_photo_files', 'album_id = '.$id.'')) { ?>	
+                    <?php if ($inDB->rows_count('cms_photo_files', 'album_id = '.$id.'')) { ?>	
                             <select name="iconurl" id="iconurl" style="width:285px" onchange="showMapMarker()">
                                 <?php
                                     if ($mod['iconurl']){
@@ -914,7 +914,7 @@ function showMapMarker(){
             <td valign="top">
                 <?php if($opt=='add_photo' || ($opt=='edit_photo' && @$mod['NSDiffer']=='')){ ?>
                     <select name="album_id" size="8" id="album_id" style="width:250px">
-                        <?php $rootid = dbGetField('cms_photo_albums', "parent_id=0 AND NSDiffer=''", 'id'); ?>
+                        <?php $rootid = $inDB->get_field('cms_photo_albums', "parent_id=0 AND NSDiffer=''", 'id'); ?>
                         <option value="<?php echo $rootid; ?>" <?php if (@$mod['album_id']==$rootid || !isset($mod['album_id'])) { echo 'selected'; }?>>-- Корневой альбом --</option>
                         <?php
                             if (isset($mod['album_id'])){
@@ -926,7 +926,7 @@ function showMapMarker(){
                     </select>
                 <?php } else {
                     $club['id']     = substr($mod['NSDiffer'], 4);
-                    $club['title']  = dbGetField('cms_clubs', "id={$club['id']}", 'title');
+                    $club['title']  = $inDB->get_field('cms_clubs', "id={$club['id']}", 'title');
                 ?><input type="hidden" name="album_id" value="<?php echo $mod['album_id']; ?>" />
                     Клуб <a href="index.php?view=components&do=config&id=23&opt=edit&item_id=<?php echo $club['id']; ?>"><?php echo $club['title'];?></a> &rarr; <?php echo $mod['album']; ?>
                 <?php
@@ -1038,7 +1038,7 @@ function showMapMarker(){
              <td valign="top">Фотоальбом:</td>
              <td valign="top"><select name="album_id" size="8" id="parent_id" style="width:250px">
                      <?php  //FIND MENU ROOT
-                     $rootid = dbGetField('cms_photo_albums', 'parent_id=0', 'id');
+                     $rootid = $inDB->get_field('cms_photo_albums', 'parent_id=0', 'id');
                      ?>
                      <option value="<?php echo $rootid?>" <?php if (@$mod['album_id']==$rootid || !isset($mod['album_id'])) { echo 'selected'; }?>>-- Корневой альбом --</option>
                      <?php if (isset($mod['album_id'])){

@@ -16,6 +16,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 function applet_userbanlist(){
 
     $inCore = cmsCore::getInstance();
+	$inDB   = cmsDatabase::getInstance();
 
 	//check access
 	global $adminAccess;
@@ -237,7 +238,7 @@ function applet_userbanlist(){
         <table width="530" border="0" cellspacing="5" class="proptable">
           <tr>
             <td width="150" valign="top"><div><strong>ѕользователь: </strong></div></td>
-			<?php if($do=='add' && $to) { $mod['user_id'] = $to; $mod['ip'] = dbGetField('cms_users', 'id='.$to, 'last_ip'); } ?>
+			<?php if($do=='add' && $to) { $mod['user_id'] = $to; $mod['ip'] = $inDB->get_field('cms_users', 'id='.$to, 'last_ip'); } ?>
             <td valign="top">
 				<select name="user_id" id="user_id" onchange="loadUserIp()">
 					<option value="0" <?php if (@!$mod['user_id']){ echo 'selected'; } ?>>-- без прив€зки к пользователю --</option>

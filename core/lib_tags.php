@@ -107,7 +107,7 @@ function cmsTagItemLink($target, $item_id){
 						$rs = $inDB->query($sql) ;
 						if ($inDB->num_rows($rs)){
 							$item = $inDB->fetch_assoc($rs);
-							if ($item['owner'] == 'club') { $item['cat'] = dbGetField('cms_clubs','id='.$item['user_id'],'title'); }
+							if ($item['owner'] == 'club') { $item['cat'] = $inDB->get_field('cms_clubs','id='.$item['user_id'],'title'); }
 							$link =  '<a href="/blogs/'.$item['bloglink'].'" class="tag_searchcat">'.$item['cat'].'</a> &rarr; ';
 							$link .= '<a href="/blogs/'.$item['bloglink'].'/'.$item['seolink'].'.html" class="tag_searchitem">'.$item['title'].'</a>';
 						}

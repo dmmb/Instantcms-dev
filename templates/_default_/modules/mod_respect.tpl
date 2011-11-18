@@ -6,7 +6,7 @@
                 <td width="30"><img src="{$user.avatar}" border="0" /></td>
                 <td>
                     <div style="margin-left:15px;">
-                        <a style="font-size:16px;font-weight:bold;" href="{profile_url login=$user.login}#awards" title="{$user.nickname|escape:'html'}">{$user.nickname}</a>
+                        <a style="font-size:16px;font-weight:bold;" href="{profile_url login=$user.login}#upr_awards" title="{$user.nickname|escape:'html'}">{$user.nickname}</a>
                         {if $cfg.show_awards}
                             <div style="margin-top:6px">
                                 {foreach key=id item=award from=$user.awards}

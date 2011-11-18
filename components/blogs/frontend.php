@@ -429,7 +429,7 @@ if ($do=='blog'){
     }
 
     //Считаем количество постов, ожидающих модерации
-    $on_moderate = ($is_moder || $is_admin) ? dbRowsCount('cms_blog_posts', 'blog_id='.$blog['id'].' AND published = 0') : false;
+    $on_moderate = ($is_moder || $is_admin) ? $inDB->rows_count('cms_blog_posts', 'blog_id='.$blog['id'].' AND published = 0') : false;
 
     //Если нужно, получаем список рубрик (категорий) этого блога
     $blogcats   = $blog['showcats'] ? blogCats($blog['id'], $blog['seolink'], $cat_id) : false;

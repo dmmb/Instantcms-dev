@@ -48,6 +48,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if (isset($_REQUEST['opt'])) { $opt = $inCore->request('opt', 'str'); } else { $opt = 'list_items'; }
 
     $inUser = cmsUser::getInstance();
+	$inDB   = cmsDatabase::getInstance();
 
 	$toolmenu = array();
 
@@ -266,8 +267,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 		if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
 			
-        $items_total = dbRowsCount('cms_board_items', 'id>0');
-        $items_pub = dbRowsCount('cms_board_items', 'published=1');
+        $items_total = $inDB->rows_count('cms_board_items', 'id>0');
+        $items_pub = $inDB->rows_count('cms_board_items', 'published=1');
         $items_unpub = $items_total - $items_pub;
 
 		if ($items_unpub) {
@@ -558,7 +559,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					$model->deleteRecord($photo['id']);
 				}			
 			}
-			$f_icon = dbGetField('cms_board_cats', "id = '$id'", 'icon');
+			$f_icon = $inDB->get_field('cms_board_cats', "id = '$id'", 'icon');
 			//DELETE ALBUM
 			dbDeleteNS('cms_board_cats', $id);
 			if(file_exists(PATH.'/upload/board/cat_icons/'.$f_icon)){
@@ -748,7 +749,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                 <td valign="top"><strong>Родительская рубрика:</strong></td>
 			    <td valign="top"><select name="parent_id" id="parent_id" style="width:250px">
                     <?php  //FIND BOARD ROOT
-                        $rootid = dbGetField('cms_board_cats', 'parent_id=0', 'id');
+                        $rootid = $inDB->get_field('cms_board_cats', 'parent_id=0', 'id');
                     ?>
                     <option value="<?php echo $rootid?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- Корневая рубрика --</option>
                     <?php
@@ -948,7 +949,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			}
 
 		//DEFAULT VALUES
-		if (!isset($mod['city'])) { $mod['city'] = dbGetField('cms_user_profiles', 'id='.$inUser->id, 'city'); }
+		if (!isset($mod['city'])) { $mod['city'] = $inDB->get_field('cms_user_profiles', 'id='.$inUser->id, 'city'); }
 		if (!isset($mod['published'])) { $mod['published'] = 1; }	
 		if (!isset($mod['pubdays'])) { $mod['pubdays'] = 14; }		
 		
@@ -971,7 +972,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                     <td valign="top"><strong>Рубрика:</strong></td>
 				    <td valign="top"><select name="category_id" size="8" id="category_id" style="width:330px">
                       <?php  //FIND BOARD ROOT
-			$rootid = dbGetField('cms_board_cats', 'parent_id=0', 'id');
+			$rootid = $inDB->get_field('cms_board_cats', 'parent_id=0', 'id');
 		?>
                       <?php if (isset($mod['category_id'])){ 
 								echo $inCore->getListItemsNS('cms_board_cats', $mod['category_id']);

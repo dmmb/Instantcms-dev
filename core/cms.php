@@ -3810,10 +3810,6 @@ class cmsCore {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function dbRowsCount($table, $where){
-    $inDB = cmsDatabase::getInstance();
-    return $inDB->rows_count($table, $where);
-}
 
 function dbGetField($table, $where, $field){
     $inDB = cmsDatabase::getInstance();
@@ -3894,51 +3890,6 @@ function cmsModule($position){
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function cmsGetUserLink(){
-    $inPage = cmsPage::getInstance();
-    return $inPage->getUserLinks();
-}
-
-function cmsMenuId(){
-   $inCore = cmsCore::getInstance();
-   return $inCore->menuId();
-}
-
-function cmsUserId(){
-   $inUser = cmsUser::getInstance();
-   return $inUser->id;
-}
-
-function cmsLoadModuleConfig($module_id){
-   $inCore = cmsCore::getInstance();
-   return $inCore->loadModuleConfig($module_id);
-}
-
-function cmsLoadComponentConfig($component){
-   $inCore = cmsCore::getInstance();
-   return $inCore->loadComponentConfig($component);
-}
-
-function cmsNestedSetsInit($table){
-   $inCore = cmsCore::getInstance();
-   return $inCore->nestedSetsInit($table);
-}
-
-function cmsUserIsAdmin(){
-    $inUser = cmsUser::getInstance();
-    return $inUser->is_admin;
-}
-
-function cmsGuestGroup(){
-    return cmsUser::getGuestGroupId();
-}
-
-function cmsMenuSeoLink($link, $linktype, $menuid=1){
-    $inCore = cmsCore::getInstance();
-    return $inCore->menuSeoLink($link, $linktype, $menuid);
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 function cmsSmartyComments($params){
 
     if (!$params['target']) { return false; }
@@ -3985,11 +3936,6 @@ function cmsSmartyAddCSS($params){
 
 function cmsSmartyProfileURL($params){
     return cmsUser::getProfileURL($params['login']);
-}
-
-function usrNewMessages($user_id){
-   $inCore = cmsCore::getInstance();
-   return cmsUser::isNewMessages($user_id);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
