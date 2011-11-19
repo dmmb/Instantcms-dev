@@ -10,7 +10,7 @@
 </div>
 {/if}
 
-<h1 class="con_heading">{$pagetitle}</h1>
+<h1 class="con_heading">{$pagetitle} <a href="/rss/board/{if $root_id==$cat.id}all{else}{$cat.id}{/if}/feed.rss" title="{$LANG.RSS}"><img src="/images/markers/rssfeed.png" border="0" alt="{$LANG.RSS}"/></a></h1>
 
 {if $cats}
 	<table class="board_categorylist" cellspacing="3" width="100%" border="0">
