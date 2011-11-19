@@ -868,11 +868,8 @@ class cms_model_users{
 		//проверяем подписку на уведомления
 		$needmail = $this->inDB->get_field('cms_user_profiles', "user_id='{$to_id}'", 'email_newmsg');
 
-		//Проверяем, если юзер онлайн, то уведомление на почту не отправляем.
-		$isonline = $this->inDB->get_field('cms_online', "user_id='{$to_id}'", 'id');
-
 		//если подписан и не онлайн, отправляем уведомление на email
-		if (!$isonline && $needmail){
+		if (!$inUser->isOnline($to_id) && $needmail){
 
 			$postdate   = date('d/m/Y H:i:s');
 			$to_email   = $this->inDB->get_field('cms_users', "id='{$to_id}'", 'email');

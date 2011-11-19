@@ -25,6 +25,8 @@ class cmsUser {
 
     public $id          = 0;
 
+    public $online_users = array();
+
     private function __construct() {}
 
     private function __clone() {}
@@ -857,11 +859,32 @@ class cmsUser {
      * @param int $user_id
      * @return bool
      */
-    public static function isOnline($user_id){
+    public function isOnline($user_id){
+
+		if($user_id<=0) { return false; }
+
         $inDB = cmsDatabase::getInstance();
-        $sql = "SELECT id FROM cms_online WHERE user_id = $user_id";
-        $result = $inDB->query($sql);
-        return (bool)$inDB->num_rows($result);
+
+		$online_users = array();
+
+		if(!$this->online_users){
+
+			$sql_online    = "SELECT user_id FROM cms_online WHERE user_id > 0";
+			$result_online = $inDB->query($sql_online);
+			if ($inDB->num_rows($result_online)){
+				while($data = $inDB->fetch_assoc($result_online)){
+					$online_users[] = $data['user_id'];
+				}
+			}
+			
+			$this->online_users = $online_users;
+
+		} else {
+			$online_users = $this->online_users;
+		}
+
+        return in_array($user_id, $online_users);
+
     }
 
 

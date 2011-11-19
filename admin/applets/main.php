@@ -210,6 +210,12 @@ function applet_main(){
               <tr>
                 <td><img src="/images/markers/rssfeed.png" width="16" height="16" /></td>
                 <td><a href="/rss/content/all/feed.rss" id="rss_link">Лента материалов</a> </td>
+                <td><img src="/images/markers/rssfeed.png" width="16" height="16" /></td>
+                <td><a href="/rss/board/all/feed.rss" id="rss_link">Лента объявлений</a> </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
                 <td><img src="/admin/images/icons/config.png" width="16" height="16" /></td>
                 <td><a href="index.php?view=components&amp;do=config&amp;id=<?php echo $inDB->get_field('cms_components', "link='rssfeed'", 'id'); ?>" id="rss_link">Настройки RSS </a></td>
               </tr>

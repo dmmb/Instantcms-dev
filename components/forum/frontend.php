@@ -389,16 +389,6 @@ if ($do=='thread'){
 	}
 	$t = cmsCore::callEvent('GET_FORUM_THREAD', $t);
 
-	// Массив пользователей онлайн
-	$online_users = array();
-	$sql_online    = "SELECT user_id FROM cms_online WHERE user_id > 0";
-	$result_online = $inDB->query($sql_online);
-	if ($inDB->num_rows($result_online)){
-		while($data = $inDB->fetch_assoc($result_online)){
-			$online_users[] = $data['user_id'];
-		}
-	}
-	
 	$mythread = ($inUser->id==$t['user_id']);
 	$is_admin = $inUser->is_admin;
 	$is_adm   = $inCore->userIsAdmin($inUser->id);
@@ -567,7 +557,7 @@ if ($do=='thread'){
 					echo '</div>';
 					
 					echo '<div class="post_usermsgcnt">'.$_LANG['MESSAGES'].': '.$user_messages.'</div>';
-					if(in_array($p['uid'], $online_users)){
+					if($inUser->isOnline($p['uid'])){
 						echo '<span class="online" style="font-size:10px;">'.$_LANG['ONLINE'].'</span>';
 					}
 												

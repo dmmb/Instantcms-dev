@@ -1266,13 +1266,8 @@ class cmsCore {
      * @param string $lib
      * @return bool
      */
-    public function loadLib($lib){
-        $libfile = PATH.'/core/lib_'.$lib.'.php';
-        if (file_exists($libfile)){
-            include_once($libfile);
-            return true;
-        }
-        return false;
+    public static function loadLib($lib){
+        return self::includeFile('core/lib_'.$lib.'.php');
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1282,13 +1277,8 @@ class cmsCore {
      * @param string $class
      * @return bool
      */
-    public function loadClass($class){
-        $classfile = PATH.'/core/classes/'.$class.'.class.php';
-        if (file_exists($classfile)){
-            include_once($classfile);
-            return true;
-        }
-        return false;
+    public static function loadClass($class){
+        return self::includeFile('core/classes/'.$class.'.class.php');
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1298,23 +1288,23 @@ class cmsCore {
      * @param string $component
      * @return bool
      */
-    public function loadModel($component){
-        $modelfile = PATH.'/components/'.$component.'/model.php';
-        if (file_exists($modelfile)){
-            include_once($modelfile);
-            return true;
-        }
-        return false;
+    public static function loadModel($component){
+        return self::includeFile('components/'.$component.'/model.php');
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * Подключает внешний файл
-     * @param string $lib
+     * @param string $file
      */
-    public function includeFile($file){
-        include_once PATH.'/'.$file;
+    public static function includeFile($file){
+		if (file_exists(PATH.'/'.$file)){
+        	include_once PATH.'/'.$file;
+			return true;
+		} else {
+			return false;
+		}
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1668,50 +1658,51 @@ class cmsCore {
 		//если uri нет, все равно возвращаем истину - для опции "компонент на главной"
         if (!$this->uri) { return true; }
 
-        if(!file_exists('components/'.$component.'/router.php')){ return false; }
+		// если uri совпадает с названием компонента, возвращаем истину
+		if($this->uri == $component) { return true; }
+
 		/**
 		 * Критерий "включенности" компонента определяется в функции loadComponentConfig
 		 */
         //подключаем список маршрутов компонента
-        $this->includeFile('components/'.$component.'/router.php');
+        if(!$this->includeFile('components/'.$component.'/router.php')){ return false; }
 
         $routes = call_user_func('routes_'.$component);
 		$routes = self::callEvent('GET_ROUTE_'.mb_strtoupper($component), $routes);
 		// Флаг удачного перебора
 		$is_found = false;
         //перебираем все маршруты
-        foreach($routes as $route_id=>$route){
-
-            //сравниваем шаблон маршрута с текущим URI
-            preg_match($route['_uri'], $this->uri, $matches);
-
-            //Если найдено совпадение
-            if ($matches){
-
-                //удаляем шаблон из параметров маршрута, чтобы не мешал при переборе
-                unset($route['_uri']);
-
-                //перебираем параметры маршрута в виде ключ=>значение
-                foreach($route as $key=>$value){
-                    if (is_integer($key)){
-                        //Если ключ - целое число, то значением является сегмент URI
-                        $_REQUEST[$value] = $matches[$key];
-                    } else {
-                        //иначе, значение берется из маршрута
-                        $_REQUEST[$key]   = $value;
-                    }
-                }
-				// совпадение есть
-				$is_found = true;
-                //раз найдено совпадение, прерываем цикл
-                break;
-
-            }
-
-        }
-
-		// если uri совпадает с названием компонента, флаг удачного перебора истина
-		if($this->uri == $component) { $is_found = true; }
+		if($routes){
+			foreach($routes as $route_id=>$route){
+	
+				//сравниваем шаблон маршрута с текущим URI
+				preg_match($route['_uri'], $this->uri, $matches);
+	
+				//Если найдено совпадение
+				if ($matches){
+	
+					//удаляем шаблон из параметров маршрута, чтобы не мешал при переборе
+					unset($route['_uri']);
+	
+					//перебираем параметры маршрута в виде ключ=>значение
+					foreach($route as $key=>$value){
+						if (is_integer($key)){
+							//Если ключ - целое число, то значением является сегмент URI
+							$_REQUEST[$value] = $matches[$key];
+						} else {
+							//иначе, значение берется из маршрута
+							$_REQUEST[$key]   = $value;
+						}
+					}
+					// совпадение есть
+					$is_found = true;
+					//раз найдено совпадение, прерываем цикл
+					break;
+	
+				}
+	
+			}
+		}
 
 		// Если в маршруте нет совпадений
 		if(!$is_found) { return false; }

@@ -22,7 +22,7 @@
                 </div>
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
                     <tr>
-                        <td width="20"><input type="checkbox" name="remember" value="1" id="remember" tabindex="3" /></td>
+                        <td width="20"><input type="checkbox" name="remember" value="1" checked="checked" id="remember" tabindex="3" /></td>
                         <td>
                             <label for="remember">{$LANG.REMEMBER_ME}</label>
                         </td>

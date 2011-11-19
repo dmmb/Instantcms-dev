@@ -86,8 +86,7 @@ function mod_userfiles($module_id){
 
             $sql = "SELECT SUM(f.filesize) as bytes
 					FROM cms_user_files f
-					WHERE f.allow_who = 'all'
-					GROUP BY f.id";
+					WHERE f.allow_who = 'all'";
 
             $result = $inDB->query($sql);
 

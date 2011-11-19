@@ -66,7 +66,12 @@
 						</table>
 						<table cellspacing="4">		
 						<tr>						
-							<td width="70" height="70" valign="middle" align="center" style="border:solid 1px #C3D6DF">{$record.user_img}</td>
+							<td width="70" height="70" valign="middle" align="center" style="border:solid 1px #C3D6DF">
+                            	{$record.user_img}
+                                {if $record.is_online}
+                                <br /><span class="online" style="font-size:10px;">{$LANG.ONLINE}</span>
+                                {/if}
+                            </td>
 							<td width="" valign="top"><div style="padding:6px">{$record.message}</div></td>
 						</tr>
 						</table>

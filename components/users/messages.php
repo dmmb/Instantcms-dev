@@ -138,6 +138,9 @@
                     } else {
                         $record['user_img'] = usrImageNOdb($record['sender_id'], 'small', $record['imageurl'], $record['is_deleted'], $record['author_login']);
                     }
+					
+					$record['is_online'] = $inUser->isOnline($record['sender_id']);
+					
                     $records[] = $record;
                 }
         }

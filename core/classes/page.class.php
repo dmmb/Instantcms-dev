@@ -400,33 +400,7 @@ public function showSplash(){
     return false;
 
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/**
- * Возвращает html с пользовательскими ссылками (профиль, сообщения, выход)
- * @return html
- */
-public function getUserLinks(){
-    $inCore = cmsCore::getInstance();
-    $inUser = cmsUser::getInstance();
-    $html   = '';
-    if(!isset($inUser->id)){
-            $html .= '<a href="/registration" id="ht_reg">Регистрация</a><a href="javascript:auth()" id="ht_auth">Авторизация</a>';
-    }
-    else{
-        $uid    = isset($inUser->id) ? $inUser->id : 0;
-        $newmsg = cmsUser::isNewMessages($uid);
-        $html  .= '<a href="'.cmsUser::getProfileURL($inUser->login).'" id="ht_profile">Мой профиль</a>';
-        if (!$newmsg){
-                $html .= '<a href="/users/'.$uid.'/messages.html" id="ht_messages">Cообщения</a>';
-        }
-        else{
-                $html .= '<a href="/users/'.$uid.'/messages.html" id="ht_messages_new">Cообщения '.strip_tags($newmsg).'</a>';
-        }
-        $html .= '<a href="/logout" id="ht_logout">Выход</a>';
-    }
-    return $html;
-}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

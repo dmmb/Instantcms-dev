@@ -485,8 +485,8 @@ function applet_modules(){
         $is_strict_bind = $inCore->request('is_strict_bind', 'int', 0);
 		
 		if ($operate == 'user'){ //USER MODULE
-			$sql = "INSERT INTO cms_modules (id, position, name, title, is_external, content, ordering, showtitle, published, original, css_prefix, access_list, cache, cachetime, cacheint, template, is_strict_bind)
-					VALUES ('', '$position', '$name', '$title', 0, '$content', $maxorder, $showtitle, $published, 1, '$css_prefix', '$access_list', 0, 24, 'HOUR', '$template', '$is_strict_bind')";
+			$sql = "INSERT INTO cms_modules (position, name, title, is_external, content, ordering, showtitle, published, original, css_prefix, access_list, template, is_strict_bind)
+					VALUES ('$position', '$name', '$title', 0, '$content', '$maxorder', '$showtitle', '$published', 1, '$css_prefix', '$access_list', '$template', '$is_strict_bind')";
 			dbQuery($sql) ;			
 		}
 		
@@ -519,7 +519,7 @@ function applet_modules(){
                             '{$template}',
                             '{$access_list}',
                             '{$is_strict_bind}', 
-                            0, 24, 'HOUR'
+                            '{$cache}', '{$cachetime}', '{$cacheint}'
                             )";
 			dbQuery($sql);
 						
@@ -843,7 +843,7 @@ function applet_modules(){
 
                     </div>
 
-                    
+					<?php if(($mod['is_external'] && $do=='edit') || $do=='add') { ?>
 
                     {tab=Кеширование}
 
@@ -894,6 +894,7 @@ function applet_modules(){
                                 }
                             ?>
                         </div>
+					<?php } ?>
 
                     {tab=Доступ}
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist" style="margin-top:5px">
