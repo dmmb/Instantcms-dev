@@ -1202,6 +1202,9 @@ if ($do=='submitphotos'){
 
     if (!$inCore->inRequest('submit')){
 
+		$p = end($photos);
+		$album_id = $p['album_id'];
+
         $albums = $model->getPhotoAlbums($id, true, true);
 
         $inPage->setTitle($_LANG['PHOTOS_CONFIG']);
@@ -1213,6 +1216,7 @@ if ($do=='submitphotos'){
         $smarty->assign('user_id', $id);
         $smarty->assign('albums', $albums);
         $smarty->assign('photos', $photos);
+		$smarty->assign('album_id', $album_id);
 		$smarty->assign('is_edit', $inCore->request('is_edit', 'int', 0));
         $smarty->display('com_users_photo_submit.tpl');
 

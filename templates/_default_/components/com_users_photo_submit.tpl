@@ -29,7 +29,7 @@
                 <td style="padding-left: 10px" colspan="3">
                     <select name="album_id" class="select-input">
                         {foreach key=ak item=album from=$albums}
-                            <option value="{$album.id}">{$album.title}</option>
+                            <option value="{$album.id}" {if $album_id == $album.id} selected="selected"{/if}>{$album.title}</option>
                         {/foreach}
                     </select>
                 </td>
