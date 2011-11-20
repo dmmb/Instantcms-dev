@@ -185,7 +185,7 @@ function applet_usergroups(){
 					
 					 echo '<h3>Редактировать группу '.$ostatok.'</h3>';
 					 
-					 cpAddPathway($mod['title'], 'index.php?view=usergroups&do=edit&id='.$mod['id']);
+					 cpAddPathway('Редактировать группу '.$mod['title'], 'index.php?view=usergroups&do=edit&id='.$mod['id']);
 			}   
 
 	if(isset($mod['access'])){
@@ -207,8 +207,8 @@ function applet_usergroups(){
 			<tr>
 				<td><strong>Администраторы?</strong></td>
 				<td>
-					<input name="is_admin" type="radio" value="1" <?php if (@$mod['is_admin']) { echo 'checked="checked"'; } ?> onclick="$('#accesstable').hide();$('#admin_accesstable').show();"/> Да
-					<input name="is_admin" type="radio" value="0"  <?php if (@!$mod['is_admin']) { echo 'checked="checked"'; } ?> onclick="$('#accesstable').show();$('#admin_accesstable').hide();"/> Нет
+					<label><input name="is_admin" type="radio" value="1" <?php if (@$mod['is_admin']) { echo 'checked="checked"'; } ?> onclick="$('#accesstable').hide();$('#admin_accesstable').show();"/> Да </label>
+					<label><input name="is_admin" type="radio" value="0"  <?php if (@!$mod['is_admin']) { echo 'checked="checked"'; } ?> onclick="$('#accesstable').show();$('#admin_accesstable').hide();"/> Нет</label>
 				</td>
 			</tr>
 		</table>
@@ -291,48 +291,52 @@ function applet_usergroups(){
 				<td width="475" valign="top">
 					<table width="100%" border="0" cellspacing="2" cellpadding="0">
 						<tr>
-							<td width="16"><input type="checkbox" name="access[]" value="comments/add" <?php if (isset($mod['access'])) { if (in_array('comments/add', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td>Добавление комментариев </td>
+							<td width="16"><input type="checkbox" name="access[]" id="comments_add" value="comments/add" <?php if (isset($mod['access'])) { if (in_array('comments/add', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
+							<td><label for="comments_add">Добавление комментариев</label></td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" name="access[]" value="comments/bbcode" <?php if (isset($mod['access'])) { if (in_array('comments/bbcode', $mod['access'])) { echo 'checked="checked"'; } }?> /></td>
-							<td>Расширенный редактор комментариев (BBCode) </td>
+							<td><input type="checkbox" name="access[]" id="comments_bbcode" value="comments/bbcode" <?php if (isset($mod['access'])) { if (in_array('comments/bbcode', $mod['access'])) { echo 'checked="checked"'; } }?> /></td>
+							<td><label for="comments_bbcode">Расширенный редактор комментариев (BBCode)</label></td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" name="access[]" value="comments/delete" <?php if (isset($mod['access'])) { if (in_array('comments/delete', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td>Удаление своих комментариев </td>
+							<td><input type="checkbox" name="access[]" id="comments_delete" value="comments/delete" <?php if (isset($mod['access'])) { if (in_array('comments/delete', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
+							<td><label for="comments_delete">Удаление своих комментариев</label></td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" name="access[]" value="comments/moderate" <?php if (isset($mod['access'])) { if (in_array('comments/moderate', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td>Удаление чужих комментариев </td>
+							<td><input type="checkbox" name="access[]" id="comments_moderate" value="comments/moderate" <?php if (isset($mod['access'])) { if (in_array('comments/moderate', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
+							<td><label for="comments_moderate">Удаление чужих комментариев</label></td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" name="access[]" value="comments/iscomments" <?php if (isset($mod['access'])) { if (in_array('comments/iscomments', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td>Возможность отключать комментарии в своем блоге</td>
+							<td><input type="checkbox" name="access[]" id="comments_iscomments" value="comments/iscomments" <?php if (isset($mod['access'])) { if (in_array('comments/iscomments', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
+							<td><label for="comments_iscomments">Возможность отключать комментарии в своем блоге</label></td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" name="access[]" value="forum/moderate" <?php if (isset($mod['access'])) { if (in_array('forum/moderate', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td>Модерация форума </td>
+							<td><input type="checkbox" name="access[]" id="forum_moderate" value="forum/moderate" <?php if (isset($mod['access'])) { if (in_array('forum/moderate', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
+							<td><label for="forum_moderate">Модерация форума</label></td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" name="access[]" value="content/add" <?php if (isset($mod['access'])) { if (in_array('content/add', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td>Добавление статей на сайт </td>
+							<td><input type="checkbox" name="access[]" id="content_add" value="content/add" <?php if (isset($mod['access'])) { if (in_array('content/add', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
+							<td><label for="content_add">Добавление статей на сайт</label></td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" name="access[]" value="content/autoadd" <?php if (isset($mod['access'])) { if (in_array('content/autoadd', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td>Принимать статьи без модерации </td>
+							<td><input type="checkbox" name="access[]" id="content_autoadd" value="content/autoadd" <?php if (isset($mod['access'])) { if (in_array('content/autoadd', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
+							<td><label for="content_autoadd">Принимать статьи без модерации</label></td>
 						</tr>
 						<tr>
-							<td><input name="access[]" type="checkbox" id="access[]" value="content/delete" <?php if (isset($mod['access'])) { if (in_array('content/delete', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td>Удаление своих статей </td>
+							<td><input name="access[]" type="checkbox" id="content_delete" value="content/delete" <?php if (isset($mod['access'])) { if (in_array('content/delete', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
+							<td><label for="content_delete">Удаление своих статей</label></td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" name="access[]" value="board/autoadd" <?php if (isset($mod['access'])) { if (in_array('board/autoadd', $mod['access'])) { echo 'checked="checked"'; } }?> /></td>
-							<td>Принимать объявления без модерации </td>
+							<td><input type="checkbox" name="access[]" id="board_add" value="board/add" <?php if (isset($mod['access'])) { if (in_array('board/add', $mod['access'])) { echo 'checked="checked"'; } }?> /></td>
+							<td><label for="board_add">Добавление объявлений</label></td>
 						</tr>
 						<tr>
-							<td><input name="access[]" type="checkbox" id="access[]" value="board/moderate" <?php if (isset($mod['access'])) { if (in_array('board/moderate', $mod['access'])) { echo 'checked="checked"'; } }?> /></td>
-							<td>Модерация доски объявлений</td>
+							<td><input type="checkbox" name="access[]" id="board_autoadd" value="board/autoadd" <?php if (isset($mod['access'])) { if (in_array('board/autoadd', $mod['access'])) { echo 'checked="checked"'; } }?> /></td>
+							<td><label for="board_autoadd">Принимать объявления без модерации</label></td>
+						</tr>
+						<tr>
+							<td><input name="access[]" type="checkbox" id="board_moderate" value="board/moderate" <?php if (isset($mod['access'])) { if (in_array('board/moderate', $mod['access'])) { echo 'checked="checked"'; } }?> /></td>
+							<td><label for="board_moderate">Модерация доски объявлений</label></td>
 						</tr>
 					</table>
 				</td>

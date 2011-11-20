@@ -171,6 +171,7 @@ if ($do=='view'){
 
     $inPage->printHeading($_LANG['FORUMS']);
     $inPage->setTitle($_LANG['FORUMS']);
+	$inPage->addHead('<link rel="alternate" type="application/rss+xml" title="'.$_LANG['FORUMS'].'" href="'.HOST.'/rss/forum/all/feed.rss">');
 
     $groupsql = forumUserAuthSQL();
     $sql = "SELECT *
@@ -258,6 +259,7 @@ if ($do=='forum'){
 	}
         
     $inPage->setTitle($f['title']);
+	$inPage->addHead('<link rel="alternate" type="application/rss+xml" title="'.htmlspecialchars($f['title']).'" href="'.HOST.'/rss/forum/'.$f['id'].'/feed.rss">');
 
     //PATHWAY ENTRY
     $left_key   = $f['NSLeft'];

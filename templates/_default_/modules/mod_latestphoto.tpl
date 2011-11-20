@@ -1,5 +1,5 @@
 {if $is_photo}
-        <table cellspacing="2" border="0" style="margin:0px">
+        <table cellspacing="2" border="0" width="100%">
               {assign var="col" value="1"}	
               {foreach key=tid item=con from=$photos}
               {if $col==1}

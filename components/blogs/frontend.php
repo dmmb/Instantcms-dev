@@ -275,6 +275,9 @@ if ($do=='config'){
 ////////// СПИСОК БЛОГОВ ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){
 
+	// rss в адресной строке
+	$inPage->addHead('<link rel="alternate" type="application/rss+xml" title="'.$_LANG['BLOGS'].'" href="'.HOST.'/rss/blogs/all/feed.rss">');
+
     //Получаем номер страницы и число записей на одну страницу
     $perpage        = isset($cfg['perpage_blog']) ? $cfg['perpage_blog'] : 15;
     $page           = $inCore->request('page', 'int', 1);
@@ -486,6 +489,9 @@ if ($do=='blog'){
         //Передаем в шаблон флаг о наличии записей
         $smarty->assign('is_posts', (bool)sizeof($posts));
     }
+
+	// rss в адресной строке
+	$inPage->addHead('<link rel="alternate" type="application/rss+xml" title="'.htmlspecialchars(strip_tags($blog['title'])).'" href="'.HOST.'/rss/blogs/'.$blog['id'].'/feed.rss">');
 
     //Выводим блог
     $smarty->assign('myblog', $myblog);
@@ -1289,6 +1295,9 @@ if ($do == 'delcat'){
 
 ////////// VIEW LATEST POSTS ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='latest'){
+
+	// rss в адресной строке
+	$inPage->addHead('<link rel="alternate" type="application/rss+xml" title="'.$_LANG['RSS_BLOGS'].'" href="'.HOST.'/rss/blogs/all/feed.rss">');
 
 	$smarty     = $inCore->initSmarty('components', 'com_blog_view_posts.tpl');
 				

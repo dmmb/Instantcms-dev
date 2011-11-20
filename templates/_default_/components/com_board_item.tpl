@@ -43,7 +43,7 @@
                     <table width="100%" cellspacing="0" cellpadding="2" style="border-top:1px solid #C3D6DF; margin:5px 0 0 0">
                         {foreach key=tid item=form from=$formsdata}
                         <tr>
-                            <td valign="top" width="80px">
+                            <td valign="top" width="140px">
                                 <strong>{$form.title}:</strong>
                             </td>
                             <td valign="top">
@@ -64,7 +64,9 @@
 			<span class="bd_message"><a href="/users/{$item.user_id}/sendmessage.html">{$LANG.WRITE_MESS_TO_AVTOR}</a></span>
 		{/if}
 	{/if}
+    {if $item.user_login}
 	<span class="bd_author"><a href="/board/by_user_{$item.user_login}">{$LANG.ALL_AVTOR_ADVS}</a></span>
+    {/if}
 </div>
 
 {if $cfg.comments}

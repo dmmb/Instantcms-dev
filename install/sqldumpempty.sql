@@ -1445,7 +1445,7 @@ CREATE TABLE `#__user_groups` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__user_groups` (`id`, `title`, `alias`, `is_admin`, `access`) VALUES
-(1, 'Пользователи', 'registered', 0, 'comments/add, comments/bbcode, comments/delete, content/add, board/autoadd'),
+(1, 'Пользователи', 'registered', 0, 'comments/add, comments/bbcode, comments/delete, content/add, board/add, board/autoadd'),
 (2, 'Администраторы', 'admin', 1, 'admin/content, admin/com_rssfeed, admin/com_arhive, admin/com_banners, admin/com_blog, admin/com_faq, admin/com_board, admin/com_content, admin/com_clubs, admin/com_comments, admin/com_forms, admin/com_photos'),
 (8, 'Гости', 'guest', 0, 'comments/add'),
 (7, 'Редакторы', 'editors', 0, 'comments/add, comments/delete, content/add, content/autoadd, content/delete'),

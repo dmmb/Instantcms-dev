@@ -12,16 +12,7 @@
 
 {if $cfg.is_rss}
 	{* ============================== Заголовок + RSS ==================================== *}
-	<table cellpadding="0" cellspacing="0" border="0">
-		<tr>
-			<td><h1 class="con_heading">{$cat.title}</h1></td>
-			<td valign="top" style="padding-left:6px">
-                <div class="con_rss_icon">
-                    <a href="/rss/catalog/{$cat.id}/feed.rss" title="{$LANG.RSS}"><img src="/images/markers/rssfeed.png" border="0" alt="{$LANG.RSS}"/></a>
-                </div>
-			</td>
-		</tr>
-	</table>
+    <h1 class="con_heading">{$cat.title} <a href="/rss/catalog/{$cat.id}/feed.rss" title="{$LANG.RSS}"><img src="/images/markers/rssfeed.png" border="0" alt="{$LANG.RSS}"/></a></h1>
 {else}
 	{* ============================== Просто заголовок ==================================== *}
     <h1 class="con_heading">{$cat.title}</h1>

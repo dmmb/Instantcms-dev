@@ -100,7 +100,9 @@ function comments($target='', $target_id=0, $labels=array()){
 				}
 			}
 		}
-		
+
+		$inPage->addHead('<link rel="alternate" type="application/rss+xml" title="'.$_LANG['BOARD'].'" href="'.HOST.'/rss/comments/all/feed.rss">');
+
 		// Отдаем в шаблон
 		$smarty = $inCore->initSmarty('components', 'com_comments_list_all.tpl');
 

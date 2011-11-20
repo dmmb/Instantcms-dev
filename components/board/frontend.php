@@ -64,6 +64,10 @@ if ($do=='view'){
 
 	}
 
+	// rss в адресной строке
+	$rss_cat_id = $category['id'] == $model->root_cat['id'] ? 'all' : $category['id'];
+	$inPage->addHead('<link rel="alternate" type="application/rss+xml" title="'.$_LANG['BOARD'].'" href="'.HOST.'/rss/board/'.$rss_cat_id.'/feed.rss">');
+
 	//‘ормируем категории
 	$cats = $model->getSubCats($category['id']);
 
@@ -90,7 +94,7 @@ if ($do=='view'){
 	$inPage->setTitle($pagetitle);
 
 	// модератор или админ
-	$is_moder = $inUser->is_admin || $inCore->isUserCan('board/moderate');
+	$is_moder = $inUser->is_admin || $model->is_moderator_by_group;
 
     // ќбщее количество объ€влений по заданным выше услови€м
     $total = $model->getAdvertsCount($is_moder);
@@ -224,7 +228,7 @@ if($do=='read'){
 	$smarty->assign('user_id', $inUser->id);
 	$smarty->assign('is_admin', $inUser->is_admin);
 	$smarty->assign('formsdata', $model->getFormData($item['form_id'], $item['form_array']));
-	$smarty->assign('is_moder', $inCore->isUserCan('board/moderate'));
+	$smarty->assign('is_moder', $model->is_moderator_by_group);
 	$smarty->display('com_board_item.tpl');
         
 }
@@ -234,7 +238,7 @@ if ($do=='additem'){
 	// ѕолучаем категории, в которые может загружать пользователь
 	$catslist = $model->getPublicCats($model->category_id);
 	if(!$catslist) { 
-		cmsCore::addSessionMessage($_LANG['YOU_CANT_ADD_ADV'], 'error');
+		cmsCore::addSessionMessage($_LANG['YOU_CANT_ADD_ADV_ANY'], 'error');
 		$inCore->redirect('/board');
 	}
 
@@ -294,7 +298,7 @@ if ($do=='additem'){
 			cmsCore::addSessionMessage($_LANG['MAX_VALUE_OF_ADD_ADV'], 'error'); $errors = true;
 		}
 		// ћожем ли добавл€ть в эту рубрику
-		if (!$cat['public'] && !$inUser->is_admin){
+		if (!$model->checkAdd($cat)){
 			cmsCore::addSessionMessage($_LANG['YOU_CANT_ADD_ADV'], 'error'); $errors = true;
 		}
 
@@ -313,10 +317,7 @@ if ($do=='additem'){
 
         $vipdays    = $inCore->request('vipdays', 'int', 0);
 
-        $published  = 0;
-
-        $published  = ($cat['public']==2 && $inCore->isUserCan('board/autoadd')) ? 1 : 0;
-        if ($inUser->is_admin || $inCore->isUserCan('board/moderate')) { $published = 1; }
+        $published  = $model->checkPublished($cat);
 
         if ($model->config['srok']){  $pubdays = ($inCore->request('pubdays', 'int') <= 50) ? $inCore->request('pubdays', 'int') : 50; }
         if (!$model->config['srok']){ $pubdays = isset($model->config['pubdays']) ? $model->config['pubdays'] : 14; }
@@ -437,7 +438,7 @@ if ($do=='edititem'){
         $smarty->assign('item', $item);
 		$smarty->assign('pagetitle', $_LANG['EDIT_ADV']);
         $smarty->assign('is_admin', $inUser->is_admin);
-        $smarty->assign('catslist', $model->getPublicCats($item['category_id']));
+        $smarty->assign('catslist', $model->getPublicCats($item['category_id'], true));
 		$smarty->assign('formsdata', $model->getFormDataEdit($cat['form_id'], $item['form_array']));
 		$smarty->assign('is_user', $inUser->id);
 		$smarty->assign('is_billing', IS_BILLING);
@@ -467,8 +468,7 @@ if ($do=='edititem'){
 		$form_array = $inCore->request('field', 'array');
 		$formsdata  = $inCore->strClear($inCore->arrayToYaml($form_array));
 
-        $published  = ($cat['public']==2 && $inCore->isUserCan('board/autoadd')) ? 1 : 0;
-        if ($inUser->is_admin || $inCore->isUserCan('board/moderate')) { $published = 1; }
+        $published  = $model->checkPublished($cat, true);
 
 		if ($item['is_overdue'] && !$item['published']) {
 			if ($model->config['srok']){
@@ -557,25 +557,25 @@ if ($do == 'publish'){
 	if ($item['published']) { cmsCore::error404(); }
 
 	// публиковать могут админы и модераторы доски
-	if(!$inUser->is_admin && !$inCore->isUserCan('board/moderate')) { cmsCore::error404(); }
+	if(!$inUser->is_admin && !$model->is_moderator_by_group) { cmsCore::error404(); }
 
     $model->publishRecord($model->item_id);
 
 	cmsCore::callEvent('ADD_BOARD_DONE', $item);
-    
-    //регистрируем событие
-	cmsActions::log('add_board', array(
-				'object' => $item['obtype'].' '.$item['title'],
-				'user_id' => $item['user_id'],
-				'object_url' => '/board/read'.$item['id'].'.html',
-				'object_id' => $item['id'],
-				'target' => $item['category'],
-				'target_url' => '/board/'.$item['cat_id'],
-				'target_id' => $item['cat_id'], 
-				'description' => ''
-	));
+ 
+ 	if($item['user_id']){
+		//регистрируем событие
+		cmsActions::log('add_board', array(
+					'object' => $item['obtype'].' '.$item['title'],
+					'user_id' => $item['user_id'],
+					'object_url' => '/board/read'.$item['id'].'.html',
+					'object_id' => $item['id'],
+					'target' => $item['category'],
+					'target_url' => '/board/'.$item['cat_id'],
+					'target_id' => $item['cat_id'], 
+					'description' => ''
+		));
 
-	if($item['user_id']){
 		$link = '<a href="/board/read'.$item['id'].'.html">'.$item['obtype'].' '.$item['title'].'</a>';
 		$message = str_replace('%link%', $link, $_LANG['MSG_ADV_ACCEPTED']);
 		cmsUser::sendMessage(USER_UPDATER, $item['user_id'], $message);

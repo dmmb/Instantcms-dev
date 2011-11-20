@@ -82,6 +82,7 @@ if ($do=='view'){
 		$pagetitle  = $cat['title'];
 		$showdate   = $cat['showdate'];
 		$showcomm   = $cat['showcomm'];
+		$inPage->addHead('<link rel="alternate" type="application/rss+xml" title="'.htmlspecialchars($cat['title']).'" href="'.HOST.'/rss/content/'.$cat['id'].'/feed.rss">');
 	}
 
     if ($cat['id']<=0){

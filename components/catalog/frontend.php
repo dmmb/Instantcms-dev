@@ -98,13 +98,13 @@ function ratingForm($ratingdata, $item_id){
     global $_LANG;
     $html = '';
     $html .= '<form name="rateform" action="" method="POST"><div class="uc_detailrating"><table><tr>' ."\n";
-    $html .= '<td width="90">'."\n";
+    $html .= '<td width="100">'."\n";
     $html .= '<strong>'.$_LANG['RATING'].':</strong> '.round($ratingdata['rating'], 2)."\n";
     $html .= '</td>'."\n";
     $html .= '<td width="100" valign="middle">'."\n";
     $html .= buildRating($ratingdata['rating'])."\n";
     $html .= '</td>'."\n";
-    $html .= '<td width="50">'."\n";
+    $html .= '<td width="65">'."\n";
     $html .= '<strong>'.$_LANG['VOTES'].':</strong> '."\n";
     $html .= '</td>'."\n";
     $html .= '<td width="40" valign="middle">'."\n";
@@ -445,7 +445,7 @@ function catalog(){
 
         $inPage->setTitle($menutitle);
         $cats_html = subCatsList();
-        
+        $inPage->addHead('<link rel="alternate" type="application/rss+xml" title="'.$_LANG['CATALOG'].'" href="'.HOST.'/rss/catalog/all/feed.rss">');
         $smarty = $inCore->initSmarty('components', 'com_catalog_index.tpl');
         $smarty->assign('cfg', $cfg);
         $smarty->assign('title', $menutitle);
@@ -460,13 +460,14 @@ function catalog(){
         $sql = "SELECT * FROM cms_uc_cats WHERE id = $id";
         $catres = $inDB->query($sql);
 
-        $inPage->addHeadJS('includes/jquery/lightbox/js/jquery.lightbox.js');
-        $inPage->addHeadCSS('includes/jquery/lightbox/css/jquery.lightbox.css');
-
         if ($inDB->num_rows($catres)>0){
             
             $cat        = $inDB->fetch_assoc($catres);
             $fstruct    = unserialize($cat['fieldsstruct']);
+
+			$inPage->addHead('<link rel="alternate" type="application/rss+xml" title="'.$_LANG['CATALOG'].'" href="'.HOST.'/rss/catalog/'.$cat['id'].'/feed.rss">');
+			$inPage->addHeadJS('includes/jquery/lightbox/js/jquery.lightbox.js');
+			$inPage->addHeadCSS('includes/jquery/lightbox/css/jquery.lightbox.css');
 
             //heading
             //PATHWAY ENTRY

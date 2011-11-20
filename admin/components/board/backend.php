@@ -72,6 +72,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$cfg['vip_max_days']   = $inCore->request('vip_max_days', 'int', 30);
 		$cfg['vip_day_cost']   = $inCore->request('vip_day_cost', 'str', 5);
 		$cfg['home_perpage']   = $inCore->request('home_perpage', 'int', 15);
+		$cfg['publish_after_edit'] = $inCore->request('publish_after_edit', 'int', 0);
 
         $cfg['vip_day_cost'] = str_replace(',', '.', trim($cfg['vip_day_cost']));
         
@@ -296,6 +297,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		if (!isset($cfg['vip_max_days'])) { $cfg['vip_max_days'] = 30; }
 		if (!isset($cfg['vip_day_cost'])) { $cfg['vip_day_cost'] = 5; }
 		if (!isset($cfg['home_perpage'])) { $cfg['home_perpage'] = 15; }
+		if (!isset($cfg['publish_after_edit'])) { $cfg['publish_after_edit'] = 0; }
         
 		?>
 		<?php cpCheckWritable('/images/board', 'folder'); ?>
@@ -370,6 +372,17 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                                 <option value="0" <?php if(@$cfg['public']=='0') { echo 'selected'; } ?>>Запрещено</option>
                                 <option value="1" <?php if(@$cfg['public']=='1') { echo 'selected'; } ?>>Разрешено с премодерацией</option>
                                 <option value="2" <?php if(@$cfg['public']=='2') { echo 'selected'; } ?>>Разрешено без модерации</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="250">
+                        <strong>Модерация объявлений после редактирования: </strong><br/>
+                    </td>
+                    <td valign="top">
+                        <select name="publish_after_edit" id="publish_after_edit" style="width:260px">
+                                <option value="0" <?php if(@$cfg['publish_after_edit']=='0') { echo 'selected'; } ?>>по умолчанию</option>
+                                <option value="1" <?php if(@$cfg['publish_after_edit']=='1') { echo 'selected'; } ?>>без модерации</option>
                         </select>
                     </td>
                 </tr>

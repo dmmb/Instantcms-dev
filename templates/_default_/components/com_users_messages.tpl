@@ -45,7 +45,7 @@
                             <td class="usr_msg_title" width=""><strong>{$record.authorlink}</strong>, <span class="usr_msg_date">{$record.fpubdate}</span></td>
 							{if $record.is_new}
 								{if $opt=='in'}									
-									<td class="usr_msg_title" width="20" align="right"><span class="msg_new">{$LANG.NEW}!</span></td>
+									<td class="usr_msg_title" width="90" align="right"><span class="msg_new">{$LANG.NEW}!</span></td>
 								{else}
 									<td class="usr_msg_title" width="90" align="right"><a class="msg_delete" href="/users/delmsg{$record.id}.html">{$LANG.CANCEL_MESS}</a></td>
 								{/if}

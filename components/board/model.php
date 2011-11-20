@@ -21,6 +21,8 @@ class cms_model_board{
     private $limit    = '100';
 	public $root_cat  = array();
 	public $config    = array();
+	public $is_can_add_by_group   = false;
+	public $is_moderator_by_group = false;
 
 /* ==================================================================================================== */
 /* ==================================================================================================== */
@@ -35,6 +37,8 @@ class cms_model_board{
 		$this->page        = $this->inCore->request('page', 'int', 1);
 		$this->city        = $this->detectCriteria('city');
 		$this->obtype      = $this->detectCriteria('obtype');
+		$this->is_can_add_by_group   = $this->inCore->isUserCan('board/add');
+		$this->is_moderator_by_group = $this->inCore->isUserCan('board/moderate');
     }
 
 /* ==================================================================================================== */
@@ -69,6 +73,7 @@ class cms_model_board{
                      'maxcols'=>1,
                      'public'=>1,
 					 'home_perpage'=>15,
+					 'publish_after_edit'=>0,
                      'srok'=>1,
                      'pubdays'=>14,
                      'watermark'=>0,
@@ -180,11 +185,8 @@ class cms_model_board{
 		}
 		if(!$category) { return false; }
 
-        $category = cmsCore::callEvent('GET_BOARD_CAT', $category);
-
 		$category['perpage'] = $category['perpage'] ? $category['perpage'] : $this->config['home_perpage'];
-		if ($category['public'] == -1) { $category['public'] = $this->config['public']; }
-		if($inUser->is_admin) { $category['public'] = 1; }
+		$category['is_can_add'] = $this->checkAdd($category);
 
         if (!$category['obtypes']){
             $category['obtypes'] = $this->inDB->get_field('cms_board_cats', "NSLeft <= {$category['NSLeft']} AND NSRight >= {$category['NSRight']} AND obtypes <> ''", 'obtypes');
@@ -194,6 +196,8 @@ class cms_model_board{
 		$category['cat_city'] = $this->getCatCity($category['id']);
 
 		$category['ob_links'] = $this->getTypesLinks($category['id'], $category['obtypes']);
+
+        $category = cmsCore::callEvent('GET_BOARD_CAT', $category);
 
         return $category;
     }
@@ -254,8 +258,13 @@ class cms_model_board{
 
 /* ==================================================================================================== */
 /* ==================================================================================================== */
-
-    public function getPublicCats($sel = '') {
+    /**
+     * ¬озвращает элементы option дл€ категорий, в которые разрешено добавление
+     * @param int $sel - выбранныа€ категори€
+     * @param bool $is_edit - флаг редактировани€
+     * @return string
+     */
+    public function getPublicCats($sel = '', $is_edit = false) {
 
 		$inUser = cmsUser::getInstance();
 
@@ -265,8 +274,7 @@ class cms_model_board{
         if ($rs_rows){
 			$html = '';
             while($node = $this->inDB->fetch_assoc($rs_rows)){
-				if ($node['public'] == -1) { $node['public'] = $this->config['public']; }
-                if($node['public'] || $inUser->is_admin){
+                if($this->checkAdd($node) || ($is_edit && $sel==$node['id'])){
                     if ($sel==$node['id']){
                         $s = 'selected="selected"';
                     } else {
@@ -805,11 +813,57 @@ class cms_model_board{
 		$inUser = cmsUser::getInstance();
 
 		if ($inUser->id){	
-			$access = ($inUser->is_admin || $this->inCore->isUserCan('board/moderate') || $user_id == $inUser->id);
+			$access = ($inUser->is_admin || $this->is_moderator_by_group || $user_id == $inUser->id);
 		} else {
 			$access = false;
 		}
 		return $access;
+
+	}
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+	public function checkAdd($cat){
+
+		$inUser = cmsUser::getInstance();
+
+		// администраторы могут всегда
+		if($inUser->is_admin) { return true; }
+
+		// настройки группы всегда приоритетней
+		if(!$this->is_can_add_by_group) { return false; }
+
+		// наследование от настроек компонента
+		if ($cat['public'] == -1) { $cat['public'] = $this->config['public']; }
+
+		if($cat['public']>0) { return true; }
+
+		return false;
+
+	}
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+	public function checkPublished($cat, $is_edit = false){
+
+		$inUser = cmsUser::getInstance();
+
+		// админы и модераторы добавл€ют всегда без модерации
+		if($inUser->is_admin || $this->is_moderator_by_group) { return 1; }
+
+		// при редактировании объ€влени€ смотрим опцию publish_after_edit
+		if($is_edit){
+			if($this->config['publish_after_edit']) { return 1; }
+		}
+
+		// наследование от настроек компонента
+		if ($cat['public'] == -1) { $cat['public'] = $this->config['public']; }
+
+        if ($cat['public']==2 && $this->inCore->isUserCan('board/autoadd')) { return 1; }
+
+		return 0;
 
 	}
 

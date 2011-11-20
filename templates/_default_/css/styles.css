@@ -24,6 +24,7 @@ html { height:100%; }
 body {
     background:url(../images/bg.jpg) no-repeat center top #1F3147;
     height: 100%;
+	word-wrap: break-word;
 }
 
 a { color:#09c; }
@@ -3699,6 +3700,7 @@ table.feed td.date strong { color:green; }
     clear:both;
     //clear:none;
     color:gray;
+	overflow:hidden;
 }
 
 .action_details .act_photo{

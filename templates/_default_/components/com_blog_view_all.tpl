@@ -46,8 +46,8 @@
 					{else}
 						<td width="220" style="{$blog.style}">&nbsp;</td>
 					{/if}
-                    <td width="20" style="{$blog.style}"><span class="blog_posts">{$blog.records}</span></td>
-					<td width="20" style="{$blog.style}"><span class="blog_comm">{$blog.comments}</span></td>
+                    <td width="40" style="{$blog.style}"><span class="blog_posts">{$blog.records}</span></td>
+					<td width="40" style="{$blog.style}"><span class="blog_comm">{$blog.comments}</span></td>
 					{if $cfg.rss_one}
 						<td width="16" style="{$blog.style}">
                             <a class="blog_rss" href="/rss/blogs/{$blog.id}/feed.rss"></a>

@@ -31,7 +31,7 @@
 									<a href="/board/read{$con.id}.html" title="{$con.title|escape:'html'}">{$con.title}</a>
 								</div>
 								<div class="bd_text">
-									{$con.content}
+									{$con.content|truncate:250}
 								</div>																													
 								<div class="bd_item_details">
                                 		{if $cat.showdate && $con.published}
