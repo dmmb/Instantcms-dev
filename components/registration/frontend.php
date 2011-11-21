@@ -75,7 +75,7 @@ function registration(){
     if ($do=='sendremind'){
 
         $inPage->setTitle($_LANG['REMINDER_PASS']);
-        $inPage->addPathway($_LANG['REMINDER_PASS'], $_SERVER['REQUEST_URI']);
+        $inPage->addPathway($_LANG['REMINDER_PASS']);
 
         echo '<div class="con_heading">'.$_LANG['REMINDER_PASS'].'</div>';
 
@@ -129,8 +129,6 @@ function registration(){
 //======================================================================================================================//
 
     if ($do=='register'){
-
-        $inPage->setTitle($_LANG['REGISTRATION']);
 
         $msg = '';
 		// ѕровер€ем логин и пароль
@@ -283,8 +281,9 @@ function registration(){
     if ($do=='view' || @$msg!=''){
 
         $inPage->setTitle($_LANG['REGISTRATION']);
+		$inPage->addPathway($_LANG['REGISTRATION']);
 
-        $do             = 'view';
+        $do = 'view';
 		// ≈сли пользователь авторизован, то не показываем форму регистрации, редирект в профиль.
         if ($inUser->id && !$inUser->is_admin) {
             if ($inCore->menuId() == 1) { return; } else {  $inCore->redirect(cmsUser::getProfileURL($inUser->login)); }
@@ -474,6 +473,9 @@ function registration(){
             }
             
         }
+
+        $inPage->setTitle($_LANG['RECOVER_PASS']);
+		$inPage->addPathway($_LANG['RECOVER_PASS']);
 
         $inPage->backButton(false);
         $inPage->setTitle($_LANG['RECOVER_PASS']);
