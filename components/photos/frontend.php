@@ -308,7 +308,7 @@ if($do=='viewphoto'){
 	while($pcat=$inDB->fetch_assoc($rs_rows)){
 			$inPage->addPathway($pcat['title'], '/photos/'.$pcat['id']);
 	}
-	$inPage->addPathway($photo['title'], $_SERVER['REQUEST_URI']);
+	$inPage->addPathway($photo['title']);
 	$inPage->setTitle($photo['title']);
 	// Обновляем количество просмотров фотографии
 	$inDB->query("UPDATE cms_photo_files SET hits = hits + 1 WHERE id = '$id'");

@@ -23,7 +23,7 @@ class p_ping extends cmsPlugin {
 
         $this->info['plugin']           = 'p_ping';
         $this->info['title']            = 'ѕинг поисковых систем';
-        $this->info['description']      = 'ѕингует яндекс и √угл при добавлении статей и постов в блоги';
+        $this->info['description']      = 'ѕингует яндекс и √угл при добавлении статей, объ€влений и постов в блоги';
         $this->info['author']           = 'InstantCMS Team';
         $this->info['version']          = '1.0';
 
@@ -36,8 +36,9 @@ class p_ping extends cmsPlugin {
 
         // —обыти€, которые будут отлавливатьс€ плагином
 
-        $this->events[]                 = 'ADD_POST_DONE';
-        $this->events[]                 = 'ADD_ARTICLE_DONE';
+        $this->events[] = 'ADD_POST_DONE';
+        $this->events[] = 'ADD_ARTICLE_DONE';
+        $this->events[] = 'ADD_BOARD_DONE';
 
     }
 
@@ -77,7 +78,7 @@ class p_ping extends cmsPlugin {
 
         parent::execute();
 
-        $siteURL  = 'http://'.$_SERVER['HTTP_HOST'].'/';
+        $siteURL  = HOST.'/';
 
         switch ($event){
 
@@ -91,6 +92,12 @@ class p_ping extends cmsPlugin {
                 $pageURL = $siteURL . $item['seolink'] . '.html';
                 $feedURL = $siteURL . 'rss/content/all/feed.rss';
                 $this->ping($pageURL, $feedURL);
+
+            case 'ADD_BOARD_DONE':
+                $pageURL = $siteURL . 'board/read'.$item['id'].'.html';
+                $feedURL = $siteURL . 'rss/board/all/feed.rss';
+                $this->ping($pageURL, $feedURL);
+
             break;
 
         }
@@ -104,13 +111,14 @@ class p_ping extends cmsPlugin {
     private function ping($pageURL, $feedURL) {
 
         $inConf = cmsConfig::getInstance();
+		$inUser = cmsUser::getInstance();
 
         require(PATH.'/plugins/p_ping/IXR_Library.php');
 
-        $siteName = $inConf->sitename;
-        $siteURL  = 'http://'.$_SERVER['HTTP_HOST'].'/';
+        $siteName = @iconv('CP1251', 'UTF-8', $inConf->sitename);
+        $siteURL  = HOST.'/';
 
-        $result   = array();
+        $result   = '';
 
         //
         // яндекс.Ѕлоги
@@ -120,9 +128,11 @@ class p_ping extends cmsPlugin {
             $pingClient = new IXR_Client($this->config['Yandex HOST'], $this->config['Yandex PATH']);
 
             // ѕосылаем запрос
-            if ($pingClient->query('weblogUpdates.ping', $siteName, $siteURL, $pageURL)) {
-                $result[] = 'ќтправлен ping яндексу';
+            if ($pingClient->query('weblogUpdates.ping', $siteName, $siteURL, $pageURL, $feedURL)) {
+                $result .= 'ќтправлен ping яндексу, ';
             }
+			
+			unset($pingClient);
 
         }
 
@@ -135,12 +145,16 @@ class p_ping extends cmsPlugin {
 
             // ѕосылаем запрос
             if ($pingClient->query('weblogUpdates.extendedPing', $siteName, $siteURL, $pageURL, $feedURL)) {
-                $result[] = 'ќтправлен ping Google';
+                $result .= 'ќтправлен ping Google';
             }
+			
+			unset($pingClient);
 
         }
 
-        $_SESSION['ping_result'] = $result;
+		if($inUser->is_admin && $result){
+        	cmsCore::addSessionMessage($result, 'info');
+		}
 
         return;
 

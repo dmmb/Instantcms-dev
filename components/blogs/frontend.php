@@ -1064,12 +1064,6 @@ if($do=='post'){
         $smarty->assign('msg', $msg);
         $smarty->assign('nav', blogPostNav($model, $post['pubdate'], $blog['id'], $blog['seolink']));
         $smarty->assign('tag_bar', cmsTagBar('blogpost', $post['id']));
-        //если есть результаты пинга поисковиков, выводим их тоже
-        if ($_SESSION['ping_result']){
-            $ping_result = $_SESSION['ping_result'];
-            $smarty->assign('ping_result', $ping_result);
-            unset($_SESSION['ping_result']);
-        }
     $smarty->display('com_blog_view_post.tpl');
 
     //show user comments

@@ -388,6 +388,7 @@ if ($do=='additem'){
 						'description' => ''
 			));
 			cmsCore::addSessionMessage($_LANG['ADV_IS_ADDED'], 'success');
+			cmsCore::callEvent('ADD_BOARD_DONE', array('id'=>$item_id));
 			$inCore->redirect('/board/read'.$item_id.'.html');
 		}
 
