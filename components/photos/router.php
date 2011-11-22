@@ -19,12 +19,6 @@
                          );
 
         $routes[] = array(
-                            '_uri'  => '/^photos\/([0-9]+)\/byuser([0-9]+).html$/i',
-                            1       => 'id',
-                            2       => 'userid'
-                         );
-
-        $routes[] = array(
                             '_uri'  => '/^photos\/([0-9]+)\-([0-9]+)$/i',
                             1       => 'id',
                             2       => 'page'

@@ -72,6 +72,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$cfg['vip_max_days']   = $inCore->request('vip_max_days', 'int', 30);
 		$cfg['vip_day_cost']   = $inCore->request('vip_day_cost', 'str', 5);
 		$cfg['home_perpage']   = $inCore->request('home_perpage', 'int', 15);
+		$cfg['maxcols_on_home'] = $inCore->request('maxcols_on_home', 'int', 1);
 		$cfg['publish_after_edit'] = $inCore->request('publish_after_edit', 'int', 0);
 
         $cfg['vip_day_cost'] = str_replace(',', '.', trim($cfg['vip_day_cost']));
@@ -297,6 +298,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		if (!isset($cfg['vip_max_days'])) { $cfg['vip_max_days'] = 30; }
 		if (!isset($cfg['vip_day_cost'])) { $cfg['vip_day_cost'] = 5; }
 		if (!isset($cfg['home_perpage'])) { $cfg['home_perpage'] = 15; }
+		if (!isset($cfg['maxcols_on_home'])) { $cfg['maxcols_on_home'] = 1; }
 		if (!isset($cfg['publish_after_edit'])) { $cfg['publish_after_edit'] = 0; }
         
 		?>
@@ -345,6 +347,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                 <tr>
                     <td><strong>Количество объявлений на главной странице компонента: </strong></td>
                     <td width="250"><input name="home_perpage" type="text" id="home_perpage" size="5" value="<?php echo @$cfg['home_perpage'];?>"/> шт</td>
+                </tr>
+                <tr>
+                    <td><strong>Число колонок для вывода объявлений на главной странице компонента: </strong></td>
+                    <td width="250"><input name="maxcols_on_home" type="text" id="maxcols_on_home" size="5" value="<?php echo @$cfg['maxcols_on_home'];?>"/> шт</td>
                 </tr>
                 <tr>
                     <td><strong>Количество колонок для вывода списка рубрик: </strong></td>

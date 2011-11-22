@@ -197,21 +197,21 @@ if ($do=='search'){
 		$val = $inCore->request('name', 'str', '');
         $val = strtolower($val);
 		$s .= ' AND LOWER(u.nickname) LIKE \'%'.$val.'%\'';
-		$stext[] = $_LANG['NAME']." &mdash; ".$val;
+		$stext[] = $_LANG['NAME']." &mdash; ".htmlspecialchars($val);
 	}
 
     if ($_REQUEST['city']){
 		$val = $inCore->request('city', 'str', '');
         $val = strtolower($val);
 		$s .= ' AND LOWER(p.city) LIKE \''.$val.'%\'';
-		$stext[] = $_LANG['CITY']." &mdash; ".$val;
+		$stext[] = $_LANG['CITY']." &mdash; ".htmlspecialchars($val);
 	}
 
     if ($_REQUEST['hobby']){
 		$val = $inCore->request('hobby', 'str', '');
         $val = strtolower($val);        
 		$s .= ' AND (LOWER(p.description) LIKE \'%'.$val.'%\' OR LOWER(p.formsdata) LIKE \'%'.$val.'%\')';
-		$stext[] = $_LANG['HOBBY']." &mdash; ".$val;
+		$stext[] = $_LANG['HOBBY']." &mdash; ".htmlspecialchars($val);
 	}
 
 	$querysql = "SELECT		        
@@ -236,7 +236,7 @@ if ($do=='search'){
 	if (sizeof($stext)){
 		$querymsg .= '<ul>';
 			foreach($stext as $value){
-				$querymsg .= '<li>'.htmlspecialchars($value).';</li>';		
+				$querymsg .= '<li>'.$value.';</li>';		
 			}
 		$querymsg .= '</ul>';
 	}

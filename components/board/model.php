@@ -71,6 +71,7 @@ class cms_model_board{
                      'showlat'=>1,
                      'photos'=>1,
                      'maxcols'=>1,
+					 'maxcols_on_home'=>1,
                      'public'=>1,
 					 'home_perpage'=>15,
 					 'publish_after_edit'=>0,
@@ -180,6 +181,7 @@ class cms_model_board{
 		if($category_id == $this->root_cat['id']){
 			$category = $this->root_cat;
 			$category['perpage'] = $this->config['home_perpage'];
+			$category['maxcols'] = $this->config['maxcols_on_home'];
 		} else {
 	        $category = $this->inDB->get_fields('cms_board_cats', "id = '{$category_id}'", '*');
 		}
