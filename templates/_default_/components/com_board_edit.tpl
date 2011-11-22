@@ -113,7 +113,7 @@
                         <input type="hidden" id="vip_day_cost" name="vip_day_cost" value="{$cfg.vip_day_cost}" />
                         <input type="hidden" id="balance" name="balance" value="{$balance}" />
                         <div id="vip_cost" style="margin-top:10px;display: none">
-                            Стоимость: <span>20</span> баллов
+                            Стоимость: <span>0</span> баллов
                         </div>
 
                         <script type="text/javascript">
