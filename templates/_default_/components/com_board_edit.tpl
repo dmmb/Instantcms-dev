@@ -35,7 +35,7 @@
 				<input name="city_ed" class="text-input" type="text" id="city_ed" style="width:184px" value="{$item.city|escape:'html'}"/> {$LANG.OR_SELECTING} {$cities}
 			</td>
 		</tr>
-		<tr>
+		<tr id="before_form">
 			<td valign="top">
 				<span>{$LANG.TEXT_ADV}:</span>
 			</td>
@@ -45,7 +45,7 @@
 		</tr>
         {if $formsdata}
         	{foreach key=tid item=form from=$formsdata}
-            <tr>
+            <tr class="cat_form">
                 <td valign="top">
                     <span>{$form.title}:</span>
                 </td>
@@ -196,9 +196,24 @@
 				$("#obtype").attr("disabled", "");
 				$("#obtype").html(data);
 			});
+			{/literal}
+			{if $form_do == 'add' && !$cat.id}
+			{literal}
+			$.post("/components/board/ajax/get_form.php", {value: category_id}, function(data1) {
+				if(data1!=1){
+					$('.cat_form').remove();
+					$("#before_form").after(data1);
+				}else{
+					$('.cat_form').remove();
+				}
+			});
+			{/literal}
+			{/if}
+			{literal}
 		} else {
 			$("#obtype").html('<option value="0">-- {/literal}{$LANG.SELECT_CAT}{literal} --</option>');
 			$("#obtype").attr("disabled", "disabled");
+			$('.cat_form').remove();
 		}
 	}
 	$(document).ready(function() {
