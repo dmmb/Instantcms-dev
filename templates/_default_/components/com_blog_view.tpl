@@ -74,7 +74,7 @@
 		<table cellspacing="0" cellpadding="5">
 			<tr>
 				<td width="16"><img src="/components/blogs/images/record_add.gif" border="0"/></td>
-				<td width=""><a href="/blogs/{$blog.id}/newpost.html{if $cat_id>0}{$cat_id}{/if}">{$LANG.NEW_POST}</a></td>
+				<td width=""><a href="/blogs/{$blog.id}/newpost{if $cat_id>0}{$cat_id}{/if}.html">{$LANG.NEW_POST}</a></td>
 			</tr>
 		</table>
 	{/if}

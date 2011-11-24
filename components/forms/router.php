@@ -14,7 +14,7 @@
     function routes_forms(){
 
         $routes[] = array(
-                            '_uri'  => '/^forms\/process/i',
+                            '_uri'  => '/^forms\/process$/i',
                             'do'    => 'processform'
                          );
 
