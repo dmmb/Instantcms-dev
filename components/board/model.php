@@ -744,7 +744,7 @@ class cms_model_board{
 			return false;
 		}
 
-		$u_count = $this->inDB->rows_count('cms_board_items', "category_id = '$album_id' {$where} AND pubdate >= DATE_SUB(NOW(), INTERVAL 1 DAY)");
+		$u_count = $this->inDB->rows_count('cms_board_items', "category_id = '{$cat['id']}' {$where} AND pubdate >= DATE_SUB(NOW(), INTERVAL 1 DAY)");
 
 		if($u_count<=$cat['uplimit']) { return true; }
 
