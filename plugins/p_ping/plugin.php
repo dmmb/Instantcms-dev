@@ -113,7 +113,7 @@ class p_ping extends cmsPlugin {
         $inConf = cmsConfig::getInstance();
 		$inUser = cmsUser::getInstance();
 
-        require(PATH.'/plugins/p_ping/IXR_Library.php');
+        require_once(PATH.'/plugins/p_ping/IXR_Library.php');
 
         $siteName = @iconv('CP1251', 'UTF-8', $inConf->sitename);
         $siteURL  = HOST.'/';

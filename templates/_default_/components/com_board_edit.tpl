@@ -199,10 +199,10 @@
 			{/literal}
 			{if $form_do == 'add' && !$cat.id}
 			{literal}
-			$.post("/components/board/ajax/get_form.php", {value: category_id}, function(data1) {
-				if(data1!=1){
+			$.post("/components/board/ajax/get_form.php", {value: category_id}, function(dataform) {
+				if(dataform!=1){
 					$('.cat_form').remove();
-					$("#before_form").after(data1);
+					$("#before_form").after(dataform);
 				}else{
 					$('.cat_form').remove();
 				}
@@ -218,6 +218,7 @@
 	}
 	$(document).ready(function() {
 		$('#title').focus();
+		$('#from_search').hide();
 		getRubric();
 	});
 </script>

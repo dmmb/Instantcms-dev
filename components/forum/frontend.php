@@ -1011,6 +1011,8 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 							WHERE id = '$id'";
 					$inDB->query($sql) ;
 					$inCore->registerUploadImages(session_id(), $id, 'forum');
+					$message = $inCore->parseSmiles($message, true);
+					$message = substr(strip_tags($message), 0, 100);
 					cmsActions::updateLog('add_fpost', array('description' => $message), $id);
 					if ($pages==1){
 						$inCore->redirect('/forum/thread'.$msg['thread_id'].'.html#'.$id);

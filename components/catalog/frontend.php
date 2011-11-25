@@ -549,7 +549,7 @@ function catalog(){
             if ($itemscount>0){
 
                 //pagination
-                if (!@$advsearch) { $perpage = $cat['perpage']; } else { $perpage='1000'; }
+                if (!@$advsearch) { $perpage = $cat['perpage']; } else { $perpage='100'; }
                 $page = $inCore->request('page', 'int', 1);
 
                 //request items using pagination
@@ -626,11 +626,11 @@ function catalog(){
                 } else {
 
                     if ($pagemode=='findfirst'){
-                        $pagebar = cmsPage::getPagebar($itemscount, $page, $perpage, '/catalog/'.$id.'-%page%/find-first/'.urlencode($query));
+                        $pagebar = cmsPage::getPagebar($itemscount, $page, $perpage, '/catalog/'.$id.'-%page%/find-first/'.urlencode(urlencode($query)));
                     }
 
                     if ($pagemode=='find'){
-                        $pagebar = cmsPage::getPagebar($itemscount, $page, $perpage, '/catalog/'.$id.'-%page%/find/'.urlencode($query));
+                        $pagebar = cmsPage::getPagebar($itemscount, $page, $perpage, '/catalog/'.$id.'-%page%/find/'.urlencode(urlencode($query)));
                     }
 
                 }

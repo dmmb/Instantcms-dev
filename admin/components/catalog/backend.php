@@ -197,7 +197,8 @@ function cpPriceInput($id){
                         }
                     }                    
 
-                    $fields = serialize($fields);
+                    $fields = $inDB->escape_string(serialize($fields));
+					$title  = $inDB->escape_string($title);
 
                     if ($title && $fields){
                         $sql = "INSERT INTO cms_uc_items (category_id, title, pubdate, published, imageurl, fieldsdata, is_comments, tags, rating, meta_desc, meta_keys, price, canmany)
