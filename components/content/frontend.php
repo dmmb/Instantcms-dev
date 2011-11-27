@@ -469,6 +469,14 @@ if ($do=='addarticle' || $do=='editarticle'){
 
 		if($errors) { $inCore->redirectBack(); }
 
+		// добавление статьи
+        if ($do=='addarticle'){
+
+            $article['id'] = $model->addArticle($article);
+
+            $id = $article['id'];
+		}
+
 		// загрузка фото
 		$file = 'article'.$id.'.jpg';
 
@@ -498,10 +506,6 @@ if ($do=='addarticle' || $do=='editarticle'){
 
 		// добавление статьи
         if ($do=='addarticle'){
-
-            $article['id'] = $model->addArticle($article);
-
-            $id = $article['id'];
 
             //autoforum
             if ($cfg['af_on'] && $category_id != $cfg['af_hidecat_id'] && $article['published']){
