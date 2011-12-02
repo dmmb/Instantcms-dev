@@ -42,6 +42,9 @@
 
     date_default_timezone_set($inConf->timezone);
 
+	$domain = str_replace('http://', '', HOST);
+	if(!strstr($_SERVER['HTTP_REFERER'], $domain)) { $inCore->redirect('/404'); }
+
     if ( !$inUser->update() ) { $inCore->redirect('/404'); }
 
 	// проверяем доступ по Ip
