@@ -43,9 +43,9 @@
     date_default_timezone_set($inConf->timezone);
 
 	$domain = str_replace('http://', '', HOST);
-	if(!strstr($_SERVER['HTTP_REFERER'], $domain)) { $inCore->redirect('/404'); }
+	if(!strstr($_SERVER['HTTP_REFERER'], $domain)) { cmsCore::error404(); }
 
-    if ( !$inUser->update() ) { $inCore->redirect('/404'); }
+    if ( !$inUser->update() ) { cmsCore::error404(); }
 
 	// проверяем доступ по Ip
 	if(!$inCore->checkAccessByIp($inConf->allow_ip)) { cmsCore::error404(); }

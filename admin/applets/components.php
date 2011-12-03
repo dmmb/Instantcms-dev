@@ -136,6 +136,16 @@ function applet_components(){
                         echo '</ul>';
                     }
                 }
+                if (isset($_component['plugins'])){
+                    if(is_array($_component['plugins'])){
+                        echo '<p>ƒополнительно установлены плагины:</p>';
+                        echo '<ul>';
+                            foreach($_component['plugins'] as $module=>$title){
+                                echo '<li>'.$title.'</li>';
+                            }
+                        echo '</ul>';
+                    }
+                }
                 echo '</div>';
             }
 
