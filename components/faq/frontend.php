@@ -202,7 +202,7 @@ if ($do=='sendquest'){
 		$smarty = $inCore->initSmarty('components', 'com_faq_add.tpl');			
 		$smarty->assign('catslist', $inCore->getListItems('cms_faq_cats', $category_id));
 		$smarty->assign('user_id', $inUser->id);
-		$smarty->assign('message', $_REQUEST['message']);
+		$smarty->assign('message', htmlspecialchars($inCore->request('message', 'html', '')));
 		$smarty->assign('error', $error);
 		$smarty->display('com_faq_add.tpl');
 

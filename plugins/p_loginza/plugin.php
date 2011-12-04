@@ -25,7 +25,7 @@ class p_loginza extends cmsPlugin {
         $this->info['title']            = 'Àâòîğèçàöèÿ Loginza';
         $this->info['description']      = 'Ïîçâîëÿåò ïîñåòèòåëÿì àâòîğèçîâàòüñÿ íà ñàéòå, èñïîëüçóÿ àêêàóíòû ïîïóëÿğíûõ ñîöèàëüíûõ ñåòåé';
         $this->info['author']           = 'InstantCMS Team';
-        $this->info['version']          = '1.0';
+        $this->info['version']          = '1.9';
 
         // Íàñòğîéêè ïî-óìîë÷àíèş
 
@@ -173,6 +173,7 @@ class p_loginza extends cmsPlugin {
 
         $inCore = cmsCore::getInstance();
         $inDB   = cmsDatabase::getInstance();
+		$inCore->loadClass('actions');
 
         if ($profile->name->full_name){
 
@@ -277,6 +278,17 @@ class p_loginza extends cmsPlugin {
 
             $user_array['id'] = $user_id;
             cmsCore::callEvent('USER_REGISTER', $user_array);
+
+			cmsActions::log('add_user', array(
+				'object' => '',
+				'user_id' => $user_id,
+				'object_url' => '',
+				'object_id' => $user_id,
+				'target' => '',
+				'target_url' => '',
+				'target_id' => 0,
+				'description' => ''
+			));
 
             return $user_id;
 

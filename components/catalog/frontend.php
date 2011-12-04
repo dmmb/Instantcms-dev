@@ -398,7 +398,8 @@ function catalog(){
 
         $id = $inCore->request('cat_id', 'int');
 
-        $query = urldecode($inCore->request('text', 'str'));
+        $query = urldecode($inCore->request('text', 'html'));
+		$query = $inCore->strClear($query);
         $query = str_replace("'", '?', $query);
         $query = str_replace("{", '?', $query);
         $query = str_replace("}", '?', $query);
@@ -421,7 +422,8 @@ function catalog(){
     if ($do == 'find') {
         $id = $inCore->request('cat_id', 'int');
 
-        $query = urldecode(urldecode($inCore->request('text', 'str')));
+        $query = urldecode(urldecode($inCore->request('text', 'html')));
+		$query = $inCore->strClear($query);
         $query = str_replace("{", '?', $query);
         $query = str_replace("}", '?', $query);
         $query = str_replace(":", '?', $query);

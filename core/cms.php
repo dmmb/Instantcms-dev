@@ -3333,7 +3333,7 @@ class cmsCore {
 
         $message = wordwrap($message, 70);
 
-		if ($content="text/html") {
+		if ($content=="text/html") {
 			$this->sendMail($inConf->sitemail, $inConf->sitename, $email, $subject, $message, 1);
 		} else {
 			$this->sendMail($inConf->sitemail, $inConf->sitename, $email, $subject, $message);
