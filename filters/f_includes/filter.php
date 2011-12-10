@@ -13,7 +13,8 @@
 
 	function getLink($file){		
 		trim($file);
-		$file = preg_replace('/\.+\//', '', $file); 
+		$file = preg_replace ('/[^a-zA-Z0-9\-_\.]/i', '', $file);
+		$file = str_replace ('..', '.', $file);
 		$filefull = PATH.'/includes/myphp/'.$file;
 		
 		if (file_exists($filefull)){
