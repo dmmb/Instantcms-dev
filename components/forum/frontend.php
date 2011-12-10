@@ -541,7 +541,7 @@ if ($do=='thread'){
 			echo '<tr class="posts_table_tr">';
 				//user column
 				echo '<td class="post_usercell" width="140" align="center" valign="top" height="150">';
-					echo '<div><a class="post_userlink" href="javascript:addNickname(\''.$p['author'].'\');" title="'.$_LANG['ADD_NICKNAME'].'"/>'.$p['author'].'</a></div>';
+					echo '<div><a class="post_userlink" href="javascript:addNickname(\''.htmlspecialchars($p['author']).'\');" title="'.$_LANG['ADD_NICKNAME'].'"/>'.$p['author'].'</a></div>';
 												
 					echo '<div class="post_userrank">'.$model->getForumUserRank($p['uid'], $user_messages, $cfg['ranks'], $cfg['modrank']).'</div>';
 				
