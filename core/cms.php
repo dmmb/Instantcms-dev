@@ -76,6 +76,8 @@ class cmsCore {
         //загрузим все события плагинов в память
         $this->plugins = $this->getAllPlugins();
 
+		mb_internal_encoding("UTF-8");
+
     }
 
     private function __clone() {}  

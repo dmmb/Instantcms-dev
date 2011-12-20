@@ -158,7 +158,7 @@ class cms_model_search{
 		// убираем пробелы по краям
 		$query  = trim($query);
 		// убираем двойные пробелы
-		$query  = preg_replace('/\s+/', ' ', $query);
+		$query  = preg_replace('/\s+/u', ' ', $query);
 		// ограничиваем строку запроса 64 символами
 		$query  = mb_substr($query, 0, 64);
 
@@ -424,18 +424,20 @@ class cms_model_search{
 
 		if (!cmsUser::sessionGet('searchquery')){ return $text; }
 
+		$text = mb_strtolower($text);
+
 		if ($this->look == 'phrase'){
-			$text = str_ireplace(cmsUser::sessionGet('searchquery'), '<strong class="search_match">'.cmsUser::sessionGet('searchquery').'</strong>', $text);
+			$text = str_replace(cmsUser::sessionGet('searchquery'), '<strong class="search_match">'.cmsUser::sessionGet('searchquery').'</strong>', $text);
 		} elseif($this->look == 'allwords') {
-			$text = str_ireplace(cmsUser::sessionGet('searchquery'), '<strong class="search_match">'.cmsUser::sessionGet('searchquery').'</strong>', $text);
+			$text = str_replace(cmsUser::sessionGet('searchquery'), '<strong class="search_match">'.cmsUser::sessionGet('searchquery').'</strong>', $text);
 			$words = explode(' ', cmsUser::sessionGet('searchquery'));
 			foreach($words as $w){
-				$text = str_ireplace($w, '<strong class="search_match">'.$w.'</strong>', $text);
+				$text = str_replace($w, '<strong class="search_match">'.$w.'</strong>', $text);
 			}
 		} else {
 			$words = explode(' ', cmsUser::sessionGet('searchquery'));
 			foreach($words as $w){
-				$text = str_ireplace($w, '<strong class="search_match">'.$w.'</strong>', $text);
+				$text = str_replace($w, '<strong class="search_match">'.$w.'</strong>', $text);
 			}
 		}
 
@@ -464,7 +466,7 @@ class cms_model_search{
 
 		$result_array = array();
 		foreach($words_array as $w){
-			$result_array = preg_grep('/'.$w.'/i', $text_array);
+			$result_array = preg_grep('/'.$w.'/iu', $text_array);
 			if($result_array) { break; }
 		}
 
