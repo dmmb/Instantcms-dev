@@ -74,7 +74,7 @@ function mod_uc_popular($module_id){
 			$is_uc = true;
 			if ($cfg['showtype']=='thumb'){
 					while($item = $inDB->fetch_assoc($result)){
-						if (strlen($item['imageurl'])<4) {
+						if (mb_strlen($item['imageurl'])<4) {
 							$item['imageurl'] = 'nopic';
 						} elseif (!file_exists(PATH.'/images/catalog/small/'.$item['imageurl'].'.jpg')) {
 							$item['imageurl'] = 'nopic';

@@ -101,7 +101,7 @@
 		foreach ($matches as $elm) {	
 			$elm[0] = str_replace('{', '', $elm[0]);
 			$elm[0] = str_replace('}', '', $elm[0]);			
-			parse_str( $elm[0], $args );
+			mb_parse_str( $elm[0], $args );
 			$category=@$args['ПРАЙС'];	
 			if ($category){		
 				$output = PriceLink($category);			
@@ -116,7 +116,7 @@
 		foreach ($matches as $elm) {	
 			$elm[0] = str_replace('{', '', $elm[0]);
 			$elm[0] = str_replace('}', '', $elm[0]);			
-			parse_str( $elm[0], $args );
+			mb_parse_str( $elm[0], $args );
 			$photo=@$args['ФОТО'];		
 			if ($photo){		
 				$output = PhotoLink($photo);			
@@ -131,7 +131,7 @@
 		foreach ($matches as $elm) {	
 			$elm[0] = str_replace('{', '', $elm[0]);
 			$elm[0] = str_replace('}', '', $elm[0]);			
-			parse_str( $elm[0], $args );
+			mb_parse_str( $elm[0], $args );
 			$album=@$args['АЛЬБОМ'];		
 			if ($album){		
 				$output = AlbumLink($album);			
@@ -146,7 +146,7 @@
 		foreach ($matches as $elm) {	
 			$elm[0] = str_replace('{', '', $elm[0]);
 			$elm[0] = str_replace('}', '', $elm[0]);			
-			parse_str( $elm[0], $args );
+			mb_parse_str( $elm[0], $args );
 			$content=@$args['МАТЕРИАЛ'];		
 			if ($content){		
 				$output = ContentLink($content);			
@@ -161,7 +161,7 @@
 		foreach ($matches as $elm) {	
 			$elm[0] = str_replace('{', '', $elm[0]);
 			$elm[0] = str_replace('}', '', $elm[0]);			
-			parse_str( $elm[0], $args );
+			mb_parse_str( $elm[0], $args );
 			$content=@$args['ФОРМА'];		
 			if ($content){		
 				$output = insertForm($content, true);			
@@ -176,7 +176,7 @@
 		foreach ($matches as $elm) {	
 			$elm[0] = str_replace('{', '', $elm[0]);
 			$elm[0] = str_replace('}', '', $elm[0]);			
-			parse_str( $elm[0], $args );
+			mb_parse_str( $elm[0], $args );
 			$content=@$args['БЛАНК'];		
 			if ($content){		
 				$output = insertForm($content, false);			

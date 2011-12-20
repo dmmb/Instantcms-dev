@@ -46,8 +46,8 @@ function mod_latest_faq($module_id){
 			
 			while($con = $inDB->fetch_assoc($result)){
 				$next = sizeof($faq);
-				if(strlen($con['quest'])>$cfg['maxlen']){
-					$con['quest'] = substr($con['quest'], 0, $cfg['maxlen']) . '...';
+				if(mb_strlen($con['quest'])>$cfg['maxlen']){
+					$con['quest'] = mb_substr($con['quest'], 0, $cfg['maxlen']) . '...';
 				}
 				$faq[$next]['quest'] = $con['quest'];
 				$faq[$next]['date']  = $inCore->dateformat($con['pubdate']);

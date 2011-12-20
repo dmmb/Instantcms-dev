@@ -47,19 +47,19 @@ function FCKeditor_IsCompatibleBrowser()
 		}
 	}
 
-	if ( strpos($sAgent, 'MSIE') !== false && strpos($sAgent, 'mac') === false && strpos($sAgent, 'Opera') === false )
+	if ( mb_strpos($sAgent, 'MSIE') !== false && mb_strpos($sAgent, 'mac') === false && mb_strpos($sAgent, 'Opera') === false )
 	{
-		$iVersion = (float)substr($sAgent, strpos($sAgent, 'MSIE') + 5, 3) ;
+		$iVersion = (float)mb_substr($sAgent, mb_strpos($sAgent, 'MSIE') + 5, 3) ;
 		return ($iVersion >= 5.5) ;
 	}
-	else if ( strpos($sAgent, 'Gecko/') !== false )
+	else if ( mb_strpos($sAgent, 'Gecko/') !== false )
 	{
-		$iVersion = (int)substr($sAgent, strpos($sAgent, 'Gecko/') + 6, 8) ;
+		$iVersion = (int)mb_substr($sAgent, mb_strpos($sAgent, 'Gecko/') + 6, 8) ;
 		return ($iVersion >= 20030210) ;
 	}
-	else if ( strpos($sAgent, 'Opera/') !== false )
+	else if ( mb_strpos($sAgent, 'Opera/') !== false )
 	{
-		$fVersion = (float)substr($sAgent, strpos($sAgent, 'Opera/') + 6, 4) ;
+		$fVersion = (float)mb_substr($sAgent, mb_strpos($sAgent, 'Opera/') + 6, 4) ;
 		return ($fVersion >= 9.5) ;
 	}
 	else if ( preg_match( "|AppleWebKit/(\d+)|i", $sAgent, $matches ) )
@@ -182,12 +182,12 @@ class FCKeditor
 		}
 		else
 		{
-			if ( strpos( $this->Width, '%' ) === false )
+			if ( mb_strpos( $this->Width, '%' ) === false )
 				$WidthCSS = $this->Width . 'px' ;
 			else
 				$WidthCSS = $this->Width ;
 
-			if ( strpos( $this->Height, '%' ) === false )
+			if ( mb_strpos( $this->Height, '%' ) === false )
 				$HeightCSS = $this->Height . 'px' ;
 			else
 				$HeightCSS = $this->Height ;

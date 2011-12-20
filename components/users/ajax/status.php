@@ -11,6 +11,9 @@
 //                                                                            //
 /******************************************************************************/
 
+    setlocale(LC_ALL, 'ru_RU.UTF-8');
+    header('Content-Type: text/html; charset=utf-8');
+
     session_start();
 
 	define("VALID_CMS", 1);
@@ -41,8 +44,7 @@
 
     if ($user_id != $inUser->id && !$inUser->is_admin) { return; }
 
-    $status = @iconv('UTF-8', 'CP1251', $status);
-    if (strlen($status)>140){ $status = substr($status, 0, 140); }
+    if (mb_strlen($status)>140){ $status = mb_substr($status, 0, 140); }
 
     $sql = "UPDATE cms_users
             SET status = '{$status}', status_date = NOW()

@@ -317,7 +317,7 @@ function cpPriceInput($id){
 			$file = $_FILES["imgfile"]["name"];			
 			$path_parts = pathinfo($file);
 			$ext = $path_parts['extension'];
-			if(strstr($ext, 'php')) { die(); }
+			if(mb_strstr($ext, 'php')) { die(); }
 			$file = md5($file.time()).'.'.$ext;
             $item['file'] = $file;
 			//upload image and insert record in db		
@@ -405,7 +405,7 @@ function cpPriceInput($id){
                 $file               = $_FILES["imgfile"]["name"];
                 $path_parts         = pathinfo($file);
                 $ext                = $path_parts['extension'];
-				if(strstr($ext, 'php')) { die(); }
+				if(mb_strstr($ext, 'php')) { die(); }
                 $file               = md5($file.time()).'.'.$ext;
                 
                 $item['imageurl']   = $file;
@@ -950,10 +950,10 @@ function cpPriceInput($id){
                         <?php
 
                         foreach($fstruct as $key=>$value) {
-                            if (strstr($value, '/~h~/')) { $ftype = 'html'; $value=str_replace('/~h~/', '', $value); }
-                            elseif (strstr($value, '/~l~/')) { $ftype = 'link'; $value=str_replace('/~l~/', '', $value); } else { $ftype='text'; }
+                            if (mb_strstr($value, '/~h~/')) { $ftype = 'html'; $value=str_replace('/~h~/', '', $value); }
+                            elseif (mb_strstr($value, '/~l~/')) { $ftype = 'link'; $value=str_replace('/~l~/', '', $value); } else { $ftype='text'; }
 
-                            if (strstr($value, '/~m~/')) { $makelink = true; $value=str_replace('/~m~/', '', $value); }
+                            if (mb_strstr($value, '/~m~/')) { $makelink = true; $value=str_replace('/~m~/', '', $value); }
                             else { $makelink = false; }
 
                         ?>
@@ -1174,11 +1174,11 @@ function cpPriceInput($id){
                             <?php for($f=0; $f<10; $f++) { ?>
                                 <?php
                                     if(@$fstruct[$f]) {
-                                        if (strstr($fstruct[$f], '/~h~/')) {
+                                        if (mb_strstr($fstruct[$f], '/~h~/')) {
                                             $ftype = 'html';  $fstruct[$f] = str_replace('/~h~/', '', $fstruct[$f]);
-                                        } elseif(strstr($fstruct[$f], '/~l~/')) { $ftype = 'link';  $fstruct[$f] = str_replace('/~l~/', '', $fstruct[$f]);} else { $ftype = 'text'; }
+                                        } elseif(mb_strstr($fstruct[$f], '/~l~/')) { $ftype = 'link';  $fstruct[$f] = str_replace('/~l~/', '', $fstruct[$f]);} else { $ftype = 'text'; }
 
-                                        if (strstr($fstruct[$f], '/~m~/')) {
+                                        if (mb_strstr($fstruct[$f], '/~m~/')) {
                                             $makelink = true;  $fstruct[$f] = str_replace('/~m~/', '', $fstruct[$f]);
                                         } else { $makelink = false; }
                                     }
@@ -1701,7 +1701,7 @@ function cpPriceInput($id){
                     </td>
                     <td>
                         <select name="charset" style="width:300px">
-                            <option value="cp1251" selected>windows-1251 (MS Office)</option>
+                            <option value="cp1251" selected>utf-8 (MS Office)</option>
                             <option value="UTF-8">utf-8 (OpenOffice)</option>
                         </select>
                     </td>
@@ -1737,9 +1737,9 @@ function cpPriceInput($id){
             $current = 0;
             foreach($fstruct as $key=>$value) {
                 //strip special markups
-                if (strstr($value, '/~h~/')) { $value=str_replace('/~h~/', '', $value); }
-                elseif (strstr($value, '/~l~/')) { $value=str_replace('/~l~/', '', $value); } else { $ftype='text'; }
-                if (strstr($value, '/~m~/')) { $value=str_replace('/~m~/', '', $value); }
+                if (mb_strstr($value, '/~h~/')) { $value=str_replace('/~h~/', '', $value); }
+                elseif (mb_strstr($value, '/~l~/')) { $value=str_replace('/~l~/', '', $value); } else { $ftype='text'; }
+                if (mb_strstr($value, '/~m~/')) { $value=str_replace('/~m~/', '', $value); }
                 //show field inputs
                 ?>                
                     <tr id="row_<?php echo $current; ?>">

@@ -13,7 +13,7 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-define('CORE_VERSION', 		'1.9');
+define('CORE_VERSION', 		'1.9.1');
 define('CORE_BUILD', 		'1');
 define('CORE_VERSION_DATE', '2011-11-21');
 define('CORE_BUILD_DATE', 	'2011-11-21');
@@ -99,7 +99,7 @@ class cmsCore {
 
         $IDN = new idna_convert();
 
-        $host = iconv('utf-8', 'cp1251', $IDN->decode($_SERVER['HTTP_HOST']));
+        $host = $IDN->decode($_SERVER['HTTP_HOST']);
 
         return $host;
 
@@ -1474,8 +1474,8 @@ class cmsCore {
 
         $user_id    = $inUser->id;
 
-        if (strstr(strtolower($useragent), 'select')) { return false; }
-        if (strstr(strtolower($useragent), 'from'))   { return false; }
+        if (mb_strstr(mb_strtolower($useragent), 'select')) { return false; }
+        if (mb_strstr(mb_strtolower($useragent), 'from'))   { return false; }
 
         //проверяем, есть ли текущий пользователь в таблице "кто онлайн"
 		$online = $inDB->get_field('cms_online', "sess_id = '$sess_id' AND ip = '$ip'", 'id');
@@ -1483,7 +1483,7 @@ class cmsCore {
         if (!$online){
             //Проверяем, пользователь это или поисковый бот
             $crawler = false;
-            foreach($bots as $bot=>$uagent){ if (strpos($useragent, $uagent)) { $crawler = true; break; }	}
+            foreach($bots as $bot=>$uagent){ if (mb_strpos($useragent, $uagent)) { $crawler = true; break; }	}
             //Если не бот, вставляем запись в "кто онлайн"
             if (!$crawler){
                 $sql = "INSERT INTO cms_online (ip, sess_id, lastdate, user_id, agent, viewurl) VALUES ('$ip', '$sess_id', NOW(), '$user_id', '$useragent', '$page')";
@@ -1528,16 +1528,16 @@ class cmsCore {
 
         $folder = rtrim($uri, '/');
 
-        if (strstr($uri, "?") && !preg_match('/^admin\/(.*)/i', $uri) && !strstr($uri, 'go/url=')){
-            $query_str = substr($uri, strpos($uri, "?")+1);
-            $uri = substr($uri, 0, strpos($uri, "?"));
-            parse_str($query_str, $_REQUEST);
+        if (mb_strstr($uri, "?") && !preg_match('/^admin\/(.*)/i', $uri) && !mb_strstr($uri, 'go/url=')){
+            $query_str = mb_substr($uri, mb_strpos($uri, "?")+1);
+            $uri = mb_substr($uri, 0, mb_strpos($uri, "?"));
+            mb_parse_str($query_str, $_REQUEST);
         }
 
         if (in_array($folder, array('admin', 'install', 'migrate', 'index.php'))) { return; }
 
         //специальный хак для поиска по сайту, для совместимости со старыми шаблонами
-        if (strstr($_SERVER['QUERY_STRING'], 'view=search')){ $uri = 'search'; }
+        if (mb_strstr($_SERVER['QUERY_STRING'], 'view=search')){ $uri = 'search'; }
 
         if(file_exists(PATH.'/url_rewrite.php')) {
             //подключаем список rewrite-правил
@@ -1571,7 +1571,7 @@ class cmsCore {
                     //чтобы сохранить параметры из $uri в новом адресе
                     foreach($matches as $key=>$value){
                         if (!$key) { continue; }
-                        if (strstr($rule['target'], '{'.$key.'}')){
+                        if (mb_strstr($rule['target'], '{'.$key.'}')){
                             $rule['target'] = str_replace('{'.$key.'}', $value, $rule['target']);
                         }
                     }
@@ -1617,11 +1617,11 @@ class cmsCore {
         if (!$this->uri && $inConf->homecom) { return $inConf->homecom; }
 
         //определяем, есть ли слэши в адресе
-        $first_slash_pos = strpos($this->uri, '/');
+        $first_slash_pos = mb_strpos($this->uri, '/');
 
         if ($first_slash_pos){
             //если есть слэши, то компонент это сегмент до первого слэша
-            $component  = substr($this->uri, 0, $first_slash_pos);
+            $component  = mb_substr($this->uri, 0, $first_slash_pos);
         } else {
             //если слэшей нет, то компонент совпадает с адресом
             $component  = $this->uri;            
@@ -1832,7 +1832,7 @@ class cmsCore {
         $params['min_3words_length'] = 5;  //minimum length of words for 3 word phrases
         $params['min_3words_phrase_length'] = 10; //minimum length of 3 word phrases
         $params['min_3words_phrase_occur'] = 2; //minimum occur of 3 words phrase
-        $keyword = new autokeyword($params, "cp1251");
+        $keyword = new autokeyword($params, "UTF-8");
         return $keyword->get_keywords();
     }
 
@@ -2241,7 +2241,7 @@ class cmsCore {
         $ext = $path_parts['extension'];
         $icon = '';
         foreach($ftypes as $key=>$value){
-            if (strstr($ftypes[$key]['ext'], $ext)) { $icon = $ftypes[$key]['icon']; break; }
+            if (mb_strstr($ftypes[$key]['ext'], $ext)) { $icon = $ftypes[$key]['icon']; break; }
         }
 
         if ($icon == '') { $icon = $standart_icon; }
@@ -2352,7 +2352,7 @@ class cmsCore {
         $view       = $this->request('view', 'str', '');
         
         if ($this->is_content){
-            $uri = substr($this->uri, strlen('content/'));
+            $uri = mb_substr($this->uri, mb_strlen('content/'));
         } else {
             $uri = $this->uri;
         }
@@ -2389,7 +2389,7 @@ class cmsCore {
             }
 
             //частичное совпадение ссылки и адреса (по началу строки)?
-            $uri_first_part = substr($uri, 0, strlen($item['link']));
+            $uri_first_part = mb_substr($uri, 0, mb_strlen($item['link']));
             if ($uri_first_part == $item['link']){
                 $menuid = $item['id'];
                 break;
@@ -3353,7 +3353,7 @@ class cmsCore {
 
         $mail->PluginDir = PATH . '/includes/phpmailer/';
         $mail->SetLanguage( 'en', PATH . '/includes/phpmailer/language/' );
-        $mail->CharSet     = 'windows-1251';
+        $mail->CharSet     = 'utf-8';
         $mail->IsMail();
         $mail->From     = $from ? $from : $inConf->sitemail;
         $mail->FromName = $fromname ? $fromname : $inConf->sitename;
@@ -3686,12 +3686,12 @@ class cmsCore {
     static public function strToURL($str){
 
         $str    = trim($str);        
-        $str    = mb_strtolower($str, 'cp1251');
+        $str    = mb_strtolower($str);
         $str    = str_replace(' ', '-', $str);
         $string = preg_replace ('/[^a-zA-Zа-яёА-ЯЁ0-9\-]/i', '-', $str);
         $string = rtrim($string, '-');
 
-        while(strstr($string, '--')){ $string = str_replace('--', '-', $string); }
+        while(mb_strstr($string, '--')){ $string = str_replace('--', '-', $string); }
 
         $ru_en = array(
                         'а'=>'a','б'=>'b','в'=>'v','г'=>'g','д'=>'d',

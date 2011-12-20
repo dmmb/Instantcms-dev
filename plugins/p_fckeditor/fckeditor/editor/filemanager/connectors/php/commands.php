@@ -124,7 +124,7 @@ function CreateFolder( $resourceType, $currentFolder )
 		$sNewFolderName = $_GET['NewFolderName'] ;
 		$sNewFolderName = SanitizeFolderName( $sNewFolderName ) ;
 
-		if ( strpos( $sNewFolderName, '..' ) !== FALSE )
+		if ( mb_strpos( $sNewFolderName, '..' ) !== FALSE )
 			$sErrorNumber = '102' ;		// Invalid folder name.
 		else
 		{
@@ -186,8 +186,8 @@ function FileUpload( $resourceType, $currentFolder, $sCommand )
 		$sOriginalFileName = $sFileName ;
 
 		// Get the extension.
-		$sExtension = substr( $sFileName, ( strrpos($sFileName, '.') + 1 ) ) ;
-		$sExtension = strtolower( $sExtension ) ;
+		$sExtension = mb_substr( $sFileName, ( mb_strrpos($sFileName, '.') + 1 ) ) ;
+		$sExtension = mb_strtolower( $sExtension ) ;
 
 		if ( isset( $Config['SecureImageUploads'] ) )
 		{

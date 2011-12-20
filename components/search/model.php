@@ -150,17 +150,17 @@ class cms_model_search{
 		// получаем саму строку запроса из GET
 		$query  = $inCore->request('query', 'str', '');
 		// приводим ее в нижний регистр
-		$query  = strtolower($query);
+		$query  = mb_strtolower($query);
 		// декодируем строку с URL
 		$query  = urldecode($query);
 		// оставляем только нужные символы
-		$query  = preg_replace('/[^a-zA-Zа-яёіїєґА-ЯЁІЇЄҐ0-9\.\,\s\-_]/i', '', $query);
+		$query  = preg_replace('/[^a-zA-Zа-яёіїєґА-ЯЁІЇЄҐ0-9\.\,\s\-_]/ui', '', $query);
 		// убираем пробелы по краям
 		$query  = trim($query);
 		// убираем двойные пробелы
 		$query  = preg_replace('/\s+/', ' ', $query);
 		// ограничиваем строку запроса 64 символами
-		$query  = substr($query, 0, 64);
+		$query  = mb_substr($query, 0, 64);
 
 		return $query;
 
@@ -597,8 +597,8 @@ class cms_model_search{
 		if ($this->look == 'anyword'){
 			foreach($words as $w){
 				$w = trim($w); 
-				if(strlen($w)>3){
-					if(strlen($w)==4){
+				if(mb_strlen($w)>3){
+					if(mb_strlen($w)==4){
 						$this->against .= $w.'* ';
 						$this->words   .= $w.' ';
 					} else {
@@ -615,8 +615,8 @@ class cms_model_search{
 			$this->against .= '<(';
 			foreach($words as $w){
 				$w = trim($w); 
-				if(strlen($w)>3){
-					if(strlen($w)==4){
+				if(mb_strlen($w)>3){
+					if(mb_strlen($w)==4){
 						$this->against .= '+'.$w.'* ';
 						$this->words   .= $w.' ';
 					} else {

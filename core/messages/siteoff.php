@@ -1,7 +1,7 @@
 <?php if(!defined('VALID_CMS')) { die('ACCESS DENIED'); } $inConf     = cmsConfig::getInstance(); ?>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="refresh" content="20;URL=/">
 <title>Сайт временно недоступен</title>
 <style>

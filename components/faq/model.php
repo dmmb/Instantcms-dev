@@ -39,7 +39,7 @@ class cms_model_faq{
             case 'faq': $item               = $this->inDB->get_fields('cms_faq_quests', "id={$target_id}", 'quest');
                         if (!$item) { return false; }
                         $result['link']     = '/faq/quest'.$target_id.'.html';
-                        $result['title']    = (strlen($item['quest'])<100 ? $item['quest'] : substr($item['quest'], 0, 100).'...');
+                        $result['title']    = (mb_strlen($item['quest'])<100 ? $item['quest'] : mb_substr($item['quest'], 0, 100).'...');
                         break;
 
         }

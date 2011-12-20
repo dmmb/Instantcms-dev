@@ -1,6 +1,6 @@
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Ошибка авторизации</title>
         <meta http-equiv="refresh" content="5;URL=/">
         <style type="text/css">

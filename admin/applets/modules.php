@@ -123,7 +123,7 @@ function applet_modules(){
 
             $name       = (string)$param['name'];
             $type       = (string)$param['type'];
-            $default    = iconv('utf-8', 'cp1251', (string)$param['default']);
+            $default    = (string)$param['default'];
 
             if ($type == 'flag' && $default === 'on') { $default = 1; }
             if ($type == 'flag' && $default === 'off') { $default = 0; }

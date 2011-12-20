@@ -63,7 +63,7 @@ function pageSelectFiles($records, $current, $perpage){
 
 function return_bytes($val) {
     $val = trim($val);
-    $last = strtolower($val{strlen($val)-1});
+    $last = mb_strtolower($val{mb_strlen($val)-1});
     switch($last) {
         case 'g':
             $val *= 1024;
@@ -144,7 +144,7 @@ if ($do=='hobby'){
 
     $hobby = str_replace('\"', '"', $hobby);
 
-    $hobby = strtolower($hobby);
+    $hobby = mb_strtolower($hobby);
 
 	$querysql = "SELECT		        
 				u.id as id,
@@ -195,21 +195,21 @@ if ($do=='search'){
 
     if ($_REQUEST['name']){
 		$val = $inCore->request('name', 'str', '');
-        $val = strtolower($val);
+        $val = mb_strtolower($val);
 		$s .= ' AND LOWER(u.nickname) LIKE \'%'.$val.'%\'';
 		$stext[] = $_LANG['NAME']." &mdash; ".htmlspecialchars($val);
 	}
 
     if ($_REQUEST['city']){
 		$val = $inCore->request('city', 'str', '');
-        $val = strtolower($val);
+        $val = mb_strtolower($val);
 		$s .= ' AND LOWER(p.city) LIKE \''.$val.'%\'';
 		$stext[] = $_LANG['CITY']." &mdash; ".htmlspecialchars($val);
 	}
 
     if ($_REQUEST['hobby']){
 		$val = $inCore->request('hobby', 'str', '');
-        $val = strtolower($val);        
+        $val = mb_strtolower($val);        
 		$s .= ' AND (LOWER(p.description) LIKE \'%'.$val.'%\' OR LOWER(p.formsdata) LIKE \'%'.$val.'%\')';
 		$stext[] = $_LANG['HOBBY']." &mdash; ".htmlspecialchars($val);
 	}
@@ -390,7 +390,7 @@ if ($do=='editprofile'){
 		$errors = false;
 		
 		$nickname = $inCore->request('nickname', 'str');
-		if (strlen($nickname)<2) { cmsCore::addSessionMessage($_LANG['SHORT_NICKNAME'], 'error'); $errors = true; }
+		if (mb_strlen($nickname)<2) { cmsCore::addSessionMessage($_LANG['SHORT_NICKNAME'], 'error'); $errors = true; }
 		$inCore->loadModel('registration');
 		$modreg = new cms_model_registration();
 		if (!$inCore->userIsAdmin($inUser->id)){
@@ -400,7 +400,7 @@ if ($do=='editprofile'){
 		$gender = $inCore->request('gender', 'str');
 		
 		$city = $inCore->request('city', 'str');
-		if (strlen($city)>25) { cmsCore::addSessionMessage($_LANG['LONG_CITY_NAME'], 'error'); $errors = true; }
+		if (mb_strlen($city)>25) { cmsCore::addSessionMessage($_LANG['LONG_CITY_NAME'], 'error'); $errors = true; }
 
 		$email = $inCore->request('email', 'str');
 		if (!preg_match('/^([a-z0-9\._-]+)@([a-z0-9\._-]+)\.([a-z]{2,4})$/i', $email)) { cmsCore::addSessionMessage($_LANG['REALY_ADRESS_EMAIL'], 'error'); $errors = true; }
@@ -482,7 +482,7 @@ if ($do=='editprofile'){
 		
 		if ($inUser->password != md5($oldpass)) { cmsCore::addSessionMessage($_LANG['OLD_PASS_WRONG'], 'error'); $errors = true;}
 		if ($newpass != $newpass2) { cmsCore::addSessionMessage($_LANG['WRONG_PASS'], 'error'); $errors = true; }
-		if($oldpass && $newpass && $newpass2 && strlen($newpass )<6) { cmsCore::addSessionMessage($_LANG['PASS_SHORT'], 'error'); $errors = true; }
+		if($oldpass && $newpass && $newpass2 && mb_strlen($newpass )<6) { cmsCore::addSessionMessage($_LANG['PASS_SHORT'], 'error'); $errors = true; }
 
 		if (!$errors){
 			$sql = "UPDATE cms_users SET password='".md5($newpass)."' WHERE id = '$id' AND password='".md5($oldpass)."'";
@@ -876,7 +876,7 @@ if ($do=='avatar'){
 		$uploaddir 		= PATH.'/images/users/avatars/';		
 		$realfile		= $_FILES['picture']['name'];
 		$path_parts     = pathinfo($realfile);
-		$ext            = strtolower($path_parts['extension']);
+		$ext            = mb_strtolower($path_parts['extension']);
 		$realfile		= md5($realfile. '-' . time()).'.'.$ext;
 
 		if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'bmp' || $ext == 'png'){
@@ -965,7 +965,7 @@ if ($do=='select_avatar'){
 	$avatars            = array();
 	
 	while ($nextfile = readdir($avatars_dir_handle)){
-		if(($nextfile!='.')&&($nextfile!='..')&&( strstr($nextfile, '.gif') || strstr($nextfile, '.jpg') || strstr($nextfile, '.jpeg') || strstr($nextfile, '.png')  ) ){
+		if(($nextfile!='.')&&($nextfile!='..')&&( mb_strstr($nextfile, '.gif') || mb_strstr($nextfile, '.jpg') || mb_strstr($nextfile, '.jpeg') || mb_strstr($nextfile, '.png')  ) ){
 			$avatars[] = $nextfile;
 		}
 	}
@@ -1140,7 +1140,7 @@ if ($do=='uploadphotos'){
     $realfile 				= $inDB->escape_string($_FILES['Filedata']['name']);
 
 	$path_parts             = pathinfo($realfile);
-    $ext                    = strtolower($path_parts['extension']);
+    $ext                    = mb_strtolower($path_parts['extension']);
 	if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'png' && $ext != 'bmp') {  exit(0); }
 
     $lid 					= $inDB->get_fields('cms_user_photos', 'id>0', 'id', 'id DESC');
@@ -1892,7 +1892,7 @@ if ($do=='sendmessage'){
         $message = $inCore->parseSmiles($message, true);
         $message = $inDB->escape_string($message);
 
-        if (strlen($message)<2) { $inCore->addSessionMessage($_LANG['ERR_SEND_MESS'], 'error'); $errors = true; }
+        if (mb_strlen($message)<2) { $inCore->addSessionMessage($_LANG['ERR_SEND_MESS'], 'error'); $errors = true; }
         if ($errors) { $inCore->redirect($back); }
 
         $send_to_group  = $inCore->request('send_to_group', 'int', 0);
@@ -2327,14 +2327,14 @@ if ($do=='addfile'){
 			$maytypes 	= explode(',', str_replace(' ', '', $types));  
 			$path_parts = pathinfo($name);
 			// расширение файла
-			$ext        = strtolower($path_parts['extension']);
+			$ext        = mb_strtolower($path_parts['extension']);
 			// флаг существования расширения в разрешенных
 			$may        = in_array($ext, $maytypes);
 			if(!$may) { cmsCore::addSessionMessage($_LANG['ERROR_TYPE_FILE'].': '.$types, 'error'); $inCore->redirectBack(); }
 			
 			// Переводим имя файла в транслит
 			// отделяем имя файла от расширения
-			$name  = substr($name, 0, strrpos($name, '.'));
+			$name  = substr($name, 0, mb_strrpos($name, '.'));
 			// транслитируем
 			$name  = cmsCore::strToURL($name);
 			// присоединяем расширения файла
@@ -2701,7 +2701,7 @@ if ($do=='votekarma'){
 		$message 	= $inCore->parseSmiles($message, true); 
 		$message 	= $inDB->escape_string($message); 
 		$errors 	= false;
-		if (strlen($message)<2) { $inCore->addSessionMessage($_LANG['ERR_SEND_WALL'], 'error'); $errors = true; }
+		if (mb_strlen($message)<2) { $inCore->addSessionMessage($_LANG['ERR_SEND_WALL'], 'error'); $errors = true; }
 
 		if ($message && $user_id && $author_id && !$errors){
 			switch ($usertype){
@@ -2720,7 +2720,7 @@ if ($do=='votekarma'){
 											'target' => '',
 											'target_url' => '',
 											'target_id' => 0, 
-											'description' => strlen(strip_tags($message))>100 ? substr(strip_tags($message), 0, 100) : strip_tags($message)
+											'description' => mb_strlen(strip_tags($message))>100 ? mb_substr(strip_tags($message), 0, 100) : strip_tags($message)
 									));
 								} elseif($author_id == $user_id) {
 									cmsActions::log('add_wall_my', array(
@@ -2730,7 +2730,7 @@ if ($do=='votekarma'){
 											'target' => '',
 											'target_url' => '',
 											'target_id' => 0, 
-											'description' => strlen(strip_tags($message))>100 ? substr(strip_tags($message), 0, 100) : strip_tags($message)
+											'description' => mb_strlen(strip_tags($message))>100 ? mb_substr(strip_tags($message), 0, 100) : strip_tags($message)
 									));
 								}
                     //send email notification, if user want it
@@ -2768,7 +2768,7 @@ if ($do=='votekarma'){
 											'target' => '',
 											'target_url' => '',
 											'target_id' => 0, 
-											'description' => strlen(strip_tags($message))>100 ? substr(strip_tags($message), 0, 100) : strip_tags($message)
+											'description' => mb_strlen(strip_tags($message))>100 ? mb_substr(strip_tags($message), 0, 100) : strip_tags($message)
 								));
 						break;
                 }

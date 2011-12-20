@@ -169,7 +169,7 @@ function tagsList($cat_id){
     $result = $inDB->query($sql) ;
     if ($inDB->num_rows($result)>0){
         while($tag = $inDB->fetch_assoc($result)){
-            $html .= '<a href="#" onclick="addTag(\''.strtolower($tag['tag']).'\')">'.strtolower($tag['tag']).'</a> ('.$tag['num'].') ';
+            $html .= '<a href="#" onclick="addTag(\''.mb_strtolower($tag['tag']).'\')">'.mb_strtolower($tag['tag']).'</a> ('.$tag['num'].') ';
         }
     }
     return $html;
@@ -185,7 +185,7 @@ function tagLine($tagstr, $cat_id){
     $tags = explode(',', $tagstr);
     $num = 0;
     foreach($tags as $key=>$value){
-        $value = strtolower($value);
+        $value = mb_strtolower($value);
         $html .= '<a href="/catalog/'.$cat_id.'/tag/'.urlencode($value).'">'.$value.'</a>';
         if ($num < sizeof($tags)-1) { $html .= ', '; $num++; }
     }
@@ -372,9 +372,9 @@ function catalog(){
 
                 $fstruct_ready = array();
                 foreach($fstruct as $key=>$value) {
-                    if (strstr($value, '/~h~/')) { $ftype = 'html'; $value=str_replace('/~h~/', '', $value); }
-                    elseif (strstr($value, '/~l~/')) { $ftype = 'link'; $value=str_replace('/~l~/', '', $value); } else { $ftype='text'; }
-                    if (strstr($value, '/~m~/')) {
+                    if (mb_strstr($value, '/~h~/')) { $ftype = 'html'; $value=str_replace('/~h~/', '', $value); }
+                    elseif (mb_strstr($value, '/~l~/')) { $ftype = 'link'; $value=str_replace('/~l~/', '', $value); } else { $ftype='text'; }
+                    if (mb_strstr($value, '/~m~/')) {
                         $value = str_replace('/~m~/', '', $value);
                     }
                     $fstruct_ready[stripslashes($key)] = stripslashes($value);
@@ -588,13 +588,13 @@ function catalog(){
 
                                 if ($item['fdata'][$key]){
 
-                                    if (strstr($value, '/~h~/')){ $value = str_replace('/~h~/', '', $value); $is_html = true; } else { $is_html = false; }
-                                    if (strstr($value, '/~m~/')){
+                                    if (mb_strstr($value, '/~h~/')){ $value = str_replace('/~h~/', '', $value); $is_html = true; } else { $is_html = false; }
+                                    if (mb_strstr($value, '/~m~/')){
                                         $value = str_replace('/~m~/', '', $value);
                                         $makelink = true;
                                     } else {$makelink = false; }
                                     if (!$is_html){
-                                        if (strstr($value, '/~l~/')){
+                                        if (mb_strstr($value, '/~l~/')){
                                             if (@$item['fdata'][$key]!=''){
                                                 $field = '<a class="uc_fieldlink" href="/load/url='.$item['fdata'][$key].'" target="_blank">'.str_replace('/~l~/', '', $value).'</a> ('.$inCore->fileDownloadCount($item['fdata'][$key]).')';
                                             }
@@ -714,16 +714,16 @@ function catalog(){
             if (sizeof($fstruct)>0){
                 foreach($fstruct as $key=>$value){
                     if (@$fdata[$key]!=''){
-                        if (strstr($value, '/~h~/')){
+                        if (mb_strstr($value, '/~h~/')){
                             $value = str_replace('/~h~/', '', $value);
                             $htmlfield = true;
                         }
-                        if (strstr($value, '/~m~/')){
+                        if (mb_strstr($value, '/~m~/')){
                             $value = str_replace('/~m~/', '', $value);
                             $makelink = true;
                         } else {$makelink = false; }
                         $field = str_replace('<p>', '<p style="margin-top:0px; margin-bottom:5px">', $fdata[$key]);
-                        if (strstr($value, '/~l~/')){
+                        if (mb_strstr($value, '/~l~/')){
                             $field = '<a class="uc_detaillink" href="/load/url='.$field.'" target="_blank">'.str_replace('/~l~/', '', $value).'</a> ('.$inCore->fileDownloadCount($field).')';
 
                         } else {
@@ -900,10 +900,10 @@ function catalog(){
 
         foreach($fstruct as $f_id=>$value){
 
-            if (strstr($value, '/~h~/')) { $ftype = 'html'; $value=str_replace('/~h~/', '', $value); }
-            elseif (strstr($value, '/~l~/')) { $ftype = 'link'; $value=str_replace('/~l~/', '', $value); } else { $ftype='text'; }
+            if (mb_strstr($value, '/~h~/')) { $ftype = 'html'; $value=str_replace('/~h~/', '', $value); }
+            elseif (mb_strstr($value, '/~l~/')) { $ftype = 'link'; $value=str_replace('/~l~/', '', $value); } else { $ftype='text'; }
 
-            if (strstr($value, '/~m~/')) { $makelink = true; $value=str_replace('/~m~/', '', $value); }
+            if (mb_strstr($value, '/~m~/')) { $makelink = true; $value=str_replace('/~m~/', '', $value); }
             else { $makelink = false; }
 
             $next['ftype']      = stripslashes($ftype);
@@ -1018,9 +1018,9 @@ function catalog(){
                 $file           = $_FILES["imgfile"]["name"];
                 $path_parts     = pathinfo($file);
                 $ext            = $path_parts['extension'];
-				if(strstr($ext, 'php')) { $inCore->halt(); }
-				if(strstr($ext, 'htm')) { $inCore->halt(); }
-				if(strstr($ext, 'htaccess')) { $inCore->halt(); }
+				if(mb_strstr($ext, 'php')) { $inCore->halt(); }
+				if(mb_strstr($ext, 'htm')) { $inCore->halt(); }
+				if(mb_strstr($ext, 'htaccess')) { $inCore->halt(); }
                 $file           = md5($file.time()).'.'.$ext;
                 $item['file']   = $file;
                 //upload image and insert record in db

@@ -13,6 +13,9 @@
 
     if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
 
+    setlocale(LC_ALL, 'ru_RU.UTF-8');
+    header('Content-Type: text/html; charset=utf-8');
+
     session_start();
 
 	define("VALID_CMS", 1);

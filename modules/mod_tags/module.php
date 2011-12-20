@@ -69,7 +69,7 @@ function mod_tags($module_id){
 				$tags = array();
 				$summary = 0;
 				while($tag = $inDB->fetch_assoc($result)){
-					if (strlen($tag['tag'])>=$cfg['minlen']){
+					if (mb_strlen($tag['tag'])>=$cfg['minlen']){
 						$next = sizeof($tags);
 						$tags[$next]['title'] = $tag['tag'];
 						$tags[$next]['num'] = $tag['num'];

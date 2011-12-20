@@ -59,7 +59,7 @@ if ($do=='view'){
 
     $owner = 'user';
 
-	if(strstr($album['NSDiffer'],'club')) {
+	if(mb_strstr($album['NSDiffer'],'club')) {
 
         $owner = 'club';
 		$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], '*');
@@ -120,7 +120,7 @@ if ($do=='view'){
     $subcats_list = $model->getSubAlbums($id, $left_key, $right_key, $albums_orderby, $albums_orderto);
 
 	if(isset($cfg['maxcols'])) { $maxcols = $cfg['maxcols']; } else { $maxcols = 1; }
-	if (strstr($album['NSDiffer'],'club') && $album['parent_id']==0) { $maxcols=1; }
+	if (mb_strstr($album['NSDiffer'],'club') && $album['parent_id']==0) { $maxcols=1; }
 	// если есть список категорий, то у каждой считаем кол-во подкатегорий
     if ($subcats_list){
 		$is_subcats = true;
@@ -178,8 +178,8 @@ if ($do=='view'){
 				$orderto = $album['orderto']; 
 			}
 
-            if (strlen($orderby)>12) { $orderby='title'; }
-            if (strlen($orderto)>12) { $orderto='asc'; }
+            if (mb_strlen($orderby)>12) { $orderby='title'; }
+            if (mb_strlen($orderto)>12) { $orderto='asc'; }
 
 			if ($album['orderform'] && $root['id']!=$id){ echo orderForm($orderby, $orderto); }			
 			$sql .=  " ORDER BY ".$orderby." ".$orderto." \n";
@@ -192,7 +192,7 @@ if ($do=='view'){
 			if (!$inUser->id) { $can_add = false; } 
 			else {			
 				if ($album['NSDiffer']=='') { $can_add = $inUser->id; } 
-				elseif (strstr($album['NSDiffer'],'club')){
+				elseif (mb_strstr($album['NSDiffer'],'club')){
 					$can_add = clubUserIsMember($club['id'], $inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || $inUser->is_admin;
 				}				
 			}
@@ -290,7 +290,7 @@ if($do=='viewphoto'){
 	$photo = cmsCore::callEvent('GET_PHOTO', $photo);
 		
    	$can_view = true;
-	if (strstr($photo['NSDiffer'],'club')){
+	if (mb_strstr($photo['NSDiffer'],'club')){
 		$owner = 'club';
 	$club = $inDB->get_fields('cms_clubs', 'id='.$photo['album_user_id'], 'id, title, clubtype');
 		$can_view = $club['clubtype'] == 'public' || ($club['clubtype'] == 'private' && (clubUserIsMember($club['id'], $inUser->id) || $inUser->is_admin || clubUserIsAdmin($club['id'], $inUser->id)));
@@ -343,7 +343,7 @@ if($do=='viewphoto'){
 	if($photo['NSDiffer'] == ''){
 		$is_admin = $inCore->userIsAdmin($inUser->id);
 	}				
-	if(strstr($photo['NSDiffer'],'club')){
+	if(mb_strstr($photo['NSDiffer'],'club')){
 		$is_admin = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator');
 	}
 	
@@ -399,7 +399,7 @@ if ($do=='uploadphotos'){
 		$club['id'] = false;
 		$differ     = '';
 
-	} elseif (strstr($album['NSDiffer'],'club')){
+	} elseif (mb_strstr($album['NSDiffer'],'club')){
 
 		$club   = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], '*');
 		$differ = 'club'.$club['id'];
@@ -414,7 +414,7 @@ if ($do=='uploadphotos'){
 			
 			if ($album['public']==2 || $inCore->userIsAdmin($user_id)) { $published = 1; } else { $published = 0; }	
 		
-		} elseif (strstr($album['NSDiffer'], 'club')){
+		} elseif (mb_strstr($album['NSDiffer'], 'club')){
 
 			if ($club['photo_premod'] && !clubUserIsAdmin($club['id'], $user_id) && !clubUserIsRole($club['id'], $user_id, 'moderator')) { 
 				$published = 0; 
@@ -469,7 +469,7 @@ if ($do=='addphoto'){
 		$autocomplete_js = $inPage->getAutocompleteJS('tagsearch', 'tags');
 									
 		$inPage->setTitle($_LANG['ADD_PHOTO'].' - '.$_LANG['STEP'].' 1');
-		if (strstr($album['NSDiffer'],'club')) {
+		if (mb_strstr($album['NSDiffer'],'club')) {
 			$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], 'id, title');
 			$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
 		}
@@ -525,7 +525,7 @@ if ($do=='submit_photo'){
 
 	$uload_type = $mod['is_multi'] ? 'multi' : 'single';
 
-	if (strstr($album['NSDiffer'],'club')){
+	if (mb_strstr($album['NSDiffer'],'club')){
 
 		$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], '*');
 		$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
@@ -590,7 +590,7 @@ if ($do=='editphoto'){
 	
 	$album = $model->getAlbum($photo['album_id']);
 	
-	if (strstr($album['NSDiffer'],'club')){
+	if (mb_strstr($album['NSDiffer'],'club')){
 
 		$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], 'id, title');
 		$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
@@ -648,7 +648,7 @@ if ($do=='movephoto'){
 	
 	$album = $model->getAlbum($photo['album_id']);
 
-	if(strstr($album['NSDiffer'],'club')) { 
+	if(mb_strstr($album['NSDiffer'],'club')) { 
 
 		$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], 'id, title');
 		$inPage->addPathway($club['title'], '/clubs/'.$club['id']);
@@ -722,7 +722,7 @@ if ($do=='delphoto'){
 
 	$album = $model->getAlbum($photo['album_id']);
 	
-	if (strstr($album['NSDiffer'],'club')){
+	if (mb_strstr($album['NSDiffer'],'club')){
 
 		$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], 'id, title');
 		$inPage->addPathway($club['title'], '/clubs/'.$club['id']);

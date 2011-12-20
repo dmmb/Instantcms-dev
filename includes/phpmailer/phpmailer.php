@@ -34,7 +34,7 @@ class mosPHPMailer
 	 * Sets the CharSet of the message.
 	 * @var string
 	 */
-	var $CharSet			= "windows-1251";
+	var $CharSet			= "utf-8";
 
 	/**
 	 * Sets the Content-type of the message.
@@ -427,7 +427,7 @@ class mosPHPMailer
 			$to .= $this->to[$i][0];
 		}
 
-		if ($this->Sender != "" && strlen(ini_get("safe_mode"))< 1)
+		if ($this->Sender != "" && mb_strlen(ini_get("safe_mode"))< 1)
 		{
 			$old_from = ini_get("sendmail_from");
 			ini_set("sendmail_from", $this->Sender);
@@ -535,7 +535,7 @@ class mosPHPMailer
 		// Retry while there is no connection
 		while($index < count($hosts) && $connection == false)
 		{
-			if(strstr($hosts[$index], ":"))
+			if(mb_strstr($hosts[$index], ":"))
 				list($host, $port) = explode(":", $hosts[$index]);
 			else
 			{
@@ -659,8 +659,8 @@ class mosPHPMailer
 		$soft_break = ($qp_mode) ? sprintf(" =%s", $this->LE) : $this->LE;
 
 		$message = $this->FixEOL($message);
-		if (substr($message, -1) == $this->LE)
-			$message = substr($message, 0, -1);
+		if (mb_substr($message, -1) == $this->LE)
+			$message = mb_substr($message, 0, -1);
 
 		$line = explode($this->LE, $message);
 		$message = "";
@@ -671,20 +671,20 @@ class mosPHPMailer
 		  for ($e = 0; $e<count($line_part); $e++)
 		  {
 			  $word = $line_part[$e];
-			  if ($qp_mode and (strlen($word) > $length))
+			  if ($qp_mode and (mb_strlen($word) > $length))
 			  {
-				$space_left = $length - strlen($buf) - 1;
+				$space_left = $length - mb_strlen($buf) - 1;
 				if ($e != 0)
 				{
 					if ($space_left > 20)
 					{
 						$len = $space_left;
-						if (substr($word, $len - 1, 1) == "=")
+						if (mb_substr($word, $len - 1, 1) == "=")
 						  $len--;
-						elseif (substr($word, $len - 2, 1) == "=")
+						elseif (mb_substr($word, $len - 2, 1) == "=")
 						  $len -= 2;
-						$part = substr($word, 0, $len);
-						$word = substr($word, $len);
+						$part = mb_substr($word, 0, $len);
+						$word = mb_substr($word, $len);
 						$buf .= " " . $part;
 						$message .= $buf . sprintf("=%s", $this->LE);
 					}
@@ -694,17 +694,17 @@ class mosPHPMailer
 					}
 					$buf = "";
 				}
-				while (strlen($word) > 0)
+				while (mb_strlen($word) > 0)
 				{
 					$len = $length;
-					if (substr($word, $len - 1, 1) == "=")
+					if (mb_substr($word, $len - 1, 1) == "=")
 						$len--;
-					elseif (substr($word, $len - 2, 1) == "=")
+					elseif (mb_substr($word, $len - 2, 1) == "=")
 						$len -= 2;
-					$part = substr($word, 0, $len);
-					$word = substr($word, $len);
+					$part = mb_substr($word, 0, $len);
+					$word = mb_substr($word, $len);
 
-					if (strlen($word) > 0)
+					if (mb_strlen($word) > 0)
 						$message .= $part . sprintf("=%s", $this->LE);
 					else
 						$buf = $part;
@@ -715,7 +715,7 @@ class mosPHPMailer
 				$buf_o = $buf;
 				$buf .= ($e == 0) ? $word : (" " . $word);
 
-				if (strlen($buf) > $length and $buf_o != "")
+				if (mb_strlen($buf) > $length and $buf_o != "")
 				{
 					$message .= $buf_o . $soft_break;
 					$buf = $word;
@@ -949,15 +949,15 @@ class mosPHPMailer
 	 * @return void
 	 */
 	function SetMessageType() {
-		if(count($this->attachment) < 1 && strlen($this->AltBody) < 1)
+		if(count($this->attachment) < 1 && mb_strlen($this->AltBody) < 1)
 			$this->message_type = "plain";
 		else
 		{
 			if(count($this->attachment) > 0)
 				$this->message_type = "attachments";
-			if(strlen($this->AltBody) > 0 && count($this->attachment) < 1)
+			if(mb_strlen($this->AltBody) > 0 && count($this->attachment) < 1)
 				$this->message_type = "alt";
-			if(strlen($this->AltBody) > 0 && count($this->attachment) > 0)
+			if(mb_strlen($this->AltBody) > 0 && count($this->attachment) > 0)
 				$this->message_type = "alt_attachments";
 		}
 	}
@@ -1106,7 +1106,7 @@ class mosPHPMailer
 	 */
 	function EncodeString ($str, $encoding = "base64") {
 		$encoded = "";
-		switch(strtolower($encoding)) {
+		switch(mb_strtolower($encoding)) {
 		  case "base64":
 			  // chunk_split is found in PHP >= 3.0.6
 			  $encoded = chunk_split(base64_encode($str), 76, $this->LE);
@@ -1114,7 +1114,7 @@ class mosPHPMailer
 		  case "7bit":
 		  case "8bit":
 			  $encoded = $this->FixEOL($str);
-			  if (substr($encoded, -(strlen($this->LE))) != $this->LE)
+			  if (mb_substr($encoded, -(mb_strlen($this->LE))) != $this->LE)
 				$encoded .= $this->LE;
 			  break;
 		  case "binary":
@@ -1138,7 +1138,7 @@ class mosPHPMailer
 	function EncodeHeader ($str, $position = 'text') {
 	  $x = 0;
 
-	  switch (strtolower($position)) {
+	  switch (mb_strtolower($position)) {
 		case 'phrase':
 		  if (!preg_match('/[\200-\377]/', $str)) {
 			// Can't use addslashes as we don't know what value has magic_quotes_sybase.
@@ -1163,7 +1163,7 @@ class mosPHPMailer
 	  if ($x == 0)
 		return ($str);
 
-	  $maxlen = 75 - 7 - strlen($this->CharSet);
+	  $maxlen = 75 - 7 - mb_strlen($this->CharSet);
 	  // Try to select the encoding which should produce the shortest output
 	  if (strlen($str)/3 < $x) {
 		$encoding = 'B';
@@ -1190,7 +1190,7 @@ class mosPHPMailer
 	 */
 	function EncodeQP ($str) {
 		$encoded = $this->FixEOL($str);
-		if (substr($encoded, -(strlen($this->LE))) != $this->LE)
+		if (mb_substr($encoded, -(mb_strlen($this->LE))) != $this->LE)
 			$encoded .= $this->LE;
 
 		// Replace every high ascii, control and = characters
@@ -1215,7 +1215,7 @@ class mosPHPMailer
 		// There should not be any EOL in the string
 		$encoded = preg_replace("[\r\n]", "", $str);
 
-		switch (strtolower($position)) {
+		switch (mb_strtolower($position)) {
 		  case "phrase":
 			$encoded = preg_replace("/([^A-Za-z0-9!*+\/ -])/e", "'='.sprintf('%02X', ord('\\1'))", $encoded);
 			break;

@@ -18,7 +18,7 @@ function img_add_watermark($src){
 
   if ($size === false) return false;
 
-  $format = strtolower(substr($size['mime'], strpos($size['mime'], '/')+1));
+  $format = mb_strtolower(mb_substr($size['mime'], mb_strpos($size['mime'], '/')+1));
   $icfunc = "imagecreatefrom" . $format;
   if (!function_exists($icfunc)) return false;
 
@@ -87,7 +87,7 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $w
   // Определяем исходный формат по MIME-информации, предоставленной
   // функцией getimagesize, и выбираем соответствующую формату
   // imagecreatefrom-функцию.
-  $format = strtolower(substr($size['mime'], strpos($size['mime'], '/')+1));
+  $format = mb_strtolower(mb_substr($size['mime'], mb_strpos($size['mime'], '/')+1));
   $icfunc = "imagecreatefrom" . $format;
   if (!function_exists($icfunc)) return false;
 

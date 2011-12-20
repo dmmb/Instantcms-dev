@@ -666,12 +666,12 @@ class cms_model_board{
 		if(!$cat['cat_city']) { $cat['cat_city'] = $this->getCatCity(); }
 		if ($cat['cat_city']){
 			foreach($cat['cat_city'] as $cat_city){
-				if (strtolower($selected)==strtolower($cat_city)){
+				if (mb_strtolower($selected)==mb_strtolower($cat_city)){
 					$s = 'selected="selected"';
 				} else {
 					$s = '';
 				}
-				$pretty = htmlspecialchars(ucfirst(strtolower($cat_city)));
+				$pretty = htmlspecialchars(ucfirst(mb_strtolower($cat_city)));
 				$html .= '<option value="'.$pretty.'" '.$s.'>'.$pretty.'</option>';
 			}
 		}
@@ -707,7 +707,7 @@ class cms_model_board{
 
 		foreach($types as $id=>$type){
 			$type = ucfirst(htmlspecialchars(trim($type)));
-			if (strtolower($selected) == strtolower($type)){ $sel = 'selected="selected"'; } else { $sel = ''; }
+			if (mb_strtolower($selected) == mb_strtolower($type)){ $sel = 'selected="selected"'; } else { $sel = ''; }
 			$html .= '<option value="'.$type.'" '.$sel.'>'.$type.'</option>';
 		}
 		return $html;

@@ -11,6 +11,9 @@
 //                                                                            //
 /******************************************************************************/
 
+    setlocale(LC_ALL, 'ru_RU.UTF-8');
+    header('Content-Type: text/html; charset=utf-8');
+
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
     
 	session_start();
@@ -126,10 +129,6 @@
 	$smarty->display('com_comments_list.tpl');
 
     $html = ob_get_clean();
-
-    if(!isset($cfg['recode']) || @$cfg['recode']==1){
-		$html = iconv('cp1251', 'utf-8', $html);
-	}
 
     echo $html;
 

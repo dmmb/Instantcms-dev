@@ -199,9 +199,9 @@ function usrStatus($user_id, $logdate='', $online=false, $gender='m'){
 		return '<span class="online">'.$_LANG['ONLINE'].'</span>';
 	} else {
 				if ($logdate){
-                    if (!strstr(strtolower($logdate), $_LANG['YESTERDAY']) && !strstr(strtolower($logdate), $_LANG['TODAY'])){
+                    if (!mb_strstr(mb_strtolower($logdate), $_LANG['YESTERDAY']) && !mb_strstr(mb_strtolower($logdate), $_LANG['TODAY'])){
                         $logdate = cmsCore::dateDiffNow($logdate);                        
-                        if (!strstr($logdate, 'не известно')) { $logdate .=  ' '.$_LANG['BACK']; }
+                        if (!mb_strstr($logdate, 'не известно')) { $logdate .=  ' '.$_LANG['BACK']; }
                     }
 					return '<span class="offline">'.$logdate.'</span>';
 				} else {
@@ -370,7 +370,7 @@ function usrAwardsList($selected = 'aw.gif'){
 		while (false !== ($file = readdir($handle))) {
 			$html .= '<div style="float:left;margin:4px">';
 			$html .= '<table border="0" cellspacing="0" cellpadding="4"><tr>';
-			if ($file != '.' && $file != '..' && strstr($file, '.gif')){
+			if ($file != '.' && $file != '..' && mb_strstr($file, '.gif')){
 				 $tag = str_replace('.gif', '', $file);
 				 $dir = '/images/users/awards/';			 
 				 if ($selected != $file){
@@ -422,7 +422,7 @@ function usrCityStats(){
 	if ($inDB->num_rows($rs)){ 
 		while($row = $inDB->fetch_assoc($rs)){
 			if ($row['city'] != $empty) { $row['href'] = '/users/city/'.urlencode($row['city']); } else { $row['href'] = ''; }
-			$row['city'] = ucfirst(strtolower($row['city']));
+			$row['city'] = ucfirst(mb_strtolower($row['city']));
 			$stat[] = $row;
 		}
 	}

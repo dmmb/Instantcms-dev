@@ -293,7 +293,7 @@ function forumAttachForm($cfg){
 				$html .= '<div class="forum_fa_desc">';
 					$html .= '<div><strong>'.$_LANG['MAXIMUM_FILES'].':</strong> '.$cfg['fa_max'].'</div>';
 					$html .= '<div><strong>'.$_LANG['MAX_SIZE_FILE'].':</strong> '.$cfg['fa_size'].' '.$_LANG['KBITE'].'.</div>';
-					$html .= '<div><strong>'.$_LANG['MUST_FILE_TYPE'].':</strong> .'.strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</div>';
+					$html .= '<div><strong>'.$_LANG['MUST_FILE_TYPE'].':</strong> .'.mb_strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</div>';
 				$html .= '</div>';
 				if ($cfg['fa_max']) { $files = $cfg['fa_max']; } else { $files = 50; }
 				for($f=1; $f<=$files; $f++){

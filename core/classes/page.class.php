@@ -188,14 +188,14 @@ public function printHead(){
 
     //Остальные JS-файлы
     foreach($this->page_head as $key=>$value) {
-        if(strstr($this->page_head[$key], '<script')) {
+        if(mb_strstr($this->page_head[$key], '<script')) {
             echo $this->page_head[$key] ."\n"; unset($this->page_head[$key]);
         }
     }
 
     //CSS-файлы
     foreach($this->page_head as $key=>$value) {
-        if(strstr($this->page_head[$key], '<link')) {
+        if(mb_strstr($this->page_head[$key], '<link')) {
             echo $this->page_head[$key] ."\n"; unset($this->page_head[$key]);
         }
     }
@@ -738,7 +738,7 @@ public static function getMetaSearchLink($link, $text){
     $html='';
     $text = strip_tags($text);
     $text = trim($text);
-    if (!strstr($text, ',')){
+    if (!mb_strstr($text, ',')){
         $html .= '<a href="'.$link.urlencode($text).'">'.$text.'</a>';
     } else {
         $text = str_replace(', ', ',', $text);
@@ -897,7 +897,7 @@ public static function getSmilesPanel($for_field_id){
     $html = '<div class="usr_msg_smilebox" id="smilespanel" style="display:none">';
     if ($handle = opendir(PATH.'/images/smilies')) {
         while (false !== ($file = readdir($handle))) {
-            if ($file != '.' && $file != '..' && strstr($file, '.gif')){
+            if ($file != '.' && $file != '..' && mb_strstr($file, '.gif')){
              $tag = str_replace('.gif', '', $file);
              $dir = '/images/smilies/';
 

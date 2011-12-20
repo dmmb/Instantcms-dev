@@ -179,20 +179,18 @@ class p_loginza extends cmsPlugin {
 
             // указано полное имя
             $nickname   = $profile->name->full_name;
-            $nickname   = iconv('utf-8', 'cp1251', $nickname);
 
         } elseif($profile->name->first_name) {
         
             // указано имя и фамилия по-отдельности
             $nickname   = $profile->name->first_name;
             if ($profile->name->last_name){ $nickname .= ' '. $profile->name->last_name; }
-            $nickname   = iconv('utf-8', 'cp1251', $nickname);
 
         } elseif(preg_match('/^(http:\/\/)([a-zA-Z0-9\-_]+)\.([a-zA-Z0-9\-_]+)\.([a-zA-Z]{2,6})([\/]?)$/i', $profile->identity)) {
             
             // не указано имя, но передан идентификатор в виде домена 3-го уровня
             $nickname = str_replace('http://', '', $profile->identity);
-            $nickname = substr($nickname, 0, strpos($nickname, '.'));
+            $nickname = mb_substr($nickname, 0, mb_strpos($nickname, '.'));
 
         } else {
 
@@ -204,7 +202,7 @@ class p_loginza extends cmsPlugin {
 		$nickname   = $inDB->escape_string($nickname);
 
         $login      = str_replace('-', '', cmsCore::strToURL($nickname));
-        $pass       = md5(substr(md5(rand(0, 9999)), 0, 8));
+        $pass       = md5(mb_substr(md5(rand(0, 9999)), 0, 8));
         $email      = $inDB->escape_string($profile->email);
         $birthdate  = $inDB->escape_string($profile->dob);
 

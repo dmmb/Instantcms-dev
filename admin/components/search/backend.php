@@ -17,7 +17,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		$provider_array = array();
 		while ($provider = readdir($pdir)){
 			if (($provider != '.') && ($provider != '..') && !is_dir(PATH.'/components/search/providers/'.$provider)) {
-				$provider = substr($provider, 0, strrpos($provider, '.'));
+				$provider = mb_substr($provider, 0, mb_strrpos($provider, '.'));
 				$provider_array[] = $provider;
 			}
 		}

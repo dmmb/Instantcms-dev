@@ -10,6 +10,8 @@
 //                        LICENSED BY GNU/GPL v2                              //
 //                                                                            //
 /******************************************************************************/
+    setlocale(LC_ALL, 'ru_RU.UTF-8');
+    header('Content-Type: text/html; charset=utf-8');
 
     session_start();
 	if (!isset($_REQUEST['id'])) { die(100); } else { $id = (int)$_REQUEST['id']; }
@@ -43,7 +45,7 @@
 	
 	$album = $model->getAlbum($photo['album_id']);
 	
-	if (strstr($album['NSDiffer'],'club')){
+	if (mb_strstr($album['NSDiffer'],'club')){
 		$ok = $inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($album['user_id'], $inUser->id) || clubUserIsRole($album['user_id'], $inUser->id, 'moderator');	
 	} else {
 		$ok = $inCore->userIsAdmin($inUser->id);

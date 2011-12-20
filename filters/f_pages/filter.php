@@ -29,7 +29,7 @@
 
         $title  = $inDB->get_field('cms_content', 'id='.$id, 'title');
 
-		if ( strpos( $text, 'pagebreak' ) === false ) {
+		if ( mb_strpos( $text, 'pagebreak' ) === false ) {
 			return true;
 		}
 

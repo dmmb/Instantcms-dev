@@ -49,7 +49,7 @@
 		if ($inDB->num_rows($result)){
 			$is_uc = true;
 			while ($item=$inDB->fetch_assoc($result)){
-				if (strlen($item['imageurl'])<4) {
+				if (mb_strlen($item['imageurl'])<4) {
 					$item['imageurl'] = 'nopic';
 				} elseif (!file_exists(PATH.'/images/catalog/small/'.$item['imageurl'].'.jpg')) {
 					$item['imageurl'] = 'nopic';

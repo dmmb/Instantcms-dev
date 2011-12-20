@@ -27,12 +27,12 @@ function files(){
 
         $fileurl    = $inCore->request('fileurl', 'str', '');
 
-        if(strstr($fileurl, '..')){ $inCore->halt(); }
+        if(mb_strstr($fileurl, '..')){ $inCore->halt(); }
 
         if (!$fileurl) { $inCore->halt($_LANG['FILE_NOT_FOUND']); }
 
-        if (strstr($fileurl, 'http:/')){
-            if (!strstr($fileurl, 'http://')){ $fileurl = str_replace('http:/', 'http://', $fileurl); }
+        if (mb_strstr($fileurl, 'http:/')){
+            if (!mb_strstr($fileurl, 'http://')){ $fileurl = str_replace('http:/', 'http://', $fileurl); }
         }
 
         $downloads = $inCore->fileDownloadCount($fileurl);
@@ -45,7 +45,7 @@ function files(){
             $inDB->query($sql);
         }
 
-        if (strstr($fileurl, 'http:/')){
+        if (mb_strstr($fileurl, 'http:/')){
             $inCore->redirect($fileurl);
         }
 
@@ -68,15 +68,15 @@ function files(){
 
     	$url = str_replace('--q--', '?', $inCore->request('url', 'str', ''));
 
-        if(strstr($url, '..')){ $inCore->halt(); }
+        if(mb_strstr($url, '..')){ $inCore->halt(); }
 
         if (!$url) { $inCore->halt(); }
 
-        if (strstr($url, 'http:/')){
-            if (!strstr($url, 'http://')){ $url = str_replace('http:/', 'http://', $url); }
+        if (mb_strstr($url, 'http:/')){
+            if (!mb_strstr($url, 'http://')){ $url = str_replace('http:/', 'http://', $url); }
         }
-        if (strstr($url, 'https:/')){
-            if (!strstr($url, 'https://')){ $url = str_replace('https:/', 'https://', $url); }
+        if (mb_strstr($url, 'https:/')){
+            if (!mb_strstr($url, 'https://')){ $url = str_replace('https:/', 'https://', $url); }
         }
         $inCore->redirect($url);
 

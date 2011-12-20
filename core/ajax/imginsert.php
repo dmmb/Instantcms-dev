@@ -10,8 +10,9 @@
 //                        LICENSED BY GNU/GPL v2                              //
 //                                                                            //
 /******************************************************************************/
+    setlocale(LC_ALL, 'ru_RU.UTF-8');
+    header('Content-Type: text/html; charset=utf-8');
 
-    header('Content-Type: text/html; charset=windows-1251');
     session_start();
 
 	define("VALID_CMS", 1);
@@ -77,7 +78,7 @@
 				$realfile   = $_FILES['attach_img']['name'];
 			
 				$path_parts = pathinfo($realfile);
-                $ext        = strtolower($path_parts['extension']);
+                $ext        = mb_strtolower($path_parts['extension']);
 				
 				if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'bmp' || $ext == 'png'){
 

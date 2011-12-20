@@ -437,7 +437,7 @@ class cmsActions {
             if ($this->show_targets){
                 $action['message'] = str_replace('|', '', $action['message']);
             } else {
-                $action['message'] = substr($action['message'], 0, strpos($action['message'], '|'));
+                $action['message'] = mb_substr($action['message'], 0, mb_strpos($action['message'], '|'));
             }
 
             if ($action['object']){

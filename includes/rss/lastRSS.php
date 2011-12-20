@@ -68,7 +68,7 @@ class lastRSS {
 				$result = $this->Parse($rss_url);
 				$serialized = serialize($result);
 				if ($f = @fopen($cache_file, 'w')) {
-					fwrite ($f, $serialized, strlen($serialized));
+					fwrite ($f, $serialized, mb_strlen($serialized));
 					fclose($f);
 				}
 				if ($result) $result['cached'] = 0;

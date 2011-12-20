@@ -67,7 +67,7 @@ function rss_blogs($item_id, $cfg, &$rssdata){
 				$id = $item['id'];
 				$items[$id] = $item;
                 $items[$id]['link']     = $rooturl . $model->getPostURL(0, $item['bloglink'], $item['seolink']);
-				$items[$id]['description'] = parseHide(substr(strip_tags($items[$id]['content_html']), 0, 250). '...');
+				$items[$id]['description'] = parseHide(mb_substr(strip_tags($items[$id]['content_html']), 0, 250). '...');
 				$items[$id]['comments'] = $items[$id]['link'].'#c';
 				$items[$id]['category'] = $item['category'];
 			}

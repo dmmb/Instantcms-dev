@@ -9,7 +9,7 @@ CREATE TABLE `#__actions` (
   `is_visible` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`,`is_visible`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__actions` (`id`, `component`, `name`, `title`, `message`, `is_tracked`, `is_visible`) VALUES
 (2, 'comments', 'add_comment', 'Добавление комментария', 'добавляет %s| на странице %s', 1, 1),
@@ -56,7 +56,7 @@ CREATE TABLE `#__actions_log` (
   KEY `action_id` (`action_id`,`user_id`),
   KEY `object_id` (`object_id`),
   KEY `target_id` (`target_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__actions_log` (`id`, `action_id`, `pubdate`, `user_id`, `object`, `object_url`, `object_id`, `target`, `target_url`, `target_id`, `description`, `is_friends_only`, `is_users_only`) VALUES
 (2, 11, '2011-10-13 23:09:34', 2, '', '', 0, '', '', 0, 'I love InstantCMS', 0, 0),
@@ -78,7 +78,7 @@ CREATE TABLE `#__banlist` (
   `status` int(11) NOT NULL DEFAULT '1',
   `autodelete` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__banners`;
 CREATE TABLE `#__banners` (
@@ -96,7 +96,7 @@ CREATE TABLE `#__banners` (
   `link` varchar(250) DEFAULT NULL,
   `published` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__banners` (`id`, `position`, `typeimg`, `fileurl`, `hits`, `clicks`, `maxhits`, `maxuser`, `user_id`, `pubdate`, `title`, `link`, `published`) VALUES
 (4, 'banner1', 'image', 'banner468x60v1.gif', 0, 0, 0, 0, 1, '2009-04-04 19:43:53', 'InstantCMS - Бесплатная система управления сайтом', 'http://www.instantcms.ru/', 1);
@@ -108,7 +108,7 @@ CREATE TABLE `#__banner_hits` (
   `ip` varchar(16) DEFAULT NULL,
   `pubdate` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__blogs`;
 CREATE TABLE `#__blogs` (
@@ -129,7 +129,7 @@ CREATE TABLE `#__blogs` (
   KEY `seolink` (`seolink`),
   KEY `user_id` (`user_id`),
   KEY `pubdate` (`pubdate`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__blogs` (`id`, `user_id`, `title`, `pubdate`, `allow_who`, `view_type`, `showcats`, `ownertype`, `premod`, `forall`, `owner`, `seolink`, `rating`) VALUES
 (1, 1, 'Пример блога админа', '2008-06-03 13:26:55', 'all', 'list', 1, 'single', 0, 1, 'user', 'primer-bloga-admina', 2),
@@ -145,7 +145,7 @@ CREATE TABLE `#__blog_authors` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `blog_id` (`blog_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__blog_cats`;
 CREATE TABLE `#__blog_cats` (
@@ -154,7 +154,7 @@ CREATE TABLE `#__blog_cats` (
   `title` varchar(250) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `blog_id` (`blog_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__blog_files`;
 CREATE TABLE `#__blog_files` (
@@ -165,7 +165,7 @@ CREATE TABLE `#__blog_files` (
   `hits` int(11) NOT NULL,
   `pubdate` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__blog_posts`;
 CREATE TABLE `#__blog_posts` (
@@ -191,7 +191,7 @@ CREATE TABLE `#__blog_posts` (
   KEY `user_id` (`user_id`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `content` (`content`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__blog_posts` (`id`, `user_id`, `cat_id`, `blog_id`, `pubdate`, `title`, `feel`, `music`, `content`, `content_html`, `allow_who`, `edit_times`, `edit_date`, `published`, `seolink`, `comments`) VALUES
 (5, 1, 5, 1, '2009-09-07 11:50:16', 'Пример записи в блоге', '', '', '[b]Блоги InstantCMS - это мощный и надежный инструмент для ваших публикаций:[/b]\r\n\r\n- Редактор BB-кода (скрытый текст, ссылки, цитаты, картинки);\r\n- Вставка изображений "на лету";\r\n- Неограниченное число рубрик;\r\n- Комментарии к записям;\r\n- Возможность ведения коллективных блогов;\r\n- Смайлы и теги;', '<b>Блоги InstantCMS - это мощный и надежный инструмент для ваших публикаций:</b><br />\r\n<br />\r\n- Редактор BB-кода (скрытый текст, ссылки, цитаты, картинки);<br />\r\n- Вставка изображений "на лету";<br />\r\n- Неограниченное число рубрик;<br />\r\n- Комментарии к записям;<br />\r\n- Возможность ведения коллективных блогов;<br />\r\n- Смайлы и теги;', '0', 3, '2009-09-07 11:50:16', 1, 'primer-zapisi-v-bloge', 1);
@@ -228,7 +228,7 @@ CREATE TABLE `#__board_cats` (
   PRIMARY KEY (`id`),
   KEY `parent_id` (`parent_id`),
   KEY `NSLeft` (`NSLeft`,`NSRight`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__board_cats` (`id`, `parent_id`, `ordering`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`, `title`, `description`, `published`, `orderform`, `showdate`, `pubdate`, `orderby`, `orderto`, `public`, `perpage`, `maxcols`, `thumb1`, `thumb2`, `thumbsqr`, `uplimit`, `is_photos`, `icon`, `obtypes`) VALUES
 (1, 0, 1, 1, 8, '', 0, 0, '-- Корневая рубрика --', '', 1, 1, 1, '2008-09-22 13:39:32', 'pubdate', 'desc', 0, 15, 1, 64, 400, 0, 10, 1, 'folder_grey.png', ''),
@@ -262,7 +262,7 @@ CREATE TABLE `#__board_items` (
   KEY `ip` (`ip`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `content` (`content`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__board_items` (`id`, `category_id`, `user_id`, `obtype`, `title`, `content`, `city`, `pubdate`, `pubdays`, `published`, `file`, `hits`, `is_vip`, `vipdate`, `ip`) VALUES
 (4, 10, 1, 'Предлагаю', 'свои услуги', 'Могу выносить мусор и мыть пол.', 'Москва', '2011-11-11 14:11:18', 10, 1, '550de8a5de9b5301133a815de31be00d.jpg', 7, 0, '0000-00-00 00:00:00', 2130706433),
@@ -277,7 +277,7 @@ CREATE TABLE `#__cache` (
   `cachedate` datetime NOT NULL,
   `cachefile` varchar(80) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__category`;
 CREATE TABLE `#__category` (
@@ -310,7 +310,7 @@ CREATE TABLE `#__category` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `seolink` (`seolink`),
   KEY `parent_id` (`parent_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__category` (`id`, `parent_id`, `title`, `description`, `published`, `showdate`, `showcomm`, `orderby`, `orderto`, `modgrp_id`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `ordering`, `maxcols`, `showtags`, `showrss`, `showdesc`, `is_public`, `photoalbum`, `seolink`, `url`, `tpl`, `cost`) VALUES
 (1, 0, '--Корневой раздел--', 'Корневой раздел сайта', 1, 1, 1, 'pubdate', 'asc', 0, 1, 14, 0, '', 0, 1, 1, 1, 1, 0, 0, '', '--kornevoi-razdel--', '', 'com_content_view.tpl', ''),
@@ -348,7 +348,7 @@ CREATE TABLE `#__clubs` (
   PRIMARY KEY (`id`),
   KEY `pubdate` (`pubdate`),
   KEY `admin_id` (`admin_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__clubs` (`id`, `admin_id`, `title`, `description`, `imageurl`, `pubdate`, `clubtype`, `published`, `maxsize`, `enabled_blogs`, `enabled_photos`, `rating`, `photo_premod`, `blog_premod`, `blog_min_karma`, `photo_min_karma`, `album_min_karma`, `join_min_karma`, `join_karma_limit`, `create_karma`, `is_vip`, `join_cost`) VALUES
 (14, 1, 'Клуб любителей InstantCMS', '', '', '2010-10-12 14:41:45', 'public', 1, 0, 1, 1, 0, 0, 0, 0, 0, 25, 0, 0, 0, 0, 0);
@@ -360,7 +360,7 @@ CREATE TABLE `#__codecheck` (
   `code` varchar(40) NOT NULL,
   `session_id` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__comments`;
 CREATE TABLE `#__comments` (
@@ -383,7 +383,7 @@ CREATE TABLE `#__comments` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `target_id` (`target_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__comments` (`id`, `parent_id`, `pid`, `user_id`, `target`, `target_id`, `guestname`, `content`, `content_bbcode`, `pubdate`, `published`, `is_new`, `target_title`, `target_link`, `ip`) VALUES
 (8, 0, 0, 1, 'article', 32, '', 'Питание прогиба исходным материалом, несмотря на не менее значительную разницу в плотности теплового потока, составляет биотит, так как совершенно однозначно указывает на существование', '', '2010-10-13 23:45:56', 1, 1, 'Почему нерезко плато?!!!', '/content/stati/geologija/pochemu-nerezko-plato.html', ''),
@@ -397,7 +397,7 @@ CREATE TABLE `#__comments_votes` (
   `vote` smallint(6) NOT NULL,
   `user_id` int(11) NOT NULL,
   KEY `comment_id` (`comment_id`,`comment_type`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__comment_targets`;
 CREATE TABLE `#__comment_targets` (
@@ -407,7 +407,7 @@ CREATE TABLE `#__comment_targets` (
   `title` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `target` (`target`,`component`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__comment_targets` (`id`, `target`, `component`, `title`) VALUES
 (1, 'article', 'content', 'Статьи'),
@@ -431,7 +431,7 @@ CREATE TABLE `#__components` (
   `version` varchar(6) NOT NULL DEFAULT '1.9',
   `system` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__components` (`id`, `title`, `link`, `config`, `internal`, `author`, `published`, `version`, `system`) VALUES
 (1, 'Каталог статей', 'content', '---\nreaddesc: 0\nrating: 1\nperpage: 15\npt_show: 1\npt_disp: 1\npt_hide: 1\nautokeys: 1\nimg_small_w: 100\nimg_big_w: 200\nimg_sqr: 1\nimg_users: 1\nwatermark: 1\nwatermark_only_big: 1\naf_on: 0\naf_delete: 1\naf_showlink: 1\naf_forum_id: 1\naf_hidecat_id: 2\n', 0, 'InstantCMS team', 1, '1.9', 1),
@@ -488,7 +488,7 @@ CREATE TABLE `#__content` (
   KEY `user_id` (`user_id`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `content` (`content`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__content` (`id`, `category_id`, `user_id`, `pubdate`, `enddate`, `is_end`, `title`, `description`, `content`, `published`, `hits`, `meta_desc`, `meta_keys`, `showtitle`, `showdate`, `showlatest`, `showpath`, `ordering`, `comments`, `is_arhive`, `seolink`, `canrate`, `pagetitle`, `url`, `tpl`) VALUES
 (20, 2, 1, '2011-03-01 15:56:00', '2009-05-22', 0, 'Наш сайт открыт!', '<p>Мы рады приветствовать вас на нашем сайте!</p>', '<p>Наш сайт открыт и начинает активно фунционировать.</p>\r\n<p>У нас большие планы на будущее. На этом сайте мы постарались разместить интересную информацию.</p>\r\n<p>Мы очень рады что вы читаете эту новость.</p>\r\n<p>Наша компания занимается бизнесом в сфере продажи строительных материалов.</p>', 1, 397, '', '', 1, 1, 1, 1, 1, 1, 0, 'novosti/nash-sait-otkryt', 1, '', '', 'com_content_read.tpl'),
@@ -510,7 +510,7 @@ CREATE TABLE `#__content_access` (
   `group_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `content_id` (`content_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__cron_jobs`;
 CREATE TABLE `#__cron_jobs` (
@@ -528,7 +528,7 @@ CREATE TABLE `#__cron_jobs` (
   `class_method` varchar(50) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `job_name` (`job_name`,`is_enabled`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__cron_jobs` (`id`, `job_name`, `job_interval`, `job_run_date`, `component`, `model_method`, `custom_file`, `is_enabled`, `is_new`, `comment`, `class_name`, `class_method`) VALUES
 (1, 'photos_clear', 24, '2011-04-07 12:10:08', 'users', 'clearUploadedPhotos', '', 1, 1, 'Удаление неиспользуемых личных фотографий', '', ''),
@@ -546,7 +546,7 @@ CREATE TABLE `#__downloads` (
   `fileurl` varchar(250) NOT NULL,
   `hits` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__event_hooks`;
 CREATE TABLE `#__event_hooks` (
@@ -555,7 +555,7 @@ CREATE TABLE `#__event_hooks` (
   `plugin_id` varchar(30) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `event` (`event`,`plugin_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__event_hooks` (`id`, `event`, `plugin_id`) VALUES
 (6, 'GET_ARTICLE', '5'),
@@ -583,7 +583,7 @@ CREATE TABLE `#__faq_cats` (
   `description` text NOT NULL,
   `published` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__faq_cats` (`id`, `parent_id`, `title`, `description`, `published`) VALUES
 (3, 0, 'Технические вопросы', '<p>Обсуждение неисправностей и поломок</p>', 1),
@@ -605,7 +605,7 @@ CREATE TABLE `#__faq_quests` (
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   FULLTEXT KEY `quest` (`quest`,`answer`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__faq_quests` (`id`, `category_id`, `pubdate`, `published`, `quest`, `answer`, `user_id`, `answeruser_id`, `answerdate`, `hits`) VALUES
 (3, 3, '2008-04-14 20:09:54', 1, 'У меня не работает чайник. Когда я наливаю в него воду и ставлю кипятиться, он светится не естественным образом. Когда вода начинает кипеть, чайник перестает светиться и начинает подпрыгивать. Один раз он упрыгал в ванну.\r\n\r\nПодскажите, как мне его починить?', '<p>Василий, ваша проблема встречается очень часто. И, к сожалению, вряд ли вам чем-то можно помочь. Единственное, что мы можем - это заявить на вас в милицию. Так что решайте, что вам дороже.</p>', 2, 1, '2008-04-14 20:09:54', 32),
@@ -620,7 +620,7 @@ CREATE TABLE `#__filters` (
   `link` varchar(100) NOT NULL,
   `published` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__filters` (`id`, `title`, `description`, `link`, `published`) VALUES
 (1, 'Автозамена / Фильтр ссылок', 'Фильтр выполняет замену выражений по созданным вами правилам, а так же служит для создания ссылок в категории прайслиста, фотоальбомы и фотографии.<br/><br/>{ПРАЙС=Название категории}, <br/>{ФОТО=Название фотографии}, <br/>{АЛЬБОМ=Название фотоальбома}, <br/>{МАТЕРИАЛ=Название материала}<br/>{ФОРМА=Название формы} - форма с заголовком<br/>\r\n{БЛАНК=Название формы} - форма без заголовка', 'f_replace', 1),
@@ -638,7 +638,7 @@ CREATE TABLE `#__filter_rules` (
   `replace` text NOT NULL,
   `published` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__forms`;
 CREATE TABLE `#__forms` (
@@ -649,7 +649,7 @@ CREATE TABLE `#__forms` (
   `sendto` varchar(4) NOT NULL DEFAULT 'mail',
   `user_id` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__forms` (`id`, `title`, `description`, `email`, `sendto`, `user_id`) VALUES
 (1, 'Написать письмо', '<p>Используйте эту форму для обратной связи!</p>', 'forms@cms.ru', 'user', 1),
@@ -665,7 +665,7 @@ CREATE TABLE `#__form_fields` (
   `mustbe` int(11) NOT NULL,
   `config` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__form_fields` (`id`, `form_id`, `title`, `ordering`, `kind`, `mustbe`, `config`) VALUES
 (8, 1, 'Ваше имя:', 1, 'text', 1, 'a:3:{s:3:"max";s:3:"200";s:4:"size";s:2:"30";s:7:"default";s:0:"";}'),
@@ -696,7 +696,7 @@ CREATE TABLE `#__forums` (
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   KEY `parent_id` (`parent_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__forums` (`id`, `category_id`, `title`, `description`, `access_list`, `ordering`, `published`, `parent_id`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`, `icon`, `topic_cost`) VALUES
 (1000, 0, '-- Корневой форум --', '', '', 1, 0, 0, 1, 8, '', 0, 0, '', 0),
@@ -715,7 +715,7 @@ CREATE TABLE `#__forum_cats` (
   PRIMARY KEY (`id`),
   KEY `auth_group` (`auth_group`),
   KEY `seolink` (`seolink`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__forum_cats` (`id`, `title`, `published`, `auth_group`, `ordering`, `seolink`) VALUES
 (1, 'Общие вопросы', 1, 0, 1, 'obschie-voprosi');
@@ -730,7 +730,7 @@ CREATE TABLE `#__forum_files` (
   `hits` int(11) NOT NULL,
   `pubdate` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__forum_images`;
 CREATE TABLE `#__forum_images` (
@@ -739,7 +739,7 @@ CREATE TABLE `#__forum_images` (
   `session_id` varchar(50) NOT NULL,
   `fileurl` varchar(250) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__forum_polls`;
 CREATE TABLE `#__forum_polls` (
@@ -751,7 +751,7 @@ CREATE TABLE `#__forum_polls` (
   `options` varchar(250) NOT NULL,
   `enddate` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__forum_posts`;
 CREATE TABLE `#__forum_posts` (
@@ -766,7 +766,7 @@ CREATE TABLE `#__forum_posts` (
   KEY `thread_id` (`thread_id`,`pubdate`),
   KEY `user_id` (`user_id`),
   FULLTEXT KEY `content` (`content`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__forum_posts` (`id`, `thread_id`, `user_id`, `pubdate`, `editdate`, `edittimes`, `content`) VALUES
 (29, 12, 1, '2009-04-04 18:54:53', '2010-10-07 18:07:14', 2, 'Геосинклиналь [b]обогащает магматический монтмориллонит[/b], что в общем свидетельствует о преобладании тектонических опусканий в это время. Углефикация характерна. Порода существенна. Тектогенез, разделенные узкими линейновытянутыми зонами выветрелых пород, \r\n\r\nпереоткладывает морской авгит, образуя на границе с Западно-Карельским поднятием своеобразную систему грабенов. Ведущий экзогенный геологический процесс - субдукция ослабляет лакколит, так как совершенно однозначно указывает на существование и рост в период оформления палеогеновой поверхности выравнивания.');
@@ -790,7 +790,7 @@ CREATE TABLE `#__forum_threads` (
   KEY `user_id` (`user_id`),
   KEY `forum_id` (`forum_id`),
   FULLTEXT KEY `title` (`title`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__forum_threads` (`id`, `forum_id`, `user_id`, `title`, `description`, `icon`, `pubdate`, `hits`, `closed`, `pinned`, `is_hidden`, `rel_to`, `rel_id`) VALUES
 (12, 1, 1, 'Пример темы', '', '', '2009-10-16 12:31:36', 71, 0, 0, 0, '', 0);
@@ -803,7 +803,7 @@ CREATE TABLE `#__forum_votes` (
   `user_id` int(11) NOT NULL,
   `pubdate` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__menu`;
 CREATE TABLE `#__menu` (
@@ -827,7 +827,7 @@ CREATE TABLE `#__menu` (
   `NSIgnore` int(11) NOT NULL,
   `parent_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__menu` (`id`, `menu`, `title`, `link`, `linktype`, `linkid`, `target`, `component`, `ordering`, `published`, `template`, `access_list`, `iconurl`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `parent_id`) VALUES
 (1, 'root', '-- Корневая страница --', '-1', 'link', '-1', '_self', '', 1, 0, '0', '', '', 1, 34, 0, '', 0, 0),
@@ -871,7 +871,7 @@ CREATE TABLE `#__modules` (
   `is_strict_bind` tinyint(4) NOT NULL DEFAULT '0',
   `version` varchar(6) NOT NULL DEFAULT '1.0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__modules` (`id`, `position`, `name`, `title`, `is_external`, `content`, `ordering`, `showtitle`, `published`, `user`, `config`, `original`, `css_prefix`, `access_list`, `cache`, `cachetime`, `cacheint`, `template`, `is_strict_bind`, `version`) VALUES
 (1, 'topmenu', 'Меню', 'Меню', 1, 'mod_menu', 6, 0, 1, 0, '---\nmenu: mainmenu\nshow_home: 1\ntpl: mod_menu.tpl\nis_sub_menu: 0\n', 1, '', '', 0, 1, 'HOUR', 'module_simple.tpl', 0, '1.0'),
@@ -926,7 +926,7 @@ CREATE TABLE `#__modules_bind` (
   `position` varchar(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `position` (`position`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__modules_bind` (`id`, `module_id`, `menu_id`, `position`) VALUES
 (329, 42, 0, ''),
@@ -1005,7 +1005,7 @@ CREATE TABLE `#__ns_transactions` (
   `InTransaction` bit(1) DEFAULT NULL,
   `TStamp` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`IDTransaction`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__online`;
 CREATE TABLE `#__online` (
@@ -1019,7 +1019,7 @@ CREATE TABLE `#__online` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `sess_id` (`sess_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__online` (`id`, `ip`, `sess_id`, `lastdate`, `user_id`, `agent`, `viewurl`) VALUES
 (1, '127.0.0.1', 'cro00215v3tvqh3n7n985m0ks2', '2011-04-07 12:10:53', 1, '', '/');
@@ -1060,7 +1060,7 @@ CREATE TABLE `#__photo_albums` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `parent_id` (`parent_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__photo_albums` (`id`, `parent_id`, `ordering`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`, `title`, `description`, `published`, `showdate`, `iconurl`, `pubdate`, `orderby`, `orderto`, `public`, `perpage`, `cssprefix`, `thumb1`, `thumb2`, `thumbsqr`, `showtype`, `nav`, `uplimit`, `maxcols`, `orderform`, `showtags`, `bbcode`, `user_id`, `is_comments`) VALUES
 (100, 0, 1, 1, 6, '', 0, 0, '-- Корневой альбом --', '', 1, 1, '', '2008-05-30 12:03:07', 'title', 'asc', 0, 15, '', 96, 480, 1, 'list', 1, 0, 4, 1, 1, 1, 1, 0),
@@ -1086,7 +1086,7 @@ CREATE TABLE `#__photo_files` (
   KEY `album_id` (`album_id`),
   KEY `user_id` (`user_id`),
   FULLTEXT KEY `title` (`title`,`description`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__photo_files` (`id`, `album_id`, `title`, `description`, `pubdate`, `file`, `published`, `hits`, `showdate`, `comments`, `user_id`, `owner`) VALUES
 (10, 1, 'Закат на пляже', '', '2009-08-31 18:26:43', 'd0633d5a84f03a27f1b7d0419947e968.jpg', 1, 25, 1, 1, 1, 'photos'),
@@ -1107,7 +1107,7 @@ CREATE TABLE `#__plugins` (
   `published` int(11) NOT NULL,
   `config` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__plugins` (`id`, `plugin`, `title`, `description`, `author`, `version`, `plugin_type`, `published`, `config`) VALUES
 (6, 'p_usertab', 'Demo Profile Plugin', 'Пример плагина - Добавляет вкладку "Статьи" в профили всех пользователей', 'InstantCMS Team', '1.0', 'plugin', 0, '---\nКоличество статей: 10\n'),
@@ -1125,7 +1125,7 @@ CREATE TABLE `#__polls` (
   `pubdate` date NOT NULL DEFAULT '0000-00-00',
   `answers` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__polls` (`id`, `title`, `pubdate`, `answers`) VALUES
 (2, 'Какой у вас хостинг?', '2008-05-23', 'a:3:{s:7:"Платный";i:0;s:10:"Бесплатный";i:1;s:11:"Собственный";i:0;}');
@@ -1138,7 +1138,7 @@ CREATE TABLE `#__polls_log` (
   `user_id` int(11) NOT NULL,
   `ip` varchar(15) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__price_cats`;
 CREATE TABLE `#__price_cats` (
@@ -1147,7 +1147,7 @@ CREATE TABLE `#__price_cats` (
   `description` text NOT NULL,
   `published` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__price_cats` (`id`, `title`, `description`, `published`) VALUES
 (4, 'Плакаты и агитационные  материалы', '', 1),
@@ -1165,7 +1165,7 @@ CREATE TABLE `#__price_items` (
   `canmany` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   FULLTEXT KEY `title` (`title`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__price_items` (`id`, `category_id`, `title`, `price`, `published`, `canmany`) VALUES
 (688, 9, 'Учет тепловой энергии и теплоносителя. Энергосервис, Москва, 2004 год', 170, 1, 1),
@@ -1197,7 +1197,7 @@ CREATE TABLE `#__ratings` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `item_id` (`item_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__ratings_total`;
 CREATE TABLE `#__ratings_total` (
@@ -1209,7 +1209,7 @@ CREATE TABLE `#__ratings_total` (
   PRIMARY KEY (`id`),
   KEY `item_id` (`item_id`),
   KEY `target` (`target`,`item_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__rating_targets`;
 CREATE TABLE `#__rating_targets` (
@@ -1222,7 +1222,7 @@ CREATE TABLE `#__rating_targets` (
   `target_title` varchar(70) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `target` (`target`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__rating_targets` (`id`, `target`, `component`, `is_user_affect`, `user_weight`, `target_table`, `target_title`) VALUES
 (1, 'content', 'content', 1, 5, 'cms_content', 'Статья'),
@@ -1244,7 +1244,7 @@ CREATE TABLE `#__search` (
   PRIMARY KEY  (`id`),
   KEY `session_id` (`session_id`),
   KEY `date` (`date`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__stats`;
 CREATE TABLE `#__stats` (
@@ -1255,7 +1255,7 @@ CREATE TABLE `#__stats` (
   `agent` varchar(60) DEFAULT 'unknown',
   `refer` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__subscribe`;
 CREATE TABLE `#__subscribe` (
@@ -1267,7 +1267,7 @@ CREATE TABLE `#__subscribe` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `target_id` (`target_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__tags`;
 CREATE TABLE `#__tags` (
@@ -1278,7 +1278,7 @@ CREATE TABLE `#__tags` (
   PRIMARY KEY (`id`),
   KEY `tag` (`tag`),
   KEY `item_id` (`item_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 
 INSERT INTO `#__tags` (`id`, `tag`, `target`, `item_id`) VALUES
@@ -1325,7 +1325,7 @@ CREATE TABLE `#__uc_cart` (
   `pubdate` datetime NOT NULL,
   `itemscount` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__uc_cats`;
 CREATE TABLE `#__uc_cats` (
@@ -1359,7 +1359,7 @@ CREATE TABLE `#__uc_cats` (
   `can_edit` int(11) NOT NULL DEFAULT '0',
   `cost` varchar(5) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__uc_cats` (`id`, `parent_id`, `title`, `description`, `published`, `fieldsstruct`, `view_type`, `fields_show`, `showmore`, `perpage`, `showtags`, `showsort`, `is_ratings`, `orderby`, `orderto`, `showabc`, `shownew`, `newint`, `filters`, `is_shop`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `ordering`, `is_public`, `can_edit`, `cost`) VALUES
 (1000, 0, '-- Корневая рубрика --', '', 1, '', 'list', 10, 1, 20, 1, 1, 0, 'pubdate', 'desc', 1, 0, '', 0, 0, 1, 6, 0, 0, 0, 1, 0, 0, ''),
@@ -1371,7 +1371,7 @@ CREATE TABLE `#__uc_cats_access` (
   `cat_id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL,
   KEY `cat_id` (`cat_id`,`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__uc_discount`;
 CREATE TABLE `#__uc_discount` (
@@ -1384,7 +1384,7 @@ CREATE TABLE `#__uc_discount` (
   `if_limit` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `cat_id` (`cat_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__uc_discount` (`id`, `title`, `cat_id`, `sign`, `value`, `unit`, `if_limit`) VALUES
 (2, 'Почтовые расходы', 0, 2, 200, 'руб.', 0),
@@ -1412,7 +1412,7 @@ CREATE TABLE `#__uc_items` (
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   FULLTEXT KEY `title` (`title`,`fieldsdata`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__uc_items` (`id`, `category_id`, `title`, `pubdate`, `published`, `imageurl`, `fieldsdata`, `hits`, `is_comments`, `tags`, `rating`, `meta_desc`, `meta_keys`, `price`, `canmany`, `user_id`, `on_moderate`) VALUES
 (1, 1, 'Карандаши', '2008-06-03 13:38:55', 1, 'b00117f6bca1efaaef37b44da87c1100.jpg', 'a:4:{i:0;s:7:"3130070";i:1;s:7:"бежевый";i:2;s:7:"191 шт.";i:3;s:64:"Набор для рисования: 12 цветных карандашей в картонной коробочке";}', 37, 1, 'пастель, карандаши', 0, '', '', 14.6, 1, 1, 0),
@@ -1428,7 +1428,7 @@ CREATE TABLE `#__uc_ratings` (
   `points` int(11) NOT NULL,
   `ip` varchar(16) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__uc_tags`;
 CREATE TABLE `#__uc_tags` (
@@ -1436,7 +1436,7 @@ CREATE TABLE `#__uc_tags` (
   `tag` varchar(200) NOT NULL,
   `item_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__upload_images`;
 CREATE TABLE `#__upload_images` (
@@ -1446,7 +1446,7 @@ CREATE TABLE `#__upload_images` (
   `fileurl` varchar(250) NOT NULL,
   `target` varchar(25) NOT NULL DEFAULT 'forum',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__users`;
 CREATE TABLE `#__users` (
@@ -1478,7 +1478,7 @@ CREATE TABLE `#__users` (
   KEY `group_id` (`group_id`),
   KEY `invited_by` (`invited_by`),
   KEY `openid` (`openid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 INSERT INTO `#__users` (`id`, `group_id`, `login`, `nickname`, `password`, `email`, `icq`, `regdate`, `logdate`, `birthdate`, `is_locked`, `is_deleted`, `is_logged_once`, `rating`, `points`, `last_ip`, `status`, `status_date`, `invited_by`, `invdate`) VALUES
 (1, 2, 'admin', 'Администратор', '2ca41752ccf4dbdb76d8fe88c488fd44', 'admin@cms.ru', '100200300', '2007-11-23 12:41:57', '2011-04-15 13:20:33', '1980-10-23', 0, 0, 0, 32, 0, '127.0.0.1', 'Самый длинный статус из всех что существуют в этом прекрасном мире', '2010-10-21 02:06:53', 0, '2010-11-09 23:25:59'),
@@ -1492,7 +1492,7 @@ CREATE TABLE `#__users_activate` (
   `user_id` int(11) NOT NULL,
   `code` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__user_albums`;
 CREATE TABLE `#__user_albums` (
@@ -1505,7 +1505,7 @@ CREATE TABLE `#__user_albums` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `allow_who` (`allow_who`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__user_albums` (`id`, `user_id`, `title`, `pubdate`, `allow_who`, `description`) VALUES
 (2, 3, 'Мой фотоальбом', '2010-10-22 20:28:51', 'all', ''),
@@ -1526,7 +1526,7 @@ CREATE TABLE `#__user_autoawards` (
   `p_karma` int(11) NOT NULL,
   `published` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__user_autoawards` (`id`, `title`, `description`, `imageurl`, `p_comment`, `p_blog`, `p_forum`, `p_photo`, `p_privphoto`, `p_content`, `p_karma`, `published`) VALUES
 (1, 'Медаль', 'Почетный член форума', 'aw.gif', 0, 0, 100, 0, 0, 0, 0, 1),
@@ -1544,7 +1544,7 @@ CREATE TABLE `#__user_awards` (
   `award_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__user_awards` (`id`, `user_id`, `pubdate`, `title`, `description`, `imageurl`, `from_id`, `award_id`) VALUES
 (1, 2, '2010-10-27 21:46:44', 'Медаль за заслуги', 'В благодарность от администрации', 'aw.gif', 1, 0);
@@ -1555,7 +1555,7 @@ CREATE TABLE `#__user_clubs` (
   `club_id` int(11) NOT NULL,
   `role` varchar(20) NOT NULL DEFAULT 'guest',
   `pubdate` datetime NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__user_clubs` (`user_id`, `club_id`, `role`, `pubdate`) VALUES
 (3, 14, 'member', '0000-00-00 00:00:00');
@@ -1571,7 +1571,7 @@ CREATE TABLE `#__user_files` (
   `hits` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__user_friends`;
 CREATE TABLE `#__user_friends` (
@@ -1583,7 +1583,7 @@ CREATE TABLE `#__user_friends` (
   PRIMARY KEY (`id`),
   KEY `to_id` (`to_id`),
   KEY `from_id` (`from_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__user_friends` (`id`, `to_id`, `from_id`, `logdate`, `is_accepted`) VALUES
 (1, 2, 1, '2010-10-08 17:53:22', 1),
@@ -1598,7 +1598,7 @@ CREATE TABLE `#__user_groups` (
   `is_admin` int(11) NOT NULL,
   `access` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__user_groups` (`id`, `title`, `alias`, `is_admin`, `access`) VALUES
 (1, 'Пользователи', 'registered', 0, 'comments/add, comments/bbcode, comments/delete, content/add, board/add, board/autoadd'),
@@ -1617,7 +1617,7 @@ CREATE TABLE `#__user_invites` (
   `is_sended` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `code` (`code`,`owner_id`,`is_used`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__user_karma`;
 CREATE TABLE `#__user_karma` (
@@ -1628,7 +1628,7 @@ CREATE TABLE `#__user_karma` (
   `senddate` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__user_msg`;
 CREATE TABLE `#__user_msg` (
@@ -1645,7 +1645,7 @@ CREATE TABLE `#__user_msg` (
   KEY `from_id` (`from_id`),
   KEY `to_del` (`to_del`),
   KEY `from_del` (`from_del`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__user_photos`;
 CREATE TABLE `#__user_photos` (
@@ -1661,7 +1661,7 @@ CREATE TABLE `#__user_photos` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `album_id` (`album_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__user_photos` (`id`, `user_id`, `album_id`, `pubdate`, `title`, `description`, `allow_who`, `hits`, `imageurl`) VALUES
 (6, 1, 5, '2010-11-13 00:00:00', 'Горный пейзаж', 'Красивый вид с большой высоты', 'all', 4, 'b22c5c0f95c1fb9398578fd5e396c7dd.jpg'),
@@ -1688,7 +1688,7 @@ CREATE TABLE `#__user_profiles` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `city` (`city`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 INSERT INTO `#__user_profiles` (`id`, `user_id`, `city`, `description`, `showmail`, `showbirth`, `showicq`, `karma`, `imageurl`, `allow_who`, `signature`, `gender`, `formsdata`, `email_newmsg`, `cm_subscribe`, `stats`) VALUES
 (1, 1, 'Москва', 'Р.Хайнлайн, А.Азимов, А.Кларк', 1, 1, 1, 0, '', 'all', '', 'm', '---\n22: Р.Хайнлайн, А.Азимов, А.Кларк\n24: Высшее\n', 1, 'none', '---\ncount: \n  comments: 1\n  forum: 1\n  photos: 2\n  board: 2\n  files_public: 0\n  files_private: 0\nrating: 0\n'),
@@ -1705,7 +1705,7 @@ CREATE TABLE `#__user_wall` (
   `usertype` varchar(8) NOT NULL DEFAULT 'user',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__user_wall` (`id`, `user_id`, `author_id`, `pubdate`, `content`, `usertype`) VALUES
 (6, 1, 1, '2010-10-22 20:52:56', 'спасибо что заглянули в мой профиль', 'user'),

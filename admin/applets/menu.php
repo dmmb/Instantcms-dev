@@ -17,7 +17,7 @@ function iconList(){
 	if ($handle = opendir(PATH.'/images/menuicons')) {
 		$n = 0;
 		while (false !== ($file = readdir($handle))) {
-			if ($file != '.' && $file != '..' && strstr($file, '.gif')){
+			if ($file != '.' && $file != '..' && mb_strstr($file, '.gif')){
 				$tag = str_replace('.gif', '', $file);
 				$dir = '/images/menuicons/';
 				echo '<a style="width:20px;height:20px;display:block; float:left; padding:2px" href="javascript:selectIcon(\''.$file.'\')"><img alt="'.$file.'"src="'.$dir.$file.'" border="0" /></a>';

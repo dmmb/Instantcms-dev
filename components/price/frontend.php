@@ -430,7 +430,7 @@ function price(){
 			if($look == 'anyword'){
 				//$looktype = 'любое слово';
 				foreach($words as $w){
-					if(strlen($w)>1){
+					if(mb_strlen($w)>1){
 						$n++;
 						if ($n==1) { $sql .= "title LIKE '%$w%'"; }
 						else { $sql .= " OR title LIKE '%$w%'"; }
@@ -441,7 +441,7 @@ function price(){
 			if($look == 'allwords'){
 				//looktype = 'все слова';		
 				foreach($words as $w){
-					if(strlen($w)>1){
+					if(mb_strlen($w)>1){
 						$n++;
 						if ($n==1) { $sql .= "title LIKE '%$w%'"; }
 						else { $sql .= " AND title LIKE '%$w%'"; }

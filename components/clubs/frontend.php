@@ -303,7 +303,7 @@ if ($do == 'config'){
 
 			$realfile   = $_FILES['picture']['name'];
 			$path_parts = pathinfo($realfile);
-			$ext        = strtolower($path_parts['extension']);
+			$ext        = mb_strtolower($path_parts['extension']);
 			if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'png' && $ext != 'bmp') { cmsCore::error404(); }
 
             $filename       = md5($id . $user_id . time()).'.jpg';
@@ -593,7 +593,7 @@ if ($do == 'send_message'){
 		$members_list    = clubMembers($id);
 		$total_list 	 = $_POST['only_mod'] ? $moderators_list : array_merge ($moderators_list, $members_list);
 
-		if (strlen($message)<3) { $inCore->addSessionMessage($_LANG['ERR_SEND_MESS'], 'error'); $errors = true; }
+		if (mb_strlen($message)<3) { $inCore->addSessionMessage($_LANG['ERR_SEND_MESS'], 'error'); $errors = true; }
 		if (!$total_list) { $inCore->addSessionMessage($_LANG['ERR_SEND_MESS_NO_MEMBERS'], 'error'); $errors = true; }
 		if ($errors) { $inCore->redirect($back); }
 

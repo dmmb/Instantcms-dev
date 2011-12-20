@@ -67,7 +67,7 @@ function mod_bestcontent($module_id){
 			while($con = $inDB->fetch_assoc($result)){
 				$next = sizeof($articles);
 				$text = strip_tags($con['title']);							
-				if (strlen($text)>70) { $text = substr($text, 0, 70). '...'; }
+				if (mb_strlen($text)>70) { $text = mb_substr($text, 0, 70). '...'; }
 							
 				$articles[$next]['title'] = $text;
 				$articles[$next]['href'] = $model->getArticleURL($cfg['menuid'], $con['seolink']);

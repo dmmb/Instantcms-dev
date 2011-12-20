@@ -112,7 +112,7 @@ function getAgent($agent){
 	
 	foreach($bot as $id => $title){
 	
-		if (strstr($agent, $id)){
+		if (mb_strstr($agent, $id)){
 			$back = $title;
 		}
 	

@@ -118,11 +118,11 @@ function bannerHitsbyID($id){
 
 			$realfile = $_FILES['picture']['name'];
 			$path_parts = pathinfo($realfile);
-			$ext = strtolower($path_parts['extension']);
+			$ext = mb_strtolower($path_parts['extension']);
 
 			if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'swf') { die('тип файла неверный'); }
 
-			$realfile = substr($realfile, 0, strrpos($realfile, '.'));
+			$realfile = mb_substr($realfile, 0, mb_strrpos($realfile, '.'));
 			$realfile = preg_replace ('/[^a-zA-Z0-9]/i', '', $realfile);
 			$filename = $inDB->escape_string($realfile . '.' . $ext);
 
@@ -159,11 +159,11 @@ function bannerHitsbyID($id){
 
 				$realfile = $_FILES['picture']['name'];
 				$path_parts = pathinfo($realfile);
-				$ext = strtolower($path_parts['extension']);
+				$ext = mb_strtolower($path_parts['extension']);
 	
 				if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'swf') { die('тип файла неверный'); }
 	
-				$realfile = substr($realfile, 0, strrpos($realfile, '.'));
+				$realfile = mb_substr($realfile, 0, mb_strrpos($realfile, '.'));
 				$realfile = preg_replace ('/[^a-zA-Z0-9]/i', '', $realfile);
 				$filename = $inDB->escape_string($realfile . '.' . $ext);
 	
@@ -205,7 +205,7 @@ function bannerHitsbyID($id){
 				$f = mysql_fetch_assoc($result);
 
 				$path_parts = pathinfo($f['fileurl']);
-				$ext = strtolower($path_parts['extension']);
+				$ext = mb_strtolower($path_parts['extension']);
 				if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'swf') {
 					unlink(PATH.'/images/banners/'.$f['fileurl']);
 				}

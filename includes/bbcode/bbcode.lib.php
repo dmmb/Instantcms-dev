@@ -254,7 +254,7 @@ class bbcode {
     8 - имя тега
     */
     function get_array_of_tokens($code) {
-        $length = strlen($code);
+        $length = mb_strlen($code);
         $tokens = array();
         $token_key = -1;
         $type_of_char = null;
@@ -301,7 +301,7 @@ class bbcode {
                     $type_of_char = 7;
             }
             if ( 7 == $previous_type && $type_of_char != $previous_type ) {
-                $word = strtolower($tokens[$token_key][1]);
+                $word = mb_strtolower($tokens[$token_key][1]);
                 if ( isset($this -> info_about_tags[$word]) ) {
                     $tokens[$token_key][0] = 8;
                 }
@@ -507,7 +507,7 @@ class bbcode {
                     break;
                 case 5:
                     $tag_decomposition['type'] = 'open';
-                    $name = strtolower($token[1]);
+                    $name = mb_strtolower($token[1]);
                     $tag_decomposition['name'] = $name;
                     $tag_decomposition['str'] .= $token[1];
                     $tag_decomposition['layout'][] = array( 2, $token[1] );
@@ -526,7 +526,7 @@ class bbcode {
                     $tag_decomposition = array();
                     break;
                 case 7:
-                    $tag_decomposition['name'] = strtolower($token[1]);
+                    $tag_decomposition['name'] = mb_strtolower($token[1]);
                     $tag_decomposition['str'] .= $token[1];
                     $tag_decomposition['layout'][] = array( 2, $token[1] );
                     break;
@@ -561,7 +561,7 @@ class bbcode {
                     $tag_decomposition['layout'][] = array( 4, $token[1] );
                     break;
                 case 15:
-                    $name = strtolower($token[1]);
+                    $name = mb_strtolower($token[1]);
                     $tag_decomposition['str'] .= $token[1];
                     $tag_decomposition['layout'][] = array( 6, $token[1] );
                     $tag_decomposition['attrib'][$name] = '';
@@ -974,7 +974,7 @@ class bbcode {
 	
 		while ($smile = @readdir($pdir)){
 			if (($smile != '.') && ($smile != '..') && !is_dir(PATH.$path.$smile)) {
-				$smiles[] = substr($smile, 0, strrpos($smile, '.'));
+				$smiles[] = mb_substr($smile, 0, mb_strrpos($smile, '.'));
 			}
 		}
 	
@@ -997,7 +997,7 @@ class bbcode {
                 $elem['str'] = $this -> insert_smiles($elem['str']);
                 for ($i=0; $i<$rbr; ++$i) {
                     $elem['str'] = ltrim($elem['str']);
-                    if ('<br />' == substr($elem['str'], 0, 6)) {
+                    if ('<br />' == mb_substr($elem['str'], 0, 6)) {
                         $elem['str'] = substr_replace($elem['str'], '', 0, 6);
                     }
                 }
@@ -1007,7 +1007,7 @@ class bbcode {
                 $rbr = $this -> info_about_tags[$elem['name']]['rbr'];
                 for ($i=0; $i<$lbr; ++$i) {
                     $result = rtrim($result);
-                    if ('<br />' == substr($result, -6)) {
+                    if ('<br />' == mb_substr($result, -6)) {
                         $result = substr_replace($result, '', -6, 6);
                     }
                 }
@@ -1033,7 +1033,7 @@ class bbcode {
         if(!$lang){ $lang = 'php'; }
 
         $str  = '<div class="bb_tag_code">';
-        $str .= '<strong>Код '.strtoupper($lang).':</strong><br/>';
+        $str .= '<strong>Код '.mb_strtoupper($lang).':</strong><br/>';
         $str .= '<pre>';
 
         $inCore = cmsCore::getInstance();

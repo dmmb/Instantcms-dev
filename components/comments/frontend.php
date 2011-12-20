@@ -311,7 +311,7 @@ function comments($target='', $target_id=0, $labels=array()){
 					'target' => $target_data['title'],
 					'target_url' => $target_data['link'],
 					'target_id' => 0, 
-					'description' => strip_tags( strlen(strip_tags($content))>140 ? substr(strip_tags($content), 0, 140) : $content )
+					'description' => strip_tags( mb_strlen(strip_tags($content))>140 ? mb_substr(strip_tags($content), 0, 140) : $content )
 				));
 			}
 
@@ -376,7 +376,7 @@ function comments($target='', $target_id=0, $labels=array()){
 
 							$targetlink = str_replace('%author_id%', $author['id'], $targetlink);
 
-							if (strstr($targetlink, '%post_url%')){
+							if (mb_strstr($targetlink, '%post_url%')){
                                 $inCore->loadModel('blogs');
                                 $model = new cms_model_blogs();
                                 $post       = $model->getPost($target_id);
@@ -446,7 +446,7 @@ function comments($target='', $target_id=0, $labels=array()){
                 'content'=>$content,
                 'content_bbcode'=>$content_bb
             ));
-			$content = strip_tags( strlen(strip_tags($content))>140 ? substr(strip_tags($content), 0, 140) : $content );
+			$content = strip_tags( mb_strlen(strip_tags($content))>140 ? mb_substr(strip_tags($content), 0, 140) : $content );
 			cmsActions::updateLog('add_comment', array('description' => $content), $comment_id);
 
 		}

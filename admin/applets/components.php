@@ -189,7 +189,7 @@ function applet_components(){
 
         if ($inUser->id > 1){
             foreach($adminAccess as $key=>$value){
-                if (strstr($value, 'admin/com_')){
+                if (mb_strstr($value, 'admin/com_')){
                     if ($where) { $where .= ' OR '; }
                     $value = str_replace('admin/com_', '', $value);
                     $where .= "link='{$value}'";

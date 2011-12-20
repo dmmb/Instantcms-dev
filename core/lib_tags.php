@@ -18,7 +18,7 @@ function cmsInsertTags($tagstr, $target, $item_id){
     $inDB = cmsDatabase::getInstance();
 	$inDB->query("DELETE FROM cms_tags WHERE target='$target' AND item_id = '$item_id'");
 
-	$tagstr = strtolower($tagstr);
+	$tagstr = mb_strtolower($tagstr);
 	$tagstr = preg_replace('/[^a-zA-Zа-яёіїєґА-ЯЁІЇЄҐ0-9\s\-\,_]/i', '', $tagstr);
 	$tagstr = trim($tagstr);
 	$tagstr = preg_replace('/\s+/', ' ', $tagstr);
@@ -29,8 +29,8 @@ function cmsInsertTags($tagstr, $target, $item_id){
 		$tags = explode(',', $tagstr);
 
 		foreach ($tags as $key=>$tag){
-			if(strlen($tag)>3){
-				if (strlen($tag>15) && !(strstr($tag, ' ') || strstr($tag, '-'))) { $tag = substr($tag, 0, 15); }
+			if(mb_strlen($tag)>3){
+				if (mb_strlen($tag>15) && !(mb_strstr($tag, ' ') || mb_strstr($tag, '-'))) { $tag = mb_substr($tag, 0, 15); }
 				$sql = "INSERT INTO cms_tags (tag, target, item_id) VALUES ('$tag', '$target', $item_id)";
 				$inDB->query($sql);
 			}

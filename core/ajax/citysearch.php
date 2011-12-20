@@ -10,7 +10,8 @@
 //                        LICENSED BY GNU/GPL v2                              //
 //                                                                            //
 /******************************************************************************/
-
+    setlocale(LC_ALL, 'ru_RU.UTF-8');
+    header('Content-Type: text/html; charset=utf-8');
 
     if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
 
@@ -27,8 +28,7 @@
 
     if (!$q) return;
 
-	$q = iconv('UTF-8//IGNORE', 'WINDOWS-1251//IGNORE', $q);
-	$q = strtolower($q);
+	$q = mb_strtolower($q);
 
     $inCore->loadClass('config');       //конфигурация
     $inCore->loadClass('db');           //база данных

@@ -102,7 +102,7 @@ class cms_model_forum{
 				}
 				//check is moderator
 				$rights = $this->inDB->get_fields('cms_user_groups g, cms_users u', "u.group_id = g.id AND u.id = '$user_id'", 'g.id, g.access as access');
-				if (strstr($rights['access'], 'forum/moderate')){
+				if (mb_strstr($rights['access'], 'forum/moderate')){
 					if ($modrank){
 						$userrank .= '<span id="moder">'.$_LANG['MODER'].'</span>';
 					} else {

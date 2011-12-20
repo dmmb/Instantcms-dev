@@ -12,7 +12,8 @@
 /******************************************************************************/
 
     if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
-	header('Content-Type: text/html; charset=windows-1251'); 
+    setlocale(LC_ALL, 'ru_RU.UTF-8');
+    header('Content-Type: text/html; charset=utf-8');
 	session_start();
 
 	if (!isset($_REQUEST['module_id'])) { die(2); }

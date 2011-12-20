@@ -67,7 +67,7 @@ function mod_bestblogs($module_id){
                 }
 
 				$text = strip_tags($con['title']);							
-				if (strlen($text)>70) { $text = substr($text, 0, 70). '...'; }				
+				if (mb_strlen($text)>70) { $text = mb_substr($text, 0, 70). '...'; }				
 
 				$posts[$next]['title'] = $text;
                 $posts[$next]['href'] = $model->getPostURL(null, $con['bloglink'], $con['seolink']);

@@ -136,11 +136,11 @@ function registration(){
 		$pass 	= $inCore->request('pass', 'str', '');
 		$pass2	= $inCore->request('pass2', 'str', '');
 
-        if(strlen($login)<2) 					{ $msg .= $_LANG['TYPE_LOGIN'].'<br/>'; }
-		if ((!preg_match("/^([a-zA-Z0-9])+$/i", $login)) && strlen($login)>=2)	{$msg  .= $_LANG['ERR_LOGIN'].'<br/>'; }
+        if(mb_strlen($login)<2) 					{ $msg .= $_LANG['TYPE_LOGIN'].'<br/>'; }
+		if ((!preg_match("/^([a-zA-Z0-9])+$/i", $login)) && mb_strlen($login)>=2)	{$msg  .= $_LANG['ERR_LOGIN'].'<br/>'; }
         if(!$pass) 								{ $msg .= $_LANG['TYPE_PASS'].'<br/>'; }
         if($pass && !$pass2) 					{ $msg .= $_LANG['TYPE_PASS_TWICE'].'<br/>'; }
-		if($pass && $pass2 && strlen($pass)<6) 	{ $msg .= $_LANG['PASS_SHORT'].'<br/>'; }
+		if($pass && $pass2 && mb_strlen($pass)<6) 	{ $msg .= $_LANG['PASS_SHORT'].'<br/>'; }
 		if($pass && $pass2 && $pass != $pass2) 	{ $msg .= $_LANG['WRONG_PASS'].'<br/>'; }
 
 		// Проверяем nickname или имя и фамилию

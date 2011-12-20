@@ -51,7 +51,7 @@ function FindBadUtf8( $string )
 		if ( isset($matches[2])) {
 			return true;
 		}
-		$string = substr($string, strlen($matches[0]));
+		$string = mb_substr($string, mb_strlen($matches[0]));
 	}
 
 	return false;
@@ -68,7 +68,7 @@ function ConvertToXmlAttribute( $value )
 		$os = php_uname() ;
 	}
 
-	if ( strtoupper( substr( $os, 0, 3 ) ) === 'WIN' || FindBadUtf8( $value ) )
+	if ( mb_strtoupper( mb_substr( $os, 0, 3 ) ) === 'WIN' || FindBadUtf8( $value ) )
 	{
 		return ( utf8_encode( htmlspecialchars( $value ) ) ) ;
 	}
@@ -94,7 +94,7 @@ function IsHtmlExtension( $ext, $htmlExtensions )
 	$lcaseHtmlExtensions = array() ;
 	foreach ( $htmlExtensions as $key => $val )
 	{
-		$lcaseHtmlExtensions[$key] = strtolower( $val ) ;
+		$lcaseHtmlExtensions[$key] = mb_strtolower( $val ) ;
 	}
 	return in_array( $ext, $lcaseHtmlExtensions ) ;
 }
@@ -121,7 +121,7 @@ function DetectHtml( $filePath )
 	flock( $fp, LOCK_UN ) ;
 	fclose( $fp ) ;
 
-	$chunk = strtolower( $chunk ) ;
+	$chunk = mb_strtolower( $chunk ) ;
 
 	if (!$chunk)
 	{
@@ -139,7 +139,7 @@ function DetectHtml( $filePath )
 
 	foreach( $tags as $tag )
 	{
-		if( false !== strpos( $chunk, $tag ) )
+		if( false !== mb_strpos( $chunk, $tag ) )
 		{
 			return true ;
 		}

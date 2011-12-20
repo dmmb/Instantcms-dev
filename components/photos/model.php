@@ -69,7 +69,7 @@ class cms_model_photos{
 
             case 'photo':  	$photo = $this->getPhoto($target_id);
 							$album = $this->getAlbum($photo['album_id']);
-							if(strstr($album['NSDiffer'],'club') && $album['published']) {
+							if(mb_strstr($album['NSDiffer'],'club') && $album['published']) {
 								$clubtype = $this->inDB->get_field('cms_clubs', "id='{$album['user_id']}'", 'clubtype');
 								if($clubtype == 'private') { $is_hidden = 1; }
 							}
@@ -454,10 +454,10 @@ class cms_model_photos{
 			$realfile 				= $this->inDB->escape_string($_FILES['Filedata']['name']);
 		
 			$path_parts             = pathinfo($realfile);
-			$ext                    = strtolower($path_parts['extension']);
+			$ext                    = mb_strtolower($path_parts['extension']);
 			
 			// убираем расширение файла вместе с точкой
-			$realfile = substr($realfile, 0, strrpos($realfile, '.'));
+			$realfile = mb_substr($realfile, 0, mb_strrpos($realfile, '.'));
 		
 			if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'png' && $ext != 'bmp') { return false; }
 		
@@ -486,7 +486,7 @@ class cms_model_photos{
 
 				$file['filename'] = $filename;
 				
-				$file['realfile'] = $inCore->inRequest('upload') ? $realfile : iconv('utf-8', 'cp1251', $realfile);
+				$file['realfile'] = $realfile;
 		
 		
 			} else {
@@ -527,7 +527,7 @@ class cms_model_photos{
 			$can_add    = $user_id; 
 			$min_karma  = false; 
 
-		} elseif (strstr($album['NSDiffer'],'club')){
+		} elseif (mb_strstr($album['NSDiffer'],'club')){
 			
 			$club =$this->inDB->get_fields('cms_clubs', 'id='.$album['user_id'], '*');
 

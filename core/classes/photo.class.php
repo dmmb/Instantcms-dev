@@ -113,10 +113,10 @@ class cmsPhoto {
 			$realfile 				= $this->inDB->escape_string($_FILES['Filedata']['name']);
 		
 			$path_parts             = pathinfo($realfile);
-			$ext                    = strtolower($path_parts['extension']);
+			$ext                    = mb_strtolower($path_parts['extension']);
 			
 			// убираем расширение файла вместе с точкой
-			$realfile = substr($realfile, 0, strrpos($realfile, '.'));
+			$realfile = mb_substr($realfile, 0, mb_strrpos($realfile, '.'));
 		
 			if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'png' && $ext != 'bmp') { return false; }
 
@@ -149,8 +149,7 @@ class cmsPhoto {
 
 				$file['filename'] = $filename;
 
-				$realfile_1251    = iconv('utf-8', 'cp1251', $realfile);
-				$file['realfile'] = $realfile_1251 ? $realfile_1251 : $realfile;
+				$file['realfile'] = $realfile;
 		
 		
 			} else {

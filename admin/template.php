@@ -17,7 +17,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <?php cpHead(); ?>
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="css/styles.css?17" rel="stylesheet" type="text/css" />
 <link href="js/hmenu/hmenu.css?17" rel="stylesheet" type="text/css" />
 <link href="/includes/jquery/tablesorter/style.css" rel="stylesheet" type="text/css" />

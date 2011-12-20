@@ -76,11 +76,8 @@ function mod_comments($module_id){
                     $con['link'] = $con['target_link'] . '#c'.$con['id'];
                     $con['text'] = strip_tags($con['content']);
                     
-                    $con['text'] =  preg_replace('/\[hide\](.*?)\[\/hide\]/i', '', $con['text']);
-                    $con['text'] =  preg_replace('/\[hide\](.*?)$/i', '', $con['text']);
-
-                    if (strlen($con['text'])>60) { $con['text'] = substr($con['text'], 0, 60). '...'; }
-                    if (!$con['text']) { $con['text'] = '...'; }
+                    $con['text'] =  preg_replace('/\[hide\](.*?)\[\/hide\]/ui', '', $con['text']);
+                    $con['text'] =  preg_replace('/\[hide\](.*?)$/ui', '', $con['text']);
 
                     $con['user_url'] = $con['user_id'] ? cmsUser::getProfileURL($con['author_login']) : $con['link'];
                     $con['author']   = $con['user_id'] ? $con['author'] : $con['guestname'];

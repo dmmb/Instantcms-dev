@@ -42,7 +42,7 @@ if ($do=='rss'){
 
 	if (file_exists(PATH.'/components/'.$target.'/prss.php')){
 
-		header('Content-Type: application/rss+xml; charset=windows-1251');
+		header('Content-Type: application/rss+xml; charset=utf-8');
 
         cmsCore::loadLanguage('components/'.$target);
 
@@ -58,7 +58,7 @@ if ($do=='rss'){
 		
 			if ($cfg['addsite']) { $channel['title'] .= ' :: ' . $inConf->sitename; }
 		
-			$rss  = '<?xml version="1.0" encoding="windows-1251" ?>' ."\n";
+			$rss  = '<?xml version="1.0" encoding="utf-8" ?>' ."\n";
 			$rss .= '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">' ."\n";
 				$rss .= '<channel>' ."\n";
 					//CHANNEL

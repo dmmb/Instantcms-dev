@@ -179,8 +179,8 @@ function applet_users(){
 	
 	if ($do == 'submit'){
 
-		$login      = htmlspecialchars($_REQUEST['login'], ENT_QUOTES);
-		$nickname   = htmlspecialchars($_REQUEST['nickname'], ENT_QUOTES, 'cp1251');
+		$login      = htmlspecialchars($_REQUEST['login']);
+		$nickname   = htmlspecialchars($_REQUEST['nickname']);
 		$email      = $inCore->request('email', 'str');
 		$group_id   = $inCore->request('group_id', 'int');
 		$is_locked  = $inCore->request('is_locked', 'int');
@@ -245,7 +245,7 @@ function applet_users(){
 			$id = (int)$_REQUEST['id'];
 			
             $login      = htmlspecialchars($_REQUEST['login'], ENT_QUOTES);
-            $nickname   = htmlspecialchars($_REQUEST['nickname'], ENT_QUOTES, 'cp1251');
+            $nickname   = htmlspecialchars($_REQUEST['nickname']);
             $email      = $inCore->request('email', 'str');
 			if($id == 1) {
 				$group_id   = 2;

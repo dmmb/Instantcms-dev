@@ -103,16 +103,16 @@ function uploadFiles($post_id, $cfg){
                     $filesize = $inDB->escape_string($_FILES["fa"]["size"][$key]);
 
                     $path_parts = pathinfo($file);
-                    $ext = strtolower($path_parts['extension']);
-					if(strstr('php', $ext)) { return false; }
-					if(strstr('htm', $ext)) { return false; }
-					if(strstr('htaccess', $ext)) { return false; }
+                    $ext = mb_strtolower($path_parts['extension']);
+					if(mb_strstr('php', $ext)) { return false; }
+					if(mb_strstr('htm', $ext)) { return false; }
+					if(mb_strstr('htaccess', $ext)) { return false; }
                     //check file extension is allowed
-                    if (strstr(strtolower($cfg['fa_ext']), $ext)){
+                    if (mb_strstr(mb_strtolower($cfg['fa_ext']), $ext)){
 
-						$name = substr($file, 0, strrpos($file, '.'));
+						$name = mb_substr($file, 0, mb_strrpos($file, '.'));
 						$name = preg_replace ('/[^a-zA-Z0-9]/i', '', $name);
-                        $file = $inDB->escape_string($name . '_' . substr(session_id(), 0, 5) . '.' . $ext);
+                        $file = $inDB->escape_string($name . '_' . mb_substr(session_id(), 0, 5) . '.' . $ext);
 
 						@mkdir(PATH."/upload/forum/post".$post_id);
                         $destination = PATH.'/upload/forum/post'.$post_id.'/'.$file;
@@ -900,7 +900,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 			cmsUser::sendUpdateNotify('forum', $id);
 
 			if ($file_error){
-				$err_msg = $_LANG['ERR_UPLOAD_FILE'].'<div><strong>'.$_LANG['UPLOAD_MAXSIZE'].':</strong> '.$cfg['fa_size'].' '.$_LANG['KBITE'].'.</div><div><strong>'.$_LANG['UPLOAD_FILETYPE'].':</strong> .'.strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</div><p>'.$_LANG['NOT_ALL_FILE_ATTACH'].'</p>';
+				$err_msg = $_LANG['ERR_UPLOAD_FILE'].'<div><strong>'.$_LANG['UPLOAD_MAXSIZE'].':</strong> '.$cfg['fa_size'].' '.$_LANG['KBITE'].'.</div><div><strong>'.$_LANG['UPLOAD_FILETYPE'].':</strong> .'.mb_strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</div><p>'.$_LANG['NOT_ALL_FILE_ATTACH'].'</p>';
 				cmsCore::addSessionMessage($err_msg, 'error');
 			}
 
@@ -917,7 +917,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 					'target' => $t['title'],
 					'target_url' => '/forum/thread'.$id.'.html',
 					'target_id' => $id,
-					'description' => ( strlen($message_post)>100 ? substr($message_post, 0, 100) : $message_post )
+					'description' => ( mb_strlen($message_post)>100 ? mb_substr($message_post, 0, 100) : $message_post )
 				));
 			}
 			$inCore->redirect('/forum/thread'.$id.'-'.$pages.'.html#'.$lastid);
@@ -973,7 +973,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 					}
 
 					if ($file_error){
-						$err_msg = $_LANG['ERR_UPLOAD_FILE'].'<div><strong>'.$_LANG['UPLOAD_MAXSIZE'].':</strong> '.$cfg['fa_size'].' '.$_LANG['KBITE'].'.</div><div><strong>'.$_LANG['UPLOAD_FILETYPE'].':</strong> .'.strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</div><p>'.$_LANG['NOT_ALL_FILE_ATTACH'].'</p>';
+						$err_msg = $_LANG['ERR_UPLOAD_FILE'].'<div><strong>'.$_LANG['UPLOAD_MAXSIZE'].':</strong> '.$cfg['fa_size'].' '.$_LANG['KBITE'].'.</div><div><strong>'.$_LANG['UPLOAD_FILETYPE'].':</strong> .'.mb_strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</div><p>'.$_LANG['NOT_ALL_FILE_ATTACH'].'</p>';
 						cmsCore::addSessionMessage($err_msg, 'error');
 					}
 
@@ -992,7 +992,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 							'target' => $forum['title'],
 							'target_url' => '/forum/'.$forum['id'],
 							'target_id' => $forum['id'], 
-							'description' => ( strlen($message)>100 ? substr($message, 0, 100) : $message )
+							'description' => ( mb_strlen($message)>100 ? mb_substr($message, 0, 100) : $message )
 						));	
 					}
 					$inCore->redirect('/forum/thread'.$threadlastid.'.html#'.$lastid);
@@ -1012,7 +1012,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 					$inDB->query($sql) ;
 					$inCore->registerUploadImages(session_id(), $id, 'forum');
 					$message = $inCore->parseSmiles($message, true);
-					$message = substr(strip_tags($message), 0, 100);
+					$message = mb_substr(strip_tags($message), 0, 100);
 					cmsActions::updateLog('add_fpost', array('description' => $message), $id);
 					if ($pages==1){
 						$inCore->redirect('/forum/thread'.$msg['thread_id'].'.html#'.$id);
@@ -1259,14 +1259,14 @@ if ($do=='reloadfile'){
 					$filesize = $_FILES["newfile"]["size"];																	
 					$path_parts = pathinfo($filename);
 					$ext = $path_parts['extension'];	
-					if(strstr('php', $ext)) { echo usrAccessDenied(); }
-					if(strstr('htm', $ext)) { echo usrAccessDenied(); }
-					if(strstr('htaccess', $ext)) { echo usrAccessDenied(); }
+					if(mb_strstr('php', $ext)) { echo usrAccessDenied(); }
+					if(mb_strstr('htm', $ext)) { echo usrAccessDenied(); }
+					if(mb_strstr('htaccess', $ext)) { echo usrAccessDenied(); }
 					//check file size
 					if ($filesize <= $cfg['fa_size']*1024){
 							
 						//check file extension is allowed									
-						if ( (!$cfg['fa_ext_not'] && strstr($cfg['fa_ext'], $ext)) || ($cfg['fa_ext_not'] && !strstr($cfg['fa_ext'], $ext))){									
+						if ( (!$cfg['fa_ext_not'] && mb_strstr($cfg['fa_ext'], $ext)) || ($cfg['fa_ext_not'] && !strstr($cfg['fa_ext'], $ext))){									
 							$name = basename($filename, '.' . $path_parts['extension']);
 									
 							$filename = $name . '_' . substr(session_id(), 0, 5) . '.' . $ext;
@@ -1282,14 +1282,14 @@ if ($do=='reloadfile'){
 							$inCore->redirect('/forum/thread'.$file['tid'].'.html#'.$file['post_id']);
 						} else {
 							echo '<p style="color:red"><strong>'.$_LANG['ERROR'].':</strong> '.$_LANG['ERR_FILE_TYPE'].'</p>';
-							echo '<p><strong>'.$_LANG['MUST_FILE_TYPE'].':</strong> .'.strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</p>';
+							echo '<p><strong>'.$_LANG['MUST_FILE_TYPE'].':</strong> .'.mb_strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</p>';
 						}
 					
 					} else { echo '<p style="color:red"><strong>'.$_LANG['ERROR'].':</strong> '.$_LANG['ERR_FILE_SIZE'].' ('.$cfg['fa_size'].' '.$_LANG['KBITE'].').</p>'; }
 				}  else { 
 							echo '<p style="color:red"><strong>'.$_LANG['ERROR'].':</strong> '.$_LANG['CHECK_SIZE_TYPE_FILE'].'</p>';
 							echo '<p><strong>'.$_LANG['MAX_SIZE'].':</strong> '.$cfg['fa_size'].' '.$_LANG['KBITE'].'.</p>';
-							echo '<p><strong>'.$_LANG['MUST_FILE_TYPE'].':</strong> .'.strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</p>';
+							echo '<p><strong>'.$_LANG['MUST_FILE_TYPE'].':</strong> .'.mb_strtolower(str_replace(' ', ' .', $cfg['fa_ext'])).'</p>';
 						}
 			} else {
 				//show reload form													

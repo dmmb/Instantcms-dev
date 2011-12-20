@@ -15,7 +15,8 @@
 
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
     define('HOST', 'http://' . $_SERVER['HTTP_HOST']);
-
+    setlocale(LC_ALL, 'ru_RU.UTF-8');
+    header('Content-Type: text/html; charset=utf-8');
     include('../core/cms.php');
 
     $inCore     = cmsCore::getInstance(true);
@@ -107,7 +108,7 @@
                 include(PATH.'/includes/database.inc.php');
                 include(PATH.'/includes/dbimport.inc.php');
 
-                mysql_query("SET NAMES cp1251");
+                mysql_query("SET NAMES utf8");
 
                 dbRunSQL(PATH.'/install/'.$sql_file, $db_prefix);
 
@@ -202,7 +203,7 @@ function installCheckExtensions(){
 
     if (!$all_right){
         echo '<p>Для установки отсутствующих расширений обратитесь к вашему хостеру.</p>';
-        echo '<p><a href="http://www.instantcms.ru/forum/0/thread1345-1.html">Как установить mbstring на Денвер</a> читайте на нашем форуме.</p>';
+        echo '<p><a href="http://www.instantcms.ru/forum/thread1345-1.html">Как установить mbstring на Денвер</a> читайте на нашем форуме.</p>';
     }
 
     $php_ver = getPHPVersion();
@@ -226,7 +227,7 @@ function installCheckExtensions(){
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title>InstantCMS - Установка</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<script src='/includes/jquery/jquery.js' type='text/javascript'></script>
 	<script src='/install/js/jquery.wizard.js' type='text/javascript'></script>
 	<script src='/install/js/install.js' type='text/javascript'></script>
@@ -264,13 +265,13 @@ function installCheckExtensions(){
 				<p>
 					Перед началом установки создайте новую базу данных MySQL на вашем хостинге.
 				</p>
-				<p>Как установить систему на локальный компьютер с ОС Windows&trade; для тестирования, читайте в <a href="http://www.instantcms.ru/wiki/doku.php/%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%B0%D1%8F_%D1%83%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0_%D0%B4%D0%B5%D0%BD%D0%B2%D0%B5%D1%80" target="_blank">инструкции</a> на официальном сайте.</p>
+				<p>Как установить систему на локальный компьютер с ОС Windows&trade; для тестирования, читайте в <a href="http://www.instantcms.ru/wiki/doku.php/локальная_установка_денвер" target="_blank">инструкции</a> на официальном сайте.</p>
 
                 <p>InstantCMS распространяется по лицензии GNU/GPL версии 2. Вы должны согласиться с условиями этой лицензии для установки системы.</p>
 
-                <table cellpadding="0" cellspacing="0" border="0">
+                <table cellpadding="2" cellspacing="0" border="0">
                     <tr>
-                        <td width="20"><input type="checkbox" id="license_agree" onClick="checkAgree()"/></td>
+                        <td width="20" valign="top"><input type="checkbox" id="license_agree" onClick="checkAgree()" /></td>
                         <td>
                             <label for="license_agree">Я согласен с условиями</label>
                             <a target="_blank" href="/license.rus.win.txt">лицензии GNU/GPL</a>

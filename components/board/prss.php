@@ -53,7 +53,7 @@ function rss_board($item_id, $cfg, &$rssdata){
 		$item['link']     = HOST.'/board/read'.$item['id'].'.html';
 		$item['comments'] = $item['link'].'#c';				
 		$item['category'] = $item['cat_title'];
-		$item['description'] = substr(strip_tags($item['content']), 0, 250). '...';
+		$item['description'] = mb_substr(strip_tags($item['content']), 0, 250). '...';
 		$image_file = PATH.'/images/board/medium/'.$item['file'];
 		$image_url  = HOST.'/images/board/medium/'.$item['file'];
 		$item['image'] = file_exists($image_file) ? $image_url : '';

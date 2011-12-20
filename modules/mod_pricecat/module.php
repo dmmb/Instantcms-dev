@@ -36,7 +36,7 @@ function mod_pricecat($module_id){
 			
 				$item['link'] = '/price/'.$item['id'];
 				
-				if (strstr($_SERVER['REQUEST_URI'], $link)){ $item['is_current'] = true; } else { $item['is_current'] = false; }			
+				if (mb_strstr($_SERVER['REQUEST_URI'], $link)){ $item['is_current'] = true; } else { $item['is_current'] = false; }			
 				
 				$item['is_icon'] = ($cfg['icon'] && file_exists(PATH.$cfg['icon']));
 				

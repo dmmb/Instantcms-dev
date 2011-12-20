@@ -63,7 +63,7 @@ function cpUpdates(){
 	if(mysql_num_rows($result)){
 		while($item = mysql_fetch_assoc($result)){
             $text = $inCore->strClear($item['content']);
-            if (strlen($text)>100) { $text = substr($text, 0, 100) . ' (...)'; }
+            if (mb_strlen($text)>100) { $text = mb_substr($text, 0, 100) . ' (...)'; }
 			$html .= '<div class="upd_listitem">
 						<table width="100%" cellpadding="2" cellspacing="0"><tr>
 							<td valign="top" width="16">
@@ -399,7 +399,7 @@ function cpModulePositions($template){
 			$str = fgets($file);
 			$str = str_replace("\n", '', $str);
 			$str = str_replace("\r", '', $str);
-			if (!strstr($str, '#') && strlen($str)>1){
+			if (!mb_strstr($str, '#') && mb_strlen($str)>1){
 				$pos[] = $str;
 			}
 		}
@@ -421,7 +421,7 @@ function cpAddParam($query, $param, $value){
 		if ($l<sizeof($params)) { $new_query .= '&'; }
 	}	
 	if (!$added) {  
-		if (strlen($new_query)>1){ $new_query .= '&'.$param . '=' . $value; } else {$new_query .= $param . '=' . $value; }
+		if (mb_strlen($new_query)>1){ $new_query .= '&'.$param . '=' . $value; } else {$new_query .= $param . '=' . $value; }
 	}	
 	return $new_query;
 }
@@ -477,8 +477,8 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 		if (!isset($_SESSION['filter'])) { $_SESSION['filter'] = $filter; }
 	}
 	
-	if (strlen($where)>3) {	
-		if (strstr($sql, 'WHERE')){ $sql .= ' AND '.$where; }
+	if (mb_strlen($where)>3) {	
+		if (mb_strstr($sql, 'WHERE')){ $sql .= ' AND '.$where; }
 		else { $sql .= ' WHERE '.$where; }
 	}
 	
@@ -580,8 +580,8 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 							 $data = $item[$_fields[$key]['field']];
 							 
 							 if (isset($_fields[$key]['maxlen'])){
-								if (strlen($data)>$_fields[$key]['maxlen']){
-									$data = substr($data, 0, $_fields[$key]['maxlen']).'...';
+								if (mb_strlen($data)>$_fields[$key]['maxlen']){
+									$data = mb_substr($data, 0, $_fields[$key]['maxlen']).'...';
 								}
 							 }
 							 //nested sets otstup
@@ -627,8 +627,8 @@ function cpListTable($table, $_fields, $_actions, $where='', $orderby='title'){
 											} else {
 												$data = $item[$_fields[$key]['field']];
 												 if (isset($_fields[$key]['maxlen'])){
-													if (strlen($data)>$_fields[$key]['maxlen']){
-														$data = substr($data, 0, $_fields[$key]['maxlen']).'...';
+													if (mb_strlen($data)>$_fields[$key]['maxlen']){
+														$data = mb_substr($data, 0, $_fields[$key]['maxlen']).'...';
 													}
 												 }
 											}
@@ -1193,8 +1193,8 @@ function cpMenutypeById($id){
 					 			break;
 	}	
 	$clear = strip_tags($html);
-	$r = strlen($html) - strlen($clear);
-	if (strlen($clear)>$maxlen) { $html = substr($html, 0, $maxlen+$r).'...'; }
+	$r = mb_strlen($html) - mb_strlen($clear);
+	if (mb_strlen($clear)>$maxlen) { $html = mb_substr($html, 0, $maxlen+$r).'...'; }
 	return $html;
 }
 

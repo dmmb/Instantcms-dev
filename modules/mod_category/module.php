@@ -35,7 +35,7 @@ function mod_category($module_id){
 			echo '<table cellspacing="2" border="0">';
 			while($con = $inDB->fetch_assoc($result)){
                 $link = $model->getCategoryURL(null, $con['seolink']);
-				if (strstr($_SERVER['REQUEST_URI'], $link)){ $is_current = true; } else { $is_current = false; }			
+				if (mb_strstr($_SERVER['REQUEST_URI'], $link)){ $is_current = true; } else { $is_current = false; }			
 				$is_icon = ($cfg['icon'] && file_exists(PATH.$cfg['icon']));
 				echo '<tr>';
 					if ($is_icon){

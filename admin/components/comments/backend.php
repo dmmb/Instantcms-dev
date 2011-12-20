@@ -232,7 +232,6 @@ function cpStripComment($text){
 	if($opt=='config'){
 
     if(!isset($cfg['bbcode'])) { 			$cfg['bbcode']=1; }
-	if(!isset($cfg['recode'])) { 			$cfg['recode']=1; }
 	if(!isset($cfg['min_karma'])) { 		$cfg['min_karma']=0; 		}
 	if(!isset($cfg['min_karma_add'])) { 	$cfg['min_karma_add']=0; 	}
 	if(!isset($cfg['min_karma_show'])) { 	$cfg['min_karma_show']=0;	}
@@ -330,18 +329,6 @@ function cpStripComment($text){
                         <option value="0" <?php if($cfg['cmm_ip']==0) { echo 'selected'; } ?>>не показывать</option>
                         <option value="1" <?php if($cfg['cmm_ip']==1) { echo 'selected'; } ?>>только гостей</option>
                         <option value="2" <?php if($cfg['cmm_ip']==2) { echo 'selected'; } ?>>всех</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td valign="top">
-                    <strong>Кодировка формы добавления комментария:</strong><br />
-                    <span class="hinttext">Переключите, если в форме &quot;Добавить комментарий&quot; текст отображается неправильно </span>
-                </td>
-                <td valign="top">
-                    <select name="recode" id="recode" style="width:220px">
-                        <option value="1" selected="selected"  <?php if(@$cfg['recode']==1) { echo 'selected'; } ?>>UTF8</option>
-                        <option value="0" <?php if(@$cfg['recode']==0) { echo 'selected'; } ?>>CP1251</option>
                     </select>
                 </td>
             </tr>

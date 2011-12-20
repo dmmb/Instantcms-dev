@@ -513,7 +513,7 @@ if ($do == 'submitdoc'){
     $doc['is_end']          = 0;
     $doc['user_id']         = $inUser->id;
 
-    $doc['meta_desc']       = strtolower($doc['title']);
+    $doc['meta_desc']       = mb_strtolower($doc['title']);
     $doc['meta_keys']       = $inCore->getKeywords($inCore->strClear($doc['content']));
 		
 	$sql = "INSERT INTO cms_content (category_id, user_id, pubdate, enddate, is_end, title, description, content, published, hits, meta_desc, meta_keys, showtitle, showdate, showlatest, ordering, comments, seolink, canrate)

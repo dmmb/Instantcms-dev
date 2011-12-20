@@ -256,7 +256,7 @@ if ($do=='read'){
     $inPage->addPathway($article['title'], $_SERVER['REQUEST_URI']);
 
     //SET META KEYWORDS AND DESCRIPTION
-    if (strlen($article['meta_keys'])){ $inPage->setKeywords($article['meta_keys']); }
+    if (mb_strlen($article['meta_keys'])){ $inPage->setKeywords($article['meta_keys']); }
     elseif ( !$cfg['autokeys'] ) { $inPage->setKeywords($inConf->keywords); }
     else {
         if (sizeof($inCore->strClear($article_content))>30){
@@ -264,7 +264,7 @@ if ($do=='read'){
         }
     }
 
-    if (strlen($article['meta_desc'])){ $inPage->setDescription($article['meta_desc']); } else { $inPage->setDescription($inConf->metadesc); }
+    if (mb_strlen($article['meta_desc'])){ $inPage->setDescription($article['meta_desc']); } else { $inPage->setDescription($inConf->metadesc); }
 
     //PROCESS FILTERS
     $inCore->processFilters($article_content);
@@ -451,7 +451,7 @@ if ($do=='addarticle' || $do=='editarticle'){
         $article['is_end']              = $do=='editarticle' ? $mod['is_end'] : 0;
         $article['showtitle']           = $do=='editarticle' ? $mod['showtitle'] : 1;
 
-		$article['meta_desc']           = $do=='addarticle' ? strtolower($article['title']) : $inDB->escape_string($mod['meta_desc']);
+		$article['meta_desc']           = $do=='addarticle' ? mb_strtolower($article['title']) : $inDB->escape_string($mod['meta_desc']);
 		$article['meta_keys']           = $do=='addarticle' ? $inCore->getKeywords($article['content']) : $inDB->escape_string($mod['meta_keys']);
 
         $article['showdate']            = $do=='editarticle' ? $mod['showdate'] : 1;
@@ -464,8 +464,8 @@ if ($do=='addarticle' || $do=='editarticle'){
            $article['tpl']              = $mod['tpl'];
         }
 
-        if (strlen($article['title'])<2){ cmsCore::addSessionMessage($_LANG['REQ_TITLE'], 'error'); $errors = true; }
-        if (strlen($article['content'])<10){ cmsCore::addSessionMessage($_LANG['REQ_CONTENT'], 'error'); $errors = true; }
+        if (mb_strlen($article['title'])<2){ cmsCore::addSessionMessage($_LANG['REQ_TITLE'], 'error'); $errors = true; }
+        if (mb_strlen($article['content'])<10){ cmsCore::addSessionMessage($_LANG['REQ_CONTENT'], 'error'); $errors = true; }
 
 		if($errors) { $inCore->redirectBack(); }
 

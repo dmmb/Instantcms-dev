@@ -140,7 +140,7 @@ if ($do=='create'){
         $ownertype  = $inCore->request('ownertype', 'str', 'single');
 
         //Проверяем название
-        if (strlen($title)<5) { $error_msg .= '<p>'.$_LANG['BLOG_ERR_TITLE'].'</p>'; }
+        if (mb_strlen($title)<5) { $error_msg .= '<p>'.$_LANG['BLOG_ERR_TITLE'].'</p>'; }
 
         //Проверяем хватает ли кармы, но только если это не админ
         if ($cfg['min_karma'] && !$inCore->userIsAdmin($inUser->id)){
@@ -236,7 +236,7 @@ if ($do=='config'){
         $showcats 	= $inCore->request('showcats', 'int', 1);
 
         //Проверяем настройки
-        if (strlen($title)<5) { $error_msg .= $_LANG['BLOG_ERR_TITLE']; }
+        if (mb_strlen($title)<5) { $error_msg .= $_LANG['BLOG_ERR_TITLE']; }
 
         //Проверяем ограничения по карме (для смены типа блога)
         if ($cfg['min_karma'] && !$inCore->userIsAdmin($inUser->id)){
@@ -472,7 +472,7 @@ if ($do=='blog'){
                     $msg                = $post['content_html'];
 
                     //Разбиваем текст поста на 2 части по тегу [cut=...] и оставляем только первую из них
-                    if (strstr($msg, '[cut')){
+                    if (mb_strstr($msg, '[cut')){
                         $msg = $model->getPostShort($msg, $post['url']);                        
                     }
                     
@@ -576,7 +576,7 @@ if ($do=='moderate'){
 		$post['fpubdate']	= $inCore->dateFormat($post['pubdate']);
         $post['url']        = $model->getPostURL(null, $post['bloglink'], $post['seolink']);
 		//Разбиваем текст поста на 2 части по тегу [cut=...] и оставляем только первую из них
-		if (strstr($post['msg'], '[cut')){
+		if (mb_strstr($post['msg'], '[cut')){
 			$post['msg'] = $model->getPostShort($post['msg'], $post['url']);                        
 		}
         $posts[]            = $post;
@@ -768,8 +768,8 @@ if ($do=='newpost' || $do=='editpost'){
 		$comments   = $inCore->request('comments', 'int', 1);
 
         //Проверяем их
-        if (strlen($title)<2) {  cmsCore::addSessionMessage($_LANG['POST_ERR_TITLE'], 'error'); $errors = true; }
-        if (strlen($content)<5) { cmsCore::addSessionMessage($_LANG['POST_ERR_TEXT'], 'error'); $errors = true; }
+        if (mb_strlen($title)<2) {  cmsCore::addSessionMessage($_LANG['POST_ERR_TITLE'], 'error'); $errors = true; }
+        if (mb_strlen($content)<5) { cmsCore::addSessionMessage($_LANG['POST_ERR_TEXT'], 'error'); $errors = true; }
 
 		// Если есть ошибки, возвращаемся назад
 		if($errors){
@@ -955,7 +955,7 @@ if ($do=='newcat' || $do=='editcat'){
         $error_msg = '';;
         //получаем и проверяем название рубрики
         $title = $inCore->request('title', 'str');
-        if (strlen($title)<2) { $error_msg .= $_LANG['CAT_ERR_TITLE'].'<br/>'; }
+        if (mb_strlen($title)<2) { $error_msg .= $_LANG['CAT_ERR_TITLE'].'<br/>'; }
 
         //если была ошибка
         if ($error_msg){
@@ -1338,7 +1338,7 @@ if ($do=='latest'){
                     $msg = $post['content_html'];
 
                     //Разбиваем текст поста на 2 части по тегу [cut=...] и оставляем только первую из них
-                    if (strstr($msg, '[cut')){
+                    if (mb_strstr($msg, '[cut')){
                         $msg = $model->getPostShort($msg, $post['url']);
                     }
 
@@ -1416,7 +1416,7 @@ if ($do=='best'){
                     $msg = $post['content_html'];
 
                     //Разбиваем текст поста на 2 части по тегу [cut=...] и оставляем только первую из них
-                    if (strstr($msg, '[cut')){
+                    if (mb_strstr($msg, '[cut')){
                         $msg = $model->getPostShort($msg, $post['url']);
                     }
 

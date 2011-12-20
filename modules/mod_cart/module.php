@@ -99,7 +99,7 @@
 						  </div>';				
 				}
 				
-				if (strstr($cfg['showtype'], 'qty')){
+				if (mb_strstr($cfg['showtype'], 'qty')){
 					while($con = $inDB->fetch_assoc($result)){
 						$num++;
 						$price = $con['price'];

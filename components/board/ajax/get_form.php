@@ -15,7 +15,8 @@
 
 	if (!isset($_REQUEST['value'])) { die(2); }
 
-	setlocale(LC_ALL, 'ru_RU.CP1251');
+    setlocale(LC_ALL, 'ru_RU.UTF-8');
+    header('Content-Type: text/html; charset=utf-8');
 
 	define("VALID_CMS", 1);
     define('PATH', $_SERVER['DOCUMENT_ROOT']);

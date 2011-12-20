@@ -211,10 +211,10 @@ class IXR_Message
         xml_set_character_data_handler($this->_parser, 'cdata');
         $chunk_size = 262144; // 256Kb, parse in chunks to avoid the RAM usage on very large messages
         do {
-            if (strlen($this->message) <= $chunk_size) {
+            if (mb_strlen($this->message) <= $chunk_size) {
                 $final = true;
             }
-            $part = substr($this->message, 0, $chunk_size);
+            $part = mb_substr($this->message, 0, $chunk_size);
             $this->message = substr($this->message, $chunk_size);
             if (!xml_parse($this->_parser, $part, $final)) {
                 return false;
@@ -460,7 +460,7 @@ EOD;
     function output($xml)
     {
         $xml = '<?xml version="1.0"?>'."\n".$xml;
-        $length = strlen($xml);
+        $length = mb_strlen($xml);
         header('Connection: close');
         header('Content-Length: '.$length);
         header('Content-Type: text/xml');

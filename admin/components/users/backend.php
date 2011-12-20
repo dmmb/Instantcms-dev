@@ -79,7 +79,7 @@ if($opt=='saveconfig'){
 
     $cfg['sw_files']    = $_REQUEST['sw_files'];
     $cfg['filessize']   = $_REQUEST['filessize'];
-	$cfg['filestype']   = trim(strtolower($_REQUEST['filestype']));
+	$cfg['filestype']   = trim(mb_strtolower($_REQUEST['filestype']));
 
     $cfg['privforms']   = $_REQUEST['privforms'];
 

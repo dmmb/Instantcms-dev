@@ -90,7 +90,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if ($opt == 'submit_item'){	
 		$category_id = $_REQUEST['category_id'];
-		if (!empty($_REQUEST['title'])) { $title = htmlspecialchars($_REQUEST['title'], ENT_QUOTES, 'cp1251'); } else { error("Укажите название категории!"); }
+		if (!empty($_REQUEST['title'])) { $title = htmlspecialchars($_REQUEST['title']); } else { error("Укажите название категории!"); }
 		if (!empty($_REQUEST['price'])) {		
 			$price = $_REQUEST['price'];					
 		}

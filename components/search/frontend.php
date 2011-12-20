@@ -41,7 +41,7 @@ function search(){
 /* ==================================================================================================== */
 	if ($mode == 'text'){
 
-		if (strlen($model->query)<=3 && strlen($model->query)>=1){ 
+		if (mb_strlen($model->query)<=3 && mb_strlen($model->query)>=1){ 
 			cmsCore::addSessionMessage($_LANG['ERROR'].': '.$_LANG['SHORT_QUERY'], 'error');
 			$inCore->redirect('/search');
 		}
@@ -106,7 +106,7 @@ function search(){
 /* ==================================================================================================== */
 	if ($mode == 'tag'){
 
-		if (strlen($model->query)<=3 && strlen($model->query)>=1){ 
+		if (mb_strlen($model->query)<=3 && mb_strlen($model->query)>=1){ 
 			cmsCore::addSessionMessage($_LANG['EMPTY_QUERY'], 'error');
 			$inCore->redirect('/search');
 		}

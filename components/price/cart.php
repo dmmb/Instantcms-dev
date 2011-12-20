@@ -10,8 +10,11 @@
 //                        LICENSED BY GNU/GPL v2                              //
 //                                                                            //
 /******************************************************************************/
-	
-	define("VALID_CMS", 1);	
+
+    setlocale(LC_ALL, 'ru_RU.UTF-8');
+    header('Content-Type: text/html; charset=utf-8');
+
+    define("VALID_CMS", 1);	
 	session_start();
 
 	include('../../includes/config.inc.php');			//configuration
@@ -23,11 +26,11 @@
 		if(!isset($_SESSION['cart'])) { $_SESSION['cart'] = array(); }
 	
 		foreach($_REQUEST as $key=>$value){
-			if (strpos($key, 'item')===0){
+			if (mb_strpos($key, 'item')===0){
 				if(isset($_SESSION['cart'][$value])){
-					$_SESSION['cart'][$value] += $_REQUEST['kolvo'][$value];
+					$_SESSION['cart'][$value] += (int)$_REQUEST['kolvo'][$value];
 				} else {
-					$_SESSION['cart'][$value] = $_REQUEST['kolvo'][$value];
+					$_SESSION['cart'][$value] = (int)$_REQUEST['kolvo'][$value];
 				}
 			}
 		}

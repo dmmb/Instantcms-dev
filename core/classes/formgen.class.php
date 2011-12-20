@@ -40,16 +40,14 @@ class cmsFormGen {
 
         foreach($this->xml->params->param as $param){
 
-            if ($param['hint']) {
-                $param['hint'] = iconv('utf-8', 'cp1251', (string)$param['hint']);
-            }
+            $param['hint'] = (string)$param['hint'];
 
             //получаем значение параметра
             $value = $this->getParamValue($param['name'], (isset($param['default']) ? $param['default'] : ''));
             //если это массив, склеиваем в строку
             if (is_array($value)){ $value = implode('|', $value); }
 
-            $param['value'] = iconv('cp1251', 'utf-8', $value);
+            $param['value'] = $value;
 
             $param['html']  = $this->getParamHTML($param);
 
@@ -94,11 +92,9 @@ class cmsFormGen {
 
         $inPage = cmsPage::getInstance();
 
-        $this->xml->module->title = iconv('utf-8', 'cp1251', $this->xml->module->title);
-
         foreach($this->params as $key=>$param){
-            $this->params[$key]['title'] = iconv('utf-8', 'cp1251', $param['title']);
-            $this->params[$key]['html']     = iconv('utf-8', 'cp1251', $param['html']);
+            $this->params[$key]['title'] = $param['title'];
+            $this->params[$key]['html']  = $param['html'];
         }
 
         ob_start();
@@ -179,7 +175,7 @@ class cmsFormGen {
         $html = '<input type="checkbox" '.($value==1 ? 'checked="checked"' : '').' onclick="$(\'#'.$name.'\').val(1-$(\'#'.$name.'\').val())" />' . "\n" .
                 '<input type="hidden" id="'.$name.'" name="'.$name.'" value="'.$value.'" />';
 
-        return iconv('cp1251', 'utf-8', $html);
+        return $html;
 
     }
 
@@ -261,7 +257,6 @@ class cmsFormGen {
 
             if ($inDB->num_rows($result)){
                 while($option = $inDB->fetch_assoc($result)){
-                    $option['title'] = iconv('cp1251', 'utf-8', $option['title']);
                     if (isset($option['level']) && $option['level'] >= 1){
                         $option['title'] = str_repeat('--', $option['level']-1) . ' ' . $option['title'];
                     }
@@ -284,8 +279,6 @@ class cmsFormGen {
 
             if ($inDB->num_rows($result)){
                 while($option = $inDB->fetch_assoc($result)){
-                    $option['title'] = iconv('cp1251', 'utf-8', $option['title']);
-                    
                     $html .= '<tr>' . "\n" .
                                 "\t" . '<td><input type="checkbox" id="'.$name.'_'.$option['value'].'" name="'.$name.'['.$option['value'].']" value="'.htmlspecialchars($option['value']).'" '.(in_array($option['value'], $values) ? 'checked="checked"' : '').' />' . "\n" .
                                 "\t" . '<td><label for="'.$name.'_'.$option['value'].'">'.$option['title'].'</label></td>' . "\n" .

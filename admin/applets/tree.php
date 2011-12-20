@@ -75,7 +75,7 @@ function applet_tree(){
         }
 
         if ($title_part){
-            $model->where('LOWER(con.title) LIKE \'%'.strtolower($title_part).'%\'');
+            $model->where('LOWER(con.title) LIKE \'%'.mb_strtolower($title_part).'%\'');
         }
 
         $model->orderBy($orderby, $orderto);

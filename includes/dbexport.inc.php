@@ -208,8 +208,8 @@ class MySQLDump {
 			$insertStatement .= ", ";
 			$selectStatement .= ", ";
 		}
-		$insertStatement = @substr($insertStatement,0,-2).') VALUES';
-		$selectStatement = @substr($selectStatement,0,-2).' FROM `'.$table.'`';
+		$insertStatement = @mb_substr($insertStatement,0,-2).') VALUES';
+		$selectStatement = @mb_substr($selectStatement,0,-2).' FROM `'.$table.'`';
 
 		$records = @mysql_query($selectStatement);
 		$num_rows = @mysql_num_rows($records);
@@ -222,17 +222,17 @@ class MySQLDump {
 				$data .= ' (';
 				for ($j = 0; $j < $num_fields; $j++) {
 					$field_name = @mysql_field_name($records, $j);
-					if ( $hexField[$j] && (@strlen($record[$field_name]) > 0) )
+					if ( $hexField[$j] && (@mb_strlen($record[$field_name]) > 0) )
 						$data .= "0x".$record[$field_name];
 					else
 						$data .= "'".@str_replace('\"','"',@mysql_escape_string($record[$field_name]))."'";
 					$data .= ',';
 				}
-				$data = @substr($data,0,-1).")";
+				$data = @mb_substr($data,0,-1).")";
 				$data .= ( $i < ($num_rows-1) ) ? ',' : ';';
 				$data .= "\n";
 				//if data in greather than 1MB save
-				if (strlen($data) > 1048576) {
+				if (mb_strlen($data) > 1048576) {
 					$this->saveToFile($this->file,$data);
 					$data = '';
 				}

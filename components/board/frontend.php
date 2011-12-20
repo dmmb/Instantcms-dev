@@ -84,7 +84,7 @@ if ($do=='view'){
 	}
 
     // Типы объявлений
-	if ($model->obtype && stristr($category['obtypes'], $model->obtype)) {
+	if ($model->obtype && mb_stristr($category['obtypes'], $model->obtype)) {
     	$model->whereTypeIs($model->obtype);
 		$pagetitle .= ' :: '.$model->obtype;
 	}

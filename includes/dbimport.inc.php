@@ -19,19 +19,19 @@
 
 	function dbRunSQL($sql_file, $db_pref){
 		if (file_exists($sql_file)){
-				mysql_query("SET NAMES cp1251");
+				mysql_query("SET NAMES utf8");
 				$sqlfile = fopen($sql_file, 'r');				
 				$sql = '';				
 				while(!feof($sqlfile)){
 					$str = fgets($sqlfile);
 					$str = str_replace("#_", $db_pref, $str);
 					if(!preg_match('/^\-\-(.*)$/i', $str)) {
-						if (   strstr($str, 'SET ') ||
-                                strstr($str, 'CREATE TABLE') ||
-                                strstr($str, 'INSERT INTO') ||
-                                strstr($str, 'DROP') ||
-                                strstr($str, 'UPDATE') ||
-                                strstr($str, 'ALTER TABLE')){
+						if (   mb_strstr($str, 'SET ') ||
+                                mb_strstr($str, 'CREATE TABLE') ||
+                                mb_strstr($str, 'INSERT INTO') ||
+                                mb_strstr($str, 'DROP') ||
+                                mb_strstr($str, 'UPDATE') ||
+                                mb_strstr($str, 'ALTER TABLE')){
 
                             if ($sql){
                                 $sql = str_replace("DEFAULT 'CURRENT_TIMESTAMP'", "DEFAULT CURRENT_TIMESTAMP", $sql);

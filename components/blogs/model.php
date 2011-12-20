@@ -842,7 +842,7 @@ class cms_model_blogs{
         //парсим bb-код перед записью в базу
         $inCore                 = cmsCore::getInstance();
 		// Парсим по отдельности части текста, если есть тег [cut
-        if (strstr($item['content'], '[cut')){
+        if (mb_strstr($item['content'], '[cut')){
             $msg_to 	= $this->getPostShort($item['content']);
 			$msg_to 	= $inCore->parseSmiles($msg_to, true);
 			$msg_after 	= $this->getPostShort($item['content'], false, true);
@@ -916,7 +916,7 @@ class cms_model_blogs{
         //парсим bb-код перед записью в базу
         $inCore                 = cmsCore::getInstance();
 		// Парсим по отдельности части текста, если есть тег [cut
-        if (strstr($item['content'], '[cut')){
+        if (mb_strstr($item['content'], '[cut')){
             $msg_to 	= $this->getPostShort($item['content']);
 			$msg_to 	= $inCore->parseSmiles($msg_to, true);
 			$msg_after 	= $this->getPostShort($item['content'], false, true);

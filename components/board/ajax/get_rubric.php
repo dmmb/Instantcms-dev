@@ -15,7 +15,8 @@
 
 	if (!isset($_REQUEST['value'])) { die(2); }
 
-	setlocale(LC_ALL, 'ru_RU.CP1251');
+    setlocale(LC_ALL, 'ru_RU.UTF-8');
+    header('Content-Type: text/html; charset=utf-8');
 
 	define("VALID_CMS", 1);
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
@@ -35,7 +36,6 @@
 
 	$cat_id   = $inCore->request('value', 'int', '');	
 	$selected = $inCore->request('obtype', 'str', '');
-	$selected = @iconv('UTF-8', 'CP1251', $selected);	
 
 	$cat = $model->getCategory($cat_id);
 	if(!$cat) { die(); }

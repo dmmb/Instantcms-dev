@@ -205,7 +205,7 @@ class OLERead {
 				'type' => $type,
 				'startBlock' => $startBlock,
 				'size' => $size);
-			if ((strtolower($name) == "workbook") || ( strtolower($name) == "book")) {
+			if ((mb_strtolower($name) == "workbook") || ( mb_strtolower($name) == "book")) {
 				$this->wrkbook = count($this->props) - 1;
 			}
 			if ($name == "Root Entry") {
@@ -323,7 +323,7 @@ class Spreadsheet_Excel_Reader {
 
 	function getCol($col) {
 		if (is_string($col)) {
-			$col = strtolower($col);
+			$col = mb_strtolower($col);
 			if (array_key_exists($col,$this->colnames)) {
 				$col = $this->colnames[$col];
 			}
@@ -587,7 +587,7 @@ class Spreadsheet_Excel_Reader {
 				if ($this->colhidden($i,$sheet)) {
 					$style .= "display:none;";
 				}
-				$out .= "\n\t\t<th style=\"$style\">" . strtoupper($this->colindexes[$i]) . "</th>";
+				$out .= "\n\t\t<th style=\"$style\">" . mb_strtoupper($this->colindexes[$i]) . "</th>";
 			}
 			$out .= "</tr></thead>\n";
 		}
@@ -845,7 +845,7 @@ class Spreadsheet_Excel_Reader {
 		$color = "";
 		$color_regex = "/^\[(BLACK|BLUE|CYAN|GREEN|MAGENTA|RED|WHITE|YELLOW)\]/i";
 		if (preg_match($color_regex,$pattern,$matches)) {
-			$color = strtolower($matches[1]);
+			$color = mb_strtolower($matches[1]);
 			$pattern = preg_replace($color_regex,"",$pattern);
 		}
 		
@@ -883,7 +883,7 @@ class Spreadsheet_Excel_Reader {
 				$formatted = number_format($num,strlen($right));
 			}
 			else {
-				$sprintf_pattern = "%1.".strlen($right)."f";
+				$sprintf_pattern = "%1.".mb_strlen($right)."f";
 				$formatted = sprintf($sprintf_pattern, $num);
 			}
 			$pattern = preg_replace($number_regex, $formatted, $pattern);
@@ -907,7 +907,7 @@ class Spreadsheet_Excel_Reader {
 			$this->setOutputEncoding($outputEncoding);
 		}
 		for ($i=1; $i<245; $i++) {
-			$name = strtolower(( (($i-1)/26>=1)?chr(($i-1)/26+64):'') . chr(($i-1)%26+65));
+			$name = mb_strtolower(( (($i-1)/26>=1)?chr(($i-1)/26+64):'') . chr(($i-1)%26+65));
 			$this->colnames[$name] = $i;
 			$this->colindexes[$i] = $name;
 		}

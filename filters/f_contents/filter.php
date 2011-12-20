@@ -20,7 +20,7 @@
 		foreach ($matches as $elm) {	
 			$elm[0] = str_replace('{', '', $elm[0]);
 			$elm[0] = str_replace('}', '', $elm[0]);			
-			parse_str( $elm[0], $args );
+			mb_parse_str( $elm[0], $args );
 			$title=@$args['СТРАНИЦА'];	
 			if ($title){		
 				$GLOBALS['pt'][] = $title;

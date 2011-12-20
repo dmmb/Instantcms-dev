@@ -22,7 +22,7 @@
 		
 		$rss->cache_dir = PATH.'/includes/rss/cache';
 		$rss->cache_time = 3600; // one hour
-		$rss->cp = 'cp1251';
+		$rss->cp = 'UTF-8';
 
 		$items_limit = $cfg['itemslimit'];
 		$icount = 0; $i = 1;

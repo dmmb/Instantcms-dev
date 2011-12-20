@@ -1,5 +1,9 @@
 <?php
-	session_start();	
+
+    setlocale(LC_ALL, 'ru_RU.UTF-8');
+    header('Content-Type: text/html; charset=utf-8');
+
+    session_start();	
 
 	define("VALID_CMS", 1);
 
@@ -24,7 +28,7 @@
 	$inCore->loadLib('clubs');
 	$inCore->loadLib('photos');
 
-	$title = iconv('UTF-8//IGNORE', 'WINDOWS-1251//IGNORE', $inCore->request('title', 'str'));	
+	$title  = $inCore->request('title', 'str');	
 	$clubid = $inCore->request('clubid', 'int');
 
 	if (!$title) return;

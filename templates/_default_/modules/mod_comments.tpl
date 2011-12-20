@@ -1,7 +1,7 @@
 {if $is_com}
             {foreach key=aid item=comment from=$comments}
                 <div class="mod_com_line">
-                        <a class="mod_com_link" href="{$comment.link}">{$comment.text}</a> {if $cfg.showtarg} <strong>({$comment.rating})</strong>{/if}
+                        <a class="mod_com_link" href="{$comment.link}">{$comment.text|truncate:60}</a> {if $cfg.showtarg} <strong>({$comment.rating})</strong>{/if}
                 </div>
                 <div class="mod_com_details">
                     <a class="mod_com_userlink" href="{$comment.user_url}">{$comment.author}</a> {$comment.fpubdate}<br/><a class="mod_com_targetlink" href="{$comment.target_link}">{$comment.target_title}</a>
