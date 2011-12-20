@@ -21,9 +21,9 @@
 	define("VALID_CMS", 1);
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
 
-	// Ãðóçèì ÿäðî è êëàññû
+	// Ð“Ñ€ÑƒÐ·Ð¸Ð¼ ÑÐ´Ñ€Ð¾ Ð¸ ÐºÐ»Ð°ÑÑÑ‹
 	include(PATH.'/core/cms.php');
-	// Ãðóçèì êîíôèã
+	// Ð“Ñ€ÑƒÐ·Ð¸Ð¼ ÐºÐ¾Ð½Ñ„Ð¸Ð³
 	include(PATH.'/includes/config.inc.php');
     $inCore = cmsCore::getInstance();
 
@@ -35,20 +35,20 @@
     $inCore->loadClass('page');
     $inDB   = cmsDatabase::getInstance();
 
-	// Ïîäãðóæàåì ÿçûêîâîé ôàéë
+	// ÐŸÐ¾Ð´Ð³Ñ€ÑƒÐ¶Ð°ÐµÐ¼ ÑÐ·Ñ‹ÐºÐ¾Ð²Ð¾Ð¹ Ñ„Ð°Ð¹Ð»
 	$inCore->loadLanguage('lang');
 	$inCore->loadLanguage('modules/mod_latest');
 
-	// Ãðóçèì øàáëîíèçàòîð
+	// Ð“Ñ€ÑƒÐ·Ð¸Ð¼ ÑˆÐ°Ð±Ð»Ð¾Ð½Ð¸Ð·Ð°Ñ‚Ð¾Ñ€
     $smarty = $inCore->initSmarty();
 
-	// Âõîäíûå äàííûå
+	// Ð’Ñ…Ð¾Ð´Ð½Ñ‹Ðµ Ð´Ð°Ð½Ð½Ñ‹Ðµ
 	$page	    = $inCore->request('page', 'int', 1);	
 	$module_id	= $inCore->request('module_id', 'int', '');
 
-	// Ãðóçèì êîíôèã ìîäóëÿ
+	// Ð“Ñ€ÑƒÐ·Ð¸Ð¼ ÐºÐ¾Ð½Ñ„Ð¸Ð³ Ð¼Ð¾Ð´ÑƒÐ»Ñ
 	$cfg = $inCore->loadModuleConfig($module_id);
-	// Åñëè ïàãèíàöèÿ îòêëþ÷åíà, âûõîäèì
+	// Ð•ÑÐ»Ð¸ Ð¿Ð°Ð³Ð¸Ð½Ð°Ñ†Ð¸Ñ Ð¾Ñ‚ÐºÐ»ÑŽÑ‡ÐµÐ½Ð°, Ð²Ñ‹Ñ…Ð¾Ð´Ð¸Ð¼
 	if (!$cfg['is_pag']) { die(); }
 
 	$perpage    = $cfg['newscount'];
@@ -89,7 +89,7 @@
 
 	$is_con = false;
 
-	// Ñ÷èòàåì îáùåå êîëè÷åñòâî ìàòåðèàëîâ
+	// Ð¡Ñ‡Ð¸Ñ‚Ð°ÐµÐ¼ Ð¾Ð±Ñ‰ÐµÐµ ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð¼Ð°Ñ‚ÐµÑ€Ð¸Ð°Ð»Ð¾Ð²
 	$sql_total = "SELECT 1
 			FROM cms_content con
 			LEFT JOIN cms_category cat ON cat.id = con.category_id
@@ -97,12 +97,12 @@
 	$result_total = $inDB->query($sql_total) ;
 	$total_page = $inDB->num_rows($result_total);
 
-	// åñëè åñòü çàïèñè âûâîäèì èõ	
+	// ÐµÑÐ»Ð¸ ÐµÑÑ‚ÑŒ Ð·Ð°Ð¿Ð¸ÑÐ¸ Ð²Ñ‹Ð²Ð¾Ð´Ð¸Ð¼ Ð¸Ñ…	
 	if ($total_page){
 
 		$is_con = true;
 
-		// ãðóçèì ìîäåëü êîìïîíåíòà êîíòåíò
+		// Ð³Ñ€ÑƒÐ·Ð¸Ð¼ Ð¼Ð¾Ð´ÐµÐ»ÑŒ ÐºÐ¾Ð¼Ð¿Ð¾Ð½ÐµÐ½Ñ‚Ð° ÐºÐ¾Ð½Ñ‚ÐµÐ½Ñ‚
         $inCore->loadModel('content');
         $model = new cms_model_content();
 
@@ -122,7 +122,7 @@
 		}
 	}
 
-	// Îòäàåì â øàáëîí
+	// ÐžÑ‚Ð´Ð°ÐµÐ¼ Ð² ÑˆÐ°Ð±Ð»Ð¾Ð½
 	ob_start();
 	$smarty = $inCore->initSmarty('modules', 'mod_latest.tpl');			
 	$smarty->assign('articles', $articles);

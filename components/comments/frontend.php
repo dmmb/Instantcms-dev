@@ -22,10 +22,10 @@ function comments($target='', $target_id=0, $labels=array()){
     $inCore->loadModel('comments');
     $model = new cms_model_comments();
 
-    //Çàãğóæàåì íàñòğîéêè êîìïîíåíòà
+    //Ğ—Ğ°Ğ³Ñ€ÑƒĞ¶Ğ°ĞµĞ¼ Ğ½Ğ°ÑÑ‚Ñ€Ğ¾Ğ¹ĞºĞ¸ ĞºĞ¾Ğ¼Ğ¿Ğ¾Ğ½ĞµĞ½Ñ‚Ğ°
 	$cfg = $inCore->loadComponentConfig('comments');
 
-    // Ïğîâåğÿåì âêëş÷åíè ëè êîìïîíåíò
+    // ĞŸÑ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼ Ğ²ĞºĞ»ÑÑ‡ĞµĞ½Ğ¸ Ğ»Ğ¸ ĞºĞ¾Ğ¼Ğ¿Ğ¾Ğ½ĞµĞ½Ñ‚
 	if(!$cfg['component_enabled']) { return false; }
 
     if (!isset($cfg['bbcode'])) { $cfg['bbcode'] = 1; }
@@ -39,11 +39,11 @@ function comments($target='', $target_id=0, $labels=array()){
     global $_LANG;
     $inCore->loadLanguage('components/comments');
 
-	// Çíà÷åíèÿ ïî óìîë÷àíèş äëÿ íàäïèñåé
+	// Ğ—Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸Ñ Ğ¿Ğ¾ ÑƒĞ¼Ğ¾Ğ»Ñ‡Ğ°Ğ½Ğ¸Ñ Ğ´Ğ»Ñ Ğ½Ğ°Ğ´Ğ¿Ğ¸ÑĞµĞ¹
 	$def_labels = array('comments' => $_LANG['COMMENTS'], 'add' => $_LANG['ADD_COMM'], 'rss' => $_LANG['RSS_COMM'], 'not_comments' => $_LANG['NOT_COMMENT_TEXT']);
 	if (!$labels) { $labels = $def_labels; }
 
-    //Îïğåäåëÿåì àäğåñ äëÿ ğåäèğåêòà íàçàä
+    //ĞĞ¿Ñ€ĞµĞ´ĞµĞ»ÑĞµĞ¼ Ğ°Ğ´Ñ€ĞµÑ Ğ´Ğ»Ñ Ñ€ĞµĞ´Ğ¸Ñ€ĞµĞºÑ‚Ğ° Ğ½Ğ°Ğ·Ğ°Ğ´
     $back   = $inCore->getBackURL();
     
     $do     = $inCore->request('do', 'str', 'view');
@@ -54,26 +54,26 @@ function comments($target='', $target_id=0, $labels=array()){
 		
 		$inPage->addHeadJS('components/comments/js/comments.js');
 		
-		// Çàãğóæàåì ôóíêöèè ïğîôèëÿ
+		// Ğ—Ğ°Ğ³Ñ€ÑƒĞ¶Ğ°ĞµĞ¼ Ñ„ÑƒĞ½ĞºÑ†Ğ¸Ğ¸ Ğ¿Ñ€Ğ¾Ñ„Ğ¸Ğ»Ñ
 		$inCore->includeFile('components/users/includes/usercore.php');
 
-		//  Çàãîëîâêè è ãëóáèíîìåğ
+		//  Ğ—Ğ°Ğ³Ğ¾Ğ»Ğ¾Ğ²ĞºĞ¸ Ğ¸ Ğ³Ğ»ÑƒĞ±Ğ¸Ğ½Ğ¾Ğ¼ĞµÑ€
 		$inPage->setTitle($_LANG['COMMENTS']);
 		$inPage->addPathway($_LANG['COMMENTS']);
 		$inPage->backButton(false);
 
-		// Ïàãèíàöèÿ
+		// ĞŸĞ°Ğ³Ğ¸Ğ½Ğ°Ñ†Ğ¸Ñ
 		$perpage = $cfg['perpage'] ? $cfg['perpage'] : 20;
 		$page    = $inCore->request('page', 'int', 1);
 
 		$is_admin = $inCore->userIsAdmin($inUser->id);
 
-		//Çàãğóæàåì êîììåíòàğèè
+		//Ğ—Ğ°Ğ³Ñ€ÑƒĞ¶Ğ°ĞµĞ¼ ĞºĞ¾Ğ¼Ğ¼ĞµĞ½Ñ‚Ğ°Ñ€Ğ¸Ğ¸
 		$comments = array();
-		// Ñ÷èòàåì îáùåå ÷èñëî êîëè÷åñòâî êîììåíòàğèåâ
+		// Ğ¡Ñ‡Ğ¸Ñ‚Ğ°ĞµĞ¼ Ğ¾Ğ±Ñ‰ĞµĞµ Ñ‡Ğ¸ÑĞ»Ğ¾ ĞºĞ¾Ğ»Ğ¸Ñ‡ĞµÑÑ‚Ğ²Ğ¾ ĞºĞ¾Ğ¼Ğ¼ĞµĞ½Ñ‚Ğ°Ñ€Ğ¸ĞµĞ²
 		$hidden_sql = $inUser->is_admin ? '' : 'AND is_hidden=0';
 		$total = $inDB->rows_count('cms_comments', "published=1 {$hidden_sql}");
-		// Åñëè åñòü êîììåíòàğèè, âûáèğàåì è îáğàáàòûâàåì
+		// Ğ•ÑĞ»Ğ¸ ĞµÑÑ‚ÑŒ ĞºĞ¾Ğ¼Ğ¼ĞµĞ½Ñ‚Ğ°Ñ€Ğ¸Ğ¸, Ğ²Ñ‹Ğ±Ğ¸Ñ€Ğ°ĞµĞ¼ Ğ¸ Ğ¾Ğ±Ñ€Ğ°Ğ±Ğ°Ñ‚Ñ‹Ğ²Ğ°ĞµĞ¼
 		if ($total){
 
 			$comments_list  = $model->getCommentsAll($page, $perpage);
@@ -103,7 +103,7 @@ function comments($target='', $target_id=0, $labels=array()){
 
 		$inPage->addHead('<link rel="alternate" type="application/rss+xml" title="'.$_LANG['BOARD'].'" href="'.HOST.'/rss/comments/all/feed.rss">');
 
-		// Îòäàåì â øàáëîí
+		// ĞÑ‚Ğ´Ğ°ĞµĞ¼ Ğ² ÑˆĞ°Ğ±Ğ»Ğ¾Ğ½
 		$smarty = $inCore->initSmarty('components', 'com_comments_list_all.tpl');
 
 		$smarty->assign('comments_count', $total);
@@ -223,7 +223,7 @@ function comments($target='', $target_id=0, $labels=array()){
 //========================================================================================================================//
 	if ($do=='add'){
 
-        //Óäàëÿåì ñîîáùåíèå îá îøèáêàõ êîììåíòàğèåâ
+        //Ğ£Ğ´Ğ°Ğ»ÑĞµĞ¼ ÑĞ¾Ğ¾Ğ±Ñ‰ĞµĞ½Ğ¸Ğµ Ğ¾Ğ± Ğ¾ÑˆĞ¸Ğ±ĞºĞ°Ñ… ĞºĞ¾Ğ¼Ğ¼ĞµĞ½Ñ‚Ğ°Ñ€Ğ¸ĞµĞ²
         unset($_SESSION['cm_error']);
 
         $error          = '';
@@ -250,44 +250,44 @@ function comments($target='', $target_id=0, $labels=array()){
 
         if (!$target || !$target_id) { $error = $_LANG['ERR_UNKNOWN_TARGET']; }
 
-        //Ïğîâåğÿåì îøèáêè
+        //ĞŸÑ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼ Ğ¾ÑˆĞ¸Ğ±ĞºĞ¸
         if ($user_id != $inUser->id) { $error = $_LANG['ERR_DEFINE_USER']; }
         if (!$guestname && !$user_id) { $error = $_LANG['ERR_USER_NAME']; }
         if (!$content) { $error = $_LANG['ERR_COMMENT_TEXT']; }
         if ($need_captcha && !$inCore->checkCaptchaCode($inCore->request('code', 'str'))) { $error = $_LANG['ERR_CAPTCHA']; }
 
-        // ïîëó÷àåì ìàññèâ ñî ññûëêîé è çàãîëîâêîì öåëè êîììåíòàğèÿ
-        // äëÿ ıòîãî:
+        // Ğ¿Ğ¾Ğ»ÑƒÑ‡Ğ°ĞµĞ¼ Ğ¼Ğ°ÑÑĞ¸Ğ² ÑĞ¾ ÑÑÑ‹Ğ»ĞºĞ¾Ğ¹ Ğ¸ Ğ·Ğ°Ğ³Ğ¾Ğ»Ğ¾Ğ²ĞºĞ¾Ğ¼ Ñ†ĞµĞ»Ğ¸ ĞºĞ¾Ğ¼Ğ¼ĞµĞ½Ñ‚Ğ°Ñ€Ğ¸Ñ
+        // Ğ´Ğ»Ñ ÑÑ‚Ğ¾Ğ³Ğ¾:
 
-        //  1. óçíàåì îòâåòñòâåííûé êîìïîíåíò èç cms_comment_targets
+        //  1. ÑƒĞ·Ğ½Ğ°ĞµĞ¼ Ğ¾Ñ‚Ğ²ĞµÑ‚ÑÑ‚Ğ²ĞµĞ½Ğ½Ñ‹Ğ¹ ĞºĞ¾Ğ¼Ğ¿Ğ¾Ğ½ĞµĞ½Ñ‚ Ğ¸Ğ· cms_comment_targets
         $target_component = $inDB->get_field('cms_comment_targets', "target='{$target}'", 'component');
         if (!$target_component) { $error = true; cmsCore::addSessionMessage($_LANG['ERR_UNKNOWN_TARGET'] . ' #1', 'error'); $inCore->redirect('/comments'); }
 
-        //  2. ïîäêëş÷èì ìîäåëü ıòîãî êîìïîíåíòà
+        //  2. Ğ¿Ğ¾Ğ´ĞºĞ»ÑÑ‡Ğ¸Ğ¼ Ğ¼Ğ¾Ğ´ĞµĞ»ÑŒ ÑÑ‚Ğ¾Ğ³Ğ¾ ĞºĞ¾Ğ¼Ğ¿Ğ¾Ğ½ĞµĞ½Ñ‚Ğ°
         $inCore->loadModel($target_component);
         $model_class  = 'cms_model_'.$target_component;
 	    $target_model = new $model_class();
 
         if (!$target_model) { $error = true; cmsCore::addSessionMessage($_LANG['ERR_UNKNOWN_TARGET'] . ' #2', 'error'); $inCore->redirect('/comments'); }
 
-        //  3. çàïğîñèì ìàññèâ $target[link, title] ó ìåòîäà getCommentTarget ìîäåëè
+        //  3. Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑĞ¸Ğ¼ Ğ¼Ğ°ÑÑĞ¸Ğ² $target[link, title] Ñƒ Ğ¼ĞµÑ‚Ğ¾Ğ´Ğ° getCommentTarget Ğ¼Ğ¾Ğ´ĞµĞ»Ğ¸
         $target_data = $target_model->getCommentTarget($target, $target_id);
         if (!$target_data) { $error = true; cmsCore::addSessionMessage($_LANG['ERR_UNKNOWN_TARGET'] . ' #3', 'error'); $inCore->redirect('/comments'); }
 
-		// 4. Óçíàåì âèäèìîñòü êîììåíòàğèÿ â ìîäåëè $target_model
+		// 4. Ğ£Ğ·Ğ½Ğ°ĞµĞ¼ Ğ²Ğ¸Ğ´Ğ¸Ğ¼Ğ¾ÑÑ‚ÑŒ ĞºĞ¾Ğ¼Ğ¼ĞµĞ½Ñ‚Ğ°Ñ€Ğ¸Ñ Ğ² Ğ¼Ğ¾Ğ´ĞµĞ»Ğ¸ $target_model
 		if(method_exists($target_model, 'getVisibility')){
 			$is_hidden = $target_model->getVisibility($target, $target_id);
 		} else {
 			$is_hidden = 0;
 		}
 
-		//Åñëè îøèáîê íå áûëî,
-        //äîáàâëÿåì êîììåíòàğèé â áàçó
+		//Ğ•ÑĞ»Ğ¸ Ğ¾ÑˆĞ¸Ğ±Ğ¾Ğº Ğ½Ğµ Ğ±Ñ‹Ğ»Ğ¾,
+        //Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ»ÑĞµĞ¼ ĞºĞ¾Ğ¼Ğ¼ĞµĞ½Ñ‚Ğ°Ñ€Ğ¸Ğ¹ Ğ² Ğ±Ğ°Ğ·Ñƒ
         if(!$error){
 
             $parent_id = $inCore->request('parent_id', 'int', 0);
 
-			//ïîìåùàåì êîììåíòàğèé â áàçó
+			//Ğ¿Ğ¾Ğ¼ĞµÑ‰Ğ°ĞµĞ¼ ĞºĞ¾Ğ¼Ğ¼ĞµĞ½Ñ‚Ğ°Ñ€Ğ¸Ğ¹ Ğ² Ğ±Ğ°Ğ·Ñƒ
             $comment_id = $model->addComment(array(
                                                     'parent_id'=>$parent_id,
                                                     'user_id'=>$user_id,
@@ -303,9 +303,9 @@ function comments($target='', $target_id=0, $labels=array()){
                                                     'is_hidden'=>$is_hidden
                                                   ));
 			if(!$is_hidden){
-				//ğåãèñòğèğóåì ñîáûòèå
+				//Ñ€ĞµĞ³Ğ¸ÑÑ‚Ñ€Ğ¸Ñ€ÑƒĞµĞ¼ ÑĞ¾Ğ±Ñ‹Ñ‚Ğ¸Ğµ
 				cmsActions::log('add_comment', array(
-					'object' => 'êîììåíòàğèé',
+					'object' => 'ĞºĞ¾Ğ¼Ğ¼ĞµĞ½Ñ‚Ğ°Ñ€Ğ¸Ğ¹',
 					'object_url' => $target_data['link'] . '#c' . $comment_id,
 					'object_id' => $comment_id,
 					'target' => $target_data['title'],
@@ -315,23 +315,23 @@ function comments($target='', $target_id=0, $labels=array()){
 				));
 			}
 
-			//ïîäïèñûâàåì ïîëüçîâàòåëÿ íà îáíîâëåíèÿ, åñëè íóæíî
+			//Ğ¿Ğ¾Ğ´Ğ¿Ğ¸ÑÑ‹Ğ²Ğ°ĞµĞ¼ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ Ğ½Ğ° Ğ¾Ğ±Ğ½Ğ¾Ğ²Ğ»ĞµĞ½Ğ¸Ñ, ĞµÑĞ»Ğ¸ Ğ½ÑƒĞ¶Ğ½Ğ¾
             if ($inUser->id && $inCore->inRequest('subscribe')){
                 cmsUser::isSubscribed($inUser->id, $target, $target_id);
 			}
 
-			//ğàññûëàåì óâåäîìëåíèÿ î íîâîì êîììåíòå
+			//Ñ€Ğ°ÑÑÑ‹Ğ»Ğ°ĞµĞ¼ ÑƒĞ²ĞµĞ´Ğ¾Ğ¼Ğ»ĞµĞ½Ğ¸Ñ Ğ¾ Ğ½Ğ¾Ğ²Ğ¾Ğ¼ ĞºĞ¾Ğ¼Ğ¼ĞµĞ½Ñ‚Ğµ
 			cmsUser::sendUpdateNotify($target, $target_id);
 
-			//ïğîâåğÿåì è âûäàåì íàãğàäó åñëè íóæíî
+			//Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼ Ğ¸ Ğ²Ñ‹Ğ´Ğ°ĞµĞ¼ Ğ½Ğ°Ğ³Ñ€Ğ°Ğ´Ñƒ ĞµÑĞ»Ğ¸ Ğ½ÑƒĞ¶Ğ½Ğ¾
             cmsUser::checkAwards( $inUser->id );
 
-			//ñìîòğèì íàñòğîéêè ìîäåğàöèè
+			//ÑĞ¼Ğ¾Ñ‚Ñ€Ğ¸Ğ¼ Ğ½Ğ°ÑÑ‚Ñ€Ğ¾Ğ¹ĞºĞ¸ Ğ¼Ğ¾Ğ´ĞµÑ€Ğ°Ñ†Ğ¸Ğ¸
 			if (!$cfg['publish']){
 				$_SESSION['cm_message'] = $_LANG['COMM_PREMODER_TEXT'];
 			}
 			$inConf = cmsConfig::getInstance();
-			//îòïğàâëÿåì àäìèíó óâåäîìëåíèå î êîììåíòàğèè íà e-mail, åñëè íóæíî
+			//Ğ¾Ñ‚Ğ¿Ñ€Ğ°Ğ²Ğ»ÑĞµĞ¼ Ğ°Ğ´Ğ¼Ğ¸Ğ½Ñƒ ÑƒĞ²ĞµĞ´Ğ¾Ğ¼Ğ»ĞµĞ½Ğ¸Ğµ Ğ¾ ĞºĞ¾Ğ¼Ğ¼ĞµĞ½Ñ‚Ğ°Ñ€Ğ¸Ğ¸ Ğ½Ğ° e-mail, ĞµÑĞ»Ğ¸ Ğ½ÑƒĞ¶Ğ½Ğ¾
 			if($cfg['email']) {
 				$mailmsg = $_LANG['DATE'].": ".date('d m Y (H:i)')."\n";
 				$mailmsg .= $_LANG['NEW_COMMENT'].': '.HOST.$target_data['link'].'#c'. $comment_id . "\n";
@@ -342,7 +342,7 @@ function comments($target='', $target_id=0, $labels=array()){
 				$inCore->mailText($cfg['email'], $email_subj, $mailmsg);
 			}
 
-			//åñëè êîììåíò äëÿ áëîãà èëè ôîòîãğàôèè, îòïğàâëÿåì àâòîğó óâåäîìëåíèå íà e-mail
+			//ĞµÑĞ»Ğ¸ ĞºĞ¾Ğ¼Ğ¼ĞµĞ½Ñ‚ Ğ´Ğ»Ñ Ğ±Ğ»Ğ¾Ğ³Ğ° Ğ¸Ğ»Ğ¸ Ñ„Ğ¾Ñ‚Ğ¾Ğ³Ñ€Ğ°Ñ„Ğ¸Ğ¸, Ğ¾Ñ‚Ğ¿Ñ€Ğ°Ğ²Ğ»ÑĞµĞ¼ Ğ°Ğ²Ñ‚Ğ¾Ñ€Ñƒ ÑƒĞ²ĞµĞ´Ğ¾Ğ¼Ğ»ĞµĞ½Ğ¸Ğµ Ğ½Ğ° e-mail
 			if($target=='userphoto' || $target=='blog' || $target=='photo'){
 				
 				switch($target){
@@ -363,7 +363,7 @@ function comments($target='', $target_id=0, $labels=array()){
 					break;
 				}
 
-				//ïîëó÷àåì ID è e-mail àâòîğà
+				//Ğ¿Ğ¾Ğ»ÑƒÑ‡Ğ°ĞµĞ¼ ID Ğ¸ e-mail Ğ°Ğ²Ñ‚Ğ¾Ñ€Ğ°
                 $author = $model->getTargetAuthor($table, $target_id);
 
 				if ($author){
@@ -410,7 +410,7 @@ function comments($target='', $target_id=0, $labels=array()){
 
 		if (!$inUser->id){ cmsCore::error404(); }
 
-        //Óäàëÿåì ñîîáùåíèå îá îøèáêàõ êîììåíòàğèåâ
+        //Ğ£Ğ´Ğ°Ğ»ÑĞµĞ¼ ÑĞ¾Ğ¾Ğ±Ñ‰ĞµĞ½Ğ¸Ğµ Ğ¾Ğ± Ğ¾ÑˆĞ¸Ğ±ĞºĞ°Ñ… ĞºĞ¾Ğ¼Ğ¼ĞµĞ½Ñ‚Ğ°Ñ€Ğ¸ĞµĞ²
         unset($_SESSION['cm_error']);
 
         $error          = '';
@@ -427,7 +427,7 @@ function comments($target='', $target_id=0, $labels=array()){
 
         $comment_id     = $inCore->request('comment_id', 'int', 0);
 
-        //Ïğîâåğÿåì îøèáêè
+        //ĞŸÑ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼ Ğ¾ÑˆĞ¸Ğ±ĞºĞ¸
         if (!$comment_id) { $error = $_LANG['ERR_UNKNOWN_TARGET']; }
         if (!$content) { $error = $_LANG['ERR_COMMENT_TEXT']; }
 
@@ -437,11 +437,11 @@ function comments($target='', $target_id=0, $labels=array()){
             $error = $_LANG['ERR_UNKNOWN_TARGET'];
         }
 
-		//Åñëè îøèáîê íå áûëî,
-        //îáíîâëÿåì êîììåíòàğèé â áàçå
+		//Ğ•ÑĞ»Ğ¸ Ğ¾ÑˆĞ¸Ğ±Ğ¾Ğº Ğ½Ğµ Ğ±Ñ‹Ğ»Ğ¾,
+        //Ğ¾Ğ±Ğ½Ğ¾Ğ²Ğ»ÑĞµĞ¼ ĞºĞ¾Ğ¼Ğ¼ĞµĞ½Ñ‚Ğ°Ñ€Ğ¸Ğ¹ Ğ² Ğ±Ğ°Ğ·Ğµ
         if(!$error){
 
-			//ïîìåùàåì êîììåíòàğèé â áàçó
+			//Ğ¿Ğ¾Ğ¼ĞµÑ‰Ğ°ĞµĞ¼ ĞºĞ¾Ğ¼Ğ¼ĞµĞ½Ñ‚Ğ°Ñ€Ğ¸Ğ¹ Ğ² Ğ±Ğ°Ğ·Ñƒ
             $model->updateComment($comment_id, array(
                 'content'=>$content,
                 'content_bbcode'=>$content_bb

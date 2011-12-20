@@ -20,7 +20,7 @@ function rssfeed(){
 
 	$cfg        = $inCore->loadComponentConfig('rssfeed');
     
-	// Проверяем включен ли компонент
+	// РџСЂРѕРІРµСЂСЏРµРј РІРєР»СЋС‡РµРЅ Р»Рё РєРѕРјРїРѕРЅРµРЅС‚
 	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     global $_LANG;
@@ -29,7 +29,7 @@ function rssfeed(){
     $target     = $inCore->request('target', 'str', 'rss');
     $item_id    = $inCore->request('item_id', 'str', 'all');
 
-	// фильтруем входные параметры
+	// С„РёР»СЊС‚СЂСѓРµРј РІС…РѕРґРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹
 	$target  = preg_replace ('/[^a-z0-9]/i', '', $target);
 	if (!preg_match('/^([a-z0-9\-]+)$/i', $item_id)) { $item_id = 'all'; }
 

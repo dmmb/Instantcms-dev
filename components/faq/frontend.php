@@ -28,7 +28,7 @@ function faq(){
 	global $_LANG;
 	
 	$cfg = $inCore->loadComponentConfig('faq');
-	// Проверяем включени ли компонент
+	// РџСЂРѕРІРµСЂСЏРµРј РІРєР»СЋС‡РµРЅРё Р»Рё РєРѕРјРїРѕРЅРµРЅС‚
 	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     if(!isset($cfg['guest_enabled'])) { $cfg['guest_enabled'] = 1; }
@@ -227,9 +227,9 @@ if ($do=='sendquest'){
 			echo '<div style="margin-top:10px"><a href="/faq">'.$_LANG['CONTINUE'].'</a></div>';
         } elseif ($published) {
 			$category = $inDB->get_field('cms_faq_cats', "id={$category_id}", 'title');
-            //регистрируем событие
+            //СЂРµРіРёСЃС‚СЂРёСЂСѓРµРј СЃРѕР±С‹С‚РёРµ
             cmsActions::log('add_quest', array(
-                'object' => 'вопрос',
+                'object' => 'РІРѕРїСЂРѕСЃ',
                 'object_url' => '/faq/quest'.$quest_id.'.html',
                 'object_id' => $quest_id,
                 'target' => $category,

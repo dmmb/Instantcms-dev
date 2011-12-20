@@ -15,17 +15,17 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
         $inCore = cmsCore::getInstance();
 
-		// Загружаем класс загрузки фото
+		// Р—Р°РіСЂСѓР¶Р°РµРј РєР»Р°СЃСЃ Р·Р°РіСЂСѓР·РєРё С„РѕС‚Рѕ
 		$inCore->loadClass('upload_photo');
 		$inUploadPhoto = cmsUploadPhoto::getInstance();
-		// Выставляем конфигурационные параметры
+		// Р’С‹СЃС‚Р°РІР»СЏРµРј РєРѕРЅС„РёРіСѓСЂР°С†РёРѕРЅРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹
 		$inUploadPhoto->upload_dir    = PATH.'/upload/forum/';
 		$inUploadPhoto->dir_medium    = 'cat_icons/';
 		$inUploadPhoto->medium_size_w = 32;
 		$inUploadPhoto->medium_size_h = 32;
 		$inUploadPhoto->only_medium   = true;
 		$inUploadPhoto->is_watermark  = false;
-		// Процесс загрузки фото
+		// РџСЂРѕС†РµСЃСЃ Р·Р°РіСЂСѓР·РєРё С„РѕС‚Рѕ
 		$files = $inUploadPhoto->uploadPhoto($file);
 
 		$icon = $files['filename'] ? $files['filename'] : $file;
@@ -49,46 +49,46 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	$inCore->loadModel('forum');
 	$model = new cms_model_forum();
 
-	cpAddPathway('Форум', '?view=components&do=config&id='.$id);
-	echo '<h3>Форум</h3>';
+	cpAddPathway('Р¤РѕСЂСѓРј', '?view=components&do=config&id='.$id);
+	echo '<h3>Р¤РѕСЂСѓРј</h3>';
 
 	$toolmenu = array();
 
 	if ($opt=='list_forums' || $opt=='list_cats' || $opt=='config' || $opt=='saveconfig'){
 	
 		$toolmenu[0]['icon'] = 'newfolder.gif';
-		$toolmenu[0]['title'] = 'Новая категория';
+		$toolmenu[0]['title'] = 'РќРѕРІР°СЏ РєР°С‚РµРіРѕСЂРёСЏ';
 		$toolmenu[0]['link'] = '?view=components&do=config&id='.$id.'&opt=add_cat';
 	
 		$toolmenu[2]['icon'] = 'newforum.gif';
-		$toolmenu[2]['title'] = 'Новый форум';
+		$toolmenu[2]['title'] = 'РќРѕРІС‹Р№ С„РѕСЂСѓРј';
 		$toolmenu[2]['link'] = '?view=components&do=config&id='.$id.'&opt=add_forum';
 	
 		$toolmenu[1]['icon'] = 'folders.gif';
-		$toolmenu[1]['title'] = 'Категории форумов';
+		$toolmenu[1]['title'] = 'РљР°С‚РµРіРѕСЂРёРё С„РѕСЂСѓРјРѕРІ';
 		$toolmenu[1]['link'] = '?view=components&do=config&id='.$id.'&opt=list_cats';
 	
 		$toolmenu[3]['icon'] = 'listforums.gif';
-		$toolmenu[3]['title'] = 'Все форумы';
+		$toolmenu[3]['title'] = 'Р’СЃРµ С„РѕСЂСѓРјС‹';
 		$toolmenu[3]['link'] = '?view=components&do=config&id='.$id.'&opt=list_forums';
 
 		$toolmenu[4]['icon'] = 'ranks.gif';
-		$toolmenu[4]['title'] = 'Звания на форуме';
+		$toolmenu[4]['title'] = 'Р—РІР°РЅРёСЏ РЅР° С„РѕСЂСѓРјРµ';
 		$toolmenu[4]['link'] = '?view=components&do=config&id='.$id.'&opt=list_ranks';
 
 	}
 	if($opt=='list_forums'){
 
 		$toolmenu[11]['icon'] = 'edit.gif';
-		$toolmenu[11]['title'] = 'Редактировать выбранные';
+		$toolmenu[11]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[11]['link'] = "javascript:checkSel('?view=components&do=config&id=".$id."&opt=edit_forum&multiple=1');";
 
 		$toolmenu[12]['icon'] = 'show.gif';
-		$toolmenu[12]['title'] = 'Публиковать выбранные';
+		$toolmenu[12]['title'] = 'РџСѓР±Р»РёРєРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".$id."&opt=show_forum&multiple=1');";
 
 		$toolmenu[13]['icon'] = 'hide.gif';
-		$toolmenu[13]['title'] = 'Скрыть выбранные';
+		$toolmenu[13]['title'] = 'РЎРєСЂС‹С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".$id."&opt=hide_forum&multiple=1');";
 
 	}
@@ -97,11 +97,11 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	} else {
 	
 		$toolmenu[20]['icon'] = 'save.gif';
-		$toolmenu[20]['title'] = 'Сохранить';
+		$toolmenu[20]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 		$toolmenu[20]['link'] = 'javascript:document.addform.submit();';
 
 		$toolmenu[21]['icon'] = 'cancel.gif';
-		$toolmenu[21]['title'] = 'Отмена';
+		$toolmenu[21]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[21]['link'] = '?view=components&do=config&id='.$id;
 	
 	}
@@ -139,7 +139,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 		$inCore->saveComponentConfig('forum', $cfg);
 
-		$msg = 'Настройки сохранены.';
+		$msg = 'РќР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅРµРЅС‹.';
 		$opt = 'config';
 
 	}
@@ -151,7 +151,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		
 		$inCore->saveComponentConfig('forum', $cfg);
 
-		$msg = 'Настройки сохранены.';
+		$msg = 'РќР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅРµРЅС‹.';
 		$opt = 'list_ranks';		
 		
 	}
@@ -303,104 +303,104 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		?>
         <form action="index.php?view=components&amp;do=config&amp;id=<?php echo $id;?>" method="post" name="addform" target="_self" id="form1" style="margin-top:10px">
             <?php ob_start(); ?>
-           {tab=Просмотр}
+           {tab=РџСЂРѕСЃРјРѕС‚СЂ}
            <table width="609" border="0" cellpadding="10" cellspacing="0" class="proptable">
                 <tr>
-                    <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Просмотр форума </h4></td>
+                    <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>РџСЂРѕСЃРјРѕС‚СЂ С„РѕСЂСѓРјР° </h4></td>
                 </tr>
                 <tr>
-                    <td valign="top"><strong>Тем на странице: </strong></td>
-                    <td valign="top"><input name="pp_forum" type="text" id="pp_forum" value="<?php echo @$cfg['pp_forum'];?>" size="5" /> шт.</td>
+                    <td valign="top"><strong>РўРµРј РЅР° СЃС‚СЂР°РЅРёС†Рµ: </strong></td>
+                    <td valign="top"><input name="pp_forum" type="text" id="pp_forum" value="<?php echo @$cfg['pp_forum'];?>" size="5" /> С€С‚.</td>
                 </tr>                
                 <tr>
-                    <td valign="top"><strong>Иконка RSS: </strong></td>
+                    <td valign="top"><strong>РРєРѕРЅРєР° RSS: </strong></td>
                     <td valign="top">
-                        <input name="is_rss" type="radio" value="1" <?php if (@$cfg['is_rss']) { echo 'checked="checked"'; } ?> /> Вкл
-                        <input name="is_rss" type="radio" value="0" <?php if (@!$cfg['is_rss']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="is_rss" type="radio" value="1" <?php if (@$cfg['is_rss']) { echo 'checked="checked"'; } ?> /> Р’РєР»
+                        <input name="is_rss" type="radio" value="0" <?php if (@!$cfg['is_rss']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Просмотр темы  </h4></td>
+                    <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>РџСЂРѕСЃРјРѕС‚СЂ С‚РµРјС‹  </h4></td>
                 </tr>
                 <tr>
-                    <td valign="top"><strong>Сообщений на странице: </strong></td>
-                    <td valign="top"><input name="pp_thread" type="text" id="pp_thread" value="<?php echo @$cfg['pp_thread'];?>" size="5" /> шт.</td>
+                    <td valign="top"><strong>РЎРѕРѕР±С‰РµРЅРёР№ РЅР° СЃС‚СЂР°РЅРёС†Рµ: </strong></td>
+                    <td valign="top"><input name="pp_thread" type="text" id="pp_thread" value="<?php echo @$cfg['pp_thread'];?>" size="5" /> С€С‚.</td>
                 </tr>
                 <tr>
-                    <td valign="top"><strong>Показывать уменьшенные прикрепленные изображения: </strong></td>
+                    <td valign="top"><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ СѓРјРµРЅСЊС€РµРЅРЅС‹Рµ РїСЂРёРєСЂРµРїР»РµРЅРЅС‹Рµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ: </strong></td>
                     <td valign="top">
-                        <input name="showimg" type="radio" value="1" <?php if (@$cfg['showimg']) { echo 'checked="checked"'; } ?> /> Вкл
-                        <input name="showimg" type="radio" value="0" <?php if (@!$cfg['showimg']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="showimg" type="radio" value="1" <?php if (@$cfg['showimg']) { echo 'checked="checked"'; } ?> /> Р’РєР»
+                        <input name="showimg" type="radio" value="0" <?php if (@!$cfg['showimg']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
                 <tr>
-                    <td valign="top"><strong>Форма для быстрого ответа: </strong></td>
+                    <td valign="top"><strong>Р¤РѕСЂРјР° РґР»СЏ Р±С‹СЃС‚СЂРѕРіРѕ РѕС‚РІРµС‚Р°: </strong></td>
                     <td valign="top">
-                        <input name="fast_on" type="radio" value="1" <?php if (@$cfg['fast_on'] || !isset($cfg['fast_on'])) { echo 'checked="checked"'; } ?> /> Вкл
-                        <input name="fast_on" type="radio" value="0" <?php if (@!$cfg['fast_on']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="fast_on" type="radio" value="1" <?php if (@$cfg['fast_on'] || !isset($cfg['fast_on'])) { echo 'checked="checked"'; } ?> /> Р’РєР»
+                        <input name="fast_on" type="radio" value="0" <?php if (@!$cfg['fast_on']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
                 <tr>
-                    <td valign="top"><p><strong>ББ-код в быстром ответе</strong><strong>: </strong></p></td>
+                    <td valign="top"><p><strong>Р‘Р‘-РєРѕРґ РІ Р±С‹СЃС‚СЂРѕРј РѕС‚РІРµС‚Рµ</strong><strong>: </strong></p></td>
                     <td valign="top">
-                        <input name="fast_bb" type="radio" value="1" <?php if (@$cfg['fast_bb'] || !isset($cfg['fast_bb'])) { echo 'checked="checked"'; } ?> /> Вкл
-                        <input name="fast_bb" type="radio" value="0" <?php if (@!$cfg['fast_bb']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="fast_bb" type="radio" value="1" <?php if (@$cfg['fast_bb'] || !isset($cfg['fast_bb'])) { echo 'checked="checked"'; } ?> /> Р’РєР»
+                        <input name="fast_bb" type="radio" value="0" <?php if (@!$cfg['fast_bb']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
                 <tr>
-                    <td valign="top"><strong>Запрещать редактирование/удаление через:</strong><br />
-                        <span class="hinttext">Спустя указанное время после добавления поста его редактирование/удаление станет невозможным для пользователя</span>
+                    <td valign="top"><strong>Р—Р°РїСЂРµС‰Р°С‚СЊ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ/СѓРґР°Р»РµРЅРёРµ С‡РµСЂРµР·:</strong><br />
+                        <span class="hinttext">РЎРїСѓСЃС‚СЏ СѓРєР°Р·Р°РЅРЅРѕРµ РІСЂРµРјСЏ РїРѕСЃР»Рµ РґРѕР±Р°РІР»РµРЅРёСЏ РїРѕСЃС‚Р° РµРіРѕ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ/СѓРґР°Р»РµРЅРёРµ СЃС‚Р°РЅРµС‚ РЅРµРІРѕР·РјРѕР¶РЅС‹Рј РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ</span>
                     </td>
                     <td valign="top">
                         <select name="edit_minutes" style="width:200px">
-                            <option value="0" <?php if(!$cfg['edit_minutes']) { echo 'selected'; } ?>>не запрещать</option>
-                            <option value="-1" <?php if(@$cfg['edit_minutes']==-1) { echo 'selected'; } ?>>запрещать сразу</option>
-                            <option value="1" <?php if(@$cfg['edit_minutes']==1) { echo 'selected'; } ?>>1 минуту</option>
-                            <option value="5" <?php if(@$cfg['edit_minutes']==5) { echo 'selected'; } ?>>5 минут</option>
-                            <option value="10" <?php if(@$cfg['edit_minutes']==10) { echo 'selected'; } ?>>10 минут</option>
-                            <option value="15" <?php if(@$cfg['edit_minutes']==15) { echo 'selected'; } ?>>15 минут</option>
-                            <option value="30" <?php if(@$cfg['edit_minutes']==30) { echo 'selected'; } ?>>30 минут</option>
-                            <option value="60" <?php if(@$cfg['edit_minutes']==60) { echo 'selected'; } ?>>1 час</option>                        
+                            <option value="0" <?php if(!$cfg['edit_minutes']) { echo 'selected'; } ?>>РЅРµ Р·Р°РїСЂРµС‰Р°С‚СЊ</option>
+                            <option value="-1" <?php if(@$cfg['edit_minutes']==-1) { echo 'selected'; } ?>>Р·Р°РїСЂРµС‰Р°С‚СЊ СЃСЂР°Р·Сѓ</option>
+                            <option value="1" <?php if(@$cfg['edit_minutes']==1) { echo 'selected'; } ?>>1 РјРёРЅСѓС‚Сѓ</option>
+                            <option value="5" <?php if(@$cfg['edit_minutes']==5) { echo 'selected'; } ?>>5 РјРёРЅСѓС‚</option>
+                            <option value="10" <?php if(@$cfg['edit_minutes']==10) { echo 'selected'; } ?>>10 РјРёРЅСѓС‚</option>
+                            <option value="15" <?php if(@$cfg['edit_minutes']==15) { echo 'selected'; } ?>>15 РјРёРЅСѓС‚</option>
+                            <option value="30" <?php if(@$cfg['edit_minutes']==30) { echo 'selected'; } ?>>30 РјРёРЅСѓС‚</option>
+                            <option value="60" <?php if(@$cfg['edit_minutes']==60) { echo 'selected'; } ?>>1 С‡Р°СЃ</option>                        
                         </select>
                     </td>
                 </tr>
            </table>
-           {tab=Изображения}
+           {tab=РР·РѕР±СЂР°Р¶РµРЅРёСЏ}
            <table width="609" border="0" cellpadding="10" cellspacing="0" class="proptable">
                 <tr>
-                    <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Вставка изображений в сообщения: </h4></td>
+                    <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Р’СЃС‚Р°РІРєР° РёР·РѕР±СЂР°Р¶РµРЅРёР№ РІ СЃРѕРѕР±С‰РµРЅРёСЏ: </h4></td>
                 </tr>
                 <tr>
-                    <td valign="top"><strong>Вставка изображений: </strong></td>
+                    <td valign="top"><strong>Р’СЃС‚Р°РІРєР° РёР·РѕР±СЂР°Р¶РµРЅРёР№: </strong></td>
                     <td valign="top">
-                        <input name="img_on" type="radio" value="1" <?php if (@$cfg['img_on']) { echo 'checked="checked"'; } ?> /> Вкл
-                        <input name="img_on" type="radio" value="0" <?php if (@!$cfg['img_on']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="img_on" type="radio" value="1" <?php if (@$cfg['img_on']) { echo 'checked="checked"'; } ?> /> Р’РєР»
+                        <input name="img_on" type="radio" value="0" <?php if (@!$cfg['img_on']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
                 <tr>
                     <td valign="top">
-                        <strong>Максимум файлов:</strong><br />
-                        <span class="hinttext">Сколько изображений можно вставить в одно сообщение</span>
+                        <strong>РњР°РєСЃРёРјСѓРј С„Р°Р№Р»РѕРІ:</strong><br />
+                        <span class="hinttext">РЎРєРѕР»СЊРєРѕ РёР·РѕР±СЂР°Р¶РµРЅРёР№ РјРѕР¶РЅРѕ РІСЃС‚Р°РІРёС‚СЊ РІ РѕРґРЅРѕ СЃРѕРѕР±С‰РµРЅРёРµ</span>
                     </td>
-                    <td valign="top"><input name="img_max" type="text" id="img_max" value="<?php echo @$cfg['img_max'];?>" size="5" /> шт.</td>
+                    <td valign="top"><input name="img_max" type="text" id="img_max" value="<?php echo @$cfg['img_max'];?>" size="5" /> С€С‚.</td>
                 </tr>
            </table>
-           {tab=Вложения}
+           {tab=Р’Р»РѕР¶РµРЅРёСЏ}
            <table width="609" border="0" cellpadding="10" cellspacing="0" class="proptable">
                 <tr>
-                    <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Прикрепление файлов (аттачи) </h4></td>
+                    <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>РџСЂРёРєСЂРµРїР»РµРЅРёРµ С„Р°Р№Р»РѕРІ (Р°С‚С‚Р°С‡Рё) </h4></td>
                 </tr>
                 <tr>
-                    <td valign="top"><strong>Прикрепление файлов: </strong></td>
+                    <td valign="top"><strong>РџСЂРёРєСЂРµРїР»РµРЅРёРµ С„Р°Р№Р»РѕРІ: </strong></td>
                     <td valign="top">
-                        <input name="fa_on" type="radio" value="1" <?php if (@$cfg['fa_on']) { echo 'checked="checked"'; } ?> /> Вкл
-                        <input name="fa_on" type="radio" value="0" <?php if (@!$cfg['fa_on']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="fa_on" type="radio" value="1" <?php if (@$cfg['fa_on']) { echo 'checked="checked"'; } ?> /> Р’РєР»
+                        <input name="fa_on" type="radio" value="0" <?php if (@!$cfg['fa_on']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
                 <tr>
                     <td valign="top">
-                        <strong>Доступно для групп:</strong><br/>
-                        <span class="hinttext">Какой из групп должен принадлежать пользователь, чтобы иметь возможность прикреплять файлы</span>
+                        <strong>Р”РѕСЃС‚СѓРїРЅРѕ РґР»СЏ РіСЂСѓРїРї:</strong><br/>
+                        <span class="hinttext">РљР°РєРѕР№ РёР· РіСЂСѓРїРї РґРѕР»Р¶РµРЅ РїСЂРёРЅР°РґР»РµР¶Р°С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ, С‡С‚РѕР±С‹ РёРјРµС‚СЊ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РїСЂРёРєСЂРµРїР»СЏС‚СЊ С„Р°Р№Р»С‹</span>
                     </td>
                     <td valign="top">
                       <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist" style="margin-top:5px">
@@ -423,20 +423,20 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                                   ?>
                                   <input name="is_access" type="checkbox" id="is_access" onclick="checkGroupList()" value="1" <?php echo $public?> />
                               </td>
-                              <td><label for="is_access"><strong>Все группы</strong></label></td>
+                              <td><label for="is_access"><strong>Р’СЃРµ РіСЂСѓРїРїС‹</strong></label></td>
                           </tr>
                       </table>
                       <div style="padding:5px">
                           <span class="hinttext">
-                              Если отмечено, все группы пользователей смогут прикреплять файлы.
+                              Р•СЃР»Рё РѕС‚РјРµС‡РµРЅРѕ, РІСЃРµ РіСЂСѓРїРїС‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ СЃРјРѕРіСѓС‚ РїСЂРёРєСЂРµРїР»СЏС‚СЊ С„Р°Р№Р»С‹.
                           </span>
                       </div>
   
                       <div style="margin-top:10px;padding:5px;padding-right:0px;" id="grp">
                           <div>
-                              <strong>Могут прикреплять только группы:</strong><br />
+                              <strong>РњРѕРіСѓС‚ РїСЂРёРєСЂРµРїР»СЏС‚СЊ С‚РѕР»СЊРєРѕ РіСЂСѓРїРїС‹:</strong><br />
                               <span class="hinttext">
-                                  Можно выбрать несколько, удерживая CTRL.
+                                  РњРѕР¶РЅРѕ РІС‹Р±СЂР°С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ, СѓРґРµСЂР¶РёРІР°СЏ CTRL.
                               </span>
                           </div>
                           <div>
@@ -478,26 +478,26 @@ function checkGroupList(){
                 </tr>
                 <tr>
                     <td valign="top">
-                        <strong>Максимум файлов:</strong><br />
-                        <span class="hinttext">Сколько файлов можно прикрепить к одному сообщению</span>
+                        <strong>РњР°РєСЃРёРјСѓРј С„Р°Р№Р»РѕРІ:</strong><br />
+                        <span class="hinttext">РЎРєРѕР»СЊРєРѕ С„Р°Р№Р»РѕРІ РјРѕР¶РЅРѕ РїСЂРёРєСЂРµРїРёС‚СЊ Рє РѕРґРЅРѕРјСѓ СЃРѕРѕР±С‰РµРЅРёСЋ</span>
                     </td>
                     <td valign="top">
-                        <input name="fa_max" type="text" id="fa_max" value="<?php echo @$cfg['fa_max'];?>" size="5" /> шт.
+                        <input name="fa_max" type="text" id="fa_max" value="<?php echo @$cfg['fa_max'];?>" size="5" /> С€С‚.
                     </td>
                 </tr>
                 <tr>
                     <td valign="top">
-                        <strong>Разрешенные расширения: </strong><br />
-                        <span class="hinttext">Список допустимых расширений, через пробел</span>
+                        <strong>Р Р°Р·СЂРµС€РµРЅРЅС‹Рµ СЂР°СЃС€РёСЂРµРЅРёСЏ: </strong><br />
+                        <span class="hinttext">РЎРїРёСЃРѕРє РґРѕРїСѓСЃС‚РёРјС‹С… СЂР°СЃС€РёСЂРµРЅРёР№, С‡РµСЂРµР· РїСЂРѕР±РµР»</span>
                     </td>
                     <td valign="top">
                         <textarea name="fa_ext" cols="35" rows="3" id="fa_ext"><?php echo @$cfg['fa_ext'];?></textarea>
                     </td>
                 </tr>
                 <tr>
-                    <td valign="top"><strong>Максимальный размер файла: </strong></td>
+                    <td valign="top"><strong>РњР°РєСЃРёРјР°Р»СЊРЅС‹Р№ СЂР°Р·РјРµСЂ С„Р°Р№Р»Р°: </strong></td>
                     <td valign="top">
-                        <input name="fa_size" type="text" id="fa_size" value="<?php echo @$cfg['fa_size'];?>" size="10" /> Кб
+                        <input name="fa_size" type="text" id="fa_size" value="<?php echo @$cfg['fa_size'];?>" size="10" /> РљР±
                     </td>
                 </tr>
             </table>
@@ -505,15 +505,15 @@ function checkGroupList(){
             <?php echo jwTabs(ob_get_clean()); ?>
             <p>
                 <input name="opt" type="hidden" id="do" value="saveconfig" />
-                <input name="save" type="submit" id="save" value="Сохранить" />
+                <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
             </p>
         </form>
 		<?php
 	}
 	
 	if ($opt == 'list_ranks') {
-		cpAddPathway('Звания', $_SERVER['REQUEST_URI']);
-		echo '<h3>Звания на форуме</h3>';
+		cpAddPathway('Р—РІР°РЅРёСЏ', $_SERVER['REQUEST_URI']);
+		echo '<h3>Р—РІР°РЅРёСЏ РЅР° С„РѕСЂСѓРјРµ</h3>';
 		
 		if(!isset($cfg['ranks'])) { $cfg['ranks'] = array(); }
 		if(!isset($cfg['modrank'])) { $cfg['modrank'] = 1; }
@@ -521,17 +521,17 @@ function checkGroupList(){
             <form action="index.php?view=components&amp;do=config&amp;id=<?php echo $id;?>" method="post" name="addform" target="_self" id="form1">
                 <table width="500" border="0" cellpadding="10" cellspacing="0" class="proptable" style="margin-bottom:2px">
                     <tr>
-                        <td align="center" valign="middle"><strong>Показывать звания для модераторов: </strong></td>
+                        <td align="center" valign="middle"><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ Р·РІР°РЅРёСЏ РґР»СЏ РјРѕРґРµСЂР°С‚РѕСЂРѕРІ: </strong></td>
                         <td width="120" align="center" valign="middle">
-                            <input name="modrank" type="radio" value="1" <?php if (@$cfg['modrank']) { echo 'checked="checked"'; } ?> /> Да
-                            <input name="modrank" type="radio" value="0" <?php if (@!$cfg['modrank']) { echo 'checked="checked"'; } ?>/> Нет
+                            <input name="modrank" type="radio" value="1" <?php if (@$cfg['modrank']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                            <input name="modrank" type="radio" value="0" <?php if (@!$cfg['modrank']) { echo 'checked="checked"'; } ?>/> РќРµС‚
                         </td>
                     </tr>
                 </table>
                 <table width="500" border="0" cellpadding="10" cellspacing="0" class="proptable">
                     <tr>
-                        <td align="center" valign="middle" bgcolor="#EBEBEB"><strong>Звание</strong></td>
-                        <td width="120" align="center" valign="middle" bgcolor="#EBEBEB"><strong>Необходимое число сообщений </strong></td>
+                        <td align="center" valign="middle" bgcolor="#EBEBEB"><strong>Р—РІР°РЅРёРµ</strong></td>
+                        <td width="120" align="center" valign="middle" bgcolor="#EBEBEB"><strong>РќРµРѕР±С…РѕРґРёРјРѕРµ С‡РёСЃР»Рѕ СЃРѕРѕР±С‰РµРЅРёР№ </strong></td>
                     </tr>
                     <?php for($r = 1; $r <= 10; $r++){ ?>
                     <tr>
@@ -542,8 +542,8 @@ function checkGroupList(){
                 </table>
                 <p>
                     <input name="opt" type="hidden" id="do" value="saveranks" />
-                    <input name="save" type="submit" id="save" value="Сохранить" />
-                    <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components&amp;do=config&amp;id=<?php echo $id;?>';"/>
+                    <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+                    <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components&amp;do=config&amp;id=<?php echo $id;?>';"/>
                 </p>
             </form>
 		<?php
@@ -569,7 +569,7 @@ function checkGroupList(){
 	}
 	
 	if ($opt == 'submit_cat'){	
-		if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("Укажите заголовок категории!"); }
+		if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("РЈРєР°Р¶РёС‚Рµ Р·Р°РіРѕР»РѕРІРѕРє РєР°С‚РµРіРѕСЂРёРё!"); }
 		$published  = (int)$_REQUEST['published'];
 		$auth_group = $_REQUEST['auth_group'];
 		$ordering   = (int)$_REQUEST['ordering'];		
@@ -595,7 +595,7 @@ function checkGroupList(){
 		if(isset($_REQUEST['item_id'])) { 
 			$item_id = (int)$_REQUEST['item_id'];
 			
-			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("Укажите заголовок категории!"); }
+			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("РЈРєР°Р¶РёС‚Рµ Р·Р°РіРѕР»РѕРІРѕРє РєР°С‚РµРіРѕСЂРёРё!"); }
 			$published  = (int)$_REQUEST['published'];
 			$auth_group = $_REQUEST['auth_group'];
 			$ordering   = (int)$_REQUEST['ordering'];		
@@ -616,29 +616,29 @@ function checkGroupList(){
 	}
 	
 	if ($opt == 'list_cats'){
-		cpAddPathway('Категории форумов', '?view=components&do=config&id='.$id.'&opt=list_cats');
-		echo '<h3>Категории форумов</h3>';
+		cpAddPathway('РљР°С‚РµРіРѕСЂРёРё С„РѕСЂСѓРјРѕРІ', '?view=components&do=config&id='.$id.'&opt=list_cats');
+		echo '<h3>РљР°С‚РµРіРѕСЂРёРё С„РѕСЂСѓРјРѕРІ</h3>';
 
 		//TABLE COLUMNS
 		$fields = array();
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 		
-		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
+		$fields[1]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
 		$fields[1]['link'] = '?view=components&do=config&id='.$id.'&opt=edit_cat&item_id=%id%';
 
-		$fields[2]['title'] = 'Показ';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
-		$fields[2]['do'] = 'opt'; $fields[2]['do_suffix'] = '_cat'; //Чтобы вместо 'do=hide&id=1' было 'opt=hide_albun&item_id=1'
+		$fields[2]['title'] = 'РџРѕРєР°Р·';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
+		$fields[2]['do'] = 'opt'; $fields[2]['do_suffix'] = '_cat'; //Р§С‚РѕР±С‹ РІРјРµСЃС‚Рѕ 'do=hide&id=1' Р±С‹Р»Рѕ 'opt=hide_albun&item_id=1'
 		
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Редактировать';
+		$actions[0]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[0]['icon']  = 'edit.gif';
 		$actions[0]['link']  = '?view=components&do=config&id='.$id.'&opt=edit_cat&item_id=%id%';
 
-		$actions[1]['title'] = 'Удалить';
+		$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[1]['icon']  = 'delete.gif';
-		$actions[1]['confirm'] = 'Вместе с категорией будут удалены все ее форумы. Удалить категорию?';
+		$actions[1]['confirm'] = 'Р’РјРµСЃС‚Рµ СЃ РєР°С‚РµРіРѕСЂРёРµР№ Р±СѓРґСѓС‚ СѓРґР°Р»РµРЅС‹ РІСЃРµ РµРµ С„РѕСЂСѓРјС‹. РЈРґР°Р»РёС‚СЊ РєР°С‚РµРіРѕСЂРёСЋ?';
 		$actions[1]['link']  = '?view=components&do=config&id='.$id.'&opt=delete_cat&item_id=%id%';
 				
 		//Print table
@@ -646,32 +646,32 @@ function checkGroupList(){
 	}
 
 	if ($opt == 'list_forums'){
-		echo '<h3>Форумы</h3>';
+		echo '<h3>Р¤РѕСЂСѓРјС‹</h3>';
 		
 		//TABLE COLUMNS
 		$fields = array();
 
 		$fields[0]['title'] = 'Lt';			$fields[0]['field'] = 'NSLeft';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
+		$fields[1]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
 		$fields[1]['filter'] = 15;
 		$fields[1]['link'] = '?view=components&do=config&id='.$id.'&opt=edit_forum&item_id=%id%';
 
-		$fields[2]['title'] = 'Показ';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
+		$fields[2]['title'] = 'РџРѕРєР°Р·';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
 		$fields[2]['do'] = 'opt'; $fields[2]['do_suffix'] = '_forum';
 	
-		$fields[4]['title'] = 'Категория';		$fields[4]['field'] = 'category_id';	$fields[4]['width'] = '150';
+		$fields[4]['title'] = 'РљР°С‚РµРіРѕСЂРёСЏ';		$fields[4]['field'] = 'category_id';	$fields[4]['width'] = '150';
 		$fields[4]['prc'] = 'cpForumCatById';  $fields[4]['filter'] = 1;  $fields[4]['filterlist'] = cpGetList('cms_forum_cats');
 		
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Редактировать';
+		$actions[0]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[0]['icon']  = 'edit.gif';
 		$actions[0]['link']  = '?view=components&do=config&id='.$id.'&opt=edit_forum&item_id=%id%';
 
-		$actions[1]['title'] = 'Удалить';
+		$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[1]['icon']  = 'delete.gif';
-		$actions[1]['confirm'] = 'Удалить форум?';
+		$actions[1]['confirm'] = 'РЈРґР°Р»РёС‚СЊ С„РѕСЂСѓРј?';
 		$actions[1]['link']  = '?view=components&do=config&id='.$id.'&opt=delete_forum&item_id=%id%';
 				
 		//Print table
@@ -680,7 +680,7 @@ function checkGroupList(){
 	
 	if ($opt == 'add_cat' || $opt == 'edit_cat'){
 		if ($opt=='add_cat'){
-			 echo '<h3>Добавить категорию</h3>';
+			 echo '<h3>Р”РѕР±Р°РІРёС‚СЊ РєР°С‚РµРіРѕСЂРёСЋ</h3>';
 		} else {
 					 if(isset($_REQUEST['item_id'])){
 						 $item_id = (int)$_REQUEST['item_id'];
@@ -691,29 +691,29 @@ function checkGroupList(){
 						 }
 					 }
 					
-					 echo '<h3>Редактировать категорию</h3>';
+					 echo '<h3>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РєР°С‚РµРіРѕСЂРёСЋ</h3>';
 			   }
 		?>
         <form id="addform" name="addform" method="post" action="index.php?view=components&amp;do=config&amp;id=<?php echo $id;?>">
             <table width="600" border="0" cellspacing="5" class="proptable">
                 <tr>
-                    <td width="211" valign="top">Заголовок категории: </td>
+                    <td width="211" valign="top">Р—Р°РіРѕР»РѕРІРѕРє РєР°С‚РµРіРѕСЂРёРё: </td>
                     <td width="195" valign="top"><input name="title" type="text" id="title" size="30" value="<?php echo htmlspecialchars($mod['title']);?>"/></td>
                     <td width="168" valign="top">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td valign="top">Публиковать категорию?</td>
+                    <td valign="top">РџСѓР±Р»РёРєРѕРІР°С‚СЊ РєР°С‚РµРіРѕСЂРёСЋ?</td>
                     <td valign="top">
-                        <input name="published" type="radio" value="1" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> /> Да
-                        <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> /> Нет
+                        <input name="published" type="radio" value="1" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                        <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                     </td>
                     <td valign="top">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td valign="top">Показывать группе: </td>
+                    <td valign="top">РџРѕРєР°Р·С‹РІР°С‚СЊ РіСЂСѓРїРїРµ: </td>
                     <td valign="top">
                         <select name="auth_group" id="auth_group">
-                            <option value="0" <?php if (@$mod['auth_group']=='0') { echo "selected"; }?>>Всем группам</option>
+                            <option value="0" <?php if (@$mod['auth_group']=='0') { echo "selected"; }?>>Р’СЃРµРј РіСЂСѓРїРїР°Рј</option>
                             <?php
                                 if (isset($mod['auth_group'])) {
                                     echo $inCore->getListItems('cms_user_groups', $mod['auth_group']);
@@ -726,15 +726,15 @@ function checkGroupList(){
                     <td valign="top">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td valign="top">Порядковый номер: </td>
+                    <td valign="top">РџРѕСЂСЏРґРєРѕРІС‹Р№ РЅРѕРјРµСЂ: </td>
                     <td valign="top"><input name="ordering" type="text" id="ordering" value="<?php echo @$mod['ordering'];?>" size="5" /></td>
                     <td valign="top">&nbsp;</td>
                 </tr>
             </table>
             <p>
                 <input name="opt" type="hidden" id="opt" <?php if ($opt=='add_cat') { echo 'value="submit_cat"'; } else { echo 'value="update_cat"'; } ?> />
-                <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_cat') { echo 'value="Создать категорию"'; } else { echo 'value="Сохранить категорию"'; } ?> />
-                <input name="back2" type="button" id="back2" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
+                <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_cat') { echo 'value="РЎРѕР·РґР°С‚СЊ РєР°С‚РµРіРѕСЂРёСЋ"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ РєР°С‚РµРіРѕСЂРёСЋ"'; } ?> />
+                <input name="back2" type="button" id="back2" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
                 <?php
                     if ($opt=='edit_cat'){
                         echo '<input name="item_id" type="hidden" value="'.$mod['id'].'" />';
@@ -748,13 +748,13 @@ function checkGroupList(){
 	if ($opt == 'add_forum' || $opt == 'edit_forum'){	
 			
 		if ($opt=='add_forum'){
-			 echo '<h3>Добавить форум</h3>';
+			 echo '<h3>Р”РѕР±Р°РІРёС‚СЊ С„РѕСЂСѓРј</h3>';
 		} else {
 					if(isset($_REQUEST['multiple'])){				 
 						if (isset($_REQUEST['item'])){					
 							$_SESSION['editlist'] = $_REQUEST['item'];
 						} else {
-							echo '<p class="error">Нет выбранных объектов!</p>';
+							echo '<p class="error">РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ!</p>';
 							return;
 						}				 
 					 }
@@ -764,7 +764,7 @@ function checkGroupList(){
 					 if (isset($_SESSION['editlist'])){
 						$item_id = array_shift($_SESSION['editlist']);
 						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
-						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
+						{ $ostatok = '(РќР° РѕС‡РµСЂРµРґРё: '.sizeof($_SESSION['editlist']).')'; }
 					 } else { $item_id = $_REQUEST['item_id']; }
 		
 		
@@ -782,26 +782,26 @@ function checkGroupList(){
         <form action="index.php?view=components&do=config&id=<?php echo $id;?>" method="post" name="addform" id="addform" enctype="multipart/form-data">
             <table width="514" border="0" cellspacing="10" class="proptable">
                 <tr>
-                    <td width="236"><strong>Название форума:</strong></td>
+                    <td width="236"><strong>РќР°Р·РІР°РЅРёРµ С„РѕСЂСѓРјР°:</strong></td>
                     <td width="259"><input name="title" type="text" id="title" size="30" value="<?php echo htmlspecialchars($mod['title']);?>" style="width:254px"/></td>
                 </tr>
                 <tr>
-                    <td valign="top"><strong>Описание форума:</strong></td>
+                    <td valign="top"><strong>РћРїРёСЃР°РЅРёРµ С„РѕСЂСѓРјР°:</strong></td>
                     <td><textarea name="description" cols="35" rows="2" id="description" style="width:250px"><?php echo @$mod['description']?></textarea></td>
                 </tr>
                 <tr>
-                    <td><strong>Публиковать форум?</strong></td>
+                    <td><strong>РџСѓР±Р»РёРєРѕРІР°С‚СЊ С„РѕСЂСѓРј?</strong></td>
                     <td>
-                        <input name="published" type="radio" value="1" checked="checked" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> /> Да
-                        <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> /> Нет
+                        <input name="published" type="radio" value="1" checked="checked" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                        <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Родительский форум:</strong></td>
+                    <td><strong>Р РѕРґРёС‚РµР»СЊСЃРєРёР№ С„РѕСЂСѓРј:</strong></td>
                     <td>
                         <?php $rootid = $inDB->get_field('cms_forums', 'parent_id=0', 'id'); ?>
                         <select name="parent_id" id="parent_id" style="width:260px">
-                                <option value="<?php echo $rootid?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- Корень форумов --</option>
+                                <option value="<?php echo $rootid?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- РљРѕСЂРµРЅСЊ С„РѕСЂСѓРјРѕРІ --</option>
                         <?php
                             if (isset($mod['parent_id'])){
                                echo $inCore->getListItemsNS('cms_forums', $mod['parent_id']);
@@ -813,7 +813,7 @@ function checkGroupList(){
                    </td>
                 </tr>
                 <tr>
-                    <td><strong>Категория:</strong></td>
+                    <td><strong>РљР°С‚РµРіРѕСЂРёСЏ:</strong></td>
                     <td>
                         <select name="category_id" id="category_id" style="width:260px">
                         <?php
@@ -831,9 +831,9 @@ function checkGroupList(){
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Показывать группе:</strong><br />
+                    <td><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ РіСЂСѓРїРїРµ:</strong><br />
                       <span class="hinttext">
-                          Можно выбрать несколько, удерживая CTRL.
+                          РњРѕР¶РЅРѕ РІС‹Р±СЂР°С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ, СѓРґРµСЂР¶РёРІР°СЏ CTRL.
                       </span>
                     </td>
                     <td>
@@ -873,33 +873,33 @@ function checkGroupList(){
                     echo '</select>';
                     ?>
                     
-                    <label><input name="is_access" type="checkbox" id="is_access" onclick="checkAccesList()" value="1" <?php echo $public?> /> <strong>Всем группам</strong></label>
+                    <label><input name="is_access" type="checkbox" id="is_access" onclick="checkAccesList()" value="1" <?php echo $public?> /> <strong>Р’СЃРµРј РіСЂСѓРїРїР°Рј</strong></label>
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Иконка форума:</strong><br/>
-                        <span class="hinttext">файл размером 32px и менее вставляется оригиналом</span></td>
+                    <td><strong>РРєРѕРЅРєР° С„РѕСЂСѓРјР°:</strong><br/>
+                        <span class="hinttext">С„Р°Р№Р» СЂР°Р·РјРµСЂРѕРј 32px Рё РјРµРЅРµРµ РІСЃС‚Р°РІР»СЏРµС‚СЃСЏ РѕСЂРёРіРёРЅР°Р»РѕРј</span></td>
                     <td valign="middle"> <?php if (@$mod['icon']) { ?><img src="/upload/forum/cat_icons/<?php echo @$mod['icon'];?>" border="0" /><?php } ?> 
                         <input name="Filedata" type="file" style="width:215px; margin:0 0 0 5px; vertical-align:top" />
                     </td>
                 </tr>
                 <tr>
                     <td width="236">
-                        <strong>Стоимость создания темы:</strong><br/>
-                        <span class="hinttext">0 &mdash; бесплатно</span>
+                        <strong>РЎС‚РѕРёРјРѕСЃС‚СЊ СЃРѕР·РґР°РЅРёСЏ С‚РµРјС‹:</strong><br/>
+                        <span class="hinttext">0 &mdash; Р±РµСЃРїР»Р°С‚РЅРѕ</span>
                     </td>
                     <td width="259">
                         <?php if (IS_BILLING) { ?>
-                            <input name="topic_cost" type="text" id="title" value="<?php echo @$mod['topic_cost'];?>" style="width:60px"/> баллов
+                            <input name="topic_cost" type="text" id="title" value="<?php echo @$mod['topic_cost'];?>" style="width:60px"/> Р±Р°Р»Р»РѕРІ
                         <?php } else { ?>
-                            требуется &laquo;<a href="http://www.instantcms.ru/billing/about.html">Биллинг пользователей</a>&raquo;
+                            С‚СЂРµР±СѓРµС‚СЃСЏ &laquo;<a href="http://www.instantcms.ru/billing/about.html">Р‘РёР»Р»РёРЅРі РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</a>&raquo;
                         <?php } ?>
                     </td>
                 </tr>
         </table>
         <p>
-            <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_forum') { echo 'value="Создать форум"'; } else { echo 'value="Сохранить форум"'; } ?> />
-            <input name="back3" type="button" id="back3" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
+            <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_forum') { echo 'value="РЎРѕР·РґР°С‚СЊ С„РѕСЂСѓРј"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ С„РѕСЂСѓРј"'; } ?> />
+            <input name="back3" type="button" id="back3" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
             <input name="opt" type="hidden" id="opt" <?php if ($opt=='add_forum') { echo 'value="submit_forum"'; } else { echo 'value="update_forum"'; } ?> />
             <?php
             if ($opt=='edit_forum'){

@@ -34,7 +34,7 @@ class cms_model_registration{
 		$inCore     = cmsCore::getInstance();
 		$cfg 		= $inCore->loadComponentConfig('registration');
 		
-		$types 		= $cfg['badnickname'] ? $cfg['badnickname'] : "администратор\nадмин\nqwert\nqwerty\n123\nadmin\nвася пупкин";
+		$types 		= $cfg['badnickname'] ? $cfg['badnickname'] : "Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ\nР°РґРјРёРЅ\nqwert\nqwerty\n123\nadmin\nРІР°СЃСЏ РїСѓРїРєРёРЅ";
 		$maytypes 	= explode("\n", $types);
 		$nickname	= mb_strtolower($nickname);
 		$may        = in_array($nickname, $maytypes);		

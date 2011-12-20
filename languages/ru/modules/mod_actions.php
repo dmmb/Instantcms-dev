@@ -13,6 +13,6 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-$_LANG['ALL_ACTIONS'] = 'Âñÿ ëåíòà àêòèâíîñòè';
+$_LANG['ALL_ACTIONS'] = 'Ð’ÑÑ Ð»ÐµÐ½Ñ‚Ð° Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¾ÑÑ‚Ð¸';
 
 ?>

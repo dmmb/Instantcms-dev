@@ -63,11 +63,11 @@ function repairNestedSet($table){
 	$differ = $table['differ'];
 	$table	= $table['name'];
 	
-	$root_id = $inDB->get_field($table, "NSDiffer = '$differ' AND (title LIKE '%Корнев%')", 'id');
+	$root_id = $inDB->get_field($table, "NSDiffer = '$differ' AND (title LIKE '%РљРѕСЂРЅРµРІ%')", 'id');
 	
 	$sql = "SELECT id
 			FROM $table
-			WHERE NSDiffer = '$differ' AND (NOT title LIKE '%Корнев%')
+			WHERE NSDiffer = '$differ' AND (NOT title LIKE '%РљРѕСЂРЅРµРІ%')
 			ORDER BY NSLeft";
 	$res = dbQuery($sql);
 	
@@ -116,44 +116,44 @@ function applet_repairnested(){
 	$tables = array();
 	
 	$tables[0]['name']	 	= 'cms_category';
-	$tables[0]['title']		= 'Дерево разделов для статей';
+	$tables[0]['title']		= 'Р”РµСЂРµРІРѕ СЂР°Р·РґРµР»РѕРІ РґР»СЏ СЃС‚Р°С‚РµР№';
 	$tables[0]['differ']	= '';
 	
 	$tables[1]['name']	 	= 'cms_photo_albums';
-	$tables[1]['title']		= 'Дерево фотоальбомов';
+	$tables[1]['title']		= 'Р”РµСЂРµРІРѕ С„РѕС‚РѕР°Р»СЊР±РѕРјРѕРІ';
 	$tables[1]['differ']	= '';	
 
 	$tables[3]['name']	 	= 'cms_board_cats';
-	$tables[3]['title']		= 'Дерево разделов доски объявлений';
+	$tables[3]['title']		= 'Р”РµСЂРµРІРѕ СЂР°Р·РґРµР»РѕРІ РґРѕСЃРєРё РѕР±СЉСЏРІР»РµРЅРёР№';
 	$tables[3]['differ']	= '';	
 
 	$tables[4]['name']	 	= 'cms_uc_cats';
-	$tables[4]['title']		= 'Дерево разделов каталога';
+	$tables[4]['title']		= 'Р”РµСЂРµРІРѕ СЂР°Р·РґРµР»РѕРІ РєР°С‚Р°Р»РѕРіР°';
 	$tables[4]['differ']	= '';
 
 	$tables[5]['name']	    = 'cms_menu';
-	$tables[5]['title']	    = 'Дерево меню';
+	$tables[5]['title']	    = 'Р”РµСЂРµРІРѕ РјРµРЅСЋ';
 	$tables[5]['differ']	= '';
 
 	$tables[6]['name']	    = 'cms_forums';
-	$tables[6]['title']	    = 'Дерево форумов';
+	$tables[6]['title']	    = 'Р”РµСЂРµРІРѕ С„РѕСЂСѓРјРѕРІ';
 	$tables[6]['differ']	= '';
 
 	if($inCore->isComponentInstalled('maps')){
 		$tables[7]['name']	    = 'cms_map_cats';
-		$tables[7]['title']	    = 'Дерево категорий InstantMaps';
+		$tables[7]['title']	    = 'Р”РµСЂРµРІРѕ РєР°С‚РµРіРѕСЂРёР№ InstantMaps';
 		$tables[7]['differ']	= '';
 	}
 
 	if($inCore->isComponentInstalled('video')){
 		$tables[8]['name']	    = 'cms_video_category';
-		$tables[8]['title']	    = 'Дерево категорий InstantVideo';
+		$tables[8]['title']	    = 'Р”РµСЂРµРІРѕ РєР°С‚РµРіРѕСЂРёР№ InstantVideo';
 		$tables[8]['differ']	= '';
 	}
 
 	if($inCore->isComponentInstalled('shop')){
 		$tables[9]['name']	    = 'cms_shop_cats';
-		$tables[9]['title']	    = 'Дерево категорий InstantShop';
+		$tables[9]['title']	    = 'Р”РµСЂРµРІРѕ РєР°С‚РµРіРѕСЂРёР№ InstantShop';
 		$tables[9]['differ']	= '';
 	}
 
@@ -165,16 +165,16 @@ function applet_repairnested(){
 		}
 	}
 
-	$GLOBALS['cp_page_title'] = 'Проверка деревьев';
+	$GLOBALS['cp_page_title'] = 'РџСЂРѕРІРµСЂРєР° РґРµСЂРµРІСЊРµРІ';
  	
-	cpAddPathway('Настройки сайта', 'index.php?view=config');	
-	cpAddPathway('Проверка деревьев', 'index.php?view=repairnested');	
+	cpAddPathway('РќР°СЃС‚СЂРѕР№РєРё СЃР°Р№С‚Р°', 'index.php?view=config');	
+	cpAddPathway('РџСЂРѕРІРµСЂРєР° РґРµСЂРµРІСЊРµРІ', 'index.php?view=repairnested');	
 	
 	$GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/admin/js/repair.js"></script>';
 
 	$errors_found = false;	
 	
-	echo '<h3>Проверка целостности деревьев БД</h3>';
+	echo '<h3>РџСЂРѕРІРµСЂРєР° С†РµР»РѕСЃС‚РЅРѕСЃС‚Рё РґРµСЂРµРІСЊРµРІ Р‘Р”</h3>';
 	
 	echo '<div style="margin:20px; margin-top:0px;">';
 	echo '<form method="post" action="" id="repairform">';
@@ -185,7 +185,7 @@ function applet_repairnested(){
 				echo '<tr>';
 					echo '<td width="15">'.($errors ? '<input type="checkbox" name="tables[]" value="'.$id.'" checked="checked"/>' : '').'</td>';
 					echo '<td><div>';
-						echo '<span>'.$table['title'].'</span> &mdash; ' . ($errors ? '<span style="color:red">найдены ошибки!</span>' : '<span style="color:green">ошибок не найдено</span>');		
+						echo '<span>'.$table['title'].'</span> &mdash; ' . ($errors ? '<span style="color:red">РЅР°Р№РґРµРЅС‹ РѕС€РёР±РєРё!</span>' : '<span style="color:green">РѕС€РёР±РѕРє РЅРµ РЅР°Р№РґРµРЅРѕ</span>');		
 					echo '</div></td>';
 				echo '</tr>';
 				if ($errors) { $errors_found = true; }
@@ -195,7 +195,7 @@ function applet_repairnested(){
 	
 	if ($errors_found){
 		echo '<div style="margin-bottom:20px">';
-			echo '<input type="button"  onclick="repairTrees()" value="Исправить выбранные">';
+			echo '<input type="button"  onclick="repairTrees()" value="РСЃРїСЂР°РІРёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ">';
 		echo '</div>';
 	}
 	

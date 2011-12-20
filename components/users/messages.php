@@ -27,10 +27,10 @@
 
                 $inPage->addPathway($_LANG['INBOX']);
 
-                //Êîëè÷åñòâî çàïèñåé
+                //ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð·Ð°Ð¿Ð¸ÑÐµÐ¹
                 $msg_count = $inDB->rows_count('cms_user_msg', "to_id = '$id' AND to_del = 0");
 
-                // Ïàãèíàöèÿ
+                // ÐŸÐ°Ð³Ð¸Ð½Ð°Ñ†Ð¸Ñ
                 $pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/messages%page%.html\')') : '';
 
                 $sql = "SELECT m.*, m.senddate as fpubdate, m.from_id as sender_id, u.nickname as author, u.login as author_login, u.is_deleted, p.imageurl
@@ -47,10 +47,10 @@
 
                 $inPage->addPathway($_LANG['SENT']);
 
-                //Êîëè÷åñòâî çàïèñåé
+                //ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð·Ð°Ð¿Ð¸ÑÐµÐ¹
                 $msg_count = $inDB->rows_count('cms_user_msg m, cms_users u', "m.from_id = '$id' AND m.to_id = u.id AND m.from_del=0");
                 
-                // Ïàãèíàöèÿ
+                // ÐŸÐ°Ð³Ð¸Ð½Ð°Ñ†Ð¸Ñ
                 $pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/messages-sent%page%.html\')') : '';
 
                 $sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.to_id as sender_id, u.is_deleted, p.imageurl
@@ -68,10 +68,10 @@
                 $with_name = $inDB->get_field('cms_users', "id = $with_id", 'nickname');
                 $inPage->addPathway($_LANG['MESSEN_WITH'].' '.$with_name, $_SERVER['REQUEST_URI']);
 
-                //Êîëè÷åñòâî çàïèñåé
+                //ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð·Ð°Ð¿Ð¸ÑÐµÐ¹
                 $msg_count = $inDB->rows_count('cms_user_msg m', "((m.from_id = $id AND from_del=0) OR (m.from_id = $with_id AND to_del=0)) AND ((m.to_id = $id AND to_del=0) OR (m.to_id = $with_id AND from_del=0))");
 
-                // Ïàãèíàöèÿ
+                // ÐŸÐ°Ð³Ð¸Ð½Ð°Ñ†Ð¸Ñ
                 $pagebar = ($msg_count > $perpage) ? cmsPage::getPagebar($msg_count, $page, $perpage, 'javascript:centerLink(\'/users/'.$id.'/messages-history'.$with_id.'-%page%.html\')') : '';
 
                 $sql = "SELECT m.*, u.nickname as author, u.login as author_login, m.senddate as fpubdate, m.from_id as sender_id, u.is_deleted, p.imageurl

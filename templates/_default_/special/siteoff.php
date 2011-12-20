@@ -5,7 +5,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-        <title>Сайт временно недоступен</title>
+        <title>РЎР°Р№С‚ РІСЂРµРјРµРЅРЅРѕ РЅРµРґРѕСЃС‚СѓРїРµРЅ</title>
         <meta http-equiv="refresh" content="25;URL=/">
         <style type="text/css">
             * { font-family: Arial; }
@@ -24,7 +24,7 @@
                                 <img src="/templates/_default_/special/images/siteoff.png" />
                             </td>
                             <td>
-                                <h2>Сайт временно недоступен</h2>
+                                <h2>РЎР°Р№С‚ РІСЂРµРјРµРЅРЅРѕ РЅРµРґРѕСЃС‚СѓРїРµРЅ</h2>
                                 <p><?php echo $inConf->offtext; ?></p>
                             </td>
                         </tr>

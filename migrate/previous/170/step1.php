@@ -22,12 +22,12 @@
                                           `user`, `config`, `original`, `css_prefix`,
                                           `allow_group`, `cache`, `cachetime`, `cacheint`,
                                            `template`, `is_strict_bind`)
-                VALUES ('sidebar', 'Статистика пользователей', 'Статистика пользователей', '1', 'mod_user_stats',
+                VALUES ('sidebar', 'РЎС‚Р°С‚РёСЃС‚РёРєР° РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', 'РЎС‚Р°С‚РёСЃС‚РёРєР° РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', '1', 'mod_user_stats',
                         '1', '1', '0', '0', '', '1', '', '-1', '0', '1', 'HOUR', 'module.tpl', '0')";
 
         $inDB->query($sql);
 
-        echo '<p>Модуль &laquo;<strong>Статистика пользователей</strong>&raquo; установлен</p>';
+        echo '<p>РњРѕРґСѓР»СЊ &laquo;<strong>РЎС‚Р°С‚РёСЃС‚РёРєР° РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</strong>&raquo; СѓСЃС‚Р°РЅРѕРІР»РµРЅ</p>';
 
     }
 
@@ -43,12 +43,12 @@
                                           `user`, `config`, `original`, `css_prefix`,
                                           `allow_group`, `cache`, `cachetime`, `cacheint`,
                                            `template`, `is_strict_bind`)
-                VALUES ('sidebar', 'Пригласить друга', 'Пригласить друга', '1', 'mod_invite',
+                VALUES ('sidebar', 'РџСЂРёРіР»Р°СЃРёС‚СЊ РґСЂСѓРіР°', 'РџСЂРёРіР»Р°СЃРёС‚СЊ РґСЂСѓРіР°', '1', 'mod_invite',
                         '1', '1', '0', '0', '', '1', '', '-1', '0', '1', 'HOUR', 'module.tpl', '0')";
 
         $inDB->query($sql);
 
-        echo '<p>Модуль &laquo;<strong>Пригласить друга</strong>&raquo; установлен</p>';
+        echo '<p>РњРѕРґСѓР»СЊ &laquo;<strong>РџСЂРёРіР»Р°СЃРёС‚СЊ РґСЂСѓРіР°</strong>&raquo; СѓСЃС‚Р°РЅРѕРІР»РµРЅ</p>';
 
     }
 
@@ -64,12 +64,12 @@
                                           `user`, `config`, `original`, `css_prefix`,
                                           `allow_group`, `cache`, `cachetime`, `cacheint`,
                                            `template`, `is_strict_bind`)
-                VALUES ('maintop', 'Лента активности', 'Лента активности', '1', 'mod_actions',
+                VALUES ('maintop', 'Р›РµРЅС‚Р° Р°РєС‚РёРІРЅРѕСЃС‚Рё', 'Р›РµРЅС‚Р° Р°РєС‚РёРІРЅРѕСЃС‚Рё', '1', 'mod_actions',
                         '1', '1', '0', '0', '', '1', '', '-1', '0', '1', 'HOUR', 'module.tpl', '0')";
 
         $inDB->query($sql);
 
-        echo '<p>Модуль &laquo;<strong>Лента активности</strong>&raquo; установлен</p>';
+        echo '<p>РњРѕРґСѓР»СЊ &laquo;<strong>Р›РµРЅС‚Р° Р°РєС‚РёРІРЅРѕСЃС‚Рё</strong>&raquo; СѓСЃС‚Р°РЅРѕРІР»РµРЅ</p>';
 
     }
 
@@ -80,10 +80,10 @@
 
     if (!$mod_friends_installed){
 
-        $sql = "INSERT INTO `cms_modules` VALUES ('', 'left', 'Друзья онлайн', 'Друзья онлайн', 1, 'mod_user_friend', 5, 1, 0, 0, '---\nlimit: 5\nview_type: table', 1, '', -1, 0, 1, 'HOUR','module_simple.tpl', 0, '1.0')";
+        $sql = "INSERT INTO `cms_modules` VALUES ('', 'left', 'Р”СЂСѓР·СЊСЏ РѕРЅР»Р°Р№РЅ', 'Р”СЂСѓР·СЊСЏ РѕРЅР»Р°Р№РЅ', 1, 'mod_user_friend', 5, 1, 0, 0, '---\nlimit: 5\nview_type: table', 1, '', -1, 0, 1, 'HOUR','module_simple.tpl', 0, '1.0')";
 
         $result = $inDB->query($sql);
 
-        echo '<p>Модуль &laquo;<strong>Друзья онлайн</strong>&raquo; установлен</p>';
+        echo '<p>РњРѕРґСѓР»СЊ &laquo;<strong>Р”СЂСѓР·СЊСЏ РѕРЅР»Р°Р№РЅ</strong>&raquo; СѓСЃС‚Р°РЅРѕРІР»РµРЅ</p>';
 
     }

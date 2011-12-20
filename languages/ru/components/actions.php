@@ -13,11 +13,11 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-$_LANG['FEED_EVENTS']         = 'Ëåíòà àêòèâíîñòè';
-$_LANG['EVENTS_NOT_FOUND']    = 'Çàïèñåé íå íàéäåíî';
-$_LANG['ACTIONS_NOT_FOUND']   = 'Ëåíòà ñîáûòèé ïîëüçîâàòåëÿ ïóñòà';
-$_LANG['ACTIONS_USERS']       = 'Ñîáûòèÿ ïîëüçîâàòåëÿ';
-$_LANG['ALL_ACTIONS_FR']      = 'Âñå ñîáûòèÿ äðóçåé';
-$_LANG['SHOWN_LAST']          = 'ïîêàçàíû ïîñëåäíèå';
+$_LANG['FEED_EVENTS']         = 'Ð›ÐµÐ½Ñ‚Ð° Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¾ÑÑ‚Ð¸';
+$_LANG['EVENTS_NOT_FOUND']    = 'Ð—Ð°Ð¿Ð¸ÑÐµÐ¹ Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾';
+$_LANG['ACTIONS_NOT_FOUND']   = 'Ð›ÐµÐ½Ñ‚Ð° ÑÐ¾Ð±Ñ‹Ñ‚Ð¸Ð¹ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ñ Ð¿ÑƒÑÑ‚Ð°';
+$_LANG['ACTIONS_USERS']       = 'Ð¡Ð¾Ð±Ñ‹Ñ‚Ð¸Ñ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ñ';
+$_LANG['ALL_ACTIONS_FR']      = 'Ð’ÑÐµ ÑÐ¾Ð±Ñ‹Ñ‚Ð¸Ñ Ð´Ñ€ÑƒÐ·ÐµÐ¹';
+$_LANG['SHOWN_LAST']          = 'Ð¿Ð¾ÐºÐ°Ð·Ð°Ð½Ñ‹ Ð¿Ð¾ÑÐ»ÐµÐ´Ð½Ð¸Ðµ';
 
 ?>

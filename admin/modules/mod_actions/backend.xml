@@ -2,17 +2,17 @@
 <backend>    
     <module>
         <id>mod_actions</id>
-        <title>Лента активности</title>
+        <title>Р›РµРЅС‚Р° Р°РєС‚РёРІРЅРѕСЃС‚Рё</title>
     </module>
     <params>
 
-        <param type="number" name="limit" title="Количество записей в ленте" units="шт." default="15" />
+        <param type="number" name="limit" title="РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РїРёСЃРµР№ РІ Р»РµРЅС‚Рµ" units="С€С‚." default="15" />
 
-        <param type="flag" name="show_target" title="Показывать место назначения" hint="Кроме ссылки на событие будет выводиться ссылка на раздел сайта" default="off" />
+        <param type="flag" name="show_target" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РјРµСЃС‚Рѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ" hint="РљСЂРѕРјРµ СЃСЃС‹Р»РєРё РЅР° СЃРѕР±С‹С‚РёРµ Р±СѓРґРµС‚ РІС‹РІРѕРґРёС‚СЊСЃСЏ СЃСЃС‹Р»РєР° РЅР° СЂР°Р·РґРµР» СЃР°Р№С‚Р°" default="off" />
 
-		<param type="flag" name="show_link" title="Показывать ссылку на всю ленту" default="on" />
+		<param type="flag" name="show_link" title="РџРѕРєР°Р·С‹РІР°С‚СЊ СЃСЃС‹Р»РєСѓ РЅР° РІСЃСЋ Р»РµРЅС‚Сѓ" default="on" />
 
-        <param type="list_db" multiple="1" name="action_types" title="Типы событий" src="cms_actions" src_title="title" src_value="id" />
+        <param type="list_db" multiple="1" name="action_types" title="РўРёРїС‹ СЃРѕР±С‹С‚РёР№" src="cms_actions" src_title="title" src_value="id" />
 
     </params>
 </backend>

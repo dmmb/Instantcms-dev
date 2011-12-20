@@ -36,7 +36,7 @@ function getAlphaList($cat_id){
     if ($inDB->num_rows($result)){
         $html .= '<div class="uc_alpha_list">';
         while($a = $inDB->fetch_assoc($result)){
-			if(preg_match('/^([a-zA-Zа-яёіїєґА-ЯЁІЇЄҐ0-9]+)$/i', $a['first_letter'])){
+			if(preg_match('/^([a-zA-ZР°-СЏС‘С–С—С”Т‘Рђ-РЇРЃР†Р‡Р„Тђ0-9]+)$/i', $a['first_letter'])){
             	$html .= '<a class="uc_alpha_link" href="/catalog/'.$cat_id.'/find-first/'.urlencode($a['first_letter']).'" title="'.$_LANG['ARTICLES'].': '.$a['num'].'">'.$a['first_letter'].'</a>';
 			}
         }
@@ -262,11 +262,11 @@ function catalog(){
     $menutitle  = $inCore->menuTitle();
     if (!$menutitle) { $menutitle = $_LANG['CATALOG']; }
     $cfg        = $inCore->loadComponentConfig('catalog');
-	// Проверяем включени ли компонент
+	// РџСЂРѕРІРµСЂСЏРµРј РІРєР»СЋС‡РµРЅРё Р»Рё РєРѕРјРїРѕРЅРµРЅС‚
 	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     if (!isset($cfg['email'])) { $cfg['email'] = 'shop@site.ru'; }
-    if (!isset($cfg['delivery'])) { $cfg['delivery'] = 'Сведения о доставке'; }
+    if (!isset($cfg['delivery'])) { $cfg['delivery'] = 'РЎРІРµРґРµРЅРёСЏ Рѕ РґРѕСЃС‚Р°РІРєРµ'; }
     if (!isset($cfg['notice'])) { $cfg['notice'] = 0; }
     if (!isset($cfg['premod'])) { $cfg['premod'] = 1; }
     if (!isset($cfg['premod_msg'])) { $cfg['premod_msg'] = 1; }
@@ -1056,7 +1056,7 @@ function catalog(){
                 }
 
 				if (!$cfg['premod'] || $inUser->is_admin) {
-					//регистрируем событие
+					//СЂРµРіРёСЃС‚СЂРёСЂСѓРµРј СЃРѕР±С‹С‚РёРµ
 					cmsActions::log('add_catalog', array(
 						'object' => $item['title'],
 						'object_url' => '/catalog/item'.$item_id.'.html',
@@ -1105,7 +1105,7 @@ function catalog(){
 		
 		$cat  = $inDB->get_fields('cms_uc_cats', 'id='.$item['category_id'], 'id, title');
 		
-		//регистрируем событие
+		//СЂРµРіРёСЃС‚СЂРёСЂСѓРµРј СЃРѕР±С‹С‚РёРµ
 		cmsActions::log('add_catalog', array(
 				'object' => $item['title'],
 				'user_id' => $item['user_id'],

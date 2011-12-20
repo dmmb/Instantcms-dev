@@ -19,20 +19,20 @@ class p_loginza extends cmsPlugin {
         
         parent::__construct();
 
-        // Информация о плагине
+        // РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїР»Р°РіРёРЅРµ
 
         $this->info['plugin']           = 'p_loginza';
-        $this->info['title']            = 'Авторизация Loginza';
-        $this->info['description']      = 'Позволяет посетителям авторизоваться на сайте, используя аккаунты популярных социальных сетей';
+        $this->info['title']            = 'РђРІС‚РѕСЂРёР·Р°С†РёСЏ Loginza';
+        $this->info['description']      = 'РџРѕР·РІРѕР»СЏРµС‚ РїРѕСЃРµС‚РёС‚РµР»СЏРј Р°РІС‚РѕСЂРёР·РѕРІР°С‚СЊСЃСЏ РЅР° СЃР°Р№С‚Рµ, РёСЃРїРѕР»СЊР·СѓСЏ Р°РєРєР°СѓРЅС‚С‹ РїРѕРїСѓР»СЏСЂРЅС‹С… СЃРѕС†РёР°Р»СЊРЅС‹С… СЃРµС‚РµР№';
         $this->info['author']           = 'InstantCMS Team';
         $this->info['version']          = '1.9';
 
-        // Настройки по-умолчанию
+        // РќР°СЃС‚СЂРѕР№РєРё РїРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ
 
-        $this->config['Провайдеры']         = 'vkontakte,facebook,mailruapi,google,yandex,openid,twitter,webmoney,rambler,flickr,mailru,loginza,myopenid,lastfm,verisign,aol,steam';
-        $this->config['Язык (ru/uk/en)']    = 'ru';
+        $this->config['РџСЂРѕРІР°Р№РґРµСЂС‹']         = 'vkontakte,facebook,mailruapi,google,yandex,openid,twitter,webmoney,rambler,flickr,mailru,loginza,myopenid,lastfm,verisign,aol,steam';
+        $this->config['РЇР·С‹Рє (ru/uk/en)']    = 'ru';
 
-        // События, которые будут отлавливаться плагином
+        // РЎРѕР±С‹С‚РёСЏ, РєРѕС‚РѕСЂС‹Рµ Р±СѓРґСѓС‚ РѕС‚Р»Р°РІР»РёРІР°С‚СЊСЃСЏ РїР»Р°РіРёРЅРѕРј
 
         $this->events[]                 = 'LOGINZA_BUTTON';
         $this->events[]                 = 'LOGINZA_AUTH';
@@ -42,7 +42,7 @@ class p_loginza extends cmsPlugin {
 // ==================================================================== //
 
     /**
-     * Процедура установки плагина
+     * РџСЂРѕС†РµРґСѓСЂР° СѓСЃС‚Р°РЅРѕРІРєРё РїР»Р°РіРёРЅР°
      * @return bool
      */
     public function install(){
@@ -62,7 +62,7 @@ class p_loginza extends cmsPlugin {
 // ==================================================================== //
 
     /**
-     * Процедура обновления плагина
+     * РџСЂРѕС†РµРґСѓСЂР° РѕР±РЅРѕРІР»РµРЅРёСЏ РїР»Р°РіРёРЅР°
      * @return bool
      */
     public function upgrade(){
@@ -74,7 +74,7 @@ class p_loginza extends cmsPlugin {
 // ==================================================================== //
 
     /**
-     * Обработка событий
+     * РћР±СЂР°Р±РѕС‚РєР° СЃРѕР±С‹С‚РёР№
      * @param string $event
      * @param mixed $item
      * @return mixed
@@ -97,8 +97,8 @@ class p_loginza extends cmsPlugin {
     private function showLoginzaButton() {
 
         $token_url  = urlencode(HOST . '/plugins/p_loginza/auth.php');
-        $providers  = $this->config['Провайдеры'];
-        $lang       = $this->config['Язык (ru/uk/en)'];
+        $providers  = $this->config['РџСЂРѕРІР°Р№РґРµСЂС‹'];
+        $lang       = $this->config['РЇР·С‹Рє (ru/uk/en)'];
 
         $providers_list = explode(',', $providers);
         $providers = '';
@@ -109,9 +109,9 @@ class p_loginza extends cmsPlugin {
 
         $providers = rtrim($providers, ',');
 
-        $html  = '<div class="lf_title">Вход через социальный сети</div><p style="margin:15px 0">Если у Вас есть регистрация в других социальных сетях или аккаунт OpenID, то Вы можете войти на сайт без регистрации.</p><p><script src="http://loginza.ru/js/widget.js" type="text/javascript"></script>
+        $html  = '<div class="lf_title">Р’С…РѕРґ С‡РµСЂРµР· СЃРѕС†РёР°Р»СЊРЅС‹Р№ СЃРµС‚Рё</div><p style="margin:15px 0">Р•СЃР»Рё Сѓ Р’Р°СЃ РµСЃС‚СЊ СЂРµРіРёСЃС‚СЂР°С†РёСЏ РІ РґСЂСѓРіРёС… СЃРѕС†РёР°Р»СЊРЅС‹С… СЃРµС‚СЏС… РёР»Рё Р°РєРєР°СѓРЅС‚ OpenID, С‚Рѕ Р’С‹ РјРѕР¶РµС‚Рµ РІРѕР№С‚Рё РЅР° СЃР°Р№С‚ Р±РµР· СЂРµРіРёСЃС‚СЂР°С†РёРё.</p><p><script src="http://loginza.ru/js/widget.js" type="text/javascript"></script>
                  <a href="http://loginza.ru/api/widget?token_url='.$token_url.'&providers_set='.$providers.'&lang='.$lang.'" class="loginza">
-                     <img src="http://loginza.ru/img/sign_in_button_gray.gif" alt="Войти через loginza"/>
+                     <img src="http://loginza.ru/img/sign_in_button_gray.gif" alt="Р’РѕР№С‚Рё С‡РµСЂРµР· loginza"/>
                  </a></p>';
 
         echo $html;
@@ -133,25 +133,25 @@ class p_loginza extends cmsPlugin {
 
         $loginza_api_url = 'http://loginza.ru/api/authinfo';
 
-        // получение профиля
+        // РїРѕР»СѓС‡РµРЅРёРµ РїСЂРѕС„РёР»СЏ
         $profile = $this->loginzaRequest($loginza_api_url.'?token='.$token);
 
         $profile = json_decode($profile);
 
-        // проверка на ошибки
+        // РїСЂРѕРІРµСЂРєР° РЅР° РѕС€РёР±РєРё
         if (!is_object($profile) || !empty($profile->error_message) || !empty($profile->error_type)) {
             exit;
         }
 
-        // ищем такого пользователя
+        // РёС‰РµРј С‚Р°РєРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
         $user_id = $this->getUserByIdentity($profile->identity);
 
-        // если пользователя нет, создаем
+        // РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅРµС‚, СЃРѕР·РґР°РµРј
         if (!$user_id){
             $user_id = $this->createUser($profile);
         }
 
-        // если пользователь уже был или успешно создан, авторизуем
+        // РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ СѓР¶Рµ Р±С‹Р» РёР»Рё СѓСЃРїРµС€РЅРѕ СЃРѕР·РґР°РЅ, Р°РІС‚РѕСЂРёР·СѓРµРј
         if ($user_id){
 			$user = $inDB->get_fields('cms_users', "id = '{$user_id}'", 'login, password');
 			if(!$user) { return false; }
@@ -162,7 +162,7 @@ class p_loginza extends cmsPlugin {
 
         }
 
-        // если авторизация не удалась, редиректим на сообщение об ошибке
+        // РµСЃР»Рё Р°РІС‚РѕСЂРёР·Р°С†РёСЏ РЅРµ СѓРґР°Р»Р°СЃСЊ, СЂРµРґРёСЂРµРєС‚РёРј РЅР° СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ
         $inCore->redirect('/auth/error.html');  exit;
 
     }
@@ -177,26 +177,26 @@ class p_loginza extends cmsPlugin {
 
         if ($profile->name->full_name){
 
-            // указано полное имя
+            // СѓРєР°Р·Р°РЅРѕ РїРѕР»РЅРѕРµ РёРјСЏ
             $nickname   = $profile->name->full_name;
             $nickname   = iconv('utf-8', 'cp1251', $nickname);
 
         } elseif($profile->name->first_name) {
         
-            // указано имя и фамилия по-отдельности
+            // СѓРєР°Р·Р°РЅРѕ РёРјСЏ Рё С„Р°РјРёР»РёСЏ РїРѕ-РѕС‚РґРµР»СЊРЅРѕСЃС‚Рё
             $nickname   = $profile->name->first_name;
             if ($profile->name->last_name){ $nickname .= ' '. $profile->name->last_name; }
             $nickname   = iconv('utf-8', 'cp1251', $nickname);
 
         } elseif(preg_match('/^(http:\/\/)([a-zA-Z0-9\-_]+)\.([a-zA-Z0-9\-_]+)\.([a-zA-Z]{2,6})([\/]?)$/i', $profile->identity)) {
             
-            // не указано имя, но передан идентификатор в виде домена 3-го уровня
+            // РЅРµ СѓРєР°Р·Р°РЅРѕ РёРјСЏ, РЅРѕ РїРµСЂРµРґР°РЅ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РІ РІРёРґРµ РґРѕРјРµРЅР° 3-РіРѕ СѓСЂРѕРІРЅСЏ
             $nickname = str_replace('http://', '', $profile->identity);
             $nickname = substr($nickname, 0, strpos($nickname, '.'));
 
         } else {
 
-            // не указано вообще ничего
+            // РЅРµ СѓРєР°Р·Р°РЅРѕ РІРѕРѕР±С‰Рµ РЅРёС‡РµРіРѕ
             $max = $inDB->get_fields('cms_users', 'id>0', 'id', 'id DESC');
             $nickname = 'user' . ($max['id'] + 1);
 
@@ -212,17 +212,17 @@ class p_loginza extends cmsPlugin {
 		$already_login = $inDB->get_field('cms_users', "login='{$login}' AND is_deleted=0", 'login');
 
 		//
-		// проверяем наличие и занятость email
+		// РїСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ Рё Р·Р°РЅСЏС‚РѕСЃС‚СЊ email
 		//
 		if ($email && $already_email == $email){
 			$inCore->redirect('/auth/error.html');  exit;
 		}
 
 		//
-		// проверяем занятость логина
+		// РїСЂРѕРІРµСЂСЏРµРј Р·Р°РЅСЏС‚РѕСЃС‚СЊ Р»РѕРіРёРЅР°
 		//
 		if ($already_login == $login){
-			// если логин занят, добавляем к нему ID
+			// РµСЃР»Рё Р»РѕРіРёРЅ Р·Р°РЅСЏС‚, РґРѕР±Р°РІР»СЏРµРј Рє РЅРµРјСѓ ID
 			$max = $inDB->get_fields('cms_users', 'id>0', 'id', 'id DESC');
 			$login .= ($max['id']+1);
 		}
@@ -241,12 +241,12 @@ class p_loginza extends cmsPlugin {
 
         $user_id = $inDB->get_last_id('cms_users');
 
-        // создаем профиль пользователя
+        // СЃРѕР·РґР°РµРј РїСЂРѕС„РёР»СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
         if ($user_id){
 
             $filename = 'nopic.jpg';
 
-            // если есть аватар, пробуем скачать
+            // РµСЃР»Рё РµСЃС‚СЊ Р°РІР°С‚Р°СЂ, РїСЂРѕР±СѓРµРј СЃРєР°С‡Р°С‚СЊ
             if ($profile->photo){
                 $photo_path = $this->downloadAvatar($profile->photo);
                 if ($photo_path){

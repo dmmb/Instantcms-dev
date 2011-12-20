@@ -22,9 +22,9 @@ function applet_userbanlist(){
 	global $adminAccess;
 	if (!$inCore->isAdminCan('admin/users', $adminAccess)) { cpAccessDenied(); }
 
-	$GLOBALS['cp_page_title'] = 'Бан-лист';
- 	cpAddPathway('Пользователи', 'index.php?view=users');	
- 	cpAddPathway('Бан-лист', 'index.php?view=userbanlist');	
+	$GLOBALS['cp_page_title'] = 'Р‘Р°РЅ-Р»РёСЃС‚';
+ 	cpAddPathway('РџРѕР»СЊР·РѕРІР°С‚РµР»Рё', 'index.php?view=users');	
+ 	cpAddPathway('Р‘Р°РЅ-Р»РёСЃС‚', 'index.php?view=userbanlist');	
 
 	if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
 	if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { $id = -1; }
@@ -34,19 +34,19 @@ function applet_userbanlist(){
 	if ($do == 'list'){
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'useradd.gif';
-		$toolmenu[0]['title'] = 'Добавить в бан-лист';
+		$toolmenu[0]['title'] = 'Р”РѕР±Р°РІРёС‚СЊ РІ Р±Р°РЅ-Р»РёСЃС‚';
 		$toolmenu[0]['link'] = "?view=userbanlist&do=add";
 		
 		$toolmenu[1]['icon'] = 'edit.gif';
-		$toolmenu[1]['title'] = 'Редактировать выбранные';
+		$toolmenu[1]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[1]['link'] = "javascript:checkSel('?view=userbanlist&do=edit&multiple=1');";
 
 		$toolmenu[4]['icon'] = 'delete.gif';
-		$toolmenu[4]['title'] = 'Удалить выбранные';
+		$toolmenu[4]['title'] = 'РЈРґР°Р»РёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[4]['link'] = "javascript:checkSel('?view=userbanlist&do=delete&multiple=1');";
 
 		$toolmenu[5]['icon'] = 'cancel.gif';
-		$toolmenu[5]['title'] = 'Отмена';
+		$toolmenu[5]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[5]['link'] = "?view=users";
 
 		cpToolMenu($toolmenu);
@@ -56,33 +56,33 @@ function applet_userbanlist(){
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Пользователь';	$fields[1]['field'] = 'user_id';	$fields[1]['width'] = '120';
+		$fields[1]['title'] = 'РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ';	$fields[1]['field'] = 'user_id';	$fields[1]['width'] = '120';
 		$fields[1]['filter'] = 12;		$fields[1]['prc'] = 'cpUserNick';
 
-		$fields[2]['title'] = 'IP-Адрес';	$fields[2]['field'] = 'ip';		$fields[2]['width'] = '100';		$fields[2]['link'] = '?view=userbanlist&do=edit&id=%id%';
+		$fields[2]['title'] = 'IP-РђРґСЂРµСЃ';	$fields[2]['field'] = 'ip';		$fields[2]['width'] = '100';		$fields[2]['link'] = '?view=userbanlist&do=edit&id=%id%';
 		$fields[2]['filter'] = 12;
 
-		$fields[3]['title'] = 'Дата';	$fields[3]['field'] = 'bandate';	$fields[3]['width'] = '';
+		$fields[3]['title'] = 'Р”Р°С‚Р°';	$fields[3]['field'] = 'bandate';	$fields[3]['width'] = '';
 		$fields[3]['filter'] = 12; $fields[3]['fdate'] = '%d/%m/%Y %H:%i:%s';
 
-		$fields[4]['title'] = 'Срок';	$fields[4]['field'] = 'int_num';	$fields[4]['width'] = '55';
+		$fields[4]['title'] = 'РЎСЂРѕРє';	$fields[4]['field'] = 'int_num';	$fields[4]['width'] = '55';
 		$fields[5]['title'] = '';	$fields[5]['field'] = 'int_period';	$fields[5]['width'] = '190';
 		
-		$fields[14]['title'] = 'Автоудаление';	$fields[14]['field'] = 'autodelete';	$fields[14]['width'] = '90';
+		$fields[14]['title'] = 'РђРІС‚РѕСѓРґР°Р»РµРЅРёРµ';	$fields[14]['field'] = 'autodelete';	$fields[14]['width'] = '90';
 		$fields[14]['prc'] = 'cpYesNo'; 
 
-//		$fields[2]['title'] = 'Псевдоним';	$fields[2]['field'] = 'alias';		$fields[2]['width'] = '150';	$fields[2]['link'] = '?view=usergroups&do=edit&id=%id%';
+//		$fields[2]['title'] = 'РџСЃРµРІРґРѕРЅРёРј';	$fields[2]['field'] = 'alias';		$fields[2]['width'] = '150';	$fields[2]['link'] = '?view=usergroups&do=edit&id=%id%';
 //		$fields[2]['filter'] = 12;
 	
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Редактировать';
+		$actions[0]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[0]['icon']  = 'edit.gif';
 		$actions[0]['link']  = '?view=userbanlist&do=edit&id=%id%';
 
-		$actions[1]['title'] = 'Удалить';
+		$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[1]['icon']  = 'delete.gif';
-		$actions[1]['confirm'] = 'Удалить правило?';
+		$actions[1]['confirm'] = 'РЈРґР°Р»РёС‚СЊ РїСЂР°РІРёР»Рѕ?';
 		$actions[1]['link']  = '?view=userbanlist&do=delete&id=%id%';
 				
 		//Print table
@@ -112,11 +112,11 @@ function applet_userbanlist(){
 		
 		$error = '';
 				
-		if (!$ip){	$error = 'Нужно указать IP-адрес!';	}		
-		if ($ip == $_SERVER['REMOTE_ADDR'] || $user_id == $inUser->id){ $error = 'IP-адрес совпадает с вашим!';	}
+		if (!$ip){	$error = 'РќСѓР¶РЅРѕ СѓРєР°Р·Р°С‚СЊ IP-Р°РґСЂРµСЃ!';	}		
+		if ($ip == $_SERVER['REMOTE_ADDR'] || $user_id == $inUser->id){ $error = 'IP-Р°РґСЂРµСЃ СЃРѕРІРїР°РґР°РµС‚ СЃ РІР°С€РёРј!';	}
 		
 		if($inCore->userIsAdmin($user_id)){
-			$error = 'Нельзя забанить администратора!';
+			$error = 'РќРµР»СЊР·СЏ Р·Р°Р±Р°РЅРёС‚СЊ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°!';
 		}
 
 		$back = '?view=userbanlist';
@@ -176,24 +176,24 @@ function applet_userbanlist(){
  
  		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'save.gif';
-		$toolmenu[0]['title'] = 'Сохранить';
+		$toolmenu[0]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 		$toolmenu[0]['link'] = 'javascript:document.addform.submit();';
 
 		$toolmenu[1]['icon'] = 'cancel.gif';
-		$toolmenu[1]['title'] = 'Отмена';
+		$toolmenu[1]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[1]['link'] = 'javascript:history.go(-1);';
 
 		cpToolMenu($toolmenu);
    
 		if ($do=='add'){
-			 echo '<h3>Добавить в бан-лист</h3>';
- 	 		 cpAddPathway('Добавить в бан-лист', 'index.php?view=userbanlist&do=add');
+			 echo '<h3>Р”РѕР±Р°РІРёС‚СЊ РІ Р±Р°РЅ-Р»РёСЃС‚</h3>';
+ 	 		 cpAddPathway('Р”РѕР±Р°РІРёС‚СЊ РІ Р±Р°РЅ-Р»РёСЃС‚', 'index.php?view=userbanlist&do=add');
 		} else {
 					 if(isset($_REQUEST['multiple'])){				 
 						if (isset($_REQUEST['item'])){					
 							$_SESSION['editlist'] = $_REQUEST['item'];
 						} else {
-							echo '<p class="error">Нет выбранных объектов!</p>';
+							echo '<p class="error">РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ!</p>';
 							return;
 						}				 
 					 }
@@ -203,7 +203,7 @@ function applet_userbanlist(){
 					 if (isset($_SESSION['editlist'])){
 						$id = array_shift($_SESSION['editlist']);
 						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
-						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
+						{ $ostatok = '(РќР° РѕС‡РµСЂРµРґРё: '.sizeof($_SESSION['editlist']).')'; }
 					 } else { $id = (int)$_REQUEST['id']; }
 	
 					 $sql = "SELECT * FROM cms_banlist WHERE id = $id LIMIT 1";
@@ -212,9 +212,9 @@ function applet_userbanlist(){
 						$mod = mysql_fetch_assoc($result);
 					 }
 					
-					 echo '<h3>Редактировать правило '.$ostatok.'</h3>';
+					 echo '<h3>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РїСЂР°РІРёР»Рѕ '.$ostatok.'</h3>';
 					 
-					 cpAddPathway('Редактировать правило', 'index.php?view=userbanlist&do=edit&id='.$mod['id']);
+					 cpAddPathway('Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РїСЂР°РІРёР»Рѕ', 'index.php?view=userbanlist&do=edit&id='.$mod['id']);
 			}   
 
 	if(isset($mod['access'])){
@@ -226,10 +226,10 @@ function applet_userbanlist(){
 	
 	?>
 	  <div style="margin-top:2px;padding:10px;border:dotted 1px silver; width:508px;background:#FFFFCC">
-	  	<div style="font-weight:bold">Внимание!</div>
-		<div>Добавление IP-адреса в бан-лист полностью запретит доступ к сайту!</div>
-		<div>Если вы хотите запретить доступ не полностью, а только авторизацию, то воспользуйтесь функцией "Заблокировать"
-		в настройках нужного пользователя.</div>
+	  	<div style="font-weight:bold">Р’РЅРёРјР°РЅРёРµ!</div>
+		<div>Р”РѕР±Р°РІР»РµРЅРёРµ IP-Р°РґСЂРµСЃР° РІ Р±Р°РЅ-Р»РёСЃС‚ РїРѕР»РЅРѕСЃС‚СЊСЋ Р·Р°РїСЂРµС‚РёС‚ РґРѕСЃС‚СѓРї Рє СЃР°Р№С‚Сѓ!</div>
+		<div>Р•СЃР»Рё РІС‹ С…РѕС‚РёС‚Рµ Р·Р°РїСЂРµС‚РёС‚СЊ РґРѕСЃС‚СѓРї РЅРµ РїРѕР»РЅРѕСЃС‚СЊСЋ, Р° С‚РѕР»СЊРєРѕ Р°РІС‚РѕСЂРёР·Р°С†РёСЋ, С‚Рѕ РІРѕСЃРїРѕР»СЊР·СѓР№С‚РµСЃСЊ С„СѓРЅРєС†РёРµР№ "Р—Р°Р±Р»РѕРєРёСЂРѕРІР°С‚СЊ"
+		РІ РЅР°СЃС‚СЂРѕР№РєР°С… РЅСѓР¶РЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.</div>
 	  </div>
 	  <?php if (@$error){ ?>
 	  	<div style="padding:15px;color:red"><?php echo $error;?></div>
@@ -237,11 +237,11 @@ function applet_userbanlist(){
       <form id="addform" name="addform" method="post" action="index.php?view=userbanlist">
         <table width="530" border="0" cellspacing="5" class="proptable">
           <tr>
-            <td width="150" valign="top"><div><strong>Пользователь: </strong></div></td>
+            <td width="150" valign="top"><div><strong>РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ: </strong></div></td>
 			<?php if($do=='add' && $to) { $mod['user_id'] = $to; $mod['ip'] = $inDB->get_field('cms_users', 'id='.$to, 'last_ip'); } ?>
             <td valign="top">
 				<select name="user_id" id="user_id" onchange="loadUserIp()">
-					<option value="0" <?php if (@!$mod['user_id']){ echo 'selected'; } ?>>-- без привязки к пользователю --</option>
+					<option value="0" <?php if (@!$mod['user_id']){ echo 'selected'; } ?>>-- Р±РµР· РїСЂРёРІСЏР·РєРё Рє РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ --</option>
                     <?php
                         if (isset($mod['user_id'])) {
                             echo $inCore->getListItems('cms_users', $mod['user_id'], 'nickname', 'ASC', 'is_deleted=0 AND is_locked=0', 'id', 'nickname');
@@ -253,38 +253,38 @@ function applet_userbanlist(){
             </td>
           </tr>
           <tr>
-            <td valign="top"><strong>IP-адрес:</strong></td>
+            <td valign="top"><strong>IP-Р°РґСЂРµСЃ:</strong></td>
             <td valign="top"><input name="ip" type="text" id="ip" size="30" value="<?php echo @$mod['ip'];?>"/></td>
           </tr>
 		  <?php $forever=false; if (@$mod['int_num']==0){ $mod['int_num']=1; $forever = true; }?>
           <tr>
-            <td valign="top"><strong>Бан навсегда:</strong></td>
+            <td valign="top"><strong>Р‘Р°РЅ РЅР°РІСЃРµРіРґР°:</strong></td>
             <td valign="top"><input type="checkbox" name="forever" value="1" <?php if($forever){ echo 'checked'; } ?> onclick="$('tr.bantime').toggle();"/></td>
           </tr>
           <tr class="bantime">
-            <td valign="top"><strong>Бан на время:</strong> </td>
+            <td valign="top"><strong>Р‘Р°РЅ РЅР° РІСЂРµРјСЏ:</strong> </td>
 			
             <td valign="top"><p>
             <input name="int_num" type="text" id="int_num" size="5" value="<?php echo @(int)$mod['int_num']?>"/>
               <select name="int_period" id="int_period">
-                <option value="MINUTE"  <?php if(@strstr($mod['int_period'], 'MINUTE')) { echo 'selected'; } ?>>минут</option>
-                <option value="HOUR"  <?php if(@strstr($mod['int_period'], 'HOUR')) { echo 'selected'; } ?>>часов</option>
-                <option value="DAY" <?php if(@strstr($mod['int_period'], 'DAY')) { echo 'selected'; } ?>>дней</option>
-                <option value="MONTH" <?php if(@strstr($mod['int_period'], 'MONTH')) { echo 'selected'; } ?>>месяцев</option>
+                <option value="MINUTE"  <?php if(@strstr($mod['int_period'], 'MINUTE')) { echo 'selected'; } ?>>РјРёРЅСѓС‚</option>
+                <option value="HOUR"  <?php if(@strstr($mod['int_period'], 'HOUR')) { echo 'selected'; } ?>>С‡Р°СЃРѕРІ</option>
+                <option value="DAY" <?php if(@strstr($mod['int_period'], 'DAY')) { echo 'selected'; } ?>>РґРЅРµР№</option>
+                <option value="MONTH" <?php if(@strstr($mod['int_period'], 'MONTH')) { echo 'selected'; } ?>>РјРµСЃСЏС†РµРІ</option>
               </select>
             </p>
               <p>
                 <input name="autodelete" type="checkbox" id="autodelete" value="1" <?php if($mod['autodelete']){ echo 'checked'; } ?>/>
-            Удалить бан автоматически после истечения срока</p></td>
+            РЈРґР°Р»РёС‚СЊ Р±Р°РЅ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РїРѕСЃР»Рµ РёСЃС‚РµС‡РµРЅРёСЏ СЃСЂРѕРєР°</p></td>
           </tr>
 		  <?php if ($forever) { ?><script type="text/javascript">$('tr.bantime').hide();</script><?php } ?>
         </table>
         <p>
           <label>
-          <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add') { echo 'value="Добавить в бан-лист"'; } else { echo 'value="Сохранить правило"'; } ?> />
+          <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add') { echo 'value="Р”РѕР±Р°РІРёС‚СЊ РІ Р±Р°РЅ-Р»РёСЃС‚"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ РїСЂР°РІРёР»Рѕ"'; } ?> />
           </label>
           <label><span style="margin-top:15px">
-          <input name="back" type="button" id="back" value="Отмена" onclick="window.history.back();"/>
+          <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.history.back();"/>
           </span></label>
           <input name="do" type="hidden" id="do" <?php if ($do=='add') { echo 'value="submit"'; } else { echo 'value="update"'; } ?> />
           <?php

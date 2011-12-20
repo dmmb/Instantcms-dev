@@ -261,9 +261,9 @@ class cms_model_board{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
     /**
-     * Âîçâğàùàåò ıëåìåíòû option äëÿ êàòåãîğèé, â êîòîğûå ğàçğåøåíî äîáàâëåíèå
-     * @param int $sel - âûáğàííûàÿ êàòåãîğèÿ
-     * @param bool $is_edit - ôëàã ğåäàêòèğîâàíèÿ
+     * Ğ’Ğ¾Ğ·Ğ²Ñ€Ğ°Ñ‰Ğ°ĞµÑ‚ ÑĞ»ĞµĞ¼ĞµĞ½Ñ‚Ñ‹ option Ğ´Ğ»Ñ ĞºĞ°Ñ‚ĞµĞ³Ğ¾Ñ€Ğ¸Ğ¹, Ğ² ĞºĞ¾Ñ‚Ğ¾Ñ€Ñ‹Ğµ Ñ€Ğ°Ğ·Ñ€ĞµÑˆĞµĞ½Ğ¾ Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ»ĞµĞ½Ğ¸Ğµ
+     * @param int $sel - Ğ²Ñ‹Ğ±Ñ€Ğ°Ğ½Ğ½Ñ‹Ğ°Ñ ĞºĞ°Ñ‚ĞµĞ³Ğ¾Ñ€Ğ¸Ñ
+     * @param bool $is_edit - Ñ„Ğ»Ğ°Ğ³ Ñ€ĞµĞ´Ğ°ĞºÑ‚Ğ¸Ñ€Ğ¾Ğ²Ğ°Ğ½Ğ¸Ñ
      * @return string
      */
     public function getPublicCats($sel = '', $is_edit = false) {
@@ -299,7 +299,7 @@ class cms_model_board{
         $this->deleteOldRecords();
         $this->clearOldVips();
 
-        //ïîäãîòîâèì óñëîâèÿ
+        //Ğ¿Ğ¾Ğ´Ğ³Ğ¾Ñ‚Ğ¾Ğ²Ğ¸Ğ¼ ÑƒÑĞ»Ğ¾Ğ²Ğ¸Ñ
         $pub_where = ($show_all ? '1=1' : 'i.published = 1');
         $r_join    = $is_users ? " LEFT JOIN cms_users u ON u.id = i.user_id \n" : '';
 		$r_join   .= $is_cats ? " INNER JOIN cms_board_cats cat ON cat.id = i.category_id" : '';
@@ -341,7 +341,7 @@ class cms_model_board{
             if (!$item['file'] || !file_exists(PATH.'/images/board/small/'.$item['file'])){
 				$item['file'] = 'nopic.jpg';
 			}
-            // Ïğàâà äîñòóïà
+            // ĞŸÑ€Ğ°Ğ²Ğ° Ğ´Ğ¾ÑÑ‚ÑƒĞ¿Ğ°
             $item['moderator'] = $this->checkAccess($item['user_id']);
 			$timedifference    = strtotime("now") - strtotime($item['pubdate']);
 			$item['is_overdue'] = round($timedifference / 86400) > $item['pubdays'] && $item['pubdays'] > 0;
@@ -363,7 +363,7 @@ class cms_model_board{
 
     public function getAdvertsCount($show_all = false){
 
-        //ïîäãîòîâèì óñëîâèÿ
+        //Ğ¿Ğ¾Ğ´Ğ³Ğ¾Ñ‚Ğ¾Ğ²Ğ¸Ğ¼ ÑƒÑĞ»Ğ¾Ğ²Ğ¸Ñ
         $pub_where = ($show_all ? '1=1' : 'i.published = 1');
 
         $sql = "SELECT 1
@@ -550,8 +550,8 @@ class cms_model_board{
 
     public function setVip($id, $days){
 
-        // Óñòàíîâèòü ñòàòóñ VIP è äàòó îêîí÷àíèÿ ñ÷èòàÿ îò òåêóùåé,
-        // åñëè äî ıòîãî ñòàòóñà VIP íå áûëî
+        // Ğ£ÑÑ‚Ğ°Ğ½Ğ¾Ğ²Ğ¸Ñ‚ÑŒ ÑÑ‚Ğ°Ñ‚ÑƒÑ VIP Ğ¸ Ğ´Ğ°Ñ‚Ñƒ Ğ¾ĞºĞ¾Ğ½Ñ‡Ğ°Ğ½Ğ¸Ñ ÑÑ‡Ğ¸Ñ‚Ğ°Ñ Ğ¾Ñ‚ Ñ‚ĞµĞºÑƒÑ‰ĞµĞ¹,
+        // ĞµÑĞ»Ğ¸ Ğ´Ğ¾ ÑÑ‚Ğ¾Ğ³Ğ¾ ÑÑ‚Ğ°Ñ‚ÑƒÑĞ° VIP Ğ½Ğµ Ğ±Ñ‹Ğ»Ğ¾
         $sql = "UPDATE cms_board_items
                 SET is_vip = 1, vipdate = DATE_ADD(NOW(), INTERVAL {$days} DAY)
                 WHERE id='{$id}' AND is_vip=0
@@ -559,7 +559,7 @@ class cms_model_board{
 
         $this->inDB->query($sql);
 
-        // Ïğîäëèòü èìåşùóşñÿ äàòó VIP, åñëè VIP-ñòàòóñ óæå áûë
+        // ĞŸÑ€Ğ¾Ğ´Ğ»Ğ¸Ñ‚ÑŒ Ğ¸Ğ¼ĞµÑÑ‰ÑƒÑÑÑ Ğ´Ğ°Ñ‚Ñƒ VIP, ĞµÑĞ»Ğ¸ VIP-ÑÑ‚Ğ°Ñ‚ÑƒÑ ÑƒĞ¶Ğµ Ğ±Ñ‹Ğ»
         $sql = "UPDATE cms_board_items
                 SET vipdate = DATE_ADD(vipdate, INTERVAL {$days} DAY)
                 WHERE id='{$id}' AND is_vip=1
@@ -575,16 +575,16 @@ class cms_model_board{
 	
 	public function uploadPhoto($old_file = '', $cat) {
 
-		// Çàãğóæàåì êëàññ çàãğóçêè ôîòî
+		// Ğ—Ğ°Ğ³Ñ€ÑƒĞ¶Ğ°ĞµĞ¼ ĞºĞ»Ğ°ÑÑ Ğ·Ğ°Ğ³Ñ€ÑƒĞ·ĞºĞ¸ Ñ„Ğ¾Ñ‚Ğ¾
 		$this->inCore->loadClass('upload_photo');
 		$inUploadPhoto = cmsUploadPhoto::getInstance();
-		// Âûñòàâëÿåì êîíôèãóğàöèîííûå ïàğàìåòğû
+		// Ğ’Ñ‹ÑÑ‚Ğ°Ğ²Ğ»ÑĞµĞ¼ ĞºĞ¾Ğ½Ñ„Ğ¸Ğ³ÑƒÑ€Ğ°Ñ†Ğ¸Ğ¾Ğ½Ğ½Ñ‹Ğµ Ğ¿Ğ°Ñ€Ğ°Ğ¼ĞµÑ‚Ñ€Ñ‹
 		$inUploadPhoto->upload_dir    = PATH.'/images/board/';
 		$inUploadPhoto->small_size_w  = $cat['thumb1'];
 		$inUploadPhoto->medium_size_w = $cat['thumb2'];
 		$inUploadPhoto->thumbsqr      = $cat['thumbsqr'];
 		$inUploadPhoto->is_watermark  = $this->config['watermark'];
-		// Ïğîöåññ çàãğóçêè ôîòî
+		// ĞŸÑ€Ğ¾Ñ†ĞµÑÑ Ğ·Ğ°Ğ³Ñ€ÑƒĞ·ĞºĞ¸ Ñ„Ğ¾Ñ‚Ğ¾
 		$file = $inUploadPhoto->uploadPhoto($old_file);
 		
 		return $file;
@@ -830,13 +830,13 @@ class cms_model_board{
 
 		$inUser = cmsUser::getInstance();
 
-		// àäìèíèñòğàòîğû ìîãóò âñåãäà
+		// Ğ°Ğ´Ğ¼Ğ¸Ğ½Ğ¸ÑÑ‚Ñ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹ Ğ¼Ğ¾Ğ³ÑƒÑ‚ Ğ²ÑĞµĞ³Ğ´Ğ°
 		if($inUser->is_admin) { return true; }
 
-		// íàñòğîéêè ãğóïïû âñåãäà ïğèîğèòåòíåé
+		// Ğ½Ğ°ÑÑ‚Ñ€Ğ¾Ğ¹ĞºĞ¸ Ğ³Ñ€ÑƒĞ¿Ğ¿Ñ‹ Ğ²ÑĞµĞ³Ğ´Ğ° Ğ¿Ñ€Ğ¸Ğ¾Ñ€Ğ¸Ñ‚ĞµÑ‚Ğ½ĞµĞ¹
 		if(!$this->is_can_add_by_group) { return false; }
 
-		// íàñëåäîâàíèå îò íàñòğîåê êîìïîíåíòà
+		// Ğ½Ğ°ÑĞ»ĞµĞ´Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ Ğ¾Ñ‚ Ğ½Ğ°ÑÑ‚Ñ€Ğ¾ĞµĞº ĞºĞ¾Ğ¼Ğ¿Ğ¾Ğ½ĞµĞ½Ñ‚Ğ°
 		if ($cat['public'] == -1) { $cat['public'] = $this->config['public']; }
 
 		if($cat['public']>0) { return true; }
@@ -852,15 +852,15 @@ class cms_model_board{
 
 		$inUser = cmsUser::getInstance();
 
-		// àäìèíû è ìîäåğàòîğû äîáàâëÿşò âñåãäà áåç ìîäåğàöèè
+		// Ğ°Ğ´Ğ¼Ğ¸Ğ½Ñ‹ Ğ¸ Ğ¼Ğ¾Ğ´ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹ Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ»ÑÑÑ‚ Ğ²ÑĞµĞ³Ğ´Ğ° Ğ±ĞµĞ· Ğ¼Ğ¾Ğ´ĞµÑ€Ğ°Ñ†Ğ¸Ğ¸
 		if($inUser->is_admin || $this->is_moderator_by_group) { return 1; }
 
-		// ïğè ğåäàêòèğîâàíèè îáúÿâëåíèÿ ñìîòğèì îïöèş publish_after_edit
+		// Ğ¿Ñ€Ğ¸ Ñ€ĞµĞ´Ğ°ĞºÑ‚Ğ¸Ñ€Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğ¸ Ğ¾Ğ±ÑŠÑĞ²Ğ»ĞµĞ½Ğ¸Ñ ÑĞ¼Ğ¾Ñ‚Ñ€Ğ¸Ğ¼ Ğ¾Ğ¿Ñ†Ğ¸Ñ publish_after_edit
 		if($is_edit){
 			if($this->config['publish_after_edit']) { return 1; }
 		}
 
-		// íàñëåäîâàíèå îò íàñòğîåê êîìïîíåíòà
+		// Ğ½Ğ°ÑĞ»ĞµĞ´Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ Ğ¾Ñ‚ Ğ½Ğ°ÑÑ‚Ñ€Ğ¾ĞµĞº ĞºĞ¾Ğ¼Ğ¿Ğ¾Ğ½ĞµĞ½Ñ‚Ğ°
 		if ($cat['public'] == -1) { $cat['public'] = $this->config['public']; }
 
         if ($cat['public']==2 && $this->inCore->isUserCan('board/autoadd')) { return 1; }

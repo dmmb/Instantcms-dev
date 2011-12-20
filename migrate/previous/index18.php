@@ -24,8 +24,8 @@
 
     define('HOST', 'http://' . $inCore->getHost());
 
-    $inCore->loadClass('config');       //конфигурация
-    $inCore->loadClass('db');           //база данных
+    $inCore->loadClass('config');       //РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ
+    $inCore->loadClass('db');           //Р±Р°Р·Р° РґР°РЅРЅС‹С…
     $inCore->loadClass('user');
 
     $inConf     = cmsConfig::getInstance();
@@ -72,13 +72,13 @@
 
     echo '<div id="wrapper">';
 
-    echo "<h2>Миграция InstantCMS {$version_prev} &rarr; {$version_next}</h2>";
+    echo "<h2>РњРёРіСЂР°С†РёСЏ InstantCMS {$version_prev} &rarr; {$version_next}</h2>";
 
 // ========================================================================== //
 // ========================================================================== //	
     if (!$inDB->isFieldExists('cms_modules', 'access_list')){
         $inDB->query("ALTER TABLE `cms_modules` ADD `access_list` TINYTEXT NOT NULL AFTER `css_prefix`");
-        echo '<p>Поле <strong>access_list</strong> добавлено в таблицу <strong>cms_modules</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>access_list</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_modules</strong></p>';
 		$is_was_migrate = true;
     }
 // ========================================================================== //
@@ -102,21 +102,21 @@
 			}
 		}
 	
-		echo '<p>Мультидоступ групп к модулям выполнен.</p>';
+		echo '<p>РњСѓР»СЊС‚РёРґРѕСЃС‚СѓРї РіСЂСѓРїРї Рє РјРѕРґСѓР»СЏРј РІС‹РїРѕР»РЅРµРЅ.</p>';
 		$is_was_migrate = true;
 	}
 // ========================================================================== //
 // ========================================================================== //
     if ($inDB->isFieldExists('cms_modules', 'allow_group')){
         $inDB->query("ALTER TABLE `cms_modules` DROP `allow_group`");
-        echo '<p>Поле <strong>allow_group</strong> удалено из таблицы <strong>cms_modules</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>allow_group</strong> СѓРґР°Р»РµРЅРѕ РёР· С‚Р°Р±Р»РёС†С‹ <strong>cms_modules</strong></p>';
 		$is_was_migrate = true;
     }
 // ========================================================================== //
 // ========================================================================== //	
     if (!$inDB->isFieldExists('cms_menu', 'access_list')){
         $inDB->query("ALTER TABLE `cms_menu` ADD `access_list` TINYTEXT NOT NULL AFTER `template`");
-        echo '<p>Поле <strong>access_list</strong> добавлено в таблицу <strong>cms_menu</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>access_list</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_menu</strong></p>';
 		$is_was_migrate = true;
     }
 // ========================================================================== //
@@ -140,38 +140,38 @@
 			}
 		}
 	
-		echo '<p>Мультидоступ групп к пунктам меню выполнен.</p>';
+		echo '<p>РњСѓР»СЊС‚РёРґРѕСЃС‚СѓРї РіСЂСѓРїРї Рє РїСѓРЅРєС‚Р°Рј РјРµРЅСЋ РІС‹РїРѕР»РЅРµРЅ.</p>';
 		$is_was_migrate = true;
 	}
 // ========================================================================== //
 // ========================================================================== //
     if ($inDB->isFieldExists('cms_menu', 'allow_group')){
         $inDB->query("ALTER TABLE `cms_menu` DROP `allow_group`");
-        echo '<p>Поле <strong>allow_group</strong> удалено из таблицы <strong>cms_menu</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>allow_group</strong> СѓРґР°Р»РµРЅРѕ РёР· С‚Р°Р±Р»РёС†С‹ <strong>cms_menu</strong></p>';
 		$is_was_migrate = true;
     }
 // ========================================================================== //
 // ========================================================================== //
     if (!$inDB->isFieldExists('cms_clubs', 'create_karma')){
         $inDB->query("ALTER TABLE `cms_clubs` ADD `create_karma` INT( 11 ) NOT NULL AFTER `join_karma_limit`");
-        echo '<p>Поле <strong>create_karma</strong> добавлено в таблицу <strong>cms_clubs</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>create_karma</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_clubs</strong></p>';
 		$is_was_migrate = true;
     }
     if (!$inDB->isFieldExists('cms_clubs', 'is_vip')){
         $inDB->query("ALTER TABLE `cms_clubs` ADD `is_vip` TINYINT NOT NULL DEFAULT '0'");
-        echo '<p>Поле <strong>is_vip</strong> добавлено в таблицу <strong>cms_clubs</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>is_vip</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_clubs</strong></p>';
 		$is_was_migrate = true;
     }
     if (!$inDB->isFieldExists('cms_clubs', 'join_cost')){
         $inDB->query("ALTER TABLE `cms_clubs` ADD `join_cost` FLOAT NOT NULL");
-        echo '<p>Поле <strong>join_cost</strong> добавлено в таблицу <strong>cms_clubs</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>join_cost</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_clubs</strong></p>';
 		$is_was_migrate = true;
     }
 // ========================================================================== //
 // ========================================================================== //
     if (!$inDB->isFieldExists('cms_comments', 'content_bbcode')){
         $inDB->query("ALTER TABLE `cms_comments` ADD `content_bbcode` TEXT NOT NULL AFTER `content`");
-        echo '<p>Поле <strong>content_bbcode</strong> добавлено в таблицу <strong>cms_comments</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>content_bbcode</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_comments</strong></p>';
 		$is_was_migrate = true;
     }
 // ========================================================================== //
@@ -185,14 +185,14 @@
     if (!$inDB->isFieldExists('cms_user_msg', 'to_del')){
         $inDB->query("ALTER TABLE `cms_user_msg` ADD `to_del` TINYINT NOT NULL DEFAULT '0'");
         $inDB->query("ALTER TABLE `cms_user_msg` ADD `from_del` TINYINT NOT NULL DEFAULT '0'");
-        echo '<p>Поля <strong>to_del</strong>, <strong>from_del</strong> добавлены в таблицу <strong>cms_user_msg</strong></p>';
+        echo '<p>РџРѕР»СЏ <strong>to_del</strong>, <strong>from_del</strong> РґРѕР±Р°РІР»РµРЅС‹ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_user_msg</strong></p>';
         $is_was_migrate = true;
     }	
 
     if (!$inDB->isFieldExists('cms_board_items', 'is_vip')){
         $inDB->query("ALTER TABLE `cms_board_items` ADD `is_vip` TINYINT NOT NULL DEFAULT '0'");
         $inDB->query("ALTER TABLE `cms_board_items` ADD `vipdate` DATETIME NOT NULL");
-        echo '<p>Поля <strong>is_vip</strong>, <strong>vipdate</strong> добавлены в таблицу <strong>cms_board_items</strong></p>';
+        echo '<p>РџРѕР»СЏ <strong>is_vip</strong>, <strong>vipdate</strong> РґРѕР±Р°РІР»РµРЅС‹ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_board_items</strong></p>';
         $is_was_migrate = true;
     }
 
@@ -219,11 +219,11 @@
 // ========================================================================== //
 // ========================================================================== //
 	if ($is_was_migrate) {
-	    echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Миграция завершена. Удалите папку /migrate/ прежде чем продолжить!</div>';
+	    echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">РњРёРіСЂР°С†РёСЏ Р·Р°РІРµСЂС€РµРЅР°. РЈРґР°Р»РёС‚Рµ РїР°РїРєСѓ /migrate/ РїСЂРµР¶РґРµ С‡РµРј РїСЂРѕРґРѕР»Р¶РёС‚СЊ!</div>';
 	} else {
-		echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Вы уже прошли миграцию.</div>';
+		echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Р’С‹ СѓР¶Рµ РїСЂРѕС€Р»Рё РјРёРіСЂР°С†РёСЋ.</div>';
 	}
-    echo '<div class="nextlink"><a href="/">Перейти на сайт</a></div>';
+    echo '<div class="nextlink"><a href="/">РџРµСЂРµР№С‚Рё РЅР° СЃР°Р№С‚</a></div>';
     echo '</div>';
 
     

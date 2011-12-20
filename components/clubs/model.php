@@ -95,7 +95,7 @@ class cms_model_clubs{
 
         if (!$id){
                 $sql = "INSERT INTO cms_blogs (user_id, title, pubdate, allow_who, view_type, showcats, ownertype, premod, forall, owner)
-                        VALUES ('$club_id', 'Блог', NOW(), 'all', 'list', 1, 'multi', 0, 0, 'club')";
+                        VALUES ('$club_id', 'Р‘Р»РѕРі', NOW(), 'all', 'list', 1, 'multi', 0, 0, 'club')";
                 $this->inDB->query($sql);
                 $id = $this->inDB->get_last_id('cms_blogs');
         }
@@ -134,7 +134,7 @@ class cms_model_clubs{
         if ($is_exists) { $blog_seolink .= '-' . date("d-i"); }
 
         $sql = "INSERT INTO cms_blogs (user_id, title, pubdate, allow_who, view_type, showcats, ownertype, premod, forall, owner, seolink)
-                VALUES ('$club_id', 'Блог клуба {$item['title']}', NOW(), 'all', 'list', 1, 'multi', 0, 0, 'club', '$blog_seolink')";
+                VALUES ('$club_id', 'Р‘Р»РѕРі РєР»СѓР±Р° {$item['title']}', NOW(), 'all', 'list', 1, 'multi', 0, 0, 'club', '$blog_seolink')";
         $this->inDB->query($sql);
 
         return $club_id;
@@ -214,18 +214,18 @@ class cms_model_clubs{
         $blog_model     = new cms_model_blogs();
         $photos_model   = new cms_model_photos();
 
-        //Удаляем логотип клуба
+        //РЈРґР°Р»СЏРµРј Р»РѕРіРѕС‚РёРї РєР»СѓР±Р°
         @unlink(PATH.'/images/clubs/'.$club['imageurl']);
         @unlink(PATH.'/images/clubs/small/'.$club['imageurl']);
 
-        //Удаляем клуб и привязки пользователей
+        //РЈРґР°Р»СЏРµРј РєР»СѓР± Рё РїСЂРёРІСЏР·РєРё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
         $this->inDB->query("DELETE FROM cms_clubs WHERE id = $club_id");
         $this->inDB->query("DELETE FROM cms_user_clubs WHERE club_id = $club_id");
 
-        //Удаляем блог клуба
+        //РЈРґР°Р»СЏРµРј Р±Р»РѕРі РєР»СѓР±Р°
         $blog_model->deleteBlog( $this->getClubBlogId($club_id) );
 
-        //Удаляем фотоальбомы клуба
+        //РЈРґР°Р»СЏРµРј С„РѕС‚РѕР°Р»СЊР±РѕРјС‹ РєР»СѓР±Р°
         $photos_model->deleteAlbum( $this->getClubRootAlbumId($club_id) );
         $this->inDB->query("DELETE FROM cms_photo_albums WHERE NSDiffer = 'club{$club_id}'");
 		cmsActions::removeObjectLog('add_club', $club_id);
@@ -255,16 +255,16 @@ class cms_model_clubs{
 
 		$inUser = cmsUser::getInstance();
 		
-		// неавторизованные не могут создавать клубы
+		// РЅРµР°РІС‚РѕСЂРёР·РѕРІР°РЅРЅС‹Рµ РЅРµ РјРѕРіСѓС‚ СЃРѕР·РґР°РІР°С‚СЊ РєР»СѓР±С‹
 		if (!$inUser->id) { return false; }
-		// администраторы могут создавать клубы
+		// Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂС‹ РјРѕРіСѓС‚ СЃРѕР·РґР°РІР°С‚СЊ РєР»СѓР±С‹
 		if ($inUser->is_admin) { return true; }
 		
 		$is_has_club = $this->hasUserClub();
 
 		$u_karma = cmsUser::getKarma($inUser->id);
 
-		// клуб можно создавать каждые $cfg['every_karma']
+		// РєР»СѓР± РјРѕР¶РЅРѕ СЃРѕР·РґР°РІР°С‚СЊ РєР°Р¶РґС‹Рµ $cfg['every_karma']
 		if ($is_has_club) {
 			if (!$cfg['every_karma']) {
 				
@@ -314,7 +314,7 @@ class cms_model_clubs{
 /* ========================================================================== */
 /* ========================================================================== */
     /**
-     * Отрабатывает плагины на событие $plugin_title
+     * РћС‚СЂР°Р±Р°С‚С‹РІР°РµС‚ РїР»Р°РіРёРЅС‹ РЅР° СЃРѕР±С‹С‚РёРµ $plugin_title
      * @return array $plugins_list
      */
     public function getPluginsOutput($item, $plugin_title = 'GET_SINGLE_CLUB'){

@@ -23,8 +23,8 @@ function applet_modules(){
 	global $adminAccess;
 	if (!$inCore->isAdminCan('admin/modules', $adminAccess)) { cpAccessDenied(); }
 	
-	$GLOBALS['cp_page_title'] = 'Модули сайта';	
-	cpAddPathway('Модули сайта', 'index.php?view=modules');	
+	$GLOBALS['cp_page_title'] = 'РњРѕРґСѓР»Рё СЃР°Р№С‚Р°';	
+	cpAddPathway('РњРѕРґСѓР»Рё СЃР°Р№С‚Р°', 'index.php?view=modules');	
 	$GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="js/modules.js"></script>';
 	
 	if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
@@ -57,7 +57,7 @@ function applet_modules(){
         $formGen = new cmsFormGen($xml_file, $cfg);       
 
         cpAddPathway($module_title, '?view=modules&do=edit&id='.$id);
-    	cpAddPathway('Настройки', '?view=modules&do=config&id='.$id);
+    	cpAddPathway('РќР°СЃС‚СЂРѕР№РєРё', '?view=modules&do=config&id='.$id);
 
         echo '<h3>'.$module_title.'</h3>';
 
@@ -68,15 +68,15 @@ function applet_modules(){
 
         $toolmenu = array();
         $toolmenu[0]['icon'] = 'save.gif';
-        $toolmenu[0]['title'] = 'Сохранить';
+        $toolmenu[0]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
         $toolmenu[0]['link'] = 'javascript:submitModuleConfig()';
 
         $toolmenu[2]['icon'] = 'cancel.gif';
-        $toolmenu[2]['title'] = 'Отмена';
+        $toolmenu[2]['title'] = 'РћС‚РјРµРЅР°';
         $toolmenu[2]['link'] = '?view=modules';
 
         $toolmenu[1]['icon'] = 'edit.gif';
-        $toolmenu[1]['title'] = 'Редактировать отображение модуля';
+        $toolmenu[1]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ РјРѕРґСѓР»СЏ';
         $toolmenu[1]['link'] = '?view=modules&do=edit&id='.$id;
 
         cpToolMenu($toolmenu);
@@ -145,7 +145,7 @@ function applet_modules(){
         $inCore->saveModuleConfig($id, $cfg);
 
         if (!$is_ajax){
-            $_SESSION['save_message'] = 'Настройки модуля сохранены';
+            $_SESSION['save_message'] = 'РќР°СЃС‚СЂРѕР№РєРё РјРѕРґСѓР»СЏ СЃРѕС…СЂР°РЅРµРЅС‹';
         }
 
         $inCore->redirectBack();
@@ -158,39 +158,39 @@ function applet_modules(){
     if ($do == 'list'){
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'new.gif';
-		$toolmenu[0]['title'] = 'Добавить модуль';
+		$toolmenu[0]['title'] = 'Р”РѕР±Р°РІРёС‚СЊ РјРѕРґСѓР»СЊ';
 		$toolmenu[0]['link'] = '?view=modules&do=add';
 
 		$toolmenu[2]['icon'] = 'edit.gif';
-		$toolmenu[2]['title'] = 'Редактировать выбранные';
+		$toolmenu[2]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[2]['link'] = "javascript:checkSel('?view=modules&do=edit&multiple=1');";
 
 		$toolmenu[5]['icon'] = 'delete.gif';
-		$toolmenu[5]['title'] = 'Удалить выбранные';
+		$toolmenu[5]['title'] = 'РЈРґР°Р»РёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[5]['link'] = "javascript:checkSel('?view=modules&do=delete&multiple=1');";
 
 		$toolmenu[3]['icon'] = 'show.gif';
-		$toolmenu[3]['title'] = 'Публиковать выбранные';
+		$toolmenu[3]['title'] = 'РџСѓР±Р»РёРєРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[3]['link'] = "javascript:checkSel('?view=modules&do=show&multiple=1');";
 
 		$toolmenu[4]['icon'] = 'hide.gif';
-		$toolmenu[4]['title'] = 'Скрыть выбранные';
+		$toolmenu[4]['title'] = 'РЎРєСЂС‹С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[4]['link'] = "javascript:checkSel('?view=modules&do=hide&multiple=1');";
 
 		$toolmenu[7]['icon'] = 'autoorder.gif';
-		$toolmenu[7]['title'] = 'Упорядочить модули';
+		$toolmenu[7]['title'] = 'РЈРїРѕСЂСЏРґРѕС‡РёС‚СЊ РјРѕРґСѓР»Рё';
 		$toolmenu[7]['link'] = "?view=modules&do=autoorder";
 
 		$toolmenu[6]['icon'] = 'reorder.gif';
-		$toolmenu[6]['title'] = 'Сохранить порядок модулей';
+		$toolmenu[6]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ РїРѕСЂСЏРґРѕРє РјРѕРґСѓР»РµР№';
 		$toolmenu[6]['link'] = "javascript:checkSel('?view=modules&do=saveorder');";
 
 		$toolmenu[1]['icon'] = 'install.gif';
-		$toolmenu[1]['title'] = 'Установить модуль';
+		$toolmenu[1]['title'] = 'РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РјРѕРґСѓР»СЊ';
 		$toolmenu[1]['link'] = '?view=install&do=module';
 
 		$toolmenu[8]['icon'] = 'help.gif';
-		$toolmenu[8]['title'] = 'Помощь';
+		$toolmenu[8]['title'] = 'РџРѕРјРѕС‰СЊ';
 		$toolmenu[8]['link'] = "?view=help&topic=modules";
 
 		cpToolMenu($toolmenu);
@@ -200,32 +200,32 @@ function applet_modules(){
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Заголовок';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';		$fields[1]['filter'] = 15;
+		$fields[1]['title'] = 'Р—Р°РіРѕР»РѕРІРѕРє';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';		$fields[1]['filter'] = 15;
 		$fields[1]['link'] = '?view=modules&do=edit&id=%id%';
 
-		$fields[2]['title'] = 'Название';	$fields[2]['field'] = 'name';		$fields[2]['width'] = '300';
+		$fields[2]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[2]['field'] = 'name';		$fields[2]['width'] = '300';
 		$fields[2]['filter'] = 15;
 				
-		$fields[3]['title'] = 'Показ';		$fields[3]['field'] = 'published';	$fields[3]['width'] = '100';	
-		$fields[4]['title'] = 'Порядок';	$fields[4]['field'] = 'ordering';	$fields[4]['width'] = '100';	
-		$fields[5]['title'] = 'Позиция';	$fields[5]['field'] = 'position';	$fields[5]['width'] = '100';	
+		$fields[3]['title'] = 'РџРѕРєР°Р·';		$fields[3]['field'] = 'published';	$fields[3]['width'] = '100';	
+		$fields[4]['title'] = 'РџРѕСЂСЏРґРѕРє';	$fields[4]['field'] = 'ordering';	$fields[4]['width'] = '100';	
+		$fields[5]['title'] = 'РџРѕР·РёС†РёСЏ';	$fields[5]['field'] = 'position';	$fields[5]['width'] = '100';	
 		$fields[5]['filter'] = 10; 			$fields[5]['filterlist'] = cpGetList('positions');
 		
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Настроить';
+		$actions[0]['title'] = 'РќР°СЃС‚СЂРѕРёС‚СЊ';
 		$actions[0]['icon']  = 'config.gif';
 		$actions[0]['link']  = '?view=modules&do=config&id=%id%';
-		// Функция, которой передается ID объекта, и если она вернет TRUE то только тогда отобразится значок
+		// Р¤СѓРЅРєС†РёСЏ, РєРѕС‚РѕСЂРѕР№ РїРµСЂРµРґР°РµС‚СЃСЏ ID РѕР±СЉРµРєС‚Р°, Рё РµСЃР»Рё РѕРЅР° РІРµСЂРЅРµС‚ TRUE С‚Рѕ С‚РѕР»СЊРєРѕ С‚РѕРіРґР° РѕС‚РѕР±СЂР°Р·РёС‚СЃСЏ Р·РЅР°С‡РѕРє
 		$actions[0]['condition'] = 'cpModuleHasConfig';
 		
-		$actions[1]['title'] = 'Редактировать';
+		$actions[1]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[1]['icon']  = 'edit.gif';
 		$actions[1]['link']  = '?view=modules&do=edit&id=%id%';
 
-		$actions[2]['title'] = 'Удалить';
+		$actions[2]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[2]['icon']  = 'delete.gif';
-		$actions[2]['confirm'] = 'Удалить модуль?';
+		$actions[2]['confirm'] = 'РЈРґР°Р»РёС‚СЊ РјРѕРґСѓР»СЊ?';
 		$actions[2]['link']  = '?view=modules&do=delete&id=%id%';
 
         $module = $inCore->request('installed', 'str', '');
@@ -241,14 +241,14 @@ function applet_modules(){
                 $inCore->loadModuleInstaller($module);
                 $_module = call_user_func('info_module_'.$module);
 
-                $task_str   = ($task=='install') ? 'установлен' : 'обновлен';
+                $task_str   = ($task=='install') ? 'СѓСЃС‚Р°РЅРѕРІР»РµРЅ' : 'РѕР±РЅРѕРІР»РµРЅ';
                 echo '<div style="color:green;margin:12px 0px;">
-                        Модуль <strong>"'.$_module['title'].'"</strong> успешно '.$task_str.'.
+                        РњРѕРґСѓР»СЊ <strong>"'.$_module['title'].'"</strong> СѓСЃРїРµС€РЅРѕ '.$task_str.'.
                       </div>';
             }
 
             if ($task == 'remove'){
-                echo '<div style="color:green;margin-top:12px;margin-bottom:5px;">Модуль удален из системы.</div>';
+                echo '<div style="color:green;margin-top:12px;margin-bottom:5px;">РњРѕРґСѓР»СЊ СѓРґР°Р»РµРЅ РёР· СЃРёСЃС‚РµРјС‹.</div>';
             }
 
         }
@@ -262,20 +262,20 @@ function applet_modules(){
             <table width="100%">
                 <tbody>
                     <tr>
-                        <td width="125">Фильтр по названию: </td>
+                        <td width="125">Р¤РёР»СЊС‚СЂ РїРѕ РЅР°Р·РІР°РЅРёСЋ: </td>
                         <td width="">
-                            <a href="javascript:" onclick="$('input#_filterText3').val('меню|Меню').trigger('keyup');">меню</a> |
-                            <a href="javascript:" onclick="$('input#_filterText3').val('стат|материалы').trigger('keyup');">статьи</a> |
-                            <a href="javascript:" onclick="$('input#_filterText3').val('коммент|Коммент').trigger('keyup');">комментарии</a> |
-                            <a href="javascript:" onclick="$('input#_filterText3').val('блог|Блог').trigger('keyup');">блоги</a> |
-                            <a href="javascript:" onclick="$('input#_filterText3').val('клуб|Клуб').trigger('keyup');">клубы</a> |
-                            <a href="javascript:" onclick="$('input#_filterText3').val('пользовател|авторизация|регистр').trigger('keyup');">пользователи</a> |
-                            <a href="javascript:" onclick="$('input#_filterText3').val('каталог|корзина').trigger('keyup');">каталог</a> |
-                            <a href="javascript:" onclick="$('input#_filterText3').val('фото|изображен').trigger('keyup');">фотографии</a> |
-                            <a href="javascript:" onclick="$('input#_filterText3').val('форум').trigger('keyup');">форум</a> |
-                            <a href="javascript:" onclick="$('input#_filterText3').val('файл').trigger('keyup');">файлы</a> |
-                            <a href="javascript:" onclick="$('input#_filterText3').val('вопросы').trigger('keyup');">вопросы</a> |
-                            <a href="javascript:" onclick="$('input._filterText').val('').trigger('keyup');" style="color:gray"> показать все</a>
+                            <a href="javascript:" onclick="$('input#_filterText3').val('РјРµРЅСЋ|РњРµРЅСЋ').trigger('keyup');">РјРµРЅСЋ</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('СЃС‚Р°С‚|РјР°С‚РµСЂРёР°Р»С‹').trigger('keyup');">СЃС‚Р°С‚СЊРё</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('РєРѕРјРјРµРЅС‚|РљРѕРјРјРµРЅС‚').trigger('keyup');">РєРѕРјРјРµРЅС‚Р°СЂРёРё</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('Р±Р»РѕРі|Р‘Р»РѕРі').trigger('keyup');">Р±Р»РѕРіРё</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('РєР»СѓР±|РљР»СѓР±').trigger('keyup');">РєР»СѓР±С‹</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('РїРѕР»СЊР·РѕРІР°С‚РµР»|Р°РІС‚РѕСЂРёР·Р°С†РёСЏ|СЂРµРіРёСЃС‚СЂ').trigger('keyup');">РїРѕР»СЊР·РѕРІР°С‚РµР»Рё</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('РєР°С‚Р°Р»РѕРі|РєРѕСЂР·РёРЅР°').trigger('keyup');">РєР°С‚Р°Р»РѕРі</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('С„РѕС‚Рѕ|РёР·РѕР±СЂР°Р¶РµРЅ').trigger('keyup');">С„РѕС‚РѕРіСЂР°С„РёРё</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('С„РѕСЂСѓРј').trigger('keyup');">С„РѕСЂСѓРј</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('С„Р°Р№Р»').trigger('keyup');">С„Р°Р№Р»С‹</a> |
+                            <a href="javascript:" onclick="$('input#_filterText3').val('РІРѕРїСЂРѕСЃС‹').trigger('keyup');">РІРѕРїСЂРѕСЃС‹</a> |
+                            <a href="javascript:" onclick="$('input._filterText').val('').trigger('keyup');" style="color:gray"> РїРѕРєР°Р·Р°С‚СЊ РІСЃРµ</a>
                         </td>
                     </tr>
                 </tbody>
@@ -562,15 +562,15 @@ function applet_modules(){
 		$GLOBALS['cp_page_head'][] = jwHeader();
 
 		if ($do=='add'){
-	 		 cpAddPathway('Добавить модуль', 'index.php?view=modules&do=add');
-			 echo '<h3>Добавить модуль</h3>';
+	 		 cpAddPathway('Р”РѕР±Р°РІРёС‚СЊ РјРѕРґСѓР»СЊ', 'index.php?view=modules&do=add');
+			 echo '<h3>Р”РѕР±Р°РІРёС‚СЊ РјРѕРґСѓР»СЊ</h3>';
              $show_all = false;
 		} else {
 					 if(isset($_REQUEST['multiple'])){				 
 						if (isset($_REQUEST['item'])){					
 							$_SESSION['editlist'] = $_REQUEST['item'];
 						} else {
-							echo '<p class="error">Нет выбранных объектов!</p>';
+							echo '<p class="error">РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ!</p>';
 							return;
 						}				 
 					 }
@@ -580,7 +580,7 @@ function applet_modules(){
 					 if (isset($_SESSION['editlist'])){
 						$id = array_shift($_SESSION['editlist']);
 						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
-						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
+						{ $ostatok = '(РќР° РѕС‡РµСЂРµРґРё: '.sizeof($_SESSION['editlist']).')'; }
 					 } else { $id = (int)$_REQUEST['id']; }
 	
 					 $sql = "SELECT * FROM cms_modules WHERE id = $id LIMIT 1";
@@ -594,17 +594,17 @@ function applet_modules(){
 					 
 					 if(mysql_num_rows($result)) { $show_all = true; } else { $show_all = false; }
 					 					
-					 echo '<h3>Редактировать модуль '.$ostatok.'</h3>';
+					 echo '<h3>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РјРѕРґСѓР»СЊ '.$ostatok.'</h3>';
  					 cpAddPathway($mod['name'], 'index.php?view=modules&do=edit&id='.$mod['id']);
 			}   
 			
  		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'save.gif';
-		$toolmenu[0]['title'] = 'Сохранить';
+		$toolmenu[0]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 		$toolmenu[0]['link'] = 'javascript:document.addform.submit();';
 
 		$toolmenu[2]['icon'] = 'cancel.gif';
-		$toolmenu[2]['title'] = 'Отмена';
+		$toolmenu[2]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[2]['link'] = 'javascript:history.go(-1);';
 
 		if(@$mod['is_external']){
@@ -612,7 +612,7 @@ function applet_modules(){
 			$xml_file = 'modules/'.$mod['content'].'/backend.xml';
 			if (file_exists($php_file) || file_exists($xml_file)){
 				$toolmenu[1]['icon'] = 'config.gif';
-				$toolmenu[1]['title'] = 'Настроить модуль';
+				$toolmenu[1]['title'] = 'РќР°СЃС‚СЂРѕРёС‚СЊ РјРѕРґСѓР»СЊ';
 				$toolmenu[1]['link'] = '?view=modules&do=config&id='.$mod['id'];
 			}
 		}
@@ -626,16 +626,16 @@ function applet_modules(){
         <table class="proptable" width="100%" cellpadding="15" cellspacing="2">
             <tr>
 
-                <!-- главная ячейка -->
+                <!-- РіР»Р°РІРЅР°СЏ СЏС‡РµР№РєР° -->
                 <td valign="top">
 
-                    <div><strong>Заголовок модуля</strong> <span class="hinttext">&mdash; отображается на сайте</span></div>
+                    <div><strong>Р—Р°РіРѕР»РѕРІРѕРє РјРѕРґСѓР»СЏ</strong> <span class="hinttext">&mdash; РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РЅР° СЃР°Р№С‚Рµ</span></div>
                     <div>
                         <table width="100%" cellpadding="0" cellspacing="0" border="0">
                             <tr>
                                 <td><input name="title" type="text" id="title" style="width:100%" value="<?php echo htmlspecialchars($mod['title']);?>" /></td>
                                 <td style="width:15px;padding-left:10px;padding-right:0px;">
-                                    <input type="checkbox" title="Показывать заголовок" name="showtitle" <?php if ($mod['showtitle'] || $do=='add') { echo 'checked="checked"'; } ?> value="1">
+                                    <input type="checkbox" title="РџРѕРєР°Р·С‹РІР°С‚СЊ Р·Р°РіРѕР»РѕРІРѕРє" name="showtitle" <?php if ($mod['showtitle'] || $do=='add') { echo 'checked="checked"'; } ?> value="1">
                                 </td>
                             </tr>
                         </table>
@@ -645,7 +645,7 @@ function applet_modules(){
                         <tr>
                             <td valign="top">
                                 <div>
-                                    <strong>Название модуля</strong> <span class="hinttext">&mdash; отображается в админке</span>
+                                    <strong>РќР°Р·РІР°РЅРёРµ РјРѕРґСѓР»СЏ</strong> <span class="hinttext">&mdash; РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РІ Р°РґРјРёРЅРєРµ</span>
                                 </div>
                                 <div>
                                     <?php if (!isset($mod['user']) || @$mod['user']==1) { ?>
@@ -658,7 +658,7 @@ function applet_modules(){
                             </td>
                             <td valign="top" width="160" style="padding-left:10px;">
                                 <div>
-                                    <strong>CSS префикс</strong>
+                                    <strong>CSS РїСЂРµС„РёРєСЃ</strong>
                                 </div>
                                 <div>                                    
                                     <input name="css_prefix" type="text" id="css_prefix" value="<?php echo @$mod['css_prefix'];?>" style="width:154px" />
@@ -668,7 +668,7 @@ function applet_modules(){
                     </table>
 
                     <div style="margin-top:8px">
-                        <strong>Позиция показа по-умолчанию</strong> <span class="hinttext">&mdash; должна присутствовать в шаблоне</span>
+                        <strong>РџРѕР·РёС†РёСЏ РїРѕРєР°Р·Р° РїРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ</strong> <span class="hinttext">&mdash; РґРѕР»Р¶РЅР° РїСЂРёСЃСѓС‚СЃС‚РІРѕРІР°С‚СЊ РІ С€Р°Р±Р»РѕРЅРµ</span>
                     </div>
                     <div>
                         <?php
@@ -691,7 +691,7 @@ function applet_modules(){
                     </div>
 
                     <div style="margin-top:15px">
-                        <strong>Шаблон модуля</strong> <span class="hinttext">&mdash; Файлы из папки <b>modules/</b> вашего шаблона, названия которых начинаются на module</span>
+                        <strong>РЁР°Р±Р»РѕРЅ РјРѕРґСѓР»СЏ</strong> <span class="hinttext">&mdash; Р¤Р°Р№Р»С‹ РёР· РїР°РїРєРё <b>modules/</b> РІР°С€РµРіРѕ С€Р°Р±Р»РѕРЅР°, РЅР°Р·РІР°РЅРёСЏ РєРѕС‚РѕСЂС‹С… РЅР°С‡РёРЅР°СЋС‚СЃСЏ РЅР° module</span>
                     </div>
                     <div>
                         <?php
@@ -709,12 +709,12 @@ function applet_modules(){
 
                     <?php if ($do=='add'){ ?>
                     <div style="margin-top:15px">
-                        <strong>Тип модуля</strong>
+                        <strong>РўРёРї РјРѕРґСѓР»СЏ</strong>
                     </div>
                     <div>
                         <select name="operate" id="operate" onchange="checkDiv()" style="width:100%">
-                            <option value="user" selected="selected">Пользовательский (новый)</option>
-                            <option value="clone">Дубликат (копия)</option>
+                            <option value="user" selected="selected">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ (РЅРѕРІС‹Р№)</option>
+                            <option value="clone">Р”СѓР±Р»РёРєР°С‚ (РєРѕРїРёСЏ)</option>
                         </select>
                     </div>
                     <?php } ?>
@@ -722,7 +722,7 @@ function applet_modules(){
                     <?php if(!isset($mod['user']) || $mod['user']==1 || $do=='add'){ ?>
                         <div id="user_div">
                             <div style="margin-top:15px">
-                                <strong>Содержимое модуля</strong>
+                                <strong>РЎРѕРґРµСЂР¶РёРјРѕРµ РјРѕРґСѓР»СЏ</strong>
                             </div>
                             <div><?php insertPanel(); ?></div>
                             <div>                             
@@ -735,7 +735,7 @@ function applet_modules(){
 
                 <div id="clone_div" style="display:none;">
                         <div style="margin-top:15px">
-                            <strong>Скопировать модуль</strong>
+                            <strong>РЎРєРѕРїРёСЂРѕРІР°С‚СЊ РјРѕРґСѓР»СЊ</strong>
                         </div>
                         <div>
                             <select name="clone_id" id="clone_id" style="width:100%">
@@ -746,7 +746,7 @@ function applet_modules(){
                             <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist" style="margin-top:6px">
                                 <tr>
                                     <td width="20"><input type="checkbox" name="del_orig" id="del_orig" value="1" /></td>
-                                    <td><label for="del_orig">Удалить оригинал</label></td>
+                                    <td><label for="del_orig">РЈРґР°Р»РёС‚СЊ РѕСЂРёРіРёРЅР°Р»</label></td>
                                 </tr>
                             </table>    
                         </div>                        
@@ -754,21 +754,21 @@ function applet_modules(){
 
                 </td>
 
-                <!-- боковая ячейка -->
+                <!-- Р±РѕРєРѕРІР°СЏ СЏС‡РµР№РєР° -->
                 <td width="300" valign="top" style="background:#ECECEC;">
 
                     <?php ob_start(); ?>
 
-                    {tab=Публикация}
+                    {tab=РџСѓР±Р»РёРєР°С†РёСЏ}
 
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
                         <tr>
                             <td width="20"><input type="checkbox" name="published" id="published" value="1" <?php if ($mod['published'] || $do=='add') { echo 'checked="checked"'; } ?>/></td>
-                            <td><label for="published"><strong>Публиковать модуль</strong></label></td>
+                            <td><label for="published"><strong>РџСѓР±Р»РёРєРѕРІР°С‚СЊ РјРѕРґСѓР»СЊ</strong></label></td>
                         </tr>
                         <tr>
                             <td width="20"><input name="show_all" id="show_all" type="checkbox" value="1"  onclick="checkGroupList()" <?php if ($show_all) { echo 'checked'; } ?> /></td>
-                            <td><label for="show_all"><strong>Показывать на всех страницах сайта</strong></label></td>
+                            <td><label for="show_all"><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ РЅР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С… СЃР°Р№С‚Р°</strong></label></td>
                         </tr>
                     </table>
 
@@ -797,7 +797,7 @@ function applet_modules(){
                                         $item['position'] = $bind_pos[$item['id']];
                                     }
                                 }
-								$item['title'] = str_replace('-- Корневая страница --', 'Главная страница', $item['title']);
+								$item['title'] = str_replace('-- РљРѕСЂРЅРµРІР°СЏ СЃС‚СЂР°РЅРёС†Р° --', 'Р“Р»Р°РІРЅР°СЏ СЃС‚СЂР°РЅРёС†Р°', $item['title']);
                                 $menu_items[] = $item;
                             }
                         }
@@ -807,14 +807,14 @@ function applet_modules(){
                     <div id="grp">
 
                         <div style="margin-top:13px">
-                            <strong>Где показывать модуль?</strong>
+                            <strong>Р“РґРµ РїРѕРєР°Р·С‹РІР°С‚СЊ РјРѕРґСѓР»СЊ?</strong>
                         </div>
 
                         <div style="height:300px;overflow: auto;border: solid 1px #999; padding:5px 10px; background: #FFF;">
                         <table cellpadding="0" cellspacing="0" border="0" width="100%" align="center">
                             <tr>
-                                <td colspan="2" height="25"><strong>Раздел сайта</strong></td>
-                                <td align="center" width="50"><strong>Позиция</strong></td>
+                                <td colspan="2" height="25"><strong>Р Р°Р·РґРµР» СЃР°Р№С‚Р°</strong></td>
+                                <td align="center" width="50"><strong>РџРѕР·РёС†РёСЏ</strong></td>
                             </tr>
                             <?php foreach($menu_items as $i){ ?>
                             <tr>
@@ -837,7 +837,7 @@ function applet_modules(){
                         <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
                             <tr>
                                 <td width="20"><input type="checkbox" name="is_strict_bind" id="is_strict_bind" value="1" <?php if ($mod['is_strict_bind']) { echo 'checked="checked"'; } ?>/></td>
-                                <td><label for="is_strict_bind"><strong>Не показывать на вложенных страницах</strong></label></td>
+                                <td><label for="is_strict_bind"><strong>РќРµ РїРѕРєР°Р·С‹РІР°С‚СЊ РЅР° РІР»РѕР¶РµРЅРЅС‹С… СЃС‚СЂР°РЅРёС†Р°С…</strong></label></td>
                             </tr>
                         </table>
 
@@ -845,20 +845,20 @@ function applet_modules(){
 
 					<?php if(($mod['is_external'] && $do=='edit') || $do=='add') { ?>
 
-                    {tab=Кеширование}
+                    {tab=РљРµС€РёСЂРѕРІР°РЅРёРµ}
 
                         <div style="margin-top:4px">
-                            <strong>Кешировать модуль?</strong>
+                            <strong>РљРµС€РёСЂРѕРІР°С‚СЊ РјРѕРґСѓР»СЊ?</strong>
                         </div>
                         <div>
                             <select name="cache" id="cache" style="width:100%">
-                                <option value="0" <?php if (@!$mod['cache']) { echo 'selected'; } ?>>Нет</option>
-                                <option value="1" <?php if (@$mod['cache']) { echo 'selected'; } ?>>Да</option>
+                                <option value="0" <?php if (@!$mod['cache']) { echo 'selected'; } ?>>РќРµС‚</option>
+                                <option value="1" <?php if (@$mod['cache']) { echo 'selected'; } ?>>Р”Р°</option>
                             </select>
                         </div>
 
                         <div style="margin-top:15px">
-                            <strong>Период обновления кеша</strong>
+                            <strong>РџРµСЂРёРѕРґ РѕР±РЅРѕРІР»РµРЅРёСЏ РєРµС€Р°</strong>
                         </div>
                         <div>
                             <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:5px;">
@@ -868,10 +868,10 @@ function applet_modules(){
                                     </td>
                                     <td valign="top" style="padding-left:5px">
                                         <select name="cacheint" id="int_2" style="width:100%">
-                                            <option value="MINUTE"  <?php if(@strstr($mod['cacheint'], 'MINUTE')) { echo 'selected'; } ?>>минут</option>
-                                            <option value="HOUR"  <?php if(@strstr($mod['cacheint'], 'HOUR')) { echo 'selected'; } ?>>часов</option>
-                                            <option value="DAY" <?php if(@strstr($mod['cacheint'], 'DAY')) { echo 'selected'; } ?>>дней</option>
-                                            <option value="MONTH" <?php if(@strstr($mod['cacheint'], 'MONTH')) { echo 'selected'; } ?>>месяцев</option>
+                                            <option value="MINUTE"  <?php if(@strstr($mod['cacheint'], 'MINUTE')) { echo 'selected'; } ?>>РјРёРЅСѓС‚</option>
+                                            <option value="HOUR"  <?php if(@strstr($mod['cacheint'], 'HOUR')) { echo 'selected'; } ?>>С‡Р°СЃРѕРІ</option>
+                                            <option value="DAY" <?php if(@strstr($mod['cacheint'], 'DAY')) { echo 'selected'; } ?>>РґРЅРµР№</option>
+                                            <option value="MONTH" <?php if(@strstr($mod['cacheint'], 'MONTH')) { echo 'selected'; } ?>>РјРµСЃСЏС†РµРІ</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -886,17 +886,17 @@ function applet_modules(){
                                         $cfile = PATH.'/cache/'.md5($t).'.html';
                                         if (file_exists($cfile)){
                                             $kb = round(filesize($cfile)/1024, 2);
-                                            echo '<a href="index.php?view=cache&do=delcache&target=module&id='.$mod['id'].'">Удалить кеш</a> ('.$kb.' Кб)';
+                                            echo '<a href="index.php?view=cache&do=delcache&target=module&id='.$mod['id'].'">РЈРґР°Р»РёС‚СЊ РєРµС€</a> ('.$kb.' РљР±)';
                                         }
                                     } else {
-                                        echo '<span style="color:gray">Сейчас нет кеша</span>';
+                                        echo '<span style="color:gray">РЎРµР№С‡Р°СЃ РЅРµС‚ РєРµС€Р°</span>';
                                     }
                                 }
                             ?>
                         </div>
 					<?php } ?>
 
-                    {tab=Доступ}
+                    {tab=Р”РѕСЃС‚СѓРї}
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist" style="margin-top:5px">
                         <tr>
                             <td width="20">
@@ -920,20 +920,20 @@ function applet_modules(){
                                 ?>
                                 <input name="is_public" type="checkbox" id="is_public" onclick="checkAccesList()" value="1" <?php echo $public?> />
                             </td>
-                            <td><label for="is_public"><strong>Общий доступ</strong></label></td>
+                            <td><label for="is_public"><strong>РћР±С‰РёР№ РґРѕСЃС‚СѓРї</strong></label></td>
                         </tr>
                     </table>
                     <div style="padding:5px">
                         <span class="hinttext">
-                            Если отмечено, модуль виден всем посетителям. Снимите галочку, чтобы вручную выбрать разрешенные группы пользователей.
+                            Р•СЃР»Рё РѕС‚РјРµС‡РµРЅРѕ, РјРѕРґСѓР»СЊ РІРёРґРµРЅ РІСЃРµРј РїРѕСЃРµС‚РёС‚РµР»СЏРј. РЎРЅРёРјРёС‚Рµ РіР°Р»РѕС‡РєСѓ, С‡С‚РѕР±С‹ РІСЂСѓС‡РЅСѓСЋ РІС‹Р±СЂР°С‚СЊ СЂР°Р·СЂРµС€РµРЅРЅС‹Рµ РіСЂСѓРїРїС‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№.
                         </span>
                     </div>
 
                     <div style="margin-top:10px;padding:5px;padding-right:0px;">
                         <div>
-                            <strong>Показывать группам:</strong><br />
+                            <strong>РџРѕРєР°Р·С‹РІР°С‚СЊ РіСЂСѓРїРїР°Рј:</strong><br />
                             <span class="hinttext">
-                                Можно выбрать несколько, удерживая CTRL.
+                                РњРѕР¶РЅРѕ РІС‹Р±СЂР°С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ, СѓРґРµСЂР¶РёРІР°СЏ CTRL.
                             </span>
                         </div>
                         <div>
@@ -969,8 +969,8 @@ function applet_modules(){
             </tr>
         </table>
         <p>
-            <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add') { echo 'value="Создать модуль"'; } else { echo 'value="Сохранить модуль"'; } ?> />
-            <input name="back" type="button" id="back" value="Отмена" onclick="window.history.back();"/>
+            <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add') { echo 'value="РЎРѕР·РґР°С‚СЊ РјРѕРґСѓР»СЊ"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ РјРѕРґСѓР»СЊ"'; } ?> />
+            <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.history.back();"/>
             <input name="do" type="hidden" id="do" <?php if ($do=='add') { echo 'value="submit"'; } else { echo 'value="update"'; } ?> />
             <?php
                 if ($do=='edit'){

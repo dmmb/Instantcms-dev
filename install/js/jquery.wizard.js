@@ -1,4 +1,4 @@
-﻿/*
+/*
  * @author stuartb
  * @date 2008.10.08
  * @description Wizard forms made easy.

@@ -3,28 +3,28 @@
 
     <module>
         <id>mod_hmenu</id>
-        <title>Горизонтальное меню</title>
+        <title>Р“РѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅРѕРµ РјРµРЅСЋ</title>
     </module>
 
     <params>
 
-        <param type="list" name="menu" title="Меню для отображения">
-            <option title="Главное меню" value="mainmenu" />
-            <option title="Дополнительное меню 1" value="menu1" />
-            <option title="Дополнительное меню 2" value="menu2" />
-            <option title="Дополнительное меню 3" value="menu3" />
-            <option title="Дополнительное меню 4" value="menu4" />
-            <option title="Дополнительное меню 5" value="menu5" />
-            <option title="Дополнительное меню 6" value="menu6" />
-            <option title="Дополнительное меню 7" value="menu7" />
-            <option title="Дополнительное меню 8" value="menu8" />
-            <option title="Дополнительное меню 9" value="menu9" />
-            <option title="Дополнительное меню 10" value="menu10" />
-            <option title="Дополнительное меню 11" value="menu11" />
-            <option title="Дополнительное меню 12" value="menu12" />
-            <option title="Дополнительное меню 13" value="menu13" />
-            <option title="Дополнительное меню 14" value="menu14" />
-            <option title="Дополнительное меню 15" value="menu15" />
+        <param type="list" name="menu" title="РњРµРЅСЋ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ">
+            <option title="Р“Р»Р°РІРЅРѕРµ РјРµРЅСЋ" value="mainmenu" />
+            <option title="Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РјРµРЅСЋ 1" value="menu1" />
+            <option title="Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РјРµРЅСЋ 2" value="menu2" />
+            <option title="Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РјРµРЅСЋ 3" value="menu3" />
+            <option title="Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РјРµРЅСЋ 4" value="menu4" />
+            <option title="Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РјРµРЅСЋ 5" value="menu5" />
+            <option title="Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РјРµРЅСЋ 6" value="menu6" />
+            <option title="Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РјРµРЅСЋ 7" value="menu7" />
+            <option title="Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РјРµРЅСЋ 8" value="menu8" />
+            <option title="Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РјРµРЅСЋ 9" value="menu9" />
+            <option title="Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РјРµРЅСЋ 10" value="menu10" />
+            <option title="Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РјРµРЅСЋ 11" value="menu11" />
+            <option title="Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РјРµРЅСЋ 12" value="menu12" />
+            <option title="Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РјРµРЅСЋ 13" value="menu13" />
+            <option title="Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РјРµРЅСЋ 14" value="menu14" />
+            <option title="Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РјРµРЅСЋ 15" value="menu15" />
         </param>
 
     </params>

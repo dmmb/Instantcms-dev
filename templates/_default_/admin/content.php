@@ -6,24 +6,24 @@
 
             <div class="cat_add_link">
                 <div>
-                    <a href="?view=cats&do=add" style="color:#09C">Добавить раздел</a>
+                    <a href="?view=cats&do=add" style="color:#09C">Р”РѕР±Р°РІРёС‚СЊ СЂР°Р·РґРµР»</a>
                 </div>
             </div>
             <div class="cat_link">
                 <div>
                 <?php if ($category_id) { ?>
-                    <a href="<?php echo $base_uri; ?>" style="font-weight:bold">Все страницы</a>
-                <?php } else { $current_cat = 'Все страницы'; ?>
-                    Все страницы
+                    <a href="<?php echo $base_uri; ?>" style="font-weight:bold">Р’СЃРµ СЃС‚СЂР°РЅРёС†С‹</a>
+                <?php } else { $current_cat = 'Р’СЃРµ СЃС‚СЂР°РЅРёС†С‹'; ?>
+                    Р’СЃРµ СЃС‚СЂР°РЅРёС†С‹
                 <?php } ?>
                 </div>
             </div>
             <div class="cat_link">
                 <div>
                 <?php if ($category_id != 1) { ?>
-                    <a href="<?php echo $base_uri.'&cat_id=1'; ?>" style="font-weight:bold">Корневой раздел</a>
-                <?php } else { $current_cat = 'Корневой раздел'; ?>
-                    Корневой раздел
+                    <a href="<?php echo $base_uri.'&cat_id=1'; ?>" style="font-weight:bold">РљРѕСЂРЅРµРІРѕР№ СЂР°Р·РґРµР»</a>
+                <?php } else { $current_cat = 'РљРѕСЂРЅРµРІРѕР№ СЂР°Р·РґРµР»'; ?>
+                    РљРѕСЂРЅРµРІРѕР№ СЂР°Р·РґРµР»
                 <?php } ?>
                 </div>
             </div>
@@ -60,15 +60,15 @@
                                 <?php echo $current_cat; ?>
                             </span>
                             <span style="padding-left: 15px;">
-                                <a title="Добавить статью" href="?view=content&do=add<?php if($category_id){ ?>&to=<?php echo $category_id; } ?>">
-                                    <img border="0" hspace="2" alt="Добавить статью" src="images/actions/add.gif"/>
+                                <a title="Р”РѕР±Р°РІРёС‚СЊ СЃС‚Р°С‚СЊСЋ" href="?view=content&do=add<?php if($category_id){ ?>&to=<?php echo $category_id; } ?>">
+                                    <img border="0" hspace="2" alt="Р”РѕР±Р°РІРёС‚СЊ СЃС‚Р°С‚СЊСЋ" src="images/actions/add.gif"/>
                                 </a>
                                 <?php if($category_id>1){ ?>
-                                    <a title="Редактировать раздел" href="?view=cats&do=edit&id=<?php echo $category_id; ?>">
-                                        <img border="0" hspace="2" alt="Редактировать раздел" src="images/actions/edit.gif"/>
+                                    <a title="Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ СЂР°Р·РґРµР»" href="?view=cats&do=edit&id=<?php echo $category_id; ?>">
+                                        <img border="0" hspace="2" alt="Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ СЂР°Р·РґРµР»" src="images/actions/edit.gif"/>
                                     </a>
-                                    <a title="Удалить раздел" onclick="deleteCat('<?php echo $current_cat; ?>', <?php echo $category_id; ?>)" href="#">
-                                        <img border="0" hspace="2" alt="Удалить раздел" src="images/actions/delete.gif"/>
+                                    <a title="РЈРґР°Р»РёС‚СЊ СЂР°Р·РґРµР»" onclick="deleteCat('<?php echo $current_cat; ?>', <?php echo $category_id; ?>)" href="#">
+                                        <img border="0" hspace="2" alt="РЈРґР°Р»РёС‚СЊ СЂР°Р·РґРµР»" src="images/actions/delete.gif"/>
                                     </a>
                                 <?php } ?>
                             </span>
@@ -80,19 +80,19 @@
                         <td width="130">
                             <select name="orderby" style="width:130px" onchange="$('#filter_form').submit()">
                                 <?php if($category_id){ ?>
-                                <option value="ordering" <?php if($orderby=='ordering'){ ?>selected="selected"<?php } ?>>по порядку</option>
+                                <option value="ordering" <?php if($orderby=='ordering'){ ?>selected="selected"<?php } ?>>РїРѕ РїРѕСЂСЏРґРєСѓ</option>
                                 <?php } ?>
-                                <option value="title" <?php if($orderby=='title'){ ?>selected="selected"<?php } ?>>по названию</option>
-                                <option value="pubdate" <?php if($orderby=='pubdate'){ ?>selected="selected"<?php } ?>>по дате</option>
+                                <option value="title" <?php if($orderby=='title'){ ?>selected="selected"<?php } ?>>РїРѕ РЅР°Р·РІР°РЅРёСЋ</option>
+                                <option value="pubdate" <?php if($orderby=='pubdate'){ ?>selected="selected"<?php } ?>>РїРѕ РґР°С‚Рµ</option>
                             </select>
                         </td>
                         <td width="150">
                             <select name="orderto" style="width:150px" onchange="$('#filter_form').submit()">
-                                <option value="asc" <?php if($orderto=='asc'){ ?>selected="selected"<?php } ?>>по возрастанию</option>
-                                <option value="desc" <?php if($orderto=='desc'){ ?>selected="selected"<?php } ?>>по убыванию</option>
+                                <option value="asc" <?php if($orderto=='asc'){ ?>selected="selected"<?php } ?>>РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ</option>
+                                <option value="desc" <?php if($orderto=='desc'){ ?>selected="selected"<?php } ?>>РїРѕ СѓР±С‹РІР°РЅРёСЋ</option>
                             </select>
                         </td>
-                        <td width="60">Название:</td>
+                        <td width="60">РќР°Р·РІР°РЅРёРµ:</td>
                         <td width="">
                             <input type="text" name="title" value="<?php echo $title_part; ?>" style="width:99%"/>
                         </td>
@@ -108,17 +108,17 @@
                     <thead>
                         <tr>
                             <th class="lt_header" align="center" width="20">
-                                <a class="lt_header_link" title="Инвертировать выделение" href="javascript:" onclick="javascript:invert()">#</a>
+                                <a class="lt_header_link" title="РРЅРІРµСЂС‚РёСЂРѕРІР°С‚СЊ РІС‹РґРµР»РµРЅРёРµ" href="javascript:" onclick="javascript:invert()">#</a>
                             </th>
                             <th class="lt_header" width="25">id</th>
-                            <th class="lt_header" width="" colspan="2">Название</th>
-                            <th class="lt_header" width="80">Дата</th>
-                            <th class="lt_header" width="50">Показ</th>
+                            <th class="lt_header" width="" colspan="2">РќР°Р·РІР°РЅРёРµ</th>
+                            <th class="lt_header" width="80">Р”Р°С‚Р°</th>
+                            <th class="lt_header" width="50">РџРѕРєР°Р·</th>
                             <?php if ($category_id && sizeof($items)>1){ ?>
-                            	<th class="lt_header" width="50">Порядок</th>
+                            	<th class="lt_header" width="50">РџРѕСЂСЏРґРѕРє</th>
                                 <th class="lt_header" width="24">&darr;&uarr;</th>
                             <?php } ?>
-                            <th class="lt_header" align="center" width="90">Действия</th>
+                            <th class="lt_header" align="center" width="90">Р”РµР№СЃС‚РІРёСЏ</th>
                         </tr>
                     </thead>
                     <?php if ($items){ ?>
@@ -138,11 +138,11 @@
                                     <td><?php echo $item['fpubdate']; ?></td>
                                     <td>
                                         <?php if ($item['published']) { ?>
-                                            <a id="publink<?php echo $item['id']; ?>" href="javascript:pub(<?php echo $item['id']; ?>, 'view=content&do=hide&id=<?php echo $item['id']; ?>', 'view=content&do=show&id=<?php echo $item['id']; ?>', 'off', 'on');" title="Скрыть">
+                                            <a id="publink<?php echo $item['id']; ?>" href="javascript:pub(<?php echo $item['id']; ?>, 'view=content&do=hide&id=<?php echo $item['id']; ?>', 'view=content&do=show&id=<?php echo $item['id']; ?>', 'off', 'on');" title="РЎРєСЂС‹С‚СЊ">
                                                 <img id="pub<?php echo $item['id']; ?>" border="0" src="images/actions/on.gif"/>
                                             </a>
                                         <?php } else { ?>
-                                            <a id="publink<?php echo $item['id']; ?>" href="javascript:pub(<?php echo $item['id']; ?>, 'view=content&do=show&id=<?php echo $item['id']; ?>', 'view=content&do=hide&item_=<?php echo $item['id']; ?>', 'on', 'off');" title="Показать">
+                                            <a id="publink<?php echo $item['id']; ?>" href="javascript:pub(<?php echo $item['id']; ?>, 'view=content&do=show&id=<?php echo $item['id']; ?>', 'view=content&do=hide&item_=<?php echo $item['id']; ?>', 'on', 'off');" title="РџРѕРєР°Р·Р°С‚СЊ">
                                                 <img id="pub<?php echo $item['id']; ?>" border="0" src="images/actions/off.gif"/>
                                             </a>
                                         <?php } ?>                                        
@@ -154,23 +154,23 @@
                                                 $display_move_down  = ($num<sizeof($items)-1) ? 'inline' : 'none';
                                                 $display_move_up    = ($num>0) ? 'inline' : 'none';
                                             ?>
-                                            <a class="move_item_down" href="javascript:void(0)" onclick="moveItem(<?php echo $item['id']; ?>, 1)" title="Подвинуть ниже" style="float:left;display:<?php echo $display_move_down; ?>"><img src="images/actions/down.gif" border="0"/></a>
-                                            <a class="move_item_up" href="javascript:void(0)" onclick="moveItem(<?php echo $item['id']; ?>, -1)" title="Подвинуть выше" style="float:right;display:<?php echo $display_move_up; ?>"><img src="images/actions/top.gif" border="0"/></a>
+                                            <a class="move_item_down" href="javascript:void(0)" onclick="moveItem(<?php echo $item['id']; ?>, 1)" title="РџРѕРґРІРёРЅСѓС‚СЊ РЅРёР¶Рµ" style="float:left;display:<?php echo $display_move_down; ?>"><img src="images/actions/down.gif" border="0"/></a>
+                                            <a class="move_item_up" href="javascript:void(0)" onclick="moveItem(<?php echo $item['id']; ?>, -1)" title="РџРѕРґРІРёРЅСѓС‚СЊ РІС‹С€Рµ" style="float:right;display:<?php echo $display_move_up; ?>"><img src="images/actions/top.gif" border="0"/></a>
                                         </td>
                                     <?php } ?>
                                     <td align="right">
                                         <div style="padding-right: 8px;">
-                                            <a title="Посмотреть на сайте" href="/<?php echo $item['seolink'];?>.html">
-                                                <img border="0" hspace="2" alt="Посмотреть на сайте" src="images/actions/search.gif"/>
+                                            <a title="РџРѕСЃРјРѕС‚СЂРµС‚СЊ РЅР° СЃР°Р№С‚Рµ" href="/<?php echo $item['seolink'];?>.html">
+                                                <img border="0" hspace="2" alt="РџРѕСЃРјРѕС‚СЂРµС‚СЊ РЅР° СЃР°Р№С‚Рµ" src="images/actions/search.gif"/>
                                             </a>
-                                            <a title="Редактировать" href="?view=content&do=edit&id=<?php echo $item['id']; ?>">
-                                                <img border="0" hspace="2" alt="Редактировать" src="images/actions/edit.gif"/>
+                                            <a title="Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ" href="?view=content&do=edit&id=<?php echo $item['id']; ?>">
+                                                <img border="0" hspace="2" alt="Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ" src="images/actions/edit.gif"/>
                                             </a>
-                                            <a title="В архив" href="?view=content&do=arhive_on&id=<?php echo $item['id']; ?>">
-                                                <img border="0" hspace="2" alt="В архив" src="images/actions/arhive_on.gif">
+                                            <a title="Р’ Р°СЂС…РёРІ" href="?view=content&do=arhive_on&id=<?php echo $item['id']; ?>">
+                                                <img border="0" hspace="2" alt="Р’ Р°СЂС…РёРІ" src="images/actions/arhive_on.gif">
                                             </a>
-                                            <a title="Удалить" onclick="jsmsg('Удалить <?php echo $item['title']; ?>?', '?view=content&do=delete&id=<?php echo $item['id']; ?>')" href="#">
-                                                <img border="0" hspace="2" alt="Удалить" src="images/actions/delete.gif"/>
+                                            <a title="РЈРґР°Р»РёС‚СЊ" onclick="jsmsg('РЈРґР°Р»РёС‚СЊ <?php echo $item['title']; ?>?', '?view=content&do=delete&id=<?php echo $item['id']; ?>')" href="#">
+                                                <img border="0" hspace="2" alt="РЈРґР°Р»РёС‚СЊ" src="images/actions/delete.gif"/>
                                             </a>
                                         </div>
                                     </td>
@@ -179,7 +179,7 @@
                         </tbody>
                     <?php } else { ?>
                         <tbody>
-                            <td colspan="7" style="padding-left:5px"><div style="padding:15px;padding-left:0px">Статьи не найдены</div></td>
+                            <td colspan="7" style="padding-left:5px"><div style="padding:15px;padding-left:0px">РЎС‚Р°С‚СЊРё РЅРµ РЅР°Р№РґРµРЅС‹</div></td>
                         </tbody>
                     <?php } ?>
                 </table>
@@ -189,33 +189,33 @@
                         <table class="" cellpadding="5" border="0" height="40">
                             <tr>
                                 <td width="">
-                                   <strong style="color:#09C">Отмеченные:</strong>
+                                   <strong style="color:#09C">РћС‚РјРµС‡РµРЅРЅС‹Рµ:</strong>
                                 </td>
                                 <td width="" class="sel_pub">
-                                    <input type="button" name="" value="Редактировать" onclick="sendContentForm('edit');" />
-                                    <input type="button" name="" value="Перенести" onclick="$('.sel_move').toggle();$('.sel_pub').toggle();" />
+                                    <input type="button" name="" value="Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ" onclick="sendContentForm('edit');" />
+                                    <input type="button" name="" value="РџРµСЂРµРЅРµСЃС‚Рё" onclick="$('.sel_move').toggle();$('.sel_pub').toggle();" />
                                 </td>
                                 <td class="sel_move" style="display:none">
-                                    Перенести в раздел
+                                    РџРµСЂРµРЅРµСЃС‚Рё РІ СЂР°Р·РґРµР»
                                 </td>
                                 <td class="sel_move" style="display:none">
                                     <select id="move_cat_id" style="width:250px">
-                                        <option value="1">Корневой раздел</option>
+                                        <option value="1">РљРѕСЂРЅРµРІРѕР№ СЂР°Р·РґРµР»</option>
                                         <?php
                                            echo $inCore->getListItemsNS('cms_category', $category_id);
                                         ?>
                                     </select>
                                 </td>
                                 <td class="sel_move" style="display:none">
-                                    <input type="button" name="" value="ОК" onclick="sendContentForm('move_to_cat', $('select#move_cat_id').val(), <?php echo $category_id; ?>);" />
-                                    <input type="button" name="" value="Отмена" onclick="$('td.sel_move').toggle();$('td.sel_pub').toggle();" />
+                                    <input type="button" name="" value="РћРљ" onclick="sendContentForm('move_to_cat', $('select#move_cat_id').val(), <?php echo $category_id; ?>);" />
+                                    <input type="button" name="" value="РћС‚РјРµРЅР°" onclick="$('td.sel_move').toggle();$('td.sel_pub').toggle();" />
                                 </td>
                                 <td class="sel_pub">
-                                    <input type="button" name="" value="Показать" onclick="sendContentForm('show');" />
-                                    <input type="button" name="" value="Скрыть" onclick="sendContentForm('hide');" />
+                                    <input type="button" name="" value="РџРѕРєР°Р·Р°С‚СЊ" onclick="sendContentForm('show');" />
+                                    <input type="button" name="" value="РЎРєСЂС‹С‚СЊ" onclick="sendContentForm('hide');" />
                                 </td>
                                 <td class="sel_pub">
-                                    <input type="button" name="" value="Удалить" onclick="sendContentForm('delete');" />
+                                    <input type="button" name="" value="РЈРґР°Р»РёС‚СЊ" onclick="sendContentForm('delete');" />
                                 </td>
                             </tr>
                         </table>

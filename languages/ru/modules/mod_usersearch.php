@@ -18,14 +18,14 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * site: firs.org.ua
  */
 // templates
-$_LANG['USERSEARCH_FIND']          ='Íàéòè';
-$_LANG['USERSEARCH_FEMALE']        ='æåíùèí';
-$_LANG['USERSEARCH_MALE']          ='ìóæ÷èí';
-$_LANG['USERSEARCH_ALL']           ='âñåõ';
-$_LANG['USERSEARCH_FROM']          ='îò';
-$_LANG['USERSEARCH_TO']            ='äî';
-$_LANG['USERSEARCH_YEARS']         ='ëåò';
-$_LANG['USERSEARCH_NAME']          ='èìÿ';
-$_LANG['USERSEARCH_CITY']          ='ãîðîä';
-$_LANG['USERSEARCH_HOBBY']         ='èíòåðåñû';
+$_LANG['USERSEARCH_FIND']          ='ÐÐ°Ð¹Ñ‚Ð¸';
+$_LANG['USERSEARCH_FEMALE']        ='Ð¶ÐµÐ½Ñ‰Ð¸Ð½';
+$_LANG['USERSEARCH_MALE']          ='Ð¼ÑƒÐ¶Ñ‡Ð¸Ð½';
+$_LANG['USERSEARCH_ALL']           ='Ð²ÑÐµÑ…';
+$_LANG['USERSEARCH_FROM']          ='Ð¾Ñ‚';
+$_LANG['USERSEARCH_TO']            ='Ð´Ð¾';
+$_LANG['USERSEARCH_YEARS']         ='Ð»ÐµÑ‚';
+$_LANG['USERSEARCH_NAME']          ='Ð¸Ð¼Ñ';
+$_LANG['USERSEARCH_CITY']          ='Ð³Ð¾Ñ€Ð¾Ð´';
+$_LANG['USERSEARCH_HOBBY']         ='Ð¸Ð½Ñ‚ÐµÑ€ÐµÑÑ‹';
 ?>

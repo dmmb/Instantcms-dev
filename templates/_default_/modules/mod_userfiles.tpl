@@ -1,15 +1,15 @@
 {if $latest}    
-    <div style="margin-bottom:8px"><strong>Новые файлы</strong></div>
+    <div style="margin-bottom:8px"><strong>РќРѕРІС‹Рµ С„Р°Р№Р»С‹</strong></div>
 
     <table width="100%" cellpadding="0" cellspacing="2" border="0" style="margin-bottom:10px">
         {foreach key=id item=file from=$latest}
             <tr>
-                <td><a href="/users/files/download{$file.id}.html">{$file.filename}</a> - {$file.size} Мб</td>
+                <td><a href="/users/files/download{$file.id}.html">{$file.filename}</a> - {$file.size} РњР±</td>
                 <td width="35">
                     <a href="{profile_url login=$file.user_login}" title="{$file.user_nickname|escape:'html'}">
                         <img src="/images/icons/users.gif" border="0" />
                     </a> 
-                    <a href="/users/{$file.user_id}/files.html" title="Все файлы пользователя">
+                    <a href="/users/{$file.user_id}/files.html" title="Р’СЃРµ С„Р°Р№Р»С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ">
                         <img src="/images/markers/folder.png" border="0" />
                     </a>
                 </td>
@@ -19,17 +19,17 @@
 {/if}
 
 {if $popular}
-    <div style="margin-bottom:8px"><strong>Популярные файлы</strong></div>
+    <div style="margin-bottom:8px"><strong>РџРѕРїСѓР»СЏСЂРЅС‹Рµ С„Р°Р№Р»С‹</strong></div>
 
     <table width="100%" cellpadding="0" cellspacing="2" border="0" style="margin-bottom:10px">
         {foreach key=id item=file from=$popular}
             <tr>
-                <td><a href="/users/files/download{$file.id}.html">{$file.filename}</a> - {$file.size} Мб</td>
+                <td><a href="/users/files/download{$file.id}.html">{$file.filename}</a> - {$file.size} РњР±</td>
                 <td width="35">
                     <a href="{profile_url login=$file.user_login}" title="{$file.user_nickname|escape:'html'}">
                         <img src="/images/icons/users.gif" border="0" />
                     </a> 
-                    <a href="/users/{$file.user_id}/files.html" title="Все файлы пользователя">
+                    <a href="/users/{$file.user_id}/files.html" title="Р’СЃРµ С„Р°Р№Р»С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ">
                         <img src="/images/markers/folder.png" border="0" />
                     </a>
                 </td>
@@ -39,6 +39,6 @@
 {/if}
 
 {if $cfg.sw_stats}
-    <div><strong>Всего файлов:</strong> {$stats.total_files}</div>
-    <div><strong>Общий размер:</strong> {$stats.total_size} Мб</div>
+    <div><strong>Р’СЃРµРіРѕ С„Р°Р№Р»РѕРІ:</strong> {$stats.total_files}</div>
+    <div><strong>РћР±С‰РёР№ СЂР°Р·РјРµСЂ:</strong> {$stats.total_size} РњР±</div>
 {/if}

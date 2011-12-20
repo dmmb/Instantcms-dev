@@ -1,5 +1,5 @@
 {* ================================================================================ *}
-{* ======================== Написать сообщение ==================================== *}
+{* ======================== РќР°РїРёСЃР°С‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ ==================================== *}
 {* ================================================================================ *}
 
 {if $is_reply_user}
@@ -16,7 +16,7 @@
   <tr>
     <td width="200" height="200" valign="top" style="padding-right: 10px">
     <div style="background-color:#FFFFFF;padding:5px;border:solid 1px gray;text-align:center"><a href="{profile_url login=$usr.login}">{$usr.avatar}</a></div>
-      <div style="padding:5px;width:100%"> Кому: <a href="{profile_url login=$usr.login}">{$usr.nickname}</a></div></td>
+      <div style="padding:5px;width:100%"> РљРѕРјСѓ: <a href="{profile_url login=$usr.login}">{$usr.nickname}</a></div></td>
     <td valign="top"><form action="" method="POST" name="msgform">
         <div class="usr_msg_bbcodebox">{$bbcodetoolbar}</div>
         {$smilestoolbar}

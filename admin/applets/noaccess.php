@@ -17,8 +17,8 @@ function applet_noaccess(){
 
     $inCore = cmsCore::getInstance();
 
-	$GLOBALS['cp_page_title'] = 'Доступ запрещен';
- 	cpAddPathway('Доступ запрещен', 'index.php?view=noaccess');	
+	$GLOBALS['cp_page_title'] = 'Р”РѕСЃС‚СѓРї Р·Р°РїСЂРµС‰РµРЅ';
+ 	cpAddPathway('Р”РѕСЃС‚СѓРї Р·Р°РїСЂРµС‰РµРЅ', 'index.php?view=noaccess');	
 
 	if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
 	if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { $id = -1; }
@@ -26,9 +26,9 @@ function applet_noaccess(){
 		
 	if ($do == 'list'){
 
-		echo '<h3>Доступ запрещен</h3>';
-		echo '<p>Главный администратор ограничил ваш доступ в этот раздел.</p>';
-		echo '<p><a href="javascript:void(0)" onclick="window.history.go(-1)">Вернуться назад</a></p>';
+		echo '<h3>Р”РѕСЃС‚СѓРї Р·Р°РїСЂРµС‰РµРЅ</h3>';
+		echo '<p>Р“Р»Р°РІРЅС‹Р№ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ РѕРіСЂР°РЅРёС‡РёР» РІР°С€ РґРѕСЃС‚СѓРї РІ СЌС‚РѕС‚ СЂР°Р·РґРµР».</p>';
+		echo '<p><a href="javascript:void(0)" onclick="window.history.go(-1)">Р’РµСЂРЅСѓС‚СЊСЃСЏ РЅР°Р·Р°Рґ</a></p>';
 		
     }
 }

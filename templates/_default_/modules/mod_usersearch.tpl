@@ -5,32 +5,32 @@
     <table width="100%" border="0" cellspacing="0" cellpadding="4">
         <tr>
             <td valign="middle" style="text-align:center">
-                Найти
+                РќР°Р№С‚Рё
                 <select name="gender" id="gender" style="width:150px">
-                    <option value="f">женщин</option>
-                    <option value="m">мужчин</option>
-                    <option value="0" selected>всех</option>
+                    <option value="f">Р¶РµРЅС‰РёРЅ</option>
+                    <option value="m">РјСѓР¶С‡РёРЅ</option>
+                    <option value="0" selected>РІСЃРµС…</option>
                 </select>
             </td>
         </tr>
         <tr>
             <td style="text-align:center">
-                от
+                РѕС‚
                 <input style="text-align:center;width:56px" name="agefrom" type="text" id="agefrom" value="18"/>
-                до
+                РґРѕ
                 <input style="text-align:center;width:56px" name="ageto" type="text" id="ageto" value=""/>
-                лет
+                Р»РµС‚
             </td>
         </tr>
         <tr>
             <td style="text-align:center">
-                имя 
+                РёРјСЏ 
                 <input style="text-align:center;width:158px" id="name" name="name" type="text" value=""/>
             </td>
         </tr>
         <tr>
             <td style="text-align:center">
-                город 
+                РіРѕСЂРѕРґ 
                 <input style="text-align:center;width:150px" id="city" name="city" type="text" value=""/>
                 <script type="text/javascript">
                     {$autocomplete_js}
@@ -39,13 +39,13 @@
         </tr>
         <tr>
             <td style="text-align:center">
-                интересы 
+                РёРЅС‚РµСЂРµСЃС‹ 
                 <input style="text-align:center;width:128px" id="hobby" name="hobby" type="text" value=""/>
             </td>
         </tr>
         <tr>
             <td align="center">
-                <input name="gosearch" type="submit" id="gosearch" value="Найти!" />
+                <input name="gosearch" type="submit" id="gosearch" value="РќР°Р№С‚Рё!" />
             </td>
         </tr>
     </table>

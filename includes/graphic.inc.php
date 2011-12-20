@@ -26,7 +26,7 @@ function img_add_watermark($src){
 
   img_watermark($isrc, $size[0], $size[1]);
   
-   // вывод картинки и очистка памяти
+   // РІС‹РІРѕРґ РєР°СЂС‚РёРЅРєРё Рё РѕС‡РёСЃС‚РєР° РїР°РјСЏС‚Рё
   imagejpeg($isrc,$src,80); 
 
 }
@@ -56,14 +56,14 @@ function img_watermark(&$img, $w, $h){
 }
 
 /***********************************************************************************
-Функция img_resize(): генерация thumbnails
-Параметры:
-  $src             - имя исходного файла
-  $dest            - имя генерируемого файла
-  $width, $height  - ширина и высота генерируемого изображения, в пикселях
-Необязательные параметры:
-  $rgb             - цвет фона, по умолчанию - белый
-  $quality         - качество генерируемого JPEG, по умолчанию - максимальное (100)
+Р¤СѓРЅРєС†РёСЏ img_resize(): РіРµРЅРµСЂР°С†РёСЏ thumbnails
+РџР°СЂР°РјРµС‚СЂС‹:
+  $src             - РёРјСЏ РёСЃС…РѕРґРЅРѕРіРѕ С„Р°Р№Р»Р°
+  $dest            - РёРјСЏ РіРµРЅРµСЂРёСЂСѓРµРјРѕРіРѕ С„Р°Р№Р»Р°
+  $width, $height  - С€РёСЂРёРЅР° Рё РІС‹СЃРѕС‚Р° РіРµРЅРµСЂРёСЂСѓРµРјРѕРіРѕ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ, РІ РїРёРєСЃРµР»СЏС…
+РќРµРѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹:
+  $rgb             - С†РІРµС‚ С„РѕРЅР°, РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - Р±РµР»С‹Р№
+  $quality         - РєР°С‡РµСЃС‚РІРѕ РіРµРЅРµСЂРёСЂСѓРµРјРѕРіРѕ JPEG, РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ (100)
 ***********************************************************************************/
 function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $watermark=false, $rgb=0xFFFFFF, $quality=80)
 {
@@ -84,9 +84,9 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $w
       return true;
   }
 
-  // Определяем исходный формат по MIME-информации, предоставленной
-  // функцией getimagesize, и выбираем соответствующую формату
-  // imagecreatefrom-функцию.
+  // РћРїСЂРµРґРµР»СЏРµРј РёСЃС…РѕРґРЅС‹Р№ С„РѕСЂРјР°С‚ РїРѕ MIME-РёРЅС„РѕСЂРјР°С†РёРё, РїСЂРµРґРѕСЃС‚Р°РІР»РµРЅРЅРѕР№
+  // С„СѓРЅРєС†РёРµР№ getimagesize, Рё РІС‹Р±РёСЂР°РµРј СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰СѓСЋ С„РѕСЂРјР°С‚Сѓ
+  // imagecreatefrom-С„СѓРЅРєС†РёСЋ.
   $format = strtolower(substr($size['mime'], strpos($size['mime'], '/')+1));
   $icfunc = "imagecreatefrom" . $format;
   if (!function_exists($icfunc)) return false;
@@ -96,13 +96,13 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $w
   if($is_square){
 	  $idest = imagecreatetruecolor($maxwidth,$maxwidth);
 	  imagefill($idest, 0, 0, $rgb);	   
-	  // вырезаем квадратную серединку по x, если фото горизонтальное
+	  // РІС‹СЂРµР·Р°РµРј РєРІР°РґСЂР°С‚РЅСѓСЋ СЃРµСЂРµРґРёРЅРєСѓ РїРѕ x, РµСЃР»Рё С„РѕС‚Рѕ РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅРѕРµ
 	  if ($new_width>$new_height)
 	  imagecopyresampled($idest, $isrc, 0, 0, round((max($new_width,$new_height)-min($new_width,$new_height))/2), 0, $maxwidth, $maxwidth, min($new_width,$new_height), min($new_width,$new_height));	
-	  // вырезаем квадратную верхушку по y,
+	  // РІС‹СЂРµР·Р°РµРј РєРІР°РґСЂР°С‚РЅСѓСЋ РІРµСЂС…СѓС€РєСѓ РїРѕ y,
 	  if ($new_width<$new_height)
 	  imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxwidth, min($new_width,$new_height), min($new_width,$new_height));
-	  // квадратная картинка масштабируется без вырезок
+	  // РєРІР°РґСЂР°С‚РЅР°СЏ РєР°СЂС‚РёРЅРєР° РјР°СЃС€С‚Р°Р±РёСЂСѓРµС‚СЃСЏ Р±РµР· РІС‹СЂРµР·РѕРє
 	  if ($new_width==$new_height)
 	   imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxwidth, $new_width, $new_width);
   } else {
@@ -118,7 +118,7 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $w
 
   imageinterlace($idest,1);
 
-  // вывод картинки и очистка памяти
+  // РІС‹РІРѕРґ РєР°СЂС‚РёРЅРєРё Рё РѕС‡РёСЃС‚РєР° РїР°РјСЏС‚Рё
   imagejpeg($idest,$dest,$quality);
 
   imagedestroy($isrc);

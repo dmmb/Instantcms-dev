@@ -44,8 +44,8 @@ function cpPriceInput($id){
     define('IS_BILLING', $inCore->isComponentInstalled('billing'));
     if (IS_BILLING) { $inCore->loadClass('billing'); }
 
-	cpAddPathway('Универсальный каталог', '?view=components&do=config&id='.$_REQUEST['id']);
-    echo '<h3>Универсальный каталог</h3>';
+	cpAddPathway('РЈРЅРёРІРµСЂСЃР°Р»СЊРЅС‹Р№ РєР°С‚Р°Р»РѕРі', '?view=components&do=config&id='.$_REQUEST['id']);
+    echo '<h3>РЈРЅРёРІРµСЂСЃР°Р»СЊРЅС‹Р№ РєР°С‚Р°Р»РѕРі</h3>';
 
     $GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/admin/components/catalog/js/common.js"></script>';
 
@@ -57,35 +57,35 @@ function cpPriceInput($id){
 	if ($opt=='list_items' || $opt=='list_cats' || $opt=='list_discount'){
 
         $toolmenu[0]['icon'] = 'newfolder.gif';
-        $toolmenu[0]['title'] = 'Новая рубрика';
+        $toolmenu[0]['title'] = 'РќРѕРІР°СЏ СЂСѓР±СЂРёРєР°';
         $toolmenu[0]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_cat';
 
         $toolmenu[1]['icon'] = 'newstuff.gif';
-        $toolmenu[1]['title'] = 'Новая запись';
+        $toolmenu[1]['title'] = 'РќРѕРІР°СЏ Р·Р°РїРёСЃСЊ';
         $toolmenu[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_item';
 
         $toolmenu[2]['icon'] = 'newdiscount.gif';
-        $toolmenu[2]['title'] = 'Новый коэффициент';
+        $toolmenu[2]['title'] = 'РќРѕРІС‹Р№ РєРѕСЌС„С„РёС†РёРµРЅС‚';
         $toolmenu[2]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_discount';
 
         $toolmenu[3]['icon'] = 'folders.gif';
-        $toolmenu[3]['title'] = 'Все рубрики';
+        $toolmenu[3]['title'] = 'Р’СЃРµ СЂСѓР±СЂРёРєРё';
         $toolmenu[3]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats';
 
         $toolmenu[4]['icon'] = 'liststuff.gif';
-        $toolmenu[4]['title'] = 'Все записи';
+        $toolmenu[4]['title'] = 'Р’СЃРµ Р·Р°РїРёСЃРё';
         $toolmenu[4]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items';
 
         $toolmenu[5]['icon'] = 'listdiscount.gif';
-        $toolmenu[5]['title'] = 'Все коэффициенты';
+        $toolmenu[5]['title'] = 'Р’СЃРµ РєРѕСЌС„С„РёС†РёРµРЅС‚С‹';
         $toolmenu[5]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_discount';
 
         $toolmenu[6]['icon'] = 'excel.gif';
-        $toolmenu[6]['title'] = 'Импорт записей из MS Excel';
+        $toolmenu[6]['title'] = 'РРјРїРѕСЂС‚ Р·Р°РїРёСЃРµР№ РёР· MS Excel';
         $toolmenu[6]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=import_xls';
 
         $toolmenu[7]['icon'] = 'config.gif';
-        $toolmenu[7]['title'] = 'Настройки';
+        $toolmenu[7]['title'] = 'РќР°СЃС‚СЂРѕР№РєРё';
         $toolmenu[7]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config';
 
 	}
@@ -95,19 +95,19 @@ function cpPriceInput($id){
 
 	if($opt == 'list_items'){
 		$toolmenu[11]['icon'] = 'edit.gif';
-		$toolmenu[11]['title'] = 'Редактировать выбранные';
+		$toolmenu[11]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[11]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=edit_item&multiple=1');";
 
 		$toolmenu[12]['icon'] = 'show.gif';
-		$toolmenu[12]['title'] = 'Публиковать выбранные';
+		$toolmenu[12]['title'] = 'РџСѓР±Р»РёРєРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=show_item&multiple=1');";
 
 		$toolmenu[13]['icon'] = 'hide.gif';
-		$toolmenu[13]['title'] = 'Скрыть выбранные';
+		$toolmenu[13]['title'] = 'РЎРєСЂС‹С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=hide_item&multiple=1');";
 
 		$toolmenu[16]['icon'] = 'saveprices.gif';
-		$toolmenu[16]['title'] = 'Сохранить цены';
+		$toolmenu[16]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ С†РµРЅС‹';
 		$toolmenu[16]['link'] = "javascript:sendForm('index.php?view=components&do=config&id=".$_REQUEST['id']."&opt=saveprices');";	
 	}
 
@@ -118,11 +118,11 @@ function cpPriceInput($id){
 	} else {
 	
 		$toolmenu[20]['icon'] = 'save.gif';
-		$toolmenu[20]['title'] = 'Сохранить';
+		$toolmenu[20]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 		$toolmenu[20]['link'] = 'javascript:document.addform.submit();';
 
 		$toolmenu[21]['icon'] = 'cancel.gif';
-		$toolmenu[21]['title'] = 'Отмена';
+		$toolmenu[21]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[21]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'];
 	
 	}
@@ -162,7 +162,7 @@ function cpPriceInput($id){
 			if (@move_uploaded_file($tmp_name, PATH."/images/catalog/$imgfile")){
 				@img_resize(PATH."/images/catalog/$imgfile", PATH."/images/catalog/small/$imgfile.jpg", 100, 100);
 				@img_resize(PATH."/images/catalog/$imgfile", PATH."/images/catalog/medium/$imgfile.jpg", 250, 250);
-			} else { $msg .= 'Ошибка загрузки изображения!'; }
+			} else { $msg .= 'РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ!'; }
 		} else { $imgfile = ''; }
 
         //process import
@@ -203,7 +203,7 @@ function cpPriceInput($id){
                     if ($title && $fields){
                         $sql = "INSERT INTO cms_uc_items (category_id, title, pubdate, published, imageurl, fieldsdata, is_comments, tags, rating, meta_desc, meta_keys, price, canmany)
                                 VALUES ($cat_id, '$title', NOW(), '$published', '$imgfile', '$fields', $is_comments, '$tags', 0, '$meta_desc', '$meta_keys', '$price', $canmany)";
-                        dbQuery($sql) or die('Ошибка импорта. Проверьте правильность настроек. <a href="javascript:window.history.go(-2)">Назад</a>');
+                        dbQuery($sql) or die('РћС€РёР±РєР° РёРјРїРѕСЂС‚Р°. РџСЂРѕРІРµСЂСЊС‚Рµ РїСЂР°РІРёР»СЊРЅРѕСЃС‚СЊ РЅР°СЃС‚СЂРѕРµРє. <a href="javascript:window.history.go(-2)">РќР°Р·Р°Рґ</a>');
 
                         if ($tags){
                             $lastid = dbLastId('cms_uc_items');
@@ -214,7 +214,7 @@ function cpPriceInput($id){
 
                 if ($file) @unlink($file);
 
-			} else { $msg .= 'Ошибка загрузки файла Excel!'; }
+			} else { $msg .= 'РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё С„Р°Р№Р»Р° Excel!'; }
 		} else { $file = ''; }
 
 		header('location:?view=components&do=config&opt=list_items&id='.$_REQUEST['id']);
@@ -418,7 +418,7 @@ function cpPriceInput($id){
                     @chmod(PATH."/images/catalog/$file", 0644);
                     @chmod(PATH."/images/catalog/small/$file.jpg", 0644);
                     @chmod(PATH."/images/catalog/medium/$file.jpg", 0644);
-				} else { $msg = 'Ошибка загрузки изображения!'; }				
+				} else { $msg = 'РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ!'; }				
 			}					
 
 			$model->updateItem($id, $item);
@@ -653,40 +653,40 @@ function cpPriceInput($id){
 
 	if ($opt == 'list_cats'){
 
-        cpAddPathway('Рубрики каталога', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
-		echo '<h3>Рубрики каталога</h3>';
+        cpAddPathway('Р СѓР±СЂРёРєРё РєР°С‚Р°Р»РѕРіР°', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
+		echo '<h3>Р СѓР±СЂРёРєРё РєР°С‚Р°Р»РѕРіР°</h3>';
 
 		//TABLE COLUMNS
 		$fields = array();
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
+		$fields[1]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
 		$fields[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id=%id%';
 
-		$fields[3]['title'] = 'Родитель';	$fields[3]['field'] = 'parent_id';	$fields[3]['width'] = '200';
+		$fields[3]['title'] = 'Р РѕРґРёС‚РµР»СЊ';	$fields[3]['field'] = 'parent_id';	$fields[3]['width'] = '200';
 		$fields[3]['prc'] = 'cpCatalogCatById';
 
-		$fields[4]['title'] = 'Показ';		$fields[4]['field'] = 'published';	$fields[4]['width'] = '100';
+		$fields[4]['title'] = 'РџРѕРєР°Р·';		$fields[4]['field'] = 'published';	$fields[4]['width'] = '100';
 		$fields[4]['do'] = 'opt'; $fields[4]['do_suffix'] = '_cat';
 
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Просмотр содержимого';
+		$actions[0]['title'] = 'РџСЂРѕСЃРјРѕС‚СЂ СЃРѕРґРµСЂР¶РёРјРѕРіРѕ';
 		$actions[0]['icon']  = 'explore.gif';
 		$actions[0]['link']  = 'javascript:openCat(%id%)';
 
-		$actions[1]['title'] = 'Редактировать';
+		$actions[1]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[1]['icon']  = 'edit.gif';
 		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id=%id%';
 
-		$actions[2]['title'] = 'Копировать';
+		$actions[2]['title'] = 'РљРѕРїРёСЂРѕРІР°С‚СЊ';
 		$actions[2]['icon']  = 'copy.gif';
 		$actions[2]['link']  = "javascript:copyCat(".$_REQUEST['id'].", %id%);";
 
-		$actions[3]['title'] = 'Удалить';
+		$actions[3]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[3]['icon']  = 'delete.gif';
-		$actions[3]['confirm'] = 'Удалить рубрику из каталога?';
+		$actions[3]['confirm'] = 'РЈРґР°Р»РёС‚СЊ СЂСѓР±СЂРёРєСѓ РёР· РєР°С‚Р°Р»РѕРіР°?';
 		$actions[3]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete_cat&item_id=%id%';
 				
 		//Print table
@@ -703,12 +703,12 @@ function cpPriceInput($id){
 	if ($opt == 'list_items'){
 		$GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/admin/components/catalog/js/common.js"></script>';
 	
-		cpAddPathway('Записи', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
+		cpAddPathway('Р—Р°РїРёСЃРё', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
 
         if ($inCore->inRequest('on_moderate')){
-            echo '<h3>Записи на модерацию</h3>';
+            echo '<h3>Р—Р°РїРёСЃРё РЅР° РјРѕРґРµСЂР°С†РёСЋ</h3>';
         } else {
-            echo '<h3>Записи</h3>';
+            echo '<h3>Р—Р°РїРёСЃРё</h3>';
         }
 		
 		//TABLE COLUMNS
@@ -716,7 +716,7 @@ function cpPriceInput($id){
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
+		$fields[1]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
 
         if ($inCore->inRequest('on_moderate')){
             $fields[1]['link'] = '/catalog/item%id%.html';
@@ -726,32 +726,32 @@ function cpPriceInput($id){
 
 		$fields[1]['filter'] = 15;
 		
-		$fields[2]['title'] = 'Показ';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
+		$fields[2]['title'] = 'РџРѕРєР°Р·';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
 		$fields[2]['do'] = 'opt'; $fields[2]['do_suffix'] = '_item';
 		
-		$fields[3]['title'] = 'Рубрика';	$fields[3]['field'] = 'category_id';$fields[3]['width'] = '200';
+		$fields[3]['title'] = 'Р СѓР±СЂРёРєР°';	$fields[3]['field'] = 'category_id';$fields[3]['width'] = '200';
 		$fields[3]['prc'] = 'cpCatalogCatById';  $fields[3]['filter'] = 1;  $fields[3]['filterlist'] = cpGetList('cms_uc_cats');
 
-		$fields[4]['title'] = 'Цена';		$fields[4]['field'] = 'id';	$fields[4]['width'] = '150';
+		$fields[4]['title'] = 'Р¦РµРЅР°';		$fields[4]['field'] = 'id';	$fields[4]['width'] = '150';
 		$fields[4]['prc'] = 'cpPriceInput';
 		
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Обновить дату';
+		$actions[0]['title'] = 'РћР±РЅРѕРІРёС‚СЊ РґР°С‚Сѓ';
 		$actions[0]['icon']  = 'date.gif';
 		$actions[0]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=renew_item&item_id=%id%';
 
-		$actions[1]['title'] = 'Редактировать';
+		$actions[1]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[1]['icon']  = 'edit.gif';
 		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
 
-		$actions[2]['title'] = 'Копировать';
+		$actions[2]['title'] = 'РљРѕРїРёСЂРѕРІР°С‚СЊ';
 		$actions[2]['icon']  = 'copy.gif';
 		$actions[2]['link']  = "javascript:copyItem(".$_REQUEST['id'].", %id%);";
 
-		$actions[3]['title'] = 'Удалить';
+		$actions[3]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[3]['icon']  = 'delete.gif';
-		$actions[3]['confirm'] = 'Удалить запись из каталога?';
+		$actions[3]['confirm'] = 'РЈРґР°Р»РёС‚СЊ Р·Р°РїРёСЃСЊ РёР· РєР°С‚Р°Р»РѕРіР°?';
 		$actions[3]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete_item&item_id=%id%';
 
         if ($inCore->inRequest('on_moderate')){ $where = 'on_moderate=1'; } else { $where = ''; }
@@ -765,37 +765,37 @@ function cpPriceInput($id){
 
     if ($opt == 'list_discount'){
 
-        cpAddPathway('Коэффициенты', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_discount');
-		echo '<h3>Коэффициенты</h3>';
+        cpAddPathway('РљРѕСЌС„С„РёС†РёРµРЅС‚С‹', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_discount');
+		echo '<h3>РљРѕСЌС„С„РёС†РёРµРЅС‚С‹</h3>';
 
 		//TABLE COLUMNS
 		$fields = array();
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
+		$fields[1]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
 		$fields[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_discount&item_id=%id%';
 
-		$fields[3]['title'] = 'Категория';	$fields[3]['field'] = 'cat_id';     $fields[3]['width'] = '200';
+		$fields[3]['title'] = 'РљР°С‚РµРіРѕСЂРёСЏ';	$fields[3]['field'] = 'cat_id';     $fields[3]['width'] = '200';
 		$fields[3]['prc'] = 'cpCatalogCatById';
 
-		$fields[4]['title'] = 'Тип';       $fields[4]['field'] = 'sign';		$fields[4]['width'] = '40';
+		$fields[4]['title'] = 'РўРёРї';       $fields[4]['field'] = 'sign';		$fields[4]['width'] = '40';
 
-        $fields[5]['title'] = 'Размер';     $fields[5]['field'] = 'value';      $fields[5]['width'] = '80';
+        $fields[5]['title'] = 'Р Р°Р·РјРµСЂ';     $fields[5]['field'] = 'value';      $fields[5]['width'] = '80';
 
-        $fields[6]['title'] = 'Единицы';        $fields[6]['field'] = 'unit';       $fields[6]['width'] = '80';
+        $fields[6]['title'] = 'Р•РґРёРЅРёС†С‹';        $fields[6]['field'] = 'unit';       $fields[6]['width'] = '80';
 
-        $fields[7]['title'] = 'Лимит';     $fields[7]['field'] = 'if_limit';      $fields[7]['width'] = '80';
+        $fields[7]['title'] = 'Р›РёРјРёС‚';     $fields[7]['field'] = 'if_limit';      $fields[7]['width'] = '80';
 
 		//ACTIONS
 		$actions = array();
-		$actions[1]['title'] = 'Редактировать';
+		$actions[1]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[1]['icon']  = 'edit.gif';
 		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_discount&item_id=%id%';
 
-        $actions[3]['title'] = 'Удалить';
+        $actions[3]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[3]['icon']  = 'delete.gif';
-		$actions[3]['confirm'] = 'Удалить коэффициент?';
+		$actions[3]['confirm'] = 'РЈРґР°Р»РёС‚СЊ РєРѕСЌС„С„РёС†РёРµРЅС‚?';
 		$actions[3]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete_discount&item_id=%id%';
 
 		//Print table
@@ -833,14 +833,14 @@ function cpPriceInput($id){
 	   	$inCore->includeFile('includes/jwtabs.php');
 		$GLOBALS['cp_page_head'][] = jwHeader();
 		if ($opt=='add_item'){
-            echo '<h3>Добавить запись</h3>';
-            cpAddPathway('Добавить запись', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_item');
+            echo '<h3>Р”РѕР±Р°РІРёС‚СЊ Р·Р°РїРёСЃСЊ</h3>';
+            cpAddPathway('Р”РѕР±Р°РІРёС‚СЊ Р·Р°РїРёСЃСЊ', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_item');
 		} else {
                      if(isset($_REQUEST['multiple'])){
                         if (isset($_REQUEST['item'])){
                             $_SESSION['editlist'] = $_REQUEST['item'];
                         } else {
-                            echo '<p class="error">Нет выбранных объектов!</p>';
+                            echo '<p class="error">РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ!</p>';
                             return;
                         }
                      }
@@ -850,7 +850,7 @@ function cpPriceInput($id){
                      if (isset($_SESSION['editlist'])){
                         $id = array_shift($_SESSION['editlist']);
                         if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else
-                        { $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
+                        { $ostatok = '(РќР° РѕС‡РµСЂРµРґРё: '.sizeof($_SESSION['editlist']).')'; }
                      } else { $id = $_REQUEST['item_id']; }
 
 
@@ -866,7 +866,7 @@ function cpPriceInput($id){
 
 
                      echo '<h3>'.$mod['title'].' '.$ostatok.'</h3>';
-                     cpAddPathway('Записи', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
+                     cpAddPathway('Р—Р°РїРёСЃРё', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
                      cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_item&item_id='.$id);
 			}
 
@@ -902,13 +902,13 @@ function cpPriceInput($id){
             <table class="proptable" width="100%" cellpadding="15" cellspacing="2">
                 <tr>
 
-                    <!-- главная ячейка -->
+                    <!-- РіР»Р°РІРЅР°СЏ СЏС‡РµР№РєР° -->
                     <td valign="top">
 
                         <table width="100%" cellpadding="0" cellspacing="0" border="0">
                             <tr>
                                 <td valign="top">
-                                    <div><strong>Название записи</strong></div>
+                                    <div><strong>РќР°Р·РІР°РЅРёРµ Р·Р°РїРёСЃРё</strong></div>
                                     <div>
                                         <table width="100%" cellpadding="0" cellspacing="0" border="0">
                                             <tr>
@@ -918,7 +918,7 @@ function cpPriceInput($id){
                                     </div>
                                 </td>
                                 <td width="135" valign="top">
-                                    <div><strong>Дата публикации</strong></div>
+                                    <div><strong>Р”Р°С‚Р° РїСѓР±Р»РёРєР°С†РёРё</strong></div>
                                     <div>
                                         <input name="pubdate" type="text" id="pubdate" style="width:100px" <?php if(@!$mod['pubdate']) { echo 'value="'.date('Y-m-d').'"'; } else { echo 'value="'.$mod['pubdate'].'"'; } ?>/>
                                         <?php
@@ -938,7 +938,7 @@ function cpPriceInput($id){
                                 </td>
                                 <?php if ($is_shop){ ?>
                                 <td width="130" valign="top">
-                                    <div><strong>Цена</strong></div>
+                                    <div><strong>Р¦РµРЅР°</strong></div>
                                     <div>
                                         <input name="price" type="text" id="price" style="width:125px" value="<?php echo @$mod['price'];?>"/>
                                     </div>
@@ -959,7 +959,7 @@ function cpPriceInput($id){
                         ?>
                         <div>
                             <strong><?php echo stripslashes($value); ?></strong>
-                            <?php if ($makelink) { echo ' <span class="hinttext" style="float:right">Через запятую, если несколько</span>'; } ?>
+                            <?php if ($makelink) { echo ' <span class="hinttext" style="float:right">Р§РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ, РµСЃР»Рё РЅРµСЃРєРѕР»СЊРєРѕ</span>'; } ?>
                         </div>
                         <div>
                             <?php if ($ftype=='link' || $ftype == 'text') { ?>
@@ -973,43 +973,43 @@ function cpPriceInput($id){
                         </div>
                         <?php } ?>
 
-                        <div><strong>Теги записи</strong></div>
+                        <div><strong>РўРµРіРё Р·Р°РїРёСЃРё</strong></div>
                         <div><input name="tags" type="text" id="tags" style="width:99%" value="<?php if (isset($mod['id'])) { echo cmsTagLine('catalog', $mod['id'], false); } ?>" /></div>
 
                         <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
                             <?php if ($is_shop) { ?>
                             <tr>
                                 <td width="20"><input type="checkbox" name="canmany" id="canmany" value="1" <?php if (@$mod['canmany']) { echo 'checked="checked"'; } ?>/> </td>
-                                <td><label for="canmany"><strong>Разрешить выбор количества при заказе этого товара</strong></label></td>
+                                <td><label for="canmany"><strong>Р Р°Р·СЂРµС€РёС‚СЊ РІС‹Р±РѕСЂ РєРѕР»РёС‡РµСЃС‚РІР° РїСЂРё Р·Р°РєР°Р·Рµ СЌС‚РѕРіРѕ С‚РѕРІР°СЂР°</strong></label></td>
                             </tr>
                             <?php } ?>
                         </table>
 
                     </td>
 
-                    <!-- боковая ячейка -->
+                    <!-- Р±РѕРєРѕРІР°СЏ СЏС‡РµР№РєР° -->
                     <td width="300" valign="top" style="background:#ECECEC;">
 
                         <?php ob_start(); ?>
 
-                        {tab=Публикация}
+                        {tab=РџСѓР±Р»РёРєР°С†РёСЏ}
 
                         <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
                             <tr>
                                 <td width="20"><input type="checkbox" name="published" id="published" value="1" <?php if ($mod['published'] || $do=='add') { echo 'checked="checked"'; } ?>/></td>
-                                <td><label for="published"><strong>Публиковать запись</strong></label></td>
+                                <td><label for="published"><strong>РџСѓР±Р»РёРєРѕРІР°С‚СЊ Р·Р°РїРёСЃСЊ</strong></label></td>
                             </tr>
                         </table>
 
                         <div style="margin-top:15px">
-                            <strong>Рубрика</strong>
+                            <strong>Р СѓР±СЂРёРєР°</strong>
                         </div>
                         <div>
                             <input type="text" disabled="disabled" value="<?php echo $cat['title']; ?>" style="width:100%" />
                             <input type="hidden" name="cat_id" value="<?php echo $cat_id; ?>" />
                         </div>
 
-                        <div style="margin-top:15px"><strong>Фотография</strong></div>
+                        <div style="margin-top:15px"><strong>Р¤РѕС‚РѕРіСЂР°С„РёСЏ</strong></div>
                         <div style="margin-bottom:10px">
                             <?php
                                 if ($opt=='edit_item'){
@@ -1025,27 +1025,27 @@ function cpPriceInput($id){
                             <input type="file" name="imgfile" style="width:100%" />
                         </div>
 
-                        <div style="margin-top:25px"><strong>Параметры публикации</strong></div>
+                        <div style="margin-top:25px"><strong>РџР°СЂР°РјРµС‚СЂС‹ РїСѓР±Р»РёРєР°С†РёРё</strong></div>
                         <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
                             <tr>
                                 <td width="20"><input type="checkbox" name="is_comments" id="is_comments" value="1" <?php if ($mod['is_comments'] || $opt=='add_item') { echo 'checked="checked"'; } ?>/></td>
-                                <td><label for="is_comments">Разрешить комментарии</label></td>
+                                <td><label for="is_comments">Р Р°Р·СЂРµС€РёС‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё</label></td>
                             </tr>
                         </table>
 
                         {tab=SEO}
 
                         <div style="margin-top:5px">
-                            <strong>Ключевые слова</strong><br/>
-                            <span class="hinttext">Через запятую, 10-15 слов</span>
+                            <strong>РљР»СЋС‡РµРІС‹Рµ СЃР»РѕРІР°</strong><br/>
+                            <span class="hinttext">Р§РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ, 10-15 СЃР»РѕРІ</span>
                         </div>
                         <div>
                              <textarea name="meta_keys" style="width:97%" rows="2" id="meta_keys"><?php echo @$mod['meta_keys'];?></textarea>
                         </div>
 
                         <div style="margin-top:20px">
-                            <strong>Описание</strong><br/>
-                            <span class="hinttext">Не более 250 символов</span>
+                            <strong>РћРїРёСЃР°РЅРёРµ</strong><br/>
+                            <span class="hinttext">РќРµ Р±РѕР»РµРµ 250 СЃРёРјРІРѕР»РѕРІ</span>
                         </div>
                         <div>
                              <textarea name="meta_desc" style="width:97%" rows="4" id="meta_desc"><?php echo @$mod['meta_desc'];?></textarea>
@@ -1060,8 +1060,8 @@ function cpPriceInput($id){
                 </tr>
             </table>
             <p>
-                <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_item') { echo 'value="Добавить запись"'; } else { echo 'value="Сохранить запись"'; } ?> />
-                <input name="back2" type="button" id="back2" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+                <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_item') { echo 'value="Р”РѕР±Р°РІРёС‚СЊ Р·Р°РїРёСЃСЊ"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ Р·Р°РїРёСЃСЊ"'; } ?> />
+                <input name="back2" type="button" id="back2" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components';"/>
                 <input name="opt" type="hidden" id="do" <?php if ($opt=='add_item') { echo 'value="submit_item"'; } else { echo 'value="update_item"'; } ?> />
                 <?php
                     if ($opt=='edit_item'){
@@ -1073,7 +1073,7 @@ function cpPriceInput($id){
 
             <?php
 		} else {
-					echo '<h4>Выберите рубрику:</h4>';
+					echo '<h4>Р’С‹Р±РµСЂРёС‚Рµ СЂСѓР±СЂРёРєСѓ:</h4>';
 
 					$sql = "SELECT id, title, NSLeft, NSLevel, parent_id
                             FROM cms_uc_cats
@@ -1103,8 +1103,8 @@ function cpPriceInput($id){
 		$GLOBALS['cp_page_head'][] = jwHeader();
 
 		if ($opt=='add_cat'){
-			 echo '<h3>Добавить рубрику</h3>';
-			 cpAddPathway('Добавить рубрику', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_cat');	 
+			 echo '<h3>Р”РѕР±Р°РІРёС‚СЊ СЂСѓР±СЂРёРєСѓ</h3>';
+			 cpAddPathway('Р”РѕР±Р°РІРёС‚СЊ СЂСѓР±СЂРёРєСѓ', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_cat');	 
 			} else {
 				 if(isset($_REQUEST['item_id'])){
 					 $id = $_REQUEST['item_id'];
@@ -1116,8 +1116,8 @@ function cpPriceInput($id){
 					 }
 				 }
 				
-				 echo '<h3>Рубрика: '.$mod['title'].'</h3>';
-	 	 		 cpAddPathway('Рубрики каталога', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
+				 echo '<h3>Р СѓР±СЂРёРєР°: '.$mod['title'].'</h3>';
+	 	 		 cpAddPathway('Р СѓР±СЂРёРєРё РєР°С‚Р°Р»РѕРіР°', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
 				 cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id='.$_REQUEST['item_id']);	 
 			}
 			?>
@@ -1126,21 +1126,21 @@ function cpPriceInput($id){
                 <table class="proptable" width="100%" cellpadding="15" cellspacing="2">
                     <tr>
 
-                        <!-- главная ячейка -->
+                        <!-- РіР»Р°РІРЅР°СЏ СЏС‡РµР№РєР° -->
                         <td valign="top">
 
-                            <div><strong>Название рубрики</strong></div>
+                            <div><strong>РќР°Р·РІР°РЅРёРµ СЂСѓР±СЂРёРєРё</strong></div>
                             <div><input name="title" type="text" id="title" style="width:99%" value="<?php echo htmlspecialchars($mod['title']);?>" /></div>
 
-                            <div style="margin-top:10px"><strong>Характеристики записей</strong></div>
+                            <div style="margin-top:10px"><strong>РҐР°СЂР°РєС‚РµСЂРёСЃС‚РёРєРё Р·Р°РїРёСЃРµР№</strong></div>
 
                             <div style="margin-top:2px;margin-bottom:12px">
                                 <div><span class="hinttext">
-                                    Введите названия полей, которые нужно будет заполнять при добавлении записей в эту рубрику каталога.
+                                    Р’РІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёСЏ РїРѕР»РµР№, РєРѕС‚РѕСЂС‹Рµ РЅСѓР¶РЅРѕ Р±СѓРґРµС‚ Р·Р°РїРѕР»РЅСЏС‚СЊ РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё Р·Р°РїРёСЃРµР№ РІ СЌС‚Сѓ СЂСѓР±СЂРёРєСѓ РєР°С‚Р°Р»РѕРіР°.
                                 </span></div>
                                 <div><span class="hinttext">
-                                    Автопоиск разбивает текст характеристики на отдельные слова и каждое слово делает ссылкой.
-                                    Это позволяет пользователям искать записи с одинаковыми характеристиками одним кликом.
+                                    РђРІС‚РѕРїРѕРёСЃРє СЂР°Р·Р±РёРІР°РµС‚ С‚РµРєСЃС‚ С…Р°СЂР°РєС‚РµСЂРёСЃС‚РёРєРё РЅР° РѕС‚РґРµР»СЊРЅС‹Рµ СЃР»РѕРІР° Рё РєР°Р¶РґРѕРµ СЃР»РѕРІРѕ РґРµР»Р°РµС‚ СЃСЃС‹Р»РєРѕР№.
+                                    Р­С‚Рѕ РїРѕР·РІРѕР»СЏРµС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј РёСЃРєР°С‚СЊ Р·Р°РїРёСЃРё СЃ РѕРґРёРЅР°РєРѕРІС‹РјРё С…Р°СЂР°РєС‚РµСЂРёСЃС‚РёРєР°РјРё РѕРґРЅРёРј РєР»РёРєРѕРј.
                                 </span></div>
                             </div>
 
@@ -1164,7 +1164,7 @@ function cpPriceInput($id){
                                     <tr>
                                         <td width="16"><input type="checkbox" id="copy_parent_struct" name="copy_parent_struct" onchange="toggleFields()" value="1" /></td>
                                         <td>
-                                            <label for="copy_parent_struct">Скопировать характеристики родительской рубрики</label>
+                                            <label for="copy_parent_struct">РЎРєРѕРїРёСЂРѕРІР°С‚СЊ С…Р°СЂР°РєС‚РµСЂРёСЃС‚РёРєРё СЂРѕРґРёС‚РµР»СЊСЃРєРѕР№ СЂСѓР±СЂРёРєРё</label>
                                         </td>
                                     </tr>
                                 </table>
@@ -1186,56 +1186,56 @@ function cpPriceInput($id){
                                 <tr>
                                     <td width="105" style="padding-bottom:4px">
                                         <select name="fformat[]" class="fformat" style="width:100px">
-                                            <option value="text" <?php if(@$fstruct[$f]) { if ($ftype=='text') { echo 'selected'; } } ?>>Текст</option>
+                                            <option value="text" <?php if(@$fstruct[$f]) { if ($ftype=='text') { echo 'selected'; } } ?>>РўРµРєСЃС‚</option>
                                             <option value="html" <?php if(@$fstruct[$f]) { if ($ftype=='html') { echo 'selected'; } } ?>>HTML</option>
-                                            <option value="link" <?php if(@$fstruct[$f]) { if ($ftype=='link') { echo 'selected'; } } ?>>Ссылка</option>
+                                            <option value="link" <?php if(@$fstruct[$f]) { if ($ftype=='link') { echo 'selected'; } } ?>>РЎСЃС‹Р»РєР°</option>
                                         </select>
                                     </td>
                                     <td style="padding-bottom:4px">
                                         <input name="fstruct[]" class="field" type="text" id="fstruct[]" style="width:99%" <?php if (@$fstruct[$f]) { echo 'value="'.htmlspecialchars(stripslashes($fstruct[$f])).'"'; }?> />
                                     </td>
                                     <td width="80" align="right" style="padding-bottom:2px">
-                                        <strong>Автопоиск:</strong>
+                                        <strong>РђРІС‚РѕРїРѕРёСЃРє:</strong>
                                     </td>
                                     <td width="20" align="right"><input name="flink[<?php echo $f;?>]" class="flink" type="radio" value="1" <?php if(@$fstruct[$f]) { if ($makelink) { echo 'checked="checked"'; } } ?>/></td>
-                                    <td width="20" align="right">Вкл</td>
+                                    <td width="20" align="right">Р’РєР»</td>
                                     <td width="20" align="right"><input name="flink[<?php echo $f;?>]" class="flink" type="radio" value="0" <?php if(@$fstruct[$f]) { if (!$makelink) { echo 'checked="checked"'; } } else { echo 'checked="checked"';} ?>/></td>
-                                    <td width="20" align="right">Выкл</td>
+                                    <td width="20" align="right">Р’С‹РєР»</td>
                                 </tr>
                             <?php } ?>
                             </table>
 
-                            <div style="margin-top:10px"><strong>Обрабатывать HTML-поля <a href="index.php?view=filters" target="_blank">фильтрами</a>?</strong></div>
+                            <div style="margin-top:10px"><strong>РћР±СЂР°Р±Р°С‚С‹РІР°С‚СЊ HTML-РїРѕР»СЏ <a href="index.php?view=filters" target="_blank">С„РёР»СЊС‚СЂР°РјРё</a>?</strong></div>
                             <div>
                                 <select name="filters" id="filters" style="width:100%">
-                                    <option value="0" <?php if (!$mod['filters']) { echo 'selected="selected"'; } ?>>Нет</option>
-                                    <option value="1" <?php if ($mod['filters']) { echo 'selected="selected"'; } ?>>Да</option>
+                                    <option value="0" <?php if (!$mod['filters']) { echo 'selected="selected"'; } ?>>РќРµС‚</option>
+                                    <option value="1" <?php if ($mod['filters']) { echo 'selected="selected"'; } ?>>Р”Р°</option>
                                 </select>
                             </div>
 
-                            <div style="margin-top:12px"><strong>Описание рубрики</strong></div>
+                            <div style="margin-top:12px"><strong>РћРїРёСЃР°РЅРёРµ СЂСѓР±СЂРёРєРё</strong></div>
                             <div><?php $inCore->insertEditor('description', $mod['description'], '200', '100%'); ?></div>
 
                         </td>
 
-                        <!-- боковая ячейка -->
+                        <!-- Р±РѕРєРѕРІР°СЏ СЏС‡РµР№РєР° -->
                         <td width="300" valign="top" style="background:#ECECEC;">
 
                             <?php ob_start(); ?>
 
-                            {tab=Публикация}
+                            {tab=РџСѓР±Р»РёРєР°С†РёСЏ}
 
                             <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
                                 <tr>
                                     <td width="20"><input type="checkbox" name="published" id="published" value="1" <?php if ($mod['published'] || $do=='add') { echo 'checked="checked"'; } ?>/></td>
-                                    <td><label for="published"><strong>Публиковать рубрику</strong></label></td>
+                                    <td><label for="published"><strong>РџСѓР±Р»РёРєРѕРІР°С‚СЊ СЂСѓР±СЂРёРєСѓ</strong></label></td>
                                 </tr>
                             </table>
 
                             <div style="margin-top:7px">
                                 <select name="parent_id" size="8" id="parent_id" style="width:99%;height:200px">
                                     <?php $rootid = $inDB->get_field('cms_uc_cats', 'parent_id=0', 'id'); ?>
-                                    <option value="<?php echo $rootid; ?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- Корень каталога --</option>
+                                    <option value="<?php echo $rootid; ?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- РљРѕСЂРµРЅСЊ РєР°С‚Р°Р»РѕРіР° --</option>
                                     <?php
                                         if (isset($mod['parent_id'])){
                                             echo $inCore->getListItemsNS('cms_uc_cats', $mod['parent_id']);
@@ -1248,70 +1248,70 @@ function cpPriceInput($id){
 
                             <div style="margin-bottom:15px;margin-top:4px" onchange="toggleAdvert()">
                                 <select name="view_type" id="view_type" style="width:99%">
-                                    <option value="list" <?php if (@$mod['view_type']=='list') {echo 'selected';} ?>>Список (таблица)</option>
-                                    <option value="thumb" <?php if (@$mod['view_type']=='thumb') {echo 'selected';} ?>>Галерея (блоки)</option>
-                                    <option value="shop" <?php if (@$mod['view_type']=='shop') {echo 'selected';} ?>>Магазин</option>
+                                    <option value="list" <?php if (@$mod['view_type']=='list') {echo 'selected';} ?>>РЎРїРёСЃРѕРє (С‚Р°Р±Р»РёС†Р°)</option>
+                                    <option value="thumb" <?php if (@$mod['view_type']=='thumb') {echo 'selected';} ?>>Р“Р°Р»РµСЂРµСЏ (Р±Р»РѕРєРё)</option>
+                                    <option value="shop" <?php if (@$mod['view_type']=='shop') {echo 'selected';} ?>>РњР°РіР°Р·РёРЅ</option>
                                 </select>
                             </div>
 
                             <div class="advert" id="catalog_advert" style="line-height:16px;<?php if ($mod['view_type']!='shop') {?>display:none<?php } ?>">
-                                См. также: <a href="http://www.instantcms.ru/blogs/InstantSoft/professionalnyi-magazin-dlja-InstantCMS.html" target="_blank">InstantShop &mdash; профессиональный магазин для InstantCMS</a>
+                                РЎРј. С‚Р°РєР¶Рµ: <a href="http://www.instantcms.ru/blogs/InstantSoft/professionalnyi-magazin-dlja-InstantCMS.html" target="_blank">InstantShop &mdash; РїСЂРѕС„РµСЃСЃРёРѕРЅР°Р»СЊРЅС‹Р№ РјР°РіР°Р·РёРЅ РґР»СЏ InstantCMS</a>
                             </div>
 
                             <script type="text/javascript">toggleAdvert();</script>
 
-                            <div style="margin-top:12px"><strong>Вид рубрики</strong></div>
+                            <div style="margin-top:12px"><strong>Р’РёРґ СЂСѓР±СЂРёРєРё</strong></div>
                             <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
                                 <tr>
                                     <td width="20"><input type="checkbox" name="showmore" id="showmore" value="1" <?php if ($mod['showmore']) { echo 'checked="checked"'; } ?>/></td>
-                                    <td><label for="showmore">Ссылка &quot;Подробнее&quot; у каждой записи</label></td>
+                                    <td><label for="showmore">РЎСЃС‹Р»РєР° &quot;РџРѕРґСЂРѕР±РЅРµРµ&quot; Сѓ РєР°Р¶РґРѕР№ Р·Р°РїРёСЃРё</label></td>
                                 </tr>
                                 <tr>
                                     <td width="20"><input type="checkbox" name="is_ratings" id="is_ratings" value="1" <?php if ($mod['is_ratings']) { echo 'checked="checked"'; } ?>/></td>
-                                    <td><label for="is_ratings">Рейтинги записей</label></td>
+                                    <td><label for="is_ratings">Р РµР№С‚РёРЅРіРё Р·Р°РїРёСЃРµР№</label></td>
                                 </tr>
                                 <tr>
                                     <td width="20"><input type="checkbox" name="showtags" id="showtags" value="1" <?php if ($mod['showtags']) { echo 'checked="checked"'; } ?>/></td>
-                                    <td><label for="showtags">Показывать теги</label></td>
+                                    <td><label for="showtags">РџРѕРєР°Р·С‹РІР°С‚СЊ С‚РµРіРё</label></td>
                                 </tr>
                                 <tr>
                                     <td width="20"><input type="checkbox" name="showsort" id="showsort" value="1" <?php if ($mod['showsort']) { echo 'checked="checked"'; } ?>/></td>
-                                    <td><label for="showsort">Показывать выбор сортировки</label></td>
+                                    <td><label for="showsort">РџРѕРєР°Р·С‹РІР°С‚СЊ РІС‹Р±РѕСЂ СЃРѕСЂС‚РёСЂРѕРІРєРё</label></td>
                                 </tr>
                                 <tr>
                                     <td width="20"><input type="checkbox" name="showabc" id="showabc" value="1" <?php if ($mod['showabc']) { echo 'checked="checked"'; } ?>/></td>
-                                    <td><label for="showabc">Алфавитный указатель</label></td>
+                                    <td><label for="showabc">РђР»С„Р°РІРёС‚РЅС‹Р№ СѓРєР°Р·Р°С‚РµР»СЊ</label></td>
                                 </tr>
                             </table>
                             
-                            {tab=Записи}
+                            {tab=Р—Р°РїРёСЃРё}
 
                             <div style="margin-top:5px;">
-                                <strong>Количество полей</strong><br/>
-                                <span class="hinttext">Сколько полей (характеристик) показывать для каждой записи при просмотре рубрики</span>
+                                <strong>РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕР»РµР№</strong><br/>
+                                <span class="hinttext">РЎРєРѕР»СЊРєРѕ РїРѕР»РµР№ (С…Р°СЂР°РєС‚РµСЂРёСЃС‚РёРє) РїРѕРєР°Р·С‹РІР°С‚СЊ РґР»СЏ РєР°Р¶РґРѕР№ Р·Р°РїРёСЃРё РїСЂРё РїСЂРѕСЃРјРѕС‚СЂРµ СЂСѓР±СЂРёРєРё</span>
                             </div>
                             <div>
                                 <input name="fieldsshow" type="text" id="fieldsshow" style="width:100%" value="<?php if ($opt=='edit_cat') { echo $mod['fields_show']; } else { echo '10'; } ?>"/>
                             </div>
 
                             <div style="margin-top:10px;">
-                                <strong>Сортировка записей</strong>
+                                <strong>РЎРѕСЂС‚РёСЂРѕРІРєР° Р·Р°РїРёСЃРµР№</strong>
                             </div>
                             <div>
                                 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:2px;">
                                     <tr>
                                         <td valign="top"  width="50%">
                                             <select name="orderby" id="orderby" style="width:100%">
-                                                <option value="title" <?php if(@$mod['orderby']=='title') { echo 'selected'; } ?>>По алфавиту</option>
-                                                <option value="pubdate" <?php if(@$mod['orderby']=='pubdate') { echo 'selected'; } ?>>По дате</option>
-                                                <option value="rating" <?php if(@$mod['orderby']=='rating') { echo 'selected'; } ?>>По рейтингу</option>
-                                                <option value="hits" <?php if(@$mod['orderby']=='hits') { echo 'selected'; } ?>>По просмотрам</option>
+                                                <option value="title" <?php if(@$mod['orderby']=='title') { echo 'selected'; } ?>>РџРѕ Р°Р»С„Р°РІРёС‚Сѓ</option>
+                                                <option value="pubdate" <?php if(@$mod['orderby']=='pubdate') { echo 'selected'; } ?>>РџРѕ РґР°С‚Рµ</option>
+                                                <option value="rating" <?php if(@$mod['orderby']=='rating') { echo 'selected'; } ?>>РџРѕ СЂРµР№С‚РёРЅРіСѓ</option>
+                                                <option value="hits" <?php if(@$mod['orderby']=='hits') { echo 'selected'; } ?>>РџРѕ РїСЂРѕСЃРјРѕС‚СЂР°Рј</option>
                                             </select>
                                         </td>
                                         <td valign="top" style="padding-left:5px">
                                             <select name="orderto" id="orderto" style="width:100%">
-                                                <option value="desc" <?php if(@$mod['orderto']=='desc') { echo 'selected'; } ?>>по убыванию</option>
-                                                <option value="asc" <?php if(@$mod['orderto']=='asc') { echo 'selected'; } ?>>по возрастанию</option>
+                                                <option value="desc" <?php if(@$mod['orderto']=='desc') { echo 'selected'; } ?>>РїРѕ СѓР±С‹РІР°РЅРёСЋ</option>
+                                                <option value="asc" <?php if(@$mod['orderto']=='asc') { echo 'selected'; } ?>>РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ</option>
                                             </select>
                                         </td>
                                     </tr>
@@ -1319,24 +1319,24 @@ function cpPriceInput($id){
                             </div>
 
                             <div style="margin-top:10px;">
-                                <strong>Записей на странице</strong>
+                                <strong>Р—Р°РїРёСЃРµР№ РЅР° СЃС‚СЂР°РЅРёС†Рµ</strong>
                             </div>
                             <div>
                                 <input name="perpage" type="text" id="perpage" style="width:100%" value="<?php if ($opt=='edit_cat') { echo $mod['perpage']; } else { echo '20'; } ?>"/>
                             </div>
 
                             <div style="margin-top:10px;">
-                                <strong>Подсветка новинок</strong>
+                                <strong>РџРѕРґСЃРІРµС‚РєР° РЅРѕРІРёРЅРѕРє</strong>
                             </div>
                             <div>
                                 <select name="shownew" id="shownew" style="width:100%">
-                                    <option value="1" <?php if ($mod['shownew']) { echo 'selected="selected"'; } ?>>Да</option>
-                                    <option value="0" <?php if (!$mod['shownew']) { echo 'selected="selected"'; } ?>>Нет</option>
+                                    <option value="1" <?php if ($mod['shownew']) { echo 'selected="selected"'; } ?>>Р”Р°</option>
+                                    <option value="0" <?php if (!$mod['shownew']) { echo 'selected="selected"'; } ?>>РќРµС‚</option>
                                 </select>
                             </div>
 
                             <div style="margin-top:10px;">
-                                <strong>Срок статуса новинки</strong>
+                                <strong>РЎСЂРѕРє СЃС‚Р°С‚СѓСЃР° РЅРѕРІРёРЅРєРё</strong>
                             </div>
                             <div>
                                 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:2px;">
@@ -1346,16 +1346,16 @@ function cpPriceInput($id){
                                         </td>
                                         <td valign="top">
                                             <select name="int_2" id="int_2" style="width:100%">
-                                                <option value="HOUR"  <?php if(@strstr($mod['newint'], 'HOUR')) { echo 'selected'; } ?>>часов</option>
-                                                <option value="DAY" <?php if(@strstr($mod['newint'], 'DAY')) { echo 'selected'; } ?>>дней</option>
-                                                <option value="MONTH" <?php if(@strstr($mod['newint'], 'MONTH')) { echo 'selected'; } ?>>месяцев</option>
+                                                <option value="HOUR"  <?php if(@strstr($mod['newint'], 'HOUR')) { echo 'selected'; } ?>>С‡Р°СЃРѕРІ</option>
+                                                <option value="DAY" <?php if(@strstr($mod['newint'], 'DAY')) { echo 'selected'; } ?>>РґРЅРµР№</option>
+                                                <option value="MONTH" <?php if(@strstr($mod['newint'], 'MONTH')) { echo 'selected'; } ?>>РјРµСЃСЏС†РµРІ</option>
                                             </select>
                                         </td>
                                     </tr>
                                 </table>
                             </div>
 
-                            {tab=Доступ}
+                            {tab=Р”РѕСЃС‚СѓРї}
 
                             <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist" style="margin-top:5px">
                                 <tr>
@@ -1376,20 +1376,20 @@ function cpPriceInput($id){
                                         ?>
                                         <input name="is_public" type="checkbox" id="is_public" onclick="checkGroupList()" value="1" <?php if(@$mod['is_public']){ echo 'checked="checked"'; } ?> />
                                     </td>
-                                    <td><label for="is_public"><strong>Разрешить пользователям добавлять записи</strong></label></td>
+                                    <td><label for="is_public"><strong>Р Р°Р·СЂРµС€РёС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј РґРѕР±Р°РІР»СЏС‚СЊ Р·Р°РїРёСЃРё</strong></label></td>
                                 </tr>
                             </table>
                             <div style="padding:5px">
                                 <span class="hinttext">
-                                    Если отмечено, пользователи из выбранных групп будут видеть ссылку "Добавить запись" в этой рубрике каталога.
+                                    Р•СЃР»Рё РѕС‚РјРµС‡РµРЅРѕ, РїРѕР»СЊР·РѕРІР°С‚РµР»Рё РёР· РІС‹Р±СЂР°РЅРЅС‹С… РіСЂСѓРїРї Р±СѓРґСѓС‚ РІРёРґРµС‚СЊ СЃСЃС‹Р»РєСѓ "Р”РѕР±Р°РІРёС‚СЊ Р·Р°РїРёСЃСЊ" РІ СЌС‚РѕР№ СЂСѓР±СЂРёРєРµ РєР°С‚Р°Р»РѕРіР°.
                                 </span>
                             </div>
 
                             <div style="margin-top:10px;padding:5px;padding-right:0px;" id="grp">
                                 <div>
-                                    <strong>Разрешить группам:</strong><br />
+                                    <strong>Р Р°Р·СЂРµС€РёС‚СЊ РіСЂСѓРїРїР°Рј:</strong><br />
                                     <span class="hinttext">
-                                        Можно выбрать несколько, удерживая CTRL.
+                                        РњРѕР¶РЅРѕ РІС‹Р±СЂР°С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ, СѓРґРµСЂР¶РёРІР°СЏ CTRL.
                                     </span>
                                 </div>
                                 <div>
@@ -1422,9 +1422,9 @@ function cpPriceInput($id){
 
                             <?php if (IS_BILLING){ ?>
                                 <div style="margin:5px">
-                                    <strong>Стоимость добавления записи</strong><br/>
-                                    <div style="color:gray">Если не указана здесь, то используется цена по-умолчанию, из настроек биллинга</div>
-                                    <input type="text" name="cost" value="<?php echo $mod['cost']; ?>" style="width:50px"/> баллов
+                                    <strong>РЎС‚РѕРёРјРѕСЃС‚СЊ РґРѕР±Р°РІР»РµРЅРёСЏ Р·Р°РїРёСЃРё</strong><br/>
+                                    <div style="color:gray">Р•СЃР»Рё РЅРµ СѓРєР°Р·Р°РЅР° Р·РґРµСЃСЊ, С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С†РµРЅР° РїРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ, РёР· РЅР°СЃС‚СЂРѕРµРє Р±РёР»Р»РёРЅРіР°</div>
+                                    <input type="text" name="cost" value="<?php echo $mod['cost']; ?>" style="width:50px"/> Р±Р°Р»Р»РѕРІ
                                 </div>
                             <?php } ?>
 
@@ -1433,12 +1433,12 @@ function cpPriceInput($id){
                                     <td width="20">
                                         <input name="can_edit" type="checkbox" id="can_edit" onclick="" value="1" <?php if(@$mod['can_edit']){ echo 'checked="checked"'; } ?> />
                                     </td>
-                                    <td><label for="can_edit"><strong>Разрешить редактирование</strong></label></td>
+                                    <td><label for="can_edit"><strong>Р Р°Р·СЂРµС€РёС‚СЊ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ</strong></label></td>
                                 </tr>
                             </table>
                             <div style="padding:5px">
                                 <span class="hinttext">
-                                    Если отмечено, пользователи смогут изменять свои записи
+                                    Р•СЃР»Рё РѕС‚РјРµС‡РµРЅРѕ, РїРѕР»СЊР·РѕРІР°С‚РµР»Рё СЃРјРѕРіСѓС‚ РёР·РјРµРЅСЏС‚СЊ СЃРІРѕРё Р·Р°РїРёСЃРё
                                 </span>
                             </div>
 
@@ -1451,8 +1451,8 @@ function cpPriceInput($id){
                     </tr>
                 </table>
                 <p>
-                    <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add_cat') { echo 'value="Создать рубрику"'; } else { echo 'value="Сохранить рубрику"'; } ?> />
-                    <input name="back" type="button" id="back" value="Отмена" onclick="window.history.back();"/>
+                    <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add_cat') { echo 'value="РЎРѕР·РґР°С‚СЊ СЂСѓР±СЂРёРєСѓ"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ СЂСѓР±СЂРёРєСѓ"'; } ?> />
+                    <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.history.back();"/>
                     <input name="opt" type="hidden" id="opt" <?php if ($opt=='add_cat') { echo 'value="submit_cat"'; } else { echo 'value="update_cat"'; } ?> />
                     <?php
                         if ($opt=='edit_cat'){
@@ -1470,8 +1470,8 @@ function cpPriceInput($id){
 
 	if ($opt == 'add_discount' || $opt == 'edit_discount'){
 		if ($opt=='add_discount'){
-			 echo '<h3>Добавить коэффициент</h3>';
-			 cpAddPathway('Добавить коэффициент', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_discount');
+			 echo '<h3>Р”РѕР±Р°РІРёС‚СЊ РєРѕСЌС„С„РёС†РёРµРЅС‚</h3>';
+			 cpAddPathway('Р”РѕР±Р°РІРёС‚СЊ РєРѕСЌС„С„РёС†РёРµРЅС‚', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_discount');
 			} else {
 				 if(isset($_REQUEST['item_id'])){
 					 $id = $_REQUEST['item_id'];
@@ -1483,22 +1483,22 @@ function cpPriceInput($id){
 				 }
 
 				 echo '<h3>'.$mod['title'].'</h3>';
-	 	 		 cpAddPathway('Коэффициенты', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_discount');
+	 	 		 cpAddPathway('РљРѕСЌС„С„РёС†РёРµРЅС‚С‹', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_discount');
 				 cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_discount&item_id='.$_REQUEST['item_id']);
 			}
 			?>
             <form id="addform" name="addform" method="post" action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>">
                 <table width="584" border="0" cellspacing="5" class="proptable">
                     <tr>
-                        <td width="250"><strong>Название: </strong></td>
+                        <td width="250"><strong>РќР°Р·РІР°РЅРёРµ: </strong></td>
                         <td width="315" valign="top"><input name="title" type="text" id="title" style="width:250px" value="<?php echo htmlspecialchars($mod['title']);?>"/></td>
                     </tr>
                     <tr>
-                        <td valign="top"><strong>Рубрика:</strong></td>
+                        <td valign="top"><strong>Р СѓР±СЂРёРєР°:</strong></td>
                         <td valign="top">
                             <select name="cat_id" id="cat_id" style="width:250px">
                                 <?php $rootid = 0; ?>
-                                <option value="<?php echo $rootid; ?>" <?php if (@$mod['cat_id']==$rootid || !isset($mod['cat_id'])) { echo 'selected'; }?>>Все рубрики</option>
+                                <option value="<?php echo $rootid; ?>" <?php if (@$mod['cat_id']==$rootid || !isset($mod['cat_id'])) { echo 'selected'; }?>>Р’СЃРµ СЂСѓР±СЂРёРєРё</option>
                                 <?php
                                     if (isset($mod['cat_id'])){
                                         echo $inCore->getListItems('cms_uc_cats', $mod['cat_id']);
@@ -1510,36 +1510,36 @@ function cpPriceInput($id){
                         </td>
                     </tr>
                     <tr>
-                        <td><strong>Тип (действие): </strong></td>
+                        <td><strong>РўРёРї (РґРµР№СЃС‚РІРёРµ): </strong></td>
                         <td valign="top"><label>
                                 <select name="sign" id="sign" style="width:200px" onchange="toggleDiscountLimit()">
-                                    <option value="-1" <?php if (@$mod['sign']==-1) {echo 'selected';} ?>>Скидка на товар (-1)</option>
-                                    <option value="1" <?php if (@$mod['sign']==1) {echo 'selected';} ?>>Надбавка на товар (1)</option>
-                                    <option value="2" <?php if (@$mod['sign']==2) {echo 'selected';} ?>>Надбавка на заказ (2)</option>
-                                    <option value="3" <?php if (@$mod['sign']==3) {echo 'selected';} ?>>Скидка на заказ (3)</option>
+                                    <option value="-1" <?php if (@$mod['sign']==-1) {echo 'selected';} ?>>РЎРєРёРґРєР° РЅР° С‚РѕРІР°СЂ (-1)</option>
+                                    <option value="1" <?php if (@$mod['sign']==1) {echo 'selected';} ?>>РќР°РґР±Р°РІРєР° РЅР° С‚РѕРІР°СЂ (1)</option>
+                                    <option value="2" <?php if (@$mod['sign']==2) {echo 'selected';} ?>>РќР°РґР±Р°РІРєР° РЅР° Р·Р°РєР°Р· (2)</option>
+                                    <option value="3" <?php if (@$mod['sign']==3) {echo 'selected';} ?>>РЎРєРёРґРєР° РЅР° Р·Р°РєР°Р· (3)</option>
                                 </select>
                         </label></td>
                     </tr>
                     <tr class="if_limit" <?php if($mod['sign']!=3){ echo 'style="display:none"'; } ?>>
                         <td>
-                            <strong>Действует при заказе на сумму от </strong>
+                            <strong>Р”РµР№СЃС‚РІСѓРµС‚ РїСЂРё Р·Р°РєР°Р·Рµ РЅР° СЃСѓРјРјСѓ РѕС‚ </strong>
                         </td>
                         <td valign="top">
-                            <input name="if_limit" type="text" id="value" size="5" value="<?php if ($opt=='edit_discount') { echo $mod['if_limit']; } else { echo '0'; }?>"/> руб.
+                            <input name="if_limit" type="text" id="value" size="5" value="<?php if ($opt=='edit_discount') { echo $mod['if_limit']; } else { echo '0'; }?>"/> СЂСѓР±.
                         </td>
                     </tr>
                     <tr>
-                        <td><strong>Единицы: </strong></td>
+                        <td><strong>Р•РґРёРЅРёС†С‹: </strong></td>
                         <td valign="top"><label>
                                 <select name="unit" id="unit" style="width:200px">
-                                    <option value="%" <?php if (@$mod['unit']=='%') {echo 'selected';} ?>>Проценты</option>
-                                    <option value="руб." <?php if (@$mod['unit']=='руб.') {echo 'selected';} ?>>Рубли</option>
+                                    <option value="%" <?php if (@$mod['unit']=='%') {echo 'selected';} ?>>РџСЂРѕС†РµРЅС‚С‹</option>
+                                    <option value="СЂСѓР±." <?php if (@$mod['unit']=='СЂСѓР±.') {echo 'selected';} ?>>Р СѓР±Р»Рё</option>
                                 </select>
                         </label></td>
                     </tr>
                     <tr>
                         <td>
-                            <strong>Значение: </strong>
+                            <strong>Р—РЅР°С‡РµРЅРёРµ: </strong>
                         </td>
                         <td valign="top">
                             <input name="value" type="text" id="value" size="5" value="<?php if ($opt=='edit_discount') { echo $mod['value']; } ?>"/>
@@ -1547,8 +1547,8 @@ function cpPriceInput($id){
                     </tr>
                 </table>
                 <p>
-                    <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_discount') { echo 'value="Создать"'; } else { echo 'value="Сохранить изменения"'; } ?> />
-                    <input name="back3" type="button" id="back3" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+                    <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_discount') { echo 'value="РЎРѕР·РґР°С‚СЊ"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ"'; } ?> />
+                    <input name="back3" type="button" id="back3" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components';"/>
                     <input name="opt" type="hidden" id="do" <?php if ($opt=='add_discount') { echo 'value="submit_discount"'; } else { echo 'value="update_discount"'; } ?> />
                     <?php
                     if ($opt=='edit_discount'){
@@ -1585,74 +1585,74 @@ function cpPriceInput($id){
 	if ($opt == 'config') {
 
 		if (!isset($cfg['email'])) { $cfg['email'] = 'shop@site.ru'; }
-		if (!isset($cfg['delivery'])) { $cfg['delivery'] = 'Сведения о доставке'; }
+		if (!isset($cfg['delivery'])) { $cfg['delivery'] = 'РЎРІРµРґРµРЅРёСЏ Рѕ РґРѕСЃС‚Р°РІРєРµ'; }
         if (!isset($cfg['notice'])) { $cfg['notice'] = 0; }
         if (!isset($cfg['premod'])) { $cfg['premod'] = 1; }        
         if (!isset($cfg['premod_msg'])) { $cfg['premod_msg'] = 1; }
         if (!isset($cfg['is_comments'])) { $cfg['is_comments'] = 0; }
         if (!isset($cfg['is_rss'])) { $cfg['is_rss'] = 1; }
 		
-		cpAddPathway('Настройки', $_SERVER['REQUEST_URI']);
+		cpAddPathway('РќР°СЃС‚СЂРѕР№РєРё', $_SERVER['REQUEST_URI']);
 			
          ?>
          <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
              <table width="600" border="0" cellpadding="10" cellspacing="0" class="proptable">
                  <tr>
-                     <td width=""><strong>E-mail продавца:</strong></td>
+                     <td width=""><strong>E-mail РїСЂРѕРґР°РІС†Р°:</strong></td>
                      <td width="260"><input name="email" type="text" id="email" style="width:250px" value="<?php echo @$cfg['email'];?>"/></td>
                  </tr>
                  <tr>
-                     <td><strong>Отправлять уведомление покупателю: </strong></td>
+                     <td><strong>РћС‚РїСЂР°РІР»СЏС‚СЊ СѓРІРµРґРѕРјР»РµРЅРёРµ РїРѕРєСѓРїР°С‚РµР»СЋ: </strong></td>
                      <td>
-                         <input name="notice" type="radio" value="1" <?php if (@$cfg['notice']) { echo 'checked="checked"'; } ?> /> Да
-                         <input name="notice" type="radio" value="0"  <?php if (@!$cfg['notice']) { echo 'checked="checked"'; } ?> /> Нет
+                         <input name="notice" type="radio" value="1" <?php if (@$cfg['notice']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                         <input name="notice" type="radio" value="0"  <?php if (@!$cfg['notice']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                      </td>
                  </tr>
              </table>
              <table width="600" border="0" cellpadding="10" cellspacing="0" class="proptable">
                  <tr>
-                     <td><strong>Премодерация записей пользователей: </strong></td>
+                     <td><strong>РџСЂРµРјРѕРґРµСЂР°С†РёСЏ Р·Р°РїРёСЃРµР№ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№: </strong></td>
                      <td width="260">
-                         <input name="premod" type="radio" value="1" <?php if (@$cfg['premod']) { echo 'checked="checked"'; } ?> /> Да
-                         <input name="premod" type="radio" value="0"  <?php if (@!$cfg['premod']) { echo 'checked="checked"'; } ?> /> Нет
+                         <input name="premod" type="radio" value="1" <?php if (@$cfg['premod']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                         <input name="premod" type="radio" value="0"  <?php if (@!$cfg['premod']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                      </td>
                  </tr>
                  <tr>
-                     <td><strong>Сообщать администратору о новых записях: </strong></td>
+                     <td><strong>РЎРѕРѕР±С‰Р°С‚СЊ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂСѓ Рѕ РЅРѕРІС‹С… Р·Р°РїРёСЃСЏС…: </strong></td>
                      <td width="260">
-                         <input name="premod_msg" type="radio" value="1" <?php if (@$cfg['premod_msg']) { echo 'checked="checked"'; } ?> /> Да
-                         <input name="premod_msg" type="radio" value="0"  <?php if (@!$cfg['premod_msg']) { echo 'checked="checked"'; } ?> /> Нет
+                         <input name="premod_msg" type="radio" value="1" <?php if (@$cfg['premod_msg']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                         <input name="premod_msg" type="radio" value="0"  <?php if (@!$cfg['premod_msg']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                      </td>
                  </tr>
                  <tr>
-                     <td><strong>Автоматически включать комментарии для пользовательских записей: </strong></td>
+                     <td><strong>РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРё РІРєР»СЋС‡Р°С‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёС… Р·Р°РїРёСЃРµР№: </strong></td>
                      <td width="260">
-                         <input name="is_comments" type="radio" value="1" <?php if (@$cfg['is_comments']) { echo 'checked="checked"'; } ?> /> Да
-                         <input name="is_comments" type="radio" value="0"  <?php if (@!$cfg['is_comments']) { echo 'checked="checked"'; } ?> /> Нет
+                         <input name="is_comments" type="radio" value="1" <?php if (@$cfg['is_comments']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                         <input name="is_comments" type="radio" value="0"  <?php if (@!$cfg['is_comments']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                      </td>
                  </tr>
                  <tr>
-                     <td><strong>Наносить водяной знак:</strong>  <br />Если включено, то на все загружаемые
-			      фотографии к записям каталога будет наносится изображение 
-			      из файла "<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>"</td>
+                     <td><strong>РќР°РЅРѕСЃРёС‚СЊ РІРѕРґСЏРЅРѕР№ Р·РЅР°Рє:</strong>  <br />Р•СЃР»Рё РІРєР»СЋС‡РµРЅРѕ, С‚Рѕ РЅР° РІСЃРµ Р·Р°РіСЂСѓР¶Р°РµРјС‹Рµ
+			      С„РѕС‚РѕРіСЂР°С„РёРё Рє Р·Р°РїРёСЃСЏРј РєР°С‚Р°Р»РѕРіР° Р±СѓРґРµС‚ РЅР°РЅРѕСЃРёС‚СЃСЏ РёР·РѕР±СЂР°Р¶РµРЅРёРµ 
+			      РёР· С„Р°Р№Р»Р° "<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>"</td>
                      <td width="260">
-                         <input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?> /> Да
-                         <input name="watermark" type="radio" value="0"  <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?> /> Нет
-                     </td>
-                 </tr>
-             </table>
-             <table width="600" border="0" cellpadding="10" cellspacing="0" class="proptable">
-                 <tr>
-                     <td><strong>Показывать иконку RSS в рубриках: </strong></td>
-                     <td width="260">
-                         <input name="is_rss" type="radio" value="1" <?php if (@$cfg['is_rss']) { echo 'checked="checked"'; } ?> /> Да
-                         <input name="is_rss" type="radio" value="0"  <?php if (@!$cfg['is_rss']) { echo 'checked="checked"'; } ?> /> Нет
+                         <input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                         <input name="watermark" type="radio" value="0"  <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                      </td>
                  </tr>
              </table>
              <table width="600" border="0" cellpadding="10" cellspacing="0" class="proptable">
                  <tr>
-                     <td><p><strong>Информация о доставке:</strong></p>
+                     <td><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ РёРєРѕРЅРєСѓ RSS РІ СЂСѓР±СЂРёРєР°С…: </strong></td>
+                     <td width="260">
+                         <input name="is_rss" type="radio" value="1" <?php if (@$cfg['is_rss']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                         <input name="is_rss" type="radio" value="0"  <?php if (@!$cfg['is_rss']) { echo 'checked="checked"'; } ?> /> РќРµС‚
+                     </td>
+                 </tr>
+             </table>
+             <table width="600" border="0" cellpadding="10" cellspacing="0" class="proptable">
+                 <tr>
+                     <td><p><strong>РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РґРѕСЃС‚Р°РІРєРµ:</strong></p>
                          <p>
                              <label>
                                  <textarea name="delivery" style="width:568px;height:150px;border:solid 1px gray"><?php echo @$cfg['delivery'];?></textarea>
@@ -1662,8 +1662,8 @@ function cpPriceInput($id){
              </table>
              <p>
                  <input name="opt" type="hidden" id="opt" value="saveconfig" />
-                 <input name="save" type="submit" id="save" value="Сохранить" />
-                 <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+                 <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+                 <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components';"/>
              </p>
          </form>
         <?php
@@ -1674,8 +1674,8 @@ function cpPriceInput($id){
 
     if ($opt == 'import_xls'){
 
-        cpAddPathway('Импорт из MS Excel', $_SERVER['REQUEST_URI']);
-        echo '<h3>Импорт из MS Excel</h3>';
+        cpAddPathway('РРјРїРѕСЂС‚ РёР· MS Excel', $_SERVER['REQUEST_URI']);
+        echo '<h3>РРјРїРѕСЂС‚ РёР· MS Excel</h3>';
 
         if ($inCore->inRequest('cat_id')){
             //load category fields structure
@@ -1684,20 +1684,20 @@ function cpPriceInput($id){
 
             ?>
             <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>" method="POST" enctype="multipart/form-data" name="addform">
-            <p><strong>Рубрика:</strong> <a href="index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>&opt=import_xls"><?php echo $cat['title']; ?></a></p>
-            <p>Выберите файл Excel, в котором находится таблица с характеристиками записей</p>
+            <p><strong>Р СѓР±СЂРёРєР°:</strong> <a href="index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>&opt=import_xls"><?php echo $cat['title']; ?></a></p>
+            <p>Р’С‹Р±РµСЂРёС‚Рµ С„Р°Р№Р» Excel, РІ РєРѕС‚РѕСЂРѕРј РЅР°С…РѕРґРёС‚СЃСЏ С‚Р°Р±Р»РёС†Р° СЃ С…Р°СЂР°РєС‚РµСЂРёСЃС‚РёРєР°РјРё Р·Р°РїРёСЃРµР№</p>
             <table width="650" border="0" cellspacing="5" class="proptable">
                 <tr>
                     <td width="300">
-                        <strong>Файл таблицы Excel:</strong><br/>
-                        <span class="hinttext">В формате *.XLS</span>
+                        <strong>Р¤Р°Р№Р» С‚Р°Р±Р»РёС†С‹ Excel:</strong><br/>
+                        <span class="hinttext">Р’ С„РѕСЂРјР°С‚Рµ *.XLS</span>
                     </td>
                     <td><input type="file" name="xlsfile" /></td>
                 </tr>
                 <tr>
                     <td width="300">
-                        <strong>Кодировка файла:</strong><br/>
-                        <span class="hinttext">Зависит от пакета, в котором создавалась таблица</span>
+                        <strong>РљРѕРґРёСЂРѕРІРєР° С„Р°Р№Р»Р°:</strong><br/>
+                        <span class="hinttext">Р—Р°РІРёСЃРёС‚ РѕС‚ РїР°РєРµС‚Р°, РІ РєРѕС‚РѕСЂРѕРј СЃРѕР·РґР°РІР°Р»Р°СЃСЊ С‚Р°Р±Р»РёС†Р°</span>
                     </td>
                     <td>
                         <select name="charset" style="width:300px">
@@ -1708,29 +1708,29 @@ function cpPriceInput($id){
                 </tr>
                 <tr>
                     <td>
-                        <strong>Количество записей (строк) для импорта:</strong><br/>
-                        <span class="hinttext">Большие файлы рекомендуется импортировать по частям</span>
+                        <strong>РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РїРёСЃРµР№ (СЃС‚СЂРѕРє) РґР»СЏ РёРјРїРѕСЂС‚Р°:</strong><br/>
+                        <span class="hinttext">Р‘РѕР»СЊС€РёРµ С„Р°Р№Р»С‹ СЂРµРєРѕРјРµРЅРґСѓРµС‚СЃСЏ РёРјРїРѕСЂС‚РёСЂРѕРІР°С‚СЊ РїРѕ С‡Р°СЃС‚СЏРј</span>
                     </td>
-                    <td><input type="text" name="xlsrows" style="width:40px" /> шт.</td>
+                    <td><input type="text" name="xlsrows" style="width:40px" /> С€С‚.</td>
                 </tr>
                 <tr>
-                    <td><strong>Номер листа с таблицей в файле:</strong></td>
+                    <td><strong>РќРѕРјРµСЂ Р»РёСЃС‚Р° СЃ С‚Р°Р±Р»РёС†РµР№ РІ С„Р°Р№Р»Рµ:</strong></td>
                     <td><input type="text" name="xlslist" style="width:40px" value="1" /></td>
                 </tr>
             </table>
             <p>
-                Укажите числовые координаты первых ячеек с данными для каждого столбца.<br/>
-                Если какую-либо характеристику нужно брать не из таблицы Excel, а сделать одинаковой для всех записей,<br/>
-                то отметьте для нее галочку "Текст" и введите значение вручную.
+                РЈРєР°Р¶РёС‚Рµ С‡РёСЃР»РѕРІС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ РїРµСЂРІС‹С… СЏС‡РµРµРє СЃ РґР°РЅРЅС‹РјРё РґР»СЏ РєР°Р¶РґРѕРіРѕ СЃС‚РѕР»Р±С†Р°.<br/>
+                Р•СЃР»Рё РєР°РєСѓСЋ-Р»РёР±Рѕ С…Р°СЂР°РєС‚РµСЂРёСЃС‚РёРєСѓ РЅСѓР¶РЅРѕ Р±СЂР°С‚СЊ РЅРµ РёР· С‚Р°Р±Р»РёС†С‹ Excel, Р° СЃРґРµР»Р°С‚СЊ РѕРґРёРЅР°РєРѕРІРѕР№ РґР»СЏ РІСЃРµС… Р·Р°РїРёСЃРµР№,<br/>
+                С‚Рѕ РѕС‚РјРµС‚СЊС‚Рµ РґР»СЏ РЅРµРµ РіР°Р»РѕС‡РєСѓ "РўРµРєСЃС‚" Рё РІРІРµРґРёС‚Рµ Р·РЅР°С‡РµРЅРёРµ РІСЂСѓС‡РЅСѓСЋ.
             </p>
             <table width="650" border="0" cellspacing="5" class="proptable">
                 <tr id="row_title">
-                    <td width=""><strong>Название:</strong></td>
-                    <td>Столбец:</td>
+                    <td width=""><strong>РќР°Р·РІР°РЅРёРµ:</strong></td>
+                    <td>РЎС‚РѕР»Р±РµС†:</td>
                     <td><input type="text" onkeyup="xlsEditCol()" id="title_col" name="cells[title][col]" style="width:40px" /></td>
-                    <td>Строка:</td>
+                    <td>РЎС‚СЂРѕРєР°:</td>
                     <td><input type="text" onkeyup="xlsEditRow()" id="title_row" name="cells[title][row]" style="width:40px" /></td>
-                    <td width="90"><input type="checkbox" id="ignore_title" name="cells[title][ignore]" onclick="ignoreRow('title')" value="1"/> Текст:</td>
+                    <td width="90"><input type="checkbox" id="ignore_title" name="cells[title][ignore]" onclick="ignoreRow('title')" value="1"/> РўРµРєСЃС‚:</td>
                     <td><input type="text" class="other" name="cells[title][other]" style="width:200px" disabled /></td>
                 </tr>
             <?php
@@ -1744,11 +1744,11 @@ function cpPriceInput($id){
                 ?>                
                     <tr id="row_<?php echo $current; ?>">
                         <td width="150"><strong><?php echo stripslashes($value); ?>:</strong></td>
-                        <td>Столбец:</td>
+                        <td>РЎС‚РѕР»Р±РµС†:</td>
                         <td><input type="text" class="col" id="<?php echo $current; ?>" name="cells[<?php echo $current; ?>][col]" style="width:40px" /></td>
-                        <td>Строка:</td>
+                        <td>РЎС‚СЂРѕРєР°:</td>
                         <td><input type="text" class="row" name="cells[<?php echo $current; ?>][row]" style="width:40px" /></td>
-                        <td><input type="checkbox" id="ignore_<?php echo $current; ?>" name="cells[<?php echo $current; ?>][ignore]" onclick="ignoreRow('<?php echo $current; ?>')" value="1" /> Текст:</td>
+                        <td><input type="checkbox" id="ignore_<?php echo $current; ?>" name="cells[<?php echo $current; ?>][ignore]" onclick="ignoreRow('<?php echo $current; ?>')" value="1" /> РўРµРєСЃС‚:</td>
                         <td><input type="text" class="other" name="cells[<?php echo $current; ?>][other]" style="width:200px" disabled /></td>
                     </tr>
                 <?php
@@ -1758,12 +1758,12 @@ function cpPriceInput($id){
             if ($cat['view_type']=='shop'){
                 ?>
                     <tr id="row_price">
-                        <td width="250"><strong>Цена:</strong></td>
-                        <td>Столбец:</td>
+                        <td width="250"><strong>Р¦РµРЅР°:</strong></td>
+                        <td>РЎС‚РѕР»Р±РµС†:</td>
                         <td><input type="text" class="col" name="cells[price][col]" style="width:40px" /></td>
-                        <td>Строка:</td>
+                        <td>РЎС‚СЂРѕРєР°:</td>
                         <td><input type="text" class="row" name="cells[price][row]" style="width:40px" /></td>
-                        <td><input type="checkbox" id="ignore_price" name="cells[price][ignore]" onclick="ignoreRow('price')" value="1"/> Текст: </td>
+                        <td><input type="checkbox" id="ignore_price" name="cells[price][ignore]" onclick="ignoreRow('price')" value="1"/> РўРµРєСЃС‚: </td>
                         <td><input type="text" class="other" name="cells[price][other]" style="width:200px" disabled /></td>
                     </tr>
                 <?php
@@ -1771,41 +1771,41 @@ function cpPriceInput($id){
             ?>
             </table>
 
-            <p>Задайте остальные параметры записей:</p>
+            <p>Р—Р°РґР°Р№С‚Рµ РѕСЃС‚Р°Р»СЊРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹ Р·Р°РїРёСЃРµР№:</p>
             <table width="650" border="0" cellspacing="5" class="proptable">
                 <tr>
                     <td width="300">
-                        <strong>Публиковать записи:</strong><br/>
-                        <span class="hinttext">Если включено, записи сразу появятся на сайте</span>
+                        <strong>РџСѓР±Р»РёРєРѕРІР°С‚СЊ Р·Р°РїРёСЃРё:</strong><br/>
+                        <span class="hinttext">Р•СЃР»Рё РІРєР»СЋС‡РµРЅРѕ, Р·Р°РїРёСЃРё СЃСЂР°Р·Сѓ РїРѕСЏРІСЏС‚СЃСЏ РЅР° СЃР°Р№С‚Рµ</span>
                     </td>
                     <td>
-                        <input name="published" type="radio" value="1" checked="checked" /> Да
-                        <input name="published" type="radio" value="0" /> Нет
+                        <input name="published" type="radio" value="1" checked="checked" /> Р”Р°
+                        <input name="published" type="radio" value="0" /> РќРµС‚
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Разрешить комментарии:</strong></td>
+                    <td><strong>Р Р°Р·СЂРµС€РёС‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё:</strong></td>
                     <td>
-                        <input name="is_comments" type="radio" value="1" checked="checked" /> Да
-                        <input name="is_comments" type="radio" value="0" /> Нет
+                        <input name="is_comments" type="radio" value="1" checked="checked" /> Р”Р°
+                        <input name="is_comments" type="radio" value="0" /> РќРµС‚
                     </td>
                 </tr>
                 <?php if ($cat['view_type']=='shop'){ ?>
                 <tr>
                     <td>
-                        <strong>Разрешить выбор количества:</strong><br/>
-                        <span class="hinttext">При заказе товара</span>
+                        <strong>Р Р°Р·СЂРµС€РёС‚СЊ РІС‹Р±РѕСЂ РєРѕР»РёС‡РµСЃС‚РІР°:</strong><br/>
+                        <span class="hinttext">РџСЂРё Р·Р°РєР°Р·Рµ С‚РѕРІР°СЂР°</span>
                     </td>
                     <td>
-                        <input name="canmany" type="radio" value="1" checked="checked" /> Да
-                        <input name="canmany" type="radio" value="0" /> Нет
+                        <input name="canmany" type="radio" value="1" checked="checked" /> Р”Р°
+                        <input name="canmany" type="radio" value="0" /> РќРµС‚
                     </td>
                 </tr>
                 <?php } ?>
                 <tr>
                     <td>
-                        <strong>Тэги записей:</strong><br/>
-                        <span class="hinttext">Не обязательно</span>
+                        <strong>РўСЌРіРё Р·Р°РїРёСЃРµР№:</strong><br/>
+                        <span class="hinttext">РќРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ</span>
                     </td>
                     <td>
                         <input type="text" name="tags" style="width:300px" />
@@ -1813,8 +1813,8 @@ function cpPriceInput($id){
                 </tr>
                 <tr>
                     <td>
-                        <strong>Изображение:</strong><br/>
-                        <span class="hinttext">Не обязательно</span>
+                        <strong>РР·РѕР±СЂР°Р¶РµРЅРёРµ:</strong><br/>
+                        <span class="hinttext">РќРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ</span>
                     </td>
                     <td>
                         <input type="file" name="imgfile" />
@@ -1825,8 +1825,8 @@ function cpPriceInput($id){
             <p>
                 <input name="cat_id" type="hidden" id="cat_id" value="<?php echo (int)$_REQUEST['cat_id']; ?>" />
                  <input name="opt" type="hidden" id="opt" value="go_import_xls" />
-                 <input name="save" type="submit" id="save" value="Импортировать" />
-                 <input name="back" type="button" id="back" value="Отмена" onclick="window.history.go(-1);"/>
+                 <input name="save" type="submit" id="save" value="РРјРїРѕСЂС‚РёСЂРѕРІР°С‚СЊ" />
+                 <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.history.go(-1);"/>
             </p>
 
             </form><?php
@@ -1834,7 +1834,7 @@ function cpPriceInput($id){
         } else {
 
 
-            echo '<h4>Выберите рубрику для импорта записей:</h4>';
+            echo '<h4>Р’С‹Р±РµСЂРёС‚Рµ СЂСѓР±СЂРёРєСѓ РґР»СЏ РёРјРїРѕСЂС‚Р° Р·Р°РїРёСЃРµР№:</h4>';
 
             $sql = "SELECT id, title, NSLeft, NSLevel, parent_id
                     FROM cms_uc_cats
@@ -1856,7 +1856,7 @@ function cpPriceInput($id){
 //            $result = dbQuery($sql);
 //
 //            if (mysql_num_rows($result)>0){
-//                echo '<p><strong>Выберите рубрику для импорта записей:</strong></p>';
+//                echo '<p><strong>Р’С‹Р±РµСЂРёС‚Рµ СЂСѓР±СЂРёРєСѓ РґР»СЏ РёРјРїРѕСЂС‚Р° Р·Р°РїРёСЃРµР№:</strong></p>';
 //                echo '<ul>';
 //                while ($cat = mysql_fetch_assoc($result)){
 //                    echo '<li><a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=import_xls&cat_id='.$cat['id'].'">'.$cat['title'].'</a></li>';

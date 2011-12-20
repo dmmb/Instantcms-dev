@@ -18,7 +18,7 @@ function subscribes(){
     $inDB       = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
 
-    //Îïðåäåëÿåì àäðåñ äëÿ ðåäèðåêòà íàçàä
+    //ÐžÐ¿Ñ€ÐµÐ´ÐµÐ»ÑÐµÐ¼ Ð°Ð´Ñ€ÐµÑ Ð´Ð»Ñ Ñ€ÐµÐ´Ð¸Ñ€ÐµÐºÑ‚Ð° Ð½Ð°Ð·Ð°Ð´
     $back   = $inCore->getBackURL();
 
     $do = $inCore->request('do', 'str', 'subscribe');

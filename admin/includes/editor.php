@@ -42,9 +42,9 @@ function editorPage(){
 
 function editorHead(){
 	if ($GLOBALS['ed_page_title']){
-		echo '<title>'.$GLOBALS['ed_page_title'].' - Панель редактора</title>';
+		echo '<title>'.$GLOBALS['ed_page_title'].' - РџР°РЅРµР»СЊ СЂРµРґР°РєС‚РѕСЂР°</title>';
 	} else {
-		echo '<title>Редактор InstantCMS</title>';	
+		echo '<title>Р РµРґР°РєС‚РѕСЂ InstantCMS</title>';	
 	}
 	
 	foreach($GLOBALS['ed_page_head'] as $key=>$value) { 
@@ -85,7 +85,7 @@ function pageBar($cat_id, $current, $perpage){
 
 		if($pages>1){
 			$html .= '<div class="pagebar">';
-			$html .= '<span class="pagebar_title"><strong>Страницы: </strong></span>';	
+			$html .= '<span class="pagebar_title"><strong>РЎС‚СЂР°РЅРёС†С‹: </strong></span>';	
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {			
 					

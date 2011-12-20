@@ -1,5 +1,5 @@
 {* ================================================================================ *}
-{* ========================= —ÔËÒÓÍ ÔÓÎ¸ÁÓ‚‡ÚÂÎÂÈ ================================= *}
+{* ========================= –°–ø–∏—Å–æ–∫ –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª–µ–π ================================= *}
 {* ================================================================================ *}
 
 <div id="users_search_link" class="float_bar">
@@ -76,11 +76,11 @@
 	<table width="100%" cellspacing="0" cellpadding="0" class="users_layout">
 		<tr>
 			<td width="" valign="top">
-			{* ========================= —œ»—Œ  œŒÀ‹«Œ¬¿“≈À≈… ============================*}				
+			{* ========================= –°–ü–ò–°–û–ö –ü–û–õ–¨–ó–û–í–ê–¢–ï–õ–ï–ô ============================*}				
 				<div class="users_list_buttons">
-					<div class="button {if $link.selected=='latest'}selected{/if}"><a rel=înofollowî href="{$link.latest}">{$LANG.LATEST}</a></div>
-                    <div class="button {if $link.selected=='positive'}selected{/if}"><a rel=înofollowî href="{$link.positive}">{$LANG.POSITIVE}</a></div>
-					<div class="button {if $link.selected=='rating'}selected{/if}"><a rel=înofollowî href="{$link.rating}">{$LANG.RATING}</a></div>					
+					<div class="button {if $link.selected=='latest'}selected{/if}"><a rel=‚Äùnofollow‚Äù href="{$link.latest}">{$LANG.LATEST}</a></div>
+                    <div class="button {if $link.selected=='positive'}selected{/if}"><a rel=‚Äùnofollow‚Äù href="{$link.positive}">{$LANG.POSITIVE}</a></div>
+					<div class="button {if $link.selected=='rating'}selected{/if}"><a rel=‚Äùnofollow‚Äù href="{$link.rating}">{$LANG.RATING}</a></div>					
 				</div>
 				<div class="users_list">
 					<table width="100%" cellspacing="0" cellpadding="0" class="users_list">

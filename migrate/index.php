@@ -24,8 +24,8 @@
 
     define('HOST', 'http://' . $inCore->getHost());
 
-    $inCore->loadClass('config');       //конфигурация
-    $inCore->loadClass('db');           //база данных
+    $inCore->loadClass('config');       //РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ
+    $inCore->loadClass('db');           //Р±Р°Р·Р° РґР°РЅРЅС‹С…
     $inCore->loadClass('user');
 	$inCore->loadClass('cron');
 
@@ -73,29 +73,29 @@
 
     echo '<div id="wrapper">';
 
-    echo "<h2>Миграция InstantCMS {$version_prev} &rarr; {$version_next}</h2>";
+    echo "<h2>РњРёРіСЂР°С†РёСЏ InstantCMS {$version_prev} &rarr; {$version_next}</h2>";
 
 // ========================================================================== //
 // ========================================================================== //
 	if(!$inDB->get_field('cms_components', "link='actions'", 'id')){
 		$sql = "INSERT INTO `cms_components` (`title`, `link`, `config`, `internal`, `author`, `published`, `version`, `system`) VALUES
-		('Лента активности', 'actions', '---\r\nshow_target: 1\r\nperpage: 10\r\nperpage_tab: 15\r\nis_all: 1\r\nact_type: \r\n  add_quest: 16\r\n  add_club_user: 15\r\n  vote_movie: 31\r\n  add_movie: 30\r\n  add_friend: 20\r\n  add_post: 10\r\n  add_post_club: 25\r\n  add_catalog: 13\r\n  add_wall_my: 29\r\n  add_wall: 23\r\n  add_wall_club: 24\r\n  add_comment: 2\r\n  add_user_photo_multi: 27\r\n  add_board: 12\r\n  add_fpost: 17\r\n  add_article: 8\r\n  add_thread: 18\r\n  add_photo: 7\r\n  add_user_photo: 26\r\n  add_avatar: 19\r\n  add_file: 22\r\n  set_status: 11\r\n  add_award: 21\r\n  add_user: 28\r\n  add_blog: 9\r\n  add_club: 14\r\n', 0, 'InstantCMS Team', 1, '1.9', 1);";
+		('Р›РµРЅС‚Р° Р°РєС‚РёРІРЅРѕСЃС‚Рё', 'actions', '---\r\nshow_target: 1\r\nperpage: 10\r\nperpage_tab: 15\r\nis_all: 1\r\nact_type: \r\n  add_quest: 16\r\n  add_club_user: 15\r\n  vote_movie: 31\r\n  add_movie: 30\r\n  add_friend: 20\r\n  add_post: 10\r\n  add_post_club: 25\r\n  add_catalog: 13\r\n  add_wall_my: 29\r\n  add_wall: 23\r\n  add_wall_club: 24\r\n  add_comment: 2\r\n  add_user_photo_multi: 27\r\n  add_board: 12\r\n  add_fpost: 17\r\n  add_article: 8\r\n  add_thread: 18\r\n  add_photo: 7\r\n  add_user_photo: 26\r\n  add_avatar: 19\r\n  add_file: 22\r\n  set_status: 11\r\n  add_award: 21\r\n  add_user: 28\r\n  add_blog: 9\r\n  add_club: 14\r\n', 0, 'InstantCMS Team', 1, '1.9', 1);";
 		$inDB->query($sql);
 	
-		echo '<p>Компонент <strong>Лента активности</strong> установлен.</p>';
+		echo '<p>РљРѕРјРїРѕРЅРµРЅС‚ <strong>Р›РµРЅС‚Р° Р°РєС‚РёРІРЅРѕСЃС‚Рё</strong> СѓСЃС‚Р°РЅРѕРІР»РµРЅ.</p>';
 		$is_was_migrate = true;
 	}
 // ========================================================================== //
 // ========================================================================== //	
-	$inDB->query("UPDATE `cms_forums` SET `title` = '-- Корневой форум --' WHERE `parent_id` = 0 LIMIT 1");
-	$inDB->query("UPDATE `cms_menu` SET `title` = '-- Корневая страница --' WHERE `parent_id` = 0 LIMIT 1");
+	$inDB->query("UPDATE `cms_forums` SET `title` = '-- РљРѕСЂРЅРµРІРѕР№ С„РѕСЂСѓРј --' WHERE `parent_id` = 0 LIMIT 1");
+	$inDB->query("UPDATE `cms_menu` SET `title` = '-- РљРѕСЂРЅРµРІР°СЏ СЃС‚СЂР°РЅРёС†Р° --' WHERE `parent_id` = 0 LIMIT 1");
 	$inDB->query("ALTER TABLE `cms_board_cats` CHANGE `icon` `icon` VARCHAR( 200 ) CHARACTER SET cp1251 COLLATE cp1251_general_ci NULL DEFAULT 'folder_grey.png'");
 // ========================================================================== //
 // ========================================================================== //	
 	if (!$inDB->isFieldExists('cms_users', 'openid')){
 
 		$inDB->query("ALTER TABLE `cms_users` ADD `openid` VARCHAR( 250 ) NULL, ADD INDEX ( `openid` )");
-        echo '<p>Поле <strong>openid</strong> добавлено в таблицу <strong>cms_users</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>openid</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_users</strong></p>';
 		$is_was_migrate = true;
 	}
 // ========================================================================== //
@@ -103,7 +103,7 @@
 	if (!$inDB->isFieldExists('cms_board_items', 'ip')){
 
 		$inDB->query("ALTER TABLE `cms_board_items` ADD `ip` INT( 10 ) UNSIGNED NOT NULL AFTER `vipdate` , ADD INDEX ( `ip` )");
-        echo '<p>Поле <strong>ip</strong> добавлено в таблицу <strong>cms_board_items</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>ip</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_board_items</strong></p>';
 		$is_was_migrate = true;
 	}
 // ========================================================================== //
@@ -111,7 +111,7 @@
 	if (!$inDB->isFieldExists('cms_board_cats', 'form_id')){
 
 		$inDB->query("ALTER TABLE `cms_board_cats` ADD `form_id` INT( 11 ) NOT NULL AFTER `obtypes`");
-        echo '<p>Поле <strong>form_id</strong> добавлено в таблицу <strong>cms_board_cats</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>form_id</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_board_cats</strong></p>';
 		$is_was_migrate = true;
 	}
 // ========================================================================== //
@@ -119,7 +119,7 @@
 	if (!$inDB->isFieldExists('cms_board_items', 'formsdata')){
 
 		$inDB->query("ALTER TABLE `cms_board_items` ADD `formsdata` TEXT CHARACTER SET cp1251 COLLATE cp1251_general_ci NOT NULL AFTER `content`");
-        echo '<p>Поле <strong>formsdata</strong> добавлено в таблицу <strong>cms_board_items</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>formsdata</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_board_items</strong></p>';
 		$is_was_migrate = true;
 	}
 // ========================================================================== //
@@ -141,7 +141,7 @@
 
 		}
 
-		echo '<p>Типы объявлений удалены из поля заголовков.</p>';
+		echo '<p>РўРёРїС‹ РѕР±СЉСЏРІР»РµРЅРёР№ СѓРґР°Р»РµРЅС‹ РёР· РїРѕР»СЏ Р·Р°РіРѕР»РѕРІРєРѕРІ.</p>';
 		$is_was_migrate = true;
 
 // ========================================================================== //
@@ -165,7 +165,7 @@
 
 	$inDB->query($sql);
 
-	echo '<p>Таблица <strong>cms_search</strong> пересоздана.</p>';
+	echo '<p>РўР°Р±Р»РёС†Р° <strong>cms_search</strong> РїРµСЂРµСЃРѕР·РґР°РЅР°.</p>';
 	$is_was_migrate = true;
 
 // ========================================================================== //
@@ -175,13 +175,13 @@
 										'interval' => 24,
 										'component' => 'search',
 										'model_method' => 'deleteOldResults',
-										'comment' => 'Удаляет записи в кеше поиска старее 1 дня.',
+										'comment' => 'РЈРґР°Р»СЏРµС‚ Р·Р°РїРёСЃРё РІ РєРµС€Рµ РїРѕРёСЃРєР° СЃС‚Р°СЂРµРµ 1 РґРЅСЏ.',
 										'custom_file' => '',
 										'enabled' => 1,
 										'class_name' => '',
 										'class_method' => ''
 								  ));
-		echo '<p>Задание CRON deleteOldResults для очистки поискового кеша создано.</p>';
+		echo '<p>Р—Р°РґР°РЅРёРµ CRON deleteOldResults РґР»СЏ РѕС‡РёСЃС‚РєРё РїРѕРёСЃРєРѕРІРѕРіРѕ РєРµС€Р° СЃРѕР·РґР°РЅРѕ.</p>';
 		$is_was_migrate = true;
 	}
 // ========================================================================== //
@@ -191,13 +191,13 @@
 										'interval' => 48,
 										'component' => 'users',
 										'model_method' => 'deleteOldNotification',
-										'comment' => 'Удаляет сообщения службы обновлений и рассылки старее 1 месяца',
+										'comment' => 'РЈРґР°Р»СЏРµС‚ СЃРѕРѕР±С‰РµРЅРёСЏ СЃР»СѓР¶Р±С‹ РѕР±РЅРѕРІР»РµРЅРёР№ Рё СЂР°СЃСЃС‹Р»РєРё СЃС‚Р°СЂРµРµ 1 РјРµСЃСЏС†Р°',
 										'custom_file' => '',
 										'enabled' => 1,
 										'class_name' => '',
 										'class_method' => ''
 								  ));
-		echo '<p>Задание CRON deleteOldNotification для очистки сообщений службы обновлений и рассылки создано.</p>';
+		echo '<p>Р—Р°РґР°РЅРёРµ CRON deleteOldNotification РґР»СЏ РѕС‡РёСЃС‚РєРё СЃРѕРѕР±С‰РµРЅРёР№ СЃР»СѓР¶Р±С‹ РѕР±РЅРѕРІР»РµРЅРёР№ Рё СЂР°СЃСЃС‹Р»РєРё СЃРѕР·РґР°РЅРѕ.</p>';
 		$is_was_migrate = true;
 	}
 // ========================================================================== //
@@ -206,20 +206,20 @@
 	addFultextIndex('cms_board_items');
 	addFultextIndex('cms_faq_quests', 'quest');
 	addFultextIndex('cms_faq_quests', 'answer');
-	echo '<p>Индексы fulltext для таблиц cms_blog_posts, cms_faq_quests и cms_board_items созданы.</p>';
+	echo '<p>РРЅРґРµРєСЃС‹ fulltext РґР»СЏ С‚Р°Р±Р»РёС† cms_blog_posts, cms_faq_quests Рё cms_board_items СЃРѕР·РґР°РЅС‹.</p>';
 	$is_was_migrate = true;
 // ========================================================================== //
 // ========================================================================== //
     if (!$inDB->isFieldExists('cms_comments', 'is_hidden')){
         $inDB->query("ALTER TABLE `cms_comments` ADD `is_hidden` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `ip`");
-        echo '<p>Поле <strong>is_hidden</strong> добавлено в таблицу <strong>cms_comments</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>is_hidden</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_comments</strong></p>';
 		$is_was_migrate = true;
     }
 // ========================================================================== //
 // ========================================================================== //
     if (!$inDB->isFieldExists('cms_forum_cats', 'seolink')){
         $inDB->query("ALTER TABLE `cms_forum_cats`  ADD `seolink` VARCHAR(200) NOT NULL AFTER `ordering`,  ADD INDEX (`seolink`) ");
-        echo '<p>Поле <strong>seolink</strong> добавлено в таблицу <strong>cms_forum_cats</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>seolink</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_forum_cats</strong></p>';
 		$is_was_migrate = true;
     }
 // ========================================================================================== //
@@ -244,21 +244,21 @@
 	
 		}
 	
-		echo '<p>Генерация SEO-ЧПУ для категорий форума завершена...</p>';
+		echo '<p>Р“РµРЅРµСЂР°С†РёСЏ SEO-Р§РџРЈ РґР»СЏ РєР°С‚РµРіРѕСЂРёР№ С„РѕСЂСѓРјР° Р·Р°РІРµСЂС€РµРЅР°...</p>';
 		$is_was_migrate = true;
 	}
 // ========================================================================== //
 // ========================================================================== //
     if (!$inDB->isFieldExists('cms_forums', 'icon')){
         $inDB->query("ALTER TABLE `cms_forums` ADD `icon` VARCHAR( 200 ) NOT NULL AFTER `NSLevel`");
-        echo '<p>Поле <strong>icon</strong> добавлено в таблицу <strong>cms_forums</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>icon</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_forums</strong></p>';
 		$is_was_migrate = true;
     }
 // ========================================================================== //
 // ========================================================================== //
     if (!$inDB->isFieldExists('cms_forums', 'access_list')){
         $inDB->query("ALTER TABLE `cms_forums` ADD `access_list` TINYTEXT NOT NULL AFTER `description`");
-        echo '<p>Поле <strong>access_list</strong> добавлено в таблицу <strong>cms_forums</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>access_list</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_forums</strong></p>';
 		$is_was_migrate = true;
     }
 // ========================================================================== //
@@ -282,7 +282,7 @@
 			}
 		}
 	
-		echo '<p>Мультидоступ групп к форумам выполнен.</p>';
+		echo '<p>РњСѓР»СЊС‚РёРґРѕСЃС‚СѓРї РіСЂСѓРїРї Рє С„РѕСЂСѓРјР°Рј РІС‹РїРѕР»РЅРµРЅ.</p>';
 		$is_was_migrate = true;
 	}
 // ========================================================================== //
@@ -296,24 +296,24 @@
 
 	} elseif(!$forum_cfg['group_access']) { $forum_cfg['group_access'] = ''; $inCore->saveComponentConfig('forum', $forum_cfg); }
 
-	echo '<p>Мультидоступ групп к прикреплению вложений на форуме выполнен.</p>';
+	echo '<p>РњСѓР»СЊС‚РёРґРѕСЃС‚СѓРї РіСЂСѓРїРї Рє РїСЂРёРєСЂРµРїР»РµРЅРёСЋ РІР»РѕР¶РµРЅРёР№ РЅР° С„РѕСЂСѓРјРµ РІС‹РїРѕР»РЅРµРЅ.</p>';
 	$is_was_migrate = true;
 
 // ========================================================================== //
 // ========================================================================== //
     if ($inDB->isFieldExists('cms_forums', 'auth_group')){
         $inDB->query("ALTER TABLE `cms_forums` DROP `auth_group`");
-        echo '<p>Поле <strong>auth_group</strong> удалено из таблицы <strong>cms_forums</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>auth_group</strong> СѓРґР°Р»РµРЅРѕ РёР· С‚Р°Р±Р»РёС†С‹ <strong>cms_forums</strong></p>';
 		$is_was_migrate = true;
     }
 // ========================================================================== //
 // ========================================================================== //
 	if ($is_was_migrate) {
-	    echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Миграция завершена. Удалите папку /migrate/ прежде чем продолжить!</div>';
+	    echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">РњРёРіСЂР°С†РёСЏ Р·Р°РІРµСЂС€РµРЅР°. РЈРґР°Р»РёС‚Рµ РїР°РїРєСѓ /migrate/ РїСЂРµР¶РґРµ С‡РµРј РїСЂРѕРґРѕР»Р¶РёС‚СЊ!</div>';
 	} else {
-		echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Вы уже прошли миграцию.</div>';
+		echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Р’С‹ СѓР¶Рµ РїСЂРѕС€Р»Рё РјРёРіСЂР°С†РёСЋ.</div>';
 	}
-    echo '<div class="nextlink"><a href="/">Перейти на сайт</a></div>';
+    echo '<div class="nextlink"><a href="/">РџРµСЂРµР№С‚Рё РЅР° СЃР°Р№С‚</a></div>';
     echo '</div>';
 
 // ========================================================================== //

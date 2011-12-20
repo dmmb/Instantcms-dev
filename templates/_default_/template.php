@@ -49,8 +49,8 @@
                 <div class="grid_9">
                     <?php if (!$inUser->id){ ?>
                         <div class="mod_user_menu">
-                            <span class="register"><a href="/registration">Регистрация</a></span>
-                            <span class="login"><a href="/login">Вход</a></span>
+                            <span class="register"><a href="/registration">Р РµРіРёСЃС‚СЂР°С†РёСЏ</a></span>
+                            <span class="login"><a href="/login">Р’С…РѕРґ</a></span>
                         </div>
                     <?php } else { ?>
                         <?php cmsModule('header'); ?>
@@ -114,7 +114,7 @@
                 <div id="copyright"><?php cmsPrintSitename(); ?> &copy; <?php echo date('Y'); ?></div>
             </div>
             <div class="grid_4 foot_right">
-                <a href="http://www.instantcms.ru/" title="Работает на InstantCMS">
+                <a href="http://www.instantcms.ru/" title="Р Р°Р±РѕС‚Р°РµС‚ РЅР° InstantCMS">
                     <img src="/templates/_default_/images/b88x31.gif" border="0"/>
                 </a>
             </div>

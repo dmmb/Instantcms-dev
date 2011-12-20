@@ -3,16 +3,16 @@
 
     <module>
         <id>mod_lastreg</id>
-        <title>Друзья онлайн</title>
+        <title>Р”СЂСѓР·СЊСЏ РѕРЅР»Р°Р№РЅ</title>
     </module>
 
     <params>
 
-        <param type="number" name="limit" title="Количество друзей онлайн" default="5" />
+        <param type="number" name="limit" title="РљРѕР»РёС‡РµСЃС‚РІРѕ РґСЂСѓР·РµР№ РѕРЅР»Р°Р№РЅ" default="5" />
 
-        <param type="list" name="view_type" title="Показывать как">
-            <option title="С аватарами" value="table" />
-            <option title="Списком" value="list" />
+        <param type="list" name="view_type" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РєР°Рє">
+            <option title="РЎ Р°РІР°С‚Р°СЂР°РјРё" value="table" />
+            <option title="РЎРїРёСЃРєРѕРј" value="list" />
         </param>
 
     </params>

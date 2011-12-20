@@ -39,7 +39,7 @@ function clubs(){
 
 	//LOAD CONFIG
 	$cfg = $inCore->loadComponentConfig('clubs');
-	// Проверяем включени ли компонент
+	// РџСЂРѕРІРµСЂСЏРµРј РІРєР»СЋС‡РµРЅРё Р»Рё РєРѕРјРїРѕРЅРµРЅС‚
 	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 	
 	//SOME DEFAULT CONFIG VALUES
@@ -55,7 +55,7 @@ function clubs(){
     if(!isset($cfg['notify_out'])) { $cfg['notify_out'] = 1; }
 	if(!isset($cfg['every_karma'])) { $cfg['every_karma'] = 100; }
 	
-    //Определяем адрес для редиректа назад
+    //РћРїСЂРµРґРµР»СЏРµРј Р°РґСЂРµСЃ РґР»СЏ СЂРµРґРёСЂРµРєС‚Р° РЅР°Р·Р°Рґ
     $back   = $inCore->getBackURL();
 	
 	$pagetitle = $inCore->menuTitle();
@@ -92,7 +92,7 @@ if ($do=='view'){
 	$smarty = $inCore->initSmarty('components', 'com_clubs_view.tpl');
 	$smarty->assign('pagetitle', $pagetitle);
 	$smarty->assign('clubid', $id);
-	// Ссылку на создание клуба показываем всем авторизованным, если включено создание клуба
+	// РЎСЃС‹Р»РєСѓ РЅР° СЃРѕР·РґР°РЅРёРµ РєР»СѓР±Р° РїРѕРєР°Р·С‹РІР°РµРј РІСЃРµРј Р°РІС‚РѕСЂРёР·РѕРІР°РЅРЅС‹Рј, РµСЃР»Рё РІРєР»СЋС‡РµРЅРѕ СЃРѕР·РґР°РЅРёРµ РєР»СѓР±Р°
 	$smarty->assign('can_create', ($inUser->id && $cfg['cancreate'] || $inUser->is_admin));
 	$smarty->assign('clubs', $clubs);
 	$smarty->assign('total', $total);
@@ -182,7 +182,7 @@ if ($do=='club'){
 
 	$club['pubdate'] = $inCore->dateformat($club['pubdate'], true, true);
 
-	// Получаем плагины
+	// РџРѕР»СѓС‡Р°РµРј РїР»Р°РіРёРЅС‹
 	$plugins = $model->getPluginsOutput($club);
 
 	$smarty = $inCore->initSmarty('components', 'com_clubs_view_club.tpl');	
@@ -242,7 +242,7 @@ if ($do == 'create'){
         if(!$errors){
             $created_id = $model->addClub(array('user_id'=>$inUser->id, 'title'=>$title, 'clubtype'=>$clubtype), $cfg);
             if($created_id){ setClubRating($created_id); }
-			//регистрируем событие
+			//СЂРµРіРёСЃС‚СЂРёСЂСѓРµРј СЃРѕР±С‹С‚РёРµ
 			cmsActions::log('add_club', array(
 						'object' => $title,
 						'object_url' => '/clubs/'.$created_id,
@@ -363,40 +363,40 @@ if ($do == 'config'){
 
     if ( !$inCore->inRequest('save') ){
         
-        // Заголовки и пафвей
+        // Р—Р°РіРѕР»РѕРІРєРё Рё РїР°С„РІРµР№
         $inPage->addPathway($club['title'], '/clubs/'.$id);
         $inPage->addPathway($_LANG['CONFIG_CLUB']);
         $inPage->setTitle($_LANG['CONFIG_CLUB']);
 
-		// Получаем список друзей владельца клуба
+		// РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє РґСЂСѓР·РµР№ РІР»Р°РґРµР»СЊС†Р° РєР»СѓР±Р°
 		$friends     	 = cmsUser::getFriends($club['admin_id']);
-		// Получаем участников клуба, без учета администратора
+		// РџРѕР»СѓС‡Р°РµРј СѓС‡Р°СЃС‚РЅРёРєРѕРІ РєР»СѓР±Р°, Р±РµР· СѓС‡РµС‚Р° Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°
         $moderators     = clubModerators($id);
         $members        = clubMembers($id);
         $club_users_list = array_merge($moderators, $members);
-		// Проверяем наличие друга в списке участников клуба или является ли он администратором
+		// РџСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ РґСЂСѓРіР° РІ СЃРїРёСЃРєРµ СѓС‡Р°СЃС‚РЅРёРєРѕРІ РєР»СѓР±Р° РёР»Рё СЏРІР»СЏРµС‚СЃСЏ Р»Рё РѕРЅ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂРѕРј
 		foreach($friends as $key=>$friend){ 
 			if (in_array($friend['id'], $club_users_list) || $friend['id'] == $club['admin_id']) { unset($friends[$key]); }
 		}
-		// Формируем список option друзей, если они есть
+		// Р¤РѕСЂРјРёСЂСѓРµРј СЃРїРёСЃРѕРє option РґСЂСѓР·РµР№, РµСЃР»Рё РѕРЅРё РµСЃС‚СЊ
 		if ($_SESSION['user']['friends'] && $friends) { 
 			foreach($friends as $friend){ 
 				$friends_list .= '<option value="'.$friend['id'].'">'.$friend['nickname'].'</option>';
 			}		
 		}
-		// Формируем массив id друзей для мержа с участниками клуба
-		// массив друзей берется с уже отфильтрованными участниками
+		// Р¤РѕСЂРјРёСЂСѓРµРј РјР°СЃСЃРёРІ id РґСЂСѓР·РµР№ РґР»СЏ РјРµСЂР¶Р° СЃ СѓС‡Р°СЃС‚РЅРёРєР°РјРё РєР»СѓР±Р°
+		// РјР°СЃСЃРёРІ РґСЂСѓР·РµР№ Р±РµСЂРµС‚СЃСЏ СЃ СѓР¶Рµ РѕС‚С„РёР»СЊС‚СЂРѕРІР°РЅРЅС‹РјРё СѓС‡Р°СЃС‚РЅРёРєР°РјРё
 		$friends_ids = array();
 		foreach($friends as $friend){ 
 			$friends_ids[] = $friend['id'];
 		}
-		// формируем список друзья не в клубе + участники клуба
+		// С„РѕСЂРјРёСЂСѓРµРј СЃРїРёСЃРѕРє РґСЂСѓР·СЊСЏ РЅРµ РІ РєР»СѓР±Рµ + СѓС‡Р°СЃС‚РЅРёРєРё РєР»СѓР±Р°
 		$fr_members = array_merge($club_users_list, $friends_ids);
-		// Проверяем наличие друга или участников клуба в списке модераторов
+		// РџСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ РґСЂСѓРіР° РёР»Рё СѓС‡Р°СЃС‚РЅРёРєРѕРІ РєР»СѓР±Р° РІ СЃРїРёСЃРєРµ РјРѕРґРµСЂР°С‚РѕСЂРѕРІ
 		$fr_members = array_diff($fr_members, $moderators);
-		// Формируем список option друзей (которые еще не в этом клубе) и участников
+		// Р¤РѕСЂРјРёСЂСѓРµРј СЃРїРёСЃРѕРє option РґСЂСѓР·РµР№ (РєРѕС‚РѕСЂС‹Рµ РµС‰Рµ РЅРµ РІ СЌС‚РѕРј РєР»СѓР±Рµ) Рё СѓС‡Р°СЃС‚РЅРёРєРѕРІ
 		if ($fr_members) { $fr_members_list = cmsUser::getAuthorsList($fr_members); } else { $fr_members_list = ''; }
-		// Формируем список option участников клуба
+		// Р¤РѕСЂРјРёСЂСѓРµРј СЃРїРёСЃРѕРє option СѓС‡Р°СЃС‚РЅРёРєРѕРІ РєР»СѓР±Р°
         if ($moderators) { $moders_list = cmsUser::getAuthorsList($moderators); } else { $moders_list = ''; }
         if ($club_users_list) { $members_list = cmsUser::getAuthorsList($club_users_list); } else { $members_list = ''; }
 
@@ -481,18 +481,18 @@ if ($do == 'join'){
     if (clubUserIsMember($id, $user_id)){ return; }
 
     //
-    // Обработка заявки
+    // РћР±СЂР°Р±РѕС‚РєР° Р·Р°СЏРІРєРё
     //
     if ( $inCore->inRequest('confirm') ){
 
-        //списываем оплату если клуб платный
+        //СЃРїРёСЃС‹РІР°РµРј РѕРїР»Р°С‚Сѓ РµСЃР»Рё РєР»СѓР± РїР»Р°С‚РЅС‹Р№
         if (IS_BILLING && $club['is_vip'] && $club['join_cost'] && !$inUser->is_admin){
             if ($inUser->balance >= $club['join_cost']){
-                //если средств на балансе хватает
+                //РµСЃР»Рё СЃСЂРµРґСЃС‚РІ РЅР° Р±Р°Р»Р°РЅСЃРµ С…РІР°С‚Р°РµС‚
                 cmsBilling::pay($user_id, $club['join_cost'], sprintf($_LANG['VIP_CLUB_BUY_JOIN'], $club['title']));
             } else {
-                //недостаточно средств, создаем тикет
-                //и отправляем оплачивать
+                //РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ СЃСЂРµРґСЃС‚РІ, СЃРѕР·РґР°РµРј С‚РёРєРµС‚
+                //Рё РѕС‚РїСЂР°РІР»СЏРµРј РѕРїР»Р°С‡РёРІР°С‚СЊ
                 $billing_ticket = array(
                     'action' => sprintf($_LANG['VIP_CLUB_BUY_JOIN'], $club['title']), 
                     'cost'   => $club['join_cost'],
@@ -504,11 +504,11 @@ if ($do == 'join'){
             }
         }
 
-        //добавляем пользователя в клуб
+        //РґРѕР±Р°РІР»СЏРµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РІ РєР»СѓР±
         clubAddUser($id, $user_id);
         setClubsRating($id);
 
-		//регистрируем событие
+		//СЂРµРіРёСЃС‚СЂРёСЂСѓРµРј СЃРѕР±С‹С‚РёРµ
 		cmsActions::log('add_club_user', array(
 						'object' => $club['title'],
 						'object_url' => '/clubs/'.$id,
@@ -524,7 +524,7 @@ if ($do == 'join'){
     }
 
     //
-    // Форма подтверждения заявки
+    // Р¤РѕСЂРјР° РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ Р·Р°СЏРІРєРё
     //
     if ( !$inCore->inRequest('confirm') ) {
 
@@ -561,7 +561,7 @@ if ($do == 'join'){
     }
 
 }
-///////////////////// Рассылка сообщения членам клуба /////////////////////////////////////////////////////////
+///////////////////// Р Р°СЃСЃС‹Р»РєР° СЃРѕРѕР±С‰РµРЅРёСЏ С‡Р»РµРЅР°Рј РєР»СѓР±Р° /////////////////////////////////////////////////////////
 if ($do == 'send_message'){
 
     $user_id    = $inUser->id;
@@ -598,7 +598,7 @@ if ($do == 'send_message'){
 		if ($errors) { $inCore->redirect($back); }
 
 		foreach ($total_list as $user_id){
-			cmsUser::sendMessage(USER_UPDATER, $user_id, '<b>Сообщение от <a href="'.cmsUser::getProfileURL($inUser->login).'">Администратора</a> клуба "<a href="/clubs/'.$id.'">'.$club['title'].'</a>":</b><br> '.$message);
+			cmsUser::sendMessage(USER_UPDATER, $user_id, '<b>РЎРѕРѕР±С‰РµРЅРёРµ РѕС‚ <a href="'.cmsUser::getProfileURL($inUser->login).'">РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°</a> РєР»СѓР±Р° "<a href="/clubs/'.$id.'">'.$club['title'].'</a>":</b><br> '.$message);
 		}
 		$_POST['only_mod'] ? $inCore->addSessionMessage($_LANG['SEND_MESS_TO_MODERS_OK'], 'info') : $inCore->addSessionMessage($_LANG['SEND_MESS_TO_MEMBERS_OK'], 'info');
 		$inCore->redirect('/clubs/'.$id);
@@ -607,7 +607,7 @@ if ($do == 'send_message'){
 
 }
 
-///////////////////////// Пригласить друзей в группу /////////////////////////////////////////
+///////////////////////// РџСЂРёРіР»Р°СЃРёС‚СЊ РґСЂСѓР·РµР№ РІ РіСЂСѓРїРїСѓ /////////////////////////////////////////
 if ($do=='join_member'){
 
     $user_id    = $inUser->id;
@@ -617,28 +617,28 @@ if ($do=='join_member'){
 
 	if ( !$inCore->inRequest('join') ){
 
-		// Получаем список друзей
+		// РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє РґСЂСѓР·РµР№
 		$friends     	= cmsUser::getFriends($user_id);
-		// Получаем участников клуба
+		// РџРѕР»СѓС‡Р°РµРј СѓС‡Р°СЃС‚РЅРёРєРѕРІ РєР»СѓР±Р°
         $moderators     = clubModerators($id);
         $members        = clubMembers($id);
         $userslist      = array_merge($moderators, $members);
-		// Проверяем наличие друга в списке участников клуба или является ли он администратором
+		// РџСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ РґСЂСѓРіР° РІ СЃРїРёСЃРєРµ СѓС‡Р°СЃС‚РЅРёРєРѕРІ РєР»СѓР±Р° РёР»Рё СЏРІР»СЏРµС‚СЃСЏ Р»Рё РѕРЅ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂРѕРј
 		foreach($friends as $key=>$friend){ 
 			if (in_array($friend['id'], $userslist) || $friend['id'] == $club['admin_id']) { unset($friends[$key]); }
 		}
-		// Если нет друзей или все друзья уже в этом клубе, то выводим ошибку и возвращаемся назад
+		// Р•СЃР»Рё РЅРµС‚ РґСЂСѓР·РµР№ РёР»Рё РІСЃРµ РґСЂСѓР·СЊСЏ СѓР¶Рµ РІ СЌС‚РѕРј РєР»СѓР±Рµ, С‚Рѕ РІС‹РІРѕРґРёРј РѕС€РёР±РєСѓ Рё РІРѕР·РІСЂР°С‰Р°РµРјСЃСЏ РЅР°Р·Р°Рґ
 		if (!$_SESSION['user']['friends'] || !$friends) { $inCore->addSessionMessage($_LANG['SEND_INVITE_ERROR'], 'error'); $inCore->redirect($back); }
-		// Формируем список option друзей
+		// Р¤РѕСЂРјРёСЂСѓРµРј СЃРїРёСЃРѕРє option РґСЂСѓР·РµР№
 		foreach($friends as $friend){ 
 			$friends_opt .= '<option value="'.$friend['id'].'">'.$friend['nickname'].'</option>';
 		}
-		// Заголовок страницы и пафвей
+		// Р—Р°РіРѕР»РѕРІРѕРє СЃС‚СЂР°РЅРёС†С‹ Рё РїР°С„РІРµР№
 		$inPage->setTitle($_LANG['SEND_INVITE_CLUB'].' '.$club['title']);
 		$inPage->addPathway($club['title'], '/clubs/'.$id);
 		$inPage->addPathway($_LANG['SEND_INVITE_CLUB']);
 		$inPage->backButton(false);
-		// Выводим шаблон
+		// Р’С‹РІРѕРґРёРј С€Р°Р±Р»РѕРЅ
 		$smarty = $inCore->initSmarty('components', 'com_clubs_join_member.tpl');			
 		$smarty->assign('club', $club);
 		$smarty->assign('friends', $friends_opt);

@@ -52,23 +52,23 @@ if($opt=='list'){
     $toolmenu = array();
 
     $toolmenu[0]['icon'] = 'new.gif';
-    $toolmenu[0]['title'] = 'Новый клуб';
+    $toolmenu[0]['title'] = 'РќРѕРІС‹Р№ РєР»СѓР±';
     $toolmenu[0]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add';
 
     $toolmenu[4]['icon'] = 'config.gif';
-    $toolmenu[4]['title'] = 'Настройки';
+    $toolmenu[4]['title'] = 'РќР°СЃС‚СЂРѕР№РєРё';
     $toolmenu[4]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config';
 
     $toolmenu[11]['icon'] = 'edit.gif';
-    $toolmenu[11]['title'] = 'Редактировать выбранные';
+    $toolmenu[11]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
     $toolmenu[11]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=edit&multiple=1');";
 
     $toolmenu[12]['icon'] = 'show.gif';
-    $toolmenu[12]['title'] = 'Включить выбранные';
+    $toolmenu[12]['title'] = 'Р’РєР»СЋС‡РёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
     $toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=show_club&multiple=1');";
 
     $toolmenu[13]['icon'] = 'hide.gif';
-    $toolmenu[13]['title'] = 'Отключить выбранные';
+    $toolmenu[13]['title'] = 'РћС‚РєР»СЋС‡РёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
     $toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=hide_club&multiple=1');";
 
 }
@@ -77,11 +77,11 @@ if ($opt=='list' || $opt=='config'){
 } else {
 
     $toolmenu[20]['icon'] = 'save.gif';
-    $toolmenu[20]['title'] = 'Сохранить';
+    $toolmenu[20]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
     $toolmenu[20]['link'] = 'javascript:document.addform.submit();';
 
     $toolmenu[21]['icon'] = 'cancel.gif';
-    $toolmenu[21]['title'] = 'Отмена';
+    $toolmenu[21]['title'] = 'РћС‚РјРµРЅР°';
     $toolmenu[21]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'];
 
 }
@@ -104,7 +104,7 @@ if($opt=='saveconfig'){
 
     $inCore->saveComponentConfig('clubs', $cfg);
 
-    $msg = 'Настройки сохранены.';
+    $msg = 'РќР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅРµРЅС‹.';
     $opt = 'config';
 }
 
@@ -129,7 +129,7 @@ if ($opt == 'hide_club'){
 }
 
 if ($opt == 'submit'){	
-    $title 			= $inCore->request('title', 'str', 'Клуб без названия');
+    $title 			= $inCore->request('title', 'str', 'РљР»СѓР± Р±РµР· РЅР°Р·РІР°РЅРёСЏ');
     $description 	= $inCore->request('description', 'html');
     $description    = $inDB->escape_string($description);
     $published 		= $inCore->request('published', 'int');
@@ -177,7 +177,7 @@ if ($opt == 'submit'){
     $blog_seolink = cmsCore::strToURL($title);
 
     $sql = "INSERT INTO cms_blogs (user_id, title, pubdate, allow_who, view_type, showcats, ownertype, premod, forall, owner, seolink)
-                    VALUES ('$id', 'Блог', NOW(), 'all', 'list', 1, 'multi', 0, 0, 'club', '$blog_seolink')";
+                    VALUES ('$id', 'Р‘Р»РѕРі', NOW(), 'all', 'list', 1, 'multi', 0, 0, 'club', '$blog_seolink')";
     dbQuery($sql);
 
     $moders 		= $_POST['moderslist'];
@@ -195,7 +195,7 @@ if ($opt == 'submit'){
 if ($opt == 'update'){
     if(isset($_REQUEST['item_id'])) {
         $id 			= (int)$_REQUEST['item_id'];
-        $title 			= $inCore->request('title', 'str', 'Клуб без названия');
+        $title 			= $inCore->request('title', 'str', 'РљР»СѓР± Р±РµР· РЅР°Р·РІР°РЅРёСЏ');
         $description 	= $inCore->request('description', 'html');
         $description    = $inDB->escape_string($description);
         $published 		= $inCore->request('published', 'int');
@@ -275,36 +275,36 @@ if($opt == 'delete'){
 cpToolMenu($toolmenu);
 
 if ($opt == 'list'){
-    cpAddPathway('Клубы пользователей', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
-    echo '<h3>Клубы пользователей</h3>';
+    cpAddPathway('РљР»СѓР±С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
+    echo '<h3>РљР»СѓР±С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</h3>';
 
     //TABLE COLUMNS
     $fields = array();
 
     $fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-    $fields[1]['title'] = 'Дата';		$fields[1]['field'] = 'pubdate';		$fields[1]['width'] = '100';		$fields[1]['filter'] = 15;
+    $fields[1]['title'] = 'Р”Р°С‚Р°';		$fields[1]['field'] = 'pubdate';		$fields[1]['width'] = '100';		$fields[1]['filter'] = 15;
     $fields[1]['fdate'] = '%d/%m/%Y';
 
-    $fields[2]['title'] = 'Название';	$fields[2]['field'] = 'title';		$fields[2]['width'] = '';
+    $fields[2]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[2]['field'] = 'title';		$fields[2]['width'] = '';
     $fields[2]['filter'] = 15;
     $fields[2]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id=%id%';
 
-    $fields[3]['title'] = 'Участников';	$fields[3]['field'] = 'id';		$fields[3]['width'] = '120';
+    $fields[3]['title'] = 'РЈС‡Р°СЃС‚РЅРёРєРѕРІ';	$fields[3]['field'] = 'id';		$fields[3]['width'] = '120';
     $fields[3]['prc'] = 'usersClubByID';
 
-    $fields[4]['title'] = 'Активен';		$fields[4]['field'] = 'published';		$fields[4]['width'] = '100';
+    $fields[4]['title'] = 'РђРєС‚РёРІРµРЅ';		$fields[4]['field'] = 'published';		$fields[4]['width'] = '100';
     $fields[4]['do'] = 'opt'; $fields[4]['do_suffix'] = '_club';
 
     //ACTIONS
     $actions = array();
-    $actions[0]['title'] = 'Редактировать';
+    $actions[0]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
     $actions[0]['icon']  = 'edit.gif';
     $actions[0]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id=%id%';
 
-    $actions[1]['title'] = 'Удалить';
+    $actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
     $actions[1]['icon']  = 'delete.gif';
-    $actions[1]['confirm'] = 'Удалить клуб?';
+    $actions[1]['confirm'] = 'РЈРґР°Р»РёС‚СЊ РєР»СѓР±?';
     $actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete&item_id=%id%';
 
     //Print table
@@ -314,13 +314,13 @@ if ($opt == 'list'){
 if ($opt == 'add' || $opt == 'edit'){	
 
     if ($opt=='add'){
-        echo '<h3>Добавить клуб</h3>';
+        echo '<h3>Р”РѕР±Р°РІРёС‚СЊ РєР»СѓР±</h3>';
     } else {
         if(isset($_REQUEST['multiple'])){
             if (isset($_REQUEST['item'])){
                 $_SESSION['editlist'] = $_REQUEST['item'];
             } else {
-                echo '<p class="error">Нет выбранных объектов!</p>';
+                echo '<p class="error">РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ!</p>';
                 return;
             }
         }
@@ -330,7 +330,7 @@ if ($opt == 'add' || $opt == 'edit'){
         if (isset($_SESSION['editlist'])){
             $id = array_shift($_SESSION['editlist']);
             if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else
-            { $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
+            { $ostatok = '(РќР° РѕС‡РµСЂРµРґРё: '.sizeof($_SESSION['editlist']).')'; }
         } else { $id = $_REQUEST['item_id']; }
 
 
@@ -342,7 +342,7 @@ if ($opt == 'add' || $opt == 'edit'){
         }
 
         echo '<h3>'.$mod['title'].' '.$ostatok.'</h3>';
-        cpAddPathway('Клубы пользователей', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
+        cpAddPathway('РљР»СѓР±С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
         cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id='.$id);
 
     }
@@ -359,30 +359,30 @@ if ($opt == 'add' || $opt == 'edit'){
     ob_start(); ?>
     
 <form action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id'];?>" method="post" enctype="multipart/form-data" name="addform" id="addform">
-    {tab=Обшие настройки}
+    {tab=РћР±С€РёРµ РЅР°СЃС‚СЂРѕР№РєРё}
     <table width="625" border="0" cellspacing="5" class="proptable">
         <tr>
-            <td width="298"><strong>Название клуба: </strong><br />
-            <span class="hinttext">Отображается на сайте</span>					</td>
+            <td width="298"><strong>РќР°Р·РІР°РЅРёРµ РєР»СѓР±Р°: </strong><br />
+            <span class="hinttext">РћС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РЅР° СЃР°Р№С‚Рµ</span>					</td>
             <td width="308"><input name="title" type="text" id="title" style="width:300px" value="<?php echo htmlspecialchars($mod['title']);?>"/></td>
         </tr>
         <tr>
-            <td><strong>Логотип клуба:</strong><br />
-            <span class="hinttext">Только GIF, JPG, JPEG, PNG </span>					</td>
+            <td><strong>Р›РѕРіРѕС‚РёРї РєР»СѓР±Р°:</strong><br />
+            <span class="hinttext">РўРѕР»СЊРєРѕ GIF, JPG, JPEG, PNG </span>					</td>
             <td>
                 <?php if (@$mod['imageurl']){ echo '<div style="margin-bottom:5px;"><img src="/images/clubs/small/'.$mod['imageurl'].'" /></div>'; } ?>
                 <input name="picture" type="file" id="picture" size="33" />
             </td>
         </tr>
         <tr>
-            <td><strong>Максимальный размер: </strong><br />
-                <span class="hinttext">Введите &quot;0&quot; для бесконечного <br />
-            числа участников </span></td>
+            <td><strong>РњР°РєСЃРёРјР°Р»СЊРЅС‹Р№ СЂР°Р·РјРµСЂ: </strong><br />
+                <span class="hinttext">Р’РІРµРґРёС‚Рµ &quot;0&quot; РґР»СЏ Р±РµСЃРєРѕРЅРµС‡РЅРѕРіРѕ <br />
+            С‡РёСЃР»Р° СѓС‡Р°СЃС‚РЅРёРєРѕРІ </span></td>
             <td><input name="maxsize" type="text" id="maxsize" style="width:300px" value="<?php echo @$mod['maxsize'];?>"/></td>
         </tr>
         <tr>
-            <td><strong>Дата создания клуба:</strong><br />
-            <span class="hinttext">Отображается на сайте</span></td>
+            <td><strong>Р”Р°С‚Р° СЃРѕР·РґР°РЅРёСЏ РєР»СѓР±Р°:</strong><br />
+            <span class="hinttext">РћС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РЅР° СЃР°Р№С‚Рµ</span></td>
             <td><input name="pubdate" type="text" id="pubdate" style="width:278px" <?php if(@!$mod['pubdate']) { echo 'value="'.date('Y-m-d').'"'; } else { echo 'value="'.$mod['pubdate'].'"'; } ?>/>
                 <?php
                 //include javascript
@@ -400,43 +400,43 @@ if ($opt == 'add' || $opt == 'edit'){
         </tr>
         <tr>
             <td>
-                <strong>Публиковать клуб?</strong><br />
-                <span class="hinttext">При выключении клуб не отображается в общем списке<br />
-                и не работает</span>
+                <strong>РџСѓР±Р»РёРєРѕРІР°С‚СЊ РєР»СѓР±?</strong><br />
+                <span class="hinttext">РџСЂРё РІС‹РєР»СЋС‡РµРЅРёРё РєР»СѓР± РЅРµ РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РІ РѕР±С‰РµРј СЃРїРёСЃРєРµ<br />
+                Рё РЅРµ СЂР°Р±РѕС‚Р°РµС‚</span>
             </td>
             <td><input name="published" type="radio" value="1" checked="checked" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> />
-                Да
+                Р”Р°
                 <label>
                     <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> />
-            Нет</label></td>
+            РќРµС‚</label></td>
         </tr>
         <tr>
-            <td><strong>Блог:</strong><br />
-            <span class="hinttext">Включить/выключить блог клуба</span></td>
+            <td><strong>Р‘Р»РѕРі:</strong><br />
+            <span class="hinttext">Р’РєР»СЋС‡РёС‚СЊ/РІС‹РєР»СЋС‡РёС‚СЊ Р±Р»РѕРі РєР»СѓР±Р°</span></td>
             <td>
                 <select name="enabled_blogs" id="enabled_blogs" style="width:300px">
-                    <option value="0" <?php if (@$mod['enabled_blogs']=='0') { echo 'selected="selected"'; } ?>>По-умолчанию</option>
-                    <option value="1" <?php if (@$mod['enabled_blogs']=='1') { echo 'selected="selected"'; } ?>>Включен</option>
-                    <option value="-1" <?php if (@$mod['enabled_blogs']=='-1') { echo 'selected="selected"'; } ?>>Отключен</option>
+                    <option value="0" <?php if (@$mod['enabled_blogs']=='0') { echo 'selected="selected"'; } ?>>РџРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ</option>
+                    <option value="1" <?php if (@$mod['enabled_blogs']=='1') { echo 'selected="selected"'; } ?>>Р’РєР»СЋС‡РµРЅ</option>
+                    <option value="-1" <?php if (@$mod['enabled_blogs']=='-1') { echo 'selected="selected"'; } ?>>РћС‚РєР»СЋС‡РµРЅ</option>
                 </select>
             </td>
         </tr>
         <tr>
-            <td><strong>Фотоальбомы:</strong><br />
-            <span class="hinttext">Включить/выключить фотоальбомы</span></td>
+            <td><strong>Р¤РѕС‚РѕР°Р»СЊР±РѕРјС‹:</strong><br />
+            <span class="hinttext">Р’РєР»СЋС‡РёС‚СЊ/РІС‹РєР»СЋС‡РёС‚СЊ С„РѕС‚РѕР°Р»СЊР±РѕРјС‹</span></td>
             <td>
                 <select name="enabled_photos" id="enabled_photos" style="width:300px">
-                    <option value="0" <?php if (@$mod['enabled_photos']=='0') { echo 'selected="selected"'; } ?>>По-умолчанию</option>
-                    <option value="1" <?php if (@$mod['enabled_photos']=='1') { echo 'selected="selected"'; } ?>>Включены</option>
-                    <option value="-1" <?php if (@$mod['enabled_photos']=='-1') { echo 'selected="selected"'; } ?>>Отключены</option>
+                    <option value="0" <?php if (@$mod['enabled_photos']=='0') { echo 'selected="selected"'; } ?>>РџРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ</option>
+                    <option value="1" <?php if (@$mod['enabled_photos']=='1') { echo 'selected="selected"'; } ?>>Р’РєР»СЋС‡РµРЅС‹</option>
+                    <option value="-1" <?php if (@$mod['enabled_photos']=='-1') { echo 'selected="selected"'; } ?>>РћС‚РєР»СЋС‡РµРЅС‹</option>
                 </select>
             </td>
         </tr>
     </table>
-    {tab=Описание}
+    {tab=РћРїРёСЃР°РЅРёРµ}
     <table width="100%" border="0" cellspacing="5" class="proptable">
         <tr>
-            <td><strong>Описание:</strong> <span class="hinttext">Отображается на первой странице при просмотре клуба </span></td>
+            <td><strong>РћРїРёСЃР°РЅРёРµ:</strong> <span class="hinttext">РћС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РЅР° РїРµСЂРІРѕР№ СЃС‚СЂР°РЅРёС†Рµ РїСЂРё РїСЂРѕСЃРјРѕС‚СЂРµ РєР»СѓР±Р° </span></td>
         </tr>
         <tr>
             <td>
@@ -448,11 +448,11 @@ if ($opt == 'add' || $opt == 'edit'){
             </td>
         </tr>
     </table>
-    {tab=Права доступа}
+    {tab=РџСЂР°РІР° РґРѕСЃС‚СѓРїР°}
     <table width="625" border="0" cellspacing="5" class="proptable">
         <tr>
-            <td width="298"><strong>Главный администратор клуба:</strong><br />
-            <span class="hinttext">Назначает модераторов </span></td>
+            <td width="298"><strong>Р“Р»Р°РІРЅС‹Р№ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ РєР»СѓР±Р°:</strong><br />
+            <span class="hinttext">РќР°Р·РЅР°С‡Р°РµС‚ РјРѕРґРµСЂР°С‚РѕСЂРѕРІ </span></td>
             <td width="308">
                 <select name="admin_id" id="admin_id" style="width:300px">
                     <?php
@@ -466,12 +466,12 @@ if ($opt == 'add' || $opt == 'edit'){
             </td>
         </tr>
         <tr>
-            <td><strong>Тип клуба:</strong><br />
-            <span class="hinttext">Для кого открыт этот клуб </span></td>
+            <td><strong>РўРёРї РєР»СѓР±Р°:</strong><br />
+            <span class="hinttext">Р”Р»СЏ РєРѕРіРѕ РѕС‚РєСЂС‹С‚ СЌС‚РѕС‚ РєР»СѓР± </span></td>
             <td>
                 <select name="clubtype" id="clubtype" style="width:300px" onchange="toggleMembers()">
-                    <option value="public" <?php if (@$mod['clubtype']=='public') { echo 'selected="selected"'; } ?>>Открыт для всех (public)</option>
-                    <option value="private" <?php if (@$mod['clubtype']=='private') { echo 'selected="selected"'; } ?>>Открыт для избранных (private)</option>
+                    <option value="public" <?php if (@$mod['clubtype']=='public') { echo 'selected="selected"'; } ?>>РћС‚РєСЂС‹С‚ РґР»СЏ РІСЃРµС… (public)</option>
+                    <option value="private" <?php if (@$mod['clubtype']=='private') { echo 'selected="selected"'; } ?>>РћС‚РєСЂС‹С‚ РґР»СЏ РёР·Р±СЂР°РЅРЅС‹С… (private)</option>
                 </select>
             </td>
         </tr>
@@ -480,14 +480,14 @@ if ($opt == 'add' || $opt == 'edit'){
             <?php if (isset($mod['id'])) { $moderators = clubModerators(@$mod['id']); } else { $moderators = array(); }?>
             <?php if (isset($mod['id'])) { $members = clubMembers(@$mod['id']); } else { $members = array(); } ?>
             <table width="100%" border="0" cellspacing="0" cellpadding="10" id="multiuserscfg" style="margin-top:5px;border:dotted 1px silver;display: {if $blog.ownertype=='single' || $blog.forall}none;{else}table;{/if}">
-            <td align="center" valign="top"><strong>Модераторы клуба: </strong><br/>
+            <td align="center" valign="top"><strong>РњРѕРґРµСЂР°С‚РѕСЂС‹ РєР»СѓР±Р°: </strong><br/>
                 <select name="moderslist[]" size="10" multiple id="moderslist" style="width:200px">
                     <?php echo cmsUser::getAuthorsList($moderators); ?>
             </select>					  </td>
             <td align="center">
                 <div><input name="moderator_add" type="button" id="moderator_add" value="&lt;&lt;"></div>
             <div><input name="moderator_remove" type="button" id="moderator_remove" value="&gt;&gt;" style="margin-top:4px"></div>					  </td>
-            <td align="center" valign="top"><strong>Все пользователи:</strong><br/>
+            <td align="center" valign="top"><strong>Р’СЃРµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё:</strong><br/>
                 <select name="userslist1" size="10" multiple id="userslist1" style="width:200px">
                     <?php echo cmsUser::getUsersList(false, array_merge($moderators, $members)); ?>
                 </select>
@@ -497,15 +497,15 @@ if ($opt == 'add' || $opt == 'edit'){
     </td>
     </tr>
     </table>
-    {tab=Участники}
+    {tab=РЈС‡Р°СЃС‚РЅРёРєРё}
     <table width="625" border="0" cellspacing="5" class="proptable">
         <tr>
             <td width="606">
-                <p id="nomembers" style="display:<?php @$mod['clubtype']=='public' ? 'block' : 'none' ?>">Клуб открыт для всех, поэтому каждый зарегистрированный пользователь может стать его участником.</p>
+                <p id="nomembers" style="display:<?php @$mod['clubtype']=='public' ? 'block' : 'none' ?>">РљР»СѓР± РѕС‚РєСЂС‹С‚ РґР»СЏ РІСЃРµС…, РїРѕСЌС‚РѕРјСѓ РєР°Р¶РґС‹Р№ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РјРѕР¶РµС‚ СЃС‚Р°С‚СЊ РµРіРѕ СѓС‡Р°СЃС‚РЅРёРєРѕРј.</p>
                 <div id="members">
                     <table width="100%" border="0" align="center" cellpadding="10" cellspacing="0" style="display:<?php (@$mod['clubtype']=='public') ?'none' : 'block' ?>">
                         <tr>
-                            <td align="center" valign="top"><strong>Участники клуба: </strong><br/>
+                            <td align="center" valign="top"><strong>РЈС‡Р°СЃС‚РЅРёРєРё РєР»СѓР±Р°: </strong><br/>
                                 <select name="memberslist[]" size="12" multiple="multiple" id="memberslist" style="width:200px">
                                     <?php echo cmsUser::getAuthorsList($members); ?>
                             </select>                    </td>
@@ -515,7 +515,7 @@ if ($opt == 'add' || $opt == 'edit'){
                                 <div>
                                     <input name="member_remove" type="button" id="member_remove" value="&gt;&gt;" style="margin-top:4px" />
                             </div></td>
-                            <td align="center" valign="top"><strong>Все пользователи:</strong><br/>
+                            <td align="center" valign="top"><strong>Р’СЃРµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё:</strong><br/>
                                 <select name="userslist2" size="12" multiple="multiple" id="userslist2" style="width:200px">
                                     <?php echo cmsUser::getUsersList(false, array_merge($moderators, $members)); ?>
                                 </select>
@@ -528,8 +528,8 @@ if ($opt == 'add' || $opt == 'edit'){
     </table>
     {/tabs}
     <p>
-        <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add') { echo 'value="Создать клуб"'; } else { echo 'value="Сохранить клуб"'; } ?> />
-        <input name="back3" type="button" id="back3" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+        <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add') { echo 'value="РЎРѕР·РґР°С‚СЊ РєР»СѓР±"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ РєР»СѓР±"'; } ?> />
+        <input name="back3" type="button" id="back3" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components';"/>
         <input name="opt" type="hidden" id="opt" <?php if ($opt=='add') { echo 'value="submit"'; } else { echo 'value="update"'; } ?> />
         <?php
         if ($opt=='edit'){
@@ -546,9 +546,9 @@ if ($opt == 'add' || $opt == 'edit'){
 
 if ($opt=='config') {
 
-    cpAddPathway('Клубы пользователей', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
-    cpAddPathway('Настройки', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config');
-    echo '<h3>Клубы пользователей</h3>';
+    cpAddPathway('РљР»СѓР±С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
+    cpAddPathway('РќР°СЃС‚СЂРѕР№РєРё', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config');
+    echo '<h3>РљР»СѓР±С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</h3>';
 
     if (@$msg) { echo '<p style="color:green">'.$msg.'</p>'; }
     ?>
@@ -556,104 +556,104 @@ if ($opt=='config') {
 <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
     <table width="680" border="0" cellpadding="10" cellspacing="0" class="proptable">
         <tr>
-            <td><strong>Количество клубов на странице:</strong><br /></td>
+            <td><strong>РљРѕР»РёС‡РµСЃС‚РІРѕ РєР»СѓР±РѕРІ РЅР° СЃС‚СЂР°РЅРёС†Рµ:</strong><br /></td>
             <td><input name="perpage" type="text" id="perpage" style="width:300px" value="<?php echo @$cfg['perpage'];?>"/></td>
         </tr>
         <tr>
-            <td><strong>SEO для клубов:</strong><br />
-            <span class="hinttext">Чем заполнять тег meta description при просмотре клуба?</span></td>
+            <td><strong>SEO РґР»СЏ РєР»СѓР±РѕРІ:</strong><br />
+            <span class="hinttext">Р§РµРј Р·Р°РїРѕР»РЅСЏС‚СЊ С‚РµРі meta description РїСЂРё РїСЂРѕСЃРјРѕС‚СЂРµ РєР»СѓР±Р°?</span></td>
             <td width="300">
                 <select name="seo_club" id="seo_club" style="width:300px">
-                    <option value="deskr" <?php if (@$cfg['seo_club']=='deskr') { echo 'selected="selected"'; } ?>>Из описания клуба</option>
-                    <option value="title" <?php if (@$cfg['seo_club']=='title') { echo 'selected="selected"'; } ?>>Из заголовка клуба</option>
-                    <option value="def" <?php if (@$cfg['seo_club']=='def') { echo 'selected="selected"'; } ?>>По умолчанию для сайта</option>
+                    <option value="deskr" <?php if (@$cfg['seo_club']=='deskr') { echo 'selected="selected"'; } ?>>РР· РѕРїРёСЃР°РЅРёСЏ РєР»СѓР±Р°</option>
+                    <option value="title" <?php if (@$cfg['seo_club']=='title') { echo 'selected="selected"'; } ?>>РР· Р·Р°РіРѕР»РѕРІРєР° РєР»СѓР±Р°</option>
+                    <option value="def" <?php if (@$cfg['seo_club']=='def') { echo 'selected="selected"'; } ?>>РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РґР»СЏ СЃР°Р№С‚Р°</option>
             </select>			</td>
         </tr>
         <tr>
-            <td><strong>Блоги клубов:</strong><br />
-            <span class="hinttext">Включить/выключить блоги</span></td>
+            <td><strong>Р‘Р»РѕРіРё РєР»СѓР±РѕРІ:</strong><br />
+            <span class="hinttext">Р’РєР»СЋС‡РёС‚СЊ/РІС‹РєР»СЋС‡РёС‚СЊ Р±Р»РѕРіРё</span></td>
             <td width="300">
                 <select name="enabled_blogs" id="enabled_blogs" style="width:300px">
-                    <option value="1" <?php if (@$cfg['enabled_blogs']=='1') { echo 'selected="selected"'; } ?>>Включены</option>
-                    <option value="-1" <?php if (@$cfg['enabled_blogs']=='-1') { echo 'selected="selected"'; } ?>>Отключены</option>
+                    <option value="1" <?php if (@$cfg['enabled_blogs']=='1') { echo 'selected="selected"'; } ?>>Р’РєР»СЋС‡РµРЅС‹</option>
+                    <option value="-1" <?php if (@$cfg['enabled_blogs']=='-1') { echo 'selected="selected"'; } ?>>РћС‚РєР»СЋС‡РµРЅС‹</option>
             </select>			</td>
         </tr>
         <tr>
-            <td><strong>Фотоальбомы клубов:</strong><br />
-            <span class="hinttext">Включить/выключить фотоальбомы </span></td>
+            <td><strong>Р¤РѕС‚РѕР°Р»СЊР±РѕРјС‹ РєР»СѓР±РѕРІ:</strong><br />
+            <span class="hinttext">Р’РєР»СЋС‡РёС‚СЊ/РІС‹РєР»СЋС‡РёС‚СЊ С„РѕС‚РѕР°Р»СЊР±РѕРјС‹ </span></td>
             <td>
                 <select name="enabled_photos" id="enabled_photos" style="width:300px">
-                    <option value="1" <?php if (@$cfg['enabled_photos']=='1') { echo 'selected="selected"'; } ?>>Включены</option>
-                    <option value="-1" <?php if (@$cfg['enabled_photos']=='-1') { echo 'selected="selected"'; } ?>>Отключены</option>
+                    <option value="1" <?php if (@$cfg['enabled_photos']=='1') { echo 'selected="selected"'; } ?>>Р’РєР»СЋС‡РµРЅС‹</option>
+                    <option value="-1" <?php if (@$cfg['enabled_photos']=='-1') { echo 'selected="selected"'; } ?>>РћС‚РєР»СЋС‡РµРЅС‹</option>
             </select>            </td>
         </tr>
         <tr>
-            <td><strong>Ширина маленькой копии лого:</strong><br />
-            <span class="hinttext">В пикселях</span></td>
+            <td><strong>РЁРёСЂРёРЅР° РјР°Р»РµРЅСЊРєРѕР№ РєРѕРїРёРё Р»РѕРіРѕ:</strong><br />
+            <span class="hinttext">Р’ РїРёРєСЃРµР»СЏС…</span></td>
             <td><input name="thumb1" type="text" id="thumb1" style="width:300px" value="<?php echo @$cfg['thumb1'];?>"/></td>
         </tr>
         <tr>
-            <td><strong>Ширина основной копии лого:</strong><br />
-            <span class="hinttext">В пикселях</span></td>
+            <td><strong>РЁРёСЂРёРЅР° РѕСЃРЅРѕРІРЅРѕР№ РєРѕРїРёРё Р»РѕРіРѕ:</strong><br />
+            <span class="hinttext">Р’ РїРёРєСЃРµР»СЏС…</span></td>
             <td><input name="thumb2" type="text" id="thumb2" style="width:300px" value="<?php echo @$cfg['thumb2'];?>"/></td>
         </tr>
         <tr>
-            <td><strong>Квадратные логотипы:</strong></td>
+            <td><strong>РљРІР°РґСЂР°С‚РЅС‹Рµ Р»РѕРіРѕС‚РёРїС‹:</strong></td>
             <td>
                 <select name="thumbsqr" id="select" style="width:300px">
-                    <option value="1" <?php if (@$cfg['thumbsqr']=='1') { echo 'selected="selected"'; } ?>>Да</option>
-                    <option value="0" <?php if (@$cfg['thumbsqr']=='0') { echo 'selected="selected"'; } ?>>Нет</option>
+                    <option value="1" <?php if (@$cfg['thumbsqr']=='1') { echo 'selected="selected"'; } ?>>Р”Р°</option>
+                    <option value="0" <?php if (@$cfg['thumbsqr']=='0') { echo 'selected="selected"'; } ?>>РќРµС‚</option>
             </select>			</td>
         </tr>
         <tr>
-            <td><strong>Создание клубов пользователями:</strong><br />
-                <span class="hinttext">Если включено, каждый пользователь может<br />
-            создать собственный клуб</span></td>
+            <td><strong>РЎРѕР·РґР°РЅРёРµ РєР»СѓР±РѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРјРё:</strong><br />
+                <span class="hinttext">Р•СЃР»Рё РІРєР»СЋС‡РµРЅРѕ, РєР°Р¶РґС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РјРѕР¶РµС‚<br />
+            СЃРѕР·РґР°С‚СЊ СЃРѕР±СЃС‚РІРµРЅРЅС‹Р№ РєР»СѓР±</span></td>
             <td valign="top">
-                <input name="cancreate" type="radio" value="1"  <?php if (@$cfg['cancreate']) { echo 'checked="checked"'; } ?> />Да
-            <input name="cancreate" type="radio" value="0"  <?php if (@!$cfg['cancreate']) { echo 'checked="checked"'; } ?> /> Нет			</td>
+                <input name="cancreate" type="radio" value="1"  <?php if (@$cfg['cancreate']) { echo 'checked="checked"'; } ?> />Р”Р°
+            <input name="cancreate" type="radio" value="0"  <?php if (@!$cfg['cancreate']) { echo 'checked="checked"'; } ?> /> РќРµС‚			</td>
         </tr>
         <tr>
-            <td><strong>Шаг кармы для создания нового клуба:</strong><br />
-            <span class="hinttext">0 - можно создавать только один клуб</span></td>
+            <td><strong>РЁР°Рі РєР°СЂРјС‹ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РЅРѕРІРѕРіРѕ РєР»СѓР±Р°:</strong><br />
+            <span class="hinttext">0 - РјРѕР¶РЅРѕ СЃРѕР·РґР°РІР°С‚СЊ С‚РѕР»СЊРєРѕ РѕРґРёРЅ РєР»СѓР±</span></td>
             <td valign="top"><input name="every_karma" type="text" id="every_karma" style="width:300px" value="<?php echo @$cfg['every_karma'];?>"/></td>
         </tr>
         <tr>
-            <td><strong>Ограничение по карме на создание клубов:</strong><br />
-            <span class="hinttext">Пользователь должен иметь  карму не ниже указанной, чтобы иметь возможность создавать клубы </span></td>
+            <td><strong>РћРіСЂР°РЅРёС‡РµРЅРёРµ РїРѕ РєР°СЂРјРµ РЅР° СЃРѕР·РґР°РЅРёРµ РєР»СѓР±РѕРІ:</strong><br />
+            <span class="hinttext">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РґРѕР»Р¶РµРЅ РёРјРµС‚СЊ  РєР°СЂРјСѓ РЅРµ РЅРёР¶Рµ СѓРєР°Р·Р°РЅРЅРѕР№, С‡С‚РѕР±С‹ РёРјРµС‚СЊ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ СЃРѕР·РґР°РІР°С‚СЊ РєР»СѓР±С‹ </span></td>
             <td valign="top"><input name="create_min_karma" type="text" id="create_min_karma" style="width:300px" value="<?php echo @$cfg['create_min_karma'];?>"/></td>
         </tr>
         <tr>
-            <td><strong>Ограничение по рейтингу на создание клубов:</strong><br />
-            <span class="hinttext">Пользователь должен иметь рейтинг не ниже указанного, чтобы иметь возможность создавать клубы</span></td>
+            <td><strong>РћРіСЂР°РЅРёС‡РµРЅРёРµ РїРѕ СЂРµР№С‚РёРЅРіСѓ РЅР° СЃРѕР·РґР°РЅРёРµ РєР»СѓР±РѕРІ:</strong><br />
+            <span class="hinttext">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РґРѕР»Р¶РµРЅ РёРјРµС‚СЊ СЂРµР№С‚РёРЅРі РЅРµ РЅРёР¶Рµ СѓРєР°Р·Р°РЅРЅРѕРіРѕ, С‡С‚РѕР±С‹ РёРјРµС‚СЊ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ СЃРѕР·РґР°РІР°С‚СЊ РєР»СѓР±С‹</span></td>
             <td valign="top"><input name="create_min_rating" type="text" id="create_min_rating" style="width:300px" value="<?php echo @$cfg['create_min_rating'];?>"/></td>
         </tr>
         <tr>
             <td>
-                <strong>Уведомления о принятии в клуб:</strong><br />
-                <span class="hinttext">Посылать личное сообщение пользователю,<br/>принятому в приватный клуб</span>
+                <strong>РЈРІРµРґРѕРјР»РµРЅРёСЏ Рѕ РїСЂРёРЅСЏС‚РёРё РІ РєР»СѓР±:</strong><br />
+                <span class="hinttext">РџРѕСЃС‹Р»Р°С‚СЊ Р»РёС‡РЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ,<br/>РїСЂРёРЅСЏС‚РѕРјСѓ РІ РїСЂРёРІР°С‚РЅС‹Р№ РєР»СѓР±</span>
             </td>
             <td valign="top">
-                <input name="notify_in" type="radio" value="1"  <?php if (@$cfg['notify_in']) { echo 'checked="checked"'; } ?> /> Да
-                <input name="notify_in" type="radio" value="0"  <?php if (@!$cfg['notify_in']) { echo 'checked="checked"'; } ?> /> Нет
+                <input name="notify_in" type="radio" value="1"  <?php if (@$cfg['notify_in']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                <input name="notify_in" type="radio" value="0"  <?php if (@!$cfg['notify_in']) { echo 'checked="checked"'; } ?> /> РќРµС‚
             </td>
         </tr>
         <tr>
             <td>
-                <strong>Уведомления о исключении из клуба:</strong><br />
-                <span class="hinttext">Посылать личное сообщение пользователю, исключенному из приватного клуба</span>
+                <strong>РЈРІРµРґРѕРјР»РµРЅРёСЏ Рѕ РёСЃРєР»СЋС‡РµРЅРёРё РёР· РєР»СѓР±Р°:</strong><br />
+                <span class="hinttext">РџРѕСЃС‹Р»Р°С‚СЊ Р»РёС‡РЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ, РёСЃРєР»СЋС‡РµРЅРЅРѕРјСѓ РёР· РїСЂРёРІР°С‚РЅРѕРіРѕ РєР»СѓР±Р°</span>
             </td>
             <td valign="top">
-                <input name="notify_out" type="radio" value="1"  <?php if (@$cfg['notify_out']) { echo 'checked="checked"'; } ?> /> Да
-                <input name="notify_out" type="radio" value="0"  <?php if (@!$cfg['notify_out']) { echo 'checked="checked"'; } ?> /> Нет
+                <input name="notify_out" type="radio" value="1"  <?php if (@$cfg['notify_out']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                <input name="notify_out" type="radio" value="0"  <?php if (@!$cfg['notify_out']) { echo 'checked="checked"'; } ?> /> РќРµС‚
             </td>
         </tr>
 
     </table>
     <p>
         <input name="opt" type="hidden" value="saveconfig" />
-        <input name="save" type="submit" id="save" value="Сохранить" />
-        <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>'"/>
+        <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+        <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>'"/>
     </p>
 </form>	
 

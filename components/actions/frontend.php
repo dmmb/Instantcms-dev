@@ -87,7 +87,7 @@ function actions(){
 
 		if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { exit; }
 
-		// Ïîëó÷àåì äðóçåé
+		// ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ð´Ñ€ÑƒÐ·ÐµÐ¹
 		$friends = usrFriends($inUser->id, $friends_total, 6);
 
 		if($friends_total){
@@ -97,7 +97,7 @@ function actions(){
 			$inActions->showTargets($model->config['show_target']);
 			$inActions->limitIs($model->config['perpage_tab']);
         	$actions = $inActions->getActionsLog();
-			// ïîëó÷àåì ïåðâûé ýëåìåíò ìàññèâà äëÿ âûáîðêè îòòóäà èìÿ ïîëüçîâàòåëÿ è ññûëêó íà ïðîôèëü.
+			// Ð¿Ð¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ð¿ÐµÑ€Ð²Ñ‹Ð¹ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚ Ð¼Ð°ÑÑÐ¸Ð²Ð° Ð´Ð»Ñ Ð²Ñ‹Ð±Ð¾Ñ€ÐºÐ¸ Ð¾Ñ‚Ñ‚ÑƒÐ´Ð° Ð¸Ð¼Ñ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ñ Ð¸ ÑÑÑ‹Ð»ÐºÑƒ Ð½Ð° Ð¿Ñ€Ð¾Ñ„Ð¸Ð»ÑŒ.
 		}
 
 		$total_pages = ceil($friends_total / 6);
@@ -131,7 +131,7 @@ function actions(){
 		$inActions->showTargets($model->config['show_target']);
 		$inActions->limitIs($model->config['perpage_tab']);
 		$actions = $inActions->getActionsLog();
-		// ïîëó÷àåì ïîñëåäíèé ýëåìåíò ìàññèâà äëÿ âûáîðêè èìÿ ïîëüçîâàòåëÿ è ññûëêè íà ïðîôèëü.
+		// Ð¿Ð¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ð¿Ð¾ÑÐ»ÐµÐ´Ð½Ð¸Ð¹ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚ Ð¼Ð°ÑÑÐ¸Ð²Ð° Ð´Ð»Ñ Ð²Ñ‹Ð±Ð¾Ñ€ÐºÐ¸ Ð¸Ð¼Ñ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ñ Ð¸ ÑÑÑ‹Ð»ÐºÐ¸ Ð½Ð° Ð¿Ñ€Ð¾Ñ„Ð¸Ð»ÑŒ.
 		$user = end($actions);
 
         $smarty = $inCore->initSmarty('components', 'com_actions_tab.tpl');
@@ -150,7 +150,7 @@ function actions(){
 
 		if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { exit; }
 
-		// Ïîëó÷àåì äðóçåé
+		// ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ð´Ñ€ÑƒÐ·ÐµÐ¹
 		$friends = usrFriends($inUser->id, $friends_total, 6, $page);
 
 		$total_pages = ceil($friends_total / 6);

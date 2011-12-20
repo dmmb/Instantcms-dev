@@ -19,8 +19,8 @@
 
     $inCore     = cmsCore::getInstance();
 
-    $inCore->loadClass('config');       //конфигурация
-    $inCore->loadClass('db');           //база данных
+    $inCore->loadClass('config');       //РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ
+    $inCore->loadClass('db');           //Р±Р°Р·Р° РґР°РЅРЅС‹С…
     $inCore->loadClass('user');
 
     $inConf     = cmsConfig::getInstance();
@@ -35,7 +35,7 @@
 
         $result = $inDB->query($sql);
 
-        echo '<p>Таблица <strong>cms_comments</strong> обновлена...</p>';
+        echo '<p>РўР°Р±Р»РёС†Р° <strong>cms_comments</strong> РѕР±РЅРѕРІР»РµРЅР°...</p>';
 
     }
 
@@ -54,7 +54,7 @@
 
         $result = $inDB->query($sql);
 
-        echo '<p>Таблица <strong>cms_comments_votes</strong> создана...</p>';
+        echo '<p>РўР°Р±Р»РёС†Р° <strong>cms_comments_votes</strong> СЃРѕР·РґР°РЅР°...</p>';
 
     }
 
@@ -73,7 +73,7 @@
 
         $result = $inDB->query($sql);
 
-        echo '<p>Таблица <strong>cms_event_hooks</strong> создана...</p>';
+        echo '<p>РўР°Р±Р»РёС†Р° <strong>cms_event_hooks</strong> СЃРѕР·РґР°РЅР°...</p>';
 
         $sql = "INSERT INTO `cms_event_hooks` (`id`, `event`, `plugin_id`)
                 VALUES ('6','GET_ARTICLE','5'),
@@ -82,7 +82,7 @@
 						(8, 'PRINT_PAGE_HEAD', '7')";
         $result = $inDB->query($sql);
 
-        echo '<p>Таблица <strong>cms_event_hooks</strong> заполнена...</p>';
+        echo '<p>РўР°Р±Р»РёС†Р° <strong>cms_event_hooks</strong> Р·Р°РїРѕР»РЅРµРЅР°...</p>';
 
     }
 
@@ -92,7 +92,7 @@
     $sql = "UPDATE cms_components SET internal = 1 WHERE link = 'statistics' LIMIT 1" ;
     $result = $inDB->query($sql);
 
-    echo '<p>Компонент <Strong>Статистика</strong> преобразован...</p>';
+    echo '<p>РљРѕРјРїРѕРЅРµРЅС‚ <Strong>РЎС‚Р°С‚РёСЃС‚РёРєР°</strong> РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅ...</p>';
 
 // ========================================================================================== //
 // ========================================================================================== //
@@ -114,17 +114,17 @@
 
         $result = $inDB->query($sql);
 
-        echo '<p>Таблица <strong>cms_plugins</strong> создана...</p>';
+        echo '<p>РўР°Р±Р»РёС†Р° <strong>cms_plugins</strong> СЃРѕР·РґР°РЅР°...</p>';
 
         $sql = "INSERT INTO `cms_plugins` (`id`, `plugin`, `title`, `description`, `author`, `version`, `plugin_type`, `published`, `config`)
-                VALUES ('6','p_usertab','Demo Profile Plugin','Пример плагина - Добавляет вкладку \"Статьи\" в профили всех пользователей','InstantCMS Team','1.0','plugin','0','---\nКоличество статей: 10\n'),
-                       ('3','p_fckeditor','FCKEditor','Визуальный редактор','F. C. Knabben','2.63','wysiwyg','1','---\n'),
-                       ('5','p_demo','Demo Plugin','Пример плагина - Добавляет текст в конец каждой статьи на сайте','InstantCMS Team','1.0','plugin','0','---\ntext: Added By Plugin From Parameter\ncolor: blue\ncounter: 1\n'),
-					   ('7', 'p_swftags', 'SWF облако тэгов', 'Является частью модуля mod_swftags. Добавляет подключение скрипта', 'InstantCMS Team (Konstantin Maximchik) smart.maxx@gmail.com', '1.0', 'plugin', 0, '')";
+                VALUES ('6','p_usertab','Demo Profile Plugin','РџСЂРёРјРµСЂ РїР»Р°РіРёРЅР° - Р”РѕР±Р°РІР»СЏРµС‚ РІРєР»Р°РґРєСѓ \"РЎС‚Р°С‚СЊРё\" РІ РїСЂРѕС„РёР»Рё РІСЃРµС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№','InstantCMS Team','1.0','plugin','0','---\nРљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚Р°С‚РµР№: 10\n'),
+                       ('3','p_fckeditor','FCKEditor','Р’РёР·СѓР°Р»СЊРЅС‹Р№ СЂРµРґР°РєС‚РѕСЂ','F. C. Knabben','2.63','wysiwyg','1','---\n'),
+                       ('5','p_demo','Demo Plugin','РџСЂРёРјРµСЂ РїР»Р°РіРёРЅР° - Р”РѕР±Р°РІР»СЏРµС‚ С‚РµРєСЃС‚ РІ РєРѕРЅРµС† РєР°Р¶РґРѕР№ СЃС‚Р°С‚СЊРё РЅР° СЃР°Р№С‚Рµ','InstantCMS Team','1.0','plugin','0','---\ntext: Added By Plugin From Parameter\ncolor: blue\ncounter: 1\n'),
+					   ('7', 'p_swftags', 'SWF РѕР±Р»Р°РєРѕ С‚СЌРіРѕРІ', 'РЇРІР»СЏРµС‚СЃСЏ С‡Р°СЃС‚СЊСЋ РјРѕРґСѓР»СЏ mod_swftags. Р”РѕР±Р°РІР»СЏРµС‚ РїРѕРґРєР»СЋС‡РµРЅРёРµ СЃРєСЂРёРїС‚Р°', 'InstantCMS Team (Konstantin Maximchik) smart.maxx@gmail.com', '1.0', 'plugin', 0, '')";
         $result = $inDB->query($sql);
 
-        echo '<p>Плагин <strong>FCKEditor</strong> установлен...</p>';
-        echo '<p>Плагин <strong>SWF облако тэгов</strong> установлен...</p>';
+        echo '<p>РџР»Р°РіРёРЅ <strong>FCKEditor</strong> СѓСЃС‚Р°РЅРѕРІР»РµРЅ...</p>';
+        echo '<p>РџР»Р°РіРёРЅ <strong>SWF РѕР±Р»Р°РєРѕ С‚СЌРіРѕРІ</strong> СѓСЃС‚Р°РЅРѕРІР»РµРЅ...</p>';
         
     }
 
@@ -136,7 +136,7 @@
         $sql = "ALTER TABLE `cms_modules` ADD `template` VARCHAR( 35 ) NOT NULL DEFAULT 'module.tpl'";
         $result = $inDB->query($sql);
 
-        echo '<p>Таблица <strong>cms_modules</strong> обновлена...</p>';
+        echo '<p>РўР°Р±Р»РёС†Р° <strong>cms_modules</strong> РѕР±РЅРѕРІР»РµРЅР°...</p>';
 
     }
 
@@ -147,10 +147,10 @@
 
         $sql = "INSERT INTO `cms_modules` (`id`, `position`, `name`, `title`, `is_external`, `content`, `ordering`, `showtitle`, `published` ,
                                             `user`, `config`, `original`, `css_prefix`, `allow_group`, `cache`, `cachetime`, `cacheint`, `template`)
-                VALUES (NULL, 'left', 'Доска почета', 'Доска почета', '1', 'mod_respect', '1', '1', '0', '0', '', '1', '', '-1', '', '1', 'HOUR', 'module.tpl')";
+                VALUES (NULL, 'left', 'Р”РѕСЃРєР° РїРѕС‡РµС‚Р°', 'Р”РѕСЃРєР° РїРѕС‡РµС‚Р°', '1', 'mod_respect', '1', '1', '0', '0', '', '1', '', '-1', '', '1', 'HOUR', 'module.tpl')";
         $result = $inDB->query($sql);
 
-        echo '<p>Модуль <strong>Доска почета</strong> установлен...</p>';
+        echo '<p>РњРѕРґСѓР»СЊ <strong>Р”РѕСЃРєР° РїРѕС‡РµС‚Р°</strong> СѓСЃС‚Р°РЅРѕРІР»РµРЅ...</p>';
 
     }
 
@@ -160,10 +160,10 @@
     if (!$inDB->rows_count('cms_modules', "content = 'mod_swftags'", 1)){
 
         $sql = "INSERT INTO `cms_modules` (`position`, `name`, `title`, `is_external`, `content`, `ordering`, `showtitle`, `published`, `user`, `config`, `original`, `css_prefix`, `allow_group`, `cache`, `cachetime`, `cacheint`, `template`) VALUES
-				('right', 'SWF Облако тегов', 'SWF Облако тегов', 1, 'mod_swftags', 99, 0, 0, 0, '---\ncat_id: \nsortby: tag\nmenuid: \nminfreq: 0\nminlen: 3\ntargets: \n  content: content\n  photo: photo\n  blogpost: blog\n  catalog: catalog\n  userphoto: userphoto\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl')";
+				('right', 'SWF РћР±Р»Р°РєРѕ С‚РµРіРѕРІ', 'SWF РћР±Р»Р°РєРѕ С‚РµРіРѕРІ', 1, 'mod_swftags', 99, 0, 0, 0, '---\ncat_id: \nsortby: tag\nmenuid: \nminfreq: 0\nminlen: 3\ntargets: \n  content: content\n  photo: photo\n  blogpost: blog\n  catalog: catalog\n  userphoto: userphoto\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl')";
         $result = $inDB->query($sql);
 
-        echo '<p>Модуль <strong>SWF Облако тегов</strong> установлен...</p>';
+        echo '<p>РњРѕРґСѓР»СЊ <strong>SWF РћР±Р»Р°РєРѕ С‚РµРіРѕРІ</strong> СѓСЃС‚Р°РЅРѕРІР»РµРЅ...</p>';
 
     }
 
@@ -173,18 +173,18 @@
     if (!$inDB->rows_count('cms_modules', "content = 'mod_userfiles'", 1)){
 
         $sql = "INSERT INTO `cms_modules` (`position`, `name`, `title`, `is_external`, `content`, `ordering`, `showtitle`, `published`, `user`, `config`, `original`, `css_prefix`, `allow_group`, `cache`, `cachetime`, `cacheint`, `template`)
-                VALUES ('right', 'Файлы пользователей', 'Файлы пользователей', 1, 'mod_userfiles', 1, 1, 1, 0, '---\nmenuid: 0\nsw_stats: 1\nsw_latest: 1\nsw_popular: 1\nnum_latest: 5\nnum_popular: 5\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl')";
+                VALUES ('right', 'Р¤Р°Р№Р»С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', 'Р¤Р°Р№Р»С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', 1, 'mod_userfiles', 1, 1, 1, 0, '---\nmenuid: 0\nsw_stats: 1\nsw_latest: 1\nsw_popular: 1\nnum_latest: 5\nnum_popular: 5\n', 1, '', -1, 0, 1, 'HOUR', 'module.tpl')";
 
         $result = $inDB->query($sql);
 
-        echo '<p>Модуль <strong>Файлы пользователей</strong> добавлен...</p>';
+        echo '<p>РњРѕРґСѓР»СЊ <strong>Р¤Р°Р№Р»С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</strong> РґРѕР±Р°РІР»РµРЅ...</p>';
 
     }
 
 // ========================================================================================== //
 // ========================================================================================== //
 
-    //конверт настроек компонентов в YAML
+    //РєРѕРЅРІРµСЂС‚ РЅР°СЃС‚СЂРѕРµРє РєРѕРјРїРѕРЅРµРЅС‚РѕРІ РІ YAML
 
     $sql = "SELECT id, config FROM cms_components";
 
@@ -202,11 +202,11 @@
         }
     }
 
-    echo '<p>Настройки компонентов переведены в формат YAML...</p>';
+    echo '<p>РќР°СЃС‚СЂРѕР№РєРё РєРѕРјРїРѕРЅРµРЅС‚РѕРІ РїРµСЂРµРІРµРґРµРЅС‹ РІ С„РѕСЂРјР°С‚ YAML...</p>';
 
 // ========================================================================================== //
 
-    //конверт настроек модулей в YAML
+    //РєРѕРЅРІРµСЂС‚ РЅР°СЃС‚СЂРѕРµРє РјРѕРґСѓР»РµР№ РІ YAML
 
     $sql = "SELECT id, config FROM cms_modules";
 
@@ -224,11 +224,11 @@
         }
     }
 
-    echo '<p>Настройки модулей переведены в формат YAML...</p>';
+    echo '<p>РќР°СЃС‚СЂРѕР№РєРё РјРѕРґСѓР»РµР№ РїРµСЂРµРІРµРґРµРЅС‹ РІ С„РѕСЂРјР°С‚ YAML...</p>';
 
 // ========================================================================================== //
 
-    //конверт форм пользователей в YAML
+    //РєРѕРЅРІРµСЂС‚ С„РѕСЂРј РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ РІ YAML
 
     $sql = "SELECT id, formsdata FROM cms_user_profiles";
 
@@ -246,7 +246,7 @@
         }
     }
 
-    echo '<p>Формы профилей переведены в формат YAML...</p>';
+    echo '<p>Р¤РѕСЂРјС‹ РїСЂРѕС„РёР»РµР№ РїРµСЂРµРІРµРґРµРЅС‹ РІ С„РѕСЂРјР°С‚ YAML...</p>';
 
 // ========================================================================================== //
 
@@ -256,13 +256,13 @@
 
         $result = $inDB->query($sql);
 
-        echo '<p>Таблица <strong>cms_user_profiles</strong> преобразована...</p>';
+        echo '<p>РўР°Р±Р»РёС†Р° <strong>cms_user_profiles</strong> РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅР°...</p>';
 
     }
 
 // ========================================================================================== //
 
-    //конверт статистики пользователей в YAML
+    //РєРѕРЅРІРµСЂС‚ СЃС‚Р°С‚РёСЃС‚РёРєРё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ РІ YAML
 
     $sql = "SELECT id FROM cms_users";
 
@@ -276,12 +276,12 @@
         }
     }
 
-    echo '<p>Статистика пользователей переведена в формат YAML...</p>';
+    echo '<p>РЎС‚Р°С‚РёСЃС‚РёРєР° РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ РїРµСЂРµРІРµРґРµРЅР° РІ С„РѕСЂРјР°С‚ YAML...</p>';
 
 // ========================================================================================== //
 // ========================================================================================== //
 
     //COMPLETED
-	echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Миграция завершена. Обязательно удалите папку /migrate/ прежде чем продолжить!</div>';
-	echo '<a href="/">Перейти на сайт</a>';
+	echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">РњРёРіСЂР°С†РёСЏ Р·Р°РІРµСЂС€РµРЅР°. РћР±СЏР·Р°С‚РµР»СЊРЅРѕ СѓРґР°Р»РёС‚Рµ РїР°РїРєСѓ /migrate/ РїСЂРµР¶РґРµ С‡РµРј РїСЂРѕРґРѕР»Р¶РёС‚СЊ!</div>';
+	echo '<a href="/">РџРµСЂРµР№С‚Рё РЅР° СЃР°Р№С‚</a>';
 ?>

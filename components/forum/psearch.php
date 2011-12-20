@@ -22,7 +22,7 @@ function search_forum($query, $look){
         global $_LANG;
 		$inCore->loadLanguage('components/forum');
 
-		// Ищем в названиях тем
+		// РС‰РµРј РІ РЅР°Р·РІР°РЅРёСЏС… С‚РµРј
 		$sql = "SELECT t.*, f.title as forum, f.id as forum_id, f.access_list
 				FROM cms_forum_threads t
 				INNER JOIN cms_forums f ON f.id = t.forum_id
@@ -49,7 +49,7 @@ function search_forum($query, $look){
 			}
 		}
 		
-		// Ищем в тексте постов
+		// РС‰РµРј РІ С‚РµРєСЃС‚Рµ РїРѕСЃС‚РѕРІ
 		$sql = "SELECT p.*, t.title as thread, t.id as thread_id
 				FROM cms_forum_posts p
 				INNER JOIN cms_forum_threads t ON t.id = p.thread_id AND t.is_hidden=0

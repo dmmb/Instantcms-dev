@@ -137,30 +137,30 @@ function cmsSubmitKarma($target, $item_id, $points){
 
 	if(cmsAlreadyKarmed($target, $item_id, $id)){ return false; }
 
-    //вставляем новый голос
+    //РІСЃС‚Р°РІР»СЏРµРј РЅРѕРІС‹Р№ РіРѕР»РѕСЃ
     $sql = "INSERT INTO cms_ratings (item_id, points, ip, target, user_id, pubdate)
             VALUES ('$item_id', '$points', '$ip', '$target', '$id', NOW())";
     $inDB->query($sql);
 
-    //проверяем была ли сделана агрегация для этой цели ранее
+    //РїСЂРѕРІРµСЂСЏРµРј Р±С‹Р»Р° Р»Рё СЃРґРµР»Р°РЅР° Р°РіСЂРµРіР°С†РёСЏ РґР»СЏ СЌС‚РѕР№ С†РµР»Рё СЂР°РЅРµРµ
     $is_agr = $inDB->rows_count('cms_ratings_total', "target='$target' AND item_id = '$item_id'", 1);
 
-    //если была, то обновляем
+    //РµСЃР»Рё Р±С‹Р»Р°, С‚Рѕ РѕР±РЅРѕРІР»СЏРµРј
     if ($is_agr) { $agr_sql = "UPDATE cms_ratings_total
                                SET  total_rating = total_rating + ({$points}),
                                     total_votes  = total_votes + 1
                                WHERE target='$target' AND item_id = '$item_id'"; }
 
-    //если не было, то вставляем
+    //РµСЃР»Рё РЅРµ Р±С‹Р»Рѕ, С‚Рѕ РІСЃС‚Р°РІР»СЏРµРј
     if (!$is_agr) { $agr_sql = "INSERT INTO cms_ratings_total (target, item_id, total_rating, total_votes)
                                 VALUES ('{$target}', '{$item_id}', '{$points}', '1')"; }
 
     $inDB->query($agr_sql);
 
-    //получаем информацию о цели
+    //РїРѕР»СѓС‡Р°РµРј РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ С†РµР»Рё
     $info = $inDB->get_fields('cms_rating_targets', "target='{$target}'", '*');
 
-    //если нужно, изменяем рейтинг автора цели
+    //РµСЃР»Рё РЅСѓР¶РЅРѕ, РёР·РјРµРЅСЏРµРј СЂРµР№С‚РёРЅРі Р°РІС‚РѕСЂР° С†РµР»Рё
     if ($info['is_user_affect'] && $info['user_weight'] && $info['target_table']){
 
         $user_sql = "UPDATE cms_users u,
@@ -172,8 +172,8 @@ function cmsSubmitKarma($target, $item_id, $points){
         
     }
 
-    //проверяем наличие метода updateRatingHook(target, item_id, points) в модели
-    //компонента, ответственного за цель
+    //РїСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ РјРµС‚РѕРґР° updateRatingHook(target, item_id, points) РІ РјРѕРґРµР»Рё
+    //РєРѕРјРїРѕРЅРµРЅС‚Р°, РѕС‚РІРµС‚СЃС‚РІРµРЅРЅРѕРіРѕ Р·Р° С†РµР»СЊ
     if ($info['component']){
         $inCore = cmsCore::getInstance();
         $inCore->loadModel($info['component']);
@@ -234,14 +234,14 @@ function cmsKarmaForm($target, $target_id, $points = 0, $is_author = false){
 		if(!cmsAlreadyKarmed($target, $target_id, $inUser->id)){
 			$inPage->addHeadJS('core/js/karma.js');
 			$control .= '<div style="text-align:center;margin-top:10px;">';
-				$control .= '<a href="javascript:void(0);" onclick="plusKarma(\''.$target.'\', \''.$target_id.'\')" title="'.$_LANG['LIKE'].'"><img src="/components/users/images/karma_up.png" border="0" alt="Карма+"/></a> ';
-				$control .= '<a href="javascript:void(0);" onclick="minusKarma(\''.$target.'\', \''.$target_id.'\')" title="'.$_LANG['UNLIKE'].'"><img src="/components/users/images/karma_down.png" border="0" alt="Карма-"/></a>';
+				$control .= '<a href="javascript:void(0);" onclick="plusKarma(\''.$target.'\', \''.$target_id.'\')" title="'.$_LANG['LIKE'].'"><img src="/components/users/images/karma_up.png" border="0" alt="РљР°СЂРјР°+"/></a> ';
+				$control .= '<a href="javascript:void(0);" onclick="minusKarma(\''.$target.'\', \''.$target_id.'\')" title="'.$_LANG['UNLIKE'].'"><img src="/components/users/images/karma_down.png" border="0" alt="РљР°СЂРјР°-"/></a>';
 			$control .= '</div>'; 
 		}
 	}
 	$html .= '<div class="karma_form">';
 		$html .= '<div id="karmapoints" style="font-size:24px">'.$points.'</div>';
-		$html .= '<div id="karmavotes">Голосов: '.$postkarma['votes'].'</div>';
+		$html .= '<div id="karmavotes">Р“РѕР»РѕСЃРѕРІ: '.$postkarma['votes'].'</div>';
 		$html .= '<div id="karmactrl">'.$control.'</div>';
 	$html .= '</div>';
 	return $html;
@@ -268,8 +268,8 @@ function cmsKarmaButtons($target, $target_id, $points = 0, $is_author = false){
 			$inPage->addHeadJS('core/js/karma.js');
 			
 			$control .= '<div style="text-align:center">';
-				$control .= '<a href="javascript:void(0);" onclick="plusKarma(\''.$target.'\', '.$target_id.');" title="'.$_LANG['LIKE'].'"><img src="/components/users/images/karma_up.png" border="0" alt="Карма+"/></a> ';
-				$control .= '<a href="javascript:void(0);" onclick="minusKarma(\''.$target.'\', '.$target_id.');" title="'.$_LANG['UNLIKE'].'"><img src="/components/users/images/karma_down.png" border="0" alt="Карма-"/></a>';
+				$control .= '<a href="javascript:void(0);" onclick="plusKarma(\''.$target.'\', '.$target_id.');" title="'.$_LANG['LIKE'].'"><img src="/components/users/images/karma_up.png" border="0" alt="РљР°СЂРјР°+"/></a> ';
+				$control .= '<a href="javascript:void(0);" onclick="minusKarma(\''.$target.'\', '.$target_id.');" title="'.$_LANG['UNLIKE'].'"><img src="/components/users/images/karma_down.png" border="0" alt="РљР°СЂРјР°-"/></a>';
 			$control .= '</div>'; 
 		}
 	}
@@ -302,8 +302,8 @@ function cmsKarmaButtonsText($target, $target_id, $points = 0, $is_author = fals
 		if(!cmsAlreadyKarmed($target, $target_id, $inUser->id)){
 			$inPage->addHeadJS('core/js/karma.js');
 			$control .= '<span>';
-				$control .= '<a href="javascript:void(0);" onclick="plusKarma(\''.$target.'\', '.$target_id.');" style="color:green">Нравится</a> &uarr; ';
-				$control .= '<a href="javascript:void(0);" onclick="minusKarma(\''.$target.'\', '.$target_id.');" style="color:red">Не нравится</a> &darr;';
+				$control .= '<a href="javascript:void(0);" onclick="plusKarma(\''.$target.'\', '.$target_id.');" style="color:green">РќСЂР°РІРёС‚СЃСЏ</a> &uarr; ';
+				$control .= '<a href="javascript:void(0);" onclick="minusKarma(\''.$target.'\', '.$target_id.');" style="color:red">РќРµ РЅСЂР°РІРёС‚СЃСЏ</a> &darr;';
 			$control .= '</span>'; 
 			$html .= '<span class="karma_buttons">';
 					$html .= '<span id="karmactrl">'.$control.'</span>';

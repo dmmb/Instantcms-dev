@@ -2,21 +2,21 @@
 <backend>    
     <module>
         <id>mod_comments</id>
-        <title>Последние комментарии</title>
+        <title>РџРѕСЃР»РµРґРЅРёРµ РєРѕРјРјРµРЅС‚Р°СЂРёРё</title>
     </module>
     <params>
 
-        <param type="number" name="shownum" title="Количество комментариев" units="шт." default="15" />
+        <param type="number" name="shownum" title="РљРѕР»РёС‡РµСЃС‚РІРѕ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ" units="С€С‚." default="15" />
 
-        <param type="number" name="minrate" title="Ограничение по рейтингу" default="0" hint="Показывать комментарии с рейтингом выше указанного" />
+        <param type="number" name="minrate" title="РћРіСЂР°РЅРёС‡РµРЅРёРµ РїРѕ СЂРµР№С‚РёРЅРіСѓ" default="0" hint="РџРѕРєР°Р·С‹РІР°С‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё СЃ СЂРµР№С‚РёРЅРіРѕРј РІС‹С€Рµ СѓРєР°Р·Р°РЅРЅРѕРіРѕ" />
 
-        <param type="flag" name="showguest" title="Показывать комментарии гостей" default="on" />
+        <param type="flag" name="showguest" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё РіРѕСЃС‚РµР№" default="on" />
 
-        <param type="flag" name="showrss" title="Ссылка на RSS" default="on" />
+        <param type="flag" name="showrss" title="РЎСЃС‹Р»РєР° РЅР° RSS" default="on" />
 
-		<param type="flag" name="showtarg" title="Показывать цель и рейтинг" default="on" />
+		<param type="flag" name="showtarg" title="РџРѕРєР°Р·С‹РІР°С‚СЊ С†РµР»СЊ Рё СЂРµР№С‚РёРЅРі" default="on" />
 
-        <param type="list_db" multiple="1" name="targets" title="Показывать комментарии для" src="cms_comment_targets" src_title="title" src_value="target" />
+        <param type="list_db" multiple="1" name="targets" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё РґР»СЏ" src="cms_comment_targets" src_title="title" src_value="target" />
 
     </params>
 </backend>

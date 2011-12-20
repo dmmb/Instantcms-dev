@@ -11,23 +11,23 @@
 //                                                                            //
 /******************************************************************************/
 
-	cpAddPathway('Голосования', '?view=modules&do=edit&id='.$_REQUEST['id']);
+	cpAddPathway('Р“РѕР»РѕСЃРѕРІР°РЅРёСЏ', '?view=modules&do=edit&id='.$_REQUEST['id']);
 	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; }
 	$toolmenu = array();
 	$toolmenu[0]['icon'] = 'new.gif';
-	$toolmenu[0]['title'] = 'Новое голосование';
+	$toolmenu[0]['title'] = 'РќРѕРІРѕРµ РіРѕР»РѕСЃРѕРІР°РЅРёРµ';
 	$toolmenu[0]['link'] = '?view=modules&do=config&id='.$_REQUEST['id'].'&opt=add';
 
 	$toolmenu[1]['icon'] = 'list.gif';
-	$toolmenu[1]['title'] = 'Все голосования';
+	$toolmenu[1]['title'] = 'Р’СЃРµ РіРѕР»РѕСЃРѕРІР°РЅРёСЏ';
 	$toolmenu[1]['link'] = '?view=modules&do=config&id='.$_REQUEST['id'].'&opt=list';
 
 	$toolmenu[2]['icon'] = 'config.gif';
-	$toolmenu[2]['title'] = 'Настройки модуля';
+	$toolmenu[2]['title'] = 'РќР°СЃС‚СЂРѕР№РєРё РјРѕРґСѓР»СЏ';
 	$toolmenu[2]['link'] = '?view=modules&do=config&id='.$_REQUEST['id'].'&opt=config';
 
 	$toolmenu[3]['icon'] = 'cancel.gif';
-	$toolmenu[3]['title'] = 'Отмена';
+	$toolmenu[3]['title'] = 'РћС‚РјРµРЅР°';
 	$toolmenu[3]['link'] = '?view=modules';
 
 	cpToolMenu($toolmenu);
@@ -46,26 +46,26 @@
 	}
 	
 	if ($opt == 'list'){
-		cpAddPathway('Все голосования', '?view=modules&do=config&id='.$_REQUEST['id'].'&opt=list');
-		echo '<h3>Все голосования</h3>';
+		cpAddPathway('Р’СЃРµ РіРѕР»РѕСЃРѕРІР°РЅРёСЏ', '?view=modules&do=config&id='.$_REQUEST['id'].'&opt=list');
+		echo '<h3>Р’СЃРµ РіРѕР»РѕСЃРѕРІР°РЅРёСЏ</h3>';
 
 		//TABLE COLUMNS
 		$fields = array();
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';		$fields[1]['link'] = '?view=modules&do=config&id='.$_REQUEST['id'].'&opt=edit&poll_id=%id%';
+		$fields[1]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';		$fields[1]['link'] = '?view=modules&do=config&id='.$_REQUEST['id'].'&opt=edit&poll_id=%id%';
 		$fields[1]['filter'] = 15;
 				
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Редактировать';
+		$actions[0]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[0]['icon']  = 'edit.gif';
 		$actions[0]['link']  = '?view=modules&do=config&id='.$_REQUEST['id'].'&opt=edit&poll_id=%id%';
 
-		$actions[1]['title'] = 'Удалить';
+		$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[1]['icon']  = 'delete.gif';
-		$actions[1]['confirm'] = 'Удалить голосование?';
+		$actions[1]['confirm'] = 'РЈРґР°Р»РёС‚СЊ РіРѕР»РѕСЃРѕРІР°РЅРёРµ?';
 		$actions[1]['link']  = '?view=modules&do=config&id='.$_REQUEST['id'].'&opt=delete&poll_id=%id%';
 				
 		//Print table
@@ -139,8 +139,8 @@
 	if($opt=='add' || $opt=='edit'){
 	
 		if ($opt=='add'){
-			cpAddPathway('Новое голосование', '?view=modules&do=config&id='.$_REQUEST['id'].'&opt=add');
-			echo '<h3>Добавить голосование</h3>';
+			cpAddPathway('РќРѕРІРѕРµ РіРѕР»РѕСЃРѕРІР°РЅРёРµ', '?view=modules&do=config&id='.$_REQUEST['id'].'&opt=add');
+			echo '<h3>Р”РѕР±Р°РІРёС‚СЊ РіРѕР»РѕСЃРѕРІР°РЅРёРµ</h3>';
 			unset($mod);
 		} else {
 			if(isset($_REQUEST['poll_id'])){
@@ -165,7 +165,7 @@
 				 }
 			}			
 			cpAddPathway($mod['title'], '?view=modules&do=config&id='.$_REQUEST['id'].'&opt=add');
-			echo '<h3>Редактировать голосование</h3>';
+			echo '<h3>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РіРѕР»РѕСЃРѕРІР°РЅРёРµ</h3>';
 		}
 
 	
@@ -173,20 +173,20 @@
       <form id="addform" name="addform" method="post" action="index.php?view=modules&do=config&id=<?php echo $_REQUEST['id'];?>">
         <table width="600" border="0" cellspacing="5" class="proptable">
           <tr>
-            <td width="200">Вопрос: </td>
+            <td width="200">Р’РѕРїСЂРѕСЃ: </td>
             <td width="213"><input name="title" type="text" id="title" size="30" value="<?php echo $mod['title']; ?>"/></td>
             <td width="173">&nbsp;</td>
           </tr>
           <?php for ($v=1; $v<=8; $v++) { ?>
           <tr>
-            <td>Вариант ответа №<?php echo $v?>:</td>
+            <td>Р’Р°СЂРёР°РЅС‚ РѕС‚РІРµС‚Р° в„–<?php echo $v?>:</td>
             <td><input name="answers[]" type="text" id="title2" size="30" value="<?php echo @$answers_title[$v];?>"/></td>
-            <td><?php if (isset($answers_num[$v])) { echo 'Голосов: '.$answers_num[$v]; echo '<input type="hidden" name="num['.@$answers_title[$v].']" value="'.$answers_num[$v].'" />'; } else { echo '&nbsp;'; }?></td>
+            <td><?php if (isset($answers_num[$v])) { echo 'Р“РѕР»РѕСЃРѕРІ: '.$answers_num[$v]; echo '<input type="hidden" name="num['.@$answers_title[$v].']" value="'.$answers_num[$v].'" />'; } else { echo '&nbsp;'; }?></td>
           </tr>
           <?php } ?>
         </table>
         <label>
-        <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add') { echo 'value="Создать голосование"'; } else { echo 'value="Сохранить голосование"'; } ?> />
+        <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add') { echo 'value="РЎРѕР·РґР°С‚СЊ РіРѕР»РѕСЃРѕРІР°РЅРёРµ"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ РіРѕР»РѕСЃРѕРІР°РЅРёРµ"'; } ?> />
         </label>
         <label></label>
         <input name="opt" type="hidden" id="opt" <?php if ($opt=='add') { echo 'value="submit"'; } else { echo 'value="update"'; } ?> />
@@ -203,25 +203,25 @@
 
 	if($opt=='config'){
 
-	cpAddPathway('Настройки', '?view=modules&do=config&id='.$_REQUEST['id'].'&opt=config');	
-	echo '<h3>Настройки модуля</h3>';
+	cpAddPathway('РќР°СЃС‚СЂРѕР№РєРё', '?view=modules&do=config&id='.$_REQUEST['id'].'&opt=config');	
+	echo '<h3>РќР°СЃС‚СЂРѕР№РєРё РјРѕРґСѓР»СЏ</h3>';
 	
 	?>
       </p>
       <form action="index.php?view=modules&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
         <table border="0" cellpadding="10" cellspacing="0" class="proptable">
           <tr>
-            <td width="215"><strong>Показывать результаты до голосования: </strong></td>
+            <td width="215"><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ СЂРµР·СѓР»СЊС‚Р°С‚С‹ РґРѕ РіРѕР»РѕСЃРѕРІР°РЅРёСЏ: </strong></td>
             <td width="126"><input name="shownum" type="radio" value="1" <?php if (@$cfg['shownum']) { echo 'checked="checked"'; } ?>/>
-              Да
+              Р”Р°
               <input name="shownum" type="radio" value="0" <?php if (@!$cfg['shownum']) { echo 'checked="checked"'; } ?>/>
-              Нет </td>
+              РќРµС‚ </td>
           </tr>
           <tr>
-            <td><strong>Активное голосование : </strong></td>
+            <td><strong>РђРєС‚РёРІРЅРѕРµ РіРѕР»РѕСЃРѕРІР°РЅРёРµ : </strong></td>
             <td>
                 <select name="poll_id" id="poll_id">
-                    <option value="0">-- Случайное голосование --</option>
+                    <option value="0">-- РЎР»СѓС‡Р°Р№РЅРѕРµ РіРѕР»РѕСЃРѕРІР°РЅРёРµ --</option>
                     <?php
                         if (isset($cfg['poll_id'])) {
                             echo $inCore->getListItems('cms_polls', $cfg['poll_id']);
@@ -235,8 +235,8 @@
         </table>
         <p>
           <input name="opt" type="hidden" id="opt" value="saveconfig" />
-          <input name="save" type="submit" id="save" value="Сохранить" />
-          <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='/admin/index.php?view=modules&do=config&id=<?php echo $_REQUEST['id']; ?>&opt=list';"/>
+          <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+          <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='/admin/index.php?view=modules&do=config&id=<?php echo $_REQUEST['id']; ?>&opt=list';"/>
         </p>
       </form>
     <?php

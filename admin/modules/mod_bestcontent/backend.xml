@@ -2,13 +2,13 @@
 <backend>    
     <module>
         <id>mod_bestcontent</id>
-        <title>Популярные статьи</title>
+        <title>РџРѕРїСѓР»СЏСЂРЅС‹Рµ СЃС‚Р°С‚СЊРё</title>
     </module>
     <params>        
-        <param type="number" name="shownum" title="Количество популярных статей" units="шт." default="5" />
-        <param type="flag" name="showlink" title="Показывать ссылку на полный рейтинг" default="on" />
-        <param type="flag" name="showdesc" title="Показывать анонсы статей" default="on" />
-        <param type="list_db" name="cat_id" title="Статьи из раздела" src="cms_category" src_title="title" src_value="id" tree="1" />
-        <param type="flag" name="subs" title="Вместе с подразделами" default="off" />
+        <param type="number" name="shownum" title="РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕРїСѓР»СЏСЂРЅС‹С… СЃС‚Р°С‚РµР№" units="С€С‚." default="5" />
+        <param type="flag" name="showlink" title="РџРѕРєР°Р·С‹РІР°С‚СЊ СЃСЃС‹Р»РєСѓ РЅР° РїРѕР»РЅС‹Р№ СЂРµР№С‚РёРЅРі" default="on" />
+        <param type="flag" name="showdesc" title="РџРѕРєР°Р·С‹РІР°С‚СЊ Р°РЅРѕРЅСЃС‹ СЃС‚Р°С‚РµР№" default="on" />
+        <param type="list_db" name="cat_id" title="РЎС‚Р°С‚СЊРё РёР· СЂР°Р·РґРµР»Р°" src="cms_category" src_title="title" src_value="id" tree="1" />
+        <param type="flag" name="subs" title="Р’РјРµСЃС‚Рµ СЃ РїРѕРґСЂР°Р·РґРµР»Р°РјРё" default="off" />
     </params>
 </backend>

@@ -17,12 +17,12 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * e-mail: firs.yura@gmail.com
  * site: firs.org.ua
  */
-$_LANG['USERFILES_NO_FILES']           ='Íåò ôàéëîâ.';
+$_LANG['USERFILES_NO_FILES']           ='ÐÐµÑ‚ Ñ„Ð°Ð¹Ð»Ð¾Ð².';
 // templates
-$_LANG['USERFILES_NEW_FILES']          ='Íîâûå ôàéëû';
-$_LANG['USERFILES_MBITE']              ='Ìá';
-$_LANG['USERFILES_ALL_USER_FILES']     ='Âñå ôàéëû ïîëüçîâàòåëÿ';
-$_LANG['USERFILES_POPULAR_FILES']      ='Ïîïóëÿðíûå ôàéëû';
-$_LANG['USERFILES_TOTAL_FILES']        ='Âñåãî ôàéëîâ';
-$_LANG['USERFILES_TOTAL_SIZE']         ='Îáùèé ðàçìåð';
+$_LANG['USERFILES_NEW_FILES']          ='ÐÐ¾Ð²Ñ‹Ðµ Ñ„Ð°Ð¹Ð»Ñ‹';
+$_LANG['USERFILES_MBITE']              ='ÐœÐ±';
+$_LANG['USERFILES_ALL_USER_FILES']     ='Ð’ÑÐµ Ñ„Ð°Ð¹Ð»Ñ‹ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ñ';
+$_LANG['USERFILES_POPULAR_FILES']      ='ÐŸÐ¾Ð¿ÑƒÐ»ÑÑ€Ð½Ñ‹Ðµ Ñ„Ð°Ð¹Ð»Ñ‹';
+$_LANG['USERFILES_TOTAL_FILES']        ='Ð’ÑÐµÐ³Ð¾ Ñ„Ð°Ð¹Ð»Ð¾Ð²';
+$_LANG['USERFILES_TOTAL_SIZE']         ='ÐžÐ±Ñ‰Ð¸Ð¹ Ñ€Ð°Ð·Ð¼ÐµÑ€';
 ?>

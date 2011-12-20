@@ -12,7 +12,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //                                                                            //
 /******************************************************************************/
 
-	define('DEFAULT_PHOTO_TITLE', 'Фото');
+	define('DEFAULT_PHOTO_TITLE', 'Р¤РѕС‚Рѕ');
 
 	$inCore->loadLib('tags');
     $inCore->includeGraphics();
@@ -27,8 +27,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
     $opt = $inCore->request('opt', 'str', 'list_albums');
 
-	cpAddPathway('Фотогалерея', '?view=components&do=config&id='.$_REQUEST['id']);
-	echo '<h3>Фотогалерея</h3>';
+	cpAddPathway('Р¤РѕС‚РѕРіР°Р»РµСЂРµСЏ', '?view=components&do=config&id='.$_REQUEST['id']);
+	echo '<h3>Р¤РѕС‚РѕРіР°Р»РµСЂРµСЏ</h3>';
 
 //=================================================================================================//
 //=================================================================================================//
@@ -51,7 +51,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 		$inCore->saveComponentConfig('photos', $cfg);
         
-		$msg = 'Настройки сохранены.';
+		$msg = 'РќР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅРµРЅС‹.';
 		$opt = 'config';				
 	}
 
@@ -61,27 +61,27 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if ($opt=='list_photos' || $opt=='list_albums'){
 	
 		$toolmenu[0]['icon'] = 'newfolder.gif';
-		$toolmenu[0]['title'] = 'Новый альбом';
+		$toolmenu[0]['title'] = 'РќРѕРІС‹Р№ Р°Р»СЊР±РѕРј';
 		$toolmenu[0]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_album';
 	
 		$toolmenu[1]['icon'] = 'newphoto.gif';
-		$toolmenu[1]['title'] = 'Новая фотография';
+		$toolmenu[1]['title'] = 'РќРѕРІР°СЏ С„РѕС‚РѕРіСЂР°С„РёСЏ';
 		$toolmenu[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_photo';
 
 		$toolmenu[2]['icon'] = 'newphotomulti.gif';
-		$toolmenu[2]['title'] = 'Массовая загрузка фото';
+		$toolmenu[2]['title'] = 'РњР°СЃСЃРѕРІР°СЏ Р·Р°РіСЂСѓР·РєР° С„РѕС‚Рѕ';
 		$toolmenu[2]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_photo_multi';
 	
 		$toolmenu[3]['icon'] = 'folders.gif';
-		$toolmenu[3]['title'] = 'Фотоальбомы';
+		$toolmenu[3]['title'] = 'Р¤РѕС‚РѕР°Р»СЊР±РѕРјС‹';
 		$toolmenu[3]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_albums';
 	
 		$toolmenu[4]['icon'] = 'listphoto.gif';
-		$toolmenu[4]['title'] = 'Все фотографии';
+		$toolmenu[4]['title'] = 'Р’СЃРµ С„РѕС‚РѕРіСЂР°С„РёРё';
 		$toolmenu[4]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_photos';
 
 		$toolmenu[5]['icon'] = 'config.gif';
-		$toolmenu[5]['title'] = 'Настройки';
+		$toolmenu[5]['title'] = 'РќР°СЃС‚СЂРѕР№РєРё';
 		$toolmenu[5]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config';
 
 	}
@@ -92,19 +92,19 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if($opt=='list_photos'){
 
 		$toolmenu[11]['icon'] = 'edit.gif';
-		$toolmenu[11]['title'] = 'Редактировать выбранные';
+		$toolmenu[11]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[11]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=edit_photo&multiple=1');";
 
 		$toolmenu[12]['icon'] = 'delete.gif';
-		$toolmenu[12]['title'] = 'Удалить выбранные';
+		$toolmenu[12]['title'] = 'РЈРґР°Р»РёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=delete_photo&multiple=1');";
 
 		$toolmenu[13]['icon'] = 'show.gif';
-		$toolmenu[13]['title'] = 'Публиковать выбранные';
+		$toolmenu[13]['title'] = 'РџСѓР±Р»РёРєРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=show_photo&multiple=1');";
 
 		$toolmenu[14]['icon'] = 'hide.gif';
-		$toolmenu[14]['title'] = 'Скрыть выбранные';
+		$toolmenu[14]['title'] = 'РЎРєСЂС‹С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[14]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=hide_photo&multiple=1');";
 
 	}
@@ -116,11 +116,11 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	} else {
 	
 		$toolmenu[20]['icon'] = 'save.gif';
-		$toolmenu[20]['title'] = 'Сохранить';
+		$toolmenu[20]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 		$toolmenu[20]['link'] = 'javascript:document.addform.submit();';
 
 		$toolmenu[21]['icon'] = 'cancel.gif';
-		$toolmenu[21]['title'] = 'Отмена';
+		$toolmenu[21]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[21]['link'] = '?view=components&do=config&id='.$_REQUEST['id'];
 	
 	}
@@ -186,7 +186,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                 
                 $model->addPhoto($photo);
 
-			} else { $msg = 'Ошибка загрузки фотографии!'; }
+			} else { $msg = 'РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё С„РѕС‚РѕРіСЂР°С„РёРё!'; }
 			
             $inCore->redirect('?view=components&do=config&opt=list_photos&id='.$_REQUEST['id']);
 	}	  
@@ -195,7 +195,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //=================================================================================================//
 
 	if ($opt == 'submit_photo_multi'){	
-			echo '<h3>Загрузка файлов завершена</h3>';
+			echo '<h3>Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»РѕРІ Р·Р°РІРµСЂС€РµРЅР°</h3>';
 
             $photo['album_id']     = $inCore->request('album_id', 'int');			
 			$photo['description']  = $inCore->request('description', 'html');
@@ -245,7 +245,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                             if (@!$inCore->inRequest('saveorig')){ @unlink($uploadphoto); }
 
                             if($titlemode == 'number'){
-                                $photo['title'] = 'Фото #'.sizeof($loaded_files);
+                                $photo['title'] = 'Р¤РѕС‚Рѕ #'.sizeof($loaded_files);
                             } else {
                                 $photo['title'] = $realfile;
                             }
@@ -257,17 +257,17 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					
 				echo '<div style="padding:20px">';	
                     if (sizeof($loaded_files)){
-                        echo '<div><strong>Загруженные файлы:</strong></div>';
+                        echo '<div><strong>Р—Р°РіСЂСѓР¶РµРЅРЅС‹Рµ С„Р°Р№Р»С‹:</strong></div>';
                         echo '<ul>';
                             foreach($loaded_files as $k=>$val){
                                 echo '<li>'.$val.'</li>';
                             }
                         echo '</ul>';
                     } else {
-                        echo '<div style="color:red">Ни один файл не был загружен. Может файлы слишком большие?</div>';
-                        echo '<div style="color:red">Имена файлов не должны содержать пробелов и русских букв.</div>';
+                        echo '<div style="color:red">РќРё РѕРґРёРЅ С„Р°Р№Р» РЅРµ Р±С‹Р» Р·Р°РіСЂСѓР¶РµРЅ. РњРѕР¶РµС‚ С„Р°Р№Р»С‹ СЃР»РёС€РєРѕРј Р±РѕР»СЊС€РёРµ?</div>';
+                        echo '<div style="color:red">РРјРµРЅР° С„Р°Р№Р»РѕРІ РЅРµ РґРѕР»Р¶РЅС‹ СЃРѕРґРµСЂР¶Р°С‚СЊ РїСЂРѕР±РµР»РѕРІ Рё СЂСѓСЃСЃРєРёС… Р±СѓРєРІ.</div>';
                     }
-                    echo '<div><a href="/admin/index.php?view=components&do=config&opt=list_photos&id='.$_REQUEST['id'].'">Продолжить</a> &rarr;</div>';
+                    echo '<div><a href="/admin/index.php?view=components&do=config&opt=list_photos&id='.$_REQUEST['id'].'">РџСЂРѕРґРѕР»Р¶РёС‚СЊ</a> &rarr;</div>';
 				echo '</div>';
 	}	  
 
@@ -319,7 +319,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if ($opt == 'config') {
 
-        cpAddPathway('Настройки', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config');
+        cpAddPathway('РќР°СЃС‚СЂРѕР№РєРё', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config');
 
 		if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
 			
@@ -337,88 +337,88 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			<form action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id']; ?>" method="post" enctype="multipart/form-data" name="optform">
 			  <table width="" border="0" cellpadding="10" cellspacing="0" class="proptable">
 				<tr>
-				  <td width="300"><strong>Показывать ссылки на оригинал: </strong></td>
+				  <td width="300"><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ СЃСЃС‹Р»РєРё РЅР° РѕСЂРёРіРёРЅР°Р»: </strong></td>
 				  <td width="250">
-				  	<input name="link" type="radio" value="1" <?php if (@$cfg['link']) { echo 'checked="checked"'; } ?>/> Да
-				  <input name="link" type="radio" value="0" <?php if (@!$cfg['link']) { echo 'checked="checked"'; } ?>/> Нет				  </td>
+				  	<input name="link" type="radio" value="1" <?php if (@$cfg['link']) { echo 'checked="checked"'; } ?>/> Р”Р°
+				  <input name="link" type="radio" value="0" <?php if (@!$cfg['link']) { echo 'checked="checked"'; } ?>/> РќРµС‚				  </td>
 				</tr>
 				<tr>
-				  <td><strong>Сохранять оригиналы при загрузке<br /> 
-			      фотографий пользователями:</strong> </td>
+				  <td><strong>РЎРѕС…СЂР°РЅСЏС‚СЊ РѕСЂРёРіРёРЅР°Р»С‹ РїСЂРё Р·Р°РіСЂСѓР·РєРµ<br /> 
+			      С„РѕС‚РѕРіСЂР°С„РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРјРё:</strong> </td>
 				  <td>
-					  <input name="saveorig" type="radio" value="1" <?php if (@$cfg['saveorig']) { echo 'checked="checked"'; } ?>/> Да
-					  <input name="saveorig" type="radio" value="0" <?php if (@!$cfg['saveorig']) { echo 'checked="checked"'; } ?>/> Нет				  </td>
+					  <input name="saveorig" type="radio" value="1" <?php if (@$cfg['saveorig']) { echo 'checked="checked"'; } ?>/> Р”Р°
+					  <input name="saveorig" type="radio" value="0" <?php if (@!$cfg['saveorig']) { echo 'checked="checked"'; } ?>/> РќРµС‚				  </td>
 			    </tr>
 				<tr>
-				  <td><strong>Количество колонок для<br />вывода списка альбомов: </strong></td>
-				  <td><input name="maxcols" type="text" id="maxcols" size="5" value="<?php echo @$cfg['maxcols'];?>"/> шт</td>
+				  <td><strong>РљРѕР»РёС‡РµСЃС‚РІРѕ РєРѕР»РѕРЅРѕРє РґР»СЏ<br />РІС‹РІРѕРґР° СЃРїРёСЃРєР° Р°Р»СЊР±РѕРјРѕРІ: </strong></td>
+				  <td><input name="maxcols" type="text" id="maxcols" size="5" value="<?php echo @$cfg['maxcols'];?>"/> С€С‚</td>
 			    </tr>
 				<tr>
-				  <td valign="top"><strong>Сортировать список альбомов: </strong></td>
+				  <td valign="top"><strong>РЎРѕСЂС‚РёСЂРѕРІР°С‚СЊ СЃРїРёСЃРѕРє Р°Р»СЊР±РѕРјРѕРІ: </strong></td>
 				  <td><select name="orderby" style="width:190px">
-                    <option value="title" <?php if(@$cfg['orderby']=='title') { echo 'selected'; } ?>>По алфавиту</option>
-                    <option value="pubdate" <?php if(@$cfg['orderby']=='pubdate') { echo 'selected'; } ?>>По дате</option>
-                    <option value="content_count" <?php if(@$cfg['orderby']=='content_count') { echo 'selected'; } ?>>По количеству фото</option>
+                    <option value="title" <?php if(@$cfg['orderby']=='title') { echo 'selected'; } ?>>РџРѕ Р°Р»С„Р°РІРёС‚Сѓ</option>
+                    <option value="pubdate" <?php if(@$cfg['orderby']=='pubdate') { echo 'selected'; } ?>>РџРѕ РґР°С‚Рµ</option>
+                    <option value="content_count" <?php if(@$cfg['orderby']=='content_count') { echo 'selected'; } ?>>РџРѕ РєРѕР»РёС‡РµСЃС‚РІСѓ С„РѕС‚Рѕ</option>
                   </select>
                     <select name="orderto" style="width:190px">
-                      <option value="desc" <?php if(@$cfg['orderto']=='desc') { echo 'selected'; } ?>>по убыванию</option>
-                      <option value="asc" <?php if(@$cfg['orderto']=='asc') { echo 'selected'; } ?>>по возрастанию</option>
+                      <option value="desc" <?php if(@$cfg['orderto']=='desc') { echo 'selected'; } ?>>РїРѕ СѓР±С‹РІР°РЅРёСЋ</option>
+                      <option value="asc" <?php if(@$cfg['orderto']=='asc') { echo 'selected'; } ?>>РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ</option>
                     </select></td>
 			    </tr>
 				<tr>
-				  <td><strong>Показывать ссылки на последние и лучшие фото: </strong></td>
+				  <td><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ СЃСЃС‹Р»РєРё РЅР° РїРѕСЃР»РµРґРЅРёРµ Рё Р»СѓС‡С€РёРµ С„РѕС‚Рѕ: </strong></td>
 				  <td>
-				  	<input name="showlat" type="radio" value="1" <?php if (@$cfg['showlat']) { echo 'checked="checked"'; } ?>/> Да
-					<input name="showlat" type="radio" value="0" <?php if (@!$cfg['showlat']) { echo 'checked="checked"'; } ?>/> Нет			      </td>
+				  	<input name="showlat" type="radio" value="1" <?php if (@$cfg['showlat']) { echo 'checked="checked"'; } ?>/> Р”Р°
+					<input name="showlat" type="radio" value="0" <?php if (@!$cfg['showlat']) { echo 'checked="checked"'; } ?>/> РќРµС‚			      </td>
 			    </tr>
 				<tr>
 				  <td>
-                      <strong>Наносить водяной знак:</strong><br />
-                      <span class="hinttext">Если включено, то на все загружаемые фотографии будет наносится изображение из файла "<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>"</span></td>
+                      <strong>РќР°РЅРѕСЃРёС‚СЊ РІРѕРґСЏРЅРѕР№ Р·РЅР°Рє:</strong><br />
+                      <span class="hinttext">Р•СЃР»Рё РІРєР»СЋС‡РµРЅРѕ, С‚Рѕ РЅР° РІСЃРµ Р·Р°РіСЂСѓР¶Р°РµРјС‹Рµ С„РѕС‚РѕРіСЂР°С„РёРё Р±СѓРґРµС‚ РЅР°РЅРѕСЃРёС‚СЃСЏ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РёР· С„Р°Р№Р»Р° "<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>"</span></td>
 				  <td>
-					<input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Да
-					<input name="watermark" type="radio" value="0" <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Нет				  </td>
+					<input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Р”Р°
+					<input name="watermark" type="radio" value="0" <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?>/> РќРµС‚				  </td>
 			    </tr>
 				<tr>
 				  <td>
-                      <strong>Показ мини-эскизов:</strong><br />
-                      <span class="hinttext">Выводить фото вместо иконки фотольбома</span>
+                      <strong>РџРѕРєР°Р· РјРёРЅРё-СЌСЃРєРёР·РѕРІ:</strong><br />
+                      <span class="hinttext">Р’С‹РІРѕРґРёС‚СЊ С„РѕС‚Рѕ РІРјРµСЃС‚Рѕ РёРєРѕРЅРєРё С„РѕС‚РѕР»СЊР±РѕРјР°</span>
                   </td>
 				  <td>
 					<select name="tumb_view" style="width:190px">
-                        <option value="1" <?php if(@$cfg['tumb_view']=='1') { echo 'selected'; } ?>>Не показывать</option>
-                        <option value="2" <?php if(@$cfg['tumb_view']=='2') { echo 'selected'; } ?>>Случайный</option>
-                        <option value="3" <?php if(@$cfg['tumb_view']=='3') { echo 'selected'; } ?>>По выбору</option>
+                        <option value="1" <?php if(@$cfg['tumb_view']=='1') { echo 'selected'; } ?>>РќРµ РїРѕРєР°Р·С‹РІР°С‚СЊ</option>
+                        <option value="2" <?php if(@$cfg['tumb_view']=='2') { echo 'selected'; } ?>>РЎР»СѓС‡Р°Р№РЅС‹Р№</option>
+                        <option value="3" <?php if(@$cfg['tumb_view']=='3') { echo 'selected'; } ?>>РџРѕ РІС‹Р±РѕСЂСѓ</option>
                   	</select><br />
                     <label>
                         <input name="tumb_club" type="checkbox" value="1" <?php if (@$cfg['tumb_club']) { echo 'checked'; } ?>/>
-                        Не применять к альбомам клубов
+                        РќРµ РїСЂРёРјРµРЅСЏС‚СЊ Рє Р°Р»СЊР±РѕРјР°Рј РєР»СѓР±РѕРІ
                     </label>
                     </td>
 			    </tr>
 				<tr>
 				  <td>
-                      <strong>Выбор случайных мини-эскизов:</strong><br />
-                      <span class="hinttext">Из каких альбомов выбирать эскизы, если выбран их случайный показ</span>
+                      <strong>Р’С‹Р±РѕСЂ СЃР»СѓС‡Р°Р№РЅС‹С… РјРёРЅРё-СЌСЃРєРёР·РѕРІ:</strong><br />
+                      <span class="hinttext">РР· РєР°РєРёС… Р°Р»СЊР±РѕРјРѕРІ РІС‹Р±РёСЂР°С‚СЊ СЌСЃРєРёР·С‹, РµСЃР»Рё РІС‹Р±СЂР°РЅ РёС… СЃР»СѓС‡Р°Р№РЅС‹Р№ РїРѕРєР°Р·</span>
                   </td>
 				  <td>
 					<select name="tumb_from" style="width:190px">
-                        <option value="1" <?php if(@$cfg['tumb_from']=='1') { echo 'selected'; } ?>>Из текущего</option>
-                        <option value="2" <?php if(@$cfg['tumb_from']=='2') { echo 'selected'; } ?>>Включая вложенные</option>
+                        <option value="1" <?php if(@$cfg['tumb_from']=='1') { echo 'selected'; } ?>>РР· С‚РµРєСѓС‰РµРіРѕ</option>
+                        <option value="2" <?php if(@$cfg['tumb_from']=='2') { echo 'selected'; } ?>>Р’РєР»СЋС‡Р°СЏ РІР»РѕР¶РµРЅРЅС‹Рµ</option>
                   	</select>
                   </td>
 			    </tr>
                 <tr>
-                    <td><strong>Показывать количество новых фото за день?</strong></td>
+                    <td><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ РєРѕР»РёС‡РµСЃС‚РІРѕ РЅРѕРІС‹С… С„РѕС‚Рѕ Р·Р° РґРµРЅСЊ?</strong></td>
                         <td>
-                            <input name="is_today" type="radio" value="1" <?php if (@$cfg['is_today']) { echo 'checked="checked"'; } ?> /> Да
-                            <input name="is_today" type="radio" value="0"  <?php if (@!$cfg['is_today']) { echo 'checked="checked"'; } ?> /> Нет
+                            <input name="is_today" type="radio" value="1" <?php if (@$cfg['is_today']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                            <input name="is_today" type="radio" value="0"  <?php if (@!$cfg['is_today']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                         </td>
                 </tr>
 			  </table>
 			  <p>
 				<input name="opt" type="hidden" value="saveconfig" />
-				<input name="save" type="submit" id="save" value="Сохранить" />
+				<input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
 			  </p>
 		</form>
 		<?php
@@ -534,28 +534,28 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if ($opt == 'list_albums'){
 		
-		echo '<h3>Фотоальбомы</h3>';
+		echo '<h3>Р¤РѕС‚РѕР°Р»СЊР±РѕРјС‹</h3>';
 
 		//TABLE COLUMNS
 		$fields = array();
 
 		$fields[0]['title'] = 'Lt';			$fields[0]['field'] = 'NSLeft';			$fields[0]['width'] = '30';
 		
-		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
+		$fields[1]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
 		$fields[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_album&item_id=%id%';
 
-		$fields[2]['title'] = 'Показ';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
-		$fields[2]['do'] = 'opt'; $fields[2]['do_suffix'] = '_album'; //Чтобы вместо 'do=hide&id=1' было 'opt=hide_album&item_id=1'
+		$fields[2]['title'] = 'РџРѕРєР°Р·';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
+		$fields[2]['do'] = 'opt'; $fields[2]['do_suffix'] = '_album'; //Р§С‚РѕР±С‹ РІРјРµСЃС‚Рѕ 'do=hide&id=1' Р±С‹Р»Рѕ 'opt=hide_album&item_id=1'
 
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Редактировать';
+		$actions[0]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[0]['icon']  = 'edit.gif';
 		$actions[0]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_album&item_id=%id%';
 
-		$actions[1]['title'] = 'Удалить';
+		$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[1]['icon']  = 'delete.gif';
-		$actions[1]['confirm'] = 'Вместе с альбомом будут удалены все фотографии. Удалить фотоальбом?';
+		$actions[1]['confirm'] = 'Р’РјРµСЃС‚Рµ СЃ Р°Р»СЊР±РѕРјРѕРј Р±СѓРґСѓС‚ СѓРґР°Р»РµРЅС‹ РІСЃРµ С„РѕС‚РѕРіСЂР°С„РёРё. РЈРґР°Р»РёС‚СЊ С„РѕС‚РѕР°Р»СЊР±РѕРј?';
 		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete_album&item_id=%id%';
 				
 		//Print table
@@ -566,38 +566,38 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //=================================================================================================//
 
 	if ($opt == 'list_photos'){
-		cpAddPathway('Фотографии', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_photos');
-		echo '<h3>Фотографии</h3>';
+		cpAddPathway('Р¤РѕС‚РѕРіСЂР°С„РёРё', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_photos');
+		echo '<h3>Р¤РѕС‚РѕРіСЂР°С„РёРё</h3>';
 		
 		//TABLE COLUMNS
 		$fields = array();
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Дата';		$fields[1]['field'] = 'pubdate';		$fields[1]['width'] = '80';		$fields[1]['filter'] = 15;
+		$fields[1]['title'] = 'Р”Р°С‚Р°';		$fields[1]['field'] = 'pubdate';		$fields[1]['width'] = '80';		$fields[1]['filter'] = 15;
 		$fields[1]['fdate'] = '%d/%m/%Y';
 
-		$fields[2]['title'] = 'Название';	$fields[2]['field'] = 'title';		$fields[2]['width'] = '';
+		$fields[2]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[2]['field'] = 'title';		$fields[2]['width'] = '';
 		$fields[2]['filter'] = 15;
 		$fields[2]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_photo&item_id=%id%';
 
-		$fields[3]['title'] = 'Показ';		$fields[3]['field'] = 'published';	$fields[3]['width'] = '100';
+		$fields[3]['title'] = 'РџРѕРєР°Р·';		$fields[3]['field'] = 'published';	$fields[3]['width'] = '100';
 		$fields[3]['do'] = 'opt'; $fields[3]['do_suffix'] = '_photo';
 
-		$fields[4]['title'] = 'Просмотров';	$fields[4]['field'] = 'hits';		$fields[4]['width'] = '90';
+		$fields[4]['title'] = 'РџСЂРѕСЃРјРѕС‚СЂРѕРІ';	$fields[4]['field'] = 'hits';		$fields[4]['width'] = '90';
 		
-		$fields[5]['title'] = 'Альбом';		$fields[5]['field'] = 'album_id';	$fields[5]['width'] = '250';
+		$fields[5]['title'] = 'РђР»СЊР±РѕРј';		$fields[5]['field'] = 'album_id';	$fields[5]['width'] = '250';
 		$fields[5]['prc'] = 'cpPhotoAlbumById';  $fields[5]['filter'] = 1;  $fields[5]['filterlist'] = cpGetList('cms_photo_albums');
 	
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Редактировать';
+		$actions[0]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[0]['icon']  = 'edit.gif';
 		$actions[0]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_photo&item_id=%id%';
 
-		$actions[1]['title'] = 'Удалить';
+		$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[1]['icon']  = 'delete.gif';
-		$actions[1]['confirm'] = 'Удалить фотографию?';
+		$actions[1]['confirm'] = 'РЈРґР°Р»РёС‚СЊ С„РѕС‚РѕРіСЂР°С„РёСЋ?';
 		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete_photo&item_id=%id%';
 				
 		//Print table
@@ -609,9 +609,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	
 	if ($opt == 'add_album' || $opt == 'edit_album'){
 		if ($opt=='add_album'){
-			 cpAddPathway('Фотоальбомы', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_albums');
-			 cpAddPathway('Добавить фотоальбом', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_album');
-			 echo '<h3>Добавить фотоальбом</h3>';
+			 cpAddPathway('Р¤РѕС‚РѕР°Р»СЊР±РѕРјС‹', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_albums');
+			 cpAddPathway('Р”РѕР±Р°РІРёС‚СЊ С„РѕС‚РѕР°Р»СЊР±РѕРј', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_album');
+			 echo '<h3>Р”РѕР±Р°РІРёС‚СЊ С„РѕС‚РѕР°Р»СЊР±РѕРј</h3>';
 		} else {
 					 if(isset($_REQUEST['item_id'])){
 						 $id = $_REQUEST['item_id'];
@@ -622,9 +622,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 							
 						 }
 					 }
-					 cpAddPathway('Фотоальбомы', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_albums');
-					 cpAddPathway('Редактировать фотоальбом', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_album');
-					 echo '<h3>Редактировать фотоальбом</h3>';
+					 cpAddPathway('Р¤РѕС‚РѕР°Р»СЊР±РѕРјС‹', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_albums');
+					 cpAddPathway('Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ С„РѕС‚РѕР°Р»СЊР±РѕРј', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_album');
+					 echo '<h3>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ С„РѕС‚РѕР°Р»СЊР±РѕРј</h3>';
 			   }
 
                //DEFAULT VALUES
@@ -649,16 +649,16 @@ function showMapMarker(){
         <form id="addform" name="addform" method="post" action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>">
             <table width="610" border="0" cellspacing="5" class="proptable">
                 <tr>
-                    <td width="300">Название альбома:</td>
+                    <td width="300">РќР°Р·РІР°РЅРёРµ Р°Р»СЊР±РѕРјР°:</td>
                     <td><input name="title" type="text" id="title" size="30" value="<?php echo htmlspecialchars($mod['title']); ?>"/></td>
                 </tr>
                 <tr>
-                    <td valign="top">Родительский альбом:</td>
+                    <td valign="top">Р РѕРґРёС‚РµР»СЊСЃРєРёР№ Р°Р»СЊР±РѕРј:</td>
                     <td valign="top">
                         <?php if($opt=='add_album' || ($opt=='edit_album' && @$mod['NSDiffer']=='')){ ?>
                             <?php $rootid = $inDB->get_field('cms_photo_albums', "parent_id=0 AND NSDiffer=''", 'id'); ?>
                             <select name="parent_id" size="8" id="parent_id" style="width:285px">
-                                <option value="<?php echo $rootid; ?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- Корневой альбом --</option>
+                                <option value="<?php echo $rootid; ?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- РљРѕСЂРЅРµРІРѕР№ Р°Р»СЊР±РѕРј --</option>
                                 <?php
                                     if (isset($mod['parent_id'])){
                                         echo $inCore->getListItemsNS('cms_photo_albums', $mod['parent_id']);
@@ -672,146 +672,146 @@ function showMapMarker(){
                                 $club['title']  = $inDB->get_field('cms_clubs', "id={$club['id']}", 'title');
                         ?>
                             <input type="hidden" name="parent_id" value="<?php echo $mod['parent_id']; ?>" />
-                            Клуб <a href="index.php?view=components&do=config&id=23&opt=edit&item_id=<?php echo $club['id']; ?>"><?php echo $club['title'];?></a>
+                            РљР»СѓР± <a href="index.php?view=components&do=config&id=23&opt=edit&item_id=<?php echo $club['id']; ?>"><?php echo $club['title'];?></a>
                         <?php
                             }
                         ?>
                     </td>
                 </tr>
                 <tr>
-                    <td>Публиковать альбом?</td>
+                    <td>РџСѓР±Р»РёРєРѕРІР°С‚СЊ Р°Р»СЊР±РѕРј?</td>
                         <td>
-                            <input name="published" type="radio" value="1" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> /> Да
-                            <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> /> Нет
+                            <input name="published" type="radio" value="1" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                            <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                         </td>
                 </tr>
                 <tr>
-                    <td>Показывать даты и комментарии фото?</td>
+                    <td>РџРѕРєР°Р·С‹РІР°С‚СЊ РґР°С‚С‹ Рё РєРѕРјРјРµРЅС‚Р°СЂРёРё С„РѕС‚Рѕ?</td>
                         <td>
-                            <input name="showdate" type="radio" value="1" checked="checked" <?php if (@$mod['showdate']) { echo 'checked="checked"'; } ?> /> Да
-                            <input name="showdate" type="radio" value="0"  <?php if (@!$mod['showdate']) { echo 'checked="checked"'; } ?> /> Нет
+                            <input name="showdate" type="radio" value="1" checked="checked" <?php if (@$mod['showdate']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                            <input name="showdate" type="radio" value="0"  <?php if (@!$mod['showdate']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                         </td>
                 </tr>
                 <tr>
-                    <td valign="top">Показывать теги фото:</td>
+                    <td valign="top">РџРѕРєР°Р·С‹РІР°С‚СЊ С‚РµРіРё С„РѕС‚Рѕ:</td>
                     <td valign="top">
-                        <input name="showtags" type="radio" value="1" checked="checked" <?php if (@$mod['showtags']) { echo 'checked="checked"'; } ?> /> Да
-                        <input name="showtags" type="radio" value="0"  <?php if (@!$mod['showtags']) { echo 'checked="checked"'; } ?> /> Нет
+                        <input name="showtags" type="radio" value="1" checked="checked" <?php if (@$mod['showtags']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                        <input name="showtags" type="radio" value="0"  <?php if (@!$mod['showtags']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                     </td>
                 </tr>
                 <tr>
-                    <td valign="top">Показывать код для вставки на форум:</td>
+                    <td valign="top">РџРѕРєР°Р·С‹РІР°С‚СЊ РєРѕРґ РґР»СЏ РІСЃС‚Р°РІРєРё РЅР° С„РѕСЂСѓРј:</td>
                     <td valign="top">
-                        <input name="bbcode" type="radio" value="1" checked="checked" <?php if (@$mod['bbcode']) { echo 'checked="checked"'; } ?> /> Да
-                        <input name="bbcode" type="radio" value="0"  <?php if (@!$mod['bbcode']) { echo 'checked="checked"'; } ?> /> Нет
+                        <input name="bbcode" type="radio" value="1" checked="checked" <?php if (@$mod['bbcode']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                        <input name="bbcode" type="radio" value="0"  <?php if (@!$mod['bbcode']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                     </td>
                 </tr>
                 <tr>
-                    <td valign="top">Комментарии для альбома:</td>
+                    <td valign="top">РљРѕРјРјРµРЅС‚Р°СЂРёРё РґР»СЏ Р°Р»СЊР±РѕРјР°:</td>
                     <td valign="top">
-                        <input name="is_comments" type="radio" value="1" checked="checked" <?php if (@$mod['is_comments']) { echo 'checked="checked"'; } ?> /> Да
-                        <input name="is_comments" type="radio" value="0"  <?php if (@!$mod['is_comments']) { echo 'checked="checked"'; } ?> /> Нет
+                        <input name="is_comments" type="radio" value="1" checked="checked" <?php if (@$mod['is_comments']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                        <input name="is_comments" type="radio" value="0"  <?php if (@!$mod['is_comments']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                     </td>
                 </tr>
                 <tr>
-                    <td>Сортировать фото:</td>
+                    <td>РЎРѕСЂС‚РёСЂРѕРІР°С‚СЊ С„РѕС‚Рѕ:</td>
                     <td>
                         <select name="orderby" id="orderby" style="width:285px">
-                            <option value="title" <?php if(@$mod['orderby']=='title') { echo 'selected'; } ?>>По алфавиту</option>
-                            <option value="pubdate" <?php if(@$mod['orderby']=='pubdate') { echo 'selected'; } ?>>По дате</option>
-                            <option value="rating" <?php if(@$mod['orderby']=='rating') { echo 'selected'; } ?>>По рейтингу</option>
-                            <option value="hits" <?php if(@$mod['orderby']=='hits') { echo 'selected'; } ?>>По просмотрам</option>
+                            <option value="title" <?php if(@$mod['orderby']=='title') { echo 'selected'; } ?>>РџРѕ Р°Р»С„Р°РІРёС‚Сѓ</option>
+                            <option value="pubdate" <?php if(@$mod['orderby']=='pubdate') { echo 'selected'; } ?>>РџРѕ РґР°С‚Рµ</option>
+                            <option value="rating" <?php if(@$mod['orderby']=='rating') { echo 'selected'; } ?>>РџРѕ СЂРµР№С‚РёРЅРіСѓ</option>
+                            <option value="hits" <?php if(@$mod['orderby']=='hits') { echo 'selected'; } ?>>РџРѕ РїСЂРѕСЃРјРѕС‚СЂР°Рј</option>
                         </select>
                         <select name="orderto" id="orderto" style="width:285px">
-                            <option value="desc" <?php if(@$mod['orderto']=='desc') { echo 'selected'; } ?>>по убыванию</option>
-                            <option value="asc" <?php if(@$mod['orderto']=='asc') { echo 'selected'; } ?>>по возрастанию</option>
+                            <option value="desc" <?php if(@$mod['orderto']=='desc') { echo 'selected'; } ?>>РїРѕ СѓР±С‹РІР°РЅРёСЋ</option>
+                            <option value="asc" <?php if(@$mod['orderto']=='asc') { echo 'selected'; } ?>>РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
-                    <td>Вывод фотографий:</td>
+                    <td>Р’С‹РІРѕРґ С„РѕС‚РѕРіСЂР°С„РёР№:</td>
                     <td>
                         <select name="showtype" id="showtype" style="width:285px">
-                            <option value="list" <?php if(@$mod['showtype']=='list') { echo 'selected'; } ?>>Таблица (список)</option>
-                            <option value="thumb" <?php if(@$mod['showtype']=='thumb') { echo 'selected'; } ?>>Галерея</option>
-                            <option value="lightbox" <?php if(@$mod['showtype']=='lightbox') { echo 'selected'; } ?>>Галерея (лайтбокс)</option>
-                            <option value="simple" <?php if(@$mod['showtype']=='simple') { echo 'selected'; } ?>>Галерея (простая)</option>
-                            <option value="fast" <?php if(@$mod['showtype']=='fast') { echo 'selected'; } ?>>Галерея (быстрая)</option>
+                            <option value="list" <?php if(@$mod['showtype']=='list') { echo 'selected'; } ?>>РўР°Р±Р»РёС†Р° (СЃРїРёСЃРѕРє)</option>
+                            <option value="thumb" <?php if(@$mod['showtype']=='thumb') { echo 'selected'; } ?>>Р“Р°Р»РµСЂРµСЏ</option>
+                            <option value="lightbox" <?php if(@$mod['showtype']=='lightbox') { echo 'selected'; } ?>>Р“Р°Р»РµСЂРµСЏ (Р»Р°Р№С‚Р±РѕРєСЃ)</option>
+                            <option value="simple" <?php if(@$mod['showtype']=='simple') { echo 'selected'; } ?>>Р“Р°Р»РµСЂРµСЏ (РїСЂРѕСЃС‚Р°СЏ)</option>
+                            <option value="fast" <?php if(@$mod['showtype']=='fast') { echo 'selected'; } ?>>Р“Р°Р»РµСЂРµСЏ (Р±С‹СЃС‚СЂР°СЏ)</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
-                    <td>Число колонок для вывода:</td>
+                    <td>Р§РёСЃР»Рѕ РєРѕР»РѕРЅРѕРє РґР»СЏ РІС‹РІРѕРґР°:</td>
                     <td>
-                        <input name="maxcols" type="text" id="maxcols" size="5" value="<?php echo @$mod['maxcols'];?>"/> шт.
+                        <input name="maxcols" type="text" id="maxcols" size="5" value="<?php echo @$mod['maxcols'];?>"/> С€С‚.
                     </td>
                 </tr>
                 <tr>
-                    <td>Добавление фото пользователями:</td>
+                    <td>Р”РѕР±Р°РІР»РµРЅРёРµ С„РѕС‚Рѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРјРё:</td>
                     <td>
                         <select name="public" id="select" style="width:285px">
-                            <option value="0" <?php if(@$mod['public']=='0') { echo 'selected'; } ?>>Запрещено</option>
-                            <option value="1" <?php if(@$mod['public']=='1') { echo 'selected'; } ?>>Разрешено с премодерацией</option>
-                            <option value="2" <?php if(@$mod['public']=='2') { echo 'selected'; } ?>>Разрешено без модерации</option>
+                            <option value="0" <?php if(@$mod['public']=='0') { echo 'selected'; } ?>>Р—Р°РїСЂРµС‰РµРЅРѕ</option>
+                            <option value="1" <?php if(@$mod['public']=='1') { echo 'selected'; } ?>>Р Р°Р·СЂРµС€РµРЅРѕ СЃ РїСЂРµРјРѕРґРµСЂР°С†РёРµР№</option>
+                            <option value="2" <?php if(@$mod['public']=='2') { echo 'selected'; } ?>>Р Р°Р·СЂРµС€РµРЅРѕ Р±РµР· РјРѕРґРµСЂР°С†РёРё</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
-                    <td>Макс. загрузок от одного пользователя в сутки:</td>
+                    <td>РњР°РєСЃ. Р·Р°РіСЂСѓР·РѕРє РѕС‚ РѕРґРЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РІ СЃСѓС‚РєРё:</td>
                     <td>
-                        <input name="uplimit" type="text" id="uplimit" size="5" value="<?php echo @$mod['uplimit'];?>"/> шт.
+                        <input name="uplimit" type="text" id="uplimit" size="5" value="<?php echo @$mod['uplimit'];?>"/> С€С‚.
                     </td>
                 </tr>
                 <tr>
-                    <td>Форма сортировки:</td>
+                    <td>Р¤РѕСЂРјР° СЃРѕСЂС‚РёСЂРѕРІРєРё:</td>
                     <td>
-                        <input name="orderform" type="radio" value="1" checked="checked" <?php if (@$mod['orderform']) { echo 'checked="checked"'; } ?> /> Показать
-                        <input name="orderform" type="radio" value="0"  <?php if (@!$mod['orderform']) { echo 'checked="checked"'; } ?> /> Скрыть
+                        <input name="orderform" type="radio" value="1" checked="checked" <?php if (@$mod['orderform']) { echo 'checked="checked"'; } ?> /> РџРѕРєР°Р·Р°С‚СЊ
+                        <input name="orderform" type="radio" value="0"  <?php if (@!$mod['orderform']) { echo 'checked="checked"'; } ?> /> РЎРєСЂС‹С‚СЊ
                     </td>
                 </tr>
                 <tr>
-                    <td>Навигация в альбоме:</td>
+                    <td>РќР°РІРёРіР°С†РёСЏ РІ Р°Р»СЊР±РѕРјРµ:</td>
                     <td>
-                        <input name="nav" type="radio" value="1" <?php if (@$mod['nav']) { echo 'checked="checked"'; } ?> /> Включена
-                        <input name="nav" type="radio" value="0"  <?php if (@!$mod['nav']) { echo 'checked="checked"'; } ?> /> Выключена
+                        <input name="nav" type="radio" value="1" <?php if (@$mod['nav']) { echo 'checked="checked"'; } ?> /> Р’РєР»СЋС‡РµРЅР°
+                        <input name="nav" type="radio" value="0"  <?php if (@!$mod['nav']) { echo 'checked="checked"'; } ?> /> Р’С‹РєР»СЋС‡РµРЅР°
                     </td>
                 </tr>
                 <tr>
-                    <td>CSS-префикс фотографий:</td>
+                    <td>CSS-РїСЂРµС„РёРєСЃ С„РѕС‚РѕРіСЂР°С„РёР№:</td>
                     <td><input name="cssprefix" type="text" id="cssprefix" size="10" value="<?php echo @$mod['cssprefix'];?>"/></td>
                 </tr>
                 <tr>
-                    <td>Фотографий на странице:</td>
+                    <td>Р¤РѕС‚РѕРіСЂР°С„РёР№ РЅР° СЃС‚СЂР°РЅРёС†Рµ:</td>
                     <td>
-                        <input name="perpage" type="text" id="perpage" size="5" value="<?php echo @$mod['perpage'];?>"/> шт.</td>
+                        <input name="perpage" type="text" id="perpage" size="5" value="<?php echo @$mod['perpage'];?>"/> С€С‚.</td>
                 </tr>
                 <tr>
-                    <td>Ширина маленькой копии: </td>
+                    <td>РЁРёСЂРёРЅР° РјР°Р»РµРЅСЊРєРѕР№ РєРѕРїРёРё: </td>
                     <td>
                         <table border="0" cellspacing="0" cellpadding="1">
                             <tr>
                                 <td width="100" valign="middle">
-                                    <input name="thumb1" type="text" id="thumb1" size="3" value="<?php echo @$mod['thumb1'];?>"/> пикс.
+                                    <input name="thumb1" type="text" id="thumb1" size="3" value="<?php echo @$mod['thumb1'];?>"/> РїРёРєСЃ.
                                 </td>
-                                <td width="100" align="center" valign="middle" style="background-color:#EBEBEB">Квадратные:</td>
+                                <td width="100" align="center" valign="middle" style="background-color:#EBEBEB">РљРІР°РґСЂР°С‚РЅС‹Рµ:</td>
                                 <td width="115" align="center" valign="middle" style="background-color:#EBEBEB">
-                                    <input name="thumbsqr" type="radio" value="1" checked="checked" <?php if (@$mod['thumbsqr']) { echo 'checked="checked"'; } ?> /> Да
-                                    <input name="thumbsqr" type="radio" value="0"  <?php if (@!$mod['thumbsqr']) { echo 'checked="checked"'; } ?> />Нет
+                                    <input name="thumbsqr" type="radio" value="1" checked="checked" <?php if (@$mod['thumbsqr']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                                    <input name="thumbsqr" type="radio" value="0"  <?php if (@!$mod['thumbsqr']) { echo 'checked="checked"'; } ?> />РќРµС‚
                                 </td>
                             </tr>
                         </table>
                     </td>
                 </tr>
                 <tr>
-                    <td>Ширина средней копии: </td>
+                    <td>РЁРёСЂРёРЅР° СЃСЂРµРґРЅРµР№ РєРѕРїРёРё: </td>
                     <td>
-                        <input name="thumb2" type="text" id="thumb2" size="3" value="<?php echo @$mod['thumb2'];?>"/> пикс.
+                        <input name="thumb2" type="text" id="thumb2" size="3" value="<?php echo @$mod['thumb2'];?>"/> РїРёРєСЃ.
                     </td>
                 </tr>
 				<?php
                     if ($opt=='edit_album' && $cfg['tumb_view'] == 3){ ?>
                 <tr>
-                    <td valign="top">Мини-эскиз:<br />
+                    <td valign="top">РњРёРЅРё-СЌСЃРєРёР·:<br />
                     <?php if ($mod['iconurl']){ ?>
                     <img id="marker_demo" src="/images/photos/small/<?php echo $mod['iconurl']; ?>" border="0">
                     <?php  } else { ?>
@@ -825,13 +825,13 @@ function showMapMarker(){
                                     if ($mod['iconurl']){
                                         echo $inCore->getListItems('cms_photo_files', $mod['iconurl'], 'id', 'ASC', 'album_id = '.$id.' AND published = 1', 'file');
                                     } else {
-										echo '<option value="" selected>Выберите мини-эскиз</option>';
+										echo '<option value="" selected>Р’С‹Р±РµСЂРёС‚Рµ РјРёРЅРё-СЌСЃРєРёР·</option>';
                                         echo $inCore->getListItems('cms_photo_files', 0, 'id', 'ASC', 'album_id = '.$id.' AND published = 1', 'file');                                        
                                     }
                                 ?>
                             </select>
                        <?php  } else { ?>
-                       		В альбоме нет еще фотографий, загрузите фотографии в альбом, после выберите мини-эскиз.
+                       		Р’ Р°Р»СЊР±РѕРјРµ РЅРµС‚ РµС‰Рµ С„РѕС‚РѕРіСЂР°С„РёР№, Р·Р°РіСЂСѓР·РёС‚Рµ С„РѕС‚РѕРіСЂР°С„РёРё РІ Р°Р»СЊР±РѕРј, РїРѕСЃР»Рµ РІС‹Р±РµСЂРёС‚Рµ РјРёРЅРё-СЌСЃРєРёР·.
                        <?php  } ?>
                     </td>
                 </tr>
@@ -841,15 +841,15 @@ function showMapMarker(){
             </table>
             <table width="100%" border="0">
                 <tr>
-                    <div style="margin:5px 0px 5px 0px">Описание альбома:</div>
+                    <div style="margin:5px 0px 5px 0px">РћРїРёСЃР°РЅРёРµ Р°Р»СЊР±РѕРјР°:</div>
                     <textarea name="description" style="width:580px" rows="4"><?php echo @$mod['description']?></textarea>
                 </tr>
             </table>
 
         <p>
             <input name="opt" type="hidden" id="opt" <?php if ($opt=='add_album') { echo 'value="submit_album"'; } else { echo 'value="update_album"'; } ?> />
-            <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_album') { echo 'value="Создать альбом"'; } else { echo 'value="Сохранить альбом"'; } ?> />
-            <input name="back2" type="button" id="back2" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
+            <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_album') { echo 'value="РЎРѕР·РґР°С‚СЊ Р°Р»СЊР±РѕРј"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ Р°Р»СЊР±РѕРј"'; } ?> />
+            <input name="back2" type="button" id="back2" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
             <?php
                 if ($opt=='edit_album'){
                     echo '<input name="item_id" type="hidden" value="'.$mod['id'].'" />';
@@ -866,13 +866,13 @@ function showMapMarker(){
 	if ($opt == 'add_photo' || $opt == 'edit_photo'){	
 			
 		if ($opt=='add_photo'){
-			 echo '<h3>Добавить фотографию</h3>';
+			 echo '<h3>Р”РѕР±Р°РІРёС‚СЊ С„РѕС‚РѕРіСЂР°С„РёСЋ</h3>';
 		} else {
 					if(isset($_REQUEST['multiple'])){				 
 						if (isset($_REQUEST['item'])){					
 							$_SESSION['editlist'] = $_REQUEST['item'];
 						} else {
-							echo '<p class="error">Нет выбранных объектов!</p>';
+							echo '<p class="error">РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ!</p>';
 							return;
 						}				 
 					 }
@@ -882,7 +882,7 @@ function showMapMarker(){
 					 if (isset($_SESSION['editlist'])){
 						$id = array_shift($_SESSION['editlist']);
 						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
-						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
+						{ $ostatok = '(РќР° РѕС‡РµСЂРµРґРё: '.sizeof($_SESSION['editlist']).')'; }
 					 } else { $id = $_REQUEST['item_id']; }
 		
 		
@@ -895,7 +895,7 @@ function showMapMarker(){
 					 }
 
 					 echo '<h3>'.$mod['title'].' '.$ostatok.'</h3>';
-					 cpAddPathway('Фотографии', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_photos');
+					 cpAddPathway('Р¤РѕС‚РѕРіСЂР°С„РёРё', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_photos');
 					 cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_photo&item_id='.$id);		
 						
 			}
@@ -906,16 +906,16 @@ function showMapMarker(){
         <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" enctype="multipart/form-data" name="addform" id="addform">
         <table width="600" border="0" cellspacing="5" class="proptable">
         <tr>
-            <td width="177">Название фотографии: </td>
+            <td width="177">РќР°Р·РІР°РЅРёРµ С„РѕС‚РѕРіСЂР°С„РёРё: </td>
             <td width="311"><input name="title" type="text" id="title" size="30" value="<?php echo htmlspecialchars($mod['title']);?>"/></td>
         </tr>
         <tr>
-            <td valign="top">Фотоальбом:</td>
+            <td valign="top">Р¤РѕС‚РѕР°Р»СЊР±РѕРј:</td>
             <td valign="top">
                 <?php if($opt=='add_photo' || ($opt=='edit_photo' && @$mod['NSDiffer']=='')){ ?>
                     <select name="album_id" size="8" id="album_id" style="width:250px">
                         <?php $rootid = $inDB->get_field('cms_photo_albums', "parent_id=0 AND NSDiffer=''", 'id'); ?>
-                        <option value="<?php echo $rootid; ?>" <?php if (@$mod['album_id']==$rootid || !isset($mod['album_id'])) { echo 'selected'; }?>>-- Корневой альбом --</option>
+                        <option value="<?php echo $rootid; ?>" <?php if (@$mod['album_id']==$rootid || !isset($mod['album_id'])) { echo 'selected'; }?>>-- РљРѕСЂРЅРµРІРѕР№ Р°Р»СЊР±РѕРј --</option>
                         <?php
                             if (isset($mod['album_id'])){
                                echo $inCore->getListItemsNS('cms_photo_albums', $mod['album_id']);
@@ -928,46 +928,46 @@ function showMapMarker(){
                     $club['id']     = substr($mod['NSDiffer'], 4);
                     $club['title']  = $inDB->get_field('cms_clubs', "id={$club['id']}", 'title');
                 ?><input type="hidden" name="album_id" value="<?php echo $mod['album_id']; ?>" />
-                    Клуб <a href="index.php?view=components&do=config&id=23&opt=edit&item_id=<?php echo $club['id']; ?>"><?php echo $club['title'];?></a> &rarr; <?php echo $mod['album']; ?>
+                    РљР»СѓР± <a href="index.php?view=components&do=config&id=23&opt=edit&item_id=<?php echo $club['id']; ?>"><?php echo $club['title'];?></a> &rarr; <?php echo $mod['album']; ?>
                 <?php
                   }
                 ?>
             </td>
         </tr>
         <tr>
-            <td>Файл фотографии: </td>
+            <td>Р¤Р°Р№Р» С„РѕС‚РѕРіСЂР°С„РёРё: </td>
             <td><?php if (@$mod['file']) {
                 echo '<div><img src="/images/photos/small/'.$mod['file'].'" border="1" /></div>';
-                echo '<div><a href="/images/photos/medium/'.$mod['file'].'" title="Посмотреть фото">'.$mod['file'].'</a></div>';
+                echo '<div><a href="/images/photos/medium/'.$mod['file'].'" title="РџРѕСЃРјРѕС‚СЂРµС‚СЊ С„РѕС‚Рѕ">'.$mod['file'].'</a></div>';
             } else { ?>
                 <input name="picture" type="file" id="picture" size="30" />
             <?php } ?></td>
         </tr>
         <tr>
-            <td>Публиковать фотографию?</td>
+            <td>РџСѓР±Р»РёРєРѕРІР°С‚СЊ С„РѕС‚РѕРіСЂР°С„РёСЋ?</td>
             <td><input name="published" type="radio" value="1" checked="checked" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> />
-                Да
+                Р”Р°
                 <label>
                     <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> />
-            Нет</label></td>
+            РќРµС‚</label></td>
         </tr>
         <tr>
-            <td>Показывать дату? </td>
+            <td>РџРѕРєР°Р·С‹РІР°С‚СЊ РґР°С‚Сѓ? </td>
             <td><input name="showdate" type="radio" value="1" checked="checked" <?php if (@$mod['showdate']) { echo 'checked="checked"'; } ?> />
-                Да
+                Р”Р°
                 <label>
                     <input name="showdate" type="radio" value="0"  <?php if (@!$mod['showdate']) { echo 'checked="checked"'; } ?> />
-            Нет</label></td>
+            РќРµС‚</label></td>
         </tr>
         <?php if ($do=='add_photo'){ ?>
         <tr>
-        <td>Cохранить оригинал: </td>
-        <td><input name="saveorig" type="radio" value="1" checked="checked" />Да<input name="saveorig" type="radio" value="0"  />Нет</label></td>
+        <td>CРѕС…СЂР°РЅРёС‚СЊ РѕСЂРёРіРёРЅР°Р»: </td>
+        <td><input name="saveorig" type="radio" value="1" checked="checked" />Р”Р°<input name="saveorig" type="radio" value="0"  />РќРµС‚</label></td>
         </tr>
         <?php } ?>
         <tr>
-            <td valign="top">Теги фотографии: <br />
-            <span class="hinttext">Ключевые слова, через запятую</span></td>
+            <td valign="top">РўРµРіРё С„РѕС‚РѕРіСЂР°С„РёРё: <br />
+            <span class="hinttext">РљР»СЋС‡РµРІС‹Рµ СЃР»РѕРІР°, С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ</span></td>
             <td valign="top"><input name="tags" type="text" id="tags" size="45" value="<?php if (isset($mod['id'])) { echo cmsTagLine('photo', $mod['id'], false); } ?>" /></td>
         </tr>
         </table>
@@ -976,7 +976,7 @@ function showMapMarker(){
                 <?php
                 if(!isset($mod['user']) || @$mod['user']==1){
                     echo '<td width="52%" valign="top">';
-                    echo 'Описание фотографии:<br/>';
+                    echo 'РћРїРёСЃР°РЅРёРµ С„РѕС‚РѕРіСЂР°С„РёРё:<br/>';
 
                     $inCore->insertEditor('description', $mod['description'], '260', '605');
                     
@@ -986,8 +986,8 @@ function showMapMarker(){
             </tr>
         </table>
         <p>
-            <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_photo') { echo 'value="Загрузить фото"'; } else { echo 'value="Сохранить фото"'; } ?> />
-            <input name="back3" type="button" id="back3" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
+            <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_photo') { echo 'value="Р—Р°РіСЂСѓР·РёС‚СЊ С„РѕС‚Рѕ"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ С„РѕС‚Рѕ"'; } ?> />
+            <input name="back3" type="button" id="back3" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
             <input name="opt" type="hidden" id="opt" <?php if ($opt=='add_photo') { echo 'value="submit_photo"'; } else { echo 'value="update_photo"'; } ?> />
             <?php
             if ($opt=='edit_photo'){
@@ -1010,7 +1010,7 @@ function showMapMarker(){
 			$GLOBALS['cp_page_head'][] = '<script type="text/javascript">
 										  function startUpload(){
 											$("#upload_btn").attr(\'disabled\', \'true\');
-											$("#upload_btn").attr(\'value\', \'Идет загрузка...\');
+											$("#upload_btn").attr(\'value\', \'РРґРµС‚ Р·Р°РіСЂСѓР·РєР°...\');
 											$("#cancel_btn").css(\'display\', \'none\');
 											$("#loadergif").css(\'display\', \'block\');
 											document.addform.submit();													
@@ -1018,29 +1018,29 @@ function showMapMarker(){
 									   </script>';
 
 	
-			 echo '<h3>Массовая загрузка фото</h3>';
+			 echo '<h3>РњР°СЃСЃРѕРІР°СЏ Р·Р°РіСЂСѓР·РєР° С„РѕС‚Рѕ</h3>';
 
-			 cpAddPathway('Массовая загрузка фото', $_SERVER['REQUEST_URI']);
+			 cpAddPathway('РњР°СЃСЃРѕРІР°СЏ Р·Р°РіСЂСѓР·РєР° С„РѕС‚Рѕ', $_SERVER['REQUEST_URI']);
 						
 		?>
          <form action="/admin/index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" enctype="multipart/form-data" name="addform" id="addform">
          <table width="600" border="0" cellspacing="5" class="proptable">
          <tr>
-             <td width="177">Названия фотографий: </td>
+             <td width="177">РќР°Р·РІР°РЅРёСЏ С„РѕС‚РѕРіСЂР°С„РёР№: </td>
              <td width="311"><label>
                      <select name="titlemode" id="titlemode">
-                         <option value="number">Фото + номер</option>
-                         <option value="original">Оригинальные названия файлов</option>
+                         <option value="number">Р¤РѕС‚Рѕ + РЅРѕРјРµСЂ</option>
+                         <option value="original">РћСЂРёРіРёРЅР°Р»СЊРЅС‹Рµ РЅР°Р·РІР°РЅРёСЏ С„Р°Р№Р»РѕРІ</option>
                      </select>
              </label></td>
          </tr>
          <tr>
-             <td valign="top">Фотоальбом:</td>
+             <td valign="top">Р¤РѕС‚РѕР°Р»СЊР±РѕРј:</td>
              <td valign="top"><select name="album_id" size="8" id="parent_id" style="width:250px">
                      <?php  //FIND MENU ROOT
                      $rootid = $inDB->get_field('cms_photo_albums', 'parent_id=0', 'id');
                      ?>
-                     <option value="<?php echo $rootid?>" <?php if (@$mod['album_id']==$rootid || !isset($mod['album_id'])) { echo 'selected'; }?>>-- Корневой альбом --</option>
+                     <option value="<?php echo $rootid?>" <?php if (@$mod['album_id']==$rootid || !isset($mod['album_id'])) { echo 'selected'; }?>>-- РљРѕСЂРЅРµРІРѕР№ Р°Р»СЊР±РѕРј --</option>
                      <?php if (isset($mod['album_id'])){
                          echo $inCore->getListItemsNS('cms_photo_albums', $mod['album_id']);
                      } else {
@@ -1050,38 +1050,38 @@ function showMapMarker(){
              </select></td>
          </tr>
          <tr>
-             <td>Публиковать фотографии?</td>
+             <td>РџСѓР±Р»РёРєРѕРІР°С‚СЊ С„РѕС‚РѕРіСЂР°С„РёРё?</td>
              <td><input name="published" type="radio" value="1" checked="checked" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> />
-                 Да
+                 Р”Р°
                  <label>
                      <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> />
-             Нет</label></td>
+             РќРµС‚</label></td>
          </tr>
          <tr>
-             <td>Показывать даты? </td>
+             <td>РџРѕРєР°Р·С‹РІР°С‚СЊ РґР°С‚С‹? </td>
              <td><input name="showdate" type="radio" value="1" checked="checked" <?php if (@$mod['showdate']) { echo 'checked="checked"'; } ?> />
-                 Да
+                 Р”Р°
                  <label>
                      <input name="showdate" type="radio" value="0"  <?php if (@!$mod['showdate']) { echo 'checked="checked"'; } ?> />
-             Нет</label></td>
+             РќРµС‚</label></td>
          </tr>
          <tr>
-         <td>Cохранить оригиналы: </td>
+         <td>CРѕС…СЂР°РЅРёС‚СЊ РѕСЂРёРіРёРЅР°Р»С‹: </td>
          <td><input name="saveorig" type="radio" value="1" checked="checked" />
-             Да
+             Р”Р°
              <input name="saveorig" type="radio" value="0">
-             Нет
+             РќРµС‚
          </label></td>
          </tr>
          <tr>
-             <td valign="top">Теги фотографий: <br />
-             <span class="hinttext">Ключевые слова, через запятую</span></td>
+             <td valign="top">РўРµРіРё С„РѕС‚РѕРіСЂР°С„РёР№: <br />
+             <span class="hinttext">РљР»СЋС‡РµРІС‹Рµ СЃР»РѕРІР°, С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ</span></td>
              <td valign="top"><input name="tags" type="text" id="tags" size="45" /></td>
          </tr>
 
          <tr>
-             <td valign="top">Файлы фотографий: <br />
-             <span class="hinttext">Выбирайте все фото по очереди </span></td>
+             <td valign="top">Р¤Р°Р№Р»С‹ С„РѕС‚РѕРіСЂР°С„РёР№: <br />
+             <span class="hinttext">Р’С‹Р±РёСЂР°Р№С‚Рµ РІСЃРµ С„РѕС‚Рѕ РїРѕ РѕС‡РµСЂРµРґРё </span></td>
              <td valign="top">
                  <input type="file" class="multi" name="upfile[]" id="upfile" accept="jpeg,gif,png,jpg,bmp"/>
                  <div id="loadergif" style="display:none;float:left;margin:6px"><img src="/images/ajax-loader.gif" border="0"/></div>
@@ -1089,8 +1089,8 @@ function showMapMarker(){
          </tr>
          </table>
          <p>
-             <input name="upload_btn" type="button" id="upload_btn" value="Загрузить фото" onclick="startUpload()"/>
-             <input name="back3" type="button" id="cancel_btn" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
+             <input name="upload_btn" type="button" id="upload_btn" value="Р—Р°РіСЂСѓР·РёС‚СЊ С„РѕС‚Рѕ" onclick="startUpload()"/>
+             <input name="back3" type="button" id="cancel_btn" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
              <input name="opt" type="hidden" id="opt" value="submit_photo_multi" />
          </p>
          </form>

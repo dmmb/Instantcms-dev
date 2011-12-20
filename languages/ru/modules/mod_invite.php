@@ -13,13 +13,13 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-$_LANG['DO_INVITE']     = 'Ïðèãëàñèòü!';
-$_LANG['YOUR_NAME']     = 'Âàøå èìÿ...';
-$_LANG['FRIEND_EMAIL']  = 'E-mail äðóãà...';
-$_LANG['ERR_NEED_NAME'] = 'Íóæíî óêàçàòü èìÿ!';
-$_LANG['ERR_NEED_MAIL'] = 'Íóæíî óêàçàòü e-mail äðóãà!';
-$_LANG['ERR_WRONG_MAIL'] = 'Íåêîððåêòíûé e-mail!';
-$_LANG['INVITE_SENDED'] = 'Ïðèãëàøåíèå îòïðàâëåíî!';
-$_LANG['INVITE_SUBJECT'] = '%s ïðèãëàøàåò Âàñ';
+$_LANG['DO_INVITE']     = 'ÐŸÑ€Ð¸Ð³Ð»Ð°ÑÐ¸Ñ‚ÑŒ!';
+$_LANG['YOUR_NAME']     = 'Ð’Ð°ÑˆÐµ Ð¸Ð¼Ñ...';
+$_LANG['FRIEND_EMAIL']  = 'E-mail Ð´Ñ€ÑƒÐ³Ð°...';
+$_LANG['ERR_NEED_NAME'] = 'ÐÑƒÐ¶Ð½Ð¾ ÑƒÐºÐ°Ð·Ð°Ñ‚ÑŒ Ð¸Ð¼Ñ!';
+$_LANG['ERR_NEED_MAIL'] = 'ÐÑƒÐ¶Ð½Ð¾ ÑƒÐºÐ°Ð·Ð°Ñ‚ÑŒ e-mail Ð´Ñ€ÑƒÐ³Ð°!';
+$_LANG['ERR_WRONG_MAIL'] = 'ÐÐµÐºÐ¾Ñ€Ñ€ÐµÐºÑ‚Ð½Ñ‹Ð¹ e-mail!';
+$_LANG['INVITE_SENDED'] = 'ÐŸÑ€Ð¸Ð³Ð»Ð°ÑˆÐµÐ½Ð¸Ðµ Ð¾Ñ‚Ð¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð¾!';
+$_LANG['INVITE_SUBJECT'] = '%s Ð¿Ñ€Ð¸Ð³Ð»Ð°ÑˆÐ°ÐµÑ‚ Ð’Ð°Ñ';
 
 ?>

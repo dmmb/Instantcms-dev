@@ -22,8 +22,8 @@ function applet_filters(){
 	if (!$inCore->isAdminCan('admin/plugins', $adminAccess)) { cpAccessDenied(); }
 	if (!$inCore->isAdminCan('admin/filters', $adminAccess)) { cpAccessDenied(); }
 
-	$GLOBALS['cp_page_title'] = 'Фильтры';
- 	cpAddPathway('Фильтры', 'index.php?view=filters');	
+	$GLOBALS['cp_page_title'] = 'Р¤РёР»СЊС‚СЂС‹';
+ 	cpAddPathway('Р¤РёР»СЊС‚СЂС‹', 'index.php?view=filters');	
 
 	if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
 	if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { $id = -1; }
@@ -43,11 +43,11 @@ function applet_filters(){
 	if ($do == 'list'){
 		$toolmenu = array();
 		$toolmenu[1]['icon'] = 'replace.gif';
-		$toolmenu[1]['title'] = 'Правила фильтрации';
+		$toolmenu[1]['title'] = 'РџСЂР°РІРёР»Р° С„РёР»СЊС‚СЂР°С†РёРё';
 		$toolmenu[1]['link'] = '?view=frules';
 		
 //		$toolmenu[2]['icon'] = 'install.gif';
-//		$toolmenu[2]['title'] = 'Установить фильтр';
+//		$toolmenu[2]['title'] = 'РЈСЃС‚Р°РЅРѕРІРёС‚СЊ С„РёР»СЊС‚СЂ';
 //		$toolmenu[2]['link'] = '?view=install&do=filter';
 //
 //		cpToolMenu($toolmenu);
@@ -57,11 +57,11 @@ function applet_filters(){
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '250';
+		$fields[1]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '250';
 
-		$fields[2]['title'] = 'Описание';	$fields[2]['field'] = 'description';$fields[2]['width'] = '';
+		$fields[2]['title'] = 'РћРїРёСЃР°РЅРёРµ';	$fields[2]['field'] = 'description';$fields[2]['width'] = '';
 
-		$fields[3]['title'] = 'Включен';	$fields[3]['field'] = 'published';		$fields[3]['width'] = '100';
+		$fields[3]['title'] = 'Р’РєР»СЋС‡РµРЅ';	$fields[3]['field'] = 'published';		$fields[3]['width'] = '100';
 		
 		//ACTIONS
 		$actions = array();

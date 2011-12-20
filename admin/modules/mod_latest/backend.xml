@@ -2,16 +2,16 @@
 <backend>    
     <module>
         <id>mod_latest</id>
-        <title>Последние материалы</title>
+        <title>РџРѕСЃР»РµРґРЅРёРµ РјР°С‚РµСЂРёР°Р»С‹</title>
     </module>
     <params>
-        <param type="number" name="newscount" title="Количество материалов" units="шт." default="5" />
-        <param type="flag" name="showdesc" title="Показывать анонсы" default="on" />
-        <param type="flag" name="showdate" title="Показывать даты и авторов" default="on" />
-        <param type="flag" name="showcom" title="Показывать число комментариев" default="on" />
-        <param type="flag" name="showrss" title="Показывать ссылку на RSS" default="on" />
-        <param type="list_db" name="cat_id" title="Материалы из раздела" src="cms_category" src_title="title" src_value="id" tree="1" />
-        <param type="flag" name="subs" title="Вместе с подразделами" default="off" />
-		<param type="flag" name="is_pag" title="Использовать пагинацию" default="on" />
+        <param type="number" name="newscount" title="РљРѕР»РёС‡РµСЃС‚РІРѕ РјР°С‚РµСЂРёР°Р»РѕРІ" units="С€С‚." default="5" />
+        <param type="flag" name="showdesc" title="РџРѕРєР°Р·С‹РІР°С‚СЊ Р°РЅРѕРЅСЃС‹" default="on" />
+        <param type="flag" name="showdate" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РґР°С‚С‹ Рё Р°РІС‚РѕСЂРѕРІ" default="on" />
+        <param type="flag" name="showcom" title="РџРѕРєР°Р·С‹РІР°С‚СЊ С‡РёСЃР»Рѕ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ" default="on" />
+        <param type="flag" name="showrss" title="РџРѕРєР°Р·С‹РІР°С‚СЊ СЃСЃС‹Р»РєСѓ РЅР° RSS" default="on" />
+        <param type="list_db" name="cat_id" title="РњР°С‚РµСЂРёР°Р»С‹ РёР· СЂР°Р·РґРµР»Р°" src="cms_category" src_title="title" src_value="id" tree="1" />
+        <param type="flag" name="subs" title="Р’РјРµСЃС‚Рµ СЃ РїРѕРґСЂР°Р·РґРµР»Р°РјРё" default="off" />
+		<param type="flag" name="is_pag" title="РСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РїР°РіРёРЅР°С†РёСЋ" default="on" />
     </params>
 </backend>

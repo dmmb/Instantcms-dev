@@ -107,7 +107,7 @@ $use_optimized_loader = 0; // Use optimized JS code loader? 0=no and 1=yes. Defa
 	    foreach ($matches[0] as $match) {
 	      $match = str_replace("{slide=", "", $match);
 	      $match = str_replace("}", "", $match);
-	      $text = str_replace( "{slide=".$match."}", "<div class=\"jwts_title\"><div class=\"jwts_title_left\"><a href=\"javascript:void(null);\" title=\"Íàæìèòå ÷òîáû îòêðûòü\" class=\"jwts_title_text\">".$match."</a></div></div><div class=\"jwts_slidewrapper\"><div>", $text );
+	      $text = str_replace( "{slide=".$match."}", "<div class=\"jwts_title\"><div class=\"jwts_title_left\"><a href=\"javascript:void(null);\" title=\"ÐÐ°Ð¶Ð¼Ð¸Ñ‚Ðµ Ñ‡Ñ‚Ð¾Ð±Ñ‹ Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚ÑŒ\" class=\"jwts_title_text\">".$match."</a></div></div><div class=\"jwts_slidewrapper\"><div>", $text );
 	      $text = str_replace( "{/slide}", "</div></div>", $text );
 	    }   
 	   }

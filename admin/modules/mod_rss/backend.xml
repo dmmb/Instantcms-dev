@@ -2,17 +2,17 @@
 <backend>    
     <module>
         <id>mod_rss</id>
-        <title>Лента RSS</title>
+        <title>Р›РµРЅС‚Р° RSS</title>
     </module>
     <params>
-        <param type="string" name="rssurl" title="Адрес RSS-канала" default="http://www.lenta.ru/rss" />
-        <param type="flag" name="showdesc" title="Показывать анонсы" default="on" />
-        <param type="number" name="itemslimit" title="Количество новостей" units="шт." default="5" />
-        <param type="list" name="cols" title="Количество колонок">
+        <param type="string" name="rssurl" title="РђРґСЂРµСЃ RSS-РєР°РЅР°Р»Р°" default="http://www.lenta.ru/rss" />
+        <param type="flag" name="showdesc" title="РџРѕРєР°Р·С‹РІР°С‚СЊ Р°РЅРѕРЅСЃС‹" default="on" />
+        <param type="number" name="itemslimit" title="РљРѕР»РёС‡РµСЃС‚РІРѕ РЅРѕРІРѕСЃС‚РµР№" units="С€С‚." default="5" />
+        <param type="list" name="cols" title="РљРѕР»РёС‡РµСЃС‚РІРѕ РєРѕР»РѕРЅРѕРє">
             <option title="1" value="1" />
             <option title="2" value="2" />
             <option title="3" value="3" />
         </param>
-        <param type="flag" name="showicon" title="Показывать иконки RSS" default="on" />
+        <param type="flag" name="showicon" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РёРєРѕРЅРєРё RSS" default="on" />
     </params>
 </backend>

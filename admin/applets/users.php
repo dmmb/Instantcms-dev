@@ -15,9 +15,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 function viewAct($value){
 	if (!$value) { 
-		$value = '<span style="color:green;">да</span>';
+		$value = '<span style="color:green;">РґР°</span>';
 	} else {
-		$value = '<span style="color:red;">Нет</span>';	
+		$value = '<span style="color:red;">РќРµС‚</span>';	
 	}
 	return $value;
 }
@@ -32,8 +32,8 @@ function applet_users(){
 	global $adminAccess;
 	if (!$inCore->isAdminCan('admin/users', $adminAccess)) { cpAccessDenied(); }
 	
-	$GLOBALS['cp_page_title'] = 'Пользователи';
- 	cpAddPathway('Пользователи', 'index.php?view=users');	
+	$GLOBALS['cp_page_title'] = 'РџРѕР»СЊР·РѕРІР°С‚РµР»Рё';
+ 	cpAddPathway('РџРѕР»СЊР·РѕРІР°С‚РµР»Рё', 'index.php?view=users');	
 
     $do = $inCore->request('do', 'str', 'list');
 	$id = $inCore->request('id', 'int', -1);
@@ -46,31 +46,31 @@ function applet_users(){
 	if ($do == 'list'){
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'useradd.gif';
-		$toolmenu[0]['title'] = 'Создать пользователя';
+		$toolmenu[0]['title'] = 'РЎРѕР·РґР°С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ';
 		$toolmenu[0]['link'] = "?view=users&do=add";
 
 		$toolmenu[1]['icon'] = 'useredit.gif';
-		$toolmenu[1]['title'] = 'Редактировать выбранных';
+		$toolmenu[1]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹С…';
 		$toolmenu[1]['link'] = "javascript:checkSel('?view=users&do=edit&multiple=1');";
 
 		$toolmenu[4]['icon'] = 'userdelete.gif';
-		$toolmenu[4]['title'] = 'Удалить выбранных';
-		$toolmenu[4]['link'] = "javascript:if(confirm('Удалить выбранных пользователей?')) { checkSel('?view=users&do=delete&multiple=1'); }";
+		$toolmenu[4]['title'] = 'РЈРґР°Р»РёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹С…';
+		$toolmenu[4]['link'] = "javascript:if(confirm('РЈРґР°Р»РёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№?')) { checkSel('?view=users&do=delete&multiple=1'); }";
 
 		$toolmenu[5]['icon'] = 'usergroup.gif';
-		$toolmenu[5]['title'] = 'Группы пользователей';
+		$toolmenu[5]['title'] = 'Р“СЂСѓРїРїС‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№';
 		$toolmenu[5]['link'] = "?view=usergroups";
 
 		$toolmenu[6]['icon'] = 'userbanlist.gif';
-		$toolmenu[6]['title'] = 'Бан-лист';
+		$toolmenu[6]['title'] = 'Р‘Р°РЅ-Р»РёСЃС‚';
 		$toolmenu[6]['link'] = "?view=userbanlist";
 
 		$toolmenu[7]['icon'] = 'user_go.png';
-		$toolmenu[7]['title'] = 'Активировать выбранных';
-		$toolmenu[7]['link'] = "javascript:if(confirm('Активировать выбранных пользователей?')) { checkSel('?view=users&do=activate&multiple=1'); }";
+		$toolmenu[7]['title'] = 'РђРєС‚РёРІРёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹С…';
+		$toolmenu[7]['link'] = "javascript:if(confirm('РђРєС‚РёРІРёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№?')) { checkSel('?view=users&do=activate&multiple=1'); }";
 
 		$toolmenu[8]['icon'] = 'help.gif';
-		$toolmenu[8]['title'] = 'Помощь';
+		$toolmenu[8]['title'] = 'РџРѕРјРѕС‰СЊ';
 		$toolmenu[8]['link'] = "?view=help&topic=users";
 
 		cpToolMenu($toolmenu);
@@ -80,46 +80,46 @@ function applet_users(){
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Логин';		$fields[1]['field'] = 'login';		$fields[1]['width'] = '150';		$fields[1]['link'] = '?view=users&do=edit&id=%id%';
+		$fields[1]['title'] = 'Р›РѕРіРёРЅ';		$fields[1]['field'] = 'login';		$fields[1]['width'] = '150';		$fields[1]['link'] = '?view=users&do=edit&id=%id%';
 		$fields[1]['filter'] = 12;
 
-		$fields[2]['title'] = 'Никнейм';	$fields[2]['field'] = 'nickname';	$fields[2]['width'] = '';		$fields[2]['link'] = '?view=users&do=edit&id=%id%';
+		$fields[2]['title'] = 'РќРёРєРЅРµР№Рј';	$fields[2]['field'] = 'nickname';	$fields[2]['width'] = '';		$fields[2]['link'] = '?view=users&do=edit&id=%id%';
 		$fields[2]['filter'] = 12;
 
-		$fields[3]['title'] = 'Группа';		$fields[3]['field'] = 'group_id';	$fields[3]['width'] = '200';
+		$fields[3]['title'] = 'Р“СЂСѓРїРїР°';		$fields[3]['field'] = 'group_id';	$fields[3]['width'] = '200';
 		$fields[3]['prc'] = 'cpGroupById';  $fields[3]['filter']= '1';		    $fields[3]['filterlist'] = cpGetList('cms_user_groups');
 
 		$fields[4]['title'] = 'E-Mail';		$fields[4]['field'] = 'email';		$fields[4]['width'] = '120';
 
-		$fields[5]['title'] = 'Дата<br/>регистрации';	$fields[5]['field'] = 'regdate';	$fields[5]['width'] = '140';		
+		$fields[5]['title'] = 'Р”Р°С‚Р°<br/>СЂРµРіРёСЃС‚СЂР°С†РёРё';	$fields[5]['field'] = 'regdate';	$fields[5]['width'] = '140';		
 
-		$fields[6]['title'] = 'Последний<br/>вход';		$fields[6]['field'] = 'logdate';	$fields[6]['width'] = '140';
-		$fields[7]['title'] = 'Последний<br/>IP';		$fields[7]['field'] = 'last_ip';	$fields[7]['width'] = '100';
-		$fields[8]['title'] = 'Активирован?';		$fields[8]['field'] = 'is_locked';	$fields[8]['width'] = '95';
+		$fields[6]['title'] = 'РџРѕСЃР»РµРґРЅРёР№<br/>РІС…РѕРґ';		$fields[6]['field'] = 'logdate';	$fields[6]['width'] = '140';
+		$fields[7]['title'] = 'РџРѕСЃР»РµРґРЅРёР№<br/>IP';		$fields[7]['field'] = 'last_ip';	$fields[7]['width'] = '100';
+		$fields[8]['title'] = 'РђРєС‚РёРІРёСЂРѕРІР°РЅ?';		$fields[8]['field'] = 'is_locked';	$fields[8]['width'] = '95';
 		$fields[8]['prc'] = 'viewAct';
 		
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Профиль';
+		$actions[0]['title'] = 'РџСЂРѕС„РёР»СЊ';
 		$actions[0]['icon']  = 'profile.gif';
 		$actions[0]['link']  = '/users/%login%';
 
-		$actions[1]['title'] = 'Личное сообщение';
+		$actions[1]['title'] = 'Р›РёС‡РЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ';
 		$actions[1]['icon']  = 'message.gif';
 		$actions[1]['link']  = '/users/%id%/sendmessage.html';
 
-		$actions[3]['title'] = 'Забанить';
+		$actions[3]['title'] = 'Р—Р°Р±Р°РЅРёС‚СЊ';
 		$actions[3]['icon']  = 'ban.gif';
 		$actions[3]['link']  = '/admin/index.php?view=userbanlist&do=add&to=%id%';
 
-		$actions[4]['title'] = 'Удалить';
+		$actions[4]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[4]['icon']  = 'delete.gif';
-		$actions[4]['confirm'] = 'Удалить пользователя?';
+		$actions[4]['confirm'] = 'РЈРґР°Р»РёС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ?';
 		$actions[4]['link']  = '?view=users&do=delete&id=%id%';
 
-		$actions[5]['title'] = 'Удалить полностью';
+		$actions[5]['title'] = 'РЈРґР°Р»РёС‚СЊ РїРѕР»РЅРѕСЃС‚СЊСЋ';
 		$actions[5]['icon']  = 'off.gif';
-		$actions[5]['confirm'] = 'Удалить пользователя без возможности восстановления?';
+		$actions[5]['confirm'] = 'РЈРґР°Р»РёС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ Р±РµР· РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ?';
 		$actions[5]['link']  = '?view=users&do=delete_full&id=%id%';
 
 		//Print table
@@ -143,7 +143,7 @@ function applet_users(){
 	
 			cmsCore::callEvent('USER_ACTIVATED', $user_id);
 	
-			// Регистрируем событие
+			// Р РµРіРёСЃС‚СЂРёСЂСѓРµРј СЃРѕР±С‹С‚РёРµ
 			cmsActions::log('add_user', array(
 					'object' => '',
 					'user_id' => $user_id,
@@ -190,18 +190,18 @@ function applet_users(){
 
         $error      = '';
 
-        if (!$login) { $error .= 'Нужно указать логин пользователя!<br/>'; }
-        if (!$nickname) { $error .= 'Нужно указать никнейм!<br/>'; }
-        if (!$email) { $error .= 'Нужно указать адрес e-mail!<br/>'; }
-        if ($pass != $pass2) { $error .= 'Пароли не совпали!'; }
+        if (!$login) { $error .= 'РќСѓР¶РЅРѕ СѓРєР°Р·Р°С‚СЊ Р»РѕРіРёРЅ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ!<br/>'; }
+        if (!$nickname) { $error .= 'РќСѓР¶РЅРѕ СѓРєР°Р·Р°С‚СЊ РЅРёРєРЅРµР№Рј!<br/>'; }
+        if (!$email) { $error .= 'РќСѓР¶РЅРѕ СѓРєР°Р·Р°С‚СЊ Р°РґСЂРµСЃ e-mail!<br/>'; }
+        if ($pass != $pass2) { $error .= 'РџР°СЂРѕР»Рё РЅРµ СЃРѕРІРїР°Р»Рё!'; }
 
-        if (!preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/i", $email)){ $error .= 'Некорректный адрес e-mail!<br/>'; }
+        if (!preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/i", $email)){ $error .= 'РќРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ Р°РґСЂРµСЃ e-mail!<br/>'; }
 
         if(!$error){
             $login_exists = $inDB->get_field('cms_users', "login='{$login}'", 'id');
             $email_exists = $inDB->get_field('cms_users', "email='{$email}'", 'id');
-            if ($login_exists) { $error .= 'Указанный логин занят.<br/>'; }
-            if ($email_exists) { $error .= 'Указанный email занят.<br/>'; }
+            if ($login_exists) { $error .= 'РЈРєР°Р·Р°РЅРЅС‹Р№ Р»РѕРіРёРЅ Р·Р°РЅСЏС‚.<br/>'; }
+            if ($email_exists) { $error .= 'РЈРєР°Р·Р°РЅРЅС‹Р№ email Р·Р°РЅСЏС‚.<br/>'; }
         }
 
         if (!$error){
@@ -284,11 +284,11 @@ function applet_users(){
 
  		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'save.gif';
-		$toolmenu[0]['title'] = 'Сохранить';
+		$toolmenu[0]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 		$toolmenu[0]['link'] = 'javascript:document.addform.submit();';
 
 		$toolmenu[1]['icon'] = 'cancel.gif';
-		$toolmenu[1]['title'] = 'Отмена';
+		$toolmenu[1]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[1]['link'] = 'javascript:history.go(-1);';
 
 		cpToolMenu($toolmenu);
@@ -299,7 +299,7 @@ function applet_users(){
 						if (isset($_REQUEST['item'])){					
 							$_SESSION['editlist'] = $_REQUEST['item'];
 						} else {
-							echo '<p class="error">Нет выбранных объектов!</p>';
+							echo '<p class="error">РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ!</p>';
 							return;
 						}				 
 					 }
@@ -309,7 +309,7 @@ function applet_users(){
 					 if (isset($_SESSION['editlist'])){
 						$id = array_shift($_SESSION['editlist']);
 						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
-						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
+						{ $ostatok = '(РќР° РѕС‡РµСЂРµРґРё: '.sizeof($_SESSION['editlist']).')'; }
 					 } else { $id = (int)$_REQUEST['id']; }
 	
 					 $sql = "SELECT * FROM cms_users WHERE id = $id LIMIT 1";
@@ -318,12 +318,12 @@ function applet_users(){
 						$mod = mysql_fetch_assoc($result);
 					 }
 					
-					 echo '<h3>Редактировать пользователя '.$ostatok.'</h3>';					 
+					 echo '<h3>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ '.$ostatok.'</h3>';					 
 					 cpAddPathway($mod['nickname'], 'index.php?view=users&do=edit&id='.$mod['id']);
 		
 		} else {
-					 echo '<h3>Создать пользователя</h3>';					 
-					 cpAddPathway('Создать пользователя', 'index.php?view=users&do=add');
+					 echo '<h3>РЎРѕР·РґР°С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ</h3>';					 
+					 cpAddPathway('РЎРѕР·РґР°С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ', 'index.php?view=users&do=add');
 		}
 		$GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/components/registration/js/check.js"></script>';
 	?>
@@ -335,7 +335,7 @@ function applet_users(){
       <form action="index.php?view=users" method="post" enctype="multipart/form-data" name="addform" id="addform">
         <table width="600" border="0" cellpadding="0" cellspacing="10" class="proptable">
           <tr>
-            <td width="" valign="middle"><strong>Логин: </strong></td>
+            <td width="" valign="middle"><strong>Р›РѕРіРёРЅ: </strong></td>
             <td width="220" valign="middle">
 				<input name="login" type="text" id="logininput" style="width:220px" value="<?php echo @$mod['login'];?>" onchange="checkLogin()"/>
 				<div id="logincheck"></div>
@@ -343,13 +343,13 @@ function applet_users(){
             <td width="22">
                 <?php
                     if ($do=='edit'){
-                        echo '<a target="_blank" href="/users/'.$mod['login'].'" title="Профиль на сайте"><img src="images/icons/site.png" border="0" alt="Профиль на сайте"/></a>';
+                        echo '<a target="_blank" href="/users/'.$mod['login'].'" title="РџСЂРѕС„РёР»СЊ РЅР° СЃР°Р№С‚Рµ"><img src="images/icons/site.png" border="0" alt="РџСЂРѕС„РёР»СЊ РЅР° СЃР°Р№С‚Рµ"/></a>';
                     }
                 ?>
             </td>
           </tr>
           <tr>
-            <td valign="middle"><strong>Никнейм:</strong></td>
+            <td valign="middle"><strong>РќРёРєРЅРµР№Рј:</strong></td>
             <td valign="middle"><input name="nickname" type="text" id="login" style="width:220px" value="<?php echo htmlspecialchars($mod['nickname']);?>"/></td>
             <td>&nbsp;</td>
           </tr>
@@ -360,20 +360,20 @@ function applet_users(){
           </tr>
           <tr>
 		  	<?php if($do=='edit') { ?>
-	            <td valign="middle"><strong>Новый пароль:</strong></td>
+	            <td valign="middle"><strong>РќРѕРІС‹Р№ РїР°СЂРѕР»СЊ:</strong></td>
 			<?php } else { ?>
-	            <td valign="middle"><strong>Пароль:</strong> </td>		
+	            <td valign="middle"><strong>РџР°СЂРѕР»СЊ:</strong> </td>		
 			<?php } ?>
             <td><input name="pass" type="password" id="pass" style="width:220px"/></td>
             <td>&nbsp;</td>
           </tr>
           <tr>
-            <td valign="middle"><strong>Повтор пароля:</strong> </td>
+            <td valign="middle"><strong>РџРѕРІС‚РѕСЂ РїР°СЂРѕР»СЏ:</strong> </td>
             <td valign="middle"><input name="pass2" type="password" id="pass2" style="width:220px"/></td>
             <td>&nbsp;</td>
           </tr>
           <tr>
-            <td valign="middle"><strong>Группа:</strong></td>
+            <td valign="middle"><strong>Р“СЂСѓРїРїР°:</strong></td>
             <td valign="middle">
 			<select name="group_id" id="group_id" style="width:225px">
                 <?php
@@ -389,32 +389,32 @@ function applet_users(){
                 <?php
                     if ($do=='edit'){
                         if (isset($mod['group_id'])) {
-                            echo '<a target="_blank" href="?view=usergroups&do=edit&id='.$mod['group_id'].'"><img src="images/icons/edit.png" border="0" alt="Редактировать группу"/></a>';
-                        } else { echo 'Администраторы'; echo '<input type="hidden" name="group_id" value="2" />';}
+                            echo '<a target="_blank" href="?view=usergroups&do=edit&id='.$mod['group_id'].'"><img src="images/icons/edit.png" border="0" alt="Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РіСЂСѓРїРїСѓ"/></a>';
+                        } else { echo 'РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂС‹'; echo '<input type="hidden" name="group_id" value="2" />';}
                     }
                 ?>
             </td>
           </tr>
           <tr>
-            <td valign="middle"><strong>Заблокировать аккаунт?</strong></td>
+            <td valign="middle"><strong>Р—Р°Р±Р»РѕРєРёСЂРѕРІР°С‚СЊ Р°РєРєР°СѓРЅС‚?</strong></td>
             <td valign="middle"><input name="is_locked" type="radio" value="1" <?php if ($mod['is_locked']) { echo 'checked="checked"'; } ?> />
-              Да
+              Р”Р°
               <label>
           <input name="is_locked" type="radio" value="0"  <?php if (!$mod['is_locked']) { echo 'checked="checked"'; } ?> />
-            Нет</label></td>
+            РќРµС‚</label></td>
             <td>&nbsp;</td>
           </tr>
         </table>
         <p>
 		  <?php if($do=='edit'){ ?>
 	          <input name="do" type="hidden" id="do" value="update" />
-	          <input name="add_mod" type="submit" id="add_mod" value="Сохранить профиль" />
+	          <input name="add_mod" type="submit" id="add_mod" value="РЎРѕС…СЂР°РЅРёС‚СЊ РїСЂРѕС„РёР»СЊ" />
 		  <?php } else { ?>
 	          <input name="do" type="hidden" id="do" value="submit" />	  
-	          <input name="add_mod" type="submit" id="add_mod" value="Создать профиль" />
+	          <input name="add_mod" type="submit" id="add_mod" value="РЎРѕР·РґР°С‚СЊ РїСЂРѕС„РёР»СЊ" />
 		  <?php } ?>
           <span style="margin-top:15px">
-          <input name="back2" type="button" id="back2" value="Отмена" onclick="window.history.back();"/>
+          <input name="back2" type="button" id="back2" value="РћС‚РјРµРЅР°" onclick="window.history.back();"/>
           </span>
           <?php
 		  	if ($do=='edit'){ 

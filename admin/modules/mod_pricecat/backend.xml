@@ -2,13 +2,13 @@
 <backend>    
     <module>
         <id>mod_pricecat</id>
-        <title>Категории прайса</title>
+        <title>РљР°С‚РµРіРѕСЂРёРё РїСЂР°Р№СЃР°</title>
     </module>
     <params>
 
-        <param type="flag" name="showdesc" title="Показывать описания" default="on" />
+        <param type="flag" name="showdesc" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РѕРїРёСЃР°РЅРёСЏ" default="on" />
 
-        <param type="string" name="icon" title="Иконка" hint="Оставьте поле пустым, если иконка не нужна" default="/images/markers/pricelist.png" />
+        <param type="string" name="icon" title="РРєРѕРЅРєР°" hint="РћСЃС‚Р°РІСЊС‚Рµ РїРѕР»Рµ РїСѓСЃС‚С‹Рј, РµСЃР»Рё РёРєРѕРЅРєР° РЅРµ РЅСѓР¶РЅР°" default="/images/markers/pricelist.png" />
 
     </params>
 </backend>

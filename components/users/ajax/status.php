@@ -22,8 +22,8 @@
 
     define('HOST', 'http://' . $inCore->getHost());
 
-    $inCore->loadClass('config');       //êîíôèãóðàöèÿ
-    $inCore->loadClass('db');           //áàçà äàííûõ
+    $inCore->loadClass('config');       //ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ
+    $inCore->loadClass('db');           //Ð±Ð°Ð·Ð° Ð´Ð°Ð½Ð½Ñ‹Ñ…
     $inCore->loadClass('user');
     $inCore->loadClass('actions');
 
@@ -51,7 +51,7 @@
 
     $inDB->query($sql);
 
-    //ðåãèñòðèðóåì ñîáûòèå
+    //Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€ÑƒÐµÐ¼ ÑÐ¾Ð±Ñ‹Ñ‚Ð¸Ðµ
     if ($status){
         cmsActions::log('set_status', array(
             'object' => '',

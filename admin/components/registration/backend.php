@@ -13,20 +13,20 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 /******************************************************************************/
 
 
-cpAddPathway('Регистрация', '?view=components&do=config&id='.$_REQUEST['id']);
+cpAddPathway('Р РµРіРёСЃС‚СЂР°С†РёСЏ', '?view=components&do=config&id='.$_REQUEST['id']);
 
-echo '<h3>Регистрация</h3>';
+echo '<h3>Р РµРіРёСЃС‚СЂР°С†РёСЏ</h3>';
 
 if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; }
 
 $toolmenu = array();
 
 $toolmenu[0]['icon'] = 'save.gif';
-$toolmenu[0]['title'] = 'Сохранить';
+$toolmenu[0]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 $toolmenu[0]['link'] = 'javascript:document.optform.submit();';
 
 $toolmenu[1]['icon'] = 'cancel.gif';
-$toolmenu[1]['title'] = 'Отмена';
+$toolmenu[1]['title'] = 'РћС‚РјРµРЅР°';
 $toolmenu[1]['link'] = '?view=components';
 
 cpToolMenu($toolmenu);
@@ -53,7 +53,7 @@ if (!isset($cfg['name_mode'])) { $cfg['name_mode'] = 'nickname'; }
 if (!isset($cfg['first_auth_redirect'])) { $cfg['first_auth_redirect'] = 'profile'; }
 if (!isset($cfg['ask_icq'])) { $cfg['ask_icq'] = 1; }
 if (!isset($cfg['ask_birthdate'])) { $cfg['ask_birthdate'] = 1; }
-if (!isset($cfg['badnickname'])) { $cfg['badnickname'] = "администратор\nадмин\nqwert\nqwerty\n123\nadmin\nвася пупкин"; }
+if (!isset($cfg['badnickname'])) { $cfg['badnickname'] = "Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ\nР°РґРјРёРЅ\nqwert\nqwerty\n123\nadmin\nРІР°СЃСЏ РїСѓРїРєРёРЅ"; }
 
 if (!isset($cfg['send_greetmsg'])) { $cfg['send_greetmsg'] = 0; }
 
@@ -99,9 +99,9 @@ if($opt=='saveconfig'){
             $invites_given = $model->giveInvites($inv_count, $inv_karma);
 
             if ($invites_given){
-                cmsUser::sessionPut('reg_msg', 'Выдано инвайтов: '.$invites_given);
+                cmsUser::sessionPut('reg_msg', 'Р’С‹РґР°РЅРѕ РёРЅРІР°Р№С‚РѕРІ: '.$invites_given);
             } else {
-                cmsUser::sessionPut('reg_msg', 'Инвайты не выданы: нет подходящих пользователей');
+                cmsUser::sessionPut('reg_msg', 'РРЅРІР°Р№С‚С‹ РЅРµ РІС‹РґР°РЅС‹: РЅРµС‚ РїРѕРґС…РѕРґСЏС‰РёС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№');
             }
         }
 
@@ -114,7 +114,7 @@ if($opt=='saveconfig'){
 
         $model->deleteInvites();
 
-        cmsUser::sessionPut('reg_msg', 'Неиспользованные инвайты удалены');
+        cmsUser::sessionPut('reg_msg', 'РќРµРёСЃРїРѕР»СЊР·РѕРІР°РЅРЅС‹Рµ РёРЅРІР°Р№С‚С‹ СѓРґР°Р»РµРЅС‹');
 
     }
 
@@ -131,40 +131,40 @@ if ($msg) { echo '<p class="success">'.$msg.'</p>'; cmsUser::sessionDel('reg_msg
 <div id="config_tabs" style="margin-top:12px;">
 
     <ul id="tabs">
-        <li><a href="#basic"><span>Общие</span></a></li>
-        <li><a href="#form"><span>Форма</span></a></li>
-        <li><a href="#greets"><span>Приветствие</span></a></li>
+        <li><a href="#basic"><span>РћР±С‰РёРµ</span></a></li>
+        <li><a href="#form"><span>Р¤РѕСЂРјР°</span></a></li>
+        <li><a href="#greets"><span>РџСЂРёРІРµС‚СЃС‚РІРёРµ</span></a></li>
     </ul>
 
     <div id="basic">
         <table width="661" border="0" cellpadding="10" cellspacing="0" class="proptable">
             <tr>
-                <td width="110"><strong>Тип регистрации:</strong></td>
+                <td width="110"><strong>РўРёРї СЂРµРіРёСЃС‚СЂР°С†РёРё:</strong></td>
                 <td>
                     <select name="reg_type" id="name_mode" style="width:300px" onchange="if($(this).val()=='invite'){ $('.inv').show(); } else { $('.inv').hide(); }">
-                        <option value="open" <?php if (@$cfg['reg_type']=='open') {echo 'selected';} ?>>открытая</option>
-                        <option value="invite" <?php if (@$cfg['reg_type']=='invite') {echo 'selected';} ?>>по инвайтам</option>
+                        <option value="open" <?php if (@$cfg['reg_type']=='open') {echo 'selected';} ?>>РѕС‚РєСЂС‹С‚Р°СЏ</option>
+                        <option value="invite" <?php if (@$cfg['reg_type']=='invite') {echo 'selected';} ?>>РїРѕ РёРЅРІР°Р№С‚Р°Рј</option>
                     </select>
                 </td>
             </tr>
             <tr class="inv" <?php if($cfg['reg_type']=='open'){ ?>style="display:none"<?php } ?>>
-                <td valign="top" style="padding-top:20px"><strong>Выдавать по:</strong></td>
+                <td valign="top" style="padding-top:20px"><strong>Р’С‹РґР°РІР°С‚СЊ РїРѕ:</strong></td>
                 <td>
                     <table cellpadding="4" cellspacing="0" border="0">
                         <tr>
                             <td style="padding-left:0px;">
                                 <input type="text" style="width:30px" name="inv_count" value="<?php echo $cfg['inv_count']; ?>">
                             </td>
-                            <td> инвайтов пользователям с кармой &ge; </td>
+                            <td> РёРЅРІР°Р№С‚РѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј СЃ РєР°СЂРјРѕР№ &ge; </td>
                             <td>
                                 <input type="text" style="width:30px" name="inv_karma" value="<?php echo $cfg['inv_karma']; ?>">
                             </td>
-                            <td> один раз в </td>
+                            <td> РѕРґРёРЅ СЂР°Р· РІ </td>
                             <td>
                                 <select name="inv_period">
-                                    <option value="DAY" <?php if (@$cfg['inv_period']=='DAY') {echo 'selected';} ?>>день</option>
-                                    <option value="WEEK" <?php if (@$cfg['inv_period']=='WEEK') {echo 'selected';} ?>>неделю</option>
-                                    <option value="MONTH" <?php if (@$cfg['inv_period']=='MONTH') {echo 'selected';} ?>>месяц</option>
+                                    <option value="DAY" <?php if (@$cfg['inv_period']=='DAY') {echo 'selected';} ?>>РґРµРЅСЊ</option>
+                                    <option value="WEEK" <?php if (@$cfg['inv_period']=='WEEK') {echo 'selected';} ?>>РЅРµРґРµР»СЋ</option>
+                                    <option value="MONTH" <?php if (@$cfg['inv_period']=='MONTH') {echo 'selected';} ?>>РјРµСЃСЏС†</option>
                                 </select>
                             </td>
                         </tr>
@@ -172,8 +172,8 @@ if ($msg) { echo '<p class="success">'.$msg.'</p>'; cmsUser::sessionDel('reg_msg
                             <td style="padding-left:0px;" colspan="5">
                                 <input type="hidden" id="inv_now" name="inv_now" value="0" />
                                 <input type="hidden" id="inv_delete" name="inv_delete" value="0" />
-                                <input type="button" value="Выдать сейчас" onclick="if(confirm('Выдать инвайты?')){ $('#inv_now').val('1'); $('#optform').submit(); }" />
-                                <input type="button" value="Удалить неиспользованные" onclick="if(confirm('Удалить инвайты?')){ $('#inv_delete').val('1'); $('#optform').submit(); }" />
+                                <input type="button" value="Р’С‹РґР°С‚СЊ СЃРµР№С‡Р°СЃ" onclick="if(confirm('Р’С‹РґР°С‚СЊ РёРЅРІР°Р№С‚С‹?')){ $('#inv_now').val('1'); $('#optform').submit(); }" />
+                                <input type="button" value="РЈРґР°Р»РёС‚СЊ РЅРµРёСЃРїРѕР»СЊР·РѕРІР°РЅРЅС‹Рµ" onclick="if(confirm('РЈРґР°Р»РёС‚СЊ РёРЅРІР°Р№С‚С‹?')){ $('#inv_delete').val('1'); $('#optform').submit(); }" />
                             </td>
                         </tr>
                     </table>
@@ -183,29 +183,29 @@ if ($msg) { echo '<p class="success">'.$msg.'</p>'; cmsUser::sessionDel('reg_msg
         </table>
         <table width="661" border="0" cellpadding="10" cellspacing="0" class="proptable">
             <tr>
-                <td width="308"><strong>Регистрация включена: </strong></td>
+                <td width="308"><strong>Р РµРіРёСЃС‚СЂР°С†РёСЏ РІРєР»СЋС‡РµРЅР°: </strong></td>
                 <td width="313">
-                    <input name="is_on" type="radio" value="1" <?php if (@$cfg['is_on']) { echo 'checked="checked"'; } ?>/> Да
-                    <input name="is_on" type="radio" value="0" <?php if (@!$cfg['is_on']) { echo 'checked="checked"'; } ?>/> Нет
+                    <input name="is_on" type="radio" value="1" <?php if (@$cfg['is_on']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                    <input name="is_on" type="radio" value="0" <?php if (@!$cfg['is_on']) { echo 'checked="checked"'; } ?>/> РќРµС‚
                 </td>
             </tr>
             <tr>
-                <td valign="top"><strong>Сообщение при выключенной регистрации:</strong> </td>
+                <td valign="top"><strong>РЎРѕРѕР±С‰РµРЅРёРµ РїСЂРё РІС‹РєР»СЋС‡РµРЅРЅРѕР№ СЂРµРіРёСЃС‚СЂР°С†РёРё:</strong> </td>
                 <td valign="top"><textarea  name="offmsg" type="text" id="offmsg" rows="2" style="border: solid 1px gray;width:300px;"><?php echo @$cfg['offmsg'];?></textarea></td>
             </tr>
             <tr>
-                <td><strong>Активация учетных записей по e-mail: </strong></td>
+                <td><strong>РђРєС‚РёРІР°С†РёСЏ СѓС‡РµС‚РЅС‹С… Р·Р°РїРёСЃРµР№ РїРѕ e-mail: </strong></td>
                 <td>
-                    <input name="act" type="radio" value="1" <?php if (@$cfg['act']) { echo 'checked="checked"'; } ?>/> Да
-                    <input name="act" type="radio" value="0" <?php if (@!$cfg['act']) { echo 'checked="checked"'; } ?>/> Нет
+                    <input name="act" type="radio" value="1" <?php if (@$cfg['act']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                    <input name="act" type="radio" value="0" <?php if (@!$cfg['act']) { echo 'checked="checked"'; } ?>/> РќРµС‚
                 </td>
             </tr>
             <tr>
-                <td><strong>Письмо с инструкцией по активации:</strong> </td>
+                <td><strong>РџРёСЃСЊРјРѕ СЃ РёРЅСЃС‚СЂСѓРєС†РёРµР№ РїРѕ Р°РєС‚РёРІР°С†РёРё:</strong> </td>
                 <td><a href="/includes/letters/activation.txt">/includes/letters/activation.txt</a></td>
             </tr>
             <tr>
-                <td><strong>Группа пользователей по-умолчанию:</strong></td>
+                <td><strong>Р“СЂСѓРїРїР° РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ РїРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ:</strong></td>
                 <td>
                     <?php $groups = cmsUser::getGroups(true); ?>
                     <select name="default_gid" id="default_gid" style="width:300px">
@@ -216,24 +216,24 @@ if ($msg) { echo '<p class="success">'.$msg.'</p>'; cmsUser::sessionDel('reg_msg
                 </td>
             </tr>
             <tr>
-                <td><strong>После первой авторизации на сайте:</strong></td>
+                <td><strong>РџРѕСЃР»Рµ РїРµСЂРІРѕР№ Р°РІС‚РѕСЂРёР·Р°С†РёРё РЅР° СЃР°Р№С‚Рµ:</strong></td>
                 <td>
                     <select name="first_auth_redirect" id="first_auth_redirect" style="width:300px">
-                        <option value="none" <?php if (@$cfg['first_auth_redirect']=='none') {echo 'selected';} ?>>ничего не делать</option>
-                        <option value="index" <?php if (@$cfg['first_auth_redirect']=='index') {echo 'selected';} ?>>открыть главную страницу</option>
-                        <option value="profile" <?php if (@$cfg['first_auth_redirect']=='profile') {echo 'selected';} ?>>открыть профиль</option>
-                        <option value="editprofile" <?php if (@$cfg['first_auth_redirect']=='editprofile') {echo 'selected';} ?>>открыть настройки профиля</option>
+                        <option value="none" <?php if (@$cfg['first_auth_redirect']=='none') {echo 'selected';} ?>>РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°С‚СЊ</option>
+                        <option value="index" <?php if (@$cfg['first_auth_redirect']=='index') {echo 'selected';} ?>>РѕС‚РєСЂС‹С‚СЊ РіР»Р°РІРЅСѓСЋ СЃС‚СЂР°РЅРёС†Сѓ</option>
+                        <option value="profile" <?php if (@$cfg['first_auth_redirect']=='profile') {echo 'selected';} ?>>РѕС‚РєСЂС‹С‚СЊ РїСЂРѕС„РёР»СЊ</option>
+                        <option value="editprofile" <?php if (@$cfg['first_auth_redirect']=='editprofile') {echo 'selected';} ?>>РѕС‚РєСЂС‹С‚СЊ РЅР°СЃС‚СЂРѕР№РєРё РїСЂРѕС„РёР»СЏ</option>
                     </select>
                 </td>
             </tr>
             <tr>
-                <td><strong>После следующих авторизаций на сайте:</strong></td>
+                <td><strong>РџРѕСЃР»Рµ СЃР»РµРґСѓСЋС‰РёС… Р°РІС‚РѕСЂРёР·Р°С†РёР№ РЅР° СЃР°Р№С‚Рµ:</strong></td>
                 <td>
                     <select name="auth_redirect" id="auth_redirect" style="width:300px">
-                        <option value="none" <?php if (@$cfg['auth_redirect']=='none') {echo 'selected';} ?>>ничего не делать</option>
-                        <option value="index" <?php if (@$cfg['auth_redirect']=='index') {echo 'selected';} ?>>открыть главную страницу</option>
-                        <option value="profile" <?php if (@$cfg['auth_redirect']=='profile') {echo 'selected';} ?>>открыть профиль</option>
-                        <option value="editprofile" <?php if (@$cfg['auth_redirect']=='editprofile') {echo 'selected';} ?>>открыть настройки профиля</option>
+                        <option value="none" <?php if (@$cfg['auth_redirect']=='none') {echo 'selected';} ?>>РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°С‚СЊ</option>
+                        <option value="index" <?php if (@$cfg['auth_redirect']=='index') {echo 'selected';} ?>>РѕС‚РєСЂС‹С‚СЊ РіР»Р°РІРЅСѓСЋ СЃС‚СЂР°РЅРёС†Сѓ</option>
+                        <option value="profile" <?php if (@$cfg['auth_redirect']=='profile') {echo 'selected';} ?>>РѕС‚РєСЂС‹С‚СЊ РїСЂРѕС„РёР»СЊ</option>
+                        <option value="editprofile" <?php if (@$cfg['auth_redirect']=='editprofile') {echo 'selected';} ?>>РѕС‚РєСЂС‹С‚СЊ РЅР°СЃС‚СЂРѕР№РєРё РїСЂРѕС„РёР»СЏ</option>
                     </select>
                 </td>
             </tr>
@@ -243,30 +243,30 @@ if ($msg) { echo '<p class="success">'.$msg.'</p>'; cmsUser::sessionDel('reg_msg
     <div id="form">
         <table width="661" border="0" cellpadding="10" cellspacing="0" class="proptable">
             <tr>
-                <td width="308"><strong>Формат имени пользователей:</strong></td>
+                <td width="308"><strong>Р¤РѕСЂРјР°С‚ РёРјРµРЅРё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№:</strong></td>
                 <td>
                     <select name="name_mode" id="name_mode" style="width:300px">
-                        <option value="nickname" <?php if (@$cfg['name_mode']=='nickname') {echo 'selected';} ?>>никнейм</option>
-                        <option value="realname" <?php if (@$cfg['name_mode']=='realname') {echo 'selected';} ?>>имя и фамилия</option>
+                        <option value="nickname" <?php if (@$cfg['name_mode']=='nickname') {echo 'selected';} ?>>РЅРёРєРЅРµР№Рј</option>
+                        <option value="realname" <?php if (@$cfg['name_mode']=='realname') {echo 'selected';} ?>>РёРјСЏ Рё С„Р°РјРёР»РёСЏ</option>
                     </select>
                 </td>
             </tr>
             <tr>
-                <td valign="top"><strong>Запрещенные никнеймы или имена и фамилии:</strong><br />Введите запрещенные никнеймы или имена и фамилии, каждое слово или словосочетание с новой строки.</td>
+                <td valign="top"><strong>Р—Р°РїСЂРµС‰РµРЅРЅС‹Рµ РЅРёРєРЅРµР№РјС‹ РёР»Рё РёРјРµРЅР° Рё С„Р°РјРёР»РёРё:</strong><br />Р’РІРµРґРёС‚Рµ Р·Р°РїСЂРµС‰РµРЅРЅС‹Рµ РЅРёРєРЅРµР№РјС‹ РёР»Рё РёРјРµРЅР° Рё С„Р°РјРёР»РёРё, РєР°Р¶РґРѕРµ СЃР»РѕРІРѕ РёР»Рё СЃР»РѕРІРѕСЃРѕС‡РµС‚Р°РЅРёРµ СЃ РЅРѕРІРѕР№ СЃС‚СЂРѕРєРё.</td>
                 <td valign="top"><textarea  name="badnickname" type="text" id="badnickname" rows="5" style="border: solid 1px gray;width:300px;"><?php echo @$cfg['badnickname'];?></textarea></td>
             </tr>
             <tr>
-                <td><strong>Запрашивать ICQ при регистрации:</strong> </td>
+                <td><strong>Р—Р°РїСЂР°С€РёРІР°С‚СЊ ICQ РїСЂРё СЂРµРіРёСЃС‚СЂР°С†РёРё:</strong> </td>
                 <td>
-                    <input name="ask_icq" type="radio" value="1" <?php if (@$cfg['ask_icq']) { echo 'checked="checked"'; } ?>/> Да
-                    <input name="ask_icq" type="radio" value="0" <?php if (@!$cfg['ask_icq']) { echo 'checked="checked"'; } ?>/> Нет
+                    <input name="ask_icq" type="radio" value="1" <?php if (@$cfg['ask_icq']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                    <input name="ask_icq" type="radio" value="0" <?php if (@!$cfg['ask_icq']) { echo 'checked="checked"'; } ?>/> РќРµС‚
                 </td>
             </tr>
             <tr>
-                <td><strong>Запрашивать дату рождения при регистрации:</strong> </td>
+                <td><strong>Р—Р°РїСЂР°С€РёРІР°С‚СЊ РґР°С‚Сѓ СЂРѕР¶РґРµРЅРёСЏ РїСЂРё СЂРµРіРёСЃС‚СЂР°С†РёРё:</strong> </td>
                 <td>
-                    <input name="ask_birthdate" type="radio" value="1" <?php if (@$cfg['ask_birthdate']) { echo 'checked="checked"'; } ?>/> Да
-                    <input name="ask_birthdate" type="radio" value="0" <?php if (@!$cfg['ask_birthdate']) { echo 'checked="checked"'; } ?>/> Нет
+                    <input name="ask_birthdate" type="radio" value="1" <?php if (@$cfg['ask_birthdate']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                    <input name="ask_birthdate" type="radio" value="0" <?php if (@!$cfg['ask_birthdate']) { echo 'checked="checked"'; } ?>/> РќРµС‚
                 </td>
             </tr>
         </table>
@@ -275,10 +275,10 @@ if ($msg) { echo '<p class="success">'.$msg.'</p>'; cmsUser::sessionDel('reg_msg
     <div id="greets">
         <table width="800" border="0" cellpadding="10" cellspacing="0" class="proptable">
             <tr>
-                <td width="308"><strong>Отправлять личное сообщение после регистрации:</strong></td>
+                <td width="308"><strong>РћС‚РїСЂР°РІР»СЏС‚СЊ Р»РёС‡РЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕСЃР»Рµ СЂРµРіРёСЃС‚СЂР°С†РёРё:</strong></td>
                 <td>
-                    <input name="send_greetmsg" type="radio" value="1" <?php if (@$cfg['send_greetmsg']) { echo 'checked="checked"'; } ?>/> Да
-                    <input name="send_greetmsg" type="radio" value="0" <?php if (@!$cfg['send_greetmsg']) { echo 'checked="checked"'; } ?>/> Нет
+                    <input name="send_greetmsg" type="radio" value="1" <?php if (@$cfg['send_greetmsg']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                    <input name="send_greetmsg" type="radio" value="0" <?php if (@!$cfg['send_greetmsg']) { echo 'checked="checked"'; } ?>/> РќРµС‚
                 </td>
             </tr>
         </table>
@@ -289,8 +289,8 @@ if ($msg) { echo '<p class="success">'.$msg.'</p>'; cmsUser::sessionDel('reg_msg
 
 <p>
     <input name="opt" type="hidden" value="saveconfig" />
-    <input name="save" type="submit" id="save" value="Сохранить" />
-    <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+    <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+    <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components';"/>
 </p>
 </form>
 

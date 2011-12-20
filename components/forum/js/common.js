@@ -1,5 +1,5 @@
 function deleteThread(link){
-	if(confirm('Вы уверены что хотите удалить тему?')){
+	if(confirm('Р’С‹ СѓРІРµСЂРµРЅС‹ С‡С‚Рѕ С…РѕС‚РёС‚Рµ СѓРґР°Р»РёС‚СЊ С‚РµРјСѓ?')){
 		window.location.href = link;
 	}
 }

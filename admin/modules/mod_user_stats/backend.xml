@@ -2,15 +2,15 @@
 <backend>    
     <module>
         <id>mod_user_stats</id>
-        <title>Статистика пользователей</title>
+        <title>РЎС‚Р°С‚РёСЃС‚РёРєР° РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</title>
     </module>
     <params>
 
-        <param type="flag" name="show_total" title="Показывать число пользователей" default="on" />
-        <param type="flag" name="show_online" title="Показывать кто онлайн" default="on" />
-        <param type="flag" name="show_gender" title="Показывать соотношение полов" default="on" />
-        <param type="flag" name="show_city" title="Показывать города" default="on" />
-        <param type="flag" name="show_bday" title="Показывать именинников" default="on" />
+        <param type="flag" name="show_total" title="РџРѕРєР°Р·С‹РІР°С‚СЊ С‡РёСЃР»Рѕ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№" default="on" />
+        <param type="flag" name="show_online" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РєС‚Рѕ РѕРЅР»Р°Р№РЅ" default="on" />
+        <param type="flag" name="show_gender" title="РџРѕРєР°Р·С‹РІР°С‚СЊ СЃРѕРѕС‚РЅРѕС€РµРЅРёРµ РїРѕР»РѕРІ" default="on" />
+        <param type="flag" name="show_city" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РіРѕСЂРѕРґР°" default="on" />
+        <param type="flag" name="show_bday" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РёРјРµРЅРёРЅРЅРёРєРѕРІ" default="on" />
 
     </params>
 </backend>

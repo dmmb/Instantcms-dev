@@ -19,8 +19,8 @@
                     
                 <?php if ($field['type']=='list_db' && $field['multiple']) { ?>
                     <div class="param-links">
-                        <a href="javascript:" onclick="$('tr#f<?php echo $fid; ?> td input[type=checkbox]').attr('checked', 'checked')">Выделить все</a> |
-                        <a href="javascript:" onclick="$('tr#f<?php echo $fid; ?> td input[type=checkbox]').attr('checked', '')">Снять все</a>
+                        <a href="javascript:" onclick="$('tr#f<?php echo $fid; ?> td input[type=checkbox]').attr('checked', 'checked')">Р’С‹РґРµР»РёС‚СЊ РІСЃРµ</a> |
+                        <a href="javascript:" onclick="$('tr#f<?php echo $fid; ?> td input[type=checkbox]').attr('checked', '')">РЎРЅСЏС‚СЊ РІСЃРµ</a>
                     </div>
                 <?php } ?>
             </td>
@@ -33,7 +33,7 @@
 </div>
 
 <div class="params-buttons">
-    <input type="submit" name="save" class="button" value="Сохранить" />
+    <input type="submit" name="save" class="button" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
 </div>
 
 <script type="text/javascript">

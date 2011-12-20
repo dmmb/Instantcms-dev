@@ -29,9 +29,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         return $link;
     }
 
-	cpAddPathway('Блоги', '?view=components&do=config&id='.(int)$_REQUEST['id']);
+	cpAddPathway('Р‘Р»РѕРіРё', '?view=components&do=config&id='.(int)$_REQUEST['id']);
 	
-	echo '<h3>Блоги</h3>';
+	echo '<h3>Р‘Р»РѕРіРё</h3>';
 
     $opt = $inCore->request('opt', 'str', 'config');
 
@@ -40,11 +40,11 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
     if ($opt=='config' || $opt=='saveconfig'){
 
         $toolmenu[0]['icon'] = 'save.gif';
-        $toolmenu[0]['title'] = 'Сохранить';
+        $toolmenu[0]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
         $toolmenu[0]['link'] = 'javascript:document.optform.submit();';
 
         $toolmenu[2]['icon'] = 'listblogs.gif';
-        $toolmenu[2]['title'] = 'Список блогов';
+        $toolmenu[2]['title'] = 'РЎРїРёСЃРѕРє Р±Р»РѕРіРѕРІ';
         $toolmenu[2]['link'] = '?view=components&do=config&link=blogs&opt=list_blogs';
         cpToolMenu($toolmenu);
 
@@ -52,18 +52,18 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
     if ($opt=='list_blogs'){
 
-        cpAddPathway('Список блогов', $_SERVER['REQUEST_URI']);
+        cpAddPathway('РЎРїРёСЃРѕРє Р±Р»РѕРіРѕРІ', $_SERVER['REQUEST_URI']);
 
 		$toolmenu[1]['icon'] = 'edit.gif';
-		$toolmenu[1]['title'] = 'Редактировать выбранные';
+		$toolmenu[1]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[1]['link'] = "javascript:checkSel('?view=components&do=config&link=blogs&opt=edit_blog&multiple=1');";
 
 		$toolmenu[2]['icon'] = 'delete.gif';
-		$toolmenu[2]['title'] = 'Удалить выбранные';
+		$toolmenu[2]['title'] = 'РЈРґР°Р»РёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[2]['link'] = "javascript:checkSel('?view=components&do=config&link=blogs&opt=delete_blog&multiple=1');";
 
         $toolmenu[3]['icon'] = 'config.gif';
-        $toolmenu[3]['title'] = 'Настройки компонента';
+        $toolmenu[3]['title'] = 'РќР°СЃС‚СЂРѕР№РєРё РєРѕРјРїРѕРЅРµРЅС‚Р°';
         $toolmenu[3]['link'] = '?view=components&do=config&link=blogs&opt=config';
         cpToolMenu($toolmenu);
 
@@ -72,24 +72,24 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';				$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Создан';		$fields[1]['field'] = 'pubdate';		$fields[1]['width'] = '80';		$fields[1]['filter'] = 15;
+		$fields[1]['title'] = 'РЎРѕР·РґР°РЅ';		$fields[1]['field'] = 'pubdate';		$fields[1]['width'] = '80';		$fields[1]['filter'] = 15;
 		$fields[1]['fdate'] = '%d/%m/%Y';
 
-		$fields[2]['title']  = 'Название';	$fields[2]['field'] = 'title';			$fields[2]['width'] = '';		$fields[2]['link'] = '?view=components&do=config&link=blogs&opt=edit_blog&item_id=%id%';
+		$fields[2]['title']  = 'РќР°Р·РІР°РЅРёРµ';	$fields[2]['field'] = 'title';			$fields[2]['width'] = '';		$fields[2]['link'] = '?view=components&do=config&link=blogs&opt=edit_blog&item_id=%id%';
 		$fields[2]['filter'] = 15;
 
-		$fields[3]['title'] = 'Владелец';		$fields[3]['field'] = 'id';         $fields[3]['width'] = '300';
+		$fields[3]['title'] = 'Р’Р»Р°РґРµР»РµС†';		$fields[3]['field'] = 'id';         $fields[3]['width'] = '300';
 		$fields[3]['prc']   = 'cpBlogOwner';
 
 		//ACTIONS
 		$actions = array();
-		$actions[1]['title'] = 'Переименовать';
+		$actions[1]['title'] = 'РџРµСЂРµРёРјРµРЅРѕРІР°С‚СЊ';
 		$actions[1]['icon']  = 'edit.gif';
 		$actions[1]['link']  = '?view=components&do=config&link=blogs&opt=edit_blog&item_id=%id%';
 
-		$actions[2]['title'] = 'Удалить';
+		$actions[2]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[2]['icon']  = 'delete.gif';
-		$actions[2]['confirm'] = 'Удалить блог?';
+		$actions[2]['confirm'] = 'РЈРґР°Р»РёС‚СЊ Р±Р»РѕРі?';
 		$actions[2]['link']  = '?view=components&do=config&link=blogs&opt=delete_blog&item_id=%id%';
 
 		//Print table
@@ -123,7 +123,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			
 		$inCore->saveComponentConfig('blogs', $cfg);
 		
-		$msg = 'Настройки сохранены.';
+		$msg = 'РќР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅРµРЅС‹.';
 
         $opt = 'config';
 	}
@@ -186,97 +186,97 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 <form action="index.php?view=components&do=config&id=<?php echo (int)$_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
     <table width="609" border="0" cellpadding="10" cellspacing="0" class="proptable">
         <tr>
-            <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Просмотр блога </h4></td>
+            <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>РџСЂРѕСЃРјРѕС‚СЂ Р±Р»РѕРіР° </h4></td>
         </tr>
         <tr>
-            <td valign="top"><strong>Постов на странице в блоге: </strong></td>
+            <td valign="top"><strong>РџРѕСЃС‚РѕРІ РЅР° СЃС‚СЂР°РЅРёС†Рµ РІ Р±Р»РѕРіРµ: </strong></td>
             <td width="100" valign="top">
-                <input name="perpage" type="text" id="perpage" value="<?php echo @$cfg['perpage'];?>" size="5" /> шт.
+                <input name="perpage" type="text" id="perpage" value="<?php echo @$cfg['perpage'];?>" size="5" /> С€С‚.
             </td>
         </tr>
         <tr>
-            <td valign="top"><strong>Количество блогов на странице в списке блогов: </strong></td>
+            <td valign="top"><strong>РљРѕР»РёС‡РµСЃС‚РІРѕ Р±Р»РѕРіРѕРІ РЅР° СЃС‚СЂР°РЅРёС†Рµ РІ СЃРїРёСЃРєРµ Р±Р»РѕРіРѕРІ: </strong></td>
             <td width="100" valign="top">
-                <input name="perpage_blog" type="text" id="perpage_blog" value="<?php echo @$cfg['perpage_blog'];?>" size="5" /> шт.
+                <input name="perpage_blog" type="text" id="perpage_blog" value="<?php echo @$cfg['perpage_blog'];?>" size="5" /> С€С‚.
             </td>
         </tr>
         <tr>
-            <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Опции фотографий</h4></td>
+            <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>РћРїС†РёРё С„РѕС‚РѕРіСЂР°С„РёР№</h4></td>
         </tr>
         <tr>
-            <td valign="top"><strong>Разрешить загрузку фотографий к постам в блоге:</strong></td>
+            <td valign="top"><strong>Р Р°Р·СЂРµС€РёС‚СЊ Р·Р°РіСЂСѓР·РєСѓ С„РѕС‚РѕРіСЂР°С„РёР№ Рє РїРѕСЃС‚Р°Рј РІ Р±Р»РѕРіРµ:</strong></td>
             <td width="100" valign="top">
-                <input name="img_on" type="radio" value="1" <?php if (@$cfg['img_on']) { echo 'checked="checked"'; } ?> /> Да
-                <input name="img_on" type="radio" value="0" <?php if (@!$cfg['img_on']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="img_on" type="radio" value="1" <?php if (@$cfg['img_on']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                <input name="img_on" type="radio" value="0" <?php if (@!$cfg['img_on']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
         <tr>
-            <td valign="top"><strong>Наносить водяной знак:</strong>  <br />Если включено, то на все загружаемые
-			      фотографии к постам будет наносится изображение 
-			      из файла "<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>"</td>
+            <td valign="top"><strong>РќР°РЅРѕСЃРёС‚СЊ РІРѕРґСЏРЅРѕР№ Р·РЅР°Рє:</strong>  <br />Р•СЃР»Рё РІРєР»СЋС‡РµРЅРѕ, С‚Рѕ РЅР° РІСЃРµ Р·Р°РіСЂСѓР¶Р°РµРјС‹Рµ
+			      С„РѕС‚РѕРіСЂР°С„РёРё Рє РїРѕСЃС‚Р°Рј Р±СѓРґРµС‚ РЅР°РЅРѕСЃРёС‚СЃСЏ РёР·РѕР±СЂР°Р¶РµРЅРёРµ 
+			      РёР· С„Р°Р№Р»Р° "<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>"</td>
             <td width="100" valign="top">
-                <input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?> /> Да
-                <input name="watermark" type="radio" value="0" <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                <input name="watermark" type="radio" value="0" <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
 
         <tr>
-            <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Настройки редактирования</h4></td>
+            <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>РќР°СЃС‚СЂРѕР№РєРё СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ</h4></td>
         </tr>
         <tr>
             <td valign="top">
-                <strong>Обновлять дату поста после редактирования:</strong><br />
+                <strong>РћР±РЅРѕРІР»СЏС‚СЊ РґР°С‚Сѓ РїРѕСЃС‚Р° РїРѕСЃР»Рµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ:</strong><br />
                 <span class="hinttext">
-                    Если включено, после редактирования поста его дата будет устанавливаться в текущую.
+                    Р•СЃР»Рё РІРєР»СЋС‡РµРЅРѕ, РїРѕСЃР»Рµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РїРѕСЃС‚Р° РµРіРѕ РґР°С‚Р° Р±СѓРґРµС‚ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊСЃСЏ РІ С‚РµРєСѓС‰СѓСЋ.
                 </span>
             </td>
             <td valign="top">
-                <input name="update_date" type="radio" value="1" <?php if (@$cfg['update_date']) { echo 'checked="checked"'; } ?> /> Да
-                <input name="update_date" type="radio" value="0" <?php if (@!$cfg['update_date']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="update_date" type="radio" value="1" <?php if (@$cfg['update_date']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                <input name="update_date" type="radio" value="0" <?php if (@!$cfg['update_date']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
         <tr>
             <td valign="top">
-                <strong>Обновлять ссылку блога после редактирования при смене заголовка:</strong><br />
+                <strong>РћР±РЅРѕРІР»СЏС‚СЊ СЃСЃС‹Р»РєСѓ Р±Р»РѕРіР° РїРѕСЃР»Рµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РїСЂРё СЃРјРµРЅРµ Р·Р°РіРѕР»РѕРІРєР°:</strong><br />
                 <span class="hinttext">
-                    Если включено, после редактирования блога его ссылка, а так же все ссылки постов в блоге, будут изменены согласно нового заголовка блога.
+                    Р•СЃР»Рё РІРєР»СЋС‡РµРЅРѕ, РїРѕСЃР»Рµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ Р±Р»РѕРіР° РµРіРѕ СЃСЃС‹Р»РєР°, Р° С‚Р°Рє Р¶Рµ РІСЃРµ СЃСЃС‹Р»РєРё РїРѕСЃС‚РѕРІ РІ Р±Р»РѕРіРµ, Р±СѓРґСѓС‚ РёР·РјРµРЅРµРЅС‹ СЃРѕРіР»Р°СЃРЅРѕ РЅРѕРІРѕРіРѕ Р·Р°РіРѕР»РѕРІРєР° Р±Р»РѕРіР°.
                 </span>
             </td>
             <td valign="top">
-                <input name="update_seo_link_blog" type="radio" value="1" <?php if (@$cfg['update_seo_link_blog']) { echo 'checked="checked"'; } ?> /> Да
-                <input name="update_seo_link_blog" type="radio" value="0" <?php if (@!$cfg['update_seo_link_blog']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="update_seo_link_blog" type="radio" value="1" <?php if (@$cfg['update_seo_link_blog']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                <input name="update_seo_link_blog" type="radio" value="0" <?php if (@!$cfg['update_seo_link_blog']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
         <tr>
             <td valign="top">
-                <strong>Обновлять ссылку поста после редактирования при смене заголовка:</strong><br />
+                <strong>РћР±РЅРѕРІР»СЏС‚СЊ СЃСЃС‹Р»РєСѓ РїРѕСЃС‚Р° РїРѕСЃР»Рµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РїСЂРё СЃРјРµРЅРµ Р·Р°РіРѕР»РѕРІРєР°:</strong><br />
                 <span class="hinttext">
-                    Если включено, после редактирования поста его ссылка будет изменена согласно нового заголовка.
+                    Р•СЃР»Рё РІРєР»СЋС‡РµРЅРѕ, РїРѕСЃР»Рµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РїРѕСЃС‚Р° РµРіРѕ СЃСЃС‹Р»РєР° Р±СѓРґРµС‚ РёР·РјРµРЅРµРЅР° СЃРѕРіР»Р°СЃРЅРѕ РЅРѕРІРѕРіРѕ Р·Р°РіРѕР»РѕРІРєР°.
                 </span>
             </td>
             <td valign="top">
-                <input name="update_seo_link" type="radio" value="1" <?php if (@$cfg['update_seo_link']) { echo 'checked="checked"'; } ?> /> Да
-                <input name="update_seo_link" type="radio" value="0" <?php if (@!$cfg['update_seo_link']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="update_seo_link" type="radio" value="1" <?php if (@$cfg['update_seo_link']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                <input name="update_seo_link" type="radio" value="0" <?php if (@!$cfg['update_seo_link']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
         <tr>
-            <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>Ограничения по карме</h4></td>
+            <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>РћРіСЂР°РЅРёС‡РµРЅРёСЏ РїРѕ РєР°СЂРјРµ</h4></td>
         </tr>
 
         <tr>
             <td valign="top">
-                <strong>Использовать ограничения:</strong><br />
-                <span class="hinttext">Если выключено, то любой пользователь сможет создать блог,<br />независимо от значения своей кармы</span>
+                <strong>РСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РѕРіСЂР°РЅРёС‡РµРЅРёСЏ:</strong><br />
+                <span class="hinttext">Р•СЃР»Рё РІС‹РєР»СЋС‡РµРЅРѕ, С‚Рѕ Р»СЋР±РѕР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃРјРѕР¶РµС‚ СЃРѕР·РґР°С‚СЊ Р±Р»РѕРі,<br />РЅРµР·Р°РІРёСЃРёРјРѕ РѕС‚ Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕРµР№ РєР°СЂРјС‹</span>
             </td>
             <td valign="top">
-                <input name="min_karma" type="radio" value="1" <?php if (@$cfg['min_karma']) { echo 'checked="checked"'; } ?> /> Да
-                <input name="min_karma" type="radio" value="0" <?php if (@!$cfg['min_karma']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="min_karma" type="radio" value="1" <?php if (@$cfg['min_karma']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                <input name="min_karma" type="radio" value="0" <?php if (@!$cfg['min_karma']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
         <tr>
             <td valign="top">
-                <strong>Создание личного блога:</strong><br />
-                <span class="hinttext">Сколько очков кармы нужно для создания личного блога </span>
+                <strong>РЎРѕР·РґР°РЅРёРµ Р»РёС‡РЅРѕРіРѕ Р±Р»РѕРіР°:</strong><br />
+                <span class="hinttext">РЎРєРѕР»СЊРєРѕ РѕС‡РєРѕРІ РєР°СЂРјС‹ РЅСѓР¶РЅРѕ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Р»РёС‡РЅРѕРіРѕ Р±Р»РѕРіР° </span>
             </td>
             <td valign="top">
                 <input name="min_karma_private" type="text" id="min_karma_private" value="<?php echo @$cfg['min_karma_private'];?>" size="5" />
@@ -284,35 +284,35 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         </tr>
         <tr>
             <td valign="top">
-                <strong>Создание коллективного блога:</strong><br />
-                <span class="hinttext">Сколько очков кармы нужно для создания коллективного блога </span>
+                <strong>РЎРѕР·РґР°РЅРёРµ РєРѕР»Р»РµРєС‚РёРІРЅРѕРіРѕ Р±Р»РѕРіР°:</strong><br />
+                <span class="hinttext">РЎРєРѕР»СЊРєРѕ РѕС‡РєРѕРІ РєР°СЂРјС‹ РЅСѓР¶РЅРѕ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РєРѕР»Р»РµРєС‚РёРІРЅРѕРіРѕ Р±Р»РѕРіР° </span>
             </td>
             <td valign="top">
                 <input name="min_karma_public" type="text" id="min_karma_public" value="<?php echo @$cfg['min_karma_public'];?>" size="5" />
             </td>
         </tr>
         <tr>
-            <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>RSS лента </h4></td>
+            <td colspan="2" valign="top" bgcolor="#EBEBEB"><h4>RSS Р»РµРЅС‚Р° </h4></td>
         </tr>
         <tr>
-            <td valign="top"><strong>Показывать ссылку RSS для всех блогов: </strong></td>
+            <td valign="top"><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ СЃСЃС‹Р»РєСѓ RSS РґР»СЏ РІСЃРµС… Р±Р»РѕРіРѕРІ: </strong></td>
             <td valign="top">
-                <input name="rss_all" type="radio" value="1" <?php if (@$cfg['rss_all']) { echo 'checked="checked"'; } ?> /> Да
-                <input name="rss_all" type="radio" value="0" <?php if (@!$cfg['rss_all']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="rss_all" type="radio" value="1" <?php if (@$cfg['rss_all']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                <input name="rss_all" type="radio" value="0" <?php if (@!$cfg['rss_all']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
         <tr>
-            <td valign="top"><strong>Показывать ссылку RSS для каждого блога: </strong></td>
+            <td valign="top"><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ СЃСЃС‹Р»РєСѓ RSS РґР»СЏ РєР°Р¶РґРѕРіРѕ Р±Р»РѕРіР°: </strong></td>
             <td valign="top">
-                <input name="rss_one" type="radio" value="1" <?php if (@$cfg['rss_one']) { echo 'checked="checked"'; } ?> /> Да
-                <input name="rss_one" type="radio" value="0" <?php if (@!$cfg['rss_one']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="rss_one" type="radio" value="1" <?php if (@$cfg['rss_one']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                <input name="rss_one" type="radio" value="0" <?php if (@!$cfg['rss_one']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
     </table>
     <p>
         <input name="opt" type="hidden" value="saveconfig" />
-        <input name="save" type="submit" id="save" value="Сохранить" />
-        <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+        <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+        <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components';"/>
     </p>
 </form>
 <?php } ?>
@@ -324,7 +324,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 						if (isset($_REQUEST['item'])){					
 							$_SESSION['editlist'] = $_REQUEST['item'];
 						} else {
-							echo '<p class="error">Нет выбранных объектов!</p>';
+							echo '<p class="error">РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ!</p>';
 							return;
 						}				 
 					 }
@@ -334,7 +334,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					 if (isset($_SESSION['editlist'])){
 						$id = array_shift($_SESSION['editlist']);
 						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
-						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
+						{ $ostatok = '(РќР° РѕС‡РµСЂРµРґРё: '.sizeof($_SESSION['editlist']).')'; }
 					 } else { $id = (int)$_REQUEST['item_id']; }
 	
 					 $sql = "SELECT id, title
@@ -345,14 +345,14 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 						$mod = mysql_fetch_assoc($result);
 					 }
 					
-					 echo '<h3>Редактировать блог '.$ostatok.'</h3>';
+					 echo '<h3>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ Р±Р»РѕРі '.$ostatok.'</h3>';
  					 cpAddPathway($mod['title'], $_SERVER['REQUEST_URI']);
     
 ?>
 <form action="index.php?view=components&do=config&link=blogs&opt=update_blog&item_id=<?php echo $mod['id']; ?>" method="post" name="optform" target="_self" id="form1">
     <table width="609" border="0" cellpadding="10" cellspacing="0" class="proptable">
         <tr>
-            <td width="120"><strong>Название блога: </strong></td>
+            <td width="120"><strong>РќР°Р·РІР°РЅРёРµ Р±Р»РѕРіР°: </strong></td>
             <td>
                 <input name="title" type="text" id="title" value="<?php echo $mod['title'];?>" style="width:99%" />
             </td>
@@ -361,8 +361,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
     <p>
         <input name="opt" type="hidden" value="update_blog" />
         <input name="item_id" type="hidden" value="<?php echo $mod['id']; ?>" />
-        <input name="save" type="submit" id="save" value="Сохранить" />
-        <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&link=blogs&opt=list_blogs';"/>
+        <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+        <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components&do=config&link=blogs&opt=list_blogs';"/>
     </p>
 </form>
 <?php } ?>

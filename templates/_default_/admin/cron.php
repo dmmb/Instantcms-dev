@@ -5,12 +5,12 @@
         <thead>
             <tr>
                 <th class="lt_header" width="25">id</th>
-                <th class="lt_header" width="80">Название</th>
-                <th class="lt_header" width="">Описание</th>
-                <th class="lt_header" width="30">Интервал</th>
-                <th class="lt_header" width="100">Посл. запуск</th>
-                <th class="lt_header" width="50">Активна?</th>
-                <th class="lt_header" align="center" width="65">Действия</th>
+                <th class="lt_header" width="80">РќР°Р·РІР°РЅРёРµ</th>
+                <th class="lt_header" width="">РћРїРёСЃР°РЅРёРµ</th>
+                <th class="lt_header" width="30">РРЅС‚РµСЂРІР°Р»</th>
+                <th class="lt_header" width="100">РџРѕСЃР». Р·Р°РїСѓСЃРє</th>
+                <th class="lt_header" width="50">РђРєС‚РёРІРЅР°?</th>
+                <th class="lt_header" align="center" width="65">Р”РµР№СЃС‚РІРёСЏ</th>
             </tr>
         </thead>
         <?php if ($items){ ?>
@@ -19,34 +19,34 @@
                     <tr id="<?php echo $item['id']; ?>" class="item_tr">
                         <td><?php echo $item['id']; ?></td>
                         <td>
-                            <a title="Редактировать" href="?view=cron&do=edit&id=<?php echo $item['id']; ?>">
+                            <a title="Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ" href="?view=cron&do=edit&id=<?php echo $item['id']; ?>">
                                 <?php echo $item['name']; ?>
                             </a>
                         </td>
                         <td><?php echo $item['comment']; ?></td>
-                        <td><?php echo $item['job_interval']; ?> ч.</td>
+                        <td><?php echo $item['job_interval']; ?> С‡.</td>
                         <td><?php echo $item['run_date']; ?></td>
                         <td>
                             <?php if ($item['is_enabled']) { ?>
-                                <a id="publink<?php echo $item['id']; ?>" href="javascript:pub(<?php echo $item['id']; ?>, 'view=cron&do=hide&id=<?php echo $item['id']; ?>', 'view=content&do=show&id=<?php echo $item['id']; ?>', 'off', 'on');" title="Отключить">
+                                <a id="publink<?php echo $item['id']; ?>" href="javascript:pub(<?php echo $item['id']; ?>, 'view=cron&do=hide&id=<?php echo $item['id']; ?>', 'view=content&do=show&id=<?php echo $item['id']; ?>', 'off', 'on');" title="РћС‚РєР»СЋС‡РёС‚СЊ">
                                     <img id="pub<?php echo $item['id']; ?>" border="0" src="images/actions/on.gif"/>
                                 </a>
                             <?php } else { ?>
-                                <a id="publink<?php echo $item['id']; ?>" href="javascript:pub(<?php echo $item['id']; ?>, 'view=cron&do=show&id=<?php echo $item['id']; ?>', 'view=content&do=hide&item_=<?php echo $item['id']; ?>', 'on', 'off');" title="Включить">
+                                <a id="publink<?php echo $item['id']; ?>" href="javascript:pub(<?php echo $item['id']; ?>, 'view=cron&do=show&id=<?php echo $item['id']; ?>', 'view=content&do=hide&item_=<?php echo $item['id']; ?>', 'on', 'off');" title="Р’РєР»СЋС‡РёС‚СЊ">
                                     <img id="pub<?php echo $item['id']; ?>" border="0" src="images/actions/off.gif"/>
                                 </a>
                             <?php } ?>
                         </td>
                         <td align="right">
                             <div style="padding-right: 8px;">
-                                <a title="Выполнить сейчас" onclick="jsmsg('Выполнить задачу <?php echo $item['name']; ?>?', '?view=cron&do=execute&id=<?php echo $item['id']; ?>')" href="#">
-                                    <img border="0" hspace="2" alt="Выполнить сейчас" src="images/actions/play.gif"/>
+                                <a title="Р’С‹РїРѕР»РЅРёС‚СЊ СЃРµР№С‡Р°СЃ" onclick="jsmsg('Р’С‹РїРѕР»РЅРёС‚СЊ Р·Р°РґР°С‡Сѓ <?php echo $item['name']; ?>?', '?view=cron&do=execute&id=<?php echo $item['id']; ?>')" href="#">
+                                    <img border="0" hspace="2" alt="Р’С‹РїРѕР»РЅРёС‚СЊ СЃРµР№С‡Р°СЃ" src="images/actions/play.gif"/>
                                 </a>
-                                <a title="Редактировать" href="?view=cron&do=edit&id=<?php echo $item['id']; ?>">
-                                    <img border="0" hspace="2" alt="Редактировать" src="images/actions/edit.gif"/>
+                                <a title="Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ" href="?view=cron&do=edit&id=<?php echo $item['id']; ?>">
+                                    <img border="0" hspace="2" alt="Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ" src="images/actions/edit.gif"/>
                                 </a>
-                                <a title="Удалить" onclick="jsmsg('Удалить задачу <?php echo $item['name']; ?>?', '?view=cron&do=delete&id=<?php echo $item['id']; ?>')" href="#">
-                                    <img border="0" hspace="2" alt="Удалить" src="images/actions/delete.gif"/>
+                                <a title="РЈРґР°Р»РёС‚СЊ" onclick="jsmsg('РЈРґР°Р»РёС‚СЊ Р·Р°РґР°С‡Сѓ <?php echo $item['name']; ?>?', '?view=cron&do=delete&id=<?php echo $item['id']; ?>')" href="#">
+                                    <img border="0" hspace="2" alt="РЈРґР°Р»РёС‚СЊ" src="images/actions/delete.gif"/>
                                 </a>
                             </div>
                         </td>
@@ -55,7 +55,7 @@
             </tbody>
         <?php } else { ?>
             <tbody>
-                <td colspan="7" style="padding-left:5px"><div style="padding:15px;padding-left:0px">Задачи не найдены</div></td>
+                <td colspan="7" style="padding-left:5px"><div style="padding:15px;padding-left:0px">Р—Р°РґР°С‡Рё РЅРµ РЅР°Р№РґРµРЅС‹</div></td>
             </tbody>
         <?php } ?>
     </table>

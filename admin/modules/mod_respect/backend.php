@@ -11,22 +11,22 @@
 //                                                                            //
 /******************************************************************************/
 
-	cpAddPathway('Доска почета', '?view=modules&do=edit&id='.$_REQUEST['id']);
-	cpAddPathway('Настройки', '?view=modules&do=config&id='.$_REQUEST['id']);
+	cpAddPathway('Р”РѕСЃРєР° РїРѕС‡РµС‚Р°', '?view=modules&do=edit&id='.$_REQUEST['id']);
+	cpAddPathway('РќР°СЃС‚СЂРѕР№РєРё', '?view=modules&do=config&id='.$_REQUEST['id']);
 	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'config'; }
-	echo '<h3>Доска почета</h3>';
+	echo '<h3>Р”РѕСЃРєР° РїРѕС‡РµС‚Р°</h3>';
     
  		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'save.gif';
-		$toolmenu[0]['title'] = 'Сохранить';
+		$toolmenu[0]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 		$toolmenu[0]['link'] = 'javascript:document.optform.submit();';
 
 		$toolmenu[1]['icon'] = 'edit.gif';
-		$toolmenu[1]['title'] = 'Редактировать отображение модуля';
+		$toolmenu[1]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ РјРѕРґСѓР»СЏ';
 		$toolmenu[1]['link'] = '?view=modules&do=edit&id='.$_REQUEST['id'];				
 
 		$toolmenu[2]['icon'] = 'cancel.gif';
-		$toolmenu[2]['title'] = 'Отмена';
+		$toolmenu[2]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[2]['link'] = '?view=modules';
 		
 		cpToolMenu($toolmenu);
@@ -43,7 +43,7 @@
 		$cfg['limit']       = $inCore->request('limit', 'int', 5);
 
         $inCore->saveModuleConfig($_REQUEST['id'], $cfg);
-		$msg = 'Настройки сохранены.';
+		$msg = 'РќР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅРµРЅС‹.';
 
 	}
     
@@ -58,38 +58,38 @@
 <form action="index.php?view=modules&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="optform">
     <table width="546" border="0" cellpadding="10" cellspacing="0" class="proptable">
         <tr>
-            <td><strong>Количество пользователей: </strong></td>
+            <td><strong>РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№: </strong></td>
             <td><input name="limit" type="text" id="limit" value="<?php if (@$cfg) { echo $cfg['limit']; } ?>" size="5" /></td>
         </tr>
         <tr>
-            <td width="288"><strong>Показывать награды:</strong></td>
+            <td width="288"><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ РЅР°РіСЂР°РґС‹:</strong></td>
             <td width="218">
-                <input name="show_awards" type="radio" value="1" <?php if (@$cfg['show_awards']) { echo 'checked="checked"'; } ?>/> Да
-                <input name="show_awards" type="radio" value="0" <?php if (@!$cfg['show_awards']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="show_awards" type="radio" value="1" <?php if (@$cfg['show_awards']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                <input name="show_awards" type="radio" value="0" <?php if (@!$cfg['show_awards']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
         <tr>
-            <td><strong>Показывать пользователей с наградой: </strong></td>
+            <td><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ СЃ РЅР°РіСЂР°РґРѕР№: </strong></td>
             <td>
                 <select name="view_aw" id="order" style="width:220px">
-                    <option value="all" <?php if (@$cfg['view']=='all'){ echo 'selected="selected"'; } ?>/>-- Любая награда --
+                    <option value="all" <?php if (@$cfg['view']=='all'){ echo 'selected="selected"'; } ?>/>-- Р›СЋР±Р°СЏ РЅР°РіСЂР°РґР° --
                     <?php echo cmsUser::getFullAwardsList($cfg['view']); ?>
                 </select>
             </td>
         </tr>
         <tr>
-            <td><strong>Сортировать: </strong></td>
+            <td><strong>РЎРѕСЂС‚РёСЂРѕРІР°С‚СЊ: </strong></td>
             <td>
                 <select name="order" id="order" style="width:220px">
-                    <option value="desc" <?php if (@$cfg['order']=='desc' || !isset($cfg['order'])) { echo 'selected="selected"'; } ?>>По количеству наград</option>
-                    <option value="rand" <?php if (@$cfg['order']=='rand') { echo 'selected="selected"'; } ?>>Случайный порядок</option>
+                    <option value="desc" <?php if (@$cfg['order']=='desc' || !isset($cfg['order'])) { echo 'selected="selected"'; } ?>>РџРѕ РєРѕР»РёС‡РµСЃС‚РІСѓ РЅР°РіСЂР°Рґ</option>
+                    <option value="rand" <?php if (@$cfg['order']=='rand') { echo 'selected="selected"'; } ?>>РЎР»СѓС‡Р°Р№РЅС‹Р№ РїРѕСЂСЏРґРѕРє</option>
                 </select>
             </td>
         </tr>
     </table>
     <p>
         <input name="opt" type="hidden" id="do" value="save" />
-        <input name="save" type="submit" id="save" value="Сохранить" />
-        <input name="back" type="button" id="back" value="Назад" onclick="window.location.href='index.php?view=modules';"/>
+        <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+        <input name="back" type="button" id="back" value="РќР°Р·Р°Рґ" onclick="window.location.href='index.php?view=modules';"/>
     </p>
 </form>

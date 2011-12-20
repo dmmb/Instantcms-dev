@@ -372,7 +372,7 @@ function forumPollForm($cfg){
 					if ($f < 5) { $style= 'display:block'; } else { $style = 'display:none'; }
 					$html .= '<div id="pa_entry'.$f.'" style="'.$style.'"><table cellspacing="0" class="forum_fa_entry" cellpadding="5">';
 						$html .= '<tr>';
-							$html .= '<td>'.$_LANG['OPTION'].' ¹'.$f.': </td>';
+							$html .= '<td>'.$_LANG['OPTION'].' â„–'.$f.': </td>';
 							$html .= '<td><input name="poll[answers][]" type="text" size="30" id="pa_entry_input'.$f.'" /></td>';	
 							if ($f >= 4) { $style= 'display:block'; } else { $style = 'display:none'; }
 							$html .= '<td><div id="pa_entry_btn'.$f.'" style="'.$style.'">';								

@@ -28,7 +28,7 @@ function board(){
     $inCore->loadModel('board');
     $model = new cms_model_board();
 
-	// Ïğîâåğÿåì âêëş÷åí ëè êîìïîíåíò
+	// ĞŸÑ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼ Ğ²ĞºĞ»ÑÑ‡ĞµĞ½ Ğ»Ğ¸ ĞºĞ¾Ğ¼Ğ¿Ğ¾Ğ½ĞµĞ½Ñ‚
 	if(!$model->config['component_enabled']) { cmsCore::error404(); }
 
 	$do = $inCore->request('do', 'str', 'view');
@@ -40,11 +40,11 @@ function board(){
 /////////////////////////////// VIEW CATEGORY ///////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){ 
 
-	//Ïîëó÷àåì òåêóùóş êàòåãîğèş
+	//ĞŸĞ¾Ğ»ÑƒÑ‡Ğ°ĞµĞ¼ Ñ‚ĞµĞºÑƒÑ‰ÑƒÑ ĞºĞ°Ñ‚ĞµĞ³Ğ¾Ñ€Ğ¸Ñ
 	$category = $model->getCategory($model->category_id);
 	if (!$category) { cmsCore::error404(); }
 
-	// Çàãîëîâêè ñòğàíèöû	
+	// Ğ—Ğ°Ğ³Ğ¾Ğ»Ğ¾Ğ²ĞºĞ¸ ÑÑ‚Ñ€Ğ°Ğ½Ğ¸Ñ†Ñ‹	
 	if ($category['id'] == $model->root_cat['id']){
 
 		$pagetitle = $inCore->menuTitle();
@@ -64,55 +64,55 @@ if ($do=='view'){
 
 	}
 
-	// rss â àäğåñíîé ñòğîêå
+	// rss Ğ² Ğ°Ğ´Ñ€ĞµÑĞ½Ğ¾Ğ¹ ÑÑ‚Ñ€Ğ¾ĞºĞµ
 	$rss_cat_id = $category['id'] == $model->root_cat['id'] ? 'all' : $category['id'];
 	$inPage->addHead('<link rel="alternate" type="application/rss+xml" title="'.$_LANG['BOARD'].'" href="'.HOST.'/rss/board/'.$rss_cat_id.'/feed.rss">');
 
-	//Ôîğìèğóåì êàòåãîğèè
+	//Ğ¤Ğ¾Ñ€Ğ¼Ğ¸Ñ€ÑƒĞµĞ¼ ĞºĞ°Ñ‚ĞµĞ³Ğ¾Ñ€Ğ¸Ğ¸
 	$cats = $model->getSubCats($category['id']);
 
-	// Ôîğìèğóåì ñïèñîê îáúÿâëåíèé
-	// Óñòàíàâëèâàåì êàòåãîğèş
+	// Ğ¤Ğ¾Ñ€Ğ¼Ğ¸Ñ€ÑƒĞµĞ¼ ÑĞ¿Ğ¸ÑĞ¾Ğº Ğ¾Ğ±ÑŠÑĞ²Ğ»ĞµĞ½Ğ¸Ğ¹
+	// Ğ£ÑÑ‚Ğ°Ğ½Ğ°Ğ²Ğ»Ğ¸Ğ²Ğ°ĞµĞ¼ ĞºĞ°Ñ‚ĞµĞ³Ğ¾Ñ€Ğ¸Ñ
 	if ($category['id'] != $model->root_cat['id']) {
 		$model->whereCatIs($category['id']);
 	}
 
-	//Ãîğîä
+	//Ğ“Ğ¾Ñ€Ğ¾Ğ´
 	if ($model->city && in_array($model->city, $category['cat_city'])) {
     	$model->whereCityIs($model->city);
 		$pagetitle .= ' :: '.$model->city;
 	}
 
-    // Òèïû îáúÿâëåíèé
+    // Ğ¢Ğ¸Ğ¿Ñ‹ Ğ¾Ğ±ÑŠÑĞ²Ğ»ĞµĞ½Ğ¸Ğ¹
 	if ($model->obtype && stristr($category['obtypes'], $model->obtype)) {
     	$model->whereTypeIs($model->obtype);
 		$pagetitle .= ' :: '.$model->obtype;
 	}
 
-	// Ïğîñòàâëÿåì çàãîëîâêè ñòğàíèöû è îïèñàíèå ñîãëàñíî âûáîğêè
+	// ĞŸÑ€Ğ¾ÑÑ‚Ğ°Ğ²Ğ»ÑĞµĞ¼ Ğ·Ğ°Ğ³Ğ¾Ğ»Ğ¾Ğ²ĞºĞ¸ ÑÑ‚Ñ€Ğ°Ğ½Ğ¸Ñ†Ñ‹ Ğ¸ Ğ¾Ğ¿Ğ¸ÑĞ°Ğ½Ğ¸Ğµ ÑĞ¾Ğ³Ğ»Ğ°ÑĞ½Ğ¾ Ğ²Ñ‹Ğ±Ğ¾Ñ€ĞºĞ¸
 	$inPage->setDescription($pagetitle);
 	$inPage->setTitle($pagetitle);
 
-	// ìîäåğàòîğ èëè àäìèí
+	// Ğ¼Ğ¾Ğ´ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€ Ğ¸Ğ»Ğ¸ Ğ°Ğ´Ğ¼Ğ¸Ğ½
 	$is_moder = $inUser->is_admin || $model->is_moderator_by_group;
 
-    // Îáùåå êîëè÷åñòâî îáúÿâëåíèé ïî çàäàííûì âûøå óñëîâèÿì
+    // ĞĞ±Ñ‰ĞµĞµ ĞºĞ¾Ğ»Ğ¸Ñ‡ĞµÑÑ‚Ğ²Ğ¾ Ğ¾Ğ±ÑŠÑĞ²Ğ»ĞµĞ½Ğ¸Ğ¹ Ğ¿Ğ¾ Ğ·Ğ°Ğ´Ğ°Ğ½Ğ½Ñ‹Ğ¼ Ğ²Ñ‹ÑˆĞµ ÑƒÑĞ»Ğ¾Ğ²Ğ¸ÑĞ¼
     $total = $model->getAdvertsCount($is_moder);
 
-    //óñòàíàâëèâàåì ñîğòèğîâêó
+    //ÑƒÑÑ‚Ğ°Ğ½Ğ°Ğ²Ğ»Ğ¸Ğ²Ğ°ĞµĞ¼ ÑĞ¾Ñ€Ñ‚Ğ¸Ñ€Ğ¾Ğ²ĞºÑƒ
 	$orderby = $model->getOrder('orderby', $category['orderby']); 
 	$orderto = $model->getOrder('orderto', $category['orderto']);
     if (!$orderby) { $orderby = 'id'; }
     if (!$orderto) { $orderto = 'DESC'; }
     $model->orderBy($orderby, $orderto);
 
-    //óñòàíàâëèâàåì íîìåğ òåêóùåé ñòğàíèöû è êîë-âî îáúÿâëåíèé íà ñòğàíèöå
+    //ÑƒÑÑ‚Ğ°Ğ½Ğ°Ğ²Ğ»Ğ¸Ğ²Ğ°ĞµĞ¼ Ğ½Ğ¾Ğ¼ĞµÑ€ Ñ‚ĞµĞºÑƒÑ‰ĞµĞ¹ ÑÑ‚Ñ€Ğ°Ğ½Ğ¸Ñ†Ñ‹ Ğ¸ ĞºĞ¾Ğ»-Ğ²Ğ¾ Ğ¾Ğ±ÑŠÑĞ²Ğ»ĞµĞ½Ğ¸Ğ¹ Ğ½Ğ° ÑÑ‚Ñ€Ğ°Ğ½Ğ¸Ñ†Ğµ
     $model->limitPage($model->page, $category['perpage']);
 
-	// Ïîëó÷àåì îáúÿâëåíèÿ
+	// ĞŸĞ¾Ğ»ÑƒÑ‡Ğ°ĞµĞ¼ Ğ¾Ğ±ÑŠÑĞ²Ğ»ĞµĞ½Ğ¸Ñ
 	$items = $model->getAdverts($is_moder, true);
 
-    // Îòäàåì â øàáëîí êàòåãîğèè
+    // ĞÑ‚Ğ´Ğ°ĞµĞ¼ Ğ² ÑˆĞ°Ğ±Ğ»Ğ¾Ğ½ ĞºĞ°Ñ‚ĞµĞ³Ğ¾Ñ€Ğ¸Ğ¸
 	$smarty = $inCore->initSmarty('components', 'com_board_cats.tpl');			
 	$smarty->assign('pagetitle', $pagetitle);
 	$smarty->assign('cats', $cats);
@@ -122,9 +122,9 @@ if ($do=='view'){
 	$smarty->assign('maxcols', $model->config['maxcols']);
 	$smarty->display('com_board_cats.tpl');
 
-	// Îòäàåì â øàáëîí îáúÿâëåíèÿ
+	// ĞÑ‚Ğ´Ğ°ĞµĞ¼ Ğ² ÑˆĞ°Ğ±Ğ»Ğ¾Ğ½ Ğ¾Ğ±ÑŠÑĞ²Ğ»ĞµĞ½Ğ¸Ñ
     $smarty = $inCore->initSmarty('components', 'com_board_items.tpl');
-    // Åñëè íåîáõîäèìî, îòäàåì â øàáëîí html ôîğìû ñîğòèğîâêè
+    // Ğ•ÑĞ»Ğ¸ Ğ½ĞµĞ¾Ğ±Ñ…Ğ¾Ğ´Ğ¸Ğ¼Ğ¾, Ğ¾Ñ‚Ğ´Ğ°ĞµĞ¼ Ğ² ÑˆĞ°Ğ±Ğ»Ğ¾Ğ½ html Ñ„Ğ¾Ñ€Ğ¼Ñ‹ ÑĞ¾Ñ€Ñ‚Ğ¸Ñ€Ğ¾Ğ²ĞºĞ¸
     if ($category['orderform']){
 		 $smarty->assign('order_form', $model->orderForm($orderby, $orderto, $category));
     }
@@ -144,9 +144,9 @@ if ($do=='view'){
 /////////////////////////////// VIEW USER ADV ///////////////////////////////////////////////////////////////////////////////////////
 if ($do=='by_user'){
 
-	// ëîãèí ïîëüçîâàòåëÿ
+	// Ğ»Ğ¾Ğ³Ğ¸Ğ½ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ
 	$login = $inCore->request('login', 'str', ''.$inUser->login.'');
-	// ïîëó÷àåì äàííûå ïîëüçîâàòåëÿ
+	// Ğ¿Ğ¾Ğ»ÑƒÑ‡Ğ°ĞµĞ¼ Ğ´Ğ°Ğ½Ğ½Ñ‹Ğµ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ
 	$user = cmsUser::getUserBylogin($login);
 	if (!$user) { cmsCore::error404(); }
 
@@ -156,25 +156,25 @@ if ($do=='by_user'){
     $inPage->setTitle($_LANG['BOARD'].' - '.$user['nickname']);
 	$inPage->setDescription($_LANG['BOARD'].' - '.$user['nickname']);
 
-	// Ôîğìèğóåì ñïèñîê îáúÿâëåíèé
+	// Ğ¤Ğ¾Ñ€Ğ¼Ğ¸Ñ€ÑƒĞµĞ¼ ÑĞ¿Ğ¸ÑĞ¾Ğº Ğ¾Ğ±ÑŠÑĞ²Ğ»ĞµĞ½Ğ¸Ğ¹
 	$model->whereUserIs($user['id']);
 
-    // Îáùåå êîëè÷åñòâî îáúÿâëåíèé ïî çàäàííûì âûøå óñëîâèÿì
+    // ĞĞ±Ñ‰ĞµĞµ ĞºĞ¾Ğ»Ğ¸Ñ‡ĞµÑÑ‚Ğ²Ğ¾ Ğ¾Ğ±ÑŠÑĞ²Ğ»ĞµĞ½Ğ¸Ğ¹ Ğ¿Ğ¾ Ğ·Ğ°Ğ´Ğ°Ğ½Ğ½Ñ‹Ğ¼ Ğ²Ñ‹ÑˆĞµ ÑƒÑĞ»Ğ¾Ğ²Ğ¸ÑĞ¼
     $total = $model->getAdvertsCount($myprofile);
 
-    //óñòàíàâëèâàåì ñîğòèğîâêó
+    //ÑƒÑÑ‚Ğ°Ğ½Ğ°Ğ²Ğ»Ğ¸Ğ²Ğ°ĞµĞ¼ ÑĞ¾Ñ€Ñ‚Ğ¸Ñ€Ğ¾Ğ²ĞºÑƒ
     $model->orderBy('pubdate', 'DESC');
 
-    //óñòàíàâëèâàåì íîìåğ òåêóùåé ñòğàíèöû è êîë-âî îáúÿâëåíèé íà ñòğàíèöå
+    //ÑƒÑÑ‚Ğ°Ğ½Ğ°Ğ²Ğ»Ğ¸Ğ²Ğ°ĞµĞ¼ Ğ½Ğ¾Ğ¼ĞµÑ€ Ñ‚ĞµĞºÑƒÑ‰ĞµĞ¹ ÑÑ‚Ñ€Ğ°Ğ½Ğ¸Ñ†Ñ‹ Ğ¸ ĞºĞ¾Ğ»-Ğ²Ğ¾ Ğ¾Ğ±ÑŠÑĞ²Ğ»ĞµĞ½Ğ¸Ğ¹ Ğ½Ğ° ÑÑ‚Ñ€Ğ°Ğ½Ğ¸Ñ†Ğµ
     $model->limitPage($model->page, 15);
 
-	// Ïîëó÷àåì îáúÿâëåíèÿ
+	// ĞŸĞ¾Ğ»ÑƒÑ‡Ğ°ĞµĞ¼ Ğ¾Ğ±ÑŠÑĞ²Ğ»ĞµĞ½Ğ¸Ñ
 	$items = $model->getAdverts($myprofile, true, false, true);
 
-	// Ïàãèíàöèÿ
+	// ĞŸĞ°Ğ³Ğ¸Ğ½Ğ°Ñ†Ğ¸Ñ
 	$pagebar = cmsPage::getPagebar($total, $model->page, 15, '/board/by_user_'.$login.'/page-%page%');
 
-	// Ïîêàçûâàåì äàòû
+	// ĞŸĞ¾ĞºĞ°Ğ·Ñ‹Ğ²Ğ°ĞµĞ¼ Ğ´Ğ°Ñ‚Ñ‹
 	$category['showdate'] = 1;
 
 	$smarty = $inCore->initSmarty('components', 'com_board_items.tpl');
@@ -192,14 +192,14 @@ if ($do=='by_user'){
 /////////////////////////////// VIEW ITEM ///////////////////////////////////////////////////////////////////////////////////////////
 if($do=='read'){
 
-	// ïîëó÷àåì îáúÿâëåíèå
+	// Ğ¿Ğ¾Ğ»ÑƒÑ‡Ğ°ĞµĞ¼ Ğ¾Ğ±ÑŠÑĞ²Ğ»ĞµĞ½Ğ¸Ğµ
 	$item = $model->getRecord($model->item_id);
 	if (!$item){ cmsCore::error404(); }
 
-	// íåîïóáëèêîâàííûå ïîêàçûâàåì àäìèíàì, ìîäåğàòîğàì è àâòîğó
+	// Ğ½ĞµĞ¾Ğ¿ÑƒĞ±Ğ»Ğ¸ĞºĞ¾Ğ²Ğ°Ğ½Ğ½Ñ‹Ğµ Ğ¿Ğ¾ĞºĞ°Ğ·Ñ‹Ğ²Ğ°ĞµĞ¼ Ğ°Ğ´Ğ¼Ğ¸Ğ½Ğ°Ğ¼, Ğ¼Ğ¾Ğ´ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ğ°Ğ¼ Ğ¸ Ğ°Ğ²Ñ‚Ğ¾Ñ€Ñƒ
 	if (!$item['published'] && !$item['moderator']) { cmsCore::error404(); } 
 
-	// äëÿ íåîïóáëèêîâàííîãî ïîêàçûâàåì èíôî: ïğîñğî÷åíî/íà ìîäåğàöèè
+	// Ğ´Ğ»Ñ Ğ½ĞµĞ¾Ğ¿ÑƒĞ±Ğ»Ğ¸ĞºĞ¾Ğ²Ğ°Ğ½Ğ½Ğ¾Ğ³Ğ¾ Ğ¿Ğ¾ĞºĞ°Ğ·Ñ‹Ğ²Ğ°ĞµĞ¼ Ğ¸Ğ½Ñ„Ğ¾: Ğ¿Ñ€Ğ¾ÑÑ€Ğ¾Ñ‡ĞµĞ½Ğ¾/Ğ½Ğ° Ğ¼Ğ¾Ğ´ĞµÑ€Ğ°Ñ†Ğ¸Ğ¸
 	if (!$item['published']) {
 		$info_text = $item['is_overdue'] ? $_LANG['ADV_IS_EXTEND'] : $_LANG['ADV_IS_MODER'];
 		cmsCore::addSessionMessage($info_text, 'info');
@@ -207,7 +207,7 @@ if($do=='read'){
 		$model->increaseHits($model->item_id);
 	}
 
-	// ôîğìèğóåì çàãîëîâîê è òåëî ñîîáùåíèÿ
+	// Ñ„Ğ¾Ñ€Ğ¼Ğ¸Ñ€ÑƒĞµĞ¼ Ğ·Ğ°Ğ³Ğ¾Ğ»Ğ¾Ğ²Ğ¾Ğº Ğ¸ Ñ‚ĞµĞ»Ğ¾ ÑĞ¾Ğ¾Ğ±Ñ‰ĞµĞ½Ğ¸Ñ
 	$item['title']   = $item['obtype'].' '.$item['title'];
 	$item['content'] = nl2br($item['content']);
 	$item['content'] = $model->config['auto_link'] ? $inCore->parseSmiles($item['content']) : $item['content'];
@@ -235,7 +235,7 @@ if($do=='read'){
 /////////////////////////////// NEW BOARD ITEM /////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='additem'){
 
-	// Ïîëó÷àåì êàòåãîğèè, â êîòîğûå ìîæåò çàãğóæàòü ïîëüçîâàòåëü
+	// ĞŸĞ¾Ğ»ÑƒÑ‡Ğ°ĞµĞ¼ ĞºĞ°Ñ‚ĞµĞ³Ğ¾Ñ€Ğ¸Ğ¸, Ğ² ĞºĞ¾Ñ‚Ğ¾Ñ€Ñ‹Ğµ Ğ¼Ğ¾Ğ¶ĞµÑ‚ Ğ·Ğ°Ğ³Ñ€ÑƒĞ¶Ğ°Ñ‚ÑŒ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»ÑŒ
 	$catslist = $model->getPublicCats($model->category_id);
 	if(!$catslist) { 
 		cmsCore::addSessionMessage($_LANG['YOU_CANT_ADD_ADV_ANY'], 'error');
@@ -283,26 +283,26 @@ if ($do=='additem'){
 
     if ( $inCore->inRequest('submit') ) {
 
-		// ïğîâåğÿåì íà çàïîëíåíîñòü ñêğûòîå ïîëå
+		// Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼ Ğ½Ğ° Ğ·Ğ°Ğ¿Ğ¾Ğ»Ğ½ĞµĞ½Ğ¾ÑÑ‚ÑŒ ÑĞºÑ€Ñ‹Ñ‚Ğ¾Ğµ Ğ¿Ğ¾Ğ»Ğµ
 		$title_fake = $inCore->request('title_fake', 'str', '');
-		// åñëè îíî çàïîëíåíî, ñ÷èòàåì ÷òî ıòî áîò, 404
+		// ĞµÑĞ»Ğ¸ Ğ¾Ğ½Ğ¾ Ğ·Ğ°Ğ¿Ğ¾Ğ»Ğ½ĞµĞ½Ğ¾, ÑÑ‡Ğ¸Ñ‚Ğ°ĞµĞ¼ Ñ‡Ñ‚Ğ¾ ÑÑ‚Ğ¾ Ğ±Ğ¾Ñ‚, 404
 		if ($title_fake) { cmsCore::error404(); }
 
 		$errors = false;
 
-		// ïğîâåğÿåì íàëè÷èå êàòåãîğèè
+		// Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼ Ğ½Ğ°Ğ»Ğ¸Ñ‡Ğ¸Ğµ ĞºĞ°Ñ‚ĞµĞ³Ğ¾Ñ€Ğ¸Ğ¸
 		if (!$cat['id']) { cmsCore::addSessionMessage($_LANG['NEED_CAT_ADV'], 'error'); $errors = true; }
 
-		// Ïğîâåğÿåì êîëè÷åñòâî äîáàâëåííûõ çà ñóòêè
+		// ĞŸÑ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼ ĞºĞ¾Ğ»Ğ¸Ñ‡ĞµÑÑ‚Ğ²Ğ¾ Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ»ĞµĞ½Ğ½Ñ‹Ñ… Ğ·Ğ° ÑÑƒÑ‚ĞºĞ¸
 		if (!$model->checkLoadedByUser24h($cat)){       
 			cmsCore::addSessionMessage($_LANG['MAX_VALUE_OF_ADD_ADV'], 'error'); $errors = true;
 		}
-		// Ìîæåì ëè äîáàâëÿòü â ıòó ğóáğèêó
+		// ĞœĞ¾Ğ¶ĞµĞ¼ Ğ»Ğ¸ Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ»ÑÑ‚ÑŒ Ğ² ÑÑ‚Ñƒ Ñ€ÑƒĞ±Ñ€Ğ¸ĞºÑƒ
 		if (!$model->checkAdd($cat)){
 			cmsCore::addSessionMessage($_LANG['YOU_CANT_ADD_ADV'], 'error'); $errors = true;
 		}
 
-        // âõîäíûå äàííûå
+        // Ğ²Ñ…Ğ¾Ğ´Ğ½Ñ‹Ğµ Ğ´Ğ°Ğ½Ğ½Ñ‹Ğµ
         $obtype     = $inCore->request('obtype', 'str', '');
         $title      = $inCore->request('title', 'str', '');
 		$title      = str_ireplace($obtype, '', $title);
@@ -338,7 +338,7 @@ if ($do=='additem'){
         }
 
 		if($cat['is_photos']){
-			// Çàãğóæàåì ôîòî
+			// Ğ—Ğ°Ğ³Ñ€ÑƒĞ¶Ğ°ĞµĞ¼ Ñ„Ğ¾Ñ‚Ğ¾
 			$file = $model->uploadPhoto('', $cat);
 		} else {
 			$file['filename'] = '';
@@ -377,7 +377,7 @@ if ($do=='additem'){
 		cmsUser::sessionClearAll();
 
 		if ($published) {
-			//ğåãèñòğèğóåì ñîáûòèå
+			//Ñ€ĞµĞ³Ğ¸ÑÑ‚Ñ€Ğ¸Ñ€ÑƒĞµĞ¼ ÑĞ¾Ğ±Ñ‹Ñ‚Ğ¸Ğµ
 			cmsActions::log('add_board', array(
 						'object' => $obtype.' '.$title,
 						'object_url' => '/board/read'.$item_id.'.html',
@@ -491,13 +491,13 @@ if ($do=='edititem'){
 		if ($errors){ $inCore->redirect('/board/edit'.$item['id'].'.html'); }
 
 		if($cat['is_photos']){
-			// Çàãğóæàåì ôîòî
+			// Ğ—Ğ°Ğ³Ñ€ÑƒĞ¶Ğ°ĞµĞ¼ Ñ„Ğ¾Ñ‚Ğ¾
 			$file = $model->uploadPhoto($item['file'], $cat);
 		}
 
 		$file['filename'] = $file['filename'] ? $file['filename'] : $item['file'];
 
-		// îáíîâëÿåì îáúÿâëåíèå
+		// Ğ¾Ğ±Ğ½Ğ¾Ğ²Ğ»ÑĞµĞ¼ Ğ¾Ğ±ÑŠÑĞ²Ğ»ĞµĞ½Ğ¸Ğµ
         $model->updateRecord($item['id'], array(
                                     'category_id'=>$item['category_id'],
                                     'obtype'=>$obtype,
@@ -510,7 +510,7 @@ if ($do=='edititem'){
                                     'published'=>$published,
                                     'file'=>$file['filename']
                                 ));
-		// îáíîâëÿåì çàïèñü â ëåíòå àêòèâíîñòè
+		// Ğ¾Ğ±Ğ½Ğ¾Ğ²Ğ»ÑĞµĞ¼ Ğ·Ğ°Ğ¿Ğ¸ÑÑŒ Ğ² Ğ»ĞµĞ½Ñ‚Ğµ Ğ°ĞºÑ‚Ğ¸Ğ²Ğ½Ğ¾ÑÑ‚Ğ¸
 		cmsActions::updateLog('add_board', array('object' => $obtype.' '.$title), $item['id']);
 
         if ($inUser->is_admin && $vipdays){
@@ -554,10 +554,10 @@ if ($do == 'publish'){
 	$item = $model->getRecord($model->item_id);
     if (!$item){ cmsCore::error404(); }
 
-	// åñëè óæå îïóáëèêîâàíî, 404
+	// ĞµÑĞ»Ğ¸ ÑƒĞ¶Ğµ Ğ¾Ğ¿ÑƒĞ±Ğ»Ğ¸ĞºĞ¾Ğ²Ğ°Ğ½Ğ¾, 404
 	if ($item['published']) { cmsCore::error404(); }
 
-	// ïóáëèêîâàòü ìîãóò àäìèíû è ìîäåğàòîğû äîñêè
+	// Ğ¿ÑƒĞ±Ğ»Ğ¸ĞºĞ¾Ğ²Ğ°Ñ‚ÑŒ Ğ¼Ğ¾Ğ³ÑƒÑ‚ Ğ°Ğ´Ğ¼Ğ¸Ğ½Ñ‹ Ğ¸ Ğ¼Ğ¾Ğ´ĞµÑ€Ğ°Ñ‚Ğ¾Ñ€Ñ‹ Ğ´Ğ¾ÑĞºĞ¸
 	if(!$inUser->is_admin && !$model->is_moderator_by_group) { cmsCore::error404(); }
 
     $model->publishRecord($model->item_id);
@@ -565,7 +565,7 @@ if ($do == 'publish'){
 	cmsCore::callEvent('ADD_BOARD_DONE', $item);
  
  	if($item['user_id']){
-		//ğåãèñòğèğóåì ñîáûòèå
+		//Ñ€ĞµĞ³Ğ¸ÑÑ‚Ñ€Ğ¸Ñ€ÑƒĞµĞ¼ ÑĞ¾Ğ±Ñ‹Ñ‚Ğ¸Ğµ
 		cmsActions::log('add_board', array(
 					'object' => $item['obtype'].' '.$item['title'],
 					'user_id' => $item['user_id'],

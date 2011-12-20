@@ -39,7 +39,7 @@ function submitItem(){
     var link        = $('#addform #link').val();
 
     if (linktype=='link' && link==''){
-        alert('Укажите ссылку пункта меню!'); return;
+        alert('РЈРєР°Р¶РёС‚Рµ СЃСЃС‹Р»РєСѓ РїСѓРЅРєС‚Р° РјРµРЅСЋ!'); return;
     }
 
     $('#addform').submit();

@@ -2,22 +2,22 @@
 <backend>    
     <module>
         <id>mod_latestblogs</id>
-        <title>Новое в блогах</title>
+        <title>РќРѕРІРѕРµ РІ Р±Р»РѕРіР°С…</title>
     </module>
     <params>
 
-        <param type="list" name="namemode" title="Формат имени личных блогов" hint="Показывать название блога или имя его хозяина">
-            <option title="Название блога" value="blog" />
-            <option title="Имя пользователя" value="user" />
+        <param type="list" name="namemode" title="Р¤РѕСЂРјР°С‚ РёРјРµРЅРё Р»РёС‡РЅС‹С… Р±Р»РѕРіРѕРІ" hint="РџРѕРєР°Р·С‹РІР°С‚СЊ РЅР°Р·РІР°РЅРёРµ Р±Р»РѕРіР° РёР»Рё РёРјСЏ РµРіРѕ С…РѕР·СЏРёРЅР°">
+            <option title="РќР°Р·РІР°РЅРёРµ Р±Р»РѕРіР°" value="blog" />
+            <option title="РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ" value="user" />
         </param>
 
-        <param type="number" name="shownum" title="Количество новых записей" units="шт." default="5" />
+        <param type="number" name="shownum" title="РљРѕР»РёС‡РµСЃС‚РІРѕ РЅРѕРІС‹С… Р·Р°РїРёСЃРµР№" units="С€С‚." default="5" />
 
-		<param type="flag" name="showcom" title="Показывать число комментариев" default="on" />
+		<param type="flag" name="showcom" title="РџРѕРєР°Р·С‹РІР°С‚СЊ С‡РёСЃР»Рѕ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ" default="on" />
 
-        <param type="number" name="minrate" title="Ограничение по рейтингу" default="5" hint="Показывать записи с рейтингом выше указанного" />
+        <param type="number" name="minrate" title="РћРіСЂР°РЅРёС‡РµРЅРёРµ РїРѕ СЂРµР№С‚РёРЅРіСѓ" default="5" hint="РџРѕРєР°Р·С‹РІР°С‚СЊ Р·Р°РїРёСЃРё СЃ СЂРµР№С‚РёРЅРіРѕРј РІС‹С€Рµ СѓРєР°Р·Р°РЅРЅРѕРіРѕ" />
 
-        <param type="flag" name="showrss" title="Показывать ссылку на RSS" default="on" />
+        <param type="flag" name="showrss" title="РџРѕРєР°Р·С‹РІР°С‚СЊ СЃСЃС‹Р»РєСѓ РЅР° RSS" default="on" />
         
     </params>
 </backend>

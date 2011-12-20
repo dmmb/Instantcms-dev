@@ -1,6 +1,6 @@
 function addComment(sess_md5, target, target_id, parent_id){
 	$('div.reply').html('').hide();
-    $("#cm_addentry"+parent_id).html("<div>Загрузка формы...</div>");
+    $("#cm_addentry"+parent_id).html("<div>Р—Р°РіСЂСѓР·РєР° С„РѕСЂРјС‹...</div>");
 	$("#cm_addentry"+parent_id).load("/components/comments/addform.php", {cd: sess_md5, target: target, target_id: target_id, parent_id: parent_id}, cmLoaded());
 	$("#cm_addentry"+parent_id).slideDown("fast");
 }
@@ -10,7 +10,7 @@ function editComment(sess_md5, comment_id){
     var entry = $("#cm_addentry"+comment_id);
     entry.parent('div').find('.cmm_entry').hide();
     entry.show();
-    entry.html("<div>Загрузка формы...</div>");
+    entry.html("<div>Р—Р°РіСЂСѓР·РєР° С„РѕСЂРјС‹...</div>");
 	entry.load("/components/comments/addform.php", {cd: sess_md5, action: 'edit', id: comment_id}, cmLoaded());	
 }
 
@@ -36,7 +36,7 @@ function addSmile(tag, field_id){
 
 function loadComments(target, target_id, anchor){
 
-    $('div.cm_ajax_list').html('<p style="margin:30px; margin-left:0px; padding-left:50px; background:url(/images/ajax-loader.gif) no-repeat">загрузка комментариев...</p>');
+    $('div.cm_ajax_list').html('<p style="margin:30px; margin-left:0px; padding-left:50px; background:url(/images/ajax-loader.gif) no-repeat">Р·Р°РіСЂСѓР·РєР° РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ...</p>');
 
     $.ajax({
 			type: "POST",
@@ -47,7 +47,7 @@ function loadComments(target, target_id, anchor){
                 $('td.loading').html('');
                 if (anchor){
                     window.location.hash = anchor.substr(1, 100);
-                    $('a[href='+anchor+']').css('color', 'red').attr('title', 'Вы пришли на страницу по этой ссылке');
+                    $('a[href='+anchor+']').css('color', 'red').attr('title', 'Р’С‹ РїСЂРёС€Р»Рё РЅР° СЃС‚СЂР°РЅРёС†Сѓ РїРѕ СЌС‚РѕР№ СЃСЃС‹Р»РєРµ');
                 }
 			}
     });

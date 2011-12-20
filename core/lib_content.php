@@ -29,7 +29,7 @@ function cmsAutoCreateThread($article, $content_cfg){
 
     $link       = '[URL='.HOST.'/'.$seolink.'.html]'.$article['title'].'[/URL]';
 
-    $post   = 'В этой теме форума обсуждаем статью &quot;'.$link.'&quot;';
+    $post   = 'Р’ СЌС‚РѕР№ С‚РµРјРµ С„РѕСЂСѓРјР° РѕР±СЃСѓР¶РґР°РµРј СЃС‚Р°С‚СЊСЋ &quot;'.$link.'&quot;';
 
 	$threadlastid = $model_forum->addThread(array(
 			'forum_id' => $content_cfg['af_forum_id'],
@@ -46,7 +46,7 @@ function cmsAutoCreateThread($article, $content_cfg){
 					'user_id' => $article['user_id'],
 					'message' => $post
 	));
-	//регистрируем событие
+	//СЂРµРіРёСЃС‚СЂРёСЂСѓРµРј СЃРѕР±С‹С‚РёРµ
 	$forum_title = $inDB->get_field('cms_forums', "id={$content_cfg['af_forum_id']}", 'title');
 	cmsActions::log('add_thread', array(
 				'object' => $article['title'],
@@ -56,7 +56,7 @@ function cmsAutoCreateThread($article, $content_cfg){
 				'target' => $forum_title,
 				'target_url' => '/forum/'.$content_cfg['af_forum_id'],
 				'target_id' => $content_cfg['af_forum_id'], 
-				'description' => 'В этой теме форума обсуждаем статью &quot;<a href="'.HOST.'/'.$seolink.'.html">'.$article['title'].'</a>&quot;'
+				'description' => 'Р’ СЌС‚РѕР№ С‚РµРјРµ С„РѕСЂСѓРјР° РѕР±СЃСѓР¶РґР°РµРј СЃС‚Р°С‚СЊСЋ &quot;<a href="'.HOST.'/'.$seolink.'.html">'.$article['title'].'</a>&quot;'
 	));	
 
     return $threadlastid;

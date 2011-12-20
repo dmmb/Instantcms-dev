@@ -20,8 +20,8 @@
 
     $inCore     = cmsCore::getInstance();
 
-    $inCore->loadClass('config');       //конфигурация
-    $inCore->loadClass('db');           //база данных
+    $inCore->loadClass('config');       //РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ
+    $inCore->loadClass('db');           //Р±Р°Р·Р° РґР°РЅРЅС‹С…
     $inCore->loadClass('user');
 
     $inConf     = cmsConfig::getInstance();
@@ -49,7 +49,7 @@
                        }
           </style>';
 
-    echo '<h2>Миграция 1.5.3 &rarr; 1.6.0</h2>';
+    echo '<h2>РњРёРіСЂР°С†РёСЏ 1.5.3 &rarr; 1.6.0</h2>';
 
     echo '<div class="migrate">';
 
@@ -72,7 +72,7 @@
         $inDB->query("UPDATE cms_menu SET link = '{$item['link']}'{$linkfix} WHERE id = {$item['id']}");        
     }
 
-    echo '<p>Пункты меню обновлены</p>';
+    echo '<p>РџСѓРЅРєС‚С‹ РјРµРЅСЋ РѕР±РЅРѕРІР»РµРЅС‹</p>';
 
 // ========================================================================== //
 // ========================================================================== //
@@ -90,18 +90,18 @@
 
         $inDB->query($sql);
 
-        echo '<p>Таблица <strong>cms_comment_targets</strong> создана</p>';
+        echo '<p>РўР°Р±Р»РёС†Р° <strong>cms_comment_targets</strong> СЃРѕР·РґР°РЅР°</p>';
 
-        $inCore->registerCommentsTarget('article', 'content', 'Статьи');
-        $inCore->registerCommentsTarget('blog', 'blogs', 'Посты блогов');
-        $inCore->registerCommentsTarget('palbum', 'photos', 'Фотоальбомы');
-        $inCore->registerCommentsTarget('photo', 'photos', 'Фотографии галереи');
-        $inCore->registerCommentsTarget('userphoto', 'users', 'Фотографии пользователей');
-        $inCore->registerCommentsTarget('catalog', 'catalog', 'Записи каталога');
-        $inCore->registerCommentsTarget('boarditem', 'board', 'Объявления');
-        $inCore->registerCommentsTarget('faq', 'faq', 'Вопросы FAQ');
+        $inCore->registerCommentsTarget('article', 'content', 'РЎС‚Р°С‚СЊРё');
+        $inCore->registerCommentsTarget('blog', 'blogs', 'РџРѕСЃС‚С‹ Р±Р»РѕРіРѕРІ');
+        $inCore->registerCommentsTarget('palbum', 'photos', 'Р¤РѕС‚РѕР°Р»СЊР±РѕРјС‹');
+        $inCore->registerCommentsTarget('photo', 'photos', 'Р¤РѕС‚РѕРіСЂР°С„РёРё РіР°Р»РµСЂРµРё');
+        $inCore->registerCommentsTarget('userphoto', 'users', 'Р¤РѕС‚РѕРіСЂР°С„РёРё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№');
+        $inCore->registerCommentsTarget('catalog', 'catalog', 'Р—Р°РїРёСЃРё РєР°С‚Р°Р»РѕРіР°');
+        $inCore->registerCommentsTarget('boarditem', 'board', 'РћР±СЉСЏРІР»РµРЅРёСЏ');
+        $inCore->registerCommentsTarget('faq', 'faq', 'Р’РѕРїСЂРѕСЃС‹ FAQ');
 
-        echo '<p>Таблица <strong>cms_comment_targets</strong> заполнена</p>';
+        echo '<p>РўР°Р±Р»РёС†Р° <strong>cms_comment_targets</strong> Р·Р°РїРѕР»РЅРµРЅР°</p>';
 
     }
 
@@ -110,12 +110,12 @@
 
     if (!$inDB->isFieldExists('cms_content', 'url')){
         $inDB->query("ALTER TABLE `cms_content` ADD `url` VARCHAR( 100 ) NOT NULL");
-        echo '<p>Поле <strong>url</strong> добавлено в таблицу <strong>cms_content</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>url</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_content</strong></p>';
     }
 
     if (!$inDB->isFieldExists('cms_category', 'url')){
         $inDB->query("ALTER TABLE `cms_category` ADD `url` VARCHAR( 100 ) NOT NULL");
-        echo '<p>Поле <strong>url</strong> добавлено в таблицу <strong>cms_category</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>url</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_category</strong></p>';
     }
 
 // ========================================================================== //
@@ -123,7 +123,7 @@
 
     if (!$inDB->isFieldExists('cms_uc_cats', 'can_edit')){
         $inDB->query("ALTER TABLE `cms_uc_cats` ADD `can_edit` INT NOT NULL DEFAULT '0'");
-        echo '<p>Поле <strong>can_edit</strong> добавлено в таблицу <strong>cms_uc_cats</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>can_edit</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_uc_cats</strong></p>';
     }
 
 // ========================================================================== //
@@ -131,13 +131,13 @@
 
     if (!$inDB->isFieldExists('cms_comments', 'target_title')){
         $inDB->query("ALTER TABLE `cms_comments` ADD `target_title` VARCHAR( 150 ) NOT NULL");
-        echo '<p>Поле <strong>target_title</strong> добавлено в таблицу <strong>cms_comments</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>target_title</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_comments</strong></p>';
     }
 
     if (!$inDB->isFieldExists('cms_comments', 'target_link')){
 
         $inDB->query("ALTER TABLE `cms_comments` ADD `target_link` VARCHAR( 200 ) NOT NULL");
-        echo '<p>Поле <strong>target_link</strong> добавлено в таблицу <strong>cms_comments</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>target_link</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_comments</strong></p>';
 
             $sql = "UPDATE  cms_comments com,
                             cms_content targets
@@ -182,7 +182,7 @@
 
             $inDB->query($sql);
 
-            echo '<p>Таблица <strong>cms_comments</strong> обновлена</p>';
+            echo '<p>РўР°Р±Р»РёС†Р° <strong>cms_comments</strong> РѕР±РЅРѕРІР»РµРЅР°</p>';
 
     }
 
@@ -205,14 +205,14 @@
 
         $inDB->query($sql);
 
-        echo '<p>Таблица <strong>cms_rating_targets</strong> создана</p>';
+        echo '<p>РўР°Р±Р»РёС†Р° <strong>cms_rating_targets</strong> СЃРѕР·РґР°РЅР°</p>';
 
-        $inCore->registerRatingsTarget('content', 'content', 'Статья', true, 5, 'cms_content');
-        $inCore->registerRatingsTarget('photo', 'photos', 'Фото в галерее', true, 5, 'cms_photo_files');
-        $inCore->registerRatingsTarget('blogpost', 'blogs', 'Пост в блоге', true, 5, 'cms_blog_posts');
-        $inCore->registerRatingsTarget('comment', 'comments', 'Комментарий', true, 2, 'cms_comments');
+        $inCore->registerRatingsTarget('content', 'content', 'РЎС‚Р°С‚СЊСЏ', true, 5, 'cms_content');
+        $inCore->registerRatingsTarget('photo', 'photos', 'Р¤РѕС‚Рѕ РІ РіР°Р»РµСЂРµРµ', true, 5, 'cms_photo_files');
+        $inCore->registerRatingsTarget('blogpost', 'blogs', 'РџРѕСЃС‚ РІ Р±Р»РѕРіРµ', true, 5, 'cms_blog_posts');
+        $inCore->registerRatingsTarget('comment', 'comments', 'РљРѕРјРјРµРЅС‚Р°СЂРёР№', true, 2, 'cms_comments');
 
-        echo '<p>Таблица <strong>cms_rating_targets</strong> заполнена</p>';
+        echo '<p>РўР°Р±Р»РёС†Р° <strong>cms_rating_targets</strong> Р·Р°РїРѕР»РЅРµРЅР°</p>';
 
     }
 
@@ -231,9 +231,9 @@
                 ) ENGINE = MYISAM";
 
         $inDB->query($sql);
-        echo '<p>Таблица <strong>cms_ratings_total</strong> создана</p>';
+        echo '<p>РўР°Р±Р»РёС†Р° <strong>cms_ratings_total</strong> СЃРѕР·РґР°РЅР°</p>';
 
-        //== перенос оценок комментариев ==========================
+        //== РїРµСЂРµРЅРѕСЃ РѕС†РµРЅРѕРє РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ ==========================
         $cv_sql = "SELECT comment_id, vote, user_id
                 FROM cms_comments_votes
                 LIMIT 500";
@@ -248,13 +248,13 @@
             }
         }
         unset($result);
-        echo '<p>Оценки комментариев перенесены в общую таблицу</p>';
+        echo '<p>РћС†РµРЅРєРё РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ РїРµСЂРµРЅРµСЃРµРЅС‹ РІ РѕР±С‰СѓСЋ С‚Р°Р±Р»РёС†Сѓ</p>';
 
-        //== удаление cms_comment_votes ============================
+        //== СѓРґР°Р»РµРЅРёРµ cms_comment_votes ============================
         $inDB->query("DROP TABLE cms_comments_votes");
-        echo '<p>Таблица <strong>cms_comments_votes</strong> удалена</p>';
+        echo '<p>РўР°Р±Р»РёС†Р° <strong>cms_comments_votes</strong> СѓРґР°Р»РµРЅР°</p>';
 
-        //== агрегация рейтинга ====================================
+        //== Р°РіСЂРµРіР°С†РёСЏ СЂРµР№С‚РёРЅРіР° ====================================
         $sql = "SELECT target, item_id, SUM(points) as total_rating, COUNT(id) as total_votes
                 FROM cms_ratings
                 GROUP BY target, item_id";
@@ -270,7 +270,7 @@
         }
 
         unset($result);
-        echo '<p>Рейтинг контента агрегирован</p>';
+        echo '<p>Р РµР№С‚РёРЅРі РєРѕРЅС‚РµРЅС‚Р° Р°РіСЂРµРіРёСЂРѕРІР°РЅ</p>';
 
     }
 
@@ -280,9 +280,9 @@
     if (!$inDB->isFieldExists('cms_blogs', 'rating')){
 
         $inDB->query("ALTER TABLE `cms_blogs` ADD `rating` INT NOT NULL");
-        echo '<p>Поле <strong>rating</strong> добавлено в таблицу <strong>cms_blogs</strong></p>';
+        echo '<p>РџРѕР»Рµ <strong>rating</strong> РґРѕР±Р°РІР»РµРЅРѕ РІ С‚Р°Р±Р»РёС†Сѓ <strong>cms_blogs</strong></p>';
 
-        //== вычисляем рейтинг блогов ====================================
+        //== РІС‹С‡РёСЃР»СЏРµРј СЂРµР№С‚РёРЅРі Р±Р»РѕРіРѕРІ ====================================
         $sql = "SELECT b.id as id,
                        IFNULL(SUM(r.total_rating), 0) AS rating
                 FROM cms_blogs b
@@ -300,7 +300,7 @@
         }
 
         unset($result);
-        echo '<p>Рейтинг блогов агрегирован</p>';
+        echo '<p>Р РµР№С‚РёРЅРі Р±Р»РѕРіРѕРІ Р°РіСЂРµРіРёСЂРѕРІР°РЅ</p>';
 
     }
 
@@ -310,12 +310,12 @@
     echo '</div>';
 
     //COMPLETED
-	echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Миграция завершена. Обязательно удалите папку /migrate/ прежде чем продолжить!</div>';
-    echo '<div style="margin:15px 0px 15px 0px;">Если вы вносили собственные изменения в код: 
+	echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">РњРёРіСЂР°С†РёСЏ Р·Р°РІРµСЂС€РµРЅР°. РћР±СЏР·Р°С‚РµР»СЊРЅРѕ СѓРґР°Р»РёС‚Рµ РїР°РїРєСѓ /migrate/ РїСЂРµР¶РґРµ С‡РµРј РїСЂРѕРґРѕР»Р¶РёС‚СЊ!</div>';
+    echo '<div style="margin:15px 0px 15px 0px;">Р•СЃР»Рё РІС‹ РІРЅРѕСЃРёР»Рё СЃРѕР±СЃС‚РІРµРЅРЅС‹Рµ РёР·РјРµРЅРµРЅРёСЏ РІ РєРѕРґ: 
             <a href="http://www.instantcms.ru/wiki/doku.php/%D0%B0%D0%BF%D0%B3%D1%80%D0%B5%D0%B9%D0%B4_%D0%BF%D0%B5%D1%80%D0%B5%D1%83%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0_%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D0%B8_%D0%B4%D0%B8%D1%81%D1%82%D1%80%D0%B8%D0%B1%D1%83%D1%82%D0%B8%D0%B2%D0%B0#%D0%BF%D0%B5%D1%80%D0%B5%D0%BD%D0%BE%D1%81_%D0%B2%D0%B0%D1%88%D0%B8%D1%85_%D0%B8%D0%B7%D0%BC%D0%B5%D0%BD%D0%B5%D0%BD%D0%B8%D0%B9_%D0%BC%D0%B5%D0%B6%D0%B4%D1%83_%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F%D0%BC%D0%B8">
-                Инструкция по переносу изменений между версиями
+                РРЅСЃС‚СЂСѓРєС†РёСЏ РїРѕ РїРµСЂРµРЅРѕСЃСѓ РёР·РјРµРЅРµРЅРёР№ РјРµР¶РґСѓ РІРµСЂСЃРёСЏРјРё
             </a>
           </div>';
-	echo '<a href="/">Перейти на сайт</a>';
+	echo '<a href="/">РџРµСЂРµР№С‚Рё РЅР° СЃР°Р№С‚</a>';
     
 ?>

@@ -61,8 +61,8 @@ function applet_content(){
     $inCore->loadLib('tags');
     $inCore->loadLib('content');
 
-    $GLOBALS['cp_page_title'] = 'Статьи сайта';
-    cpAddPathway('Статьи сайта', 'index.php?view=tree');
+    $GLOBALS['cp_page_title'] = 'РЎС‚Р°С‚СЊРё СЃР°Р№С‚Р°';
+    cpAddPathway('РЎС‚Р°С‚СЊРё СЃР°Р№С‚Р°', 'index.php?view=tree');
 	
 	$GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="js/content.js"></script>';
 
@@ -73,39 +73,39 @@ function applet_content(){
 	if ($do == 'list'){
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'new.gif';
-		$toolmenu[0]['title'] = 'Добавить материал';
+		$toolmenu[0]['title'] = 'Р”РѕР±Р°РІРёС‚СЊ РјР°С‚РµСЂРёР°Р»';
 		$toolmenu[0]['link'] = '?view=content&do=add';
 
 		$toolmenu[1]['icon'] = 'edit.gif';
-		$toolmenu[1]['title'] = 'Редактировать выбранные';
+		$toolmenu[1]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[1]['link'] = "javascript:checkSel('?view=content&do=edit&multiple=1');";
 
 		$toolmenu[2]['icon'] = 'show.gif';
-		$toolmenu[2]['title'] = 'Публиковать выбранные';
+		$toolmenu[2]['title'] = 'РџСѓР±Р»РёРєРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[2]['link'] = "javascript:checkSel('?view=content&do=show&multiple=1');";
 
 		$toolmenu[3]['icon'] = 'hide.gif';
-		$toolmenu[3]['title'] = 'Скрыть выбранные';
+		$toolmenu[3]['title'] = 'РЎРєСЂС‹С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[3]['link'] = "javascript:checkSel('?view=content&do=hide&multiple=1');";
 
 		$toolmenu[4]['icon'] = 'delete.gif';
-		$toolmenu[4]['title'] = 'Удалить выбранные';
+		$toolmenu[4]['title'] = 'РЈРґР°Р»РёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[4]['link'] = "javascript:checkSel('?view=content&do=delete&multiple=1');";
 
 		$toolmenu[5]['icon'] = 'reorder.gif';
-		$toolmenu[5]['title'] = 'Сохранить порядок элементов';
+		$toolmenu[5]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ РїРѕСЂСЏРґРѕРє СЌР»РµРјРµРЅС‚РѕРІ';
 		$toolmenu[5]['link'] = "javascript:checkSel('?view=content&do=saveorder');";
 
 		$toolmenu[6]['icon'] = 'autoorder.gif';
-		$toolmenu[6]['title'] = 'Упорядочить элементы';
+		$toolmenu[6]['title'] = 'РЈРїРѕСЂСЏРґРѕС‡РёС‚СЊ СЌР»РµРјРµРЅС‚С‹';
 		$toolmenu[6]['link'] = "?view=content&do=autoorder";
 
 		$toolmenu[8]['icon'] = 'config.gif';
-		$toolmenu[8]['title'] = 'Настроить каталог статей';
+		$toolmenu[8]['title'] = 'РќР°СЃС‚СЂРѕРёС‚СЊ РєР°С‚Р°Р»РѕРі СЃС‚Р°С‚РµР№';
 		$toolmenu[8]['link'] = "?view=components&do=config&link=content";
 
 		$toolmenu[9]['icon'] = 'help.gif';
-		$toolmenu[9]['title'] = 'Помощь';
+		$toolmenu[9]['title'] = 'РџРѕРјРѕС‰СЊ';
 		$toolmenu[9]['link'] = "?view=help&topic=menu";
 
 		cpToolMenu($toolmenu);
@@ -115,31 +115,31 @@ function applet_content(){
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';				$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Создан';		$fields[1]['field'] = 'pubdate';		$fields[1]['width'] = '80';		$fields[1]['filter'] = 15;
+		$fields[1]['title'] = 'РЎРѕР·РґР°РЅ';		$fields[1]['field'] = 'pubdate';		$fields[1]['width'] = '80';		$fields[1]['filter'] = 15;
 		$fields[1]['fdate'] = '%d/%m/%Y';
 
-		$fields[2]['title']  = 'Название';	$fields[2]['field'] = 'title';			$fields[2]['width'] = '';		$fields[2]['link'] = '?view=content&do=edit&id=%id%';
+		$fields[2]['title']  = 'РќР°Р·РІР°РЅРёРµ';	$fields[2]['field'] = 'title';			$fields[2]['width'] = '';		$fields[2]['link'] = '?view=content&do=edit&id=%id%';
 		$fields[2]['filter'] = 15;
 
-		$fields[3]['title'] = 'Раздел';		$fields[3]['field'] = 'category_id';	$fields[3]['width'] = '300';	$fields[3]['filter'] = 1;
+		$fields[3]['title'] = 'Р Р°Р·РґРµР»';		$fields[3]['field'] = 'category_id';	$fields[3]['width'] = '300';	$fields[3]['filter'] = 1;
 		$fields[3]['prc']   = 'cpCatById';	$fields[3]['filterlist'] = cpGetList('cms_category');
 		
-		$fields[4]['title'] = 'Показ';		$fields[4]['field'] = 'published';		$fields[4]['width'] = '100';	 
-		$fields[5]['title'] = 'Порядок';	$fields[5]['field'] = 'ordering';		$fields[5]['width'] = '100';	
+		$fields[4]['title'] = 'РџРѕРєР°Р·';		$fields[4]['field'] = 'published';		$fields[4]['width'] = '100';	 
+		$fields[5]['title'] = 'РџРѕСЂСЏРґРѕРє';	$fields[5]['field'] = 'ordering';		$fields[5]['width'] = '100';	
 		
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'В архив';
+		$actions[0]['title'] = 'Р’ Р°СЂС…РёРІ';
 		$actions[0]['icon']  = 'arhive_on.gif';
 		$actions[0]['link']  = '?view=content&do=arhive_on&id=%id%';
 
-		$actions[1]['title'] = 'Редактировать';
+		$actions[1]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[1]['icon']  = 'edit.gif';
 		$actions[1]['link']  = '?view=content&do=edit&id=%id%';
 
-		$actions[2]['title'] = 'Удалить';
+		$actions[2]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[2]['icon']  = 'delete.gif';
-		$actions[2]['confirm'] = 'Удалить материал?';
+		$actions[2]['confirm'] = 'РЈРґР°Р»РёС‚СЊ РјР°С‚РµСЂРёР°Р»?';
 		$actions[2]['link']  = '?view=content&do=delete&id=%id%';
 				
 		//Print table
@@ -432,18 +432,18 @@ function applet_content(){
  
  		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'save.gif';
-		$toolmenu[0]['title'] = 'Сохранить';
+		$toolmenu[0]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 		$toolmenu[0]['link'] = 'javascript:document.addform.submit();';
 
 		$toolmenu[1]['icon'] = 'cancel.gif';
-		$toolmenu[1]['title'] = 'Отмена';
+		$toolmenu[1]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[1]['link'] = 'javascript:history.go(-1);';
 
 		cpToolMenu($toolmenu);
    
 		if ($do=='add'){
-			 echo '<h3>Добавить статью</h3>';
- 	 		 cpAddPathway('Добавить статью', 'index.php?view=content&do=add');
+			 echo '<h3>Р”РѕР±Р°РІРёС‚СЊ СЃС‚Р°С‚СЊСЋ</h3>';
+ 	 		 cpAddPathway('Р”РѕР±Р°РІРёС‚СЊ СЃС‚Р°С‚СЊСЋ', 'index.php?view=content&do=add');
 			 $mod['category_id'] = $_REQUEST['to'];
 		} else {
                     if (isset($_REQUEST['item'])){
@@ -455,7 +455,7 @@ function applet_content(){
 					 if (isset($_SESSION['editlist'])){
 						$id = array_shift($_SESSION['editlist']);
 						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
-						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
+						{ $ostatok = '(РќР° РѕС‡РµСЂРµРґРё: '.sizeof($_SESSION['editlist']).')'; }
 					 } else { $id = (int)$_REQUEST['id']; }
 	
 					 $sql = "SELECT *, (TO_DAYS(enddate) - TO_DAYS(CURDATE())) as daysleft, DATE_FORMAT(pubdate, '%d.%m.%Y') as pubdate
@@ -466,7 +466,7 @@ function applet_content(){
 						$mod = mysql_fetch_assoc($result);
 					 }
 					
-					 echo '<h3>Редактировать статью '.$ostatok.'</h3>';
+					 echo '<h3>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ СЃС‚Р°С‚СЊСЋ '.$ostatok.'</h3>';
  					 cpAddPathway($mod['title'], 'index.php?view=content&do=edit&id='.$mod['id']);
 			}   
 	?>
@@ -476,26 +476,26 @@ function applet_content(){
         <table class="proptable" width="100%" cellpadding="15" cellspacing="2">
             <tr>
             
-                <!-- главная ячейка -->
+                <!-- РіР»Р°РІРЅР°СЏ СЏС‡РµР№РєР° -->
                 <td valign="top">
 
                     <table width="100%" cellpadding="0" cellspacing="4" border="0">
                         <tr>
                             <td valign="top">
-                                <div><strong>Название статьи</strong></div>
+                                <div><strong>РќР°Р·РІР°РЅРёРµ СЃС‚Р°С‚СЊРё</strong></div>
                                 <div>
                                     <table width="100%" cellpadding="0" cellspacing="0" border="0">
                                         <tr>
                                             <td><input name="title" type="text" id="title" style="width:100%" value="<?php echo htmlspecialchars($mod['title']);?>" /></td>
                                             <td style="width:15px;padding-left:10px;padding-right:10px;">
-                                                <input type="checkbox" title="Показывать заголовок" name="showtitle" <?php if ($mod['showtitle'] || $do=='add') { echo 'checked="checked"'; } ?> value="1">
+                                                <input type="checkbox" title="РџРѕРєР°Р·С‹РІР°С‚СЊ Р·Р°РіРѕР»РѕРІРѕРє" name="showtitle" <?php if ($mod['showtitle'] || $do=='add') { echo 'checked="checked"'; } ?> value="1">
                                             </td>
                                         </tr>
                                     </table>
                                 </div>
                             </td>
                             <td width="130" valign="top">
-                                <div><strong>Дата публикации</strong></div>
+                                <div><strong>Р”Р°С‚Р° РїСѓР±Р»РёРєР°С†РёРё</strong></div>
                                 <div>
                                     <input name="pubdate" type="text" id="pubdate" style="width:100px" <?php if(@!$mod['pubdate']) { echo 'value="'.date('Y-m-d').'"'; } else { echo 'value="'.$mod['pubdate'].'"'; } ?>/>
                                     <?php
@@ -514,24 +514,24 @@ function applet_content(){
                                 </div>
                             </td>
                             <td width="16" valign="bottom" style="padding-bottom:10px">
-                                <input type="checkbox" name="showdate" id="showdate" title="Показывать дату и автора" value="1" <?php if ($mod['showdate'] || $do=='add') { echo 'checked="checked"'; } ?>/>
+                                <input type="checkbox" name="showdate" id="showdate" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РґР°С‚Сѓ Рё Р°РІС‚РѕСЂР°" value="1" <?php if ($mod['showdate'] || $do=='add') { echo 'checked="checked"'; } ?>/>
                             </td>
                             <td width="160" valign="top">
-                                <div><strong>Шаблон статьи</strong></div>
+                                <div><strong>РЁР°Р±Р»РѕРЅ СЃС‚Р°С‚СЊРё</strong></div>
                                 <div><input name="tpl" type="text" style="width:160px" value="<?php echo @$mod['tpl'];?>"></div>
                             </td>
 
                         </tr>
                     </table>
 
-                    <div><strong>Анонс статьи (не обязательно)</strong></div>
+                    <div><strong>РђРЅРѕРЅСЃ СЃС‚Р°С‚СЊРё (РЅРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ)</strong></div>
                     <div><?php $inCore->insertEditor('description', $mod['description'], '200', '100%'); ?></div>
 
-                    <div><strong>Полный текст статьи</strong></div>
+                    <div><strong>РџРѕР»РЅС‹Р№ С‚РµРєСЃС‚ СЃС‚Р°С‚СЊРё</strong></div>
                     <?php insertPanel(); ?>
                     <div><?php $inCore->insertEditor('content', $mod['content'], '400', '100%'); ?></div>
 
-                    <div><strong>Теги статьи</strong></div>
+                    <div><strong>РўРµРіРё СЃС‚Р°С‚СЊРё</strong></div>
                     <div><input name="tags" type="text" id="tags" style="width:99%" value="<?php if (isset($mod['id'])) { echo cmsTagLine('content', $mod['id'], false); } ?>" /></div>
 
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
@@ -540,7 +540,7 @@ function applet_content(){
                                 <input type="radio" name="autokeys" id="autokeys1" <?php if ($do=='add' && $cfg['autokeys']){ ?>checked="checked"<?php } ?> value="1"/>
                             </td>
                             <td>
-                                <label for="autokeys1"><strong>Автоматически сгенерировать ключевые слова и описание</strong></label>
+                                <label for="autokeys1"><strong>РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРё СЃРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РєР»СЋС‡РµРІС‹Рµ СЃР»РѕРІР° Рё РѕРїРёСЃР°РЅРёРµ</strong></label>
                             </td>
                         </tr>
                         <tr>
@@ -548,7 +548,7 @@ function applet_content(){
                                 <input type="radio" name="autokeys" id="autokeys2" value="2"/>
                             </td>
                             <td>
-                                <label for="autokeys2"><strong>Использовать теги и анонс как ключевые слова и описание</strong></label>
+                                <label for="autokeys2"><strong>РСЃРїРѕР»СЊР·РѕРІР°С‚СЊ С‚РµРіРё Рё Р°РЅРѕРЅСЃ РєР°Рє РєР»СЋС‡РµРІС‹Рµ СЃР»РѕРІР° Рё РѕРїРёСЃР°РЅРёРµ</strong></label>
                             </td>
                         </tr>
                         <tr>
@@ -556,37 +556,37 @@ function applet_content(){
                                 <input type="radio" name="autokeys" id="autokeys3" value="3" <?php if ($do=='edit' || !$cfg['autokeys']){ ?>checked="checked"<?php } ?>/>
                             </td>
                             <td>
-                                <label for="autokeys3"><strong>Заполнить ключевые слова и описание вручную</strong></label>
+                                <label for="autokeys3"><strong>Р—Р°РїРѕР»РЅРёС‚СЊ РєР»СЋС‡РµРІС‹Рµ СЃР»РѕРІР° Рё РѕРїРёСЃР°РЅРёРµ РІСЂСѓС‡РЅСѓСЋ</strong></label>
                             </td>
                         </tr>
                         
                         <?php if ($cfg['af_on'] && $do=='add') { ?>
                         <tr>
                             <td width="20"><input type="checkbox" name="noforum" id="noforum" value="1" /> </td>
-                            <td><label for="noforum"><strong>Не создавать тему на форуме для обсуждения статьи</strong></label></td>
+                            <td><label for="noforum"><strong>РќРµ СЃРѕР·РґР°РІР°С‚СЊ С‚РµРјСѓ РЅР° С„РѕСЂСѓРјРµ РґР»СЏ РѕР±СЃСѓР¶РґРµРЅРёСЏ СЃС‚Р°С‚СЊРё</strong></label></td>
                         </tr>
                         <?php } ?>
                     </table>
 
                 </td>
 
-                <!-- боковая ячейка -->
+                <!-- Р±РѕРєРѕРІР°СЏ СЏС‡РµР№РєР° -->
                 <td width="300" valign="top" style="background:#ECECEC;">
 
                     <?php ob_start(); ?>
 
-                    {tab=Публикация}
+                    {tab=РџСѓР±Р»РёРєР°С†РёСЏ}
 
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
                         <tr>
                             <td width="20"><input type="checkbox" name="published" id="published" value="1" <?php if ($mod['published'] || $do=='add') { echo 'checked="checked"'; } ?>/></td>
-                            <td><label for="published"><strong>Публиковать статью</strong></label></td>
+                            <td><label for="published"><strong>РџСѓР±Р»РёРєРѕРІР°С‚СЊ СЃС‚Р°С‚СЊСЋ</strong></label></td>
                         </tr>
                     </table>
 
                     <div style="margin-top:7px">
                         <select name="category_id" size="10" id="category_id" style="width:99%;height:200px">
-                            <option value="1" <?php if (@$mod['category_id']==1 || !isset($mod['category_id'])) { echo 'selected'; }?>>-- Корневой раздел --</option>
+                            <option value="1" <?php if (@$mod['category_id']==1 || !isset($mod['category_id'])) { echo 'selected'; }?>>-- РљРѕСЂРЅРµРІРѕР№ СЂР°Р·РґРµР» --</option>
                             <?php
                                 if (isset($mod['category_id'])){
                                     echo $inCore->getListItemsNS('cms_category', $mod['category_id']);
@@ -599,14 +599,14 @@ function applet_content(){
 
                     <div style="margin-bottom:10px">
                         <select name="showpath" id="showpath" style="width:99%">
-                            <option value="0" <?php if (@!$mod['showpath']) { echo 'selected'; } ?>>Глубиномер: Только название</option>
-                            <option value="1" <?php if (@$mod['showpath']) { echo 'selected'; } ?>>Глубиномер: Полный путь</option>
+                            <option value="0" <?php if (@!$mod['showpath']) { echo 'selected'; } ?>>Р“Р»СѓР±РёРЅРѕРјРµСЂ: РўРѕР»СЊРєРѕ РЅР°Р·РІР°РЅРёРµ</option>
+                            <option value="1" <?php if (@$mod['showpath']) { echo 'selected'; } ?>>Р“Р»СѓР±РёРЅРѕРјРµСЂ: РџРѕР»РЅС‹Р№ РїСѓС‚СЊ</option>
                         </select>
                     </div>
 
                     <div style="margin-top:15px">
-                        <strong>URL страницы</strong><br/>
-                        <div style="color:gray">Если не указан, генерируется из заголовка</div>
+                        <strong>URL СЃС‚СЂР°РЅРёС†С‹</strong><br/>
+                        <div style="color:gray">Р•СЃР»Рё РЅРµ СѓРєР°Р·Р°РЅ, РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ РёР· Р·Р°РіРѕР»РѕРІРєР°</div>
                     </div>
                     <div>
                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -618,7 +618,7 @@ function applet_content(){
                     </div>
 
                     <div style="margin-top:10px">
-                        <strong>Автор статьи</strong>
+                        <strong>РђРІС‚РѕСЂ СЃС‚Р°С‚СЊРё</strong>
                     </div>
                     <div>
                         <select name="user_id" id="user_id" style="width:99%">
@@ -632,7 +632,7 @@ function applet_content(){
                         </select>
                     </div>
 
-                    <div style="margin-top:12px"><strong>Фотография</strong></div>
+                    <div style="margin-top:12px"><strong>Р¤РѕС‚РѕРіСЂР°С„РёСЏ</strong></div>
                     <div style="margin-bottom:10px">
                         <?php
                             if ($do=='edit'){
@@ -644,7 +644,7 @@ function applet_content(){
                         <table cellpadding="0" cellspacing="0" border="0">
                             <tr>
                                 <td width="16"><input type="checkbox" id="delete_image" name="delete_image" value="1" /></td>
-                                <td><label for="delete_image">Удалить фотографию</label></td>
+                                <td><label for="delete_image">РЈРґР°Р»РёС‚СЊ С„РѕС‚РѕРіСЂР°С„РёСЋ</label></td>
                             </tr>
                         </table>
                         <?php
@@ -654,52 +654,52 @@ function applet_content(){
                         <input type="file" name="picture" style="width:100%" />
                     </div>
                     
-                    <div style="margin-top:25px"><strong>Параметры публикации</strong></div>
+                    <div style="margin-top:25px"><strong>РџР°СЂР°РјРµС‚СЂС‹ РїСѓР±Р»РёРєР°С†РёРё</strong></div>
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
                         <tr>
                             <td width="20"><input type="checkbox" name="showlatest" id="showlatest" value="1" <?php if ($mod['showlatest'] || $do=='add') { echo 'checked="checked"'; } ?>/></td>
-                            <td><label for="showlatest">Показывать в "новых статьях"</label></td>
+                            <td><label for="showlatest">РџРѕРєР°Р·С‹РІР°С‚СЊ РІ "РЅРѕРІС‹С… СЃС‚Р°С‚СЊСЏС…"</label></td>
                         </tr>
                         <tr>
                             <td width="20"><input type="checkbox" name="comments" id="comments" value="1" <?php if ($mod['comments'] || $do=='add') { echo 'checked="checked"'; } ?>/></td>
-                            <td><label for="comments">Разрешить комментарии</label></td>
+                            <td><label for="comments">Р Р°Р·СЂРµС€РёС‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё</label></td>
                         </tr>
                         <tr>
                             <td width="20"><input type="checkbox" name="canrate" id="canrate" value="1" <?php if ($mod['canrate']) { echo 'checked="checked"'; } ?>/></td>
-                            <td><label for="canrate">Разрешить рейтинг</label></td>
+                            <td><label for="canrate">Р Р°Р·СЂРµС€РёС‚СЊ СЂРµР№С‚РёРЅРі</label></td>
                         </tr>
                     </table>
 
                     <?php if ($do=='add'){ ?>
                         <div style="margin-top:25px">
-                            <strong>Создать ссылку в меню</strong>
+                            <strong>РЎРѕР·РґР°С‚СЊ СЃСЃС‹Р»РєСѓ РІ РјРµРЅСЋ</strong>
                         </div>
                         <div>
                             <select name="createmenu" id="createmenu" style="width:99%">
-                                <option value="0" selected="selected">-- не создавать --</option>
-                                <option value="mainmenu">Главное меню</option>
+                                <option value="0" selected="selected">-- РЅРµ СЃРѕР·РґР°РІР°С‚СЊ --</option>
+                                <option value="mainmenu">Р“Р»Р°РІРЅРѕРµ РјРµРЅСЋ</option>
                                 <?php for($m=1;$m<=15;$m++){ ?>
-                                    <option value="menu<?php echo $m; ?>">Дополнительное меню <?php echo $m; ?></option>
+                                    <option value="menu<?php echo $m; ?>">Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РјРµРЅСЋ <?php echo $m; ?></option>
                                 <?php } ?>
                             </select>
                         </div>
                     <?php } ?>
 
-                    {tab=Сроки}
+                    {tab=РЎСЂРѕРєРё}
 
                     <div style="margin-top:5px">
-                        <strong>Срок показа статьи</strong>
+                        <strong>РЎСЂРѕРє РїРѕРєР°Р·Р° СЃС‚Р°С‚СЊРё</strong>
                     </div>
                     <div>
                         <select name="is_end" id="is_end" style="width:99%">
-                            <option value="0" <?php if (@!$mod['is_end']) { echo 'selected'; } ?>>Не ограничен</option>
-                            <option value="1" <?php if (@$mod['is_end']) { echo 'selected'; } ?>>По дату окончания</option>
+                            <option value="0" <?php if (@!$mod['is_end']) { echo 'selected'; } ?>>РќРµ РѕРіСЂР°РЅРёС‡РµРЅ</option>
+                            <option value="1" <?php if (@$mod['is_end']) { echo 'selected'; } ?>>РџРѕ РґР°С‚Сѓ РѕРєРѕРЅС‡Р°РЅРёСЏ</option>
                         </select>
                     </div>
 
                     <div style="margin-top:20px">
-                        <strong>Дата окончания:</strong><br/>
-                        <span class="hinttext">В формате ГГГГ-ММ-ДД</span>
+                        <strong>Р”Р°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ:</strong><br/>
+                        <span class="hinttext">Р’ С„РѕСЂРјР°С‚Рµ Р“Р“Р“Р“-РњРњ-Р”Р”</span>
                     </div>
                     <div><input name="enddate" type="text" style="width:99%" <?php if(@!$mod['is_end']) { echo 'value="'.date('Y-m-d').'"'; } else { echo 'value="'.$mod['enddate'].'"'; } ?>id="enddate" /></div>
                     
@@ -707,30 +707,30 @@ function applet_content(){
                     {tab=SEO}
 
                     <div style="margin-top:5px">
-                        <strong>Заголовок страницы</strong><br/>
-                        <span class="hinttext">Если не указан, будет совпадать с названием</span>
+                        <strong>Р—Р°РіРѕР»РѕРІРѕРє СЃС‚СЂР°РЅРёС†С‹</strong><br/>
+                        <span class="hinttext">Р•СЃР»Рё РЅРµ СѓРєР°Р·Р°РЅ, Р±СѓРґРµС‚ СЃРѕРІРїР°РґР°С‚СЊ СЃ РЅР°Р·РІР°РЅРёРµРј</span>
                     </div>
                     <div>
                         <input name="pagetitle" type="text" id="pagetitle" style="width:99%" value="<?php if (isset($mod['pagetitle'])) { echo htmlspecialchars($mod['pagetitle']); } ?>" />
                     </div>
 
                     <div style="margin-top:20px">
-                        <strong>Ключевые слова</strong><br/>
-                        <span class="hinttext">Через запятую, 10-15 слов</span>
+                        <strong>РљР»СЋС‡РµРІС‹Рµ СЃР»РѕРІР°</strong><br/>
+                        <span class="hinttext">Р§РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ, 10-15 СЃР»РѕРІ</span>
                     </div>
                     <div>
                          <textarea name="meta_keys" style="width:97%" rows="2" id="meta_keys"><?php echo htmlspecialchars($mod['meta_keys']);?></textarea>
                     </div>
 
                     <div style="margin-top:20px">
-                        <strong>Описание</strong><br/>
-                        <span class="hinttext">Не более 250 символов</span>
+                        <strong>РћРїРёСЃР°РЅРёРµ</strong><br/>
+                        <span class="hinttext">РќРµ Р±РѕР»РµРµ 250 СЃРёРјРІРѕР»РѕРІ</span>
                     </div>
                     <div>
                          <textarea name="meta_desc" style="width:97%" rows="4" id="meta_desc"><?php echo htmlspecialchars($mod['meta_desc']);?></textarea>
                     </div>
 
-                    {tab=Доступ}
+                    {tab=Р”РѕСЃС‚СѓРї}
 
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist" style="margin-top:5px">
                         <tr>
@@ -759,20 +759,20 @@ function applet_content(){
                                 ?>
                                 <input name="is_public" type="checkbox" id="is_public" onclick="checkGroupList()" value="1" <?php echo $public?> />
                             </td>
-                            <td><label for="is_public"><strong>Общий доступ</strong></label></td>
+                            <td><label for="is_public"><strong>РћР±С‰РёР№ РґРѕСЃС‚СѓРї</strong></label></td>
                         </tr>
                     </table>
                     <div style="padding:5px">
                         <span class="hinttext">
-                            Если отмечено, материал виден всем посетителям. Снимите галочку, чтобы вручную выбрать разрешенные группы пользователей.
+                            Р•СЃР»Рё РѕС‚РјРµС‡РµРЅРѕ, РјР°С‚РµСЂРёР°Р» РІРёРґРµРЅ РІСЃРµРј РїРѕСЃРµС‚РёС‚РµР»СЏРј. РЎРЅРёРјРёС‚Рµ РіР°Р»РѕС‡РєСѓ, С‡С‚РѕР±С‹ РІСЂСѓС‡РЅСѓСЋ РІС‹Р±СЂР°С‚СЊ СЂР°Р·СЂРµС€РµРЅРЅС‹Рµ РіСЂСѓРїРїС‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№.
                         </span>
                     </div>
 
                     <div style="margin-top:10px;padding:5px;padding-right:0px;" id="grp">
                         <div>
-                            <strong>Показывать группам:</strong><br />
+                            <strong>РџРѕРєР°Р·С‹РІР°С‚СЊ РіСЂСѓРїРїР°Рј:</strong><br />
                             <span class="hinttext">
-                                Можно выбрать несколько, удерживая CTRL.
+                                РњРѕР¶РЅРѕ РІС‹Р±СЂР°С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ, СѓРґРµСЂР¶РёРІР°СЏ CTRL.
                             </span>
                         </div>
                         <div>
@@ -808,8 +808,8 @@ function applet_content(){
         </table>
 
         <p>
-            <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add') { echo 'value="Создать материал"'; } else { echo 'value="Сохранить материал"'; } ?> />
-            <input name="back" type="button" id="back" value="Отмена" onclick="window.history.back();"/>
+            <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add') { echo 'value="РЎРѕР·РґР°С‚СЊ РјР°С‚РµСЂРёР°Р»"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ РјР°С‚РµСЂРёР°Р»"'; } ?> />
+            <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.history.back();"/>
             <input name="do" type="hidden" id="do" <?php if ($do=='add') { echo 'value="submit"'; } else { echo 'value="update"'; } ?> />
             <?php
                 if ($do=='edit'){

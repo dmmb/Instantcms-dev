@@ -29,10 +29,10 @@ function mod_forum($module_id){
 		if (!isset($cfg['show_pinned'])) { $cfg['show_pinned'] = 0; }
         $forumcfg = $inCore->loadComponentConfig('forum');
 
-		// категории форумов
+		// РєР°С‚РµРіРѕСЂРёРё С„РѕСЂСѓРјРѕРІ
 		$cats_sql = $cfg['cat_id'] ? "INNER JOIN cms_forum_cats cat ON cat.id = f.category_id AND cat.id = '{$cfg['cat_id']}'" : '';
 
-		// форумы
+		// С„РѕСЂСѓРјС‹
 		$catsql = '';
 		if($cfg['forum_id']){
 			if (!$cfg['subs']){

@@ -2,13 +2,13 @@
 <backend>    
     <module>
         <id>mod_userfiles</id>
-        <title>Файлы пользователей</title>
+        <title>Р¤Р°Р№Р»С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</title>
     </module>
     <params>
-        <param type="flag" name="sw_latest" title="Показывать новые файлы" default="on" />
-        <param type="number" name="num_latest" title="Количество новых файлов" units="шт." default="5" />
-        <param type="flag" name="sw_popular" title="Показывать популярные файлы" default="on" />
-        <param type="number" name="num_popular" title="Количество популярных файлов" units="шт." default="5" />
-        <param type="flag" name="sw_stats" title="Показывать счетчик файлов" default="on" />
+        <param type="flag" name="sw_latest" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РЅРѕРІС‹Рµ С„Р°Р№Р»С‹" default="on" />
+        <param type="number" name="num_latest" title="РљРѕР»РёС‡РµСЃС‚РІРѕ РЅРѕРІС‹С… С„Р°Р№Р»РѕРІ" units="С€С‚." default="5" />
+        <param type="flag" name="sw_popular" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РїРѕРїСѓР»СЏСЂРЅС‹Рµ С„Р°Р№Р»С‹" default="on" />
+        <param type="number" name="num_popular" title="РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕРїСѓР»СЏСЂРЅС‹С… С„Р°Р№Р»РѕРІ" units="С€С‚." default="5" />
+        <param type="flag" name="sw_stats" title="РџРѕРєР°Р·С‹РІР°С‚СЊ СЃС‡РµС‚С‡РёРє С„Р°Р№Р»РѕРІ" default="on" />
     </params>
 </backend>

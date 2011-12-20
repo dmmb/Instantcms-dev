@@ -19,15 +19,15 @@ class p_hidetext extends cmsPlugin {
         
         parent::__construct();
 
-        // Информация о плагине
+        // РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїР»Р°РіРёРЅРµ
 
         $this->info['plugin']           = 'p_hidetext';
-        $this->info['title']            = 'Скрытый текст';
-        $this->info['description']      = 'Скрывает содержимое тега [hide] от незарегистрированных';
+        $this->info['title']            = 'РЎРєСЂС‹С‚С‹Р№ С‚РµРєСЃС‚';
+        $this->info['description']      = 'РЎРєСЂС‹РІР°РµС‚ СЃРѕРґРµСЂР¶РёРјРѕРµ С‚РµРіР° [hide] РѕС‚ РЅРµР·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹С…';
         $this->info['author']           = 'InstantCMS Team';
         $this->info['version']          = '1.0';
 
-        // События, которые будут отлавливаться плагином
+        // РЎРѕР±С‹С‚РёСЏ, РєРѕС‚РѕСЂС‹Рµ Р±СѓРґСѓС‚ РѕС‚Р»Р°РІР»РёРІР°С‚СЊСЃСЏ РїР»Р°РіРёРЅРѕРј
 
         $this->events[]                 = 'GET_POSTS';
         $this->events[]                 = 'GET_POST';
@@ -42,7 +42,7 @@ class p_hidetext extends cmsPlugin {
 // ==================================================================== //
 
     /**
-     * Процедура установки плагина
+     * РџСЂРѕС†РµРґСѓСЂР° СѓСЃС‚Р°РЅРѕРІРєРё РїР»Р°РіРёРЅР°
      * @return bool
      */
     public function install(){
@@ -54,7 +54,7 @@ class p_hidetext extends cmsPlugin {
 // ==================================================================== //
 
     /**
-     * Процедура обновления плагина
+     * РџСЂРѕС†РµРґСѓСЂР° РѕР±РЅРѕРІР»РµРЅРёСЏ РїР»Р°РіРёРЅР°
      * @return bool
      */
     public function upgrade(){
@@ -66,7 +66,7 @@ class p_hidetext extends cmsPlugin {
 // ==================================================================== //
 
     /**
-     * Обработка событий
+     * РћР±СЂР°Р±РѕС‚РєР° СЃРѕР±С‹С‚РёР№
      * @param string $event
      * @param mixed $item
      * @return mixed
@@ -96,7 +96,7 @@ class p_hidetext extends cmsPlugin {
         $inUser = cmsUser::getInstance();
 
         $pattern        = '/\[hide\](.*?)\[\/hide\]/i';
-        $hidden_text    = 'Скрытый текст виден только <a href="/registration">зарегистрированным</a> пользователям';
+        $hidden_text    = 'РЎРєСЂС‹С‚С‹Р№ С‚РµРєСЃС‚ РІРёРґРµРЅ С‚РѕР»СЊРєРѕ <a href="/registration">Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹Рј</a> РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј';
 
         if (!$inUser->id){
             $replacement = '<div class="bb_tag_hide">'.$hidden_text.'</div>';

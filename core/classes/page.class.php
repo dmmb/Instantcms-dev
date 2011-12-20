@@ -44,7 +44,7 @@ class cmsPage {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Добавляет указанный тег в <head> страницы
+ * Р”РѕР±Р°РІР»СЏРµС‚ СѓРєР°Р·Р°РЅРЅС‹Р№ С‚РµРі РІ <head> СЃС‚СЂР°РЅРёС†С‹
  * @param string $tag
  * @return true
  */
@@ -55,8 +55,8 @@ public function addHead($tag){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Добавляет тег <script> с указанным путем
- * @param string $src - Первый слеш не требуется
+ * Р”РѕР±Р°РІР»СЏРµС‚ С‚РµРі <script> СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РїСѓС‚РµРј
+ * @param string $src - РџРµСЂРІС‹Р№ СЃР»РµС€ РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ
  * @return true
  */
 public function addHeadJS($src){
@@ -71,8 +71,8 @@ public function addHeadJS($src){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Добавляет тег <link> с указанным путем к CSS-файлу
- * @param string $src - Первый слеш не требуется
+ * Р”РѕР±Р°РІР»СЏРµС‚ С‚РµРі <link> СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РїСѓС‚РµРј Рє CSS-С„Р°Р№Р»Сѓ
+ * @param string $src - РџРµСЂРІС‹Р№ СЃР»РµС€ РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ
  * @return true
  */
 public function addHeadCSS($src){
@@ -87,7 +87,7 @@ public function addHeadCSS($src){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Возвращает заголовок главной страницы
+ * Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·Р°РіРѕР»РѕРІРѕРє РіР»Р°РІРЅРѕР№ СЃС‚СЂР°РЅРёС†С‹
  * @global array $_CFG
  * @return string
  */
@@ -102,7 +102,7 @@ public function homeTitle(){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Устанавливает заголовок страницы
+ * РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р·Р°РіРѕР»РѕРІРѕРє СЃС‚СЂР°РЅРёС†С‹
  */
 public function setTitle($title=''){
     $this->title = $title;
@@ -111,7 +111,7 @@ public function setTitle($title=''){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Выводит заголовок h1 на странице
+ * Р’С‹РІРѕРґРёС‚ Р·Р°РіРѕР»РѕРІРѕРє h1 РЅР° СЃС‚СЂР°РЅРёС†Рµ
  */
 public function printHeading($heading=''){
     echo '<h1 class="con_heading">'.htmlspecialchars($heading).'</h1>';
@@ -120,7 +120,7 @@ public function printHeading($heading=''){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Устанавливает ключевые слова страницы
+ * РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РєР»СЋС‡РµРІС‹Рµ СЃР»РѕРІР° СЃС‚СЂР°РЅРёС†С‹
  */
 public function setKeywords($keywords){
     $this->page_keys = $keywords;
@@ -128,7 +128,7 @@ public function setKeywords($keywords){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Устанавливает описание страницы
+ * РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РѕРїРёСЃР°РЅРёРµ СЃС‚СЂР°РЅРёС†С‹
  */
 public function setDescription($text){
     $this->page_desc = $text;
@@ -136,7 +136,7 @@ public function setDescription($text){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Печатает название сайта из конфига
+ * РџРµС‡Р°С‚Р°РµС‚ РЅР°Р·РІР°РЅРёРµ СЃР°Р№С‚Р° РёР· РєРѕРЅС„РёРіР°
  * @return true
  */
 public function printSitename(){
@@ -147,7 +147,7 @@ public function printSitename(){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Включает/выключает показ ссылки "Назад" внизу страницы
+ * Р’РєР»СЋС‡Р°РµС‚/РІС‹РєР»СЋС‡Р°РµС‚ РїРѕРєР°Р· СЃСЃС‹Р»РєРё "РќР°Р·Р°Рґ" РІРЅРёР·Сѓ СЃС‚СЂР°РЅРёС†С‹
  * @return true
  */
 public function backButton($show=true){
@@ -157,7 +157,7 @@ public function backButton($show=true){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Печатает головную область страницы
+ * РџРµС‡Р°С‚Р°РµС‚ РіРѕР»РѕРІРЅСѓСЋ РѕР±Р»Р°СЃС‚СЊ СЃС‚СЂР°РЅРёС†С‹
  */
 public function printHead(){
 
@@ -168,39 +168,39 @@ public function printHead(){
 
     ob_start();
     
-    //Заголовок
+    //Р—Р°РіРѕР»РѕРІРѕРє
     $title = strip_tags($this->title);
     $title = ($inCore->menuId()==1 ? $this->homeTitle() : $title.' - '.$inConf->sitename);
     echo '<title>'.htmlspecialchars($title).'</title>' ."\n";
-    //Ключевые слова
+    //РљР»СЋС‡РµРІС‹Рµ СЃР»РѕРІР°
     if (!$this->page_keys) { $this->page_keys = $inConf->keywords; }
     echo '<meta name="keywords" content="'.htmlspecialchars($this->page_keys).'" />' ."\n";
-    //Описание
+    //РћРїРёСЃР°РЅРёРµ
     if (!$this->page_desc) { $this->page_desc = $inConf->metadesc; }
     echo '<meta name="description" content="'.htmlspecialchars($this->page_desc).'" />' ."\n";
-    //Генератор
+    //Р“РµРЅРµСЂР°С‚РѕСЂ
     echo '<meta name="generator" content="InstantCMS - www.instantcms.ru"/>' ."\n";
 
-    //jQuery библиотека
+    //jQuery Р±РёР±Р»РёРѕС‚РµРєР°
     echo '<script type="text/javascript" src="/includes/jquery/jquery.js"></script>' ."\n";
-    //JS-функции ядра
+    //JS-С„СѓРЅРєС†РёРё СЏРґСЂР°
     echo '<script type="text/javascript" src="/core/js/common.js"></script>' ."\n";
 
-    //Остальные JS-файлы
+    //РћСЃС‚Р°Р»СЊРЅС‹Рµ JS-С„Р°Р№Р»С‹
     foreach($this->page_head as $key=>$value) {
         if(strstr($this->page_head[$key], '<script')) {
             echo $this->page_head[$key] ."\n"; unset($this->page_head[$key]);
         }
     }
 
-    //CSS-файлы
+    //CSS-С„Р°Р№Р»С‹
     foreach($this->page_head as $key=>$value) {
         if(strstr($this->page_head[$key], '<link')) {
             echo $this->page_head[$key] ."\n"; unset($this->page_head[$key]);
         }
     }
 
-    //Оставшиеся теги
+    //РћСЃС‚Р°РІС€РёРµСЃСЏ С‚РµРіРё
     foreach($this->page_head as $key=>$value) { echo $this->page_head[$key] ."\n"; }
     
     echo ob_get_clean();
@@ -209,7 +209,7 @@ public function printHead(){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Печатает подвал страницы
+ * РџРµС‡Р°С‚Р°РµС‚ РїРѕРґРІР°Р» СЃС‚СЂР°РЅРёС†С‹
  * @global array $_CFG
  */
 public function printFooter(){
@@ -217,14 +217,14 @@ public function printFooter(){
     $currentYear = date('Y');
     echo '<div id="footer" align="center"><a href="/" title="'.$_CFG['sitename'].'">'.$_CFG['sitename'].'</a> &copy; '.$currentYear;
         echo '<br/>';
-        echo 'Сайт работает на <a href="http://www.instantcms.ru/">InstantCMS</a> v'.CORE_VERSION.'<br/>';
+        echo 'РЎР°Р№С‚ СЂР°Р±РѕС‚Р°РµС‚ РЅР° <a href="http://www.instantcms.ru/">InstantCMS</a> v'.CORE_VERSION.'<br/>';
     echo '<div>';
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Выводит тело страницы (результат работы компонента)
+ * Р’С‹РІРѕРґРёС‚ С‚РµР»Рѕ СЃС‚СЂР°РЅРёС†С‹ (СЂРµР·СѓР»СЊС‚Р°С‚ СЂР°Р±РѕС‚С‹ РєРѕРјРїРѕРЅРµРЅС‚Р°)
  * @global array $_CFG
  */
 public function printBody(){
@@ -246,7 +246,7 @@ public function printBody(){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Печатает глубиномер
+ * РџРµС‡Р°С‚Р°РµС‚ РіР»СѓР±РёРЅРѕРјРµСЂ
  * @param string $separator
  */
 public function printPathway($separator='&rarr;'){
@@ -254,7 +254,7 @@ public function printPathway($separator='&rarr;'){
     $inCore = cmsCore::getInstance();
     $inConf = cmsConfig::getInstance();
 
-    //Проверяем, на главной мы или нет
+    //РџСЂРѕРІРµСЂСЏРµРј, РЅР° РіР»Р°РІРЅРѕР№ РјС‹ РёР»Рё РЅРµС‚
     if (($inCore->menuId()==1 && !$inConf->index_pw) || !$inConf->show_pw) { return false; }
 
     if ($inConf->short_pw){ unset($this->pathway[sizeof($this->pathway)-1]); }
@@ -274,22 +274,22 @@ public function printPathway($separator='&rarr;'){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Добавляет звено к глубиномеру
+ * Р”РѕР±Р°РІР»СЏРµС‚ Р·РІРµРЅРѕ Рє РіР»СѓР±РёРЅРѕРјРµСЂСѓ
  * @param string $title
  * @param string $link
  * @return bool
  */
 public function addPathway($title, $link=''){
-    //Если ссылка не указана, берем текущий URI
+    //Р•СЃР»Рё СЃСЃС‹Р»РєР° РЅРµ СѓРєР°Р·Р°РЅР°, Р±РµСЂРµРј С‚РµРєСѓС‰РёР№ URI
     if (empty($link)) { $link = $_SERVER['REQUEST_URI']; }
-    //Проверяем, есть ли уже в глубиномере такое звено
+    //РџСЂРѕРІРµСЂСЏРµРј, РµСЃС‚СЊ Р»Рё СѓР¶Рµ РІ РіР»СѓР±РёРЅРѕРјРµСЂРµ С‚Р°РєРѕРµ Р·РІРµРЅРѕ
     $already = false;
     foreach($this->pathway as $key => $val){
         if ($this->pathway[$key]['link'] == $link){
             $already = true;
         }
     }
-    //Если такого звена еще нет, добавляем его
+    //Р•СЃР»Рё С‚Р°РєРѕРіРѕ Р·РІРµРЅР° РµС‰Рµ РЅРµС‚, РґРѕР±Р°РІР»СЏРµРј РµРіРѕ
     if(!$already){
         $this->pathway[] = array('title'=>$title, 'link'=>$link);
     }
@@ -298,7 +298,7 @@ public function addPathway($title, $link=''){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Добавляет к глубиномеру путь до указанного пункта меню
+ * Р”РѕР±Р°РІР»СЏРµС‚ Рє РіР»СѓР±РёРЅРѕРјРµСЂСѓ РїСѓС‚СЊ РґРѕ СѓРєР°Р·Р°РЅРЅРѕРіРѕ РїСѓРЅРєС‚Р° РјРµРЅСЋ
  * @param int $menuid
  */
 public function addMenuPathway($menuid){
@@ -306,7 +306,7 @@ public function addMenuPathway($menuid){
     $inCore = cmsCore::getInstance();
     $inDB   = cmsDatabase::getInstance();
 
-    //Получаем путь к пункту меню
+    //РџРѕР»СѓС‡Р°РµРј РїСѓС‚СЊ Рє РїСѓРЅРєС‚Сѓ РјРµРЅСЋ
     $rs_item = $inDB->query("SELECT NSLeft, NSRight FROM cms_menu WHERE id = '$menuid'");
 
     if ($inDB->num_rows($rs_item)){
@@ -335,9 +335,9 @@ public function addMenuPathway($menuid){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Выводит на экран шаблон сайта
- * Какой именно шаблон выводить определяют константы TEMPLATE и TEMPLATE_DIR
- * Эти константы задаются в файле /index.php
+ * Р’С‹РІРѕРґРёС‚ РЅР° СЌРєСЂР°РЅ С€Р°Р±Р»РѕРЅ СЃР°Р№С‚Р°
+ * РљР°РєРѕР№ РёРјРµРЅРЅРѕ С€Р°Р±Р»РѕРЅ РІС‹РІРѕРґРёС‚СЊ РѕРїСЂРµРґРµР»СЏСЋС‚ РєРѕРЅСЃС‚Р°РЅС‚С‹ TEMPLATE Рё TEMPLATE_DIR
+ * Р­С‚Рё РєРѕРЅСЃС‚Р°РЅС‚С‹ Р·Р°РґР°СЋС‚СЃСЏ РІ С„Р°Р№Р»Рµ /index.php
  */
 public function showTemplate(){
 
@@ -355,16 +355,16 @@ public function showTemplate(){
         return; 
     }
     
-    $inCore->halt('Шаблон "'.TEMPLATE.'" не найден.');
+    $inCore->halt('РЁР°Р±Р»РѕРЅ "'.TEMPLATE.'" РЅРµ РЅР°Р№РґРµРЅ.');
 
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Подключает файл из папки с шаблоном
- * Если в папке текущего шаблона такой файл не найден, ищет в дефолтном
- * @param string $file, например "special/error404.html"
+ * РџРѕРґРєР»СЋС‡Р°РµС‚ С„Р°Р№Р» РёР· РїР°РїРєРё СЃ С€Р°Р±Р»РѕРЅРѕРј
+ * Р•СЃР»Рё РІ РїР°РїРєРµ С‚РµРєСѓС‰РµРіРѕ С€Р°Р±Р»РѕРЅР° С‚Р°РєРѕР№ С„Р°Р№Р» РЅРµ РЅР°Р№РґРµРЅ, РёС‰РµС‚ РІ РґРµС„РѕР»С‚РЅРѕРј
+ * @param string $file, РЅР°РїСЂРёРјРµСЂ "special/error404.html"
  * @return <type>
  */
 public function includeTemplateFile($file){
@@ -430,7 +430,7 @@ public function countModules($position){
 
     while($mod = $inDB->fetch_assoc($result)){
 
-		// Проверяем права доступа
+		// РџСЂРѕРІРµСЂСЏРµРј РїСЂР°РІР° РґРѕСЃС‚СѓРїР°
 		if (!$inCore->checkContentAccess($mod['access_list'])) { continue; }
 		$mods[] = $mod;
 		
@@ -441,7 +441,7 @@ public function countModules($position){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Выводит модули для указанной позиции и текущего пункта меню
+ * Р’С‹РІРѕРґРёС‚ РјРѕРґСѓР»Рё РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕР№ РїРѕР·РёС†РёРё Рё С‚РµРєСѓС‰РµРіРѕ РїСѓРЅРєС‚Р° РјРµРЅСЋ
  * @param string $position
  * @return html
  */
@@ -454,16 +454,16 @@ public function printModules($position){
     global $_CFG;
     global $_LANG;
 
-    //Получаем id пункта меню
+    //РџРѕР»СѓС‡Р°РµРј id РїСѓРЅРєС‚Р° РјРµРЅСЋ
     $menuid = $inCore->menuId();
 
-    // Проверяем позиции
+    // РџСЂРѕРІРµСЂСЏРµРј РїРѕР·РёС†РёРё
     if (!$position) { return false; }
     if ($position=='top' && @$_REQUEST['view']=='search') { return true; }
 
     if (!$inCore->isMenuIdStrict()){ $strict_sql = "AND (m.is_strict_bind = 0)"; } else { $strict_sql = ""; }
 
-    // Получаем все модули на позицию
+    // РџРѕР»СѓС‡Р°РµРј РІСЃРµ РјРѕРґСѓР»Рё РЅР° РїРѕР·РёС†РёСЋ
     $sql = "SELECT *, m.id as mid, m.template as tpl
             FROM cms_modules m, cms_modules_bind mb
             WHERE (mb.position = '$position') AND
@@ -480,7 +480,7 @@ public function printModules($position){
 
 	while ($mod = $inDB->fetch_assoc($result)){
 		
-		// Проверяем права доступа
+		// РџСЂРѕРІРµСЂСЏРµРј РїСЂР°РІР° РґРѕСЃС‚СѓРїР°
 		if (!$inCore->checkContentAccess($mod['access_list'])) { continue; }
 		
 		$modulefile = PATH.'/modules/'.$mod['content'].'/module.php';
@@ -549,7 +549,7 @@ public function printModules($position){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Возвращает html-код каптчи
+ * Р’РѕР·РІСЂР°С‰Р°РµС‚ html-РєРѕРґ РєР°РїС‚С‡Рё
  * @param string $input_name
  * @return html
  */
@@ -562,9 +562,9 @@ public static function getCaptcha($input_name='code'){
             <tr>
                 <td valign="middle" width="130"><img id="<?php echo $input_id; ?>" class="captcha" src="/includes/codegen/cms_codegen.php" border="0" /></td>
                 <td valign="middle">
-                    <div>Введите код:</div>
+                    <div>Р’РІРµРґРёС‚Рµ РєРѕРґ:</div>
                     <div><input name="<?php echo $input_name; ?>" type="text" style="width:120px" /></div>
-                    <div><a href="javascript:reloadCaptcha('<?php echo $input_id;  ?>')"><small>Обновить картинку</small></a></div>
+                    <div><a href="javascript:reloadCaptcha('<?php echo $input_id;  ?>')"><small>РћР±РЅРѕРІРёС‚СЊ РєР°СЂС‚РёРЅРєСѓ</small></a></div>
                 </td>
             </tr>
         </table>
@@ -576,7 +576,7 @@ public static function getCaptcha($input_name='code'){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Генерирует и возращает html-код указанной формы из конструктора форм
+ * Р“РµРЅРµСЂРёСЂСѓРµС‚ Рё РІРѕР·СЂР°С‰Р°РµС‚ html-РєРѕРґ СѓРєР°Р·Р°РЅРЅРѕР№ С„РѕСЂРјС‹ РёР· РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° С„РѕСЂРј
  * @param int $form_id
  * @param bool $admin
  * @param bool $showtitle
@@ -615,9 +615,9 @@ public function buildForm($form_id, $admin=false, $showtitle=true){
 				$html .= $field['title'];
 				if ($field['mustbe']) { $html .= '<span style="color:red;font-size:20px">*</span>'; }
 				if($admin) {
-					$html .= '<a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=del_field&form_id='.$form_id.'&item_id='.$field['id'].'" title="Удалить"><img src="/admin/images/actions/delete.gif" border="0" /></a>';
-					$html .= '<a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=up_field&form_id='.$form_id.'&item_id='.$field['id'].'" title="Переместить вверх"><img src="/admin/images/actions/top.gif" border="0" /></a>';
-					$html .= '<a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=down_field&form_id='.$form_id.'&item_id='.$field['id'].'" title="Переместить вниз"><img src="/admin/images/actions/down.gif" border="0" /></a>';
+					$html .= '<a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=del_field&form_id='.$form_id.'&item_id='.$field['id'].'" title="РЈРґР°Р»РёС‚СЊ"><img src="/admin/images/actions/delete.gif" border="0" /></a>';
+					$html .= '<a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=up_field&form_id='.$form_id.'&item_id='.$field['id'].'" title="РџРµСЂРµРјРµСЃС‚РёС‚СЊ РІРІРµСЂС…"><img src="/admin/images/actions/top.gif" border="0" /></a>';
+					$html .= '<a href="?view=components&do=config&id='.$_REQUEST['id'].'&opt=down_field&form_id='.$form_id.'&item_id='.$field['id'].'" title="РџРµСЂРµРјРµСЃС‚РёС‚СЊ РІРЅРёР·"><img src="/admin/images/actions/down.gif" border="0" /></a>';
 				}
 			$html .= '</td></tr>';
 			$html .= '<tr><td>'.$this->buildFormField($form_id, $field).'</td></tr>';
@@ -629,13 +629,13 @@ public function buildForm($form_id, $admin=false, $showtitle=true){
 			$html .= '</td></tr>';
 			//Submit buttons
 			$html .= '<tr><td><div style="margin-top:10px">';
-				$html .= '<input type="submit" value="Отправить" /> ';
-				$html .= '<input type="reset" value="Очистить" />';
+				$html .= '<input type="submit" value="РћС‚РїСЂР°РІРёС‚СЊ" /> ';
+				$html .= '<input type="reset" value="РћС‡РёСЃС‚РёС‚СЊ" />';
 			$html .= '</div></td></tr>';
 		}
 		$html .= '</table>';
 
-	} else { $html .= '<p>В форме нет полей.</p>'; }
+	} else { $html .= '<p>Р’ С„РѕСЂРјРµ РЅРµС‚ РїРѕР»РµР№.</p>'; }
 
 	$html .= '</form>';
 
@@ -648,7 +648,7 @@ public function buildForm($form_id, $admin=false, $showtitle=true){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Генерирует и возращает html-код поля формы
+ * Р“РµРЅРµСЂРёСЂСѓРµС‚ Рё РІРѕР·СЂР°С‰Р°РµС‚ html-РєРѕРґ РїРѕР»СЏ С„РѕСЂРјС‹
  * @param array $field
  * @param string $default
  * @return html
@@ -687,12 +687,12 @@ public function buildFormField($form_id, $field, $default=''){
                                              cols="'.$cfg['size'].'"
                                              rows="'.$cfg['rows'].'" style="'.$style.'">'.htmlspecialchars($cfg['default']).'</textarea>';
                          break;
-        case 'checkbox':  $html .= '<label><input type="radio" name="field['.$field['id'].']" value="Да" ';
-                          if($cfg['default']=='Да') { $html .= 'checked'; }
-                          $html .= '/>Да</label> ';
-                          $html .= '<label><input type="radio" name="field['.$field['id'].']" value="Нет" ';
-                          if($cfg['default']=='Нет') { $html .= 'checked'; }
-                          $html .= '/>Нет</label> ';
+        case 'checkbox':  $html .= '<label><input type="radio" name="field['.$field['id'].']" value="Р”Р°" ';
+                          if($cfg['default']=='Р”Р°') { $html .= 'checked'; }
+                          $html .= '/>Р”Р°</label> ';
+                          $html .= '<label><input type="radio" name="field['.$field['id'].']" value="РќРµС‚" ';
+                          if($cfg['default']=='РќРµС‚') { $html .= 'checked'; }
+                          $html .= '/>РќРµС‚</label> ';
                          break;
         case 'radiogroup': $items = explode('/', $cfg['items']);
                            foreach($items as $i){
@@ -729,7 +729,7 @@ public function buildFormField($form_id, $field, $default=''){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Разбивает текст на слова и делает каждое слово ссылкой, добавляя в его начало $link
+ * Р Р°Р·Р±РёРІР°РµС‚ С‚РµРєСЃС‚ РЅР° СЃР»РѕРІР° Рё РґРµР»Р°РµС‚ РєР°Р¶РґРѕРµ СЃР»РѕРІРѕ СЃСЃС‹Р»РєРѕР№, РґРѕР±Р°РІР»СЏСЏ РІ РµРіРѕ РЅР°С‡Р°Р»Рѕ $link
  * @param string $link
  * @param string $text
  * @return html
@@ -767,7 +767,7 @@ public static function getMetaSearchLink($link, $text){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Возвращает html-код панели для вставки BBCode
+ * Р’РѕР·РІСЂР°С‰Р°РµС‚ html-РєРѕРґ РїР°РЅРµР»Рё РґР»СЏ РІСЃС‚Р°РІРєРё BBCode
  * @param string $field_id
  * @param bool $images
  * @param string $placekind
@@ -782,100 +782,100 @@ public static function getBBCodeToolbar($field_id, $images=0, $placekind='forum'
     $inPage->addHeadJS('core/js/smiles.js');
     $inPage->addHeadJS('includes/jquery/upload/ajaxfileupload.js');
 
-    $html = '<a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[b]\', \'[/b]\')" title="Жирный">
-                <img src="/includes/bbcode/images/b.png" border="0" alt="Жирный" />
+    $html = '<a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[b]\', \'[/b]\')" title="Р–РёСЂРЅС‹Р№">
+                <img src="/includes/bbcode/images/b.png" border="0" alt="Р–РёСЂРЅС‹Р№" />
              </a>
-             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[i]\', \'[/i]\')" title="Курсив">
-                <img src="/includes/bbcode/images/i.png" border="0" alt="Курсив" />
+             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[i]\', \'[/i]\')" title="РљСѓСЂСЃРёРІ">
+                <img src="/includes/bbcode/images/i.png" border="0" alt="РљСѓСЂСЃРёРІ" />
              </a>
-             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[u]\', \'[/u]\')"  title="Подчеркнутый">
-                <img src="/includes/bbcode/images/u.png" border="0" alt="Подчеркнутый" />
+             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[u]\', \'[/u]\')"  title="РџРѕРґС‡РµСЂРєРЅСѓС‚С‹Р№">
+                <img src="/includes/bbcode/images/u.png" border="0" alt="РџРѕРґС‡РµСЂРєРЅСѓС‚С‹Р№" />
              </a>
-             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[s]\', \'[/s]\')"  title="Зачеркнутый">
-                <img src="/includes/bbcode/images/s.png" border="0" alt="Зачеркнутый" />
+             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[s]\', \'[/s]\')"  title="Р—Р°С‡РµСЂРєРЅСѓС‚С‹Р№">
+                <img src="/includes/bbcode/images/s.png" border="0" alt="Р—Р°С‡РµСЂРєРЅСѓС‚С‹Р№" />
              </a>
-             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[align=left]\', \'[/align]\')" title="По левому краю">
-                <img src="/includes/bbcode/images/align_left.png" border="0" alt="По левому краю" />
+             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[align=left]\', \'[/align]\')" title="РџРѕ Р»РµРІРѕРјСѓ РєСЂР°СЋ">
+                <img src="/includes/bbcode/images/align_left.png" border="0" alt="РџРѕ Р»РµРІРѕРјСѓ РєСЂР°СЋ" />
              </a>
-             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[align=center]\', \'[/align]\')" title="По центру">
-                <img src="/includes/bbcode/images/align_center.png" border="0" alt="По центру" />
+             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[align=center]\', \'[/align]\')" title="РџРѕ С†РµРЅС‚СЂСѓ">
+                <img src="/includes/bbcode/images/align_center.png" border="0" alt="РџРѕ С†РµРЅС‚СЂСѓ" />
              </a>
-             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[align=right]\', \'[/align]\')" title="По правому краю">
-                <img src="/includes/bbcode/images/align_right.png" border="0" alt="По правому краю" />
+             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[align=right]\', \'[/align]\')" title="РџРѕ РїСЂР°РІРѕРјСѓ РєСЂР°СЋ">
+                <img src="/includes/bbcode/images/align_right.png" border="0" alt="РџРѕ РїСЂР°РІРѕРјСѓ РєСЂР°СЋ" />
              </a>
-             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[h1]\', \'[/h1]\')" title="Большой заголовок">
-                <img src="/includes/bbcode/images/h1.png" border="0" alt="Большой заголовок" />
+             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[h1]\', \'[/h1]\')" title="Р‘РѕР»СЊС€РѕР№ Р·Р°РіРѕР»РѕРІРѕРє">
+                <img src="/includes/bbcode/images/h1.png" border="0" alt="Р‘РѕР»СЊС€РѕР№ Р·Р°РіРѕР»РѕРІРѕРє" />
              </a>
-             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[h2]\', \'[/h2]\')" title="Средний заголовок">
-                <img src="/includes/bbcode/images/h2.png" border="0" alt="Средний заголовок" />
+             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[h2]\', \'[/h2]\')" title="РЎСЂРµРґРЅРёР№ Р·Р°РіРѕР»РѕРІРѕРє">
+                <img src="/includes/bbcode/images/h2.png" border="0" alt="РЎСЂРµРґРЅРёР№ Р·Р°РіРѕР»РѕРІРѕРє" />
              </a>
-             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[h3]\', \'[/h3]\')" title="Маленький заголовок">
-                <img src="/includes/bbcode/images/h3.png" border="0" alt="Маленький заголовок" />
+             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[h3]\', \'[/h3]\')" title="РњР°Р»РµРЅСЊРєРёР№ Р·Р°РіРѕР»РѕРІРѕРє">
+                <img src="/includes/bbcode/images/h3.png" border="0" alt="РњР°Р»РµРЅСЊРєРёР№ Р·Р°РіРѕР»РѕРІРѕРє" />
              </a>
-             <a class="usr_bb_button" href="javascript:addTagQuote(\''.$field_id.'\')" title="Цитата">
-                <img src="/includes/bbcode/images/quote.png" border="0" alt="Цитата" />
+             <a class="usr_bb_button" href="javascript:addTagQuote(\''.$field_id.'\')" title="Р¦РёС‚Р°С‚Р°">
+                <img src="/includes/bbcode/images/quote.png" border="0" alt="Р¦РёС‚Р°С‚Р°" />
              </a>
-             <a class="usr_bb_button" href="javascript:addTagUrl(\''.$field_id.'\')" title="Вставить ссылку">
-                <img src="/includes/bbcode/images/url.png" border="0" alt="Вставить ссылку" />
+             <a class="usr_bb_button" href="javascript:addTagUrl(\''.$field_id.'\')" title="Р’СЃС‚Р°РІРёС‚СЊ СЃСЃС‹Р»РєСѓ">
+                <img src="/includes/bbcode/images/url.png" border="0" alt="Р’СЃС‚Р°РІРёС‚СЊ СЃСЃС‹Р»РєСѓ" />
              </a>
-             <a class="usr_bb_button" href="javascript:addTagEmail(\''.$field_id.'\')" title="Вставить email">
-                <img src="/includes/bbcode/images/email.png" border="0" alt="Вставить email" />
+             <a class="usr_bb_button" href="javascript:addTagEmail(\''.$field_id.'\')" title="Р’СЃС‚Р°РІРёС‚СЊ email">
+                <img src="/includes/bbcode/images/email.png" border="0" alt="Р’СЃС‚Р°РІРёС‚СЊ email" />
              </a>
-             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[code=php]\', \'[/code]\')" title="Вставить код">
-                <img src="/includes/bbcode/images/code.png" border="0" alt="Вставить код" />
+             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[code=php]\', \'[/code]\')" title="Р’СЃС‚Р°РІРёС‚СЊ РєРѕРґ">
+                <img src="/includes/bbcode/images/code.png" border="0" alt="Р’СЃС‚Р°РІРёС‚СЊ РєРѕРґ" />
              </a>
-             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[hide]\', \'[/hide]\')" title="Вставить скрытый текст">
-                <img src="/includes/bbcode/images/hide.png" border="0" alt="Вставить скрытый текст" />
+             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[hide]\', \'[/hide]\')" title="Р’СЃС‚Р°РІРёС‚СЊ СЃРєСЂС‹С‚С‹Р№ С‚РµРєСЃС‚">
+                <img src="/includes/bbcode/images/hide.png" border="0" alt="Р’СЃС‚Р°РІРёС‚СЊ СЃРєСЂС‹С‚С‹Р№ С‚РµРєСЃС‚" />
              </a>
-             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[spoiler=Спойлер]\', \'[/spoiler]\')" title="Вставить спойлер">
-                <img src="/includes/bbcode/images/spoiler.png" border="0" alt="Вставить спойлер" />
+             <a class="usr_bb_button" href="javascript:addTag(\''.$field_id.'\', \'[spoiler=РЎРїРѕР№Р»РµСЂ]\', \'[/spoiler]\')" title="Р’СЃС‚Р°РІРёС‚СЊ СЃРїРѕР№Р»РµСЂ">
+                <img src="/includes/bbcode/images/spoiler.png" border="0" alt="Р’СЃС‚Р°РІРёС‚СЊ СЃРїРѕР№Р»РµСЂ" />
              </a>
-             <a class="usr_bb_button" href="javascript:void(0)" onclick="$(\'#smilespanel\').slideToggle(\'slow\')" title="Вставить смайл">
-                <img src="/includes/bbcode/images/smiles.png" border="0" alt="Вставить смайл" />
+             <a class="usr_bb_button" href="javascript:void(0)" onclick="$(\'#smilespanel\').slideToggle(\'slow\')" title="Р’СЃС‚Р°РІРёС‚СЊ СЃРјР°Р№Р»">
+                <img src="/includes/bbcode/images/smiles.png" border="0" alt="Р’СЃС‚Р°РІРёС‚СЊ СЃРјР°Р№Р»" />
              </a>';
 
     if ($placekind=='blogs'){
 
-        $html .= '<a class="usr_bb_button" href="javascript:addTagCut(\''.$field_id.'\')" title="Вставить конец анонса (кат)">
-                    <img src="/includes/bbcode/images/cut.png" border="0" alt="Вставить конец анонса (кат)" />
+        $html .= '<a class="usr_bb_button" href="javascript:addTagCut(\''.$field_id.'\')" title="Р’СЃС‚Р°РІРёС‚СЊ РєРѕРЅРµС† Р°РЅРѕРЅСЃР° (РєР°С‚)">
+                    <img src="/includes/bbcode/images/cut.png" border="0" alt="Р’СЃС‚Р°РІРёС‚СЊ РєРѕРЅРµС† Р°РЅРѕРЅСЃР° (РєР°С‚)" />
                   </a>';
 
     }
 
     if ($images){
-        $html .= '<a class="usr_bb_button" href="javascript:addTagVideo(\''.$field_id.'\')" title="Вставить видео">
-                    <img src="/includes/bbcode/images/video.png" border="0" alt="Вставить видео" />
+        $html .= '<a class="usr_bb_button" href="javascript:addTagVideo(\''.$field_id.'\')" title="Р’СЃС‚Р°РІРёС‚СЊ РІРёРґРµРѕ">
+                    <img src="/includes/bbcode/images/video.png" border="0" alt="Р’СЃС‚Р°РІРёС‚СЊ РІРёРґРµРѕ" />
                  </a>
-                 <a class="usr_bb_button" href="javascript:addTagAudio(\''.$field_id.'\')" title="Вставить mp3">
-                    <img src="/includes/bbcode/images/audio.png" border="0" alt="Вставить mp3" />
+                 <a class="usr_bb_button" href="javascript:addTagAudio(\''.$field_id.'\')" title="Р’СЃС‚Р°РІРёС‚СЊ mp3">
+                    <img src="/includes/bbcode/images/audio.png" border="0" alt="Р’СЃС‚Р°РІРёС‚СЊ mp3" />
                  </a>
-                 <a class="usr_bb_button" href="javascript:addTagImage(\''.$field_id.'\')" title="Вставить картинку из Сети">
-                    <img src="/includes/bbcode/images/image_link.png" border="0" alt="Вставить картинку из Сети" />
+                 <a class="usr_bb_button" href="javascript:addTagImage(\''.$field_id.'\')" title="Р’СЃС‚Р°РІРёС‚СЊ РєР°СЂС‚РёРЅРєСѓ РёР· РЎРµС‚Рё">
+                    <img src="/includes/bbcode/images/image_link.png" border="0" alt="Р’СЃС‚Р°РІРёС‚СЊ РєР°СЂС‚РёРЅРєСѓ РёР· РЎРµС‚Рё" />
                  </a>';
 		if ($inUser->id) {
 			
 			$users_cfg = $inCore->loadComponentConfig('users');
 
 			if ($users_cfg['sw_photo']){
-				$html .= '<a class="usr_bb_button" href="javascript:addAlbumImage()" title="Вставить фото из личных альбомов">
-							<img src="/includes/bbcode/images/albumimage.png" border="0" alt="Вставить фото из личных альбомов" />
+				$html .= '<a class="usr_bb_button" href="javascript:addAlbumImage()" title="Р’СЃС‚Р°РІРёС‚СЊ С„РѕС‚Рѕ РёР· Р»РёС‡РЅС‹С… Р°Р»СЊР±РѕРјРѕРІ">
+							<img src="/includes/bbcode/images/albumimage.png" border="0" alt="Р’СЃС‚Р°РІРёС‚СЊ С„РѕС‚Рѕ РёР· Р»РёС‡РЅС‹С… Р°Р»СЊР±РѕРјРѕРІ" />
 						 </a>';
 			}
 
-			$html .= '<a class="usr_bb_button" href="javascript:addImage(\''.$field_id.'\')" title="Загрузить и вставить фото">
-						<img src="/includes/bbcode/images/image.png" border="0" alt="Загрузить и вставить фото" />
+			$html .= '<a class="usr_bb_button" href="javascript:addImage(\''.$field_id.'\')" title="Р—Р°РіСЂСѓР·РёС‚СЊ Рё РІСЃС‚Р°РІРёС‚СЊ С„РѕС‚Рѕ">
+						<img src="/includes/bbcode/images/image.png" border="0" alt="Р—Р°РіСЂСѓР·РёС‚СЊ Рё РІСЃС‚Р°РІРёС‚СЊ С„РѕС‚Рѕ" />
 					 </a>
 					 <div class="usr_bb_button" id="imginsert" style="display:none">
-						<strong>Загрузить фото:</strong> <input type="file" id="attach_img" name="attach_img"/>
-						 <input type="button" name="goinsert" value="Вставить" onclick="loadImage(\''.$field_id.'\', \''.session_id().'\', \''.$placekind.'\')" />
+						<strong>Р—Р°РіСЂСѓР·РёС‚СЊ С„РѕС‚Рѕ:</strong> <input type="file" id="attach_img" name="attach_img"/>
+						 <input type="button" name="goinsert" value="Р’СЃС‚Р°РІРёС‚СЊ" onclick="loadImage(\''.$field_id.'\', \''.session_id().'\', \''.$placekind.'\')" />
 					 </div>
 					 <div class="usr_bb_button" id="imgloading" style="display:none">
-						Загрузка изображения...
+						Р—Р°РіСЂСѓР·РєР° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ...
 					 </div>';
 			if ($users_cfg['sw_photo']){
 				$html .= '<div class="usr_bb_button" id="albumimginsert" style="display:none">
-						<strong>Вставить фото:</strong> '.cmsUser::getPhotosList($inUser->id).'
-						 <input type="button" name="goinsert" value="Вставить" onclick="insertAlbumImage(\''.$field_id.'\')" />
+						<strong>Р’СЃС‚Р°РІРёС‚СЊ С„РѕС‚Рѕ:</strong> '.cmsUser::getPhotosList($inUser->id).'
+						 <input type="button" name="goinsert" value="Р’СЃС‚Р°РІРёС‚СЊ" onclick="insertAlbumImage(\''.$field_id.'\')" />
 					 </div>';
 			}
     	}
@@ -889,7 +889,7 @@ public static function getBBCodeToolbar($field_id, $images=0, $placekind='forum'
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Возвращает html-код панели со смайлами
+ * Р’РѕР·РІСЂР°С‰Р°РµС‚ html-РєРѕРґ РїР°РЅРµР»Рё СЃРѕ СЃРјР°Р№Р»Р°РјРё
  * @param string $for_field_id
  * @return html
  */
@@ -915,7 +915,7 @@ public static function getSmilesPanel($for_field_id){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Подключает JS и CSS для автокомплита
+ * РџРѕРґРєР»СЋС‡Р°РµС‚ JS Рё CSS РґР»СЏ Р°РІС‚РѕРєРѕРјРїР»РёС‚Р°
  */
 public function initAutocomplete(){
     $this->addHeadJS('includes/jquery/autocomplete/jquery.autocomplete.min.js');
@@ -923,7 +923,7 @@ public function initAutocomplete(){
 }
 
 /**
- * Возвращает JS-код инициализации автокомплита для указанного поля ввода и скрипта
+ * Р’РѕР·РІСЂР°С‰Р°РµС‚ JS-РєРѕРґ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё Р°РІС‚РѕРєРѕРјРїР»РёС‚Р° РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ РїРѕР»СЏ РІРІРѕРґР° Рё СЃРєСЂРёРїС‚Р°
  * @param string $script
  * @param string $field_id
  * @param bool $multiple
@@ -944,7 +944,7 @@ public function getAutocompleteJS($script, $field_id='tags', $multiple=true){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Возвращает код панели для постраничной навигации
+ * Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕРґ РїР°РЅРµР»Рё РґР»СЏ РїРѕСЃС‚СЂР°РЅРёС‡РЅРѕР№ РЅР°РІРёРіР°С†РёРё
  * @param int $total
  * @param int $page
  * @param int $perpage
@@ -1081,8 +1081,8 @@ public static function getModuleTemplates() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public function siteOffNotify() {
     return '<div style="margin:4px; padding:5px; border:solid 1px red; background:#FFF; position:absolute; z-index:999">
-                <strong style="color:red">Сайт отключен.</strong> 
-                Только администраторы видят его содержимое.
+                <strong style="color:red">РЎР°Р№С‚ РѕС‚РєР»СЋС‡РµРЅ.</strong> 
+                РўРѕР»СЊРєРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂС‹ РІРёРґСЏС‚ РµРіРѕ СЃРѕРґРµСЂР¶РёРјРѕРµ.
             </div>';
 }
 

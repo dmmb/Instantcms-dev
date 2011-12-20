@@ -21,7 +21,7 @@ function albumCreateRoot($user_id, $differ='', $title=''){
 	
 	$sql = "UPDATE cms_photo_albums
 			SET user_id = '$user_id', 
-				title = '-Корневой альбом клуба $title-',
+				title = '-РљРѕСЂРЅРµРІРѕР№ Р°Р»СЊР±РѕРј РєР»СѓР±Р° $title-',
 				orderform=0
 			WHERE id = '$album_id'";
 	$inDB->query($sql);
@@ -177,7 +177,7 @@ function cmsPhotoList($album){
 					echo '</table>';
 				
 			} else { 
-					 if($id != $root['id']) { echo '<p>Нет фотографий в этом альбоме.</p>'; }
+					 if($id != $root['id']) { echo '<p>РќРµС‚ С„РѕС‚РѕРіСЂР°С„РёР№ РІ СЌС‚РѕРј Р°Р»СЊР±РѕРјРµ.</p>'; }
 					}
 					
 		}//END - ALBUM CONTENT

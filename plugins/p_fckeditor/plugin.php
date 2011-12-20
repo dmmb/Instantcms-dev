@@ -21,7 +21,7 @@ class p_fckeditor extends cmsPlugin {
 
         $this->info['plugin']           = 'p_fckeditor';
         $this->info['title']            = 'FCKEditor';
-        $this->info['description']      = 'Âèçóàëüíûé ðåäàêòîð';
+        $this->info['description']      = 'Ð’Ð¸Ð·ÑƒÐ°Ð»ÑŒÐ½Ñ‹Ð¹ Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¾Ñ€';
         $this->info['author']           = 'F. C. Knabben';
         $this->info['version']          = '2.63';
         $this->info['type']             = 'wysiwyg';

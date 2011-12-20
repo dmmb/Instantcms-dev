@@ -11,8 +11,8 @@
 
     define('HOST', 'http://' . $inCore->getHost());
 
-    $inCore->loadClass('config');       //êîíôèãóðàöèÿ
-    $inCore->loadClass('db');           //áàçà äàííûõ
+    $inCore->loadClass('config');       //ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ
+    $inCore->loadClass('db');           //Ð±Ð°Ð·Ð° Ð´Ð°Ð½Ð½Ñ‹Ñ…
     $inCore->loadClass('page');
     $inCore->loadClass('user');
     $inCore->loadClass('plugin');

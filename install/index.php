@@ -24,7 +24,7 @@
 
     $inConf     = cmsConfig::getInstance();
 
-    //Минимальная версия PHP
+    //РњРёРЅРёРјР°Р»СЊРЅР°СЏ РІРµСЂСЃРёСЏ PHP
     $php_req = array();
     $php_req['major']       = '5';
     $php_req['minor']       = '2';
@@ -32,7 +32,7 @@
 
     $php_req_ver = $php_req['major'] * 10000 + $php_req['minor'] * 100 + $php_req['release'];
 
-    //Список необходимых расширений PHP
+    //РЎРїРёСЃРѕРє РЅРµРѕР±С…РѕРґРёРјС‹С… СЂР°СЃС€РёСЂРµРЅРёР№ PHP
     $ext_req = array();
     $ext_req['mbstring']    = 'mbstring';
     $ext_req['iconv']       = 'iconv';
@@ -43,14 +43,14 @@
 	
 		$msg = '';
 	
-		if(!empty($_REQUEST['sitename'])) { $sitename = $_REQUEST['sitename']; } else { $sitename = 'Мой сайт'; }
-		if(!empty($_REQUEST['db_server'])) { $db_server = $_REQUEST['db_server']; } else { $msg .= 'Необходимо указать сервер БД!<br/>'; }
-		if(!empty($_REQUEST['db_base'])) { $db_base = $_REQUEST['db_base']; } else { $msg .= 'Необходимо указать название БД!<br/>'; }
-		if(!empty($_REQUEST['db_user'])) { $db_user = $_REQUEST['db_user']; } else { $msg .= 'Необходимо указать пользователя БД!<br/>'; }				
+		if(!empty($_REQUEST['sitename'])) { $sitename = $_REQUEST['sitename']; } else { $sitename = 'РњРѕР№ СЃР°Р№С‚'; }
+		if(!empty($_REQUEST['db_server'])) { $db_server = $_REQUEST['db_server']; } else { $msg .= 'РќРµРѕР±С…РѕРґРёРјРѕ СѓРєР°Р·Р°С‚СЊ СЃРµСЂРІРµСЂ Р‘Р”!<br/>'; }
+		if(!empty($_REQUEST['db_base'])) { $db_base = $_REQUEST['db_base']; } else { $msg .= 'РќРµРѕР±С…РѕРґРёРјРѕ СѓРєР°Р·Р°С‚СЊ РЅР°Р·РІР°РЅРёРµ Р‘Р”!<br/>'; }
+		if(!empty($_REQUEST['db_user'])) { $db_user = $_REQUEST['db_user']; } else { $msg .= 'РќРµРѕР±С…РѕРґРёРјРѕ СѓРєР°Р·Р°С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ Р‘Р”!<br/>'; }				
 		if(!empty($_REQUEST['db_password'])) { $db_password = $_REQUEST['db_password']; } else { $db_password = ''; }
-		if(!empty($_REQUEST['db_prefix'])) { $db_prefix = $_REQUEST['db_prefix']; } else { $msg .= 'Необходимо указать префикс БД!<br/>'; }				
-		if(!empty($_REQUEST['admin_login'])) { $admin_login = $_REQUEST['admin_login']; } else { $msg .= 'Необходимо указать логин администратора!<br/>'; }
-		if(!empty($_REQUEST['admin_password'])) { $admin_password = $_REQUEST['admin_password']; } else { $msg .= 'Необходимо указать пароль администратора!<br/>'; }
+		if(!empty($_REQUEST['db_prefix'])) { $db_prefix = $_REQUEST['db_prefix']; } else { $msg .= 'РќРµРѕР±С…РѕРґРёРјРѕ СѓРєР°Р·Р°С‚СЊ РїСЂРµС„РёРєСЃ Р‘Р”!<br/>'; }				
+		if(!empty($_REQUEST['admin_login'])) { $admin_login = $_REQUEST['admin_login']; } else { $msg .= 'РќРµРѕР±С…РѕРґРёРјРѕ СѓРєР°Р·Р°С‚СЊ Р»РѕРіРёРЅ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°!<br/>'; }
+		if(!empty($_REQUEST['admin_password'])) { $admin_password = $_REQUEST['admin_password']; } else { $msg .= 'РќРµРѕР±С…РѕРґРёРјРѕ СѓРєР°Р·Р°С‚СЊ РїР°СЂРѕР»СЊ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°!<br/>'; }
 
 		if(!$msg){
 		
@@ -71,9 +71,9 @@
 			$_CFG['stats']      = '0';
 			$_CFG['slight']     = '1';
 			$_CFG['siteoff']    = '0';
-			$_CFG['offtext']    = 'Производится обновление сайта';
-			$_CFG['keywords']   = 'InstantCMS, система управления сайтом, бесплатная CMS, движок сайта, CMS, движок социальной сети';
-			$_CFG['metadesc']   = 'InstantCMS - бесплатная система управления сайтом с социальными функциями';
+			$_CFG['offtext']    = 'РџСЂРѕРёР·РІРѕРґРёС‚СЃСЏ РѕР±РЅРѕРІР»РµРЅРёРµ СЃР°Р№С‚Р°';
+			$_CFG['keywords']   = 'InstantCMS, СЃРёСЃС‚РµРјР° СѓРїСЂР°РІР»РµРЅРёСЏ СЃР°Р№С‚РѕРј, Р±РµСЃРїР»Р°С‚РЅР°СЏ CMS, РґРІРёР¶РѕРє СЃР°Р№С‚Р°, CMS, РґРІРёР¶РѕРє СЃРѕС†РёР°Р»СЊРЅРѕР№ СЃРµС‚Рё';
+			$_CFG['metadesc']   = 'InstantCMS - Р±РµСЃРїР»Р°С‚РЅР°СЏ СЃРёСЃС‚РµРјР° СѓРїСЂР°РІР»РµРЅРёСЏ СЃР°Р№С‚РѕРј СЃ СЃРѕС†РёР°Р»СЊРЅС‹РјРё С„СѓРЅРєС†РёСЏРјРё';
 			$_CFG['fastcfg']    = '1';
             $_CFG['debug']      = '0';
             $_CFG['lang']       = 'ru';
@@ -88,15 +88,15 @@
 			$GLOBALS['db'] = @mysql_connect($_CFG['db_host'], $_CFG['db_user'], $_CFG['db_pass']);
 			
 			if (mysql_error()) { 
-				$msg .= 'Не удалось установить соединение c MySQL.<br/>
-						 Проверьте адрес сервера MySQL и правильность пользователя и пароля БД.<br/>
-						 За уточнением этих параметров вы можете обратиться к своему хостеру.'; }
+				$msg .= 'РќРµ СѓРґР°Р»РѕСЃСЊ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ СЃРѕРµРґРёРЅРµРЅРёРµ c MySQL.<br/>
+						 РџСЂРѕРІРµСЂСЊС‚Рµ Р°РґСЂРµСЃ СЃРµСЂРІРµСЂР° MySQL Рё РїСЂР°РІРёР»СЊРЅРѕСЃС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ Рё РїР°СЂРѕР»СЏ Р‘Р”.<br/>
+						 Р—Р° СѓС‚РѕС‡РЅРµРЅРёРµРј СЌС‚РёС… РїР°СЂР°РјРµС‚СЂРѕРІ РІС‹ РјРѕР¶РµС‚Рµ РѕР±СЂР°С‚РёС‚СЊСЃСЏ Рє СЃРІРѕРµРјСѓ С…РѕСЃС‚РµСЂСѓ.'; }
 			else {
 				@mysql_select_db($_CFG['db_base'], $GLOBALS['db']);
 				if (mysql_error()) { 
-					$msg .= 'Не удалось открыть БД MySQL.<br/>
-							 База данных "'.$_CFG['db_base'].'" не найдена на указанном сервере.<br/>
-						 	 За уточнением этих параметров вы можете обратиться к своему хостеру.'; 
+					$msg .= 'РќРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РєСЂС‹С‚СЊ Р‘Р” MySQL.<br/>
+							 Р‘Р°Р·Р° РґР°РЅРЅС‹С… "'.$_CFG['db_base'].'" РЅРµ РЅР°Р№РґРµРЅР° РЅР° СѓРєР°Р·Р°РЅРЅРѕРј СЃРµСЂРІРµСЂРµ.<br/>
+						 	 Р—Р° СѓС‚РѕС‡РЅРµРЅРёРµРј СЌС‚РёС… РїР°СЂР°РјРµС‚СЂРѕРІ РІС‹ РјРѕР¶РµС‚Рµ РѕР±СЂР°С‚РёС‚СЊСЃСЏ Рє СЃРІРѕРµРјСѓ С…РѕСЃС‚РµСЂСѓ.'; 
 				}
 			}
 			
@@ -150,8 +150,8 @@ function installCheckFolders(){
 	
 	echo '<table align="center">';
 		echo '<tr>';
-			echo '<th width="260">Папка</th>';
-			echo '<th style="text-align:center" width="170">Доступна для записи</th>';
+			echo '<th width="260">РџР°РїРєР°</th>';
+			echo '<th style="text-align:center" width="170">Р”РѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё</th>';
 		echo '</tr>';
 
 	foreach($folders as $key=>$folder){	
@@ -163,7 +163,7 @@ function installCheckFolders(){
 		}
 		echo '<tr>';
 			echo '<td class="folder">'.$folder.'</td>';
-			echo '<td style="text-align:center">'.($right ? '<span style="color:green">Да</span>' : '<span style="color:red">Нет</span>').'</td>';
+			echo '<td style="text-align:center">'.($right ? '<span style="color:green">Р”Р°</span>' : '<span style="color:red">РќРµС‚</span>').'</td>';
 		echo '</tr>';
 	}
 	
@@ -180,8 +180,8 @@ function installCheckExtensions(){
 
 	echo '<table align="center">';
 		echo '<tr>';
-			echo '<th width="300">Расширение PHP</th>';
-			echo '<th style="text-align:center" width="70">Установлено</th>';
+			echo '<th width="300">Р Р°СЃС€РёСЂРµРЅРёРµ PHP</th>';
+			echo '<th style="text-align:center" width="70">РЈСЃС‚Р°РЅРѕРІР»РµРЅРѕ</th>';
 		echo '</tr>';
         
     $all_right = true;
@@ -193,16 +193,16 @@ function installCheckExtensions(){
             $all_right = false;
 		}
 		echo '<tr>';
-			echo '<td class="extension"><a href="http://ru.php.net/manual/ru/book.'.$ext.'.php" title="Посмотреть описание на сайте PHP">'.$name.'</td>';
-			echo '<td style="text-align:center">'.($right ? '<span style="color:green">Да</span>' : '<span style="color:red">Нет</span>').'</td>';
+			echo '<td class="extension"><a href="http://ru.php.net/manual/ru/book.'.$ext.'.php" title="РџРѕСЃРјРѕС‚СЂРµС‚СЊ РѕРїРёСЃР°РЅРёРµ РЅР° СЃР°Р№С‚Рµ PHP">'.$name.'</td>';
+			echo '<td style="text-align:center">'.($right ? '<span style="color:green">Р”Р°</span>' : '<span style="color:red">РќРµС‚</span>').'</td>';
 		echo '</tr>';
 	}
 
 	echo '</table>';
 
     if (!$all_right){
-        echo '<p>Для установки отсутствующих расширений обратитесь к вашему хостеру.</p>';
-        echo '<p><a href="http://www.instantcms.ru/forum/0/thread1345-1.html">Как установить mbstring на Денвер</a> читайте на нашем форуме.</p>';
+        echo '<p>Р”Р»СЏ СѓСЃС‚Р°РЅРѕРІРєРё РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‰РёС… СЂР°СЃС€РёСЂРµРЅРёР№ РѕР±СЂР°С‚РёС‚РµСЃСЊ Рє РІР°С€РµРјСѓ С…РѕСЃС‚РµСЂСѓ.</p>';
+        echo '<p><a href="http://www.instantcms.ru/forum/0/thread1345-1.html">РљР°Рє СѓСЃС‚Р°РЅРѕРІРёС‚СЊ mbstring РЅР° Р”РµРЅРІРµСЂ</a> С‡РёС‚Р°Р№С‚Рµ РЅР° РЅР°С€РµРј С„РѕСЂСѓРјРµ.</p>';
     }
 
     $php_ver = getPHPVersion();
@@ -212,10 +212,10 @@ function installCheckExtensions(){
     
     if ($php_ver['int'] < $php_req_ver) { $right=false; }
 
-    echo '<p><strong>Версия PHP:</strong> '.$php_ver['text'].' &mdash '.($right ? '<span style="color:green">Оk</span>' : '<span style="color:red">требуется '.$php_req['major'].'.'.$php_req['minor'].'.'.$php_req['release'].' или выше</span>').'</p>';
+    echo '<p><strong>Р’РµСЂСЃРёСЏ PHP:</strong> '.$php_ver['text'].' &mdash '.($right ? '<span style="color:green">Рћk</span>' : '<span style="color:red">С‚СЂРµР±СѓРµС‚СЃСЏ '.$php_req['major'].'.'.$php_req['minor'].'.'.$php_req['release'].' РёР»Рё РІС‹С€Рµ</span>').'</p>';
 
     if (!$right){
-        echo '<p>Для обновления PHP обратитесь к своему хостеру.</p>';
+        echo '<p>Р”Р»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ PHP РѕР±СЂР°С‚РёС‚РµСЃСЊ Рє СЃРІРѕРµРјСѓ С…РѕСЃС‚РµСЂСѓ.</p>';
     }
     
 }
@@ -225,7 +225,7 @@ function installCheckExtensions(){
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>InstantCMS - Установка</title>
+	<title>InstantCMS - РЈСЃС‚Р°РЅРѕРІРєР°</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
 	<script src='/includes/jquery/jquery.js' type='text/javascript'></script>
 	<script src='/install/js/jquery.wizard.js' type='text/javascript'></script>
@@ -239,42 +239,42 @@ function installCheckExtensions(){
 	<tr><td>
 
 		<h1 id="header">
-			Установка InstantCMS <?php echo CORE_VERSION; ?>
+			РЈСЃС‚Р°РЅРѕРІРєР° InstantCMS <?php echo CORE_VERSION; ?>
 		</h1>
 		
 		<?php if(!isset($msg)){ ?>
 		
 		<form class="wizard" action="#" method="post" >
 			<div class="wizard-nav"  align="center">			
-				<a href="#start">Начало</a>
-				<a href="#php">Проверка PHP</a>
-				<a href="#folders">Проверка прав</a>
-				<a href="#install">Установка</a>
+				<a href="#start">РќР°С‡Р°Р»Рѕ</a>
+				<a href="#php">РџСЂРѕРІРµСЂРєР° PHP</a>
+				<a href="#folders">РџСЂРѕРІРµСЂРєР° РїСЂР°РІ</a>
+				<a href="#install">РЈСЃС‚Р°РЅРѕРІРєР°</a>
 			</div>
 			<!-- ================================================================ -->
 					
 			<div id="start" class="wizardpage">
-				<h2>Добро пожаловать</h2>
+				<h2>Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ</h2>
 				<img src="/install/images/start.gif" border="0" />
 				<p>
-					Cкрипт установки проверит сервер на соответствие техническим требованиям и совершит все 
-					необходимые действия для начала работы с InstantCMS.
+					CРєСЂРёРїС‚ СѓСЃС‚Р°РЅРѕРІРєРё РїСЂРѕРІРµСЂРёС‚ СЃРµСЂРІРµСЂ РЅР° СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ С‚РµС…РЅРёС‡РµСЃРєРёРј С‚СЂРµР±РѕРІР°РЅРёСЏРј Рё СЃРѕРІРµСЂС€РёС‚ РІСЃРµ 
+					РЅРµРѕР±С…РѕРґРёРјС‹Рµ РґРµР№СЃС‚РІРёСЏ РґР»СЏ РЅР°С‡Р°Р»Р° СЂР°Р±РѕС‚С‹ СЃ InstantCMS.
 				</p>
-                <p>Устанавливать InstantCMS можно только в корневую папку сайта.</p>
+                <p>РЈСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊ InstantCMS РјРѕР¶РЅРѕ С‚РѕР»СЊРєРѕ РІ РєРѕСЂРЅРµРІСѓСЋ РїР°РїРєСѓ СЃР°Р№С‚Р°.</p>
 				<p>
-					Перед началом установки создайте новую базу данных MySQL на вашем хостинге.
+					РџРµСЂРµРґ РЅР°С‡Р°Р»РѕРј СѓСЃС‚Р°РЅРѕРІРєРё СЃРѕР·РґР°Р№С‚Рµ РЅРѕРІСѓСЋ Р±Р°Р·Сѓ РґР°РЅРЅС‹С… MySQL РЅР° РІР°С€РµРј С…РѕСЃС‚РёРЅРіРµ.
 				</p>
-				<p>Как установить систему на локальный компьютер с ОС Windows&trade; для тестирования, читайте в <a href="http://www.instantcms.ru/wiki/doku.php/%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%B0%D1%8F_%D1%83%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0_%D0%B4%D0%B5%D0%BD%D0%B2%D0%B5%D1%80" target="_blank">инструкции</a> на официальном сайте.</p>
+				<p>РљР°Рє СѓСЃС‚Р°РЅРѕРІРёС‚СЊ СЃРёСЃС‚РµРјСѓ РЅР° Р»РѕРєР°Р»СЊРЅС‹Р№ РєРѕРјРїСЊСЋС‚РµСЂ СЃ РћРЎ Windows&trade; РґР»СЏ С‚РµСЃС‚РёСЂРѕРІР°РЅРёСЏ, С‡РёС‚Р°Р№С‚Рµ РІ <a href="http://www.instantcms.ru/wiki/doku.php/%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%B0%D1%8F_%D1%83%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0_%D0%B4%D0%B5%D0%BD%D0%B2%D0%B5%D1%80" target="_blank">РёРЅСЃС‚СЂСѓРєС†РёРё</a> РЅР° РѕС„РёС†РёР°Р»СЊРЅРѕРј СЃР°Р№С‚Рµ.</p>
 
-                <p>InstantCMS распространяется по лицензии GNU/GPL версии 2. Вы должны согласиться с условиями этой лицензии для установки системы.</p>
+                <p>InstantCMS СЂР°СЃРїСЂРѕСЃС‚СЂР°РЅСЏРµС‚СЃСЏ РїРѕ Р»РёС†РµРЅР·РёРё GNU/GPL РІРµСЂСЃРёРё 2. Р’С‹ РґРѕР»Р¶РЅС‹ СЃРѕРіР»Р°СЃРёС‚СЊСЃСЏ СЃ СѓСЃР»РѕРІРёСЏРјРё СЌС‚РѕР№ Р»РёС†РµРЅР·РёРё РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё СЃРёСЃС‚РµРјС‹.</p>
 
                 <table cellpadding="0" cellspacing="0" border="0">
                     <tr>
                         <td width="20"><input type="checkbox" id="license_agree" onClick="checkAgree()"/></td>
                         <td>
-                            <label for="license_agree">Я согласен с условиями</label>
-                            <a target="_blank" href="/license.rus.win.txt">лицензии GNU/GPL</a>
-                            (<a target="_blank" href="http://www.gnu.org/licenses/gpl-2.0.html">оригинал на английском</a>)</p></td>
+                            <label for="license_agree">РЇ СЃРѕРіР»Р°СЃРµРЅ СЃ СѓСЃР»РѕРІРёСЏРјРё</label>
+                            <a target="_blank" href="/license.rus.win.txt">Р»РёС†РµРЅР·РёРё GNU/GPL</a>
+                            (<a target="_blank" href="http://www.gnu.org/licenses/gpl-2.0.html">РѕСЂРёРіРёРЅР°Р» РЅР° Р°РЅРіР»РёР№СЃРєРѕРј</a>)</p></td>
                     </tr>
                 </table>
 
@@ -284,11 +284,11 @@ function installCheckExtensions(){
 
 			<div id="php" class="wizardpage">
 
-                <h2>Проверка расширений PHP</h2>
+                <h2>РџСЂРѕРІРµСЂРєР° СЂР°СЃС€РёСЂРµРЅРёР№ PHP</h2>
                 <img src="/install/images/extensions.gif" border="0" />
 
                 <p>
-					Для корректной работы InstantCMS необходимо чтобы PHP на вашем сервере имел установленные расширения, перечисленные ниже.
+					Р”Р»СЏ РєРѕСЂСЂРµРєС‚РЅРѕР№ СЂР°Р±РѕС‚С‹ InstantCMS РЅРµРѕР±С…РѕРґРёРјРѕ С‡С‚РѕР±С‹ PHP РЅР° РІР°С€РµРј СЃРµСЂРІРµСЂРµ РёРјРµР» СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹Рµ СЂР°СЃС€РёСЂРµРЅРёСЏ, РїРµСЂРµС‡РёСЃР»РµРЅРЅС‹Рµ РЅРёР¶Рµ.
 				</p>
 
                 <?php installCheckExtensions(); ?>
@@ -298,23 +298,23 @@ function installCheckExtensions(){
 			<!-- ================================================================ -->
 			
 			<div id="folders" class="wizardpage">
-				<h2>Проверка прав на папки</h2>
+				<h2>РџСЂРѕРІРµСЂРєР° РїСЂР°РІ РЅР° РїР°РїРєРё</h2>
 				<img src="/install/images/folders.gif" border="0" />
 
                 <p>
-					Для корректной работы InstantCMS указанные ниже папки должны быть доступны для записи.
-					Сменить права на папки можно с помощью FTP-клиента, например Total Commander или FAR.
+					Р”Р»СЏ РєРѕСЂСЂРµРєС‚РЅРѕР№ СЂР°Р±РѕС‚С‹ InstantCMS СѓРєР°Р·Р°РЅРЅС‹Рµ РЅРёР¶Рµ РїР°РїРєРё РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅС‹ РґР»СЏ Р·Р°РїРёСЃРё.
+					РЎРјРµРЅРёС‚СЊ РїСЂР°РІР° РЅР° РїР°РїРєРё РјРѕР¶РЅРѕ СЃ РїРѕРјРѕС‰СЊСЋ FTP-РєР»РёРµРЅС‚Р°, РЅР°РїСЂРёРјРµСЂ Total Commander РёР»Рё FAR.
 				</p>
 
 				<?php installCheckFolders(); ?>
 
 				<p>
-					Если вы не знаете или сомневаетесь какие права нужно установить, чтобы сделать папку доступной для записи, обратитесь
-                    в техническую поддержку вашего хостинга.
+					Р•СЃР»Рё РІС‹ РЅРµ Р·РЅР°РµС‚Рµ РёР»Рё СЃРѕРјРЅРµРІР°РµС‚РµСЃСЊ РєР°РєРёРµ РїСЂР°РІР° РЅСѓР¶РЅРѕ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ, С‡С‚РѕР±С‹ СЃРґРµР»Р°С‚СЊ РїР°РїРєСѓ РґРѕСЃС‚СѓРїРЅРѕР№ РґР»СЏ Р·Р°РїРёСЃРё, РѕР±СЂР°С‚РёС‚РµСЃСЊ
+                    РІ С‚РµС…РЅРёС‡РµСЃРєСѓСЋ РїРѕРґРґРµСЂР¶РєСѓ РІР°С€РµРіРѕ С…РѕСЃС‚РёРЅРіР°.
 				</p>
 
 				<p>
-					Установку можно произвести и не выставляя права, но полноценное функционирование системы при этом не гарантируется.
+					РЈСЃС‚Р°РЅРѕРІРєСѓ РјРѕР¶РЅРѕ РїСЂРѕРёР·РІРµСЃС‚Рё Рё РЅРµ РІС‹СЃС‚Р°РІР»СЏСЏ РїСЂР°РІР°, РЅРѕ РїРѕР»РЅРѕС†РµРЅРЅРѕРµ С„СѓРЅРєС†РёРѕРЅРёСЂРѕРІР°РЅРёРµ СЃРёСЃС‚РµРјС‹ РїСЂРё СЌС‚РѕРј РЅРµ РіР°СЂР°РЅС‚РёСЂСѓРµС‚СЃСЏ.
 				</p>
 
 			</div>
@@ -322,8 +322,8 @@ function installCheckExtensions(){
 			<!-- ================================================================ -->
 			
 		  <div id="install" class="wizardpage">
-                <h2>Установка</h2>
-                <p>Заполните форму и нажмите "Установить" для завершения процесса.</p>
+                <h2>РЈСЃС‚Р°РЅРѕРІРєР°</h2>
+                <p>Р—Р°РїРѕР»РЅРёС‚Рµ С„РѕСЂРјСѓ Рё РЅР°Р¶РјРёС‚Рµ "РЈСЃС‚Р°РЅРѕРІРёС‚СЊ" РґР»СЏ Р·Р°РІРµСЂС€РµРЅРёСЏ РїСЂРѕС†РµСЃСЃР°.</p>
 
                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                     <tr>
@@ -333,44 +333,44 @@ function installCheckExtensions(){
                         <td valign="top">
                             <table width="" border="0" cellpadding="4" cellspacing="0" style="margin-bottom:10px">
                               <tr>
-                                <td width="220">Название сайта:</td>
-                                <td width="" align="center"><input name="sitename" type="text" class="txt" value="Моя социальная сеть"></td>
+                                <td width="220">РќР°Р·РІР°РЅРёРµ СЃР°Р№С‚Р°:</td>
+                                <td width="" align="center"><input name="sitename" type="text" class="txt" value="РњРѕСЏ СЃРѕС†РёР°Р»СЊРЅР°СЏ СЃРµС‚СЊ"></td>
                               </tr>
                               <tr>
-                                <td>Логин администратора сайта:</td>
+                                <td>Р›РѕРіРёРЅ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР° СЃР°Р№С‚Р°:</td>
                                 <td align="center"><input name="admin_login" type="text" class="txt" value="admin"></td>
                               </tr>
                               <tr>
-                                <td>Пароль администратора сайта:</td>
+                                <td>РџР°СЂРѕР»СЊ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР° СЃР°Р№С‚Р°:</td>
                                 <td align="center"><input name="admin_password" type="password" class="txt"></td>
                               </tr>
                             </table>
                             <table width="" border="0" cellpadding="4" cellspacing="0" style="margin-bottom:0px">
                               <tr>
-                                <td width="220">Сервер MySQL: </td>
+                                <td width="220">РЎРµСЂРІРµСЂ MySQL: </td>
                                 <td align="center"><input name="db_server" type="text" class="txt" value="localhost"></td>
                               </tr>
                               <tr>
-                                <td>База данных: </td>
+                                <td>Р‘Р°Р·Р° РґР°РЅРЅС‹С…: </td>
                                 <td align="center"><input name="db_base" type="text" class="txt"></td>
                               </tr>
                               <tr>
-                                <td>Пользователь БД: </td>
+                                <td>РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ Р‘Р”: </td>
                                 <td align="center"><input name="db_user" type="text" class="txt" value="root"></td>
                               </tr>
                               <tr>
-                                <td>Пароль пользователя БД: </td>
+                                <td>РџР°СЂРѕР»СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ Р‘Р”: </td>
                                 <td align="center"><input name="db_password" type="password" class="txt"></td>
                               </tr>
                               <tr>
-                                <td>Префикс таблиц в базе данных: </td>
+                                <td>РџСЂРµС„РёРєСЃ С‚Р°Р±Р»РёС† РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…: </td>
                                 <td align="center"><input name="db_prefix" type="text" class="txt" value="cms"></td>
                               </tr>
                               <tr>
-                                <td>Демо-данные:</td>
+                                <td>Р”РµРјРѕ-РґР°РЅРЅС‹Рµ:</td>
                                 <td align="center" valign="top">
-                                    <label><input name="demodata" type="radio" value="1" checked /> Да</label>
-                                    <label><input name="demodata" type="radio" value="0" /> Нет</label>
+                                    <label><input name="demodata" type="radio" value="1" checked /> Р”Р°</label>
+                                    <label><input name="demodata" type="radio" value="0" /> РќРµС‚</label>
                                 </td>
                               </tr>
                             </table>
@@ -379,11 +379,11 @@ function installCheckExtensions(){
                 </table>
 
 				<p style="color:gray">
-                    При установке с демо-данными всем пользователям будет установлен одинаковый пароль, совпадающий с паролем администратора.
-                    Логин каждого пользователя можно узнать из адреса его профиля или из панели управления.
+                    РџСЂРё СѓСЃС‚Р°РЅРѕРІРєРµ СЃ РґРµРјРѕ-РґР°РЅРЅС‹РјРё РІСЃРµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј Р±СѓРґРµС‚ СѓСЃС‚Р°РЅРѕРІР»РµРЅ РѕРґРёРЅР°РєРѕРІС‹Р№ РїР°СЂРѕР»СЊ, СЃРѕРІРїР°РґР°СЋС‰РёР№ СЃ РїР°СЂРѕР»РµРј Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°.
+                    Р›РѕРіРёРЅ РєР°Р¶РґРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РјРѕР¶РЅРѕ СѓР·РЅР°С‚СЊ РёР· Р°РґСЂРµСЃР° РµРіРѕ РїСЂРѕС„РёР»СЏ РёР»Рё РёР· РїР°РЅРµР»Рё СѓРїСЂР°РІР»РµРЅРёСЏ.
                 </p>
 
-                <p>Установка может занять от секунд до нескольких минут, в зависимости от скорости вашего сервера.</p>
+                <p>РЈСЃС‚Р°РЅРѕРІРєР° РјРѕР¶РµС‚ Р·Р°РЅСЏС‚СЊ РѕС‚ СЃРµРєСѓРЅРґ РґРѕ РЅРµСЃРєРѕР»СЊРєРёС… РјРёРЅСѓС‚, РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЃРєРѕСЂРѕСЃС‚Рё РІР°С€РµРіРѕ СЃРµСЂРІРµСЂР°.</p>
 				
 				</div>
 		</form>
@@ -392,39 +392,39 @@ function installCheckExtensions(){
 					
 			if (isset($msg) && @$msg != ''){ 
 				echo '<div style="margin-left:52px;_margin-left:0px">';
-				echo '<h2>Обнаружена ошибка!</h2>';
+				echo '<h2>РћР±РЅР°СЂСѓР¶РµРЅР° РѕС€РёР±РєР°!</h2>';
 				echo '<p style="color:red">'.$msg.'</p>';
-				echo '<p><a href="index.php">Повторить ввод данных</a></p>';
+				echo '<p><a href="index.php">РџРѕРІС‚РѕСЂРёС‚СЊ РІРІРѕРґ РґР°РЅРЅС‹С…</a></p>';
 				echo '</div>';
 			}
 			
 			if (isset($installed)){
 				if($installed){
 					echo '<div style="margin-left:52px;_margin-left:0px">';
-					echo '<h2>Установка завершена!</h2>';
+					echo '<h2>РЈСЃС‚Р°РЅРѕРІРєР° Р·Р°РІРµСЂС€РµРЅР°!</h2>';
 					echo '<div>';
-					echo '<p>Система установлена и готова к работе.</p>';
+					echo '<p>РЎРёСЃС‚РµРјР° СѓСЃС‚Р°РЅРѕРІР»РµРЅР° Рё РіРѕС‚РѕРІР° Рє СЂР°Р±РѕС‚Рµ.</p>';
 					echo '<div style="background:url(/install/images/cron.png) no-repeat;padding-left:24px;margin-top:30px;margin-bottom:30px;">
-                            <div style="margin-bottom:6px;"><strong>Создайте задание для CRON</strong></div>
+                            <div style="margin-bottom:6px;"><strong>РЎРѕР·РґР°Р№С‚Рµ Р·Р°РґР°РЅРёРµ РґР»СЏ CRON</strong></div>
                             <div>
-                                Добавьте файл <strong>/cron.php</strong> в расписание заданий CRON в панели вашего хостинга.<br/>
-                                Интервал выполнения &mdash; 24 часа. Это позволит системе выполнять периодические сервисные задачи. 
-                                Обычно команда, которую нужно добавить в CRON, выглядит так:
-                                <pre class="cron">  php -f /полный/путь/до/сайта/cron.php > /dev/null</pre>
+                                Р”РѕР±Р°РІСЊС‚Рµ С„Р°Р№Р» <strong>/cron.php</strong> РІ СЂР°СЃРїРёСЃР°РЅРёРµ Р·Р°РґР°РЅРёР№ CRON РІ РїР°РЅРµР»Рё РІР°С€РµРіРѕ С…РѕСЃС‚РёРЅРіР°.<br/>
+                                РРЅС‚РµСЂРІР°Р» РІС‹РїРѕР»РЅРµРЅРёСЏ &mdash; 24 С‡Р°СЃР°. Р­С‚Рѕ РїРѕР·РІРѕР»РёС‚ СЃРёСЃС‚РµРјРµ РІС‹РїРѕР»РЅСЏС‚СЊ РїРµСЂРёРѕРґРёС‡РµСЃРєРёРµ СЃРµСЂРІРёСЃРЅС‹Рµ Р·Р°РґР°С‡Рё. 
+                                РћР±С‹С‡РЅРѕ РєРѕРјР°РЅРґР°, РєРѕС‚РѕСЂСѓСЋ РЅСѓР¶РЅРѕ РґРѕР±Р°РІРёС‚СЊ РІ CRON, РІС‹РіР»СЏРґРёС‚ С‚Р°Рє:
+                                <pre class="cron">  php -f /РїРѕР»РЅС‹Р№/РїСѓС‚СЊ/РґРѕ/СЃР°Р№С‚Р°/cron.php > /dev/null</pre>
                             </div>
                             <div>
-                                В случае затруднений обратитесь в техническую поддержку хостинга.
+                                Р’ СЃР»СѓС‡Р°Рµ Р·Р°С‚СЂСѓРґРЅРµРЅРёР№ РѕР±СЂР°С‚РёС‚РµСЃСЊ РІ С‚РµС…РЅРёС‡РµСЃРєСѓСЋ РїРѕРґРґРµСЂР¶РєСѓ С…РѕСЃС‚РёРЅРіР°.
                             </div>
                           </div>';
 					echo '<div style="background:url(/install/images/warning.png) no-repeat;padding-left:24px;margin-top:30px;margin-bottom:30px;">
-                            <div style="margin-bottom:6px;"><strong>Внимание!</strong></div>
-                            До перехода на сайт необходимо удалить каталоги "install" и "migrate"<br/>
-                            на сервере вместе со всеми находящимися в них файлами!
+                            <div style="margin-bottom:6px;"><strong>Р’РЅРёРјР°РЅРёРµ!</strong></div>
+                            Р”Рѕ РїРµСЂРµС…РѕРґР° РЅР° СЃР°Р№С‚ РЅРµРѕР±С…РѕРґРёРјРѕ СѓРґР°Р»РёС‚СЊ РєР°С‚Р°Р»РѕРіРё "install" Рё "migrate"<br/>
+                            РЅР° СЃРµСЂРІРµСЂРµ РІРјРµСЃС‚Рµ СЃРѕ РІСЃРµРјРё РЅР°С…РѕРґСЏС‰РёРјРёСЃСЏ РІ РЅРёС… С„Р°Р№Р»Р°РјРё!
                           </div>';
-					echo '<p style="font-size:18px"><a href="/">Перейти на сайт</a> | <a href="/admin">Перейти в панель управления</a></p>';
+					echo '<p style="font-size:18px"><a href="/">РџРµСЂРµР№С‚Рё РЅР° СЃР°Р№С‚</a> | <a href="/admin">РџРµСЂРµР№С‚Рё РІ РїР°РЅРµР»СЊ СѓРїСЂР°РІР»РµРЅРёСЏ</a></p>';
 					echo '<p>
-                            <a id="tutorial" href="http://www.instantcms.ru/articles/quickstart.html">Учебник для начинающих</a>
-                            <a id="video" href="http://www.instantcms.ru/video-lessons.html">Видео-уроки</a>
+                            <a id="tutorial" href="http://www.instantcms.ru/articles/quickstart.html">РЈС‡РµР±РЅРёРє РґР»СЏ РЅР°С‡РёРЅР°СЋС‰РёС…</a>
+                            <a id="video" href="http://www.instantcms.ru/video-lessons.html">Р’РёРґРµРѕ-СѓСЂРѕРєРё</a>
                           </p>';
 					echo '</div>';
 					echo '</div>';

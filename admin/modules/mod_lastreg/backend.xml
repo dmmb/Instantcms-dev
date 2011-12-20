@@ -3,20 +3,20 @@
 
     <module>
         <id>mod_lastreg</id>
-        <title>Новые пользователи</title>
+        <title>РќРѕРІС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё</title>
     </module>
 
     <params>
 
-        <param type="number" name="newscount" title="Количество для показа" default="5" />
+        <param type="number" name="newscount" title="РљРѕР»РёС‡РµСЃС‚РІРѕ РґР»СЏ РїРѕРєР°Р·Р°" default="5" />
 
-        <param type="list" name="view_type" title="Показывать как">
-            <option title="Таблица" value="table" />
-			<option title="Горизонтальная таблица" value="hr_table" />
-            <option title="Список" value="list" />
+        <param type="list" name="view_type" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РєР°Рє">
+            <option title="РўР°Р±Р»РёС†Р°" value="table" />
+			<option title="Р“РѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅР°СЏ С‚Р°Р±Р»РёС†Р°" value="hr_table" />
+            <option title="РЎРїРёСЃРѕРє" value="list" />
         </param>
 
-		<param type="number" name="maxcool" title="Количество колонок" default="2" />
+		<param type="number" name="maxcool" title="РљРѕР»РёС‡РµСЃС‚РІРѕ РєРѕР»РѕРЅРѕРє" default="2" />
 
     </params>
 

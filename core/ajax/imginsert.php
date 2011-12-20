@@ -23,32 +23,32 @@
 
     define('HOST', 'http://' . $inCore->getHost());
 
-    $inCore->loadClass('config');       //конфигурация
-    $inCore->loadClass('db');           //база данных
-    $inCore->loadClass('user');			//юзер
+    $inCore->loadClass('config');       //РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ
+    $inCore->loadClass('db');           //Р±Р°Р·Р° РґР°РЅРЅС‹С…
+    $inCore->loadClass('user');			//СЋР·РµСЂ
 
     $inUser = cmsUser::getInstance();
     $inDB  = cmsDatabase::getInstance();
 
 	$place = $inCore->request('place', 'str');
 	
-	// если место не определено, выводим ошибку и выходим
+	// РµСЃР»Рё РјРµСЃС‚Рѕ РЅРµ РѕРїСЂРµРґРµР»РµРЅРѕ, РІС‹РІРѕРґРёРј РѕС€РёР±РєСѓ Рё РІС‹С…РѕРґРёРј
 	if (!$place) { 
 			echo "{";
-			echo		"error: 'Файл не загружен!',\n";
+			echo		"error: 'Р¤Р°Р№Р» РЅРµ Р·Р°РіСЂСѓР¶РµРЅ!',\n";
 			echo		"msg: ''\n";
 			echo "}";
 			die();
 	}
 	
-	// если в имени компонента запрещенные сиволы, выходим
+	// РµСЃР»Рё РІ РёРјРµРЅРё РєРѕРјРїРѕРЅРµРЅС‚Р° Р·Р°РїСЂРµС‰РµРЅРЅС‹Рµ СЃРёРІРѕР»С‹, РІС‹С…РѕРґРёРј
 	if (!preg_match('/^([a-zA-Z0-9\_]+)$/i', $place)) { die(); }
 	
-	// если не авторизованы, выводим ошибку и выходим
+	// РµСЃР»Рё РЅРµ Р°РІС‚РѕСЂРёР·РѕРІР°РЅС‹, РІС‹РІРѕРґРёРј РѕС€РёР±РєСѓ Рё РІС‹С…РѕРґРёРј
 	$inUser->update();
     if (!$inUser->id) {
 			echo "{";
-			echo		"error: 'Загрузка файлов только для зарегистрированных!',\n";
+			echo		"error: 'Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»РѕРІ С‚РѕР»СЊРєРѕ РґР»СЏ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹С…!',\n";
 			echo		"msg: ''\n";
 			echo "}";
 			die();
@@ -81,13 +81,13 @@
 				
 				if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'bmp' || $ext == 'png'){
 
-					// оригинальный файл
+					// РѕСЂРёРіРёРЅР°Р»СЊРЅС‹Р№ С„Р°Р№Р»
 					$filename       = md5($realfile.time()).'-orig.'.$ext;
 					$uploadfile     = $uploaddir . $filename;
-					// сконверченый файл
+					// СЃРєРѕРЅРІРµСЂС‡РµРЅС‹Р№ С„Р°Р№Р»
                     $filename_jpg   = md5($realfile.time()).'.jpg';
 					$uploadphoto    = $uploaddir . $filename_jpg;
-					// url файла
+					// url С„Р°Р№Р»Р°
 					$fileurl = '/upload/'.$place.'/'.$filename_jpg;
 
 					if ($inCore->moveUploadedFile($_FILES['attach_img']['tmp_name'], $uploadfile, $_FILES['attach_img']['error'])) {
@@ -109,21 +109,21 @@
 						echo "}";
 					} else { 
 						echo "{";
-						echo	"error: 'Файл не загружен! Проверьте его тип, размер и права на запись в папку /upload/$place.',\n";
+						echo	"error: 'Р¤Р°Р№Р» РЅРµ Р·Р°РіСЂСѓР¶РµРЅ! РџСЂРѕРІРµСЂСЊС‚Рµ РµРіРѕ С‚РёРї, СЂР°Р·РјРµСЂ Рё РїСЂР°РІР° РЅР° Р·Р°РїРёСЃСЊ РІ РїР°РїРєСѓ /upload/$place.',\n";
 						echo	"msg: ''\n";
 						echo "}";
 					} 
 					
 				} else { 
 						echo "{";
-						echo	"error: 'Неверный тип файла! Допустимые типы: jpg, jpeg, gif, png, bmp.',\n";
+						echo	"error: 'РќРµРІРµСЂРЅС‹Р№ С‚РёРї С„Р°Р№Р»Р°! Р”РѕРїСѓСЃС‚РёРјС‹Рµ С‚РёРїС‹: jpg, jpeg, gif, png, bmp.',\n";
 						echo	"msg: ''\n";
 						echo "}";
 				} //filetype
 			}//max limit
 			else {
 					echo "{";
-					echo		"error: 'Достигнут предел количества изображений!',\n";
+					echo		"error: 'Р”РѕСЃС‚РёРіРЅСѓС‚ РїСЂРµРґРµР» РєРѕР»РёС‡РµСЃС‚РІР° РёР·РѕР±СЂР°Р¶РµРЅРёР№!',\n";
 					echo		"msg: ''\n";
 					echo "}";	
 				}
@@ -131,13 +131,13 @@
 		} //img is on
 		else {
 			echo "{";
-			echo		"error: 'Загрузка файлов запрещена!',\n";
+			echo		"error: 'Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»РѕРІ Р·Р°РїСЂРµС‰РµРЅР°!',\n";
 			echo		"msg: ''\n";
 			echo "}";	
 		}
 	} else { 	
 			echo "{";
-			echo		"error: 'Файл не загружен!',\n";
+			echo		"error: 'Р¤Р°Р№Р» РЅРµ Р·Р°РіСЂСѓР¶РµРЅ!',\n";
 			echo		"msg: ''\n";
 			echo "}";
 	 }

@@ -1,12 +1,12 @@
 function copyItem(com_id, item_id){
-	var copies = prompt('Количество копий:', 1);
+	var copies = prompt('РљРѕР»РёС‡РµСЃС‚РІРѕ РєРѕРїРёР№:', 1);
 	if (copies>0){
 		window.location.href='/admin/index.php?view=components&do=config&id='+com_id+'&opt=copy_item&item_id='+item_id+'&copies='+copies;	
 	}
 }
 
 function copyCat(com_id, item_id){
-	var copies = prompt('Количество копий:', 1);
+	var copies = prompt('РљРѕР»РёС‡РµСЃС‚РІРѕ РєРѕРїРёР№:', 1);
 	if (copies>0){
 		window.location.href='/admin/index.php?view=components&do=config&id='+com_id+'&opt=copy_cat&item_id='+item_id+'&copies='+copies;	
 	}

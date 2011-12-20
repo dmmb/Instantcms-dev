@@ -26,7 +26,7 @@ function content(){
 
     $cfg = $inCore->loadComponentConfig('content');
 
-    // Ïğîâåğÿåì âêëş÷åíè ëè êîìïîíåíò
+    // ĞŸÑ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼ Ğ²ĞºĞ»ÑÑ‡ĞµĞ½Ğ¸ Ğ»Ğ¸ ĞºĞ¾Ğ¼Ğ¿Ğ¾Ğ½ĞµĞ½Ñ‚
     if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     $inCore->loadModel('content');
@@ -146,7 +146,7 @@ if ($do=='view'){
 		foreach($content_list as $con){
 			$con['tagline']		 = cmsTagLine('content', $con['id'], true);
 			$con['comments'] 	 = $inCore->getCommentsCount('article', $con['id']);
-			$con['user_access']  = true; // îñòàâëåíî äëÿ ñîâìåñòèìîñòè ñî ñòàğûìè øàáëîíàìè, óáğàòü â ñëåä âåğñèÿõ.
+			$con['user_access']  = true; // Ğ¾ÑÑ‚Ğ°Ğ²Ğ»ĞµĞ½Ğ¾ Ğ´Ğ»Ñ ÑĞ¾Ğ²Ğ¼ĞµÑÑ‚Ğ¸Ğ¼Ğ¾ÑÑ‚Ğ¸ ÑĞ¾ ÑÑ‚Ğ°Ñ€Ñ‹Ğ¼Ğ¸ ÑˆĞ°Ğ±Ğ»Ğ¾Ğ½Ğ°Ğ¼Ğ¸, ÑƒĞ±Ñ€Ğ°Ñ‚ÑŒ Ğ² ÑĞ»ĞµĞ´ Ğ²ĞµÑ€ÑĞ¸ÑÑ….
             $con['url']          = $model->getArticleURL(null, $con['seolink']);
             $con['image']       = (file_exists(PATH.'/images/photos/small/article'.$con['id'].'.jpg') ? 'article'.$con['id'].'.jpg' : '');
 			$cons[]              = $con;
@@ -336,10 +336,10 @@ if ($do=='read'){
 ///////////////////////////////////// ADD ARTICLE //////////////////////////////////////////////////////////////////////////////////
 if ($do=='addarticle' || $do=='editarticle'){
 
-	$is_add      = $inCore->isUserCan('content/add');     // ìîæåò äîáàâëÿòü ñòàòüè
-	$is_auto_add = $inCore->isUserCan('content/autoadd'); // äîáàâëÿòü ñòàòüè áåç ìîäåğàöèè
-	$is_admin    = $inUser->is_admin;                     // àäìèí
-	$user_id     = $inUser->id;                           // id òåêóùåãî şçåğà
+	$is_add      = $inCore->isUserCan('content/add');     // Ğ¼Ğ¾Ğ¶ĞµÑ‚ Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ»ÑÑ‚ÑŒ ÑÑ‚Ğ°Ñ‚ÑŒĞ¸
+	$is_auto_add = $inCore->isUserCan('content/autoadd'); // Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ»ÑÑ‚ÑŒ ÑÑ‚Ğ°Ñ‚ÑŒĞ¸ Ğ±ĞµĞ· Ğ¼Ğ¾Ğ´ĞµÑ€Ğ°Ñ†Ğ¸Ğ¸
+	$is_admin    = $inUser->is_admin;                     // Ğ°Ğ´Ğ¼Ğ¸Ğ½
+	$user_id     = $inUser->id;                           // id Ñ‚ĞµĞºÑƒÑ‰ĞµĞ³Ğ¾ ÑĞ·ĞµÑ€Ğ°
 	
 	if (!$is_add && !$is_auto_add){ cmsCore::error404(); }
 
@@ -353,8 +353,8 @@ if ($do=='addarticle' || $do=='editarticle'){
 		$mod = $inDB->get_fields('cms_content con LEFT JOIN cms_category cat ON cat.id = con.category_id', "con.id = '$id' $is_autoadd", 'con.*, cat.modgrp_id', 'con.id ASC');
 		if (!$mod) { cmsCore::error404(); }
 
-		$is_editor = $mod['modgrp_id'] == $inUser->group_id && $is_auto_add; // ğåäàêòîğ åñëè id ãğóïïû ğåäàêòîğîâ ğàçäåëà ñîâïàäàåò ñ id ãğóïïû òåêóùåãî ïîëüçîâàòåëÿ
-		$is_author = $user_id == $mod['user_id'];                            // àâòîğ, åñëè òåêóùèé id ïîëüçîâàòåëÿ ñîâïàäàåò ñ id àâòîğà ñòàòüè
+		$is_editor = $mod['modgrp_id'] == $inUser->group_id && $is_auto_add; // Ñ€ĞµĞ´Ğ°ĞºÑ‚Ğ¾Ñ€ ĞµÑĞ»Ğ¸ id Ğ³Ñ€ÑƒĞ¿Ğ¿Ñ‹ Ñ€ĞµĞ´Ğ°ĞºÑ‚Ğ¾Ñ€Ğ¾Ğ² Ñ€Ğ°Ğ·Ğ´ĞµĞ»Ğ° ÑĞ¾Ğ²Ğ¿Ğ°Ğ´Ğ°ĞµÑ‚ Ñ id Ğ³Ñ€ÑƒĞ¿Ğ¿Ñ‹ Ñ‚ĞµĞºÑƒÑ‰ĞµĞ³Ğ¾ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ
+		$is_author = $user_id == $mod['user_id'];                            // Ğ°Ğ²Ñ‚Ğ¾Ñ€, ĞµÑĞ»Ğ¸ Ñ‚ĞµĞºÑƒÑ‰Ğ¸Ğ¹ id Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ ÑĞ¾Ğ²Ğ¿Ğ°Ğ´Ğ°ĞµÑ‚ Ñ id Ğ°Ğ²Ñ‚Ğ¾Ñ€Ğ° ÑÑ‚Ğ°Ñ‚ÑŒĞ¸
 		if (!$is_editor && !$is_author && !$is_admin) { cmsCore::error404(); };
     }
 
@@ -369,7 +369,7 @@ if ($do=='addarticle' || $do=='editarticle'){
 
             $pubcats = $model->getPublicCats();
 
-            // ïîääåğæêà áèëëèíãà
+            // Ğ¿Ğ¾Ğ´Ğ´ĞµÑ€Ğ¶ĞºĞ° Ğ±Ğ¸Ğ»Ğ»Ğ¸Ğ½Ğ³Ğ°
             $dynamic_cost = false;
             if (IS_BILLING){                             
                 $action         = cmsBilling::getAction('content', 'add_content');
@@ -469,7 +469,7 @@ if ($do=='addarticle' || $do=='editarticle'){
 
 		if($errors) { $inCore->redirectBack(); }
 
-		// äîáàâëåíèå ñòàòüè
+		// Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ»ĞµĞ½Ğ¸Ğµ ÑÑ‚Ğ°Ñ‚ÑŒĞ¸
         if ($do=='addarticle'){
 
             $article['id'] = $model->addArticle($article);
@@ -477,7 +477,7 @@ if ($do=='addarticle' || $do=='editarticle'){
             $id = $article['id'];
 		}
 
-		// çàãğóçêà ôîòî
+		// Ğ·Ğ°Ğ³Ñ€ÑƒĞ·ĞºĞ° Ñ„Ğ¾Ñ‚Ğ¾
 		$file = 'article'.$id.'.jpg';
 
 		if ($inCore->request('delete_image', 'int', 0)){
@@ -504,7 +504,7 @@ if ($do=='addarticle' || $do=='editarticle'){
 			}
 		}
 
-		// äîáàâëåíèå ñòàòüè
+		// Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ»ĞµĞ½Ğ¸Ğµ ÑÑ‚Ğ°Ñ‚ÑŒĞ¸
         if ($do=='addarticle'){
 
             //autoforum
@@ -527,7 +527,7 @@ if ($do=='addarticle' || $do=='editarticle'){
 
             } else {
 
-                //ğåãèñòğèğóåì ñîáûòèå
+                //Ñ€ĞµĞ³Ğ¸ÑÑ‚Ñ€Ğ¸Ñ€ÑƒĞµĞ¼ ÑĞ¾Ğ±Ñ‹Ñ‚Ğ¸Ğµ
                 cmsActions::log('add_article', array(
                     'object' => $article['title'],
                     'object_url' =>  "/{$article['seolink']}.html",
@@ -591,7 +591,7 @@ if ($do == 'publisharticle'){
     $article = $model->getArticle($id);
 	if (!$article) { $inCore->halt(); }
 
-    //Åñëè ïîëüçîâàòåëü àâòîğèçîâàí, ïğîâåğÿåì ÿâëÿåòñÿ ëè îí àäìèíîì èëè ğåäàêòîğîì
+    //Ğ•ÑĞ»Ğ¸ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»ÑŒ Ğ°Ğ²Ñ‚Ğ¾Ñ€Ğ¸Ğ·Ğ¾Ğ²Ğ°Ğ½, Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼ ÑĞ²Ğ»ÑĞµÑ‚ÑÑ Ğ»Ğ¸ Ğ¾Ğ½ Ğ°Ğ´Ğ¼Ğ¸Ğ½Ğ¾Ğ¼ Ğ¸Ğ»Ğ¸ Ñ€ĞµĞ´Ğ°ĞºÑ‚Ğ¾Ñ€Ğ¾Ğ¼
 	$is_editor  = ($article['modgrp_id'] == $inUser->group_id && $inCore->isUserCan('content/autoadd'));
 	$is_admin   = $inUser->is_admin;
 
@@ -608,7 +608,7 @@ if ($do == 'publisharticle'){
         cmsBilling::process('content', 'add_content', $category_cost, $author);
     }
     
-    //ğåãèñòğèğóåì ñîáûòèå
+    //Ñ€ĞµĞ³Ğ¸ÑÑ‚Ñ€Ğ¸Ñ€ÑƒĞµĞ¼ ÑĞ¾Ğ±Ñ‹Ñ‚Ğ¸Ğµ
     cmsActions::log('add_article', array(
            'object' => $article['title'],
 		   'user_id' => $article['user_id'],
@@ -635,11 +635,11 @@ if ($do=='deletearticle'){
 	$user_id = $inUser->id;
 	if (!$user_id || !$id){ $inCore->halt(); }
 
-	// ïîëó÷àåì id ğåäàêòîğà è ññûëêó êàòåãîğèè óäàëÿåìîé ñòàòüè
+	// Ğ¿Ğ¾Ğ»ÑƒÑ‡Ğ°ĞµĞ¼ id Ñ€ĞµĞ´Ğ°ĞºÑ‚Ğ¾Ñ€Ğ° Ğ¸ ÑÑÑ‹Ğ»ĞºÑƒ ĞºĞ°Ñ‚ĞµĞ³Ğ¾Ñ€Ğ¸Ğ¸ ÑƒĞ´Ğ°Ğ»ÑĞµĞ¼Ğ¾Ğ¹ ÑÑ‚Ğ°Ñ‚ÑŒĞ¸
 	$article = $inDB->get_fields('cms_content con LEFT JOIN cms_category cat ON cat.id = con.category_id', "con.id = '$id'", 'con.seolink as con_seolink, con.title, cat.modgrp_id, cat.seolink', 'con.id ASC');
 	if (!$article) { $inCore->halt(); }
 
-	// Îïğåäåëÿåì ïğàâà äîñòóïà
+	// ĞĞ¿Ñ€ĞµĞ´ĞµĞ»ÑĞµĞ¼ Ğ¿Ñ€Ğ°Ğ²Ğ° Ğ´Ğ¾ÑÑ‚ÑƒĞ¿Ğ°
 	$is_admin  = $inUser->is_admin;
 	$is_author = $inCore->isUserCan('content/delete') && $inDB->rows_count('cms_content', "id='$id' AND user_id='{$user_id}'");
 	$is_editor = ($article['modgrp_id'] == $inUser->group_id && $inCore->isUserCan('content/autoadd'));

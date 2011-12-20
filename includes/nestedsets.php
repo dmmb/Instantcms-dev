@@ -116,7 +116,7 @@ class CCelkoNastedSet {
 
 	private function BeginTransaction ($Differ = "")
 	{
-        //r2: çäåñü íóæíî áóäåò ðàçáèðàòüñÿ ñ òðàíçàêöèÿìè
+        //r2: Ð·Ð´ÐµÑÑŒ Ð½ÑƒÐ¶Ð½Ð¾ Ð±ÑƒÐ´ÐµÑ‚ Ñ€Ð°Ð·Ð±Ð¸Ñ€Ð°Ñ‚ÑŒÑÑ Ñ Ñ‚Ñ€Ð°Ð½Ð·Ð°ÐºÑ†Ð¸ÑÐ¼Ð¸
         $this->_IsInTransaction = true; return true;
 
         $this->InitializeTransaction($Differ);
@@ -357,12 +357,12 @@ class CCelkoNastedSet {
         if ($move_row[$this->FieldDiffer]) $Differ = 'AND ' . $this->FieldDiffer . ' = ' . $move_row[$this->FieldDiffer];
         else $Differ = '';
         
-		// ìàêñèìàëüíîå çíà÷åíèå ñîðòèðîâêè
+		// Ð¼Ð°ÐºÑÐ¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ ÑÐ¾Ñ€Ñ‚Ð¸Ñ€Ð¾Ð²ÐºÐ¸
         $sql = "SELECT MAX({$this->FieldOrder}) FROM {$this->TableName} WHERE {$this->FieldIDParent}={$move_row[$this->FieldIDParent]}";
         $res = $this->_safe_query ($sql, $this->MyLink);
         list($maxordering) = mysql_fetch_row($res);
         if (!$maxordering) $maxordering = 1;
-		// ìèíèìàëüíîå çíà÷åíèå ñîðòèðîâêè
+		// Ð¼Ð¸Ð½Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ ÑÐ¾Ñ€Ñ‚Ð¸Ñ€Ð¾Ð²ÐºÐ¸
         $sql_min = "SELECT MIN({$this->FieldOrder}) FROM {$this->TableName} WHERE {$this->FieldIDParent}={$move_row[$this->FieldIDParent]}";
         $res_min = $this->_safe_query ($sql_min, $this->MyLink);
         list($minordering) = mysql_fetch_row($res_min);

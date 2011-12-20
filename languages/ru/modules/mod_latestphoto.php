@@ -17,8 +17,8 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * e-mail: firs.yura@gmail.com
  * site: firs.org.ua
  */
-$_LANG['LATESTPHOTO_NO_MATERIAL']       = 'Нет материалов для отображения.';
-$_LANG['LATESTPHOTO_ALLNEW']       = 'Все новые фото';
+$_LANG['LATESTPHOTO_NO_MATERIAL']       = 'РќРµС‚ РјР°С‚РµСЂРёР°Р»РѕРІ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ.';
+$_LANG['LATESTPHOTO_ALLNEW']       = 'Р’СЃРµ РЅРѕРІС‹Рµ С„РѕС‚Рѕ';
 $_LANG['LATESTPHOTO_ARR']       = ' &rarr;';
 
 ?>

@@ -20,19 +20,19 @@ function cpStripComment($text){
 
 }
 
-	cpAddPathway('Комментарии пользователей', '?view=components&do=config&id='.$_REQUEST['id']);
+	cpAddPathway('РљРѕРјРјРµРЅС‚Р°СЂРёРё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', '?view=components&do=config&id='.$_REQUEST['id']);
 	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; }
 		$toolmenu = array();
 
         if ($opt!='list'){
             $toolmenu[1]['icon'] = 'listcomments.gif';
-            $toolmenu[1]['title'] = 'Все комментарии';
+            $toolmenu[1]['title'] = 'Р’СЃРµ РєРѕРјРјРµРЅС‚Р°СЂРёРё';
             $toolmenu[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list';
         }
 
         if ($opt!='config'){
             $toolmenu[2]['icon'] = 'config.gif';
-            $toolmenu[2]['title'] = 'Настройки компонента';
+            $toolmenu[2]['title'] = 'РќР°СЃС‚СЂРѕР№РєРё РєРѕРјРїРѕРЅРµРЅС‚Р°';
             $toolmenu[2]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config';
         }
 	
@@ -122,39 +122,39 @@ function cpStripComment($text){
 	}
 	
 	if ($opt == 'list'){
-		cpAddPathway('Все комментарии', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
-		echo '<h3>Все комментарии</h3>';
+		cpAddPathway('Р’СЃРµ РєРѕРјРјРµРЅС‚Р°СЂРёРё', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
+		echo '<h3>Р’СЃРµ РєРѕРјРјРµРЅС‚Р°СЂРёРё</h3>';
 
 		//TABLE COLUMNS
 		$fields = array();
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Дата';		$fields[1]['field'] = 'pubdate';	$fields[1]['width'] = '100';
+		$fields[1]['title'] = 'Р”Р°С‚Р°';		$fields[1]['field'] = 'pubdate';	$fields[1]['width'] = '100';
 
-		$fields[2]['title'] = 'Текст';		$fields[2]['field'] = 'content';	$fields[2]['width'] = ''; 
+		$fields[2]['title'] = 'РўРµРєСЃС‚';		$fields[2]['field'] = 'content';	$fields[2]['width'] = ''; 
         $fields[2]['prc'] = 'cpStripComment';
 
 		$fields[3]['title'] = 'IP';			$fields[3]['field'] = 'ip';			$fields[3]['width'] = '80'; 
 
-		$fields[4]['title'] = 'Показ';      $fields[4]['field'] = 'published';	$fields[4]['width'] = '50';
+		$fields[4]['title'] = 'РџРѕРєР°Р·';      $fields[4]['field'] = 'published';	$fields[4]['width'] = '50';
         $fields[4]['do'] = 'opt';           $fields[4]['do_suffix'] = '_comment';
 
-		$fields[5]['title'] = 'Автор';		$fields[5]['field'] = 'id';			$fields[5]['width'] = '180';
+		$fields[5]['title'] = 'РђРІС‚РѕСЂ';		$fields[5]['field'] = 'id';			$fields[5]['width'] = '180';
 		$fields[5]['prc'] = 'cpCommentAuthor';
 
-		$fields[6]['title'] = 'Цель';		$fields[6]['field'] = 'id';			$fields[6]['width'] = '220';
+		$fields[6]['title'] = 'Р¦РµР»СЊ';		$fields[6]['field'] = 'id';			$fields[6]['width'] = '220';
 		$fields[6]['prc'] = 'cpCommentTarget';
 
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Редактировать';
+		$actions[0]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[0]['icon']  = 'edit.gif';
 		$actions[0]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id=%id%';
 
-		$actions[1]['title'] = 'Удалить';
+		$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[1]['icon']  = 'delete.gif';
-		$actions[1]['confirm'] = 'Удалить комментарий?';
+		$actions[1]['confirm'] = 'РЈРґР°Р»РёС‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёР№?';
 		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete&item_id=%id%';
 				
 		//Print table
@@ -177,36 +177,36 @@ function cpStripComment($text){
 					}
 					$target='N/A';
 					switch($mod['target']){
-						case 'article': $target = '<a href="/index.php?view=content&do=read&id='.$mod['target_id'].'">Статья</a> (ID='.$mod['target_id'].')'; break;
-						case 'photo': $target = '<a href="/index.php?view=content&do=viewphoto&id='.$mod['target_id'].'">Фото</a> (ID='.$mod['target_id'].')'; break;
-						case 'user': $target = '<a href="/index.php?view=profile&do=view&id='.$mod['target_id'].'">Пользователь</a> (ID='.$mod['user_id'].')'; break;
+						case 'article': $target = '<a href="/index.php?view=content&do=read&id='.$mod['target_id'].'">РЎС‚Р°С‚СЊСЏ</a> (ID='.$mod['target_id'].')'; break;
+						case 'photo': $target = '<a href="/index.php?view=content&do=viewphoto&id='.$mod['target_id'].'">Р¤РѕС‚Рѕ</a> (ID='.$mod['target_id'].')'; break;
+						case 'user': $target = '<a href="/index.php?view=profile&do=view&id='.$mod['target_id'].'">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ</a> (ID='.$mod['user_id'].')'; break;
 					}
 				}
 								 
 			 }
 
-			cpAddPathway('Редактировать комментарий', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add');
-		    echo '<h3>Редактировать комментарий</h3>';
+			cpAddPathway('Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёР№', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add');
+		    echo '<h3>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёР№</h3>';
 		
 ?>
 
 	<form id="addform" name="addform" method="post" action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>">
         <table width="662" border="0" cellspacing="5" class="proptable">
           <tr>
-            <td width="200"><strong>Автор комментария: </strong></td>
+            <td width="200"><strong>РђРІС‚РѕСЂ РєРѕРјРјРµРЅС‚Р°СЂРёСЏ: </strong></td>
             <td><?php echo $author?></td>
           </tr>
           <tr>
-            <td><strong>Дата подачи: </strong></td>
+            <td><strong>Р”Р°С‚Р° РїРѕРґР°С‡Рё: </strong></td>
             <td><input name="pubdate" type="text" id="title3" size="30" value="<?php echo @$mod['pubdate'];?>"/></td>
           </tr>
           <tr>
-            <td><strong>Публиковать комментарий?</strong></td>
+            <td><strong>РџСѓР±Р»РёРєРѕРІР°С‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёР№?</strong></td>
             <td><input name="published" type="radio" value="1" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> />
-              Да
+              Р”Р°
               <label>
           <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> />
-                Нет</label></td>
+                РќРµС‚</label></td>
           </tr>
         </table>
             <?php
@@ -216,10 +216,10 @@ function cpStripComment($text){
             ?>
         <p>
           <label>
-          <input name="add_mod" type="submit" id="add_mod" value="Сохранить изменения"/>
+          <input name="add_mod" type="submit" id="add_mod" value="РЎРѕС…СЂР°РЅРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ"/>
           </label>
           <label>
-          <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+          <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components';"/>
           </label>
           <input name="opt" type="hidden" id="do" value="update" />
 		  <input name="item_id" type="hidden" value="<?php echo $mod['id']?>" />
@@ -246,8 +246,8 @@ function cpStripComment($text){
     $GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/includes/jquery/tabs/jquery.ui.min.js"></script>';
     $GLOBALS['cp_page_head'][] = '<link href="/includes/jquery/tabs/tabs.css" rel="stylesheet" type="text/css" />';
 
-	cpAddPathway('Настройки', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config');	
-	echo '<h3>Настройки комментариев</h3>';
+	cpAddPathway('РќР°СЃС‚СЂРѕР№РєРё', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config');	
+	echo '<h3>РќР°СЃС‚СЂРѕР№РєРё РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ</h3>';
 	
 	?>
 
@@ -256,18 +256,18 @@ function cpStripComment($text){
 <div id="config_tabs" style="margin-top:12px;">
 
     <ul id="tabs">
-        <li><a href="#basic"><span>Общие</span></a></li>
-        <li><a href="#format"><span>Формат</span></a></li>
-        <li><a href="#access"><span>Доступ</span></a></li>
-        <li><a href="#restrict"><span>Ограничения</span></a></li>
+        <li><a href="#basic"><span>РћР±С‰РёРµ</span></a></li>
+        <li><a href="#format"><span>Р¤РѕСЂРјР°С‚</span></a></li>
+        <li><a href="#access"><span>Р”РѕСЃС‚СѓРї</span></a></li>
+        <li><a href="#restrict"><span>РћРіСЂР°РЅРёС‡РµРЅРёСЏ</span></a></li>
     </ul>
 
     <div id="basic">
         <table width="671" border="0" cellpadding="10" cellspacing="0" class="proptable">
             <tr>
                 <td width="316" valign="top">
-                    <strong>E-mail для комментариев:</strong><br/>
-                    <span class="hinttext">Оставьте пустым, если вы не хотите получать комментарии по почте</span>
+                    <strong>E-mail РґР»СЏ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ:</strong><br/>
+                    <span class="hinttext">РћСЃС‚Р°РІСЊС‚Рµ РїСѓСЃС‚С‹Рј, РµСЃР»Рё РІС‹ РЅРµ С…РѕС‚РёС‚Рµ РїРѕР»СѓС‡Р°С‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё РїРѕ РїРѕС‡С‚Рµ</span>
                 </td>
                 <td width="313" valign="top">
                     <input name="email" type="text" id="email" size="30" value="<?php echo @$cfg['email'];?>"/>
@@ -275,12 +275,12 @@ function cpStripComment($text){
             </tr>
             <tr>
                 <td valign="top">
-                    <strong>Подписка на уведомления: </strong><br />
-                    <span class="hinttext">Позволяет пользователям получать личные сообщения с уведомлениями о новых комментариях</span>
+                    <strong>РџРѕРґРїРёСЃРєР° РЅР° СѓРІРµРґРѕРјР»РµРЅРёСЏ: </strong><br />
+                    <span class="hinttext">РџРѕР·РІРѕР»СЏРµС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј РїРѕР»СѓС‡Р°С‚СЊ Р»РёС‡РЅС‹Рµ СЃРѕРѕР±С‰РµРЅРёСЏ СЃ СѓРІРµРґРѕРјР»РµРЅРёСЏРјРё Рѕ РЅРѕРІС‹С… РєРѕРјРјРµРЅС‚Р°СЂРёСЏС…</span>
                 </td>
                 <td valign="top">
-                    <input name="subscribe" type="radio" value="1" <?php if (@$cfg['subscribe']) { echo 'checked="checked"'; } ?> /> Да
-                    <input name="subscribe" type="radio" value="0"  <?php if (@!$cfg['subscribe']) { echo 'checked="checked"'; } ?> /> Нет
+                    <input name="subscribe" type="radio" value="1" <?php if (@$cfg['subscribe']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                    <input name="subscribe" type="radio" value="0"  <?php if (@!$cfg['subscribe']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                 </td>
             </tr>
         </table>
@@ -290,53 +290,53 @@ function cpStripComment($text){
         <table width="671" border="0" cellpadding="10" cellspacing="0" class="proptable">
             <tr>
                 <td width="316" valign="top">
-                    <strong>Загружать комментарии, используя ajax?</strong>
+                    <strong>Р—Р°РіСЂСѓР¶Р°С‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё, РёСЃРїРѕР»СЊР·СѓСЏ ajax?</strong>
                 </td>
                 <td width="313" valign="top">
-                    <input name="cmm_ajax" type="radio" value="1" <?php if (@$cfg['cmm_ajax']) { echo 'checked="checked"'; } ?> /> Да
-                    <input name="cmm_ajax" type="radio" value="0"  <?php if (!$cfg['cmm_ajax']) { echo 'checked="checked"'; } ?> /> Нет
+                    <input name="cmm_ajax" type="radio" value="1" <?php if (@$cfg['cmm_ajax']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                    <input name="cmm_ajax" type="radio" value="0"  <?php if (!$cfg['cmm_ajax']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                 </td>
             </tr>
             <tr>
-                <td valign="top"><strong>Смайлы в комментариях:</strong></td>
+                <td valign="top"><strong>РЎРјР°Р№Р»С‹ РІ РєРѕРјРјРµРЅС‚Р°СЂРёСЏС…:</strong></td>
                 <td valign="top">
-                    <input name="smiles" type="radio" value="1" <?php if (@$cfg['smiles']) { echo 'checked="checked"'; } ?> /> Да
-                    <input name="smiles" type="radio" value="0"  <?php if (@!$cfg['smiles']) { echo 'checked="checked"'; } ?> /> Нет
+                    <input name="smiles" type="radio" value="1" <?php if (@$cfg['smiles']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                    <input name="smiles" type="radio" value="0"  <?php if (@!$cfg['smiles']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                 </td>
             </tr>
             <tr>
-                <td valign="top"><strong>BB-Code в комментариях:</strong></td>
+                <td valign="top"><strong>BB-Code РІ РєРѕРјРјРµРЅС‚Р°СЂРёСЏС…:</strong></td>
                 <td valign="top">
-                    <input name="bbcode" type="radio" value="1" <?php if (@$cfg['bbcode']) { echo 'checked="checked"'; } ?> /> Да
-                    <input name="bbcode" type="radio" value="0"  <?php if (@!$cfg['bbcode']) { echo 'checked="checked"'; } ?> /> Нет
+                    <input name="bbcode" type="radio" value="1" <?php if (@$cfg['bbcode']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                    <input name="bbcode" type="radio" value="0"  <?php if (@!$cfg['bbcode']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                 </td>
             </tr>
             <tr>
-                <td valign="top"><strong>Текст уведомления о новых комментариях:</strong></td>
+                <td valign="top"><strong>РўРµРєСЃС‚ СѓРІРµРґРѕРјР»РµРЅРёСЏ Рѕ РЅРѕРІС‹С… РєРѕРјРјРµРЅС‚Р°СЂРёСЏС…:</strong></td>
                 <td valign="top"><a href="/includes/letters/newcomment.txt">/includes/letters/newcomment.txt</a></td>
             </tr>
             <tr>
-                <td valign="top"><strong>Максимальный уровень вложенности:</strong></td>
+                <td valign="top"><strong>РњР°РєСЃРёРјР°Р»СЊРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ РІР»РѕР¶РµРЅРЅРѕСЃС‚Рё:</strong></td>
                 <td valign="top"><input name="max_level" type="text" id="max_level" value="<?php echo @$cfg['max_level'];?>" size="3" /></td>
             </tr>
             <tr>
-                <td valign="top"><strong>Количество комментариев на странице при просмотре всех комментариев сайта:</strong></td>
+                <td valign="top"><strong>РљРѕР»РёС‡РµСЃС‚РІРѕ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ РЅР° СЃС‚СЂР°РЅРёС†Рµ РїСЂРё РїСЂРѕСЃРјРѕС‚СЂРµ РІСЃРµС… РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ СЃР°Р№С‚Р°:</strong></td>
                 <td valign="top"><input name="perpage" type="text" id="perpage" value="<?php echo @$cfg['perpage'];?>" size="3" /></td>
             </tr>
             <tr>
-                <td valign="middle"><strong>Показывать ip комментаторов администраторам: </strong></td>
+                <td valign="middle"><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ ip РєРѕРјРјРµРЅС‚Р°С‚РѕСЂРѕРІ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°Рј: </strong></td>
                 <td>
                     <select name="cmm_ip" id="cmm_ip" style="width:220px">
-                        <option value="0" <?php if($cfg['cmm_ip']==0) { echo 'selected'; } ?>>не показывать</option>
-                        <option value="1" <?php if($cfg['cmm_ip']==1) { echo 'selected'; } ?>>только гостей</option>
-                        <option value="2" <?php if($cfg['cmm_ip']==2) { echo 'selected'; } ?>>всех</option>
+                        <option value="0" <?php if($cfg['cmm_ip']==0) { echo 'selected'; } ?>>РЅРµ РїРѕРєР°Р·С‹РІР°С‚СЊ</option>
+                        <option value="1" <?php if($cfg['cmm_ip']==1) { echo 'selected'; } ?>>С‚РѕР»СЊРєРѕ РіРѕСЃС‚РµР№</option>
+                        <option value="2" <?php if($cfg['cmm_ip']==2) { echo 'selected'; } ?>>РІСЃРµС…</option>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td valign="top">
-                    <strong>Кодировка формы добавления комментария:</strong><br />
-                    <span class="hinttext">Переключите, если в форме &quot;Добавить комментарий&quot; текст отображается неправильно </span>
+                    <strong>РљРѕРґРёСЂРѕРІРєР° С„РѕСЂРјС‹ РґРѕР±Р°РІР»РµРЅРёСЏ РєРѕРјРјРµРЅС‚Р°СЂРёСЏ:</strong><br />
+                    <span class="hinttext">РџРµСЂРµРєР»СЋС‡РёС‚Рµ, РµСЃР»Рё РІ С„РѕСЂРјРµ &quot;Р”РѕР±Р°РІРёС‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёР№&quot; С‚РµРєСЃС‚ РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РЅРµРїСЂР°РІРёР»СЊРЅРѕ </span>
                 </td>
                 <td valign="top">
                     <select name="recode" id="recode" style="width:220px">
@@ -351,48 +351,48 @@ function cpStripComment($text){
     <div id="access">
         <table width="671" border="0" cellpadding="10" cellspacing="0" class="proptable">
             <tr>
-                <td width="316" valign="middle"><strong>Комментарии доступны: </strong></td>
+                <td width="316" valign="middle"><strong>РљРѕРјРјРµРЅС‚Р°СЂРёРё РґРѕСЃС‚СѓРїРЅС‹: </strong></td>
                 <td width="313">
                     <select name="canguests" id="canguests" style="width:220px">
-                        <option value="0" <?php if(@$cfg['canguests']==0) { echo 'selected'; } ?>>Для зарегистрированных</option>
-                        <option value="1" <?php if(@$cfg['canguests']==1) { echo 'selected'; } ?>>Для всех</option>
+                        <option value="0" <?php if(@$cfg['canguests']==0) { echo 'selected'; } ?>>Р”Р»СЏ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹С…</option>
+                        <option value="1" <?php if(@$cfg['canguests']==1) { echo 'selected'; } ?>>Р”Р»СЏ РІСЃРµС…</option>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td valign="top">
-        			<strong>Требовать защитный код:</strong><br />
-            		<span class="hinttext">Каким пользователям показывать капчу при добавлении комментария </span>
+        			<strong>РўСЂРµР±РѕРІР°С‚СЊ Р·Р°С‰РёС‚РЅС‹Р№ РєРѕРґ:</strong><br />
+            		<span class="hinttext">РљР°РєРёРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј РїРѕРєР°Р·С‹РІР°С‚СЊ РєР°РїС‡Сѓ РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё РєРѕРјРјРµРЅС‚Р°СЂРёСЏ </span>
                 </td>
                 <td valign="top">
                     <select name="regcap" id="regcap" style="width:220px">
-                        <option value="0" <?php if(@$cfg['regcap']==0) { echo 'selected'; } ?>>Для гостей</option>
-                        <option value="1" <?php if(@$cfg['regcap']==1) { echo 'selected'; } ?>>Для всех</option>
+                        <option value="0" <?php if(@$cfg['regcap']==0) { echo 'selected'; } ?>>Р”Р»СЏ РіРѕСЃС‚РµР№</option>
+                        <option value="1" <?php if(@$cfg['regcap']==1) { echo 'selected'; } ?>>Р”Р»СЏ РІСЃРµС…</option>
                     </select>
                 </td>
             </tr>
             <tr>
-                <td valign="top"><strong>Публиковать сразу:</strong><br />
-                    <span class="hinttext">Запретите, если вы хотите проверять комментарии перед добавлением на сайт</span>
+                <td valign="top"><strong>РџСѓР±Р»РёРєРѕРІР°С‚СЊ СЃСЂР°Р·Сѓ:</strong><br />
+                    <span class="hinttext">Р—Р°РїСЂРµС‚РёС‚Рµ, РµСЃР»Рё РІС‹ С…РѕС‚РёС‚Рµ РїСЂРѕРІРµСЂСЏС‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё РїРµСЂРµРґ РґРѕР±Р°РІР»РµРЅРёРµРј РЅР° СЃР°Р№С‚</span>
                 </td>
                 <td valign="top">
-                    <input name="publish" type="radio" value="1" <?php if (@$cfg['publish']) { echo 'checked="checked"'; } ?> /> Да
-                    <input name="publish" type="radio" value="0"  <?php if (@!$cfg['publish']) { echo 'checked="checked"'; } ?> /> Нет
+                    <input name="publish" type="radio" value="1" <?php if (@$cfg['publish']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                    <input name="publish" type="radio" value="0"  <?php if (@!$cfg['publish']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                 </td>
             </tr>
             <tr>
-                <td valign="top"><strong>Запрещать редактирование через:</strong><br />
-                    <span class="hinttext">Спустя указанное время после добавления комментария его редактирование станет невозможным для пользователя</span>
+                <td valign="top"><strong>Р—Р°РїСЂРµС‰Р°С‚СЊ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ С‡РµСЂРµР·:</strong><br />
+                    <span class="hinttext">РЎРїСѓСЃС‚СЏ СѓРєР°Р·Р°РЅРЅРѕРµ РІСЂРµРјСЏ РїРѕСЃР»Рµ РґРѕР±Р°РІР»РµРЅРёСЏ РєРѕРјРјРµРЅС‚Р°СЂРёСЏ РµРіРѕ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ СЃС‚Р°РЅРµС‚ РЅРµРІРѕР·РјРѕР¶РЅС‹Рј РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ</span>
                 </td>
                 <td valign="top">
                     <select name="edit_minutes" id="regcap" style="width:220px">
-                        <option value="0" <?php if(!$cfg['edit_minutes']) { echo 'selected'; } ?>>запрещать сразу</option>
-                        <option value="1" <?php if(@$cfg['edit_minutes']==1) { echo 'selected'; } ?>>1 минуту</option>
-                        <option value="5" <?php if(@$cfg['edit_minutes']==5) { echo 'selected'; } ?>>5 минут</option>
-                        <option value="10" <?php if(@$cfg['edit_minutes']==10) { echo 'selected'; } ?>>10 минут</option>
-                        <option value="15" <?php if(@$cfg['edit_minutes']==15) { echo 'selected'; } ?>>15 минут</option>
-                        <option value="30" <?php if(@$cfg['edit_minutes']==30) { echo 'selected'; } ?>>30 минут</option>
-                        <option value="60" <?php if(@$cfg['edit_minutes']==60) { echo 'selected'; } ?>>1 час</option>                        
+                        <option value="0" <?php if(!$cfg['edit_minutes']) { echo 'selected'; } ?>>Р·Р°РїСЂРµС‰Р°С‚СЊ СЃСЂР°Р·Сѓ</option>
+                        <option value="1" <?php if(@$cfg['edit_minutes']==1) { echo 'selected'; } ?>>1 РјРёРЅСѓС‚Сѓ</option>
+                        <option value="5" <?php if(@$cfg['edit_minutes']==5) { echo 'selected'; } ?>>5 РјРёРЅСѓС‚</option>
+                        <option value="10" <?php if(@$cfg['edit_minutes']==10) { echo 'selected'; } ?>>10 РјРёРЅСѓС‚</option>
+                        <option value="15" <?php if(@$cfg['edit_minutes']==15) { echo 'selected'; } ?>>15 РјРёРЅСѓС‚</option>
+                        <option value="30" <?php if(@$cfg['edit_minutes']==30) { echo 'selected'; } ?>>30 РјРёРЅСѓС‚</option>
+                        <option value="60" <?php if(@$cfg['edit_minutes']==60) { echo 'selected'; } ?>>1 С‡Р°СЃ</option>                        
                     </select>
                 </td>
             </tr>
@@ -403,18 +403,18 @@ function cpStripComment($text){
         <table width="671" border="0" cellpadding="10" cellspacing="0" class="proptable">
             <tr>
                 <td width="316" valign="top">
-                    <strong>Использовать ограничения:</strong><br />
-                    <span class="hinttext">Если выключено, разрешенные пользователи смогут добавлять комментарии, независимо от значения своей кармы </span>
+                    <strong>РСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РѕРіСЂР°РЅРёС‡РµРЅРёСЏ:</strong><br />
+                    <span class="hinttext">Р•СЃР»Рё РІС‹РєР»СЋС‡РµРЅРѕ, СЂР°Р·СЂРµС€РµРЅРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё СЃРјРѕРіСѓС‚ РґРѕР±Р°РІР»СЏС‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё, РЅРµР·Р°РІРёСЃРёРјРѕ РѕС‚ Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕРµР№ РєР°СЂРјС‹ </span>
                 </td>
                 <td width="313" valign="top">
-                    <input name="min_karma" type="radio" value="1" <?php if (@$cfg['min_karma']) { echo 'checked="checked"'; } ?> /> Да
-                    <input name="min_karma" type="radio" value="0" <?php if (@!$cfg['min_karma']) { echo 'checked="checked"'; } ?>/> Нет
+                    <input name="min_karma" type="radio" value="1" <?php if (@$cfg['min_karma']) { echo 'checked="checked"'; } ?> /> Р”Р°
+                    <input name="min_karma" type="radio" value="0" <?php if (@!$cfg['min_karma']) { echo 'checked="checked"'; } ?>/> РќРµС‚
                 </td>
             </tr>
             <tr>
                 <td valign="top">
-                    <strong>Добавление комментария:</strong><br />
-                    <span class="hinttext">Сколько очков кармы нужно для добавления комментария </span>
+                    <strong>Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРјРјРµРЅС‚Р°СЂРёСЏ:</strong><br />
+                    <span class="hinttext">РЎРєРѕР»СЊРєРѕ РѕС‡РєРѕРІ РєР°СЂРјС‹ РЅСѓР¶РЅРѕ РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ РєРѕРјРјРµРЅС‚Р°СЂРёСЏ </span>
                 </td>
                 <td valign="top">
                     <input name="min_karma_add" type="text" id="min_karma_add" value="<?php echo @$cfg['min_karma_add'];?>" size="5" />
@@ -422,8 +422,8 @@ function cpStripComment($text){
             </tr>
             <tr>
                 <td valign="top">
-                    <strong>Сворачивать комментарии, с рейтингом ниже:</strong><br />
-                    <span class="hinttext">Комментарии c рейтингом ниже указанного будут выводится в свернутом виде </span>
+                    <strong>РЎРІРѕСЂР°С‡РёРІР°С‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё, СЃ СЂРµР№С‚РёРЅРіРѕРј РЅРёР¶Рµ:</strong><br />
+                    <span class="hinttext">РљРѕРјРјРµРЅС‚Р°СЂРёРё c СЂРµР№С‚РёРЅРіРѕРј РЅРёР¶Рµ СѓРєР°Р·Р°РЅРЅРѕРіРѕ Р±СѓРґСѓС‚ РІС‹РІРѕРґРёС‚СЃСЏ РІ СЃРІРµСЂРЅСѓС‚РѕРј РІРёРґРµ </span>
                 </td>
                 <td valign="top">
                     <input name="min_karma_show" type="text" id="min_karma_show" value="<?php echo @$cfg['min_karma_show'];?>" size="5" />
@@ -436,8 +436,8 @@ function cpStripComment($text){
           
 <p>
   <input name="opt" type="hidden" id="do" value="saveconfig" />
-  <input name="save" type="submit" id="save" value="Сохранить" />
-  <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
+  <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+  <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
 </p>
 </form>
 

@@ -12,20 +12,20 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //                                                                            //
 /******************************************************************************/
 
-	cpAddPathway('Каталог статей', '?view=components&do=config&id='.(int)$_REQUEST['id']);
+	cpAddPathway('РљР°С‚Р°Р»РѕРі СЃС‚Р°С‚РµР№', '?view=components&do=config&id='.(int)$_REQUEST['id']);
 	
-	echo '<h3>Каталог статей</h3>';
+	echo '<h3>РљР°С‚Р°Р»РѕРі СЃС‚Р°С‚РµР№</h3>';
 	
 	$opt = $inCore->request('opt', 'str', 'list');
 	
 	$toolmenu = array();
 
 	$toolmenu[0]['icon'] = 'save.gif';
-	$toolmenu[0]['title'] = 'Сохранить';
+	$toolmenu[0]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 	$toolmenu[0]['link'] = 'javascript:document.optform.submit();';
 
 	$toolmenu[1]['icon'] = 'cancel.gif';
-	$toolmenu[1]['title'] = 'Отмена';
+	$toolmenu[1]['title'] = 'РћС‚РјРµРЅР°';
 	$toolmenu[1]['link'] = '?view=components';
 
 	cpToolMenu($toolmenu);
@@ -55,7 +55,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 		$inCore->saveComponentConfig('content', $cfg);
 		
-		$msg = 'Настройки сохранены.';
+		$msg = 'РќР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅРµРЅС‹.';
 	}
 
 	if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
@@ -86,133 +86,133 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 <form action="index.php?view=components&do=config&id=<?php echo (int)$_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
     <?php ob_start(); ?>
-    {tab=Внешний вид}
+    {tab=Р’РЅРµС€РЅРёР№ РІРёРґ}
     <table width="550" border="0" cellpadding="10" cellspacing="0" class="proptable">
         <tr>
-            <td><strong>Выводить анонсы при просмотре статей: </strong></td>
+            <td><strong>Р’С‹РІРѕРґРёС‚СЊ Р°РЅРѕРЅСЃС‹ РїСЂРё РїСЂРѕСЃРјРѕС‚СЂРµ СЃС‚Р°С‚РµР№: </strong></td>
             <td width="110">
-                <input name="readdesc" type="radio" value="1" <?php if (@$cfg['readdesc']) { echo 'checked="checked"'; } ?>/> Да
-                <input name="readdesc" type="radio" value="0" <?php if (@!$cfg['readdesc']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="readdesc" type="radio" value="1" <?php if (@$cfg['readdesc']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                <input name="readdesc" type="radio" value="0" <?php if (@!$cfg['readdesc']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
         <tr>
-            <td><strong>Рейтинг статей: </strong></td>
+            <td><strong>Р РµР№С‚РёРЅРі СЃС‚Р°С‚РµР№: </strong></td>
             <td>
-                <input name="rating" type="radio" value="1" <?php if (@$cfg['rating']) { echo 'checked="checked"'; } ?>/> Вкл
-                <input name="rating" type="radio" value="0" <?php if (@!$cfg['rating']) { echo 'checked="checked"'; } ?>/> Выкл
+                <input name="rating" type="radio" value="1" <?php if (@$cfg['rating']) { echo 'checked="checked"'; } ?>/> Р’РєР»
+                <input name="rating" type="radio" value="0" <?php if (@!$cfg['rating']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
             </td>
         </tr>
         <tr>
             <td>
-                <strong>Автоматически генерировать<br />ключевые слова и описания для статей:</strong>
+                <strong>РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРё РіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ<br />РєР»СЋС‡РµРІС‹Рµ СЃР»РѕРІР° Рё РѕРїРёСЃР°РЅРёСЏ РґР»СЏ СЃС‚Р°С‚РµР№:</strong>
             </td>
             <td valign="top">
-                <input name="autokeys" type="radio" value="1" <?php if (@$cfg['autokeys']) { echo 'checked="checked"'; } ?>/> Да
-                <input name="autokeys" type="radio" value="0" <?php if (@!$cfg['autokeys']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="autokeys" type="radio" value="1" <?php if (@$cfg['autokeys']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                <input name="autokeys" type="radio" value="0" <?php if (@!$cfg['autokeys']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
         <tr>
-            <td><strong>Количество статей на странице: </strong></td>
-            <td><input name="perpage" type="text" id="perpage" value="<?php echo @$cfg['perpage'];?>" size="5" /> шт.</td>
+            <td><strong>РљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚Р°С‚РµР№ РЅР° СЃС‚СЂР°РЅРёС†Рµ: </strong></td>
+            <td><input name="perpage" type="text" id="perpage" value="<?php echo @$cfg['perpage'];?>" size="5" /> С€С‚.</td>
         </tr>
     </table>
     <table width="550" border="0" cellpadding="10" cellspacing="0" class="proptable">
         <tr>
-            <td><strong>Показывать содержание статей: </strong></td>
+            <td><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ СЃРѕРґРµСЂР¶Р°РЅРёРµ СЃС‚Р°С‚РµР№: </strong></td>
             <td width="110">
-                <input name="pt_show" type="radio" value="1" <?php if (@$cfg['pt_show']) { echo 'checked="checked"'; } ?>/> Да
-                <input name="pt_show" type="radio" value="0" <?php if (@!$cfg['pt_show']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="pt_show" type="radio" value="1" <?php if (@$cfg['pt_show']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                <input name="pt_show" type="radio" value="0" <?php if (@!$cfg['pt_show']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
         <tr>
-            <td><strong>Разворачивать содержание: </strong></td>
+            <td><strong>Р Р°Р·РІРѕСЂР°С‡РёРІР°С‚СЊ СЃРѕРґРµСЂР¶Р°РЅРёРµ: </strong></td>
             <td>
-                <input name="pt_disp" type="radio" value="1" <?php if (@$cfg['pt_disp']) { echo 'checked="checked"'; } ?>/> Да
-                <input name="pt_disp" type="radio" value="0" <?php if (@!$cfg['pt_disp']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="pt_disp" type="radio" value="1" <?php if (@$cfg['pt_disp']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                <input name="pt_disp" type="radio" value="0" <?php if (@!$cfg['pt_disp']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
         <tr>
-            <td><strong>Ссылка &quot;Скрыть содержание&quot; : </strong></td>
+            <td><strong>РЎСЃС‹Р»РєР° &quot;РЎРєСЂС‹С‚СЊ СЃРѕРґРµСЂР¶Р°РЅРёРµ&quot; : </strong></td>
             <td>
-                <input name="pt_hide" type="radio" value="1" <?php if (@$cfg['pt_hide']) { echo 'checked="checked"'; } ?>/> Да
-                <input name="pt_hide" type="radio" value="0" <?php if (@!$cfg['pt_hide']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="pt_hide" type="radio" value="1" <?php if (@$cfg['pt_hide']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                <input name="pt_hide" type="radio" value="0" <?php if (@!$cfg['pt_hide']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
     </table>
-    {tab=Фото статей}
+    {tab=Р¤РѕС‚Рѕ СЃС‚Р°С‚РµР№}
     <table width="550" border="0" cellpadding="10" cellspacing="0" class="proptable">
         <tr>
-            <td><strong>Ширина маленькой копии:</strong></td>
+            <td><strong>РЁРёСЂРёРЅР° РјР°Р»РµРЅСЊРєРѕР№ РєРѕРїРёРё:</strong></td>
             <td width="120">
-                <input name="img_small_w" type="text" id="img_small_w" value="<?php echo @$cfg['img_small_w'];?>" size="5" /> пикс.
+                <input name="img_small_w" type="text" id="img_small_w" value="<?php echo @$cfg['img_small_w'];?>" size="5" /> РїРёРєСЃ.
             </td>
         </tr>
         <tr>
-            <td><strong>Ширина большой копии:</strong></td>
+            <td><strong>РЁРёСЂРёРЅР° Р±РѕР»СЊС€РѕР№ РєРѕРїРёРё:</strong></td>
             <td>
-                <input name="img_big_w" type="text" id="img_big_w" value="<?php echo @$cfg['img_big_w'];?>" size="5" /> пикс.
+                <input name="img_big_w" type="text" id="img_big_w" value="<?php echo @$cfg['img_big_w'];?>" size="5" /> РїРёРєСЃ.
             </td>
         </tr>
         <tr>
-            <td><strong>Квадратные:</strong></td>
+            <td><strong>РљРІР°РґСЂР°С‚РЅС‹Рµ:</strong></td>
             <td>
-                <input name="img_sqr" type="radio" value="1" <?php if (@$cfg['img_sqr']) { echo 'checked="checked"'; } ?>/> Да
-                <input name="img_sqr" type="radio" value="0" <?php if (@!$cfg['img_sqr']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="img_sqr" type="radio" value="1" <?php if (@$cfg['img_sqr']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                <input name="img_sqr" type="radio" value="0" <?php if (@!$cfg['img_sqr']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
         <tr>
             <td>
-                <strong>Разрешить пользователям:</strong><br/>
-                <span class="hinttext">Смогут ли пользователи добавлять фотографии к своим статьям</span>
+                <strong>Р Р°Р·СЂРµС€РёС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј:</strong><br/>
+                <span class="hinttext">РЎРјРѕРіСѓС‚ Р»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»Рё РґРѕР±Р°РІР»СЏС‚СЊ С„РѕС‚РѕРіСЂР°С„РёРё Рє СЃРІРѕРёРј СЃС‚Р°С‚СЊСЏРј</span>
             </td>
             <td>
-                <input name="img_users" type="radio" value="1" <?php if (@$cfg['img_users']) { echo 'checked="checked"'; } ?>/> Да
-                <input name="img_users" type="radio" value="0" <?php if (@!$cfg['img_users']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="img_users" type="radio" value="1" <?php if (@$cfg['img_users']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                <input name="img_users" type="radio" value="0" <?php if (@!$cfg['img_users']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
         <tr>
-           <td><strong>Наносить водяной знак:</strong>  <br />Если включено, то на все загружаемые
-			      фотографии к статьям будет наносится изображение 
-			      из файла "<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>"</td>
+           <td><strong>РќР°РЅРѕСЃРёС‚СЊ РІРѕРґСЏРЅРѕР№ Р·РЅР°Рє:</strong>  <br />Р•СЃР»Рё РІРєР»СЋС‡РµРЅРѕ, С‚Рѕ РЅР° РІСЃРµ Р·Р°РіСЂСѓР¶Р°РµРјС‹Рµ
+			      С„РѕС‚РѕРіСЂР°С„РёРё Рє СЃС‚Р°С‚СЊСЏРј Р±СѓРґРµС‚ РЅР°РЅРѕСЃРёС‚СЃСЏ РёР·РѕР±СЂР°Р¶РµРЅРёРµ 
+			      РёР· С„Р°Р№Р»Р° "<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>"</td>
            <td width="260">
-               <input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?> /> Да
-               <input name="watermark" type="radio" value="0"  <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?> /> Нет
+               <input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?> /> Р”Р°
+               <input name="watermark" type="radio" value="0"  <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?> /> РќРµС‚
            </td>
         </tr>
         <tr>
-           <td><strong>Наносить водяной знак только на большую копию:</strong><br />
-           Работает только с включенной опцией "Наносить водяной знак"</td>
+           <td><strong>РќР°РЅРѕСЃРёС‚СЊ РІРѕРґСЏРЅРѕР№ Р·РЅР°Рє С‚РѕР»СЊРєРѕ РЅР° Р±РѕР»СЊС€СѓСЋ РєРѕРїРёСЋ:</strong><br />
+           Р Р°Р±РѕС‚Р°РµС‚ С‚РѕР»СЊРєРѕ СЃ РІРєР»СЋС‡РµРЅРЅРѕР№ РѕРїС†РёРµР№ "РќР°РЅРѕСЃРёС‚СЊ РІРѕРґСЏРЅРѕР№ Р·РЅР°Рє"</td>
            <td width="260">
-               <input name="watermark_only_big" type="radio" value="1" <?php if (@$cfg['watermark_only_big']) { echo 'checked="checked"'; } ?> /> Да
-               <input name="watermark_only_big" type="radio" value="0"  <?php if (@!$cfg['watermark_only_big']) { echo 'checked="checked"'; } ?> /> Нет
+               <input name="watermark_only_big" type="radio" value="1" <?php if (@$cfg['watermark_only_big']) { echo 'checked="checked"'; } ?> /> Р”Р°
+               <input name="watermark_only_big" type="radio" value="0"  <?php if (@!$cfg['watermark_only_big']) { echo 'checked="checked"'; } ?> /> РќРµС‚
            </td>
         </tr>
     </table>
-    {tab=Автофорум}
+    {tab=РђРІС‚РѕС„РѕСЂСѓРј}
     <table width="550" border="0" cellpadding="10" cellspacing="0" class="proptable">
         <tr>
-            <td><strong>Автоматически создавать темы на форуме<br/>для обсуждения статей:</strong></td>
+            <td><strong>РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРё СЃРѕР·РґР°РІР°С‚СЊ С‚РµРјС‹ РЅР° С„РѕСЂСѓРјРµ<br/>РґР»СЏ РѕР±СЃСѓР¶РґРµРЅРёСЏ СЃС‚Р°С‚РµР№:</strong></td>
             <td width="250">
-                <input name="af_on" type="radio" value="1" <?php if (@$cfg['af_on']) { echo 'checked="checked"'; } ?>/> Да
-                <input name="af_on" type="radio" value="0" <?php if (@!$cfg['af_on']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="af_on" type="radio" value="1" <?php if (@$cfg['af_on']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                <input name="af_on" type="radio" value="0" <?php if (@!$cfg['af_on']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
         <tr>
-            <td><strong>Удалять темы при удалении статей:</strong></td>
+            <td><strong>РЈРґР°Р»СЏС‚СЊ С‚РµРјС‹ РїСЂРё СѓРґР°Р»РµРЅРёРё СЃС‚Р°С‚РµР№:</strong></td>
             <td width="250">
-                <input name="af_delete" type="radio" value="1" <?php if (@$cfg['af_delete']) { echo 'checked="checked"'; } ?>/> Да
-                <input name="af_delete" type="radio" value="0" <?php if (@!$cfg['af_delete']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="af_delete" type="radio" value="1" <?php if (@$cfg['af_delete']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                <input name="af_delete" type="radio" value="0" <?php if (@!$cfg['af_delete']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
         <tr>
-            <td><strong>Показывать ссылку из статьи на связанную тему форума:</strong></td>
+            <td><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ СЃСЃС‹Р»РєСѓ РёР· СЃС‚Р°С‚СЊРё РЅР° СЃРІСЏР·Р°РЅРЅСѓСЋ С‚РµРјСѓ С„РѕСЂСѓРјР°:</strong></td>
             <td width="250">
-                <input name="af_showlink" type="radio" value="1" <?php if (@$cfg['af_showlink']) { echo 'checked="checked"'; } ?>/> Да
-                <input name="af_showlink" type="radio" value="0" <?php if (@!$cfg['af_showlink']) { echo 'checked="checked"'; } ?>/> Нет
+                <input name="af_showlink" type="radio" value="1" <?php if (@$cfg['af_showlink']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                <input name="af_showlink" type="radio" value="0" <?php if (@!$cfg['af_showlink']) { echo 'checked="checked"'; } ?>/> РќРµС‚
             </td>
         </tr>
         <tr>
-            <td><strong>Помещать темы в форум:</strong></td>
+            <td><strong>РџРѕРјРµС‰Р°С‚СЊ С‚РµРјС‹ РІ С„РѕСЂСѓРј:</strong></td>
             <td width="250">
                 <select name="af_forum_id" style="width:250px">
                     <?php
@@ -226,7 +226,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             </td>
         </tr>
         <tr>
-            <td><strong>Не создавать темы для статей из раздела:</strong></td>
+            <td><strong>РќРµ СЃРѕР·РґР°РІР°С‚СЊ С‚РµРјС‹ РґР»СЏ СЃС‚Р°С‚РµР№ РёР· СЂР°Р·РґРµР»Р°:</strong></td>
             <td width="250">
                 <select name="af_hidecat_id" style="width:250px">
                     <?php
@@ -244,7 +244,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
     <?php echo jwTabs(ob_get_clean()); ?>
     <p>
         <input name="opt" type="hidden" value="saveconfig" />
-        <input name="save" type="submit" id="save" value="Сохранить" />
-        <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+        <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+        <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components';"/>
     </p>
 </form>

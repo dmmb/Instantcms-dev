@@ -9,7 +9,7 @@
  *
  * MySQL language file for GeSHi.
  *
- * Based on original MySQL language file by Carl Fürstenberg (2004); brought
+ * Based on original MySQL language file by Carl FГјrstenberg (2004); brought
  * up-to-date for current MySQL versions, and with more classes for different
  * types of keywords; several minor errors were corrected as well.
  *

@@ -49,9 +49,9 @@
         }
 
 		if (!@$_SESSION['usr_online']) {
-			$online_link = '<a href="/users/online.html" rel=”nofollow”>'.$_LANG['SHOW_ONLY_ONLINE'].'</a>';
+			$online_link = '<a href="/users/online.html" rel=â€nofollowâ€>'.$_LANG['SHOW_ONLY_ONLINE'].'</a>';
 		} else {
-			$online_link = '<a href="/users/all.html" rel=”nofollow”>'.$_LANG['SHOW_ALL'].'</a>';
+			$online_link = '<a href="/users/all.html" rel=â€nofollowâ€>'.$_LANG['SHOW_ALL'].'</a>';
 		}
 
 		$smarty = $inCore->initSmarty('modules', 'mod_user_stats.tpl');

@@ -30,7 +30,7 @@ function photos(){
     global $_LANG;
 
 	$cfg = $inCore->loadComponentConfig('photos');
-	// Проверяем включени ли компонент
+	// РџСЂРѕРІРµСЂСЏРµРј РІРєР»СЋС‡РµРЅРё Р»Рё РєРѕРјРїРѕРЅРµРЅС‚
 	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 	
 	if (!isset($cfg['showlat'])) { $cfg['showlat'] = 1; }
@@ -49,13 +49,13 @@ function photos(){
 	$user_id = $inCore->request('userid', 'int');
 	$do      = $inCore->request('do', 'str', 'view');
 
-/////////////////////////////// Просмотр альбома ///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// РџСЂРѕСЃРјРѕС‚СЂ Р°Р»СЊР±РѕРјР° ///////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){ 
 
 	//SHOW ALBUMS LIST
 	$album = $model->getAlbum($id);
 
-	$show_hidden = 0; //по-умолчанию не показывать скрытые фотки
+	$show_hidden = 0; //РїРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ РЅРµ РїРѕРєР°Р·С‹РІР°С‚СЊ СЃРєСЂС‹С‚С‹Рµ С„РѕС‚РєРё
 
     $owner = 'user';
 
@@ -64,17 +64,17 @@ if ($do=='view'){
         $owner = 'club';
 		$club = $inDB->get_fields('cms_clubs', 'id='.$album['user_id'], '*');
 		$club['root_album_id'] = $inDB->get_field('cms_photo_albums', "parent_id=0 AND NSDiffer='club".$club['id']."' AND user_id = ".$club['id'], 'id');
-		if ($inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator')) { $show_hidden = 1; } //показывать скрытые фотки админам и модераторам клуба
+		if ($inCore->userIsAdmin($inUser->id) || clubUserIsAdmin($club['id'], $inUser->id) || clubUserIsRole($club['id'], $inUser->id, 'moderator')) { $show_hidden = 1; } //РїРѕРєР°Р·С‹РІР°С‚СЊ СЃРєСЂС‹С‚С‹Рµ С„РѕС‚РєРё Р°РґРјРёРЅР°Рј Рё РјРѕРґРµСЂР°С‚РѕСЂР°Рј РєР»СѓР±Р°
 
 	} else {
 
-		if ($inCore->userIsAdmin($inUser->id)) { $show_hidden = 1; } //показывать скрытые фотки админам
+		if ($inCore->userIsAdmin($inUser->id)) { $show_hidden = 1; } //РїРѕРєР°Р·С‹РІР°С‚СЊ СЃРєСЂС‹С‚С‹Рµ С„РѕС‚РєРё Р°РґРјРёРЅР°Рј
 
 	}
 
     $can_view = true;
 
-	//Заголовки страницы
+	//Р—Р°РіРѕР»РѕРІРєРё СЃС‚СЂР°РЅРёС†С‹
 	$menu_item = $inCore->getMenuItem($inCore->menuId());
 	if ($album['parent_id']==0){
 		if($id == $root['id']){
@@ -114,14 +114,14 @@ if ($do=='view'){
 
 	if (!isset($cfg['orderto'])) { $albums_orderto = 'ASC'; } else { $albums_orderto = $cfg['orderto']; }
 	if (!isset($cfg['orderby'])) { $albums_orderby = 'title'; } else { $albums_orderby = $cfg['orderby']; }
-	//Формируем подкатегории альбома
+	//Р¤РѕСЂРјРёСЂСѓРµРј РїРѕРґРєР°С‚РµРіРѕСЂРёРё Р°Р»СЊР±РѕРјР°
     $left_key   = $album['NSLeft'];
     $right_key  = $album['NSRight'];
     $subcats_list = $model->getSubAlbums($id, $left_key, $right_key, $albums_orderby, $albums_orderto);
 
 	if(isset($cfg['maxcols'])) { $maxcols = $cfg['maxcols']; } else { $maxcols = 1; }
 	if (strstr($album['NSDiffer'],'club') && $album['parent_id']==0) { $maxcols=1; }
-	// если есть список категорий, то у каждой считаем кол-во подкатегорий
+	// РµСЃР»Рё РµСЃС‚СЊ СЃРїРёСЃРѕРє РєР°С‚РµРіРѕСЂРёР№, С‚Рѕ Сѓ РєР°Р¶РґРѕР№ СЃС‡РёС‚Р°РµРј РєРѕР»-РІРѕ РїРѕРґРєР°С‚РµРіРѕСЂРёР№
     if ($subcats_list){
 		$is_subcats = true;
 		$subcats    = array();
@@ -143,7 +143,7 @@ if ($do=='view'){
 		$is_subcats = false;
     }
 																
-	//формируем содержимое альбома
+	//С„РѕСЂРјРёСЂСѓРµРј СЃРѕРґРµСЂР¶РёРјРѕРµ Р°Р»СЊР±РѕРјР°
 		if ($album){	
 
 			$perpage = $album['perpage'];
@@ -151,7 +151,7 @@ if ($do=='view'){
 
 			if(!$show_hidden) { $pubsql	= ' AND f.published = 1'; } else { $pubsql = ''; }
 
-			//SQL запрос			
+			//SQL Р·Р°РїСЂРѕСЃ			
 			$sql = "SELECT f.*,
                             IFNULL(r.total_rating, 0) as rating
 					FROM cms_photo_files f
@@ -159,7 +159,7 @@ if ($do=='view'){
 					WHERE f.album_id = $id $pubsql
 					";		
 			
-			//Сортировка
+			//РЎРѕСЂС‚РёСЂРѕРІРєР°
 			if (isset($_POST['orderby'])) { 
 				$orderby = $inCore->request('orderby', 'str');
 				$_SESSION['ph_orderby'] = $orderby;
@@ -188,7 +188,7 @@ if ($do=='view'){
 			
 			$result = $inDB->query($sql) ;
 			
-			//проверяем права доступа на добавление фото
+			//РїСЂРѕРІРµСЂСЏРµРј РїСЂР°РІР° РґРѕСЃС‚СѓРїР° РЅР° РґРѕР±Р°РІР»РµРЅРёРµ С„РѕС‚Рѕ
 			if (!$inUser->id) { $can_add = false; } 
 			else {			
 				if ($album['NSDiffer']=='') { $can_add = $inUser->id; } 
@@ -241,7 +241,7 @@ if ($do=='view'){
 			}
 					
 		}//END - ALBUM CONTENT
-	// отдаем в шаблон
+	// РѕС‚РґР°РµРј РІ С€Р°Р±Р»РѕРЅ
 	$smarty = $inCore->initSmarty('components', 'com_photos_view.tpl');
 	$smarty->assign('pagetitle', $pagetitle);
 	$smarty->assign('root', $root);
@@ -260,7 +260,7 @@ if ($do=='view'){
 	$smarty->assign('maxcols', $maxcols);
 	$smarty->assign('total_foto', $total);
 	$smarty->display('com_photos_view.tpl');
-	// если есть фотограйии в альбоме и включены комментарии в альбоме, то показываем их
+	// РµСЃР»Рё РµСЃС‚СЊ С„РѕС‚РѕРіСЂР°Р№РёРё РІ Р°Р»СЊР±РѕРјРµ Рё РІРєР»СЋС‡РµРЅС‹ РєРѕРјРјРµРЅС‚Р°СЂРёРё РІ Р°Р»СЊР±РѕРјРµ, С‚Рѕ РїРѕРєР°Р·С‹РІР°РµРј РёС…
 	if($album['is_comments'] && $is_poto_yes && $inCore->isComponentInstalled('comments')){
           $inCore->includeComments();
           comments('palbum', $album['id']);
@@ -300,7 +300,7 @@ if($do=='viewphoto'){
 	
 	if (!$can_view && $owner=='club') { $inCore->redirect('/clubs/'.$club['id']); }
 
-	// Формируем глубиномер, заголовок страницы
+	// Р¤РѕСЂРјРёСЂСѓРµРј РіР»СѓР±РёРЅРѕРјРµСЂ, Р·Р°РіРѕР»РѕРІРѕРє СЃС‚СЂР°РЅРёС†С‹
 	$left_key = $photo['NSLeft'];
 	$right_key = $photo['NSRight'];
 	$sql = "SELECT id, title, NSLevel FROM cms_photo_albums WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0 AND NSDiffer = '".$photo['NSDiffer']."' ORDER BY NSLeft";
@@ -310,10 +310,10 @@ if($do=='viewphoto'){
 	}
 	$inPage->addPathway($photo['title']);
 	$inPage->setTitle($photo['title']);
-	// Обновляем количество просмотров фотографии
+	// РћР±РЅРѕРІР»СЏРµРј РєРѕР»РёС‡РµСЃС‚РІРѕ РїСЂРѕСЃРјРѕС‚СЂРѕРІ С„РѕС‚РѕРіСЂР°С„РёРё
 	$inDB->query("UPDATE cms_photo_files SET hits = hits + 1 WHERE id = '$id'");
 								
-	//навигация
+	//РЅР°РІРёРіР°С†РёСЏ
 	if($photo['album_nav']){
 	$nextid = $inDB->get_fields('cms_photo_files', 'id<'.$photo['id'].' AND album_id = '.$photo['cat_id'].' AND published=1', 'id, file', 'id DESC');
 	$previd = $inDB->get_fields('cms_photo_files', 'id>'.$photo['id'].' AND album_id = '.$photo['cat_id'].' AND published=1', 'id, file', 'id ASC');
@@ -365,7 +365,7 @@ if($do=='viewphoto'){
 		$smarty->assign('tagbar', cmsTagBar('photo', $photo['id']));
 	}
 	$smarty->display('com_photos_view_photo.tpl');
-	//если есть, выводим комментарии
+	//РµСЃР»Рё РµСЃС‚СЊ, РІС‹РІРѕРґРёРј РєРѕРјРјРµРЅС‚Р°СЂРёРё
 	if($photo['comments'] && $inCore->isComponentInstalled('comments')){
 		$inCore->includeComments();
 		comments('photo', $photo['id']);
@@ -493,7 +493,7 @@ if ($do=='addphoto'){
 
 		$mod    = array();
 
-		//Проверяем входные данные
+		//РџСЂРѕРІРµСЂСЏРµРј РІС…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ
 		
 		$mod['title']       = $inCore->request('title', 'str', '');
 
@@ -613,9 +613,9 @@ if ($do=='editphoto'){
 		$photo['description']   = $inCore->request('description', 'str');
 		$photo['tags']          = $inCore->request('tags', 'str');
 
-		// Меняем файл фото если есть
+		// РњРµРЅСЏРµРј С„Р°Р№Р» С„РѕС‚Рѕ РµСЃР»Рё РµСЃС‚СЊ
 		$file = $model->uploadPhoto($album, $photo['file']);
-		// если файл не был загружен, имя файла оставляем старое
+		// РµСЃР»Рё С„Р°Р№Р» РЅРµ Р±С‹Р» Р·Р°РіСЂСѓР¶РµРЅ, РёРјСЏ С„Р°Р№Р»Р° РѕСЃС‚Р°РІР»СЏРµРј СЃС‚Р°СЂРѕРµ
 		$photo['filename'] = $file['filename'] ? $file['filename'] : $photo['file'];
 									
 		$model->updatePhoto($photo['id'], $photo);

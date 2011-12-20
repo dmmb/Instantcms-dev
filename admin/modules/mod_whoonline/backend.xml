@@ -2,12 +2,12 @@
 <backend>    
     <module>
         <id>mod_whoonline</id>
-        <title>Кто онлайн?</title>
+        <title>РљС‚Рѕ РѕРЅР»Р°Р№РЅ?</title>
     </module>
     <params>
-        <param type="flag" name="show_today" title="Показывать кто был сегодня" hint="Выводит дополнительно список всех посетителей за сегодня" default="on" />
-		<param type="flag" name="admin_editor" title="Подсвечивать администраторов и редакторов?" hint="Администраторы и редакторы будут подсвечены соответственно красным и зеленым" default="on" />
-        <param type="string" name="color_admin" title="Цвет администраторов" hint="в формате #XXYYZZ" default="#FF0000" />
-        <param type="string" name="color_editor" title="Цвет редакторов" hint="в формате #XXYYZZ" default="#009900" />
+        <param type="flag" name="show_today" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РєС‚Рѕ Р±С‹Р» СЃРµРіРѕРґРЅСЏ" hint="Р’С‹РІРѕРґРёС‚ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ СЃРїРёСЃРѕРє РІСЃРµС… РїРѕСЃРµС‚РёС‚РµР»РµР№ Р·Р° СЃРµРіРѕРґРЅСЏ" default="on" />
+		<param type="flag" name="admin_editor" title="РџРѕРґСЃРІРµС‡РёРІР°С‚СЊ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂРѕРІ Рё СЂРµРґР°РєС‚РѕСЂРѕРІ?" hint="РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂС‹ Рё СЂРµРґР°РєС‚РѕСЂС‹ Р±СѓРґСѓС‚ РїРѕРґСЃРІРµС‡РµРЅС‹ СЃРѕРѕС‚РІРµС‚СЃС‚РІРµРЅРЅРѕ РєСЂР°СЃРЅС‹Рј Рё Р·РµР»РµРЅС‹Рј" default="on" />
+        <param type="string" name="color_admin" title="Р¦РІРµС‚ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂРѕРІ" hint="РІ С„РѕСЂРјР°С‚Рµ #XXYYZZ" default="#FF0000" />
+        <param type="string" name="color_editor" title="Р¦РІРµС‚ СЂРµРґР°РєС‚РѕСЂРѕРІ" hint="РІ С„РѕСЂРјР°С‚Рµ #XXYYZZ" default="#009900" />
     </params>
 </backend>

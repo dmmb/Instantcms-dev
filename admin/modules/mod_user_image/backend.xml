@@ -2,11 +2,11 @@
 <backend>    
     <module>
         <id>mod_uc_random</id>
-        <title>Случайное фото</title>
+        <title>РЎР»СѓС‡Р°Р№РЅРѕРµ С„РѕС‚Рѕ</title>
     </module>
     <params>
      
-        <param type="flag" name="showtitle" title="Показывать название фото" default="on" />
+        <param type="flag" name="showtitle" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РЅР°Р·РІР°РЅРёРµ С„РѕС‚Рѕ" default="on" />
         
     </params>
 </backend>

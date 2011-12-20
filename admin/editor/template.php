@@ -11,14 +11,14 @@
 <table width="100%" height="50" border="0" cellpadding="0" cellspacing="0" style="background-color:#2D557D">
   <tr>
     <td style="padding-left:10px">
-        <h2><a style="color:#fff;text-decoration:none;" href="index.php"><?php echo $inConf->sitename; ?> &mdash; Панель редактора</a></h2>
+        <h2><a style="color:#fff;text-decoration:none;" href="index.php"><?php echo $inConf->sitename; ?> &mdash; РџР°РЅРµР»СЊ СЂРµРґР°РєС‚РѕСЂР°</a></h2>
     </td>
     <td><table width="100%" border="0" cellspacing="0" cellpadding="5">
       <tr>
         <td align="right">&nbsp;</td>
         <td width="200" align="right" style="padding-right:15px">
             <div style="color:#FFFFFF"><span class="style1"><a style="color:#0CF" href="http://www.instantcms.ru/">InstantCMS</a> v<?php echo CORE_VERSION; ?></div>
-            <a href="/logout" target="_top" class="exitlink">Выход из системы</a></td>
+            <a href="/logout" target="_top" class="exitlink">Р’С‹С…РѕРґ РёР· СЃРёСЃС‚РµРјС‹</a></td>
       </tr>
     </table></td>
   </tr>

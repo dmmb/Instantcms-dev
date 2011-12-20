@@ -3,7 +3,7 @@ $().ready(function() {
 		if ($('#uid').attr('value') != $('#authorslist option:selected').attr('value')){
 			return !$('#authorslist option:selected').remove().appendTo('#userslist');  
 		} else {
-			alert('Нельзя удалить из списка авторов хозяина блога!');	
+			alert('РќРµР»СЊР·СЏ СѓРґР°Р»РёС‚СЊ РёР· СЃРїРёСЃРєР° Р°РІС‚РѕСЂРѕРІ С…РѕР·СЏРёРЅР° Р±Р»РѕРіР°!');	
 		}
   });  
   $('#author_add').click(function() {  

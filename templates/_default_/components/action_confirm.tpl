@@ -1,5 +1,5 @@
 {* ================================================================================ *}
-{* =========================== Запрос подтверждения действия ====================== *}
+{* =========================== Р—Р°РїСЂРѕСЃ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ РґРµР№СЃС‚РІРёСЏ ====================== *}
 {* ================================================================================ *}
 
 <div class="con_heading">{$confirm.title}</div>
@@ -10,13 +10,13 @@
             <input style="font-size:24px; width:100px"
                    type="{$confirm.yes_button.type|default:'submit'}"
                    name="{$confirm.yes_button.name|default:'go'}"
-                   value="{$confirm.yes_button.title|default:'Да'}"
+                   value="{$confirm.yes_button.title|default:'Р”Р°'}"
                    onclick="{$confirm.yes_button.onclick|default:'true'}"
             />
             <input style="font-size:24px; width:100px"
                    type="{$confirm.no_button.type|default:'button'}"
                    name="{$confirm.no_button.name|default:'cancel'}"
-                   value="{$confirm.no_button.title|default:'Нет'}"
+                   value="{$confirm.no_button.title|default:'РќРµС‚'}"
                    onclick="{$confirm.no_button.onclick|default:'window.history.go(-1)'}"
             />
 	</form>

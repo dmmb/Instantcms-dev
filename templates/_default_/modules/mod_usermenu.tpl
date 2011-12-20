@@ -6,7 +6,7 @@
 
     {if $is_billing}
         <span class="my_balance">
-            <a href="{profile_url login=$login}#upr_p_balance" title="Áàëàíñ">{if $balance}{$balance}{else}0{/if}</a>
+            <a href="{profile_url login=$login}#upr_p_balance" title="Ð‘Ð°Ð»Ð°Ð½Ñ">{if $balance}{$balance}{else}0{/if}</a>
         </span>
     {/if}
 

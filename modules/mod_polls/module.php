@@ -67,7 +67,7 @@
 					  $total += $answers_num[$key];
 				  }
 				 echo '</table>';
-				 echo '<div align="center"><input type="submit" class="mod_poll_submit" value="Голосовать ('.$total.')"></div>';
+				 echo '<div align="center"><input type="submit" class="mod_poll_submit" value="Р“РѕР»РѕСЃРѕРІР°С‚СЊ ('.$total.')"></div>';
 				echo '</form>';
 				
 			} else {

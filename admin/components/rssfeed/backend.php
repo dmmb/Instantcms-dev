@@ -13,20 +13,20 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 /******************************************************************************/
 
 
-	cpAddPathway('RSS генератор', '?view=components&do=config&id='.$_REQUEST['id']);
+	cpAddPathway('RSS РіРµРЅРµСЂР°С‚РѕСЂ', '?view=components&do=config&id='.$_REQUEST['id']);
 	
-	echo '<h3>RSS генератор</h3>';
+	echo '<h3>RSS РіРµРЅРµСЂР°С‚РѕСЂ</h3>';
 	
 	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; }
 	
 	$toolmenu = array();
 
 	$toolmenu[0]['icon'] = 'save.gif';
-	$toolmenu[0]['title'] = 'Сохранить';
+	$toolmenu[0]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 	$toolmenu[0]['link'] = 'javascript:document.optform.submit();';
 
 	$toolmenu[1]['icon'] = 'cancel.gif';
-	$toolmenu[1]['title'] = 'Отмена';
+	$toolmenu[1]['title'] = 'РћС‚РјРµРЅР°';
 	$toolmenu[1]['link'] = '?view=components';
 
 	cpToolMenu($toolmenu);
@@ -46,7 +46,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			
 		$inCore->saveComponentConfig('rssfeed', $cfg);
 		
-		$msg = 'Настройки сохранены.';
+		$msg = 'РќР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅРµРЅС‹.';
 	}
 
 	global $_CFG;
@@ -62,48 +62,48 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 <form action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
         <table width="650" border="0" cellpadding="10" cellspacing="0" class="proptable">
           <tr>
-            <td colspan="2" bgcolor="#EBEBEB"><strong>Каналы</strong></td>
+            <td colspan="2" bgcolor="#EBEBEB"><strong>РљР°РЅР°Р»С‹</strong></td>
           </tr>
           <tr>
-            <td>Добавлять название сайта в заголовки RSS-каналов:</td>
+            <td>Р”РѕР±Р°РІР»СЏС‚СЊ РЅР°Р·РІР°РЅРёРµ СЃР°Р№С‚Р° РІ Р·Р°РіРѕР»РѕРІРєРё RSS-РєР°РЅР°Р»РѕРІ:</td>
             <td width="300" valign="top"><input name="addsite" type="radio" value="1" <?php if (@$cfg['addsite']) { echo 'checked="checked"'; } ?>/>
-              Да
+              Р”Р°
               <input name="addsite" type="radio" value="0" <?php if (@!$cfg['addsite']) { echo 'checked="checked"'; } ?>/>
-            Нет </td>
+            РќРµС‚ </td>
           </tr>
           <tr>
-            <td>Максимальное число записей для вывода: </td>
+            <td>РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ С‡РёСЃР»Рѕ Р·Р°РїРёСЃРµР№ РґР»СЏ РІС‹РІРѕРґР°: </td>
             <td valign="top"><input name="maxitems" type="text" id="maxitems" size="6" value="<?php echo @$cfg['maxitems'];?>"/> 
-              шт. </td>
+              С€С‚. </td>
           </tr>
         </table>
         <table width="650" border="0" cellpadding="10" cellspacing="0" class="proptable" style="margin-top:2px">
           <tr>
-            <td colspan="2" bgcolor="#EBEBEB"><strong>Иконка RSS-каналов </strong></td>
+            <td colspan="2" bgcolor="#EBEBEB"><strong>РРєРѕРЅРєР° RSS-РєР°РЅР°Р»РѕРІ </strong></td>
           </tr>
           <tr>
-            <td>Использовать иконку:</td>
+            <td>РСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РёРєРѕРЅРєСѓ:</td>
             <td width="300" valign="top"><input name="icon_on" type="radio" value="1" <?php if (@$cfg['icon_on']) { echo 'checked="checked"'; } ?>/>
-              Да
+              Р”Р°
               <input name="icon_on" type="radio" value="0" <?php if (@!$cfg['icon_on']) { echo 'checked="checked"'; } ?>/>
-            Нет </td>
+            РќРµС‚ </td>
           </tr>
           <tr>
-            <td>URL иконки (включая адрес сайта): </td>
+            <td>URL РёРєРѕРЅРєРё (РІРєР»СЋС‡Р°СЏ Р°РґСЂРµСЃ СЃР°Р№С‚Р°): </td>
             <td valign="top"><input name="icon_url" type="text" id="icon_url" size="45" value="<?php echo @$cfg['icon_url'];?>"/></td>
           </tr>
           <tr>
-            <td>Заголовок:</td>
+            <td>Р—Р°РіРѕР»РѕРІРѕРє:</td>
             <td valign="top"><input name="icon_title" type="text" id="icon_title" size="45" value="<?php echo @$cfg['icon_title'];?>"/></td>
           </tr>
           <tr>
-            <td>Ссылка:</td>
+            <td>РЎСЃС‹Р»РєР°:</td>
             <td valign="top"><input name="icon_link" type="text" id="icon_link" size="45" value="<?php echo @$cfg['icon_link'];?>"/></td>
           </tr>
         </table>
         <p>
           <input name="opt" type="hidden" value="saveconfig" />
-          <input name="save" type="submit" id="save" value="Сохранить" />
-          <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+          <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+          <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components';"/>
         </p>
 </form>

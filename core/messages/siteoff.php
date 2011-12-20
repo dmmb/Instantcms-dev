@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
 <meta http-equiv="refresh" content="20;URL=/">
-<title>Сайт временно недоступен</title>
+<title>РЎР°Р№С‚ РІСЂРµРјРµРЅРЅРѕ РЅРµРґРѕСЃС‚СѓРїРµРЅ</title>
 <style>
 body{
 	font-family:Arial, Helvetica, sans-serif;
@@ -19,7 +19,7 @@ body{
   <tr>
     <td align="center" valign="middle">
 		<div style="padding:20px;border:solid 1px gray;background-color:#FFFFFF;text-align:center;width:50%">
-			<h2 style="color:#FF6600">Сайт временно недоступен</h2>			
+			<h2 style="color:#FF6600">РЎР°Р№С‚ РІСЂРµРјРµРЅРЅРѕ РЅРµРґРѕСЃС‚СѓРїРµРЅ</h2>			
 			<div style="padding:20px"><?php echo $inConf->offtext; ?></div>
 		</div>
     </td>

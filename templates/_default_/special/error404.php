@@ -1,7 +1,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-        <title>Страница не найдена</title>
+        <title>РЎС‚СЂР°РЅРёС†Р° РЅРµ РЅР°Р№РґРµРЅР°</title>
         <style type="text/css">
             * { font-family: Arial; }
             html, body { height:100%; margin:0px; }
@@ -18,8 +18,8 @@
                                 <img src="/templates/_default_/special/images/error404.png" />
                             </td>
                             <td>
-                                <h2>Страница не найдена &mdash; 404</h2>
-                                <p>Возможно, она была удалена или перемещена.</p>
+                                <h2>РЎС‚СЂР°РЅРёС†Р° РЅРµ РЅР°Р№РґРµРЅР° &mdash; 404</h2>
+                                <p>Р’РѕР·РјРѕР¶РЅРѕ, РѕРЅР° Р±С‹Р»Р° СѓРґР°Р»РµРЅР° РёР»Рё РїРµСЂРµРјРµС‰РµРЅР°.</p>
                             </td>
                         </tr>
                     </table>

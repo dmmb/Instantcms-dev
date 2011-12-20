@@ -23,12 +23,12 @@
 			$filesize = round(filesize($filefull)/1024, 2);			
 			$link = '<table border="0" cellpadding="2" cellspacing="0"><tr>';		
 				$link .= '<td width="16"><img src="/images/icons/download.gif" border="0"</td>';
-				$link .= '<td width=""><a href="/load/url='.$file.'" alt="—Í‡˜‡Ú¸">'.basename($file).'</a></td>';
-				$link .= '<td width="">| '.$filesize.' K·</td>';
-				$link .= '<td width="">| —Í‡˜‡Ì: '.$downloaded.' ‡Á</td>';					
+				$link .= '<td width=""><a href="/load/url='.$file.'" alt="–°–∫–∞—á–∞—Ç—å">'.basename($file).'</a></td>';
+				$link .= '<td width="">| '.$filesize.' K–±</td>';
+				$link .= '<td width="">| –°–∫–∞—á–∞–Ω: '.$downloaded.' —Ä–∞–∑</td>';					
 			$link .= '</tr></table>';
 		} else {
-			$link = '‘‡ÈÎ "'.$filefull.'" ÌÂ Ì‡È‰ÂÌ!';
+			$link = '–§–∞–π–ª "'.$filefull.'" –Ω–µ –Ω–∞–π–¥–µ–Ω!';
 		}	
 		return $link;
 	}
@@ -37,18 +37,18 @@
 	function f_filelink(&$text){
 
 		//REPLACE FILE DOWNLOAD LINKS
- 		$regex = '/{(— ¿◊¿“‹=)\s*(.*?)}/i';
+ 		$regex = '/{(–°–ö–ê–ß–ê–¢–¨=)\s*(.*?)}/i';
 		$matches = array();
 		preg_match_all( $regex, $text, $matches, PREG_SET_ORDER );		
 		foreach ($matches as $elm) {	
 			$elm[0] = str_replace('{', '', $elm[0]);
 			$elm[0] = str_replace('}', '', $elm[0]);			
 			parse_str( $elm[0], $args );
-			$file=@$args['— ¿◊¿“‹'];	
+			$file=@$args['–°–ö–ê–ß–ê–¢–¨'];	
 			if ($file){		
 				$output = getDownLoadLink($file);			
 			} else { $output = ''; }
-			$text = str_replace('{— ¿◊¿“‹='.$file.'}', $output, $text );	
+			$text = str_replace('{–°–ö–ê–ß–ê–¢–¨='.$file.'}', $output, $text );	
 		}
 
 		return true;

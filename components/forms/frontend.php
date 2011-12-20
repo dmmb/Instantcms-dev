@@ -37,11 +37,11 @@ function forms(){
 		$mail_message = '';
 		$form_id      = $inCore->request('form_id', 'int');
 
-		//Ïîëó÷àåì ôîðìó èç áàçû äàííûõ
+		//ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ñ„Ð¾Ñ€Ð¼Ñƒ Ð¸Ð· Ð±Ð°Ð·Ñ‹ Ð´Ð°Ð½Ð½Ñ‹Ñ…
 		$sql    = "SELECT * FROM cms_forms WHERE id = '$form_id' LIMIT 1";
 		$result = $inDB->query($sql);
 
-		//Ôîðìèðóåì òåêñò ïèñüìà
+		//Ð¤Ð¾Ñ€Ð¼Ð¸Ñ€ÑƒÐµÐ¼ Ñ‚ÐµÐºÑÑ‚ Ð¿Ð¸ÑÑŒÐ¼Ð°
 		if($inDB->num_rows($result)){
 			$form   = $inDB->fetch_assoc($result);
 
@@ -53,7 +53,7 @@ function forms(){
 				 $mail_message .=  "<h3>----------------------------------------------</h3>";
 			}
 
-			//Ïîëó÷àåì äàííûå ïîëåé èç áàçû
+			//ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ð´Ð°Ð½Ð½Ñ‹Ðµ Ð¿Ð¾Ð»ÐµÐ¹ Ð¸Ð· Ð±Ð°Ð·Ñ‹
 			$sql         = "SELECT id, title, mustbe FROM cms_form_fields WHERE form_id = '$form_id' ORDER BY ordering ASC";
 			$result      = $inDB->query($sql);
 			$items_count = $inDB->num_rows($result);

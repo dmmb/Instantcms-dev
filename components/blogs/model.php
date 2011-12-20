@@ -29,10 +29,10 @@ class cms_model_blogs{
 /* ==================================================================================================== */
 
    //
-   // ýòîò ìåòîä âûçûâàåòñÿ êîìïîíåíòîì comments ïðè ñîçäàíèè íîâîãî êîììåíòàðèÿ
+   // ÑÑ‚Ð¾Ñ‚ Ð¼ÐµÑ‚Ð¾Ð´ Ð²Ñ‹Ð·Ñ‹Ð²Ð°ÐµÑ‚ÑÑ ÐºÐ¾Ð¼Ð¿Ð¾Ð½ÐµÐ½Ñ‚Ð¾Ð¼ comments Ð¿Ñ€Ð¸ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ð¸ Ð½Ð¾Ð²Ð¾Ð³Ð¾ ÐºÐ¾Ð¼Ð¼ÐµÐ½Ñ‚Ð°Ñ€Ð¸Ñ
    //
-   // ìåòîä äîëæåí âåðíóòü ìàññèâ ñîäåðæàùèé ññûëêó è çàãîëîâîê ïîñòà, ê êîòîðîìó
-   // äîáàâëÿåòñÿ êîììåíòàðèé
+   // Ð¼ÐµÑ‚Ð¾Ð´ Ð´Ð¾Ð»Ð¶ÐµÐ½ Ð²ÐµÑ€Ð½ÑƒÑ‚ÑŒ Ð¼Ð°ÑÑÐ¸Ð² ÑÐ¾Ð´ÐµÑ€Ð¶Ð°Ñ‰Ð¸Ð¹ ÑÑÑ‹Ð»ÐºÑƒ Ð¸ Ð·Ð°Ð³Ð¾Ð»Ð¾Ð²Ð¾Ðº Ð¿Ð¾ÑÑ‚Ð°, Ðº ÐºÐ¾Ñ‚Ð¾Ñ€Ð¾Ð¼Ñƒ
+   // Ð´Ð¾Ð±Ð°Ð²Ð»ÑÐµÑ‚ÑÑ ÐºÐ¾Ð¼Ð¼ÐµÐ½Ñ‚Ð°Ñ€Ð¸Ð¹
    //
    public function getCommentTarget($target, $target_id) {
 
@@ -63,9 +63,9 @@ class cms_model_blogs{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
    //
-   // ýòîò ìåòîä âûçûâàåòñÿ êîìïîíåíòîì comments ïðè ñîçäàíèè íîâîãî êîììåíòàðèÿ
+   // ÑÑ‚Ð¾Ñ‚ Ð¼ÐµÑ‚Ð¾Ð´ Ð²Ñ‹Ð·Ñ‹Ð²Ð°ÐµÑ‚ÑÑ ÐºÐ¾Ð¼Ð¿Ð¾Ð½ÐµÐ½Ñ‚Ð¾Ð¼ comments Ð¿Ñ€Ð¸ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ð¸ Ð½Ð¾Ð²Ð¾Ð³Ð¾ ÐºÐ¾Ð¼Ð¼ÐµÐ½Ñ‚Ð°Ñ€Ð¸Ñ
    //
-   // ìåòîä äîëæåí âåðíóòü 0 èëè 1
+   // Ð¼ÐµÑ‚Ð¾Ð´ Ð´Ð¾Ð»Ð¶ÐµÐ½ Ð²ÐµÑ€Ð½ÑƒÑ‚ÑŒ 0 Ð¸Ð»Ð¸ 1
    //
    public function getVisibility($target, $target_id) {
 
@@ -74,10 +74,10 @@ class cms_model_blogs{
         switch($target){
 
             case 'blog': 
-						// ïîëó÷àåì ìàññèâ ïîñòà
+						// Ð¿Ð¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ð¼Ð°ÑÑÐ¸Ð² Ð¿Ð¾ÑÑ‚Ð°
 						$post = $this->inDB->get_fields('cms_blog_posts', "id='$target_id'", 'blog_id, allow_who, published');
 						if($post['allow_who'] != 'all' || !$post['published']) { $is_hidden = 1; }
-						// ïîëó÷àåì ìàññèâ áëîãà
+						// Ð¿Ð¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ð¼Ð°ÑÑÐ¸Ð² Ð±Ð»Ð¾Ð³Ð°
 						$blog = $this->getBlog($post['blog_id']);
 						if($blog['owner'] == 'user'){
 							if($blog['allow_who'] != 'all') { $is_hidden = 1; }
@@ -96,8 +96,8 @@ class cms_model_blogs{
 /* ==================================================================================================== */
 
     // 
-    // ýòîò ìåòîä ÿâëÿåòñÿ õóêîì è âûçûâàåòñÿ ïðè èçìåíåíèè ðåéòèíãà îáúåêòà blogpost
-    // ñì. òàáëèöó cms_rating_targets
+    // ÑÑ‚Ð¾Ñ‚ Ð¼ÐµÑ‚Ð¾Ð´ ÑÐ²Ð»ÑÐµÑ‚ÑÑ Ñ…ÑƒÐºÐ¾Ð¼ Ð¸ Ð²Ñ‹Ð·Ñ‹Ð²Ð°ÐµÑ‚ÑÑ Ð¿Ñ€Ð¸ Ð¸Ð·Ð¼ÐµÐ½ÐµÐ½Ð¸Ð¸ Ñ€ÐµÐ¹Ñ‚Ð¸Ð½Ð³Ð° Ð¾Ð±ÑŠÐµÐºÑ‚Ð° blogpost
+    // ÑÐ¼. Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñƒ cms_rating_targets
     //
     public function updateRatingHook($target, $item_id, $points) {
 
@@ -208,7 +208,7 @@ class cms_model_blogs{
         $is_exists = $this->inDB->rows_count('cms_blogs', "seolink='{$seolink}'".$where, 1);
         if ($is_exists) { $seolink .= '-' . $blog['id']; }
 
-        //Îáíîâëÿåì ïóòè âñåõ ïîñòîâ ýòîãî áëîãà
+        //ÐžÐ±Ð½Ð¾Ð²Ð»ÑÐµÐ¼ Ð¿ÑƒÑ‚Ð¸ Ð²ÑÐµÑ… Ð¿Ð¾ÑÑ‚Ð¾Ð² ÑÑ‚Ð¾Ð³Ð¾ Ð±Ð»Ð¾Ð³Ð°
         $sql = "SELECT id, title FROM cms_blog_posts WHERE blog_id = {$blog['id']}";
 
         $result = $this->inDB->query($sql);
@@ -351,12 +351,12 @@ class cms_model_blogs{
 
     public function updateBlogAuthors($id, $authors){
 
-        //Óäàëÿåì ïðåæíèé íàáîð àâòîðîâ
+        //Ð£Ð´Ð°Ð»ÑÐµÐ¼ Ð¿Ñ€ÐµÐ¶Ð½Ð¸Ð¹ Ð½Ð°Ð±Ð¾Ñ€ Ð°Ð²Ñ‚Ð¾Ñ€Ð¾Ð²
         $this->inDB->query("DELETE FROM cms_blog_authors WHERE blog_id = ".$id);
 
         $authors = cmsCore::callEvent('UPDATE_BLOG_AUTHORS', $authors);
 
-        //Ñîõðàíÿåì âñåõ àâòîðîâ èç íîâîãî ñïèñêà â áàçó
+        //Ð¡Ð¾Ñ…Ñ€Ð°Ð½ÑÐµÐ¼ Ð²ÑÐµÑ… Ð°Ð²Ñ‚Ð¾Ñ€Ð¾Ð² Ð¸Ð· Ð½Ð¾Ð²Ð¾Ð³Ð¾ ÑÐ¿Ð¸ÑÐºÐ° Ð² Ð±Ð°Ð·Ñƒ
         foreach ($authors as $key=>$author_id){
             $author_id = (int)$author_id;
             $sql = "INSERT INTO cms_blog_authors (user_id, blog_id, description, startdate)
@@ -385,7 +385,7 @@ class cms_model_blogs{
 
         $item = cmsCore::callEvent('UPDATE_BLOG', $item);
 
-        //Ñîõðàíÿåì íàñòðîéêè áëîãà
+        //Ð¡Ð¾Ñ…Ñ€Ð°Ð½ÑÐµÐ¼ Ð½Ð°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ¸ Ð±Ð»Ð¾Ð³Ð°
         $sql = "UPDATE cms_blogs
                 SET title='{$item['title']}',
                     allow_who='{$item['allow_who']}',
@@ -399,7 +399,7 @@ class cms_model_blogs{
         $this->inDB->query($sql);
 
 		if ($update_seo_link){
-			//îáíîâëÿåì ññûëêè ìåíþ
+			//Ð¾Ð±Ð½Ð¾Ð²Ð»ÑÐµÐ¼ ÑÑÑ‹Ð»ÐºÐ¸ Ð¼ÐµÐ½ÑŽ
 			$menuid = $this->inDB->get_field('cms_menu', "linktype='blog' AND linkid={$id}", 'id');
 			if ($menuid){
 				$inCore     = cmsCore::getInstance();
@@ -407,7 +407,7 @@ class cms_model_blogs{
 				$this->inDB->query("UPDATE cms_menu SET link='{$menulink}' WHERE id={$menuid}");
 			}
 	
-			//îáíîâëÿåì ññûëêè íà êîììåíòàðèè ïîñòîâ áëîãà
+			//Ð¾Ð±Ð½Ð¾Ð²Ð»ÑÐµÐ¼ ÑÑÑ‹Ð»ÐºÐ¸ Ð½Ð° ÐºÐ¾Ð¼Ð¼ÐµÐ½Ñ‚Ð°Ñ€Ð¸Ð¸ Ð¿Ð¾ÑÑ‚Ð¾Ð² Ð±Ð»Ð¾Ð³Ð°
 			$comments_sql = "UPDATE cms_comments c,
 									cms_blog_posts p,
 									cms_blogs b
@@ -450,7 +450,7 @@ class cms_model_blogs{
     public function getBlogs($ownertype, $page, $perpage){
         $list = array();
 
-        //Ôîðìèðóåì çàïðîñ
+        //Ð¤Ð¾Ñ€Ð¼Ð¸Ñ€ÑƒÐµÐ¼ Ð·Ð°Ð¿Ñ€Ð¾Ñ
         $sql = "SELECT u.id, b. * , u.id AS uid, u.nickname AS author, u.login as author_login, 
                        COUNT(p.id) as records,
                        b.rating AS points
@@ -458,7 +458,7 @@ class cms_model_blogs{
 				LEFT JOIN cms_users u ON u.id = b.user_id
                 LEFT JOIN cms_blog_posts p ON p.blog_id = b.id ";
 
-        //Äîáàâëÿåì ê çàïðîñó îãðàíè÷åíèå ïî òèïó õîçÿèíà (ïîëüçîâàòåëè èëè êëóáû)
+        //Ð”Ð¾Ð±Ð°Ð²Ð»ÑÐµÐ¼ Ðº Ð·Ð°Ð¿Ñ€Ð¾ÑÑƒ Ð¾Ð³Ñ€Ð°Ð½Ð¸Ñ‡ÐµÐ½Ð¸Ðµ Ð¿Ð¾ Ñ‚Ð¸Ð¿Ñƒ Ñ…Ð¾Ð·ÑÐ¸Ð½Ð° (Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ð¸ Ð¸Ð»Ð¸ ÐºÐ»ÑƒÐ±Ñ‹)
         if ($ownertype!='all') { 
             $sql .= "WHERE ownertype='$ownertype' AND owner='user'\n";
         } else {
@@ -467,7 +467,7 @@ class cms_model_blogs{
 
         $sql .= "GROUP BY b.id
                  ORDER BY rating DESC";
-		// åñëè ïåðåäàëè ñòðàíèöó è êîë-âî ñòðàíèö, òî äîáàâëÿåì LIMIT
+		// ÐµÑÐ»Ð¸ Ð¿ÐµÑ€ÐµÐ´Ð°Ð»Ð¸ ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñƒ Ð¸ ÐºÐ¾Ð»-Ð²Ð¾ ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†, Ñ‚Ð¾ Ð´Ð¾Ð±Ð°Ð²Ð»ÑÐµÐ¼ LIMIT
 		if ($page && $perpage) { $sql .= " LIMIT ".(($page-1)*$perpage).", $perpage"; }
 
         $result = $this->inDB->query($sql);
@@ -512,7 +512,7 @@ class cms_model_blogs{
             $cat_sql = '';
         }
 
-        //Ïîëó÷àåì çàïèñè, îòíîñÿùèåñÿ ê íóæíîé ñòðàíèöå áëîãà
+        //ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ð·Ð°Ð¿Ð¸ÑÐ¸, Ð¾Ñ‚Ð½Ð¾ÑÑÑ‰Ð¸ÐµÑÑ Ðº Ð½ÑƒÐ¶Ð½Ð¾Ð¹ ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ðµ Ð±Ð»Ð¾Ð³Ð°
         $sql = "SELECT p.*, 
                        IFNULL(r.total_rating, 0) as points, u.nickname as author, u.id as author_id
                 FROM cms_blogs b
@@ -769,7 +769,7 @@ class cms_model_blogs{
 
         $list = array();
 
-        //Ïîëó÷àåì ñïèñîê àâòîðîâ
+        //ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ ÑÐ¿Ð¸ÑÐ¾Ðº Ð°Ð²Ñ‚Ð¾Ñ€Ð¾Ð²
         $sql = "SELECT a.*, 
                        p.imageurl as imageurl,
                        u.nickname as nickname,
@@ -839,9 +839,9 @@ class cms_model_blogs{
 
         $item['seolink'] = '';
 
-        //ïàðñèì bb-êîä ïåðåä çàïèñüþ â áàçó
+        //Ð¿Ð°Ñ€ÑÐ¸Ð¼ bb-ÐºÐ¾Ð´ Ð¿ÐµÑ€ÐµÐ´ Ð·Ð°Ð¿Ð¸ÑÑŒÑŽ Ð² Ð±Ð°Ð·Ñƒ
         $inCore                 = cmsCore::getInstance();
-		// Ïàðñèì ïî îòäåëüíîñòè ÷àñòè òåêñòà, åñëè åñòü òåã [cut
+		// ÐŸÐ°Ñ€ÑÐ¸Ð¼ Ð¿Ð¾ Ð¾Ñ‚Ð´ÐµÐ»ÑŒÐ½Ð¾ÑÑ‚Ð¸ Ñ‡Ð°ÑÑ‚Ð¸ Ñ‚ÐµÐºÑÑ‚Ð°, ÐµÑÐ»Ð¸ ÐµÑÑ‚ÑŒ Ñ‚ÐµÐ³ [cut
         if (strstr($item['content'], '[cut')){
             $msg_to 	= $this->getPostShort($item['content']);
 			$msg_to 	= $inCore->parseSmiles($msg_to, true);
@@ -852,7 +852,7 @@ class cms_model_blogs{
         } else {
         $item['content_html']   = $inCore->parseSmiles($item['content'], true);
 		}
-		// Ýêðàíèðóåì ñïåöèàëüíûå ñèìâîëû
+		// Ð­ÐºÑ€Ð°Ð½Ð¸Ñ€ÑƒÐµÐ¼ ÑÐ¿ÐµÑ†Ð¸Ð°Ð»ÑŒÐ½Ñ‹Ðµ ÑÐ¸Ð¼Ð²Ð¾Ð»Ñ‹
         $item['content']        = $this->inDB->escape_string($item['content']);
         $item['content_html']   = $this->inDB->escape_string($item['content_html']);
 
@@ -913,9 +913,9 @@ class cms_model_blogs{
 			$seo_sql = ', seolink = "'.$item['seolink'].'"';
 		}
 
-        //ïàðñèì bb-êîä ïåðåä çàïèñüþ â áàçó
+        //Ð¿Ð°Ñ€ÑÐ¸Ð¼ bb-ÐºÐ¾Ð´ Ð¿ÐµÑ€ÐµÐ´ Ð·Ð°Ð¿Ð¸ÑÑŒÑŽ Ð² Ð±Ð°Ð·Ñƒ
         $inCore                 = cmsCore::getInstance();
-		// Ïàðñèì ïî îòäåëüíîñòè ÷àñòè òåêñòà, åñëè åñòü òåã [cut
+		// ÐŸÐ°Ñ€ÑÐ¸Ð¼ Ð¿Ð¾ Ð¾Ñ‚Ð´ÐµÐ»ÑŒÐ½Ð¾ÑÑ‚Ð¸ Ñ‡Ð°ÑÑ‚Ð¸ Ñ‚ÐµÐºÑÑ‚Ð°, ÐµÑÐ»Ð¸ ÐµÑÑ‚ÑŒ Ñ‚ÐµÐ³ [cut
         if (strstr($item['content'], '[cut')){
             $msg_to 	= $this->getPostShort($item['content']);
 			$msg_to 	= $inCore->parseSmiles($msg_to, true);
@@ -926,7 +926,7 @@ class cms_model_blogs{
         } else {
         $item['content_html']   = $inCore->parseSmiles($item['content'], true);
 		}
-		// Ýêðàíèðóåì ñïåöèàëüíûå ñèìâîëû
+		// Ð­ÐºÑ€Ð°Ð½Ð¸Ñ€ÑƒÐµÐ¼ ÑÐ¿ÐµÑ†Ð¸Ð°Ð»ÑŒÐ½Ñ‹Ðµ ÑÐ¸Ð¼Ð²Ð¾Ð»Ñ‹
         $item['content']        = $this->inDB->escape_string($item['content']);
         $item['content_html']   = $this->inDB->escape_string($item['content_html']);
 

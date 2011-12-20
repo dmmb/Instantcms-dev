@@ -17,15 +17,15 @@ function applet_arhive(){
 
     $inCore = cmsCore::getInstance();
 
-	$GLOBALS['cp_page_title'] = 'Архив статей';
+	$GLOBALS['cp_page_title'] = 'РђСЂС…РёРІ СЃС‚Р°С‚РµР№';
 	
 	$cfg = $inCore->loadComponentConfig('content');
 	$cfg_arhive = $inCore->loadComponentConfig('arhive');
     $inCore->loadModel('content');
     $model = new cms_model_content();
 
-	cpAddPathway('Статьи сайта', 'index.php?view=tree');
-	cpAddPathway('Архив статей', 'index.php?view=arhive');
+	cpAddPathway('РЎС‚Р°С‚СЊРё СЃР°Р№С‚Р°', 'index.php?view=tree');
+	cpAddPathway('РђСЂС…РёРІ СЃС‚Р°С‚РµР№', 'index.php?view=arhive');
 	
 	if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
 	if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { $id = -1; }
@@ -41,29 +41,29 @@ function applet_arhive(){
     if ($do=='config'){
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'folders.gif';
-		$toolmenu[0]['title'] = 'Список статей в архиве';
+		$toolmenu[0]['title'] = 'РЎРїРёСЃРѕРє СЃС‚Р°С‚РµР№ РІ Р°СЂС…РёРІРµ';
 		$toolmenu[0]['link'] = '?view=arhive';
 	
 		cpToolMenu($toolmenu);
-		cpAddPathway('Настройки', 'index.php?view=arhive&do=config');
+		cpAddPathway('РќР°СЃС‚СЂРѕР№РєРё', 'index.php?view=arhive&do=config');
 ?>
 <form action="index.php?view=arhive&do=saveconfig" method="post" name="optform" target="_self" id="form1">
     <table width="609" border="0" cellpadding="10" cellspacing="0" class="proptable">
         <tr>
-            <td valign="top"><strong>Источник материалов при просмотре архива на сайте: </strong></td>
+            <td valign="top"><strong>РСЃС‚РѕС‡РЅРёРє РјР°С‚РµСЂРёР°Р»РѕРІ РїСЂРё РїСЂРѕСЃРјРѕС‚СЂРµ Р°СЂС…РёРІР° РЅР° СЃР°Р№С‚Рµ: </strong></td>
             <td width="100" valign="top">
                 <select name="source" id="source" style="width:285px">
-                    <option value="content" <?php if($cfg_arhive['source']=='content') { echo 'selected'; } ?>>Каталог статей</option>
-                    <option value="arhive" <?php if($cfg_arhive['source']=='arhive') { echo 'selected'; } ?>>Архив статей</option>
-                    <option value="both" <?php if($cfg_arhive['source']=='both') { echo 'selected'; } ?>>Каталог и архив</option>
+                    <option value="content" <?php if($cfg_arhive['source']=='content') { echo 'selected'; } ?>>РљР°С‚Р°Р»РѕРі СЃС‚Р°С‚РµР№</option>
+                    <option value="arhive" <?php if($cfg_arhive['source']=='arhive') { echo 'selected'; } ?>>РђСЂС…РёРІ СЃС‚Р°С‚РµР№</option>
+                    <option value="both" <?php if($cfg_arhive['source']=='both') { echo 'selected'; } ?>>РљР°С‚Р°Р»РѕРі Рё Р°СЂС…РёРІ</option>
                 </select>
             </td>
         </tr>
     </table>
     <p>
         <input name="opt" type="hidden" value="saveconfig" />
-        <input name="save" type="submit" id="save" value="Сохранить" />
-        <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=arhive';"/>
+        <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+        <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=arhive';"/>
     </p>
 </form>
 <?php }
@@ -71,11 +71,11 @@ function applet_arhive(){
 	if ($do == 'list'){
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'config.gif';
-		$toolmenu[0]['title'] = 'Настройки';
+		$toolmenu[0]['title'] = 'РќР°СЃС‚СЂРѕР№РєРё';
 		$toolmenu[0]['link'] = '?view=arhive&do=config';
 
 		$toolmenu[1]['icon'] = 'delete.gif';
-		$toolmenu[1]['title'] = 'Удалить выбранные';
+		$toolmenu[1]['title'] = 'РЈРґР°Р»РёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[1]['link'] = "javascript:checkSel('?view=arhive&do=delete&multiple=1');";
 
 		cpToolMenu($toolmenu);
@@ -85,24 +85,24 @@ function applet_arhive(){
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';				$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Создан';		$fields[1]['field'] = 'pubdate';		$fields[1]['width'] = '80';		$fields[1]['filter'] = 15;
+		$fields[1]['title'] = 'РЎРѕР·РґР°РЅ';		$fields[1]['field'] = 'pubdate';		$fields[1]['width'] = '80';		$fields[1]['filter'] = 15;
 		$fields[1]['fdate'] = '%d/%m/%Y';
 
-		$fields[2]['title'] = 'Название';	$fields[2]['field'] = 'title';			$fields[2]['width'] = '';		$fields[2]['link'] = '?view=content&do=edit&id=%id%';
+		$fields[2]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[2]['field'] = 'title';			$fields[2]['width'] = '';		$fields[2]['link'] = '?view=content&do=edit&id=%id%';
 		$fields[2]['filter'] = 15;
 
-		$fields[3]['title'] = 'Раздел';		$fields[3]['field'] = 'category_id';	$fields[3]['width'] = '100';	$fields[3]['filter'] = 1;
+		$fields[3]['title'] = 'Р Р°Р·РґРµР»';		$fields[3]['field'] = 'category_id';	$fields[3]['width'] = '100';	$fields[3]['filter'] = 1;
 		$fields[3]['prc'] = 'cpCatById';	$fields[3]['filterlist'] = cpGetList('cms_category');
 				
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'В каталог статей';
+		$actions[0]['title'] = 'Р’ РєР°С‚Р°Р»РѕРі СЃС‚Р°С‚РµР№';
 		$actions[0]['icon']  = 'arhive_off.gif';
 		$actions[0]['link']  = '?view=arhive&do=arhive_off&id=%id%';
 
-		$actions[2]['title'] = 'Удалить';
+		$actions[2]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[2]['icon']  = 'delete.gif';
-		$actions[2]['confirm'] = 'Удалить материал?';
+		$actions[2]['confirm'] = 'РЈРґР°Р»РёС‚СЊ РјР°С‚РµСЂРёР°Р»?';
 		$actions[2]['link']  = '?view=content&do=delete&id=%id%';
 				
 		//Print table

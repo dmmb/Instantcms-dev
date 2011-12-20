@@ -21,9 +21,9 @@ function applet_usergroups(){
 	global $adminAccess;
 	if (!$inCore->isAdminCan('admin/users', $adminAccess)) { cpAccessDenied(); }
 	
-	$GLOBALS['cp_page_title'] = 'Группы пользователей';
- 	cpAddPathway('Пользователи', 'index.php?view=users');	
- 	cpAddPathway('Группы пользователей', 'index.php?view=usergroups');	
+	$GLOBALS['cp_page_title'] = 'Р“СЂСѓРїРїС‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№';
+ 	cpAddPathway('РџРѕР»СЊР·РѕРІР°С‚РµР»Рё', 'index.php?view=users');	
+ 	cpAddPathway('Р“СЂСѓРїРїС‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', 'index.php?view=usergroups');	
 
 	if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
 	if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { $id = -1; }
@@ -35,23 +35,23 @@ function applet_usergroups(){
 	if ($do == 'list'){
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'usergroupadd.gif';
-		$toolmenu[0]['title'] = 'Создать группу';
+		$toolmenu[0]['title'] = 'РЎРѕР·РґР°С‚СЊ РіСЂСѓРїРїСѓ';
 		$toolmenu[0]['link'] = "?view=usergroups&do=add";
 		
 		$toolmenu[1]['icon'] = 'edit.gif';
-		$toolmenu[1]['title'] = 'Редактировать выбранные';
+		$toolmenu[1]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[1]['link'] = "javascript:checkSel('?view=usergroups&do=edit&multiple=1');";
 
 		$toolmenu[4]['icon'] = 'delete.gif';
-		$toolmenu[4]['title'] = 'Удалить выбранные';
-		$toolmenu[4]['link'] = "javascript:if(confirm('Вместе с группами будут удалены все их пользователи. Удалить группы?')) { checkSel('?view=users&do=delete&multiple=1'); }";
+		$toolmenu[4]['title'] = 'РЈРґР°Р»РёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
+		$toolmenu[4]['link'] = "javascript:if(confirm('Р’РјРµСЃС‚Рµ СЃ РіСЂСѓРїРїР°РјРё Р±СѓРґСѓС‚ СѓРґР°Р»РµРЅС‹ РІСЃРµ РёС… РїРѕР»СЊР·РѕРІР°С‚РµР»Рё. РЈРґР°Р»РёС‚СЊ РіСЂСѓРїРїС‹?')) { checkSel('?view=users&do=delete&multiple=1'); }";
 
 		$toolmenu[5]['icon'] = 'cancel.gif';
-		$toolmenu[5]['title'] = 'Отмена';
+		$toolmenu[5]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[5]['link'] = "?view=users";
 
 		$toolmenu[6]['icon'] = 'help.gif';
-		$toolmenu[6]['title'] = 'Помощь';
+		$toolmenu[6]['title'] = 'РџРѕРјРѕС‰СЊ';
 		$toolmenu[6]['link'] = "?view=help&topic=usergroups";
 
 		cpToolMenu($toolmenu);
@@ -61,21 +61,21 @@ function applet_usergroups(){
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';		$fields[1]['link'] = '?view=usergroups&do=edit&id=%id%';
+		$fields[1]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';		$fields[1]['link'] = '?view=usergroups&do=edit&id=%id%';
 		$fields[1]['filter'] = 12;
 
-		$fields[2]['title'] = 'Псевдоним';	$fields[2]['field'] = 'alias';		$fields[2]['width'] = '150';	$fields[2]['link'] = '?view=usergroups&do=edit&id=%id%';
+		$fields[2]['title'] = 'РџСЃРµРІРґРѕРЅРёРј';	$fields[2]['field'] = 'alias';		$fields[2]['width'] = '150';	$fields[2]['link'] = '?view=usergroups&do=edit&id=%id%';
 		$fields[2]['filter'] = 12;
 	
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Редактировать';
+		$actions[0]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[0]['icon']  = 'edit.gif';
 		$actions[0]['link']  = '?view=usergroups&do=edit&id=%id%';
 
-		$actions[1]['title'] = 'Удалить';
+		$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[1]['icon']  = 'delete.gif';
-		$actions[1]['confirm'] = 'Вместе с группой будут удалены все ее пользователи. Удалить группу?';
+		$actions[1]['confirm'] = 'Р’РјРµСЃС‚Рµ СЃ РіСЂСѓРїРїРѕР№ Р±СѓРґСѓС‚ СѓРґР°Р»РµРЅС‹ РІСЃРµ РµРµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё. РЈРґР°Р»РёС‚СЊ РіСЂСѓРїРїСѓ?';
 		$actions[1]['link']  = '?view=usergroups&do=delete&id=%id%';
 				
 		//Print table
@@ -147,24 +147,24 @@ function applet_usergroups(){
  
  		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'save.gif';
-		$toolmenu[0]['title'] = 'Сохранить';
+		$toolmenu[0]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 		$toolmenu[0]['link'] = 'javascript:document.addform.submit();';
 
 		$toolmenu[1]['icon'] = 'cancel.gif';
-		$toolmenu[1]['title'] = 'Отмена';
+		$toolmenu[1]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[1]['link'] = 'javascript:history.go(-1);';
 
 		cpToolMenu($toolmenu);
    
 		if ($do=='add'){
-			 echo '<h3>Создать группу</h3>';
- 	 		 cpAddPathway('Создать группу', 'index.php?view=usergroups&do=add');
+			 echo '<h3>РЎРѕР·РґР°С‚СЊ РіСЂСѓРїРїСѓ</h3>';
+ 	 		 cpAddPathway('РЎРѕР·РґР°С‚СЊ РіСЂСѓРїРїСѓ', 'index.php?view=usergroups&do=add');
 		} else {
 					 if(isset($_REQUEST['multiple'])){				 
 						if (isset($_REQUEST['item'])){					
 							$_SESSION['editlist'] = $_REQUEST['item'];
 						} else {
-							echo '<p class="error">Нет выбранных объектов!</p>';
+							echo '<p class="error">РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ!</p>';
 							return;
 						}				 
 					 }
@@ -174,7 +174,7 @@ function applet_usergroups(){
 					 if (isset($_SESSION['editlist'])){
 						$id = array_shift($_SESSION['editlist']);
 						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
-						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
+						{ $ostatok = '(РќР° РѕС‡РµСЂРµРґРё: '.sizeof($_SESSION['editlist']).')'; }
 					 } else { $id = (int)$_REQUEST['id']; }
 	
 					 $sql = "SELECT * FROM cms_user_groups WHERE id = $id LIMIT 1";
@@ -183,9 +183,9 @@ function applet_usergroups(){
 						$mod = mysql_fetch_assoc($result);
 					 }
 					
-					 echo '<h3>Редактировать группу '.$ostatok.'</h3>';
+					 echo '<h3>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РіСЂСѓРїРїСѓ '.$ostatok.'</h3>';
 					 
-					 cpAddPathway('Редактировать группу '.$mod['title'], 'index.php?view=usergroups&do=edit&id='.$mod['id']);
+					 cpAddPathway('Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РіСЂСѓРїРїСѓ '.$mod['title'], 'index.php?view=usergroups&do=edit&id='.$mod['id']);
 			}   
 
 	if(isset($mod['access'])){
@@ -197,18 +197,18 @@ function applet_usergroups(){
 	<form id="addform" name="addform" method="post" action="index.php?view=usergroups">
 		<table width="660" border="0" cellspacing="5" class="proptable">
 			<tr>
-				<td width="198" valign="top"><div><strong>Название группы: </strong></div><span class="hinttext">Отображается на сайте и в админке</span></td>
+				<td width="198" valign="top"><div><strong>РќР°Р·РІР°РЅРёРµ РіСЂСѓРїРїС‹: </strong></div><span class="hinttext">РћС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РЅР° СЃР°Р№С‚Рµ Рё РІ Р°РґРјРёРЅРєРµ</span></td>
 				<td width="475" valign="top"><input name="title" type="text" id="title" size="30" value="<?php echo htmlspecialchars($mod['title']);?>"/></td>
 			</tr>
 			<tr>
-				<td valign="top"><div><strong>Псевдоним:</strong></div><?php if($do=='edit'){ ?><span class="hinttext">Не рекомендуется изменять</span><?php } ?></td>
+				<td valign="top"><div><strong>РџСЃРµРІРґРѕРЅРёРј:</strong></div><?php if($do=='edit'){ ?><span class="hinttext">РќРµ СЂРµРєРѕРјРµРЅРґСѓРµС‚СЃСЏ РёР·РјРµРЅСЏС‚СЊ</span><?php } ?></td>
 				<td valign="top"><input name="alias" type="text" id="title3" size="30" value="<?php echo @$mod['alias'];?>"/></td>
 			</tr>
 			<tr>
-				<td><strong>Администраторы?</strong></td>
+				<td><strong>РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂС‹?</strong></td>
 				<td>
-					<label><input name="is_admin" type="radio" value="1" <?php if (@$mod['is_admin']) { echo 'checked="checked"'; } ?> onclick="$('#accesstable').hide();$('#admin_accesstable').show();"/> Да </label>
-					<label><input name="is_admin" type="radio" value="0"  <?php if (@!$mod['is_admin']) { echo 'checked="checked"'; } ?> onclick="$('#accesstable').show();$('#admin_accesstable').hide();"/> Нет</label>
+					<label><input name="is_admin" type="radio" value="1" <?php if (@$mod['is_admin']) { echo 'checked="checked"'; } ?> onclick="$('#accesstable').hide();$('#admin_accesstable').show();"/> Р”Р° </label>
+					<label><input name="is_admin" type="radio" value="0"  <?php if (@!$mod['is_admin']) { echo 'checked="checked"'; } ?> onclick="$('#accesstable').show();$('#admin_accesstable').hide();"/> РќРµС‚</label>
 				</td>
 			</tr>
 		</table>
@@ -218,57 +218,57 @@ function applet_usergroups(){
 		<table width="660" border="0" cellspacing="5" class="proptable" id="admin_accesstable" style="<?php if(@!$mod['is_admin']){echo 'display:none;'; }?>">
 			<tr>
 				<td width="191" valign="top">
-					<div><strong>Доступные разделы панели управления: </strong></div>
-					<span class="hinttext">Главному администратору будут доступны все разделы, независимо от выбранных настроек</span>
+					<div><strong>Р”РѕСЃС‚СѓРїРЅС‹Рµ СЂР°Р·РґРµР»С‹ РїР°РЅРµР»Рё СѓРїСЂР°РІР»РµРЅРёСЏ: </strong></div>
+					<span class="hinttext">Р“Р»Р°РІРЅРѕРјСѓ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂСѓ Р±СѓРґСѓС‚ РґРѕСЃС‚СѓРїРЅС‹ РІСЃРµ СЂР°Р·РґРµР»С‹, РЅРµР·Р°РІРёСЃРёРјРѕ РѕС‚ РІС‹Р±СЂР°РЅРЅС‹С… РЅР°СЃС‚СЂРѕРµРє</span>
 				</td>
 				<td width="475" valign="top">
 					<table width="100%" border="0" cellspacing="2" cellpadding="0">
 						<tr>
 							<td width="16"><input type="checkbox" name="access[]" value="admin/menu" <?php if (isset($mod['access'])) { if (in_array('admin/menu', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td>Управление меню</td>
+							<td>РЈРїСЂР°РІР»РµРЅРёРµ РјРµРЅСЋ</td>
 						</tr>
 						<tr>
 							<td width="16"><input type="checkbox" name="access[]" value="admin/modules" <?php if (isset($mod['access'])) { if (in_array('admin/modules', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td>Управление модулями</td>
+							<td>РЈРїСЂР°РІР»РµРЅРёРµ РјРѕРґСѓР»СЏРјРё</td>
 						</tr>
 						<tr>
 							<td width="16"><input type="checkbox" name="access[]" value="admin/content" <?php if (isset($mod['access'])) { if (in_array('admin/content', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td>Управление контентом (статьи и разделы)</td>
+							<td>РЈРїСЂР°РІР»РµРЅРёРµ РєРѕРЅС‚РµРЅС‚РѕРј (СЃС‚Р°С‚СЊРё Рё СЂР°Р·РґРµР»С‹)</td>
 						</tr>
                         <tr>
 							<td width="16"><input type="checkbox" name="access[]" value="admin/plugins" <?php if (isset($mod['access'])) { if (in_array('admin/filters', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td>Управление плагинами</td>
+							<td>РЈРїСЂР°РІР»РµРЅРёРµ РїР»Р°РіРёРЅР°РјРё</td>
 						</tr>
 						<tr>
 							<td width="16"><input type="checkbox" name="access[]" value="admin/filters" <?php if (isset($mod['access'])) { if (in_array('admin/filters', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td>Управление фильтрами (требуется управление плагинами)</td>
+							<td>РЈРїСЂР°РІР»РµРЅРёРµ С„РёР»СЊС‚СЂР°РјРё (С‚СЂРµР±СѓРµС‚СЃСЏ СѓРїСЂР°РІР»РµРЅРёРµ РїР»Р°РіРёРЅР°РјРё)</td>
 						</tr>
 						<tr>
 							<td width="16"><input type="checkbox" name="access[]" value="admin/components" <?php if (isset($mod['access'])) { if (in_array('admin/components', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td>Управление компонентами</td>
+							<td>РЈРїСЂР°РІР»РµРЅРёРµ РєРѕРјРїРѕРЅРµРЅС‚Р°РјРё</td>
 						</tr>
 						<tr>
 							<td width="16"><input type="checkbox" name="access[]" value="admin/users" <?php if (isset($mod['access'])) { if (in_array('admin/users', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td>Управление пользователями</td>
+							<td>РЈРїСЂР°РІР»РµРЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРјРё</td>
 						</tr>
 						<tr>
 							<td width="16"><input type="checkbox" name="access[]" value="admin/config" <?php if (isset($mod['access'])) { if (in_array('admin/config', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td>Управление настройками</td>
+							<td>РЈРїСЂР°РІР»РµРЅРёРµ РЅР°СЃС‚СЂРѕР№РєР°РјРё</td>
 						</tr>						
 					</table>
                 </td>
 			</tr>
 			<tr>
 			  <td valign="top">
-			  	<div><strong>Доступные для настройки компоненты: </strong></div>
-				<span class="hinttext">Не забудьте включить "Управление компонентами"</span>
+			  	<div><strong>Р”РѕСЃС‚СѓРїРЅС‹Рµ РґР»СЏ РЅР°СЃС‚СЂРѕР№РєРё РєРѕРјРїРѕРЅРµРЅС‚С‹: </strong></div>
+				<span class="hinttext">РќРµ Р·Р°Р±СѓРґСЊС‚Рµ РІРєР»СЋС‡РёС‚СЊ "РЈРїСЂР°РІР»РµРЅРёРµ РєРѕРјРїРѕРЅРµРЅС‚Р°РјРё"</span>
 			  </td>
 			  <td valign="top">
 				  <table width="100%" border="0" cellspacing="2" cellpadding="0">
                   
 						<?php 
 							$sql = "SELECT * FROM cms_components WHERE config <> '' ORDER BY title";
-							$res = dbQuery($sql) or die('Ошибка получения списка компонентов');			
+							$res = dbQuery($sql) or die('РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃРїРёСЃРєР° РєРѕРјРїРѕРЅРµРЅС‚РѕРІ');			
 							
 							while ($com = mysql_fetch_assoc($res)) { 									
 						?>
@@ -287,56 +287,56 @@ function applet_usergroups(){
 		
 		<table width="660" border="0" cellspacing="5" class="proptable" id="accesstable" style="<?php if(@$mod['is_admin']){echo 'display:none;'; }?>">
 			<tr>
-				<td width="191" valign="top"><strong>Права группы: </strong></td>
+				<td width="191" valign="top"><strong>РџСЂР°РІР° РіСЂСѓРїРїС‹: </strong></td>
 				<td width="475" valign="top">
 					<table width="100%" border="0" cellspacing="2" cellpadding="0">
 						<tr>
 							<td width="16"><input type="checkbox" name="access[]" id="comments_add" value="comments/add" <?php if (isset($mod['access'])) { if (in_array('comments/add', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td><label for="comments_add">Добавление комментариев</label></td>
+							<td><label for="comments_add">Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ</label></td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" name="access[]" id="comments_bbcode" value="comments/bbcode" <?php if (isset($mod['access'])) { if (in_array('comments/bbcode', $mod['access'])) { echo 'checked="checked"'; } }?> /></td>
-							<td><label for="comments_bbcode">Расширенный редактор комментариев (BBCode)</label></td>
+							<td><label for="comments_bbcode">Р Р°СЃС€РёСЂРµРЅРЅС‹Р№ СЂРµРґР°РєС‚РѕСЂ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ (BBCode)</label></td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" name="access[]" id="comments_delete" value="comments/delete" <?php if (isset($mod['access'])) { if (in_array('comments/delete', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td><label for="comments_delete">Удаление своих комментариев</label></td>
+							<td><label for="comments_delete">РЈРґР°Р»РµРЅРёРµ СЃРІРѕРёС… РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ</label></td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" name="access[]" id="comments_moderate" value="comments/moderate" <?php if (isset($mod['access'])) { if (in_array('comments/moderate', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td><label for="comments_moderate">Удаление чужих комментариев</label></td>
+							<td><label for="comments_moderate">РЈРґР°Р»РµРЅРёРµ С‡СѓР¶РёС… РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ</label></td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" name="access[]" id="comments_iscomments" value="comments/iscomments" <?php if (isset($mod['access'])) { if (in_array('comments/iscomments', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td><label for="comments_iscomments">Возможность отключать комментарии в своем блоге</label></td>
+							<td><label for="comments_iscomments">Р’РѕР·РјРѕР¶РЅРѕСЃС‚СЊ РѕС‚РєР»СЋС‡Р°С‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё РІ СЃРІРѕРµРј Р±Р»РѕРіРµ</label></td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" name="access[]" id="forum_moderate" value="forum/moderate" <?php if (isset($mod['access'])) { if (in_array('forum/moderate', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td><label for="forum_moderate">Модерация форума</label></td>
+							<td><label for="forum_moderate">РњРѕРґРµСЂР°С†РёСЏ С„РѕСЂСѓРјР°</label></td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" name="access[]" id="content_add" value="content/add" <?php if (isset($mod['access'])) { if (in_array('content/add', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td><label for="content_add">Добавление статей на сайт</label></td>
+							<td><label for="content_add">Р”РѕР±Р°РІР»РµРЅРёРµ СЃС‚Р°С‚РµР№ РЅР° СЃР°Р№С‚</label></td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" name="access[]" id="content_autoadd" value="content/autoadd" <?php if (isset($mod['access'])) { if (in_array('content/autoadd', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td><label for="content_autoadd">Принимать статьи без модерации</label></td>
+							<td><label for="content_autoadd">РџСЂРёРЅРёРјР°С‚СЊ СЃС‚Р°С‚СЊРё Р±РµР· РјРѕРґРµСЂР°С†РёРё</label></td>
 						</tr>
 						<tr>
 							<td><input name="access[]" type="checkbox" id="content_delete" value="content/delete" <?php if (isset($mod['access'])) { if (in_array('content/delete', $mod['access'])) { echo 'checked="checked"'; } }?>></td>
-							<td><label for="content_delete">Удаление своих статей</label></td>
+							<td><label for="content_delete">РЈРґР°Р»РµРЅРёРµ СЃРІРѕРёС… СЃС‚Р°С‚РµР№</label></td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" name="access[]" id="board_add" value="board/add" <?php if (isset($mod['access'])) { if (in_array('board/add', $mod['access'])) { echo 'checked="checked"'; } }?> /></td>
-							<td><label for="board_add">Добавление объявлений</label></td>
+							<td><label for="board_add">Р”РѕР±Р°РІР»РµРЅРёРµ РѕР±СЉСЏРІР»РµРЅРёР№</label></td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" name="access[]" id="board_autoadd" value="board/autoadd" <?php if (isset($mod['access'])) { if (in_array('board/autoadd', $mod['access'])) { echo 'checked="checked"'; } }?> /></td>
-							<td><label for="board_autoadd">Принимать объявления без модерации</label></td>
+							<td><label for="board_autoadd">РџСЂРёРЅРёРјР°С‚СЊ РѕР±СЉСЏРІР»РµРЅРёСЏ Р±РµР· РјРѕРґРµСЂР°С†РёРё</label></td>
 						</tr>
 						<tr>
 							<td><input name="access[]" type="checkbox" id="board_moderate" value="board/moderate" <?php if (isset($mod['access'])) { if (in_array('board/moderate', $mod['access'])) { echo 'checked="checked"'; } }?> /></td>
-							<td><label for="board_moderate">Модерация доски объявлений</label></td>
+							<td><label for="board_moderate">РњРѕРґРµСЂР°С†РёСЏ РґРѕСЃРєРё РѕР±СЉСЏРІР»РµРЅРёР№</label></td>
 						</tr>
 					</table>
 				</td>
@@ -346,8 +346,8 @@ function applet_usergroups(){
 		<!--------------------------------------------------------------------------------------------------------------------------------------------->
 
 		<p>
-			<input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add') { echo 'value="Создать группу"'; } else { echo 'value="Сохранить группу"'; } ?> />
-			<span style="margin-top:15px"><input name="back" type="button" id="back" value="Отмена" onclick="window.history.back();"/></span>
+			<input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add') { echo 'value="РЎРѕР·РґР°С‚СЊ РіСЂСѓРїРїСѓ"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ РіСЂСѓРїРїСѓ"'; } ?> />
+			<span style="margin-top:15px"><input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.history.back();"/></span>
 			<input name="do" type="hidden" id="do" <?php if ($do=='add') { echo 'value="submit"'; } else { echo 'value="update"'; } ?> />
 			<?php
 			if ($do=='edit'){

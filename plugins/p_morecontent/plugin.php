@@ -19,19 +19,19 @@ class p_morecontent extends cmsPlugin {
 		
         parent::__construct();
 		
-		// Информация о плагине
+		// РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїР»Р°РіРёРЅРµ
 		
         $this->info['plugin']           = 'p_morecontent';
-        $this->info['title']            = 'Похожие статьи';
-        $this->info['description']      = 'Добавляет в конец каждой статьи список похожих статей.';
+        $this->info['title']            = 'РџРѕС…РѕР¶РёРµ СЃС‚Р°С‚СЊРё';
+        $this->info['description']      = 'Р”РѕР±Р°РІР»СЏРµС‚ РІ РєРѕРЅРµС† РєР°Р¶РґРѕР№ СЃС‚Р°С‚СЊРё СЃРїРёСЃРѕРє РїРѕС…РѕР¶РёС… СЃС‚Р°С‚РµР№.';
         $this->info['author']           = 'Maximov & InstantCMS Team';
         $this->info['version']          = '1.0';
 		
-		// События, которые будут отлавливаться плагином
+		// РЎРѕР±С‹С‚РёСЏ, РєРѕС‚РѕСЂС‹Рµ Р±СѓРґСѓС‚ РѕС‚Р»Р°РІР»РёРІР°С‚СЊСЃСЏ РїР»Р°РіРёРЅРѕРј
 		
         $this->events[]                 = 'GET_ARTICLE';
 		
-		// Настройки по-умолчанию
+		// РќР°СЃС‚СЂРѕР№РєРё РїРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ
 		
         $this->config['limit']          = 5;
         $this->config['unsort']         = 1;
@@ -40,7 +40,7 @@ class p_morecontent extends cmsPlugin {
 // ==================================================================== //
 
     /**
-     * Процедура установки плагина
+     * РџСЂРѕС†РµРґСѓСЂР° СѓСЃС‚Р°РЅРѕРІРєРё РїР»Р°РіРёРЅР°
      * @return bool
      */
     public function install(){
@@ -50,7 +50,7 @@ class p_morecontent extends cmsPlugin {
 // ==================================================================== //
 
     /**
-     * Процедура обновления плагина
+     * РџСЂРѕС†РµРґСѓСЂР° РѕР±РЅРѕРІР»РµРЅРёСЏ РїР»Р°РіРёРЅР°
      * @return bool
      */
     public function upgrade(){
@@ -60,7 +60,7 @@ class p_morecontent extends cmsPlugin {
 // ==================================================================== //
 
     /**
-     * Обработка событий
+     * РћР±СЂР°Р±РѕС‚РєР° СЃРѕР±С‹С‚РёР№
      * @param string $event
      * @param mixed $item
      * @return html
@@ -83,7 +83,7 @@ class p_morecontent extends cmsPlugin {
 		$item_id 	= $item['id']; 
   		$tag_arr 	= explode(', ', cmsTagLine('content', $item_id, false));
 		
-		// Получаем id назначения таких же тегов, не более пяти на каждый
+		// РџРѕР»СѓС‡Р°РµРј id РЅР°Р·РЅР°С‡РµРЅРёСЏ С‚Р°РєРёС… Р¶Рµ С‚РµРіРѕРІ, РЅРµ Р±РѕР»РµРµ РїСЏС‚Рё РЅР° РєР°Р¶РґС‹Р№
   		foreach ($tag_arr as $tag) {
 
     		$sql = "SELECT item_id FROM cms_tags WHERE tag = '$tag' AND item_id<>'$item_id' AND target='content' LIMIT 5";
@@ -109,7 +109,7 @@ class p_morecontent extends cmsPlugin {
 	        		$morecontent .= '<p>'.$con."</p>";
 				}
 	        }
-			if($morecontent) { $item['content'] .= '<h4>Похожие статьи:</h4>'.$morecontent; }
+			if($morecontent) { $item['content'] .= '<h4>РџРѕС…РѕР¶РёРµ СЃС‚Р°С‚СЊРё:</h4>'.$morecontent; }
         }
         return $item;
 	}

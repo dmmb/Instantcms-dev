@@ -246,7 +246,7 @@
             // Handle error
             MultiFile.error(ERROR);
 												
-            // 2007-06-24: BUG FIX - Thanks to Adrian Wrуbel <adrian [dot] wrobel [at] gmail.com>
+            // 2007-06-24: BUG FIX - Thanks to Adrian WrСѓbel <adrian [dot] wrobel [at] gmail.com>
             // Ditch the trouble maker and add a fresh new element
             MultiFile.n--;
             MultiFile.addSlave(newEle[0], slave_count);
@@ -474,11 +474,11 @@
 		
 		// STRING: collection lets you show messages in different languages
 		STRING: {
-			remove:'отменить',
-			denied:'Вы не можете выбрать $ext файл.\nДанный тип файла не разрешен...',
+			remove:'РѕС‚РјРµРЅРёС‚СЊ',
+			denied:'Р’С‹ РЅРµ РјРѕР¶РµС‚Рµ РІС‹Р±СЂР°С‚СЊ $ext С„Р°Р№Р».\nР”Р°РЅРЅС‹Р№ С‚РёРї С„Р°Р№Р»Р° РЅРµ СЂР°Р·СЂРµС€РµРЅ...',
 			file:'$file',
-			selected:'Выбраны файлы: $file',
-			duplicate:'Этот файл уже был выбран:\n$file'
+			selected:'Р’С‹Р±СЂР°РЅС‹ С„Р°Р№Р»С‹: $file',
+			duplicate:'Р­С‚РѕС‚ С„Р°Р№Р» СѓР¶Рµ Р±С‹Р» РІС‹Р±СЂР°РЅ:\n$file'
 		},
 		
 		// name of methods that should be automcatically intercepted so the plugin can disable

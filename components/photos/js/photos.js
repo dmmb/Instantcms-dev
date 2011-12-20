@@ -5,9 +5,9 @@ function publishPhoto(id){
 	  data: "id="+id,
 	  success: function(msg){
 			if (msg=='ok'){
-				$('tr#moder'+id+' td').html('<div style="color:silver">Фото опубликовано</div>');
+				$('tr#moder'+id+' td').html('<div style="color:silver">Р¤РѕС‚Рѕ РѕРїСѓР±Р»РёРєРѕРІР°РЅРѕ</div>');
 			} else {
-				alert('Ошибка! Фото не опубликовано.');	
+				alert('РћС€РёР±РєР°! Р¤РѕС‚Рѕ РЅРµ РѕРїСѓР±Р»РёРєРѕРІР°РЅРѕ.');	
 			}
 			$('#add_album_wait').hide();
 	  }

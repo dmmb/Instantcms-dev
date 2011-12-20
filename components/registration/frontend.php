@@ -56,7 +56,7 @@ function registration(){
     global $_LANG;
 
     $cfg = $inCore->loadComponentConfig('registration');
-	// Ïðîâåðÿåì âêëþ÷åíè ëè êîìïîíåíò
+	// ÐŸÑ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼ Ð²ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸ Ð»Ð¸ ÐºÐ¾Ð¼Ð¿Ð¾Ð½ÐµÐ½Ñ‚
 	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     //config defaults
@@ -131,7 +131,7 @@ function registration(){
     if ($do=='register'){
 
         $msg = '';
-		// Ïðîâåðÿåì ëîãèí è ïàðîëü
+		// ÐŸÑ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼ Ð»Ð¾Ð³Ð¸Ð½ Ð¸ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ
 		$login 	= $inCore->request('login', 'str', '');
 		$pass 	= $inCore->request('pass', 'str', '');
 		$pass2	= $inCore->request('pass2', 'str', '');
@@ -143,7 +143,7 @@ function registration(){
 		if($pass && $pass2 && strlen($pass)<6) 	{ $msg .= $_LANG['PASS_SHORT'].'<br/>'; }
 		if($pass && $pass2 && $pass != $pass2) 	{ $msg .= $_LANG['WRONG_PASS'].'<br/>'; }
 
-		// Ïðîâåðÿåì nickname èëè èìÿ è ôàìèëèþ
+		// ÐŸÑ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼ nickname Ð¸Ð»Ð¸ Ð¸Ð¼Ñ Ð¸ Ñ„Ð°Ð¼Ð¸Ð»Ð¸ÑŽ
         if($cfg['name_mode']=='nickname'){
 			$nickname = $inCore->request('nickname', 'str', '');
             if(!$nickname) 						{ $msg .= $_LANG['TYPE_NICKNAME'].'<br/>'; }
@@ -162,25 +162,25 @@ function registration(){
 		if($model->getBadNickname($nickname)){
             $msg .= $_LANG['ERR_NICK_EXISTS'].'<br/>';
         }
-		// Ïðîâåðÿåì email
+		// ÐŸÑ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼ email
         $email = $inCore->request('email', 'email');
         if(!$email) {
             $msg  .= $_LANG['ERR_EMAIL'].'<br/>';
         }
-		// Åñëè åñòü îïöèÿ ïîêàçûâàòü ÄÐ ïðè ðåãèñòðàöèè, òî ïðîâåðÿåì
+		// Ð•ÑÐ»Ð¸ ÐµÑÑ‚ÑŒ Ð¾Ð¿Ñ†Ð¸Ñ Ð¿Ð¾ÐºÐ°Ð·Ñ‹Ð²Ð°Ñ‚ÑŒ Ð”Ð  Ð¿Ñ€Ð¸ Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð°Ñ†Ð¸Ð¸, Ñ‚Ð¾ Ð¿Ñ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼
         if ($cfg['ask_birthdate']){
             $birthdate = (int)$_REQUEST['birthdate']['year'].'-'.(int)$_REQUEST['birthdate']['month'].'-'.(int)$_REQUEST['birthdate']['day'];
         } else { 
             $birthdate = '1980-01-01';
         }
-		// Åñëè åñòü îïöèÿ ïîêàçûâàòü icq ïðè ðåãèñòðàöèè, òî ïðîâåðÿåì
+		// Ð•ÑÐ»Ð¸ ÐµÑÑ‚ÑŒ Ð¾Ð¿Ñ†Ð¸Ñ Ð¿Ð¾ÐºÐ°Ð·Ñ‹Ð²Ð°Ñ‚ÑŒ icq Ð¿Ñ€Ð¸ Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð°Ñ†Ð¸Ð¸, Ñ‚Ð¾ Ð¿Ñ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼
         if ($cfg['ask_icq']){
             $icq = $inCore->request('icq', 'str', '');
 			$icq = preg_replace('/([^0-9])/i', '', $icq);
         } else {
             $icq = '';
         }
-		// Ïðîâåðÿåì êàïò÷ó
+		// ÐŸÑ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼ ÐºÐ°Ð¿Ñ‚Ñ‡Ñƒ
 		$code = $inCore->request('code', 'str');
         if(!$code) { $msg .= $_LANG['TYPE_CAPTCHA'].'<br/>'; }
 
@@ -245,7 +245,7 @@ function registration(){
                         $inPage->includeTemplateFile('special/regactivate.php');
                         $inCore->halt();
                     } else {                        
-						// Ðåãèñòðèðóåì ñîáûòèå
+						// Ð ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€ÑƒÐµÐ¼ ÑÐ¾Ð±Ñ‹Ñ‚Ð¸Ðµ
 						cmsActions::log('add_user', array(
 							'object' => '',
 							'user_id' => $new_user_id,
@@ -284,7 +284,7 @@ function registration(){
 		$inPage->addPathway($_LANG['REGISTRATION']);
 
         $do = 'view';
-		// Åñëè ïîëüçîâàòåëü àâòîðèçîâàí, òî íå ïîêàçûâàåì ôîðìó ðåãèñòðàöèè, ðåäèðåêò â ïðîôèëü.
+		// Ð•ÑÐ»Ð¸ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒ Ð°Ð²Ñ‚Ð¾Ñ€Ð¸Ð·Ð¾Ð²Ð°Ð½, Ñ‚Ð¾ Ð½Ðµ Ð¿Ð¾ÐºÐ°Ð·Ñ‹Ð²Ð°ÐµÐ¼ Ñ„Ð¾Ñ€Ð¼Ñƒ Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð°Ñ†Ð¸Ð¸, Ñ€ÐµÐ´Ð¸Ñ€ÐµÐºÑ‚ Ð² Ð¿Ñ€Ð¾Ñ„Ð¸Ð»ÑŒ.
         if ($inUser->id && !$inUser->is_admin) {
             if ($inCore->menuId() == 1) { return; } else {  $inCore->redirect(cmsUser::getProfileURL($inUser->login)); }
         }
@@ -323,7 +323,7 @@ function registration(){
     if ($do=='auth'){
 
 		//====================//
-		//==  ðàçëîãèâàíèå  ==//
+		//==  Ñ€Ð°Ð·Ð»Ð¾Ð³Ð¸Ð²Ð°Ð½Ð¸Ðµ  ==//
         if( $inCore->inRequest('logout') ) {
             $inCore->unsetCookie('userid');
 
@@ -344,14 +344,14 @@ function registration(){
         }
 
 		//====================//
-		//==  àâòîðèçàöèÿ  ==//
+		//==  Ð°Ð²Ñ‚Ð¾Ñ€Ð¸Ð·Ð°Ñ†Ð¸Ñ  ==//
         if( !$inCore->inRequest('logout') ) {
 
 			$login = $inCore->request('login', 'str', '');
 			$passw = $inCore->request('pass', 'str', '');
 			$remember_pass = $inCore->inRequest('remember');
 
-			// åñëè íåò ëîãèíà èëè ïàðîëÿ, ïîêàçûâàåì ôîðìó âõîäà
+			// ÐµÑÐ»Ð¸ Ð½ÐµÑ‚ Ð»Ð¾Ð³Ð¸Ð½Ð° Ð¸Ð»Ð¸ Ð¿Ð°Ñ€Ð¾Ð»Ñ, Ð¿Ð¾ÐºÐ°Ð·Ñ‹Ð²Ð°ÐµÐ¼ Ñ„Ð¾Ñ€Ð¼Ñƒ Ð²Ñ…Ð¾Ð´Ð°
 			if (!$login || !$passw){
 
 				if($inUser->id && !$inUser->is_admin) { $inCore->redirect('/'); }
@@ -404,7 +404,7 @@ function registration(){
 
             if ($cfg['send_greetmsg']){ $model->sendGreetsMessage($user_id, $cfg['greetmsg']); }
 
-			// Ðåãèñòðèðóåì ñîáûòèå
+			// Ð ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€ÑƒÐµÐ¼ ÑÐ¾Ð±Ñ‹Ñ‚Ð¸Ðµ
 			cmsActions::log('add_user', array(
 					'object' => '',
 					'user_id' => $user_id,
@@ -440,18 +440,18 @@ function registration(){
 
         $usercode = $inCore->request('code', 'str', '');
 
-        //ïðîâåðÿåì ôîðìàò êîäà
+        //Ð¿Ñ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼ Ñ„Ð¾Ñ€Ð¼Ð°Ñ‚ ÐºÐ¾Ð´Ð°
         if (!preg_match('/^([a-z0-9]{32})$/i', $usercode)) { $inCore->halt(); }
 
-        //èùåì ïîëüçîâàòåëÿ ïî êîäó
+        //Ð¸Ñ‰ÐµÐ¼ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ñ Ð¿Ð¾ ÐºÐ¾Ð´Ñƒ
         $sql = "SELECT * FROM cms_users
                 WHERE MD5(CONCAT(id,'-',login,'-',password,'-',DATE_FORMAT(logdate, '%d-%m-%Y-%H-%i-%s'))) = '{$usercode}'";
         $result = $inDB->query($sql);
 
-        //åñëè ïîëüçîâàòåëü íå íàéäåí, ðåäèðåêò íà ãëàâíóþ
+        //ÐµÑÐ»Ð¸ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒ Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½, Ñ€ÐµÐ´Ð¸Ñ€ÐµÐºÑ‚ Ð½Ð° Ð³Ð»Ð°Ð²Ð½ÑƒÑŽ
         if (!$inDB->num_rows($result)){ $inCore->redirect('/'); }
 
-        //ïîëó÷àåì ïîëüçîâàòåëÿ
+        //Ð¿Ð¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ñ
         $user = $inDB->fetch_assoc($result);
 
         $errors = '';

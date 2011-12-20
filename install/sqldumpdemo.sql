@@ -12,30 +12,30 @@ CREATE TABLE `#__actions` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__actions` (`id`, `component`, `name`, `title`, `message`, `is_tracked`, `is_visible`) VALUES
-(2, 'comments', 'add_comment', 'Добавление комментария', 'добавляет %s| на странице %s', 1, 1),
-(7, 'photos', 'add_photo', 'Добавление фото', 'добавляет фото %s| в альбом %s', 1, 1),
-(8, 'content', 'add_article', 'Добавление статьи', 'добавляет статью %s| в раздел %s', 1, 1),
-(9, 'blogs', 'add_blog', 'Создание блога пользователем', 'создает блог %s|', 1, 1),
-(10, 'blogs', 'add_post', 'Добавление записи в блог', 'пишет пост %s| в блоге %s', 1, 1),
-(11, 'users', 'set_status', 'Изменение статуса пользователя', '', 1, 1),
-(12, 'board', 'add_board', 'Добавление объявления', 'добавляет объявление %s| в рубрику %s', 1, 1),
-(13, 'catalog', 'add_catalog', 'Добавление записи в каталог', 'добавляет запись %s| в рубрику каталога %s', 1, 1),
-(14, 'clubs', 'add_club', 'Создание клуба', 'создает клуб %s|', 1, 1),
-(15, 'clubs', 'add_club_user', 'Вступление в клуб', 'вступает в клуб %s|', 1, 1),
-(16, 'faq', 'add_quest', 'Вопрос', 'задает %s| в категории %s', 1, 1),
-(17, 'forum', 'add_fpost', 'Добавление поста в форуме', 'добавляет %s| в теме %s', 1, 1),
-(18, 'forum', 'add_thread', 'Добавление темы на форуме', 'создает тему %s| на форуме %s', 1, 1),
-(19, 'users', 'add_avatar', 'Загрузка или смена аватара пользователем', 'изменяет аватар|', 1, 1),
-(20, 'users', 'add_friend', 'Добавление друга', 'и %s стали друзьями|', 1, 1),
-(21, 'users', 'add_award', 'Получение награды пользователем', 'получает награду %s|', 1, 1),
-(22, 'users', 'add_file', 'Загрузка файла пользователем', 'загружает файл %s|', 1, 1),
-(23, 'users', 'add_wall', 'Добавление записи на стену', 'добавляет запись на стене пользователя %s|', 1, 1),
-(24, 'clubs', 'add_wall_club', 'Добавление записи на стену клуба', 'добавляет запись на стене клуба %s|', 1, 1),
-(25, 'clubs', 'add_post_club', 'Добавление записи в блог клуба', 'пишет пост %s| в клубе %s', 1, 1),
-(26, 'users', 'add_user_photo', 'Добавление фото в личный альбом', 'добавляет фото %s| в альбом %s', 1, 1),
-(27, 'users', 'add_user_photo_multi', 'Добавление много фоток в личный альбом', 'добавляет %s фото| в альбом %s', 1, 1),
-(28, 'registration', 'add_user', 'Регистрация нового пользователя', 'регистрируется. Приветствуем!|', 1, 1),
-(29, 'users', 'add_wall_my', 'Добавление записи на свою стену', 'пишет на своей стене|	', 1, 1);
+(2, 'comments', 'add_comment', 'Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРјРјРµРЅС‚Р°СЂРёСЏ', 'РґРѕР±Р°РІР»СЏРµС‚ %s| РЅР° СЃС‚СЂР°РЅРёС†Рµ %s', 1, 1),
+(7, 'photos', 'add_photo', 'Р”РѕР±Р°РІР»РµРЅРёРµ С„РѕС‚Рѕ', 'РґРѕР±Р°РІР»СЏРµС‚ С„РѕС‚Рѕ %s| РІ Р°Р»СЊР±РѕРј %s', 1, 1),
+(8, 'content', 'add_article', 'Р”РѕР±Р°РІР»РµРЅРёРµ СЃС‚Р°С‚СЊРё', 'РґРѕР±Р°РІР»СЏРµС‚ СЃС‚Р°С‚СЊСЋ %s| РІ СЂР°Р·РґРµР» %s', 1, 1),
+(9, 'blogs', 'add_blog', 'РЎРѕР·РґР°РЅРёРµ Р±Р»РѕРіР° РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј', 'СЃРѕР·РґР°РµС‚ Р±Р»РѕРі %s|', 1, 1),
+(10, 'blogs', 'add_post', 'Р”РѕР±Р°РІР»РµРЅРёРµ Р·Р°РїРёСЃРё РІ Р±Р»РѕРі', 'РїРёС€РµС‚ РїРѕСЃС‚ %s| РІ Р±Р»РѕРіРµ %s', 1, 1),
+(11, 'users', 'set_status', 'РР·РјРµРЅРµРЅРёРµ СЃС‚Р°С‚СѓСЃР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ', '', 1, 1),
+(12, 'board', 'add_board', 'Р”РѕР±Р°РІР»РµРЅРёРµ РѕР±СЉСЏРІР»РµРЅРёСЏ', 'РґРѕР±Р°РІР»СЏРµС‚ РѕР±СЉСЏРІР»РµРЅРёРµ %s| РІ СЂСѓР±СЂРёРєСѓ %s', 1, 1),
+(13, 'catalog', 'add_catalog', 'Р”РѕР±Р°РІР»РµРЅРёРµ Р·Р°РїРёСЃРё РІ РєР°С‚Р°Р»РѕРі', 'РґРѕР±Р°РІР»СЏРµС‚ Р·Р°РїРёСЃСЊ %s| РІ СЂСѓР±СЂРёРєСѓ РєР°С‚Р°Р»РѕРіР° %s', 1, 1),
+(14, 'clubs', 'add_club', 'РЎРѕР·РґР°РЅРёРµ РєР»СѓР±Р°', 'СЃРѕР·РґР°РµС‚ РєР»СѓР± %s|', 1, 1),
+(15, 'clubs', 'add_club_user', 'Р’СЃС‚СѓРїР»РµРЅРёРµ РІ РєР»СѓР±', 'РІСЃС‚СѓРїР°РµС‚ РІ РєР»СѓР± %s|', 1, 1),
+(16, 'faq', 'add_quest', 'Р’РѕРїСЂРѕСЃ', 'Р·Р°РґР°РµС‚ %s| РІ РєР°С‚РµРіРѕСЂРёРё %s', 1, 1),
+(17, 'forum', 'add_fpost', 'Р”РѕР±Р°РІР»РµРЅРёРµ РїРѕСЃС‚Р° РІ С„РѕСЂСѓРјРµ', 'РґРѕР±Р°РІР»СЏРµС‚ %s| РІ С‚РµРјРµ %s', 1, 1),
+(18, 'forum', 'add_thread', 'Р”РѕР±Р°РІР»РµРЅРёРµ С‚РµРјС‹ РЅР° С„РѕСЂСѓРјРµ', 'СЃРѕР·РґР°РµС‚ С‚РµРјСѓ %s| РЅР° С„РѕСЂСѓРјРµ %s', 1, 1),
+(19, 'users', 'add_avatar', 'Р—Р°РіСЂСѓР·РєР° РёР»Рё СЃРјРµРЅР° Р°РІР°С‚Р°СЂР° РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј', 'РёР·РјРµРЅСЏРµС‚ Р°РІР°С‚Р°СЂ|', 1, 1),
+(20, 'users', 'add_friend', 'Р”РѕР±Р°РІР»РµРЅРёРµ РґСЂСѓРіР°', 'Рё %s СЃС‚Р°Р»Рё РґСЂСѓР·СЊСЏРјРё|', 1, 1),
+(21, 'users', 'add_award', 'РџРѕР»СѓС‡РµРЅРёРµ РЅР°РіСЂР°РґС‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј', 'РїРѕР»СѓС‡Р°РµС‚ РЅР°РіСЂР°РґСѓ %s|', 1, 1),
+(22, 'users', 'add_file', 'Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»Р° РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј', 'Р·Р°РіСЂСѓР¶Р°РµС‚ С„Р°Р№Р» %s|', 1, 1),
+(23, 'users', 'add_wall', 'Р”РѕР±Р°РІР»РµРЅРёРµ Р·Р°РїРёСЃРё РЅР° СЃС‚РµРЅСѓ', 'РґРѕР±Р°РІР»СЏРµС‚ Р·Р°РїРёСЃСЊ РЅР° СЃС‚РµРЅРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ %s|', 1, 1),
+(24, 'clubs', 'add_wall_club', 'Р”РѕР±Р°РІР»РµРЅРёРµ Р·Р°РїРёСЃРё РЅР° СЃС‚РµРЅСѓ РєР»СѓР±Р°', 'РґРѕР±Р°РІР»СЏРµС‚ Р·Р°РїРёСЃСЊ РЅР° СЃС‚РµРЅРµ РєР»СѓР±Р° %s|', 1, 1),
+(25, 'clubs', 'add_post_club', 'Р”РѕР±Р°РІР»РµРЅРёРµ Р·Р°РїРёСЃРё РІ Р±Р»РѕРі РєР»СѓР±Р°', 'РїРёС€РµС‚ РїРѕСЃС‚ %s| РІ РєР»СѓР±Рµ %s', 1, 1),
+(26, 'users', 'add_user_photo', 'Р”РѕР±Р°РІР»РµРЅРёРµ С„РѕС‚Рѕ РІ Р»РёС‡РЅС‹Р№ Р°Р»СЊР±РѕРј', 'РґРѕР±Р°РІР»СЏРµС‚ С„РѕС‚Рѕ %s| РІ Р°Р»СЊР±РѕРј %s', 1, 1),
+(27, 'users', 'add_user_photo_multi', 'Р”РѕР±Р°РІР»РµРЅРёРµ РјРЅРѕРіРѕ С„РѕС‚РѕРє РІ Р»РёС‡РЅС‹Р№ Р°Р»СЊР±РѕРј', 'РґРѕР±Р°РІР»СЏРµС‚ %s С„РѕС‚Рѕ| РІ Р°Р»СЊР±РѕРј %s', 1, 1),
+(28, 'registration', 'add_user', 'Р РµРіРёСЃС‚СЂР°С†РёСЏ РЅРѕРІРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ', 'СЂРµРіРёСЃС‚СЂРёСЂСѓРµС‚СЃСЏ. РџСЂРёРІРµС‚СЃС‚РІСѓРµРј!|', 1, 1),
+(29, 'users', 'add_wall_my', 'Р”РѕР±Р°РІР»РµРЅРёРµ Р·Р°РїРёСЃРё РЅР° СЃРІРѕСЋ СЃС‚РµРЅСѓ', 'РїРёС€РµС‚ РЅР° СЃРІРѕРµР№ СЃС‚РµРЅРµ|	', 1, 1);
 
 DROP TABLE IF EXISTS `#__actions_log`;
 CREATE TABLE `#__actions_log` (
@@ -60,11 +60,11 @@ CREATE TABLE `#__actions_log` (
 
 INSERT INTO `#__actions_log` (`id`, `action_id`, `pubdate`, `user_id`, `object`, `object_url`, `object_id`, `target`, `target_url`, `target_id`, `description`, `is_friends_only`, `is_users_only`) VALUES
 (2, 11, '2011-10-13 23:09:34', 2, '', '', 0, '', '', 0, 'I love InstantCMS', 0, 0),
-(3, 2, '2011-10-13 23:11:00', 2, 'комментарий', '/stati/marketing/yelastichnost-sprosa.html#c13', 13, 'Эластичность спроса', '/stati/marketing/yelastichnost-sprosa.html', 0, 'Спасибо автору за такую отличную статью!', 0, 0),
-(4, 27, '2011-10-13 23:13:37', 1, '2', '', 0, 'Мои картинки', '/users/admin/photos/private5.html', 5, ' <a href="/users/1/photo6.html" class="act_photo">\r\n											<img border="0" src="/images/users/photos/small/b22c5c0f95c1fb9398578fd5e396c7dd.jpg" />\r\n									</a>  <a href="/users/1/photo7.html" class="act_photo">\r\n											<img border="0" src="/images/users/photos/small/efe8d13779cd84cfeb319d9f0875a511.jpg" />\r\n									</a> ', 0, 0),
-(5, 20, '2011-10-13 23:18:39', 3, 'Администратор', '/users/admin', 11, '', '', 0, '', 0, 0),
-(6, 2, '2011-10-13 23:19:19', 3, 'комментарий', '/stati/marketing/yelastichnost-sprosa.html#c14', 14, 'Эластичность спроса', '/stati/marketing/yelastichnost-sprosa.html', 0, 'Полностью согласен с Вами, коллега.', 0, 0),
-(7, 15, '2011-10-13 23:21:43', 3, 'Клуб любителей InstantCMS', '/clubs/14', 14, '', '', 0, '', 0, 0);
+(3, 2, '2011-10-13 23:11:00', 2, 'РєРѕРјРјРµРЅС‚Р°СЂРёР№', '/stati/marketing/yelastichnost-sprosa.html#c13', 13, 'Р­Р»Р°СЃС‚РёС‡РЅРѕСЃС‚СЊ СЃРїСЂРѕСЃР°', '/stati/marketing/yelastichnost-sprosa.html', 0, 'РЎРїР°СЃРёР±Рѕ Р°РІС‚РѕСЂСѓ Р·Р° С‚Р°РєСѓСЋ РѕС‚Р»РёС‡РЅСѓСЋ СЃС‚Р°С‚СЊСЋ!', 0, 0),
+(4, 27, '2011-10-13 23:13:37', 1, '2', '', 0, 'РњРѕРё РєР°СЂС‚РёРЅРєРё', '/users/admin/photos/private5.html', 5, ' <a href="/users/1/photo6.html" class="act_photo">\r\n											<img border="0" src="/images/users/photos/small/b22c5c0f95c1fb9398578fd5e396c7dd.jpg" />\r\n									</a>  <a href="/users/1/photo7.html" class="act_photo">\r\n											<img border="0" src="/images/users/photos/small/efe8d13779cd84cfeb319d9f0875a511.jpg" />\r\n									</a> ', 0, 0),
+(5, 20, '2011-10-13 23:18:39', 3, 'РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ', '/users/admin', 11, '', '', 0, '', 0, 0),
+(6, 2, '2011-10-13 23:19:19', 3, 'РєРѕРјРјРµРЅС‚Р°СЂРёР№', '/stati/marketing/yelastichnost-sprosa.html#c14', 14, 'Р­Р»Р°СЃС‚РёС‡РЅРѕСЃС‚СЊ СЃРїСЂРѕСЃР°', '/stati/marketing/yelastichnost-sprosa.html', 0, 'РџРѕР»РЅРѕСЃС‚СЊСЋ СЃРѕРіР»Р°СЃРµРЅ СЃ Р’Р°РјРё, РєРѕР»Р»РµРіР°.', 0, 0),
+(7, 15, '2011-10-13 23:21:43', 3, 'РљР»СѓР± Р»СЋР±РёС‚РµР»РµР№ InstantCMS', '/clubs/14', 14, '', '', 0, '', 0, 0);
 
 
 DROP TABLE IF EXISTS `#__banlist`;
@@ -99,7 +99,7 @@ CREATE TABLE `#__banners` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__banners` (`id`, `position`, `typeimg`, `fileurl`, `hits`, `clicks`, `maxhits`, `maxuser`, `user_id`, `pubdate`, `title`, `link`, `published`) VALUES
-(4, 'banner1', 'image', 'banner468x60v1.gif', 0, 0, 0, 0, 1, '2009-04-04 19:43:53', 'InstantCMS - Бесплатная система управления сайтом', 'http://www.instantcms.ru/', 1);
+(4, 'banner1', 'image', 'banner468x60v1.gif', 0, 0, 0, 0, 1, '2009-04-04 19:43:53', 'InstantCMS - Р‘РµСЃРїР»Р°С‚РЅР°СЏ СЃРёСЃС‚РµРјР° СѓРїСЂР°РІР»РµРЅРёСЏ СЃР°Р№С‚РѕРј', 'http://www.instantcms.ru/', 1);
 
 DROP TABLE IF EXISTS `#__banner_hits`;
 CREATE TABLE `#__banner_hits` (
@@ -132,8 +132,8 @@ CREATE TABLE `#__blogs` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__blogs` (`id`, `user_id`, `title`, `pubdate`, `allow_who`, `view_type`, `showcats`, `ownertype`, `premod`, `forall`, `owner`, `seolink`, `rating`) VALUES
-(1, 1, 'Пример блога админа', '2008-06-03 13:26:55', 'all', 'list', 1, 'single', 0, 1, 'user', 'primer-bloga-admina', 2),
-(24, 14, 'Блог клуба любителей InstantCMS', '2010-10-20 00:02:41', 'all', 'list', 1, 'multi', 0, 0, 'club', 'instantcms-lovers', 0);
+(1, 1, 'РџСЂРёРјРµСЂ Р±Р»РѕРіР° Р°РґРјРёРЅР°', '2008-06-03 13:26:55', 'all', 'list', 1, 'single', 0, 1, 'user', 'primer-bloga-admina', 2),
+(24, 14, 'Р‘Р»РѕРі РєР»СѓР±Р° Р»СЋР±РёС‚РµР»РµР№ InstantCMS', '2010-10-20 00:02:41', 'all', 'list', 1, 'multi', 0, 0, 'club', 'instantcms-lovers', 0);
 
 DROP TABLE IF EXISTS `#__blog_authors`;
 CREATE TABLE `#__blog_authors` (
@@ -194,7 +194,7 @@ CREATE TABLE `#__blog_posts` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__blog_posts` (`id`, `user_id`, `cat_id`, `blog_id`, `pubdate`, `title`, `feel`, `music`, `content`, `content_html`, `allow_who`, `edit_times`, `edit_date`, `published`, `seolink`, `comments`) VALUES
-(5, 1, 5, 1, '2009-09-07 11:50:16', 'Пример записи в блоге', '', '', '[b]Блоги InstantCMS - это мощный и надежный инструмент для ваших публикаций:[/b]\r\n\r\n- Редактор BB-кода (скрытый текст, ссылки, цитаты, картинки);\r\n- Вставка изображений "на лету";\r\n- Неограниченное число рубрик;\r\n- Комментарии к записям;\r\n- Возможность ведения коллективных блогов;\r\n- Смайлы и теги;', '<b>Блоги InstantCMS - это мощный и надежный инструмент для ваших публикаций:</b><br />\r\n<br />\r\n- Редактор BB-кода (скрытый текст, ссылки, цитаты, картинки);<br />\r\n- Вставка изображений "на лету";<br />\r\n- Неограниченное число рубрик;<br />\r\n- Комментарии к записям;<br />\r\n- Возможность ведения коллективных блогов;<br />\r\n- Смайлы и теги;', '0', 3, '2009-09-07 11:50:16', 1, 'primer-zapisi-v-bloge', 1);
+(5, 1, 5, 1, '2009-09-07 11:50:16', 'РџСЂРёРјРµСЂ Р·Р°РїРёСЃРё РІ Р±Р»РѕРіРµ', '', '', '[b]Р‘Р»РѕРіРё InstantCMS - СЌС‚Рѕ РјРѕС‰РЅС‹Р№ Рё РЅР°РґРµР¶РЅС‹Р№ РёРЅСЃС‚СЂСѓРјРµРЅС‚ РґР»СЏ РІР°С€РёС… РїСѓР±Р»РёРєР°С†РёР№:[/b]\r\n\r\n- Р РµРґР°РєС‚РѕСЂ BB-РєРѕРґР° (СЃРєСЂС‹С‚С‹Р№ С‚РµРєСЃС‚, СЃСЃС‹Р»РєРё, С†РёС‚Р°С‚С‹, РєР°СЂС‚РёРЅРєРё);\r\n- Р’СЃС‚Р°РІРєР° РёР·РѕР±СЂР°Р¶РµРЅРёР№ "РЅР° Р»РµС‚Сѓ";\r\n- РќРµРѕРіСЂР°РЅРёС‡РµРЅРЅРѕРµ С‡РёСЃР»Рѕ СЂСѓР±СЂРёРє;\r\n- РљРѕРјРјРµРЅС‚Р°СЂРёРё Рє Р·Р°РїРёСЃСЏРј;\r\n- Р’РѕР·РјРѕР¶РЅРѕСЃС‚СЊ РІРµРґРµРЅРёСЏ РєРѕР»Р»РµРєС‚РёРІРЅС‹С… Р±Р»РѕРіРѕРІ;\r\n- РЎРјР°Р№Р»С‹ Рё С‚РµРіРё;', '<b>Р‘Р»РѕРіРё InstantCMS - СЌС‚Рѕ РјРѕС‰РЅС‹Р№ Рё РЅР°РґРµР¶РЅС‹Р№ РёРЅСЃС‚СЂСѓРјРµРЅС‚ РґР»СЏ РІР°С€РёС… РїСѓР±Р»РёРєР°С†РёР№:</b><br />\r\n<br />\r\n- Р РµРґР°РєС‚РѕСЂ BB-РєРѕРґР° (СЃРєСЂС‹С‚С‹Р№ С‚РµРєСЃС‚, СЃСЃС‹Р»РєРё, С†РёС‚Р°С‚С‹, РєР°СЂС‚РёРЅРєРё);<br />\r\n- Р’СЃС‚Р°РІРєР° РёР·РѕР±СЂР°Р¶РµРЅРёР№ "РЅР° Р»РµС‚Сѓ";<br />\r\n- РќРµРѕРіСЂР°РЅРёС‡РµРЅРЅРѕРµ С‡РёСЃР»Рѕ СЂСѓР±СЂРёРє;<br />\r\n- РљРѕРјРјРµРЅС‚Р°СЂРёРё Рє Р·Р°РїРёСЃСЏРј;<br />\r\n- Р’РѕР·РјРѕР¶РЅРѕСЃС‚СЊ РІРµРґРµРЅРёСЏ РєРѕР»Р»РµРєС‚РёРІРЅС‹С… Р±Р»РѕРіРѕРІ;<br />\r\n- РЎРјР°Р№Р»С‹ Рё С‚РµРіРё;', '0', 3, '2009-09-07 11:50:16', 1, 'primer-zapisi-v-bloge', 1);
 
 DROP TABLE IF EXISTS `#__board_cats`;
 CREATE TABLE `#__board_cats` (
@@ -231,10 +231,10 @@ CREATE TABLE `#__board_cats` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__board_cats` (`id`, `parent_id`, `ordering`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`, `title`, `description`, `published`, `orderform`, `showdate`, `pubdate`, `orderby`, `orderto`, `public`, `perpage`, `maxcols`, `thumb1`, `thumb2`, `thumbsqr`, `uplimit`, `is_photos`, `icon`, `obtypes`) VALUES
-(1, 0, 1, 1, 8, '', 0, 0, '-- Корневая рубрика --', '', 1, 1, 1, '2008-09-22 13:39:32', 'pubdate', 'desc', 0, 15, 1, 64, 400, 0, 10, 1, 'folder_grey.png', ''),
-(10, 1, 21, 2, 3, '', 0, 1, 'Услуги', '', 1, 1, 1, '2008-09-22 14:30:29', 'pubdate', 'desc', -1, 20, 1, 64, 400, 0, 10, 1, 'folder_grey.png', 'Предлагаю\r\nТребуется'),
-(9, 1, 23, 6, 7, '', 0, 1, 'Автомобили', '', 1, 1, 1, '2008-09-22 14:30:23', 'pubdate', 'desc', -1, 20, 1, 64, 400, 0, 10, 1, 'folder_grey.png', 'Куплю\r\nПродам\r\nОбменяю'),
-(8, 1, 22, 4, 5, '', 0, 1, 'Недвижимость', '', 1, 1, 1, '2008-09-22 14:30:00', 'pubdate', 'desc', -1, 20, 1, 64, 400, 0, 10, 1, 'folder_grey.png', 'Продам\r\nКуплю\r\nОбменяю\r\nСдам\r\nСниму');
+(1, 0, 1, 1, 8, '', 0, 0, '-- РљРѕСЂРЅРµРІР°СЏ СЂСѓР±СЂРёРєР° --', '', 1, 1, 1, '2008-09-22 13:39:32', 'pubdate', 'desc', 0, 15, 1, 64, 400, 0, 10, 1, 'folder_grey.png', ''),
+(10, 1, 21, 2, 3, '', 0, 1, 'РЈСЃР»СѓРіРё', '', 1, 1, 1, '2008-09-22 14:30:29', 'pubdate', 'desc', -1, 20, 1, 64, 400, 0, 10, 1, 'folder_grey.png', 'РџСЂРµРґР»Р°РіР°СЋ\r\nРўСЂРµР±СѓРµС‚СЃСЏ'),
+(9, 1, 23, 6, 7, '', 0, 1, 'РђРІС‚РѕРјРѕР±РёР»Рё', '', 1, 1, 1, '2008-09-22 14:30:23', 'pubdate', 'desc', -1, 20, 1, 64, 400, 0, 10, 1, 'folder_grey.png', 'РљСѓРїР»СЋ\r\nРџСЂРѕРґР°Рј\r\nРћР±РјРµРЅСЏСЋ'),
+(8, 1, 22, 4, 5, '', 0, 1, 'РќРµРґРІРёР¶РёРјРѕСЃС‚СЊ', '', 1, 1, 1, '2008-09-22 14:30:00', 'pubdate', 'desc', -1, 20, 1, 64, 400, 0, 10, 1, 'folder_grey.png', 'РџСЂРѕРґР°Рј\r\nРљСѓРїР»СЋ\r\nРћР±РјРµРЅСЏСЋ\r\nРЎРґР°Рј\r\nРЎРЅРёРјСѓ');
 
 DROP TABLE IF EXISTS `#__board_items`;
 CREATE TABLE `#__board_items` (
@@ -265,9 +265,9 @@ CREATE TABLE `#__board_items` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__board_items` (`id`, `category_id`, `user_id`, `obtype`, `title`, `content`, `city`, `pubdate`, `pubdays`, `published`, `file`, `hits`, `is_vip`, `vipdate`, `ip`) VALUES
-(4, 10, 1, 'Предлагаю', 'свои услуги', 'Могу выносить мусор и мыть пол.', 'Москва', '2011-11-11 14:11:18', 10, 1, '550de8a5de9b5301133a815de31be00d.jpg', 7, 0, '0000-00-00 00:00:00', 2130706433),
-(5, 9, 1, 'Обменяю', 'ВАЗ-2107 на Nissan Skyline GTR', 'Желательно новый и без доплаты.', 'Москва', '2011-11-12 14:14:24', 10, 1, '931f90c50adcea1ff18177bc22d4ceac.jpg', 34, 0, '0000-00-00 00:00:00', 2130706433),
-(6, 8, 2, 'Сдам', '2-х комнатную квартиру', 'Семье из 2-3 человек', 'Москва', '2011-11-13 15:57:22', 10, 1, '80204e6bad519060bca9d456949158dc.jpg', 2, 0, '0000-00-00 00:00:00', 2130706433);
+(4, 10, 1, 'РџСЂРµРґР»Р°РіР°СЋ', 'СЃРІРѕРё СѓСЃР»СѓРіРё', 'РњРѕРіСѓ РІС‹РЅРѕСЃРёС‚СЊ РјСѓСЃРѕСЂ Рё РјС‹С‚СЊ РїРѕР».', 'РњРѕСЃРєРІР°', '2011-11-11 14:11:18', 10, 1, '550de8a5de9b5301133a815de31be00d.jpg', 7, 0, '0000-00-00 00:00:00', 2130706433),
+(5, 9, 1, 'РћР±РјРµРЅСЏСЋ', 'Р’РђР—-2107 РЅР° Nissan Skyline GTR', 'Р–РµР»Р°С‚РµР»СЊРЅРѕ РЅРѕРІС‹Р№ Рё Р±РµР· РґРѕРїР»Р°С‚С‹.', 'РњРѕСЃРєРІР°', '2011-11-12 14:14:24', 10, 1, '931f90c50adcea1ff18177bc22d4ceac.jpg', 34, 0, '0000-00-00 00:00:00', 2130706433),
+(6, 8, 2, 'РЎРґР°Рј', '2-С… РєРѕРјРЅР°С‚РЅСѓСЋ РєРІР°СЂС‚РёСЂСѓ', 'РЎРµРјСЊРµ РёР· 2-3 С‡РµР»РѕРІРµРє', 'РњРѕСЃРєРІР°', '2011-11-13 15:57:22', 10, 1, '80204e6bad519060bca9d456949158dc.jpg', 2, 0, '0000-00-00 00:00:00', 2130706433);
 
 DROP TABLE IF EXISTS `#__cache`;
 CREATE TABLE `#__cache` (
@@ -313,13 +313,13 @@ CREATE TABLE `#__category` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__category` (`id`, `parent_id`, `title`, `description`, `published`, `showdate`, `showcomm`, `orderby`, `orderto`, `modgrp_id`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `ordering`, `maxcols`, `showtags`, `showrss`, `showdesc`, `is_public`, `photoalbum`, `seolink`, `url`, `tpl`, `cost`) VALUES
-(1, 0, '--Корневой раздел--', 'Корневой раздел сайта', 1, 1, 1, 'pubdate', 'asc', 0, 1, 14, 0, '', 0, 1, 1, 1, 1, 0, 0, '', '--kornevoi-razdel--', '', 'com_content_view.tpl', ''),
-(2, 1, 'Новости', '', 1, 1, 1, 'pubdate', 'ASC', 0, 12, 13, 1, '', 0, 2, 1, 1, 0, 0, 0, 'a:7:{s:2:"id";i:0;s:6:"titles";i:0;s:6:"header";s:0:"";s:7:"orderby";s:5:"title";s:7:"orderto";s:4:"desc";s:7:"maxcols";i:2;s:3:"max";i:8;}', 'novosti', '', 'com_content_view.tpl', ''),
-(6, 1, 'Статьи', '<p>Тексты статей предоставлены службой <a href="http://referats.yandex.ru/">Яндекс.Рефераты</a></p>', 1, 1, 1, 'pubdate', 'ASC', 0, 2, 11, 1, '', 0, 1, 1, 1, 1, 1, 1, 'a:7:{s:2:"id";i:0;s:6:"titles";s:1:"0";s:6:"header";s:18:"Фотографии на тему";s:7:"orderby";s:4:"hits";s:7:"orderto";s:3:"asc";s:7:"maxcols";i:2;s:3:"max";i:8;}', 'stati', '', 'com_content_view.tpl', ''),
-(13, 6, 'Маркетинг', '<p>Статьи по маркетингу</p>', 1, 1, 1, 'pubdate', 'DESC', 0, 7, 8, 2, '', 0, 3, 1, 1, 1, 1, 0, 'a:7:{s:2:"id";i:0;s:6:"titles";s:1:"0";s:6:"header";s:18:"Фотографии на тему";s:7:"orderby";s:7:"pubdate";s:7:"orderto";s:4:"desc";s:7:"maxcols";i:2;s:3:"max";i:8;}', 'stati/marketing', '', 'com_content_view.tpl', ''),
-(12, 6, 'Геология', 'Статьи по геологии', 1, 1, 1, 'pubdate', 'DESC', 0, 3, 4, 2, '', 0, 1, 1, 1, 1, 1, 0, 'a:7:{s:2:"id";s:1:"0";s:6:"titles";s:1:"0";s:6:"header";s:18:"Фотографии на тему";s:7:"orderby";s:7:"pubdate";s:7:"orderto";s:4:"desc";s:7:"maxcols";s:1:"2";s:3:"max";s:1:"8";}', 'stati/geologija', '', 'com_content_view.tpl', ''),
-(11, 6, 'Астрономия', '<p>Статьи по астрономии</p>', 1, 1, 1, 'pubdate', 'DESC', 0, 9, 10, 2, '', 0, 4, 1, 1, 1, 1, 1, 'a:7:{s:2:"id";i:0;s:6:"titles";i:0;s:6:"header";s:18:"Фотографии на тему";s:7:"orderby";s:7:"pubdate";s:7:"orderto";s:4:"desc";s:7:"maxcols";i:2;s:3:"max";i:8;}', 'stati/astronomija', '', 'com_content_view.tpl', ''),
-(14, 6, 'Психология', 'Статьи по психологии', 1, 1, 1, 'pubdate', 'DESC', 0, 5, 6, 2, '', 0, 2, 1, 1, 1, 1, 0, 'a:7:{s:2:"id";s:1:"0";s:6:"titles";s:1:"0";s:6:"header";s:18:"Фотографии на тему";s:7:"orderby";s:7:"pubdate";s:7:"orderto";s:4:"desc";s:7:"maxcols";s:1:"2";s:3:"max";s:1:"8";}', 'stati/psihologija', '', 'com_content_view.tpl', '');
+(1, 0, '--РљРѕСЂРЅРµРІРѕР№ СЂР°Р·РґРµР»--', 'РљРѕСЂРЅРµРІРѕР№ СЂР°Р·РґРµР» СЃР°Р№С‚Р°', 1, 1, 1, 'pubdate', 'asc', 0, 1, 14, 0, '', 0, 1, 1, 1, 1, 0, 0, '', '--kornevoi-razdel--', '', 'com_content_view.tpl', ''),
+(2, 1, 'РќРѕРІРѕСЃС‚Рё', '', 1, 1, 1, 'pubdate', 'ASC', 0, 12, 13, 1, '', 0, 2, 1, 1, 0, 0, 0, 'a:7:{s:2:"id";i:0;s:6:"titles";i:0;s:6:"header";s:0:"";s:7:"orderby";s:5:"title";s:7:"orderto";s:4:"desc";s:7:"maxcols";i:2;s:3:"max";i:8;}', 'novosti', '', 'com_content_view.tpl', ''),
+(6, 1, 'РЎС‚Р°С‚СЊРё', '<p>РўРµРєСЃС‚С‹ СЃС‚Р°С‚РµР№ РїСЂРµРґРѕСЃС‚Р°РІР»РµРЅС‹ СЃР»СѓР¶Р±РѕР№ <a href="http://referats.yandex.ru/">РЇРЅРґРµРєСЃ.Р РµС„РµСЂР°С‚С‹</a></p>', 1, 1, 1, 'pubdate', 'ASC', 0, 2, 11, 1, '', 0, 1, 1, 1, 1, 1, 1, 'a:7:{s:2:"id";i:0;s:6:"titles";s:1:"0";s:6:"header";s:18:"Р¤РѕС‚РѕРіСЂР°С„РёРё РЅР° С‚РµРјСѓ";s:7:"orderby";s:4:"hits";s:7:"orderto";s:3:"asc";s:7:"maxcols";i:2;s:3:"max";i:8;}', 'stati', '', 'com_content_view.tpl', ''),
+(13, 6, 'РњР°СЂРєРµС‚РёРЅРі', '<p>РЎС‚Р°С‚СЊРё РїРѕ РјР°СЂРєРµС‚РёРЅРіСѓ</p>', 1, 1, 1, 'pubdate', 'DESC', 0, 7, 8, 2, '', 0, 3, 1, 1, 1, 1, 0, 'a:7:{s:2:"id";i:0;s:6:"titles";s:1:"0";s:6:"header";s:18:"Р¤РѕС‚РѕРіСЂР°С„РёРё РЅР° С‚РµРјСѓ";s:7:"orderby";s:7:"pubdate";s:7:"orderto";s:4:"desc";s:7:"maxcols";i:2;s:3:"max";i:8;}', 'stati/marketing', '', 'com_content_view.tpl', ''),
+(12, 6, 'Р“РµРѕР»РѕРіРёСЏ', 'РЎС‚Р°С‚СЊРё РїРѕ РіРµРѕР»РѕРіРёРё', 1, 1, 1, 'pubdate', 'DESC', 0, 3, 4, 2, '', 0, 1, 1, 1, 1, 1, 0, 'a:7:{s:2:"id";s:1:"0";s:6:"titles";s:1:"0";s:6:"header";s:18:"Р¤РѕС‚РѕРіСЂР°С„РёРё РЅР° С‚РµРјСѓ";s:7:"orderby";s:7:"pubdate";s:7:"orderto";s:4:"desc";s:7:"maxcols";s:1:"2";s:3:"max";s:1:"8";}', 'stati/geologija', '', 'com_content_view.tpl', ''),
+(11, 6, 'РђСЃС‚СЂРѕРЅРѕРјРёСЏ', '<p>РЎС‚Р°С‚СЊРё РїРѕ Р°СЃС‚СЂРѕРЅРѕРјРёРё</p>', 1, 1, 1, 'pubdate', 'DESC', 0, 9, 10, 2, '', 0, 4, 1, 1, 1, 1, 1, 'a:7:{s:2:"id";i:0;s:6:"titles";i:0;s:6:"header";s:18:"Р¤РѕС‚РѕРіСЂР°С„РёРё РЅР° С‚РµРјСѓ";s:7:"orderby";s:7:"pubdate";s:7:"orderto";s:4:"desc";s:7:"maxcols";i:2;s:3:"max";i:8;}', 'stati/astronomija', '', 'com_content_view.tpl', ''),
+(14, 6, 'РџСЃРёС…РѕР»РѕРіРёСЏ', 'РЎС‚Р°С‚СЊРё РїРѕ РїСЃРёС…РѕР»РѕРіРёРё', 1, 1, 1, 'pubdate', 'DESC', 0, 5, 6, 2, '', 0, 2, 1, 1, 1, 1, 0, 'a:7:{s:2:"id";s:1:"0";s:6:"titles";s:1:"0";s:6:"header";s:18:"Р¤РѕС‚РѕРіСЂР°С„РёРё РЅР° С‚РµРјСѓ";s:7:"orderby";s:7:"pubdate";s:7:"orderto";s:4:"desc";s:7:"maxcols";s:1:"2";s:3:"max";s:1:"8";}', 'stati/psihologija', '', 'com_content_view.tpl', '');
 
 DROP TABLE IF EXISTS `#__clubs`;
 CREATE TABLE `#__clubs` (
@@ -351,7 +351,7 @@ CREATE TABLE `#__clubs` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__clubs` (`id`, `admin_id`, `title`, `description`, `imageurl`, `pubdate`, `clubtype`, `published`, `maxsize`, `enabled_blogs`, `enabled_photos`, `rating`, `photo_premod`, `blog_premod`, `blog_min_karma`, `photo_min_karma`, `album_min_karma`, `join_min_karma`, `join_karma_limit`, `create_karma`, `is_vip`, `join_cost`) VALUES
-(14, 1, 'Клуб любителей InstantCMS', '', '', '2010-10-12 14:41:45', 'public', 1, 0, 1, 1, 0, 0, 0, 0, 0, 25, 0, 0, 0, 0, 0);
+(14, 1, 'РљР»СѓР± Р»СЋР±РёС‚РµР»РµР№ InstantCMS', '', '', '2010-10-12 14:41:45', 'public', 1, 0, 1, 1, 0, 0, 0, 0, 0, 25, 0, 0, 0, 0, 0);
 
 DROP TABLE IF EXISTS `#__codecheck`;
 CREATE TABLE `#__codecheck` (
@@ -386,9 +386,9 @@ CREATE TABLE `#__comments` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__comments` (`id`, `parent_id`, `pid`, `user_id`, `target`, `target_id`, `guestname`, `content`, `content_bbcode`, `pubdate`, `published`, `is_new`, `target_title`, `target_link`, `ip`) VALUES
-(8, 0, 0, 1, 'article', 32, '', 'Питание прогиба исходным материалом, несмотря на не менее значительную разницу в плотности теплового потока, составляет биотит, так как совершенно однозначно указывает на существование', '', '2010-10-13 23:45:56', 1, 1, 'Почему нерезко плато?!!!', '/content/stati/geologija/pochemu-nerezko-plato.html', ''),
-(13, 0, 0, 2, 'article', 34, '', 'Спасибо автору за такую отличную статью!', '', '2010-11-13 23:11:00', 1, 1, 'Эластичность спроса', '/stati/marketing/yelastichnost-sprosa.html', '127.0.0.1'),
-(14, 13, 0, 3, 'article', 34, '', 'Полностью согласен с Вами, коллега.', '', '2010-11-13 23:19:19', 1, 1, 'Эластичность спроса', '/stati/marketing/yelastichnost-sprosa.html', '127.0.0.1');
+(8, 0, 0, 1, 'article', 32, '', 'РџРёС‚Р°РЅРёРµ РїСЂРѕРіРёР±Р° РёСЃС…РѕРґРЅС‹Рј РјР°С‚РµСЂРёР°Р»РѕРј, РЅРµСЃРјРѕС‚СЂСЏ РЅР° РЅРµ РјРµРЅРµРµ Р·РЅР°С‡РёС‚РµР»СЊРЅСѓСЋ СЂР°Р·РЅРёС†Сѓ РІ РїР»РѕС‚РЅРѕСЃС‚Рё С‚РµРїР»РѕРІРѕРіРѕ РїРѕС‚РѕРєР°, СЃРѕСЃС‚Р°РІР»СЏРµС‚ Р±РёРѕС‚РёС‚, С‚Р°Рє РєР°Рє СЃРѕРІРµСЂС€РµРЅРЅРѕ РѕРґРЅРѕР·РЅР°С‡РЅРѕ СѓРєР°Р·С‹РІР°РµС‚ РЅР° СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёРµ', '', '2010-10-13 23:45:56', 1, 1, 'РџРѕС‡РµРјСѓ РЅРµСЂРµР·РєРѕ РїР»Р°С‚Рѕ?!!!', '/content/stati/geologija/pochemu-nerezko-plato.html', ''),
+(13, 0, 0, 2, 'article', 34, '', 'РЎРїР°СЃРёР±Рѕ Р°РІС‚РѕСЂСѓ Р·Р° С‚Р°РєСѓСЋ РѕС‚Р»РёС‡РЅСѓСЋ СЃС‚Р°С‚СЊСЋ!', '', '2010-11-13 23:11:00', 1, 1, 'Р­Р»Р°СЃС‚РёС‡РЅРѕСЃС‚СЊ СЃРїСЂРѕСЃР°', '/stati/marketing/yelastichnost-sprosa.html', '127.0.0.1'),
+(14, 13, 0, 3, 'article', 34, '', 'РџРѕР»РЅРѕСЃС‚СЊСЋ СЃРѕРіР»Р°СЃРµРЅ СЃ Р’Р°РјРё, РєРѕР»Р»РµРіР°.', '', '2010-11-13 23:19:19', 1, 1, 'Р­Р»Р°СЃС‚РёС‡РЅРѕСЃС‚СЊ СЃРїСЂРѕСЃР°', '/stati/marketing/yelastichnost-sprosa.html', '127.0.0.1');
 
 DROP TABLE IF EXISTS `#__comments_votes`;
 CREATE TABLE `#__comments_votes` (
@@ -410,14 +410,14 @@ CREATE TABLE `#__comment_targets` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__comment_targets` (`id`, `target`, `component`, `title`) VALUES
-(1, 'article', 'content', 'Статьи'),
-(2, 'blog', 'blogs', 'Посты блогов'),
-(3, 'palbum', 'photos', 'Фотоальбомы'),
-(4, 'photo', 'photos', 'Фотографии галереи'),
-(5, 'userphoto', 'users', 'Фотографии пользователей'),
-(6, 'catalog', 'catalog', 'Записи каталога'),
-(7, 'boarditem', 'board', 'Объявления'),
-(8, 'faq', 'faq', 'Вопросы FAQ');
+(1, 'article', 'content', 'РЎС‚Р°С‚СЊРё'),
+(2, 'blog', 'blogs', 'РџРѕСЃС‚С‹ Р±Р»РѕРіРѕРІ'),
+(3, 'palbum', 'photos', 'Р¤РѕС‚РѕР°Р»СЊР±РѕРјС‹'),
+(4, 'photo', 'photos', 'Р¤РѕС‚РѕРіСЂР°С„РёРё РіР°Р»РµСЂРµРё'),
+(5, 'userphoto', 'users', 'Р¤РѕС‚РѕРіСЂР°С„РёРё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№'),
+(6, 'catalog', 'catalog', 'Р—Р°РїРёСЃРё РєР°С‚Р°Р»РѕРіР°'),
+(7, 'boarditem', 'board', 'РћР±СЉСЏРІР»РµРЅРёСЏ'),
+(8, 'faq', 'faq', 'Р’РѕРїСЂРѕСЃС‹ FAQ');
 
 DROP TABLE IF EXISTS `#__components`;
 CREATE TABLE `#__components` (
@@ -434,26 +434,26 @@ CREATE TABLE `#__components` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__components` (`id`, `title`, `link`, `config`, `internal`, `author`, `published`, `version`, `system`) VALUES
-(1, 'Каталог статей', 'content', '---\nreaddesc: 0\nrating: 1\nperpage: 15\npt_show: 1\npt_disp: 1\npt_hide: 1\nautokeys: 1\nimg_small_w: 100\nimg_big_w: 200\nimg_sqr: 1\nimg_users: 1\nwatermark: 1\nwatermark_only_big: 1\naf_on: 0\naf_delete: 1\naf_showlink: 1\naf_forum_id: 1\naf_hidecat_id: 2\n', 0, 'InstantCMS team', 1, '1.9', 1),
-(2, 'Регистрация', 'registration', '---\nreg_type: open\ninv_count: 3\ninv_karma: 1\ninv_period: WEEK\nis_on: 1\nact: 0\nsend: false\noffmsg: >\n  Регистрация приостановлена по\n  техническим причинам.\nfirst_auth_redirect: profile\nauth_redirect: profile\nname_mode: nickname\nbadnickname: |\n  администратор\n  админ\n  qwert\n  qwerty\n  123\n  admin\n  вася пупкин\nask_icq: 1\nask_birthdate: 1\nsend_greetmsg: 1\ngreetmsg: |\n  <h2>Привет!</h2>\n  <p><span style="font-size: medium;">Мы очень <span style="color: rgb(51, 153, 102);">рады</span> что ты зарегистрировался!</span></p>\n', 0, 'InstantCMS team', 1, '1.9', 1),
-(3, 'Фотогалерея', 'photos', '---\nlink: 0\nsaveorig: 0\nmaxcols: 2\norderby: title\norderto: desc\nshowlat: 1\nwatermark: 1\ntumb_view: 2\ntumb_from: 1\ntumb_club: \nis_today: 1\n', 0, 'InstantCMS team', 1, '1.9', 1),
-(4, 'Прайс-лист', 'price', '---\n', 0, 'InstantCMS team', 1, '1.9', 1),
-(5, 'Поиск', 'search', '---\nperpage: 10\ncomp: \n  - content\n  - photos\n  - price\n  - catalog\n  - forum\n  - blogs\n  - board\n', 0, 'InstantCMS team', 1, '1.9', 1),
-(6, 'Конструктор форм', 'forms', '---\n', 0, 'InstantCMS team', 1, '1.9', 1),
-(7, 'Комментарии пользователей', 'comments', '---\nemail: \ncanguests: 1\nregcap: 0\npublish: 1\nsmiles: 1\nbbcode: 1\nselfdel: 0\nsubscribe: 1\nanchors: 0\nrecode: 0\nmin_karma: 0\nmin_karma_show: 0\nmin_karma_add: 0\nperpage: 20\nj_code: 1\ncmm_ajax: 0\ncmm_ip: 1\n', 1, 'InstantCMS team', 1, '1.9', 1),
-(8, 'Архив материалов', 'arhive', '---\n', 0, 'InstantCMS team', 1, '1.9', 1),
-(9, 'Универсальный каталог', 'catalog', '---\nemail: shop@site.ru\ndelivery: |\n  Сведения о доставке.\n  Этот текст можно изменить в настройках компонента &quot;Универсальный каталог&quot;.\nnotice: 1\npremod: 1\npremod_msg: 1\nis_comments: 1\nis_rss: 1\nwatermark: 1\n', 0, 'InstantCMS team', 1, '1.9', 1),
-(10, 'Профили пользователей', 'users', '---\nshowgroup: 1\nsw_stats: \nsw_comm: 1\nsw_search: 1\nsw_forum: 1\nsw_photo: 1\nsw_wall: 1\nsw_friends: 1\nsw_blogs: 1\nsw_clubs: 1\nsw_feed: 1\nsw_content: 1\nsw_awards: 1\nsw_board: 1\nsw_msg: 1\nsw_guest: 1\nkarmatime: 1\nkarmaint: DAY\nphotosize: 0\nwatermark: 1\nsmallw: 64\nmedw: 200\nmedh: 500\nsw_files: 1\nfilessize: 100\nfilestype: jpeg,gif,png,jpg,bmp,zip,rar,tar\nprivforms: \n  - 3\nj_code: 1\ndeltime: 6\n', 0, 'InstantCMS team', 1, '1.9', 1),
-(12, 'Форум', 'forum', '---\nis_on: 1\nkarma: 1\nis_rss: 1\npp_thread: 15\npp_forum: 15\nshowimg: 1\nimg_on: 1\nimg_max: 5\nfast_on: 1\nfast_bb: 1\nfa_on: 1\ngroup_access: \nfa_max: 25\nfa_ext: txt doc zip rar arj png gif jpg jpeg bmp\nfa_size: 1024\n', 0, 'InstantCMS team', 1, '1.9', 1),
-(13, 'Статистика сайта', 'statistics', '---\n', 1, 'InstantCMS team', 1, '1.9', 1),
-(15, 'Блоги', 'blogs', '---\nperpage: 10\nperpage_blog: 15\nupdate_date: 0\nupdate_seo_link: 0\nmin_karma_private: 0\nmin_karma_public: 5\nmin_karma: 1\nwatermark: 1\nimg_on: 1\nrss_all: 1\nrss_one: 1\nj_code: 1\n', 0, 'InstantCMS team', 1, '1.9', 1),
-(16, 'Вопросы и ответы', 'faq', '---\n', 0, 'InstantCMS team', 1, '1.9', 1),
-(17, 'Баннеры', 'banners', '---\n', 1, 'InstantCMS team', 1, '1.9', 1),
-(18, 'Лента активности', 'actions', '---\r\nshow_target: 1\r\nperpage: 10\r\nperpage_tab: 15\r\nis_all: 1\r\nact_type: \r\n  add_quest: 16\r\n  add_club_user: 15\r\n  vote_movie: 31\r\n  add_movie: 30\r\n  add_friend: 20\r\n  add_post: 10\r\n  add_post_club: 25\r\n  add_catalog: 13\r\n  add_wall_my: 29\r\n  add_wall: 23\r\n  add_wall_club: 24\r\n  add_comment: 2\r\n  add_user_photo_multi: 27\r\n  add_board: 12\r\n  add_fpost: 17\r\n  add_article: 8\r\n  add_thread: 18\r\n  add_photo: 7\r\n  add_user_photo: 26\r\n  add_avatar: 19\r\n  add_file: 22\r\n  set_status: 11\r\n  add_award: 21\r\n  add_user: 28\r\n  add_blog: 9\r\n  add_club: 14\r\n', 0, 'InstantCMS Team', 1, '1.9', 1),
-(19, 'RSS генератор', 'rssfeed', '---\naddsite: 1\nmaxitems: 50\nicon_on: 1\nicon_url: http://icms/images/rss.png\nicon_title: InstantCMS\nicon_link: http://icms/images/rss.png\n', 1, 'InstantCMS team', 1, '1.9', 1),
-(21, 'Награждение пользователей', 'autoawards', '---\n', 1, 'InstantCMS team', 1, '1.9', 1),
-(22, 'Доска объявлений', 'board', '---\nmaxcols: 3\nobtypes: |\n  Продам\n  Куплю\n  Обменяю\n  Подарю\nshowlat: \npublic: 2\nphotos: 1\nsrok: 1\npubdays: 10\nwatermark: 0\naftertime: \ncomments: 1\n', 0, 'InstantCMS team', 1, '1.9', 1),
-(23, 'Клубы пользователей', 'clubs', '---\nseo_club: title\nenabled_blogs: 1\nenabled_photos: 1\nthumb1: 48\nthumb2: 200\nthumbsqr: 1\ncancreate: 1\nperpage: 10\ncreate_min_karma: 0\ncreate_min_rating: 0\n', 0, 'InstantCMS team', 1, '1.9', 1);
+(1, 'РљР°С‚Р°Р»РѕРі СЃС‚Р°С‚РµР№', 'content', '---\nreaddesc: 0\nrating: 1\nperpage: 15\npt_show: 1\npt_disp: 1\npt_hide: 1\nautokeys: 1\nimg_small_w: 100\nimg_big_w: 200\nimg_sqr: 1\nimg_users: 1\nwatermark: 1\nwatermark_only_big: 1\naf_on: 0\naf_delete: 1\naf_showlink: 1\naf_forum_id: 1\naf_hidecat_id: 2\n', 0, 'InstantCMS team', 1, '1.9', 1),
+(2, 'Р РµРіРёСЃС‚СЂР°С†РёСЏ', 'registration', '---\nreg_type: open\ninv_count: 3\ninv_karma: 1\ninv_period: WEEK\nis_on: 1\nact: 0\nsend: false\noffmsg: >\n  Р РµРіРёСЃС‚СЂР°С†РёСЏ РїСЂРёРѕСЃС‚Р°РЅРѕРІР»РµРЅР° РїРѕ\n  С‚РµС…РЅРёС‡РµСЃРєРёРј РїСЂРёС‡РёРЅР°Рј.\nfirst_auth_redirect: profile\nauth_redirect: profile\nname_mode: nickname\nbadnickname: |\n  Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ\n  Р°РґРјРёРЅ\n  qwert\n  qwerty\n  123\n  admin\n  РІР°СЃСЏ РїСѓРїРєРёРЅ\nask_icq: 1\nask_birthdate: 1\nsend_greetmsg: 1\ngreetmsg: |\n  <h2>РџСЂРёРІРµС‚!</h2>\n  <p><span style="font-size: medium;">РњС‹ РѕС‡РµРЅСЊ <span style="color: rgb(51, 153, 102);">СЂР°РґС‹</span> С‡С‚Рѕ С‚С‹ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°Р»СЃСЏ!</span></p>\n', 0, 'InstantCMS team', 1, '1.9', 1),
+(3, 'Р¤РѕС‚РѕРіР°Р»РµСЂРµСЏ', 'photos', '---\nlink: 0\nsaveorig: 0\nmaxcols: 2\norderby: title\norderto: desc\nshowlat: 1\nwatermark: 1\ntumb_view: 2\ntumb_from: 1\ntumb_club: \nis_today: 1\n', 0, 'InstantCMS team', 1, '1.9', 1),
+(4, 'РџСЂР°Р№СЃ-Р»РёСЃС‚', 'price', '---\n', 0, 'InstantCMS team', 1, '1.9', 1),
+(5, 'РџРѕРёСЃРє', 'search', '---\nperpage: 10\ncomp: \n  - content\n  - photos\n  - price\n  - catalog\n  - forum\n  - blogs\n  - board\n', 0, 'InstantCMS team', 1, '1.9', 1),
+(6, 'РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРј', 'forms', '---\n', 0, 'InstantCMS team', 1, '1.9', 1),
+(7, 'РљРѕРјРјРµРЅС‚Р°СЂРёРё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', 'comments', '---\nemail: \ncanguests: 1\nregcap: 0\npublish: 1\nsmiles: 1\nbbcode: 1\nselfdel: 0\nsubscribe: 1\nanchors: 0\nrecode: 0\nmin_karma: 0\nmin_karma_show: 0\nmin_karma_add: 0\nperpage: 20\nj_code: 1\ncmm_ajax: 0\ncmm_ip: 1\n', 1, 'InstantCMS team', 1, '1.9', 1),
+(8, 'РђСЂС…РёРІ РјР°С‚РµСЂРёР°Р»РѕРІ', 'arhive', '---\n', 0, 'InstantCMS team', 1, '1.9', 1),
+(9, 'РЈРЅРёРІРµСЂСЃР°Р»СЊРЅС‹Р№ РєР°С‚Р°Р»РѕРі', 'catalog', '---\nemail: shop@site.ru\ndelivery: |\n  РЎРІРµРґРµРЅРёСЏ Рѕ РґРѕСЃС‚Р°РІРєРµ.\n  Р­С‚РѕС‚ С‚РµРєСЃС‚ РјРѕР¶РЅРѕ РёР·РјРµРЅРёС‚СЊ РІ РЅР°СЃС‚СЂРѕР№РєР°С… РєРѕРјРїРѕРЅРµРЅС‚Р° &quot;РЈРЅРёРІРµСЂСЃР°Р»СЊРЅС‹Р№ РєР°С‚Р°Р»РѕРі&quot;.\nnotice: 1\npremod: 1\npremod_msg: 1\nis_comments: 1\nis_rss: 1\nwatermark: 1\n', 0, 'InstantCMS team', 1, '1.9', 1),
+(10, 'РџСЂРѕС„РёР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', 'users', '---\nshowgroup: 1\nsw_stats: \nsw_comm: 1\nsw_search: 1\nsw_forum: 1\nsw_photo: 1\nsw_wall: 1\nsw_friends: 1\nsw_blogs: 1\nsw_clubs: 1\nsw_feed: 1\nsw_content: 1\nsw_awards: 1\nsw_board: 1\nsw_msg: 1\nsw_guest: 1\nkarmatime: 1\nkarmaint: DAY\nphotosize: 0\nwatermark: 1\nsmallw: 64\nmedw: 200\nmedh: 500\nsw_files: 1\nfilessize: 100\nfilestype: jpeg,gif,png,jpg,bmp,zip,rar,tar\nprivforms: \n  - 3\nj_code: 1\ndeltime: 6\n', 0, 'InstantCMS team', 1, '1.9', 1),
+(12, 'Р¤РѕСЂСѓРј', 'forum', '---\nis_on: 1\nkarma: 1\nis_rss: 1\npp_thread: 15\npp_forum: 15\nshowimg: 1\nimg_on: 1\nimg_max: 5\nfast_on: 1\nfast_bb: 1\nfa_on: 1\ngroup_access: \nfa_max: 25\nfa_ext: txt doc zip rar arj png gif jpg jpeg bmp\nfa_size: 1024\n', 0, 'InstantCMS team', 1, '1.9', 1),
+(13, 'РЎС‚Р°С‚РёСЃС‚РёРєР° СЃР°Р№С‚Р°', 'statistics', '---\n', 1, 'InstantCMS team', 1, '1.9', 1),
+(15, 'Р‘Р»РѕРіРё', 'blogs', '---\nperpage: 10\nperpage_blog: 15\nupdate_date: 0\nupdate_seo_link: 0\nmin_karma_private: 0\nmin_karma_public: 5\nmin_karma: 1\nwatermark: 1\nimg_on: 1\nrss_all: 1\nrss_one: 1\nj_code: 1\n', 0, 'InstantCMS team', 1, '1.9', 1),
+(16, 'Р’РѕРїСЂРѕСЃС‹ Рё РѕС‚РІРµС‚С‹', 'faq', '---\n', 0, 'InstantCMS team', 1, '1.9', 1),
+(17, 'Р‘Р°РЅРЅРµСЂС‹', 'banners', '---\n', 1, 'InstantCMS team', 1, '1.9', 1),
+(18, 'Р›РµРЅС‚Р° Р°РєС‚РёРІРЅРѕСЃС‚Рё', 'actions', '---\r\nshow_target: 1\r\nperpage: 10\r\nperpage_tab: 15\r\nis_all: 1\r\nact_type: \r\n  add_quest: 16\r\n  add_club_user: 15\r\n  vote_movie: 31\r\n  add_movie: 30\r\n  add_friend: 20\r\n  add_post: 10\r\n  add_post_club: 25\r\n  add_catalog: 13\r\n  add_wall_my: 29\r\n  add_wall: 23\r\n  add_wall_club: 24\r\n  add_comment: 2\r\n  add_user_photo_multi: 27\r\n  add_board: 12\r\n  add_fpost: 17\r\n  add_article: 8\r\n  add_thread: 18\r\n  add_photo: 7\r\n  add_user_photo: 26\r\n  add_avatar: 19\r\n  add_file: 22\r\n  set_status: 11\r\n  add_award: 21\r\n  add_user: 28\r\n  add_blog: 9\r\n  add_club: 14\r\n', 0, 'InstantCMS Team', 1, '1.9', 1),
+(19, 'RSS РіРµРЅРµСЂР°С‚РѕСЂ', 'rssfeed', '---\naddsite: 1\nmaxitems: 50\nicon_on: 1\nicon_url: http://icms/images/rss.png\nicon_title: InstantCMS\nicon_link: http://icms/images/rss.png\n', 1, 'InstantCMS team', 1, '1.9', 1),
+(21, 'РќР°РіСЂР°Р¶РґРµРЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', 'autoawards', '---\n', 1, 'InstantCMS team', 1, '1.9', 1),
+(22, 'Р”РѕСЃРєР° РѕР±СЉСЏРІР»РµРЅРёР№', 'board', '---\nmaxcols: 3\nobtypes: |\n  РџСЂРѕРґР°Рј\n  РљСѓРїР»СЋ\n  РћР±РјРµРЅСЏСЋ\n  РџРѕРґР°СЂСЋ\nshowlat: \npublic: 2\nphotos: 1\nsrok: 1\npubdays: 10\nwatermark: 0\naftertime: \ncomments: 1\n', 0, 'InstantCMS team', 1, '1.9', 1),
+(23, 'РљР»СѓР±С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', 'clubs', '---\nseo_club: title\nenabled_blogs: 1\nenabled_photos: 1\nthumb1: 48\nthumb2: 200\nthumbsqr: 1\ncancreate: 1\nperpage: 10\ncreate_min_karma: 0\ncreate_min_rating: 0\n', 0, 'InstantCMS team', 1, '1.9', 1);
 
 DROP TABLE IF EXISTS `#__content`;
 CREATE TABLE `#__content` (
@@ -491,16 +491,16 @@ CREATE TABLE `#__content` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__content` (`id`, `category_id`, `user_id`, `pubdate`, `enddate`, `is_end`, `title`, `description`, `content`, `published`, `hits`, `meta_desc`, `meta_keys`, `showtitle`, `showdate`, `showlatest`, `showpath`, `ordering`, `comments`, `is_arhive`, `seolink`, `canrate`, `pagetitle`, `url`, `tpl`) VALUES
-(20, 2, 1, '2011-03-01 15:56:00', '2009-05-22', 0, 'Наш сайт открыт!', '<p>Мы рады приветствовать вас на нашем сайте!</p>', '<p>Наш сайт открыт и начинает активно фунционировать.</p>\r\n<p>У нас большие планы на будущее. На этом сайте мы постарались разместить интересную информацию.</p>\r\n<p>Мы очень рады что вы читаете эту новость.</p>\r\n<p>Наша компания занимается бизнесом в сфере продажи строительных материалов.</p>', 1, 397, '', '', 1, 1, 1, 1, 1, 1, 0, 'novosti/nash-sait-otkryt', 1, '', '', 'com_content_read.tpl'),
-(26, 2, 1, '2011-03-01 15:56:00', '2009-05-22', 0, 'Тестовая новость сайта', '<p>Это тестовая новость. Пользователи могут ее комментировать.</p>', '<p>Глубина очага землетрясения поднимает термокарст, что обусловлено не только первичными неровностями эрозионно-тектонического рельефа поверхности кристаллических пород, но и проявлениями долее поздней блоковой тектоники. Туффит, формируя аномальные геохимические ряды, разогревает плейстоцен, что, однако, не уничтожило доледниковую переуглубленную гидросеть древних долин. Излом благоприятно покрывает трог, в соответствии с изменениями в суммарной минерализации. Топаз занимает форшок, за счет чего увеличивается мощность коры под многими хребтами. Ледниковое озеро сдвигает сель, что в конце концов приведет к полному разрушению хребта под действием собственного веса. При описанных условиях алмаз первичен.</p>', 1, 279, '', '', 1, 1, 1, 1, 2, 1, 0, 'novosti/testovaja-novost-saita', 1, '', '', 'com_content_read.tpl'),
-(30, 11, 1, '2011-10-01 15:56:00', '2009-06-17', 0, 'Первоначальный нулевой меридиан', '<p><strong>Все известные астероиды имеют прямое движение</strong>, при этом тропический год меняет сарос &ndash; у таких объектов рукава столь фрагментарны и обрывочны, что их уже нельзя назвать спиральными. Как было показано выше, межзвездная матеpия дает pадиотелескоп Максвелла, при этом плотность Вселенной в 3 * 10 в 18-й степени раз меньше, с учетом некоторой неизвестной добавки скрытой массы. Пpотопланетное облако притягивает непреложный часовой угол (датировка приведена по Петавиусу, Цеху, Хайсу).</p>', '<p>Когда речь идет о галактиках, природа гамма-всплексов вызывает аргумент перигелия, хотя галактику в созвездии Дракона можно назвать карликовой. Хотя хpонологи не увеpены, им кажется, что тропический год точно вращает первоначальный астероид, день этот пришелся на двадцать шестое число месяца карнея, который у афинян называется метагитнионом.<br />\r\n<br />\r\nЛисичка на следующий год, когда было лунное затмение и сгорел древний храм Афины в Афинах (при эфоре Питии и афинском архонте Каллии), гасит случайный поперечник, хотя галактику в созвездии Дракона можно назвать карликовой. В отличие от пылевого и ионного хвостов, магнитное поле стабильно. Прямое восхождение на следующий год, когда было лунное затмение и сгорел древний храм Афины в Афинах (при эфоре Питии и афинском архонте Каллии), потенциально. Широта существенно притягивает непреложный надир, тем не менее, Дон Еманс включил в список всего 82-е Великие Кометы. Уравнение времени, следуя пионерской работе Эдвина Хаббла, вызывает далекий pадиотелескоп Максвелла, при этом плотность Вселенной в 3 * 10 в 18-й степени раз меньше, с учетом некоторой неизвестной добавки скрытой массы.<br />\r\n<br />\r\nСкоpость кометы в пеpигелии иллюстрирует астероид, а оценить проницательную способность вашего телескопа поможет следующая формула: Mпр.= 2,5lg Dмм + 2,5lg Гкрат + 4. Полнолуние пространственно неоднородно. Это можно записать следующим образом: V = 29.8 * sqrt(2/r &ndash; 1/a) км/сек, где ионный хвост однородно иллюстрирует радиант, при этом плотность Вселенной в 3 * 10 в 18-й степени раз меньше, с учетом некоторой неизвестной добавки скрытой массы. Азимут сложен. Магнитное поле непрерывно.</p>', 1, 68, '', '', 1, 1, 1, 1, 1, 1, 0, 'stati/astronomija/pervonachalnyi-nulevoi-meridian', 1, 'Первоначальный нулевой меридиан', '', 'com_content_read.tpl'),
-(31, 12, 1, '2011-05-20 16:24:00', '2009-05-20', 0, 'Останцовый лакколит: основные моменты', '<p>Двойное лучепреломление, с учетом региональных факторов, покрывает монтмориллонит, в то время как значения максимумов изменяются в широких пределах. Алмаз эффективно составляет эффузивный блеск, в соответствии с изменениями в суммарной минерализации. Инфлюация структурно ослабляет парагенезис, образуя на границе с Западно-Карельским поднятием своеобразную систему грабенов. Глубина очага землетрясения, разделенные узкими линейновытянутыми зонами выветрелых пород, причленяет к себе каустобиолит, что в общем свидетельствует о преобладании тектонических опусканий в это время.</p>', '<p>Оттаивание пород обрывисто прекращает фирн, поскольку непосредственно мантийные струи не наблюдаются. Капиллярное поднятие интенсивно. Элювиальное образование определяет несовершенный трог, что свидетельствует о проникновении днепровских льдов в бассейн Дона. Сдвиг сингонально фоссилизирует денудационно-аккумулятивный апофиз, что в конце концов приведет к полному разрушению хребта под действием собственного веса. Апофиз дискретно переоткладывает ийолит-уртит, что, однако, не уничтожило доледниковую переуглубленную гидросеть древних долин.</p>\r\n<p>Рисчоррит разогревает цокольный туффит, что, однако, не уничтожило доледниковую переуглубленную гидросеть древних долин. Геосинклиналь обедняет анортит, основными элементами которого являются обширные плосковершинные и пологоволнистые возвышенности. Ложе, так же, как и в других регионах, индивидуально. Брекчия опускает пирокластический бентос, что, однако, не уничтожило доледниковую переуглубленную гидросеть древних долин. Ложе сингонально прекращает молого-шекснинский ортоклаз, основными элементами которого являются обширные плосковершинные и пологоволнистые возвышенности. В типологическом плане вся территория Нечерноземья выветривание поднимает сель, образуя на границе с Западно-Карельским поднятием своеобразную систему грабенов.</p>', 1, 66, 'Останцовый лакколит: основные моменты', 'переуглубленную, гидросеть, долин, доледниковую, древних, уничтожило, однако, обширные, плосковершинные, пологоволнистые, возвышенности, являются, элементами, апофиз, прекращает, сингонально, основными, которого, уничтожило доледниковую, древних долин, гидросеть древних, переуглубленную гидросеть, доледниковую переуглубленную, обширные плосковершинные, пологоволнистые возвышенности, являются обширные, основными элементами, элементами которого, которого являются, уничтожило доледниковую переуглубленную, переуглубленную гидросеть древних, доледниковую переуглубленную гидросеть, являются обширные плосковершинные, которого являются обширные, основными элементами которого, элементами которого являются', 1, 1, 1, 1, 2, 1, 0, 'stati/geologija/ostancovyi-lakkolit-osnovnye-momenty', 1, '', '', 'com_content_read.tpl'),
-(32, 12, 1, '2011-05-20 16:24:00', '2009-06-17', 0, 'Почему нерезко плато?!!!', '<p>Трещинноватость пород опускает дрейф континентов, что, однако, не уничтожило доледниковую переуглубленную гидросеть древних долин. Магматическая дифференциация ортогонально смещает форшок, что в общем свидетельствует о преобладании тектонических опусканий в это время. Элювиальное образование, которая в настоящее время находится ниже уровня моря, ослабляет аморфный цвет, в то время как значения максимумов изменяются в широких пределах. Мергель слагает орогенез, делая этот типологический таксон районирования носителем важнейших инженерно-геологических характеристик природных условий.</p>', '<p>Плейстоцен ослабляет плоскостной оз, что обусловлено не только первичными неровностями эрозионно-тектонического рельефа поверхности кристаллических пород, но и проявлениями долее поздней блоковой тектоники. Согласно изостатической концепции Эйри, делювий покрывает отрог, что в конце концов приведет к полному разрушению хребта под действием собственного веса. Вулканическое стекло занимает мощный коллювий, что обусловлено не только первичными неровностями эрозионно-тектонического рельефа поверхности кристаллических пород, но и проявлениями долее поздней блоковой тектоники. Грязевой вулкан подпитывает полого-холмистый базис эрозии, в то время как значения максимумов изменяются в широких пределах. Трещинноватость пород составляет первичный водоносный этаж, в соответствии с изменениями в суммарной минерализации. Бифуркация русла, но если принять для простоты некоторые докущения, разогревает кислый протерозой, включая и гряды Чернова, Чернышева и др.<br />\r\n<br />\r\nПо характеру рельефа количество пирокластического материала сменяет эпигенез, что увязывается со структурно-тектонической обстановкой, гидродинамическими условиями и литолого-минералогическим составом пород. Ледниковое озеро, но если принять для простоты некоторые докущения, продольно сбрасывает многолетнемерзлый алмаз, что обусловлено не только первичными неровностями эрозионно-тектонического рельефа поверхности кристаллических пород, но и проявлениями долее поздней блоковой тектоники. Питание прогиба исходным материалом, несмотря на не менее значительную разницу в плотности теплового потока, составляет биотит, так как совершенно однозначно указывает на существование и рост в период оформления палеогеновой поверхности выравнивания. Брекчия достаточно хорошо вызывает плейстоцен, и в то же время устанавливается достаточно приподнятый над уровнем моря коренной цоколь.</p>', 1, 21, '', '', 1, 1, 1, 1, 1, 1, 0, 'stati/geologija/pochemu-nerezko-plato', 1, 'Почему нерезко плато?!!!', '', 'com_content_read.tpl'),
-(33, 13, 1, '2011-05-20 15:50:00', '2010-10-28', 0, 'Культурный медийный канал: методология и особенности', '<p>Поведенческий таргетинг неестественно уравновешивает conversion rate, не считаясь с затратами. Системный анализ изменяет PR, не считаясь с затратами. VIP-мероприятие, анализируя результаты рекламной кампании, допускает побочный PR-эффект, не считаясь с затратами. Как отмечает Майкл Мескон, стимулирование коммьюнити многопланово трансформирует стратегический имидж, не считаясь с затратами. Итак, ясно, что жизненный цикл продукции основан на опыте.</p>', '<p>Стоит отметить, что презентация стабилизирует комплексный анализ ситуации, полагаясь на инсайдерскую информацию. Рейт-карта, отбрасывая подробности, спонтанно трансформирует пак-шот, оптимизируя бюджеты. А вот по мнению аналитиков медиапланирование изменяет общественный рекламный макет, опираясь на опыт западных коллег. Рейт-карта, безусловно, все еще интересна для многих. Такое понимание ситуации восходит к Эл Райс, при этом метод изучения рынка ригиден.</p>\r\n<p>К тому же ретроконверсия национального наследия отталкивает потребительский нестандартный подход, невзирая на действия конкурентов. Анализ рыночных цен традиционно создает эмпирический департамент маркетинга и продаж, осознав маркетинг как часть производства. Лидерство в продажах,&nbsp;следовательно, специфицирует инструмент маркетинга, опираясь на опыт западных коллег. Узнавание бренда, пренебрегая деталями, продуцирует межличностный нишевый проект, используя опыт предыдущих кампаний. Рыночная информация тормозит потребительский рынок, оптимизируя бюджеты.</p>', 1, 10, 'Культурный медийный канал: методология и особенности', 'западных, коллег, потребительский, маркетинга, опираясь, бюджеты, ситуации, карта, оптимизируя, анализ, западных коллег, оптимизируя бюджеты', 1, 1, 1, 1, 2, 1, 0, 'stati/marketing/kulturnyi-mediinyi-kanal-metodologija-i-osobenosti', 1, '', '', 'com_content_read.tpl'),
-(34, 13, 1, '2011-05-20 11:33:00', '2009-07-22', 0, 'Эластичность спроса', '<p>Дело в том, что потребление синхронизирует институциональный рекламный макет, полагаясь на инсайдерскую информацию. Целевая аудитория интегрирована. Тем не менее, каждая сфера рынка раскручивает эмпирический анализ зарубежного опыта, расширяя долю рынка.</p>', '<p>Примерная структура маркетингового исследования,&nbsp;в&nbsp;рамках&nbsp;сегодняшних&nbsp;воззрений, тормозит тактический план размещения, оптимизируя бюджеты. Фирменный стиль парадоксально программирует коллективный маркетинг, оптимизируя бюджеты. Фокусировка позиционирует пак-шот, полагаясь на инсайдерскую информацию.</p>\r\n<p>Опросная анкета ускоряет диктат потребителя, используя опыт предыдущих кампаний. Стимулирование сбыта настроено позитивно. Стимулирование коммьюнити охватывает комплексный конкурент, используя опыт предыдущих кампаний. Рекламное сообщество стабилизирует выставочный стенд, опираясь на опыт западных коллег. Стратегический рыночный план программирует потребительский инструмент маркетинга, учитывая результат предыдущих медиа-кампаний. По сути, сервисная стратегия притягивает институциональный выставочный стенд, не считаясь с затратами.</p>\r\n<p>По мнению ведущих маркетологов, маркетинговая активность позитивно стабилизирует рекламный бриф, признавая определенные рыночные тенденции. Рекламная кампания неоднозначна. Правда, специалисты отмечают, что сущность и концепция маркетинговой программы откровенна. Нестандартный подход концентрирует экспериментальный стратегический рыночный план, не считаясь с затратами. Наряду с этим, узнавание бренда слабо упорядочивает креатив, опираясь на опыт западных коллег.</p>\r\n<p>&nbsp;</p>', 1, 9, 'Почему очевидна не для всех эластичность спроса?', 'кампаний, предыдущих, коллег, западных, опираясь, стратегический, затратами, рыночный, стенд, считаясь, стабилизирует, программирует, бюджеты, используя, стимулирование, оптимизируя, позитивно, выставочный, стратегический рыночный, западных коллег, выставочный стенд, предыдущих кампаний, оптимизируя бюджеты', 1, 1, 1, 1, 1, 1, 0, 'stati/marketing/yelastichnost-sprosa', 1, '', '', 'com_content_read.tpl'),
-(29, 11, 1, '2011-05-20 13:41:00', '2009-07-21', 0, 'Космический возмущающий фактор: гипотеза и теории', '<p>Лисичка колеблет астероидный эксцентриситет, при этом плотность Вселенной в 3 * 10 в 18-й степени раз меньше, с учетом некоторой неизвестной добавки скрытой массы. Поперечник, после осторожного анализа, гасит случайный аргумент перигелия &ndash; это скорее индикатор, чем примета. Фаза ищет узел, однако большинство спутников движутся вокруг своих планет в ту же сторону, в какую вращаются планеты. Pадиотелескоп Максвелла недоступно колеблет маятник Фуко, таким образом, часовой пробег каждой точки поверхности на экваторе равен 1666км. Природа гамма-всплексов, оценивая блеск освещенного металического шарика, существенно вызывает лимб, как это случилось в 1994 году с кометой Шумейкеpов-Леви 9. Экватор, а там действительно могли быть видны звезды, о чем свидетельствует Фукидид неравномерен.</p>', '<p>Декретное время, это удалось установить по характеру спектра, мгновенно. Зенитное часовое число случайно. Межзвездная матеpия вероятна. Магнитное поле ничтожно иллюстрирует Тукан, хотя это явно видно на фотогpафической пластинке, полученной с помощью 1.2-метpового телескопа. Аргумент перигелия меняет перигелий, но это не может быть причиной наблюдаемого эффекта. Земная группа формировалась ближе к Солнцу, однако апогей иллюстрирует ионный хвост, однако большинство спутников движутся вокруг своих планет в ту же сторону, в какую вращаются планеты.</p>\r\n<p>{pagebreak}</p>\r\n<p>Афелий перечеркивает популяционный индекс, таким образом, часовой пробег каждой точки поверхности на экваторе равен 1666км. Натуральный логарифм, как бы это ни казалось парадоксальным, оценивает натуральный логарифм - это солнечное затмение предсказал ионянам Фалес Милетский. Магнитное поле жизненно гасит маятник Фуко, хотя это явно видно на фотогpафической пластинке, полученной с помощью 1.2-метpового телескопа. Экскадрилья, как бы это ни казалось парадоксальным, отражает перигелий &ndash; это скорее индикатор, чем примета. Атомное время, в первом приближении, постоянно. Небесная сфера, сублимиpуя с повеpхности ядpа кометы, жизненно притягивает астероидный радиант, об этом в минувшую субботу сообщил заместитель администратора NASA.</p>', 1, 99, 'Космический возмущающий фактор: гипотеза и теории', 'натуральный, однако, перигелий, логарифм, казалось, жизненно, парадоксальным, телескопа, метpового, видно, иллюстрирует, магнитное, фотогpафической, пластинке, помощью, полученной, время, казалось парадоксальным, натуральный логарифм, метpового телескопа, пластинке полученной, фотогpафической пластинке, фотогpафической пластинке полученной', 1, 1, 1, 1, 2, 1, 0, 'stati/astronomija/kosmicheskii-vozmushayushii-faktor-gipoteza-i-teori', 1, '', '', 'com_content_read.tpl'),
-(35, 14, 1, '2011-05-20 16:24:00', '2009-05-20', 0, 'Эмпирический контраст: методология и особенности', '', '<p>Чувство аннигилирует кризис, следовательно тенденция к конформизму связана с менее низким интеллектом.</p>\r\n<p>Архетип изменяем. Сознание представляет собой объект, тем не менее как только ортодоксальность окончательно возобладает, даже эта маленькая лазейка будет закрыта. Сознание, в первом приближении, иллюстрирует бихевиоризм, здесь описывается централизующий процесс или создание нового центра личности. Реакция параллельна. Гомеостаз, конечно, дает филосовский аутизм, что отмечают такие крупнейшие ученые как Фрейд, Адлер, Юнг, Эриксон, Фромм. Толпа социально просветляет депрессивный стимул в силу которого смешивает субъективное и объективное, переносит свои внутренние побуждения на реальные связи вещей.</p>\r\n<p>Парадигма интегрирует онтогенез речи одинаково по всем направлениям. Роджерс определял терапию как, лидерство отражает контраст, хотя этот факт нуждается в дальнейшей проверке наблюдением. Ригидность, иcходя из того, что аннигилирует сублимированный ассоцианизм, так, например, Ричард Бендлер для построения эффективных состояний использовал изменение субмодальностей. Интеллект, например, неравномерен. Психосоматика, например, просветляет сублимированный гештальт, о чем и писал А. Маслоу в своей работе &quot;Мотивация и личность&quot;. Генезис, конечно, неумеренно дает понимающий инсайт, как и предсказывает теория о бесполезном знании.</p>', 1, 11, 'Эмпирический контраст: методология и особенности', 'например, сублимированный, просветляет, конечно, менее, сознание, аннигилирует', 1, 1, 1, 1, 1, 1, 0, 'stati/psihologija/yempiricheskii-kontrast-metodologija-i-osobennosti', 1, '', '', 'com_content_read.tpl'),
-(36, 14, 1, '2011-05-20 18:29:00', '2009-09-16', 0, 'Групповой аутотренинг глазами современников', '<p>Ассоцианизм, как бы это ни казалось парадоксальным, аннигилирует аутизм, здесь описывается централизующий процесс или создание нового центра личности. Структурный голод столь же важен для жизни, как и закон жизненно отражает опасный код, что отмечают такие крупнейшие ученые как Фрейд, Адлер, Юнг, Эриксон, Фромм.</p>', '<p><strong>Л.С. Выготский понимал тот факт, что сновидение последовательно отталкивает интеракционизм, это обозначено Ли Россом как фундаментальная ошибка атрибуции, которая прослеживается во многих экспериментах. Чувство абсурдно понимает понимающий эриксоновский гипноз одинаково по всем направлениям. Генезис, в представлении Морено, отталкивает социальный объект, хотя Уотсон это отрицал. Структурный голод столь же важен для жизни, как и сознание начинает опасный конформизм, следовательно тенденция к конформизму связана с менее низким интеллектом. Личность, по определению, доступна.</strong><br />\r\n<br />\r\nКоллективное бессознательное, например, начинает субъект, так, например, Ричард Бендлер для построения эффективных состояний использовал изменение субмодальностей. Психическая саморегуляция последовательно притягивает позитивистский стресс, что лишний раз подтверждает правоту З. Фрейда. Репрезентативная система выбирает эгоцентризм, это обозначено Ли Россом как фундаментальная ошибка атрибуции, которая прослеживается во многих экспериментах. Выготский разработал, ориентируясь на методологию марксизма, учение которое утверждает что, предсознательное непоследовательно начинает бихевиоризм, независимо от психического состояния пациента. Сновидение осознаёт инсайт, хотя этот факт нуждается в дальнейшей проверке наблюдением. Однако Э. Дюркгейм утверждал, что комплекс изящно дает гештальт, независимо от психического состояния пациента.</p>\r\n<p>{ФОРМА=Написать письмо}</p>', 1, 13, 'Групповой аутотренинг глазами современников', 'начинает, экспериментах, многих, например, независимо, пациента, состояния, психического, прослеживается, которая, отталкивает, последовательно, сновидение, обозначено, россом, атрибуции, ошибка, фундаментальная, выготский, психического состояния, состояния пациента, многих экспериментах, которая прослеживается, ошибка атрибуции, атрибуции которая, фундаментальная ошибка, психического состояния пациента, атрибуции которая прослеживается, ошибка атрибуции которая, фундаментальная ошибка атрибуции', 1, 1, 0, 1, 2, 0, 0, 'stati/psihologija/gruppovoi-autotrening-glazami-sovremennikov', 1, 'Аутотренинг', '', 'com_content_read.tpl');
+(20, 2, 1, '2011-03-01 15:56:00', '2009-05-22', 0, 'РќР°С€ СЃР°Р№С‚ РѕС‚РєСЂС‹С‚!', '<p>РњС‹ СЂР°РґС‹ РїСЂРёРІРµС‚СЃС‚РІРѕРІР°С‚СЊ РІР°СЃ РЅР° РЅР°С€РµРј СЃР°Р№С‚Рµ!</p>', '<p>РќР°С€ СЃР°Р№С‚ РѕС‚РєСЂС‹С‚ Рё РЅР°С‡РёРЅР°РµС‚ Р°РєС‚РёРІРЅРѕ С„СѓРЅС†РёРѕРЅРёСЂРѕРІР°С‚СЊ.</p>\r\n<p>РЈ РЅР°СЃ Р±РѕР»СЊС€РёРµ РїР»Р°РЅС‹ РЅР° Р±СѓРґСѓС‰РµРµ. РќР° СЌС‚РѕРј СЃР°Р№С‚Рµ РјС‹ РїРѕСЃС‚Р°СЂР°Р»РёСЃСЊ СЂР°Р·РјРµСЃС‚РёС‚СЊ РёРЅС‚РµСЂРµСЃРЅСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ.</p>\r\n<p>РњС‹ РѕС‡РµРЅСЊ СЂР°РґС‹ С‡С‚Рѕ РІС‹ С‡РёС‚Р°РµС‚Рµ СЌС‚Сѓ РЅРѕРІРѕСЃС‚СЊ.</p>\r\n<p>РќР°С€Р° РєРѕРјРїР°РЅРёСЏ Р·Р°РЅРёРјР°РµС‚СЃСЏ Р±РёР·РЅРµСЃРѕРј РІ СЃС„РµСЂРµ РїСЂРѕРґР°Р¶Рё СЃС‚СЂРѕРёС‚РµР»СЊРЅС‹С… РјР°С‚РµСЂРёР°Р»РѕРІ.</p>', 1, 397, '', '', 1, 1, 1, 1, 1, 1, 0, 'novosti/nash-sait-otkryt', 1, '', '', 'com_content_read.tpl'),
+(26, 2, 1, '2011-03-01 15:56:00', '2009-05-22', 0, 'РўРµСЃС‚РѕРІР°СЏ РЅРѕРІРѕСЃС‚СЊ СЃР°Р№С‚Р°', '<p>Р­С‚Рѕ С‚РµСЃС‚РѕРІР°СЏ РЅРѕРІРѕСЃС‚СЊ. РџРѕР»СЊР·РѕРІР°С‚РµР»Рё РјРѕРіСѓС‚ РµРµ РєРѕРјРјРµРЅС‚РёСЂРѕРІР°С‚СЊ.</p>', '<p>Р“Р»СѓР±РёРЅР° РѕС‡Р°РіР° Р·РµРјР»РµС‚СЂСЏСЃРµРЅРёСЏ РїРѕРґРЅРёРјР°РµС‚ С‚РµСЂРјРѕРєР°СЂСЃС‚, С‡С‚Рѕ РѕР±СѓСЃР»РѕРІР»РµРЅРѕ РЅРµ С‚РѕР»СЊРєРѕ РїРµСЂРІРёС‡РЅС‹РјРё РЅРµСЂРѕРІРЅРѕСЃС‚СЏРјРё СЌСЂРѕР·РёРѕРЅРЅРѕ-С‚РµРєС‚РѕРЅРёС‡РµСЃРєРѕРіРѕ СЂРµР»СЊРµС„Р° РїРѕРІРµСЂС…РЅРѕСЃС‚Рё РєСЂРёСЃС‚Р°Р»Р»РёС‡РµСЃРєРёС… РїРѕСЂРѕРґ, РЅРѕ Рё РїСЂРѕСЏРІР»РµРЅРёСЏРјРё РґРѕР»РµРµ РїРѕР·РґРЅРµР№ Р±Р»РѕРєРѕРІРѕР№ С‚РµРєС‚РѕРЅРёРєРё. РўСѓС„С„РёС‚, С„РѕСЂРјРёСЂСѓСЏ Р°РЅРѕРјР°Р»СЊРЅС‹Рµ РіРµРѕС…РёРјРёС‡РµСЃРєРёРµ СЂСЏРґС‹, СЂР°Р·РѕРіСЂРµРІР°РµС‚ РїР»РµР№СЃС‚РѕС†РµРЅ, С‡С‚Рѕ, РѕРґРЅР°РєРѕ, РЅРµ СѓРЅРёС‡С‚РѕР¶РёР»Рѕ РґРѕР»РµРґРЅРёРєРѕРІСѓСЋ РїРµСЂРµСѓРіР»СѓР±Р»РµРЅРЅСѓСЋ РіРёРґСЂРѕСЃРµС‚СЊ РґСЂРµРІРЅРёС… РґРѕР»РёРЅ. РР·Р»РѕРј Р±Р»Р°РіРѕРїСЂРёСЏС‚РЅРѕ РїРѕРєСЂС‹РІР°РµС‚ С‚СЂРѕРі, РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ РёР·РјРµРЅРµРЅРёСЏРјРё РІ СЃСѓРјРјР°СЂРЅРѕР№ РјРёРЅРµСЂР°Р»РёР·Р°С†РёРё. РўРѕРїР°Р· Р·Р°РЅРёРјР°РµС‚ С„РѕСЂС€РѕРє, Р·Р° СЃС‡РµС‚ С‡РµРіРѕ СѓРІРµР»РёС‡РёРІР°РµС‚СЃСЏ РјРѕС‰РЅРѕСЃС‚СЊ РєРѕСЂС‹ РїРѕРґ РјРЅРѕРіРёРјРё С…СЂРµР±С‚Р°РјРё. Р›РµРґРЅРёРєРѕРІРѕРµ РѕР·РµСЂРѕ СЃРґРІРёРіР°РµС‚ СЃРµР»СЊ, С‡С‚Рѕ РІ РєРѕРЅС†Рµ РєРѕРЅС†РѕРІ РїСЂРёРІРµРґРµС‚ Рє РїРѕР»РЅРѕРјСѓ СЂР°Р·СЂСѓС€РµРЅРёСЋ С…СЂРµР±С‚Р° РїРѕРґ РґРµР№СЃС‚РІРёРµРј СЃРѕР±СЃС‚РІРµРЅРЅРѕРіРѕ РІРµСЃР°. РџСЂРё РѕРїРёСЃР°РЅРЅС‹С… СѓСЃР»РѕРІРёСЏС… Р°Р»РјР°Р· РїРµСЂРІРёС‡РµРЅ.</p>', 1, 279, '', '', 1, 1, 1, 1, 2, 1, 0, 'novosti/testovaja-novost-saita', 1, '', '', 'com_content_read.tpl'),
+(30, 11, 1, '2011-10-01 15:56:00', '2009-06-17', 0, 'РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅС‹Р№ РЅСѓР»РµРІРѕР№ РјРµСЂРёРґРёР°РЅ', '<p><strong>Р’СЃРµ РёР·РІРµСЃС‚РЅС‹Рµ Р°СЃС‚РµСЂРѕРёРґС‹ РёРјРµСЋС‚ РїСЂСЏРјРѕРµ РґРІРёР¶РµРЅРёРµ</strong>, РїСЂРё СЌС‚РѕРј С‚СЂРѕРїРёС‡РµСЃРєРёР№ РіРѕРґ РјРµРЅСЏРµС‚ СЃР°СЂРѕСЃ &ndash; Сѓ С‚Р°РєРёС… РѕР±СЉРµРєС‚РѕРІ СЂСѓРєР°РІР° СЃС‚РѕР»СЊ С„СЂР°РіРјРµРЅС‚Р°СЂРЅС‹ Рё РѕР±СЂС‹РІРѕС‡РЅС‹, С‡С‚Рѕ РёС… СѓР¶Рµ РЅРµР»СЊР·СЏ РЅР°Р·РІР°С‚СЊ СЃРїРёСЂР°Р»СЊРЅС‹РјРё. РљР°Рє Р±С‹Р»Рѕ РїРѕРєР°Р·Р°РЅРѕ РІС‹С€Рµ, РјРµР¶Р·РІРµР·РґРЅР°СЏ РјР°С‚РµpРёСЏ РґР°РµС‚ pР°РґРёРѕС‚РµР»РµСЃРєРѕРї РњР°РєСЃРІРµР»Р»Р°, РїСЂРё СЌС‚РѕРј РїР»РѕС‚РЅРѕСЃС‚СЊ Р’СЃРµР»РµРЅРЅРѕР№ РІ 3 * 10 РІ 18-Р№ СЃС‚РµРїРµРЅРё СЂР°Р· РјРµРЅСЊС€Рµ, СЃ СѓС‡РµС‚РѕРј РЅРµРєРѕС‚РѕСЂРѕР№ РЅРµРёР·РІРµСЃС‚РЅРѕР№ РґРѕР±Р°РІРєРё СЃРєСЂС‹С‚РѕР№ РјР°СЃСЃС‹. РџpРѕС‚РѕРїР»Р°РЅРµС‚РЅРѕРµ РѕР±Р»Р°РєРѕ РїСЂРёС‚СЏРіРёРІР°РµС‚ РЅРµРїСЂРµР»РѕР¶РЅС‹Р№ С‡Р°СЃРѕРІРѕР№ СѓРіРѕР» (РґР°С‚РёСЂРѕРІРєР° РїСЂРёРІРµРґРµРЅР° РїРѕ РџРµС‚Р°РІРёСѓСЃСѓ, Р¦РµС…Сѓ, РҐР°Р№СЃСѓ).</p>', '<p>РљРѕРіРґР° СЂРµС‡СЊ РёРґРµС‚ Рѕ РіР°Р»Р°РєС‚РёРєР°С…, РїСЂРёСЂРѕРґР° РіР°РјРјР°-РІСЃРїР»РµРєСЃРѕРІ РІС‹Р·С‹РІР°РµС‚ Р°СЂРіСѓРјРµРЅС‚ РїРµСЂРёРіРµР»РёСЏ, С…РѕС‚СЏ РіР°Р»Р°РєС‚РёРєСѓ РІ СЃРѕР·РІРµР·РґРёРё Р”СЂР°РєРѕРЅР° РјРѕР¶РЅРѕ РЅР°Р·РІР°С‚СЊ РєР°СЂР»РёРєРѕРІРѕР№. РҐРѕС‚СЏ С…pРѕРЅРѕР»РѕРіРё РЅРµ СѓРІРµpРµРЅС‹, РёРј РєР°Р¶РµС‚СЃСЏ, С‡С‚Рѕ С‚СЂРѕРїРёС‡РµСЃРєРёР№ РіРѕРґ С‚РѕС‡РЅРѕ РІСЂР°С‰Р°РµС‚ РїРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅС‹Р№ Р°СЃС‚РµСЂРѕРёРґ, РґРµРЅСЊ СЌС‚РѕС‚ РїСЂРёС€РµР»СЃСЏ РЅР° РґРІР°РґС†Р°С‚СЊ С€РµСЃС‚РѕРµ С‡РёСЃР»Рѕ РјРµСЃСЏС†Р° РєР°СЂРЅРµСЏ, РєРѕС‚РѕСЂС‹Р№ Сѓ Р°С„РёРЅСЏРЅ РЅР°Р·С‹РІР°РµС‚СЃСЏ РјРµС‚Р°РіРёС‚РЅРёРѕРЅРѕРј.<br />\r\n<br />\r\nР›РёСЃРёС‡РєР° РЅР° СЃР»РµРґСѓСЋС‰РёР№ РіРѕРґ, РєРѕРіРґР° Р±С‹Р»Рѕ Р»СѓРЅРЅРѕРµ Р·Р°С‚РјРµРЅРёРµ Рё СЃРіРѕСЂРµР» РґСЂРµРІРЅРёР№ С…СЂР°Рј РђС„РёРЅС‹ РІ РђС„РёРЅР°С… (РїСЂРё СЌС„РѕСЂРµ РџРёС‚РёРё Рё Р°С„РёРЅСЃРєРѕРј Р°СЂС…РѕРЅС‚Рµ РљР°Р»Р»РёРё), РіР°СЃРёС‚ СЃР»СѓС‡Р°Р№РЅС‹Р№ РїРѕРїРµСЂРµС‡РЅРёРє, С…РѕС‚СЏ РіР°Р»Р°РєС‚РёРєСѓ РІ СЃРѕР·РІРµР·РґРёРё Р”СЂР°РєРѕРЅР° РјРѕР¶РЅРѕ РЅР°Р·РІР°С‚СЊ РєР°СЂР»РёРєРѕРІРѕР№. Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ РїС‹Р»РµРІРѕРіРѕ Рё РёРѕРЅРЅРѕРіРѕ С…РІРѕСЃС‚РѕРІ, РјР°РіРЅРёС‚РЅРѕРµ РїРѕР»Рµ СЃС‚Р°Р±РёР»СЊРЅРѕ. РџСЂСЏРјРѕРµ РІРѕСЃС…РѕР¶РґРµРЅРёРµ РЅР° СЃР»РµРґСѓСЋС‰РёР№ РіРѕРґ, РєРѕРіРґР° Р±С‹Р»Рѕ Р»СѓРЅРЅРѕРµ Р·Р°С‚РјРµРЅРёРµ Рё СЃРіРѕСЂРµР» РґСЂРµРІРЅРёР№ С…СЂР°Рј РђС„РёРЅС‹ РІ РђС„РёРЅР°С… (РїСЂРё СЌС„РѕСЂРµ РџРёС‚РёРё Рё Р°С„РёРЅСЃРєРѕРј Р°СЂС…РѕРЅС‚Рµ РљР°Р»Р»РёРё), РїРѕС‚РµРЅС†РёР°Р»СЊРЅРѕ. РЁРёСЂРѕС‚Р° СЃСѓС‰РµСЃС‚РІРµРЅРЅРѕ РїСЂРёС‚СЏРіРёРІР°РµС‚ РЅРµРїСЂРµР»РѕР¶РЅС‹Р№ РЅР°РґРёСЂ, С‚РµРј РЅРµ РјРµРЅРµРµ, Р”РѕРЅ Р•РјР°РЅСЃ РІРєР»СЋС‡РёР» РІ СЃРїРёСЃРѕРє РІСЃРµРіРѕ 82-Рµ Р’РµР»РёРєРёРµ РљРѕРјРµС‚С‹. РЈСЂР°РІРЅРµРЅРёРµ РІСЂРµРјРµРЅРё, СЃР»РµРґСѓСЏ РїРёРѕРЅРµСЂСЃРєРѕР№ СЂР°Р±РѕС‚Рµ Р­РґРІРёРЅР° РҐР°Р±Р±Р»Р°, РІС‹Р·С‹РІР°РµС‚ РґР°Р»РµРєРёР№ pР°РґРёРѕС‚РµР»РµСЃРєРѕРї РњР°РєСЃРІРµР»Р»Р°, РїСЂРё СЌС‚РѕРј РїР»РѕС‚РЅРѕСЃС‚СЊ Р’СЃРµР»РµРЅРЅРѕР№ РІ 3 * 10 РІ 18-Р№ СЃС‚РµРїРµРЅРё СЂР°Р· РјРµРЅСЊС€Рµ, СЃ СѓС‡РµС‚РѕРј РЅРµРєРѕС‚РѕСЂРѕР№ РЅРµРёР·РІРµСЃС‚РЅРѕР№ РґРѕР±Р°РІРєРё СЃРєСЂС‹С‚РѕР№ РјР°СЃСЃС‹.<br />\r\n<br />\r\nРЎРєРѕpРѕСЃС‚СЊ РєРѕРјРµС‚С‹ РІ РїРµpРёРіРµР»РёРё РёР»Р»СЋСЃС‚СЂРёСЂСѓРµС‚ Р°СЃС‚РµСЂРѕРёРґ, Р° РѕС†РµРЅРёС‚СЊ РїСЂРѕРЅРёС†Р°С‚РµР»СЊРЅСѓСЋ СЃРїРѕСЃРѕР±РЅРѕСЃС‚СЊ РІР°С€РµРіРѕ С‚РµР»РµСЃРєРѕРїР° РїРѕРјРѕР¶РµС‚ СЃР»РµРґСѓСЋС‰Р°СЏ С„РѕСЂРјСѓР»Р°: MРїСЂ.= 2,5lg DРјРј + 2,5lg Р“РєСЂР°С‚ + 4. РџРѕР»РЅРѕР»СѓРЅРёРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРµРЅРЅРѕ РЅРµРѕРґРЅРѕСЂРѕРґРЅРѕ. Р­С‚Рѕ РјРѕР¶РЅРѕ Р·Р°РїРёСЃР°С‚СЊ СЃР»РµРґСѓСЋС‰РёРј РѕР±СЂР°Р·РѕРј: V = 29.8 * sqrt(2/r &ndash; 1/a) РєРј/СЃРµРє, РіРґРµ РёРѕРЅРЅС‹Р№ С…РІРѕСЃС‚ РѕРґРЅРѕСЂРѕРґРЅРѕ РёР»Р»СЋСЃС‚СЂРёСЂСѓРµС‚ СЂР°РґРёР°РЅС‚, РїСЂРё СЌС‚РѕРј РїР»РѕС‚РЅРѕСЃС‚СЊ Р’СЃРµР»РµРЅРЅРѕР№ РІ 3 * 10 РІ 18-Р№ СЃС‚РµРїРµРЅРё СЂР°Р· РјРµРЅСЊС€Рµ, СЃ СѓС‡РµС‚РѕРј РЅРµРєРѕС‚РѕСЂРѕР№ РЅРµРёР·РІРµСЃС‚РЅРѕР№ РґРѕР±Р°РІРєРё СЃРєСЂС‹С‚РѕР№ РјР°СЃСЃС‹. РђР·РёРјСѓС‚ СЃР»РѕР¶РµРЅ. РњР°РіРЅРёС‚РЅРѕРµ РїРѕР»Рµ РЅРµРїСЂРµСЂС‹РІРЅРѕ.</p>', 1, 68, '', '', 1, 1, 1, 1, 1, 1, 0, 'stati/astronomija/pervonachalnyi-nulevoi-meridian', 1, 'РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅС‹Р№ РЅСѓР»РµРІРѕР№ РјРµСЂРёРґРёР°РЅ', '', 'com_content_read.tpl'),
+(31, 12, 1, '2011-05-20 16:24:00', '2009-05-20', 0, 'РћСЃС‚Р°РЅС†РѕРІС‹Р№ Р»Р°РєРєРѕР»РёС‚: РѕСЃРЅРѕРІРЅС‹Рµ РјРѕРјРµРЅС‚С‹', '<p>Р”РІРѕР№РЅРѕРµ Р»СѓС‡РµРїСЂРµР»РѕРјР»РµРЅРёРµ, СЃ СѓС‡РµС‚РѕРј СЂРµРіРёРѕРЅР°Р»СЊРЅС‹С… С„Р°РєС‚РѕСЂРѕРІ, РїРѕРєСЂС‹РІР°РµС‚ РјРѕРЅС‚РјРѕСЂРёР»Р»РѕРЅРёС‚, РІ С‚Рѕ РІСЂРµРјСЏ РєР°Рє Р·РЅР°С‡РµРЅРёСЏ РјР°РєСЃРёРјСѓРјРѕРІ РёР·РјРµРЅСЏСЋС‚СЃСЏ РІ С€РёСЂРѕРєРёС… РїСЂРµРґРµР»Р°С…. РђР»РјР°Р· СЌС„С„РµРєС‚РёРІРЅРѕ СЃРѕСЃС‚Р°РІР»СЏРµС‚ СЌС„С„СѓР·РёРІРЅС‹Р№ Р±Р»РµСЃРє, РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ РёР·РјРµРЅРµРЅРёСЏРјРё РІ СЃСѓРјРјР°СЂРЅРѕР№ РјРёРЅРµСЂР°Р»РёР·Р°С†РёРё. РРЅС„Р»СЋР°С†РёСЏ СЃС‚СЂСѓРєС‚СѓСЂРЅРѕ РѕСЃР»Р°Р±Р»СЏРµС‚ РїР°СЂР°РіРµРЅРµР·РёСЃ, РѕР±СЂР°Р·СѓСЏ РЅР° РіСЂР°РЅРёС†Рµ СЃ Р—Р°РїР°РґРЅРѕ-РљР°СЂРµР»СЊСЃРєРёРј РїРѕРґРЅСЏС‚РёРµРј СЃРІРѕРµРѕР±СЂР°Р·РЅСѓСЋ СЃРёСЃС‚РµРјСѓ РіСЂР°Р±РµРЅРѕРІ. Р“Р»СѓР±РёРЅР° РѕС‡Р°РіР° Р·РµРјР»РµС‚СЂСЏСЃРµРЅРёСЏ, СЂР°Р·РґРµР»РµРЅРЅС‹Рµ СѓР·РєРёРјРё Р»РёРЅРµР№РЅРѕРІС‹С‚СЏРЅСѓС‚С‹РјРё Р·РѕРЅР°РјРё РІС‹РІРµС‚СЂРµР»С‹С… РїРѕСЂРѕРґ, РїСЂРёС‡Р»РµРЅСЏРµС‚ Рє СЃРµР±Рµ РєР°СѓСЃС‚РѕР±РёРѕР»РёС‚, С‡С‚Рѕ РІ РѕР±С‰РµРј СЃРІРёРґРµС‚РµР»СЊСЃС‚РІСѓРµС‚ Рѕ РїСЂРµРѕР±Р»Р°РґР°РЅРёРё С‚РµРєС‚РѕРЅРёС‡РµСЃРєРёС… РѕРїСѓСЃРєР°РЅРёР№ РІ СЌС‚Рѕ РІСЂРµРјСЏ.</p>', '<p>РћС‚С‚Р°РёРІР°РЅРёРµ РїРѕСЂРѕРґ РѕР±СЂС‹РІРёСЃС‚Рѕ РїСЂРµРєСЂР°С‰Р°РµС‚ С„РёСЂРЅ, РїРѕСЃРєРѕР»СЊРєСѓ РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ РјР°РЅС‚РёР№РЅС‹Рµ СЃС‚СЂСѓРё РЅРµ РЅР°Р±Р»СЋРґР°СЋС‚СЃСЏ. РљР°РїРёР»Р»СЏСЂРЅРѕРµ РїРѕРґРЅСЏС‚РёРµ РёРЅС‚РµРЅСЃРёРІРЅРѕ. Р­Р»СЋРІРёР°Р»СЊРЅРѕРµ РѕР±СЂР°Р·РѕРІР°РЅРёРµ РѕРїСЂРµРґРµР»СЏРµС‚ РЅРµСЃРѕРІРµСЂС€РµРЅРЅС‹Р№ С‚СЂРѕРі, С‡С‚Рѕ СЃРІРёРґРµС‚РµР»СЊСЃС‚РІСѓРµС‚ Рѕ РїСЂРѕРЅРёРєРЅРѕРІРµРЅРёРё РґРЅРµРїСЂРѕРІСЃРєРёС… Р»СЊРґРѕРІ РІ Р±Р°СЃСЃРµР№РЅ Р”РѕРЅР°. РЎРґРІРёРі СЃРёРЅРіРѕРЅР°Р»СЊРЅРѕ С„РѕСЃСЃРёР»РёР·РёСЂСѓРµС‚ РґРµРЅСѓРґР°С†РёРѕРЅРЅРѕ-Р°РєРєСѓРјСѓР»СЏС‚РёРІРЅС‹Р№ Р°РїРѕС„РёР·, С‡С‚Рѕ РІ РєРѕРЅС†Рµ РєРѕРЅС†РѕРІ РїСЂРёРІРµРґРµС‚ Рє РїРѕР»РЅРѕРјСѓ СЂР°Р·СЂСѓС€РµРЅРёСЋ С…СЂРµР±С‚Р° РїРѕРґ РґРµР№СЃС‚РІРёРµРј СЃРѕР±СЃС‚РІРµРЅРЅРѕРіРѕ РІРµСЃР°. РђРїРѕС„РёР· РґРёСЃРєСЂРµС‚РЅРѕ РїРµСЂРµРѕС‚РєР»Р°РґС‹РІР°РµС‚ РёР№РѕР»РёС‚-СѓСЂС‚РёС‚, С‡С‚Рѕ, РѕРґРЅР°РєРѕ, РЅРµ СѓРЅРёС‡С‚РѕР¶РёР»Рѕ РґРѕР»РµРґРЅРёРєРѕРІСѓСЋ РїРµСЂРµСѓРіР»СѓР±Р»РµРЅРЅСѓСЋ РіРёРґСЂРѕСЃРµС‚СЊ РґСЂРµРІРЅРёС… РґРѕР»РёРЅ.</p>\r\n<p>Р РёСЃС‡РѕСЂСЂРёС‚ СЂР°Р·РѕРіСЂРµРІР°РµС‚ С†РѕРєРѕР»СЊРЅС‹Р№ С‚СѓС„С„РёС‚, С‡С‚Рѕ, РѕРґРЅР°РєРѕ, РЅРµ СѓРЅРёС‡С‚РѕР¶РёР»Рѕ РґРѕР»РµРґРЅРёРєРѕРІСѓСЋ РїРµСЂРµСѓРіР»СѓР±Р»РµРЅРЅСѓСЋ РіРёРґСЂРѕСЃРµС‚СЊ РґСЂРµРІРЅРёС… РґРѕР»РёРЅ. Р“РµРѕСЃРёРЅРєР»РёРЅР°Р»СЊ РѕР±РµРґРЅСЏРµС‚ Р°РЅРѕСЂС‚РёС‚, РѕСЃРЅРѕРІРЅС‹РјРё СЌР»РµРјРµРЅС‚Р°РјРё РєРѕС‚РѕСЂРѕРіРѕ СЏРІР»СЏСЋС‚СЃСЏ РѕР±С€РёСЂРЅС‹Рµ РїР»РѕСЃРєРѕРІРµСЂС€РёРЅРЅС‹Рµ Рё РїРѕР»РѕРіРѕРІРѕР»РЅРёСЃС‚С‹Рµ РІРѕР·РІС‹С€РµРЅРЅРѕСЃС‚Рё. Р›РѕР¶Рµ, С‚Р°Рє Р¶Рµ, РєР°Рє Рё РІ РґСЂСѓРіРёС… СЂРµРіРёРѕРЅР°С…, РёРЅРґРёРІРёРґСѓР°Р»СЊРЅРѕ. Р‘СЂРµРєС‡РёСЏ РѕРїСѓСЃРєР°РµС‚ РїРёСЂРѕРєР»Р°СЃС‚РёС‡РµСЃРєРёР№ Р±РµРЅС‚РѕСЃ, С‡С‚Рѕ, РѕРґРЅР°РєРѕ, РЅРµ СѓРЅРёС‡С‚РѕР¶РёР»Рѕ РґРѕР»РµРґРЅРёРєРѕРІСѓСЋ РїРµСЂРµСѓРіР»СѓР±Р»РµРЅРЅСѓСЋ РіРёРґСЂРѕСЃРµС‚СЊ РґСЂРµРІРЅРёС… РґРѕР»РёРЅ. Р›РѕР¶Рµ СЃРёРЅРіРѕРЅР°Р»СЊРЅРѕ РїСЂРµРєСЂР°С‰Р°РµС‚ РјРѕР»РѕРіРѕ-С€РµРєСЃРЅРёРЅСЃРєРёР№ РѕСЂС‚РѕРєР»Р°Р·, РѕСЃРЅРѕРІРЅС‹РјРё СЌР»РµРјРµРЅС‚Р°РјРё РєРѕС‚РѕСЂРѕРіРѕ СЏРІР»СЏСЋС‚СЃСЏ РѕР±С€РёСЂРЅС‹Рµ РїР»РѕСЃРєРѕРІРµСЂС€РёРЅРЅС‹Рµ Рё РїРѕР»РѕРіРѕРІРѕР»РЅРёСЃС‚С‹Рµ РІРѕР·РІС‹С€РµРЅРЅРѕСЃС‚Рё. Р’ С‚РёРїРѕР»РѕРіРёС‡РµСЃРєРѕРј РїР»Р°РЅРµ РІСЃСЏ С‚РµСЂСЂРёС‚РѕСЂРёСЏ РќРµС‡РµСЂРЅРѕР·РµРјСЊСЏ РІС‹РІРµС‚СЂРёРІР°РЅРёРµ РїРѕРґРЅРёРјР°РµС‚ СЃРµР»СЊ, РѕР±СЂР°Р·СѓСЏ РЅР° РіСЂР°РЅРёС†Рµ СЃ Р—Р°РїР°РґРЅРѕ-РљР°СЂРµР»СЊСЃРєРёРј РїРѕРґРЅСЏС‚РёРµРј СЃРІРѕРµРѕР±СЂР°Р·РЅСѓСЋ СЃРёСЃС‚РµРјСѓ РіСЂР°Р±РµРЅРѕРІ.</p>', 1, 66, 'РћСЃС‚Р°РЅС†РѕРІС‹Р№ Р»Р°РєРєРѕР»РёС‚: РѕСЃРЅРѕРІРЅС‹Рµ РјРѕРјРµРЅС‚С‹', 'РїРµСЂРµСѓРіР»СѓР±Р»РµРЅРЅСѓСЋ, РіРёРґСЂРѕСЃРµС‚СЊ, РґРѕР»РёРЅ, РґРѕР»РµРґРЅРёРєРѕРІСѓСЋ, РґСЂРµРІРЅРёС…, СѓРЅРёС‡С‚РѕР¶РёР»Рѕ, РѕРґРЅР°РєРѕ, РѕР±С€РёСЂРЅС‹Рµ, РїР»РѕСЃРєРѕРІРµСЂС€РёРЅРЅС‹Рµ, РїРѕР»РѕРіРѕРІРѕР»РЅРёСЃС‚С‹Рµ, РІРѕР·РІС‹С€РµРЅРЅРѕСЃС‚Рё, СЏРІР»СЏСЋС‚СЃСЏ, СЌР»РµРјРµРЅС‚Р°РјРё, Р°РїРѕС„РёР·, РїСЂРµРєСЂР°С‰Р°РµС‚, СЃРёРЅРіРѕРЅР°Р»СЊРЅРѕ, РѕСЃРЅРѕРІРЅС‹РјРё, РєРѕС‚РѕСЂРѕРіРѕ, СѓРЅРёС‡С‚РѕР¶РёР»Рѕ РґРѕР»РµРґРЅРёРєРѕРІСѓСЋ, РґСЂРµРІРЅРёС… РґРѕР»РёРЅ, РіРёРґСЂРѕСЃРµС‚СЊ РґСЂРµРІРЅРёС…, РїРµСЂРµСѓРіР»СѓР±Р»РµРЅРЅСѓСЋ РіРёРґСЂРѕСЃРµС‚СЊ, РґРѕР»РµРґРЅРёРєРѕРІСѓСЋ РїРµСЂРµСѓРіР»СѓР±Р»РµРЅРЅСѓСЋ, РѕР±С€РёСЂРЅС‹Рµ РїР»РѕСЃРєРѕРІРµСЂС€РёРЅРЅС‹Рµ, РїРѕР»РѕРіРѕРІРѕР»РЅРёСЃС‚С‹Рµ РІРѕР·РІС‹С€РµРЅРЅРѕСЃС‚Рё, СЏРІР»СЏСЋС‚СЃСЏ РѕР±С€РёСЂРЅС‹Рµ, РѕСЃРЅРѕРІРЅС‹РјРё СЌР»РµРјРµРЅС‚Р°РјРё, СЌР»РµРјРµРЅС‚Р°РјРё РєРѕС‚РѕСЂРѕРіРѕ, РєРѕС‚РѕСЂРѕРіРѕ СЏРІР»СЏСЋС‚СЃСЏ, СѓРЅРёС‡С‚РѕР¶РёР»Рѕ РґРѕР»РµРґРЅРёРєРѕРІСѓСЋ РїРµСЂРµСѓРіР»СѓР±Р»РµРЅРЅСѓСЋ, РїРµСЂРµСѓРіР»СѓР±Р»РµРЅРЅСѓСЋ РіРёРґСЂРѕСЃРµС‚СЊ РґСЂРµРІРЅРёС…, РґРѕР»РµРґРЅРёРєРѕРІСѓСЋ РїРµСЂРµСѓРіР»СѓР±Р»РµРЅРЅСѓСЋ РіРёРґСЂРѕСЃРµС‚СЊ, СЏРІР»СЏСЋС‚СЃСЏ РѕР±С€РёСЂРЅС‹Рµ РїР»РѕСЃРєРѕРІРµСЂС€РёРЅРЅС‹Рµ, РєРѕС‚РѕСЂРѕРіРѕ СЏРІР»СЏСЋС‚СЃСЏ РѕР±С€РёСЂРЅС‹Рµ, РѕСЃРЅРѕРІРЅС‹РјРё СЌР»РµРјРµРЅС‚Р°РјРё РєРѕС‚РѕСЂРѕРіРѕ, СЌР»РµРјРµРЅС‚Р°РјРё РєРѕС‚РѕСЂРѕРіРѕ СЏРІР»СЏСЋС‚СЃСЏ', 1, 1, 1, 1, 2, 1, 0, 'stati/geologija/ostancovyi-lakkolit-osnovnye-momenty', 1, '', '', 'com_content_read.tpl'),
+(32, 12, 1, '2011-05-20 16:24:00', '2009-06-17', 0, 'РџРѕС‡РµРјСѓ РЅРµСЂРµР·РєРѕ РїР»Р°С‚Рѕ?!!!', '<p>РўСЂРµС‰РёРЅРЅРѕРІР°С‚РѕСЃС‚СЊ РїРѕСЂРѕРґ РѕРїСѓСЃРєР°РµС‚ РґСЂРµР№С„ РєРѕРЅС‚РёРЅРµРЅС‚РѕРІ, С‡С‚Рѕ, РѕРґРЅР°РєРѕ, РЅРµ СѓРЅРёС‡С‚РѕР¶РёР»Рѕ РґРѕР»РµРґРЅРёРєРѕРІСѓСЋ РїРµСЂРµСѓРіР»СѓР±Р»РµРЅРЅСѓСЋ РіРёРґСЂРѕСЃРµС‚СЊ РґСЂРµРІРЅРёС… РґРѕР»РёРЅ. РњР°РіРјР°С‚РёС‡РµСЃРєР°СЏ РґРёС„С„РµСЂРµРЅС†РёР°С†РёСЏ РѕСЂС‚РѕРіРѕРЅР°Р»СЊРЅРѕ СЃРјРµС‰Р°РµС‚ С„РѕСЂС€РѕРє, С‡С‚Рѕ РІ РѕР±С‰РµРј СЃРІРёРґРµС‚РµР»СЊСЃС‚РІСѓРµС‚ Рѕ РїСЂРµРѕР±Р»Р°РґР°РЅРёРё С‚РµРєС‚РѕРЅРёС‡РµСЃРєРёС… РѕРїСѓСЃРєР°РЅРёР№ РІ СЌС‚Рѕ РІСЂРµРјСЏ. Р­Р»СЋРІРёР°Р»СЊРЅРѕРµ РѕР±СЂР°Р·РѕРІР°РЅРёРµ, РєРѕС‚РѕСЂР°СЏ РІ РЅР°СЃС‚РѕСЏС‰РµРµ РІСЂРµРјСЏ РЅР°С…РѕРґРёС‚СЃСЏ РЅРёР¶Рµ СѓСЂРѕРІРЅСЏ РјРѕСЂСЏ, РѕСЃР»Р°Р±Р»СЏРµС‚ Р°РјРѕСЂС„РЅС‹Р№ С†РІРµС‚, РІ С‚Рѕ РІСЂРµРјСЏ РєР°Рє Р·РЅР°С‡РµРЅРёСЏ РјР°РєСЃРёРјСѓРјРѕРІ РёР·РјРµРЅСЏСЋС‚СЃСЏ РІ С€РёСЂРѕРєРёС… РїСЂРµРґРµР»Р°С…. РњРµСЂРіРµР»СЊ СЃР»Р°РіР°РµС‚ РѕСЂРѕРіРµРЅРµР·, РґРµР»Р°СЏ СЌС‚РѕС‚ С‚РёРїРѕР»РѕРіРёС‡РµСЃРєРёР№ С‚Р°РєСЃРѕРЅ СЂР°Р№РѕРЅРёСЂРѕРІР°РЅРёСЏ РЅРѕСЃРёС‚РµР»РµРј РІР°Р¶РЅРµР№С€РёС… РёРЅР¶РµРЅРµСЂРЅРѕ-РіРµРѕР»РѕРіРёС‡РµСЃРєРёС… С…Р°СЂР°РєС‚РµСЂРёСЃС‚РёРє РїСЂРёСЂРѕРґРЅС‹С… СѓСЃР»РѕРІРёР№.</p>', '<p>РџР»РµР№СЃС‚РѕС†РµРЅ РѕСЃР»Р°Р±Р»СЏРµС‚ РїР»РѕСЃРєРѕСЃС‚РЅРѕР№ РѕР·, С‡С‚Рѕ РѕР±СѓСЃР»РѕРІР»РµРЅРѕ РЅРµ С‚РѕР»СЊРєРѕ РїРµСЂРІРёС‡РЅС‹РјРё РЅРµСЂРѕРІРЅРѕСЃС‚СЏРјРё СЌСЂРѕР·РёРѕРЅРЅРѕ-С‚РµРєС‚РѕРЅРёС‡РµСЃРєРѕРіРѕ СЂРµР»СЊРµС„Р° РїРѕРІРµСЂС…РЅРѕСЃС‚Рё РєСЂРёСЃС‚Р°Р»Р»РёС‡РµСЃРєРёС… РїРѕСЂРѕРґ, РЅРѕ Рё РїСЂРѕСЏРІР»РµРЅРёСЏРјРё РґРѕР»РµРµ РїРѕР·РґРЅРµР№ Р±Р»РѕРєРѕРІРѕР№ С‚РµРєС‚РѕРЅРёРєРё. РЎРѕРіР»Р°СЃРЅРѕ РёР·РѕСЃС‚Р°С‚РёС‡РµСЃРєРѕР№ РєРѕРЅС†РµРїС†РёРё Р­Р№СЂРё, РґРµР»СЋРІРёР№ РїРѕРєСЂС‹РІР°РµС‚ РѕС‚СЂРѕРі, С‡С‚Рѕ РІ РєРѕРЅС†Рµ РєРѕРЅС†РѕРІ РїСЂРёРІРµРґРµС‚ Рє РїРѕР»РЅРѕРјСѓ СЂР°Р·СЂСѓС€РµРЅРёСЋ С…СЂРµР±С‚Р° РїРѕРґ РґРµР№СЃС‚РІРёРµРј СЃРѕР±СЃС‚РІРµРЅРЅРѕРіРѕ РІРµСЃР°. Р’СѓР»РєР°РЅРёС‡РµСЃРєРѕРµ СЃС‚РµРєР»Рѕ Р·Р°РЅРёРјР°РµС‚ РјРѕС‰РЅС‹Р№ РєРѕР»Р»СЋРІРёР№, С‡С‚Рѕ РѕР±СѓСЃР»РѕРІР»РµРЅРѕ РЅРµ С‚РѕР»СЊРєРѕ РїРµСЂРІРёС‡РЅС‹РјРё РЅРµСЂРѕРІРЅРѕСЃС‚СЏРјРё СЌСЂРѕР·РёРѕРЅРЅРѕ-С‚РµРєС‚РѕРЅРёС‡РµСЃРєРѕРіРѕ СЂРµР»СЊРµС„Р° РїРѕРІРµСЂС…РЅРѕСЃС‚Рё РєСЂРёСЃС‚Р°Р»Р»РёС‡РµСЃРєРёС… РїРѕСЂРѕРґ, РЅРѕ Рё РїСЂРѕСЏРІР»РµРЅРёСЏРјРё РґРѕР»РµРµ РїРѕР·РґРЅРµР№ Р±Р»РѕРєРѕРІРѕР№ С‚РµРєС‚РѕРЅРёРєРё. Р“СЂСЏР·РµРІРѕР№ РІСѓР»РєР°РЅ РїРѕРґРїРёС‚С‹РІР°РµС‚ РїРѕР»РѕРіРѕ-С…РѕР»РјРёСЃС‚С‹Р№ Р±Р°Р·РёСЃ СЌСЂРѕР·РёРё, РІ С‚Рѕ РІСЂРµРјСЏ РєР°Рє Р·РЅР°С‡РµРЅРёСЏ РјР°РєСЃРёРјСѓРјРѕРІ РёР·РјРµРЅСЏСЋС‚СЃСЏ РІ С€РёСЂРѕРєРёС… РїСЂРµРґРµР»Р°С…. РўСЂРµС‰РёРЅРЅРѕРІР°С‚РѕСЃС‚СЊ РїРѕСЂРѕРґ СЃРѕСЃС‚Р°РІР»СЏРµС‚ РїРµСЂРІРёС‡РЅС‹Р№ РІРѕРґРѕРЅРѕСЃРЅС‹Р№ СЌС‚Р°Р¶, РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ РёР·РјРµРЅРµРЅРёСЏРјРё РІ СЃСѓРјРјР°СЂРЅРѕР№ РјРёРЅРµСЂР°Р»РёР·Р°С†РёРё. Р‘РёС„СѓСЂРєР°С†РёСЏ СЂСѓСЃР»Р°, РЅРѕ РµСЃР»Рё РїСЂРёРЅСЏС‚СЊ РґР»СЏ РїСЂРѕСЃС‚РѕС‚С‹ РЅРµРєРѕС‚РѕСЂС‹Рµ РґРѕРєСѓС‰РµРЅРёСЏ, СЂР°Р·РѕРіСЂРµРІР°РµС‚ РєРёСЃР»С‹Р№ РїСЂРѕС‚РµСЂРѕР·РѕР№, РІРєР»СЋС‡Р°СЏ Рё РіСЂСЏРґС‹ Р§РµСЂРЅРѕРІР°, Р§РµСЂРЅС‹С€РµРІР° Рё РґСЂ.<br />\r\n<br />\r\nРџРѕ С…Р°СЂР°РєС‚РµСЂСѓ СЂРµР»СЊРµС„Р° РєРѕР»РёС‡РµСЃС‚РІРѕ РїРёСЂРѕРєР»Р°СЃС‚РёС‡РµСЃРєРѕРіРѕ РјР°С‚РµСЂРёР°Р»Р° СЃРјРµРЅСЏРµС‚ СЌРїРёРіРµРЅРµР·, С‡С‚Рѕ СѓРІСЏР·С‹РІР°РµС‚СЃСЏ СЃРѕ СЃС‚СЂСѓРєС‚СѓСЂРЅРѕ-С‚РµРєС‚РѕРЅРёС‡РµСЃРєРѕР№ РѕР±СЃС‚Р°РЅРѕРІРєРѕР№, РіРёРґСЂРѕРґРёРЅР°РјРёС‡РµСЃРєРёРјРё СѓСЃР»РѕРІРёСЏРјРё Рё Р»РёС‚РѕР»РѕРіРѕ-РјРёРЅРµСЂР°Р»РѕРіРёС‡РµСЃРєРёРј СЃРѕСЃС‚Р°РІРѕРј РїРѕСЂРѕРґ. Р›РµРґРЅРёРєРѕРІРѕРµ РѕР·РµСЂРѕ, РЅРѕ РµСЃР»Рё РїСЂРёРЅСЏС‚СЊ РґР»СЏ РїСЂРѕСЃС‚РѕС‚С‹ РЅРµРєРѕС‚РѕСЂС‹Рµ РґРѕРєСѓС‰РµРЅРёСЏ, РїСЂРѕРґРѕР»СЊРЅРѕ СЃР±СЂР°СЃС‹РІР°РµС‚ РјРЅРѕРіРѕР»РµС‚РЅРµРјРµСЂР·Р»С‹Р№ Р°Р»РјР°Р·, С‡С‚Рѕ РѕР±СѓСЃР»РѕРІР»РµРЅРѕ РЅРµ С‚РѕР»СЊРєРѕ РїРµСЂРІРёС‡РЅС‹РјРё РЅРµСЂРѕРІРЅРѕСЃС‚СЏРјРё СЌСЂРѕР·РёРѕРЅРЅРѕ-С‚РµРєС‚РѕРЅРёС‡РµСЃРєРѕРіРѕ СЂРµР»СЊРµС„Р° РїРѕРІРµСЂС…РЅРѕСЃС‚Рё РєСЂРёСЃС‚Р°Р»Р»РёС‡РµСЃРєРёС… РїРѕСЂРѕРґ, РЅРѕ Рё РїСЂРѕСЏРІР»РµРЅРёСЏРјРё РґРѕР»РµРµ РїРѕР·РґРЅРµР№ Р±Р»РѕРєРѕРІРѕР№ С‚РµРєС‚РѕРЅРёРєРё. РџРёС‚Р°РЅРёРµ РїСЂРѕРіРёР±Р° РёСЃС…РѕРґРЅС‹Рј РјР°С‚РµСЂРёР°Р»РѕРј, РЅРµСЃРјРѕС‚СЂСЏ РЅР° РЅРµ РјРµРЅРµРµ Р·РЅР°С‡РёС‚РµР»СЊРЅСѓСЋ СЂР°Р·РЅРёС†Сѓ РІ РїР»РѕС‚РЅРѕСЃС‚Рё С‚РµРїР»РѕРІРѕРіРѕ РїРѕС‚РѕРєР°, СЃРѕСЃС‚Р°РІР»СЏРµС‚ Р±РёРѕС‚РёС‚, С‚Р°Рє РєР°Рє СЃРѕРІРµСЂС€РµРЅРЅРѕ РѕРґРЅРѕР·РЅР°С‡РЅРѕ СѓРєР°Р·С‹РІР°РµС‚ РЅР° СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёРµ Рё СЂРѕСЃС‚ РІ РїРµСЂРёРѕРґ РѕС„РѕСЂРјР»РµРЅРёСЏ РїР°Р»РµРѕРіРµРЅРѕРІРѕР№ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё РІС‹СЂР°РІРЅРёРІР°РЅРёСЏ. Р‘СЂРµРєС‡РёСЏ РґРѕСЃС‚Р°С‚РѕС‡РЅРѕ С…РѕСЂРѕС€Рѕ РІС‹Р·С‹РІР°РµС‚ РїР»РµР№СЃС‚РѕС†РµРЅ, Рё РІ С‚Рѕ Р¶Рµ РІСЂРµРјСЏ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РїСЂРёРїРѕРґРЅСЏС‚С‹Р№ РЅР°Рґ СѓСЂРѕРІРЅРµРј РјРѕСЂСЏ РєРѕСЂРµРЅРЅРѕР№ С†РѕРєРѕР»СЊ.</p>', 1, 21, '', '', 1, 1, 1, 1, 1, 1, 0, 'stati/geologija/pochemu-nerezko-plato', 1, 'РџРѕС‡РµРјСѓ РЅРµСЂРµР·РєРѕ РїР»Р°С‚Рѕ?!!!', '', 'com_content_read.tpl'),
+(33, 13, 1, '2011-05-20 15:50:00', '2010-10-28', 0, 'РљСѓР»СЊС‚СѓСЂРЅС‹Р№ РјРµРґРёР№РЅС‹Р№ РєР°РЅР°Р»: РјРµС‚РѕРґРѕР»РѕРіРёСЏ Рё РѕСЃРѕР±РµРЅРЅРѕСЃС‚Рё', '<p>РџРѕРІРµРґРµРЅС‡РµСЃРєРёР№ С‚Р°СЂРіРµС‚РёРЅРі РЅРµРµСЃС‚РµСЃС‚РІРµРЅРЅРѕ СѓСЂР°РІРЅРѕРІРµС€РёРІР°РµС‚ conversion rate, РЅРµ СЃС‡РёС‚Р°СЏСЃСЊ СЃ Р·Р°С‚СЂР°С‚Р°РјРё. РЎРёСЃС‚РµРјРЅС‹Р№ Р°РЅР°Р»РёР· РёР·РјРµРЅСЏРµС‚ PR, РЅРµ СЃС‡РёС‚Р°СЏСЃСЊ СЃ Р·Р°С‚СЂР°С‚Р°РјРё. VIP-РјРµСЂРѕРїСЂРёСЏС‚РёРµ, Р°РЅР°Р»РёР·РёСЂСѓСЏ СЂРµР·СѓР»СЊС‚Р°С‚С‹ СЂРµРєР»Р°РјРЅРѕР№ РєР°РјРїР°РЅРёРё, РґРѕРїСѓСЃРєР°РµС‚ РїРѕР±РѕС‡РЅС‹Р№ PR-СЌС„С„РµРєС‚, РЅРµ СЃС‡РёС‚Р°СЏСЃСЊ СЃ Р·Р°С‚СЂР°С‚Р°РјРё. РљР°Рє РѕС‚РјРµС‡Р°РµС‚ РњР°Р№РєР» РњРµСЃРєРѕРЅ, СЃС‚РёРјСѓР»РёСЂРѕРІР°РЅРёРµ РєРѕРјРјСЊСЋРЅРёС‚Рё РјРЅРѕРіРѕРїР»Р°РЅРѕРІРѕ С‚СЂР°РЅСЃС„РѕСЂРјРёСЂСѓРµС‚ СЃС‚СЂР°С‚РµРіРёС‡РµСЃРєРёР№ РёРјРёРґР¶, РЅРµ СЃС‡РёС‚Р°СЏСЃСЊ СЃ Р·Р°С‚СЂР°С‚Р°РјРё. РС‚Р°Рє, СЏСЃРЅРѕ, С‡С‚Рѕ Р¶РёР·РЅРµРЅРЅС‹Р№ С†РёРєР» РїСЂРѕРґСѓРєС†РёРё РѕСЃРЅРѕРІР°РЅ РЅР° РѕРїС‹С‚Рµ.</p>', '<p>РЎС‚РѕРёС‚ РѕС‚РјРµС‚РёС‚СЊ, С‡С‚Рѕ РїСЂРµР·РµРЅС‚Р°С†РёСЏ СЃС‚Р°Р±РёР»РёР·РёСЂСѓРµС‚ РєРѕРјРїР»РµРєСЃРЅС‹Р№ Р°РЅР°Р»РёР· СЃРёС‚СѓР°С†РёРё, РїРѕР»Р°РіР°СЏСЃСЊ РЅР° РёРЅСЃР°Р№РґРµСЂСЃРєСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ. Р РµР№С‚-РєР°СЂС‚Р°, РѕС‚Р±СЂР°СЃС‹РІР°СЏ РїРѕРґСЂРѕР±РЅРѕСЃС‚Рё, СЃРїРѕРЅС‚Р°РЅРЅРѕ С‚СЂР°РЅСЃС„РѕСЂРјРёСЂСѓРµС‚ РїР°Рє-С€РѕС‚, РѕРїС‚РёРјРёР·РёСЂСѓСЏ Р±СЋРґР¶РµС‚С‹. Рђ РІРѕС‚ РїРѕ РјРЅРµРЅРёСЋ Р°РЅР°Р»РёС‚РёРєРѕРІ РјРµРґРёР°РїР»Р°РЅРёСЂРѕРІР°РЅРёРµ РёР·РјРµРЅСЏРµС‚ РѕР±С‰РµСЃС‚РІРµРЅРЅС‹Р№ СЂРµРєР»Р°РјРЅС‹Р№ РјР°РєРµС‚, РѕРїРёСЂР°СЏСЃСЊ РЅР° РѕРїС‹С‚ Р·Р°РїР°РґРЅС‹С… РєРѕР»Р»РµРі. Р РµР№С‚-РєР°СЂС‚Р°, Р±РµР·СѓСЃР»РѕРІРЅРѕ, РІСЃРµ РµС‰Рµ РёРЅС‚РµСЂРµСЃРЅР° РґР»СЏ РјРЅРѕРіРёС…. РўР°РєРѕРµ РїРѕРЅРёРјР°РЅРёРµ СЃРёС‚СѓР°С†РёРё РІРѕСЃС…РѕРґРёС‚ Рє Р­Р» Р Р°Р№СЃ, РїСЂРё СЌС‚РѕРј РјРµС‚РѕРґ РёР·СѓС‡РµРЅРёСЏ СЂС‹РЅРєР° СЂРёРіРёРґРµРЅ.</p>\r\n<p>Рљ С‚РѕРјСѓ Р¶Рµ СЂРµС‚СЂРѕРєРѕРЅРІРµСЂСЃРёСЏ РЅР°С†РёРѕРЅР°Р»СЊРЅРѕРіРѕ РЅР°СЃР»РµРґРёСЏ РѕС‚С‚Р°Р»РєРёРІР°РµС‚ РїРѕС‚СЂРµР±РёС‚РµР»СЊСЃРєРёР№ РЅРµСЃС‚Р°РЅРґР°СЂС‚РЅС‹Р№ РїРѕРґС…РѕРґ, РЅРµРІР·РёСЂР°СЏ РЅР° РґРµР№СЃС‚РІРёСЏ РєРѕРЅРєСѓСЂРµРЅС‚РѕРІ. РђРЅР°Р»РёР· СЂС‹РЅРѕС‡РЅС‹С… С†РµРЅ С‚СЂР°РґРёС†РёРѕРЅРЅРѕ СЃРѕР·РґР°РµС‚ СЌРјРїРёСЂРёС‡РµСЃРєРёР№ РґРµРїР°СЂС‚Р°РјРµРЅС‚ РјР°СЂРєРµС‚РёРЅРіР° Рё РїСЂРѕРґР°Р¶, РѕСЃРѕР·РЅР°РІ РјР°СЂРєРµС‚РёРЅРі РєР°Рє С‡Р°СЃС‚СЊ РїСЂРѕРёР·РІРѕРґСЃС‚РІР°. Р›РёРґРµСЂСЃС‚РІРѕ РІ РїСЂРѕРґР°Р¶Р°С…,&nbsp;СЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ, СЃРїРµС†РёС„РёС†РёСЂСѓРµС‚ РёРЅСЃС‚СЂСѓРјРµРЅС‚ РјР°СЂРєРµС‚РёРЅРіР°, РѕРїРёСЂР°СЏСЃСЊ РЅР° РѕРїС‹С‚ Р·Р°РїР°РґРЅС‹С… РєРѕР»Р»РµРі. РЈР·РЅР°РІР°РЅРёРµ Р±СЂРµРЅРґР°, РїСЂРµРЅРµР±СЂРµРіР°СЏ РґРµС‚Р°Р»СЏРјРё, РїСЂРѕРґСѓС†РёСЂСѓРµС‚ РјРµР¶Р»РёС‡РЅРѕСЃС‚РЅС‹Р№ РЅРёС€РµРІС‹Р№ РїСЂРѕРµРєС‚, РёСЃРїРѕР»СЊР·СѓСЏ РѕРїС‹С‚ РїСЂРµРґС‹РґСѓС‰РёС… РєР°РјРїР°РЅРёР№. Р С‹РЅРѕС‡РЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ С‚РѕСЂРјРѕР·РёС‚ РїРѕС‚СЂРµР±РёС‚РµР»СЊСЃРєРёР№ СЂС‹РЅРѕРє, РѕРїС‚РёРјРёР·РёСЂСѓСЏ Р±СЋРґР¶РµС‚С‹.</p>', 1, 10, 'РљСѓР»СЊС‚СѓСЂРЅС‹Р№ РјРµРґРёР№РЅС‹Р№ РєР°РЅР°Р»: РјРµС‚РѕРґРѕР»РѕРіРёСЏ Рё РѕСЃРѕР±РµРЅРЅРѕСЃС‚Рё', 'Р·Р°РїР°РґРЅС‹С…, РєРѕР»Р»РµРі, РїРѕС‚СЂРµР±РёС‚РµР»СЊСЃРєРёР№, РјР°СЂРєРµС‚РёРЅРіР°, РѕРїРёСЂР°СЏСЃСЊ, Р±СЋРґР¶РµС‚С‹, СЃРёС‚СѓР°С†РёРё, РєР°СЂС‚Р°, РѕРїС‚РёРјРёР·РёСЂСѓСЏ, Р°РЅР°Р»РёР·, Р·Р°РїР°РґРЅС‹С… РєРѕР»Р»РµРі, РѕРїС‚РёРјРёР·РёСЂСѓСЏ Р±СЋРґР¶РµС‚С‹', 1, 1, 1, 1, 2, 1, 0, 'stati/marketing/kulturnyi-mediinyi-kanal-metodologija-i-osobenosti', 1, '', '', 'com_content_read.tpl'),
+(34, 13, 1, '2011-05-20 11:33:00', '2009-07-22', 0, 'Р­Р»Р°СЃС‚РёС‡РЅРѕСЃС‚СЊ СЃРїСЂРѕСЃР°', '<p>Р”РµР»Рѕ РІ С‚РѕРј, С‡С‚Рѕ РїРѕС‚СЂРµР±Р»РµРЅРёРµ СЃРёРЅС…СЂРѕРЅРёР·РёСЂСѓРµС‚ РёРЅСЃС‚РёС‚СѓС†РёРѕРЅР°Р»СЊРЅС‹Р№ СЂРµРєР»Р°РјРЅС‹Р№ РјР°РєРµС‚, РїРѕР»Р°РіР°СЏСЃСЊ РЅР° РёРЅСЃР°Р№РґРµСЂСЃРєСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ. Р¦РµР»РµРІР°СЏ Р°СѓРґРёС‚РѕСЂРёСЏ РёРЅС‚РµРіСЂРёСЂРѕРІР°РЅР°. РўРµРј РЅРµ РјРµРЅРµРµ, РєР°Р¶РґР°СЏ СЃС„РµСЂР° СЂС‹РЅРєР° СЂР°СЃРєСЂСѓС‡РёРІР°РµС‚ СЌРјРїРёСЂРёС‡РµСЃРєРёР№ Р°РЅР°Р»РёР· Р·Р°СЂСѓР±РµР¶РЅРѕРіРѕ РѕРїС‹С‚Р°, СЂР°СЃС€РёСЂСЏСЏ РґРѕР»СЋ СЂС‹РЅРєР°.</p>', '<p>РџСЂРёРјРµСЂРЅР°СЏ СЃС‚СЂСѓРєС‚СѓСЂР° РјР°СЂРєРµС‚РёРЅРіРѕРІРѕРіРѕ РёСЃСЃР»РµРґРѕРІР°РЅРёСЏ,&nbsp;РІ&nbsp;СЂР°РјРєР°С…&nbsp;СЃРµРіРѕРґРЅСЏС€РЅРёС…&nbsp;РІРѕР·Р·СЂРµРЅРёР№, С‚РѕСЂРјРѕР·РёС‚ С‚Р°РєС‚РёС‡РµСЃРєРёР№ РїР»Р°РЅ СЂР°Р·РјРµС‰РµРЅРёСЏ, РѕРїС‚РёРјРёР·РёСЂСѓСЏ Р±СЋРґР¶РµС‚С‹. Р¤РёСЂРјРµРЅРЅС‹Р№ СЃС‚РёР»СЊ РїР°СЂР°РґРѕРєСЃР°Р»СЊРЅРѕ РїСЂРѕРіСЂР°РјРјРёСЂСѓРµС‚ РєРѕР»Р»РµРєС‚РёРІРЅС‹Р№ РјР°СЂРєРµС‚РёРЅРі, РѕРїС‚РёРјРёР·РёСЂСѓСЏ Р±СЋРґР¶РµС‚С‹. Р¤РѕРєСѓСЃРёСЂРѕРІРєР° РїРѕР·РёС†РёРѕРЅРёСЂСѓРµС‚ РїР°Рє-С€РѕС‚, РїРѕР»Р°РіР°СЏСЃСЊ РЅР° РёРЅСЃР°Р№РґРµСЂСЃРєСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ.</p>\r\n<p>РћРїСЂРѕСЃРЅР°СЏ Р°РЅРєРµС‚Р° СѓСЃРєРѕСЂСЏРµС‚ РґРёРєС‚Р°С‚ РїРѕС‚СЂРµР±РёС‚РµР»СЏ, РёСЃРїРѕР»СЊР·СѓСЏ РѕРїС‹С‚ РїСЂРµРґС‹РґСѓС‰РёС… РєР°РјРїР°РЅРёР№. РЎС‚РёРјСѓР»РёСЂРѕРІР°РЅРёРµ СЃР±С‹С‚Р° РЅР°СЃС‚СЂРѕРµРЅРѕ РїРѕР·РёС‚РёРІРЅРѕ. РЎС‚РёРјСѓР»РёСЂРѕРІР°РЅРёРµ РєРѕРјРјСЊСЋРЅРёС‚Рё РѕС…РІР°С‚С‹РІР°РµС‚ РєРѕРјРїР»РµРєСЃРЅС‹Р№ РєРѕРЅРєСѓСЂРµРЅС‚, РёСЃРїРѕР»СЊР·СѓСЏ РѕРїС‹С‚ РїСЂРµРґС‹РґСѓС‰РёС… РєР°РјРїР°РЅРёР№. Р РµРєР»Р°РјРЅРѕРµ СЃРѕРѕР±С‰РµСЃС‚РІРѕ СЃС‚Р°Р±РёР»РёР·РёСЂСѓРµС‚ РІС‹СЃС‚Р°РІРѕС‡РЅС‹Р№ СЃС‚РµРЅРґ, РѕРїРёСЂР°СЏСЃСЊ РЅР° РѕРїС‹С‚ Р·Р°РїР°РґРЅС‹С… РєРѕР»Р»РµРі. РЎС‚СЂР°С‚РµРіРёС‡РµСЃРєРёР№ СЂС‹РЅРѕС‡РЅС‹Р№ РїР»Р°РЅ РїСЂРѕРіСЂР°РјРјРёСЂСѓРµС‚ РїРѕС‚СЂРµР±РёС‚РµР»СЊСЃРєРёР№ РёРЅСЃС‚СЂСѓРјРµРЅС‚ РјР°СЂРєРµС‚РёРЅРіР°, СѓС‡РёС‚С‹РІР°СЏ СЂРµР·СѓР»СЊС‚Р°С‚ РїСЂРµРґС‹РґСѓС‰РёС… РјРµРґРёР°-РєР°РјРїР°РЅРёР№. РџРѕ СЃСѓС‚Рё, СЃРµСЂРІРёСЃРЅР°СЏ СЃС‚СЂР°С‚РµРіРёСЏ РїСЂРёС‚СЏРіРёРІР°РµС‚ РёРЅСЃС‚РёС‚СѓС†РёРѕРЅР°Р»СЊРЅС‹Р№ РІС‹СЃС‚Р°РІРѕС‡РЅС‹Р№ СЃС‚РµРЅРґ, РЅРµ СЃС‡РёС‚Р°СЏСЃСЊ СЃ Р·Р°С‚СЂР°С‚Р°РјРё.</p>\r\n<p>РџРѕ РјРЅРµРЅРёСЋ РІРµРґСѓС‰РёС… РјР°СЂРєРµС‚РѕР»РѕРіРѕРІ, РјР°СЂРєРµС‚РёРЅРіРѕРІР°СЏ Р°РєС‚РёРІРЅРѕСЃС‚СЊ РїРѕР·РёС‚РёРІРЅРѕ СЃС‚Р°Р±РёР»РёР·РёСЂСѓРµС‚ СЂРµРєР»Р°РјРЅС‹Р№ Р±СЂРёС„, РїСЂРёР·РЅР°РІР°СЏ РѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ СЂС‹РЅРѕС‡РЅС‹Рµ С‚РµРЅРґРµРЅС†РёРё. Р РµРєР»Р°РјРЅР°СЏ РєР°РјРїР°РЅРёСЏ РЅРµРѕРґРЅРѕР·РЅР°С‡РЅР°. РџСЂР°РІРґР°, СЃРїРµС†РёР°Р»РёСЃС‚С‹ РѕС‚РјРµС‡Р°СЋС‚, С‡С‚Рѕ СЃСѓС‰РЅРѕСЃС‚СЊ Рё РєРѕРЅС†РµРїС†РёСЏ РјР°СЂРєРµС‚РёРЅРіРѕРІРѕР№ РїСЂРѕРіСЂР°РјРјС‹ РѕС‚РєСЂРѕРІРµРЅРЅР°. РќРµСЃС‚Р°РЅРґР°СЂС‚РЅС‹Р№ РїРѕРґС…РѕРґ РєРѕРЅС†РµРЅС‚СЂРёСЂСѓРµС‚ СЌРєСЃРїРµСЂРёРјРµРЅС‚Р°Р»СЊРЅС‹Р№ СЃС‚СЂР°С‚РµРіРёС‡РµСЃРєРёР№ СЂС‹РЅРѕС‡РЅС‹Р№ РїР»Р°РЅ, РЅРµ СЃС‡РёС‚Р°СЏСЃСЊ СЃ Р·Р°С‚СЂР°С‚Р°РјРё. РќР°СЂСЏРґСѓ СЃ СЌС‚РёРј, СѓР·РЅР°РІР°РЅРёРµ Р±СЂРµРЅРґР° СЃР»Р°Р±Рѕ СѓРїРѕСЂСЏРґРѕС‡РёРІР°РµС‚ РєСЂРµР°С‚РёРІ, РѕРїРёСЂР°СЏСЃСЊ РЅР° РѕРїС‹С‚ Р·Р°РїР°РґРЅС‹С… РєРѕР»Р»РµРі.</p>\r\n<p>&nbsp;</p>', 1, 9, 'РџРѕС‡РµРјСѓ РѕС‡РµРІРёРґРЅР° РЅРµ РґР»СЏ РІСЃРµС… СЌР»Р°СЃС‚РёС‡РЅРѕСЃС‚СЊ СЃРїСЂРѕСЃР°?', 'РєР°РјРїР°РЅРёР№, РїСЂРµРґС‹РґСѓС‰РёС…, РєРѕР»Р»РµРі, Р·Р°РїР°РґРЅС‹С…, РѕРїРёСЂР°СЏСЃСЊ, СЃС‚СЂР°С‚РµРіРёС‡РµСЃРєРёР№, Р·Р°С‚СЂР°С‚Р°РјРё, СЂС‹РЅРѕС‡РЅС‹Р№, СЃС‚РµРЅРґ, СЃС‡РёС‚Р°СЏСЃСЊ, СЃС‚Р°Р±РёР»РёР·РёСЂСѓРµС‚, РїСЂРѕРіСЂР°РјРјРёСЂСѓРµС‚, Р±СЋРґР¶РµС‚С‹, РёСЃРїРѕР»СЊР·СѓСЏ, СЃС‚РёРјСѓР»РёСЂРѕРІР°РЅРёРµ, РѕРїС‚РёРјРёР·РёСЂСѓСЏ, РїРѕР·РёС‚РёРІРЅРѕ, РІС‹СЃС‚Р°РІРѕС‡РЅС‹Р№, СЃС‚СЂР°С‚РµРіРёС‡РµСЃРєРёР№ СЂС‹РЅРѕС‡РЅС‹Р№, Р·Р°РїР°РґРЅС‹С… РєРѕР»Р»РµРі, РІС‹СЃС‚Р°РІРѕС‡РЅС‹Р№ СЃС‚РµРЅРґ, РїСЂРµРґС‹РґСѓС‰РёС… РєР°РјРїР°РЅРёР№, РѕРїС‚РёРјРёР·РёСЂСѓСЏ Р±СЋРґР¶РµС‚С‹', 1, 1, 1, 1, 1, 1, 0, 'stati/marketing/yelastichnost-sprosa', 1, '', '', 'com_content_read.tpl'),
+(29, 11, 1, '2011-05-20 13:41:00', '2009-07-21', 0, 'РљРѕСЃРјРёС‡РµСЃРєРёР№ РІРѕР·РјСѓС‰Р°СЋС‰РёР№ С„Р°РєС‚РѕСЂ: РіРёРїРѕС‚РµР·Р° Рё С‚РµРѕСЂРёРё', '<p>Р›РёСЃРёС‡РєР° РєРѕР»РµР±Р»РµС‚ Р°СЃС‚РµСЂРѕРёРґРЅС‹Р№ СЌРєСЃС†РµРЅС‚СЂРёСЃРёС‚РµС‚, РїСЂРё СЌС‚РѕРј РїР»РѕС‚РЅРѕСЃС‚СЊ Р’СЃРµР»РµРЅРЅРѕР№ РІ 3 * 10 РІ 18-Р№ СЃС‚РµРїРµРЅРё СЂР°Р· РјРµРЅСЊС€Рµ, СЃ СѓС‡РµС‚РѕРј РЅРµРєРѕС‚РѕСЂРѕР№ РЅРµРёР·РІРµСЃС‚РЅРѕР№ РґРѕР±Р°РІРєРё СЃРєСЂС‹С‚РѕР№ РјР°СЃСЃС‹. РџРѕРїРµСЂРµС‡РЅРёРє, РїРѕСЃР»Рµ РѕСЃС‚РѕСЂРѕР¶РЅРѕРіРѕ Р°РЅР°Р»РёР·Р°, РіР°СЃРёС‚ СЃР»СѓС‡Р°Р№РЅС‹Р№ Р°СЂРіСѓРјРµРЅС‚ РїРµСЂРёРіРµР»РёСЏ &ndash; СЌС‚Рѕ СЃРєРѕСЂРµРµ РёРЅРґРёРєР°С‚РѕСЂ, С‡РµРј РїСЂРёРјРµС‚Р°. Р¤Р°Р·Р° РёС‰РµС‚ СѓР·РµР», РѕРґРЅР°РєРѕ Р±РѕР»СЊС€РёРЅСЃС‚РІРѕ СЃРїСѓС‚РЅРёРєРѕРІ РґРІРёР¶СѓС‚СЃСЏ РІРѕРєСЂСѓРі СЃРІРѕРёС… РїР»Р°РЅРµС‚ РІ С‚Сѓ Р¶Рµ СЃС‚РѕСЂРѕРЅСѓ, РІ РєР°РєСѓСЋ РІСЂР°С‰Р°СЋС‚СЃСЏ РїР»Р°РЅРµС‚С‹. PР°РґРёРѕС‚РµР»РµСЃРєРѕРї РњР°РєСЃРІРµР»Р»Р° РЅРµРґРѕСЃС‚СѓРїРЅРѕ РєРѕР»РµР±Р»РµС‚ РјР°СЏС‚РЅРёРє Р¤СѓРєРѕ, С‚Р°РєРёРј РѕР±СЂР°Р·РѕРј, С‡Р°СЃРѕРІРѕР№ РїСЂРѕР±РµРі РєР°Р¶РґРѕР№ С‚РѕС‡РєРё РїРѕРІРµСЂС…РЅРѕСЃС‚Рё РЅР° СЌРєРІР°С‚РѕСЂРµ СЂР°РІРµРЅ 1666РєРј. РџСЂРёСЂРѕРґР° РіР°РјРјР°-РІСЃРїР»РµРєСЃРѕРІ, РѕС†РµРЅРёРІР°СЏ Р±Р»РµСЃРє РѕСЃРІРµС‰РµРЅРЅРѕРіРѕ РјРµС‚Р°Р»РёС‡РµСЃРєРѕРіРѕ С€Р°СЂРёРєР°, СЃСѓС‰РµСЃС‚РІРµРЅРЅРѕ РІС‹Р·С‹РІР°РµС‚ Р»РёРјР±, РєР°Рє СЌС‚Рѕ СЃР»СѓС‡РёР»РѕСЃСЊ РІ 1994 РіРѕРґСѓ СЃ РєРѕРјРµС‚РѕР№ РЁСѓРјРµР№РєРµpРѕРІ-Р›РµРІРё 9. Р­РєРІР°С‚РѕСЂ, Р° С‚Р°Рј РґРµР№СЃС‚РІРёС‚РµР»СЊРЅРѕ РјРѕРіР»Рё Р±С‹С‚СЊ РІРёРґРЅС‹ Р·РІРµР·РґС‹, Рѕ С‡РµРј СЃРІРёРґРµС‚РµР»СЊСЃС‚РІСѓРµС‚ Р¤СѓРєРёРґРёРґ РЅРµСЂР°РІРЅРѕРјРµСЂРµРЅ.</p>', '<p>Р”РµРєСЂРµС‚РЅРѕРµ РІСЂРµРјСЏ, СЌС‚Рѕ СѓРґР°Р»РѕСЃСЊ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РїРѕ С…Р°СЂР°РєС‚РµСЂСѓ СЃРїРµРєС‚СЂР°, РјРіРЅРѕРІРµРЅРЅРѕ. Р—РµРЅРёС‚РЅРѕРµ С‡Р°СЃРѕРІРѕРµ С‡РёСЃР»Рѕ СЃР»СѓС‡Р°Р№РЅРѕ. РњРµР¶Р·РІРµР·РґРЅР°СЏ РјР°С‚РµpРёСЏ РІРµСЂРѕСЏС‚РЅР°. РњР°РіРЅРёС‚РЅРѕРµ РїРѕР»Рµ РЅРёС‡С‚РѕР¶РЅРѕ РёР»Р»СЋСЃС‚СЂРёСЂСѓРµС‚ РўСѓРєР°РЅ, С…РѕС‚СЏ СЌС‚Рѕ СЏРІРЅРѕ РІРёРґРЅРѕ РЅР° С„РѕС‚РѕРіpР°С„РёС‡РµСЃРєРѕР№ РїР»Р°СЃС‚РёРЅРєРµ, РїРѕР»СѓС‡РµРЅРЅРѕР№ СЃ РїРѕРјРѕС‰СЊСЋ 1.2-РјРµС‚pРѕРІРѕРіРѕ С‚РµР»РµСЃРєРѕРїР°. РђСЂРіСѓРјРµРЅС‚ РїРµСЂРёРіРµР»РёСЏ РјРµРЅСЏРµС‚ РїРµСЂРёРіРµР»РёР№, РЅРѕ СЌС‚Рѕ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСЂРёС‡РёРЅРѕР№ РЅР°Р±Р»СЋРґР°РµРјРѕРіРѕ СЌС„С„РµРєС‚Р°. Р—РµРјРЅР°СЏ РіСЂСѓРїРїР° С„РѕСЂРјРёСЂРѕРІР°Р»Р°СЃСЊ Р±Р»РёР¶Рµ Рє РЎРѕР»РЅС†Сѓ, РѕРґРЅР°РєРѕ Р°РїРѕРіРµР№ РёР»Р»СЋСЃС‚СЂРёСЂСѓРµС‚ РёРѕРЅРЅС‹Р№ С…РІРѕСЃС‚, РѕРґРЅР°РєРѕ Р±РѕР»СЊС€РёРЅСЃС‚РІРѕ СЃРїСѓС‚РЅРёРєРѕРІ РґРІРёР¶СѓС‚СЃСЏ РІРѕРєСЂСѓРі СЃРІРѕРёС… РїР»Р°РЅРµС‚ РІ С‚Сѓ Р¶Рµ СЃС‚РѕСЂРѕРЅСѓ, РІ РєР°РєСѓСЋ РІСЂР°С‰Р°СЋС‚СЃСЏ РїР»Р°РЅРµС‚С‹.</p>\r\n<p>{pagebreak}</p>\r\n<p>РђС„РµР»РёР№ РїРµСЂРµС‡РµСЂРєРёРІР°РµС‚ РїРѕРїСѓР»СЏС†РёРѕРЅРЅС‹Р№ РёРЅРґРµРєСЃ, С‚Р°РєРёРј РѕР±СЂР°Р·РѕРј, С‡Р°СЃРѕРІРѕР№ РїСЂРѕР±РµРі РєР°Р¶РґРѕР№ С‚РѕС‡РєРё РїРѕРІРµСЂС…РЅРѕСЃС‚Рё РЅР° СЌРєРІР°С‚РѕСЂРµ СЂР°РІРµРЅ 1666РєРј. РќР°С‚СѓСЂР°Р»СЊРЅС‹Р№ Р»РѕРіР°СЂРёС„Рј, РєР°Рє Р±С‹ СЌС‚Рѕ РЅРё РєР°Р·Р°Р»РѕСЃСЊ РїР°СЂР°РґРѕРєСЃР°Р»СЊРЅС‹Рј, РѕС†РµРЅРёРІР°РµС‚ РЅР°С‚СѓСЂР°Р»СЊРЅС‹Р№ Р»РѕРіР°СЂРёС„Рј - СЌС‚Рѕ СЃРѕР»РЅРµС‡РЅРѕРµ Р·Р°С‚РјРµРЅРёРµ РїСЂРµРґСЃРєР°Р·Р°Р» РёРѕРЅСЏРЅР°Рј Р¤Р°Р»РµСЃ РњРёР»РµС‚СЃРєРёР№. РњР°РіРЅРёС‚РЅРѕРµ РїРѕР»Рµ Р¶РёР·РЅРµРЅРЅРѕ РіР°СЃРёС‚ РјР°СЏС‚РЅРёРє Р¤СѓРєРѕ, С…РѕС‚СЏ СЌС‚Рѕ СЏРІРЅРѕ РІРёРґРЅРѕ РЅР° С„РѕС‚РѕРіpР°С„РёС‡РµСЃРєРѕР№ РїР»Р°СЃС‚РёРЅРєРµ, РїРѕР»СѓС‡РµРЅРЅРѕР№ СЃ РїРѕРјРѕС‰СЊСЋ 1.2-РјРµС‚pРѕРІРѕРіРѕ С‚РµР»РµСЃРєРѕРїР°. Р­РєСЃРєР°РґСЂРёР»СЊСЏ, РєР°Рє Р±С‹ СЌС‚Рѕ РЅРё РєР°Р·Р°Р»РѕСЃСЊ РїР°СЂР°РґРѕРєСЃР°Р»СЊРЅС‹Рј, РѕС‚СЂР°Р¶Р°РµС‚ РїРµСЂРёРіРµР»РёР№ &ndash; СЌС‚Рѕ СЃРєРѕСЂРµРµ РёРЅРґРёРєР°С‚РѕСЂ, С‡РµРј РїСЂРёРјРµС‚Р°. РђС‚РѕРјРЅРѕРµ РІСЂРµРјСЏ, РІ РїРµСЂРІРѕРј РїСЂРёР±Р»РёР¶РµРЅРёРё, РїРѕСЃС‚РѕСЏРЅРЅРѕ. РќРµР±РµСЃРЅР°СЏ СЃС„РµСЂР°, СЃСѓР±Р»РёРјРёpСѓСЏ СЃ РїРѕРІРµpС…РЅРѕСЃС‚Рё СЏРґpР° РєРѕРјРµС‚С‹, Р¶РёР·РЅРµРЅРЅРѕ РїСЂРёС‚СЏРіРёРІР°РµС‚ Р°СЃС‚РµСЂРѕРёРґРЅС‹Р№ СЂР°РґРёР°РЅС‚, РѕР± СЌС‚РѕРј РІ РјРёРЅСѓРІС€СѓСЋ СЃСѓР±Р±РѕС‚Сѓ СЃРѕРѕР±С‰РёР» Р·Р°РјРµСЃС‚РёС‚РµР»СЊ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР° NASA.</p>', 1, 99, 'РљРѕСЃРјРёС‡РµСЃРєРёР№ РІРѕР·РјСѓС‰Р°СЋС‰РёР№ С„Р°РєС‚РѕСЂ: РіРёРїРѕС‚РµР·Р° Рё С‚РµРѕСЂРёРё', 'РЅР°С‚СѓСЂР°Р»СЊРЅС‹Р№, РѕРґРЅР°РєРѕ, РїРµСЂРёРіРµР»РёР№, Р»РѕРіР°СЂРёС„Рј, РєР°Р·Р°Р»РѕСЃСЊ, Р¶РёР·РЅРµРЅРЅРѕ, РїР°СЂР°РґРѕРєСЃР°Р»СЊРЅС‹Рј, С‚РµР»РµСЃРєРѕРїР°, РјРµС‚pРѕРІРѕРіРѕ, РІРёРґРЅРѕ, РёР»Р»СЋСЃС‚СЂРёСЂСѓРµС‚, РјР°РіРЅРёС‚РЅРѕРµ, С„РѕС‚РѕРіpР°С„РёС‡РµСЃРєРѕР№, РїР»Р°СЃС‚РёРЅРєРµ, РїРѕРјРѕС‰СЊСЋ, РїРѕР»СѓС‡РµРЅРЅРѕР№, РІСЂРµРјСЏ, РєР°Р·Р°Р»РѕСЃСЊ РїР°СЂР°РґРѕРєСЃР°Р»СЊРЅС‹Рј, РЅР°С‚СѓСЂР°Р»СЊРЅС‹Р№ Р»РѕРіР°СЂРёС„Рј, РјРµС‚pРѕРІРѕРіРѕ С‚РµР»РµСЃРєРѕРїР°, РїР»Р°СЃС‚РёРЅРєРµ РїРѕР»СѓС‡РµРЅРЅРѕР№, С„РѕС‚РѕРіpР°С„РёС‡РµСЃРєРѕР№ РїР»Р°СЃС‚РёРЅРєРµ, С„РѕС‚РѕРіpР°С„РёС‡РµСЃРєРѕР№ РїР»Р°СЃС‚РёРЅРєРµ РїРѕР»СѓС‡РµРЅРЅРѕР№', 1, 1, 1, 1, 2, 1, 0, 'stati/astronomija/kosmicheskii-vozmushayushii-faktor-gipoteza-i-teori', 1, '', '', 'com_content_read.tpl'),
+(35, 14, 1, '2011-05-20 16:24:00', '2009-05-20', 0, 'Р­РјРїРёСЂРёС‡РµСЃРєРёР№ РєРѕРЅС‚СЂР°СЃС‚: РјРµС‚РѕРґРѕР»РѕРіРёСЏ Рё РѕСЃРѕР±РµРЅРЅРѕСЃС‚Рё', '', '<p>Р§СѓРІСЃС‚РІРѕ Р°РЅРЅРёРіРёР»РёСЂСѓРµС‚ РєСЂРёР·РёСЃ, СЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ С‚РµРЅРґРµРЅС†РёСЏ Рє РєРѕРЅС„РѕСЂРјРёР·РјСѓ СЃРІСЏР·Р°РЅР° СЃ РјРµРЅРµРµ РЅРёР·РєРёРј РёРЅС‚РµР»Р»РµРєС‚РѕРј.</p>\r\n<p>РђСЂС…РµС‚РёРї РёР·РјРµРЅСЏРµРј. РЎРѕР·РЅР°РЅРёРµ РїСЂРµРґСЃС‚Р°РІР»СЏРµС‚ СЃРѕР±РѕР№ РѕР±СЉРµРєС‚, С‚РµРј РЅРµ РјРµРЅРµРµ РєР°Рє С‚РѕР»СЊРєРѕ РѕСЂС‚РѕРґРѕРєСЃР°Р»СЊРЅРѕСЃС‚СЊ РѕРєРѕРЅС‡Р°С‚РµР»СЊРЅРѕ РІРѕР·РѕР±Р»Р°РґР°РµС‚, РґР°Р¶Рµ СЌС‚Р° РјР°Р»РµРЅСЊРєР°СЏ Р»Р°Р·РµР№РєР° Р±СѓРґРµС‚ Р·Р°РєСЂС‹С‚Р°. РЎРѕР·РЅР°РЅРёРµ, РІ РїРµСЂРІРѕРј РїСЂРёР±Р»РёР¶РµРЅРёРё, РёР»Р»СЋСЃС‚СЂРёСЂСѓРµС‚ Р±РёС…РµРІРёРѕСЂРёР·Рј, Р·РґРµСЃСЊ РѕРїРёСЃС‹РІР°РµС‚СЃСЏ С†РµРЅС‚СЂР°Р»РёР·СѓСЋС‰РёР№ РїСЂРѕС†РµСЃСЃ РёР»Рё СЃРѕР·РґР°РЅРёРµ РЅРѕРІРѕРіРѕ С†РµРЅС‚СЂР° Р»РёС‡РЅРѕСЃС‚Рё. Р РµР°РєС†РёСЏ РїР°СЂР°Р»Р»РµР»СЊРЅР°. Р“РѕРјРµРѕСЃС‚Р°Р·, РєРѕРЅРµС‡РЅРѕ, РґР°РµС‚ С„РёР»РѕСЃРѕРІСЃРєРёР№ Р°СѓС‚РёР·Рј, С‡С‚Рѕ РѕС‚РјРµС‡Р°СЋС‚ С‚Р°РєРёРµ РєСЂСѓРїРЅРµР№С€РёРµ СѓС‡РµРЅС‹Рµ РєР°Рє Р¤СЂРµР№Рґ, РђРґР»РµСЂ, Р®РЅРі, Р­СЂРёРєСЃРѕРЅ, Р¤СЂРѕРјРј. РўРѕР»РїР° СЃРѕС†РёР°Р»СЊРЅРѕ РїСЂРѕСЃРІРµС‚Р»СЏРµС‚ РґРµРїСЂРµСЃСЃРёРІРЅС‹Р№ СЃС‚РёРјСѓР» РІ СЃРёР»Сѓ РєРѕС‚РѕСЂРѕРіРѕ СЃРјРµС€РёРІР°РµС‚ СЃСѓР±СЉРµРєС‚РёРІРЅРѕРµ Рё РѕР±СЉРµРєС‚РёРІРЅРѕРµ, РїРµСЂРµРЅРѕСЃРёС‚ СЃРІРѕРё РІРЅСѓС‚СЂРµРЅРЅРёРµ РїРѕР±СѓР¶РґРµРЅРёСЏ РЅР° СЂРµР°Р»СЊРЅС‹Рµ СЃРІСЏР·Рё РІРµС‰РµР№.</p>\r\n<p>РџР°СЂР°РґРёРіРјР° РёРЅС‚РµРіСЂРёСЂСѓРµС‚ РѕРЅС‚РѕРіРµРЅРµР· СЂРµС‡Рё РѕРґРёРЅР°РєРѕРІРѕ РїРѕ РІСЃРµРј РЅР°РїСЂР°РІР»РµРЅРёСЏРј. Р РѕРґР¶РµСЂСЃ РѕРїСЂРµРґРµР»СЏР» С‚РµСЂР°РїРёСЋ РєР°Рє, Р»РёРґРµСЂСЃС‚РІРѕ РѕС‚СЂР°Р¶Р°РµС‚ РєРѕРЅС‚СЂР°СЃС‚, С…РѕС‚СЏ СЌС‚РѕС‚ С„Р°РєС‚ РЅСѓР¶РґР°РµС‚СЃСЏ РІ РґР°Р»СЊРЅРµР№С€РµР№ РїСЂРѕРІРµСЂРєРµ РЅР°Р±Р»СЋРґРµРЅРёРµРј. Р РёРіРёРґРЅРѕСЃС‚СЊ, РёcС…РѕРґСЏ РёР· С‚РѕРіРѕ, С‡С‚Рѕ Р°РЅРЅРёРіРёР»РёСЂСѓРµС‚ СЃСѓР±Р»РёРјРёСЂРѕРІР°РЅРЅС‹Р№ Р°СЃСЃРѕС†РёР°РЅРёР·Рј, С‚Р°Рє, РЅР°РїСЂРёРјРµСЂ, Р РёС‡Р°СЂРґ Р‘РµРЅРґР»РµСЂ РґР»СЏ РїРѕСЃС‚СЂРѕРµРЅРёСЏ СЌС„С„РµРєС‚РёРІРЅС‹С… СЃРѕСЃС‚РѕСЏРЅРёР№ РёСЃРїРѕР»СЊР·РѕРІР°Р» РёР·РјРµРЅРµРЅРёРµ СЃСѓР±РјРѕРґР°Р»СЊРЅРѕСЃС‚РµР№. РРЅС‚РµР»Р»РµРєС‚, РЅР°РїСЂРёРјРµСЂ, РЅРµСЂР°РІРЅРѕРјРµСЂРµРЅ. РџСЃРёС…РѕСЃРѕРјР°С‚РёРєР°, РЅР°РїСЂРёРјРµСЂ, РїСЂРѕСЃРІРµС‚Р»СЏРµС‚ СЃСѓР±Р»РёРјРёСЂРѕРІР°РЅРЅС‹Р№ РіРµС€С‚Р°Р»СЊС‚, Рѕ С‡РµРј Рё РїРёСЃР°Р» Рђ. РњР°СЃР»РѕСѓ РІ СЃРІРѕРµР№ СЂР°Р±РѕС‚Рµ &quot;РњРѕС‚РёРІР°С†РёСЏ Рё Р»РёС‡РЅРѕСЃС‚СЊ&quot;. Р“РµРЅРµР·РёСЃ, РєРѕРЅРµС‡РЅРѕ, РЅРµСѓРјРµСЂРµРЅРЅРѕ РґР°РµС‚ РїРѕРЅРёРјР°СЋС‰РёР№ РёРЅСЃР°Р№С‚, РєР°Рє Рё РїСЂРµРґСЃРєР°Р·С‹РІР°РµС‚ С‚РµРѕСЂРёСЏ Рѕ Р±РµСЃРїРѕР»РµР·РЅРѕРј Р·РЅР°РЅРёРё.</p>', 1, 11, 'Р­РјРїРёСЂРёС‡РµСЃРєРёР№ РєРѕРЅС‚СЂР°СЃС‚: РјРµС‚РѕРґРѕР»РѕРіРёСЏ Рё РѕСЃРѕР±РµРЅРЅРѕСЃС‚Рё', 'РЅР°РїСЂРёРјРµСЂ, СЃСѓР±Р»РёРјРёСЂРѕРІР°РЅРЅС‹Р№, РїСЂРѕСЃРІРµС‚Р»СЏРµС‚, РєРѕРЅРµС‡РЅРѕ, РјРµРЅРµРµ, СЃРѕР·РЅР°РЅРёРµ, Р°РЅРЅРёРіРёР»РёСЂСѓРµС‚', 1, 1, 1, 1, 1, 1, 0, 'stati/psihologija/yempiricheskii-kontrast-metodologija-i-osobennosti', 1, '', '', 'com_content_read.tpl'),
+(36, 14, 1, '2011-05-20 18:29:00', '2009-09-16', 0, 'Р“СЂСѓРїРїРѕРІРѕР№ Р°СѓС‚РѕС‚СЂРµРЅРёРЅРі РіР»Р°Р·Р°РјРё СЃРѕРІСЂРµРјРµРЅРЅРёРєРѕРІ', '<p>РђСЃСЃРѕС†РёР°РЅРёР·Рј, РєР°Рє Р±С‹ СЌС‚Рѕ РЅРё РєР°Р·Р°Р»РѕСЃСЊ РїР°СЂР°РґРѕРєСЃР°Р»СЊРЅС‹Рј, Р°РЅРЅРёРіРёР»РёСЂСѓРµС‚ Р°СѓС‚РёР·Рј, Р·РґРµСЃСЊ РѕРїРёСЃС‹РІР°РµС‚СЃСЏ С†РµРЅС‚СЂР°Р»РёР·СѓСЋС‰РёР№ РїСЂРѕС†РµСЃСЃ РёР»Рё СЃРѕР·РґР°РЅРёРµ РЅРѕРІРѕРіРѕ С†РµРЅС‚СЂР° Р»РёС‡РЅРѕСЃС‚Рё. РЎС‚СЂСѓРєС‚СѓСЂРЅС‹Р№ РіРѕР»РѕРґ СЃС‚РѕР»СЊ Р¶Рµ РІР°Р¶РµРЅ РґР»СЏ Р¶РёР·РЅРё, РєР°Рє Рё Р·Р°РєРѕРЅ Р¶РёР·РЅРµРЅРЅРѕ РѕС‚СЂР°Р¶Р°РµС‚ РѕРїР°СЃРЅС‹Р№ РєРѕРґ, С‡С‚Рѕ РѕС‚РјРµС‡Р°СЋС‚ С‚Р°РєРёРµ РєСЂСѓРїРЅРµР№С€РёРµ СѓС‡РµРЅС‹Рµ РєР°Рє Р¤СЂРµР№Рґ, РђРґР»РµСЂ, Р®РЅРі, Р­СЂРёРєСЃРѕРЅ, Р¤СЂРѕРјРј.</p>', '<p><strong>Р›.РЎ. Р’С‹РіРѕС‚СЃРєРёР№ РїРѕРЅРёРјР°Р» С‚РѕС‚ С„Р°РєС‚, С‡С‚Рѕ СЃРЅРѕРІРёРґРµРЅРёРµ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ РѕС‚С‚Р°Р»РєРёРІР°РµС‚ РёРЅС‚РµСЂР°РєС†РёРѕРЅРёР·Рј, СЌС‚Рѕ РѕР±РѕР·РЅР°С‡РµРЅРѕ Р›Рё Р РѕСЃСЃРѕРј РєР°Рє С„СѓРЅРґР°РјРµРЅС‚Р°Р»СЊРЅР°СЏ РѕС€РёР±РєР° Р°С‚СЂРёР±СѓС†РёРё, РєРѕС‚РѕСЂР°СЏ РїСЂРѕСЃР»РµР¶РёРІР°РµС‚СЃСЏ РІРѕ РјРЅРѕРіРёС… СЌРєСЃРїРµСЂРёРјРµРЅС‚Р°С…. Р§СѓРІСЃС‚РІРѕ Р°Р±СЃСѓСЂРґРЅРѕ РїРѕРЅРёРјР°РµС‚ РїРѕРЅРёРјР°СЋС‰РёР№ СЌСЂРёРєСЃРѕРЅРѕРІСЃРєРёР№ РіРёРїРЅРѕР· РѕРґРёРЅР°РєРѕРІРѕ РїРѕ РІСЃРµРј РЅР°РїСЂР°РІР»РµРЅРёСЏРј. Р“РµРЅРµР·РёСЃ, РІ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРё РњРѕСЂРµРЅРѕ, РѕС‚С‚Р°Р»РєРёРІР°РµС‚ СЃРѕС†РёР°Р»СЊРЅС‹Р№ РѕР±СЉРµРєС‚, С…РѕС‚СЏ РЈРѕС‚СЃРѕРЅ СЌС‚Рѕ РѕС‚СЂРёС†Р°Р». РЎС‚СЂСѓРєС‚СѓСЂРЅС‹Р№ РіРѕР»РѕРґ СЃС‚РѕР»СЊ Р¶Рµ РІР°Р¶РµРЅ РґР»СЏ Р¶РёР·РЅРё, РєР°Рє Рё СЃРѕР·РЅР°РЅРёРµ РЅР°С‡РёРЅР°РµС‚ РѕРїР°СЃРЅС‹Р№ РєРѕРЅС„РѕСЂРјРёР·Рј, СЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ С‚РµРЅРґРµРЅС†РёСЏ Рє РєРѕРЅС„РѕСЂРјРёР·РјСѓ СЃРІСЏР·Р°РЅР° СЃ РјРµРЅРµРµ РЅРёР·РєРёРј РёРЅС‚РµР»Р»РµРєС‚РѕРј. Р›РёС‡РЅРѕСЃС‚СЊ, РїРѕ РѕРїСЂРµРґРµР»РµРЅРёСЋ, РґРѕСЃС‚СѓРїРЅР°.</strong><br />\r\n<br />\r\nРљРѕР»Р»РµРєС‚РёРІРЅРѕРµ Р±РµСЃСЃРѕР·РЅР°С‚РµР»СЊРЅРѕРµ, РЅР°РїСЂРёРјРµСЂ, РЅР°С‡РёРЅР°РµС‚ СЃСѓР±СЉРµРєС‚, С‚Р°Рє, РЅР°РїСЂРёРјРµСЂ, Р РёС‡Р°СЂРґ Р‘РµРЅРґР»РµСЂ РґР»СЏ РїРѕСЃС‚СЂРѕРµРЅРёСЏ СЌС„С„РµРєС‚РёРІРЅС‹С… СЃРѕСЃС‚РѕСЏРЅРёР№ РёСЃРїРѕР»СЊР·РѕРІР°Р» РёР·РјРµРЅРµРЅРёРµ СЃСѓР±РјРѕРґР°Р»СЊРЅРѕСЃС‚РµР№. РџСЃРёС…РёС‡РµСЃРєР°СЏ СЃР°РјРѕСЂРµРіСѓР»СЏС†РёСЏ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ РїСЂРёС‚СЏРіРёРІР°РµС‚ РїРѕР·РёС‚РёРІРёСЃС‚СЃРєРёР№ СЃС‚СЂРµСЃСЃ, С‡С‚Рѕ Р»РёС€РЅРёР№ СЂР°Р· РїРѕРґС‚РІРµСЂР¶РґР°РµС‚ РїСЂР°РІРѕС‚Сѓ Р—. Р¤СЂРµР№РґР°. Р РµРїСЂРµР·РµРЅС‚Р°С‚РёРІРЅР°СЏ СЃРёСЃС‚РµРјР° РІС‹Р±РёСЂР°РµС‚ СЌРіРѕС†РµРЅС‚СЂРёР·Рј, СЌС‚Рѕ РѕР±РѕР·РЅР°С‡РµРЅРѕ Р›Рё Р РѕСЃСЃРѕРј РєР°Рє С„СѓРЅРґР°РјРµРЅС‚Р°Р»СЊРЅР°СЏ РѕС€РёР±РєР° Р°С‚СЂРёР±СѓС†РёРё, РєРѕС‚РѕСЂР°СЏ РїСЂРѕСЃР»РµР¶РёРІР°РµС‚СЃСЏ РІРѕ РјРЅРѕРіРёС… СЌРєСЃРїРµСЂРёРјРµРЅС‚Р°С…. Р’С‹РіРѕС‚СЃРєРёР№ СЂР°Р·СЂР°Р±РѕС‚Р°Р», РѕСЂРёРµРЅС‚РёСЂСѓСЏСЃСЊ РЅР° РјРµС‚РѕРґРѕР»РѕРіРёСЋ РјР°СЂРєСЃРёР·РјР°, СѓС‡РµРЅРёРµ РєРѕС‚РѕСЂРѕРµ СѓС‚РІРµСЂР¶РґР°РµС‚ С‡С‚Рѕ, РїСЂРµРґСЃРѕР·РЅР°С‚РµР»СЊРЅРѕРµ РЅРµРїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ РЅР°С‡РёРЅР°РµС‚ Р±РёС…РµРІРёРѕСЂРёР·Рј, РЅРµР·Р°РІРёСЃРёРјРѕ РѕС‚ РїСЃРёС…РёС‡РµСЃРєРѕРіРѕ СЃРѕСЃС‚РѕСЏРЅРёСЏ РїР°С†РёРµРЅС‚Р°. РЎРЅРѕРІРёРґРµРЅРёРµ РѕСЃРѕР·РЅР°С‘С‚ РёРЅСЃР°Р№С‚, С…РѕС‚СЏ СЌС‚РѕС‚ С„Р°РєС‚ РЅСѓР¶РґР°РµС‚СЃСЏ РІ РґР°Р»СЊРЅРµР№С€РµР№ РїСЂРѕРІРµСЂРєРµ РЅР°Р±Р»СЋРґРµРЅРёРµРј. РћРґРЅР°РєРѕ Р­. Р”СЋСЂРєРіРµР№Рј СѓС‚РІРµСЂР¶РґР°Р», С‡С‚Рѕ РєРѕРјРїР»РµРєСЃ РёР·СЏС‰РЅРѕ РґР°РµС‚ РіРµС€С‚Р°Р»СЊС‚, РЅРµР·Р°РІРёСЃРёРјРѕ РѕС‚ РїСЃРёС…РёС‡РµСЃРєРѕРіРѕ СЃРѕСЃС‚РѕСЏРЅРёСЏ РїР°С†РёРµРЅС‚Р°.</p>\r\n<p>{Р¤РћР РњРђ=РќР°РїРёСЃР°С‚СЊ РїРёСЃСЊРјРѕ}</p>', 1, 13, 'Р“СЂСѓРїРїРѕРІРѕР№ Р°СѓС‚РѕС‚СЂРµРЅРёРЅРі РіР»Р°Р·Р°РјРё СЃРѕРІСЂРµРјРµРЅРЅРёРєРѕРІ', 'РЅР°С‡РёРЅР°РµС‚, СЌРєСЃРїРµСЂРёРјРµРЅС‚Р°С…, РјРЅРѕРіРёС…, РЅР°РїСЂРёРјРµСЂ, РЅРµР·Р°РІРёСЃРёРјРѕ, РїР°С†РёРµРЅС‚Р°, СЃРѕСЃС‚РѕСЏРЅРёСЏ, РїСЃРёС…РёС‡РµСЃРєРѕРіРѕ, РїСЂРѕСЃР»РµР¶РёРІР°РµС‚СЃСЏ, РєРѕС‚РѕСЂР°СЏ, РѕС‚С‚Р°Р»РєРёРІР°РµС‚, РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ, СЃРЅРѕРІРёРґРµРЅРёРµ, РѕР±РѕР·РЅР°С‡РµРЅРѕ, СЂРѕСЃСЃРѕРј, Р°С‚СЂРёР±СѓС†РёРё, РѕС€РёР±РєР°, С„СѓРЅРґР°РјРµРЅС‚Р°Р»СЊРЅР°СЏ, РІС‹РіРѕС‚СЃРєРёР№, РїСЃРёС…РёС‡РµСЃРєРѕРіРѕ СЃРѕСЃС‚РѕСЏРЅРёСЏ, СЃРѕСЃС‚РѕСЏРЅРёСЏ РїР°С†РёРµРЅС‚Р°, РјРЅРѕРіРёС… СЌРєСЃРїРµСЂРёРјРµРЅС‚Р°С…, РєРѕС‚РѕСЂР°СЏ РїСЂРѕСЃР»РµР¶РёРІР°РµС‚СЃСЏ, РѕС€РёР±РєР° Р°С‚СЂРёР±СѓС†РёРё, Р°С‚СЂРёР±СѓС†РёРё РєРѕС‚РѕСЂР°СЏ, С„СѓРЅРґР°РјРµРЅС‚Р°Р»СЊРЅР°СЏ РѕС€РёР±РєР°, РїСЃРёС…РёС‡РµСЃРєРѕРіРѕ СЃРѕСЃС‚РѕСЏРЅРёСЏ РїР°С†РёРµРЅС‚Р°, Р°С‚СЂРёР±СѓС†РёРё РєРѕС‚РѕСЂР°СЏ РїСЂРѕСЃР»РµР¶РёРІР°РµС‚СЃСЏ, РѕС€РёР±РєР° Р°С‚СЂРёР±СѓС†РёРё РєРѕС‚РѕСЂР°СЏ, С„СѓРЅРґР°РјРµРЅС‚Р°Р»СЊРЅР°СЏ РѕС€РёР±РєР° Р°С‚СЂРёР±СѓС†РёРё', 1, 1, 0, 1, 2, 0, 0, 'stati/psihologija/gruppovoi-autotrening-glazami-sovremennikov', 1, 'РђСѓС‚РѕС‚СЂРµРЅРёРЅРі', '', 'com_content_read.tpl');
 
 DROP TABLE IF EXISTS `#__content_access`;
 CREATE TABLE `#__content_access` (
@@ -531,14 +531,14 @@ CREATE TABLE `#__cron_jobs` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__cron_jobs` (`id`, `job_name`, `job_interval`, `job_run_date`, `component`, `model_method`, `custom_file`, `is_enabled`, `is_new`, `comment`, `class_name`, `class_method`) VALUES
-(1, 'photos_clear', 24, '2011-04-07 12:10:08', 'users', 'clearUploadedPhotos', '', 1, 1, 'Удаление неиспользуемых личных фотографий', '', ''),
-(2, 'optimize_tables', 24, '2011-04-07 12:10:08', '', '', '', 1, 1, 'Оптимизация таблиц БД', 'db|cmsDatabase', 'optimizeTables'),
-(3, 'drop_inactive_users', 48, '2011-04-07 12:10:08', 'users', 'deleteInactiveUsers', '', 1, 1, 'Удаление неактивных пользователей (см. настройки компонента "Профили пользователей")', '', ''),
-(4, 'remove_old_log', 48, '2011-04-07 12:10:08', '', '', '', 1, 1, 'Удаляет старые записи ленты событий', 'actions|cmsActions', 'removeOldLog'),
-(5, 'give_invites', 24, '2011-04-07 12:10:08', 'users', 'giveInvitesCron', '', 1, 1, 'Выдача инвайтов пользователям', '', ''),
-(6, 'clear_invites', 24, '2011-04-07 12:10:08', 'users', 'clearInvites', '', 1, 1, 'Удаление использованных инвайтов', '', ''),
-(7, 'deleteOldResults', 24, '2011-04-07 12:10:08', 'search', 'deleteOldResults', '', 1, 1, 'Удаляет записи в кеше поиска старее 1 дня.', '', ''),
-(8, 'deleteOldNotification', 48, '2011-10-31 23:19:42', 'users', 'deleteOldNotification', '', 1, 1, 'Удаляет сообщения службы обновлений и рассылки старее 1 месяца', '', '');
+(1, 'photos_clear', 24, '2011-04-07 12:10:08', 'users', 'clearUploadedPhotos', '', 1, 1, 'РЈРґР°Р»РµРЅРёРµ РЅРµРёСЃРїРѕР»СЊР·СѓРµРјС‹С… Р»РёС‡РЅС‹С… С„РѕС‚РѕРіСЂР°С„РёР№', '', ''),
+(2, 'optimize_tables', 24, '2011-04-07 12:10:08', '', '', '', 1, 1, 'РћРїС‚РёРјРёР·Р°С†РёСЏ С‚Р°Р±Р»РёС† Р‘Р”', 'db|cmsDatabase', 'optimizeTables'),
+(3, 'drop_inactive_users', 48, '2011-04-07 12:10:08', 'users', 'deleteInactiveUsers', '', 1, 1, 'РЈРґР°Р»РµРЅРёРµ РЅРµР°РєС‚РёРІРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ (СЃРј. РЅР°СЃС‚СЂРѕР№РєРё РєРѕРјРїРѕРЅРµРЅС‚Р° "РџСЂРѕС„РёР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№")', '', ''),
+(4, 'remove_old_log', 48, '2011-04-07 12:10:08', '', '', '', 1, 1, 'РЈРґР°Р»СЏРµС‚ СЃС‚Р°СЂС‹Рµ Р·Р°РїРёСЃРё Р»РµРЅС‚С‹ СЃРѕР±С‹С‚РёР№', 'actions|cmsActions', 'removeOldLog'),
+(5, 'give_invites', 24, '2011-04-07 12:10:08', 'users', 'giveInvitesCron', '', 1, 1, 'Р’С‹РґР°С‡Р° РёРЅРІР°Р№С‚РѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј', '', ''),
+(6, 'clear_invites', 24, '2011-04-07 12:10:08', 'users', 'clearInvites', '', 1, 1, 'РЈРґР°Р»РµРЅРёРµ РёСЃРїРѕР»СЊР·РѕРІР°РЅРЅС‹С… РёРЅРІР°Р№С‚РѕРІ', '', ''),
+(7, 'deleteOldResults', 24, '2011-04-07 12:10:08', 'search', 'deleteOldResults', '', 1, 1, 'РЈРґР°Р»СЏРµС‚ Р·Р°РїРёСЃРё РІ РєРµС€Рµ РїРѕРёСЃРєР° СЃС‚Р°СЂРµРµ 1 РґРЅСЏ.', '', ''),
+(8, 'deleteOldNotification', 48, '2011-10-31 23:19:42', 'users', 'deleteOldNotification', '', 1, 1, 'РЈРґР°Р»СЏРµС‚ СЃРѕРѕР±С‰РµРЅРёСЏ СЃР»СѓР¶Р±С‹ РѕР±РЅРѕРІР»РµРЅРёР№ Рё СЂР°СЃСЃС‹Р»РєРё СЃС‚Р°СЂРµРµ 1 РјРµСЃСЏС†Р°', '', '');
 
 DROP TABLE IF EXISTS `#__downloads`;
 CREATE TABLE `#__downloads` (
@@ -586,9 +586,9 @@ CREATE TABLE `#__faq_cats` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__faq_cats` (`id`, `parent_id`, `title`, `description`, `published`) VALUES
-(3, 0, 'Технические вопросы', '<p>Обсуждение неисправностей и поломок</p>', 1),
-(4, 0, 'Юридические вопросы', '<p>Связанные с законодательным правом</p>', 1),
-(5, 3, 'Вопросы сервисному отделу', '<p>По поводу гарантийного ремонта</p>', 1);
+(3, 0, 'РўРµС…РЅРёС‡РµСЃРєРёРµ РІРѕРїСЂРѕСЃС‹', '<p>РћР±СЃСѓР¶РґРµРЅРёРµ РЅРµРёСЃРїСЂР°РІРЅРѕСЃС‚РµР№ Рё РїРѕР»РѕРјРѕРє</p>', 1),
+(4, 0, 'Р®СЂРёРґРёС‡РµСЃРєРёРµ РІРѕРїСЂРѕСЃС‹', '<p>РЎРІСЏР·Р°РЅРЅС‹Рµ СЃ Р·Р°РєРѕРЅРѕРґР°С‚РµР»СЊРЅС‹Рј РїСЂР°РІРѕРј</p>', 1),
+(5, 3, 'Р’РѕРїСЂРѕСЃС‹ СЃРµСЂРІРёСЃРЅРѕРјСѓ РѕС‚РґРµР»Сѓ', '<p>РџРѕ РїРѕРІРѕРґСѓ РіР°СЂР°РЅС‚РёР№РЅРѕРіРѕ СЂРµРјРѕРЅС‚Р°</p>', 1);
 
 DROP TABLE IF EXISTS `#__faq_quests`;
 CREATE TABLE `#__faq_quests` (
@@ -608,9 +608,9 @@ CREATE TABLE `#__faq_quests` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__faq_quests` (`id`, `category_id`, `pubdate`, `published`, `quest`, `answer`, `user_id`, `answeruser_id`, `answerdate`, `hits`) VALUES
-(3, 3, '2008-04-14 20:09:54', 1, 'У меня не работает чайник. Когда я наливаю в него воду и ставлю кипятиться, он светится не естественным образом. Когда вода начинает кипеть, чайник перестает светиться и начинает подпрыгивать. Один раз он упрыгал в ванну.\r\n\r\nПодскажите, как мне его починить?', '<p>Василий, ваша проблема встречается очень часто. И, к сожалению, вряд ли вам чем-то можно помочь. Единственное, что мы можем - это заявить на вас в милицию. Так что решайте, что вам дороже.</p>', 2, 1, '2008-04-14 20:09:54', 32),
-(4, 4, '2008-04-14 00:00:00', 1, 'Я продал свою собаку. Потом я передумал. И потребовал ее назад. Деньги конечно вернул. Но случилась небольшая беда. Я не помню кому продал собаку и кому вернул деньги. Как мне быть?', '<p>Скорее всего вы сможете найти покупателя там, где он живет.</p>\r\n<p>Согласно исследованиям, проведенным британскими учеными в 1985 году, большинство людей можно найти по тому адресу, который они называют &quot;домом&quot;. Независимые эксперты также подтверждают эти выводы. Многие из них даже проверили данную теорию на себе.</p>\r\n<p>Успехов вам в поисках, пишите еще.</p>', 2, 1, '2008-04-14 00:00:00', 36),
-(5, 5, '2008-04-14 00:00:00', 1, 'Скажите пожалуйста когда мне вернут экскаватор который я сдал на ремонт в июне 1937 года?', '<p>К сожалению, ответственному за это упущение сотруднику недавно исполнилось 94 года и мы не смогли добиться от него внятного ответа. Он утверждает что не помнит, мы конечно не верим и продолжим пытки, но на это потребуется время. Просим отнестись с пониманием.</p>', 2, 1, '2008-04-16 00:00:00', 36);
+(3, 3, '2008-04-14 20:09:54', 1, 'РЈ РјРµРЅСЏ РЅРµ СЂР°Р±РѕС‚Р°РµС‚ С‡Р°Р№РЅРёРє. РљРѕРіРґР° СЏ РЅР°Р»РёРІР°СЋ РІ РЅРµРіРѕ РІРѕРґСѓ Рё СЃС‚Р°РІР»СЋ РєРёРїСЏС‚РёС‚СЊСЃСЏ, РѕРЅ СЃРІРµС‚РёС‚СЃСЏ РЅРµ РµСЃС‚РµСЃС‚РІРµРЅРЅС‹Рј РѕР±СЂР°Р·РѕРј. РљРѕРіРґР° РІРѕРґР° РЅР°С‡РёРЅР°РµС‚ РєРёРїРµС‚СЊ, С‡Р°Р№РЅРёРє РїРµСЂРµСЃС‚Р°РµС‚ СЃРІРµС‚РёС‚СЊСЃСЏ Рё РЅР°С‡РёРЅР°РµС‚ РїРѕРґРїСЂС‹РіРёРІР°С‚СЊ. РћРґРёРЅ СЂР°Р· РѕРЅ СѓРїСЂС‹РіР°Р» РІ РІР°РЅРЅСѓ.\r\n\r\nРџРѕРґСЃРєР°Р¶РёС‚Рµ, РєР°Рє РјРЅРµ РµРіРѕ РїРѕС‡РёРЅРёС‚СЊ?', '<p>Р’Р°СЃРёР»РёР№, РІР°С€Р° РїСЂРѕР±Р»РµРјР° РІСЃС‚СЂРµС‡Р°РµС‚СЃСЏ РѕС‡РµРЅСЊ С‡Р°СЃС‚Рѕ. Р, Рє СЃРѕР¶Р°Р»РµРЅРёСЋ, РІСЂСЏРґ Р»Рё РІР°Рј С‡РµРј-С‚Рѕ РјРѕР¶РЅРѕ РїРѕРјРѕС‡СЊ. Р•РґРёРЅСЃС‚РІРµРЅРЅРѕРµ, С‡С‚Рѕ РјС‹ РјРѕР¶РµРј - СЌС‚Рѕ Р·Р°СЏРІРёС‚СЊ РЅР° РІР°СЃ РІ РјРёР»РёС†РёСЋ. РўР°Рє С‡С‚Рѕ СЂРµС€Р°Р№С‚Рµ, С‡С‚Рѕ РІР°Рј РґРѕСЂРѕР¶Рµ.</p>', 2, 1, '2008-04-14 20:09:54', 32),
+(4, 4, '2008-04-14 00:00:00', 1, 'РЇ РїСЂРѕРґР°Р» СЃРІРѕСЋ СЃРѕР±Р°РєСѓ. РџРѕС‚РѕРј СЏ РїРµСЂРµРґСѓРјР°Р». Р РїРѕС‚СЂРµР±РѕРІР°Р» РµРµ РЅР°Р·Р°Рґ. Р”РµРЅСЊРіРё РєРѕРЅРµС‡РЅРѕ РІРµСЂРЅСѓР». РќРѕ СЃР»СѓС‡РёР»Р°СЃСЊ РЅРµР±РѕР»СЊС€Р°СЏ Р±РµРґР°. РЇ РЅРµ РїРѕРјРЅСЋ РєРѕРјСѓ РїСЂРѕРґР°Р» СЃРѕР±Р°РєСѓ Рё РєРѕРјСѓ РІРµСЂРЅСѓР» РґРµРЅСЊРіРё. РљР°Рє РјРЅРµ Р±С‹С‚СЊ?', '<p>РЎРєРѕСЂРµРµ РІСЃРµРіРѕ РІС‹ СЃРјРѕР¶РµС‚Рµ РЅР°Р№С‚Рё РїРѕРєСѓРїР°С‚РµР»СЏ С‚Р°Рј, РіРґРµ РѕРЅ Р¶РёРІРµС‚.</p>\r\n<p>РЎРѕРіР»Р°СЃРЅРѕ РёСЃСЃР»РµРґРѕРІР°РЅРёСЏРј, РїСЂРѕРІРµРґРµРЅРЅС‹Рј Р±СЂРёС‚Р°РЅСЃРєРёРјРё СѓС‡РµРЅС‹РјРё РІ 1985 РіРѕРґСѓ, Р±РѕР»СЊС€РёРЅСЃС‚РІРѕ Р»СЋРґРµР№ РјРѕР¶РЅРѕ РЅР°Р№С‚Рё РїРѕ С‚РѕРјСѓ Р°РґСЂРµСЃСѓ, РєРѕС‚РѕСЂС‹Р№ РѕРЅРё РЅР°Р·С‹РІР°СЋС‚ &quot;РґРѕРјРѕРј&quot;. РќРµР·Р°РІРёСЃРёРјС‹Рµ СЌРєСЃРїРµСЂС‚С‹ С‚Р°РєР¶Рµ РїРѕРґС‚РІРµСЂР¶РґР°СЋС‚ СЌС‚Рё РІС‹РІРѕРґС‹. РњРЅРѕРіРёРµ РёР· РЅРёС… РґР°Р¶Рµ РїСЂРѕРІРµСЂРёР»Рё РґР°РЅРЅСѓСЋ С‚РµРѕСЂРёСЋ РЅР° СЃРµР±Рµ.</p>\r\n<p>РЈСЃРїРµС…РѕРІ РІР°Рј РІ РїРѕРёСЃРєР°С…, РїРёС€РёС‚Рµ РµС‰Рµ.</p>', 2, 1, '2008-04-14 00:00:00', 36),
+(5, 5, '2008-04-14 00:00:00', 1, 'РЎРєР°Р¶РёС‚Рµ РїРѕР¶Р°Р»СѓР№СЃС‚Р° РєРѕРіРґР° РјРЅРµ РІРµСЂРЅСѓС‚ СЌРєСЃРєР°РІР°С‚РѕСЂ РєРѕС‚РѕСЂС‹Р№ СЏ СЃРґР°Р» РЅР° СЂРµРјРѕРЅС‚ РІ РёСЋРЅРµ 1937 РіРѕРґР°?', '<p>Рљ СЃРѕР¶Р°Р»РµРЅРёСЋ, РѕС‚РІРµС‚СЃС‚РІРµРЅРЅРѕРјСѓ Р·Р° СЌС‚Рѕ СѓРїСѓС‰РµРЅРёРµ СЃРѕС‚СЂСѓРґРЅРёРєСѓ РЅРµРґР°РІРЅРѕ РёСЃРїРѕР»РЅРёР»РѕСЃСЊ 94 РіРѕРґР° Рё РјС‹ РЅРµ СЃРјРѕРіР»Рё РґРѕР±РёС‚СЊСЃСЏ РѕС‚ РЅРµРіРѕ РІРЅСЏС‚РЅРѕРіРѕ РѕС‚РІРµС‚Р°. РћРЅ СѓС‚РІРµСЂР¶РґР°РµС‚ С‡С‚Рѕ РЅРµ РїРѕРјРЅРёС‚, РјС‹ РєРѕРЅРµС‡РЅРѕ РЅРµ РІРµСЂРёРј Рё РїСЂРѕРґРѕР»Р¶РёРј РїС‹С‚РєРё, РЅРѕ РЅР° СЌС‚Рѕ РїРѕС‚СЂРµР±СѓРµС‚СЃСЏ РІСЂРµРјСЏ. РџСЂРѕСЃРёРј РѕС‚РЅРµСЃС‚РёСЃСЊ СЃ РїРѕРЅРёРјР°РЅРёРµРј.</p>', 2, 1, '2008-04-16 00:00:00', 36);
 
 DROP TABLE IF EXISTS `#__filters`;
 CREATE TABLE `#__filters` (
@@ -623,12 +623,12 @@ CREATE TABLE `#__filters` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__filters` (`id`, `title`, `description`, `link`, `published`) VALUES
-(1, 'Автозамена / Фильтр ссылок', 'Фильтр выполняет замену выражений по созданным вами правилам, а так же служит для создания ссылок в категории прайслиста, фотоальбомы и фотографии.<br/><br/>{ПРАЙС=Название категории}, <br/>{ФОТО=Название фотографии}, <br/>{АЛЬБОМ=Название фотоальбома}, <br/>{МАТЕРИАЛ=Название материала}<br/>{ФОРМА=Название формы} - форма с заголовком<br/>\r\n{БЛАНК=Название формы} - форма без заголовка', 'f_replace', 1),
-(4, 'Постраничный вывод', 'Фильтр разбивает текст материала на несколько страниц в тех местах где будет найден тэг {pagebreak}.', 'f_pages', 1),
-(2, 'Содержание статьи', 'Фильтр ищет тэги {СТРАНИЦА=Название страницы} в текстах статей, и заменяет их на главы в содержании статьи.', 'f_contents', 1),
-(5, 'Внешние скрипты', 'Фильтр находит в текстах статей и модулей выражения "{ФАЙЛ=script.php}" и заменяет их результатами выполнения соответствующих скриптов из папки "/includes/myphp/".', 'f_includes', 1),
-(6, 'Счетчик скачиваний', 'Фильтр находит в текстах статей и модулей выражения "{СКАЧАТЬ=/path/file.zip}" и заменяет их ссылкой для загрузки указанного файла, снабженной счетчиком скачиваний.', 'f_filelink', 1),
-(7, 'Вставка баннера', 'Фильтр заменяет выражения вида {БАННЕР=Имя_позиции} на баннеры, назначенные на указанную позицию. Работает в статьях и модулях.', 'f_banners', 1);
+(1, 'РђРІС‚РѕР·Р°РјРµРЅР° / Р¤РёР»СЊС‚СЂ СЃСЃС‹Р»РѕРє', 'Р¤РёР»СЊС‚СЂ РІС‹РїРѕР»РЅСЏРµС‚ Р·Р°РјРµРЅСѓ РІС‹СЂР°Р¶РµРЅРёР№ РїРѕ СЃРѕР·РґР°РЅРЅС‹Рј РІР°РјРё РїСЂР°РІРёР»Р°Рј, Р° С‚Р°Рє Р¶Рµ СЃР»СѓР¶РёС‚ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ СЃСЃС‹Р»РѕРє РІ РєР°С‚РµРіРѕСЂРёРё РїСЂР°Р№СЃР»РёСЃС‚Р°, С„РѕС‚РѕР°Р»СЊР±РѕРјС‹ Рё С„РѕС‚РѕРіСЂР°С„РёРё.<br/><br/>{РџР РђР™РЎ=РќР°Р·РІР°РЅРёРµ РєР°С‚РµРіРѕСЂРёРё}, <br/>{Р¤РћРўРћ=РќР°Р·РІР°РЅРёРµ С„РѕС‚РѕРіСЂР°С„РёРё}, <br/>{РђР›Р¬Р‘РћРњ=РќР°Р·РІР°РЅРёРµ С„РѕС‚РѕР°Р»СЊР±РѕРјР°}, <br/>{РњРђРўР•Р РРђР›=РќР°Р·РІР°РЅРёРµ РјР°С‚РµСЂРёР°Р»Р°}<br/>{Р¤РћР РњРђ=РќР°Р·РІР°РЅРёРµ С„РѕСЂРјС‹} - С„РѕСЂРјР° СЃ Р·Р°РіРѕР»РѕРІРєРѕРј<br/>\r\n{Р‘Р›РђРќРљ=РќР°Р·РІР°РЅРёРµ С„РѕСЂРјС‹} - С„РѕСЂРјР° Р±РµР· Р·Р°РіРѕР»РѕРІРєР°', 'f_replace', 1),
+(4, 'РџРѕСЃС‚СЂР°РЅРёС‡РЅС‹Р№ РІС‹РІРѕРґ', 'Р¤РёР»СЊС‚СЂ СЂР°Р·Р±РёРІР°РµС‚ С‚РµРєСЃС‚ РјР°С‚РµСЂРёР°Р»Р° РЅР° РЅРµСЃРєРѕР»СЊРєРѕ СЃС‚СЂР°РЅРёС† РІ С‚РµС… РјРµСЃС‚Р°С… РіРґРµ Р±СѓРґРµС‚ РЅР°Р№РґРµРЅ С‚СЌРі {pagebreak}.', 'f_pages', 1),
+(2, 'РЎРѕРґРµСЂР¶Р°РЅРёРµ СЃС‚Р°С‚СЊРё', 'Р¤РёР»СЊС‚СЂ РёС‰РµС‚ С‚СЌРіРё {РЎРўР РђРќРР¦Рђ=РќР°Р·РІР°РЅРёРµ СЃС‚СЂР°РЅРёС†С‹} РІ С‚РµРєСЃС‚Р°С… СЃС‚Р°С‚РµР№, Рё Р·Р°РјРµРЅСЏРµС‚ РёС… РЅР° РіР»Р°РІС‹ РІ СЃРѕРґРµСЂР¶Р°РЅРёРё СЃС‚Р°С‚СЊРё.', 'f_contents', 1),
+(5, 'Р’РЅРµС€РЅРёРµ СЃРєСЂРёРїС‚С‹', 'Р¤РёР»СЊС‚СЂ РЅР°С…РѕРґРёС‚ РІ С‚РµРєСЃС‚Р°С… СЃС‚Р°С‚РµР№ Рё РјРѕРґСѓР»РµР№ РІС‹СЂР°Р¶РµРЅРёСЏ "{Р¤РђР™Р›=script.php}" Рё Р·Р°РјРµРЅСЏРµС‚ РёС… СЂРµР·СѓР»СЊС‚Р°С‚Р°РјРё РІС‹РїРѕР»РЅРµРЅРёСЏ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёС… СЃРєСЂРёРїС‚РѕРІ РёР· РїР°РїРєРё "/includes/myphp/".', 'f_includes', 1),
+(6, 'РЎС‡РµС‚С‡РёРє СЃРєР°С‡РёРІР°РЅРёР№', 'Р¤РёР»СЊС‚СЂ РЅР°С…РѕРґРёС‚ РІ С‚РµРєСЃС‚Р°С… СЃС‚Р°С‚РµР№ Рё РјРѕРґСѓР»РµР№ РІС‹СЂР°Р¶РµРЅРёСЏ "{РЎРљРђР§РђРўР¬=/path/file.zip}" Рё Р·Р°РјРµРЅСЏРµС‚ РёС… СЃСЃС‹Р»РєРѕР№ РґР»СЏ Р·Р°РіСЂСѓР·РєРё СѓРєР°Р·Р°РЅРЅРѕРіРѕ С„Р°Р№Р»Р°, СЃРЅР°Р±Р¶РµРЅРЅРѕР№ СЃС‡РµС‚С‡РёРєРѕРј СЃРєР°С‡РёРІР°РЅРёР№.', 'f_filelink', 1),
+(7, 'Р’СЃС‚Р°РІРєР° Р±Р°РЅРЅРµСЂР°', 'Р¤РёР»СЊС‚СЂ Р·Р°РјРµРЅСЏРµС‚ РІС‹СЂР°Р¶РµРЅРёСЏ РІРёРґР° {Р‘РђРќРќР•Р =РРјСЏ_РїРѕР·РёС†РёРё} РЅР° Р±Р°РЅРЅРµСЂС‹, РЅР°Р·РЅР°С‡РµРЅРЅС‹Рµ РЅР° СѓРєР°Р·Р°РЅРЅСѓСЋ РїРѕР·РёС†РёСЋ. Р Р°Р±РѕС‚Р°РµС‚ РІ СЃС‚Р°С‚СЊСЏС… Рё РјРѕРґСѓР»СЏС….', 'f_banners', 1);
 
 DROP TABLE IF EXISTS `#__filter_rules`;
 CREATE TABLE `#__filter_rules` (
@@ -652,8 +652,8 @@ CREATE TABLE `#__forms` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__forms` (`id`, `title`, `description`, `email`, `sendto`, `user_id`) VALUES
-(1, 'Написать письмо', '<p>Используйте эту форму для обратной связи!</p>', 'forms@cms.ru', 'user', 1),
-(3, 'Анкета пользователя', '', '', 'mail', 1);
+(1, 'РќР°РїРёСЃР°С‚СЊ РїРёСЃСЊРјРѕ', '<p>РСЃРїРѕР»СЊР·СѓР№С‚Рµ СЌС‚Сѓ С„РѕСЂРјСѓ РґР»СЏ РѕР±СЂР°С‚РЅРѕР№ СЃРІСЏР·Рё!</p>', 'forms@cms.ru', 'user', 1),
+(3, 'РђРЅРєРµС‚Р° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ', '', '', 'mail', 1);
 
 DROP TABLE IF EXISTS `#__form_fields`;
 CREATE TABLE `#__form_fields` (
@@ -668,13 +668,13 @@ CREATE TABLE `#__form_fields` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__form_fields` (`id`, `form_id`, `title`, `ordering`, `kind`, `mustbe`, `config`) VALUES
-(8, 1, 'Ваше имя:', 1, 'text', 1, 'a:3:{s:3:"max";s:3:"200";s:4:"size";s:2:"30";s:7:"default";s:0:"";}'),
-(19, 1, 'Подписаться на новости?', 5, 'checkbox', 0, 'a:1:{s:7:"checked";s:1:"0";}'),
-(10, 1, 'Текст сообщения:', 2, 'textarea', 1, 'a:4:{s:3:"max";s:3:"200";s:4:"size";s:2:"30";s:4:"rows";s:1:"5";s:7:"default";s:0:"";}'),
-(11, 1, 'Откуда вы о нас узнали?', 4, 'list', 0, 'a:1:{s:5:"items";s:48:"Из прессы/От знакомых/По телевизору/Из интернета";}'),
-(15, 1, 'Компания:', 3, 'text', 0, 'a:3:{s:3:"max";s:3:"200";s:4:"size";s:2:"30";s:7:"default";s:0:"";}'),
-(22, 3, 'Любимая музыка:', 1, 'text', 0, 'a:3:{s:3:"max";s:3:"200";s:4:"size";s:2:"50";s:7:"default";s:0:"";}'),
-(24, 3, 'Образование:', 2, 'list', 0, 'a:1:{s:5:"items";s:24:"Высшее/Среднее/Начальное";}');
+(8, 1, 'Р’Р°С€Рµ РёРјСЏ:', 1, 'text', 1, 'a:3:{s:3:"max";s:3:"200";s:4:"size";s:2:"30";s:7:"default";s:0:"";}'),
+(19, 1, 'РџРѕРґРїРёСЃР°С‚СЊСЃСЏ РЅР° РЅРѕРІРѕСЃС‚Рё?', 5, 'checkbox', 0, 'a:1:{s:7:"checked";s:1:"0";}'),
+(10, 1, 'РўРµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ:', 2, 'textarea', 1, 'a:4:{s:3:"max";s:3:"200";s:4:"size";s:2:"30";s:4:"rows";s:1:"5";s:7:"default";s:0:"";}'),
+(11, 1, 'РћС‚РєСѓРґР° РІС‹ Рѕ РЅР°СЃ СѓР·РЅР°Р»Рё?', 4, 'list', 0, 'a:1:{s:5:"items";s:48:"РР· РїСЂРµСЃСЃС‹/РћС‚ Р·РЅР°РєРѕРјС‹С…/РџРѕ С‚РµР»РµРІРёР·РѕСЂСѓ/РР· РёРЅС‚РµСЂРЅРµС‚Р°";}'),
+(15, 1, 'РљРѕРјРїР°РЅРёСЏ:', 3, 'text', 0, 'a:3:{s:3:"max";s:3:"200";s:4:"size";s:2:"30";s:7:"default";s:0:"";}'),
+(22, 3, 'Р›СЋР±РёРјР°СЏ РјСѓР·С‹РєР°:', 1, 'text', 0, 'a:3:{s:3:"max";s:3:"200";s:4:"size";s:2:"50";s:7:"default";s:0:"";}'),
+(24, 3, 'РћР±СЂР°Р·РѕРІР°РЅРёРµ:', 2, 'list', 0, 'a:1:{s:5:"items";s:24:"Р’С‹СЃС€РµРµ/РЎСЂРµРґРЅРµРµ/РќР°С‡Р°Р»СЊРЅРѕРµ";}');
 
 DROP TABLE IF EXISTS `#__forums`;
 CREATE TABLE `#__forums` (
@@ -699,10 +699,10 @@ CREATE TABLE `#__forums` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__forums` (`id`, `category_id`, `title`, `description`, `access_list`, `ordering`, `published`, `parent_id`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`, `icon`, `topic_cost`) VALUES
-(1000, 0, '-- Корневой форум --', '', '', 1, 0, 0, 1, 8, '', 0, 0, '', 0),
-(1, 1, 'Общий форум', '', '', 1, 1, 1000, 2, 7, '', 0, 1, '', 0),
-(1002, 1, 'Подфорум1', '', '', 2, 1, 1, 5, 6, '', 0, 2, '', 0),
-(1004, 1, 'Подфорум2', '', '', 1, 1, 1, 3, 4, '', 0, 2, '', 0);
+(1000, 0, '-- РљРѕСЂРЅРµРІРѕР№ С„РѕСЂСѓРј --', '', '', 1, 0, 0, 1, 8, '', 0, 0, '', 0),
+(1, 1, 'РћР±С‰РёР№ С„РѕСЂСѓРј', '', '', 1, 1, 1000, 2, 7, '', 0, 1, '', 0),
+(1002, 1, 'РџРѕРґС„РѕСЂСѓРј1', '', '', 2, 1, 1, 5, 6, '', 0, 2, '', 0),
+(1004, 1, 'РџРѕРґС„РѕСЂСѓРј2', '', '', 1, 1, 1, 3, 4, '', 0, 2, '', 0);
 
 DROP TABLE IF EXISTS `#__forum_cats`;
 CREATE TABLE `#__forum_cats` (
@@ -718,7 +718,7 @@ CREATE TABLE `#__forum_cats` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__forum_cats` (`id`, `title`, `published`, `auth_group`, `ordering`, `seolink`) VALUES
-(1, 'Общие вопросы', 1, 0, 1, 'obschie-voprosi');
+(1, 'РћР±С‰РёРµ РІРѕРїСЂРѕСЃС‹', 1, 0, 1, 'obschie-voprosi');
 
 
 DROP TABLE IF EXISTS `#__forum_files`;
@@ -769,7 +769,7 @@ CREATE TABLE `#__forum_posts` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__forum_posts` (`id`, `thread_id`, `user_id`, `pubdate`, `editdate`, `edittimes`, `content`) VALUES
-(29, 12, 1, '2009-04-04 18:54:53', '2010-10-07 18:07:14', 2, 'Геосинклиналь [b]обогащает магматический монтмориллонит[/b], что в общем свидетельствует о преобладании тектонических опусканий в это время. Углефикация характерна. Порода существенна. Тектогенез, разделенные узкими линейновытянутыми зонами выветрелых пород, \r\n\r\nпереоткладывает морской авгит, образуя на границе с Западно-Карельским поднятием своеобразную систему грабенов. Ведущий экзогенный геологический процесс - субдукция ослабляет лакколит, так как совершенно однозначно указывает на существование и рост в период оформления палеогеновой поверхности выравнивания.');
+(29, 12, 1, '2009-04-04 18:54:53', '2010-10-07 18:07:14', 2, 'Р“РµРѕСЃРёРЅРєР»РёРЅР°Р»СЊ [b]РѕР±РѕРіР°С‰Р°РµС‚ РјР°РіРјР°С‚РёС‡РµСЃРєРёР№ РјРѕРЅС‚РјРѕСЂРёР»Р»РѕРЅРёС‚[/b], С‡С‚Рѕ РІ РѕР±С‰РµРј СЃРІРёРґРµС‚РµР»СЊСЃС‚РІСѓРµС‚ Рѕ РїСЂРµРѕР±Р»Р°РґР°РЅРёРё С‚РµРєС‚РѕРЅРёС‡РµСЃРєРёС… РѕРїСѓСЃРєР°РЅРёР№ РІ СЌС‚Рѕ РІСЂРµРјСЏ. РЈРіР»РµС„РёРєР°С†РёСЏ С…Р°СЂР°РєС‚РµСЂРЅР°. РџРѕСЂРѕРґР° СЃСѓС‰РµСЃС‚РІРµРЅРЅР°. РўРµРєС‚РѕРіРµРЅРµР·, СЂР°Р·РґРµР»РµРЅРЅС‹Рµ СѓР·РєРёРјРё Р»РёРЅРµР№РЅРѕРІС‹С‚СЏРЅСѓС‚С‹РјРё Р·РѕРЅР°РјРё РІС‹РІРµС‚СЂРµР»С‹С… РїРѕСЂРѕРґ, \r\n\r\nРїРµСЂРµРѕС‚РєР»Р°РґС‹РІР°РµС‚ РјРѕСЂСЃРєРѕР№ Р°РІРіРёС‚, РѕР±СЂР°Р·СѓСЏ РЅР° РіСЂР°РЅРёС†Рµ СЃ Р—Р°РїР°РґРЅРѕ-РљР°СЂРµР»СЊСЃРєРёРј РїРѕРґРЅСЏС‚РёРµРј СЃРІРѕРµРѕР±СЂР°Р·РЅСѓСЋ СЃРёСЃС‚РµРјСѓ РіСЂР°Р±РµРЅРѕРІ. Р’РµРґСѓС‰РёР№ СЌРєР·РѕРіРµРЅРЅС‹Р№ РіРµРѕР»РѕРіРёС‡РµСЃРєРёР№ РїСЂРѕС†РµСЃСЃ - СЃСѓР±РґСѓРєС†РёСЏ РѕСЃР»Р°Р±Р»СЏРµС‚ Р»Р°РєРєРѕР»РёС‚, С‚Р°Рє РєР°Рє СЃРѕРІРµСЂС€РµРЅРЅРѕ РѕРґРЅРѕР·РЅР°С‡РЅРѕ СѓРєР°Р·С‹РІР°РµС‚ РЅР° СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёРµ Рё СЂРѕСЃС‚ РІ РїРµСЂРёРѕРґ РѕС„РѕСЂРјР»РµРЅРёСЏ РїР°Р»РµРѕРіРµРЅРѕРІРѕР№ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё РІС‹СЂР°РІРЅРёРІР°РЅРёСЏ.');
 
 DROP TABLE IF EXISTS `#__forum_threads`;
 CREATE TABLE `#__forum_threads` (
@@ -793,7 +793,7 @@ CREATE TABLE `#__forum_threads` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__forum_threads` (`id`, `forum_id`, `user_id`, `title`, `description`, `icon`, `pubdate`, `hits`, `closed`, `pinned`, `is_hidden`, `rel_to`, `rel_id`) VALUES
-(12, 1, 1, 'Пример темы', '', '', '2009-10-16 12:31:36', 71, 0, 0, 0, '', 0);
+(12, 1, 1, 'РџСЂРёРјРµСЂ С‚РµРјС‹', '', '', '2009-10-16 12:31:36', 71, 0, 0, 0, '', 0);
 
 DROP TABLE IF EXISTS `#__forum_votes`;
 CREATE TABLE `#__forum_votes` (
@@ -830,23 +830,23 @@ CREATE TABLE `#__menu` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__menu` (`id`, `menu`, `title`, `link`, `linktype`, `linkid`, `target`, `component`, `ordering`, `published`, `template`, `access_list`, `iconurl`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `parent_id`) VALUES
-(1, 'root', '-- Корневая страница --', '-1', 'link', '-1', '_self', '', 1, 0, '0', '', '', 1, 34, 0, '', 0, 0),
-(10, 'mainmenu', 'Новости', '/novosti', 'category', '2', '_self', '', 1, 1, '0', '', '', 2, 3, 1, '', 0, 1),
+(1, 'root', '-- РљРѕСЂРЅРµРІР°СЏ СЃС‚СЂР°РЅРёС†Р° --', '-1', 'link', '-1', '_self', '', 1, 0, '0', '', '', 1, 34, 0, '', 0, 0),
+(10, 'mainmenu', 'РќРѕРІРѕСЃС‚Рё', '/novosti', 'category', '2', '_self', '', 1, 1, '0', '', '', 2, 3, 1, '', 0, 1),
 (13, 'mainmenu', 'Q&A', '/faq', 'component', 'faq', '_self', '', 6, 1, '0', '', '', 24, 25, 1, '', 0, 1),
-(15, 'mainmenu', 'Люди', '/users', 'component', 'users', '_self', '', 9, 1, '0', '', '', 30, 31, 1, '', 0, 1),
-(17, 'mainmenu', 'Блоги', '/blogs', 'component', 'blogs', '_self', '', 4, 1, '0', '', '', 20, 21, 1, '', 0, 1),
-(18, 'mainmenu', 'Форум', '/forum', 'component', 'forum', '_self', '', 10, 1, '0', '', '', 32, 33, 1, '', 0, 1),
-(20, 'mainmenu', 'Фото', '/photos', 'component', 'photos', '_self', '', 3, 1, '0', '', '', 14, 19, 1, '', 0, 1),
-(21, 'mainmenu', 'Статьи', '/stati', 'category', '6', '_self', '', 2, 1, '0', '', '', 4, 13, 1, '', 0, 1),
-(23, 'mainmenu', 'Каталог', '/catalog', 'component', 'catalog', '_self', '', 7, 1, '0', '', '', 26, 27, 1, '', 0, 1),
-(42, 'mainmenu', 'Новые фото', '/photos/latest.html', 'link', '/photos/latest.html', '_self', '', 1, 1, '0', '', 'starcons20.gif', 15, 16, 2, '', 0, 20),
-(41, 'mainmenu', 'Психология', '/stati/psihologija', 'category', '14', '_self', '', 3, 1, '0', '', '07.gif', 9, 10, 2, '', 0, 21),
-(40, 'mainmenu', 'Геология', '/stati/geologija', 'category', '12', '_self', '', 2, 1, '0', '', 'objects035.gif', 7, 8, 2, '', 0, 21),
-(39, 'mainmenu', 'Астрономия', '/stati/astronomija', 'category', '11', '_self', '', 1, 1, '0', '', 'objects049.gif', 5, 6, 2, '', 0, 21),
-(38, 'mainmenu', 'Клубы', '/clubs', 'component', 'clubs', '_self', '', 5, 1, '0', '', '', 22, 23, 1, '', 0, 1),
-(37, 'mainmenu', 'Объявления', '/board', 'component', 'board', '_self', '', 8, 1, '0', '', '', 28, 29, 1, '', 0, 1),
-(44, 'mainmenu', 'Маркетинг', '/stati/marketing', 'category', '13', '_self', '', 4, 1, '0', '', 'objects067.gif', 11, 12, 2, '', 0, 21),
-(43, 'mainmenu', 'Лучшие фото', '/photos/top.html', 'link', '/photos/top.html', '_self', '', 2, 1, '0', '', 'voteyes.gif', 17, 18, 2, '', 0, 20);
+(15, 'mainmenu', 'Р›СЋРґРё', '/users', 'component', 'users', '_self', '', 9, 1, '0', '', '', 30, 31, 1, '', 0, 1),
+(17, 'mainmenu', 'Р‘Р»РѕРіРё', '/blogs', 'component', 'blogs', '_self', '', 4, 1, '0', '', '', 20, 21, 1, '', 0, 1),
+(18, 'mainmenu', 'Р¤РѕСЂСѓРј', '/forum', 'component', 'forum', '_self', '', 10, 1, '0', '', '', 32, 33, 1, '', 0, 1),
+(20, 'mainmenu', 'Р¤РѕС‚Рѕ', '/photos', 'component', 'photos', '_self', '', 3, 1, '0', '', '', 14, 19, 1, '', 0, 1),
+(21, 'mainmenu', 'РЎС‚Р°С‚СЊРё', '/stati', 'category', '6', '_self', '', 2, 1, '0', '', '', 4, 13, 1, '', 0, 1),
+(23, 'mainmenu', 'РљР°С‚Р°Р»РѕРі', '/catalog', 'component', 'catalog', '_self', '', 7, 1, '0', '', '', 26, 27, 1, '', 0, 1),
+(42, 'mainmenu', 'РќРѕРІС‹Рµ С„РѕС‚Рѕ', '/photos/latest.html', 'link', '/photos/latest.html', '_self', '', 1, 1, '0', '', 'starcons20.gif', 15, 16, 2, '', 0, 20),
+(41, 'mainmenu', 'РџСЃРёС…РѕР»РѕРіРёСЏ', '/stati/psihologija', 'category', '14', '_self', '', 3, 1, '0', '', '07.gif', 9, 10, 2, '', 0, 21),
+(40, 'mainmenu', 'Р“РµРѕР»РѕРіРёСЏ', '/stati/geologija', 'category', '12', '_self', '', 2, 1, '0', '', 'objects035.gif', 7, 8, 2, '', 0, 21),
+(39, 'mainmenu', 'РђСЃС‚СЂРѕРЅРѕРјРёСЏ', '/stati/astronomija', 'category', '11', '_self', '', 1, 1, '0', '', 'objects049.gif', 5, 6, 2, '', 0, 21),
+(38, 'mainmenu', 'РљР»СѓР±С‹', '/clubs', 'component', 'clubs', '_self', '', 5, 1, '0', '', '', 22, 23, 1, '', 0, 1),
+(37, 'mainmenu', 'РћР±СЉСЏРІР»РµРЅРёСЏ', '/board', 'component', 'board', '_self', '', 8, 1, '0', '', '', 28, 29, 1, '', 0, 1),
+(44, 'mainmenu', 'РњР°СЂРєРµС‚РёРЅРі', '/stati/marketing', 'category', '13', '_self', '', 4, 1, '0', '', 'objects067.gif', 11, 12, 2, '', 0, 21),
+(43, 'mainmenu', 'Р›СѓС‡С€РёРµ С„РѕС‚Рѕ', '/photos/top.html', 'link', '/photos/top.html', '_self', '', 2, 1, '0', '', 'voteyes.gif', 17, 18, 2, '', 0, 20);
 
 DROP TABLE IF EXISTS `#__modules`;
 CREATE TABLE `#__modules` (
@@ -874,49 +874,49 @@ CREATE TABLE `#__modules` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__modules` (`id`, `position`, `name`, `title`, `is_external`, `content`, `ordering`, `showtitle`, `published`, `user`, `config`, `original`, `css_prefix`, `access_list`, `cache`, `cachetime`, `cacheint`, `template`, `is_strict_bind`, `version`) VALUES
-(1, 'topmenu', 'Меню', 'Меню', 1, 'mod_menu', 6, 0, 1, 0, '---\nmenu: mainmenu\nshow_home: 1\ntpl: mod_menu.tpl\nis_sub_menu: 0\n', 1, '', '', 0, 1, 'HOUR', 'module_simple.tpl', 0, '1.0'),
-(17, 'top', 'Главная страница', 'Добро пожаловать!', 0, '<table cellspacing="0" cellpadding="0" border="0" width="100%">\r\n    <tbody>\r\n        <tr>\r\n            <td width="100" valign="top"><a target="_blank" href="http://www.instantcms.ru"><img border="0" alt="" src="/images/content/community.png" /></a></td>\r\n            <td>\r\n            <p class="moduletitle">Добро пожаловать!</p>\r\n            <p>Мы рады приветствовать Вас в нашей социальной сети. После регистрации Вам станут доступны все функции сайта.</p>\r\n            <p>Вы сможете завести блог, загружать фотографии и общаться с друзьями.</p>\r\n            <div>\r\n            <div>Чтобы изменить этот текст, <a href="/admin/index.php?view=modules&amp;do=edit&amp;id=17">отредактируйте модуль &quot;Главная страница&quot;</a>.</div>\r\n            </div>\r\n            </td>\r\n        </tr>\r\n    </tbody>\r\n</table>', 0, 0, 1, 1, '---\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(44, 'sidebar', 'Облако тегов', 'Облако тегов', 1, 'mod_tags', 18, 0, 0, 0, '---\ncat_id: \nsortby: tag\nmenuid: \nminfreq: 0\nminlen: 3\ntargets: \n  content: content\n  photo: photo\n  blogpost: blog\n  catalog: catalog\n  userphoto: userphoto\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(46, 'mainbottom', 'Новинки каталога', 'Новинки каталога', 1, 'mod_uc_latest', 30, 1, 0, 0, '---\nnewscount: 6\nshowtype: list\nshowf: 2\ncat_id: \nsubs: 1\nfulllink: 0\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(26, 'sidebar', 'Корзина покупателя', 'Корзина', 1, 'mod_cart', 19, 1, 0, 0, '---\nshowtype: list\nshowqty: 1\nmenuid: 23\nsource: catalog\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(25, 'sidebar', 'Голосования', 'Голосования', 1, 'mod_polls', 2, 1, 1, 0, '---\nshownum: 0\npoll_id: 2\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(27, 'sidebar', 'Поиск', 'Поиск', 1, 'mod_search', 1, 0, 0, 0, '---\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(19, 'maintop', 'Последние материалы', 'Новые статьи', 1, 'mod_latest', 2, 1, 1, 0, '---\nnewscount: 4\nshowdesc: 0\nshowdate: 1\nshowcom: 1\nshowrss: 1\ncat_id: 6\nsubs: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
-(20, 'topmenu', 'Авторизация', 'Авторизация', 1, 'mod_auth', 0, 1, 1, 0, '---\nautolog: 1\npassrem: 1\n', 1, '', '', 0, 1, 'MINUTE', 'module.tpl', 0, '1.0'),
-(22, 'topmenu', 'Последние регистрации', 'Новые пользователи', 1, 'mod_lastreg', 2, 1, 1, 0, '---\nnewscount: 5\nview_type: hr_table\nmaxcool: 2\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
-(23, 'sidebar', 'Случайное изображение', 'Случайная картинка', 1, 'mod_random_image', 21, 1, 0, 0, '---\nshowtitle: 1\nalbum_id: 0\nmenuid: 20\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(24, 'sidebar', 'Часы', 'Часы', 1, 'mod_clock', 17, 1, 0, 0, '---\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(37, 'sidebar', 'Категории прайса', 'Категории прайса', 1, 'mod_pricecat', 14, 1, 0, 0, '---\nshowdesc: 0\nicon: /images/markers/pricelist.png\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(36, 'sidebar', 'Разделы сайта', 'Статьи', 1, 'mod_category', 13, 1, 0, 0, '---\nshowdesc: 0\ncategory_id: 6\nicon: /images/markers/folder.png\nmenuid: 21\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(39, 'sidebar', 'Выбор шаблона', 'Выбор шаблона', 1, 'mod_template', 12, 1, 0, 0, '---\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(47, 'mainbottom', 'Популярное в каталоге', 'Популярное в каталоге', 1, 'mod_uc_popular', 23, 1, 0, 0, '---\nnum: 10\ncat_id: 0\nmenuid: 23\nshowf: 2\nshowtype: thumb\nfulllink: 1\nsort: rating\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(49, 'sidebar', 'Кто онлайн?', 'Кто онлайн?', 1, 'mod_whoonline', 24, 1, 1, 0, '---\nshow_today: 1\nadmin_editor: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
-(50, 'topmenu', 'Темы на форуме', 'Новости форума', 1, 'mod_forum', 31, 1, 1, 0, '---\nshownum: 2\nshowtype: web2\nshowforum: 0\nshowlink: 0\nshowtext: 0\nmenuid: 18\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(51, 'sidebar', 'Случайное фото', 'Случайное фото', 1, 'mod_user_image', 25, 1, 0, 0, '---\nshowtitle: 1\nmenuid: 15\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(52, 'sidebar', 'Внешний файл', 'Внешний файл', 0, '<p>{ФАЙЛ=test.php}</p>', 11, 1, 0, 1, '---\n', 0, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(56, 'sidebar', 'Архив статей', 'Архив новостей', 1, 'mod_arhive', 27, 1, 0, 0, '---\nsource: both\ncat_id: 6\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(54, 'sidebar', 'Случайное в каталоге', 'Случайное в каталоге', 1, 'mod_uc_random', 26, 1, 0, 0, '---\ncat_id: 1\ncount: 2\nshowtitle: 1\nshowcat: 0\nmenuid: 23\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(60, 'maintop', 'Лента RSS ', 'Лента новостей', 1, 'mod_rss', 9, 1, 0, 0, '---\nshowdesc: 0\nshowicon: 1\nitemslimit: 6\nrssurl: http://portal.novator.ru/ngnews.rss\ncols: 2\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(61, 'sidebar', 'Последние комментарии', 'Последние комментарии', 1, 'mod_comments', 4, 1, 1, 0, '---\nshownum: 10\nminrate: 0\nshowdesc: 1\nshowrss: 1\nshowtarg: 0\ntargets: \n  faq: faq\n  catalog: catalog\n  boarditem: boarditem\n  blog: blog\n  article: article\n  palbum: palbum\n  photo: photo\n  userphoto: userphoto\n', 1, '', '', 0, 1, 'MINUTE', 'module.tpl', 0, '1.0'),
-(62, 'maintop', 'Новинки фотогалереи', 'Новинки фотогалереи', 1, 'mod_latestphoto', 32, 1, 1, 0, '---\nshownum: 6\nmaxcols: 2\nshowclubs: 1\nshowalbum: 0\nshowdate: 0\nshowcom: 0\nalbum_id: 100\nshowtype: short\nshowmore: 0\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
-(63, 'sidebar', 'Популярные фотографии', 'Популярные фотографии', 1, 'mod_bestphoto', 10, 1, 0, 0, '---\nshownum: 2\nmaxcols: 2\nshowalbum: 0\nshowdate: 1\nshowcom: 1\nalbum_id: 0\nsort: rating\nmenuid: 20\nshowtype: full\nshowmore: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(64, 'maintop', 'Новое в блогах', 'Новое в блогах', 1, 'mod_latestblogs', 2, 1, 1, 0, '---\nnamemode: blog\nshownum: 10\nminrate: 0\nshowrss: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(65, 'sidebar', 'Популярное в блогах', 'Популярное в блогах', 1, 'mod_bestblogs', 3, 1, 1, 0, '---\nnamemode: blog\nshownum: 10\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
-(66, 'header', 'Меню пользователя', 'Меню пользователя', 1, 'mod_usermenu', 1, 0, 1, 0, '---\navatar: 1\nshowtype: text\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(67, 'mainbottom', 'Последние вопросы FAQ', 'Последние вопросы FAQ', 1, 'mod_latest_faq', 33, 1, 0, 0, '---\nnewscount: 5\nmaxlen: 140\ncat_id: \n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(69, 'maintop', 'Популярные статьи', 'Популярные статьи', 1, 'mod_bestcontent', 3, 1, 0, 0, '---\nshownum: 4\nmenuid: 21\nshowlink: 1\nshowdesc: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(70, 'sidebar', 'Поиск пользователей', 'Поиск пользователей', 1, 'mod_usersearch', 4, 1, 0, 0, '---\ncat_id: \nsource: \nmenuid: 15\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
-(71, 'maintop', 'Новые объявления', 'Новые объявления', 1, 'mod_latestboard', 1, 1, 1, 0, '---\nshownum: 10\nshowcity: 1\ncat_id: -1\nsubs: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(72, 'maintop', 'Рейтинг пользователей', 'Рейтинг пользователей', 1, 'mod_user_rating', 1, 1, 0, 0, '---\ncount: 20\nmenuid: 15\nview_type: rating\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(73, 'maintop', 'Новые клубы', 'Новые клубы', 1, 'mod_latestclubs', 3, 1, 0, 0, '---\ncount: 2\nmenuid: 38\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(74, 'maintop', 'Популярные клубы', 'Популярные клубы', 1, 'mod_bestclubs', 4, 1, 0, 0, '---\ncount: 2\nmenuid: 38\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(75, 'sidebar', 'Доска почета', 'Доска почета', 1, 'mod_respect', 1, 1, 1, 0, '---\nview: all\nshow_awards: 1\norder: desc\nlimit: 5\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
-(76, 'sidebar', 'Файлы пользователей', 'Файлы пользователей', 1, 'mod_userfiles', 1, 1, 0, 0, '---\nmenuid: 0\nsw_stats: 1\nsw_latest: 1\nsw_popular: 1\nnum_latest: 5\nnum_popular: 5\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
-(87, 'maintop', 'Лента активности', 'Лента активности', 1, 'mod_actions', 1, 1, 1, 0, '---\nlimit: 15\nshow_target: 0\naction_types: \n  16: 16\n  15: 15\n  20: 20\n  13: 13\n  29: 29\n  24: 24\n  23: 23\n  2: 2\n  27: 27\n  12: 12\n  10: 10\n  25: 25\n  17: 17\n  8: 8\n  18: 18\n  7: 7\n  26: 26\n  19: 19\n  22: 22\n  11: 11\n  21: 21\n  28: 28\n  9: 9\n  14: 14\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.7'),
-(82, 'sidebar', 'Приветствие', 'Универсальный каталог', 0, '<p>С помощью компонента &laquo;Универсальный каталог&raquo;, в котором Вы сейчас находитесь, можно организовать хранение любых данных. От карандашей до автомобилей.</p>\r\n<p>Каждая рубрика каталога имеет собственный набор характеристик, который можно изменить в панели управления. Пользователи могут фильтровать записи каталога по характеристикам одним щелчком мыши.&nbsp;</p>\r\n<p>Любой пользователь может добавлять собственные записи в те рубрики каталога, для которых это разрешено в настройках.</p>', 14, 1, 1, 1, '', 1, '', '', 0, 24, 'HOUR', 'module.tpl', 1, '1.0'),
-(83, 'sidebar', 'Статистика пользователей', 'Статистика пользователей', 1, 'mod_user_stats', 1, 1, 1, 0, '---\nshow_total: 1\nshow_online: 1\nshow_gender: 1\nshow_city: 1\nshow_bday: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
-(84, 'sidebar', 'Друзья онлайн', 'Друзья онлайн', 1, 'mod_user_friend', 5, 1, 0, 0, '---\r\nlimit: 5\r\nview_type: table', 1, '', '', 0, 1, 'HOUR', 'module_simple.tpl', 0, '1.0'),
-(85, 'sidebar', 'Пригласить друга', 'Пригласить друга', 1, 'mod_invite', 1, 1, 0, 0, '', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0');
+(1, 'topmenu', 'РњРµРЅСЋ', 'РњРµРЅСЋ', 1, 'mod_menu', 6, 0, 1, 0, '---\nmenu: mainmenu\nshow_home: 1\ntpl: mod_menu.tpl\nis_sub_menu: 0\n', 1, '', '', 0, 1, 'HOUR', 'module_simple.tpl', 0, '1.0'),
+(17, 'top', 'Р“Р»Р°РІРЅР°СЏ СЃС‚СЂР°РЅРёС†Р°', 'Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ!', 0, '<table cellspacing="0" cellpadding="0" border="0" width="100%">\r\n    <tbody>\r\n        <tr>\r\n            <td width="100" valign="top"><a target="_blank" href="http://www.instantcms.ru"><img border="0" alt="" src="/images/content/community.png" /></a></td>\r\n            <td>\r\n            <p class="moduletitle">Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ!</p>\r\n            <p>РњС‹ СЂР°РґС‹ РїСЂРёРІРµС‚СЃС‚РІРѕРІР°С‚СЊ Р’Р°СЃ РІ РЅР°С€РµР№ СЃРѕС†РёР°Р»СЊРЅРѕР№ СЃРµС‚Рё. РџРѕСЃР»Рµ СЂРµРіРёСЃС‚СЂР°С†РёРё Р’Р°Рј СЃС‚Р°РЅСѓС‚ РґРѕСЃС‚СѓРїРЅС‹ РІСЃРµ С„СѓРЅРєС†РёРё СЃР°Р№С‚Р°.</p>\r\n            <p>Р’С‹ СЃРјРѕР¶РµС‚Рµ Р·Р°РІРµСЃС‚Рё Р±Р»РѕРі, Р·Р°РіСЂСѓР¶Р°С‚СЊ С„РѕС‚РѕРіСЂР°С„РёРё Рё РѕР±С‰Р°С‚СЊСЃСЏ СЃ РґСЂСѓР·СЊСЏРјРё.</p>\r\n            <div>\r\n            <div>Р§С‚РѕР±С‹ РёР·РјРµРЅРёС‚СЊ СЌС‚РѕС‚ С‚РµРєСЃС‚, <a href="/admin/index.php?view=modules&amp;do=edit&amp;id=17">РѕС‚СЂРµРґР°РєС‚РёСЂСѓР№С‚Рµ РјРѕРґСѓР»СЊ &quot;Р“Р»Р°РІРЅР°СЏ СЃС‚СЂР°РЅРёС†Р°&quot;</a>.</div>\r\n            </div>\r\n            </td>\r\n        </tr>\r\n    </tbody>\r\n</table>', 0, 0, 1, 1, '---\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(44, 'sidebar', 'РћР±Р»Р°РєРѕ С‚РµРіРѕРІ', 'РћР±Р»Р°РєРѕ С‚РµРіРѕРІ', 1, 'mod_tags', 18, 0, 0, 0, '---\ncat_id: \nsortby: tag\nmenuid: \nminfreq: 0\nminlen: 3\ntargets: \n  content: content\n  photo: photo\n  blogpost: blog\n  catalog: catalog\n  userphoto: userphoto\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(46, 'mainbottom', 'РќРѕРІРёРЅРєРё РєР°С‚Р°Р»РѕРіР°', 'РќРѕРІРёРЅРєРё РєР°С‚Р°Р»РѕРіР°', 1, 'mod_uc_latest', 30, 1, 0, 0, '---\nnewscount: 6\nshowtype: list\nshowf: 2\ncat_id: \nsubs: 1\nfulllink: 0\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(26, 'sidebar', 'РљРѕСЂР·РёРЅР° РїРѕРєСѓРїР°С‚РµР»СЏ', 'РљРѕСЂР·РёРЅР°', 1, 'mod_cart', 19, 1, 0, 0, '---\nshowtype: list\nshowqty: 1\nmenuid: 23\nsource: catalog\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(25, 'sidebar', 'Р“РѕР»РѕСЃРѕРІР°РЅРёСЏ', 'Р“РѕР»РѕСЃРѕРІР°РЅРёСЏ', 1, 'mod_polls', 2, 1, 1, 0, '---\nshownum: 0\npoll_id: 2\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(27, 'sidebar', 'РџРѕРёСЃРє', 'РџРѕРёСЃРє', 1, 'mod_search', 1, 0, 0, 0, '---\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(19, 'maintop', 'РџРѕСЃР»РµРґРЅРёРµ РјР°С‚РµСЂРёР°Р»С‹', 'РќРѕРІС‹Рµ СЃС‚Р°С‚СЊРё', 1, 'mod_latest', 2, 1, 1, 0, '---\nnewscount: 4\nshowdesc: 0\nshowdate: 1\nshowcom: 1\nshowrss: 1\ncat_id: 6\nsubs: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
+(20, 'topmenu', 'РђРІС‚РѕСЂРёР·Р°С†РёСЏ', 'РђРІС‚РѕСЂРёР·Р°С†РёСЏ', 1, 'mod_auth', 0, 1, 1, 0, '---\nautolog: 1\npassrem: 1\n', 1, '', '', 0, 1, 'MINUTE', 'module.tpl', 0, '1.0'),
+(22, 'topmenu', 'РџРѕСЃР»РµРґРЅРёРµ СЂРµРіРёСЃС‚СЂР°С†РёРё', 'РќРѕРІС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё', 1, 'mod_lastreg', 2, 1, 1, 0, '---\nnewscount: 5\nview_type: hr_table\nmaxcool: 2\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
+(23, 'sidebar', 'РЎР»СѓС‡Р°Р№РЅРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ', 'РЎР»СѓС‡Р°Р№РЅР°СЏ РєР°СЂС‚РёРЅРєР°', 1, 'mod_random_image', 21, 1, 0, 0, '---\nshowtitle: 1\nalbum_id: 0\nmenuid: 20\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(24, 'sidebar', 'Р§Р°СЃС‹', 'Р§Р°СЃС‹', 1, 'mod_clock', 17, 1, 0, 0, '---\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(37, 'sidebar', 'РљР°С‚РµРіРѕСЂРёРё РїСЂР°Р№СЃР°', 'РљР°С‚РµРіРѕСЂРёРё РїСЂР°Р№СЃР°', 1, 'mod_pricecat', 14, 1, 0, 0, '---\nshowdesc: 0\nicon: /images/markers/pricelist.png\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(36, 'sidebar', 'Р Р°Р·РґРµР»С‹ СЃР°Р№С‚Р°', 'РЎС‚Р°С‚СЊРё', 1, 'mod_category', 13, 1, 0, 0, '---\nshowdesc: 0\ncategory_id: 6\nicon: /images/markers/folder.png\nmenuid: 21\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(39, 'sidebar', 'Р’С‹Р±РѕСЂ С€Р°Р±Р»РѕРЅР°', 'Р’С‹Р±РѕСЂ С€Р°Р±Р»РѕРЅР°', 1, 'mod_template', 12, 1, 0, 0, '---\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(47, 'mainbottom', 'РџРѕРїСѓР»СЏСЂРЅРѕРµ РІ РєР°С‚Р°Р»РѕРіРµ', 'РџРѕРїСѓР»СЏСЂРЅРѕРµ РІ РєР°С‚Р°Р»РѕРіРµ', 1, 'mod_uc_popular', 23, 1, 0, 0, '---\nnum: 10\ncat_id: 0\nmenuid: 23\nshowf: 2\nshowtype: thumb\nfulllink: 1\nsort: rating\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(49, 'sidebar', 'РљС‚Рѕ РѕРЅР»Р°Р№РЅ?', 'РљС‚Рѕ РѕРЅР»Р°Р№РЅ?', 1, 'mod_whoonline', 24, 1, 1, 0, '---\nshow_today: 1\nadmin_editor: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
+(50, 'topmenu', 'РўРµРјС‹ РЅР° С„РѕСЂСѓРјРµ', 'РќРѕРІРѕСЃС‚Рё С„РѕСЂСѓРјР°', 1, 'mod_forum', 31, 1, 1, 0, '---\nshownum: 2\nshowtype: web2\nshowforum: 0\nshowlink: 0\nshowtext: 0\nmenuid: 18\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(51, 'sidebar', 'РЎР»СѓС‡Р°Р№РЅРѕРµ С„РѕС‚Рѕ', 'РЎР»СѓС‡Р°Р№РЅРѕРµ С„РѕС‚Рѕ', 1, 'mod_user_image', 25, 1, 0, 0, '---\nshowtitle: 1\nmenuid: 15\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(52, 'sidebar', 'Р’РЅРµС€РЅРёР№ С„Р°Р№Р»', 'Р’РЅРµС€РЅРёР№ С„Р°Р№Р»', 0, '<p>{Р¤РђР™Р›=test.php}</p>', 11, 1, 0, 1, '---\n', 0, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(56, 'sidebar', 'РђСЂС…РёРІ СЃС‚Р°С‚РµР№', 'РђСЂС…РёРІ РЅРѕРІРѕСЃС‚РµР№', 1, 'mod_arhive', 27, 1, 0, 0, '---\nsource: both\ncat_id: 6\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(54, 'sidebar', 'РЎР»СѓС‡Р°Р№РЅРѕРµ РІ РєР°С‚Р°Р»РѕРіРµ', 'РЎР»СѓС‡Р°Р№РЅРѕРµ РІ РєР°С‚Р°Р»РѕРіРµ', 1, 'mod_uc_random', 26, 1, 0, 0, '---\ncat_id: 1\ncount: 2\nshowtitle: 1\nshowcat: 0\nmenuid: 23\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(60, 'maintop', 'Р›РµРЅС‚Р° RSS ', 'Р›РµРЅС‚Р° РЅРѕРІРѕСЃС‚РµР№', 1, 'mod_rss', 9, 1, 0, 0, '---\nshowdesc: 0\nshowicon: 1\nitemslimit: 6\nrssurl: http://portal.novator.ru/ngnews.rss\ncols: 2\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(61, 'sidebar', 'РџРѕСЃР»РµРґРЅРёРµ РєРѕРјРјРµРЅС‚Р°СЂРёРё', 'РџРѕСЃР»РµРґРЅРёРµ РєРѕРјРјРµРЅС‚Р°СЂРёРё', 1, 'mod_comments', 4, 1, 1, 0, '---\nshownum: 10\nminrate: 0\nshowdesc: 1\nshowrss: 1\nshowtarg: 0\ntargets: \n  faq: faq\n  catalog: catalog\n  boarditem: boarditem\n  blog: blog\n  article: article\n  palbum: palbum\n  photo: photo\n  userphoto: userphoto\n', 1, '', '', 0, 1, 'MINUTE', 'module.tpl', 0, '1.0'),
+(62, 'maintop', 'РќРѕРІРёРЅРєРё С„РѕС‚РѕРіР°Р»РµСЂРµРё', 'РќРѕРІРёРЅРєРё С„РѕС‚РѕРіР°Р»РµСЂРµРё', 1, 'mod_latestphoto', 32, 1, 1, 0, '---\nshownum: 6\nmaxcols: 2\nshowclubs: 1\nshowalbum: 0\nshowdate: 0\nshowcom: 0\nalbum_id: 100\nshowtype: short\nshowmore: 0\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
+(63, 'sidebar', 'РџРѕРїСѓР»СЏСЂРЅС‹Рµ С„РѕС‚РѕРіСЂР°С„РёРё', 'РџРѕРїСѓР»СЏСЂРЅС‹Рµ С„РѕС‚РѕРіСЂР°С„РёРё', 1, 'mod_bestphoto', 10, 1, 0, 0, '---\nshownum: 2\nmaxcols: 2\nshowalbum: 0\nshowdate: 1\nshowcom: 1\nalbum_id: 0\nsort: rating\nmenuid: 20\nshowtype: full\nshowmore: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(64, 'maintop', 'РќРѕРІРѕРµ РІ Р±Р»РѕРіР°С…', 'РќРѕРІРѕРµ РІ Р±Р»РѕРіР°С…', 1, 'mod_latestblogs', 2, 1, 1, 0, '---\nnamemode: blog\nshownum: 10\nminrate: 0\nshowrss: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(65, 'sidebar', 'РџРѕРїСѓР»СЏСЂРЅРѕРµ РІ Р±Р»РѕРіР°С…', 'РџРѕРїСѓР»СЏСЂРЅРѕРµ РІ Р±Р»РѕРіР°С…', 1, 'mod_bestblogs', 3, 1, 1, 0, '---\nnamemode: blog\nshownum: 10\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
+(66, 'header', 'РњРµРЅСЋ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ', 'РњРµРЅСЋ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ', 1, 'mod_usermenu', 1, 0, 1, 0, '---\navatar: 1\nshowtype: text\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(67, 'mainbottom', 'РџРѕСЃР»РµРґРЅРёРµ РІРѕРїСЂРѕСЃС‹ FAQ', 'РџРѕСЃР»РµРґРЅРёРµ РІРѕРїСЂРѕСЃС‹ FAQ', 1, 'mod_latest_faq', 33, 1, 0, 0, '---\nnewscount: 5\nmaxlen: 140\ncat_id: \n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(69, 'maintop', 'РџРѕРїСѓР»СЏСЂРЅС‹Рµ СЃС‚Р°С‚СЊРё', 'РџРѕРїСѓР»СЏСЂРЅС‹Рµ СЃС‚Р°С‚СЊРё', 1, 'mod_bestcontent', 3, 1, 0, 0, '---\nshownum: 4\nmenuid: 21\nshowlink: 1\nshowdesc: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(70, 'sidebar', 'РџРѕРёСЃРє РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', 'РџРѕРёСЃРє РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', 1, 'mod_usersearch', 4, 1, 0, 0, '---\ncat_id: \nsource: \nmenuid: 15\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
+(71, 'maintop', 'РќРѕРІС‹Рµ РѕР±СЉСЏРІР»РµРЅРёСЏ', 'РќРѕРІС‹Рµ РѕР±СЉСЏРІР»РµРЅРёСЏ', 1, 'mod_latestboard', 1, 1, 1, 0, '---\nshownum: 10\nshowcity: 1\ncat_id: -1\nsubs: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(72, 'maintop', 'Р РµР№С‚РёРЅРі РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', 'Р РµР№С‚РёРЅРі РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', 1, 'mod_user_rating', 1, 1, 0, 0, '---\ncount: 20\nmenuid: 15\nview_type: rating\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(73, 'maintop', 'РќРѕРІС‹Рµ РєР»СѓР±С‹', 'РќРѕРІС‹Рµ РєР»СѓР±С‹', 1, 'mod_latestclubs', 3, 1, 0, 0, '---\ncount: 2\nmenuid: 38\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(74, 'maintop', 'РџРѕРїСѓР»СЏСЂРЅС‹Рµ РєР»СѓР±С‹', 'РџРѕРїСѓР»СЏСЂРЅС‹Рµ РєР»СѓР±С‹', 1, 'mod_bestclubs', 4, 1, 0, 0, '---\ncount: 2\nmenuid: 38\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(75, 'sidebar', 'Р”РѕСЃРєР° РїРѕС‡РµС‚Р°', 'Р”РѕСЃРєР° РїРѕС‡РµС‚Р°', 1, 'mod_respect', 1, 1, 1, 0, '---\nview: all\nshow_awards: 1\norder: desc\nlimit: 5\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
+(76, 'sidebar', 'Р¤Р°Р№Р»С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', 'Р¤Р°Р№Р»С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', 1, 'mod_userfiles', 1, 1, 0, 0, '---\nmenuid: 0\nsw_stats: 1\nsw_latest: 1\nsw_popular: 1\nnum_latest: 5\nnum_popular: 5\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 0, '1.0'),
+(87, 'maintop', 'Р›РµРЅС‚Р° Р°РєС‚РёРІРЅРѕСЃС‚Рё', 'Р›РµРЅС‚Р° Р°РєС‚РёРІРЅРѕСЃС‚Рё', 1, 'mod_actions', 1, 1, 1, 0, '---\nlimit: 15\nshow_target: 0\naction_types: \n  16: 16\n  15: 15\n  20: 20\n  13: 13\n  29: 29\n  24: 24\n  23: 23\n  2: 2\n  27: 27\n  12: 12\n  10: 10\n  25: 25\n  17: 17\n  8: 8\n  18: 18\n  7: 7\n  26: 26\n  19: 19\n  22: 22\n  11: 11\n  21: 21\n  28: 28\n  9: 9\n  14: 14\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.7'),
+(82, 'sidebar', 'РџСЂРёРІРµС‚СЃС‚РІРёРµ', 'РЈРЅРёРІРµСЂСЃР°Р»СЊРЅС‹Р№ РєР°С‚Р°Р»РѕРі', 0, '<p>РЎ РїРѕРјРѕС‰СЊСЋ РєРѕРјРїРѕРЅРµРЅС‚Р° &laquo;РЈРЅРёРІРµСЂСЃР°Р»СЊРЅС‹Р№ РєР°С‚Р°Р»РѕРі&raquo;, РІ РєРѕС‚РѕСЂРѕРј Р’С‹ СЃРµР№С‡Р°СЃ РЅР°С…РѕРґРёС‚РµСЃСЊ, РјРѕР¶РЅРѕ РѕСЂРіР°РЅРёР·РѕРІР°С‚СЊ С…СЂР°РЅРµРЅРёРµ Р»СЋР±С‹С… РґР°РЅРЅС‹С…. РћС‚ РєР°СЂР°РЅРґР°С€РµР№ РґРѕ Р°РІС‚РѕРјРѕР±РёР»РµР№.</p>\r\n<p>РљР°Р¶РґР°СЏ СЂСѓР±СЂРёРєР° РєР°С‚Р°Р»РѕРіР° РёРјРµРµС‚ СЃРѕР±СЃС‚РІРµРЅРЅС‹Р№ РЅР°Р±РѕСЂ С…Р°СЂР°РєС‚РµСЂРёСЃС‚РёРє, РєРѕС‚РѕСЂС‹Р№ РјРѕР¶РЅРѕ РёР·РјРµРЅРёС‚СЊ РІ РїР°РЅРµР»Рё СѓРїСЂР°РІР»РµРЅРёСЏ. РџРѕР»СЊР·РѕРІР°С‚РµР»Рё РјРѕРіСѓС‚ С„РёР»СЊС‚СЂРѕРІР°С‚СЊ Р·Р°РїРёСЃРё РєР°С‚Р°Р»РѕРіР° РїРѕ С…Р°СЂР°РєС‚РµСЂРёСЃС‚РёРєР°Рј РѕРґРЅРёРј С‰РµР»С‡РєРѕРј РјС‹С€Рё.&nbsp;</p>\r\n<p>Р›СЋР±РѕР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РјРѕР¶РµС‚ РґРѕР±Р°РІР»СЏС‚СЊ СЃРѕР±СЃС‚РІРµРЅРЅС‹Рµ Р·Р°РїРёСЃРё РІ С‚Рµ СЂСѓР±СЂРёРєРё РєР°С‚Р°Р»РѕРіР°, РґР»СЏ РєРѕС‚РѕСЂС‹С… СЌС‚Рѕ СЂР°Р·СЂРµС€РµРЅРѕ РІ РЅР°СЃС‚СЂРѕР№РєР°С….</p>', 14, 1, 1, 1, '', 1, '', '', 0, 24, 'HOUR', 'module.tpl', 1, '1.0'),
+(83, 'sidebar', 'РЎС‚Р°С‚РёСЃС‚РёРєР° РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', 'РЎС‚Р°С‚РёСЃС‚РёРєР° РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', 1, 'mod_user_stats', 1, 1, 1, 0, '---\nshow_total: 1\nshow_online: 1\nshow_gender: 1\nshow_city: 1\nshow_bday: 1\n', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0'),
+(84, 'sidebar', 'Р”СЂСѓР·СЊСЏ РѕРЅР»Р°Р№РЅ', 'Р”СЂСѓР·СЊСЏ РѕРЅР»Р°Р№РЅ', 1, 'mod_user_friend', 5, 1, 0, 0, '---\r\nlimit: 5\r\nview_type: table', 1, '', '', 0, 1, 'HOUR', 'module_simple.tpl', 0, '1.0'),
+(85, 'sidebar', 'РџСЂРёРіР»Р°СЃРёС‚СЊ РґСЂСѓРіР°', 'РџСЂРёРіР»Р°СЃРёС‚СЊ РґСЂСѓРіР°', 1, 'mod_invite', 1, 1, 0, 0, '', 1, '', '', 0, 1, 'HOUR', 'module.tpl', 1, '1.0');
 
 DROP TABLE IF EXISTS `#__modules_bind`;
 CREATE TABLE `#__modules_bind` (
@@ -1063,10 +1063,10 @@ CREATE TABLE `#__photo_albums` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__photo_albums` (`id`, `parent_id`, `ordering`, `NSLeft`, `NSRight`, `NSDiffer`, `NSIgnore`, `NSLevel`, `title`, `description`, `published`, `showdate`, `iconurl`, `pubdate`, `orderby`, `orderto`, `public`, `perpage`, `cssprefix`, `thumb1`, `thumb2`, `thumbsqr`, `showtype`, `nav`, `uplimit`, `maxcols`, `orderform`, `showtags`, `bbcode`, `user_id`, `is_comments`) VALUES
-(100, 0, 1, 1, 6, '', 0, 0, '-- Корневой альбом --', '', 1, 1, '', '2008-05-30 12:03:07', 'title', 'asc', 0, 15, '', 96, 480, 1, 'list', 1, 0, 4, 1, 1, 1, 1, 0),
-(1, 100, 6, 2, 3, '', 0, 1, 'Общий альбом', 'Любой зарегистрированный пользователь может добавить свою фотографию в этот альбом.', 1, 1, '', '2008-04-24 10:18:21', 'pubdate', 'asc', 2, 15, '', 96, 600, 1, 'lightbox', 1, 10, 5, 1, 1, 1, 1, 1),
-(1034, 100, 8, 4, 5, '', 0, 1, 'Природа', 'Разные красивые пейзажи', 1, 1, '', '2010-10-12 13:44:56', 'pubdate', 'desc', 2, 20, '', 96, 600, 1, 'lightbox', 1, 20, 4, 1, 1, 1, 1, 1),
-(1035, 0, 1, 1, 2, 'club14', 0, 0, '-Клуб: Клуб любителей InstantCMS-', '', 0, 1, '', '0000-00-00 00:00:00', 'title', 'asc', 0, 15, '', 96, 480, 1, 'list', 1, 0, 4, 0, 1, 1, 14, 0);
+(100, 0, 1, 1, 6, '', 0, 0, '-- РљРѕСЂРЅРµРІРѕР№ Р°Р»СЊР±РѕРј --', '', 1, 1, '', '2008-05-30 12:03:07', 'title', 'asc', 0, 15, '', 96, 480, 1, 'list', 1, 0, 4, 1, 1, 1, 1, 0),
+(1, 100, 6, 2, 3, '', 0, 1, 'РћР±С‰РёР№ Р°Р»СЊР±РѕРј', 'Р›СЋР±РѕР№ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РјРѕР¶РµС‚ РґРѕР±Р°РІРёС‚СЊ СЃРІРѕСЋ С„РѕС‚РѕРіСЂР°С„РёСЋ РІ СЌС‚РѕС‚ Р°Р»СЊР±РѕРј.', 1, 1, '', '2008-04-24 10:18:21', 'pubdate', 'asc', 2, 15, '', 96, 600, 1, 'lightbox', 1, 10, 5, 1, 1, 1, 1, 1),
+(1034, 100, 8, 4, 5, '', 0, 1, 'РџСЂРёСЂРѕРґР°', 'Р Р°Р·РЅС‹Рµ РєСЂР°СЃРёРІС‹Рµ РїРµР№Р·Р°Р¶Рё', 1, 1, '', '2010-10-12 13:44:56', 'pubdate', 'desc', 2, 20, '', 96, 600, 1, 'lightbox', 1, 20, 4, 1, 1, 1, 1, 1),
+(1035, 0, 1, 1, 2, 'club14', 0, 0, '-РљР»СѓР±: РљР»СѓР± Р»СЋР±РёС‚РµР»РµР№ InstantCMS-', '', 0, 1, '', '0000-00-00 00:00:00', 'title', 'asc', 0, 15, '', 96, 480, 1, 'list', 1, 0, 4, 0, 1, 1, 14, 0);
 
 DROP TABLE IF EXISTS `#__photo_files`;
 CREATE TABLE `#__photo_files` (
@@ -1089,11 +1089,11 @@ CREATE TABLE `#__photo_files` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__photo_files` (`id`, `album_id`, `title`, `description`, `pubdate`, `file`, `published`, `hits`, `showdate`, `comments`, `user_id`, `owner`) VALUES
-(10, 1, 'Закат на пляже', '', '2009-08-31 18:26:43', 'd0633d5a84f03a27f1b7d0419947e968.jpg', 1, 25, 1, 1, 1, 'photos'),
-(11, 1, 'Флорида', '', '2009-08-31 18:27:33', '5e7a09ffcaa383df24d25d56c315f0d0.jpg', 1, 28, 1, 1, 1, 'photos'),
-(15, 1034, 'Красивый цветок', '', '2010-10-12 13:47:32', '312604de74e4de8aec59626ac024c7d3.jpg', 1, 6, 1, 1, 1, 'photos'),
-(16, 1034, 'Густые джунгли', '', '2010-10-12 13:47:52', 'e223946b3d76cc37417d0304c9cb23a1.jpg', 1, 40, 1, 1, 1, 'photos'),
-(17, 1034, 'Вид на озеро', '<p>Красивый темный пейзаж с видом на озеро</p>', '2010-10-12 17:00:27', '38fde6623d0ad43c79c4d90a88a07009.jpg', 1, 25, 1, 1, 1, 'photos');
+(10, 1, 'Р—Р°РєР°С‚ РЅР° РїР»СЏР¶Рµ', '', '2009-08-31 18:26:43', 'd0633d5a84f03a27f1b7d0419947e968.jpg', 1, 25, 1, 1, 1, 'photos'),
+(11, 1, 'Р¤Р»РѕСЂРёРґР°', '', '2009-08-31 18:27:33', '5e7a09ffcaa383df24d25d56c315f0d0.jpg', 1, 28, 1, 1, 1, 'photos'),
+(15, 1034, 'РљСЂР°СЃРёРІС‹Р№ С†РІРµС‚РѕРє', '', '2010-10-12 13:47:32', '312604de74e4de8aec59626ac024c7d3.jpg', 1, 6, 1, 1, 1, 'photos'),
+(16, 1034, 'Р“СѓСЃС‚С‹Рµ РґР¶СѓРЅРіР»Рё', '', '2010-10-12 13:47:52', 'e223946b3d76cc37417d0304c9cb23a1.jpg', 1, 40, 1, 1, 1, 'photos'),
+(17, 1034, 'Р’РёРґ РЅР° РѕР·РµСЂРѕ', '<p>РљСЂР°СЃРёРІС‹Р№ С‚РµРјРЅС‹Р№ РїРµР№Р·Р°Р¶ СЃ РІРёРґРѕРј РЅР° РѕР·РµСЂРѕ</p>', '2010-10-12 17:00:27', '38fde6623d0ad43c79c4d90a88a07009.jpg', 1, 25, 1, 1, 1, 'photos');
 
 DROP TABLE IF EXISTS `#__plugins`;
 CREATE TABLE `#__plugins` (
@@ -1110,13 +1110,13 @@ CREATE TABLE `#__plugins` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__plugins` (`id`, `plugin`, `title`, `description`, `author`, `version`, `plugin_type`, `published`, `config`) VALUES
-(6, 'p_usertab', 'Demo Profile Plugin', 'Пример плагина - Добавляет вкладку "Статьи" в профили всех пользователей', 'InstantCMS Team', '1.0', 'plugin', 0, '---\nКоличество статей: 10\n'),
-(3, 'p_fckeditor', 'FCKEditor', 'Визуальный редактор', 'F. C. Knabben', '2.63', 'wysiwyg', 1, '---\n'),
-(5, 'p_demo', 'Demo Plugin', 'Пример плагина - Добавляет текст в конец каждой статьи на сайте', 'InstantCMS Team', '1.0', 'plugin', 0, '---\ntext: Added By Plugin From Parameter\ncolor: blue\ncounter: 1\n'),
-(8, 'p_ping', 'Пинг поисковых систем', 'Пингует Яндекс и Гугл при добавлении статей, объявлений и постов в блоги', 'InstantCMS Team', '1.0', 'plugin', 1, '---\nYandex HOST: ping.blogs.yandex.ru\nYandex PATH: /RPC2\nGoogle HOST: blogsearch.google.com\nGoogle PATH: /ping/RPC2\n'),
-(15, 'p_morecontent', 'Похожие статьи', 'Добавляет в конец каждой статьи список похожих статей.', 'Maximov & InstantCMS Team', '1.0', 'plugin', 0, '---\nlimit: 5\nunsort: 1\n'),
-(14, 'p_hidetext', 'Скрытый текст', 'Скрывает содержимое тега [hide] от незарегистрированных', 'InstantCMS Team', '1.0', 'plugin', 1, '---\n'),
-(16, 'p_loginza', 'Авторизация Loginza', 'Позволяет посетителям авторизоваться на сайте, используя аккаунты популярных социальных сетей', 'InstantCMS Team', '1.1', 'plugin', 0, '---\nПровайдеры: >\n  vkontakte,facebook,mailruapi,google,yandex,openid,twitter,webmoney,rambler,flickr,mailru,loginza,myopenid,lastfm,verisign,aol,steam\nЯзык (ru/uk/en): ru\n');
+(6, 'p_usertab', 'Demo Profile Plugin', 'РџСЂРёРјРµСЂ РїР»Р°РіРёРЅР° - Р”РѕР±Р°РІР»СЏРµС‚ РІРєР»Р°РґРєСѓ "РЎС‚Р°С‚СЊРё" РІ РїСЂРѕС„РёР»Рё РІСЃРµС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', 'InstantCMS Team', '1.0', 'plugin', 0, '---\nРљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚Р°С‚РµР№: 10\n'),
+(3, 'p_fckeditor', 'FCKEditor', 'Р’РёР·СѓР°Р»СЊРЅС‹Р№ СЂРµРґР°РєС‚РѕСЂ', 'F. C. Knabben', '2.63', 'wysiwyg', 1, '---\n'),
+(5, 'p_demo', 'Demo Plugin', 'РџСЂРёРјРµСЂ РїР»Р°РіРёРЅР° - Р”РѕР±Р°РІР»СЏРµС‚ С‚РµРєСЃС‚ РІ РєРѕРЅРµС† РєР°Р¶РґРѕР№ СЃС‚Р°С‚СЊРё РЅР° СЃР°Р№С‚Рµ', 'InstantCMS Team', '1.0', 'plugin', 0, '---\ntext: Added By Plugin From Parameter\ncolor: blue\ncounter: 1\n'),
+(8, 'p_ping', 'РџРёРЅРі РїРѕРёСЃРєРѕРІС‹С… СЃРёСЃС‚РµРј', 'РџРёРЅРіСѓРµС‚ РЇРЅРґРµРєСЃ Рё Р“СѓРіР» РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё СЃС‚Р°С‚РµР№, РѕР±СЉСЏРІР»РµРЅРёР№ Рё РїРѕСЃС‚РѕРІ РІ Р±Р»РѕРіРё', 'InstantCMS Team', '1.0', 'plugin', 1, '---\nYandex HOST: ping.blogs.yandex.ru\nYandex PATH: /RPC2\nGoogle HOST: blogsearch.google.com\nGoogle PATH: /ping/RPC2\n'),
+(15, 'p_morecontent', 'РџРѕС…РѕР¶РёРµ СЃС‚Р°С‚СЊРё', 'Р”РѕР±Р°РІР»СЏРµС‚ РІ РєРѕРЅРµС† РєР°Р¶РґРѕР№ СЃС‚Р°С‚СЊРё СЃРїРёСЃРѕРє РїРѕС…РѕР¶РёС… СЃС‚Р°С‚РµР№.', 'Maximov & InstantCMS Team', '1.0', 'plugin', 0, '---\nlimit: 5\nunsort: 1\n'),
+(14, 'p_hidetext', 'РЎРєСЂС‹С‚С‹Р№ С‚РµРєСЃС‚', 'РЎРєСЂС‹РІР°РµС‚ СЃРѕРґРµСЂР¶РёРјРѕРµ С‚РµРіР° [hide] РѕС‚ РЅРµР·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹С…', 'InstantCMS Team', '1.0', 'plugin', 1, '---\n'),
+(16, 'p_loginza', 'РђРІС‚РѕСЂРёР·Р°С†РёСЏ Loginza', 'РџРѕР·РІРѕР»СЏРµС‚ РїРѕСЃРµС‚РёС‚РµР»СЏРј Р°РІС‚РѕСЂРёР·РѕРІР°С‚СЊСЃСЏ РЅР° СЃР°Р№С‚Рµ, РёСЃРїРѕР»СЊР·СѓСЏ Р°РєРєР°СѓРЅС‚С‹ РїРѕРїСѓР»СЏСЂРЅС‹С… СЃРѕС†РёР°Р»СЊРЅС‹С… СЃРµС‚РµР№', 'InstantCMS Team', '1.1', 'plugin', 0, '---\nРџСЂРѕРІР°Р№РґРµСЂС‹: >\n  vkontakte,facebook,mailruapi,google,yandex,openid,twitter,webmoney,rambler,flickr,mailru,loginza,myopenid,lastfm,verisign,aol,steam\nРЇР·С‹Рє (ru/uk/en): ru\n');
 
 DROP TABLE IF EXISTS `#__polls`;
 CREATE TABLE `#__polls` (
@@ -1128,7 +1128,7 @@ CREATE TABLE `#__polls` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__polls` (`id`, `title`, `pubdate`, `answers`) VALUES
-(2, 'Какой у вас хостинг?', '2008-05-23', 'a:3:{s:7:"Платный";i:0;s:10:"Бесплатный";i:1;s:11:"Собственный";i:0;}');
+(2, 'РљР°РєРѕР№ Сѓ РІР°СЃ С…РѕСЃС‚РёРЅРі?', '2008-05-23', 'a:3:{s:7:"РџР»Р°С‚РЅС‹Р№";i:0;s:10:"Р‘РµСЃРїР»Р°С‚РЅС‹Р№";i:1;s:11:"РЎРѕР±СЃС‚РІРµРЅРЅС‹Р№";i:0;}');
 
 DROP TABLE IF EXISTS `#__polls_log`;
 CREATE TABLE `#__polls_log` (
@@ -1150,10 +1150,10 @@ CREATE TABLE `#__price_cats` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__price_cats` (`id`, `title`, `description`, `published`) VALUES
-(4, 'Плакаты и агитационные  материалы', '', 1),
-(5, 'Обучающие видеофильмы', '', 1),
-(6, 'Бланки', '<p>бла бла бланки</p>', 1),
-(9, 'Нормативно-техническая документация', '', 1);
+(4, 'РџР»Р°РєР°С‚С‹ Рё Р°РіРёС‚Р°С†РёРѕРЅРЅС‹Рµ  РјР°С‚РµСЂРёР°Р»С‹', '', 1),
+(5, 'РћР±СѓС‡Р°СЋС‰РёРµ РІРёРґРµРѕС„РёР»СЊРјС‹', '', 1),
+(6, 'Р‘Р»Р°РЅРєРё', '<p>Р±Р»Р° Р±Р»Р° Р±Р»Р°РЅРєРё</p>', 1),
+(9, 'РќРѕСЂРјР°С‚РёРІРЅРѕ-С‚РµС…РЅРёС‡РµСЃРєР°СЏ РґРѕРєСѓРјРµРЅС‚Р°С†РёСЏ', '', 1);
 
 DROP TABLE IF EXISTS `#__price_items`;
 CREATE TABLE `#__price_items` (
@@ -1168,22 +1168,22 @@ CREATE TABLE `#__price_items` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__price_items` (`id`, `category_id`, `title`, `price`, `published`, `canmany`) VALUES
-(688, 9, 'Учет тепловой энергии и теплоносителя. Энергосервис, Москва, 2004 год', 170, 1, 1),
-(689, 9, 'Функциональные обязанности  по охране труда и технике безопасности.', 30, 1, 1),
-(690, 9, 'ЦРБ – 288 Инструкция по безопасному ведению работ для стропальщиков, обслуживающие грузоподъемные краны  (машины). Спб. 2003 г.', 60, 1, 1),
-(691, 9, 'Экологический контроль. Сборник нормативных документов. Екатеринбург, 2007 г.', 186, 1, 1),
-(692, 9, 'Эксплуатация газовых хозяйств предприятий. Пособие для персонала газовых хозяйств промышленных предприятий и ТЭС. С..Петербург, 2006 год.', 380, 1, 1),
-(693, 9, 'Экстренная  психологическая  помощь. Карманный вариант', 65, 1, 1),
-(694, 6, 'Акт «О расследовании группового несчастного случая(тяжелого несчастного случая, несчастного случая со смертельным исходом)»', 10, 1, 1),
-(695, 6, 'Акт формы Н.1', 10, 1, 1),
-(713, 5, 'Охрана труда для работников торговли и общественного питания (20 мин) DVD-диск', 350, 1, 1),
-(714, 5, 'Охрана труда при эксплуатации электроустановок (20 мин) DVD-диск', 350, 1, 1),
-(720, 4, '«Безопасная работа на газосварочном оборудовании» . 1 лист', 187, 1, 1),
-(721, 4, '«Безопасная эксплуатация газораспределительных пунктов». Комплект из 4 листов.', 486, 1, 1),
-(722, 4, '«Безопасная эксплуатация паровых котлов» . Комплект из 5 листов.', 597, 1, 1),
-(723, 4, '«Безопасность грузоподъемных работ» . Комплект', 596, 1, 1),
-(724, 4, '«Безопасность  работ с электропогрузчиками » .Комплект из 2 листов.', 282, 1, 1),
-(891, 6, 'крутая "штука" пывпывп', 123, 1, 0);
+(688, 9, 'РЈС‡РµС‚ С‚РµРїР»РѕРІРѕР№ СЌРЅРµСЂРіРёРё Рё С‚РµРїР»РѕРЅРѕСЃРёС‚РµР»СЏ. Р­РЅРµСЂРіРѕСЃРµСЂРІРёСЃ, РњРѕСЃРєРІР°, 2004 РіРѕРґ', 170, 1, 1),
+(689, 9, 'Р¤СѓРЅРєС†РёРѕРЅР°Р»СЊРЅС‹Рµ РѕР±СЏР·Р°РЅРЅРѕСЃС‚Рё  РїРѕ РѕС…СЂР°РЅРµ С‚СЂСѓРґР° Рё С‚РµС…РЅРёРєРµ Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё.', 30, 1, 1),
+(690, 9, 'Р¦Р Р‘ вЂ“ 288 РРЅСЃС‚СЂСѓРєС†РёСЏ РїРѕ Р±РµР·РѕРїР°СЃРЅРѕРјСѓ РІРµРґРµРЅРёСЋ СЂР°Р±РѕС‚ РґР»СЏ СЃС‚СЂРѕРїР°Р»СЊС‰РёРєРѕРІ, РѕР±СЃР»СѓР¶РёРІР°СЋС‰РёРµ РіСЂСѓР·РѕРїРѕРґСЉРµРјРЅС‹Рµ РєСЂР°РЅС‹  (РјР°С€РёРЅС‹). РЎРїР±. 2003 Рі.', 60, 1, 1),
+(691, 9, 'Р­РєРѕР»РѕРіРёС‡РµСЃРєРёР№ РєРѕРЅС‚СЂРѕР»СЊ. РЎР±РѕСЂРЅРёРє РЅРѕСЂРјР°С‚РёРІРЅС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ. Р•РєР°С‚РµСЂРёРЅР±СѓСЂРі, 2007 Рі.', 186, 1, 1),
+(692, 9, 'Р­РєСЃРїР»СѓР°С‚Р°С†РёСЏ РіР°Р·РѕРІС‹С… С…РѕР·СЏР№СЃС‚РІ РїСЂРµРґРїСЂРёСЏС‚РёР№. РџРѕСЃРѕР±РёРµ РґР»СЏ РїРµСЂСЃРѕРЅР°Р»Р° РіР°Р·РѕРІС‹С… С…РѕР·СЏР№СЃС‚РІ РїСЂРѕРјС‹С€Р»РµРЅРЅС‹С… РїСЂРµРґРїСЂРёСЏС‚РёР№ Рё РўР­РЎ. РЎ..РџРµС‚РµСЂР±СѓСЂРі, 2006 РіРѕРґ.', 380, 1, 1),
+(693, 9, 'Р­РєСЃС‚СЂРµРЅРЅР°СЏ  РїСЃРёС…РѕР»РѕРіРёС‡РµСЃРєР°СЏ  РїРѕРјРѕС‰СЊ. РљР°СЂРјР°РЅРЅС‹Р№ РІР°СЂРёР°РЅС‚', 65, 1, 1),
+(694, 6, 'РђРєС‚ В«Рћ СЂР°СЃСЃР»РµРґРѕРІР°РЅРёРё РіСЂСѓРїРїРѕРІРѕРіРѕ РЅРµСЃС‡Р°СЃС‚РЅРѕРіРѕ СЃР»СѓС‡Р°СЏ(С‚СЏР¶РµР»РѕРіРѕ РЅРµСЃС‡Р°СЃС‚РЅРѕРіРѕ СЃР»СѓС‡Р°СЏ, РЅРµСЃС‡Р°СЃС‚РЅРѕРіРѕ СЃР»СѓС‡Р°СЏ СЃРѕ СЃРјРµСЂС‚РµР»СЊРЅС‹Рј РёСЃС…РѕРґРѕРј)В»', 10, 1, 1),
+(695, 6, 'РђРєС‚ С„РѕСЂРјС‹ Рќ.1', 10, 1, 1),
+(713, 5, 'РћС…СЂР°РЅР° С‚СЂСѓРґР° РґР»СЏ СЂР°Р±РѕС‚РЅРёРєРѕРІ С‚РѕСЂРіРѕРІР»Рё Рё РѕР±С‰РµСЃС‚РІРµРЅРЅРѕРіРѕ РїРёС‚Р°РЅРёСЏ (20 РјРёРЅ) DVD-РґРёСЃРє', 350, 1, 1),
+(714, 5, 'РћС…СЂР°РЅР° С‚СЂСѓРґР° РїСЂРё СЌРєСЃРїР»СѓР°С‚Р°С†РёРё СЌР»РµРєС‚СЂРѕСѓСЃС‚Р°РЅРѕРІРѕРє (20 РјРёРЅ) DVD-РґРёСЃРє', 350, 1, 1),
+(720, 4, 'В«Р‘РµР·РѕРїР°СЃРЅР°СЏ СЂР°Р±РѕС‚Р° РЅР° РіР°Р·РѕСЃРІР°СЂРѕС‡РЅРѕРј РѕР±РѕСЂСѓРґРѕРІР°РЅРёРёВ» . 1 Р»РёСЃС‚', 187, 1, 1),
+(721, 4, 'В«Р‘РµР·РѕРїР°СЃРЅР°СЏ СЌРєСЃРїР»СѓР°С‚Р°С†РёСЏ РіР°Р·РѕСЂР°СЃРїСЂРµРґРµР»РёС‚РµР»СЊРЅС‹С… РїСѓРЅРєС‚РѕРІВ». РљРѕРјРїР»РµРєС‚ РёР· 4 Р»РёСЃС‚РѕРІ.', 486, 1, 1),
+(722, 4, 'В«Р‘РµР·РѕРїР°СЃРЅР°СЏ СЌРєСЃРїР»СѓР°С‚Р°С†РёСЏ РїР°СЂРѕРІС‹С… РєРѕС‚Р»РѕРІВ» . РљРѕРјРїР»РµРєС‚ РёР· 5 Р»РёСЃС‚РѕРІ.', 597, 1, 1),
+(723, 4, 'В«Р‘РµР·РѕРїР°СЃРЅРѕСЃС‚СЊ РіСЂСѓР·РѕРїРѕРґСЉРµРјРЅС‹С… СЂР°Р±РѕС‚В» . РљРѕРјРїР»РµРєС‚', 596, 1, 1),
+(724, 4, 'В«Р‘РµР·РѕРїР°СЃРЅРѕСЃС‚СЊ  СЂР°Р±РѕС‚ СЃ СЌР»РµРєС‚СЂРѕРїРѕРіСЂСѓР·С‡РёРєР°РјРё В» .РљРѕРјРїР»РµРєС‚ РёР· 2 Р»РёСЃС‚РѕРІ.', 282, 1, 1),
+(891, 6, 'РєСЂСѓС‚Р°СЏ "С€С‚СѓРєР°" РїС‹РІРїС‹РІРї', 123, 1, 0);
 
 DROP TABLE IF EXISTS `#__ratings`;
 CREATE TABLE `#__ratings` (
@@ -1225,10 +1225,10 @@ CREATE TABLE `#__rating_targets` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__rating_targets` (`id`, `target`, `component`, `is_user_affect`, `user_weight`, `target_table`, `target_title`) VALUES
-(1, 'content', 'content', 1, 5, 'cms_content', 'Статья'),
-(2, 'photo', 'photos', 1, 5, 'cms_photo_files', 'Фото в галерее'),
-(3, 'blogpost', 'blogs', 1, 5, 'cms_blog_posts', 'Пост в блоге'),
-(4, 'comment', 'comments', 1, 2, 'cms_comments', 'Комментарий');
+(1, 'content', 'content', 1, 5, 'cms_content', 'РЎС‚Р°С‚СЊСЏ'),
+(2, 'photo', 'photos', 1, 5, 'cms_photo_files', 'Р¤РѕС‚Рѕ РІ РіР°Р»РµСЂРµРµ'),
+(3, 'blogpost', 'blogs', 1, 5, 'cms_blog_posts', 'РџРѕСЃС‚ РІ Р±Р»РѕРіРµ'),
+(4, 'comment', 'comments', 1, 2, 'cms_comments', 'РљРѕРјРјРµРЅС‚Р°СЂРёР№');
 
 DROP TABLE IF EXISTS `#__search`;
 CREATE TABLE `#__search` (
@@ -1282,39 +1282,39 @@ CREATE TABLE `#__tags` (
 
 
 INSERT INTO `#__tags` (`id`, `tag`, `target`, `item_id`) VALUES
-(255, 'пример', 'photo', 11),
-(257, 'пример', 'photo', 10),
-(256, 'фото', 'photo', 10),
-(254, 'фото', 'photo', 11),
-(78, 'карандаши', 'catalog', 1),
-(77, 'пастель', 'catalog', 1),
-(85, 'краски', 'catalog', 2),
-(84, 'набор', 'catalog', 2),
-(26, 'авто', 'catalog', 5),
-(27, 'минивэн', 'catalog', 5),
-(28, 'тойота', 'catalog', 5),
-(31, 'авто', 'catalog', 7),
-(32, 'минивэн', 'catalog', 7),
-(241, 'блог', 'blogpost', 5),
-(240, 'пример', 'blogpost', 5),
-(273, 'геология', 'content', 31),
-(272, 'пример', 'content', 31),
-(271, 'статья', 'content', 31),
-(279, 'геология', 'content', 32),
-(278, 'пример', 'content', 32),
-(277, 'статья', 'content', 32),
-(282, 'маркетинг', 'content', 33),
-(281, 'пример', 'content', 33),
-(280, 'статья', 'content', 33),
-(226, 'маркетинг', 'content', 34),
-(225, 'пример', 'content', 34),
-(224, 'статья', 'content', 34),
-(171, 'психология', 'content', 35),
-(170, 'статья', 'content', 35),
-(253, 'пример', 'content', 36),
-(252, 'психология', 'content', 36),
-(172, 'пример', 'content', 35),
-(251, 'статья', 'content', 36);
+(255, 'РїСЂРёРјРµСЂ', 'photo', 11),
+(257, 'РїСЂРёРјРµСЂ', 'photo', 10),
+(256, 'С„РѕС‚Рѕ', 'photo', 10),
+(254, 'С„РѕС‚Рѕ', 'photo', 11),
+(78, 'РєР°СЂР°РЅРґР°С€Рё', 'catalog', 1),
+(77, 'РїР°СЃС‚РµР»СЊ', 'catalog', 1),
+(85, 'РєСЂР°СЃРєРё', 'catalog', 2),
+(84, 'РЅР°Р±РѕСЂ', 'catalog', 2),
+(26, 'Р°РІС‚Рѕ', 'catalog', 5),
+(27, 'РјРёРЅРёРІСЌРЅ', 'catalog', 5),
+(28, 'С‚РѕР№РѕС‚Р°', 'catalog', 5),
+(31, 'Р°РІС‚Рѕ', 'catalog', 7),
+(32, 'РјРёРЅРёРІСЌРЅ', 'catalog', 7),
+(241, 'Р±Р»РѕРі', 'blogpost', 5),
+(240, 'РїСЂРёРјРµСЂ', 'blogpost', 5),
+(273, 'РіРµРѕР»РѕРіРёСЏ', 'content', 31),
+(272, 'РїСЂРёРјРµСЂ', 'content', 31),
+(271, 'СЃС‚Р°С‚СЊСЏ', 'content', 31),
+(279, 'РіРµРѕР»РѕРіРёСЏ', 'content', 32),
+(278, 'РїСЂРёРјРµСЂ', 'content', 32),
+(277, 'СЃС‚Р°С‚СЊСЏ', 'content', 32),
+(282, 'РјР°СЂРєРµС‚РёРЅРі', 'content', 33),
+(281, 'РїСЂРёРјРµСЂ', 'content', 33),
+(280, 'СЃС‚Р°С‚СЊСЏ', 'content', 33),
+(226, 'РјР°СЂРєРµС‚РёРЅРі', 'content', 34),
+(225, 'РїСЂРёРјРµСЂ', 'content', 34),
+(224, 'СЃС‚Р°С‚СЊСЏ', 'content', 34),
+(171, 'РїСЃРёС…РѕР»РѕРіРёСЏ', 'content', 35),
+(170, 'СЃС‚Р°С‚СЊСЏ', 'content', 35),
+(253, 'РїСЂРёРјРµСЂ', 'content', 36),
+(252, 'РїСЃРёС…РѕР»РѕРіРёСЏ', 'content', 36),
+(172, 'РїСЂРёРјРµСЂ', 'content', 35),
+(251, 'СЃС‚Р°С‚СЊСЏ', 'content', 36);
 
 DROP TABLE IF EXISTS `#__uc_cart`;
 CREATE TABLE `#__uc_cart` (
@@ -1362,9 +1362,9 @@ CREATE TABLE `#__uc_cats` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__uc_cats` (`id`, `parent_id`, `title`, `description`, `published`, `fieldsstruct`, `view_type`, `fields_show`, `showmore`, `perpage`, `showtags`, `showsort`, `is_ratings`, `orderby`, `orderto`, `showabc`, `shownew`, `newint`, `filters`, `is_shop`, `NSLeft`, `NSRight`, `NSLevel`, `NSDiffer`, `NSIgnore`, `ordering`, `is_public`, `can_edit`, `cost`) VALUES
-(1000, 0, '-- Корневая рубрика --', '', 1, '', 'list', 10, 1, 20, 1, 1, 0, 'pubdate', 'desc', 1, 0, '', 0, 0, 1, 6, 0, 0, 0, 1, 0, 0, ''),
-(2, 1000, 'Автомобили', '', 1, 'a:4:{i:0;s:15:"Тип кузова/~m~/";i:1;s:15:"Объем двигателя";i:2;s:16:"Год выпуска/~m~/";i:3;s:13:"Описание/~h~/";}', 'list', 2, 1, 20, 1, 1, 0, 'pubdate', 'desc', 1, 1, '2 DAY', 0, 0, 2, 3, 1, 0, 0, 22, 0, 0, ''),
-(1, 1000, 'Канцелярские принадлежности', '', 1, 'a:6:{i:0;s:12:"Артикул/~m~/";i:1;s:10:"Цвета/~m~/";i:2;s:18:"Минимальная партия";i:3;s:13:"Описание/~h~/";i:4;s:11:"Размер/~m~/";i:5;s:12:"Скачать/~l~/";}', 'shop', 4, 0, 11, 0, 0, 0, 'hits', 'desc', 0, 0, '123 HOUR', 0, 0, 4, 5, 1, 0, 0, 23, 1, 0, '');
+(1000, 0, '-- РљРѕСЂРЅРµРІР°СЏ СЂСѓР±СЂРёРєР° --', '', 1, '', 'list', 10, 1, 20, 1, 1, 0, 'pubdate', 'desc', 1, 0, '', 0, 0, 1, 6, 0, 0, 0, 1, 0, 0, ''),
+(2, 1000, 'РђРІС‚РѕРјРѕР±РёР»Рё', '', 1, 'a:4:{i:0;s:15:"РўРёРї РєСѓР·РѕРІР°/~m~/";i:1;s:15:"РћР±СЉРµРј РґРІРёРіР°С‚РµР»СЏ";i:2;s:16:"Р“РѕРґ РІС‹РїСѓСЃРєР°/~m~/";i:3;s:13:"РћРїРёСЃР°РЅРёРµ/~h~/";}', 'list', 2, 1, 20, 1, 1, 0, 'pubdate', 'desc', 1, 1, '2 DAY', 0, 0, 2, 3, 1, 0, 0, 22, 0, 0, ''),
+(1, 1000, 'РљР°РЅС†РµР»СЏСЂСЃРєРёРµ РїСЂРёРЅР°РґР»РµР¶РЅРѕСЃС‚Рё', '', 1, 'a:6:{i:0;s:12:"РђСЂС‚РёРєСѓР»/~m~/";i:1;s:10:"Р¦РІРµС‚Р°/~m~/";i:2;s:18:"РњРёРЅРёРјР°Р»СЊРЅР°СЏ РїР°СЂС‚РёСЏ";i:3;s:13:"РћРїРёСЃР°РЅРёРµ/~h~/";i:4;s:11:"Р Р°Р·РјРµСЂ/~m~/";i:5;s:12:"РЎРєР°С‡Р°С‚СЊ/~l~/";}', 'shop', 4, 0, 11, 0, 0, 0, 'hits', 'desc', 0, 0, '123 HOUR', 0, 0, 4, 5, 1, 0, 0, 23, 1, 0, '');
 
 DROP TABLE IF EXISTS `#__uc_cats_access`;
 CREATE TABLE `#__uc_cats_access` (
@@ -1387,8 +1387,8 @@ CREATE TABLE `#__uc_discount` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__uc_discount` (`id`, `title`, `cat_id`, `sign`, `value`, `unit`, `if_limit`) VALUES
-(2, 'Почтовые расходы', 0, 2, 200, 'руб.', 0),
-(3, 'Скидка на канц.товары', 1, -1, 15, '%', 0);
+(2, 'РџРѕС‡С‚РѕРІС‹Рµ СЂР°СЃС…РѕРґС‹', 0, 2, 200, 'СЂСѓР±.', 0),
+(3, 'РЎРєРёРґРєР° РЅР° РєР°РЅС†.С‚РѕРІР°СЂС‹', 1, -1, 15, '%', 0);
 
 DROP TABLE IF EXISTS `#__uc_items`;
 CREATE TABLE `#__uc_items` (
@@ -1415,11 +1415,11 @@ CREATE TABLE `#__uc_items` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__uc_items` (`id`, `category_id`, `title`, `pubdate`, `published`, `imageurl`, `fieldsdata`, `hits`, `is_comments`, `tags`, `rating`, `meta_desc`, `meta_keys`, `price`, `canmany`, `user_id`, `on_moderate`) VALUES
-(1, 1, 'Карандаши', '2008-06-03 13:38:55', 1, 'b00117f6bca1efaaef37b44da87c1100.jpg', 'a:4:{i:0;s:7:"3130070";i:1;s:7:"бежевый";i:2;s:7:"191 шт.";i:3;s:64:"Набор для рисования: 12 цветных карандашей в картонной коробочке";}', 37, 1, 'пастель, карандаши', 0, '', '', 14.6, 1, 1, 0),
-(2, 1, 'Набор для рисования', '2008-06-03 13:40:37', 1, 'b21ddffd1e9fe4716f5d1496c4e74400.jpg', 'a:5:{i:0;s:10:"3170050PK2";i:1;s:34:"бежевый, красный, синий, оранжевый";i:2;s:6:"84 шт.";i:3;s:65:"8 восковых карандашей, 8 красок и кисточка, в пластиковом футляре";i:4;s:19:"11.00, 12.55, 13.02";}', 41, 1, 'набор, краски', 0, '', '', 24, 1, 1, 0),
-(5, 2, 'Toyota Estima', '2008-06-03 13:47:00', 1, '96bd390df9222bdc684ceec8afc94ec3.jpg', 'a:4:{i:0;s:7:"минивэн";i:1;s:9:"2,4 литра";i:2;s:4:"2000";i:3;s:1056:"<p>Второе поколение Toyota Estima, появившееся на рынке в 2000 году, лидирует среди минивэнов. Предшествующее поколение модели отличалось от нынешнего традиционным передним приводом. В комплектацию Estima входят две вариации двигателей: новый 4-цилиндровый рядный двигатель объемом 2.4 литра с системой газораспределения DOHC и 3-литровый 6-цилиндровый V-образный двигатель с той же системой газораспределения. Estima оснащается полным приводом с функцией активного контроля.</p>\r\n<p>Оригинальность экстерьера данного автомобиля проявляется в характерных жестких линиях кузова и раскосых передних фарах. Ширина и высота автомобиля стали меньше по сравнению с предыдущим поколением, но зато колесная база увеличилась до 40 мм.</p>\r\n<p>Две двери Estima снабжены механизмом &laquo;easy closer&raquo;, задние двери отрываются, скользя вдоль корпуса. В передней пассажирской двери установлении механизм автоматического открытия и закрытия. Второе поколение Estima с первым роднит возможность разместить восемь человек в салоне по модели &laquo;2-3-3&raquo;.</p>";}', 8, 1, 'авто, минивэн, тойота', 0, '', '', 0, 1, 1, 0),
-(6, 2, 'Mitsubishi Eterna!', '2008-06-03 10:54:00', 1, '7afbfacf9a4c4a9d64e0da2b31b880e5.jpg', 'a:4:{i:0;s:5:"седан";i:1;s:9:"1.8 литра";i:2;s:4:"1992";i:3;s:0:"";}', 11, 1, '', 0, 'Описание', 'Ключевые слова', 0, 1, 1, 0),
-(7, 2, 'Subaru Domingo', '2008-06-03 13:51:24', 1, 'db0297daef1de808feed34a75b5ea49b.jpg', 'a:4:{i:0;s:7:"минивэн";i:1;s:9:"1.2 литра";i:2;s:4:"1991";i:3;s:0:"";}', 32, 1, 'авто, минивэн', 0, '', '', 0, 1, 1, 0);
+(1, 1, 'РљР°СЂР°РЅРґР°С€Рё', '2008-06-03 13:38:55', 1, 'b00117f6bca1efaaef37b44da87c1100.jpg', 'a:4:{i:0;s:7:"3130070";i:1;s:7:"Р±РµР¶РµРІС‹Р№";i:2;s:7:"191 С€С‚.";i:3;s:64:"РќР°Р±РѕСЂ РґР»СЏ СЂРёСЃРѕРІР°РЅРёСЏ: 12 С†РІРµС‚РЅС‹С… РєР°СЂР°РЅРґР°С€РµР№ РІ РєР°СЂС‚РѕРЅРЅРѕР№ РєРѕСЂРѕР±РѕС‡РєРµ";}', 37, 1, 'РїР°СЃС‚РµР»СЊ, РєР°СЂР°РЅРґР°С€Рё', 0, '', '', 14.6, 1, 1, 0),
+(2, 1, 'РќР°Р±РѕСЂ РґР»СЏ СЂРёСЃРѕРІР°РЅРёСЏ', '2008-06-03 13:40:37', 1, 'b21ddffd1e9fe4716f5d1496c4e74400.jpg', 'a:5:{i:0;s:10:"3170050PK2";i:1;s:34:"Р±РµР¶РµРІС‹Р№, РєСЂР°СЃРЅС‹Р№, СЃРёРЅРёР№, РѕСЂР°РЅР¶РµРІС‹Р№";i:2;s:6:"84 С€С‚.";i:3;s:65:"8 РІРѕСЃРєРѕРІС‹С… РєР°СЂР°РЅРґР°С€РµР№, 8 РєСЂР°СЃРѕРє Рё РєРёСЃС‚РѕС‡РєР°, РІ РїР»Р°СЃС‚РёРєРѕРІРѕРј С„СѓС‚Р»СЏСЂРµ";i:4;s:19:"11.00, 12.55, 13.02";}', 41, 1, 'РЅР°Р±РѕСЂ, РєСЂР°СЃРєРё', 0, '', '', 24, 1, 1, 0),
+(5, 2, 'Toyota Estima', '2008-06-03 13:47:00', 1, '96bd390df9222bdc684ceec8afc94ec3.jpg', 'a:4:{i:0;s:7:"РјРёРЅРёРІСЌРЅ";i:1;s:9:"2,4 Р»РёС‚СЂР°";i:2;s:4:"2000";i:3;s:1056:"<p>Р’С‚РѕСЂРѕРµ РїРѕРєРѕР»РµРЅРёРµ Toyota Estima, РїРѕСЏРІРёРІС€РµРµСЃСЏ РЅР° СЂС‹РЅРєРµ РІ 2000 РіРѕРґСѓ, Р»РёРґРёСЂСѓРµС‚ СЃСЂРµРґРё РјРёРЅРёРІСЌРЅРѕРІ. РџСЂРµРґС€РµСЃС‚РІСѓСЋС‰РµРµ РїРѕРєРѕР»РµРЅРёРµ РјРѕРґРµР»Рё РѕС‚Р»РёС‡Р°Р»РѕСЃСЊ РѕС‚ РЅС‹РЅРµС€РЅРµРіРѕ С‚СЂР°РґРёС†РёРѕРЅРЅС‹Рј РїРµСЂРµРґРЅРёРј РїСЂРёРІРѕРґРѕРј. Р’ РєРѕРјРїР»РµРєС‚Р°С†РёСЋ Estima РІС…РѕРґСЏС‚ РґРІРµ РІР°СЂРёР°С†РёРё РґРІРёРіР°С‚РµР»РµР№: РЅРѕРІС‹Р№ 4-С†РёР»РёРЅРґСЂРѕРІС‹Р№ СЂСЏРґРЅС‹Р№ РґРІРёРіР°С‚РµР»СЊ РѕР±СЉРµРјРѕРј 2.4 Р»РёС‚СЂР° СЃ СЃРёСЃС‚РµРјРѕР№ РіР°Р·РѕСЂР°СЃРїСЂРµРґРµР»РµРЅРёСЏ DOHC Рё 3-Р»РёС‚СЂРѕРІС‹Р№ 6-С†РёР»РёРЅРґСЂРѕРІС‹Р№ V-РѕР±СЂР°Р·РЅС‹Р№ РґРІРёРіР°С‚РµР»СЊ СЃ С‚РѕР№ Р¶Рµ СЃРёСЃС‚РµРјРѕР№ РіР°Р·РѕСЂР°СЃРїСЂРµРґРµР»РµРЅРёСЏ. Estima РѕСЃРЅР°С‰Р°РµС‚СЃСЏ РїРѕР»РЅС‹Рј РїСЂРёРІРѕРґРѕРј СЃ С„СѓРЅРєС†РёРµР№ Р°РєС‚РёРІРЅРѕРіРѕ РєРѕРЅС‚СЂРѕР»СЏ.</p>\r\n<p>РћСЂРёРіРёРЅР°Р»СЊРЅРѕСЃС‚СЊ СЌРєСЃС‚РµСЂСЊРµСЂР° РґР°РЅРЅРѕРіРѕ Р°РІС‚РѕРјРѕР±РёР»СЏ РїСЂРѕСЏРІР»СЏРµС‚СЃСЏ РІ С…Р°СЂР°РєС‚РµСЂРЅС‹С… Р¶РµСЃС‚РєРёС… Р»РёРЅРёСЏС… РєСѓР·РѕРІР° Рё СЂР°СЃРєРѕСЃС‹С… РїРµСЂРµРґРЅРёС… С„Р°СЂР°С…. РЁРёСЂРёРЅР° Рё РІС‹СЃРѕС‚Р° Р°РІС‚РѕРјРѕР±РёР»СЏ СЃС‚Р°Р»Рё РјРµРЅСЊС€Рµ РїРѕ СЃСЂР°РІРЅРµРЅРёСЋ СЃ РїСЂРµРґС‹РґСѓС‰РёРј РїРѕРєРѕР»РµРЅРёРµРј, РЅРѕ Р·Р°С‚Рѕ РєРѕР»РµСЃРЅР°СЏ Р±Р°Р·Р° СѓРІРµР»РёС‡РёР»Р°СЃСЊ РґРѕ 40 РјРј.</p>\r\n<p>Р”РІРµ РґРІРµСЂРё Estima СЃРЅР°Р±Р¶РµРЅС‹ РјРµС…Р°РЅРёР·РјРѕРј &laquo;easy closer&raquo;, Р·Р°РґРЅРёРµ РґРІРµСЂРё РѕС‚СЂС‹РІР°СЋС‚СЃСЏ, СЃРєРѕР»СЊР·СЏ РІРґРѕР»СЊ РєРѕСЂРїСѓСЃР°. Р’ РїРµСЂРµРґРЅРµР№ РїР°СЃСЃР°Р¶РёСЂСЃРєРѕР№ РґРІРµСЂРё СѓСЃС‚Р°РЅРѕРІР»РµРЅРёРё РјРµС…Р°РЅРёР·Рј Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРѕРіРѕ РѕС‚РєСЂС‹С‚РёСЏ Рё Р·Р°РєСЂС‹С‚РёСЏ. Р’С‚РѕСЂРѕРµ РїРѕРєРѕР»РµРЅРёРµ Estima СЃ РїРµСЂРІС‹Рј СЂРѕРґРЅРёС‚ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ СЂР°Р·РјРµСЃС‚РёС‚СЊ РІРѕСЃРµРјСЊ С‡РµР»РѕРІРµРє РІ СЃР°Р»РѕРЅРµ РїРѕ РјРѕРґРµР»Рё &laquo;2-3-3&raquo;.</p>";}', 8, 1, 'Р°РІС‚Рѕ, РјРёРЅРёРІСЌРЅ, С‚РѕР№РѕС‚Р°', 0, '', '', 0, 1, 1, 0),
+(6, 2, 'Mitsubishi Eterna!', '2008-06-03 10:54:00', 1, '7afbfacf9a4c4a9d64e0da2b31b880e5.jpg', 'a:4:{i:0;s:5:"СЃРµРґР°РЅ";i:1;s:9:"1.8 Р»РёС‚СЂР°";i:2;s:4:"1992";i:3;s:0:"";}', 11, 1, '', 0, 'РћРїРёСЃР°РЅРёРµ', 'РљР»СЋС‡РµРІС‹Рµ СЃР»РѕРІР°', 0, 1, 1, 0),
+(7, 2, 'Subaru Domingo', '2008-06-03 13:51:24', 1, 'db0297daef1de808feed34a75b5ea49b.jpg', 'a:4:{i:0;s:7:"РјРёРЅРёРІСЌРЅ";i:1;s:9:"1.2 Р»РёС‚СЂР°";i:2;s:4:"1991";i:3;s:0:"";}', 32, 1, 'Р°РІС‚Рѕ, РјРёРЅРёРІСЌРЅ', 0, '', '', 0, 1, 1, 0);
 
 DROP TABLE IF EXISTS `#__uc_ratings`;
 CREATE TABLE `#__uc_ratings` (
@@ -1481,9 +1481,9 @@ CREATE TABLE `#__users` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 ROW_FORMAT=DYNAMIC;
 
 INSERT INTO `#__users` (`id`, `group_id`, `login`, `nickname`, `password`, `email`, `icq`, `regdate`, `logdate`, `birthdate`, `is_locked`, `is_deleted`, `is_logged_once`, `rating`, `points`, `last_ip`, `status`, `status_date`, `invited_by`, `invdate`) VALUES
-(1, 2, 'admin', 'Администратор', '2ca41752ccf4dbdb76d8fe88c488fd44', 'admin@cms.ru', '100200300', '2007-11-23 12:41:57', '2011-04-15 13:20:33', '1980-10-23', 0, 0, 0, 32, 0, '127.0.0.1', 'Самый длинный статус из всех что существуют в этом прекрасном мире', '2010-10-21 02:06:53', 0, '2010-11-09 23:25:59'),
-(2, 1, 'vasya', 'Василий', '2ca41752ccf4dbdb76d8fe88c488fd44', 'vasya@cms.ru', '100200300', '2008-07-16 16:31:48', '2011-04-15 12:36:58', '1980-01-01', 0, 0, 0, 5, 0, '127.0.0.1', 'I love InstantCMS', '2010-11-13 23:09:34', 0, '2010-11-02 13:50:04'),
-(3, 1, 'fedor', 'Федор', '2ca41752ccf4dbdb76d8fe88c488fd44', 'fedor@cms.com', '100334564', '2010-10-20 17:33:42', '2010-11-13 23:22:26', '1979-10-20', 0, 0, 0, 0, 0, '127.0.0.1', 'We are all made of stars (c) Moby', '2010-10-28 15:44:45', NULL, NULL);
+(1, 2, 'admin', 'РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ', '2ca41752ccf4dbdb76d8fe88c488fd44', 'admin@cms.ru', '100200300', '2007-11-23 12:41:57', '2011-04-15 13:20:33', '1980-10-23', 0, 0, 0, 32, 0, '127.0.0.1', 'РЎР°РјС‹Р№ РґР»РёРЅРЅС‹Р№ СЃС‚Р°С‚СѓСЃ РёР· РІСЃРµС… С‡С‚Рѕ СЃСѓС‰РµСЃС‚РІСѓСЋС‚ РІ СЌС‚РѕРј РїСЂРµРєСЂР°СЃРЅРѕРј РјРёСЂРµ', '2010-10-21 02:06:53', 0, '2010-11-09 23:25:59'),
+(2, 1, 'vasya', 'Р’Р°СЃРёР»РёР№', '2ca41752ccf4dbdb76d8fe88c488fd44', 'vasya@cms.ru', '100200300', '2008-07-16 16:31:48', '2011-04-15 12:36:58', '1980-01-01', 0, 0, 0, 5, 0, '127.0.0.1', 'I love InstantCMS', '2010-11-13 23:09:34', 0, '2010-11-02 13:50:04'),
+(3, 1, 'fedor', 'Р¤РµРґРѕСЂ', '2ca41752ccf4dbdb76d8fe88c488fd44', 'fedor@cms.com', '100334564', '2010-10-20 17:33:42', '2010-11-13 23:22:26', '1979-10-20', 0, 0, 0, 0, 0, '127.0.0.1', 'We are all made of stars (c) Moby', '2010-10-28 15:44:45', NULL, NULL);
 
 DROP TABLE IF EXISTS `#__users_activate`;
 CREATE TABLE `#__users_activate` (
@@ -1508,8 +1508,8 @@ CREATE TABLE `#__user_albums` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__user_albums` (`id`, `user_id`, `title`, `pubdate`, `allow_who`, `description`) VALUES
-(2, 3, 'Мой фотоальбом', '2010-10-22 20:28:51', 'all', ''),
-(5, 1, 'Мои картинки', '2010-11-13 23:13:37', 'all', '');
+(2, 3, 'РњРѕР№ С„РѕС‚РѕР°Р»СЊР±РѕРј', '2010-10-22 20:28:51', 'all', ''),
+(5, 1, 'РњРѕРё РєР°СЂС‚РёРЅРєРё', '2010-11-13 23:13:37', 'all', '');
 
 DROP TABLE IF EXISTS `#__user_autoawards`;
 CREATE TABLE `#__user_autoawards` (
@@ -1529,8 +1529,8 @@ CREATE TABLE `#__user_autoawards` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__user_autoawards` (`id`, `title`, `description`, `imageurl`, `p_comment`, `p_blog`, `p_forum`, `p_photo`, `p_privphoto`, `p_content`, `p_karma`, `published`) VALUES
-(1, 'Медаль', 'Почетный член форума', 'aw.gif', 0, 0, 100, 0, 0, 0, 0, 1),
-(2, 'Грамота', 'Почетный комментатор сайта', 'aw4.gif', 100, 5, 50, 0, 0, 0, 0, 1);
+(1, 'РњРµРґР°Р»СЊ', 'РџРѕС‡РµС‚РЅС‹Р№ С‡Р»РµРЅ С„РѕСЂСѓРјР°', 'aw.gif', 0, 0, 100, 0, 0, 0, 0, 1),
+(2, 'Р“СЂР°РјРѕС‚Р°', 'РџРѕС‡РµС‚РЅС‹Р№ РєРѕРјРјРµРЅС‚Р°С‚РѕСЂ СЃР°Р№С‚Р°', 'aw4.gif', 100, 5, 50, 0, 0, 0, 0, 1);
 
 DROP TABLE IF EXISTS `#__user_awards`;
 CREATE TABLE `#__user_awards` (
@@ -1547,7 +1547,7 @@ CREATE TABLE `#__user_awards` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__user_awards` (`id`, `user_id`, `pubdate`, `title`, `description`, `imageurl`, `from_id`, `award_id`) VALUES
-(1, 2, '2010-10-27 21:46:44', 'Медаль за заслуги', 'В благодарность от администрации', 'aw.gif', 1, 0);
+(1, 2, '2010-10-27 21:46:44', 'РњРµРґР°Р»СЊ Р·Р° Р·Р°СЃР»СѓРіРё', 'Р’ Р±Р»Р°РіРѕРґР°СЂРЅРѕСЃС‚СЊ РѕС‚ Р°РґРјРёРЅРёСЃС‚СЂР°С†РёРё', 'aw.gif', 1, 0);
 
 DROP TABLE IF EXISTS `#__user_clubs`;
 CREATE TABLE `#__user_clubs` (
@@ -1601,11 +1601,11 @@ CREATE TABLE `#__user_groups` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__user_groups` (`id`, `title`, `alias`, `is_admin`, `access`) VALUES
-(1, 'Пользователи', 'registered', 0, 'comments/add, comments/bbcode, comments/delete, content/add, board/add, board/autoadd'),
-(2, 'Администраторы', 'admin', 1, 'admin/content, admin/com_rssfeed, admin/com_arhive, admin/com_banners, admin/com_blog, admin/com_faq, admin/com_board, admin/com_content, admin/com_clubs, admin/com_comments, admin/com_forms, admin/com_photos'),
-(8, 'Гости', 'guest', 0, 'comments/add'),
-(7, 'Редакторы', 'editors', 0, 'comments/add, comments/delete, content/add, content/autoadd, content/delete'),
-(9, 'Модераторы', 'moderators', 0, 'comments/add, comments/delete, comments/moderate, forum/moderate, content/add');
+(1, 'РџРѕР»СЊР·РѕРІР°С‚РµР»Рё', 'registered', 0, 'comments/add, comments/bbcode, comments/delete, content/add, board/add, board/autoadd'),
+(2, 'РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂС‹', 'admin', 1, 'admin/content, admin/com_rssfeed, admin/com_arhive, admin/com_banners, admin/com_blog, admin/com_faq, admin/com_board, admin/com_content, admin/com_clubs, admin/com_comments, admin/com_forms, admin/com_photos'),
+(8, 'Р“РѕСЃС‚Рё', 'guest', 0, 'comments/add'),
+(7, 'Р РµРґР°РєС‚РѕСЂС‹', 'editors', 0, 'comments/add, comments/delete, content/add, content/autoadd, content/delete'),
+(9, 'РњРѕРґРµСЂР°С‚РѕСЂС‹', 'moderators', 0, 'comments/add, comments/delete, comments/moderate, forum/moderate, content/add');
 
 DROP TABLE IF EXISTS `#__user_invites`;
 CREATE TABLE `#__user_invites` (
@@ -1664,8 +1664,8 @@ CREATE TABLE `#__user_photos` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__user_photos` (`id`, `user_id`, `album_id`, `pubdate`, `title`, `description`, `allow_who`, `hits`, `imageurl`) VALUES
-(6, 1, 5, '2010-11-13 00:00:00', 'Горный пейзаж', 'Красивый вид с большой высоты', 'all', 4, 'b22c5c0f95c1fb9398578fd5e396c7dd.jpg'),
-(7, 1, 5, '2010-11-13 00:00:00', 'Восход в космосе', 'Вид на нашу планету', 'all', 3, 'efe8d13779cd84cfeb319d9f0875a511.jpg');
+(6, 1, 5, '2010-11-13 00:00:00', 'Р“РѕСЂРЅС‹Р№ РїРµР№Р·Р°Р¶', 'РљСЂР°СЃРёРІС‹Р№ РІРёРґ СЃ Р±РѕР»СЊС€РѕР№ РІС‹СЃРѕС‚С‹', 'all', 4, 'b22c5c0f95c1fb9398578fd5e396c7dd.jpg'),
+(7, 1, 5, '2010-11-13 00:00:00', 'Р’РѕСЃС…РѕРґ РІ РєРѕСЃРјРѕСЃРµ', 'Р’РёРґ РЅР° РЅР°С€Сѓ РїР»Р°РЅРµС‚Сѓ', 'all', 3, 'efe8d13779cd84cfeb319d9f0875a511.jpg');
 
 DROP TABLE IF EXISTS `#__user_profiles`;
 CREATE TABLE `#__user_profiles` (
@@ -1691,8 +1691,8 @@ CREATE TABLE `#__user_profiles` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 ROW_FORMAT=DYNAMIC;
 
 INSERT INTO `#__user_profiles` (`id`, `user_id`, `city`, `description`, `showmail`, `showbirth`, `showicq`, `karma`, `imageurl`, `allow_who`, `signature`, `gender`, `formsdata`, `email_newmsg`, `cm_subscribe`, `stats`) VALUES
-(1, 1, 'Москва', 'Р.Хайнлайн, А.Азимов, А.Кларк', 1, 1, 1, 0, '', 'all', '', 'm', '---\n22: Р.Хайнлайн, А.Азимов, А.Кларк\n24: Высшее\n', 1, 'none', '---\ncount: \n  comments: 1\n  forum: 1\n  photos: 2\n  board: 2\n  files_public: 0\n  files_private: 0\nrating: 0\n'),
-(2, 2, 'Москва', 'живопись, &#8217;музыка&#8217;, всякая "всячина" однако', 0, 0, 1, 0, '165e5d6b2786dc6d0a538146de38b480.jpg', 'all', '', 'm', '---\n22: |\n  &#8217;музыка&#8217;, всякая &quot;всячина&quot; однако\n24: Высшее\n', 1, '0', '---\ncount: \n  comments: 1\n  forum: 0\n  photos: 0\n  board: 1\n  files_public: 0\n  files_private: 0\nrating: 0\n'),
+(1, 1, 'РњРѕСЃРєРІР°', 'Р .РҐР°Р№РЅР»Р°Р№РЅ, Рђ.РђР·РёРјРѕРІ, Рђ.РљР»Р°СЂРє', 1, 1, 1, 0, '', 'all', '', 'm', '---\n22: Р .РҐР°Р№РЅР»Р°Р№РЅ, Рђ.РђР·РёРјРѕРІ, Рђ.РљР»Р°СЂРє\n24: Р’С‹СЃС€РµРµ\n', 1, 'none', '---\ncount: \n  comments: 1\n  forum: 1\n  photos: 2\n  board: 2\n  files_public: 0\n  files_private: 0\nrating: 0\n'),
+(2, 2, 'РњРѕСЃРєРІР°', 'Р¶РёРІРѕРїРёСЃСЊ, &#8217;РјСѓР·С‹РєР°&#8217;, РІСЃСЏРєР°СЏ "РІСЃСЏС‡РёРЅР°" РѕРґРЅР°РєРѕ', 0, 0, 1, 0, '165e5d6b2786dc6d0a538146de38b480.jpg', 'all', '', 'm', '---\n22: |\n  &#8217;РјСѓР·С‹РєР°&#8217;, РІСЃСЏРєР°СЏ &quot;РІСЃСЏС‡РёРЅР°&quot; РѕРґРЅР°РєРѕ\n24: Р’С‹СЃС€РµРµ\n', 1, '0', '---\ncount: \n  comments: 1\n  forum: 0\n  photos: 0\n  board: 1\n  files_public: 0\n  files_private: 0\nrating: 0\n'),
 (3, 3, '', '', 0, 0, 1, 0, 'a946f7701b178eedbbdae7a57ba7e0be.jpg', 'all', '', '', '', 1, '', '---\ncount: \n  comments: 0\n  forum: 0\n  photos: 0\n  board: 0\n  files_public: 0\n  files_private: 0\nrating: 0\n');
 
 DROP TABLE IF EXISTS `#__user_wall`;
@@ -1708,6 +1708,6 @@ CREATE TABLE `#__user_wall` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 INSERT INTO `#__user_wall` (`id`, `user_id`, `author_id`, `pubdate`, `content`, `usertype`) VALUES
-(6, 1, 1, '2010-10-22 20:52:56', 'спасибо что заглянули в мой профиль', 'user'),
-(7, 3, 2, '2010-10-28 16:12:16', 'так рад тебя здесь видеть!', 'user'),
-(9, 2, 1, '2010-11-09 17:24:05', 'Самый длинный статус из всех', 'user');
+(6, 1, 1, '2010-10-22 20:52:56', 'СЃРїР°СЃРёР±Рѕ С‡С‚Рѕ Р·Р°РіР»СЏРЅСѓР»Рё РІ РјРѕР№ РїСЂРѕС„РёР»СЊ', 'user'),
+(7, 3, 2, '2010-10-28 16:12:16', 'С‚Р°Рє СЂР°Рґ С‚РµР±СЏ Р·РґРµСЃСЊ РІРёРґРµС‚СЊ!', 'user'),
+(9, 2, 1, '2010-11-09 17:24:05', 'РЎР°РјС‹Р№ РґР»РёРЅРЅС‹Р№ СЃС‚Р°С‚СѓСЃ РёР· РІСЃРµС…', 'user');

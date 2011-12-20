@@ -27,8 +27,8 @@ function bannerHitsbyID($id){
 	if (!$b['maxhits']) { return $b['hits']; } else { return $b['hits'] . '/' . $b['maxhits']; }
 }
 
-	cpAddPathway('Баннеры', '?view=components&do=config&id='.$_REQUEST['id']);
-	echo '<h3>Баннеры</h3>';
+	cpAddPathway('Р‘Р°РЅРЅРµСЂС‹', '?view=components&do=config&id='.$_REQUEST['id']);
+	echo '<h3>Р‘Р°РЅРЅРµСЂС‹</h3>';
 	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; }
 	$msg = '';
 	$inDB = cmsDatabase::getInstance();
@@ -37,19 +37,19 @@ function bannerHitsbyID($id){
 	if($opt=='list' || $opt=='show_banner' || $opt=='hide_banner'){
 
 		$toolmenu[0]['icon'] = 'new.gif';
-		$toolmenu[0]['title'] = 'Новый баннер';
+		$toolmenu[0]['title'] = 'РќРѕРІС‹Р№ Р±Р°РЅРЅРµСЂ';
 		$toolmenu[0]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add';
 	
 		$toolmenu[11]['icon'] = 'edit.gif';
-		$toolmenu[11]['title'] = 'Редактировать выбранные';
+		$toolmenu[11]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[11]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=edit&multiple=1');";
 
 		$toolmenu[12]['icon'] = 'show.gif';
-		$toolmenu[12]['title'] = 'Публиковать выбранные';
+		$toolmenu[12]['title'] = 'РџСѓР±Р»РёРєРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=show_banner&multiple=1');";
 
 		$toolmenu[13]['icon'] = 'hide.gif';
-		$toolmenu[13]['title'] = 'Скрыть выбранные';
+		$toolmenu[13]['title'] = 'РЎРєСЂС‹С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=hide_banner&multiple=1');";
 
 	}
@@ -58,11 +58,11 @@ function bannerHitsbyID($id){
 	} else {
 	
 		$toolmenu[20]['icon'] = 'save.gif';
-		$toolmenu[20]['title'] = 'Сохранить';
+		$toolmenu[20]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 		$toolmenu[20]['link'] = 'javascript:document.addform.submit();';
 
 		$toolmenu[21]['icon'] = 'cancel.gif';
-		$toolmenu[21]['title'] = 'Отмена';
+		$toolmenu[21]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[21]['link'] = '?view=components&do=config&id='.$_REQUEST['id'];
 	
 	}
@@ -74,7 +74,7 @@ function bannerHitsbyID($id){
 			
 		$inCore->saveComponentConfig('banners', $cfg);
 		
-		$msg = 'Настройки сохранены.';
+		$msg = 'РќР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅРµРЅС‹.';
 		$opt = 'config';
 	}
 
@@ -100,7 +100,7 @@ function bannerHitsbyID($id){
 
 	if ($opt == 'submit'){	
 
-			$title = $inCore->request('title', 'str', 'Банер без названия');
+			$title = $inCore->request('title', 'str', 'Р‘Р°РЅРµСЂ Р±РµР· РЅР°Р·РІР°РЅРёСЏ');
 			$link  = $inCore->request('link', 'str');
 			
 			$typeimg = $inCore->request('typeimg', 'str');
@@ -120,7 +120,7 @@ function bannerHitsbyID($id){
 			$path_parts = pathinfo($realfile);
 			$ext = strtolower($path_parts['extension']);
 
-			if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'swf') { die('тип файла неверный'); }
+			if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'swf') { die('С‚РёРї С„Р°Р№Р»Р° РЅРµРІРµСЂРЅС‹Р№'); }
 
 			$realfile = substr($realfile, 0, strrpos($realfile, '.'));
 			$realfile = preg_replace ('/[^a-zA-Z0-9]/i', '', $realfile);
@@ -132,7 +132,7 @@ function bannerHitsbyID($id){
 					$sql = "INSERT INTO cms_banners (position, typeimg, fileurl, hits, clicks, maxhits, maxuser, user_id, pubdate, title, link, published)
 							VALUES ('$position', '$typeimg', '$filename', 0, 0, '$maxhits', '$maxuser', 1, NOW(), '$title', '$link', '$published')";	
 					dbQuery($sql);
-			} else { $msg .= 'Ошибка загрузки баннера или файл не загружен!<br>'; }
+			} else { $msg .= 'РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё Р±Р°РЅРЅРµСЂР° РёР»Рё С„Р°Р№Р» РЅРµ Р·Р°РіСЂСѓР¶РµРЅ!<br>'; }
 			if ($msg) {$opt = 'add';} else {
 			header('location:?view=components&do=config&opt=list&id='.$_REQUEST['id']);	}
 	}	  
@@ -142,7 +142,7 @@ function bannerHitsbyID($id){
 
 			$id = $inCore->request('item_id', 'int', 0);
 			
-			$title = $inCore->request('title', 'str', 'Банер без названия');
+			$title = $inCore->request('title', 'str', 'Р‘Р°РЅРµСЂ Р±РµР· РЅР°Р·РІР°РЅРёСЏ');
 			$link  = $inCore->request('link', 'str');
 			
 			$typeimg = $inCore->request('typeimg', 'str');
@@ -161,7 +161,7 @@ function bannerHitsbyID($id){
 				$path_parts = pathinfo($realfile);
 				$ext = strtolower($path_parts['extension']);
 	
-				if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'swf') { die('тип файла неверный'); }
+				if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'swf') { die('С‚РёРї С„Р°Р№Р»Р° РЅРµРІРµСЂРЅС‹Р№'); }
 	
 				$realfile = substr($realfile, 0, strrpos($realfile, '.'));
 				$realfile = preg_replace ('/[^a-zA-Z0-9]/i', '', $realfile);
@@ -172,7 +172,7 @@ function bannerHitsbyID($id){
                 if (@move_uploaded_file($_FILES['picture']['tmp_name'], $uploadfile)) {
                         $sql = "UPDATE cms_banners SET fileurl = '$filename' WHERE id = '$id'";
                         dbQuery($sql) ;
-                } else { $msg .= 'Ошибка загрузки баннера!'; }
+                } else { $msg .= 'РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё Р±Р°РЅРЅРµСЂР°!'; }
             }
 					
 			$sql = "UPDATE cms_banners
@@ -217,31 +217,31 @@ function bannerHitsbyID($id){
 	}
 
 	if ($opt == 'list'){
-		cpAddPathway('Баннеры', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
-		echo '<h3>Баннеры</h3>';
+		cpAddPathway('Р‘Р°РЅРЅРµСЂС‹', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
+		echo '<h3>Р‘Р°РЅРЅРµСЂС‹</h3>';
 		
 		//TABLE COLUMNS
 		$fields = array();
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Дата';		$fields[1]['field'] = 'pubdate';		$fields[1]['width'] = '100';		$fields[1]['filter'] = 15;
+		$fields[1]['title'] = 'Р”Р°С‚Р°';		$fields[1]['field'] = 'pubdate';		$fields[1]['width'] = '100';		$fields[1]['filter'] = 15;
 		$fields[1]['fdate'] = '%d/%m/%Y';
 
-		$fields[2]['title'] = 'Название';	$fields[2]['field'] = 'title';		$fields[2]['width'] = '';
+		$fields[2]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[2]['field'] = 'title';		$fields[2]['width'] = '';
 		$fields[2]['filter'] = 15;
 		$fields[2]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id=%id%';
 
-		$fields[3]['title'] = 'Позиция';	$fields[3]['field'] = 'position';		$fields[3]['width'] = '100';
+		$fields[3]['title'] = 'РџРѕР·РёС†РёСЏ';	$fields[3]['field'] = 'position';		$fields[3]['width'] = '100';
 		$fields[3]['filter'] = 15;
 
-		$fields[4]['title'] = 'Показ';		$fields[4]['field'] = 'published';	$fields[4]['width'] = '100';
+		$fields[4]['title'] = 'РџРѕРєР°Р·';		$fields[4]['field'] = 'published';	$fields[4]['width'] = '100';
 		$fields[4]['do'] = 'opt';  $fields[4]['do_suffix'] = '_banner';
 
-		$fields[5]['title'] = 'Хиты';	$fields[5]['field'] = 'id';		$fields[5]['width'] = '90';
+		$fields[5]['title'] = 'РҐРёС‚С‹';	$fields[5]['field'] = 'id';		$fields[5]['width'] = '90';
 		$fields[5]['prc'] = 'bannerHitsbyID';
 
-		$fields[6]['title'] = 'Клики';	$fields[6]['field'] = 'clicks';		$fields[6]['width'] = '90';
+		$fields[6]['title'] = 'РљР»РёРєРё';	$fields[6]['field'] = 'clicks';		$fields[6]['width'] = '90';
 
 		$fields[7]['title'] = 'CTR';	$fields[7]['field'] = 'id';		$fields[7]['width'] = '90';
 		$fields[7]['prc'] = 'bannerCTRbyID';
@@ -249,13 +249,13 @@ function bannerHitsbyID($id){
 		
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Редактировать';
+		$actions[0]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[0]['icon']  = 'edit.gif';
 		$actions[0]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id=%id%';
 
-		$actions[1]['title'] = 'Удалить';
+		$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[1]['icon']  = 'delete.gif';
-		$actions[1]['confirm'] = 'Удалить баннер со всей статистикой?';
+		$actions[1]['confirm'] = 'РЈРґР°Р»РёС‚СЊ Р±Р°РЅРЅРµСЂ СЃРѕ РІСЃРµР№ СЃС‚Р°С‚РёСЃС‚РёРєРѕР№?';
 		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete&item_id=%id%';
 				
 		//Print table
@@ -265,15 +265,15 @@ function bannerHitsbyID($id){
 	if ($opt == 'add' || $opt == 'edit'){	
 			
 		if ($opt=='add'){
-			 echo '<h3>Добавить баннер</h3>';
-			 cpAddPathway('Добавить баннер', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add');
+			 echo '<h3>Р”РѕР±Р°РІРёС‚СЊ Р±Р°РЅРЅРµСЂ</h3>';
+			 cpAddPathway('Р”РѕР±Р°РІРёС‚СЊ Р±Р°РЅРЅРµСЂ', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add');
 			 if (@$msg) { echo '<p class="error">'.$msg.'</p>'; }
 		} else {
 					if(isset($_REQUEST['multiple'])){				 
 						if (isset($_REQUEST['item'])){					
 							$_SESSION['editlist'] = $_REQUEST['item'];
 						} else {
-							echo '<p class="error">Нет выбранных объектов!</p>';
+							echo '<p class="error">РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ!</p>';
 							return;
 						}				 
 					 }
@@ -283,7 +283,7 @@ function bannerHitsbyID($id){
 					 if (isset($_SESSION['editlist'])){
 						$id = array_shift($_SESSION['editlist']);
 						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
-						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
+						{ $ostatok = '(РќР° РѕС‡РµСЂРµРґРё: '.sizeof($_SESSION['editlist']).')'; }
 					 } else { $id = $_REQUEST['item_id']; }
 		
 		
@@ -294,7 +294,7 @@ function bannerHitsbyID($id){
 					 }
 
 					 echo '<h3>'.$mod['title'].' '.$ostatok.'</h3>';
-					 cpAddPathway('Баннеры', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
+					 cpAddPathway('Р‘Р°РЅРЅРµСЂС‹', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
 					 cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id='.$id);		
 						
 			}
@@ -312,17 +312,17 @@ function bannerHitsbyID($id){
 		<form action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id'];?>" method="post" enctype="multipart/form-data" name="addform" id="addform">
 				<table width="625" border="0" cellspacing="5" class="proptable">
 				  <tr>
-					<td width="298"><strong>Название баннера: </strong><br />
-									<span class="hinttext">Отображается на сайте</span>					</td>
+					<td width="298"><strong>РќР°Р·РІР°РЅРёРµ Р±Р°РЅРЅРµСЂР°: </strong><br />
+									<span class="hinttext">РћС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РЅР° СЃР°Р№С‚Рµ</span>					</td>
 					<td width="308"><input name="title" type="text" id="title" size="45" value="<?php echo @$mod['title'];?>"/></td>
 				  </tr>
 				  <tr>
-				    <td><strong>Ссылка баннера: </strong><br />
-						<span class="hinttext">Не забывайте "http://" для внешних ссылок!</span>					</td>
+				    <td><strong>РЎСЃС‹Р»РєР° Р±Р°РЅРЅРµСЂР°: </strong><br />
+						<span class="hinttext">РќРµ Р·Р°Р±С‹РІР°Р№С‚Рµ "http://" РґР»СЏ РІРЅРµС€РЅРёС… СЃСЃС‹Р»РѕРє!</span>					</td>
 				    <td><input name="link" type="text" id="link" size="45" value="<?php echo @$mod['link'];?>"/></td>
 			      </tr>
 				  <tr>
-				    <td><strong>Позиция для показа: </strong></td>
+				    <td><strong>РџРѕР·РёС†РёСЏ РґР»СЏ РїРѕРєР°Р·Р°: </strong></td>
 				    <td><select name="position" id="position">
 							<?php for($m=1;$m<=30;$m++){ ?>
                                 <option value="banner<?php echo $m; ?>" <?php if(@$mod['position']=='banner'.$m) { echo 'selected'; } ?>>banner<?php echo $m; ?></option>
@@ -330,38 +330,38 @@ function bannerHitsbyID($id){
                     </select></td>
 			      </tr>
 				  <tr>
-				    <td><strong>Тип баннера: </strong></td>
+				    <td><strong>РўРёРї Р±Р°РЅРЅРµСЂР°: </strong></td>
 				    <td><select name="typeimg" id="typeimg">
-                      <option value="image" <?php if(@$mod['typeimg']=='image') { echo 'selected'; } ?>>Изображение (gif, jpg)</option>
+                      <option value="image" <?php if(@$mod['typeimg']=='image') { echo 'selected'; } ?>>РР·РѕР±СЂР°Р¶РµРЅРёРµ (gif, jpg)</option>
                       <option value="swf" <?php if(@$mod['typeimg']=='swf') { echo 'selected'; } ?>>Flash (swf) (468x60)</option>
                     </select></td>
 			      </tr>
 				  <tr>
-					<td><strong>Файл баннера: </strong><br />
-						<span class="hinttext">Только GIF, JPG, JPEG, SWF</span>					</td>
-					<td><?php if (@$mod['file']) { echo '<a href="/images/photos/'.$mod['file'].'" title="Посмотреть фото">'.$mod['file'].'</a>'; } else { ?>
+					<td><strong>Р¤Р°Р№Р» Р±Р°РЅРЅРµСЂР°: </strong><br />
+						<span class="hinttext">РўРѕР»СЊРєРѕ GIF, JPG, JPEG, SWF</span>					</td>
+					<td><?php if (@$mod['file']) { echo '<a href="/images/photos/'.$mod['file'].'" title="РџРѕСЃРјРѕС‚СЂРµС‚СЊ С„РѕС‚Рѕ">'.$mod['file'].'</a>'; } else { ?>
 						<input name="picture" type="file" id="picture" size="30" />
 					  <?php } ?></td>
 				  </tr>
 				  <tr>
-				    <td><strong>Максимум показов: </strong><br />
-						<span class="hinttext">Установите "0" для бесконечного количества</span>					</td>
-				    <td><input name="maxhits" type="text" id="maxhits" size="5" value="<?php echo @$mod['maxhits'];?>"/>  раз.</td>
+				    <td><strong>РњР°РєСЃРёРјСѓРј РїРѕРєР°Р·РѕРІ: </strong><br />
+						<span class="hinttext">РЈСЃС‚Р°РЅРѕРІРёС‚Рµ "0" РґР»СЏ Р±РµСЃРєРѕРЅРµС‡РЅРѕРіРѕ РєРѕР»РёС‡РµСЃС‚РІР°</span>					</td>
+				    <td><input name="maxhits" type="text" id="maxhits" size="5" value="<?php echo @$mod['maxhits'];?>"/>  СЂР°Р·.</td>
 			      </tr>
 				  <tr>
-					<td><strong>Публиковать баннер?</strong><br />
-						<span class="hinttext">Отключите для приостановки показов</span>					</td>
+					<td><strong>РџСѓР±Р»РёРєРѕРІР°С‚СЊ Р±Р°РЅРЅРµСЂ?</strong><br />
+						<span class="hinttext">РћС‚РєР»СЋС‡РёС‚Рµ РґР»СЏ РїСЂРёРѕСЃС‚Р°РЅРѕРІРєРё РїРѕРєР°Р·РѕРІ</span>					</td>
 					<td><input name="published" type="radio" value="1" checked="checked" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> />
-					  Да
+					  Р”Р°
 					  <label>
 				  <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> />
-						Нет</label></td>
+						РќРµС‚</label></td>
 				  </tr>
 				</table>
-				<p><strong>Примечание:</strong> для вывода баннера на сайте укажите в нужной статье или модуле выражение вида: {БАННЕР=Имя_позиции}</p>
+				<p><strong>РџСЂРёРјРµС‡Р°РЅРёРµ:</strong> РґР»СЏ РІС‹РІРѕРґР° Р±Р°РЅРЅРµСЂР° РЅР° СЃР°Р№С‚Рµ СѓРєР°Р¶РёС‚Рµ РІ РЅСѓР¶РЅРѕР№ СЃС‚Р°С‚СЊРµ РёР»Рё РјРѕРґСѓР»Рµ РІС‹СЂР°Р¶РµРЅРёРµ РІРёРґР°: {Р‘РђРќРќР•Р =РРјСЏ_РїРѕР·РёС†РёРё}</p>
 				<p>
-				  <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add') { echo 'value="Загрузить баннер"'; } else { echo 'value="Сохранить баннер"'; } ?> />
-				  <input name="back3" type="button" id="back3" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+				  <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add') { echo 'value="Р—Р°РіСЂСѓР·РёС‚СЊ Р±Р°РЅРЅРµСЂ"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ Р±Р°РЅРЅРµСЂ"'; } ?> />
+				  <input name="back3" type="button" id="back3" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components';"/>
 				  <input name="opt" type="hidden" id="opt" <?php if ($opt=='add') { echo 'value="submit"'; } else { echo 'value="update"'; } ?> />
 				  <?php
 					if ($opt=='edit'){

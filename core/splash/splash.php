@@ -1,7 +1,7 @@
 <table width="100%" height="100%" border="0" cellpadding="10" cellspacing="0">
   <tr>
-    <td align="center" valign="middle"><p><strong>Добро пожаловать на наш сайт.<br>
-      Это страница приветствия.</strong></p>
-    <p><a href="/">Войти на сайт</a></p></td>
+    <td align="center" valign="middle"><p><strong>Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ РЅР° РЅР°С€ СЃР°Р№С‚.<br>
+      Р­С‚Рѕ СЃС‚СЂР°РЅРёС†Р° РїСЂРёРІРµС‚СЃС‚РІРёСЏ.</strong></p>
+    <p><a href="/">Р’РѕР№С‚Рё РЅР° СЃР°Р№С‚</a></p></td>
   </tr>
 </table>

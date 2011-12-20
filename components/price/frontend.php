@@ -69,7 +69,7 @@ function price(){
     $inDB   = cmsDatabase::getInstance();
     global $_LANG;
 	$cfg    = $inCore->loadComponentConfig('price');
-	// Проверяем включени ли компонент
+	// РџСЂРѕРІРµСЂСЏРµРј РІРєР»СЋС‡РµРЅРё Р»Рё РєРѕРјРїРѕРЅРµРЅС‚
 	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 	
 	$id     =   $inCore->request('id', 'int', 0);
@@ -398,8 +398,8 @@ function price(){
 						echo '<td class="'.$class.'" width="" valign="top">';															
 						echo $con['title'];
 						echo '</td>';	
-						echo '<td class="'.$class.'" width="120" align="right" valign="top"><div id="kdiv'.$num.'" name="kdiv" style="display:none">'.$count_field.' шт. x</div></td>';			
-						echo '<td class="'.$class.'" width="100" align="right" valign="top">'.$con['price'].' руб.</td>';			
+						echo '<td class="'.$class.'" width="120" align="right" valign="top"><div id="kdiv'.$num.'" name="kdiv" style="display:none">'.$count_field.' С€С‚. x</div></td>';			
+						echo '<td class="'.$class.'" width="100" align="right" valign="top">'.$con['price'].' СЂСѓР±.</td>';			
 					echo '</tr>';
 				}
 				echo '</table>';
@@ -428,7 +428,7 @@ function price(){
 					
 			//Search conditions//////////////////////////////////////////
 			if($look == 'anyword'){
-				//$looktype = 'любое слово';
+				//$looktype = 'Р»СЋР±РѕРµ СЃР»РѕРІРѕ';
 				foreach($words as $w){
 					if(strlen($w)>1){
 						$n++;
@@ -439,7 +439,7 @@ function price(){
 			}
 		
 			if($look == 'allwords'){
-				//looktype = 'все слова';		
+				//looktype = 'РІСЃРµ СЃР»РѕРІР°';		
 				foreach($words as $w){
 					if(strlen($w)>1){
 						$n++;
@@ -450,7 +450,7 @@ function price(){
 			}
 			
 			if($look == 'phrase'){
-				//$looktype = 'фраза целиком';		
+				//$looktype = 'С„СЂР°Р·Р° С†РµР»РёРєРѕРј';		
 				$sql .= "title LIKE '%$query%'";			
 			}
 			/////////////////////////////////////////////////////////////				

@@ -24,12 +24,12 @@
 		if (!isset($cfg['show_home'])) { $cfg['show_home'] = 1; }
 		if (!isset($cfg['is_sub_menu'])) { $cfg['is_sub_menu'] = 0; }
 
-		// Òåêóùèé ïóíêò ìåíþ
+		// Ð¢ÐµÐºÑƒÑ‰Ð¸Ð¹ Ð¿ÑƒÐ½ÐºÑ‚ Ð¼ÐµÐ½ÑŽ
 		$currentmenu = $inDB->get_fields('cms_menu', "id = '$menuid'", 'NSLeft, NSRight, NSLevel');
 
-		// id êîðíÿ ìåíþ åñëè îáû÷íûé âûâîä ìåíþ, $menuid åñëè ðåæèì ïîäìåíþ
+		// id ÐºÐ¾Ñ€Ð½Ñ Ð¼ÐµÐ½ÑŽ ÐµÑÐ»Ð¸ Ð¾Ð±Ñ‹Ñ‡Ð½Ñ‹Ð¹ Ð²Ñ‹Ð²Ð¾Ð´ Ð¼ÐµÐ½ÑŽ, $menuid ÐµÑÐ»Ð¸ Ñ€ÐµÐ¶Ð¸Ð¼ Ð¿Ð¾Ð´Ð¼ÐµÐ½ÑŽ
 		if($cfg['is_sub_menu']){
-			// â ïîäìåíþ íå äîëæíî áûòü ññûëêè íà ãëàâíóþ
+			// Ð² Ð¿Ð¾Ð´Ð¼ÐµÐ½ÑŽ Ð½Ðµ Ð´Ð¾Ð»Ð¶Ð½Ð¾ Ð±Ñ‹Ñ‚ÑŒ ÑÑÑ‹Ð»ÐºÐ¸ Ð½Ð° Ð³Ð»Ð°Ð²Ð½ÑƒÑŽ
 			$cfg['show_home'] = 0;
 			$rs_rows = $menuid != 1 ? $nested_sets->SelectSubNodes($menuid) : false;
 		} else {

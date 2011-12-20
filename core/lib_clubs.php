@@ -89,7 +89,7 @@ function clubBlogId($club_id){
 	$id   = $inDB->get_field('cms_blogs', "owner='club' AND user_id=$club_id", 'id');	
 	if (!$id){
 			$sql = "INSERT INTO cms_blogs (user_id, title, pubdate, allow_who, view_type, showcats, ownertype, premod, forall, owner)
-					VALUES ('$club_id', 'Блог', NOW(), 'all', 'list', 1, 'multi', 0, 0, 'club')";	
+					VALUES ('$club_id', 'Р‘Р»РѕРі', NOW(), 'all', 'list', 1, 'multi', 0, 0, 'club')";	
 			$inDB->query($sql);
 			$id = $inDB->get_field('cms_blogs', "owner='club' AND user_id=$club_id", 'id');	
 	}
@@ -126,22 +126,22 @@ function clubBlogContent($blog_id, $is_admin=false, $is_moder=false, $is_member=
 			$html .= '<li><a href="'.$model->getPostURL(null, $post['bloglink'], $post['seolink']).'">'.$post['title'].'</a> &mdash; '.$inCore->dateFormat($post['fpubdate']).'</li>';
 		}
 		if ($is_member || $is_moder || $is_admin){
-			$html .= '<li class="service"><a href="/blogs/'.$blog_id.'/newpost.html">Добавить новый пост</li>';
+			$html .= '<li class="service"><a href="/blogs/'.$blog_id.'/newpost.html">Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІС‹Р№ РїРѕСЃС‚</li>';
 		}
 		if (($is_admin || $is_moder) && $on_moderate){
-			$html .= '<li><a class="on_moder" href="/blogs/'.$blog_id.'/moderate.html">Записи на модерацию</a> ('.$on_moderate.')</li>';
+			$html .= '<li><a class="on_moder" href="/blogs/'.$blog_id.'/moderate.html">Р—Р°РїРёСЃРё РЅР° РјРѕРґРµСЂР°С†РёСЋ</a> ('.$on_moderate.')</li>';
 		}
-		$html .= '<li class="all"><a href="'.$model->getBlogURL(null, $bloglink).'">Все записи</a> ('.$inDB->rows_count('cms_blog_posts', "blog_id=$blog_id AND published=1").')</li>';
+		$html .= '<li class="all"><a href="'.$model->getBlogURL(null, $bloglink).'">Р’СЃРµ Р·Р°РїРёСЃРё</a> ('.$inDB->rows_count('cms_blog_posts', "blog_id=$blog_id AND published=1").')</li>';
 		$html .= '</ul>';
 
 	} else {
 
 		if ($is_member || $is_moder || $is_admin){
 			$html .= '<ul>';
-				$html .= '<li class="service"><a href="/blogs/'.$blog_id.'/newpost.html">Добавить новый пост</a></li>';
+				$html .= '<li class="service"><a href="/blogs/'.$blog_id.'/newpost.html">Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІС‹Р№ РїРѕСЃС‚</a></li>';
 			$html .= '</ul>';	
 		} else {
-			$html = '<p>В клубном блоге нет записей.</p>';	
+			$html = '<p>Р’ РєР»СѓР±РЅРѕРј Р±Р»РѕРіРµ РЅРµС‚ Р·Р°РїРёСЃРµР№.</p>';	
 		}
 
 	}
@@ -259,7 +259,7 @@ function clubTotalMembers($club_id){
 			WHERE c.club_id = '$club_id'";
 	$rs = $inDB->query($sql);
 	if ($inDB->num_rows($rs)){
-		return $inDB->num_rows($rs) +1; //+1 потому что считаем еще и админа, не только юзеров
+		return $inDB->num_rows($rs) +1; //+1 РїРѕС‚РѕРјСѓ С‡С‚Рѕ СЃС‡РёС‚Р°РµРј РµС‰Рµ Рё Р°РґРјРёРЅР°, РЅРµ С‚РѕР»СЊРєРѕ СЋР·РµСЂРѕРІ
 	} else {
 		return 1;
 	}
@@ -292,7 +292,7 @@ function clubSaveUsers($club_id, $list, $role, $clubtype='public', $cfg=false){
                 //send notice
                 if($cfg['notify_out'] && ($user_id != $inUser->id)){
                     $club_title = $inDB->get_field('cms_clubs', 'id='.$club_id, 'title');
-                    cmsUser::sendMessage(USER_UPDATER, $user_id, 'Пользователь <a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a> исключил Вас из числа участников клуба <a href="http://'.$_SERVER['HTTP_HOST'].'/clubs/'.$club_id.'">'.$club_title.'</a>.');
+                    cmsUser::sendMessage(USER_UPDATER, $user_id, 'РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ <a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a> РёСЃРєР»СЋС‡РёР» Р’Р°СЃ РёР· С‡РёСЃР»Р° СѓС‡Р°СЃС‚РЅРёРєРѕРІ РєР»СѓР±Р° <a href="http://'.$_SERVER['HTTP_HOST'].'/clubs/'.$club_id.'">'.$club_title.'</a>.');
                 }
             }
         }
@@ -310,7 +310,7 @@ function clubSaveUsers($club_id, $list, $role, $clubtype='public', $cfg=false){
                 //send notice
                 if($cfg['notify_in'] && ($user_id != $inUser->id)){
                     $club_title = $inDB->get_field('cms_clubs', 'id='.$club_id, 'title');
-                    cmsUser::sendMessage(USER_UPDATER, $user_id, '<b>Получено приглашение в клуб.</b> Пользователь <a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a> добавил Вас в число участников клуба <a href="http://'.$_SERVER['HTTP_HOST'].'/clubs/'.$club_id.'">'.$club_title.'</a>.');
+                    cmsUser::sendMessage(USER_UPDATER, $user_id, '<b>РџРѕР»СѓС‡РµРЅРѕ РїСЂРёРіР»Р°С€РµРЅРёРµ РІ РєР»СѓР±.</b> РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ <a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a> РґРѕР±Р°РІРёР» Р’Р°СЃ РІ С‡РёСЃР»Рѕ СѓС‡Р°СЃС‚РЅРёРєРѕРІ РєР»СѓР±Р° <a href="http://'.$_SERVER['HTTP_HOST'].'/clubs/'.$club_id.'">'.$club_title.'</a>.');
                 }
             } else {
                 //user already in club, update his role if necessary

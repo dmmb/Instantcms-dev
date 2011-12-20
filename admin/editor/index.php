@@ -30,10 +30,10 @@
 
     $inCore = cmsCore::getInstance();
 
-    $inCore->loadClass('page');         //страница
-    $inCore->loadClass('plugin');       //плагины
-    $inCore->loadClass('user');       //пользователь
-    $inCore->loadClass('actions');      //лента активности
+    $inCore->loadClass('page');         //СЃС‚СЂР°РЅРёС†Р°
+    $inCore->loadClass('plugin');       //РїР»Р°РіРёРЅС‹
+    $inCore->loadClass('user');       //РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
+    $inCore->loadClass('actions');      //Р»РµРЅС‚Р° Р°РєС‚РёРІРЅРѕСЃС‚Рё
 
     $inPage     = cmsPage::getInstance();
     $inConf     = cmsConfig::getInstance();
@@ -59,16 +59,16 @@ if ($do=='view'){
 
 	//MENU
 	$GLOBALS['ed_menu'][0]['link'] = 'index.php';
-	$GLOBALS['ed_menu'][0]['title'] = 'Начало';	
+	$GLOBALS['ed_menu'][0]['title'] = 'РќР°С‡Р°Р»Рѕ';	
 
 	$GLOBALS['ed_menu'][1]['link'] = '?do=newcat';
-	$GLOBALS['ed_menu'][1]['title'] = 'Новый подраздел';	
+	$GLOBALS['ed_menu'][1]['title'] = 'РќРѕРІС‹Р№ РїРѕРґСЂР°Р·РґРµР»';	
 
 	$GLOBALS['ed_menu'][2]['link'] = '?do=newdoc';
-	$GLOBALS['ed_menu'][2]['title'] = 'Новая статья';
+	$GLOBALS['ed_menu'][2]['title'] = 'РќРѕРІР°СЏ СЃС‚Р°С‚СЊСЏ';
 
 	$GLOBALS['ed_menu'][3]['link'] = '/';
-	$GLOBALS['ed_menu'][3]['title'] = 'Перейти на сайт';	
+	$GLOBALS['ed_menu'][3]['title'] = 'РџРµСЂРµР№С‚Рё РЅР° СЃР°Р№С‚';	
 
 	if (!isset($id)){
 		$cat = editorGetCat() or die('ACCESS DENIED');	
@@ -90,7 +90,7 @@ if ($do=='view'){
 	
 	echo '<div class="desc">';
 		if (!$root){
-			echo '<a href="index.php" class="toollink">Назад</a>';			
+			echo '<a href="index.php" class="toollink">РќР°Р·Р°Рґ</a>';			
 		}
 	echo '</div>';
 	
@@ -119,11 +119,11 @@ if ($do=='view'){
 					echo '</td>';		
 
 					if ($subcat['published']){
-						echo '<td style="'.$style.'" width="16" valign="top"><img src="../images/actions/on.gif" alt="Раздел опубликован"/></td>';			
-						echo '<td style="'.$style.'" width="60" align="center" valign="top"><a href="?do=hidecat&id='.$subcat['id'].'">Скрыть</a></td>';			
+						echo '<td style="'.$style.'" width="16" valign="top"><img src="../images/actions/on.gif" alt="Р Р°Р·РґРµР» РѕРїСѓР±Р»РёРєРѕРІР°РЅ"/></td>';			
+						echo '<td style="'.$style.'" width="60" align="center" valign="top"><a href="?do=hidecat&id='.$subcat['id'].'">РЎРєСЂС‹С‚СЊ</a></td>';			
 					} else {
-						echo '<td style="'.$style.'" width="16" valign="top"><img src="../images/actions/off.gif" alt="Раздел скрыт"/></td>';			
-						echo '<td style="'.$style.'" width="60" align="center" valign="top"><a href="?do=showcat&id='.$subcat['id'].'">Показать</a></td>';							
+						echo '<td style="'.$style.'" width="16" valign="top"><img src="../images/actions/off.gif" alt="Р Р°Р·РґРµР» СЃРєСЂС‹С‚"/></td>';			
+						echo '<td style="'.$style.'" width="60" align="center" valign="top"><a href="?do=showcat&id='.$subcat['id'].'">РџРѕРєР°Р·Р°С‚СЊ</a></td>';							
 					}
 
 				echo '</tr>';
@@ -158,22 +158,22 @@ if ($do=='view'){
 					echo '<td style="'.$style.'" width="" valign="top">';
 						echo '<a href="?do=editdoc&id='.$con['id'].'">'.$con['title'].'</a>';
 					echo '</td>';	
-					echo '<td style="'.$style.'" width="16" valign="top"><img src="/images/icons/comments.gif" alt="Комментарии" border="0"/></td>';			
-                    echo '<td style="'.$style.'" width="25" valign="top"><a href="'.$model->getArticleURL(0, $con['seolink']).'#c" title="Комментарии">'.$inCore->getCommentsCount('article', $con['id']).'</a></td>';
+					echo '<td style="'.$style.'" width="16" valign="top"><img src="/images/icons/comments.gif" alt="РљРѕРјРјРµРЅС‚Р°СЂРёРё" border="0"/></td>';			
+                    echo '<td style="'.$style.'" width="25" valign="top"><a href="'.$model->getArticleURL(0, $con['seolink']).'#c" title="РљРѕРјРјРµРЅС‚Р°СЂРёРё">'.$inCore->getCommentsCount('article', $con['id']).'</a></td>';
 
-					echo '<td style="'.$style.'" width="16" valign="top"><img src="/images/icons/date.gif" alt="Дата публикации" /></td>';			
+					echo '<td style="'.$style.'" width="16" valign="top"><img src="/images/icons/date.gif" alt="Р”Р°С‚Р° РїСѓР±Р»РёРєР°С†РёРё" /></td>';			
 					echo '<td style="'.$style.'" width="140" align="center" valign="top">'.$con['fpubdate'].' [ <span style="color:gray">'.$con['fpubtime'].'</span> ]</td>';			
 
 					if ($con['published']){
-						echo '<td style="'.$style.'" width="16" valign="top"><img src="../images/actions/on.gif" alt="Статья опубликована"/></td>';
-						echo '<td style="'.$style.'" width="60" align="center" valign="top"><a href="?do=hidedoc&id='.$con['id'].'">Скрыть</a></td>';			
+						echo '<td style="'.$style.'" width="16" valign="top"><img src="../images/actions/on.gif" alt="РЎС‚Р°С‚СЊСЏ РѕРїСѓР±Р»РёРєРѕРІР°РЅР°"/></td>';
+						echo '<td style="'.$style.'" width="60" align="center" valign="top"><a href="?do=hidedoc&id='.$con['id'].'">РЎРєСЂС‹С‚СЊ</a></td>';			
 					} else {
-						echo '<td style="'.$style.'" width="16" valign="top"><img src="../images/actions/off.gif" alt="Статья скрыта"/></td>';
-						echo '<td style="'.$style.'" width="60" align="center" valign="top"><a href="?do=showdoc&id='.$con['id'].'">Показать</a></td>';							
+						echo '<td style="'.$style.'" width="16" valign="top"><img src="../images/actions/off.gif" alt="РЎС‚Р°С‚СЊСЏ СЃРєСЂС‹С‚Р°"/></td>';
+						echo '<td style="'.$style.'" width="60" align="center" valign="top"><a href="?do=showdoc&id='.$con['id'].'">РџРѕРєР°Р·Р°С‚СЊ</a></td>';							
 					}
 
 					echo '<td style="'.$style.'" width="16" valign="top"><img src="../images/actions/delete.gif" /></td>';			
-					echo '<td style="'.$style.'" width="60" align="center" valign="top"><a href="?do=deletedoc&id='.$con['id'].'">Удалить</a></td>';			
+					echo '<td style="'.$style.'" width="60" align="center" valign="top"><a href="?do=deletedoc&id='.$con['id'].'">РЈРґР°Р»РёС‚СЊ</a></td>';			
 
 				echo '</tr>';
 			}
@@ -189,22 +189,22 @@ if ($do=='newcat'){
 
 	//MENU
 	$GLOBALS['ed_menu'][0]['link'] = '/admin/editor/index.php';
-	$GLOBALS['ed_menu'][0]['title'] = 'Отмена';	
+	$GLOBALS['ed_menu'][0]['title'] = 'РћС‚РјРµРЅР°';	
 
 	if ($do=='newcat'){
 		$cat = editorGetCat() or die('ACCESS DENIED');	
-		$GLOBALS['ed_page_title'] = 'Новый подраздел';
-		echo '<div class="title">Новый подраздел</div>';	
+		$GLOBALS['ed_page_title'] = 'РќРѕРІС‹Р№ РїРѕРґСЂР°Р·РґРµР»';
+		echo '<div class="title">РќРѕРІС‹Р№ РїРѕРґСЂР°Р·РґРµР»</div>';	
 		echo '<div class="desc"></div>';
 	} else {
 		$sql = "SELECT * FROM cms_category WHERE id = $id LIMIT 1";
 		$result = dbQuery($sql) ;
 		if (mysql_num_rows($result)){
 			$mod = mysql_fetch_assoc($result);
-			$GLOBALS['ed_page_title'] = 'Редактировать раздел';
-			echo '<div class="title">Раздел: '.$mod['title'].'</div>';	
+			$GLOBALS['ed_page_title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ СЂР°Р·РґРµР»';
+			echo '<div class="title">Р Р°Р·РґРµР»: '.$mod['title'].'</div>';	
 			echo '<div class="desc"></div>';
-		} else { die('Категория не найдена'); }
+		} else { die('РљР°С‚РµРіРѕСЂРёСЏ РЅРµ РЅР°Р№РґРµРЅР°'); }
 	}
 	
 	echo '<div class="content">';
@@ -213,65 +213,65 @@ if ($do=='newcat'){
 		<form id="addform" name="addform" method="post" action="index.php">
 		  <table width="600" border="0" cellspacing="5" class="proptable">
 			<tr>
-			  <td width="222" valign="top">Название раздела:<br />
-				  <span class="hinttext">Отображается на сайте</span></td>
+			  <td width="222" valign="top">РќР°Р·РІР°РЅРёРµ СЂР°Р·РґРµР»Р°:<br />
+				  <span class="hinttext">РћС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РЅР° СЃР°Р№С‚Рµ</span></td>
 			  <td width="319" valign="top"><input name="title" type="text" id="title" size="45" value="<?php echo @$mod['title'];?>" /></td>
 			</tr>
 			<tr>
-			  <td valign="top">Сортировка статей:<br />
-				  <span class="hinttext">Сортировка статей при просмотре раздела на сайте </span></td>
+			  <td valign="top">РЎРѕСЂС‚РёСЂРѕРІРєР° СЃС‚Р°С‚РµР№:<br />
+				  <span class="hinttext">РЎРѕСЂС‚РёСЂРѕРІРєР° СЃС‚Р°С‚РµР№ РїСЂРё РїСЂРѕСЃРјРѕС‚СЂРµ СЂР°Р·РґРµР»Р° РЅР° СЃР°Р№С‚Рµ </span></td>
 			  <td valign="top"><select name="orderby" id="orderby">
-				<option value="pubdate" <?php if(@$mod['orderby']=='pubdate') { echo 'selected'; } ?>>По дате</option>
-				<option value="title" <?php if(@$mod['orderby']=='title') { echo 'selected'; } ?>>По заголовку</option>
-				<option value="ordering" <?php if(@$mod['orderby']=='ordering') { echo 'selected'; } ?>>По порядку</option>
-				<option value="hits" <?php if(@$mod['orderby']=='hits') { echo 'selected'; } ?>>По просмотрам</option>
+				<option value="pubdate" <?php if(@$mod['orderby']=='pubdate') { echo 'selected'; } ?>>РџРѕ РґР°С‚Рµ</option>
+				<option value="title" <?php if(@$mod['orderby']=='title') { echo 'selected'; } ?>>РџРѕ Р·Р°РіРѕР»РѕРІРєСѓ</option>
+				<option value="ordering" <?php if(@$mod['orderby']=='ordering') { echo 'selected'; } ?>>РџРѕ РїРѕСЂСЏРґРєСѓ</option>
+				<option value="hits" <?php if(@$mod['orderby']=='hits') { echo 'selected'; } ?>>РџРѕ РїСЂРѕСЃРјРѕС‚СЂР°Рј</option>
 			  </select>
 				  <select name="orderto" id="orderto">
-					<option value="ASC" <?php if(@$mod['orderto']=='ASC') { echo 'selected'; } ?>>По возрастанию</option>
-					<option value="DESC" <?php if(@$mod['orderto']=='DESC') { echo 'selected'; } ?>>По убыванию</option>
+					<option value="ASC" <?php if(@$mod['orderto']=='ASC') { echo 'selected'; } ?>>РџРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ</option>
+					<option value="DESC" <?php if(@$mod['orderto']=='DESC') { echo 'selected'; } ?>>РџРѕ СѓР±С‹РІР°РЅРёСЋ</option>
 				  </select>			  </td>
 			</tr>
 			<tr>
-			  <td valign="top">Публиковать раздел?</td>
+			  <td valign="top">РџСѓР±Р»РёРєРѕРІР°С‚СЊ СЂР°Р·РґРµР»?</td>
 			  <td valign="top"><input name="published" type="radio" value="1" checked="checked" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> />
-				Да
+				Р”Р°
 				<label>
 				  <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> />
-				  Нет</label></td>
+				  РќРµС‚</label></td>
 			</tr>
 			<tr>
-			  <td valign="top">Показывать даты:<br />
-				  <span class="hinttext">При просмотре раздела на сайте</span></td>
+			  <td valign="top">РџРѕРєР°Р·С‹РІР°С‚СЊ РґР°С‚С‹:<br />
+				  <span class="hinttext">РџСЂРё РїСЂРѕСЃРјРѕС‚СЂРµ СЂР°Р·РґРµР»Р° РЅР° СЃР°Р№С‚Рµ</span></td>
 			  <td valign="top"><input name="showdate" type="radio" value="1" checked="checked" <?php if (@$mod['showdate']) { echo 'checked="checked"'; } ?> />
-				Да
+				Р”Р°
 				<label>
 				  <input name="showdate" type="radio" value="0"  <?php if (@!$mod['showdate']) { echo 'checked="checked"'; } ?> />
-				  Нет</label></td>
+				  РќРµС‚</label></td>
 			</tr>
 			<tr>
-			  <td valign="top">Показывать число комментариев: <br />
-				  <span class="hinttext">При просмотре раздела на сайте</span></td>
+			  <td valign="top">РџРѕРєР°Р·С‹РІР°С‚СЊ С‡РёСЃР»Рѕ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ: <br />
+				  <span class="hinttext">РџСЂРё РїСЂРѕСЃРјРѕС‚СЂРµ СЂР°Р·РґРµР»Р° РЅР° СЃР°Р№С‚Рµ</span></td>
 			  <td valign="top"><input name="showcomm" type="radio" value="1" checked="checked" <?php if (@$mod['showcomm']) { echo 'checked="checked"'; } ?> />
-				Да
+				Р”Р°
 				<label>
 				  <input name="showcomm" type="radio" value="0"  <?php if (@!$mod['showcomm']) { echo 'checked="checked"'; } ?> />
-				  Нет</label></td>
+				  РќРµС‚</label></td>
 			</tr>
 		  </table>
 		  <table width="100%" border="0">
 			<tr>
 			  <td>
-                <h3>Описание раздела</h3>
+                <h3>РћРїРёСЃР°РЅРёРµ СЂР°Р·РґРµР»Р°</h3>
                 <?php $inCore->insertEditor('description', $mod['description'], '400', '100%'); ?>
 			  </td>
 			</tr>
 		  </table>
 		  <p>
 			<label>
-			  <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='newcat') { echo 'value="Создать раздел"'; } else { echo 'value="Сохранить раздел"'; } ?> />
+			  <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='newcat') { echo 'value="РЎРѕР·РґР°С‚СЊ СЂР°Р·РґРµР»"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ СЂР°Р·РґРµР»"'; } ?> />
 			</label>
 			<label><span style="margin-top:15px">
-			  <input name="back" type="button" id="back" value="Отмена" onclick="window.history.back();"/>
+			  <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.history.back();"/>
 			  </span></label>
 			<input name="do" type="hidden" id="do" <?php if ($do=='newcat') { echo 'value="submitcat"'; } else { echo 'value="updatecat"'; } ?> />
 			<?php
@@ -349,23 +349,23 @@ if ($do=='newdoc' || $do=='editdoc'){
 
 	//MENU
 	$GLOBALS['ed_menu'][0]['link'] = 'javascript:window.history.go(-1)';
-	$GLOBALS['ed_menu'][0]['title'] = 'Отмена';	
+	$GLOBALS['ed_menu'][0]['title'] = 'РћС‚РјРµРЅР°';	
 
 	$cat = editorGetCat() or die('ACCESS DENIED');	
 
 	if ($do=='newdoc'){
-		$GLOBALS['ed_page_title'] = 'Новая статья';
-		echo '<div class="title">Новая статья</div>';
+		$GLOBALS['ed_page_title'] = 'РќРѕРІР°СЏ СЃС‚Р°С‚СЊСЏ';
+		echo '<div class="title">РќРѕРІР°СЏ СЃС‚Р°С‚СЊСЏ</div>';
 		echo '<div class="desc"></div>';
 	} else {
 		$sql = "SELECT * FROM cms_content WHERE id = $id LIMIT 1";
 		$result = dbQuery($sql) ;
 		if (mysql_num_rows($result)){
 			$mod = mysql_fetch_assoc($result);
-			$GLOBALS['ed_page_title'] = 'Редактировать документ';
-			echo '<div class="title">Статья: '.$mod['title'].'</div>';
+			$GLOBALS['ed_page_title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РґРѕРєСѓРјРµРЅС‚';
+			echo '<div class="title">РЎС‚Р°С‚СЊСЏ: '.$mod['title'].'</div>';
 			echo '<div class="desc"></div>';
-		} else { die('Статья не найдена'); }
+		} else { die('РЎС‚Р°С‚СЊСЏ РЅРµ РЅР°Р№РґРµРЅР°'); }
 	}
 	
 	echo '<div class="content">';
@@ -377,16 +377,16 @@ if ($do=='newdoc' || $do=='editdoc'){
 			<tr>
 			  <td><table width="605" border="0" cellspacing="5" class="proptable">
 					<tr>
-					  <td width="236" valign="top">Заголовок статьи:<br />
-						  <span class="hinttext">Отображается на сайте</span></td>
+					  <td width="236" valign="top">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚Р°С‚СЊРё:<br />
+						  <span class="hinttext">РћС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РЅР° СЃР°Р№С‚Рµ</span></td>
 					  <td width="348" valign="top"><input name="title" type="text" id="title2" size="45" value="<?php echo @$mod['title'];?>" /></td>
 					</tr>
 					<tr>
-					  <td valign="top">Раздел:<br />
-					  <span class="hinttext">Куда поместить статью</span></td>
+					  <td valign="top">Р Р°Р·РґРµР»:<br />
+					  <span class="hinttext">РљСѓРґР° РїРѕРјРµСЃС‚РёС‚СЊ СЃС‚Р°С‚СЊСЋ</span></td>
 					  <td valign="top">
                         <select name="category_id" size="8" id="category_id" style="width:250px">
-                              <option value="<?php echo $editor_category_id; ?>" <?php if (@$mod['category_id']==$editor_category_id || !isset($mod['category_id'])) { echo 'selected'; }?>>-- Корневой раздел --</option>
+                              <option value="<?php echo $editor_category_id; ?>" <?php if (@$mod['category_id']==$editor_category_id || !isset($mod['category_id'])) { echo 'selected'; }?>>-- РљРѕСЂРЅРµРІРѕР№ СЂР°Р·РґРµР» --</option>
                                 <?php
                                     if (isset($mod['category_id'])){
                                         echo $inCore->getListItemsNS('cms_category', $mod['category_id'], '', '', $editor_category_id);
@@ -398,30 +398,30 @@ if ($do=='newdoc' || $do=='editdoc'){
                       </td>
 					</tr>
 					<tr>
-					  <td valign="top">Публиковать статью?</td>
+					  <td valign="top">РџСѓР±Р»РёРєРѕРІР°С‚СЊ СЃС‚Р°С‚СЊСЋ?</td>
 					  <td valign="top"><input name="published" type="radio" value="1" checked="checked" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> />
-						Да
+						Р”Р°
 						<label>
 					<input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> />
-						  Нет</label></td>
+						  РќРµС‚</label></td>
 					</tr>
 					<tr>
-					  <td valign="top">Показывать дату? <br />
-						  <span class="hinttext">Отображается на сайте</span></td>
+					  <td valign="top">РџРѕРєР°Р·С‹РІР°С‚СЊ РґР°С‚Сѓ? <br />
+						  <span class="hinttext">РћС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РЅР° СЃР°Р№С‚Рµ</span></td>
 					  <td valign="top"><input name="showdate" type="radio" value="1" checked="checked" <?php if (@$mod['showdate']) { echo 'checked="checked"'; } ?> />
-						Да
+						Р”Р°
 						<label>
 					<input name="showdate" type="radio" value="0"  <?php if (@!$mod['showdate']) { echo 'checked="checked"'; } ?> />
-						  Нет</label></td>
+						  РќРµС‚</label></td>
 					</tr>
 					<tr>
-					  <td valign="top">Разрешить комментарии: <br />
-						  <span class="hinttext">Отображается на сайте</span></td>
+					  <td valign="top">Р Р°Р·СЂРµС€РёС‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё: <br />
+						  <span class="hinttext">РћС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РЅР° СЃР°Р№С‚Рµ</span></td>
 					  <td valign="top"><input name="comments" type="radio" value="1" checked="checked" <?php if (@$mod['comments']) { echo 'checked="checked"'; } ?> />
-						Да
+						Р”Р°
 						<label>
 					<input name="comments" type="radio" value="0"  <?php if (@!$mod['comments']) { echo 'checked="checked"'; } ?> />
-						  Нет</label></td>
+						  РќРµС‚</label></td>
 					</tr>
 				  </table>
 				</td>
@@ -430,17 +430,17 @@ if ($do=='newdoc' || $do=='editdoc'){
 		  <table width="100%" border="0">
 			<tr>
                 <td>
-                    <p><b>Анонс статьи</b> (не обязательно):</p>
+                    <p><b>РђРЅРѕРЅСЃ СЃС‚Р°С‚СЊРё</b> (РЅРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ):</p>
                     <?php $inCore->insertEditor('description', $mod['description'], '250', '100%'); ?>
-                    <p><b>Текст статьи:</b></p>
+                    <p><b>РўРµРєСЃС‚ СЃС‚Р°С‚СЊРё:</b></p>
                     <?php $inCore->insertEditor('content', $mod['content'], '450', '100%'); ?>
                 </td>
 			</tr>
 		  </table>
 		  <p style="margin-left:2px">
-			<input name="add_mod" type="submit" id="add_mod" <?php if ($do=='newdoc') { echo 'value="Создать статью"'; } else { echo 'value="Сохранить статью"'; } ?> />
+			<input name="add_mod" type="submit" id="add_mod" <?php if ($do=='newdoc') { echo 'value="РЎРѕР·РґР°С‚СЊ СЃС‚Р°С‚СЊСЋ"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ СЃС‚Р°С‚СЊСЋ"'; } ?> />
 			<span style="margin-top:15px">
-			<input name="back2" type="button" id="back2" value="Отмена" onclick="window.history.back();"/>
+			<input name="back2" type="button" id="back2" value="РћС‚РјРµРЅР°" onclick="window.history.back();"/>
 			</span>
 			<input name="do" type="hidden" id="do" <?php if ($do=='newdoc') { echo 'value="submitdoc"'; } else { echo 'value="updatedoc"'; } ?> />
 			<?php
@@ -461,7 +461,7 @@ if ($do == 'updatedoc'){
 
 		$doc['id']              = (int)$_REQUEST['id'];
 		$doc['category_id']     = $inCore->request('category_id', 'int', 0);
-		$doc['title']           = $inCore->request('title', 'str', 'Статья без названия');
+		$doc['title']           = $inCore->request('title', 'str', 'РЎС‚Р°С‚СЊСЏ Р±РµР· РЅР°Р·РІР°РЅРёСЏ');
 		$doc['description']     = $inCore->request('description', 'html', '');
 		$doc['content']         = $inCore->request('content', 'html', '');
 		$doc['description']	    = $inDB->escape_string($doc['description']);
@@ -498,7 +498,7 @@ if ($do == 'updatedoc'){
 if ($do == 'submitdoc'){
 
     $doc['category_id']     = $inCore->request('category_id', 'int', 0);
-    $doc['title']           = $inCore->request('title', 'str', 'Статья без названия');
+    $doc['title']           = $inCore->request('title', 'str', 'РЎС‚Р°С‚СЊСЏ Р±РµР· РЅР°Р·РІР°РЅРёСЏ');
     $doc['description']     = $inCore->request('description', 'html', '');
     $doc['content']         = $inCore->request('content', 'html', '');
 	$doc['description']	    = $inDB->escape_string($doc['description']);
@@ -532,7 +532,7 @@ if ($do == 'submitdoc'){
         dbQuery("UPDATE cms_content SET seolink='{$seolink}' WHERE id={$doc['id']}");
 		if ($doc['published']){
 			$doc['category']    = $inDB->get_fields('cms_category', "id='{$doc['category_id']}'", 'title, seolink');
-			//регистрируем событие
+			//СЂРµРіРёСЃС‚СЂРёСЂСѓРµРј СЃРѕР±С‹С‚РёРµ
 			cmsActions::log('add_article', array(
 				  'object' => $doc['title'],
 				  'object_url' =>  "/{$seolink}.html",
@@ -590,13 +590,13 @@ if ($do == 'deletedoc'){
 			
 			//MENU
 			$GLOBALS['ed_menu'][0]['link'] = 'javascript:window.history.go(-1)';
-			$GLOBALS['ed_menu'][0]['title'] = 'Отмена';	
+			$GLOBALS['ed_menu'][0]['title'] = 'РћС‚РјРµРЅР°';	
 
-			$GLOBALS['ed_page_title'] = 'Удаление статьи';
+			$GLOBALS['ed_page_title'] = 'РЈРґР°Р»РµРЅРёРµ СЃС‚Р°С‚СЊРё';
 			
-			echo '<div class="title">Удаление статьи</div>';
-			echo '<p style="margin-bottom:30px">Вы действительно хотите удалить статью "'.$data['title'].'"?</p>';
-			echo '<a href="?do=deletedoc&id='.$id.'&confirm=yes" class="btnlink">ДА</a><a href="javascript:window.history.go(-1)" class="btnlink">НЕТ</a>';		
+			echo '<div class="title">РЈРґР°Р»РµРЅРёРµ СЃС‚Р°С‚СЊРё</div>';
+			echo '<p style="margin-bottom:30px">Р’С‹ РґРµР№СЃС‚РІРёС‚РµР»СЊРЅРѕ С…РѕС‚РёС‚Рµ СѓРґР°Р»РёС‚СЊ СЃС‚Р°С‚СЊСЋ "'.$data['title'].'"?</p>';
+			echo '<a href="?do=deletedoc&id='.$id.'&confirm=yes" class="btnlink">Р”Рђ</a><a href="javascript:window.history.go(-1)" class="btnlink">РќР•Рў</a>';		
 		}	
 	}
 }

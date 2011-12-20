@@ -6,11 +6,11 @@
 			<div class="thread_desc">{$thread.topicdesc}</div>
 		</td>
 		<td style="font-size: 12px;" class="" valign="top" width="120">
-			<div><strong>Автор:</strong><br><a href="{$thread.starterhref}">{$thread.starter}</a>
+			<div><strong>РђРІС‚РѕСЂ:</strong><br><a href="{$thread.starterhref}">{$thread.starter}</a>
 		</td>		
 		<td style="font-size: 12px;" class="" valign="top" width="200">
-			<div><strong>Последнее сообщение: </strong></div>
-			<div>{$thread.date} от <a href="{$thread.authorhref}">{$thread.author}</a></div>
+			<div><strong>РџРѕСЃР»РµРґРЅРµРµ СЃРѕРѕР±С‰РµРЅРёРµ: </strong></div>
+			<div>{$thread.date} РѕС‚ <a href="{$thread.authorhref}">{$thread.author}</a></div>
 		</td>
 	</tr>
 {/foreach}

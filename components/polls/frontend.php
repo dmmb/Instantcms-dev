@@ -18,7 +18,7 @@ function polls(){
     $inDB       = cmsDatabase::getInstance();
     $inUser     = cmsUser::getInstance();
 
-    //Îïðåäåëÿåì àäðåñ äëÿ ðåäèðåêòà íàçàä
+    //ÐžÐ¿Ñ€ÐµÐ´ÐµÐ»ÑÐµÐ¼ Ð°Ð´Ñ€ÐµÑ Ð´Ð»Ñ Ñ€ÐµÐ´Ð¸Ñ€ÐµÐºÑ‚Ð° Ð½Ð°Ð·Ð°Ð´
     $back   = $inCore->getBackURL();
 
     $do = $inCore->request('do', 'str', 'vote');
@@ -41,14 +41,14 @@ function polls(){
             $poll       = $inDB->fetch_assoc($result);
             $answers    = unserialize($poll['answers']);
 
-            //Ïðèáàâëÿåì ãîëîñ ê ïåðåäàííîìó íàì âàðèàíòó îòâåòà
+            //ÐŸÑ€Ð¸Ð±Ð°Ð²Ð»ÑÐµÐ¼ Ð³Ð¾Ð»Ð¾Ñ Ðº Ð¿ÐµÑ€ÐµÐ´Ð°Ð½Ð½Ð¾Ð¼Ñƒ Ð½Ð°Ð¼ Ð²Ð°Ñ€Ð¸Ð°Ð½Ñ‚Ñƒ Ð¾Ñ‚Ð²ÐµÑ‚Ð°
             foreach($answers as $key=>$value){
                 if ($key == $answer){
                     $answers[$key] += 1;
                 }
             }
 
-            //Ñîõðàíÿåì ðåçóëüòàòû îïðîñà
+            //Ð¡Ð¾Ñ…Ñ€Ð°Ð½ÑÐµÐ¼ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ñ‹ Ð¾Ð¿Ñ€Ð¾ÑÐ°
             $sql = "UPDATE cms_polls SET answers = '".serialize($answers)."' WHERE id = $poll_id";
             $inDB->query($sql);
 

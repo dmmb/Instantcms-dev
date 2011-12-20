@@ -2,17 +2,17 @@
 <backend>    
     <module>
         <id>mod_uc_random</id>
-        <title>Случайное в каталоге</title>
+        <title>РЎР»СѓС‡Р°Р№РЅРѕРµ РІ РєР°С‚Р°Р»РѕРіРµ</title>
     </module>
     <params>
 
-        <param type="list_db" name="cat_id" title="Записи из рубрики" src="cms_uc_cats" src_title="title" src_value="id" tree="1" />
-        <param type="flag" name="subs" title="Вместе с подрубриками" default="off" />
+        <param type="list_db" name="cat_id" title="Р—Р°РїРёСЃРё РёР· СЂСѓР±СЂРёРєРё" src="cms_uc_cats" src_title="title" src_value="id" tree="1" />
+        <param type="flag" name="subs" title="Р’РјРµСЃС‚Рµ СЃ РїРѕРґСЂСѓР±СЂРёРєР°РјРё" default="off" />
 
-        <param type="number" name="count" title="Количество записей" units="шт." default="5" />
+        <param type="number" name="count" title="РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РїРёСЃРµР№" units="С€С‚." default="5" />
       
-        <param type="flag" name="showtitle" title="Показывать названия" default="on" />
-        <param type="flag" name="showcat" title="Показывать рубрику" default="on" />
+        <param type="flag" name="showtitle" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РЅР°Р·РІР°РЅРёСЏ" default="on" />
+        <param type="flag" name="showcat" title="РџРѕРєР°Р·С‹РІР°С‚СЊ СЂСѓР±СЂРёРєСѓ" default="on" />
         
     </params>
 </backend>

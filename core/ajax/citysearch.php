@@ -30,8 +30,8 @@
 	$q = iconv('UTF-8//IGNORE', 'WINDOWS-1251//IGNORE', $q);
 	$q = strtolower($q);
 
-    $inCore->loadClass('config');       //êîíôèãóðàöèÿ
-    $inCore->loadClass('db');           //áàçà äàííûõ
+    $inCore->loadClass('config');       //ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ
+    $inCore->loadClass('db');           //Ð±Ð°Ð·Ð° Ð´Ð°Ð½Ð½Ñ‹Ñ…
 
     $inDB = cmsDatabase::getInstance();
 

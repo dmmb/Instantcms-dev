@@ -16,7 +16,7 @@
 {if $cfg.showlink neq 0}
 	<tr><td colspan="2">
 		<div style="text-align:right">
-			<a href="/content/top.html">Полный рейтинг</a> &rarr;
+			<a href="/content/top.html">РџРѕР»РЅС‹Р№ СЂРµР№С‚РёРЅРі</a> &rarr;
 		</div>
 	</td></tr>
 {/if}

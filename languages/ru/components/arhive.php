@@ -17,9 +17,9 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * e-mail: firs.yura@gmail.com
  * site: firs.org.ua
  */
-$_LANG['ARCHIVE_MATERIALS']         ='Àðõèâ ìàòåðèàëîâ';
-$_LANG['ARCHIVE_MATERIALS_FROM']    ='Ìàòåðèàëû çà ';
-$_LANG['ARHIVE_YEAR']               =' ãîä';
-$_LANG['ARHIVE_YEARS']              =' ãîäà';
-$_LANG['ARHIVE_NO_MATERIALS']       ='Íåò ìàòåðèàëîâ.'
+$_LANG['ARCHIVE_MATERIALS']         ='ÐÑ€Ñ…Ð¸Ð² Ð¼Ð°Ñ‚ÐµÑ€Ð¸Ð°Ð»Ð¾Ð²';
+$_LANG['ARCHIVE_MATERIALS_FROM']    ='ÐœÐ°Ñ‚ÐµÑ€Ð¸Ð°Ð»Ñ‹ Ð·Ð° ';
+$_LANG['ARHIVE_YEAR']               =' Ð³Ð¾Ð´';
+$_LANG['ARHIVE_YEARS']              =' Ð³Ð¾Ð´Ð°';
+$_LANG['ARHIVE_NO_MATERIALS']       ='ÐÐµÑ‚ Ð¼Ð°Ñ‚ÐµÑ€Ð¸Ð°Ð»Ð¾Ð².'
 ?>

@@ -1,5 +1,5 @@
 {* ================================================================================ *}
-{* ========================= Загрузка фото, Шаг 1 ================================= *}
+{* ========================= Р—Р°РіСЂСѓР·РєР° С„РѕС‚Рѕ, РЁР°Рі 1 ================================= *}
 {* ================================================================================ *}
 
 <h1 class="con_heading">{$LANG.ADD_PHOTOS}</h1>
@@ -26,7 +26,7 @@
             post_params: {"PHPSESSID" :{/literal} "{$sess_id}"{literal}},
             file_size_limit : "20 MB",
             file_types : "*.jpg;*.png;*.gif;*.jpeg;*.JPG;*.PNG;*.GIF;*.JPEG",
-            file_types_description : "Фотографии",
+            file_types_description : "Р¤РѕС‚РѕРіСЂР°С„РёРё",
     {/literal}
             file_upload_limit : {if $max_limit}{$max_files}{else}100{/if},
     {literal}
@@ -82,7 +82,7 @@
     
         <div>
             <span id="spanButtonPlaceHolder"></span>
-            <input id="btnCancel" type="button" value="Отменить все" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 36px;" />
+            <input id="btnCancel" type="button" value="РћС‚РјРµРЅРёС‚СЊ РІСЃРµ" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 36px;" />
         </div>
 
         <div id="divStatus" style="display:none">

@@ -11,21 +11,21 @@
 //                                                                            //
 /******************************************************************************/
 
-	cpAddPathway('SWF Облако тегов', '?view=modules&do=edit&id='.$_REQUEST['id']);
-	cpAddPathway('Настройки', '?view=modules&do=config&id='.$_REQUEST['id']);
+	cpAddPathway('SWF РћР±Р»Р°РєРѕ С‚РµРіРѕРІ', '?view=modules&do=edit&id='.$_REQUEST['id']);
+	cpAddPathway('РќР°СЃС‚СЂРѕР№РєРё', '?view=modules&do=config&id='.$_REQUEST['id']);
 	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'config'; }
-	echo '<h3>SWF Облако тегов</h3>';
+	echo '<h3>SWF РћР±Р»Р°РєРѕ С‚РµРіРѕРІ</h3>';
  		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'save.gif';
-		$toolmenu[0]['title'] = 'Сохранить';
+		$toolmenu[0]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 		$toolmenu[0]['link'] = 'javascript:document.optform.submit();';
 
 		$toolmenu[1]['icon'] = 'edit.gif';
-		$toolmenu[1]['title'] = 'Редактировать отображение модуля';
+		$toolmenu[1]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ РјРѕРґСѓР»СЏ';
 		$toolmenu[1]['link'] = '?view=modules&do=edit&id='.$_REQUEST['id'];
 
 		$toolmenu[2]['icon'] = 'cancel.gif';
-		$toolmenu[2]['title'] = 'Отмена';
+		$toolmenu[2]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[2]['link'] = '?view=modules';
 
 		cpToolMenu($toolmenu);
@@ -52,7 +52,7 @@
 
         $inCore->saveModuleConfig($_REQUEST['id'], $cfg);
 
-		$msg = 'Настройки сохранены.';
+		$msg = 'РќР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅРµРЅС‹.';
 
 	}
 	if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
@@ -68,21 +68,21 @@
         <table width="544" border="0" cellpadding="10" cellspacing="0" class="proptable">
           <tr>
           	<td colspan="2">
-          	Не забудьте опубликовать так же и плагин
+          	РќРµ Р·Р°Р±СѓРґСЊС‚Рµ РѕРїСѓР±Р»РёРєРѕРІР°С‚СЊ С‚Р°Рє Р¶Рµ Рё РїР»Р°РіРёРЅ
           	</td>
           </tr>
           <tr>
-            <td width="227"><strong>Сортировать теги : </strong></td>
+            <td width="227"><strong>РЎРѕСЂС‚РёСЂРѕРІР°С‚СЊ С‚РµРіРё : </strong></td>
             <td width="277"><select name="sortby" id="sortby">
-              <option value="tag" <?php if(@$cfg['sortby']=='tag') { echo 'selected'; } ?>>По алфавиту</option>
-              <option value="num" <?php if(@$cfg['sortby']=='num') { echo 'selected'; } ?>>По популярности</option>
+              <option value="tag" <?php if(@$cfg['sortby']=='tag') { echo 'selected'; } ?>>РџРѕ Р°Р»С„Р°РІРёС‚Сѓ</option>
+              <option value="num" <?php if(@$cfg['sortby']=='num') { echo 'selected'; } ?>>РџРѕ РїРѕРїСѓР»СЏСЂРЅРѕСЃС‚Рё</option>
             </select>            </td>
           </tr>
           <tr>
-            <td><strong>Минимальная частота тега: </strong></td>
+            <td><strong>РњРёРЅРёРјР°Р»СЊРЅР°СЏ С‡Р°СЃС‚РѕС‚Р° С‚РµРіР°: </strong></td>
             <td>
 				<select name="minfreq" id="minfreq">
-				  <option value="0" <?php if(@$cfg['minfreq']=='0') { echo 'selected'; } ?>>Без ограничений</option>
+				  <option value="0" <?php if(@$cfg['minfreq']=='0') { echo 'selected'; } ?>>Р‘РµР· РѕРіСЂР°РЅРёС‡РµРЅРёР№</option>
 				  <option value="10" <?php if(@$cfg['minfreq']=='10') { echo 'selected'; } ?>>10</option>
 				  <option value="20" <?php if(@$cfg['minfreq']=='20') { echo 'selected'; } ?>>20</option>
 				  <option value="50" <?php if(@$cfg['minfreq']=='50') { echo 'selected'; } ?>>50</option>
@@ -92,67 +92,67 @@
 				</select>			</td>
           </tr>
           <tr>
-            <td><strong>Минимальная длина тега: </strong></td>
+            <td><strong>РњРёРЅРёРјР°Р»СЊРЅР°СЏ РґР»РёРЅР° С‚РµРіР°: </strong></td>
 			<?php if(!isset($cfg['minlen'])) { $cfg['minlen'] = 3; } ?>
             <td><input name="minlen" type="text" id="minlen" size="5" value="<?php echo @$cfg['minlen'];?>"/>
-              симв.
+              СЃРёРјРІ.
 </td>
           </tr>
           <tr>
-            <td><strong>Ширина ФЛЭШ модуля: </strong></td>
+            <td><strong>РЁРёСЂРёРЅР° Р¤Р›Р­РЁ РјРѕРґСѓР»СЏ: </strong></td>
 			<?php if(!isset($cfg['swf_width'])) { $cfg['swf_width'] = 200; } ?>
             <td><input name="swf_width" type="text" id="swf_width" size="5" value="<?php echo @$cfg['swf_width'];?>"/>
-              пикс.
+              РїРёРєСЃ.
 </td>
           </tr>
           <tr>
-            <td><strong>Высота ФЛЭШ модуля: </strong></td>
+            <td><strong>Р’С‹СЃРѕС‚Р° Р¤Р›Р­РЁ РјРѕРґСѓР»СЏ: </strong></td>
 			<?php if(!isset($cfg['swf_height'])) { $cfg['swf_height'] = 200; } ?>
             <td><input name="swf_height" type="text" id="swf_height" size="5" value="<?php echo @$cfg['swf_height'];?>"/>
-              пикс.
+              РїРёРєСЃ.
 </td>
           </tr>
           <tr>
-            <td><strong>Цвет фона ФЛЭШ модуля: </strong></td>
+            <td><strong>Р¦РІРµС‚ С„РѕРЅР° Р¤Р›Р­РЁ РјРѕРґСѓР»СЏ: </strong></td>
 			<?php if(!isset($cfg['swf_bg_color'])) { $cfg['swf_bg_color'] = "FFFFFF"; } ?>
             <td><input name="swf_bg_color" type="text" id="swf_bg_color" size="6" value="<?php echo @$cfg['swf_bg_color'];?>"/>
-              в HEX.
+              РІ HEX.
 </td>
           </tr>
           <tr>
-            <td><strong>Максимальное количество тегов: </strong></td>
+            <td><strong>РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ С‚РµРіРѕРІ: </strong></td>
             <td><input name="maxtags" type="text" id="maxtags" size="5" value="<?php echo @$cfg['maxtags'];?>"/></td>
           </tr>
           <tr>
-            <td valign="top"><strong>Показывать теги для: </strong></td>
+            <td valign="top"><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ С‚РµРіРё РґР»СЏ: </strong></td>
             <td><table width="100%" border="0" cellspacing="0" cellpadding="2">
                 <tr>
                   <td><label>
                     <input name="targets[content]" type="checkbox" id="content" value="content" <?php if (@$cfg['targets']['content']) { echo 'checked="checked"'; }?>/>
-                    Статей</label></td>
+                    РЎС‚Р°С‚РµР№</label></td>
                 </tr>
                 <tr>
                   <td><input name="targets[photo]" type="checkbox" id="t_photo" value="photo" <?php if (@$cfg['targets']['photo']) { echo 'checked="checked"'; }?>/>
-                    Фото в галерее </td>
+                    Р¤РѕС‚Рѕ РІ РіР°Р»РµСЂРµРµ </td>
                 </tr>
                 <tr>
                   <td><input name="targets[blogpost]" type="checkbox" id="t_blog" value="blog" <?php if (@$cfg['targets']['blogpost']) { echo 'checked="checked"'; }?>/>
-                    Записей в блогах </td>
+                    Р—Р°РїРёСЃРµР№ РІ Р±Р»РѕРіР°С… </td>
                 </tr>
                 <tr>
                   <td><input name="targets[catalog]" type="checkbox" id="t_catalog" value="catalog" <?php if (@$cfg['targets']['catalog']) { echo 'checked="checked"'; }?>/>
-                    Записей каталога</td>
+                    Р—Р°РїРёСЃРµР№ РєР°С‚Р°Р»РѕРіР°</td>
                 </tr>
                 <tr>
                   <td><input name="targets[userphoto]" type="checkbox" id="t_userphoto" value="userphoto" <?php if (@$cfg['targets']['userphoto']) { echo 'checked="checked"'; }?>/>
-                    Фото пользователей </td>
+                    Р¤РѕС‚Рѕ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ </td>
                 </tr>
             </table></td>
           </tr>
         </table>
         <p>
           <input name="opt" type="hidden" id="do" value="save" />
-          <input name="save" type="submit" id="save" value="Сохранить" />
-          <input name="back" type="button" id="back" value="Назад" onclick="window.location.href='index.php?view=modules';"/>
+          <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+          <input name="back" type="button" id="back" value="РќР°Р·Р°Рґ" onclick="window.location.href='index.php?view=modules';"/>
         </p>
     </form>

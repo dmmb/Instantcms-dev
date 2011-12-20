@@ -390,8 +390,8 @@ class cms_model_content{
         $current = $this->inDB->get_field('cms_content', "id={$item_id}", 'ordering');
 
         if ($dir>0){
-            //движение вверх
-            //у элемента следующего за текущим нужно уменьшить порядковый номер
+            //РґРІРёР¶РµРЅРёРµ РІРІРµСЂС…
+            //Сѓ СЌР»РµРјРµРЅС‚Р° СЃР»РµРґСѓСЋС‰РµРіРѕ Р·Р° С‚РµРєСѓС‰РёРј РЅСѓР¶РЅРѕ СѓРјРµРЅСЊС€РёС‚СЊ РїРѕСЂСЏРґРєРѕРІС‹Р№ РЅРѕРјРµСЂ
             $sql = "UPDATE cms_content
                     SET ordering = ordering-1
                     WHERE category_id={$cat_id} AND ordering = ({$current}+1)
@@ -399,8 +399,8 @@ class cms_model_content{
             $this->inDB->query($sql);
         }
         if ($dir<0){
-            //движение вниз
-            //у элемента предшествующего текущему нужно увеличить порядковый номер
+            //РґРІРёР¶РµРЅРёРµ РІРЅРёР·
+            //Сѓ СЌР»РµРјРµРЅС‚Р° РїСЂРµРґС€РµСЃС‚РІСѓСЋС‰РµРіРѕ С‚РµРєСѓС‰РµРјСѓ РЅСѓР¶РЅРѕ СѓРІРµР»РёС‡РёС‚СЊ РїРѕСЂСЏРґРєРѕРІС‹Р№ РЅРѕРјРµСЂ
             $sql = "UPDATE cms_content
                     SET ordering = ordering+1
                     WHERE category_id={$cat_id} AND ordering = ({$current}-1)
@@ -456,7 +456,7 @@ class cms_model_content{
 
         $articles = cmsCore::callEvent('GET_ARTICLES', $articles);
 
-        //Переносим в архив просроченные статьи
+        //РџРµСЂРµРЅРѕСЃРёРј РІ Р°СЂС…РёРІ РїСЂРѕСЃСЂРѕС‡РµРЅРЅС‹Рµ СЃС‚Р°С‚СЊРё
         $sql = "UPDATE cms_content SET is_arhive = 1 WHERE is_end = 1 AND enddate < NOW()";
         $this->inDB->query($sql);
 
@@ -509,7 +509,7 @@ class cms_model_content{
 
         $seolink    = '';
 
-        //Строим путь к разделу
+        //РЎС‚СЂРѕРёРј РїСѓС‚СЊ Рє СЂР°Р·РґРµР»Сѓ
         $keys       = $this->inDB->get_fields('cms_category', "id={$category['id']}", 'NSLeft, NSRight');
 
         $left_key   = $keys['NSLeft'] + 1;
@@ -527,7 +527,7 @@ class cms_model_content{
 
         $seolink .= cmsCore::strToURL(($category['url'] ? $category['url'] : $category['title']));
 
-        //Обновляем пути всех статей этого раздела
+        //РћР±РЅРѕРІР»СЏРµРј РїСѓС‚Рё РІСЃРµС… СЃС‚Р°С‚РµР№ СЌС‚РѕРіРѕ СЂР°Р·РґРµР»Р°
         $sql = "SELECT id, title, url FROM cms_content WHERE category_id = '{$category['id']}'";
 
         $result = $this->inDB->query($sql);
@@ -540,7 +540,7 @@ class cms_model_content{
 
                 $this->inDB->query("UPDATE cms_content SET seolink='{$article_seolink}' WHERE id='{$article['id']}'");
 
-                //обновляем ссылки на комментарии
+                //РѕР±РЅРѕРІР»СЏРµРј СЃСЃС‹Р»РєРё РЅР° РєРѕРјРјРµРЅС‚Р°СЂРёРё
                 $comments_sql = "UPDATE cms_comments c,
                                         cms_content a
                                  SET c.target_link = CONCAT('/content/', a.seolink, '.html')
@@ -708,7 +708,7 @@ class cms_model_content{
 
         if ($article['url']) { $article['url'] = cmsCore::strToURL($article['url']); }
 
-		// получаем значение порядка последней статьи
+		// РїРѕР»СѓС‡Р°РµРј Р·РЅР°С‡РµРЅРёРµ РїРѕСЂСЏРґРєР° РїРѕСЃР»РµРґРЅРµР№ СЃС‚Р°С‚СЊРё
 		$last_ordering = (int)$this->inDB->get_field('cms_content', "category_id = '{$article['category_id']}' ORDER BY ordering DESC", 'ordering');
 		$ordering = $last_ordering+1;
 
@@ -795,14 +795,14 @@ class cms_model_content{
         cmsInsertTags($article['tags'], 'content', $article['id']);
 
 		if(!$not_upd_seo){
-			//обновляем ссылки меню
+			//РѕР±РЅРѕРІР»СЏРµРј СЃСЃС‹Р»РєРё РјРµРЅСЋ
 			$menuid = $this->inDB->get_field('cms_menu', "linktype='content' AND linkid={$id}", 'id');
 			if ($menuid){
 				$menulink = $inCore->getMenuLink('content', $id, $menuid);
 				$this->inDB->query("UPDATE cms_menu SET link='{$menulink}' WHERE id='{$menuid}'");
 			}
 	
-			//обновляем ссылки на комментарии
+			//РѕР±РЅРѕРІР»СЏРµРј СЃСЃС‹Р»РєРё РЅР° РєРѕРјРјРµРЅС‚Р°СЂРёРё
 			$comments_sql = "UPDATE cms_comments c,
 									cms_content a
 							 SET c.target_link = CONCAT('/content/', a.seolink, '.html')

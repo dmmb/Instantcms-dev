@@ -36,7 +36,7 @@
     $adminAccess = $inCore->checkAdminAccess();
 
     if (!$inCore->isAdminCan('admin/modules', $adminAccess)) {
-        echo 'Вы не имеете доступа к управлению модулями';
+        echo 'Р’С‹ РЅРµ РёРјРµРµС‚Рµ РґРѕСЃС‚СѓРїР° Рє СѓРїСЂР°РІР»РµРЅРёСЋ РјРѕРґСѓР»СЏРјРё';
         return;
     }
 

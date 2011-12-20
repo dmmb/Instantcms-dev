@@ -39,8 +39,8 @@ function applet_components(){
 	global $adminAccess;
 	if (!$inCore->isAdminCan('admin/components', $adminAccess)) { cpAccessDenied(); }
 
-	$GLOBALS['cp_page_title'] = 'Компоненты';
- 	cpAddPathway('Компоненты', 'index.php?view=components');	
+	$GLOBALS['cp_page_title'] = 'РљРѕРјРїРѕРЅРµРЅС‚С‹';
+ 	cpAddPathway('РљРѕРјРїРѕРЅРµРЅС‚С‹', 'index.php?view=components');	
 	
 	if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
 
@@ -100,11 +100,11 @@ function applet_components(){
 	if ($do == 'list'){
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'install.gif';
-		$toolmenu[0]['title'] = 'Установить компонент';
+		$toolmenu[0]['title'] = 'РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РєРѕРјРїРѕРЅРµРЅС‚';
 		$toolmenu[0]['link'] = '?view=install&do=component';
 
 		$toolmenu[1]['icon'] = 'help.gif';
-		$toolmenu[1]['title'] = 'Помощь';
+		$toolmenu[1]['title'] = 'РџРѕРјРѕС‰СЊ';
 		$toolmenu[1]['link'] = '?view=help&topic=components';
 
 		cpToolMenu($toolmenu);
@@ -123,12 +123,12 @@ function applet_components(){
                 $inCore->loadComponentInstaller($component);
                 $_component = call_user_func('info_component_'.$component);
 
-                $task_str   = ($task=='install') ? 'установлен' : 'обновлен';
+                $task_str   = ($task=='install') ? 'СѓСЃС‚Р°РЅРѕРІР»РµРЅ' : 'РѕР±РЅРѕРІР»РµРЅ';
                 echo '<div style="color:green;margin-top:12px;margin-bottom:5px;">';
-                echo '<p>Компонент <strong>"'.$_component['title'].'"</strong> успешно '.$task_str.'.</p>';
+                echo '<p>РљРѕРјРїРѕРЅРµРЅС‚ <strong>"'.$_component['title'].'"</strong> СѓСЃРїРµС€РЅРѕ '.$task_str.'.</p>';
                 if (isset($_component['modules'])){
                     if(is_array($_component['modules'])){
-                        echo '<p>Дополнительно установлены модули:</p>';
+                        echo '<p>Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅС‹ РјРѕРґСѓР»Рё:</p>';
                         echo '<ul>';
                             foreach($_component['modules'] as $module=>$title){
                                 echo '<li>'.$title.'</li>';
@@ -138,7 +138,7 @@ function applet_components(){
                 }
                 if (isset($_component['plugins'])){
                     if(is_array($_component['plugins'])){
-                        echo '<p>Дополнительно установлены плагины:</p>';
+                        echo '<p>Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅС‹ РїР»Р°РіРёРЅС‹:</p>';
                         echo '<ul>';
                             foreach($_component['plugins'] as $module=>$title){
                                 echo '<li>'.$title.'</li>';
@@ -150,7 +150,7 @@ function applet_components(){
             }
 
             if ($task == 'remove'){
-                echo '<div style="color:green;margin-top:12px;margin-bottom:5px;">Компонент удален из системы.</div>';
+                echo '<div style="color:green;margin-top:12px;margin-bottom:5px;">РљРѕРјРїРѕРЅРµРЅС‚ СѓРґР°Р»РµРЅ РёР· СЃРёСЃС‚РµРјС‹.</div>';
             }
 
         }
@@ -160,29 +160,29 @@ function applet_components(){
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';		$fields[1]['link'] = '?view=components&do=config&id=%id%';
+		$fields[1]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';		$fields[1]['link'] = '?view=components&do=config&id=%id%';
 
-        $fields[2]['title'] = 'Версия';		$fields[2]['field'] = 'version';		$fields[2]['width'] = '60';
+        $fields[2]['title'] = 'Р’РµСЂСЃРёСЏ';		$fields[2]['field'] = 'version';		$fields[2]['width'] = '60';
 
-		$fields[3]['title'] = 'Включен';	$fields[3]['field'] = 'published';		$fields[3]['width'] = '65';
+		$fields[3]['title'] = 'Р’РєР»СЋС‡РµРЅ';	$fields[3]['field'] = 'published';		$fields[3]['width'] = '65';
 
-		$fields[4]['title'] = 'Автор';		$fields[4]['field'] = 'author';		$fields[4]['width'] = '200';
+		$fields[4]['title'] = 'РђРІС‚РѕСЂ';		$fields[4]['field'] = 'author';		$fields[4]['width'] = '200';
 		
-		$fields[5]['title'] = 'Ссылка';		$fields[5]['field'] = 'link';		$fields[5]['width'] = '100';
+		$fields[5]['title'] = 'РЎСЃС‹Р»РєР°';		$fields[5]['field'] = 'link';		$fields[5]['width'] = '100';
 		
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Настроить';
+		$actions[0]['title'] = 'РќР°СЃС‚СЂРѕРёС‚СЊ';
 		$actions[0]['icon']  = 'config.gif';
 		$actions[0]['link']  = '?view=components&do=config&id=%id%';
-		// Функция, которой передается ID объекта, и если она вернет TRUE то только тогда отобразится значок
+		// Р¤СѓРЅРєС†РёСЏ, РєРѕС‚РѕСЂРѕР№ РїРµСЂРµРґР°РµС‚СЃСЏ ID РѕР±СЉРµРєС‚Р°, Рё РµСЃР»Рё РѕРЅР° РІРµСЂРЅРµС‚ TRUE С‚Рѕ С‚РѕР»СЊРєРѕ С‚РѕРіРґР° РѕС‚РѕР±СЂР°Р·РёС‚СЃСЏ Р·РЅР°С‡РѕРє
 		$actions[0]['condition'] = 'cpComponentHasConfig';
 		
-		$actions[1]['title'] = 'Удалить компонент';
+		$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ РєРѕРјРїРѕРЅРµРЅС‚';
 		$actions[1]['icon']  = 'delete.gif';
 		$actions[1]['link']  = '?view=install&do=remove_component&id=%id%';
-        $actions[1]['confirm'] = 'Удалить компонент из системы?';
-		// Функция, которой передается ID объекта, и если она вернет TRUE то только тогда отобразится значок
+        $actions[1]['confirm'] = 'РЈРґР°Р»РёС‚СЊ РєРѕРјРїРѕРЅРµРЅС‚ РёР· СЃРёСЃС‚РµРјС‹?';
+		// Р¤СѓРЅРєС†РёСЏ, РєРѕС‚РѕСЂРѕР№ РїРµСЂРµРґР°РµС‚СЃСЏ ID РѕР±СЉРµРєС‚Р°, Рё РµСЃР»Рё РѕРЅР° РІРµСЂРЅРµС‚ TRUE С‚Рѕ С‚РѕР»СЊРєРѕ С‚РѕРіРґР° РѕС‚РѕР±СЂР°Р·РёС‚СЃСЏ Р·РЅР°С‡РѕРє
 		$actions[1]['condition'] = 'cpComponentCanRemove';
 
 		$where = '';

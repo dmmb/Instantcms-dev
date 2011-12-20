@@ -1,6 +1,6 @@
 function setStatus(user_id){
 
-    var new_status = prompt('Ââåäèòå âàøå ñòàòóñíîå ñîîáùåíèå (ìàêñèìóì 140 ñèìâîëîâ):');
+    var new_status = prompt('Ğ’Ğ²ĞµĞ´Ğ¸Ñ‚Ğµ Ğ²Ğ°ÑˆĞµ ÑÑ‚Ğ°Ñ‚ÑƒÑĞ½Ğ¾Ğµ ÑĞ¾Ğ¾Ğ±Ñ‰ĞµĞ½Ğ¸Ğµ (Ğ¼Ğ°ĞºÑĞ¸Ğ¼ÑƒĞ¼ 140 ÑĞ¸Ğ¼Ğ²Ğ¾Ğ»Ğ¾Ğ²):');
 
     if (new_status.length > 140) {
         new_status = new_status.substr(0, 140);
@@ -11,7 +11,7 @@ function setStatus(user_id){
         $('.usr_status_date').show();
         $('.usr_status_bar').fadeOut();
         $('.usr_status_text span').eq(0).html(new_status);
-        $('.usr_status_date').html('// Òîëüêî ÷òî');
+        $('.usr_status_date').html('// Ğ¢Ğ¾Ğ»ÑŒĞºĞ¾ Ñ‡Ñ‚Ğ¾');
         $('.usr_status_bar').fadeIn();
     } else {
         if (new_status == ''){

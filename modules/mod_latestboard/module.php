@@ -34,11 +34,11 @@ function mod_latestboard($module_id){
 				$model->whereThisAndNestedCats($cat['NSLeft'], $cat['NSRight']);
 			}		
 		}
-		// òîëüêî ÂÈÏ
+		// Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð’Ð˜ÐŸ
 		if($cfg['onlyvip'] && !$cfg['butvip']){
 			$model->whereVip(1);
 		}
-		// êðîìå ÂÈÏ
+		// ÐºÑ€Ð¾Ð¼Ðµ Ð’Ð˜ÐŸ
 		if($cfg['butvip'] && !$cfg['onlyvip']){
 			$model->whereVip(0);
 		}

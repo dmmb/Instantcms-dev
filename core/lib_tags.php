@@ -19,7 +19,7 @@ function cmsInsertTags($tagstr, $target, $item_id){
 	$inDB->query("DELETE FROM cms_tags WHERE target='$target' AND item_id = '$item_id'");
 
 	$tagstr = strtolower($tagstr);
-	$tagstr = preg_replace('/[^a-zA-Z‡-ˇ∏≥ø∫¥¿-ﬂ®≤Ø™•0-9\s\-\,_]/i', '', $tagstr);
+	$tagstr = preg_replace('/[^a-zA-Z–∞-—è—ë—ñ—ó—î“ë–ê-–Ø–Å–Ü–á–Ñ“ê0-9\s\-\,_]/i', '', $tagstr);
 	$tagstr = trim($tagstr);
 	$tagstr = preg_replace('/\s+/', ' ', $tagstr);
 	$tagstr = str_replace(', ', ',', $tagstr);
@@ -78,7 +78,7 @@ function cmsTagLine($target, $item_id, $links=true, $selected=''){
 
 function cmsTagBar($target, $item_id, $selected=''){
 	if ($tagline = cmsTagLine($target, $item_id, true, $selected)){
-		return '<div class="taglinebar"><span class="label">“Â„Ë: </span><span class="tags">'.$tagline.'</span></div>';
+		return '<div class="taglinebar"><span class="label">–¢–µ–≥–∏: </span><span class="tags">'.$tagline.'</span></div>';
 	} else {
 		return '';
 	}

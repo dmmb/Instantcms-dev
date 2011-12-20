@@ -18,16 +18,16 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * site: firs.org.ua
  */
 // templates
-$_LANG['USERMENU_MY_PROFILE']          ='Ìîé ïðîôèëü';
-$_LANG['USERMENU_MY_RSS']              ='Ìîÿ ëåíòà';
-$_LANG['USERMENU_MESS']                ='Ñîîáùåíèÿ';
-$_LANG['USERMENU_MY_BLOG']             ='Áëîã';
-$_LANG['USERMENU_MY_CONTENT']          ='Ìîé êîíòåíò';
-$_LANG['USERMENU_PHOTOALBUM']          ='Ôîòîàëüáîì';
-$_LANG['USERMENU_PHOTOS']              ='Ôîòî';
-$_LANG['USERMENU_ADV']                 ='Îáúÿâëåíèÿ';
-$_LANG['USERMENU_ARTICLES']            ='Ñòàòüè';
-$_LANG['USERMENU_ADMININTER']          ='Àäìèíêà';
-$_LANG['USERMENU_ADD_ARTICLE']         ='Íàïèñàòü';
-$_LANG['USERMENU_EXIT']                ='Âûõîä';
+$_LANG['USERMENU_MY_PROFILE']          ='ÐœÐ¾Ð¹ Ð¿Ñ€Ð¾Ñ„Ð¸Ð»ÑŒ';
+$_LANG['USERMENU_MY_RSS']              ='ÐœÐ¾Ñ Ð»ÐµÐ½Ñ‚Ð°';
+$_LANG['USERMENU_MESS']                ='Ð¡Ð¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ';
+$_LANG['USERMENU_MY_BLOG']             ='Ð‘Ð»Ð¾Ð³';
+$_LANG['USERMENU_MY_CONTENT']          ='ÐœÐ¾Ð¹ ÐºÐ¾Ð½Ñ‚ÐµÐ½Ñ‚';
+$_LANG['USERMENU_PHOTOALBUM']          ='Ð¤Ð¾Ñ‚Ð¾Ð°Ð»ÑŒÐ±Ð¾Ð¼';
+$_LANG['USERMENU_PHOTOS']              ='Ð¤Ð¾Ñ‚Ð¾';
+$_LANG['USERMENU_ADV']                 ='ÐžÐ±ÑŠÑÐ²Ð»ÐµÐ½Ð¸Ñ';
+$_LANG['USERMENU_ARTICLES']            ='Ð¡Ñ‚Ð°Ñ‚ÑŒÐ¸';
+$_LANG['USERMENU_ADMININTER']          ='ÐÐ´Ð¼Ð¸Ð½ÐºÐ°';
+$_LANG['USERMENU_ADD_ARTICLE']         ='ÐÐ°Ð¿Ð¸ÑÐ°Ñ‚ÑŒ';
+$_LANG['USERMENU_EXIT']                ='Ð’Ñ‹Ñ…Ð¾Ð´';
 ?>

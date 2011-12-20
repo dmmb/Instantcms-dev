@@ -2,13 +2,13 @@
 <backend>    
     <module>
         <id>mod_arhive</id>
-        <title>Популярное в блогах</title>
+        <title>РџРѕРїСѓР»СЏСЂРЅРѕРµ РІ Р±Р»РѕРіР°С…</title>
     </module>
     <params>        
-        <param type="list" name="namemode" title="Формат названия личных блогов" hint="Показывать название блога или имя его хозяина">
-            <option title="Название блога" value="blog" />
-            <option title="Имя пользователя" value="user" />
+        <param type="list" name="namemode" title="Р¤РѕСЂРјР°С‚ РЅР°Р·РІР°РЅРёСЏ Р»РёС‡РЅС‹С… Р±Р»РѕРіРѕРІ" hint="РџРѕРєР°Р·С‹РІР°С‚СЊ РЅР°Р·РІР°РЅРёРµ Р±Р»РѕРіР° РёР»Рё РёРјСЏ РµРіРѕ С…РѕР·СЏРёРЅР°">
+            <option title="РќР°Р·РІР°РЅРёРµ Р±Р»РѕРіР°" value="blog" />
+            <option title="РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ" value="user" />
         </param>
-        <param type="number" name="shownum" title="Количество популярных записей" units="шт." default="5" />
+        <param type="number" name="shownum" title="РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕРїСѓР»СЏСЂРЅС‹С… Р·Р°РїРёСЃРµР№" units="С€С‚." default="5" />
     </params>
 </backend>

@@ -47,7 +47,7 @@ function pagelinks($table, $perpage, $current, $first_url=''){
 		$pages = ceil($records / $perpage);
 		if($pages>1){
 			echo '<div style="margin-top:10px; margin-bottom: 15px; font-size:10px">';
-			echo '<span style="margin:5px; padding:4px"><strong>Страницы: </strong></span>';	
+			echo '<span style="margin:5px; padding:4px"><strong>РЎС‚СЂР°РЅРёС†С‹: </strong></span>';	
 			for ($p=1; $p<=$pages; $p++){
 				if ($p != $current) {			
 					if ($first_url == '') { $link = $_SERVER['PHP_SELF'].'?page='.$p; }

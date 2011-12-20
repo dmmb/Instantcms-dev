@@ -17,14 +17,14 @@
 
 	define("VALID_CMS", 1);
     include(PATH.'/core/cms.php');
-	// Грузим конфиг
+	// Р“СЂСѓР·РёРј РєРѕРЅС„РёРі
 	include(PATH.'/includes/config.inc.php');
     $inCore     = cmsCore::getInstance();
 
     define('HOST', 'http://' . $inCore->getHost());
 
-    $inCore->loadClass('config');           //конфигурация
-    $inCore->loadClass('db');               //база данных
+    $inCore->loadClass('config');           //РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ
+    $inCore->loadClass('db');               //Р±Р°Р·Р° РґР°РЅРЅС‹С…
     $inCore->loadClass('user');
     $inCore->loadClass('page');
 	$inCore->loadClass('plugin');
@@ -54,7 +54,7 @@
 
     $cfg = $inCore->loadComponentConfig('comments');
 
-    // Проверяем включен ли компонент
+    // РџСЂРѕРІРµСЂСЏРµРј РІРєР»СЋС‡РµРЅ Р»Рё РєРѕРјРїРѕРЅРµРЅС‚
 	if(!$cfg['component_enabled']) { return false; }
 
     if (!isset($cfg['bbcode'])) { $cfg['bbcode'] = 1; }

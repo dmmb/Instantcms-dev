@@ -11,9 +11,9 @@
 
     define('HOST', 'http://' . $inCore->getHost());
 
-    $inCore->loadClass('page');         //ñòðàíèöà
-    $inCore->loadClass('config');       //êîíôèãóðàöèÿ
-    $inCore->loadClass('db');           //áàçà äàííûõ
+    $inCore->loadClass('page');         //ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ð°
+    $inCore->loadClass('config');       //ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ
+    $inCore->loadClass('db');           //Ð±Ð°Ð·Ð° Ð´Ð°Ð½Ð½Ñ‹Ñ…
     $inCore->loadClass('user');
 
     $inDB = cmsDatabase::getInstance();

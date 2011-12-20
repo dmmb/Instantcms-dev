@@ -14,7 +14,7 @@
 * - Dylan Pugh for precious advices halfing the size of the output file and for helping in debug
 *
 * @name    MySQLDump
-* @author  Daniele Viganò - CreativeFactory.it <daniele.vigano@creativefactory.it>
+* @author  Daniele ViganÑ‚ - CreativeFactory.it <daniele.vigano@creativefactory.it>
 * @version 2.20 - 02/11/2007
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */

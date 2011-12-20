@@ -29,7 +29,7 @@ function checkSel(link){
 	if (ch>0){
 		document.selform.action = link;
 		document.selform.submit();
-	} else { alert('Ничего не выбрано!'); }
+	} else { alert('РќРёС‡РµРіРѕ РЅРµ РІС‹Р±СЂР°РЅРѕ!'); }
 
 }
 
@@ -98,42 +98,42 @@ function insertTag(kind){
 	if ( oEditor.EditMode == FCK_EDITMODE_WYSIWYG ) {
 
 		if (kind=='material'){
-			text = '{МАТЕРИАЛ=' + document.addform.m.options[document.addform.m.selectedIndex].text + '}';
+			text = '{РњРђРўР•Р РРђР›=' + document.addform.m.options[document.addform.m.selectedIndex].text + '}';
 		}
 		if (kind=='photo'){
-			text = '{ФОТО=' + document.addform.f.options[document.addform.f.selectedIndex].text + '}';
+			text = '{Р¤РћРўРћ=' + document.addform.f.options[document.addform.f.selectedIndex].text + '}';
 		}
 		if (kind=='album'){
-			text = '{АЛЬБОМ=' + document.addform.a.options[document.addform.a.selectedIndex].text + '}';
+			text = '{РђР›Р¬Р‘РћРњ=' + document.addform.a.options[document.addform.a.selectedIndex].text + '}';
 		}
 		if (kind=='price'){
-			text = '{ПРАЙС=' + document.addform.p.options[document.addform.p.selectedIndex].text + '}';
+			text = '{РџР РђР™РЎ=' + document.addform.p.options[document.addform.p.selectedIndex].text + '}';
 		}
 		if (kind=='frm'){
-			text = '{ФОРМА=' + document.addform.fm.options[document.addform.fm.selectedIndex].text + '}';
+			text = '{Р¤РћР РњРђ=' + document.addform.fm.options[document.addform.fm.selectedIndex].text + '}';
 		}
 		if (kind=='blank'){
-			text = '{БЛАНК=' + document.addform.b.options[document.addform.b.selectedIndex].text + '}';
+			text = '{Р‘Р›РђРќРљ=' + document.addform.b.options[document.addform.b.selectedIndex].text + '}';
 		}
 		if (kind=='include'){
-			text = '{ФАЙЛ=' + document.addform.i.value + '}';
+			text = '{Р¤РђР™Р›=' + document.addform.i.value + '}';
 		}
 		if (kind=='filelink'){
-			text = '{СКАЧАТЬ=' + document.addform.fl.value + '}';
+			text = '{РЎРљРђР§РђРўР¬=' + document.addform.fl.value + '}';
 		}
 		if (kind=='banpos'){
-			text = '{БАННЕР=' + document.addform.ban.value + '}';
+			text = '{Р‘РђРќРќР•Р =' + document.addform.ban.value + '}';
 		}
 		if (kind=='pagebreak'){
 			text = '{pagebreak}';
 		}
 		if (kind=='pagetitle'){
-			text = '{СТРАНИЦА=' + document.addform.ptitle.value + '}';
+			text = '{РЎРўР РђРќРР¦Рђ=' + document.addform.ptitle.value + '}';
 		}
 
 		oEditor.InsertHtml( text ) ;
 	}
-	else alert( 'Переключите редактор в визуальный режим!' ) ;
+	else alert( 'РџРµСЂРµРєР»СЋС‡РёС‚Рµ СЂРµРґР°РєС‚РѕСЂ РІ РІРёР·СѓР°Р»СЊРЅС‹Р№ СЂРµР¶РёРј!' ) ;
 }
 
 function InsertPagebreak()
@@ -148,5 +148,5 @@ function InsertPagebreak()
 		oEditor.InsertHtml( '{pagebreak}' ) ;
 	}
 	else
-		alert( 'Переключите редактор в визуальный режим!' ) ;
+		alert( 'РџРµСЂРµРєР»СЋС‡РёС‚Рµ СЂРµРґР°РєС‚РѕСЂ РІ РІРёР·СѓР°Р»СЊРЅС‹Р№ СЂРµР¶РёРј!' ) ;
 }

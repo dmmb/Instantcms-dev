@@ -12,7 +12,7 @@
 
     {if $cfg.show_online}
     <div class="stat_block">
-        <div class="title"> ÚÓ ÓÌÎ‡ÈÌ?</div>
+        <div class="title">–ö—Ç–æ –æ–Ω–ª–∞–π–Ω?</div>
         <div class="body">
             <ul>
                 <li>{$people.users|spellcount:$LANG.USER:$LANG.USER2:$LANG.USER10}</li>
@@ -25,11 +25,11 @@
 
     {if $cfg.show_gender}
     <div class="stat_block">
-        <div class="title"> ÚÓ Ï˚?</div>
+        <div class="title">–ö—Ç–æ –º—ã?</div>
         <div class="body">
             <ul>
-                <li><a href="javascript:void(0)" rel=înofollowî onclick="searchGender('m')">{$gender_stats.male|spellcount:$LANG.MALE1:$LANG.MALE2:$LANG.MALE10}</a></li>
-                <li><a href="javascript:void(0)" rel=înofollowî onclick="searchGender('f')">{$gender_stats.female|spellcount:$LANG.FEMALE1:$LANG.FEMALE2:$LANG.FEMALE10}</a></li>
+                <li><a href="javascript:void(0)" rel=‚Äùnofollow‚Äù onclick="searchGender('m')">{$gender_stats.male|spellcount:$LANG.MALE1:$LANG.MALE2:$LANG.MALE10}</a></li>
+                <li><a href="javascript:void(0)" rel=‚Äùnofollow‚Äù onclick="searchGender('f')">{$gender_stats.female|spellcount:$LANG.FEMALE1:$LANG.FEMALE2:$LANG.FEMALE10}</a></li>
                 <li>{$LANG.UNKNOWN} &mdash; {$gender_stats.unknown}</li>
             </ul>
         </div>
@@ -43,7 +43,7 @@
             <ul>
                 {foreach key=tid item=city from=$city_stats}
                     {if $city.href}
-                        <li><a href="{$city.href}" rel=înofollowî>{$city.city}</a> &mdash; {$city.count}</li>
+                        <li><a href="{$city.href}" rel=‚Äùnofollow‚Äù>{$city.city}</a> &mdash; {$city.count}</li>
                     {else}
                         <li>{$city.city} &mdash; {$city.count}</li>
                     {/if}

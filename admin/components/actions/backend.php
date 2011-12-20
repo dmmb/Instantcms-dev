@@ -27,7 +27,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	$act_components = cmsActions::getActionsComponents();
     $act_component  = $inCore->request('act_component', 'str', '');
 
-    cpAddPathway('Лента активности', '?view=components&do=config&id='.$id);
+    cpAddPathway('Р›РµРЅС‚Р° Р°РєС‚РёРІРЅРѕСЃС‚Рё', '?view=components&do=config&id='.$id);
 
 	$messages = cmsCore::getSessionMessages();
 	if ($messages) { ?>
@@ -48,15 +48,15 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		  <tbody>
 			<tr>
 			  <td width="45px">
-				<a class="toolmenuitem" href="?view=components&do=config&id=<?php echo $id; ?>&opt=config" title="Настройки">
+				<a class="toolmenuitem" href="?view=components&do=config&id=<?php echo $id; ?>&opt=config" title="РќР°СЃС‚СЂРѕР№РєРё">
 				  <img src="images/toolmenu/config.gif" border="0">
 				</a>
 			  </td>
 			  <td>
               <form action="?view=components&do=config&id=<?php echo $id; ?>" method="post" id="filter_form">
-				Показывать события от: 
+				РџРѕРєР°Р·С‹РІР°С‚СЊ СЃРѕР±С‹С‚РёСЏ РѕС‚: 
                 <select name="act_component" style="width:215px" onchange="$('#filter_form').submit()">
-                    <option value="" <?php if(!$act_component){ ?>selected="selected"<?php } ?>>всех компонентов</option>
+                    <option value="" <?php if(!$act_component){ ?>selected="selected"<?php } ?>>РІСЃРµС… РєРѕРјРїРѕРЅРµРЅС‚РѕРІ</option>
                     <?php foreach($act_components as $act_com) {
 							if($act_com['link'] == $act_component){
 								echo '<option value="'.$act_com['link'].'" selected="selected">'.$act_com['title'].'</option>';
@@ -77,11 +77,11 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if($opt == 'config'){
 		$toolmenu[16]['icon'] = 'save.gif';
-		$toolmenu[16]['title'] = 'Сохранить';
+		$toolmenu[16]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 		$toolmenu[16]['link'] = 'javascript:document.optform.submit();';
 
 		$toolmenu[17]['icon'] = 'cancel.gif';
-		$toolmenu[17]['title'] = 'Отмена';
+		$toolmenu[17]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[17]['link'] = '?view=components&do=config&id='.$id;	
 		cpToolMenu($toolmenu);	
 	}
@@ -129,7 +129,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
         $inCore->saveComponentConfig('actions', $cfg);
 
-		cmsCore::addSessionMessage('Настройки успешно сохранены', 'success');
+		cmsCore::addSessionMessage('РќР°СЃС‚СЂРѕР№РєРё СѓСЃРїРµС€РЅРѕ СЃРѕС…СЂР°РЅРµРЅС‹', 'success');
 
 		$inCore->redirect('?view=components&do=config&id='.$id.'&opt=config');
 
@@ -138,7 +138,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //=================================================================================================//
 	if ($opt=='config') {
 	
-		cpAddPathway('Настройки', '?view=components&do=config&id='.$id.'&opt=config');
+		cpAddPathway('РќР°СЃС‚СЂРѕР№РєРё', '?view=components&do=config&id='.$id.'&opt=config');
 
         $sql        = "SELECT *
                        FROM cms_actions
@@ -153,16 +153,16 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		<table width="680" border="0" cellpadding="10" cellspacing="0" class="proptable">
 			<tr>
 				<td>
-					<strong>Показывать место назначения:</strong><br />
+					<strong>РџРѕРєР°Р·С‹РІР°С‚СЊ РјРµСЃС‚Рѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ:</strong><br />
 				</td>
 				<td valign="top">
-					<label><input name="show_target" type="radio" value="1"  <?php if ($model->config['show_target']) { echo 'checked="checked"'; } ?> /> Да </label>
-					<label><input name="show_target" type="radio" value="0"  <?php if (!$model->config['show_target']) { echo 'checked="checked"'; } ?> /> Нет </label>
+					<label><input name="show_target" type="radio" value="1"  <?php if ($model->config['show_target']) { echo 'checked="checked"'; } ?> /> Р”Р° </label>
+					<label><input name="show_target" type="radio" value="0"  <?php if (!$model->config['show_target']) { echo 'checked="checked"'; } ?> /> РќРµС‚ </label>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<strong>Количество событий на странице:</strong><br />
+					<strong>РљРѕР»РёС‡РµСЃС‚РІРѕ СЃРѕР±С‹С‚РёР№ РЅР° СЃС‚СЂР°РЅРёС†Рµ:</strong><br />
 				</td>
 				<td valign="top">
 					<input name="perpage" size=5 value="<?php echo $model->config['perpage'];?>"/>
@@ -170,7 +170,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			</tr>
 			<tr>
 				<td>
-					<strong>Количество событий на странице профиля во вкладке "лента":</strong><br />
+					<strong>РљРѕР»РёС‡РµСЃС‚РІРѕ СЃРѕР±С‹С‚РёР№ РЅР° СЃС‚СЂР°РЅРёС†Рµ РїСЂРѕС„РёР»СЏ РІРѕ РІРєР»Р°РґРєРµ "Р»РµРЅС‚Р°":</strong><br />
 				</td>
 				<td valign="top">
 					<input name="perpage_tab" size=5 value="<?php echo $model->config['perpage_tab'];?>"/>
@@ -178,10 +178,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			</tr>
 			<tr>
 				<td>
-					<strong>Типы событий:</strong><br />
+					<strong>РўРёРїС‹ СЃРѕР±С‹С‚РёР№:</strong><br />
                     <div class="param-links">
-                        <label for="is_all"><input type="checkbox" id="is_all" name="is_all" value="1" <?php if($model->config['is_all']) {?>checked="checked" <?php }?> /> <a href="javascript:" onclick="$('td input[type=checkbox]').attr('checked', 'checked');$('#is_all').attr('checked', 'checked')">Выделить все</a></label> |
-                        <a href="javascript:" onclick="$('td input[type=checkbox]').attr('checked', '');$('#is_all').attr('checked', '')">Снять все</a>
+                        <label for="is_all"><input type="checkbox" id="is_all" name="is_all" value="1" <?php if($model->config['is_all']) {?>checked="checked" <?php }?> /> <a href="javascript:" onclick="$('td input[type=checkbox]').attr('checked', 'checked');$('#is_all').attr('checked', 'checked')">Р’С‹РґРµР»РёС‚СЊ РІСЃРµ</a></label> |
+                        <a href="javascript:" onclick="$('td input[type=checkbox]').attr('checked', '');$('#is_all').attr('checked', '')">РЎРЅСЏС‚СЊ РІСЃРµ</a>
                     </div>
 				</td>
 				<td valign="top">
@@ -207,8 +207,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			</tr>
 		</table>
 		<p>
-			<input name="save" type="submit" id="save" value="Сохранить" />
-			<input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+			<input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+			<input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components';"/>
 		</p>
 	</form>	
 	

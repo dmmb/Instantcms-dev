@@ -51,9 +51,9 @@ class cms_model_users{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
    //
-   // ıòîò ìåòîä âûçûâàåòñÿ êîìïîíåíòîì comments ïğè ñîçäàíèè íîâîãî êîììåíòàğèÿ
+   // ÑÑ‚Ğ¾Ñ‚ Ğ¼ĞµÑ‚Ğ¾Ğ´ Ğ²Ñ‹Ğ·Ñ‹Ğ²Ğ°ĞµÑ‚ÑÑ ĞºĞ¾Ğ¼Ğ¿Ğ¾Ğ½ĞµĞ½Ñ‚Ğ¾Ğ¼ comments Ğ¿Ñ€Ğ¸ ÑĞ¾Ğ·Ğ´Ğ°Ğ½Ğ¸Ğ¸ Ğ½Ğ¾Ğ²Ğ¾Ğ³Ğ¾ ĞºĞ¾Ğ¼Ğ¼ĞµĞ½Ñ‚Ğ°Ñ€Ğ¸Ñ
    //
-   // ìåòîä äîëæåí âåğíóòü 0 èëè 1
+   // Ğ¼ĞµÑ‚Ğ¾Ğ´ Ğ´Ğ¾Ğ»Ğ¶ĞµĞ½ Ğ²ĞµÑ€Ğ½ÑƒÑ‚ÑŒ 0 Ğ¸Ğ»Ğ¸ 1
    //
    public function getVisibility($target, $target_id) {
 
@@ -593,7 +593,7 @@ class cms_model_users{
                                 )";
             }
 
-            //Ïîëó÷àåì ëè÷íûå ôîòîãğàôèè
+            //ĞŸĞ¾Ğ»ÑƒÑ‡Ğ°ĞµĞ¼ Ğ»Ğ¸Ñ‡Ğ½Ñ‹Ğµ Ñ„Ğ¾Ñ‚Ğ¾Ğ³Ñ€Ğ°Ñ„Ğ¸Ğ¸
             $private_sql = "SELECT id, pubdate, imageurl as file, hits, title
                             FROM cms_user_photos
                             WHERE user_id = '{$user_id}' AND album_id = '{$album_id}' $filter
@@ -614,7 +614,7 @@ class cms_model_users{
 
         if ($album_type == 'public'){
 
-            //Ïîëó÷àåì ôîòîãğàôèè èç ãàëåğåè
+            //ĞŸĞ¾Ğ»ÑƒÑ‡Ğ°ĞµĞ¼ Ñ„Ğ¾Ñ‚Ğ¾Ğ³Ñ€Ğ°Ñ„Ğ¸Ğ¸ Ğ¸Ğ· Ğ³Ğ°Ğ»ĞµÑ€ĞµĞ¸
             $public_sql = "SELECT id, pubdate, file, hits, title
                             FROM cms_photo_files
                             WHERE user_id = '{$user_id}' AND album_id = '{$album_id}' AND published = 1";
@@ -865,10 +865,10 @@ class cms_model_users{
 
 		global $_LANG;
 
-		//ïğîâåğÿåì ïîäïèñêó íà óâåäîìëåíèÿ
+		//Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼ Ğ¿Ğ¾Ğ´Ğ¿Ğ¸ÑĞºÑƒ Ğ½Ğ° ÑƒĞ²ĞµĞ´Ğ¾Ğ¼Ğ»ĞµĞ½Ğ¸Ñ
 		$needmail = $this->inDB->get_field('cms_user_profiles', "user_id='{$to_id}'", 'email_newmsg');
 
-		//åñëè ïîäïèñàí è íå îíëàéí, îòïğàâëÿåì óâåäîìëåíèå íà email
+		//ĞµÑĞ»Ğ¸ Ğ¿Ğ¾Ğ´Ğ¿Ğ¸ÑĞ°Ğ½ Ğ¸ Ğ½Ğµ Ğ¾Ğ½Ğ»Ğ°Ğ¹Ğ½, Ğ¾Ñ‚Ğ¿Ñ€Ğ°Ğ²Ğ»ÑĞµĞ¼ ÑƒĞ²ĞµĞ´Ğ¾Ğ¼Ğ»ĞµĞ½Ğ¸Ğµ Ğ½Ğ° email
 		if (!$inUser->isOnline($to_id) && $needmail){
 
 			$postdate   = date('d/m/Y H:i:s');

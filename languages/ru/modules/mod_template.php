@@ -17,7 +17,7 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * e-mail: firs.yura@gmail.com
  * site: firs.org.ua
  */
-$_LANG['TEMPLATE_DEFAULT']       = 'Ïî-óìîë÷àíèþ';
-$_LANG['TEMPLATE_CHOOSE']        = 'Âûáðàòü';
+$_LANG['TEMPLATE_DEFAULT']       = 'ÐŸÐ¾-ÑƒÐ¼Ð¾Ð»Ñ‡Ð°Ð½Ð¸ÑŽ';
+$_LANG['TEMPLATE_CHOOSE']        = 'Ð’Ñ‹Ð±Ñ€Ð°Ñ‚ÑŒ';
 
 ?>

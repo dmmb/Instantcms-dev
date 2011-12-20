@@ -4,7 +4,7 @@ $().ready(function(){
 
 				if($(element).is("#install")){
 					$('input[name=install]').remove();
-					$('.wizardcontrols').append('<input class="wizardnext" type="submit" name="install" style="width:150px" value="Óñòàíîâèòü">');
+					$('.wizardcontrols').append('<input class="wizardnext" type="submit" name="install" style="width:150px" value="Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ">');
 				} else {
 					$('input[name=install]').remove();
 				}

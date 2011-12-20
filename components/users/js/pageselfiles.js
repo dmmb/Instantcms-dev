@@ -28,7 +28,7 @@ function checkSelFiles(){
 function delFiles(){
 	var sel = checkSelFiles();
 	if (sel == false){
-	 	alert('Нет выбранных файлов!');	
+	 	alert('РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… С„Р°Р№Р»РѕРІ!');	
 	} else {
 		$("#listform").attr('action', 'delfilelist.html');
 		document.listform.submit();	
@@ -43,7 +43,7 @@ function pubFiles(flag){
 	 }
 	}
 	if (sel == false){
-	 	alert('Нет выбранных файлов!');	
+	 	alert('РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… С„Р°Р№Р»РѕРІ!');	
 	} else {
 		if(flag==1){
 		 $("#listform").attr('action', 'showfilelist.html');

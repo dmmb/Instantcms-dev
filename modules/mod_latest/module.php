@@ -24,7 +24,7 @@ function mod_latest($module_id){
 		if (!isset($cfg['subs'])) { $cfg['subs'] = 1; }
 		if (!isset($cfg['cat_id'])) { $cfg['cat_id'] = 1; }
 		
-		// опции постраничной разбивки
+		// РѕРїС†РёРё РїРѕСЃС‚СЂР°РЅРёС‡РЅРѕР№ СЂР°Р·Р±РёРІРєРё
 		$page    = 1;
 		$perpage = $cfg['newscount'];
 		
@@ -62,7 +62,7 @@ function mod_latest($module_id){
 		$is_con = false;
 	
 		if ($cfg['is_pag']) {
-			// Считаем общее количество материалов если опция пагинация включена
+			// РЎС‡РёС‚Р°РµРј РѕР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РјР°С‚РµСЂРёР°Р»РѕРІ РµСЃР»Рё РѕРїС†РёСЏ РїР°РіРёРЅР°С†РёСЏ РІРєР»СЋС‡РµРЅР°
 			$sql_total = "SELECT 1
 					FROM cms_content con
 					LEFT JOIN cms_category cat ON cat.id = con.category_id

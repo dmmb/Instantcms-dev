@@ -13,37 +13,37 @@
 
 if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
-$_LANG['SEARCH_ON_SITE']  ='Íàéòè íà ñàéòå';
-$_LANG['ANY_WORD']        ='Ëþáîå ñëîâî';
-$_LANG['ALL_WORDS']       ='Âñå ñëîâà';
-$_LANG['PHRASE']          ='Ôðàçà öåëèêîì';
-$_LANG['FIND']            ='Íàéòè';
-$_LANG['FOUND_MATERIALS'] ='Íàéäåíî ìàòåðèàëîâ';
-$_LANG['1_MATERIALS']     ='ìàòåðèàë';
-$_LANG['2_MATERIALS']     ='ìàòåðèàëà';
-$_LANG['10_MATERIALS']    ='ìàòåðèàëîâ';
-$_LANG['FOUND']           ='Íàéäåíî';
-$_LANG['WHERE']           ='Ãäå';
-$_LANG['BY_QUERY']        ='Ïî çàïðîñó';
-$_LANG['NOTHING_FOUND']   ='íè÷åãî íå íàéäåíî';
-$_LANG['FIND_EXTERNAL']  ='Ïîèñêàòü â ßíäåêñå?';
+$_LANG['SEARCH_ON_SITE']  ='ÐÐ°Ð¹Ñ‚Ð¸ Ð½Ð° ÑÐ°Ð¹Ñ‚Ðµ';
+$_LANG['ANY_WORD']        ='Ð›ÑŽÐ±Ð¾Ðµ ÑÐ»Ð¾Ð²Ð¾';
+$_LANG['ALL_WORDS']       ='Ð’ÑÐµ ÑÐ»Ð¾Ð²Ð°';
+$_LANG['PHRASE']          ='Ð¤Ñ€Ð°Ð·Ð° Ñ†ÐµÐ»Ð¸ÐºÐ¾Ð¼';
+$_LANG['FIND']            ='ÐÐ°Ð¹Ñ‚Ð¸';
+$_LANG['FOUND_MATERIALS'] ='ÐÐ°Ð¹Ð´ÐµÐ½Ð¾ Ð¼Ð°Ñ‚ÐµÑ€Ð¸Ð°Ð»Ð¾Ð²';
+$_LANG['1_MATERIALS']     ='Ð¼Ð°Ñ‚ÐµÑ€Ð¸Ð°Ð»';
+$_LANG['2_MATERIALS']     ='Ð¼Ð°Ñ‚ÐµÑ€Ð¸Ð°Ð»Ð°';
+$_LANG['10_MATERIALS']    ='Ð¼Ð°Ñ‚ÐµÑ€Ð¸Ð°Ð»Ð¾Ð²';
+$_LANG['FOUND']           ='ÐÐ°Ð¹Ð´ÐµÐ½Ð¾';
+$_LANG['WHERE']           ='Ð“Ð´Ðµ';
+$_LANG['BY_QUERY']        ='ÐŸÐ¾ Ð·Ð°Ð¿Ñ€Ð¾ÑÑƒ';
+$_LANG['NOTHING_FOUND']   ='Ð½Ð¸Ñ‡ÐµÐ³Ð¾ Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾';
+$_LANG['FIND_EXTERNAL']  ='ÐŸÐ¾Ð¸ÑÐºÐ°Ñ‚ÑŒ Ð² Ð¯Ð½Ð´ÐµÐºÑÐµ?';
 $_LANG['FIND_EXTERNAL_URL']  ='http://www.yandex.ru/yandsearch?text=%q%'; //%q% will be replaced by search query
 
-$_LANG['SHORT_QUERY']     ='ñëèøêîì êîðîòêèé çàïðîñ!';
-$_LANG['EMPTY_QUERY']     ='Ïóñòîé ïîèñêîâûé çàïðîñ';
-$_LANG['SEARCH_BY_TAG']   ='Ïîèñê ïî òåãó';
-$_LANG['BY_TAG']          ='Ïî òåãó';
-$_LANG['SEARCH_FOR']      ='èñêàòü ïî';
-$_LANG['ANOTHER_TAG']     ='äðóãîìó òåãó';
-$_LANG['CONTINUE_TO_SEARCH'] ='Ïðîäîëæèòü ïîèñê ïî ñàéòó';
-$_LANG['WHERE_TO_FIND']   ='Ãäå èñêàòü';
-$_LANG['SEARCH_PARAMS']   ='ïàðàìåòðû ïîèñêà';
-$_LANG['PUBDATE']         ='Äàòà ïóáëèêàöèè';
-$_LANG['ALL']             ='ëþáàÿ';
-$_LANG['F_D']             ='ñåãîäíÿ';
-$_LANG['F_W']             ='ïîñëåäíÿÿ íåäåëÿ';
-$_LANG['F_M']             ='ïîñëåäíèé ìåñÿö';
-$_LANG['F_Y']             ='ïîñëåäíèé ãîä';
-$_LANG['SORT_BY_PUBDATE'] ='ñîðòèðîâàòü ïî äàòå ïóáëèêàöèè';
+$_LANG['SHORT_QUERY']     ='ÑÐ»Ð¸ÑˆÐºÐ¾Ð¼ ÐºÐ¾Ñ€Ð¾Ñ‚ÐºÐ¸Ð¹ Ð·Ð°Ð¿Ñ€Ð¾Ñ!';
+$_LANG['EMPTY_QUERY']     ='ÐŸÑƒÑÑ‚Ð¾Ð¹ Ð¿Ð¾Ð¸ÑÐºÐ¾Ð²Ñ‹Ð¹ Ð·Ð°Ð¿Ñ€Ð¾Ñ';
+$_LANG['SEARCH_BY_TAG']   ='ÐŸÐ¾Ð¸ÑÐº Ð¿Ð¾ Ñ‚ÐµÐ³Ñƒ';
+$_LANG['BY_TAG']          ='ÐŸÐ¾ Ñ‚ÐµÐ³Ñƒ';
+$_LANG['SEARCH_FOR']      ='Ð¸ÑÐºÐ°Ñ‚ÑŒ Ð¿Ð¾';
+$_LANG['ANOTHER_TAG']     ='Ð´Ñ€ÑƒÐ³Ð¾Ð¼Ñƒ Ñ‚ÐµÐ³Ñƒ';
+$_LANG['CONTINUE_TO_SEARCH'] ='ÐŸÑ€Ð¾Ð´Ð¾Ð»Ð¶Ð¸Ñ‚ÑŒ Ð¿Ð¾Ð¸ÑÐº Ð¿Ð¾ ÑÐ°Ð¹Ñ‚Ñƒ';
+$_LANG['WHERE_TO_FIND']   ='Ð“Ð´Ðµ Ð¸ÑÐºÐ°Ñ‚ÑŒ';
+$_LANG['SEARCH_PARAMS']   ='Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹ Ð¿Ð¾Ð¸ÑÐºÐ°';
+$_LANG['PUBDATE']         ='Ð”Ð°Ñ‚Ð° Ð¿ÑƒÐ±Ð»Ð¸ÐºÐ°Ñ†Ð¸Ð¸';
+$_LANG['ALL']             ='Ð»ÑŽÐ±Ð°Ñ';
+$_LANG['F_D']             ='ÑÐµÐ³Ð¾Ð´Ð½Ñ';
+$_LANG['F_W']             ='Ð¿Ð¾ÑÐ»ÐµÐ´Ð½ÑÑ Ð½ÐµÐ´ÐµÐ»Ñ';
+$_LANG['F_M']             ='Ð¿Ð¾ÑÐ»ÐµÐ´Ð½Ð¸Ð¹ Ð¼ÐµÑÑÑ†';
+$_LANG['F_Y']             ='Ð¿Ð¾ÑÐ»ÐµÐ´Ð½Ð¸Ð¹ Ð³Ð¾Ð´';
+$_LANG['SORT_BY_PUBDATE'] ='ÑÐ¾Ñ€Ñ‚Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ Ð¿Ð¾ Ð´Ð°Ñ‚Ðµ Ð¿ÑƒÐ±Ð»Ð¸ÐºÐ°Ñ†Ð¸Ð¸';
 
 ?>

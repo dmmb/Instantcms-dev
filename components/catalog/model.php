@@ -318,11 +318,11 @@ class cms_model_catalog{
 		$inCore = cmsCore::getInstance();
 		$ns = $inCore->nestedSetsInit('cms_uc_cats');
 
-		// Äàííûå êàòåãîğèè äëÿ êîïèğîâàíèÿ
+		// Ğ”Ğ°Ğ½Ğ½Ñ‹Ğµ ĞºĞ°Ñ‚ĞµĞ³Ğ¾Ñ€Ğ¸Ğ¸ Ğ´Ğ»Ñ ĞºĞ¾Ğ¿Ğ¸Ñ€Ğ¾Ğ²Ğ°Ğ½Ğ¸Ñ
 		$item = $this->inDB->get_fields('cms_uc_cats', "id = '$id'", 'parent_id, title, description, published, fieldsstruct, view_type, fields_show, showmore, perpage, showtags, showsort,	is_ratings,	orderby, orderto, showabc, shownew, newint,	filters, is_shop, is_public, can_edit, cost');
 		if(!$item) { return false; }
 
-		// Ïîëó÷àåì ğîäèòåëüñêóş êàòåãîğèş
+		// ĞŸĞ¾Ğ»ÑƒÑ‡Ğ°ĞµĞ¼ Ñ€Ğ¾Ğ´Ğ¸Ñ‚ĞµĞ»ÑŒÑĞºÑƒÑ ĞºĞ°Ñ‚ĞµĞ³Ğ¾Ñ€Ğ¸Ñ
 		$rootid = $this->inDB->get_field('cms_uc_cats', "id = '{$item['parent_id']}'", 'id');
 		if(!$rootid) { return false; }
 

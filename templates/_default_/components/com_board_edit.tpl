@@ -104,7 +104,7 @@
         {if $form_do == 'edit' && $item.is_vip}
 			<tr>
 				<td height="35"><span>{$LANG.VIP_STATUS}:</span></td>
-				<td height="35">до {$item.vipdate}</td>
+				<td height="35">РґРѕ {$item.vipdate}</td>
 			</tr>
         {/if}
 
@@ -113,7 +113,7 @@
 				<td>
                     <span>{$LANG.MARK_AS_VIP}:</span>
                     <div style="color:gray">
-                        VIP-объявления выделяются цветом и всегда находятся в начале списка
+                        VIP-РѕР±СЉСЏРІР»РµРЅРёСЏ РІС‹РґРµР»СЏСЋС‚СЃСЏ С†РІРµС‚РѕРј Рё РІСЃРµРіРґР° РЅР°С…РѕРґСЏС‚СЃСЏ РІ РЅР°С‡Р°Р»Рµ СЃРїРёСЃРєР°
                     </div>
                 </td>
 				<td valign="top" style="padding-top:5px">
@@ -130,7 +130,7 @@
                         <input type="hidden" id="vip_day_cost" name="vip_day_cost" value="{$cfg.vip_day_cost}" />
                         <input type="hidden" id="balance" name="balance" value="{$balance}" />
                         <div id="vip_cost" style="margin-top:10px;display: none">
-                            Стоимость: <span>0</span> баллов
+                            РЎС‚РѕРёРјРѕСЃС‚СЊ: <span>0</span> Р±Р°Р»Р»РѕРІ
                         </div>
 
                         <script type="text/javascript">
@@ -154,7 +154,7 @@
                                     var balance = Number($('#balance').val());
 
                                     if (balance < cost){
-                                        alert('На вашем балансе не достаточно средств\nдля покупки VIP-статуса на указанный срок');
+                                        alert('РќР° РІР°С€РµРј Р±Р°Р»Р°РЅСЃРµ РЅРµ РґРѕСЃС‚Р°С‚РѕС‡РЅРѕ СЃСЂРµРґСЃС‚РІ\nРґР»СЏ РїРѕРєСѓРїРєРё VIP-СЃС‚Р°С‚СѓСЃР° РЅР° СѓРєР°Р·Р°РЅРЅС‹Р№ СЃСЂРѕРє');
                                         return false;
                                     } else {
                                         return true;

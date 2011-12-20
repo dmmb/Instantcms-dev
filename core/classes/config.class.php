@@ -56,7 +56,7 @@ class cmsConfig {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Сохраняет массив в файл конфигурации
+     * РЎРѕС…СЂР°РЅСЏРµС‚ РјР°СЃСЃРёРІ РІ С„Р°Р№Р» РєРѕРЅС„РёРіСѓСЂР°С†РёРё
      * @param array $_CFG
      */
     public function saveToFile($_CFG, $file='config.inc.php'){
@@ -64,9 +64,9 @@ class cmsConfig {
         $filepath = PATH.'/includes/'.$file;
 
         if (file_exists($filepath)){
-            if (!@is_writable($filepath)){ die('Файл <strong>'.$filepath.'</strong> недоступен для записи!'); }
+            if (!@is_writable($filepath)){ die('Р¤Р°Р№Р» <strong>'.$filepath.'</strong> РЅРµРґРѕСЃС‚СѓРїРµРЅ РґР»СЏ Р·Р°РїРёСЃРё!'); }
         } else {
-            if (!@is_writable(dirname($filepath))){ die('Папка <strong>'.dirname($filepath).'</strong> недоступна для записи!'); }
+            if (!@is_writable(dirname($filepath))){ die('РџР°РїРєР° <strong>'.dirname($filepath).'</strong> РЅРµРґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё!'); }
         }
 
         $cfg_file = fopen($filepath, 'w+');

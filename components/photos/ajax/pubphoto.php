@@ -18,13 +18,13 @@
 
 	include(PATH.'/core/cms.php');
     
-    $inCore = cmsCore::getInstance();	// ÿäðî
+    $inCore = cmsCore::getInstance();	// ÑÐ´Ñ€Ð¾
 
     define('HOST', 'http://' . $inCore->getHost());
 
-    $inCore->loadClass('config');       // êîíôèãóðàöèÿ
-    $inCore->loadClass('db');           // áàçà äàííûõ
-    $inCore->loadClass('user');			// ïîëüçîâàòåëü
+    $inCore->loadClass('config');       // ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ
+    $inCore->loadClass('db');           // Ð±Ð°Ð·Ð° Ð´Ð°Ð½Ð½Ñ‹Ñ…
+    $inCore->loadClass('user');			// Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒ
 	$inCore->loadClass('actions');
     
 	$inDB       = cmsDatabase::getInstance();

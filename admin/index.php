@@ -28,12 +28,12 @@
 
     $inCore = cmsCore::getInstance();
 
-    $inCore->loadClass('page');         //страница
-    $inCore->loadClass('config');       //конфигурация
-    $inCore->loadClass('db');           //база данных
-    $inCore->loadClass('plugin');       //плагины
-    $inCore->loadClass('user');       //плагины
-	$inCore->loadClass('actions');    //лента событий
+    $inCore->loadClass('page');         //СЃС‚СЂР°РЅРёС†Р°
+    $inCore->loadClass('config');       //РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ
+    $inCore->loadClass('db');           //Р±Р°Р·Р° РґР°РЅРЅС‹С…
+    $inCore->loadClass('plugin');       //РїР»Р°РіРёРЅС‹
+    $inCore->loadClass('user');       //РїР»Р°РіРёРЅС‹
+	$inCore->loadClass('actions');    //Р»РµРЅС‚Р° СЃРѕР±С‹С‚РёР№
 
     $inPage     = cmsPage::getInstance();
     $inConf     = cmsConfig::getInstance();
@@ -47,7 +47,7 @@
 
     if ( !$inUser->update() ) { cmsCore::error404(); }
 
-	// проверяем доступ по Ip
+	// РїСЂРѕРІРµСЂСЏРµРј РґРѕСЃС‚СѓРї РїРѕ Ip
 	if(!$inCore->checkAccessByIp($inConf->allow_ip)) { cmsCore::error404(); }
 
     define('TEMPLATE_DIR', PATH.'/templates/'.$inConf->template.'/');
@@ -84,7 +84,7 @@
 	$GLOBALS['cp_page_body'] = '';
 	
 	$GLOBALS['cp_pathway'] = array();
-	$GLOBALS['cp_pathway'][0]['title'] = 'Главная';
+	$GLOBALS['cp_pathway'][0]['title'] = 'Р“Р»Р°РІРЅР°СЏ';
 	$GLOBALS['cp_pathway'][0]['link'] = 'index.php';
 	
 	$GLOBALS['mainmenu'] = array();

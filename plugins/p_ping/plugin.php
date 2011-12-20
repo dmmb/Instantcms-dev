@@ -19,22 +19,22 @@ class p_ping extends cmsPlugin {
         
         parent::__construct();
 
-        // Информация о плагине
+        // РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїР»Р°РіРёРЅРµ
 
         $this->info['plugin']           = 'p_ping';
-        $this->info['title']            = 'Пинг поисковых систем';
-        $this->info['description']      = 'Пингует Яндекс и Гугл при добавлении статей, объявлений и постов в блоги';
+        $this->info['title']            = 'РџРёРЅРі РїРѕРёСЃРєРѕРІС‹С… СЃРёСЃС‚РµРј';
+        $this->info['description']      = 'РџРёРЅРіСѓРµС‚ РЇРЅРґРµРєСЃ Рё Р“СѓРіР» РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё СЃС‚Р°С‚РµР№, РѕР±СЉСЏРІР»РµРЅРёР№ Рё РїРѕСЃС‚РѕРІ РІ Р±Р»РѕРіРё';
         $this->info['author']           = 'InstantCMS Team';
         $this->info['version']          = '1.0';
 
-        // Настройки по-умолчанию
+        // РќР°СЃС‚СЂРѕР№РєРё РїРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ
 
         $this->config['Yandex HOST']     = 'ping.blogs.yandex.ru';
         $this->config['Yandex PATH']     = '/RPC2';
         $this->config['Google HOST']     = 'blogsearch.google.com';
         $this->config['Google PATH']     = '/ping/RPC2';
 
-        // События, которые будут отлавливаться плагином
+        // РЎРѕР±С‹С‚РёСЏ, РєРѕС‚РѕСЂС‹Рµ Р±СѓРґСѓС‚ РѕС‚Р»Р°РІР»РёРІР°С‚СЊСЃСЏ РїР»Р°РіРёРЅРѕРј
 
         $this->events[] = 'ADD_POST_DONE';
         $this->events[] = 'ADD_ARTICLE_DONE';
@@ -45,7 +45,7 @@ class p_ping extends cmsPlugin {
 // ==================================================================== //
 
     /**
-     * Процедура установки плагина
+     * РџСЂРѕС†РµРґСѓСЂР° СѓСЃС‚Р°РЅРѕРІРєРё РїР»Р°РіРёРЅР°
      * @return bool
      */
     public function install(){
@@ -57,7 +57,7 @@ class p_ping extends cmsPlugin {
 // ==================================================================== //
 
     /**
-     * Процедура обновления плагина
+     * РџСЂРѕС†РµРґСѓСЂР° РѕР±РЅРѕРІР»РµРЅРёСЏ РїР»Р°РіРёРЅР°
      * @return bool
      */
     public function upgrade(){
@@ -69,7 +69,7 @@ class p_ping extends cmsPlugin {
 // ==================================================================== //
 
     /**
-     * Обработка событий
+     * РћР±СЂР°Р±РѕС‚РєР° СЃРѕР±С‹С‚РёР№
      * @param string $event
      * @param mixed $item
      * @return mixed
@@ -121,15 +121,15 @@ class p_ping extends cmsPlugin {
         $result   = '';
 
         //
-        // Яндекс.Блоги
+        // РЇРЅРґРµРєСЃ.Р‘Р»РѕРіРё
         //
         if ($this->config['Yandex HOST']){
 
             $pingClient = new IXR_Client($this->config['Yandex HOST'], $this->config['Yandex PATH']);
 
-            // Посылаем запрос
+            // РџРѕСЃС‹Р»Р°РµРј Р·Р°РїСЂРѕСЃ
             if ($pingClient->query('weblogUpdates.ping', $siteName, $siteURL, $pageURL, $feedURL)) {
-                $result .= 'Отправлен ping Яндексу, ';
+                $result .= 'РћС‚РїСЂР°РІР»РµРЅ ping РЇРЅРґРµРєСЃСѓ, ';
             }
 			
 			unset($pingClient);
@@ -143,9 +143,9 @@ class p_ping extends cmsPlugin {
 
             $pingClient = new IXR_Client($this->config['Google HOST'], $this->config['Google PATH']);
 
-            // Посылаем запрос
+            // РџРѕСЃС‹Р»Р°РµРј Р·Р°РїСЂРѕСЃ
             if ($pingClient->query('weblogUpdates.extendedPing', $siteName, $siteURL, $pageURL, $feedURL)) {
-                $result .= 'Отправлен ping Google';
+                $result .= 'РћС‚РїСЂР°РІР»РµРЅ ping Google';
             }
 			
 			unset($pingClient);

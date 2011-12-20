@@ -1,6 +1,6 @@
 <?php
 
-	echo '<p style="font-weight:bold">Пример инклудинга</p>';
-	echo '<span>Этот текст выводится файлом "<a href="/includes/myphp/test.php">/includes/myphp/test.php</a>".</span>';
+	echo '<p style="font-weight:bold">РџСЂРёРјРµСЂ РёРЅРєР»СѓРґРёРЅРіР°</p>';
+	echo '<span>Р­С‚РѕС‚ С‚РµРєСЃС‚ РІС‹РІРѕРґРёС‚СЃСЏ С„Р°Р№Р»РѕРј "<a href="/includes/myphp/test.php">/includes/myphp/test.php</a>".</span>';
 
 ?>

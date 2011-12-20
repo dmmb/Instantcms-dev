@@ -19,15 +19,15 @@ class p_demo_route extends cmsPlugin {
         
         parent::__construct();
 
-        // Информация о плагине
+        // РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїР»Р°РіРёРЅРµ
 
         $this->info['plugin']           = 'p_demo_route';
         $this->info['title']            = 'Demo Plugin';
-        $this->info['description']      = 'Пример плагина - для роутера /users/get_demo.html';
+        $this->info['description']      = 'РџСЂРёРјРµСЂ РїР»Р°РіРёРЅР° - РґР»СЏ СЂРѕСѓС‚РµСЂР° /users/get_demo.html';
         $this->info['author']           = 'InstantCMS Team';
         $this->info['version']          = '1.0';
 
-        // События, которые будут отлавливаться плагином
+        // РЎРѕР±С‹С‚РёСЏ, РєРѕС‚РѕСЂС‹Рµ Р±СѓРґСѓС‚ РѕС‚Р»Р°РІР»РёРІР°С‚СЊСЃСЏ РїР»Р°РіРёРЅРѕРј
 
         $this->events[]                 = 'GET_ROUTE_USERS';
 
@@ -36,7 +36,7 @@ class p_demo_route extends cmsPlugin {
 // ==================================================================== //
 
     /**
-     * Процедура установки плагина
+     * РџСЂРѕС†РµРґСѓСЂР° СѓСЃС‚Р°РЅРѕРІРєРё РїР»Р°РіРёРЅР°
      * @return bool
      */
     public function install(){
@@ -48,7 +48,7 @@ class p_demo_route extends cmsPlugin {
 // ==================================================================== //
 
     /**
-     * Процедура обновления плагина
+     * РџСЂРѕС†РµРґСѓСЂР° РѕР±РЅРѕРІР»РµРЅРёСЏ РїР»Р°РіРёРЅР°
      * @return bool
      */
     public function upgrade(){
@@ -60,7 +60,7 @@ class p_demo_route extends cmsPlugin {
 // ==================================================================== //
 
     /**
-     * Обработка событий
+     * РћР±СЂР°Р±РѕС‚РєР° СЃРѕР±С‹С‚РёР№
      * @param string $event
      * @param mixed $item
      * @return mixed
@@ -81,13 +81,13 @@ class p_demo_route extends cmsPlugin {
 
     private function eventGetRoutes($routes) {
 		
-		// формируем массив по аналогии с router.php
+		// С„РѕСЂРјРёСЂСѓРµРј РјР°СЃСЃРёРІ РїРѕ Р°РЅР°Р»РѕРіРёРё СЃ router.php
 		$add_routes[] = array(
 					'_uri'  => '/^users\/get_demo.html$/i',
 					'do'    => 'get_demo'
 				 );
 
-		// перебираем массив $add_routes, занося каждый в начало входного массива $routes
+		// РїРµСЂРµР±РёСЂР°РµРј РјР°СЃСЃРёРІ $add_routes, Р·Р°РЅРѕСЃСЏ РєР°Р¶РґС‹Р№ РІ РЅР°С‡Р°Р»Рѕ РІС…РѕРґРЅРѕРіРѕ РјР°СЃСЃРёРІР° $routes
 		foreach($add_routes as $route){
 			array_unshift($routes, $route);
 		}

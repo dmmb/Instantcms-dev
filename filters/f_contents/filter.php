@@ -13,7 +13,7 @@
 	function f_contents(&$text){
 
 		//REPLACE PAGE TITLES
- 		$regex = '/{(—“–¿Õ»÷¿=)\s*(.*?)}/i';
+ 		$regex = '/{(–°–¢–†–ê–ù–ò–¶–ê=)\s*(.*?)}/i';
 		$matches = array();
 		preg_match_all( $regex, $text, $matches, PREG_SET_ORDER );		
 		$GLOBALS['pt'] = array();
@@ -21,11 +21,11 @@
 			$elm[0] = str_replace('{', '', $elm[0]);
 			$elm[0] = str_replace('}', '', $elm[0]);			
 			parse_str( $elm[0], $args );
-			$title=@$args['—“–¿Õ»÷¿'];	
+			$title=@$args['–°–¢–†–ê–ù–ò–¶–ê'];	
 			if ($title){		
 				$GLOBALS['pt'][] = $title;
 			}
-			$text = str_replace('{—“–¿Õ»÷¿='.$title.'}', '', $text );	
+			$text = str_replace('{–°–¢–†–ê–ù–ò–¶–ê='.$title.'}', '', $text );	
 		}
 				
 		return true;

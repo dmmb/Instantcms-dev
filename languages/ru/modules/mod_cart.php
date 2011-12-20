@@ -17,12 +17,12 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * e-mail: firs.yura@gmail.com
  * site: firs.org.ua
  */
-$_LANG['CART_GOTO_CART']        ='Ïåðåéòè â êîðçèíó';
-$_LANG['CART_R']                ='ð';
-$_LANG['CART_SUMM']             ='Ñóììà';
-$_LANG['CART_RUB']              ='ðóá';
-$_LANG['CART_ITEMS']            ='Òîâàðîâ';
-$_LANG['CART_QTY']              ='øò';
-$_LANG['CART_TOTAL']            ='Èòîãî';
-$_LANG['CART_NOT_ITEMS']        ='Â êîðçèíå íåò òîâàðîâ';
+$_LANG['CART_GOTO_CART']        ='ÐŸÐµÑ€ÐµÐ¹Ñ‚Ð¸ Ð² ÐºÐ¾Ñ€Ð·Ð¸Ð½Ñƒ';
+$_LANG['CART_R']                ='Ñ€';
+$_LANG['CART_SUMM']             ='Ð¡ÑƒÐ¼Ð¼Ð°';
+$_LANG['CART_RUB']              ='Ñ€ÑƒÐ±';
+$_LANG['CART_ITEMS']            ='Ð¢Ð¾Ð²Ð°Ñ€Ð¾Ð²';
+$_LANG['CART_QTY']              ='ÑˆÑ‚';
+$_LANG['CART_TOTAL']            ='Ð˜Ñ‚Ð¾Ð³Ð¾';
+$_LANG['CART_NOT_ITEMS']        ='Ð’ ÐºÐ¾Ñ€Ð·Ð¸Ð½Ðµ Ð½ÐµÑ‚ Ñ‚Ð¾Ð²Ð°Ñ€Ð¾Ð²';
 ?>

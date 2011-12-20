@@ -17,6 +17,6 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * e-mail: firs.yura@gmail.com
  * site: firs.org.ua
  */
-$_LANG['SEARCH_SEARCH']       = 'поиск...';
+$_LANG['SEARCH_SEARCH']       = 'РїРѕРёСЃРє...';
 
 ?>

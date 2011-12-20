@@ -14,7 +14,7 @@ function createAlbum(clubid, root_album_id){
 		  success: function(msg){
 				if (msg!='error'){
                     if ($('ul.usr_albums_list li').length==5){
-                        $('.content p').prepend('<span><a href="/photos/'+root_album_id+'">Все альбомы (<strong id="count_photo">6</strong>)</a></span>');
+                        $('.content p').prepend('<span><a href="/photos/'+root_album_id+'">Р’СЃРµ Р°Р»СЊР±РѕРјС‹ (<strong id="count_photo">6</strong>)</a></span>');
                     }					
                     if ($('ul.usr_albums_list li').length==6){
                         $('ul.usr_albums_list li:last').remove();
@@ -23,10 +23,10 @@ function createAlbum(clubid, root_album_id){
 						var new_count = Number(count_photo) + 1;
                         $('#count_photo').html(new_count);
                     }
-					$('ul.usr_albums_list').prepend('<li id="'+msg+'"><div class="usr_album_thumb"><a href="/photos/'+msg+'" title="'+title+'"><img src="/images/photos/small/no_image.png" width="64" height="64" border="0" alt="'+title+'" /></a></div><div class="usr_album"><div class="link"><a href="/photos/'+msg+'">'+title+'</a>&nbsp;<a class="delete" title="Удалить альбом" href="javascript:void(0)" onclick="deleteAlbum('+msg+', \''+title+'\', '+clubid+')">X</a></div><div class="count">нет фотографий</div><div class="date">только что</div></div></li>');
+					$('ul.usr_albums_list').prepend('<li id="'+msg+'"><div class="usr_album_thumb"><a href="/photos/'+msg+'" title="'+title+'"><img src="/images/photos/small/no_image.png" width="64" height="64" border="0" alt="'+title+'" /></a></div><div class="usr_album"><div class="link"><a href="/photos/'+msg+'">'+title+'</a>&nbsp;<a class="delete" title="РЈРґР°Р»РёС‚СЊ Р°Р»СЊР±РѕРј" href="javascript:void(0)" onclick="deleteAlbum('+msg+', \''+title+'\', '+clubid+')">X</a></div><div class="count">РЅРµС‚ С„РѕС‚РѕРіСЂР°С„РёР№</div><div class="date">С‚РѕР»СЊРєРѕ С‡С‚Рѕ</div></div></li>');
                     $('ul.usr_albums_list li.no_albums').remove();
 				} else {
-					alert('Ошибка! Альбом не создан.');	
+					alert('РћС€РёР±РєР°! РђР»СЊР±РѕРј РЅРµ СЃРѕР·РґР°РЅ.');	
 				}
 				$('#add_album_form input.text').val('');
 				$('#add_album_link').toggle();
@@ -40,7 +40,7 @@ function createAlbum(clubid, root_album_id){
 function deleteAlbum(id, title, clubid){
 	var count_photo = $('#count_photo').html();
 
-	if (confirm('Удалить фотоальбом "'+title+'"?')){			
+	if (confirm('РЈРґР°Р»РёС‚СЊ С„РѕС‚РѕР°Р»СЊР±РѕРј "'+title+'"?')){			
 		$('#add_album_wait').show();
 		$.ajax({
 		  type: "POST",
@@ -53,10 +53,10 @@ function deleteAlbum(id, title, clubid){
                         $('#count_photo').html(count_photo-1);
                     }
                     if ($('ul.usr_albums_list li').length==0){
-                        $('ul.usr_albums_list').prepend('<li class="no_albums">В клубе нет фотоальбомов.</li>');
+                        $('ul.usr_albums_list').prepend('<li class="no_albums">Р’ РєР»СѓР±Рµ РЅРµС‚ С„РѕС‚РѕР°Р»СЊР±РѕРјРѕРІ.</li>');
                     }
 				} else {
-					alert('Ошибка! Альбом не удален.');	
+					alert('РћС€РёР±РєР°! РђР»СЊР±РѕРј РЅРµ СѓРґР°Р»РµРЅ.');	
 				}
                 $('#add_album_wait').hide();
 		  }

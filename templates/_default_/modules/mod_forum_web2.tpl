@@ -7,11 +7,11 @@
                 {if !$thread.secret}
                     <img src="/templates/_default_/images/icons/user_comment.png" border="0" />
                 {else}
-                    <img src="/templates/_default_/images/icons/user_silhouette.png" border="0" title="Скрытая тема - видна только вашей группе"/>
+                    <img src="/templates/_default_/images/icons/user_silhouette.png" border="0" title="РЎРєСЂС‹С‚Р°СЏ С‚РµРјР° - РІРёРґРЅР° С‚РѕР»СЊРєРѕ РІР°С€РµР№ РіСЂСѓРїРїРµ"/>
                 {/if}
             </td>
             <td style="padding-left:0px"><a href="{$thread.authorhref}" class="mod_fweb2_userlink">{$thread.author}</a> {$thread.act} &laquo;<a href="{$thread.topichref}" class="mod_fweb2_topiclink">{$thread.topic}</a>&raquo;
-            {if $cfg.showforum neq 0} на форуме &laquo;<a href="{$thread.forumhref}">{$thread.forum}</a>&raquo;{/if}</td>
+            {if $cfg.showforum neq 0} РЅР° С„РѕСЂСѓРјРµ &laquo;<a href="{$thread.forumhref}">{$thread.forum}</a>&raquo;{/if}</td>
         </tr>
 
         {if $cfg.showtext neq 0}

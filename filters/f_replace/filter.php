@@ -95,93 +95,93 @@
         $inDB = cmsDatabase::getInstance();
 
 		//REPLACE PRICE CATS LINKS
- 		$regex = '/{(œ–¿…—=)\s*(.*?)}/i';
+ 		$regex = '/{(–ü–†–ê–ô–°=)\s*(.*?)}/i';
 		$matches = array();
 		preg_match_all( $regex, $text, $matches, PREG_SET_ORDER );		
 		foreach ($matches as $elm) {	
 			$elm[0] = str_replace('{', '', $elm[0]);
 			$elm[0] = str_replace('}', '', $elm[0]);			
 			parse_str( $elm[0], $args );
-			$category=@$args['œ–¿…—'];	
+			$category=@$args['–ü–†–ê–ô–°'];	
 			if ($category){		
 				$output = PriceLink($category);			
 			} else { $output = ''; }
-			$text = str_replace('{œ–¿…—='.$category.'}', $output, $text );	
+			$text = str_replace('{–ü–†–ê–ô–°='.$category.'}', $output, $text );	
 		}
 		
 		//REPLACE PHOTO LINK
- 		$regex = '/{(‘Œ“Œ=)\s*(.*?)}/i';
+ 		$regex = '/{(–§–û–¢–û=)\s*(.*?)}/i';
 		$matches = array();
 		preg_match_all( $regex, $text, $matches, PREG_SET_ORDER );		
 		foreach ($matches as $elm) {	
 			$elm[0] = str_replace('{', '', $elm[0]);
 			$elm[0] = str_replace('}', '', $elm[0]);			
 			parse_str( $elm[0], $args );
-			$photo=@$args['‘Œ“Œ'];		
+			$photo=@$args['–§–û–¢–û'];		
 			if ($photo){		
 				$output = PhotoLink($photo);			
 			} else { $output = ''; }
-			$text = str_replace('{‘Œ“Œ='.$photo.'}', $output, $text );			
+			$text = str_replace('{–§–û–¢–û='.$photo.'}', $output, $text );			
 		}	
 		
 		//REPLACE PHOTO ALBUM LINK
- 		$regex = '/{(¿À‹¡ŒÃ=)\s*(.*?)}/i';
+ 		$regex = '/{(–ê–õ–¨–ë–û–ú=)\s*(.*?)}/i';
 		$matches = array();
 		preg_match_all( $regex, $text, $matches, PREG_SET_ORDER );		
 		foreach ($matches as $elm) {	
 			$elm[0] = str_replace('{', '', $elm[0]);
 			$elm[0] = str_replace('}', '', $elm[0]);			
 			parse_str( $elm[0], $args );
-			$album=@$args['¿À‹¡ŒÃ'];		
+			$album=@$args['–ê–õ–¨–ë–û–ú'];		
 			if ($album){		
 				$output = AlbumLink($album);			
 			} else { $output = ''; }
-			$text = str_replace('{¿À‹¡ŒÃ='.$album.'}', $output, $text );
+			$text = str_replace('{–ê–õ–¨–ë–û–ú='.$album.'}', $output, $text );
 		}	
 		
 		//REPLACE CONTENT ITEM LINK
- 		$regex = '/{(Ã¿“≈–»¿À=)\s*(.*?)}/i';
+ 		$regex = '/{(–ú–ê–¢–ï–†–ò–ê–õ=)\s*(.*?)}/i';
 		$matches = array();
 		preg_match_all( $regex, $text, $matches, PREG_SET_ORDER );		
 		foreach ($matches as $elm) {	
 			$elm[0] = str_replace('{', '', $elm[0]);
 			$elm[0] = str_replace('}', '', $elm[0]);			
 			parse_str( $elm[0], $args );
-			$content=@$args['Ã¿“≈–»¿À'];		
+			$content=@$args['–ú–ê–¢–ï–†–ò–ê–õ'];		
 			if ($content){		
 				$output = ContentLink($content);			
 			} else { $output = ''; }
-			$text = str_replace('{Ã¿“≈–»¿À='.$content.'}', $output, $text );
+			$text = str_replace('{–ú–ê–¢–ï–†–ò–ê–õ='.$content.'}', $output, $text );
 		}	
 		
 		//INSERT USER FORM _WITH_ TITLE
- 		$regex = '/{(‘Œ–Ã¿=)\s*(.*?)}/i';
+ 		$regex = '/{(–§–û–†–ú–ê=)\s*(.*?)}/i';
 		$matches = array();
 		preg_match_all( $regex, $text, $matches, PREG_SET_ORDER );		
 		foreach ($matches as $elm) {	
 			$elm[0] = str_replace('{', '', $elm[0]);
 			$elm[0] = str_replace('}', '', $elm[0]);			
 			parse_str( $elm[0], $args );
-			$content=@$args['‘Œ–Ã¿'];		
+			$content=@$args['–§–û–†–ú–ê'];		
 			if ($content){		
 				$output = insertForm($content, true);			
 			} else { $output = ''; }
-			$text = str_replace('{‘Œ–Ã¿='.$content.'}', $output, $text );	
+			$text = str_replace('{–§–û–†–ú–ê='.$content.'}', $output, $text );	
 		}		
 
 		//INSERT USER FORM _WITHOUT_ TITLE
- 		$regex = '/{(¡À¿Õ =)\s*(.*?)}/i';
+ 		$regex = '/{(–ë–õ–ê–ù–ö=)\s*(.*?)}/i';
 		$matches = array();
 		preg_match_all( $regex, $text, $matches, PREG_SET_ORDER );		
 		foreach ($matches as $elm) {	
 			$elm[0] = str_replace('{', '', $elm[0]);
 			$elm[0] = str_replace('}', '', $elm[0]);			
 			parse_str( $elm[0], $args );
-			$content=@$args['¡À¿Õ '];		
+			$content=@$args['–ë–õ–ê–ù–ö'];		
 			if ($content){		
 				$output = insertForm($content, false);			
 			} else { $output = ''; }
-			$text = str_replace('{¡À¿Õ ='.$content.'}', $output, $text );	
+			$text = str_replace('{–ë–õ–ê–ù–ö='.$content.'}', $output, $text );	
 		}		
 						
 		//REPLACE BY USER RULES

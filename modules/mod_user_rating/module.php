@@ -22,7 +22,7 @@
 		if ($cfg['view_type']!='rating' && $cfg['view_type']!='karma') {
 			$cfg['view_type'] = 'rating';
 		}
-		if ($cfg['view_type'] == 'rating') { $target = 'Рейтинг'; } else { $target = 'Карма'; }
+		if ($cfg['view_type'] == 'rating') { $target = 'Р РµР№С‚РёРЅРі'; } else { $target = 'РљР°СЂРјР°'; }
 
 		$sql = "SELECT u.id, u.login, u.nickname, u.rating as rating, u.is_deleted, p.karma as karma, p.user_id, p.imageurl, u.status
 				FROM cms_users u

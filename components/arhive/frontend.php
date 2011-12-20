@@ -21,7 +21,7 @@ function arhive(){
 
 	$cfg        = $inCore->loadComponentConfig('arhive');
 
-    // Ïğîâåğÿåì âêëş÷åí ëè êîìïîíåíò
+    // ĞŸÑ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼ Ğ²ĞºĞ»ÑÑ‡ĞµĞ½ Ğ»Ğ¸ ĞºĞ¾Ğ¼Ğ¿Ğ¾Ğ½ĞµĞ½Ñ‚
 	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     $id         = $inCore->request('id', 'int', 0);

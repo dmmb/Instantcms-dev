@@ -2,13 +2,13 @@
 <backend>    
     <module>
         <id>mod_user_rating</id>
-        <title>Рейтинг пользователей</title>
+        <title>Р РµР№С‚РёРЅРі РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</title>
     </module>
     <params>
-        <param type="number" name="count" title="Количество пользователей" default="5" />
-        <param type="list" name="view_type" title="Показывать как">
-            <option title="Карма" value="karma" />
-            <option title="Рейтинг" value="rating" />
+        <param type="number" name="count" title="РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№" default="5" />
+        <param type="list" name="view_type" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РєР°Рє">
+            <option title="РљР°СЂРјР°" value="karma" />
+            <option title="Р РµР№С‚РёРЅРі" value="rating" />
         </param>
     </params>
 </backend>

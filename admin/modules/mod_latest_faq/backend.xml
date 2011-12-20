@@ -2,16 +2,16 @@
 <backend>    
     <module>
         <id>mod_latest</id>
-        <title>Последние материалы</title>
+        <title>РџРѕСЃР»РµРґРЅРёРµ РјР°С‚РµСЂРёР°Р»С‹</title>
     </module>
     <params>
 
-        <param type="number" name="newscount" title="Количество вопросов" units="шт." default="5" />
+        <param type="number" name="newscount" title="РљРѕР»РёС‡РµСЃС‚РІРѕ РІРѕРїСЂРѕСЃРѕРІ" units="С€С‚." default="5" />
 
-        <param type="number" name="maxlen" title="Максимальная длина вопроса" units="симв." default="120" />
+        <param type="number" name="maxlen" title="РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РґР»РёРЅР° РІРѕРїСЂРѕСЃР°" units="СЃРёРјРІ." default="120" />
 
-        <param type="list_db" name="cat_id" title="Вопросы из категории" src="cms_faq_cats" src_title="title" src_value="id">
-            <option title="-- Все категории --" value="-1" />
+        <param type="list_db" name="cat_id" title="Р’РѕРїСЂРѕСЃС‹ РёР· РєР°С‚РµРіРѕСЂРёРё" src="cms_faq_cats" src_title="title" src_value="id">
+            <option title="-- Р’СЃРµ РєР°С‚РµРіРѕСЂРёРё --" value="-1" />
         </param>
 
     </params>

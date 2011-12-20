@@ -8,12 +8,12 @@ function checkLogin(){
     }else
     {
 		if (userlogin.length < 2){
-			$("#logincheck").html('<span style="color:red">Минимальная длина = 2</span>'); 
+			$("#logincheck").html('<span style="color:red">РњРёРЅРёРјР°Р»СЊРЅР°СЏ РґР»РёРЅР° = 2</span>'); 
 		} else {
 			if (userlogin.length > 15){
-				$("#logincheck").html('<span style="color:red">Максимальная длина = 15</span>'); 
+				$("#logincheck").html('<span style="color:red">РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РґР»РёРЅР° = 15</span>'); 
 			} else {
-				$("#logincheck").html('<span style="color:red">Только латинские буквы и цифры</span>');  		
+				$("#logincheck").html('<span style="color:red">РўРѕР»СЊРєРѕ Р»Р°С‚РёРЅСЃРєРёРµ Р±СѓРєРІС‹ Рё С†РёС„СЂС‹</span>');  		
 			}
 		}	     
     }
@@ -23,8 +23,8 @@ function checkPasswords(){
 	var pass1 = $("#pass1input").attr('value');
 	var pass2 = $("#pass2input").attr('value');	
 	if (pass1 == pass2) {
-		$('#passcheck').html('<span style="color:green">Пароли совпадают</span>');
+		$('#passcheck').html('<span style="color:green">РџР°СЂРѕР»Рё СЃРѕРІРїР°РґР°СЋС‚</span>');
 	} else {
-		$('#passcheck').html('<span style="color:red">Пароли не совпадают!</span>');	
+		$('#passcheck').html('<span style="color:red">РџР°СЂРѕР»Рё РЅРµ СЃРѕРІРїР°РґР°СЋС‚!</span>');	
 	}	
 }

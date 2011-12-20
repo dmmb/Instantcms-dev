@@ -201,7 +201,7 @@ function usrStatus($user_id, $logdate='', $online=false, $gender='m'){
 				if ($logdate){
                     if (!strstr(strtolower($logdate), $_LANG['YESTERDAY']) && !strstr(strtolower($logdate), $_LANG['TODAY'])){
                         $logdate = cmsCore::dateDiffNow($logdate);                        
-                        if (!strstr($logdate, 'не известно')) { $logdate .=  ' '.$_LANG['BACK']; }
+                        if (!strstr($logdate, 'РЅРµ РёР·РІРµСЃС‚РЅРѕ')) { $logdate .=  ' '.$_LANG['BACK']; }
                     }
 					return '<span class="offline">'.$logdate.'</span>';
 				} else {
@@ -311,11 +311,11 @@ function usrFriends($user_id, &$total, $perpage=10, $page=1){
 
 	$ses_friends = cmsUser::getFriends($inUser->id);
 
-	// общее количество моих друзей выбирается из сессии, начиная со 2-й страницы
+	// РѕР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РјРѕРёС… РґСЂСѓР·РµР№ РІС‹Р±РёСЂР°РµС‚СЃСЏ РёР· СЃРµСЃСЃРёРё, РЅР°С‡РёРЅР°СЏ СЃРѕ 2-Р№ СЃС‚СЂР°РЅРёС†С‹
     $total  = (($page > 1) && ($user_id == $inUser->id)) ? sizeof($ses_friends) : $inDB->rows_count('cms_user_friends', "(from_id = '$user_id' OR to_id = '$user_id') AND is_accepted =1");
-	// если нет друзей, выходим
+	// РµСЃР»Рё РЅРµС‚ РґСЂСѓР·РµР№, РІС‹С…РѕРґРёРј
 	if(!$total) { return false; }
-	// очищать сессию друзей если в своем профиле и количество друзей из базы не совпадает с количеством друзей в сессии
+	// РѕС‡РёС‰Р°С‚СЊ СЃРµСЃСЃРёСЋ РґСЂСѓР·РµР№ РµСЃР»Рё РІ СЃРІРѕРµРј РїСЂРѕС„РёР»Рµ Рё РєРѕР»РёС‡РµСЃС‚РІРѕ РґСЂСѓР·РµР№ РёР· Р±Р°Р·С‹ РЅРµ СЃРѕРІРїР°РґР°РµС‚ СЃ РєРѕР»РёС‡РµСЃС‚РІРѕРј РґСЂСѓР·РµР№ РІ СЃРµСЃСЃРёРё
 	if (($user_id == $inUser->id) && sizeof($ses_friends) != $total) { cmsUser::clearSessionFriends(); }
 	
 	$sql = "SELECT

@@ -32,8 +32,8 @@ function pluginsList($new_plugins, $action_name, $action){
             echo '<td width="16">&nbsp;</td>';
             echo '<td>
                         <div style="margin-bottom:6px;">'.$plugin_obj->info['description'].'</div>
-                        <div style="color:gray"><strong>Автор:</strong> '.$plugin_obj->info['author'].'</div>
-                        <div style="color:gray"><strong>Папка:</strong> /plugins/'.$plugin_obj->info['plugin'].'</div>
+                        <div style="color:gray"><strong>РђРІС‚РѕСЂ:</strong> '.$plugin_obj->info['author'].'</div>
+                        <div style="color:gray"><strong>РџР°РїРєР°:</strong> /plugins/'.$plugin_obj->info['plugin'].'</div>
                   </td>';
         echo '<tr>';
     }
@@ -64,8 +64,8 @@ function componentsList($new_components, $action_name, $action){
                 echo '<td width="16">&nbsp;</td>';
                 echo '<td>
                             <div style="margin-bottom:6px;">'.$_component['description'].'</div>
-                            <div style="color:gray"><strong>Автор:</strong> '.$_component['author'].'</div>
-                            <div style="color:gray"><strong>Папка:</strong> /components/'.$_component['link'].'</div>
+                            <div style="color:gray"><strong>РђРІС‚РѕСЂ:</strong> '.$_component['author'].'</div>
+                            <div style="color:gray"><strong>РџР°РїРєР°:</strong> /components/'.$_component['link'].'</div>
                       </td>';
             echo '<tr>';
 
@@ -98,8 +98,8 @@ function modulesList($new_modules, $action_name, $action){
                 echo '<td width="16">&nbsp;</td>';
                 echo '<td>
                             <div style="margin-bottom:6px;">'.$_module['description'].'</div>
-                            <div style="color:gray"><strong>Автор:</strong> '.$_module['author'].'</div>
-                            <div style="color:gray"><strong>Папка:</strong> /modules/'.$_module['link'].'</div>
+                            <div style="color:gray"><strong>РђРІС‚РѕСЂ:</strong> '.$_module['author'].'</div>
+                            <div style="color:gray"><strong>РџР°РїРєР°:</strong> /modules/'.$_module['link'].'</div>
                       </td>';
             echo '<tr>';
 
@@ -115,7 +115,7 @@ function applet_install(){
 
     $inCore = cmsCore::getInstance();
 
-	$GLOBALS['cp_page_title'] = 'Установка расширений';
+	$GLOBALS['cp_page_title'] = 'РЈСЃС‚Р°РЅРѕРІРєР° СЂР°СЃС€РёСЂРµРЅРёР№';
 
 	if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
 	if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { $id = -1; }
@@ -125,39 +125,39 @@ function applet_install(){
 
     if ($do == 'module'){
 
-      	cpAddPathway('Установка расширений', 'index.php?view=install&do=module');
+      	cpAddPathway('РЈСЃС‚Р°РЅРѕРІРєР° СЂР°СЃС€РёСЂРµРЅРёР№', 'index.php?view=install&do=module');
 
         $new_modules = $inCore->getNewModules();
         $upd_modules = $inCore->getUpdatedModules();
 
-        echo '<h3>Установка модулей</h3>';
+        echo '<h3>РЈСЃС‚Р°РЅРѕРІРєР° РјРѕРґСѓР»РµР№</h3>';
 
         if (!$new_modules && !$upd_modules){
 
-            echo '<p>В системе не найдены модули, которые еще не установлены.</p>';
-            echo '<p>Если вы скачали архив с модулем и хотите установить или обновить, то распакуйте его в корень сайта и перезагрузите страницу.</p>';
-            echo '<p><a href="javascript:window.history.go(-1);">Вернуться назад</a></p>';
+            echo '<p>Р’ СЃРёСЃС‚РµРјРµ РЅРµ РЅР°Р№РґРµРЅС‹ РјРѕРґСѓР»Рё, РєРѕС‚РѕСЂС‹Рµ РµС‰Рµ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅС‹.</p>';
+            echo '<p>Р•СЃР»Рё РІС‹ СЃРєР°С‡Р°Р»Рё Р°СЂС…РёРІ СЃ РјРѕРґСѓР»РµРј Рё С…РѕС‚РёС‚Рµ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РёР»Рё РѕР±РЅРѕРІРёС‚СЊ, С‚Рѕ СЂР°СЃРїР°РєСѓР№С‚Рµ РµРіРѕ РІ РєРѕСЂРµРЅСЊ СЃР°Р№С‚Р° Рё РїРµСЂРµР·Р°РіСЂСѓР·РёС‚Рµ СЃС‚СЂР°РЅРёС†Сѓ.</p>';
+            echo '<p><a href="javascript:window.history.go(-1);">Р’РµСЂРЅСѓС‚СЊСЃСЏ РЅР°Р·Р°Рґ</a></p>';
             return;
 
         }
 
         if ($new_modules){
 
-            echo '<p><strong>Найдены модули, доступные для установки:</strong></p>';
-            modulesList($new_modules, 'Установить', 'install_module');
+            echo '<p><strong>РќР°Р№РґРµРЅС‹ РјРѕРґСѓР»Рё, РґРѕСЃС‚СѓРїРЅС‹Рµ РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё:</strong></p>';
+            modulesList($new_modules, 'РЈСЃС‚Р°РЅРѕРІРёС‚СЊ', 'install_module');
 
         }
 
         if ($upd_modules){
 
-            echo '<p><strong>Найдены модули, доступные для обновления:</strong></p>';
-            modulesList($upd_modules, 'Обновить', 'upgrade_module');
+            echo '<p><strong>РќР°Р№РґРµРЅС‹ РјРѕРґСѓР»Рё, РґРѕСЃС‚СѓРїРЅС‹Рµ РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ:</strong></p>';
+            modulesList($upd_modules, 'РћР±РЅРѕРІРёС‚СЊ', 'upgrade_module');
 
         }
 
-        echo '<p>Щелкните по названию модуля, чтобы продолжить.</p>';
+        echo '<p>Р©РµР»РєРЅРёС‚Рµ РїРѕ РЅР°Р·РІР°РЅРёСЋ РјРѕРґСѓР»СЏ, С‡С‚РѕР±С‹ РїСЂРѕРґРѕР»Р¶РёС‚СЊ.</p>';
 
-        echo '<p><a href="javascript:window.history.go(-1);">Назад</a></p>';
+        echo '<p><a href="javascript:window.history.go(-1);">РќР°Р·Р°Рґ</a></p>';
 
     }
 
@@ -165,7 +165,7 @@ function applet_install(){
 
     if ($do == 'install_module'){
 
-        cpAddPathway('Установка расширений', 'index.php?view=install&do=module');
+        cpAddPathway('РЈСЃС‚Р°РЅРѕРІРєР° СЂР°СЃС€РёСЂРµРЅРёР№', 'index.php?view=install&do=module');
 
         $error = '';
 
@@ -179,7 +179,7 @@ function applet_install(){
             $_module    = call_user_func('info_module_'.$module_id);
             $error      = call_user_func('install_module_'.$module_id);
         } else {
-            $error = 'Не удалось загрузить установщик модуля.';
+            $error = 'РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ СѓСЃС‚Р°РЅРѕРІС‰РёРє РјРѕРґСѓР»СЏ.';
         }
 
         if ($error === true) {
@@ -191,7 +191,7 @@ function applet_install(){
 
         }
 
-        echo '<p><a href="index.php?view=install&do=module">Назад</a></p>';
+        echo '<p><a href="index.php?view=install&do=module">РќР°Р·Р°Рґ</a></p>';
 
     }
 
@@ -199,7 +199,7 @@ function applet_install(){
 
     if ($do == 'upgrade_module'){
 
-        cpAddPathway('Установка расширений', 'index.php?view=install&do=module');
+        cpAddPathway('РЈСЃС‚Р°РЅРѕРІРєР° СЂР°СЃС€РёСЂРµРЅРёР№', 'index.php?view=install&do=module');
 
         $error = '';
 
@@ -213,7 +213,7 @@ function applet_install(){
             $_module    = call_user_func('info_module_'.$module_id);
             $error      = call_user_func('upgrade_module_'.$module_id);
         } else {
-            $error = 'Не удалось загрузить установщик модуля.';
+            $error = 'РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ СѓСЃС‚Р°РЅРѕРІС‰РёРє РјРѕРґСѓР»СЏ.';
         }
 
         if ($error === true) {
@@ -225,7 +225,7 @@ function applet_install(){
 
         }
 
-        echo '<p><a href="index.php?view=install&do=module">Назад</a></p>';
+        echo '<p><a href="index.php?view=install&do=module">РќР°Р·Р°Рґ</a></p>';
 
     }
 
@@ -260,39 +260,39 @@ function applet_install(){
 
     if ($do == 'component'){
 
-      	cpAddPathway('Установка расширений', 'index.php?view=install&do=component');
+      	cpAddPathway('РЈСЃС‚Р°РЅРѕРІРєР° СЂР°СЃС€РёСЂРµРЅРёР№', 'index.php?view=install&do=component');
 
         $new_components = $inCore->getNewComponents();
         $upd_components = $inCore->getUpdatedComponents();
 
-        echo '<h3>Установка компонентов</h3>';
+        echo '<h3>РЈСЃС‚Р°РЅРѕРІРєР° РєРѕРјРїРѕРЅРµРЅС‚РѕРІ</h3>';
 
         if (!$new_components && !$upd_components){
 
-            echo '<p>В системе не найдены компоненты, которые еще не установлены.</p>';
-            echo '<p>Если вы скачали архив с компонентом с нашего сайта и хотите установить или обновить, то распакуйте его в корень сайта и перезагрузите страницу.</p>';
-            echo '<p><a href="javascript:window.history.go(-1);">Вернуться назад</a></p>';
+            echo '<p>Р’ СЃРёСЃС‚РµРјРµ РЅРµ РЅР°Р№РґРµРЅС‹ РєРѕРјРїРѕРЅРµРЅС‚С‹, РєРѕС‚РѕСЂС‹Рµ РµС‰Рµ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅС‹.</p>';
+            echo '<p>Р•СЃР»Рё РІС‹ СЃРєР°С‡Р°Р»Рё Р°СЂС…РёРІ СЃ РєРѕРјРїРѕРЅРµРЅС‚РѕРј СЃ РЅР°С€РµРіРѕ СЃР°Р№С‚Р° Рё С…РѕС‚РёС‚Рµ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РёР»Рё РѕР±РЅРѕРІРёС‚СЊ, С‚Рѕ СЂР°СЃРїР°РєСѓР№С‚Рµ РµРіРѕ РІ РєРѕСЂРµРЅСЊ СЃР°Р№С‚Р° Рё РїРµСЂРµР·Р°РіСЂСѓР·РёС‚Рµ СЃС‚СЂР°РЅРёС†Сѓ.</p>';
+            echo '<p><a href="javascript:window.history.go(-1);">Р’РµСЂРЅСѓС‚СЊСЃСЏ РЅР°Р·Р°Рґ</a></p>';
             return;
 
         }
 
         if ($new_components){
 
-            echo '<p><strong>Найдены компоненты, доступные для установки:</strong></p>';
-            componentsList($new_components, 'Установить', 'install_component');
+            echo '<p><strong>РќР°Р№РґРµРЅС‹ РєРѕРјРїРѕРЅРµРЅС‚С‹, РґРѕСЃС‚СѓРїРЅС‹Рµ РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё:</strong></p>';
+            componentsList($new_components, 'РЈСЃС‚Р°РЅРѕРІРёС‚СЊ', 'install_component');
 
         }
 
         if ($upd_components){
 
-            echo '<p><strong>Найдены компоненты, доступные для обновления:</strong></p>';
-            componentsList($upd_components, 'Обновить', 'upgrade_component');
+            echo '<p><strong>РќР°Р№РґРµРЅС‹ РєРѕРјРїРѕРЅРµРЅС‚С‹, РґРѕСЃС‚СѓРїРЅС‹Рµ РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ:</strong></p>';
+            componentsList($upd_components, 'РћР±РЅРѕРІРёС‚СЊ', 'upgrade_component');
 
         }
 
-        echo '<p>Щелкните по названию компонента, чтобы продолжить.</p>';
+        echo '<p>Р©РµР»РєРЅРёС‚Рµ РїРѕ РЅР°Р·РІР°РЅРёСЋ РєРѕРјРїРѕРЅРµРЅС‚Р°, С‡С‚РѕР±С‹ РїСЂРѕРґРѕР»Р¶РёС‚СЊ.</p>';
 
-        echo '<p><a href="javascript:window.history.go(-1);">Назад</a></p>';
+        echo '<p><a href="javascript:window.history.go(-1);">РќР°Р·Р°Рґ</a></p>';
 
     }
 
@@ -300,7 +300,7 @@ function applet_install(){
 
     if ($do == 'install_component'){
 
-        cpAddPathway('Установка расширений', 'index.php?view=install&do=component');
+        cpAddPathway('РЈСЃС‚Р°РЅРѕРІРєР° СЂР°СЃС€РёСЂРµРЅРёР№', 'index.php?view=install&do=component');
 
         $error = '';
 
@@ -314,7 +314,7 @@ function applet_install(){
             $_component = call_user_func('info_component_'.$component_id);
             $error      = call_user_func('install_component_'.$component_id);
         } else {
-            $error = 'Не удалось загрузить установщик компонента.';
+            $error = 'РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ СѓСЃС‚Р°РЅРѕРІС‰РёРє РєРѕРјРїРѕРЅРµРЅС‚Р°.';
         }
 
         if ($error === true) {
@@ -326,7 +326,7 @@ function applet_install(){
             
         }
 
-        echo '<p><a href="index.php?view=install&do=component">Назад</a></p>';
+        echo '<p><a href="index.php?view=install&do=component">РќР°Р·Р°Рґ</a></p>';
 
     }
 
@@ -334,7 +334,7 @@ function applet_install(){
 
     if ($do == 'upgrade_component'){
 
-        cpAddPathway('Установка расширений', 'index.php?view=install&do=component');
+        cpAddPathway('РЈСЃС‚Р°РЅРѕРІРєР° СЂР°СЃС€РёСЂРµРЅРёР№', 'index.php?view=install&do=component');
 
         $error = '';
 
@@ -348,7 +348,7 @@ function applet_install(){
             $_component = call_user_func('info_component_'.$component_id);
             $error      = call_user_func('upgrade_component_'.$component_id);
         } else {
-            $error = 'Не удалось загрузить установщик компонента.';
+            $error = 'РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ СѓСЃС‚Р°РЅРѕРІС‰РёРє РєРѕРјРїРѕРЅРµРЅС‚Р°.';
         }
 
         if ($error === true) {
@@ -360,7 +360,7 @@ function applet_install(){
             
         }
 
-        echo '<p><a href="index.php?view=install&do=component">Назад</a></p>';
+        echo '<p><a href="index.php?view=install&do=component">РќР°Р·Р°Рґ</a></p>';
 
     }
 
@@ -396,39 +396,39 @@ function applet_install(){
 
     if ($do == 'plugin'){
 
-      	cpAddPathway('Установка расширений', 'index.php?view=install&do=plugin');
+      	cpAddPathway('РЈСЃС‚Р°РЅРѕРІРєР° СЂР°СЃС€РёСЂРµРЅРёР№', 'index.php?view=install&do=plugin');
 
         $new_plugins = $inCore->getNewPlugins();
         $upd_plugins = $inCore->getUpdatedPlugins();
 
-        echo '<h3>Установка плагинов</h3>';
+        echo '<h3>РЈСЃС‚Р°РЅРѕРІРєР° РїР»Р°РіРёРЅРѕРІ</h3>';
 
         if (!$new_plugins && !$upd_plugins){
 
-            echo '<p>В системе не найдены плагины, которые еще не установлены.</p>';
-            echo '<p>Если вы скачали архив с плагином с нашего сайта и хотите установить или обновить, то распакуйте его в папку <strong>/plugins</strong> и перезагрузите страницу.</p>';
-            echo '<p><a href="javascript:window.history.go(-1);">Вернуться назад</a></p>';
+            echo '<p>Р’ СЃРёСЃС‚РµРјРµ РЅРµ РЅР°Р№РґРµРЅС‹ РїР»Р°РіРёРЅС‹, РєРѕС‚РѕСЂС‹Рµ РµС‰Рµ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅС‹.</p>';
+            echo '<p>Р•СЃР»Рё РІС‹ СЃРєР°С‡Р°Р»Рё Р°СЂС…РёРІ СЃ РїР»Р°РіРёРЅРѕРј СЃ РЅР°С€РµРіРѕ СЃР°Р№С‚Р° Рё С…РѕС‚РёС‚Рµ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РёР»Рё РѕР±РЅРѕРІРёС‚СЊ, С‚Рѕ СЂР°СЃРїР°РєСѓР№С‚Рµ РµРіРѕ РІ РїР°РїРєСѓ <strong>/plugins</strong> Рё РїРµСЂРµР·Р°РіСЂСѓР·РёС‚Рµ СЃС‚СЂР°РЅРёС†Сѓ.</p>';
+            echo '<p><a href="javascript:window.history.go(-1);">Р’РµСЂРЅСѓС‚СЊСЃСЏ РЅР°Р·Р°Рґ</a></p>';
             return;
 
         }
 
         if ($new_plugins){
 
-            echo '<p><strong>Найдены плагины, доступные для установки:</strong></p>';
-            pluginsList($new_plugins, 'Установить', 'install_plugin');
+            echo '<p><strong>РќР°Р№РґРµРЅС‹ РїР»Р°РіРёРЅС‹, РґРѕСЃС‚СѓРїРЅС‹Рµ РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё:</strong></p>';
+            pluginsList($new_plugins, 'РЈСЃС‚Р°РЅРѕРІРёС‚СЊ', 'install_plugin');
 
         }
 
         if ($upd_plugins){
 
-            echo '<p><strong>Найдены плагины, доступные для обновления:</strong></p>';
-            pluginsList($upd_plugins, 'Обновить', 'upgrade_plugin');
+            echo '<p><strong>РќР°Р№РґРµРЅС‹ РїР»Р°РіРёРЅС‹, РґРѕСЃС‚СѓРїРЅС‹Рµ РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ:</strong></p>';
+            pluginsList($upd_plugins, 'РћР±РЅРѕРІРёС‚СЊ', 'upgrade_plugin');
 
         }
 
-        echo '<p>Щелкните по названию плагина, чтобы продолжить.</p>';
+        echo '<p>Р©РµР»РєРЅРёС‚Рµ РїРѕ РЅР°Р·РІР°РЅРёСЋ РїР»Р°РіРёРЅР°, С‡С‚РѕР±С‹ РїСЂРѕРґРѕР»Р¶РёС‚СЊ.</p>';
 
-        echo '<p><a href="javascript:window.history.go(-1);">Назад</a></p>';
+        echo '<p><a href="javascript:window.history.go(-1);">РќР°Р·Р°Рґ</a></p>';
 
     }
 
@@ -436,7 +436,7 @@ function applet_install(){
 
     if ($do == 'install_plugin'){
 
-        cpAddPathway('Установка расширений', 'index.php?view=install&do=plugin');
+        cpAddPathway('РЈСЃС‚Р°РЅРѕРІРєР° СЂР°СЃС€РёСЂРµРЅРёР№', 'index.php?view=install&do=plugin');
 
         $error = '';
 
@@ -448,7 +448,7 @@ function applet_install(){
 
         $plugin = $inCore->loadPlugin($plugin_id);
 
-        if (!$plugin) { $error = 'Не удалось загрузить файл плагина.'; }
+        if (!$plugin) { $error = 'РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ С„Р°Р№Р» РїР»Р°РіРёРЅР°.'; }
 
         if (!$error && $plugin->install()) {
             $inCore->redirect('/admin/index.php?view=install&do=finish_plugin&id='.$plugin_id.'&task=install');
@@ -458,7 +458,7 @@ function applet_install(){
             echo '<p style="color:red">'.$error.'</p>';
         }
 
-        echo '<p><a href="index.php?view=install&do=plugin">Назад</a></p>';
+        echo '<p><a href="index.php?view=install&do=plugin">РќР°Р·Р°Рґ</a></p>';
 
     }
 
@@ -466,7 +466,7 @@ function applet_install(){
 
     if ($do == 'upgrade_plugin'){
 
-        cpAddPathway('Установка расширений', 'index.php?view=install&do=plugin');
+        cpAddPathway('РЈСЃС‚Р°РЅРѕРІРєР° СЂР°СЃС€РёСЂРµРЅРёР№', 'index.php?view=install&do=plugin');
 
         $error = '';
 
@@ -478,7 +478,7 @@ function applet_install(){
 
         $plugin = $inCore->loadPlugin($plugin_id);
 
-        if (!$plugin) { $error = 'Не удалось загрузить файл плагина.'; }
+        if (!$plugin) { $error = 'РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ С„Р°Р№Р» РїР»Р°РіРёРЅР°.'; }
 
         if (!$error && $plugin->upgrade()) {
             $inCore->redirect('/admin/index.php?view=install&do=finish_plugin&id='.$plugin_id.'&task=upgrade');
@@ -488,7 +488,7 @@ function applet_install(){
             echo '<p style="color:red">'.$error.'</p>';
         }
 
-        echo '<p><a href="index.php?view=install&do=plugin">Назад</a></p>';
+        echo '<p><a href="index.php?view=install&do=plugin">РќР°Р·Р°Рґ</a></p>';
 
     }
 

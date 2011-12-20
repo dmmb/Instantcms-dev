@@ -17,8 +17,8 @@ function applet_help(){
 
     $inCore = cmsCore::getInstance();
 
-	$GLOBALS['cp_page_title'] = 'Помощь';
- 	cpAddPathway('Помощь', 'index.php?view=help');	
+	$GLOBALS['cp_page_title'] = 'РџРѕРјРѕС‰СЊ';
+ 	cpAddPathway('РџРѕРјРѕС‰СЊ', 'index.php?view=help');	
 
 	if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
 	if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { $id = -1; }

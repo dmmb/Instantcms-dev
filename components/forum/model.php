@@ -15,7 +15,7 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 class cms_model_forum{
 	
-	public $abstract_array = array(); // äëÿ õðàíåíèÿ âðåìåííûõ äàííûõ
+	public $abstract_array = array(); // Ð´Ð»Ñ Ñ…Ñ€Ð°Ð½ÐµÐ½Ð¸Ñ Ð²Ñ€ÐµÐ¼ÐµÐ½Ð½Ñ‹Ñ… Ð´Ð°Ð½Ð½Ñ‹Ñ…
 
 	function __construct(){
         $this->inDB = cmsDatabase::getInstance();
@@ -47,7 +47,7 @@ class cms_model_forum{
 		if(!isset($this->abstract_array['users_post_count'][$user_id])){
 
 			$user_count = $this->inDB->rows_count('cms_forum_posts', "user_id = '$user_id'");
-			// çàíîñèì â êåø
+			// Ð·Ð°Ð½Ð¾ÑÐ¸Ð¼ Ð² ÐºÐµÑˆ
 			$this->abstract_array['users_post_count'][$user_id] = $user_count;
 			
 		}
@@ -61,7 +61,7 @@ class cms_model_forum{
 		if(!isset($this->abstract_array['users_awards'][$user_id])){
 
 			$awards = cmsUser::getAwardsList($user_id);
-			// çàíîñèì â êåø
+			// Ð·Ð°Ð½Ð¾ÑÐ¸Ð¼ Ð² ÐºÐµÑˆ
 			$this->abstract_array['users_awards'][$user_id] = $awards;
 			
 		}
@@ -85,10 +85,10 @@ class cms_model_forum{
 
 			if ($inCore->userIsAdmin($user_id)){
 				$userrank = '<span id="admin">'.$_LANG['ADMINISTRATOR'].'</span>';
-				// âðåìåííîå ðåøåíèå, ÷òîáû äâà ðàçà íå ïðîâåðÿòü íà àäìèíà
+				// Ð²Ñ€ÐµÐ¼ÐµÐ½Ð½Ð¾Ðµ Ñ€ÐµÑˆÐµÐ½Ð¸Ðµ, Ñ‡Ñ‚Ð¾Ð±Ñ‹ Ð´Ð²Ð° Ñ€Ð°Ð·Ð° Ð½Ðµ Ð¿Ñ€Ð¾Ð²ÐµÑ€ÑÑ‚ÑŒ Ð½Ð° Ð°Ð´Ð¼Ð¸Ð½Ð°
 				$this->abstract_array['is_admin'][$user_id] = 1;
 			} else {
-				// âðåìåííîå ðåøåíèå, ÷òîáû äâà ðàçà íå ïðîâåðÿòü íà àäìèíà
+				// Ð²Ñ€ÐµÐ¼ÐµÐ½Ð½Ð¾Ðµ Ñ€ÐµÑˆÐµÐ½Ð¸Ðµ, Ñ‡Ñ‚Ð¾Ð±Ñ‹ Ð´Ð²Ð° Ñ€Ð°Ð·Ð° Ð½Ðµ Ð¿Ñ€Ð¾Ð²ÐµÑ€ÑÑ‚ÑŒ Ð½Ð° Ð°Ð´Ð¼Ð¸Ð½Ð°
 				$this->abstract_array['is_admin'][$user_id] = 0;
 				//rank by messages
 				if(is_array($ranks)){

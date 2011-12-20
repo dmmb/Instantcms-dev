@@ -21,9 +21,9 @@ function applet_cron(){
 	global $adminAccess;
 	if (!$inCore->isAdminCan('admin/config', $adminAccess)) { cpAccessDenied(); }
 	
-	$GLOBALS['cp_page_title'] = 'Задачи CRON';
- 	cpAddPathway('Настройки сайта', 'index.php?view=config');
- 	cpAddPathway('Задачи CRON', 'index.php?view=cron');
+	$GLOBALS['cp_page_title'] = 'Р—Р°РґР°С‡Рё CRON';
+ 	cpAddPathway('РќР°СЃС‚СЂРѕР№РєРё СЃР°Р№С‚Р°', 'index.php?view=config');
+ 	cpAddPathway('Р—Р°РґР°С‡Рё CRON', 'index.php?view=cron');
 
     $do = $inCore->request('do', 'str', 'list');
     $id = $inCore->request('id', 'int', '0');
@@ -35,7 +35,7 @@ function applet_cron(){
 	if ($do == 'list'){
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'new.gif';
-		$toolmenu[0]['title'] = 'Создать задачу';
+		$toolmenu[0]['title'] = 'РЎРѕР·РґР°С‚СЊ Р·Р°РґР°С‡Сѓ';
 		$toolmenu[0]['link'] = "?view=cron&do=add";
 
 		cpToolMenu($toolmenu);
@@ -139,11 +139,11 @@ function applet_cron(){
 
  		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'save.gif';
-		$toolmenu[0]['title'] = 'Сохранить';
+		$toolmenu[0]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 		$toolmenu[0]['link'] = 'javascript:document.addform.submit();';
 
 		$toolmenu[1]['icon'] = 'cancel.gif';
-		$toolmenu[1]['title'] = 'Отмена';
+		$toolmenu[1]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[1]['link'] = 'javascript:history.go(-1);';
 
 		cpToolMenu($toolmenu);
@@ -152,12 +152,12 @@ function applet_cron(){
 
                     $mod = cmsCron::getJobById($id);
 
-					 echo '<h3>Редактировать задачу</h3>';
+					 echo '<h3>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ Р·Р°РґР°С‡Сѓ</h3>';
 					 cpAddPathway($mod['job_name'], 'index.php?view=cron&do=edit&id='.$mod['id']);
 		
 		} else {
-					 echo '<h3>Создать задачу</h3>';
-					 cpAddPathway('Создать задачу', 'index.php?view=cron&do=add');
+					 echo '<h3>РЎРѕР·РґР°С‚СЊ Р·Р°РґР°С‡Сѓ</h3>';
+					 cpAddPathway('РЎРѕР·РґР°С‚СЊ Р·Р°РґР°С‡Сѓ', 'index.php?view=cron&do=add');
 		}
 	?>
       <?php if ($error){ ?>
@@ -170,8 +170,8 @@ function applet_cron(){
         <table width="750" border="0" cellpadding="0" cellspacing="10" class="proptable">
             <tr>
                 <td width="300" valign="middle">
-                    <strong>Название: </strong><br/>
-                    <span class="hinttext">Только латинские буквы, цифры и знак подчеркивания</span>
+                    <strong>РќР°Р·РІР°РЅРёРµ: </strong><br/>
+                    <span class="hinttext">РўРѕР»СЊРєРѕ Р»Р°С‚РёРЅСЃРєРёРµ Р±СѓРєРІС‹, С†РёС„СЂС‹ Рё Р·РЅР°Рє РїРѕРґС‡РµСЂРєРёРІР°РЅРёСЏ</span>
                 </td>
                 <td width="" valign="middle">
                     <input name="job_name" type="text" style="width:220px" value="<?php echo @$mod['job_name'];?>" />
@@ -179,8 +179,8 @@ function applet_cron(){
             </tr>
             <tr>
                 <td width="" valign="middle">
-                    <strong>Описание: </strong><br/>
-                    <span class="hinttext">Максимум 200 символов</span>
+                    <strong>РћРїРёСЃР°РЅРёРµ: </strong><br/>
+                    <span class="hinttext">РњР°РєСЃРёРјСѓРј 200 СЃРёРјРІРѕР»РѕРІ</span>
                 </td>
                 <td valign="middle">
                     <input name="comment" type="text" maxlength="200" style="width:400px" value="<?php echo htmlspecialchars($mod['comment']);?>" />
@@ -188,31 +188,31 @@ function applet_cron(){
             </tr>
             <tr>
                 <td width="" valign="middle">
-                    <strong>Задача активна: </strong><br/>
-                    <span class="hinttext">Неактивные задачи не выполняются</span>
+                    <strong>Р—Р°РґР°С‡Р° Р°РєС‚РёРІРЅР°: </strong><br/>
+                    <span class="hinttext">РќРµР°РєС‚РёРІРЅС‹Рµ Р·Р°РґР°С‡Рё РЅРµ РІС‹РїРѕР»РЅСЏСЋС‚СЃСЏ</span>
                 </td>
                 <td valign="middle">
                     <label>
-                        <input name="enabled" type="radio" value="1" <?php if ($mod['is_enabled']) { echo 'checked="checked"'; } ?> /> Да
+                        <input name="enabled" type="radio" value="1" <?php if ($mod['is_enabled']) { echo 'checked="checked"'; } ?> /> Р”Р°
                     </label>
                     <label>
-                        <input name="enabled" type="radio" value="0"  <?php if (!$mod['is_enabled']) { echo 'checked="checked"'; } ?> /> Нет
+                        <input name="enabled" type="radio" value="0"  <?php if (!$mod['is_enabled']) { echo 'checked="checked"'; } ?> /> РќРµС‚
                     </label>
                 </td>
             </tr>
             <tr>
                 <td width="" valign="middle">
-                    <strong>Интервал: </strong><br/>
-                    <span class="hinttext">Периодичность запуска задачи</span>
+                    <strong>РРЅС‚РµСЂРІР°Р»: </strong><br/>
+                    <span class="hinttext">РџРµСЂРёРѕРґРёС‡РЅРѕСЃС‚СЊ Р·Р°РїСѓСЃРєР° Р·Р°РґР°С‡Рё</span>
                 </td>
                 <td valign="middle">
-                    <input name="job_interval" type="text" maxlength="4" style="width:50px" value="<?php echo @$mod['job_interval'];?>" /> ч.
+                    <input name="job_interval" type="text" maxlength="4" style="width:50px" value="<?php echo @$mod['job_interval'];?>" /> С‡.
                 </td>
             </tr>
             <tr>
                 <td width="" valign="middle">
-                    <strong>PHP-файл: </strong><br/>
-                    <span class="hinttext">Пример: <strong>includes/myphp/test.php</strong></span><br/>
+                    <strong>PHP-С„Р°Р№Р»: </strong><br/>
+                    <span class="hinttext">РџСЂРёРјРµСЂ: <strong>includes/myphp/test.php</strong></span><br/>
                 </td>
                 <td valign="middle">
                     <input name="custom_file" type="text" maxlength="250" style="width:220px" value="<?php echo @$mod['custom_file'];?>" />
@@ -220,7 +220,7 @@ function applet_cron(){
             </tr>
             <tr>
                 <td width="" valign="middle">
-                    <strong>Компонент: </strong><br/>
+                    <strong>РљРѕРјРїРѕРЅРµРЅС‚: </strong><br/>
                 </td>
                 <td valign="middle">
                     <input name="component" type="text" maxlength="250" style="width:220px" value="<?php echo @$mod['component'];?>" />
@@ -228,7 +228,7 @@ function applet_cron(){
             </tr>
             <tr>
                 <td width="" valign="middle">
-                    <strong>Метод модели: </strong><br/>
+                    <strong>РњРµС‚РѕРґ РјРѕРґРµР»Рё: </strong><br/>
                 </td>
                 <td valign="middle">
                     <input name="model_method" type="text" maxlength="250" style="width:220px" value="<?php echo @$mod['model_method'];?>" />
@@ -236,10 +236,10 @@ function applet_cron(){
             </tr>
             <tr>
                 <td width="" valign="middle">
-                    <strong>Класс: </strong><br/>
+                    <strong>РљР»Р°СЃСЃ: </strong><br/>
                     <span class="hinttext">
-                        <span style="color:#666;font-family: mono">файл|класс</span>, пример: <strong>actions|cmsActions</strong> или<br/>
-                        <span style="color:#666;font-family: mono">класс</span>, пример: <strong>cmsDatabase</strong>
+                        <span style="color:#666;font-family: mono">С„Р°Р№Р»|РєР»Р°СЃСЃ</span>, РїСЂРёРјРµСЂ: <strong>actions|cmsActions</strong> РёР»Рё<br/>
+                        <span style="color:#666;font-family: mono">РєР»Р°СЃСЃ</span>, РїСЂРёРјРµСЂ: <strong>cmsDatabase</strong>
                     </span>
                 </td>
                 <td valign="top">
@@ -248,7 +248,7 @@ function applet_cron(){
             </tr>
             <tr>
                 <td width="" valign="middle">
-                    <strong>Статический метод класса: </strong><br/>
+                    <strong>РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ РєР»Р°СЃСЃР°: </strong><br/>
                 </td>
                 <td valign="middle">
                     <input name="class_method" type="text" maxlength="50" style="width:220px" value="<?php echo @$mod['class_method'];?>" />
@@ -258,13 +258,13 @@ function applet_cron(){
         <p>
 		  <?php if($do=='edit'){ ?>
 	          <input name="do" type="hidden" id="do" value="update" />
-	          <input name="add_mod" type="submit" id="add_mod" value="Сохранить задачу" />
+	          <input name="add_mod" type="submit" id="add_mod" value="РЎРѕС…СЂР°РЅРёС‚СЊ Р·Р°РґР°С‡Сѓ" />
 		  <?php } else { ?>
 	          <input name="do" type="hidden" id="do" value="submit" />	  
-	          <input name="add_mod" type="submit" id="add_mod" value="Создать задачу" />
+	          <input name="add_mod" type="submit" id="add_mod" value="РЎРѕР·РґР°С‚СЊ Р·Р°РґР°С‡Сѓ" />
 		  <?php } ?>
           <span style="margin-top:15px">
-          <input name="back2" type="button" id="back2" value="Отмена" onclick="window.history.back();"/>
+          <input name="back2" type="button" id="back2" value="РћС‚РјРµРЅР°" onclick="window.history.back();"/>
           </span>
           <?php
 		  	if ($do=='edit'){ 

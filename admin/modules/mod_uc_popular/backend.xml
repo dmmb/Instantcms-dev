@@ -2,23 +2,23 @@
 <backend>    
     <module>
         <id>mod_uc_popular</id>
-        <title>Популярное в каталоге</title>
+        <title>РџРѕРїСѓР»СЏСЂРЅРѕРµ РІ РєР°С‚Р°Р»РѕРіРµ</title>
     </module>
     <params>
-        <param type="number" name="num" title="Количество популярных" units="шт." default="5" />
-        <param type="list" name="sort" title="Критерий популярности">
-            <option title="Рейтинг" value="rating" />
-            <option title="Просмотры" value="hits" />
+        <param type="number" name="num" title="РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕРїСѓР»СЏСЂРЅС‹С…" units="С€С‚." default="5" />
+        <param type="list" name="sort" title="РљСЂРёС‚РµСЂРёР№ РїРѕРїСѓР»СЏСЂРЅРѕСЃС‚Рё">
+            <option title="Р РµР№С‚РёРЅРі" value="rating" />
+            <option title="РџСЂРѕСЃРјРѕС‚СЂС‹" value="hits" />
         </param>
-        <param type="list" name="showtype" title="Режим вывода">
-            <option title="Галерея" value="thumb" />
-            <option title="Список" value="list" />
+        <param type="list" name="showtype" title="Р РµР¶РёРј РІС‹РІРѕРґР°">
+            <option title="Р“Р°Р»РµСЂРµСЏ" value="thumb" />
+            <option title="РЎРїРёСЃРѕРє" value="list" />
         </param>
-        <param type="number" name="showf" title="Показывать полей" hint="для режима &amp;laquo;Список&amp;raquo;" units="шт." default="5" />
-        <param type="list_db" name="cat_id" title="Популярные из рубрики" src="cms_uc_cats" src_title="title" src_value="id" tree="1">
-            <option title="-- Все рубрики --" value="0" />
+        <param type="number" name="showf" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РїРѕР»РµР№" hint="РґР»СЏ СЂРµР¶РёРјР° &amp;laquo;РЎРїРёСЃРѕРє&amp;raquo;" units="С€С‚." default="5" />
+        <param type="list_db" name="cat_id" title="РџРѕРїСѓР»СЏСЂРЅС‹Рµ РёР· СЂСѓР±СЂРёРєРё" src="cms_uc_cats" src_title="title" src_value="id" tree="1">
+            <option title="-- Р’СЃРµ СЂСѓР±СЂРёРєРё --" value="0" />
         </param>
-        <param type="flag" name="subs" title="Вместе с подрубриками" default="off" />
-        <param type="flag" name="fulllink" title="Показывать ссылку на каталог" default="on" />
+        <param type="flag" name="subs" title="Р’РјРµСЃС‚Рµ СЃ РїРѕРґСЂСѓР±СЂРёРєР°РјРё" default="off" />
+        <param type="flag" name="fulllink" title="РџРѕРєР°Р·С‹РІР°С‚СЊ СЃСЃС‹Р»РєСѓ РЅР° РєР°С‚Р°Р»РѕРі" default="on" />
     </params>
 </backend>

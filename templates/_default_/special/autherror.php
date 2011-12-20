@@ -1,7 +1,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-        <title>Ошибка авторизации</title>
+        <title>РћС€РёР±РєР° Р°РІС‚РѕСЂРёР·Р°С†РёРё</title>
         <meta http-equiv="refresh" content="5;URL=/">
         <style type="text/css">
             * { font-family: Arial; }
@@ -20,10 +20,10 @@
                                 <img src="/templates/_default_/special/images/autherror.png" />
                             </td>
                             <td>
-                                <h2>Ошибка авторизации</h2>
-                                <p>Проверьте правильность ввода имени и пароля.</p>
-                                <p>Через несколько секунд вы будете перенаправлены.</p>
-                                <p><a href="javascript:window.history.go(-1);">Назад</a></p>
+                                <h2>РћС€РёР±РєР° Р°РІС‚РѕСЂРёР·Р°С†РёРё</h2>
+                                <p>РџСЂРѕРІРµСЂСЊС‚Рµ РїСЂР°РІРёР»СЊРЅРѕСЃС‚СЊ РІРІРѕРґР° РёРјРµРЅРё Рё РїР°СЂРѕР»СЏ.</p>
+                                <p>Р§РµСЂРµР· РЅРµСЃРєРѕР»СЊРєРѕ СЃРµРєСѓРЅРґ РІС‹ Р±СѓРґРµС‚Рµ РїРµСЂРµРЅР°РїСЂР°РІР»РµРЅС‹.</p>
+                                <p><a href="javascript:window.history.go(-1);">РќР°Р·Р°Рґ</a></p>
                             </td>
                         </tr>
                     </table>

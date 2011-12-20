@@ -1,6 +1,6 @@
 function sendQuestion(){
 	if($('#faq_message').attr('value').length < 10){
-	 	alert('Âàø âîïðîñ ñëèøêîì êîðîòêèé!');	
+	 	alert('Ð’Ð°Ñˆ Ð²Ð¾Ð¿Ñ€Ð¾Ñ ÑÐ»Ð¸ÑˆÐºÐ¾Ð¼ ÐºÐ¾Ñ€Ð¾Ñ‚ÐºÐ¸Ð¹!');	
 	} else {
 		document.questform.submit();	
 	}	

@@ -20,10 +20,10 @@ function mod_template($module_id){
 		
 		echo '<form name="templform" action="/modules/mod_template/set.php" method="post">';
 			echo '<select name="template" id="template" style="width:100%">
-					<option value="0">По-умолчанию</option>';
+					<option value="0">РџРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ</option>';
 					echo $inCore->templatesList($template);
 			echo '</select><br/>';
-			echo '<input style="margin-top:5px" type="submit" value="Выбрать"/>';			
+			echo '<input style="margin-top:5px" type="submit" value="Р’С‹Р±СЂР°С‚СЊ"/>';			
 		echo '</form>'; 
 			
 		return true;

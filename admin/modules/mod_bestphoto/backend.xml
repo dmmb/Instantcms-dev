@@ -2,43 +2,43 @@
 <backend>    
     <module>
         <id>mod_bestphoto</id>
-        <title>Популярные фотографии</title>
+        <title>РџРѕРїСѓР»СЏСЂРЅС‹Рµ С„РѕС‚РѕРіСЂР°С„РёРё</title>
     </module>
     <params>
 
-        <param type="number" name="shownum" title="Количество фотографий" units="шт." default="4" />
+        <param type="number" name="shownum" title="РљРѕР»РёС‡РµСЃС‚РІРѕ С„РѕС‚РѕРіСЂР°С„РёР№" units="С€С‚." default="4" />
 
-        <param type="number" name="maxcols" title="Число колонок для вывода" units="шт." default="4" />
+        <param type="number" name="maxcols" title="Р§РёСЃР»Рѕ РєРѕР»РѕРЅРѕРє РґР»СЏ РІС‹РІРѕРґР°" units="С€С‚." default="4" />
 
-        <param type="list_db" name="album_id" title="Фотографии из альбома" src="cms_photo_albums" src_title="title" src_value="id" src_where="NSDiffer='' AND NSLevel>0" tree="1">
-            <option title="Все альбомы" value="0" />
+        <param type="list_db" name="album_id" title="Р¤РѕС‚РѕРіСЂР°С„РёРё РёР· Р°Р»СЊР±РѕРјР°" src="cms_photo_albums" src_title="title" src_value="id" src_where="NSDiffer='' AND NSLevel>0" tree="1">
+            <option title="Р’СЃРµ Р°Р»СЊР±РѕРјС‹" value="0" />
         </param>
 
-        <param type="list" name="showtype" title="Режим вывода">
-            <option title="Подробный" value="full" />
-            <option title="Только фото" value="short" />
+        <param type="list" name="showtype" title="Р РµР¶РёРј РІС‹РІРѕРґР°">
+            <option title="РџРѕРґСЂРѕР±РЅС‹Р№" value="full" />
+            <option title="РўРѕР»СЊРєРѕ С„РѕС‚Рѕ" value="short" />
         </param>
 
-        <param type="list" name="sort" title="Критерий популярности">
-            <option title="Рейтинг" value="rating" />
-            <option title="Просмотры" value="hits" />
+        <param type="list" name="sort" title="РљСЂРёС‚РµСЂРёР№ РїРѕРїСѓР»СЏСЂРЅРѕСЃС‚Рё">
+            <option title="Р РµР№С‚РёРЅРі" value="rating" />
+            <option title="РџСЂРѕСЃРјРѕС‚СЂС‹" value="hits" />
         </param>
-        <param type="list" name="whatphoto" title="Какие фото выводить">
-            <option title="Все" value="all" />
-            <option title="За день" value="day" />
-			<option title="За неделю" value="week" />
-			<option title="За месяц" value="month" />
+        <param type="list" name="whatphoto" title="РљР°РєРёРµ С„РѕС‚Рѕ РІС‹РІРѕРґРёС‚СЊ">
+            <option title="Р’СЃРµ" value="all" />
+            <option title="Р—Р° РґРµРЅСЊ" value="day" />
+			<option title="Р—Р° РЅРµРґРµР»СЋ" value="week" />
+			<option title="Р—Р° РјРµСЃСЏС†" value="month" />
         </param>
 
-        <param type="flag" name="showalbum" title="Показывать название альбома" default="on" />
+        <param type="flag" name="showalbum" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РЅР°Р·РІР°РЅРёРµ Р°Р»СЊР±РѕРјР°" default="on" />
 
-        <param type="flag" name="showcom" title="Показывать число комментариев" default="on" />
+        <param type="flag" name="showcom" title="РџРѕРєР°Р·С‹РІР°С‚СЊ С‡РёСЃР»Рѕ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ" default="on" />
 		
-		<param type="flag" name="showdate" title="Показывать даты" default="off" />
+		<param type="flag" name="showdate" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РґР°С‚С‹" default="off" />
 
-        <param type="flag" name="showrating" title="Показывать рейтинг (просмотры)" default="on" />
+        <param type="flag" name="showrating" title="РџРѕРєР°Р·С‹РІР°С‚СЊ СЂРµР№С‚РёРЅРі (РїСЂРѕСЃРјРѕС‚СЂС‹)" default="on" />
 
-        <param type="flag" name="showmore" title="Показывать ссылку на галерею" default="on" />
+        <param type="flag" name="showmore" title="РџРѕРєР°Р·С‹РІР°С‚СЊ СЃСЃС‹Р»РєСѓ РЅР° РіР°Р»РµСЂРµСЋ" default="on" />
 
     </params>
 </backend>

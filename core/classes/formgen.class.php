@@ -44,9 +44,9 @@ class cmsFormGen {
                 $param['hint'] = iconv('utf-8', 'cp1251', (string)$param['hint']);
             }
 
-            //получаем значение параметра
+            //РїРѕР»СѓС‡Р°РµРј Р·РЅР°С‡РµРЅРёРµ РїР°СЂР°РјРµС‚СЂР°
             $value = $this->getParamValue($param['name'], (isset($param['default']) ? $param['default'] : ''));
-            //если это массив, склеиваем в строку
+            //РµСЃР»Рё СЌС‚Рѕ РјР°СЃСЃРёРІ, СЃРєР»РµРёРІР°РµРј РІ СЃС‚СЂРѕРєСѓ
             if (is_array($value)){ $value = implode('|', $value); }
 
             $param['value'] = iconv('cp1251', 'utf-8', $value);

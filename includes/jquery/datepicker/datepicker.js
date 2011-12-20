@@ -1020,12 +1020,12 @@
 	};
 	// localisable text
 	$.dpText = {
-		TEXT_PREV_YEAR		:	'Предыдущий год',
-		TEXT_PREV_MONTH		:	'Предыдущий месяц',
-		TEXT_NEXT_YEAR		:	'Следующий год',
-		TEXT_NEXT_MONTH		:	'Следующий месяц',
-		TEXT_CLOSE			:	'Закрыть',
-		TEXT_CHOOSE_DATE	:	'Выбрать дату'
+		TEXT_PREV_YEAR		:	'РџСЂРµРґС‹РґСѓС‰РёР№ РіРѕРґ',
+		TEXT_PREV_MONTH		:	'РџСЂРµРґС‹РґСѓС‰РёР№ РјРµСЃСЏС†',
+		TEXT_NEXT_YEAR		:	'РЎР»РµРґСѓСЋС‰РёР№ РіРѕРґ',
+		TEXT_NEXT_MONTH		:	'РЎР»РµРґСѓСЋС‰РёР№ РјРµСЃСЏС†',
+		TEXT_CLOSE			:	'Р—Р°РєСЂС‹С‚СЊ',
+		TEXT_CHOOSE_DATE	:	'Р’С‹Р±СЂР°С‚СЊ РґР°С‚Сѓ'
 	};
 	// version
 	$.dpVersion = '$Id: jquery.datePicker.js 3739 2007-10-25 13:55:30Z kelvin.luck $';

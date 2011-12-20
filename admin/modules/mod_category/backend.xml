@@ -2,15 +2,15 @@
 <backend>    
     <module>
         <id>mod_category</id>
-        <title>Разделы сайта</title>
+        <title>Р Р°Р·РґРµР»С‹ СЃР°Р№С‚Р°</title>
     </module>
     <params>
 
-        <param type="flag" name="showdesc" title="Показывать описания" default="on" />
+        <param type="flag" name="showdesc" title="РџРѕРєР°Р·С‹РІР°С‚СЊ РѕРїРёСЃР°РЅРёСЏ" default="on" />
 
-        <param type="list_db" name="category_id" title="Родительский раздел" src="cms_category" src_title="title" src_value="id" tree="1" />
+        <param type="list_db" name="category_id" title="Р РѕРґРёС‚РµР»СЊСЃРєРёР№ СЂР°Р·РґРµР»" src="cms_category" src_title="title" src_value="id" tree="1" />
 
-        <param type="string" name="icon" title="Иконка" default="/images/markers/folder.png" hint="Оставьте поле пустым, если иконка не нужна" />
+        <param type="string" name="icon" title="РРєРѕРЅРєР°" default="/images/markers/folder.png" hint="РћСЃС‚Р°РІСЊС‚Рµ РїРѕР»Рµ РїСѓСЃС‚С‹Рј, РµСЃР»Рё РёРєРѕРЅРєР° РЅРµ РЅСѓР¶РЅР°" />
 
     </params>
 </backend>

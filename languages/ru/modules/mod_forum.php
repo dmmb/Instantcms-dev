@@ -17,12 +17,12 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * e-mail: firs.yura@gmail.com
  * site: firs.org.ua
  */
-$_LANG['FORUM_START_THREAD']        ='íà÷èíàåò òåìó';
-$_LANG['FORUM_REPLY_THREAD']        ='îòâå÷àåò â òåìå';
-$_LANG['FORUM_NOT_THREAD']          ='Íåò òåì íà ôîðóìàõ.';
+$_LANG['FORUM_START_THREAD']        ='Ð½Ð°Ñ‡Ð¸Ð½Ð°ÐµÑ‚ Ñ‚ÐµÐ¼Ñƒ';
+$_LANG['FORUM_REPLY_THREAD']        ='Ð¾Ñ‚Ð²ÐµÑ‡Ð°ÐµÑ‚ Ð² Ñ‚ÐµÐ¼Ðµ';
+$_LANG['FORUM_NOT_THREAD']          ='ÐÐµÑ‚ Ñ‚ÐµÐ¼ Ð½Ð° Ñ„Ð¾Ñ€ÑƒÐ¼Ð°Ñ….';
 // Template
-$_LANG['FORUM_AUTHOR']              ='Àâòîð';
-$_LANG['FORUM_LAST_MESS']           ='Ïîñëåäíåå ñîîáùåíèå';
-$_LANG['FORUM_HIDE_THREAD_TEXT']    ='Ñêðûòàÿ òåìà - âèäíà òîëüêî âàøåé ãðóïïå';
-$_LANG['FORUM_ON_FORUM']            ='íà ôîðóìå';
+$_LANG['FORUM_AUTHOR']              ='ÐÐ²Ñ‚Ð¾Ñ€';
+$_LANG['FORUM_LAST_MESS']           ='ÐŸÐ¾ÑÐ»ÐµÐ´Ð½ÐµÐµ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ';
+$_LANG['FORUM_HIDE_THREAD_TEXT']    ='Ð¡ÐºÑ€Ñ‹Ñ‚Ð°Ñ Ñ‚ÐµÐ¼Ð° - Ð²Ð¸Ð´Ð½Ð° Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð²Ð°ÑˆÐµÐ¹ Ð³Ñ€ÑƒÐ¿Ð¿Ðµ';
+$_LANG['FORUM_ON_FORUM']            ='Ð½Ð° Ñ„Ð¾Ñ€ÑƒÐ¼Ðµ';
 ?>

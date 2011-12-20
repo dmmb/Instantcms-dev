@@ -38,12 +38,12 @@ function blogs(){
     define('IS_BILLING', $inCore->isComponentInstalled('billing'));
     if (IS_BILLING) { $inCore->loadClass('billing'); }
 		
-	//Загрузка настроек блогов
+	//Р—Р°РіСЂСѓР·РєР° РЅР°СЃС‚СЂРѕРµРє Р±Р»РѕРіРѕРІ
 	$cfg = $inCore->loadComponentConfig('blogs');
-	// Проверяем включени ли компонент
+	// РџСЂРѕРІРµСЂСЏРµРј РІРєР»СЋС‡РµРЅРё Р»Рё РєРѕРјРїРѕРЅРµРЅС‚
 	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 	
-	//Значения настроек по-умолчанию
+	//Р—РЅР°С‡РµРЅРёСЏ РЅР°СЃС‚СЂРѕРµРє РїРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ
 	$cfg['fa_ext'] = 'gif jpeg jpg png bmp';		
 	if (!isset($cfg['rss_all'])) { $cfg['rss_all'] = 1; }
 	if (!isset($cfg['rss_one'])) { $cfg['rss_one'] = 1; }
@@ -52,13 +52,13 @@ function blogs(){
 	if (!isset($cfg['update_seo_link'])) { $cfg['update_seo_link'] = 0; }
 	if (!isset($cfg['update_seo_link_blog'])) { $cfg['update_seo_link_blog'] = 0; }
 	
-	//Получаем параметры
+	//РџРѕР»СѓС‡Р°РµРј РїР°СЂР°РјРµС‚СЂС‹
 	$id 		= $inCore->request('id', 'int', 0);	
 	$bloglink   = $inCore->request('bloglink', 'str', '');
 	$seolink    = $inCore->request('seolink', 'str', '');
 	$do 		= $inCore->request('do', 'str', 'latest');
 
-    //Определяем тип хозяина блога, к которому обращаемся
+    //РћРїСЂРµРґРµР»СЏРµРј С‚РёРї С…РѕР·СЏРёРЅР° Р±Р»РѕРіР°, Рє РєРѕС‚РѕСЂРѕРјСѓ РѕР±СЂР°С‰Р°РµРјСЃСЏ
 	if ($inCore->inRequest('ownertype')){
 		$ownertype = $inCore->request('ownertype', 'str'); 
 		$_SESSION['blogs_ownertype'] = $ownertype;
@@ -68,7 +68,7 @@ function blogs(){
 		} else { $ownertype = 'all'; }
 	}
 
-    //Если нужно, загружаем данные об указанном во входных параметрах блоге
+    //Р•СЃР»Рё РЅСѓР¶РЅРѕ, Р·Р°РіСЂСѓР¶Р°РµРј РґР°РЅРЅС‹Рµ РѕР± СѓРєР°Р·Р°РЅРЅРѕРј РІРѕ РІС…РѕРґРЅС‹С… РїР°СЂР°РјРµС‚СЂР°С… Р±Р»РѕРіРµ
 	if ($do!='view'){
 
         if ($bloglink){
@@ -89,20 +89,20 @@ function blogs(){
 
 	}
 
-////////// СОЗДАНИЕ БЛОГА ////////////////////////////////////////////////////////////////////////////////////////
+////////// РЎРћР—Р”РђРќРР• Р‘Р›РћР“Рђ ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='create'){
 
-    //Проверяем авторизацию
+    //РџСЂРѕРІРµСЂСЏРµРј Р°РІС‚РѕСЂРёР·Р°С†РёСЋ
     if ( !$inUser->id ){ $inCore->redirectBack(); }
 
-    //Если у пользователя уже есть блог, то выходим
+    //Р•СЃР»Рё Сѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ СѓР¶Рµ РµСЃС‚СЊ Р±Р»РѕРі, С‚Рѕ РІС‹С…РѕРґРёРј
     if ($model->getUserBlogId($inUser->id)) { $inCore->redirectBack(); }
 
 	$inPage->addHeadJS('components/blogs/js/blog.js');
 	$inPage->addPathway($_LANG['BLOGS'], '/blogs');
 	$inPage->addPathway($_LANG['PATH_CREATING_BLOG']);
 
-    //Показ формы создания блога
+    //РџРѕРєР°Р· С„РѕСЂРјС‹ СЃРѕР·РґР°РЅРёСЏ Р±Р»РѕРіР°
     if (!$inCore->inRequest('goadd')){
 
         if (IS_BILLING){ cmsBilling::checkBalance('blogs', 'add_blog'); }
@@ -110,10 +110,10 @@ if ($do=='create'){
         $inPage->setTitle($_LANG['CREATE_BLOG']);
         $inPage->backButton(false);
 
-        //только для друзей, по-умолчанию?
+        //С‚РѕР»СЊРєРѕ РґР»СЏ РґСЂСѓР·РµР№, РїРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ?
         $friends = $usr['allow_who'] == 'friends' ? 1 : 0;
 
-        //Учитываем ограничения по карме
+        //РЈС‡РёС‚С‹РІР°РµРј РѕРіСЂР°РЅРёС‡РµРЅРёСЏ РїРѕ РєР°СЂРјРµ
         $min_karma_private  = '';
         $min_karma_public   = '';
         if ($cfg['min_karma'] && !$inCore->userIsAdmin($inUser->id)){
@@ -121,7 +121,7 @@ if ($do=='create'){
             if ($cfg['min_karma_public']  >0) { $min_karma_public   = '('.$_LANG['BLOG_KARMA_NEED'].' '.$cfg['min_karma_public'] .')';	}
         }
 
-        //выводим форму
+        //РІС‹РІРѕРґРёРј С„РѕСЂРјСѓ
         $smarty = $inCore->initSmarty('components', 'com_blog_create.tpl');
         $smarty->assign('friends', $friends);
         $smarty->assign('min_karma_private', $min_karma_private);
@@ -129,7 +129,7 @@ if ($do=='create'){
         $smarty->display('com_blog_create.tpl');
     }
 
-    //Сам процесс создания блога
+    //РЎР°Рј РїСЂРѕС†РµСЃСЃ СЃРѕР·РґР°РЅРёСЏ Р±Р»РѕРіР°
     if ($inCore->inRequest('goadd')){
 
         $error_msg = '';
@@ -139,10 +139,10 @@ if ($do=='create'){
         $allow_who  = $inCore->request('allow_who', 'str', 'all');
         $ownertype  = $inCore->request('ownertype', 'str', 'single');
 
-        //Проверяем название
+        //РџСЂРѕРІРµСЂСЏРµРј РЅР°Р·РІР°РЅРёРµ
         if (strlen($title)<5) { $error_msg .= '<p>'.$_LANG['BLOG_ERR_TITLE'].'</p>'; }
 
-        //Проверяем хватает ли кармы, но только если это не админ
+        //РџСЂРѕРІРµСЂСЏРµРј С…РІР°С‚Р°РµС‚ Р»Рё РєР°СЂРјС‹, РЅРѕ С‚РѕР»СЊРєРѕ РµСЃР»Рё СЌС‚Рѕ РЅРµ Р°РґРјРёРЅ
         if ($cfg['min_karma'] && !$inCore->userIsAdmin($inUser->id)){
             $user_karma = cmsUser::getKarma($inUser->id);
             if ($ownertype=='single' && ($user_karma < $cfg['min_karma_private']))
@@ -151,12 +151,12 @@ if ($do=='create'){
                 $error_msg .= '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/'.$user_id.'/karma.html">'.$_LANG['BLOG_KARMS'].'</a> '.$_LANG['FOR_CREATE_TEAM_BLOG'].' &mdash; '.$cfg['min_karma_public'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
         }
 
-        //Если ошибки не были найдены
+        //Р•СЃР»Рё РѕС€РёР±РєРё РЅРµ Р±С‹Р»Рё РЅР°Р№РґРµРЅС‹
         if(!$error_msg){
-            //Добавляем блог в базу
+            //Р”РѕР±Р°РІР»СЏРµРј Р±Р»РѕРі РІ Р±Р°Р·Сѓ
             $blog_id = $model->addBlog(array('user_id'=>$user_id, 'title'=>$title, 'allow_who'=>$allow_who, 'ownertype'=>$ownertype));
             $blog_link = $inDB->get_field('cms_blogs', "id={$blog_id}", 'seolink');
-            //регистрируем событие
+            //СЂРµРіРёСЃС‚СЂРёСЂСѓРµРј СЃРѕР±С‹С‚РёРµ
             cmsActions::log('add_blog', array(
                 'object' => $title,
                 'object_url' => $model->getBlogURL(null, $blog_link),
@@ -174,7 +174,7 @@ if ($do=='create'){
 
         }
 
-        //Если найдены ошибки
+        //Р•СЃР»Рё РЅР°Р№РґРµРЅС‹ РѕС€РёР±РєРё
         if($error_msg){
 			cmsCore::addSessionMessage($error_msg, 'error');
 			$inCore->redirect('/blogs/createblog.html');
@@ -183,35 +183,35 @@ if ($do=='create'){
 	
 
 }
-////////// НАСТРОЙКИ БЛОГА ////////////////////////////////////////////////////////////////////////////////////////
+////////// РќРђРЎРўР РћР™РљР Р‘Р›РћР“Рђ ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='config'){
 
-    //Проверяем авторизацию пользователя
+    //РџСЂРѕРІРµСЂСЏРµРј Р°РІС‚РѕСЂРёР·Р°С†РёСЋ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
     if ( !$inUser->id ) { $inCore->redirectBack(); }
 
-    //Получаем ID пользователя
+    //РџРѕР»СѓС‡Р°РµРј ID РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
     $user_id = $inUser->id;
 
-	//Проверяем является пользователь хозяином блога или админом
+	//РџСЂРѕРІРµСЂСЏРµРј СЏРІР»СЏРµС‚СЃСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ С…РѕР·СЏРёРЅРѕРј Р±Р»РѕРіР° РёР»Рё Р°РґРјРёРЅРѕРј
     if ( $blog['user_id']!=$inUser->id && !$inUser->is_admin ) { $inCore->redirectBack(); }
 
     $inPage->addPathway($blog['title'], $model->getBlogURL(null, $blog['seolink']));
 	$inPage->addPathway($_LANG['CONFIG_BLOG']);
     $inPage->addHeadJS('components/blogs/js/blog.js');
 
-    //Если нет запроса на сохранение, показываем форму настроек блога
+    //Р•СЃР»Рё РЅРµС‚ Р·Р°РїСЂРѕСЃР° РЅР° СЃРѕС…СЂР°РЅРµРЅРёРµ, РїРѕРєР°Р·С‹РІР°РµРј С„РѕСЂРјСѓ РЅР°СЃС‚СЂРѕРµРє Р±Р»РѕРіР°
     if ( !$inCore->inRequest('goadd') ){
         $inPage->setTitle($_LANG['CONFIG_BLOG']);
         $inPage->printHeading($_LANG['CONFIG_BLOG']);
         $inPage->backButton(false);
-        //Получаем список авторов блога
+        //РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє Р°РІС‚РѕСЂРѕРІ Р±Р»РѕРіР°
         $authors = blogAuthors($blog['id']);
-        //Получаем ограничения по карме
+        //РџРѕР»СѓС‡Р°РµРј РѕРіСЂР°РЅРёС‡РµРЅРёСЏ РїРѕ РєР°СЂРјРµ
         if ($cfg['min_karma'] && !$inCore->userIsAdmin($inUser->id)){
             if ($cfg['min_karma_private'] >0 && $blog['owner_type']!='single') { $min_karma_private = '('.$_LANG['BLOG_KARMA_NEED'].' '.$cfg['min_karma_private'].')';	} else { $min_karma_private = ''; }
             if ($cfg['min_karma_public']  >0 && $blog['owner_type']!='multi') { $min_karma_public = '('.$_LANG['BLOG_KARMA_NEED'].' '.$cfg['min_karma_public'] .')';	} else { $min_karma_public = ''; }
         }
-        //Выводим форму
+        //Р’С‹РІРѕРґРёРј С„РѕСЂРјСѓ
         $smarty = $inCore->initSmarty('components', 'com_blog_config.tpl');
         $smarty->assign('blog', $blog);
         $smarty->assign('id', $blog['id']);
@@ -222,12 +222,12 @@ if ($do=='config'){
         $smarty->display('com_blog_config.tpl');
     }
 
-    //Если пришел запрос на сохранение
+    //Р•СЃР»Рё РїСЂРёС€РµР» Р·Р°РїСЂРѕСЃ РЅР° СЃРѕС…СЂР°РЅРµРЅРёРµ
     if ( $inCore->inRequest('goadd') ){
 
         $error_msg 	= '';
 
-        //Получаем настройки
+        //РџРѕР»СѓС‡Р°РµРј РЅР°СЃС‚СЂРѕР№РєРё
         $title 		= $inCore->request('title', 'str');
         $allow_who 	= $inCore->request('allow_who', 'str', 'all');
         $ownertype 	= $inCore->request('ownertype', 'str', 'single');
@@ -235,10 +235,10 @@ if ($do=='config'){
         $forall 	= $inCore->request('forall', 'int', 1);
         $showcats 	= $inCore->request('showcats', 'int', 1);
 
-        //Проверяем настройки
+        //РџСЂРѕРІРµСЂСЏРµРј РЅР°СЃС‚СЂРѕР№РєРё
         if (strlen($title)<5) { $error_msg .= $_LANG['BLOG_ERR_TITLE']; }
 
-        //Проверяем ограничения по карме (для смены типа блога)
+        //РџСЂРѕРІРµСЂСЏРµРј РѕРіСЂР°РЅРёС‡РµРЅРёСЏ РїРѕ РєР°СЂРјРµ (РґР»СЏ СЃРјРµРЅС‹ С‚РёРїР° Р±Р»РѕРіР°)
         if ($cfg['min_karma'] && !$inCore->userIsAdmin($inUser->id)){
             $user_karma = cmsUser::getKarma($inUser->id);
             if ($ownertype=='single' && ($user_karma < $cfg['min_karma_private']))
@@ -247,23 +247,23 @@ if ($do=='config'){
                 $error_msg .= '<p>'.$_LANG['BLOG_YOU_NEED'].' <a href="/users/'.$user_id.'/karma.html">'.$_LANG['KARMS'].'</a> '.$_LANG['FOR_CREATE_TEAM_BLOG'].' &mdash; '.$cfg['min_karma_public'].', '.$_LANG['BLOG_HEAVING'].' &mdash; '.$user_karma.'.</p>';
         }
 
-        //Если ошибки не найдены
+        //Р•СЃР»Рё РѕС€РёР±РєРё РЅРµ РЅР°Р№РґРµРЅС‹
         if(!$error_msg){
-            //Получаем новый список авторов блога
+            //РџРѕР»СѓС‡Р°РµРј РЅРѕРІС‹Р№ СЃРїРёСЃРѕРє Р°РІС‚РѕСЂРѕРІ Р±Р»РѕРіР°
             $authors = $inCore->request('authorslist', 'array_int');
-            //сохраняем авторов
+            //СЃРѕС…СЂР°РЅСЏРµРј Р°РІС‚РѕСЂРѕРІ
             $model->updateBlogAuthors($blog['id'], $authors);
-            //сохраняем настройки блога
+            //СЃРѕС…СЂР°РЅСЏРµРј РЅР°СЃС‚СЂРѕР№РєРё Р±Р»РѕРіР°
             $blog['seolink_new'] = $model->updateBlog($blog['id'], array('title'=>$title, 'allow_who'=>$allow_who, 'showcats'=>$showcats, 'ownertype'=>$ownertype, 'premod'=>$premod, 'forall'=>$forall), $cfg['update_seo_link_blog']);
 			
 			cmsActions::updateLog('add_post', array('target' => $title), 0, $blog['id']);
 			
-            //Перенаправляем на главную страницу блога
+            //РџРµСЂРµРЅР°РїСЂР°РІР»СЏРµРј РЅР° РіР»Р°РІРЅСѓСЋ СЃС‚СЂР°РЅРёС†Сѓ Р±Р»РѕРіР°
 			$blog_url = $cfg['update_seo_link_blog'] ? $model->getBlogURL(null, $blog['seolink_new']) : $model->getBlogURL(null, $blog['seolink']);
             $inCore->redirect($blog_url);
         }
 
-        //Если найдены ошибки
+        //Р•СЃР»Рё РЅР°Р№РґРµРЅС‹ РѕС€РёР±РєРё
         if($error_msg) {
 			cmsCore::addSessionMessage($error_msg, 'error');
 			$inCore->redirect('/blogs/'.$blog['id'].'/editblog.html');
@@ -272,43 +272,43 @@ if ($do=='config'){
     }
 	
 }
-////////// СПИСОК БЛОГОВ ////////////////////////////////////////////////////////////////////////////////////////
+////////// РЎРџРРЎРћРљ Р‘Р›РћР“РћР’ ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){
 
-	// rss в адресной строке
+	// rss РІ Р°РґСЂРµСЃРЅРѕР№ СЃС‚СЂРѕРєРµ
 	$inPage->addHead('<link rel="alternate" type="application/rss+xml" title="'.$_LANG['BLOGS'].'" href="'.HOST.'/rss/blogs/all/feed.rss">');
 
-    //Получаем номер страницы и число записей на одну страницу
+    //РџРѕР»СѓС‡Р°РµРј РЅРѕРјРµСЂ СЃС‚СЂР°РЅРёС†С‹ Рё С‡РёСЃР»Рѕ Р·Р°РїРёСЃРµР№ РЅР° РѕРґРЅСѓ СЃС‚СЂР°РЅРёС†Сѓ
     $perpage        = isset($cfg['perpage_blog']) ? $cfg['perpage_blog'] : 15;
     $page           = $inCore->request('page', 'int', 1);
 
-    //Получаем ID пользователя
+    //РџРѕР»СѓС‡Р°РµРј ID РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 	$user_id 		= $inUser->id;
 
-    //Считаем количество персональных и коллективных блогов
+    //РЎС‡РёС‚Р°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ РїРµСЂСЃРѕРЅР°Р»СЊРЅС‹С… Рё РєРѕР»Р»РµРєС‚РёРІРЅС‹С… Р±Р»РѕРіРѕРІ
 	$single_blogs	= $model->getSingleBlogsCount();
 	$multi_blogs 	= $model->getMultiBlogsCount();
 	$club_blogs 	= $model->getClubsBlogsCount();
 	$total_blogs 	= $single_blogs + $multi_blogs + $club_blogs;
 
-    //Получаем список блогов
+    //РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє Р±Р»РѕРіРѕРІ
     $blogs_list     = $model->getBlogs($ownertype, $page, $perpage);
 
-	$blogs          = array();                        //Массив блогов для вывода
-    $is_blogs       = $blogs_list ? true : false;     //Флаг, показывающий есть ли блоги
+	$blogs          = array();                        //РњР°СЃСЃРёРІ Р±Р»РѕРіРѕРІ РґР»СЏ РІС‹РІРѕРґР°
+    $is_blogs       = $blogs_list ? true : false;     //Р¤Р»Р°Рі, РїРѕРєР°Р·С‹РІР°СЋС‰РёР№ РµСЃС‚СЊ Р»Рё Р±Р»РѕРіРё
 
-    //Получаем блоги и показываем все вне зависимости от прав доступа
+    //РџРѕР»СѓС‡Р°РµРј Р±Р»РѕРіРё Рё РїРѕРєР°Р·С‹РІР°РµРј РІСЃРµ РІРЅРµ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ РїСЂР°РІ РґРѕСЃС‚СѓРїР°
     foreach($blogs_list as $blog){
-            //Получаем ссылку на блог
+            //РџРѕР»СѓС‡Р°РµРј СЃСЃС‹Р»РєСѓ РЅР° Р±Р»РѕРі
             $blog['url']        = $model->getBlogURL(null, $blog['seolink']);
-            //Считаем число комментариев
+            //РЎС‡РёС‚Р°РµРј С‡РёСЃР»Рѕ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ
             $blog['comments']   = blogComments($blog['id']);
-            //Форматируем значение кармы блога
+            //Р¤РѕСЂРјР°С‚РёСЂСѓРµРј Р·РЅР°С‡РµРЅРёРµ РєР°СЂРјС‹ Р±Р»РѕРіР°
             $blog['karma']      = cmsKarmaFormatSmall($blog['points']);
-            //добавляем блог в список
+            //РґРѕР±Р°РІР»СЏРµРј Р±Р»РѕРі РІ СЃРїРёСЃРѕРє
             $blogs[]            = $blog;
 	}	
-    //Генерируем панель со страницами и устанавливаем заголовки страниц и глубиномера
+    //Р“РµРЅРµСЂРёСЂСѓРµРј РїР°РЅРµР»СЊ СЃРѕ СЃС‚СЂР°РЅРёС†Р°РјРё Рё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р·Р°РіРѕР»РѕРІРєРё СЃС‚СЂР°РЅРёС† Рё РіР»СѓР±РёРЅРѕРјРµСЂР°
 	switch ($ownertype){
 			case 'all': 	$inPage->setTitle($_LANG['ALL_BLOGS']);
 							$inPage->addPathway($_LANG['ALL_BLOGS']);
@@ -324,7 +324,7 @@ if ($do=='view'){
 							break;
 	}
 	$inPage->setDescription($_LANG['BLOGS'].' - '.$_LANG['PERSONALS'].', '.$_LANG['COLLECTIVES']);
-    //Выводим список блогов
+    //Р’С‹РІРѕРґРёРј СЃРїРёСЃРѕРє Р±Р»РѕРіРѕРІ
 	$smarty = $inCore->initSmarty('components', 'com_blog_view_all.tpl');				
 	$smarty->assign('cfg', $cfg);
 	$smarty->assign('single_blogs', $single_blogs);
@@ -338,47 +338,47 @@ if ($do=='view'){
 	$smarty->display('com_blog_view_all.tpl');
 
 }
-////////// ПРОСМОТР БЛОГА ////////////////////////////////////////////////////////////////////////////////////////
+////////// РџР РћРЎРњРћРўР  Р‘Р›РћР“Рђ ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='blog'){
 
     $error = '';
 
-    //Получаем ID пользователя
+    //РџРѕР»СѓС‡Р°РµРј ID РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
     $user_id = $inUser->id;
 
     $cat_id  = $inCore->request('cat_id', 'int', -1);
 
-    //Подготавливаем шаблон
+    //РџРѕРґРіРѕС‚Р°РІР»РёРІР°РµРј С€Р°Р±Р»РѕРЅ
 	$smarty = $inCore->initSmarty('components', 'com_blog_view.tpl');						
 	
-	//Если хозяин блога - пользователь
+	//Р•СЃР»Рё С…РѕР·СЏРёРЅ Р±Р»РѕРіР° - РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
 	if($owner=='user'){
-        //Определяем, есть ли доступ к этому блогу
+        //РћРїСЂРµРґРµР»СЏРµРј, РµСЃС‚СЊ Р»Рё РґРѕСЃС‚СѓРї Рє СЌС‚РѕРјСѓ Р±Р»РѕРіСѓ
 		$can_view       = ($blog['allow_who']=='all' || ($blog['allow_who']=='friends' && usrIsFriends($blog['user_id'], $user_id)) || $blog['user_id']==$user_id || $inUser->is_admin);
-        //Получаем html-код ссылки на автора с иконкой его пола
+        //РџРѕР»СѓС‡Р°РµРј html-РєРѕРґ СЃСЃС‹Р»РєРё РЅР° Р°РІС‚РѕСЂР° СЃ РёРєРѕРЅРєРѕР№ РµРіРѕ РїРѕР»Р°
 		$blog['author'] = cmsUser::getGenderLink($blog['user_id'], $blog['author'], null);
-        //Устанавливаем заголовок страницы и глубиномер
+        //РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р·Р°РіРѕР»РѕРІРѕРє СЃС‚СЂР°РЅРёС†С‹ Рё РіР»СѓР±РёРЅРѕРјРµСЂ
 		$inPage->setTitle($blog['title']);
 		$inPage->addPathway($blog['title']);	
 		$inPage->setDescription($blog['title']);
 	}
 
-    //Если хозяин блога - клуб
+    //Р•СЃР»Рё С…РѕР·СЏРёРЅ Р±Р»РѕРіР° - РєР»СѓР±
     if ($owner=='club'){
         $blog['club']   = $inDB->get_fields('cms_clubs', "id={$blog['user_id']}", 'title, clubtype');
-        //Блоги клубов открыты не всегда и не для всех
+        //Р‘Р»РѕРіРё РєР»СѓР±РѕРІ РѕС‚РєСЂС‹С‚С‹ РЅРµ РІСЃРµРіРґР° Рё РЅРµ РґР»СЏ РІСЃРµС…
 		$can_view 		= $blog['club']['clubtype'] == 'public' || ($blog['club']['clubtype'] == 'private' && (clubUserIsMember($blog['user_id'], $inUser->id) || $inUser->is_admin || clubUserIsAdmin($blog['user_id'], $inUser->id)));
-        //Получаем заголовок блога и ссылку на профиль администратора
-		$blog['title'] 	= '<a href="/clubs/'.$blog['user_id'].'">'.$blog['author'].'</a> &rarr; Блог';		
+        //РџРѕР»СѓС‡Р°РµРј Р·Р°РіРѕР»РѕРІРѕРє Р±Р»РѕРіР° Рё СЃСЃС‹Р»РєСѓ РЅР° РїСЂРѕС„РёР»СЊ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°
+		$blog['title'] 	= '<a href="/clubs/'.$blog['user_id'].'">'.$blog['author'].'</a> &rarr; Р‘Р»РѕРі';		
 		$blog['author'] = clubAdminLink($blog['user_id']);        
-        //Устанавливаем заголовок страницы и глубиномер
+        //РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р·Р°РіРѕР»РѕРІРѕРє СЃС‚СЂР°РЅРёС†С‹ Рё РіР»СѓР±РёРЅРѕРјРµСЂ
 	    $inPage->setTitle($_LANG['BLOG'].' - '.$blog['club']['title']);
         $inPage->addPathway($blog['club']['title'], '/clubs/'.$blog['user_id']);
 		$inPage->addPathway($_LANG['BLOG']);
 		$inPage->setDescription($_LANG['BLOG'].' - '.$blog['club']['title']);
 	}
 
-    //Если доступа нет, добавляем сообщение об ошибке
+    //Р•СЃР»Рё РґРѕСЃС‚СѓРїР° РЅРµС‚, РґРѕР±Р°РІР»СЏРµРј СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ
 	if ( !$can_view && $owner=='user' ) {
         $error = '<h1 class="con_heading">'.$_LANG['CLOSED_BLOG'].'</h1><p>'.$_LANG['CLOSED_BLOG_TEXT'] .'</p>';
     }
@@ -386,20 +386,20 @@ if ($do=='blog'){
         $error = '<h1 class="con_heading">'.$_LANG['CLOSED_BLOG'].'</h1><p>'.str_replace('%link%', '/clubs/'.$blog['user_id'], $_LANG['CLOSED_BLOG_CLUB_TEXT']).'</p>';
     }
 
-    //Если есть ошибки - показываем и выходим
+    //Р•СЃР»Рё РµСЃС‚СЊ РѕС€РёР±РєРё - РїРѕРєР°Р·С‹РІР°РµРј Рё РІС‹С…РѕРґРёРј
     if ($error){
 		echo '<p style="color:red">'.$error.'</p>';
         return;
 	}
 
-    //Если пользователь не авторизован, запрещаем ему все
+    //Р•СЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ, Р·Р°РїСЂРµС‰Р°РµРј РµРјСѓ РІСЃРµ
     if (!$user_id) {
         $myblog     = false;
         $is_author  = false;
         $is_config  = false;
     }
 
-    //Если авторизован, проверяем является ли он хозяином блога или его администратором
+    //Р•СЃР»Рё Р°РІС‚РѕСЂРёР·РѕРІР°РЅ, РїСЂРѕРІРµСЂСЏРµРј СЏРІР»СЏРµС‚СЃСЏ Р»Рё РѕРЅ С…РѕР·СЏРёРЅРѕРј Р±Р»РѕРіР° РёР»Рё РµРіРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂРѕРј
     if ($user_id){
         if ($owner=='user'){
             $myblog     = ($inUser->id == $blog['user_id']);
@@ -417,11 +417,11 @@ if ($do=='blog'){
         }
     }
 
-    //Получаем номер страницы и число записей на одну страницу
+    //РџРѕР»СѓС‡Р°РµРј РЅРѕРјРµСЂ СЃС‚СЂР°РЅРёС†С‹ Рё С‡РёСЃР»Рѕ Р·Р°РїРёСЃРµР№ РЅР° РѕРґРЅСѓ СЃС‚СЂР°РЅРёС†Сѓ
     $perpage    = isset($cfg['perpage']) ? $cfg['perpage'] : 20;
     $page       = $inCore->request('page', 'int', 1);
 
-    //Генерируем строку сообщения об авторах блога
+    //Р“РµРЅРµСЂРёСЂСѓРµРј СЃС‚СЂРѕРєСѓ СЃРѕРѕР±С‰РµРЅРёСЏ РѕР± Р°РІС‚РѕСЂР°С… Р±Р»РѕРіР°
     $authors_status = '';
     if ($blog['owner'] == 'user') {
         if ($blog['forall']){
@@ -431,37 +431,37 @@ if ($do=='blog'){
         }
     }
 
-    //Считаем количество постов, ожидающих модерации
+    //РЎС‡РёС‚Р°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ РїРѕСЃС‚РѕРІ, РѕР¶РёРґР°СЋС‰РёС… РјРѕРґРµСЂР°С†РёРё
     $on_moderate = ($is_moder || $is_admin) ? $inDB->rows_count('cms_blog_posts', 'blog_id='.$blog['id'].' AND published = 0') : false;
 
-    //Если нужно, получаем список рубрик (категорий) этого блога
+    //Р•СЃР»Рё РЅСѓР¶РЅРѕ, РїРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє СЂСѓР±СЂРёРє (РєР°С‚РµРіРѕСЂРёР№) СЌС‚РѕРіРѕ Р±Р»РѕРіР°
     $blogcats   = $blog['showcats'] ? blogCats($blog['id'], $blog['seolink'], $cat_id) : false;
 
-    //Считаем количество записей в этом блоге
+    //РЎС‡РёС‚Р°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РїРёСЃРµР№ РІ СЌС‚РѕРј Р±Р»РѕРіРµ
     $total  = $model->getPostsCount($blog['id'], $cat_id, $owner);
 
-    //Если нет записей
+    //Р•СЃР»Рё РЅРµС‚ Р·Р°РїРёСЃРµР№
     if (!$total){
         $smarty->assign('is_posts', false);
     }
 
-    //Если записи есть
+    //Р•СЃР»Рё Р·Р°РїРёСЃРё РµСЃС‚СЊ
     if ($total){
 
         $posts_list = $model->getPosts($blog['id'], $page, $perpage, $cat_id, $owner);
 
-        //Генерируем панель со страницами
+        //Р“РµРЅРµСЂРёСЂСѓРµРј РїР°РЅРµР»СЊ СЃРѕ СЃС‚СЂР°РЅРёС†Р°РјРё
         if ($cat_id != -1){
             $pagination = cmsPage::getPagebar($total, $page, $perpage, '/blogs/%bloglink%/page-%page%/cat-%catid%', array('bloglink'=>$blog['seolink'], 'catid'=>$cat_id));
         } else {
             $pagination = cmsPage::getPagebar($total, $page, $perpage, '/blogs/%bloglink%/page-%page%', array('bloglink'=>$blog['seolink']));
         }
 
-        //Извлекаем записи
+        //РР·РІР»РµРєР°РµРј Р·Р°РїРёСЃРё
         if ($posts_list){
             $posts = array();
             foreach($posts_list as $post){
-                //Проверяем можно ли показывать эту запись пользователю
+                //РџСЂРѕРІРµСЂСЏРµРј РјРѕР¶РЅРѕ Р»Рё РїРѕРєР°Р·С‹РІР°С‚СЊ СЌС‚Сѓ Р·Р°РїРёСЃСЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ
                 $can_view = ($blog['allow_who']=='all' || ($blog['allow_who']=='friends' && usrIsFriends($blog['user_id'], $user_id)) || $post['user_id']==$user_id || $inCore->userIsAdmin($user_id));
                 if ($can_view){
 
@@ -471,7 +471,7 @@ if ($do=='blog'){
                     
                     $msg                = $post['content_html'];
 
-                    //Разбиваем текст поста на 2 части по тегу [cut=...] и оставляем только первую из них
+                    //Р Р°Р·Р±РёРІР°РµРј С‚РµРєСЃС‚ РїРѕСЃС‚Р° РЅР° 2 С‡Р°СЃС‚Рё РїРѕ С‚РµРіСѓ [cut=...] Рё РѕСЃС‚Р°РІР»СЏРµРј С‚РѕР»СЊРєРѕ РїРµСЂРІСѓСЋ РёР· РЅРёС…
                     if (strstr($msg, '[cut')){
                         $msg = $model->getPostShort($msg, $post['url']);                        
                     }
@@ -486,14 +486,14 @@ if ($do=='blog'){
             }
         }
 
-        //Передаем в шаблон флаг о наличии записей
+        //РџРµСЂРµРґР°РµРј РІ С€Р°Р±Р»РѕРЅ С„Р»Р°Рі Рѕ РЅР°Р»РёС‡РёРё Р·Р°РїРёСЃРµР№
         $smarty->assign('is_posts', (bool)sizeof($posts));
     }
 
-	// rss в адресной строке
+	// rss РІ Р°РґСЂРµСЃРЅРѕР№ СЃС‚СЂРѕРєРµ
 	$inPage->addHead('<link rel="alternate" type="application/rss+xml" title="'.htmlspecialchars(strip_tags($blog['title'])).'" href="'.HOST.'/rss/blogs/'.$blog['id'].'/feed.rss">');
 
-    //Выводим блог
+    //Р’С‹РІРѕРґРёРј Р±Р»РѕРі
     $smarty->assign('myblog', $myblog);
     $smarty->assign('is_admin', $is_admin);
     $smarty->assign('is_moder', $is_moder);
@@ -518,10 +518,10 @@ if ($do=='blog'){
 if ($do=='moderate'){
 	$error = '';
 						
-    //Получаем ID пользователя
+    //РџРѕР»СѓС‡Р°РµРј ID РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
     $user_id = $inUser->id;
 
-    //Если пользователь авторизован, проверяем является ли он хозяином блога, модератором или админом
+    //Р•СЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ, РїСЂРѕРІРµСЂСЏРµРј СЏРІР»СЏРµС‚СЃСЏ Р»Рё РѕРЅ С…РѕР·СЏРёРЅРѕРј Р±Р»РѕРіР°, РјРѕРґРµСЂР°С‚РѕСЂРѕРј РёР»Рё Р°РґРјРёРЅРѕРј
 	if ($user_id){
 		if ($owner=='user'){
 			$myblog     = $blog['user_id'] == $user_id;
@@ -532,50 +532,50 @@ if ($do=='moderate'){
 		}
 	}
 
-    //Запрещаем все для не авторизованных
+    //Р—Р°РїСЂРµС‰Р°РµРј РІСЃРµ РґР»СЏ РЅРµ Р°РІС‚РѕСЂРёР·РѕРІР°РЅРЅС‹С…
     if (!$user_id) {
 		$myblog     = false;
 		$is_admin   = false;
 	}
 
-    //Устанавливаем глубиномер и заголовок страницы
+    //РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РіР»СѓР±РёРЅРѕРјРµСЂ Рё Р·Р°РіРѕР»РѕРІРѕРє СЃС‚СЂР°РЅРёС†С‹
     if ($owner=='club') { $inPage->addPathway($blog['author'], '/clubs/'.$blog['user_id']); }
     $inPage->addPathway($blog['title'], $model->getBlogURL(null, $blog['seolink']));
     $inPage->addPathway($_LANG['POSTS_ON_MODERATE'], $_SERVER['REQUEST_URI']);
     $inPage->setTitle($_LANG['MODERATING'].' - '.$blog['title']);
 
-    //Проверяем отсутствие доступа
+    //РџСЂРѕРІРµСЂСЏРµРј РѕС‚СЃСѓС‚СЃС‚РІРёРµ РґРѕСЃС‚СѓРїР°
     if (!$myblog && !$is_admin){
 		echo '<p style="color:red">'.$_LANG['ACCESS_DENIED'].'</p>';
         return;
 	}
 
-    //Считаем число записей, ожидающих модерации
+    //РЎС‡РёС‚Р°РµРј С‡РёСЃР»Рѕ Р·Р°РїРёСЃРµР№, РѕР¶РёРґР°СЋС‰РёС… РјРѕРґРµСЂР°С†РёРё
     $total = $model->getModerationCount($blog['id']);
 
-    //Если записей нет, редиректим на главную блога
+    //Р•СЃР»Рё Р·Р°РїРёСЃРµР№ РЅРµС‚, СЂРµРґРёСЂРµРєС‚РёРј РЅР° РіР»Р°РІРЅСѓСЋ Р±Р»РѕРіР°
     if (!$total){
         $inCore->redirect($model->getBlogURL(null, $blog['seolink']));
     }
 
-    //Получаем ожидающие записи из базы
+    //РџРѕР»СѓС‡Р°РµРј РѕР¶РёРґР°СЋС‰РёРµ Р·Р°РїРёСЃРё РёР· Р±Р°Р·С‹
     $posts_list = $model->getModerationPosts($blog['id']);
     $records    = sizeof($posts_list);
 
-    //Сообщаем, если записей нет
+    //РЎРѕРѕР±С‰Р°РµРј, РµСЃР»Рё Р·Р°РїРёСЃРµР№ РЅРµС‚
     if (!$records){
         echo '<p style="clear:both">'.$_LANG['NOT_POSTS_MODERATE'].'</p>';
         return;
     }
 
-    //Извлекаем записи
+    //РР·РІР»РµРєР°РµРј Р·Р°РїРёСЃРё
     $posts = array();
     foreach($posts_list as $post){
         $post['msg']        = $post['content_html'];
         $post['tagline']    = cmsTagLine('blogpost', $post['id']);
 		$post['fpubdate']	= $inCore->dateFormat($post['pubdate']);
         $post['url']        = $model->getPostURL(null, $post['bloglink'], $post['seolink']);
-		//Разбиваем текст поста на 2 части по тегу [cut=...] и оставляем только первую из них
+		//Р Р°Р·Р±РёРІР°РµРј С‚РµРєСЃС‚ РїРѕСЃС‚Р° РЅР° 2 С‡Р°СЃС‚Рё РїРѕ С‚РµРіСѓ [cut=...] Рё РѕСЃС‚Р°РІР»СЏРµРј С‚РѕР»СЊРєРѕ РїРµСЂРІСѓСЋ РёР· РЅРёС…
 		if (strstr($post['msg'], '[cut')){
 			$post['msg'] = $model->getPostShort($post['msg'], $post['url']);                        
 		}
@@ -584,7 +584,7 @@ if ($do=='moderate'){
 
     $blog['url'] = $model->getBlogURL(null, $blog['seolink']);
 
-    //Выводим записи
+    //Р’С‹РІРѕРґРёРј Р·Р°РїРёСЃРё
     $smarty = $inCore->initSmarty('components', 'com_blog_moderate.tpl');
         $smarty->assign('myblog', $myblog);
         $smarty->assign('total', $total);
@@ -595,29 +595,29 @@ if ($do=='moderate'){
     $smarty->display('com_blog_moderate.tpl');
 
 }
-////////// АВТОРЫ БЛОГА ////////////////////////////////////////////////////////////////////////////////////////
+////////// РђР’РўРћР Р« Р‘Р›РћР“Рђ ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='authors'){
 
-    //Устанавливаем заголовок страницы
+    //РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р·Р°РіРѕР»РѕРІРѕРє СЃС‚СЂР°РЅРёС†С‹
 	$inPage->setTitle($blog['title'].' - '.$_LANG['AVTORS']);
 
     $authors        = array();
 
     $authors_list   = $model->getBlogAuthors($id);
 
-    //Извлекаем авторов
+    //РР·РІР»РµРєР°РµРј Р°РІС‚РѕСЂРѕРІ
 	if ($authors_list){
 		foreach($authors_list as $author) {
-            //Определяем аватар
+            //РћРїСЂРµРґРµР»СЏРµРј Р°РІР°С‚Р°СЂ
 			$author['avatar']   = $author['imageurl'] ? $author['imageurl'] : 'nopic.jpg';
-            //Добавляем в список
+            //Р”РѕР±Р°РІР»СЏРµРј РІ СЃРїРёСЃРѕРє
             $authors[]          = $author;
 		}
 	}
 
     $is_authors     = sizeof($authors);
 
-    //Выводим список
+    //Р’С‹РІРѕРґРёРј СЃРїРёСЃРѕРє
     $smarty = $inCore->initSmarty('components', 'com_blog_authors.tpl');
         $smarty->assign('blog', $blog['title']);
         $smarty->assign('is_authors', $is_authors);
@@ -626,10 +626,10 @@ if ($do=='authors'){
     
 }
 
-////////// НОВЫЙ ПОСТ / РЕДАКТИРОВАНИЕ ПОСТА //////////////////////////////////////////////////////////////////
+////////// РќРћР’Р«Р™ РџРћРЎРў / Р Р•Р”РђРљРўРР РћР’РђРќРР• РџРћРЎРўРђ //////////////////////////////////////////////////////////////////
 if ($do=='newpost' || $do=='editpost'){
 
-	//Получаем ID пользователя
+	//РџРѕР»СѓС‡Р°РµРј ID РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
     $user_id    = $inUser->id;
 
    	$post_id 	= $inCore->request('post_id', 'int', 0);
@@ -638,14 +638,14 @@ if ($do=='newpost' || $do=='editpost'){
 		$inCore->redirectBack();
 	}
 
-    //Получаем карму пользователя
+    //РџРѕР»СѓС‡Р°РµРј РєР°СЂРјСѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 	$user_karma = cmsUser::getKarma($user_id);
-	// Может ли пользователь выбирать возможность комментировать
+	// РњРѕР¶РµС‚ Р»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІС‹Р±РёСЂР°С‚СЊ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РєРѕРјРјРµРЅС‚РёСЂРѕРІР°С‚СЊ
 	$user_can_iscomments = $inCore->isUserCan('comments/iscomments');
 
     $post = array();
 
-    //Определяем уровень доступа к блогу (админ, хозяин, автор) в зависимости от типа владельца
+    //РћРїСЂРµРґРµР»СЏРµРј СѓСЂРѕРІРµРЅСЊ РґРѕСЃС‚СѓРїР° Рє Р±Р»РѕРіСѓ (Р°РґРјРёРЅ, С…РѕР·СЏРёРЅ, Р°РІС‚РѕСЂ) РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ С‚РёРїР° РІР»Р°РґРµР»СЊС†Р°
     if ($owner=='user'){
 		if ($do=='newpost'){
 			$myblog  = $blog['user_id'] ==$user_id ;
@@ -665,7 +665,7 @@ if ($do=='newpost' || $do=='editpost'){
         $inPage->addPathway($blog['author'], '/clubs/'.$blog['user_id']);
     }
 
-    //Проверяем, хватает ли кармы
+    //РџСЂРѕРІРµСЂСЏРµРј, С…РІР°С‚Р°РµС‚ Р»Рё РєР°СЂРјС‹
     if ( !($min_karma === false || $user_karma>=$min_karma || clubUserIsAdmin($blog['user_id'], $user_id) || clubUserIsRole($blog['user_id'], $user_id, 'moderator')) ){
         $inPage->printHeading($_LANG['NEED_KARMA']);
         echo '<p><strong>'.$_LANG['NEED_KARMA_TEXT'].'</strong></p>';
@@ -676,14 +676,14 @@ if ($do=='newpost' || $do=='editpost'){
 
 	$inPage->addPathway($blog['title'], $model->getBlogURL(null, $blog['seolink']));
 	
-    //для нового поста
+    //РґР»СЏ РЅРѕРІРѕРіРѕ РїРѕСЃС‚Р°
 	if ($do=='newpost'){
-        //Проверяем доступ
+        //РџСЂРѕРІРµСЂСЏРµРј РґРѕСЃС‚СѓРї
 		if (!$myblog && !$is_author && !$is_admin) { $inCore->redirectBack(); }
 
         if (IS_BILLING){ cmsBilling::checkBalance('blogs', 'add_post'); }
         
-        //Устанавливаем заголовки
+        //РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р·Р°РіРѕР»РѕРІРєРё
         $inPage->addPathway($_LANG['NEW_POST'], $_SERVER['REQUEST_URI']);
 		$inPage->setTitle($_LANG['NEW_POST']);
 		$inPage->printHeading($_LANG['NEW_POST']);
@@ -691,15 +691,15 @@ if ($do=='newpost' || $do=='editpost'){
 		$post['cat_id'] = $inCore->request('cat_id', 'int', 0);
 	} 
 
-    //для редактирования поста
+    //РґР»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РїРѕСЃС‚Р°
     if ($do=='editpost'){
-        //Проверяем доступ
+        //РџСЂРѕРІРµСЂСЏРµРј РґРѕСЃС‚СѓРї
         $is_post_author = $model->isUserPostAuthor($post_id, $user_id);
 		if (!$myblog && !$is_post_author && !$is_admin) { $inCore->redirectBack(); }
-        //Получаем исходный пост из базы
+        //РџРѕР»СѓС‡Р°РµРј РёСЃС…РѕРґРЅС‹Р№ РїРѕСЃС‚ РёР· Р±Р°Р·С‹
         $post = $model->getPost($post_id);
         if (!$post){ $inCore->redirectBack(); }
-        //Устанавливаем заголовки
+        //РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р·Р°РіРѕР»РѕРІРєРё
 		$inPage->addPathway($post['title'], $model->getPostURL(null, $blog['seolink'], $post['postlink']));
         $inPage->addPathway($_LANG['EDIT_POST'], $_SERVER['REQUEST_URI']);
 		$inPage->setTitle($_LANG['EDIT_POST']);
@@ -708,23 +708,23 @@ if ($do=='newpost' || $do=='editpost'){
 
 	$inPage->initAutocomplete();
 
-    //Удаляем промежуточные данные о загруженных изображениях
+    //РЈРґР°Р»СЏРµРј РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅС‹Рµ РґР°РЅРЅС‹Рµ Рѕ Р·Р°РіСЂСѓР¶РµРЅРЅС‹С… РёР·РѕР±СЂР°Р¶РµРЅРёСЏС…
     $inCore->flushUpload();
 
-    //Если еще не было запроса на сохранение
+    //Р•СЃР»Рё РµС‰Рµ РЅРµ Р±С‹Р»Рѕ Р·Р°РїСЂРѕСЃР° РЅР° СЃРѕС…СЂР°РЅРµРЅРёРµ
     if ( !$inCore->inRequest('goadd') ){
 
-        //получаем рубрики блога
+        //РїРѕР»СѓС‡Р°РµРј СЂСѓР±СЂРёРєРё Р±Р»РѕРіР°
         $cat_list   = blogCategoryList($post['cat_id'], $id);
 
-        //получаем код панелей bbcode и смайлов
+        //РїРѕР»СѓС‡Р°РµРј РєРѕРґ РїР°РЅРµР»РµР№ bbcode Рё СЃРјР°Р№Р»РѕРІ
         $bb_toolbar = cmsPage::getBBCodeToolbar('message',$cfg['img_on'], 'blogs');
         $smilies    = cmsPage::getSmilesPanel('message');
 
         $inCore->initAutoGrowText('#message');
         $inPage->backButton(false);
 
-        //загружаем теги поста, если он сам загружен
+        //Р·Р°РіСЂСѓР¶Р°РµРј С‚РµРіРё РїРѕСЃС‚Р°, РµСЃР»Рё РѕРЅ СЃР°Рј Р·Р°РіСЂСѓР¶РµРЅ
         $tagline = isset($post['id']) ? cmsTagLine('blogpost', $post['id'], false) : '';
 
         $autocomplete_js = $inPage->getAutocompleteJS('tagsearch', 'tags');
@@ -735,7 +735,7 @@ if ($do=='newpost' || $do=='editpost'){
 			if (!$post) { $post['comments'] = 1; }
 		}
 
-        //показываем форму
+        //РїРѕРєР°Р·С‹РІР°РµРј С„РѕСЂРјСѓ
         $smarty = $inCore->initSmarty('components', 'com_blog_edit_post.tpl');
             $smarty->assign('blog', $blog);
             $smarty->assign('mod', $post);
@@ -752,12 +752,12 @@ if ($do=='newpost' || $do=='editpost'){
 
     }
 
-    //Если есть запрос на сохранение
+    //Р•СЃР»Рё РµСЃС‚СЊ Р·Р°РїСЂРѕСЃ РЅР° СЃРѕС…СЂР°РЅРµРЅРёРµ
     if ( $inCore->inRequest('goadd') ) {
 
         $error = false;
 
-        //Получаем параметры
+        //РџРѕР»СѓС‡Р°РµРј РїР°СЂР°РјРµС‚СЂС‹
         $title 		= $inCore->request('title', 'str');
         $content 	= $inCore->request('content', 'html');
         $feel 		= $inCore->request('feel', 'str', '');
@@ -767,11 +767,11 @@ if ($do=='newpost' || $do=='editpost'){
         $tags 		= $inCore->request('tags', 'str', '');
 		$comments   = $inCore->request('comments', 'int', 1);
 
-        //Проверяем их
+        //РџСЂРѕРІРµСЂСЏРµРј РёС…
         if (strlen($title)<2) {  cmsCore::addSessionMessage($_LANG['POST_ERR_TITLE'], 'error'); $errors = true; }
         if (strlen($content)<5) { cmsCore::addSessionMessage($_LANG['POST_ERR_TEXT'], 'error'); $errors = true; }
 
-		// Если есть ошибки, возвращаемся назад
+		// Р•СЃР»Рё РµСЃС‚СЊ РѕС€РёР±РєРё, РІРѕР·РІСЂР°С‰Р°РµРјСЃСЏ РЅР°Р·Р°Рґ
 		if($errors){
 			$mod['content']   = $content;
 			$mod['comments']  = $comments;
@@ -783,9 +783,9 @@ if ($do=='newpost' || $do=='editpost'){
 			$inCore->redirectBack();
         }
 
-        //Если нет ошибок
+        //Р•СЃР»Рё РЅРµС‚ РѕС€РёР±РѕРє
         if(!$errors){
-            //добавляем новый пост...
+            //РґРѕР±Р°РІР»СЏРµРј РЅРѕРІС‹Р№ РїРѕСЃС‚...
             if ($do=='newpost'){
 
                 if ($blog['owner']=='user'){
@@ -821,7 +821,7 @@ if ($do=='newpost' || $do=='editpost'){
 				$post_seolink = $inDB->get_field('cms_blog_posts', "id={$post_id}", 'seolink');
 
                 if ($published) {
-					//регистрируем событие
+					//СЂРµРіРёСЃС‚СЂРёСЂСѓРµРј СЃРѕР±С‹С‚РёРµ
 					if ($blog['owner']=='user' && $blog['allow_who'] != 'nobody'){
 						$is_friends_only = $blog['allow_who'] == 'friends' ? 1 : 0;
 						cmsActions::log('add_post', array(
@@ -865,7 +865,7 @@ if ($do=='newpost' || $do=='editpost'){
                 }
             }
 
-            //...или сохраняем пост после редактирования
+            //...РёР»Рё СЃРѕС…СЂР°РЅСЏРµРј РїРѕСЃС‚ РїРѕСЃР»Рµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ
             if ($do=='editpost') {
 
                 $model->updatePost($post_id, array(
@@ -897,20 +897,20 @@ if ($do=='newpost' || $do=='editpost'){
     }
 
 }
-////////// НОВАЯ РУБРИКА / РЕДАКТИРОВАНИЕ РУБРИКИ //////////////////////////////////////////////////////
+////////// РќРћР’РђРЇ Р РЈР‘Р РРљРђ / Р Р•Р”РђРљРўРР РћР’РђРќРР• Р РЈР‘Р РРљР //////////////////////////////////////////////////////
 if ($do=='newcat' || $do=='editcat'){
 
     $cat_id 	= $inCore->request('cat_id', 'int', 0);
 
-    //Проверяем авторизацию
+    //РџСЂРѕРІРµСЂСЏРµРј Р°РІС‚РѕСЂРёР·Р°С†РёСЋ
 	if (!$inUser->id) { $inCore->redirectBack(); }
-    //Проверяем что не было ошибок при загрузке данных о блоге
+    //РџСЂРѕРІРµСЂСЏРµРј С‡С‚Рѕ РЅРµ Р±С‹Р»Рѕ РѕС€РёР±РѕРє РїСЂРё Р·Р°РіСЂСѓР·РєРµ РґР°РЅРЅС‹С… Рѕ Р±Р»РѕРіРµ
 	if ( $error ) { $inCore->redirectBack(); }
 
 	$user_id    = $inUser->id;
     $cat        = array();
 
-    //Проверяем что пользователь является хозяином или модератором блога
+    //РџСЂРѕРІРµСЂСЏРµРј С‡С‚Рѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЏРІР»СЏРµС‚СЃСЏ С…РѕР·СЏРёРЅРѕРј РёР»Рё РјРѕРґРµСЂР°С‚РѕСЂРѕРј Р±Р»РѕРіР°
 	if ($owner=='user') { 		
 		$myblog = ($blog['user_id']==$user_id) || $inUser->is_admin;
 	}
@@ -921,43 +921,43 @@ if ($do=='newcat' || $do=='editcat'){
 	
 	$inPage->addPathway($blog['title'], $model->getBlogURL(null, $blog['seolink']));
 
-    //Новая рубрики
+    //РќРѕРІР°СЏ СЂСѓР±СЂРёРєРё
 	if ($do=='newcat'){
-        //Устанавливаем заголовки и глубиномер
+        //РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р·Р°РіРѕР»РѕРІРєРё Рё РіР»СѓР±РёРЅРѕРјРµСЂ
 		$inPage->addPathway($_LANG['NEW_CAT']);
 		$inPage->setTitle($_LANG['NEW_CAT']);
         $inPage->printHeading($_LANG['NEW_CAT']);
 	}
-    //Редактирование рубрики
+    //Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ СЂСѓР±СЂРёРєРё
     if ($do=='editcat'){
-        //Устанавливаем заголовки и глубиномер
+        //РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р·Р°РіРѕР»РѕРІРєРё Рё РіР»СѓР±РёРЅРѕРјРµСЂ
 		$inPage->addPathway($_LANG['RENAME_CAT']);
 		$inPage->setTitle($_LANG['RENAME_CAT']);
 		$inPage->printHeading($_LANG['RENAME_CAT']);
-        //Загружаем рубрику
+        //Р—Р°РіСЂСѓР¶Р°РµРј СЂСѓР±СЂРёРєСѓ
         $cat    = $model->getBlogCategory($cat_id);
         if (!$cat) {
 			$inCore->redirectBack();
 		}
 	}
 
-    //Если нет запроса на сохранение
+    //Р•СЃР»Рё РЅРµС‚ Р·Р°РїСЂРѕСЃР° РЅР° СЃРѕС…СЂР°РЅРµРЅРёРµ
     if (!$inCore->inRequest('goadd')){
         $inPage->backButton(false);
-        //показываем форму
+        //РїРѕРєР°Р·С‹РІР°РµРј С„РѕСЂРјСѓ
         $smarty = $inCore->initSmarty('components', 'com_blog_edit_cat.tpl');
         $smarty->assign('mod', $cat);
         $smarty->display('com_blog_edit_cat.tpl');
     }
 
-    //Если есть запрос на сохранение
+    //Р•СЃР»Рё РµСЃС‚СЊ Р·Р°РїСЂРѕСЃ РЅР° СЃРѕС…СЂР°РЅРµРЅРёРµ
     if ($inCore->inRequest('goadd')){
         $error_msg = '';;
-        //получаем и проверяем название рубрики
+        //РїРѕР»СѓС‡Р°РµРј Рё РїСЂРѕРІРµСЂСЏРµРј РЅР°Р·РІР°РЅРёРµ СЂСѓР±СЂРёРєРё
         $title = $inCore->request('title', 'str');
         if (strlen($title)<2) { $error_msg .= $_LANG['CAT_ERR_TITLE'].'<br/>'; }
 
-        //если была ошибка
+        //РµСЃР»Рё Р±С‹Р»Р° РѕС€РёР±РєР°
         if ($error_msg){
             $inPage->setTitle($_LANG['ERR_CAT_CREATE']);
             $inPage->printHeading($_LANG['ERR_CAT_CREATE']);
@@ -965,13 +965,13 @@ if ($do=='newcat' || $do=='editcat'){
             return;
         }
 
-        //если не было ошибки
+        //РµСЃР»Рё РЅРµ Р±С‹Р»Рѕ РѕС€РёР±РєРё
         if(!$error_msg){
-            //новая рубрика
+            //РЅРѕРІР°СЏ СЂСѓР±СЂРёРєР°
             if ($do=='newcat'){
                 $model->addBlogCategory(array('id'=>$id, 'title'=>$title));
             }
-            //редактирование рубрики
+            //СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ СЂСѓР±СЂРёРєРё
             if ($do=='editcat'){
                 $model->updateBlogCategory($cat_id, array('title'=>$title));
             }
@@ -981,7 +981,7 @@ if ($do=='newcat' || $do=='editcat'){
     }
 
 }
-////////////////////////// ПРОСМОТР ПОСТА /////////////////////////////////////////////////////////////////////////
+////////////////////////// РџР РћРЎРњРћРўР  РџРћРЎРўРђ /////////////////////////////////////////////////////////////////////////
 if($do=='post'){
 
 	$post_id 	= $inCore->request('post_id', 'int', 0);
@@ -1012,7 +1012,7 @@ if($do=='post'){
         return;
     }
 
-    //Если авторизован, проверяем является ли он хозяином блога или его администратором
+    //Р•СЃР»Рё Р°РІС‚РѕСЂРёР·РѕРІР°РЅ, РїСЂРѕРІРµСЂСЏРµРј СЏРІР»СЏРµС‚СЃСЏ Р»Рё РѕРЅ С…РѕР·СЏРёРЅРѕРј Р±Р»РѕРіР° РёР»Рё РµРіРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂРѕРј
     if ($user_id){
         if ($owner=='user'){
             $is_author  = (($user_id == $blog['user_id']) || ((!$myblog) && $blog['ownertype']=='multi' && $inDB->get_field('cms_blog_authors', 'blog_id='.$blog['id'].' AND user_id='.$user_id, 'id')) || ($blog['ownertype']=='multi' && $blog['forall'] && $user_id == $post['user_id']));
@@ -1037,10 +1037,10 @@ if($do=='post'){
     $inPage->setTitle($post['title']);
     $inPage->addPathway($post['title']);
 
-    //Парсим bb-код
+    //РџР°СЂСЃРёРј bb-РєРѕРґ
     $msg = $post['content_html'];
 
-    //Убираем тег [cut]
+    //РЈР±РёСЂР°РµРј С‚РµРі [cut]
     $regex  = '/\[(cut=)\s*(.*?)\]/i';
     $msg    = preg_replace($regex, '', $msg);
 
@@ -1051,7 +1051,7 @@ if($do=='post'){
 
     $post['image'] = usrImageNOdb($post['author_id'], 'small', $post['author_image'], $post['author_deleted']);
     
-    //выводим пост
+    //РІС‹РІРѕРґРёРј РїРѕСЃС‚
     $smarty = $inCore->initSmarty('components', 'com_blog_view_post.tpl');
         $smarty->assign('post', $post);
         $smarty->assign('blog', $blog);
@@ -1141,7 +1141,7 @@ if ($do == 'publishpost'){
     $user_id    = $inUser->id;
 
 	if (!$user_id || !$post_id){ $inCore->halt(); }
-    //Если пользователь авторизован, проверяем является ли он хозяином блога, модератором или админом
+    //Р•СЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ, РїСЂРѕРІРµСЂСЏРµРј СЏРІР»СЏРµС‚СЃСЏ Р»Рё РѕРЅ С…РѕР·СЏРёРЅРѕРј Р±Р»РѕРіР°, РјРѕРґРµСЂР°С‚РѕСЂРѕРј РёР»Рё Р°РґРјРёРЅРѕРј
 	if ($user_id){
 		if ($owner=='user'){
 			$myblog     = $blog['user_id'] == $user_id;
@@ -1159,7 +1159,7 @@ if ($do == 'publishpost'){
 			if ($blog['allow_who'] == 'all') { cmsCore::callEvent('ADD_POST_DONE', $post); }
 			if ($blog['owner']=='user'){
 				$is_friends_only = $blog['allow_who'] == 'friends' ? 1 : 0;
-				//регистрируем событие
+				//СЂРµРіРёСЃС‚СЂРёСЂСѓРµРј СЃРѕР±С‹С‚РёРµ
 				cmsActions::log('add_post', array(
 						'object' => $post['title'],
 						'user_id' => $post['user_id'],
@@ -1290,7 +1290,7 @@ if ($do == 'delcat'){
 ////////// VIEW LATEST POSTS ////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='latest'){
 
-	// rss в адресной строке
+	// rss РІ Р°РґСЂРµСЃРЅРѕР№ СЃС‚СЂРѕРєРµ
 	$inPage->addHead('<link rel="alternate" type="application/rss+xml" title="'.$_LANG['RSS_BLOGS'].'" href="'.HOST.'/rss/blogs/all/feed.rss">');
 
 	$smarty     = $inCore->initSmarty('components', 'com_blog_view_posts.tpl');
@@ -1301,7 +1301,7 @@ if ($do=='latest'){
 
     $posts      = array();
 
-        //Считаем количество персональных и коллективных блогов
+        //РЎС‡РёС‚Р°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ РїРµСЂСЃРѕРЅР°Р»СЊРЅС‹С… Рё РєРѕР»Р»РµРєС‚РёРІРЅС‹С… Р±Р»РѕРіРѕРІ
         $single_blogs	= $model->getSingleBlogsCount();
         $multi_blogs 	= $model->getMultiBlogsCount();
 
@@ -1337,7 +1337,7 @@ if ($do=='latest'){
 
                     $msg = $post['content_html'];
 
-                    //Разбиваем текст поста на 2 части по тегу [cut=...] и оставляем только первую из них
+                    //Р Р°Р·Р±РёРІР°РµРј С‚РµРєСЃС‚ РїРѕСЃС‚Р° РЅР° 2 С‡Р°СЃС‚Рё РїРѕ С‚РµРіСѓ [cut=...] Рё РѕСЃС‚Р°РІР»СЏРµРј С‚РѕР»СЊРєРѕ РїРµСЂРІСѓСЋ РёР· РЅРёС…
                     if (strstr($msg, '[cut')){
                         $msg = $model->getPostShort($msg, $post['url']);
                     }
@@ -1415,7 +1415,7 @@ if ($do=='best'){
 
                     $msg = $post['content_html'];
 
-                    //Разбиваем текст поста на 2 части по тегу [cut=...] и оставляем только первую из них
+                    //Р Р°Р·Р±РёРІР°РµРј С‚РµРєСЃС‚ РїРѕСЃС‚Р° РЅР° 2 С‡Р°СЃС‚Рё РїРѕ С‚РµРіСѓ [cut=...] Рё РѕСЃС‚Р°РІР»СЏРµРј С‚РѕР»СЊРєРѕ РїРµСЂРІСѓСЋ РёР· РЅРёС…
                     if (strstr($msg, '[cut')){
                         $msg = $model->getPostShort($msg, $post['url']);
                     }

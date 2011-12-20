@@ -2,9 +2,9 @@
 <backend>    
     <module>
         <id>mod_latestclubs</id>
-        <title>Новые клубы</title>
+        <title>РќРѕРІС‹Рµ РєР»СѓР±С‹</title>
     </module>
     <params>
-        <param type="number" name="count" title="Количество клубов" units="шт." default="5" />
+        <param type="number" name="count" title="РљРѕР»РёС‡РµСЃС‚РІРѕ РєР»СѓР±РѕРІ" units="С€С‚." default="5" />
     </params>
 </backend>

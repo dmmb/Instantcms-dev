@@ -27,14 +27,14 @@
 	if(!strstr($_SERVER['HTTP_REFERER'], $domain)) { cmsCore::error404(); }
 
 	if ( !$inUser->update() ) { cmsCore::error404(); }
-	// проверяем доступ по Ip
+	// РїСЂРѕРІРµСЂСЏРµРј РґРѕСЃС‚СѓРї РїРѕ Ip
 	if(!$inCore->checkAccessByIp($inConf->allow_ip)) { $inCore->halt('ACCESS DENIED'); }
 	date_default_timezone_set($inConf->timezone);
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-<title>InstantCMS - Авторизация</title>
+<title>InstantCMS - РђРІС‚РѕСЂРёР·Р°С†РёСЏ</title>
 <style type="text/css">
 <!--
     html{ height:100%; }

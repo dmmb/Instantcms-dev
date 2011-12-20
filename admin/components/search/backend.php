@@ -32,18 +32,18 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
     $opt = $inCore->request('opt', 'str', '');
 	$id  = $inCore->request('id', 'int', 0);
 
-    cpAddPathway('Поиск', '?view=components&do=config&id='.$id);
+    cpAddPathway('РџРѕРёСЃРє', '?view=components&do=config&id='.$id);
 	
-	echo '<h3>Поиск</h3>';
+	echo '<h3>РџРѕРёСЃРє</h3>';
 	
 	$toolmenu = array();
 
 	$toolmenu[0]['icon'] = 'save.gif';
-	$toolmenu[0]['title'] = 'Сохранить';
+	$toolmenu[0]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 	$toolmenu[0]['link'] = 'javascript:document.optform.submit();';
 
 	$toolmenu[1]['icon'] = 'cancel.gif';
-	$toolmenu[1]['title'] = 'Отмена';
+	$toolmenu[1]['title'] = 'РћС‚РјРµРЅР°';
 	$toolmenu[1]['link'] = '?view=components';
 
 	cpToolMenu($toolmenu);
@@ -74,14 +74,14 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 <form action="index.php?view=components&do=config&id=<?php echo $id;?>" name="optform" method="post" target="_self">
         <table border="0" cellpadding="10" cellspacing="0" class="proptable">
           <tr>
-            <td width="215"><strong>Результатов на странице: </strong></td>
+            <td width="215"><strong>Р РµР·СѓР»СЊС‚Р°С‚РѕРІ РЅР° СЃС‚СЂР°РЅРёС†Рµ: </strong></td>
             <td width="289"><input name="perpage" type="text" id="perpage" value="<?php echo $model->config['perpage'];?>" size="6" /></td>
           </tr>
           <tr>
-            <td valign="top"><strong>Провайдер поиска: </strong></td>
+            <td valign="top"><strong>РџСЂРѕРІР°Р№РґРµСЂ РїРѕРёСЃРєР°: </strong></td>
             <td valign="top">
                 <select name="search_engine" style="width:245px">
-                    <option value="" <?php if (!$model->config['search_engine']){?>selected="selected"<?php } ?>>Нативный</option>
+                    <option value="" <?php if (!$model->config['search_engine']){?>selected="selected"<?php } ?>>РќР°С‚РёРІРЅС‹Р№</option>
                     <?php $provider_array = getProvidersList();
 					if($provider_array){
 						foreach($provider_array as $provider){
@@ -103,7 +103,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
               </tr>
 		  <?php } } ?>
           <tr>
-            <td valign="top"><strong>Поиск по компонентам:</strong> </td>
+            <td valign="top"><strong>РџРѕРёСЃРє РїРѕ РєРѕРјРїРѕРЅРµРЅС‚Р°Рј:</strong> </td>
             <td valign="top">
 			<?php
 				echo '<table border="0" cellpadding="2" cellspacing="0">';
@@ -120,20 +120,20 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			?></td>
           </tr>
           <tr>
-            <td valign="top"><strong>Записей в поисковом кеше:</strong> </td>
+            <td valign="top"><strong>Р—Р°РїРёСЃРµР№ РІ РїРѕРёСЃРєРѕРІРѕРј РєРµС€Рµ:</strong> </td>
             <td valign="top">
 			<?php 
 				$records = $inDB->rows_count('cms_search', "1=1");
-				echo $records . ' шт.';
+				echo $records . ' С€С‚.';
 				if ($records) {
-					echo ' | <a href="?view=components&do=config&id='.$id.'&opt=dropcache">Очистить</a>';
+					echo ' | <a href="?view=components&do=config&id='.$id.'&opt=dropcache">РћС‡РёСЃС‚РёС‚СЊ</a>';
 				}
 			?></td>
           </tr>
         </table>
         <p>
           <input name="opt" type="hidden" id="do" value="save" />
-          <input name="save" type="submit" id="save" value="Сохранить" />
-          <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+          <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+          <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components';"/>
         </p>
 </form>

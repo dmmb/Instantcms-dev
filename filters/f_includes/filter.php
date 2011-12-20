@@ -22,7 +22,7 @@
 				include $filefull;
 			$link = ob_get_clean();
 		} else {
-			$link = '‘‡ÈÎ "/includes/myphp/'.$file.'" ÌÂ Ì‡È‰ÂÌ!';
+			$link = '–§–∞–π–ª "/includes/myphp/'.$file.'" –Ω–µ –Ω–∞–π–¥–µ–Ω!';
 		}	
 		return $link;
 	}
@@ -31,18 +31,18 @@
 	function f_includes(&$text){
 
 		//REPLACE FILE INCLUDES LINKS
- 		$regex = '/{(‘¿…À=)\s*(.*?)}/i';
+ 		$regex = '/{(–§–ê–ô–õ=)\s*(.*?)}/i';
 		$matches = array();
 		preg_match_all( $regex, $text, $matches, PREG_SET_ORDER );		
 		foreach ($matches as $elm) {	
 			$elm[0] = str_replace('{', '', $elm[0]);
 			$elm[0] = str_replace('}', '', $elm[0]);			
 			parse_str( $elm[0], $args );
-			$file=@$args['‘¿…À'];	
+			$file=@$args['–§–ê–ô–õ'];	
 			if ($file){		
 				$output = getLink($file);			
 			} else { $output = ''; }
-			$text = str_replace('{‘¿…À='.$file.'}', $output, $text );	
+			$text = str_replace('{–§–ê–ô–õ='.$file.'}', $output, $text );	
 		}
 
 		return true;

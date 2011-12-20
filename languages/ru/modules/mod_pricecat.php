@@ -17,6 +17,6 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * e-mail: firs.yura@gmail.com
  * site: firs.org.ua
  */
-$_LANG['PRICECAT_NO_ITEMS']       = 'Íåò êàòåãîðèé äëÿ îòîáðàæåíèÿ.';
+$_LANG['PRICECAT_NO_ITEMS']       = 'ÐÐµÑ‚ ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ð¸Ð¹ Ð´Ð»Ñ Ð¾Ñ‚Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ñ.';
 
 ?>

@@ -368,7 +368,7 @@ function shopDiscountsInfo(&$total, $is_cart=false){
             $show_sign = '+';
             if ($dis['sign']==2){
                 if ($dis['unit']=='%'){ $total = $total + ($total*($dis['value']/100)); }
-                if ($dis['unit']=='руб.'){ $total = $total + $dis['value']; }
+                if ($dis['unit']=='СЂСѓР±.'){ $total = $total + $dis['value']; }
                 $show_dis = true;
                 $show_sign = '+';
             }
@@ -376,7 +376,7 @@ function shopDiscountsInfo(&$total, $is_cart=false){
                 $show_dis = ($total_orig >= $dis['if_limit']);
                 if ($show_dis){
                     if ($dis['unit']=='%'){ $total = $total - ($total*($dis['value']/100)); }
-                    if ($dis['unit']=='руб.'){ $total = $total - $dis['value']; }
+                    if ($dis['unit']=='СЂСѓР±.'){ $total = $total - $dis['value']; }
                     $show_sign = '-';
                 }
             }
@@ -386,7 +386,7 @@ function shopDiscountsInfo(&$total, $is_cart=false){
                     echo '<td>'.$dis['title'].'</td>';
                     echo '<td width="200">&nbsp</td>';
                     echo '<td width="120" align="center">&nbsp</td>';
-                    if ($dis['unit']=='руб.'){
+                    if ($dis['unit']=='СЂСѓР±.'){
                         echo '<td width="100" align="center">'.number_format($dis['value'], 2, '.', '').'</td>';
                     } else {
                         echo '<td width="100" align="center">'.$dis['value'].'%</td>';
@@ -410,7 +410,7 @@ function shopDiscountPrice($item_id, $cat_id, $price){
     if($inDB->num_rows($res)){
         while ($dis = $inDB->fetch_assoc($res)){
             if ($dis['unit']=='%'){ $price = $price + ($price*($dis['value']/100))*$dis['sign']; }
-            if ($dis['unit']=='руб.'){ $price = $price + $dis['value']*$dis['sign']; }
+            if ($dis['unit']=='СЂСѓР±.'){ $price = $price + $dis['value']*$dis['sign']; }
         }
     }
     return $price;
@@ -452,7 +452,7 @@ function shopFinishOrder($cfg){
 
 		//BUILD MESSAGE
 		if($error==''){
-			// письмо администратору
+			// РїРёСЃСЊРјРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂСѓ
 			$a_mail_message  = $_LANG['GET_ORDER_FROM_CATALOG']." \"".$inConf->sitename."\".\n\n";
 			$a_mail_message .= $_LANG['CUSTOMER']."\n-----------------------------\r\n";
 			$a_mail_message .= $_LANG['FIO'].": " . $customer['fio'] . "\n";
@@ -466,7 +466,7 @@ function shopFinishOrder($cfg){
 			}
 			$a_mail_message .= $_LANG['ORDER']."\n---------------------------------\n";
 			//////////////////////////////////////////////////////////////////////////////////////
-			// список покупок
+			// СЃРїРёСЃРѕРє РїРѕРєСѓРїРѕРє
 			$row=0; $total = 0;
 			$item_mail_message = '';
 			while($item = $inDB->fetch_assoc($rs)){

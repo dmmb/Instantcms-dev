@@ -11,7 +11,7 @@
 //                        LICENSED BY GNU/GPL v2                              //
 //                                                                            //
 /******************************************************************************/
-	defined('VALID_CMS_ADMIN') or die('Доступ запрещен');
+	defined('VALID_CMS_ADMIN') or die('Р”РѕСЃС‚СѓРї Р·Р°РїСЂРµС‰РµРЅ');
 	$inDB = cmsDatabase::getInstance();
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -43,7 +43,7 @@
                             <tr>
                                 <td width="230" align="left" valign="middle" style="padding-left:20px; padding-top:5px;">
                                     <a href="/admin/">
-                                        <img src="images/toplogo.png" alt="InstantCMS - Панель управления" border="0" />
+                                        <img src="images/toplogo.png" alt="InstantCMS - РџР°РЅРµР»СЊ СѓРїСЂР°РІР»РµРЅРёСЏ" border="0" />
                                     </a>
                                 </td>
                                 <td width="120">
@@ -54,17 +54,17 @@
                                     <?php
                                         $new_messages =	cmsUser::isNewMessages($inUser->id);
                                         if ($new_messages){
-                                            $msg_link = '<a href="/users/'.$inUser->id.'/messages.html" style="color:yellow">Новые сообщения</a> '.$new_messages.'';
+                                            $msg_link = '<a href="/users/'.$inUser->id.'/messages.html" style="color:yellow">РќРѕРІС‹Рµ СЃРѕРѕР±С‰РµРЅРёСЏ</a> '.$new_messages.'';
                                         } else {
-                                            $msg_link = '<span>Нет новых сообщений</span>';
+                                            $msg_link = '<span>РќРµС‚ РЅРѕРІС‹С… СЃРѕРѕР±С‰РµРЅРёР№</span>';
                                         }
                                     ?>
-                                    <div class="juser">Вы &mdash; <a href="<?php echo cmsUser::getProfileURL($inUser->login); ?>" target="_blank" title="Перейти в профиль"><?php echo $inDB->get_field('cms_users', 'id='.$inUser->id, 'nickname'); ?></a></div>
+                                    <div class="juser">Р’С‹ &mdash; <a href="<?php echo cmsUser::getProfileURL($inUser->login); ?>" target="_blank" title="РџРµСЂРµР№С‚Рё РІ РїСЂРѕС„РёР»СЊ"><?php echo $inDB->get_field('cms_users', 'id='.$inUser->id, 'nickname'); ?></a></div>
                                     <div class="jmessages"><?php echo $msg_link; ?></div>
                                 </td>
                                 <td width="120">
-                                    <div class="jsite"><a href="/" target="_blank" class="" title="В новом окне">Открыть сайт</a></div>
-                                    <div class="jlogout"><a href="/logout" target="" >Выход</a></div>
+                                    <div class="jsite"><a href="/" target="_blank" class="" title="Р’ РЅРѕРІРѕРј РѕРєРЅРµ">РћС‚РєСЂС‹С‚СЊ СЃР°Р№С‚</a></div>
+                                    <div class="jlogout"><a href="/logout" target="" >Р’С‹С…РѕРґ</a></div>
                                 </td>
                             </tr>
                         </table>

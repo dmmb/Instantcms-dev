@@ -90,7 +90,7 @@ function users(){
     $model = new cms_model_users();
 
     $cfg = $inCore->loadComponentConfig('users');
-	// Ïðîâåðÿåì âêëþ÷åíè ëè êîìïîíåíò
+	// ÐŸÑ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼ Ð²ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸ Ð»Ð¸ ÐºÐ¾Ð¼Ð¿Ð¾Ð½ÐµÐ½Ñ‚
 	if(!$cfg['component_enabled']) { cmsCore::error404(); }
     $inCore->loadLanguage('components/users');
 
@@ -101,7 +101,7 @@ function users(){
     if (!isset($cfg['sw_search'])) { $cfg['sw_search'] = 1;  }
     if (!isset($cfg['sw_guest']))  { $cfg['sw_guest'] = 1; }
 
-    //Îïðåäåëÿåì àäðåñ äëÿ ðåäèðåêòà íàçàä
+    //ÐžÐ¿Ñ€ÐµÐ´ÐµÐ»ÑÐµÐ¼ Ð°Ð´Ñ€ÐµÑ Ð´Ð»Ñ Ñ€ÐµÐ´Ð¸Ñ€ÐµÐºÑ‚Ð° Ð½Ð°Ð·Ð°Ð´
     $back   = $inCore->getBackURL();
 	
 	$id     =   $inCore->request('id', 'int', 0);
@@ -582,7 +582,7 @@ if ($do=='comments'){
 
         $comments = cmsCore::callEvent('GET_COMMENTS', $comments);
 
-		// Ñ÷èòàåì îáùåå ÷èñëî êîììåíòàðèåâ
+		// Ð¡Ñ‡Ð¸Ñ‚Ð°ÐµÐ¼ Ð¾Ð±Ñ‰ÐµÐµ Ñ‡Ð¸ÑÐ»Ð¾ ÐºÐ¾Ð¼Ð¼ÐµÐ½Ñ‚Ð°Ñ€Ð¸ÐµÐ²
 		$records_total = $inDB->rows_count('cms_comments', 'user_id = '.$id.' AND published = 1');
 
 		$smarty = $inCore->initSmarty('components', 'com_users_comments.tpl');
@@ -601,7 +601,7 @@ if ($do=='comments'){
 /////////////////////////////// VIEW USER POSTS /////////////////////////////////////////////////////////////////////////////////////
 if ($do=='forumposts'){
 
-	// Ïðîâåðÿåì âêëþ÷åíè ëè êîìïîíåíò ôîðóì
+	// ÐŸÑ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼ Ð²ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸ Ð»Ð¸ ÐºÐ¾Ð¼Ð¿Ð¾Ð½ÐµÐ½Ñ‚ Ñ„Ð¾Ñ€ÑƒÐ¼
 	$cfg_forum = $inCore->loadComponentConfig('forum');
 	if(!$cfg_forum['component_enabled']) { cmsCore::error404(); }
 
@@ -622,7 +622,7 @@ if ($do=='forumposts'){
 					WHERE p.user_id = '$id'
 					ORDER BY p.pubdate DESC
 					LIMIT ".(($page-1)*$perpage).", $perpage";
-		// Ñ÷èòàåì îáùåå ÷èñëî ïîñòîâ íà ôîðóìå
+		// Ð¡Ñ‡Ð¸Ñ‚Ð°ÐµÐ¼ Ð¾Ð±Ñ‰ÐµÐµ Ñ‡Ð¸ÑÐ»Ð¾ Ð¿Ð¾ÑÑ‚Ð¾Ð² Ð½Ð° Ñ„Ð¾Ñ€ÑƒÐ¼Ðµ
 		$records_total = $inDB->rows_count('cms_forum_posts', 'user_id = '.$id.'');
 	} else {
 		$sql = "SELECT p.*, t.title as topic
@@ -631,7 +631,7 @@ if ($do=='forumposts'){
 					WHERE p.user_id = '$id' AND t.is_hidden = 0
 					ORDER BY p.pubdate DESC
 					LIMIT ".(($page-1)*$perpage).", $perpage";
-		// Ñ÷èòàåì îáùåå ÷èñëî ïîñòîâ íà ôîðóìå
+		// Ð¡Ñ‡Ð¸Ñ‚Ð°ÐµÐ¼ Ð¾Ð±Ñ‰ÐµÐµ Ñ‡Ð¸ÑÐ»Ð¾ Ð¿Ð¾ÑÑ‚Ð¾Ð² Ð½Ð° Ñ„Ð¾Ñ€ÑƒÐ¼Ðµ
 		$records_total = $inDB->rows_count('cms_forum_posts p LEFT JOIN cms_forum_threads t ON t.id = p.thread_id', 'p.user_id = '.$id.' AND t.is_hidden = 0');
 	}
 
@@ -925,9 +925,9 @@ if ($do=='avatar'){
 					WHERE user_id = '$id'
 					LIMIT 1";	
 			$inDB->query($sql);
-			// î÷èùàåì ïðåäûäóùóþ çàïèñü î ñìåíå àâàòàðà
+			// Ð¾Ñ‡Ð¸Ñ‰Ð°ÐµÐ¼ Ð¿Ñ€ÐµÐ´Ñ‹Ð´ÑƒÑ‰ÑƒÑŽ Ð·Ð°Ð¿Ð¸ÑÑŒ Ð¾ ÑÐ¼ÐµÐ½Ðµ Ð°Ð²Ð°Ñ‚Ð°Ñ€Ð°
 			cmsActions::removeObjectLog('add_avatar', $id);
-			// âûâîäèì ñîîáùåíèå â ëåíòó
+			// Ð²Ñ‹Ð²Ð¾Ð´Ð¸Ð¼ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ Ð² Ð»ÐµÐ½Ñ‚Ñƒ
 			cmsActions::log('add_avatar', array(
 				  'object' => '',
 				  'object_url' => '',
@@ -1040,9 +1040,9 @@ if ($do=='select_avatar'){
 					LIMIT 1";
 			$inDB->query($sql);
 
-			// î÷èùàåì ïðåäûäóùóþ çàïèñü î ñìåíå àâàòàðà
+			// Ð¾Ñ‡Ð¸Ñ‰Ð°ÐµÐ¼ Ð¿Ñ€ÐµÐ´Ñ‹Ð´ÑƒÑ‰ÑƒÑŽ Ð·Ð°Ð¿Ð¸ÑÑŒ Ð¾ ÑÐ¼ÐµÐ½Ðµ Ð°Ð²Ð°Ñ‚Ð°Ñ€Ð°
 			cmsActions::removeObjectLog('add_avatar', $id);
-			// âûâîäèì ñîîáùåíèå â ëåíòó
+			// Ð²Ñ‹Ð²Ð¾Ð´Ð¸Ð¼ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ Ð² Ð»ÐµÐ½Ñ‚Ñƒ
 			cmsActions::log('add_avatar', array(
 				  'object' => '',
 				  'object_url' => '',
@@ -1429,7 +1429,7 @@ if ($do=='editphoto'){
 }
 
 //============================================================================//
-//====================== Ïàêåòíîå ðåäàêòèðîâàíèå ôîòîãðàôèé ==================//
+//====================== ÐŸÐ°ÐºÐµÑ‚Ð½Ð¾Ðµ Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ñ„Ð¾Ñ‚Ð¾Ð³Ñ€Ð°Ñ„Ð¸Ð¹ ==================//
 //============================================================================//
 
 if ($do=='editphotolist'){
@@ -1445,7 +1445,7 @@ if ($do=='editphotolist'){
     $usr = $model->getUserShort($id);
     if (!$usr) { cmsCore::error404(); }
 
-    //ïðîâåðÿåì äîñòóï
+    //Ð¿Ñ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼ Ð´Ð¾ÑÑ‚ÑƒÐ¿
     foreach($photo_ids as $photo_id){
 
         $photo      = $model->getPhoto($photo_id);
@@ -1486,7 +1486,7 @@ if ($do=='editphotolist'){
 }
 
 //============================================================================//
-//============================ Âñå ôîòîãðàôèè ================================//
+//============================ Ð’ÑÐµ Ñ„Ð¾Ñ‚Ð¾Ð³Ñ€Ð°Ñ„Ð¸Ð¸ ================================//
 //============================================================================//
 
 if ($do=='viewphotos'){
@@ -1500,10 +1500,10 @@ if ($do=='viewphotos'){
 	$usr = $model->getUserShort($id);
 	if (!$usr){ cmsCore::error404(); }
 
-    //Ìîé ïðîôèëü èëè íåò
+    //ÐœÐ¾Ð¹ Ð¿Ñ€Ð¾Ñ„Ð¸Ð»ÑŒ Ð¸Ð»Ð¸ Ð½ÐµÑ‚
     $my_profile = ($inUser->id == $id);
 
-    //Îïðåäåëÿåì, äðóçüÿ ìû èëè íåò
+    //ÐžÐ¿Ñ€ÐµÐ´ÐµÐ»ÑÐµÐ¼, Ð´Ñ€ÑƒÐ·ÑŒÑ Ð¼Ñ‹ Ð¸Ð»Ð¸ Ð½ÐµÑ‚
 	$we_friends = ($inUser->id && !$my_profile) ? (int)usrIsFriends($usr['id'], $inUser->id) : 0;
 	if (!$we_friends) { $we_friends = 0; }
 
@@ -1513,7 +1513,7 @@ if ($do=='viewphotos'){
     $inPage->addPathway($usr['nickname'], cmsUser::getProfileURL($usr['login']));
     $inPage->addPathway($_LANG['PHOTOALBUMS']);
 
-    //Îòäàåì â øàáëîí
+    //ÐžÑ‚Ð´Ð°ÐµÐ¼ Ð² ÑˆÐ°Ð±Ð»Ð¾Ð½
     $smarty = $inCore->initSmarty('components', 'com_users_albums.tpl');
 	$smarty->assign('albums', $albums);
 	$smarty->assign('my_profile', $my_profile);
@@ -1523,7 +1523,7 @@ if ($do=='viewphotos'){
 }
 
 //============================================================================//
-//============================ Îäèí ôîòîàëüáîì ===============================//
+//============================ ÐžÐ´Ð¸Ð½ Ñ„Ð¾Ñ‚Ð¾Ð°Ð»ÑŒÐ±Ð¾Ð¼ ===============================//
 //============================================================================//
 
 if ($do=='viewalbum'){
@@ -1561,17 +1561,17 @@ if ($do=='viewalbum'){
     $photos     = array();
     $filter     = '';
 
-    //Ìîé ïðîôèëü èëè íåò
+    //ÐœÐ¾Ð¹ Ð¿Ñ€Ð¾Ñ„Ð¸Ð»ÑŒ Ð¸Ð»Ð¸ Ð½ÐµÑ‚
     $my_profile = ($inUser->id == $id);
 
-    //Îïðåäåëÿåì, äðóçüÿ ìû èëè íåò
+    //ÐžÐ¿Ñ€ÐµÐ´ÐµÐ»ÑÐµÐ¼, Ð´Ñ€ÑƒÐ·ÑŒÑ Ð¼Ñ‹ Ð¸Ð»Ð¸ Ð½ÐµÑ‚
 	$we_friends = ($inUser->id && !$my_profile) ? (int)usrIsFriends($usr['id'], $inUser->id) : 0;
 
 	if ($album['allow_who'] == 'all' || $my_profile || ($album['allow_who'] == 'friends' && $we_friends) || ($album['allow_who'] == 'registered' && $inUser->id)) {
     $photos = $model->getAlbumPhotos($usr['id'], $album_type, $album_id, $we_friends);
 	}
 
-    //Äåëèì íà ñòðàíèöû
+    //Ð”ÐµÐ»Ð¸Ð¼ Ð½Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñ‹
     $total      = sizeof($photos);
 
     if ($total){
@@ -1588,7 +1588,7 @@ if ($do=='viewalbum'){
         $photos = $page_photos; unset($page_photos);
     }
 
-    //Îòäàåì â øàáëîí
+    //ÐžÑ‚Ð´Ð°ÐµÐ¼ Ð² ÑˆÐ°Ð±Ð»Ð¾Ð½
     $smarty = $inCore->initSmarty('components', 'com_users_photos.tpl');
 	$smarty->assign('page_title', $album['title']);
 	$smarty->assign('album_type', $album_type);
@@ -1604,7 +1604,7 @@ if ($do=='viewalbum'){
 }
 
 //============================================================================//
-//============================ Óäàëèòü ôîòîàëüáîì ============================//
+//============================ Ð£Ð´Ð°Ð»Ð¸Ñ‚ÑŒ Ñ„Ð¾Ñ‚Ð¾Ð°Ð»ÑŒÐ±Ð¾Ð¼ ============================//
 //============================================================================//
 if ($do=='delalbum'){
 
@@ -1626,7 +1626,7 @@ if ($do=='delalbum'){
 
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// îñòàâëåíî äëÿ 301 ðåäèðåêòà ïî ñòàðûì ññûëêàì
+// Ð¾ÑÑ‚Ð°Ð²Ð»ÐµÐ½Ð¾ Ð´Ð»Ñ 301 Ñ€ÐµÐ´Ð¸Ñ€ÐµÐºÑ‚Ð° Ð¿Ð¾ ÑÑ‚Ð°Ñ€Ñ‹Ð¼ ÑÑÑ‹Ð»ÐºÐ°Ð¼
 if ($do=='viewboard'){ 
 	$usr = $model->getUserShort($id);
 	if (!$usr) { cmsCore::error404(); }
@@ -1702,12 +1702,12 @@ if ($do=='viewphoto'){
 					$photo['pubdate'] = $inCore->dateFormat($photo['pubdate'], true, false, false);
 	$photo['genderlink'] = cmsUser::getGenderLink($usr['id'], $usr['nickname'], 0, $photo['gender'], $usr['login']);
 					$photo['filesize'] = round(filesize(PATH.'/images/users/photos/medium/'.$photo['imageurl'])/1024, 2);
-					//ññûëêè íà ïðåäûäóùóþ è ñëåäóþùóþ ôîòîãðàôèè
+					//ÑÑÑ‹Ð»ÐºÐ¸ Ð½Ð° Ð¿Ñ€ÐµÐ´Ñ‹Ð´ÑƒÑ‰ÑƒÑŽ Ð¸ ÑÐ»ÐµÐ´ÑƒÑŽÑ‰ÑƒÑŽ Ñ„Ð¾Ñ‚Ð¾Ð³Ñ€Ð°Ñ„Ð¸Ð¸
 					$previd = $inDB->get_fields('cms_user_photos', "id>'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id ASC');
 					$nextid = $inDB->get_fields('cms_user_photos', "id<'{$photo['id']}' AND user_id = '{$usr['id']}' AND album_id='{$photo['album_id']}'", 'id, title, pubdate', 'id DESC');
-	// Ïðîâåðÿåì ïðàâà äîñòóïà
+	// ÐŸÑ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼ Ð¿Ñ€Ð°Ð²Ð° Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð°
 	$is_allow = usrAllowed($photo['allow_who'], $id) || $inCore->userIsAdmin($inUser->id) ? true : false;
-	// Åñëè âèäèì ôîòî, îáíîâëÿåì ïðîñìîòðû
+	// Ð•ÑÐ»Ð¸ Ð²Ð¸Ð´Ð¸Ð¼ Ñ„Ð¾Ñ‚Ð¾, Ð¾Ð±Ð½Ð¾Ð²Ð»ÑÐµÐ¼ Ð¿Ñ€Ð¾ÑÐ¼Ð¾Ñ‚Ñ€Ñ‹
 	if ($is_allow) { $inDB->query("UPDATE cms_user_photos SET hits = hits + 1 WHERE id = ".$photo['id']) ; }
 					
 				$smarty = $inCore->initSmarty('components', 'com_users_photos_view.tpl');
@@ -1750,7 +1750,7 @@ if ($do=='addfriend'){
 				$sql   = "UPDATE cms_user_friends SET is_accepted = 1 WHERE id = '$fr_id'";
 				$inDB->query($sql);
 					cmsCore::addSessionMessage($_LANG['ADD_FRIEND_OK'] . $usr['nickname'], 'info');
-					//ðåãèñòðèðóåì ñîáûòèå
+					//Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€ÑƒÐµÐ¼ ÑÐ¾Ð±Ñ‹Ñ‚Ð¸Ðµ
 					cmsActions::log('add_friend', array(
 						'object' => $inUser->nickname,
 						'user_id' => $usr['id'],
@@ -1883,7 +1883,7 @@ if ($do=='sendmessage'){
     }
 
     //
-    // Îòïðàâêà ñîîáùåíèé
+    // ÐžÑ‚Ð¿Ñ€Ð°Ð²ÐºÐ° ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ð¹
     //
     if($inCore->inRequest('gosend')){
 
@@ -1899,13 +1899,13 @@ if ($do=='sendmessage'){
         $group_id       = $inCore->request('group_id', 'int', 0);
 
         //
-        // Îáû÷íàÿ îòïðàâêà (1 ïîëó÷àòåëü)
+        // ÐžÐ±Ñ‹Ñ‡Ð½Ð°Ñ Ð¾Ñ‚Ð¿Ñ€Ð°Ð²ÐºÐ° (1 Ð¿Ð¾Ð»ÑƒÑ‡Ð°Ñ‚ÐµÐ»ÑŒ)
         //
         if (!$inCore->inRequest('massmail') && !$send_to_group){
             
-            //îòïðàâëÿåì ñîîáùåíèå
+            //Ð¾Ñ‚Ð¿Ñ€Ð°Ð²Ð»ÑÐµÐ¼ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ
             $msg_id = cmsUser::sendMessage($from_id, $to_id, $message);
-			// îòïðàâëÿåì óâåäîìëåíèå íà email åñëè íóæíî
+			// Ð¾Ñ‚Ð¿Ñ€Ð°Ð²Ð»ÑÐµÐ¼ ÑƒÐ²ÐµÐ´Ð¾Ð¼Ð»ÐµÐ½Ð¸Ðµ Ð½Ð° email ÐµÑÐ»Ð¸ Ð½ÑƒÐ¶Ð½Ð¾
 			$model->sendNotificationByEmail($to_id, $from_id, $msg_id);
 
             $inCore->addSessionMessage($_LANG['SEND_MESS_OK'], 'info');
@@ -1915,17 +1915,17 @@ if ($do=='sendmessage'){
         }
 
         //
-        // äàëåå èäóò ìàññîâûå ðàññûëêè, äîñòóïíûå òîëüêî àäìèíàì
+        // Ð´Ð°Ð»ÐµÐµ Ð¸Ð´ÑƒÑ‚ Ð¼Ð°ÑÑÐ¾Ð²Ñ‹Ðµ Ñ€Ð°ÑÑÑ‹Ð»ÐºÐ¸, Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ñ‹Ðµ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð°Ð´Ð¼Ð¸Ð½Ð°Ð¼
         //
         if (!$inUser->is_admin){ $inCore->halt(); }
 
-        // îòïðàâèòü âñåì: ïîëó÷àåì ñïèñîê âñåõ ïîëüçîâàòåëåé
+        // Ð¾Ñ‚Ð¿Ñ€Ð°Ð²Ð¸Ñ‚ÑŒ Ð²ÑÐµÐ¼: Ð¿Ð¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ ÑÐ¿Ð¸ÑÐ¾Ðº Ð²ÑÐµÑ… Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÐµÐ¹
         if ($inCore->inRequest('massmail')) {
             $userlist    = cmsUser::getAllUsers();
             $success_msg = $_LANG['SEND_MESS_ALL_OK'];
         }
 
-        // îòïðàâèòü ãðóïïå: ïîëó÷àåì ñïèñîê ÷ëåíîâ ãðóïïû
+        // Ð¾Ñ‚Ð¿Ñ€Ð°Ð²Ð¸Ñ‚ÑŒ Ð³Ñ€ÑƒÐ¿Ð¿Ðµ: Ð¿Ð¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ ÑÐ¿Ð¸ÑÐ¾Ðº Ñ‡Ð»ÐµÐ½Ð¾Ð² Ð³Ñ€ÑƒÐ¿Ð¿Ñ‹
         if ($send_to_group) {
             $userlist    = cmsUser::getGroupMembers($group_id);
             if ($userlist){
@@ -1933,13 +1933,13 @@ if ($do=='sendmessage'){
             }
         }
 
-        // ïðîâåðÿåì ÷òî åñòü êîìó îòïðàâëÿòü
+        // Ð¿Ñ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼ Ñ‡Ñ‚Ð¾ ÐµÑÑ‚ÑŒ ÐºÐ¾Ð¼Ñƒ Ð¾Ñ‚Ð¿Ñ€Ð°Ð²Ð»ÑÑ‚ÑŒ
         if (!$userlist){
             $inCore->addSessionMessage($_LANG['ERR_SEND_MESS'], 'error');
             $inCore->redirectBack();
         }
 
-        // îòïðàâëÿåì âñåì ïî ñïèñêó
+        // Ð¾Ñ‚Ð¿Ñ€Ð°Ð²Ð»ÑÐµÐ¼ Ð²ÑÐµÐ¼ Ð¿Ð¾ ÑÐ¿Ð¸ÑÐºÑƒ
         foreach ($userlist as $key=>$usr){
             $msg_id = cmsUser::sendMessage(USER_MASSMAIL, $usr['id'], $message);
 			$model->sendNotificationByEmail($usr['id'], $from_id, $msg_id);
@@ -2070,7 +2070,7 @@ if ($do=='giveaward'){
 					VALUES ('$to_id', NOW(), '$title', '$description', '$imageurl', '$from_id', '$award_id')";
 			$inDB->query($sql);
 			$award_id = $inDB->get_last_id('cms_user_awards');
-			//ðåãèñòðèðóåì ñîáûòèå
+			//Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€ÑƒÐµÐ¼ ÑÐ¾Ð±Ñ‹Ñ‚Ð¸Ðµ
 			cmsActions::log('add_award', array(
 					'object' => '"'.$title.'"',
 					'user_id' => $to_id,
@@ -2319,33 +2319,33 @@ if ($do=='addfile'){
 			$size       = $inCore->strClear($data_array["size"]);
 			$size_mb    += round(($size/1024)/1024, 2);
 
-			// ïðîâåðÿåì òèï ôàéëà
+			// Ð¿Ñ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼ Ñ‚Ð¸Ð¿ Ñ„Ð°Ð¹Ð»Ð°
 			$types 		= $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar';
 			$types 		= str_replace('php', '', $types);
 			$types 		= str_replace('htm', '', $types);
 			$types 		= str_replace('htaccess', '', $types);
 			$maytypes 	= explode(',', str_replace(' ', '', $types));  
 			$path_parts = pathinfo($name);
-			// ðàñøèðåíèå ôàéëà
+			// Ñ€Ð°ÑÑˆÐ¸Ñ€ÐµÐ½Ð¸Ðµ Ñ„Ð°Ð¹Ð»Ð°
 			$ext        = strtolower($path_parts['extension']);
-			// ôëàã ñóùåñòâîâàíèÿ ðàñøèðåíèÿ â ðàçðåøåííûõ
+			// Ñ„Ð»Ð°Ð³ ÑÑƒÑ‰ÐµÑÑ‚Ð²Ð¾Ð²Ð°Ð½Ð¸Ñ Ñ€Ð°ÑÑˆÐ¸Ñ€ÐµÐ½Ð¸Ñ Ð² Ñ€Ð°Ð·Ñ€ÐµÑˆÐµÐ½Ð½Ñ‹Ñ…
 			$may        = in_array($ext, $maytypes);
 			if(!$may) { cmsCore::addSessionMessage($_LANG['ERROR_TYPE_FILE'].': '.$types, 'error'); $inCore->redirectBack(); }
 			
-			// Ïåðåâîäèì èìÿ ôàéëà â òðàíñëèò
-			// îòäåëÿåì èìÿ ôàéëà îò ðàñøèðåíèÿ
+			// ÐŸÐµÑ€ÐµÐ²Ð¾Ð´Ð¸Ð¼ Ð¸Ð¼Ñ Ñ„Ð°Ð¹Ð»Ð° Ð² Ñ‚Ñ€Ð°Ð½ÑÐ»Ð¸Ñ‚
+			// Ð¾Ñ‚Ð´ÐµÐ»ÑÐµÐ¼ Ð¸Ð¼Ñ Ñ„Ð°Ð¹Ð»Ð° Ð¾Ñ‚ Ñ€Ð°ÑÑˆÐ¸Ñ€ÐµÐ½Ð¸Ñ
 			$name  = substr($name, 0, strrpos($name, '.'));
-			// òðàíñëèòèðóåì
+			// Ñ‚Ñ€Ð°Ð½ÑÐ»Ð¸Ñ‚Ð¸Ñ€ÑƒÐµÐ¼
 			$name  = cmsCore::strToURL($name);
-			// ïðèñîåäèíÿåì ðàñøèðåíèÿ ôàéëà
+			// Ð¿Ñ€Ð¸ÑÐ¾ÐµÐ´Ð¸Ð½ÑÐµÐ¼ Ñ€Ð°ÑÑˆÐ¸Ñ€ÐµÐ½Ð¸Ñ Ñ„Ð°Ð¹Ð»Ð°
 			$name .= '.'.$ext;
-			// Îáðàáàòûâàåì ïîëó÷èâøååñÿ èìÿ ôàéëà äëÿ çàïèñè â ÁÄ
+			// ÐžÐ±Ñ€Ð°Ð±Ð°Ñ‚Ñ‹Ð²Ð°ÐµÐ¼ Ð¿Ð¾Ð»ÑƒÑ‡Ð¸Ð²ÑˆÐµÐµÑÑ Ð¸Ð¼Ñ Ñ„Ð°Ð¹Ð»Ð° Ð´Ð»Ñ Ð·Ð°Ð¿Ð¸ÑÐ¸ Ð² Ð‘Ð”
 			$name  = $inCore->strClear($name);
 
-			// Ïðîâåðÿåì ñâîáîäíîå ìåñòî
+			// ÐŸÑ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼ ÑÐ²Ð¾Ð±Ð¾Ð´Ð½Ð¾Ðµ Ð¼ÐµÑÑ‚Ð¾
 			if ($size_mb > $free_mb && $cfg['filessize']){ cmsCore::addSessionMessage($_LANG['YOUR_FILE_LIMIT'].' ('.$max_mb.' '.$_LANG['MBITE'].') '.$_LANG['IS_OVER_LIMIT'].'<br>'.$_LANG['FOR_NEW_FILE_DEL_OLD'], 'error'); $inCore->redirectBack(); }
 
-			// Çàãðóæàåì ôàéë	
+			// Ð—Ð°Ð³Ñ€ÑƒÐ¶Ð°ÐµÐ¼ Ñ„Ð°Ð¹Ð»	
 			if ($inCore->moveUploadedFile($tmp_name, PATH."/upload/userfiles/$id/$name", $error)) {
 					
 				$loaded_files[] = $name;
@@ -2590,7 +2590,7 @@ if ($do=='awardslist'){
 		$is_yes_awards = true;
 		$aws = array();
 		while($aw = $inDB->fetch_assoc($result)){
-				//Ïåðåáèðàåì âñå íàãðàäû è èùåì ïîëüçîâàòåëåé ñ òåêóùåé íàãðàäîé
+				//ÐŸÐµÑ€ÐµÐ±Ð¸Ñ€Ð°ÐµÐ¼ Ð²ÑÐµ Ð½Ð°Ð³Ñ€Ð°Ð´Ñ‹ Ð¸ Ð¸Ñ‰ÐµÐ¼ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÐµÐ¹ Ñ Ñ‚ÐµÐºÑƒÑ‰ÐµÐ¹ Ð½Ð°Ð³Ñ€Ð°Ð´Ð¾Ð¹
 					$sql =  "SELECT u.id as id, u.nickname as nickname, u.login as login, IFNULL(p.gender, 'm') as gender
 							 FROM cms_user_awards aw
 							 LEFT JOIN cms_users u ON u.id = aw.user_id
@@ -2712,7 +2712,7 @@ if ($do=='votekarma'){
                 $inDB->query($sql);
 								$wall_id = $inDB->get_last_id('cms_user_wall');
 								if ($author_id != $user_id){
-									//ðåãèñòðèðóåì ñîáûòèå
+									//Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€ÑƒÐµÐ¼ ÑÐ¾Ð±Ñ‹Ñ‚Ð¸Ðµ
 									cmsActions::log('add_wall', array(
 											'object' => $usr['nickname'],
 											'object_url' => cmsUser::getProfileURL($usr['login']),
@@ -2760,7 +2760,7 @@ if ($do=='votekarma'){
 										VALUES ('$user_id', '$author_id', NOW(), '$message', '$usertype')";
 								$inDB->query($sql);
 								$wall_id = $inDB->get_last_id('cms_user_wall');
-								//ðåãèñòðèðóåì ñîáûòèå
+								//Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€ÑƒÐµÐ¼ ÑÐ¾Ð±Ñ‹Ñ‚Ð¸Ðµ
 								cmsActions::log('add_wall_club', array(
 											'object' => $club['title'],
 											'object_url' => '/clubs/'.$club['id'],
@@ -2778,7 +2778,7 @@ if ($do=='votekarma'){
 	}
 
 //============================================================================//
-//================================  Èíâàéòû  =================================//
+//================================  Ð˜Ð½Ð²Ð°Ð¹Ñ‚Ñ‹  =================================//
 //============================================================================//
 if ($do=='invites'){
 
@@ -2826,7 +2826,7 @@ if ($do=='invites'){
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * äëÿ ïëàãèíîâ ðîóòåðà
+     * Ð´Ð»Ñ Ð¿Ð»Ð°Ð³Ð¸Ð½Ð¾Ð² Ñ€Ð¾ÑƒÑ‚ÐµÑ€Ð°
      */
 	$inCore->executePluginRoute($do);
 

@@ -14,7 +14,7 @@
                 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251";
 
         $inDB->query($sql);
-        echo '<p>Таблица <strong>cms_user_invites</strong> создана</p>';
+        echo '<p>РўР°Р±Р»РёС†Р° <strong>cms_user_invites</strong> СЃРѕР·РґР°РЅР°</p>';
 
     }
 

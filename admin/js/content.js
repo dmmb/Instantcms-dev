@@ -19,14 +19,14 @@ function sendContentForm(opt, object_id, subject_id){
     var sel  = checked();
 
     if (sel){
-        if (opt!='delete' || confirm('Удалить отмеченные статьи ('+sel+' шт.)?')){
+        if (opt!='delete' || confirm('РЈРґР°Р»РёС‚СЊ РѕС‚РјРµС‡РµРЅРЅС‹Рµ СЃС‚Р°С‚СЊРё ('+sel+' С€С‚.)?')){
 
             document.selform.action = link;
             document.selform.submit();
 
         }
     } else {
-        alert('Нет отмеченных статей');
+        alert('РќРµС‚ РѕС‚РјРµС‡РµРЅРЅС‹С… СЃС‚Р°С‚РµР№');
     }
 
 }
@@ -63,11 +63,11 @@ function moveItem(item_id, dir){
 
 function deleteCat(cat_name, cat_id){
 
-    var sure = confirm('Удалить раздел "'+cat_name+'" и подразделы?');
+    var sure = confirm('РЈРґР°Р»РёС‚СЊ СЂР°Р·РґРµР» "'+cat_name+'" Рё РїРѕРґСЂР°Р·РґРµР»С‹?');
 
     if (!sure){ return; }
 
-    var is_with_content = confirm('Удалить все вложенные статьи?');
+    var is_with_content = confirm('РЈРґР°Р»РёС‚СЊ РІСЃРµ РІР»РѕР¶РµРЅРЅС‹Рµ СЃС‚Р°С‚СЊРё?');
 
     var link = '?view=cats&do=delete&id='+cat_id;
 

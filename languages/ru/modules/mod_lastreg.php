@@ -17,6 +17,6 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * e-mail: firs.yura@gmail.com
  * site: firs.org.ua
  */
-$_LANG['LASTREG_TOTAL']        ='Всего';
-$_LANG['LASTREG_NOT_DATA']     ='Нет данных для отображения.';
+$_LANG['LASTREG_TOTAL']        ='Р’СЃРµРіРѕ';
+$_LANG['LASTREG_NOT_DATA']     ='РќРµС‚ РґР°РЅРЅС‹С… РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ.';
 ?>

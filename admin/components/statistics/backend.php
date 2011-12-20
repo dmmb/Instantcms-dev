@@ -66,7 +66,7 @@ function getChart($data, $processor='', $rownums = true, $rowlines = false){
 					$html .= '<td width="30%" style="'.$style.'">'.$title.'</td>';
 				}
 			} else {
-				$html .= '<td width="30%" style="'.$style.'">Не определен</td>';			
+				$html .= '<td width="30%" style="'.$style.'">РќРµ РѕРїСЂРµРґРµР»РµРЅ</td>';			
 			}
 			$html .= '<td style="'.$style.'">';
 				$html .= '<div style="width:'.$percent.'%;float:left;padding:4px;height:15px;background-color:gray;color:white;font-size:10px;">';
@@ -122,27 +122,27 @@ function getAgent($agent){
 
 }
 
-	cpAddPathway('Статистика сайта', '?view=components&do=config&id='.$_REQUEST['id']);
+	cpAddPathway('РЎС‚Р°С‚РёСЃС‚РёРєР° СЃР°Р№С‚Р°', '?view=components&do=config&id='.$_REQUEST['id']);
 	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; }
 		$toolmenu = array();
 		$toolmenu[1]['icon'] = 'list.gif';
-		$toolmenu[1]['title'] = 'Статистика';
+		$toolmenu[1]['title'] = 'РЎС‚Р°С‚РёСЃС‚РёРєР°';
 		$toolmenu[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list';
 
 		$toolmenu[2]['icon'] = 'clock.gif';
-		$toolmenu[2]['title'] = 'Распределение по времени';
+		$toolmenu[2]['title'] = 'Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ РїРѕ РІСЂРµРјРµРЅРё';
 		$toolmenu[2]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=time';
 
 		$toolmenu[3]['icon'] = 'calendar.gif';
-		$toolmenu[3]['title'] = 'Статистика за месяц';
+		$toolmenu[3]['title'] = 'РЎС‚Р°С‚РёСЃС‚РёРєР° Р·Р° РјРµСЃСЏС†';
 		$toolmenu[3]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=month';
 
 		$toolmenu[4]['icon'] = 'refers.gif';
-		$toolmenu[4]['title'] = 'Источники просмотров';
+		$toolmenu[4]['title'] = 'РСЃС‚РѕС‡РЅРёРєРё РїСЂРѕСЃРјРѕС‚СЂРѕРІ';
 		$toolmenu[4]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=refers';
 
 		$toolmenu[9]['icon'] = 'config.gif';
-		$toolmenu[9]['title'] = 'Настройки компонента';
+		$toolmenu[9]['title'] = 'РќР°СЃС‚СЂРѕР№РєРё РєРѕРјРїРѕРЅРµРЅС‚Р°';
 		$toolmenu[9]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config';
 	
 		cpToolMenu($toolmenu);
@@ -157,7 +157,7 @@ function getAgent($agent){
 	}
 
 	if ($opt == 'list'){
-		echo '<h3>Статистика</h3>';
+		echo '<h3>РЎС‚Р°С‚РёСЃС‚РёРєР°</h3>';
 		
 		//visitors today
 		$sql = "SELECT id FROM cms_stats WHERE DATE(logdate) = CURDATE() GROUP BY ip";
@@ -195,25 +195,25 @@ function getAgent($agent){
 		$startdate = mysql_fetch_assoc($result);
 		$startdate = $startdate['logdate'];
 	
-		echo '<div style="padding:10px;clear:both"><a href="/" target="_blank">Открыть сайт в новом окне</a> &rarr;</div>';
+		echo '<div style="padding:10px;clear:both"><a href="/" target="_blank">РћС‚РєСЂС‹С‚СЊ СЃР°Р№С‚ РІ РЅРѕРІРѕРј РѕРєРЅРµ</a> &rarr;</div>';
 		
 		echo '<div class="blockdiv">';		
-			echo '<div><strong>Посетителей сегодня: </strong>'.$today_v.'</div>';
-			echo '<div><strong>Просмотров сегодня: </strong>'.$today_h.'</div>';				
+			echo '<div><strong>РџРѕСЃРµС‚РёС‚РµР»РµР№ СЃРµРіРѕРґРЅСЏ: </strong>'.$today_v.'</div>';
+			echo '<div><strong>РџСЂРѕСЃРјРѕС‚СЂРѕРІ СЃРµРіРѕРґРЅСЏ: </strong>'.$today_h.'</div>';				
 		echo '</div>';
 		echo '<div class="blockdiv">';		
-			echo '<div><strong>Посетителей за сутки: </strong>'.$day_v.'</div>';
-			echo '<div><strong>Просмотров за сутки: </strong>'.$day_h.'</div>';				
+			echo '<div><strong>РџРѕСЃРµС‚РёС‚РµР»РµР№ Р·Р° СЃСѓС‚РєРё: </strong>'.$day_v.'</div>';
+			echo '<div><strong>РџСЂРѕСЃРјРѕС‚СЂРѕРІ Р·Р° СЃСѓС‚РєРё: </strong>'.$day_h.'</div>';				
 		echo '</div>';
 
 		echo '<div class="blockdiv">';		
-			echo '<div><strong>Начало сбора статистики: </strong></div>';
+			echo '<div><strong>РќР°С‡Р°Р»Рѕ СЃР±РѕСЂР° СЃС‚Р°С‚РёСЃС‚РёРєРё: </strong></div>';
 			echo '<div>'.$startdate.'</div>';
 		echo '</div>';
 
 		echo '<div class="blockdiv" style="border:solid 1px gray; background-color:white">';		
-			echo '<div><strong>Посетителей за все время: </strong>'.$alltime_v.'</div>';
-			echo '<div><strong>Просмотров за все время: </strong>'.$alltime_h.'</div>';				
+			echo '<div><strong>РџРѕСЃРµС‚РёС‚РµР»РµР№ Р·Р° РІСЃРµ РІСЂРµРјСЏ: </strong>'.$alltime_v.'</div>';
+			echo '<div><strong>РџСЂРѕСЃРјРѕС‚СЂРѕРІ Р·Р° РІСЃРµ РІСЂРµРјСЏ: </strong>'.$alltime_h.'</div>';				
 		echo '</div>';
 
 		//popular site pages
@@ -226,7 +226,7 @@ function getAgent($agent){
 		
 		if (mysql_num_rows($result)){
 			echo '<div class="blockdiv_pop">';
-			echo '<div><strong>Популярные страницы сайта</strong></div>';
+			echo '<div><strong>РџРѕРїСѓР»СЏСЂРЅС‹Рµ СЃС‚СЂР°РЅРёС†С‹ СЃР°Р№С‚Р°</strong></div>';
 			$data = array();
 			while ($ag = mysql_fetch_assoc($result)) { $data[] = $ag; }
 			echo getChart($data, 'getLink');
@@ -243,7 +243,7 @@ function getAgent($agent){
 		
 		if (mysql_num_rows($result)){
 			echo '<div class="blockdiv_pop">';
-			echo '<div><strong>Популярные агенты</strong></div>';
+			echo '<div><strong>РџРѕРїСѓР»СЏСЂРЅС‹Рµ Р°РіРµРЅС‚С‹</strong></div>';
 			$data = array();
 			while ($ag = mysql_fetch_assoc($result)) { $data[] = $ag; }
 			echo getChart($data, 'getAgent');
@@ -264,7 +264,7 @@ function getAgent($agent){
 		
 		if (mysql_num_rows($result)){
 			echo '<div class="blockdiv_pop">';
-			echo '<div><strong>Активность поисковых ботов</strong></div>';
+			echo '<div><strong>РђРєС‚РёРІРЅРѕСЃС‚СЊ РїРѕРёСЃРєРѕРІС‹С… Р±РѕС‚РѕРІ</strong></div>';
 			$data = array();
 			while ($ag = mysql_fetch_assoc($result)) { $data[] = $ag; }
 			echo getChart($data, 'getAgent');
@@ -276,8 +276,8 @@ function getAgent($agent){
 
 	if ($opt == 'refers'){
 
-		cpAddPathway('Источники', $_SERVER['REQUEST_URI']);
-		echo '<h3>Источники</h3>';
+		cpAddPathway('РСЃС‚РѕС‡РЅРёРєРё', $_SERVER['REQUEST_URI']);
+		echo '<h3>РСЃС‚РѕС‡РЅРёРєРё</h3>';
 		
 		//useragents
 		$sql = "SELECT refer as title, COUNT( refer ) AS cnt
@@ -298,13 +298,13 @@ function getAgent($agent){
 	}
 	
 	if ($opt == 'time'){
-		cpAddPathway('По времени суток', $_SERVER['REQUEST_URI']);
+		cpAddPathway('РџРѕ РІСЂРµРјРµРЅРё СЃСѓС‚РѕРє', $_SERVER['REQUEST_URI']);
 	
-		echo '<h3>Активность посетителей по времени суток</h3>';
+		echo '<h3>РђРєС‚РёРІРЅРѕСЃС‚СЊ РїРѕСЃРµС‚РёС‚РµР»РµР№ РїРѕ РІСЂРµРјРµРЅРё СЃСѓС‚РѕРє</h3>';
 		//activity for last 24h
 		echo '<div style="width:50%;float:left">';
 			echo '<div class="blockdiv_pop">';
-			echo '<div><strong>За последние сутки</strong></div>';			
+			echo '<div><strong>Р—Р° РїРѕСЃР»РµРґРЅРёРµ СЃСѓС‚РєРё</strong></div>';			
 						
 			$data = array();
 			for($h = 0; $h < 24; $h++){
@@ -332,7 +332,7 @@ function getAgent($agent){
 		//activity for all time
 		echo '<div style="width:50%;float:left">';
 			echo '<div class="blockdiv_pop">';
-			echo '<div><strong>За все время</strong></div>';			
+			echo '<div><strong>Р—Р° РІСЃРµ РІСЂРµРјСЏ</strong></div>';			
 			
 			$data = array();
 			for($h = 0; $h < 24; $h++){
@@ -357,9 +357,9 @@ function getAgent($agent){
 	}
 	
 	if ($opt == 'month'){
-		cpAddPathway('За месяц', $_SERVER['REQUEST_URI']);
+		cpAddPathway('Р—Р° РјРµСЃСЏС†', $_SERVER['REQUEST_URI']);
 	
-		echo '<h3>Статистика за месяц</h3>';
+		echo '<h3>РЎС‚Р°С‚РёСЃС‚РёРєР° Р·Р° РјРµСЃСЏС†</h3>';
 		echo '<div class="blockdiv_pop">';
 
 		$m = str_replace('0', '', date('m'));
@@ -392,22 +392,22 @@ function getAgent($agent){
 
 	if($opt=='config'){
 
-	cpAddPathway('Настройки', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config');	
-	echo '<h3>Настройки компонента</h3>';
+	cpAddPathway('РќР°СЃС‚СЂРѕР№РєРё', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=config');	
+	echo '<h3>РќР°СЃС‚СЂРѕР№РєРё РєРѕРјРїРѕРЅРµРЅС‚Р°</h3>';
 	
 	?>
 	<form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
         <table width="370" border="0" cellpadding="10" cellspacing="0" class="proptable">
           <tr>
-            <td width="350" colspan="2" valign="top"><p><b>Внимание!</b></p>
-              <p>Компонент &quot;Статистика пользователя&quot; работает только если в общих настройках сайта включен сбор статистики.</p>
-              <p>Работа компонента может несколько увеличивать время загрузки страниц при большом количестве посетителей. </p>
+            <td width="350" colspan="2" valign="top"><p><b>Р’РЅРёРјР°РЅРёРµ!</b></p>
+              <p>РљРѕРјРїРѕРЅРµРЅС‚ &quot;РЎС‚Р°С‚РёСЃС‚РёРєР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ&quot; СЂР°Р±РѕС‚Р°РµС‚ С‚РѕР»СЊРєРѕ РµСЃР»Рё РІ РѕР±С‰РёС… РЅР°СЃС‚СЂРѕР№РєР°С… СЃР°Р№С‚Р° РІРєР»СЋС‡РµРЅ СЃР±РѕСЂ СЃС‚Р°С‚РёСЃС‚РёРєРё.</p>
+              <p>Р Р°Р±РѕС‚Р° РєРѕРјРїРѕРЅРµРЅС‚Р° РјРѕР¶РµС‚ РЅРµСЃРєРѕР»СЊРєРѕ СѓРІРµР»РёС‡РёРІР°С‚СЊ РІСЂРµРјСЏ Р·Р°РіСЂСѓР·РєРё СЃС‚СЂР°РЅРёС† РїСЂРё Р±РѕР»СЊС€РѕРј РєРѕР»РёС‡РµСЃС‚РІРµ РїРѕСЃРµС‚РёС‚РµР»РµР№. </p>
             <label></label></td>
           </tr>
         </table>
         <p>
           <input name="opt" type="hidden" id="do" value="saveconfig" />
-          <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
+          <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
         </p>
 </form>    <?php
 	

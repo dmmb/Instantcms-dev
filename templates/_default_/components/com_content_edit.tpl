@@ -1,5 +1,5 @@
 {* ================================================================================ *}
-{* ================= Редактирование/создание статьи =============================== *}
+{* ================= Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ/СЃРѕР·РґР°РЅРёРµ СЃС‚Р°С‚СЊРё =============================== *}
 {* ================================================================================ *}
 
 <div class="con_heading">{$pagetitle}</div>
@@ -12,7 +12,7 @@
 				<table width="700" border="0" cellspacing="5" class="proptable">
 					<tr>
 						<td width="230" valign="top">
-							<strong>Заголовок статьи:</strong><br />
+							<strong>Р—Р°РіРѕР»РѕРІРѕРє СЃС‚Р°С‚СЊРё:</strong><br />
 							<span class="hinttext">{$LANG.SHOW_ON_SITE}</span>
 						</td>
 						<td valign="top">
@@ -21,7 +21,7 @@
 					</tr>
 					<tr>
 						<td valign="top">
-							<strong>Теги статьи:</strong><br />
+							<strong>РўРµРіРё СЃС‚Р°С‚СЊРё:</strong><br />
 							<span class="hinttext">{$LANG.KEYWORDS_TEXT}</span>
 						</td>
 						<td valign="top">
@@ -57,7 +57,7 @@
                     {if $cfg.img_users}
 					<tr>
 						<td valign="top" style="padding-top:8px">
-							<strong>Фотография:</strong>
+							<strong>Р¤РѕС‚РѕРіСЂР°С„РёСЏ:</strong>
 						</td>
 						<td>
                             {if $mod.image}
@@ -67,7 +67,7 @@
                                 <table cellpadding="0" cellspacing="0" border="0">
                                     <tr>
                                         <td width="16"><input type="checkbox" id="delete_image" name="delete_image" value="1" /></td>
-                                        <td><label for="delete_image">Удалить фотографию</label></td>
+                                        <td><label for="delete_image">РЈРґР°Р»РёС‚СЊ С„РѕС‚РѕРіСЂР°С„РёСЋ</label></td>
                                     </tr>
                                 </table>
                             {/if}
@@ -102,11 +102,11 @@
     <script type="text/javascript">
         {literal}
             function submitArticle(){
-                if (!$('input#title').val()){ alert('Укажите заголовок статьи'); return false; }
+                if (!$('input#title').val()){ alert('РЈРєР°Р¶РёС‚Рµ Р·Р°РіРѕР»РѕРІРѕРє СЃС‚Р°С‚СЊРё'); return false; }
         {/literal}
             {if $do=='addarticle'}
                 {literal}
-                    if (!$('select#category_id').val()){ alert('Выберите раздел'); return false; }
+                    if (!$('select#category_id').val()){ alert('Р’С‹Р±РµСЂРёС‚Рµ СЂР°Р·РґРµР»'); return false; }
                 {/literal}
             {/if}
         {literal}

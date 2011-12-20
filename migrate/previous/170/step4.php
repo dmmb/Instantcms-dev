@@ -19,7 +19,7 @@
                 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251";
 
         $inDB->query($sql);
-        echo '<p>Таблица <strong>cms_user_albums</strong> создана</p>';
+        echo '<p>РўР°Р±Р»РёС†Р° <strong>cms_user_albums</strong> СЃРѕР·РґР°РЅР°</p>';
 
         $sql = "SELECT user_id as id
             FROM cms_user_photos
@@ -34,13 +34,13 @@
 
             while($user = $inDB->fetch_assoc($result)){
 
-                $album_id = $model->addPhotoAlbum(array('user_id'=>$user['id'], 'title'=>'Мой фотоальбом'));
+                $album_id = $model->addPhotoAlbum(array('user_id'=>$user['id'], 'title'=>'РњРѕР№ С„РѕС‚РѕР°Р»СЊР±РѕРј'));
 
                 $inDB->query("UPDATE cms_user_photos SET album_id = '{$album_id}' WHERE user_id = '{$user['id']}'");
 
             }
 
-            echo '<p>Личные фотоальбомы созданы</p>';
+            echo '<p>Р›РёС‡РЅС‹Рµ С„РѕС‚РѕР°Р»СЊР±РѕРјС‹ СЃРѕР·РґР°РЅС‹</p>';
 
         }
 
@@ -66,7 +66,7 @@
                 $model = new cms_model_blogs();
 
                 while($post = $inDB->fetch_assoc($result)){
-                    // Парсим по отдельности части текста, если есть тег [cut
+                    // РџР°СЂСЃРёРј РїРѕ РѕС‚РґРµР»СЊРЅРѕСЃС‚Рё С‡Р°СЃС‚Рё С‚РµРєСЃС‚Р°, РµСЃР»Рё РµСЃС‚СЊ С‚РµРі [cut
                     if (strstr($post['content'], '[cut')){
                         $msg_to 	= $model->getPostShort($post['content']);
                         $msg_to 	= $inCore->parseSmiles($msg_to, true);
@@ -84,7 +84,7 @@
 
                 }
 
-                echo '<p>Записи блогов оптимизированы</p>';
+                echo '<p>Р—Р°РїРёСЃРё Р±Р»РѕРіРѕРІ РѕРїС‚РёРјРёР·РёСЂРѕРІР°РЅС‹</p>';
 
             }
 

@@ -21,8 +21,8 @@ function applet_plugins(){
 
     $inCore = cmsCore::getInstance();
 
-    $GLOBALS['cp_page_title'] = 'Плагины';
-    cpAddPathway('Плагины', 'index.php?view=plugins');
+    $GLOBALS['cp_page_title'] = 'РџР»Р°РіРёРЅС‹';
+    cpAddPathway('РџР»Р°РіРёРЅС‹', 'index.php?view=plugins');
 
 	//check access
 	global $adminAccess;
@@ -52,7 +52,7 @@ function applet_plugins(){
 
 		$toolmenu = array();
 		$toolmenu[1]['icon']    = 'install.gif';
-		$toolmenu[1]['title']   = 'Установить плагины';
+		$toolmenu[1]['title']   = 'РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РїР»Р°РіРёРЅС‹';
 		$toolmenu[1]['link']    = '?view=install&do=plugin';
 
 		cpToolMenu($toolmenu);
@@ -65,12 +65,12 @@ function applet_plugins(){
 
             if ($task == 'install' || $task == 'upgrade'){
                 $plugin     = $inCore->loadPlugin($plugin_id);
-                $task_str   = ($task=='install') ? 'установлен' : 'обновлен';
-                echo '<div style="color:green;margin-top:12px;margin-bottom:5px;">Плагин <strong>"'.$plugin->info['title'].'"</strong> успешно '.$task_str.'. Включите его, для начала работы.</div>';
+                $task_str   = ($task=='install') ? 'СѓСЃС‚Р°РЅРѕРІР»РµРЅ' : 'РѕР±РЅРѕРІР»РµРЅ';
+                echo '<div style="color:green;margin-top:12px;margin-bottom:5px;">РџР»Р°РіРёРЅ <strong>"'.$plugin->info['title'].'"</strong> СѓСЃРїРµС€РЅРѕ '.$task_str.'. Р’РєР»СЋС‡РёС‚Рµ РµРіРѕ, РґР»СЏ РЅР°С‡Р°Р»Р° СЂР°Р±РѕС‚С‹.</div>';
             }
 
             if ($task == 'remove'){
-                echo '<div style="color:green;margin-top:12px;margin-bottom:5px;">Плагин успешно удален из системы.</div>';
+                echo '<div style="color:green;margin-top:12px;margin-bottom:5px;">РџР»Р°РіРёРЅ СѓСЃРїРµС€РЅРѕ СѓРґР°Р»РµРЅ РёР· СЃРёСЃС‚РµРјС‹.</div>';
             }
         }
 
@@ -78,24 +78,24 @@ function applet_plugins(){
 		$fields = array();
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '20';
-		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '250';
-		$fields[2]['title'] = 'Описание';	$fields[2]['field'] = 'description';$fields[2]['width'] = '';
-		$fields[3]['title'] = 'Автор';      $fields[3]['field'] = 'author';		$fields[3]['width'] = '160';
-		$fields[4]['title'] = 'Версия';     $fields[4]['field'] = 'version';	$fields[4]['width'] = '50';
+		$fields[1]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '250';
+		$fields[2]['title'] = 'РћРїРёСЃР°РЅРёРµ';	$fields[2]['field'] = 'description';$fields[2]['width'] = '';
+		$fields[3]['title'] = 'РђРІС‚РѕСЂ';      $fields[3]['field'] = 'author';		$fields[3]['width'] = '160';
+		$fields[4]['title'] = 'Р’РµСЂСЃРёСЏ';     $fields[4]['field'] = 'version';	$fields[4]['width'] = '50';
 
-        $fields[5]['title'] = 'Папка';     $fields[5]['field'] = 'plugin';      $fields[5]['width'] = '100';        
+        $fields[5]['title'] = 'РџР°РїРєР°';     $fields[5]['field'] = 'plugin';      $fields[5]['width'] = '100';        
 
-		$fields[6]['title'] = 'Включен';	$fields[6]['field'] = 'published';	$fields[6]['width'] = '60';
+		$fields[6]['title'] = 'Р’РєР»СЋС‡РµРЅ';	$fields[6]['field'] = 'published';	$fields[6]['width'] = '60';
 		
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Настроить';
+		$actions[0]['title'] = 'РќР°СЃС‚СЂРѕРёС‚СЊ';
 		$actions[0]['icon']  = 'config.gif';
 		$actions[0]['link']  = '?view=plugins&do=config&id=%id%';
 
-		$actions[1]['title'] = 'Удалить';
+		$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[1]['icon']  = 'delete.gif';
-		$actions[1]['confirm'] = 'Удалить плагин из системы?';
+		$actions[1]['confirm'] = 'РЈРґР°Р»РёС‚СЊ РїР»Р°РіРёРЅ РёР· СЃРёСЃС‚РµРјС‹?';
 		$actions[1]['link']  = '?view=install&do=remove_plugin&id=%id%';
 		//Print table
 		cpListTable('cms_plugins', $fields, $actions);
@@ -135,8 +135,8 @@ function applet_plugins(){
 
         if (!$config) {
 
-            echo '<p>Плагин не имеет конфигурации.</p>';
-            echo '<p><a href="javascript:window.history.go(-1);">Назад</a></p>';
+            echo '<p>РџР»Р°РіРёРЅ РЅРµ РёРјРµРµС‚ РєРѕРЅС„РёРіСѓСЂР°С†РёРё.</p>';
+            echo '<p><a href="javascript:window.history.go(-1);">РќР°Р·Р°Рґ</a></p>';
             return;
             
         }
@@ -153,8 +153,8 @@ function applet_plugins(){
             echo '</table>';
 
             echo '<div style="margin-top:6px;">';
-                echo '<input type="submit" name="save" value="Сохранить" /> ';
-                echo '<input type="button" name="back" value="Отменить" onclick="window.history.go(-1)" />';
+                echo '<input type="submit" name="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" /> ';
+                echo '<input type="button" name="back" value="РћС‚РјРµРЅРёС‚СЊ" onclick="window.history.go(-1)" />';
             echo '</div>';
 
         echo '</form>';

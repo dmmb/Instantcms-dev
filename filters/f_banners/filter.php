@@ -15,7 +15,7 @@
         $inCore = cmsCore::getInstance();
 
 		//REPLACE FILE DOWNLOAD LINKS
- 		$regex      = '/{(¡¿ÕÕ≈–=)\s*(.*?)}/i';
+ 		$regex      = '/{(–ë–ê–ù–ù–ï–†=)\s*(.*?)}/i';
 		$matches    = array();
 
 		preg_match_all( $regex, $text, $matches, PREG_SET_ORDER );
@@ -32,7 +32,7 @@
 
 			parse_str( $elm[0], $args );
 
-			$position = @$args['¡¿ÕÕ≈–'];
+			$position = @$args['–ë–ê–ù–ù–ï–†'];
 
 			if ($position){
 				$output = $model->getBannerHTML($position);
@@ -40,7 +40,7 @@
                 $output = '';
             }
 
-			$text = str_replace('{¡¿ÕÕ≈–='.$position.'}', $output, $text );
+			$text = str_replace('{–ë–ê–ù–ù–ï–†='.$position.'}', $output, $text );
 
 		}
 

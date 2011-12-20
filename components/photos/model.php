@@ -57,9 +57,9 @@ class cms_model_photos{
 /* ==================================================================================================== */
 /* ==================================================================================================== */
    //
-   // ýòîò ìåòîä âûçûâàåòñÿ êîìïîíåíòîì comments ïðè ñîçäàíèè íîâîãî êîììåíòàðèÿ
+   // ÑÑ‚Ð¾Ñ‚ Ð¼ÐµÑ‚Ð¾Ð´ Ð²Ñ‹Ð·Ñ‹Ð²Ð°ÐµÑ‚ÑÑ ÐºÐ¾Ð¼Ð¿Ð¾Ð½ÐµÐ½Ñ‚Ð¾Ð¼ comments Ð¿Ñ€Ð¸ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ð¸ Ð½Ð¾Ð²Ð¾Ð³Ð¾ ÐºÐ¾Ð¼Ð¼ÐµÐ½Ñ‚Ð°Ñ€Ð¸Ñ
    //
-   // ìåòîä äîëæåí âåðíóòü 0 èëè 1
+   // Ð¼ÐµÑ‚Ð¾Ð´ Ð´Ð¾Ð»Ð¶ÐµÐ½ Ð²ÐµÑ€Ð½ÑƒÑ‚ÑŒ 0 Ð¸Ð»Ð¸ 1
    //
    public function getVisibility($target, $target_id) {
 
@@ -456,7 +456,7 @@ class cms_model_photos{
 			$path_parts             = pathinfo($realfile);
 			$ext                    = strtolower($path_parts['extension']);
 			
-			// óáèðàåì ðàñøèðåíèå ôàéëà âìåñòå ñ òî÷êîé
+			// ÑƒÐ±Ð¸Ñ€Ð°ÐµÐ¼ Ñ€Ð°ÑÑˆÐ¸Ñ€ÐµÐ½Ð¸Ðµ Ñ„Ð°Ð¹Ð»Ð° Ð²Ð¼ÐµÑÑ‚Ðµ Ñ Ñ‚Ð¾Ñ‡ÐºÐ¾Ð¹
 			$realfile = substr($realfile, 0, strrpos($realfile, '.'));
 		
 			if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'png' && $ext != 'bmp') { return false; }
@@ -475,7 +475,7 @@ class cms_model_photos{
 		
 			if ($inCore->moveUploadedFile($source, $uploadphoto, $errorCode)) {
 				
-				// åñëè óæå åñòü ôîòî, òî óäàëÿåì åãî
+				// ÐµÑÐ»Ð¸ ÑƒÐ¶Ðµ ÐµÑÑ‚ÑŒ Ñ„Ð¾Ñ‚Ð¾, Ñ‚Ð¾ ÑƒÐ´Ð°Ð»ÑÐµÐ¼ ÐµÐ³Ð¾
 				$this->deletePhotoFile($photo_file, $uploaddir);
 
 				@img_resize($uploadphoto, $uploadthumb['small'], $album['thumb1'], $album['thumb1'], $album['thumbsqr']);

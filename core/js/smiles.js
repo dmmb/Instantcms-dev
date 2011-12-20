@@ -50,8 +50,8 @@ function addTag(field_id, s_open, s_close){
 
 function addTagUrl(field_id){
    var txtarea = document.getElementById(field_id);
-   var link_url = prompt('Àäðåñ ññûëêè (URL):');
-   var link_name = prompt('Íàçâàíèå ññûëêè (íå îáÿçàòåëüíî):'); 
+   var link_url = prompt('ÐÐ´Ñ€ÐµÑ ÑÑÑ‹Ð»ÐºÐ¸ (URL):');
+   var link_name = prompt('ÐÐ°Ð·Ð²Ð°Ð½Ð¸Ðµ ÑÑÑ‹Ð»ÐºÐ¸ (Ð½Ðµ Ð¾Ð±ÑÐ·Ð°Ñ‚ÐµÐ»ÑŒÐ½Ð¾):'); 
    var pos = getCaretPos(txtarea);
    if (link_url.length == 0) { return; }
    if (link_name.length > 0){txtarea.value = txtarea.value.substring(0,pos) + '[url='+link_url+']' + link_name + '[/url]'+ txtarea.value.substring(pos,txtarea.value.length);} 
@@ -61,7 +61,7 @@ function addTagUrl(field_id){
 
 function addTagImage(field_id){
    var txtarea = document.getElementById(field_id);
-   var link_url = prompt('Àäðåñ êàðòèíêè (URL):');
+   var link_url = prompt('ÐÐ´Ñ€ÐµÑ ÐºÐ°Ñ€Ñ‚Ð¸Ð½ÐºÐ¸ (URL):');
    var pos = getCaretPos(txtarea);
    if (link_url.length == 0) { return; }
    txtarea.value = txtarea.value.substring(0,pos) +  '[img]' + link_url + '[/img]'+ txtarea.value.substring(pos+1,txtarea.value.length);
@@ -85,7 +85,7 @@ function addNickname(nickname){
 
 function addTagAudio(field_id){
    var txtarea = document.getElementById(field_id);
-   var link_url = prompt('Ññûëêà íà mp3-ôàéë::');
+   var link_url = prompt('Ð¡ÑÑ‹Ð»ÐºÐ° Ð½Ð° mp3-Ñ„Ð°Ð¹Ð»::');
    var pos = getCaretPos(txtarea);
    if (link_url.length == 0) { return; }
    txtarea.value = txtarea.value.substring(0,pos) +  '[audio]' + link_url + '[/audio]'+ txtarea.value.substring(pos,txtarea.value.length);
@@ -94,7 +94,7 @@ function addTagAudio(field_id){
 
 function addTagVideo(field_id){
    var txtarea = document.getElementById(field_id);
-   var link_url = prompt('Êîä âèäåî (Youtube/Rutube):'); 
+   var link_url = prompt('ÐšÐ¾Ð´ Ð²Ð¸Ð´ÐµÐ¾ (Youtube/Rutube):'); 
    var pos = getCaretPos(txtarea);  
    if (link_url.length > 0){txtarea.value = txtarea.value.substring(0,pos) + '[video]' + link_url + '[/video]' + txtarea.value.substring(pos,txtarea.value.length);}
 	return;
@@ -130,17 +130,17 @@ function loadImage(field_id, session_id, placekind){
 					{
 						if(data.error != '')
 						{
-							alert('Îøèáêà: '+data.error);
+							alert('ÐžÑˆÐ¸Ð±ÐºÐ°: '+data.error);
 						}else
 						{
 							imageLoaded(field_id, data.msg, placekind);
-							alert('Èçîáðàæåíèå äîáàâëåíî');
+							alert('Ð˜Ð·Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ðµ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¾');
 						}
 					}
 				},
 				error: function (data, status, e)
 				{
-					alert('Îøèáêà! '+e);
+					alert('ÐžÑˆÐ¸Ð±ÐºÐ°! '+e);
 				}
 			}
 		)
@@ -160,8 +160,8 @@ function imageLoaded(field_id, data, placekind){
 function addTagQuote(field_id){
    var txtarea = document.getElementById(field_id);
    var q_text = '';
-   q_text = prompt('Òåêñò öèòàòû:');
-   var q_user = prompt('Àâòîð öèòàòû (íå îáÿçàòåëüíî):');
+   q_text = prompt('Ð¢ÐµÐºÑÑ‚ Ñ†Ð¸Ñ‚Ð°Ñ‚Ñ‹:');
+   var q_user = prompt('ÐÐ²Ñ‚Ð¾Ñ€ Ñ†Ð¸Ñ‚Ð°Ñ‚Ñ‹ (Ð½Ðµ Ð¾Ð±ÑÐ·Ð°Ñ‚ÐµÐ»ÑŒÐ½Ð¾):');
    var pos = getCaretPos(txtarea);
    if (q_text=='') { return; }   
    if (q_user.length > 0){txtarea.value = txtarea.value.substring(0,pos) + '[quote='+q_user+']' + q_text + '[/quote]' + txtarea.value.substring(pos+1,txtarea.value.length);} 
@@ -190,7 +190,7 @@ function addAlbumImage(){
 
 function addTagCut(field_id){
    var txtarea = document.getElementById(field_id);
-   var cut_text = prompt('Çàãîëîâîê ññûëêè íà ïîëíûé òåêñò ïîñòà:', '×èòàòü äàëåå...');
+   var cut_text = prompt('Ð—Ð°Ð³Ð¾Ð»Ð¾Ð²Ð¾Ðº ÑÑÑ‹Ð»ÐºÐ¸ Ð½Ð° Ð¿Ð¾Ð»Ð½Ñ‹Ð¹ Ñ‚ÐµÐºÑÑ‚ Ð¿Ð¾ÑÑ‚Ð°:', 'Ð§Ð¸Ñ‚Ð°Ñ‚ÑŒ Ð´Ð°Ð»ÐµÐµ...');
    var pos = getCaretPos(txtarea);
    if (cut_text.length > 0){ txtarea.value = txtarea.value.substring(0,pos) + '[cut=' + cut_text + ']' + txtarea.value.substring(pos,txtarea.value.length);}
 	return;

@@ -4,8 +4,8 @@
 
     function info_component_actions(){
 
-        $_component['title']        = 'Лента активности';
-        $_component['description']  = 'Управление лентой событий на сайте';
+        $_component['title']        = 'Р›РµРЅС‚Р° Р°РєС‚РёРІРЅРѕСЃС‚Рё';
+        $_component['description']  = 'РЈРїСЂР°РІР»РµРЅРёРµ Р»РµРЅС‚РѕР№ СЃРѕР±С‹С‚РёР№ РЅР° СЃР°Р№С‚Рµ';
         $_component['link']         = 'actions';
         $_component['author']       = 'InstantCMS Team';
         $_component['internal']     = '0';

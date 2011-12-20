@@ -30,10 +30,10 @@ function mod_bestcontent($module_id){
 		$today = date("Y-m-d H:i:s");
 		if ($cfg['cat_id'] != '-1') {
 			if (!$cfg['subs']){
-				//âûáèðàåì èç êàòåãîðèè
+				//Ð²Ñ‹Ð±Ð¸Ñ€Ð°ÐµÐ¼ Ð¸Ð· ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ð¸Ð¸
 				$catsql = ' AND c.category_id = '.$cfg['cat_id'];
 			} else {
-				//âûáèðàåì èç êàòåãîðèè è ïîäêàòåãîðèé
+				//Ð²Ñ‹Ð±Ð¸Ñ€Ð°ÐµÐ¼ Ð¸Ð· ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ð¸Ð¸ Ð¸ Ð¿Ð¾Ð´ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ð¸Ð¹
 				$rootcat = $inDB->get_fields('cms_category', "id='{$cfg['cat_id']}'", 'NSLeft, NSRight');
 				if(!$rootcat) { return false; }
 				$catsql = "AND (cat.NSLeft >= {$rootcat['NSLeft']} AND cat.NSRight <= {$rootcat['NSRight']})";

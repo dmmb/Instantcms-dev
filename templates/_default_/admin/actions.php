@@ -3,8 +3,8 @@
         <?php foreach($actions as $action) { ?>
             <div class="action_entry act_<?php echo $action['name']; ?>">
                 <div class="action_date
-                    <?php if ($action['is_new']){ ?> is_new<?php } ?>"><?php echo $action['pubdate']; ?> Ì‡Á‡‰
-                    <a href="/actions/delete/<?php echo $action['id']; ?>" class="action_delete" title="”‰‡ÎËÚ¸" onclick="if(!confirm('”‰‡ÎËÚ¸ Á‡ÔËÒ¸ ËÁ ÎÂÌÚ˚?')){ return false; }"></a>
+                    <?php if ($action['is_new']){ ?> is_new<?php } ?>"><?php echo $action['pubdate']; ?> –Ω–∞–∑–∞–¥
+                    <a href="/actions/delete/<?php echo $action['id']; ?>" class="action_delete" title="–£–¥–∞–ª–∏—Ç—å" onclick="if(!confirm('–£–¥–∞–ª–∏—Ç—å –∑–∞–ø–∏—Å—å –∏–∑ –ª–µ–Ω—Ç—ã?')){ return false; }"></a>
                 </div>
                 <div class="action_title">
                     <a href="<?php echo $action['user_url']; ?>" class="action_user"><?php echo $action['user_nickname']; ?></a>
@@ -27,5 +27,5 @@
 <?php
 	if($pagebar) { echo $pagebar; }
 
-	} else { echo '«‡ÔËÒÂÈ ÌÂ Ì‡È‰ÂÌÓ'; }
+	} else { echo '–ó–∞–ø–∏—Å–µ–π –Ω–µ –Ω–∞–π–¥–µ–Ω–æ'; }
 ?>

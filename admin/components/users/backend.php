@@ -12,20 +12,20 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //                                                                            //
 /******************************************************************************/
 
-cpAddPathway('Профили пользователей', '?view=components&do=config&id='.$_REQUEST['id']);
+cpAddPathway('РџСЂРѕС„РёР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', '?view=components&do=config&id='.$_REQUEST['id']);
 $inDB = cmsDatabase::getInstance();
-echo '<h3>Профили пользователей</h3>';
+echo '<h3>РџСЂРѕС„РёР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</h3>';
 
 if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; }
 
 $toolmenu = array();
 
 $toolmenu[0]['icon'] = 'save.gif';
-$toolmenu[0]['title'] = 'Сохранить';
+$toolmenu[0]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 $toolmenu[0]['link'] = 'javascript:document.optform.submit();';
 
 $toolmenu[1]['icon'] = 'cancel.gif';
-$toolmenu[1]['title'] = 'Отмена';
+$toolmenu[1]['title'] = 'РћС‚РјРµРЅР°';
 $toolmenu[1]['link'] = '?view=components';
 
 cpToolMenu($toolmenu);
@@ -87,7 +87,7 @@ if($opt=='saveconfig'){
 
     $inCore->saveComponentConfig('users', $cfg);
 
-    $msg = 'Настройки сохранены.';
+    $msg = 'РќР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅРµРЅС‹.';
 }
 
 
@@ -104,108 +104,108 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
     <div id="config_tabs" style="margin-top:12px;">
 
     <ul id="tabs">
-        <li><a href="#basic"><span>Настройки профилей</span></a></li>
-        <li><a href="#avatars"><span>Аватары</span></a></li>
-        <li><a href="#proftabs"><span>Вкладки профилей</span></a></li>
-        <li><a href="#forms"><span>Дополнительные поля</span></a></li>
-        <li><a href="#photos"><span>Фотоальбомы</span></a></li>
-        <li><a href="#files"><span>Файловые архивы</span></a></li>
-        <li><a href="#reg"><span>Регистрация</span></a></li>
+        <li><a href="#basic"><span>РќР°СЃС‚СЂРѕР№РєРё РїСЂРѕС„РёР»РµР№</span></a></li>
+        <li><a href="#avatars"><span>РђРІР°С‚Р°СЂС‹</span></a></li>
+        <li><a href="#proftabs"><span>Р’РєР»Р°РґРєРё РїСЂРѕС„РёР»РµР№</span></a></li>
+        <li><a href="#forms"><span>Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РїРѕР»СЏ</span></a></li>
+        <li><a href="#photos"><span>Р¤РѕС‚РѕР°Р»СЊР±РѕРјС‹</span></a></li>
+        <li><a href="#files"><span>Р¤Р°Р№Р»РѕРІС‹Рµ Р°СЂС…РёРІС‹</span></a></li>
+        <li><a href="#reg"><span>Р РµРіРёСЃС‚СЂР°С†РёСЏ</span></a></li>
     </ul>
 
         <div id="basic">
             <table width="605" border="0" cellpadding="10" cellspacing="0" class="proptable" style="border:none">
                 <tr>
-                    <td><strong>Разрешить гостям просматривать профили: </strong></td>
+                    <td><strong>Р Р°Р·СЂРµС€РёС‚СЊ РіРѕСЃС‚СЏРј РїСЂРѕСЃРјР°С‚СЂРёРІР°С‚СЊ РїСЂРѕС„РёР»Рё: </strong></td>
                     <td width="182">
-                        <input name="sw_guest" type="radio" value="1" <?php if (@$cfg['sw_guest']) { echo 'checked="checked"'; } ?>/> Да
-                        <input name="sw_guest" type="radio" value="0" <?php if (@!$cfg['sw_guest']) { echo 'checked="checked"'; } ?>/> Нет
+                        <input name="sw_guest" type="radio" value="1" <?php if (@$cfg['sw_guest']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                        <input name="sw_guest" type="radio" value="0" <?php if (@!$cfg['sw_guest']) { echo 'checked="checked"'; } ?>/> РќРµС‚
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Поиск пользователей: </strong></td>
+                    <td><strong>РџРѕРёСЃРє РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№: </strong></td>
                     <td>
-                        <input name="sw_search" type="radio" value="1" <?php if (@$cfg['sw_search']) { echo 'checked="checked"'; } ?>/> Вкл
-                        <input name="sw_search" type="radio" value="0" <?php if (@!$cfg['sw_search']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="sw_search" type="radio" value="1" <?php if (@$cfg['sw_search']) { echo 'checked="checked"'; } ?>/> Р’РєР»
+                        <input name="sw_search" type="radio" value="0" <?php if (@!$cfg['sw_search']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
                 <!--
                 <tr>
-                    <td><strong>Показывать группу пользователя в профиле: </strong></td>
+                    <td><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ РіСЂСѓРїРїСѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РІ РїСЂРѕС„РёР»Рµ: </strong></td>
                     <td width="182">
-                        <input name="showgroup" type="radio" value="1" <?php if (@$cfg['showgroup']) { echo 'checked="checked"'; } ?>/> Да
-                        <input name="showgroup" type="radio" value="0" <?php if (@!$cfg['showgroup']) { echo 'checked="checked"'; } ?>/> Нет
+                        <input name="showgroup" type="radio" value="1" <?php if (@$cfg['showgroup']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                        <input name="showgroup" type="radio" value="0" <?php if (@!$cfg['showgroup']) { echo 'checked="checked"'; } ?>/> РќРµС‚
                     </td>
                 </tr>
                 -->
                 <tr>
-                    <td><strong>Показывать число комментариев: </strong></td>
+                    <td><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ С‡РёСЃР»Рѕ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ: </strong></td>
                     <td width="182">
-                        <input name="sw_comm" type="radio" value="1" <?php if (@$cfg['sw_comm']) { echo 'checked="checked"'; } ?>/> Вкл
-                        <input name="sw_comm" type="radio" value="0" <?php if (@!$cfg['sw_comm']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="sw_comm" type="radio" value="1" <?php if (@$cfg['sw_comm']) { echo 'checked="checked"'; } ?>/> Р’РєР»
+                        <input name="sw_comm" type="radio" value="0" <?php if (@!$cfg['sw_comm']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Показывать число сообщений на форуме: </strong></td>
+                    <td><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ С‡РёСЃР»Рѕ СЃРѕРѕР±С‰РµРЅРёР№ РЅР° С„РѕСЂСѓРјРµ: </strong></td>
                     <td>
-                        <input name="sw_forum" type="radio" value="1" <?php if (@$cfg['sw_forum']) { echo 'checked="checked"'; } ?>/> Вкл
-                        <input name="sw_forum" type="radio" value="0" <?php if (@!$cfg['sw_forum']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="sw_forum" type="radio" value="1" <?php if (@$cfg['sw_forum']) { echo 'checked="checked"'; } ?>/> Р’РєР»
+                        <input name="sw_forum" type="radio" value="0" <?php if (@!$cfg['sw_forum']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Стена пользователя: </strong></td>
+                    <td><strong>РЎС‚РµРЅР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ: </strong></td>
                     <td>
-                        <input name="sw_wall" type="radio" value="1" <?php if (@$cfg['sw_wall']) { echo 'checked="checked"'; } ?>/> Вкл
-                        <input name="sw_wall" type="radio" value="0" <?php if (@!$cfg['sw_wall']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="sw_wall" type="radio" value="1" <?php if (@$cfg['sw_wall']) { echo 'checked="checked"'; } ?>/> Р’РєР»
+                        <input name="sw_wall" type="radio" value="0" <?php if (@!$cfg['sw_wall']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Личные блоги:</strong></td>
+                    <td><strong>Р›РёС‡РЅС‹Рµ Р±Р»РѕРіРё:</strong></td>
                     <td>
-                        <input name="sw_blogs" type="radio" value="1" <?php if (@$cfg['sw_blogs']) { echo 'checked="checked"'; } ?>/> Вкл
-                        <input name="sw_blogs" type="radio" value="0" <?php if (@!$cfg['sw_blogs']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="sw_blogs" type="radio" value="1" <?php if (@$cfg['sw_blogs']) { echo 'checked="checked"'; } ?>/> Р’РєР»
+                        <input name="sw_blogs" type="radio" value="0" <?php if (@!$cfg['sw_blogs']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Показывать объявления пользователя:</strong></td>
+                    <td><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ РѕР±СЉСЏРІР»РµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ:</strong></td>
                     <td>
-                        <input name="sw_board" type="radio" value="1" <?php if (@$cfg['sw_board']) { echo 'checked="checked"'; } ?>/> Вкл
-                        <input name="sw_board" type="radio" value="0" <?php if (@!$cfg['sw_board']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="sw_board" type="radio" value="1" <?php if (@$cfg['sw_board']) { echo 'checked="checked"'; } ?>/> Р’РєР»
+                        <input name="sw_board" type="radio" value="0" <?php if (@!$cfg['sw_board']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Личные сообщения:</strong> </td>
+                    <td><strong>Р›РёС‡РЅС‹Рµ СЃРѕРѕР±С‰РµРЅРёСЏ:</strong> </td>
                     <td>
-                        <input name="sw_msg" type="radio" value="1" <?php if (@$cfg['sw_msg']) { echo 'checked="checked"'; } ?>/> Вкл
-                        <input name="sw_msg" type="radio" value="0" <?php if (@!$cfg['sw_msg']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="sw_msg" type="radio" value="1" <?php if (@$cfg['sw_msg']) { echo 'checked="checked"'; } ?>/> Р’РєР»
+                        <input name="sw_msg" type="radio" value="0" <?php if (@!$cfg['sw_msg']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Текст уведомления о новых сообщениях: </strong></td>
+                    <td><strong>РўРµРєСЃС‚ СѓРІРµРґРѕРјР»РµРЅРёСЏ Рѕ РЅРѕРІС‹С… СЃРѕРѕР±С‰РµРЅРёСЏС…: </strong></td>
                     <td><a href="/includes/letters/newmessage.txt">/includes/letters/newmessage.txt</a></td>
                 </tr>
                 <tr>
                     <td>
-                        <strong>Период голосования за карму:</strong><br />
-                        <span class="hinttext">Пользователь может изменить карму другого пользователя только 1 раз за указанное время </span>
+                        <strong>РџРµСЂРёРѕРґ РіРѕР»РѕСЃРѕРІР°РЅРёСЏ Р·Р° РєР°СЂРјСѓ:</strong><br />
+                        <span class="hinttext">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РјРѕР¶РµС‚ РёР·РјРµРЅРёС‚СЊ РєР°СЂРјСѓ РґСЂСѓРіРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ С‚РѕР»СЊРєРѕ 1 СЂР°Р· Р·Р° СѓРєР°Р·Р°РЅРЅРѕРµ РІСЂРµРјСЏ </span>
                     </td>
                     <td valign="top">
                         <input name="karmatime" type="text" id="int_1" size="5" value="<?php echo @(int)$cfg['karmatime']?>"/>
                         <select name="karmaint" id="int_2">
-                            <option value="MINUTE"  <?php if(@strstr($cfg['karmaint'], 'MINUTE')) { echo 'selected'; } ?>>минут</option>
-                            <option value="HOUR"  <?php if(@strstr($cfg['karmaint'], 'HOUR')) { echo 'selected'; } ?>>часов</option>
-                            <option value="DAY" <?php if(@strstr($cfg['karmaint'], 'DAY')) { echo 'selected'; } ?>>дней</option>
-                            <option value="MONTH" <?php if(@strstr($cfg['karmaint'], 'MONTH')) { echo 'selected'; } ?>>месяцев</option>
+                            <option value="MINUTE"  <?php if(@strstr($cfg['karmaint'], 'MINUTE')) { echo 'selected'; } ?>>РјРёРЅСѓС‚</option>
+                            <option value="HOUR"  <?php if(@strstr($cfg['karmaint'], 'HOUR')) { echo 'selected'; } ?>>С‡Р°СЃРѕРІ</option>
+                            <option value="DAY" <?php if(@strstr($cfg['karmaint'], 'DAY')) { echo 'selected'; } ?>>РґРЅРµР№</option>
+                            <option value="MONTH" <?php if(@strstr($cfg['karmaint'], 'MONTH')) { echo 'selected'; } ?>>РјРµСЃСЏС†РµРІ</option>
                         </select>
                     </td>
                 </tr>
 				<tr>
                     <td>
-                        <strong>Период удаления неактивных аккаунтов:</strong><br />
-                        <span class="hinttext">Работает, если включен CRON и существует активная задача</span>
+                        <strong>РџРµСЂРёРѕРґ СѓРґР°Р»РµРЅРёСЏ РЅРµР°РєС‚РёРІРЅС‹С… Р°РєРєР°СѓРЅС‚РѕРІ:</strong><br />
+                        <span class="hinttext">Р Р°Р±РѕС‚Р°РµС‚, РµСЃР»Рё РІРєР»СЋС‡РµРЅ CRON Рё СЃСѓС‰РµСЃС‚РІСѓРµС‚ Р°РєС‚РёРІРЅР°СЏ Р·Р°РґР°С‡Р°</span>
                     </td>
                     <td valign="top">
-                        <input name="deltime" type="text" id="deltime" size="5" value="<?php echo @(int)$cfg['deltime']?>"/> месяцев
+                        <input name="deltime" type="text" id="deltime" size="5" value="<?php echo @(int)$cfg['deltime']?>"/> РјРµСЃСЏС†РµРІ
                     </td>
                 </tr>
             </table>
@@ -214,16 +214,16 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
         <div id="avatars">
             <table width="605" border="0" cellpadding="10" cellspacing="0" class="proptable" style="border:none">
                 <tr>
-                    <td><strong>Ширина маленького аватара: </strong></td>
-                    <td><input name="smallw" type="text" id="smallw" size="5" value="<?php echo @$cfg['smallw'];?>"/> пикс.</td>
+                    <td><strong>РЁРёСЂРёРЅР° РјР°Р»РµРЅСЊРєРѕРіРѕ Р°РІР°С‚Р°СЂР°: </strong></td>
+                    <td><input name="smallw" type="text" id="smallw" size="5" value="<?php echo @$cfg['smallw'];?>"/> РїРёРєСЃ.</td>
                 </tr>
                 <tr>
-                    <td><strong>Ширина большого аватара: </strong></td>
-                    <td><input name="medw" type="text" id="medw" size="5" value="<?php echo @$cfg['medw'];?>"/> пикс.</td>
+                    <td><strong>РЁРёСЂРёРЅР° Р±РѕР»СЊС€РѕРіРѕ Р°РІР°С‚Р°СЂР°: </strong></td>
+                    <td><input name="medw" type="text" id="medw" size="5" value="<?php echo @$cfg['medw'];?>"/> РїРёРєСЃ.</td>
                 </tr>
                 <tr>
-                    <td><strong>Высота большого аватара: </strong></td>
-                    <td><input name="medh" type="text" id="medh" size="5" value="<?php echo @$cfg['medh'];?>"/> пикс.</td>
+                    <td><strong>Р’С‹СЃРѕС‚Р° Р±РѕР»СЊС€РѕРіРѕ Р°РІР°С‚Р°СЂР°: </strong></td>
+                    <td><input name="medh" type="text" id="medh" size="5" value="<?php echo @$cfg['medh'];?>"/> РїРёРєСЃ.</td>
                 </tr>
             </table>
         </div>
@@ -232,24 +232,24 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
         <div id="proftabs">
             <table width="605" border="0" cellpadding="10" cellspacing="0" class="proptable" style="border:none">
                 <tr>
-                    <td><strong>Вкладка "Лента":</strong></td>
+                    <td><strong>Р’РєР»Р°РґРєР° "Р›РµРЅС‚Р°":</strong></td>
                     <td>
-                        <input name="sw_feed" type="radio" value="1" <?php if (@$cfg['sw_feed']) { echo 'checked="checked"'; } ?>/> Вкл
-                        <input name="sw_feed" type="radio" value="0" <?php if (@!$cfg['sw_feed']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="sw_feed" type="radio" value="1" <?php if (@$cfg['sw_feed']) { echo 'checked="checked"'; } ?>/> Р’РєР»
+                        <input name="sw_feed" type="radio" value="0" <?php if (@!$cfg['sw_feed']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Вкладка "Клубы":</strong></td>
+                    <td><strong>Р’РєР»Р°РґРєР° "РљР»СѓР±С‹":</strong></td>
                     <td>
-                        <input name="sw_clubs" type="radio" value="1" <?php if (@$cfg['sw_clubs']) { echo 'checked="checked"'; } ?>/> Вкл
-                        <input name="sw_clubs" type="radio" value="0" <?php if (@!$cfg['sw_clubs']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="sw_clubs" type="radio" value="1" <?php if (@$cfg['sw_clubs']) { echo 'checked="checked"'; } ?>/> Р’РєР»
+                        <input name="sw_clubs" type="radio" value="0" <?php if (@!$cfg['sw_clubs']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Вкладка "Награды":</strong></td>
+                    <td><strong>Р’РєР»Р°РґРєР° "РќР°РіСЂР°РґС‹":</strong></td>
                     <td>
-                        <input name="sw_awards" type="radio" value="1" <?php if (@$cfg['sw_awards']) { echo 'checked="checked"'; } ?>/> Вкл
-                        <input name="sw_awards" type="radio" value="0" <?php if (@!$cfg['sw_awards']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="sw_awards" type="radio" value="1" <?php if (@$cfg['sw_awards']) { echo 'checked="checked"'; } ?>/> Р’РєР»
+                        <input name="sw_awards" type="radio" value="0" <?php if (@!$cfg['sw_awards']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
             </table>
@@ -259,7 +259,7 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
             <table width="605" border="0" cellspacing="0" cellpadding="10" class="proptable" style="border:none">
                 <tr>
                     <td valign="top">
-                        <p>Выберите, какие формы должны присутствовать для заполнения пользователями в профилях: </p>
+                        <p>Р’С‹Р±РµСЂРёС‚Рµ, РєР°РєРёРµ С„РѕСЂРјС‹ РґРѕР»Р¶РЅС‹ РїСЂРёСЃСѓС‚СЃС‚РІРѕРІР°С‚СЊ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРјРё РІ РїСЂРѕС„РёР»СЏС…: </p>
                         <p>
                             <select name="privforms[]" size="10" style="width:100%; border:solid 1px silver;" multiple="multiple">
                                 <?php
@@ -278,8 +278,8 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
                                 ?>
                             </select>
                         </p>
-                        <p>Можно выбрать несколько форм, удерживая CTRL.</p>
-                        <p>Формы можно редактировать в настройках компонента <a href="index.php?view=components&do=config&id=<?php echo $inDB->get_field('cms_components', "link='forms'", 'id');?>">Конструктор форм</a>.</p>
+                        <p>РњРѕР¶РЅРѕ РІС‹Р±СЂР°С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ С„РѕСЂРј, СѓРґРµСЂР¶РёРІР°СЏ CTRL.</p>
+                        <p>Р¤РѕСЂРјС‹ РјРѕР¶РЅРѕ СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РІ РЅР°СЃС‚СЂРѕР№РєР°С… РєРѕРјРїРѕРЅРµРЅС‚Р° <a href="index.php?view=components&do=config&id=<?php echo $inDB->get_field('cms_components', "link='forms'", 'id');?>">РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРј</a>.</p>
                     </td>
                 </tr>
             </table>
@@ -288,28 +288,28 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
         <div id="photos">
             <table width="605" border="0" cellpadding="10" cellspacing="0" class="proptable" style="border:none">
                 <tr>
-                    <td><strong>Фотоальбомы: </strong></td>
+                    <td><strong>Р¤РѕС‚РѕР°Р»СЊР±РѕРјС‹: </strong></td>
                     <td width="182">
-                        <input name="sw_photo" type="radio" value="1" <?php if (@$cfg['sw_photo']) { echo 'checked="checked"'; } ?>/> Вкл
-                        <input name="sw_photo" type="radio" value="0" <?php if (@!$cfg['sw_photo']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="sw_photo" type="radio" value="1" <?php if (@$cfg['sw_photo']) { echo 'checked="checked"'; } ?>/> Р’РєР»
+                        <input name="sw_photo" type="radio" value="0" <?php if (@!$cfg['sw_photo']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <strong>Наносить водяной знак:</strong> <br />
-                        <span class="hinttext">Если включено, то на все загружаемые фотографии будет наносится изображение из файла &quot;<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>&quot;</span>
+                        <strong>РќР°РЅРѕСЃРёС‚СЊ РІРѕРґСЏРЅРѕР№ Р·РЅР°Рє:</strong> <br />
+                        <span class="hinttext">Р•СЃР»Рё РІРєР»СЋС‡РµРЅРѕ, С‚Рѕ РЅР° РІСЃРµ Р·Р°РіСЂСѓР¶Р°РµРјС‹Рµ С„РѕС‚РѕРіСЂР°С„РёРё Р±СѓРґРµС‚ РЅР°РЅРѕСЃРёС‚СЃСЏ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РёР· С„Р°Р№Р»Р° &quot;<a href="/images/watermark.png" target="_blank">/images/watermark.png</a>&quot;</span>
                     </td>
                     <td valign="top">
-                        <input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Вкл
-                        <input name="watermark" type="radio" value="0" <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Р’РєР»
+                        <input name="watermark" type="radio" value="0" <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <strong>Максимум фотографий в альбоме:</strong><br />
-                        <span class="hinttext">Установите &quot;0&quot; для бесконечного количества</span>
+                        <strong>РњР°РєСЃРёРјСѓРј С„РѕС‚РѕРіСЂР°С„РёР№ РІ Р°Р»СЊР±РѕРјРµ:</strong><br />
+                        <span class="hinttext">РЈСЃС‚Р°РЅРѕРІРёС‚Рµ &quot;0&quot; РґР»СЏ Р±РµСЃРєРѕРЅРµС‡РЅРѕРіРѕ РєРѕР»РёС‡РµСЃС‚РІР°</span>
                     </td>
-                    <td><input name="photosize" type="text" id="photosize" size="5" value="<?php echo @$cfg['photosize'];?>"/> шт.</td>
+                    <td><input name="photosize" type="text" id="photosize" size="5" value="<?php echo @$cfg['photosize'];?>"/> С€С‚.</td>
                 </tr>
             </table>
         </div>
@@ -317,23 +317,23 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
         <div id="files">
              <table width="605" border="0" cellpadding="10" cellspacing="0" class="proptable" style="border:none">
                 <tr>
-                    <td><strong>Файлы пользователя: </strong></td>
+                    <td><strong>Р¤Р°Р№Р»С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ: </strong></td>
                     <td width="182">
-                        <input name="sw_files" type="radio" value="1" <?php if (@$cfg['sw_files']) { echo 'checked="checked"'; } ?>/> Вкл
-                        <input name="sw_files" type="radio" value="0" <?php if (@!$cfg['sw_files']) { echo 'checked="checked"'; } ?>/> Выкл
+                        <input name="sw_files" type="radio" value="1" <?php if (@$cfg['sw_files']) { echo 'checked="checked"'; } ?>/> Р’РєР»
+                        <input name="sw_files" type="radio" value="0" <?php if (@!$cfg['sw_files']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <strong>Выделять каждому пользователю на диске:</strong><br />
-                        <span class="hinttext">Установите &quot;0&quot; для бесконечного размера</span>
+                        <strong>Р’С‹РґРµР»СЏС‚СЊ РєР°Р¶РґРѕРјСѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ РЅР° РґРёСЃРєРµ:</strong><br />
+                        <span class="hinttext">РЈСЃС‚Р°РЅРѕРІРёС‚Рµ &quot;0&quot; РґР»СЏ Р±РµСЃРєРѕРЅРµС‡РЅРѕРіРѕ СЂР°Р·РјРµСЂР°</span>
                     </td>
-                    <td><input name="filessize" type="text" id="filessize" size="5" value="<?php echo @$cfg['filessize'];?>"/> Мб</td>
+                    <td><input name="filessize" type="text" id="filessize" size="5" value="<?php echo @$cfg['filessize'];?>"/> РњР±</td>
                 </tr>
                 <tr>
                     <td>
-                        <strong>Доступные типы файлов:</strong><br />
-                        <span class="hinttext">Введите через запятую расширения для доступных типов файлов</span>
+                        <strong>Р”РѕСЃС‚СѓРїРЅС‹Рµ С‚РёРїС‹ С„Р°Р№Р»РѕРІ:</strong><br />
+                        <span class="hinttext">Р’РІРµРґРёС‚Рµ С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ СЂР°СЃС€РёСЂРµРЅРёСЏ РґР»СЏ РґРѕСЃС‚СѓРїРЅС‹С… С‚РёРїРѕРІ С„Р°Р№Р»РѕРІ</span>
                     </td>
                     <td><input name="filestype" type="text" id="filestype" size="30" value="<?php echo $cfg['filestype'] ? $cfg['filestype'] : 'jpeg,gif,png,jpg,bmp,zip,rar,tar';?>"/></td>
                 </tr>
@@ -344,7 +344,7 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
             <table width="605" border="0" cellpadding="10" cellspacing="0" class="proptable" style="border:none">
                 <tr>
                     <td>
-                        <a href="index.php?view=components&do=config&link=registration">Перейти к настройкам регистрации</a>
+                        <a href="index.php?view=components&do=config&link=registration">РџРµСЂРµР№С‚Рё Рє РЅР°СЃС‚СЂРѕР№РєР°Рј СЂРµРіРёСЃС‚СЂР°С†РёРё</a>
                     </td>
                 </tr>
             </table>
@@ -354,8 +354,8 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
 
     <p>
         <input name="opt" type="hidden" value="saveconfig" />
-        <input name="save" type="submit" id="save" value="Сохранить" />
-        <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+        <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+        <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components';"/>
     </p>
 </form>
 

@@ -22,8 +22,8 @@
 
     define('HOST', 'http://' . $inCore->getHost());
 
-    $inCore->loadClass('config');       //конфигурация
-    $inCore->loadClass('db');           //база данных
+    $inCore->loadClass('config');       //РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ
+    $inCore->loadClass('db');           //Р±Р°Р·Р° РґР°РЅРЅС‹С…
 
     $opt = $inCore->request('opt', 'str', '');
     $data = $inCore->request('data', 'str', '');
@@ -38,9 +38,9 @@
 		$result = $inDB->query($sql);
 
 		if($inDB->num_rows($result)==0){
-			echo '<span style="color:green">Вы можете использовать этот логин</span>';		
+			echo '<span style="color:green">Р’С‹ РјРѕР¶РµС‚Рµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЌС‚РѕС‚ Р»РѕРіРёРЅ</span>';		
 		} else {
-			echo '<span style="color:red">Выбранный логин занят!</span>';				
+			echo '<span style="color:red">Р’С‹Р±СЂР°РЅРЅС‹Р№ Р»РѕРіРёРЅ Р·Р°РЅСЏС‚!</span>';				
 		}
 
 	}

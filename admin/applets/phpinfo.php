@@ -21,15 +21,15 @@ function applet_phpinfo(){
 	global $adminAccess;
 	if (!$inCore->isAdminCan('admin/config', $adminAccess)) { cpAccessDenied(); }
 
-	$GLOBALS['cp_page_title'] = 'Информация PHP';
+	$GLOBALS['cp_page_title'] = 'РРЅС„РѕСЂРјР°С†РёСЏ PHP';
  	
-	cpAddPathway('Настройки сайта', 'index.php?view=config');	
-	cpAddPathway('Информация PHP', 'index.php?view=phpinfo');
+	cpAddPathway('РќР°СЃС‚СЂРѕР№РєРё СЃР°Р№С‚Р°', 'index.php?view=config');	
+	cpAddPathway('РРЅС„РѕСЂРјР°С†РёСЏ PHP', 'index.php?view=phpinfo');
 			
 ?>
 <div>
 
-	<h3>Информация PHP</h3>
+	<h3>РРЅС„РѕСЂРјР°С†РёСЏ PHP</h3>
 
     <iframe src="/admin/includes/phpinfo.php" style="border:none;width:100%;height:600px" />
 

@@ -17,7 +17,7 @@ if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
  * e-mail: firs.yura@gmail.com
  * site: firs.org.ua
  */
-$_LANG['TAGS_NO_TAGS']           = 'Íåò òåãîâ äëÿ îòîáðàæåíèÿ';
-$_LANG['TAGS_NO_SOURCE']         = 'Íå âûáðàíû èñòî÷íèêè òåãîâ äëÿ ïîêàçà.';
+$_LANG['TAGS_NO_TAGS']           = 'ÐÐµÑ‚ Ñ‚ÐµÐ³Ð¾Ð² Ð´Ð»Ñ Ð¾Ñ‚Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ñ';
+$_LANG['TAGS_NO_SOURCE']         = 'ÐÐµ Ð²Ñ‹Ð±Ñ€Ð°Ð½Ñ‹ Ð¸ÑÑ‚Ð¾Ñ‡Ð½Ð¸ÐºÐ¸ Ñ‚ÐµÐ³Ð¾Ð² Ð´Ð»Ñ Ð¿Ð¾ÐºÐ°Ð·Ð°.';
 
 ?>

@@ -13,43 +13,43 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 /******************************************************************************/
 
 
-	cpAddPathway('Прайслист', '?view=components&do=config&id='.$_REQUEST['id']);
-	echo '<h3>Прайслист</h3>';
+	cpAddPathway('РџСЂР°Р№СЃР»РёСЃС‚', '?view=components&do=config&id='.$_REQUEST['id']);
+	echo '<h3>РџСЂР°Р№СЃР»РёСЃС‚</h3>';
 	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'config'; }
 	
 	$toolmenu = array();
 
 	$toolmenu[0]['icon'] = 'newfolder.gif';
-	$toolmenu[0]['title'] = 'Новая категория';
+	$toolmenu[0]['title'] = 'РќРѕРІР°СЏ РєР°С‚РµРіРѕСЂРёСЏ';
 	$toolmenu[0]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_cat';
 
 	$toolmenu[2]['icon'] = 'newstuff.gif';
-	$toolmenu[2]['title'] = 'Новый товар';
+	$toolmenu[2]['title'] = 'РќРѕРІС‹Р№ С‚РѕРІР°СЂ';
 	$toolmenu[2]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_item';
 
 	$toolmenu[1]['icon'] = 'folders.gif';
-	$toolmenu[1]['title'] = 'Категории прайса';
+	$toolmenu[1]['title'] = 'РљР°С‚РµРіРѕСЂРёРё РїСЂР°Р№СЃР°';
 	$toolmenu[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats';
 
 	$toolmenu[3]['icon'] = 'liststuff.gif';
-	$toolmenu[3]['title'] = 'Все товары';
+	$toolmenu[3]['title'] = 'Р’СЃРµ С‚РѕРІР°СЂС‹';
 	$toolmenu[3]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items';
 
 	if($opt == 'list_items'){
 		$toolmenu[11]['icon'] = 'edit.gif';
-		$toolmenu[11]['title'] = 'Редактировать выбранные';
+		$toolmenu[11]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[11]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=edit_item&multiple=1');";
 
 		$toolmenu[12]['icon'] = 'show.gif';
-		$toolmenu[12]['title'] = 'Публиковать выбранные';
+		$toolmenu[12]['title'] = 'РџСѓР±Р»РёРєРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=show_item&multiple=1');";
 
 		$toolmenu[13]['icon'] = 'hide.gif';
-		$toolmenu[13]['title'] = 'Скрыть выбранные';
+		$toolmenu[13]['title'] = 'РЎРєСЂС‹С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=hide_item&multiple=1');";
 		
 		$toolmenu[14]['icon'] = 'delete.gif';
-		$toolmenu[14]['title'] = 'Удалить выбранные';
+		$toolmenu[14]['title'] = 'РЈРґР°Р»РёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[14]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=delete_item&multiple=1');";
 	}
 
@@ -90,7 +90,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if ($opt == 'submit_item'){	
 		$category_id = $_REQUEST['category_id'];
-		if (!empty($_REQUEST['title'])) { $title = htmlspecialchars($_REQUEST['title'], ENT_QUOTES, 'cp1251'); } else { error("Укажите название категории!"); }
+		if (!empty($_REQUEST['title'])) { $title = htmlspecialchars($_REQUEST['title'], ENT_QUOTES, 'cp1251'); } else { error("РЈРєР°Р¶РёС‚Рµ РЅР°Р·РІР°РЅРёРµ РєР°С‚РµРіРѕСЂРёРё!"); }
 		if (!empty($_REQUEST['price'])) {		
 			$price = $_REQUEST['price'];					
 		}
@@ -149,13 +149,13 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		<form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
         <table width="600" border="0" cellpadding="10" cellspacing="0" class="proptable">
           <tr>
-            <td width="218"><b>E-mail продавца : </b></td>
+            <td width="218"><b>E-mail РїСЂРѕРґР°РІС†Р° : </b></td>
             <td width="338"><input name="email" type="text" id="title2" size="30" value="<?php echo @$cfg['email'];?>"/></td>
           </tr>
         </table>
         <table width="100%" border="0" cellpadding="10" cellspacing="0" class="proptable">
           <tr>
-            <td><p><b>Информация о доставке: </b></p>
+            <td><p><b>РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РґРѕСЃС‚Р°РІРєРµ: </b></p>
             <?php
                 
                 $inCore->insertEditor('delivery', $cfg['delivery'], '260', '100%');
@@ -165,8 +165,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         </table>
         <p>
           <input name="opt" type="hidden" id="do" value="saveconfig" />
-          <input name="save" type="submit" id="save" value="Сохранить" />
-          <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
+          <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+          <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
         </p>
       </form>		
 		<?php
@@ -191,7 +191,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	}
 	
 	if ($opt == 'submit_cat'){	
-		if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("Укажите название категории!"); }
+		if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("РЈРєР°Р¶РёС‚Рµ РЅР°Р·РІР°РЅРёРµ РєР°С‚РµРіРѕСЂРёРё!"); }
 		$description = $_REQUEST['description'];
 		$published = $_REQUEST['published'];
 		
@@ -218,7 +218,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		if(isset($_REQUEST['item_id'])) { 
 			$id = $_REQUEST['item_id'];
 			
-			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("Укажите название категории!"); }	
+			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("РЈРєР°Р¶РёС‚Рµ РЅР°Р·РІР°РЅРёРµ РєР°С‚РµРіРѕСЂРёРё!"); }	
 			$description = $_REQUEST['description'];
 			$published = $_REQUEST['published'];
 			
@@ -237,28 +237,28 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	
 	
 	if ($opt == 'list_cats'){
-		cpAddPathway('Категории прайса', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
-		echo '<h3>Категории прайса</h3>';
+		cpAddPathway('РљР°С‚РµРіРѕСЂРёРё РїСЂР°Р№СЃР°', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
+		echo '<h3>РљР°С‚РµРіРѕСЂРёРё РїСЂР°Р№СЃР°</h3>';
 
 		//TABLE COLUMNS
 		$fields = array();
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
-		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
+		$fields[1]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
 		$fields[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id=%id%';
 
-		$fields[2]['title'] = 'Показ';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
+		$fields[2]['title'] = 'РџРѕРєР°Р·';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
 		$fields[2]['do'] = 'opt'; $fields[2]['do_suffix'] = '_cat';
 
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Редактировать';
+		$actions[0]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[0]['icon']  = 'edit.gif';
 		$actions[0]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id=%id%';
 
-		$actions[1]['title'] = 'Удалить';
+		$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[1]['icon']  = 'delete.gif';
-		$actions[1]['confirm'] = 'Удалить категорию из прайслиста?';
+		$actions[1]['confirm'] = 'РЈРґР°Р»РёС‚СЊ РєР°С‚РµРіРѕСЂРёСЋ РёР· РїСЂР°Р№СЃР»РёСЃС‚Р°?';
 		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete_cat&item_id=%id%';
 				
 		//Print table
@@ -266,36 +266,36 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	}
 
 	if ($opt == 'list_items'){
-		cpAddPathway('Товары', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
-		echo '<h3>Товары</h3>';
+		cpAddPathway('РўРѕРІР°СЂС‹', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
+		echo '<h3>РўРѕРІР°СЂС‹</h3>';
 		
 		//TABLE COLUMNS
 		$fields = array();
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
+		$fields[1]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
 		$fields[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
 		$fields[1]['filter'] = 15;
 		
-		$fields[2]['title'] = 'Показ';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
+		$fields[2]['title'] = 'РџРѕРєР°Р·';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
 		$fields[2]['do'] = 'opt'; $fields[2]['do_suffix'] = '_item';
 
-		$fields[3]['title'] = 'Цена';		$fields[3]['field'] = 'price';		$fields[3]['width'] = '90';
+		$fields[3]['title'] = 'Р¦РµРЅР°';		$fields[3]['field'] = 'price';		$fields[3]['width'] = '90';
 		$fields[3]['filter'] = 6;
 
-		$fields[4]['title'] = 'Категория';	$fields[4]['field'] = 'category_id';$fields[4]['width'] = '300';
+		$fields[4]['title'] = 'РљР°С‚РµРіРѕСЂРёСЏ';	$fields[4]['field'] = 'category_id';$fields[4]['width'] = '300';
 		$fields[4]['prc'] = 'cpPriceCatById';  $fields[4]['filter'] = 1;  $fields[4]['filterlist'] = cpGetList('cms_price_cats');
 		
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Редактировать';
+		$actions[0]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[0]['icon']  = 'edit.gif';
 		$actions[0]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
 
-		$actions[1]['title'] = 'Удалить';
+		$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[1]['icon']  = 'delete.gif';
-		$actions[1]['confirm'] = 'Удалить позицию из прайса?';
+		$actions[1]['confirm'] = 'РЈРґР°Р»РёС‚СЊ РїРѕР·РёС†РёСЋ РёР· РїСЂР°Р№СЃР°?';
 		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete_item&item_id=%id%';
 				
 		//Print table
@@ -304,14 +304,14 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	
 	if ($opt == 'add_item' || $opt == 'edit_item'){
 		if ($opt=='add_item'){
-		 echo '<h3>Добавить товар</h3>';
-		 cpAddPathway('Добавить товар', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_item');
+		 echo '<h3>Р”РѕР±Р°РІРёС‚СЊ С‚РѕРІР°СЂ</h3>';
+		 cpAddPathway('Р”РѕР±Р°РІРёС‚СЊ С‚РѕРІР°СЂ', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_item');
 		} else {
 					 if(isset($_REQUEST['multiple'])){				 
 						if (isset($_REQUEST['item'])){					
 							$_SESSION['editlist'] = $_REQUEST['item'];
 						} else {
-							echo '<p class="error">Нет выбранных объектов!</p>';
+							echo '<p class="error">РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ!</p>';
 							return;
 						}				 
 					 }
@@ -321,7 +321,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					 if (isset($_SESSION['editlist'])){
 						$id = array_shift($_SESSION['editlist']);
 						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
-						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
+						{ $ostatok = '(РќР° РѕС‡РµСЂРµРґРё: '.sizeof($_SESSION['editlist']).')'; }
 					 } else { $id = $_REQUEST['item_id']; }
 		
 		
@@ -332,7 +332,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					 }
 
 					 echo '<h3>'.$mod['title'].' '.$ostatok.'</h3>';
-					 cpAddPathway('Товары', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
+					 cpAddPathway('РўРѕРІР°СЂС‹', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_items');
 					 cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_item&item_id='.$id);
 			}
 
@@ -340,15 +340,15 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		 <form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" enctype="multipart/form-data" name="addform" id="addform">
         <table width="650" border="0" cellspacing="5" class="proptable">
           <tr>
-            <td width="177">Название товара: </td>
+            <td width="177">РќР°Р·РІР°РЅРёРµ С‚РѕРІР°СЂР°: </td>
             <td width="311"><textarea name="title" id="title" rows="1" style="height:16px;width:320px;"><?php echo @$mod['title'];?></textarea></td>
           </tr>
           <tr>
-            <td>Цена (<font color="#999999">руб.коп</font>): </td>
+            <td>Р¦РµРЅР° (<font color="#999999">СЂСѓР±.РєРѕРї</font>): </td>
             <td><input name="price" type="text" size="30" style="height:16px;width:120px;" value="<?php echo @$mod['price'];?>"/></td>
           </tr>
           <tr>
-            <td>Категория:</td>
+            <td>РљР°С‚РµРіРѕСЂРёСЏ:</td>
             <td>
                 <select name="category_id" id="category_id">
                     <?php
@@ -366,28 +366,28 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             </td>
           </tr>
           <tr>
-            <td>Выбор количества: </td>
+            <td>Р’С‹Р±РѕСЂ РєРѕР»РёС‡РµСЃС‚РІР°: </td>
             <td><select name="canmany" id="canmany">
-              <option value="1" <?php if(@$mod['canmany']) { echo 'selected'; } ?>>Разрешить</option>
-              <option value="0" <?php if(@!$mod['canmany']) { echo 'selected'; } ?>>Запретить</option>
+              <option value="1" <?php if(@$mod['canmany']) { echo 'selected'; } ?>>Р Р°Р·СЂРµС€РёС‚СЊ</option>
+              <option value="0" <?php if(@!$mod['canmany']) { echo 'selected'; } ?>>Р—Р°РїСЂРµС‚РёС‚СЊ</option>
             </select>
             </td>
           </tr>
           <tr>
-            <td>Публиковать товар?</td>
+            <td>РџСѓР±Р»РёРєРѕРІР°С‚СЊ С‚РѕРІР°СЂ?</td>
             <td><input name="published" type="radio" value="1" checked="checked" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> />
-              Да
+              Р”Р°
               <label>
           <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> />
-                Нет</label></td>
+                РќРµС‚</label></td>
           </tr>
         </table>
         <p>
           <label>
-          <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_item') { echo 'value="Добавить товар"'; } else { echo 'value="Сохранить изменения"'; } ?> />
+          <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_item') { echo 'value="Р”РѕР±Р°РІРёС‚СЊ С‚РѕРІР°СЂ"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ"'; } ?> />
           </label>
           <label>
-          <input name="back2" type="button" id="back2" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
+          <input name="back2" type="button" id="back2" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
           </label>
           <input name="opt" type="hidden" id="do" <?php if ($opt=='add_item') { echo 'value="submit_item"'; } else { echo 'value="update_item"'; } ?> />
           <?php
@@ -402,8 +402,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 	if ($opt == 'add_cat' || $opt == 'edit_cat'){		
 		if ($opt=='add_cat'){
-			 echo '<h3>Добавить категорию</h3>';
-			 cpAddPathway('Добавить категорию', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_cat');	 
+			 echo '<h3>Р”РѕР±Р°РІРёС‚СЊ РєР°С‚РµРіРѕСЂРёСЋ</h3>';
+			 cpAddPathway('Р”РѕР±Р°РІРёС‚СЊ РєР°С‚РµРіРѕСЂРёСЋ', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add_cat');	 
 			} else {
 				 if(isset($_REQUEST['item_id'])){
 					 $id = $_REQUEST['item_id'];
@@ -414,25 +414,25 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					 }
 				 }
 				
-				 echo '<h3>Категория: '.$mod['title'].'</h3>';
-	 	 		 cpAddPathway('Категории прайса', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
+				 echo '<h3>РљР°С‚РµРіРѕСЂРёСЏ: '.$mod['title'].'</h3>';
+	 	 		 cpAddPathway('РљР°С‚РµРіРѕСЂРёРё РїСЂР°Р№СЃР°', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list_cats');
 				 cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit_cat&item_id='.$_REQUEST['item_id']);	 
 			}
 			?>
 		<form id="addform" name="addform" method="post" action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>">
 			<table width="600" border="0" cellspacing="5" class="proptable">
 			  <tr>
-				<td width="200">Название категории: </td>
+				<td width="200">РќР°Р·РІР°РЅРёРµ РєР°С‚РµРіРѕСЂРёРё: </td>
 				<td width="213"><input name="title" type="text" id="title" size="30" value="<?php echo htmlspecialchars($mod['title']);?>"/></td>
 				<td width="173">&nbsp;</td>
 			  </tr>
 			  <tr>
-				<td>Публиковать категорию?</td>
+				<td>РџСѓР±Р»РёРєРѕРІР°С‚СЊ РєР°С‚РµРіРѕСЂРёСЋ?</td>
 				<td><input name="published" type="radio" value="1" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> />
-				  Да
+				  Р”Р°
 				  <label>
 			  <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> />
-					Нет</label></td>
+					РќРµС‚</label></td>
 				<td>&nbsp;</td>
 			  </tr>
 			</table>
@@ -441,7 +441,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 				<?php
 				if(!isset($mod['user']) || @$mod['user']==1){
 					echo '<td width="52%" valign="top">';
-					echo 'Описание категории:<br/>';
+					echo 'РћРїРёСЃР°РЅРёРµ РєР°С‚РµРіРѕСЂРёРё:<br/>';
 
                     $inCore->insertEditor('description', $mod['description'], '260', '605');
 					
@@ -452,10 +452,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			</table>	
 			<p>
 			  <label>
-			  <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add_cat') { echo 'value="Создать категорию"'; } else { echo 'value="Сохранить изменения"'; } ?> />
+			  <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add_cat') { echo 'value="РЎРѕР·РґР°С‚СЊ РєР°С‚РµРіРѕСЂРёСЋ"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ"'; } ?> />
 			  </label>
 			  <label>
-			  <input name="back3" type="button" id="back3" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
+			  <input name="back3" type="button" id="back3" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/>
 			  </label>
 			  <input name="opt" type="hidden" id="do" <?php if ($opt=='add_cat') { echo 'value="submit_cat"'; } else { echo 'value="update_cat"'; } ?> />
 			  <?php

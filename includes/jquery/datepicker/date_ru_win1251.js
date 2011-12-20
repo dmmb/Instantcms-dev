@@ -6,7 +6,7 @@
  * isWeekend, isWeekDay, getDaysInMonth, getDayName, getMonthName, getDayOfYear, getWeekOfYear,
  * setDayOfYear, addYears, addMonths, addDays, addHours, addMinutes, addSeconds methods
  *
- * Copyright (c) 2006 JУЖrn Zaefferer and Brandon Aaron (brandon.aaron@gmail.com || http://brandonaaron.net)
+ * Copyright (c) 2006 JРЈР–rn Zaefferer and Brandon Aaron (brandon.aaron@gmail.com || http://brandonaaron.net)
  *
  * Additional methods and properties added by Kelvin Luck: firstDayOfWeek, dateFormat, zeroTime, asString, fromString -
  * I've added my name to these methods so you know who to blame if they are broken!
@@ -27,10 +27,10 @@
  * @type Array
  * @cat Plugins/Methods/Date
  */
-Date.dayNames = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
-Date.abbrDayNames = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
-Date.monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
-Date.abbrMonthNames = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
+Date.dayNames = ['Р’РѕСЃРєСЂРµСЃРµРЅСЊРµ', 'РџРѕРЅРµРґРµР»СЊРЅРёРє', 'Р’С‚РѕСЂРЅРёРє', 'РЎСЂРµРґР°', 'Р§РµС‚РІРµСЂРі', 'РџСЏС‚РЅРёС†Р°', 'РЎСѓР±Р±РѕС‚Р°'];
+Date.abbrDayNames = ['Р’СЃ', 'РџРЅ', 'Р’С‚', 'РЎСЂ', 'Р§С‚', 'РџС‚', 'РЎР±'];
+Date.monthNames = ['РЇРЅРІР°СЂСЊ', 'Р¤РµРІСЂР°Р»СЊ', 'РњР°СЂС‚', 'РђРїСЂРµР»СЊ', 'РњР°Р№', 'РСЋРЅСЊ', 'РСЋР»СЊ', 'РђРІРіСѓСЃС‚', 'РЎРµРЅС‚СЏР±СЂСЊ', 'РћРєС‚СЏР±СЂСЊ', 'РќРѕСЏР±СЂСЊ', 'Р”РµРєР°Р±СЂСЊ'];
+Date.abbrMonthNames = ['РЇРЅРІ', 'Р¤РµРІ', 'РњР°СЂ', 'РђРїСЂ', 'РњР°Р№', 'РСЋРЅ', 'РСЋР»', 'РђРІРі', 'РЎРµРЅ', 'РћРєС‚', 'РќРѕСЏ', 'Р”РµРє'];
 
 Date.firstDayOfWeek = 1;
 Date.format = 'dd.mm.yyyy';

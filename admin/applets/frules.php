@@ -21,9 +21,9 @@ function applet_frules(){
 	global $adminAccess;
 	if (!$inCore->isAdminCan('admin/filters', $adminAccess)) { cpAccessDenied(); }
 
-	$GLOBALS['cp_page_title'] = 'Правила фильтрации';
- 	cpAddPathway('Фильтры', 'index.php?view=filters');	
- 	cpAddPathway('Правила фильтрации', 'index.php?view=frules');	
+	$GLOBALS['cp_page_title'] = 'РџСЂР°РІРёР»Р° С„РёР»СЊС‚СЂР°С†РёРё';
+ 	cpAddPathway('Р¤РёР»СЊС‚СЂС‹', 'index.php?view=filters');	
+ 	cpAddPathway('РџСЂР°РІРёР»Р° С„РёР»СЊС‚СЂР°С†РёРё', 'index.php?view=frules');	
 
 	if (isset($_REQUEST['do'])) { $do = $_REQUEST['do']; } else { $do = 'list'; }
 	if (isset($_REQUEST['id'])) { $id = (int)$_REQUEST['id']; } else { $id = -1; }
@@ -32,27 +32,27 @@ function applet_frules(){
 	if ($do == 'list'){
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'new.gif';
-		$toolmenu[0]['title'] = 'Добавить правило';
+		$toolmenu[0]['title'] = 'Р”РѕР±Р°РІРёС‚СЊ РїСЂР°РІРёР»Рѕ';
 		$toolmenu[0]['link'] = '?view=frules&do=add';
 
 		$toolmenu[1]['icon'] = 'edit.gif';
-		$toolmenu[1]['title'] = 'Редактировать выбранные';
+		$toolmenu[1]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[1]['link'] = "javascript:checkSel('?view=frules&do=edit&multiple=1');";
 
 		$toolmenu[2]['icon'] = 'show.gif';
-		$toolmenu[2]['title'] = 'Публиковать выбранные';
+		$toolmenu[2]['title'] = 'РџСѓР±Р»РёРєРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[2]['link'] = "javascript:checkSel('?view=frules&do=show&multiple=1');";
 
 		$toolmenu[3]['icon'] = 'hide.gif';
-		$toolmenu[3]['title'] = 'Скрыть выбранные';
+		$toolmenu[3]['title'] = 'РЎРєСЂС‹С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[3]['link'] = "javascript:checkSel('?view=frules&do=hide&multiple=1');";
 
 		$toolmenu[4]['icon'] = 'delete.gif';
-		$toolmenu[4]['title'] = 'Удалить выбранные';
+		$toolmenu[4]['title'] = 'РЈРґР°Р»РёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[4]['link'] = "javascript:checkSel('?view=frules&do=delete&multiple=1');";
 
 		$toolmenu[6]['icon'] = 'help.gif';
-		$toolmenu[6]['title'] = 'Помощь';
+		$toolmenu[6]['title'] = 'РџРѕРјРѕС‰СЊ';
 		$toolmenu[6]['link'] = "?view=help&topic=menu";
 
 		cpToolMenu($toolmenu);
@@ -62,24 +62,24 @@ function applet_frules(){
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';		$fields[1]['link'] = '?view=frules&do=edit&id=%id%';
+		$fields[1]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';		$fields[1]['link'] = '?view=frules&do=edit&id=%id%';
 		$fields[1]['filter'] = 15;
 		
-		$fields[2]['title'] = 'Найти';		$fields[2]['field'] = 'find';	$fields[2]['width'] = '220';	
+		$fields[2]['title'] = 'РќР°Р№С‚Рё';		$fields[2]['field'] = 'find';	$fields[2]['width'] = '220';	
 
-		$fields[3]['title'] = 'Заменить на';$fields[3]['field'] = 'replace';	$fields[3]['width'] = '220';	
+		$fields[3]['title'] = 'Р—Р°РјРµРЅРёС‚СЊ РЅР°';$fields[3]['field'] = 'replace';	$fields[3]['width'] = '220';	
 
-		$fields[4]['title'] = 'В работе';	$fields[4]['field'] = 'published';	$fields[4]['width'] = '100';	
+		$fields[4]['title'] = 'Р’ СЂР°Р±РѕС‚Рµ';	$fields[4]['field'] = 'published';	$fields[4]['width'] = '100';	
 		
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Редактировать';
+		$actions[0]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[0]['icon']  = 'edit.gif';
 		$actions[0]['link']  = '?view=frules&do=edit&id=%id%';
 
-		$actions[1]['title'] = 'Удалить';
+		$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[1]['icon']  = 'delete.gif';
-		$actions[1]['confirm'] = 'Удалить правило фильтрации?';
+		$actions[1]['confirm'] = 'РЈРґР°Р»РёС‚СЊ РїСЂР°РІРёР»Рѕ С„РёР»СЊС‚СЂР°С†РёРё?';
 		$actions[1]['link']  = '?view=frules&do=delete&id=%id%';
 				
 		//Print table
@@ -157,24 +157,24 @@ function applet_frules(){
  
  		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'save.gif';
-		$toolmenu[0]['title'] = 'Сохранить';
+		$toolmenu[0]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 		$toolmenu[0]['link'] = 'javascript:document.addform.submit();';
 
 		$toolmenu[1]['icon'] = 'cancel.gif';
-		$toolmenu[1]['title'] = 'Отмена';
+		$toolmenu[1]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[1]['link'] = 'javascript:window.location.href=\'index.php?view=frules\'';
 
 		cpToolMenu($toolmenu);
    
 		if ($do=='add'){
-			 echo '<h3>Добавить правило</h3>';
- 	 		 cpAddPathway('Добавить правило', 'index.php?view=frules&do=add');
+			 echo '<h3>Р”РѕР±Р°РІРёС‚СЊ РїСЂР°РІРёР»Рѕ</h3>';
+ 	 		 cpAddPathway('Р”РѕР±Р°РІРёС‚СЊ РїСЂР°РІРёР»Рѕ', 'index.php?view=frules&do=add');
 		} else {
 					 if(isset($_REQUEST['multiple'])){				 
 						if (isset($_REQUEST['item'])){					
 							$_SESSION['editlist'] = $_REQUEST['item'];
 						} else {
-							echo '<p class="error">Нет выбранных объектов!</p>';
+							echo '<p class="error">РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ!</p>';
 							return;
 						}				 
 					 }
@@ -184,7 +184,7 @@ function applet_frules(){
 					 if (isset($_SESSION['editlist'])){
 						$id = array_shift($_SESSION['editlist']);
 						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
-						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
+						{ $ostatok = '(РќР° РѕС‡РµСЂРµРґРё: '.sizeof($_SESSION['editlist']).')'; }
 					 } else { $id = (int)$_REQUEST['id']; }
 	
 					 $sql = "SELECT * FROM cms_filter_rules WHERE id = $id LIMIT 1";
@@ -193,7 +193,7 @@ function applet_frules(){
 						$mod = mysql_fetch_assoc($result);
 					 }
 					
-					 echo '<h3>Редактировать правило '.$ostatok.'</h3>';
+					 echo '<h3>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РїСЂР°РІРёР»Рѕ '.$ostatok.'</h3>';
 					 
 					 cpAddPathway($mod['title'], 'index.php?view=frules&do=edit&id='.$mod['id']);
 			}   
@@ -202,12 +202,12 @@ function applet_frules(){
 <input type="hidden" name="view" value="frules" />
   <table width="650" border="0" cellpadding="0" cellspacing="10" class="proptable">
     <tr>
-      <td valign="top"><strong>Название правила:</strong></td>
+      <td valign="top"><strong>РќР°Р·РІР°РЅРёРµ РїСЂР°РІРёР»Р°:</strong></td>
       <td width="220" valign="top"><input name="title" type="text" id="name" style="width:220px" value="<?php echo @$mod['title'];?>" />      </td>
     </tr>
     <tr>
-      <td valign="top"><strong>Тэг для поиска:</strong><br />
-          <span class="hinttext">Указанный тэг будет заменяться фильтром на текст, введенный ниже. <br/> В статьях и модулях тег нужно будет вводить в фигурных скобках.</span></td>
+      <td valign="top"><strong>РўСЌРі РґР»СЏ РїРѕРёСЃРєР°:</strong><br />
+          <span class="hinttext">РЈРєР°Р·Р°РЅРЅС‹Р№ С‚СЌРі Р±СѓРґРµС‚ Р·Р°РјРµРЅСЏС‚СЊСЃСЏ С„РёР»СЊС‚СЂРѕРј РЅР° С‚РµРєСЃС‚, РІРІРµРґРµРЅРЅС‹Р№ РЅРёР¶Рµ. <br/> Р’ СЃС‚Р°С‚СЊСЏС… Рё РјРѕРґСѓР»СЏС… С‚РµРі РЅСѓР¶РЅРѕ Р±СѓРґРµС‚ РІРІРѕРґРёС‚СЊ РІ С„РёРіСѓСЂРЅС‹С… СЃРєРѕР±РєР°С….</span></td>
       <td align="center" valign="top"><b>{</b>
           <input name="find" type="text" id="find" size="27" style="text-align:center" value="<?php echo @$mod['find'];?>"/>
           <b>}</b> </td>
@@ -218,7 +218,7 @@ function applet_frules(){
       <?php
 			if(!isset($mod['user']) || @$mod['user']==1){
 				echo '<td width="52%" valign="top">';
-				echo '<h3>Заменять тэг на:</h3>';
+				echo '<h3>Р—Р°РјРµРЅСЏС‚СЊ С‚СЌРі РЅР°:</h3>';
 
                     $inCore->insertEditor('replace', $mod['replace'], '400', '605');
 
@@ -229,10 +229,10 @@ function applet_frules(){
   </table>
   <p>
     <label>
-      <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add') { echo 'value="Создать правило"'; } else { echo 'value="Сохранить правило"'; } ?> />
+      <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add') { echo 'value="РЎРѕР·РґР°С‚СЊ РїСЂР°РІРёР»Рѕ"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ РїСЂР°РІРёР»Рѕ"'; } ?> />
     </label>
     <label><span style="margin-top:15px">
-      <input name="back" type="button" id="back" value="Отмена" onclick="window.history.back();"/>
+      <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.history.back();"/>
       </span></label>
     <input name="do" type="hidden" id="do" <?php if ($do=='add') { echo 'value="submit"'; } else { echo 'value="update"'; } ?> />
     <?php

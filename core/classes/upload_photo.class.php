@@ -15,18 +15,18 @@ class cmsUploadPhoto {
 
     private static $instance;
 
-	public $upload_dir    = '';			// директория загрузки
-	public $small_size_w  = 96;	    	// ширина миниатюры
-	public $small_size_h  = '';			// высота миниатюры
-	public $medium_size_w = 480;		// ширина среднего изображения
-	public $medium_size_h = '';			// высота среднего изображения
-	public $thumbsqr      = true;		// квадратное изображение, да по умолчанию
-	public $is_watermark  = true;		// накладывать ватермарк, да по умолчанию
-	public $is_saveorig   = 0;			// сохранять оригинал фото, нет по умолчанию
-	public $dir_small     = 'small/';	// директория загрузки миниатюры
-	public $dir_medium    = 'medium/';	// директория загрузки среднего изображения
-	public $is_circle     = false;	    // скруглять уголки, нет по умолчанию
-	public $only_medium   = false;		// загружать только среднее изображение, нет по умолчанию
+	public $upload_dir    = '';			// РґРёСЂРµРєС‚РѕСЂРёСЏ Р·Р°РіСЂСѓР·РєРё
+	public $small_size_w  = 96;	    	// С€РёСЂРёРЅР° РјРёРЅРёР°С‚СЋСЂС‹
+	public $small_size_h  = '';			// РІС‹СЃРѕС‚Р° РјРёРЅРёР°С‚СЋСЂС‹
+	public $medium_size_w = 480;		// С€РёСЂРёРЅР° СЃСЂРµРґРЅРµРіРѕ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
+	public $medium_size_h = '';			// РІС‹СЃРѕС‚Р° СЃСЂРµРґРЅРµРіРѕ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
+	public $thumbsqr      = true;		// РєРІР°РґСЂР°С‚РЅРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ, РґР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+	public $is_watermark  = true;		// РЅР°РєР»Р°РґС‹РІР°С‚СЊ РІР°С‚РµСЂРјР°СЂРє, РґР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+	public $is_saveorig   = 0;			// СЃРѕС…СЂР°РЅСЏС‚СЊ РѕСЂРёРіРёРЅР°Р» С„РѕС‚Рѕ, РЅРµС‚ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+	public $dir_small     = 'small/';	// РґРёСЂРµРєС‚РѕСЂРёСЏ Р·Р°РіСЂСѓР·РєРё РјРёРЅРёР°С‚СЋСЂС‹
+	public $dir_medium    = 'medium/';	// РґРёСЂРµРєС‚РѕСЂРёСЏ Р·Р°РіСЂСѓР·РєРё СЃСЂРµРґРЅРµРіРѕ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
+	public $is_circle     = false;	    // СЃРєСЂСѓРіР»СЏС‚СЊ СѓРіРѕР»РєРё, РЅРµС‚ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+	public $only_medium   = false;		// Р·Р°РіСЂСѓР¶Р°С‚СЊ С‚РѕР»СЊРєРѕ СЃСЂРµРґРЅРµРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ, РЅРµС‚ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
 
 // ============================================================================ //
 // ============================================================================ //
@@ -48,12 +48,12 @@ class cmsUploadPhoto {
 // ============================================================================ //
 
     /**
-     * Загружает фото файл
+     * Р—Р°РіСЂСѓР¶Р°РµС‚ С„РѕС‚Рѕ С„Р°Р№Р»
      * @return array $file (filename, realfile)
      */
     public function uploadPhoto($old_file=''){
 		
-		// если каталог загрузки не определен, возвращаем ложь
+		// РµСЃР»Рё РєР°С‚Р°Р»РѕРі Р·Р°РіСЂСѓР·РєРё РЅРµ РѕРїСЂРµРґРµР»РµРЅ, РІРѕР·РІСЂР°С‰Р°РµРј Р»РѕР¶СЊ
 		if (!$this->upload_dir) { return false; }
 
 		$inCore = cmsCore::getInstance();
@@ -67,7 +67,7 @@ class cmsUploadPhoto {
 			$path_parts = pathinfo($realfile);
 			$ext        = strtolower($path_parts['extension']);
 			
-			// убираем расширение файла вместе с точкой
+			// СѓР±РёСЂР°РµРј СЂР°СЃС€РёСЂРµРЅРёРµ С„Р°Р№Р»Р° РІРјРµСЃС‚Рµ СЃ С‚РѕС‡РєРѕР№
 			$realfile = substr($realfile, 0, strrpos($realfile, '.'));
 		
 			if ($ext != 'jpg' && $ext != 'jpeg' && $ext != 'gif' && $ext != 'png' && $ext != 'bmp') { return false; }
@@ -86,25 +86,25 @@ class cmsUploadPhoto {
 		
 			if ($inCore->moveUploadedFile($source, $uploadphoto, $errorCode)) {
 				
-				// удаляем предыдущий файл если необходимо
+				// СѓРґР°Р»СЏРµРј РїСЂРµРґС‹РґСѓС‰РёР№ С„Р°Р№Р» РµСЃР»Рё РЅРµРѕР±С…РѕРґРёРјРѕ
 				$this->deletePhotoFile($old_file);
 				
 				if (!$this->small_size_h) { $this->small_size_h = $this->small_size_w; }
 				if (!$this->medium_size_h) { $this->medium_size_h = $this->medium_size_w; }
 
-				// Гененрируем маленькое и среднее изображения
+				// Р“РµРЅРµРЅСЂРёСЂСѓРµРј РјР°Р»РµРЅСЊРєРѕРµ Рё СЃСЂРµРґРЅРµРµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
 				if(!$this->only_medium){
 					@img_resize($uploadphoto, $uploadthumb['small'], $this->small_size_w, $this->small_size_h, $this->thumbsqr);
 				}
 				@img_resize($uploadphoto, $uploadthumb['medium'], $this->medium_size_w, $this->medium_size_h, false, false);
 
-				// Скруглять уголки
+				// РЎРєСЂСѓРіР»СЏС‚СЊ СѓРіРѕР»РєРё
 				if($this->is_circle) { @img_circle($uploadthumb['small'],7); }
 
-				// Накладывать ватермарк
+				// РќР°РєР»Р°РґС‹РІР°С‚СЊ РІР°С‚РµСЂРјР°СЂРє
 				if($this->is_watermark) { @img_add_watermark($uploadthumb['medium']); }
 
-				// сохранять оригинал
+				// СЃРѕС…СЂР°РЅСЏС‚СЊ РѕСЂРёРіРёРЅР°Р»
 				if(!$this->is_saveorig) { @unlink($uploadphoto); } elseif($this->is_watermark) { @img_add_watermark($uploadphoto); }
 
 				$file['filename'] = $filename;
@@ -133,7 +133,7 @@ class cmsUploadPhoto {
 // ============================================================================ //
 // ============================================================================ //
     /**
-     * Удаляет файл фото с папок загрузки
+     * РЈРґР°Р»СЏРµС‚ С„Р°Р№Р» С„РѕС‚Рѕ СЃ РїР°РїРѕРє Р·Р°РіСЂСѓР·РєРё
      * @return bool
      */
 	public function deletePhotoFile($file=''){

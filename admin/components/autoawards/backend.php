@@ -16,8 +16,8 @@ function error($msg){
 //
 }
 
-	cpAddPathway('Награждение пользователей', '?view=components&do=config&id='.$_REQUEST['id']);
-	echo '<h3>Награждение пользователей</h3>';
+	cpAddPathway('РќР°РіСЂР°Р¶РґРµРЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№', '?view=components&do=config&id='.$_REQUEST['id']);
+	echo '<h3>РќР°РіСЂР°Р¶РґРµРЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</h3>';
 	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; }
 	
 	$toolmenu = array();
@@ -25,23 +25,23 @@ function error($msg){
 	if($opt=='list'){
 
 		$toolmenu[0]['icon'] = 'newaward.gif';
-		$toolmenu[0]['title'] = 'Новая награда';
+		$toolmenu[0]['title'] = 'РќРѕРІР°СЏ РЅР°РіСЂР°РґР°';
 		$toolmenu[0]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add';
 	
 		$toolmenu[3]['icon'] = 'listawards.gif';
-		$toolmenu[3]['title'] = 'Все награды';
+		$toolmenu[3]['title'] = 'Р’СЃРµ РЅР°РіСЂР°РґС‹';
 		$toolmenu[3]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list';
 
 		$toolmenu[11]['icon'] = 'edit.gif';
-		$toolmenu[11]['title'] = 'Редактировать выбранные';
+		$toolmenu[11]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[11]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=edit&multiple=1');";
 
 		$toolmenu[12]['icon'] = 'show.gif';
-		$toolmenu[12]['title'] = 'Включить выбранные';
+		$toolmenu[12]['title'] = 'Р’РєР»СЋС‡РёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=show_award&multiple=1');";
 
 		$toolmenu[13]['icon'] = 'hide.gif';
-		$toolmenu[13]['title'] = 'Отключить выбранные';
+		$toolmenu[13]['title'] = 'РћС‚РєР»СЋС‡РёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".$_REQUEST['id']."&opt=hide_award&multiple=1');";
 
 	}
@@ -51,11 +51,11 @@ function error($msg){
 	} else {
 	
 		$toolmenu[20]['icon'] = 'save.gif';
-		$toolmenu[20]['title'] = 'Сохранить';
+		$toolmenu[20]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 		$toolmenu[20]['link'] = 'javascript:document.addform.submit();';
 
 		$toolmenu[21]['icon'] = 'cancel.gif';
-		$toolmenu[21]['title'] = 'Отмена';
+		$toolmenu[21]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[21]['link'] = '?view=components&do=config&id='.$_REQUEST['id'];
 	
 	}
@@ -65,7 +65,7 @@ function error($msg){
 	if($opt=='saveconfig'){	
 		$cfg = array();
 		$inCore->saveComponentConfig('autoawards', $cfg);
-		$msg = 'Настройки сохранены.';
+		$msg = 'РќР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅРµРЅС‹.';
 		$opt = 'config';
 	}
 
@@ -90,7 +90,7 @@ function error($msg){
 	}
 
 	if ($opt == 'submit'){	
-			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { $title = 'Награда'; }
+			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { $title = 'РќР°РіСЂР°РґР°'; }
 												
 			$description = $_REQUEST['description'];
 			$published = $_REQUEST['published'];
@@ -115,7 +115,7 @@ function error($msg){
 		if(isset($_REQUEST['item_id'])) { 
 			$id = $_REQUEST['item_id'];
 			
-			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { $title = 'Награда'; }
+			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { $title = 'РќР°РіСЂР°РґР°'; }
 												
 			$description = $_REQUEST['description'];
 			$published = $_REQUEST['published'];
@@ -165,32 +165,32 @@ function error($msg){
 	}
 
 	if ($opt == 'list'){
-		echo '<h3>Награды</h3>';
+		echo '<h3>РќР°РіСЂР°РґС‹</h3>';
 		
 		//TABLE COLUMNS
 		$fields = array();
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[2]['title'] = 'Название';	$fields[2]['field'] = 'title';		$fields[2]['width'] = '250';
+		$fields[2]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[2]['field'] = 'title';		$fields[2]['width'] = '250';
 		$fields[2]['filter'] = 15;
 		$fields[2]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id=%id%';
 
-		$fields[3]['title'] = 'Описание';	$fields[3]['field'] = 'description';		$fields[3]['width'] = '';
+		$fields[3]['title'] = 'РћРїРёСЃР°РЅРёРµ';	$fields[3]['field'] = 'description';		$fields[3]['width'] = '';
 		$fields[3]['filter'] = 15;
 
-		$fields[4]['title'] = 'Выдача';		$fields[4]['field'] = 'published';	$fields[4]['width'] = '100';
+		$fields[4]['title'] = 'Р’С‹РґР°С‡Р°';		$fields[4]['field'] = 'published';	$fields[4]['width'] = '100';
 		$fields[4]['do'] = 'opt';  $fields[4]['do_suffix'] = '_award';
 		
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Редактировать';
+		$actions[0]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[0]['icon']  = 'edit.gif';
 		$actions[0]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id=%id%';
 
-		$actions[1]['title'] = 'Удалить';
+		$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[1]['icon']  = 'delete.gif';
-		$actions[1]['confirm'] = 'Удалить награду?\nЕе лишатся все пользователи, у которых она есть.';
+		$actions[1]['confirm'] = 'РЈРґР°Р»РёС‚СЊ РЅР°РіСЂР°РґСѓ?\nР•Рµ Р»РёС€Р°С‚СЃСЏ РІСЃРµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё, Сѓ РєРѕС‚РѕСЂС‹С… РѕРЅР° РµСЃС‚СЊ.';
 		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete&item_id=%id%';
 				
 		//Print table
@@ -202,14 +202,14 @@ function error($msg){
 		include(PATH.'/components/users/includes/usercore.php');
 			
 		if ($opt=='add'){
-			 cpAddPathway('Добавить награду', $_SERVER['REQUEST_URI']);
-			 echo '<h3>Добавить награду</h3>';
+			 cpAddPathway('Р”РѕР±Р°РІРёС‚СЊ РЅР°РіСЂР°РґСѓ', $_SERVER['REQUEST_URI']);
+			 echo '<h3>Р”РѕР±Р°РІРёС‚СЊ РЅР°РіСЂР°РґСѓ</h3>';
 		} else {
 					if(isset($_REQUEST['multiple'])){				 
 						if (isset($_REQUEST['item'])){					
 							$_SESSION['editlist'] = $_REQUEST['item'];
 						} else {
-							echo '<p class="error">Нет выбранных объектов!</p>';
+							echo '<p class="error">РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ!</p>';
 							return;
 						}				 
 					 }
@@ -219,7 +219,7 @@ function error($msg){
 					 if (isset($_SESSION['editlist'])){
 						$id = array_shift($_SESSION['editlist']);
 						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
-						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
+						{ $ostatok = '(РќР° РѕС‡РµСЂРµРґРё: '.sizeof($_SESSION['editlist']).')'; }
 					 } else { $id = $_REQUEST['item_id']; }
 		
 		
@@ -260,75 +260,75 @@ function error($msg){
 		<form action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>" method="post" enctype="multipart/form-data" name="addform" id="addform">
 				<table width="625" border="0" cellspacing="5" class="proptable">
 				  <tr>
-					<td width="298" valign="top"><strong>Название награды: </strong><br /></td>
+					<td width="298" valign="top"><strong>РќР°Р·РІР°РЅРёРµ РЅР°РіСЂР°РґС‹: </strong><br /></td>
 					<td width="308" valign="top"><input name="title" type="text" id="title" size="45" value="<?php echo @$mod['title'];?>"/></td>
 				  </tr>
 				  <tr>
-                    <td valign="top"><strong>Описание награды: </strong><br /></td>
+                    <td valign="top"><strong>РћРїРёСЃР°РЅРёРµ РЅР°РіСЂР°РґС‹: </strong><br /></td>
 				    <td valign="top"><input name="description" type="text" id="description" size="45" value="<?php echo @$mod['description'];?>"/></td>
 			      </tr>
 				  <tr>
-					<td valign="top"><strong>Выдавать награду?</strong><br />
-						<span class="hinttext">Отключите для приостановки выдачи награды </span>					</td>
+					<td valign="top"><strong>Р’С‹РґР°РІР°С‚СЊ РЅР°РіСЂР°РґСѓ?</strong><br />
+						<span class="hinttext">РћС‚РєР»СЋС‡РёС‚Рµ РґР»СЏ РїСЂРёРѕСЃС‚Р°РЅРѕРІРєРё РІС‹РґР°С‡Рё РЅР°РіСЂР°РґС‹ </span>					</td>
 					<td valign="top"><input name="published" type="radio" value="1" checked="checked" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> />
-					  Да
+					  Р”Р°
 					  <label>
 				  <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> />
-						Нет</label></td>
+						РќРµС‚</label></td>
 				  </tr>
 				  <tr>
-				    <td valign="top"><strong>Изображение награды:<br />
-				    </strong><span class="hinttext">Картинки из папки /images/users/awards </span><strong><br />
+				    <td valign="top"><strong>РР·РѕР±СЂР°Р¶РµРЅРёРµ РЅР°РіСЂР°РґС‹:<br />
+				    </strong><span class="hinttext">РљР°СЂС‚РёРЅРєРё РёР· РїР°РїРєРё /images/users/awards </span><strong><br />
 			        </strong></td>
 				    <td valign="top"><?php echo usrAwardsList($mod['imageurl']);?></td>
 			      </tr>
 				  <tr>
-				    <td valign="top"><p><strong>Условия получения награды:</strong> <br>
-				      <span class="hinttext">Награда</span> будет выдаваться пользователям, набравшим указанное количество сообщений и баллов </p>			        </td>
+				    <td valign="top"><p><strong>РЈСЃР»РѕРІРёСЏ РїРѕР»СѓС‡РµРЅРёСЏ РЅР°РіСЂР°РґС‹:</strong> <br>
+				      <span class="hinttext">РќР°РіСЂР°РґР°</span> Р±СѓРґРµС‚ РІС‹РґР°РІР°С‚СЊСЃСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј, РЅР°Р±СЂР°РІС€РёРј СѓРєР°Р·Р°РЅРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРѕРѕР±С‰РµРЅРёР№ Рё Р±Р°Р»Р»РѕРІ </p>			        </td>
 				    <td valign="top"><table width="100%" border="0" cellspacing="2" cellpadding="0">
                       <tr>
                         <td width="20"><img src="/admin/components/autoawards/images/p_comment.gif" width="16" height="16" /></td>
                         <td width="14%"><label>
                           <input name="p_comment" type="text" id="p_input" size="5" value="<?php echo @$mod['p_comment'];?>">
                         </label></td>
-                        <td width="86%">комментариев</td>
+                        <td width="86%">РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ</td>
                       </tr>
                       <tr>
                         <td><img src="/admin/components/autoawards/images/p_forum.gif" width="16" height="16" /></td>
                         <td><input name="p_forum" type="text" id="p_input" size="5" value="<?php echo @$mod['p_forum'];?>" /></td>
-                        <td>сообщений на форуме </td>
+                        <td>СЃРѕРѕР±С‰РµРЅРёР№ РЅР° С„РѕСЂСѓРјРµ </td>
                       </tr>
                       <tr>
                         <td><img src="/admin/components/autoawards/images/p_content.gif" width="16" height="16" /></td>
                         <td><input name="p_content" type="text" id="p_input" size="5" value="<?php echo @$mod['p_content'];?>"></td>
-                        <td>опубликованных статей </td>
+                        <td>РѕРїСѓР±Р»РёРєРѕРІР°РЅРЅС‹С… СЃС‚Р°С‚РµР№ </td>
                       </tr>
                       <tr>
                         <td><img src="/admin/components/autoawards/images/p_blog.gif" width="16" height="16" /></td>
                         <td><input name="p_blog" type="text" id="p_input" size="5" value="<?php echo @$mod['p_blog'];?>"></td>
-                        <td>одобренных записей в блоге </td>
+                        <td>РѕРґРѕР±СЂРµРЅРЅС‹С… Р·Р°РїРёСЃРµР№ РІ Р±Р»РѕРіРµ </td>
                       </tr>
                       <tr>
                         <td><img src="/admin/components/autoawards/images/p_karma.gif" width="16" height="16" /></td>
                         <td><input name="p_karma" type="text" id="p_input" size="5" value="<?php echo @$mod['p_karma'];?>"></td>
-                        <td>баллов личной кармы </td>
+                        <td>Р±Р°Р»Р»РѕРІ Р»РёС‡РЅРѕР№ РєР°СЂРјС‹ </td>
                       </tr>
                       <tr>
                         <td><img src="/admin/components/autoawards/images/p_photo.gif" width="16" height="16" /></td>
                         <td><input name="p_photo" type="text" id="p_input" size="5" value="<?php echo @$mod['p_photo'];?>" /></td>
-                        <td>фотографий в общих альбомах </td>
+                        <td>С„РѕС‚РѕРіСЂР°С„РёР№ РІ РѕР±С‰РёС… Р°Р»СЊР±РѕРјР°С… </td>
                       </tr>
                       <tr>
                         <td><img src="/admin/components/autoawards/images/p_privphoto.gif" width="16" height="16" /></td>
                         <td><input name="p_privphoto" type="text" id="p_input" size="5" value="<?php echo @$mod['p_privphoto'];?>" /></td>
-                        <td>фотографий в личном альбоме </td>
+                        <td>С„РѕС‚РѕРіСЂР°С„РёР№ РІ Р»РёС‡РЅРѕРј Р°Р»СЊР±РѕРјРµ </td>
                       </tr>
                     </table></td>
 			      </tr>
 				</table>
 				<p>
-				  <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add') { echo 'value="Создать награду"'; } else { echo 'value="Сохранить изменения"'; } ?> />
-				  <input name="back3" type="button" id="back3" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+				  <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add') { echo 'value="РЎРѕР·РґР°С‚СЊ РЅР°РіСЂР°РґСѓ"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ"'; } ?> />
+				  <input name="back3" type="button" id="back3" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components';"/>
 				  <input name="opt" type="hidden" id="opt" <?php if ($opt=='add') { echo 'value="submit"'; } else { echo 'value="update"'; } ?> />
 				  <?php
 					if ($opt=='edit'){

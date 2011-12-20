@@ -46,8 +46,8 @@ function applet_cats(){
     $inCore = cmsCore::getInstance();
     $inDB = cmsDatabase::getInstance();
 
-    $GLOBALS['cp_page_title'] = 'Разделы сайта';
-    cpAddPathway('Разделы сайта', 'index.php?view=tree');
+    $GLOBALS['cp_page_title'] = 'Р Р°Р·РґРµР»С‹ СЃР°Р№С‚Р°';
+    cpAddPathway('Р Р°Р·РґРµР»С‹ СЃР°Р№С‚Р°', 'index.php?view=tree');
 
     $inCore->loadModel('content');
     $model = new cms_model_content();
@@ -62,31 +62,31 @@ function applet_cats(){
 	if ($do == 'list'){
 		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'new.gif';
-		$toolmenu[0]['title'] = 'Добавить раздел';
+		$toolmenu[0]['title'] = 'Р”РѕР±Р°РІРёС‚СЊ СЂР°Р·РґРµР»';
 		$toolmenu[0]['link'] = '?view=cats&do=add';
 
 		$toolmenu[1]['icon'] = 'edit.gif';
-		$toolmenu[1]['title'] = 'Редактировать выбранные';
+		$toolmenu[1]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[1]['link'] = "javascript:checkSel('?view=cats&do=edit&multiple=1');";
 
 		$toolmenu[2]['icon'] = 'show.gif';
-		$toolmenu[2]['title'] = 'Публиковать выбранные';
+		$toolmenu[2]['title'] = 'РџСѓР±Р»РёРєРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[2]['link'] = "javascript:checkSel('?view=cats&do=show&multiple=1');";
 
 		$toolmenu[3]['icon'] = 'hide.gif';
-		$toolmenu[3]['title'] = 'Скрыть выбранные';
+		$toolmenu[3]['title'] = 'РЎРєСЂС‹С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[3]['link'] = "javascript:checkSel('?view=cats&do=hide&multiple=1');";
 
 		$toolmenu[4]['icon'] = 'delete.gif';
-		$toolmenu[4]['title'] = 'Удалить выбранные';
+		$toolmenu[4]['title'] = 'РЈРґР°Р»РёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[4]['link'] = "javascript:checkSel('?view=cats&do=delete&multiple=1');";
 
 		$toolmenu[6]['icon'] = 'config.gif';
-		$toolmenu[6]['title'] = 'Настроить каталог статей';
+		$toolmenu[6]['title'] = 'РќР°СЃС‚СЂРѕРёС‚СЊ РєР°С‚Р°Р»РѕРі СЃС‚Р°С‚РµР№';
 		$toolmenu[6]['link'] = "?view=components&do=config&link=content";
 
 		$toolmenu[7]['icon'] = 'help.gif';
-		$toolmenu[7]['title'] = 'Помощь';
+		$toolmenu[7]['title'] = 'РџРѕРјРѕС‰СЊ';
 		$toolmenu[7]['link'] = "?view=help&topic=cats";
 
 		cpToolMenu($toolmenu);
@@ -96,27 +96,27 @@ function applet_cats(){
 
 		$fields[0]['title'] = 'ID';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';		$fields[1]['link'] = '?view=cats&do=edit&id=%id%';
+		$fields[1]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';		$fields[1]['link'] = '?view=cats&do=edit&id=%id%';
 		$fields[1]['filter'] = 15;
 
-		$fields[2]['title'] = 'Родитель';	$fields[2]['field'] = 'parent_id';		$fields[2]['width'] = '300';	
+		$fields[2]['title'] = 'Р РѕРґРёС‚РµР»СЊ';	$fields[2]['field'] = 'parent_id';		$fields[2]['width'] = '300';	
 		$fields[2]['prc'] = 'cpCatById'; 	$fields[2]['filter'] = 1;		$fields[2]['filterlist'] = cpGetList('cms_category');
 
-		$fields[3]['title'] = 'Показ';		$fields[3]['field'] = 'published';	$fields[3]['width'] = '100';	
+		$fields[3]['title'] = 'РџРѕРєР°Р·';		$fields[3]['field'] = 'published';	$fields[3]['width'] = '100';	
 		
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Добавить статью';
+		$actions[0]['title'] = 'Р”РѕР±Р°РІРёС‚СЊ СЃС‚Р°С‚СЊСЋ';
 		$actions[0]['icon']  = 'add.gif';
 		$actions[0]['link']  = '?view=content&do=add&to=%id%';
 
-		$actions[1]['title'] = 'Редактировать';
+		$actions[1]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[1]['icon']  = 'edit.gif';
 		$actions[1]['link']  = '?view=cats&do=edit&id=%id%';
 
-		$actions[2]['title'] = 'Удалить';
+		$actions[2]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[2]['icon']  = 'delete.gif';
-		$actions[2]['confirm'] = 'Удалить раздел? Статьи не будут удалены.';
+		$actions[2]['confirm'] = 'РЈРґР°Р»РёС‚СЊ СЂР°Р·РґРµР»? РЎС‚Р°С‚СЊРё РЅРµ Р±СѓРґСѓС‚ СѓРґР°Р»РµРЅС‹.';
 		$actions[2]['link']  = '?view=cats&do=delete&id=%id%';
 				
 		//Print table
@@ -156,7 +156,7 @@ function applet_cats(){
 		if(isset($_REQUEST['id'])) { 
 
 			$category['id']				= (int)$_REQUEST['id'];
-			$category['title']			= $inCore->request('title', 'str', 'Категория без названия');
+			$category['title']			= $inCore->request('title', 'str', 'РљР°С‚РµРіРѕСЂРёСЏ Р±РµР· РЅР°Р·РІР°РЅРёСЏ');
 			$category['url']			= $inCore->request('url', 'str');
 			$category['parent_id']		= $inCore->request('parent_id', 'int');
 			$category['description'] 	= $inCore->request('description', 'html');
@@ -222,7 +222,7 @@ function applet_cats(){
                      LIMIT 1";
             dbQuery($sql) ;
             
-            //обновляем УРЛы всех вложенных разделов
+            //РѕР±РЅРѕРІР»СЏРµРј РЈР Р›С‹ РІСЃРµС… РІР»РѕР¶РµРЅРЅС‹С… СЂР°Р·РґРµР»РѕРІ
             if ($seolink != $old['seolink']){
                 $sql = "SELECT id, title, url, seolink
                         FROM cms_category
@@ -237,7 +237,7 @@ function applet_cats(){
                 }
             }
 
-            //обновляем ссылки меню
+            //РѕР±РЅРѕРІР»СЏРµРј СЃСЃС‹Р»РєРё РјРµРЅСЋ
             $inDB = cmsDatabase::getInstance();
             $menuid = $inDB->get_field('cms_menu', "linktype='category' AND linkid={$category['id']}", 'id');
             if ($menuid){
@@ -262,7 +262,7 @@ function applet_cats(){
 	
 	if ($do == 'submit'){
 
-        $category['title']          = $inCore->request('title', 'str', 'Категория без названия');
+        $category['title']          = $inCore->request('title', 'str', 'РљР°С‚РµРіРѕСЂРёСЏ Р±РµР· РЅР°Р·РІР°РЅРёСЏ');
         $category['url']            = $inCore->request('url', 'str');
         $category['parent_id']      = $inCore->request('parent_id', 'int');
         $category['description']    = $inCore->request('description', 'html');
@@ -297,7 +297,7 @@ function applet_cats(){
         $ns = $inCore->nestedSetsInit('cms_category');
         $category['id'] = $ns->AddNode($category['parent_id']);
 
-        if (!$category['title']) { $category['title'] = 'Раздел #'.$category['id']; }
+        if (!$category['title']) { $category['title'] = 'Р Р°Р·РґРµР» #'.$category['id']; }
 
         if ($category['url']) { $category['url'] = cmsCore::strToURL($category['url']); }
         $seolink    = $model->getCategorySeoLink($category);
@@ -355,24 +355,24 @@ function applet_cats(){
  
  		$toolmenu = array();
 		$toolmenu[0]['icon'] = 'save.gif';
-		$toolmenu[0]['title'] = 'Сохранить';
+		$toolmenu[0]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 		$toolmenu[0]['link'] = 'javascript:document.addform.submit();';
 
 		$toolmenu[1]['icon'] = 'cancel.gif';
-		$toolmenu[1]['title'] = 'Отмена';
+		$toolmenu[1]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[1]['link'] = 'javascript:history.go(-1);';
 
 		cpToolMenu($toolmenu);
    
 		if ($do=='add'){
-			 echo '<h3>Добавить раздел</h3>';
- 	 		 cpAddPathway('Добавить раздел', 'index.php?view=cats&do=add');
+			 echo '<h3>Р”РѕР±Р°РІРёС‚СЊ СЂР°Р·РґРµР»</h3>';
+ 	 		 cpAddPathway('Р”РѕР±Р°РІРёС‚СЊ СЂР°Р·РґРµР»', 'index.php?view=cats&do=add');
 		} else {
 					 if(isset($_REQUEST['multiple'])){				 
 						if (isset($_REQUEST['item'])){					
 							$_SESSION['editlist'] = $_REQUEST['item'];
 						} else {
-							echo '<p class="error">Нет выбранных объектов!</p>';
+							echo '<p class="error">РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ!</p>';
 							return;
 						}				 
 					 }
@@ -382,7 +382,7 @@ function applet_cats(){
 					 if (isset($_SESSION['editlist'])){
 						$id = array_shift($_SESSION['editlist']);
 						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
-						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
+						{ $ostatok = '(РќР° РѕС‡РµСЂРµРґРё: '.sizeof($_SESSION['editlist']).')'; }
 					 } else { $id = (int)$_REQUEST['id']; }
 	
 					 $sql = "SELECT * FROM cms_category WHERE id = $id LIMIT 1";
@@ -394,7 +394,7 @@ function applet_cats(){
 						}
 					 }
 					
-					 echo '<h3>Редактировать раздел '.$ostatok.'</h3>';
+					 echo '<h3>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ СЂР°Р·РґРµР» '.$ostatok.'</h3>';
  					 cpAddPathway($mod['title'], 'index.php?view=cats&do=edit&id='.$mod['id']);
 			}   
 	?>
@@ -404,16 +404,16 @@ function applet_cats(){
         <table class="proptable" width="100%" cellpadding="15" cellspacing="2">
             <tr>
 
-                <!-- главная ячейка -->
+                <!-- РіР»Р°РІРЅР°СЏ СЏС‡РµР№РєР° -->
                 <td valign="top">
                     <table border="0" cellpadding="0" cellspacing="5" width="100%">
                       <tbody>
                         <tr>
                           <td>
-                            <strong>Название раздела</strong>
+                            <strong>РќР°Р·РІР°РЅРёРµ СЂР°Р·РґРµР»Р°</strong>
                           </td>
                           <td width="190" style="padding-left:6px">
-                            <strong>Шаблон раздела</strong>
+                            <strong>РЁР°Р±Р»РѕРЅ СЂР°Р·РґРµР»Р°</strong>
                           </td>
                         </tr>
                         <tr>
@@ -426,12 +426,12 @@ function applet_cats(){
                         </tr>
                       </tbody>
                     </table>
-                    <div><strong>Родительский раздел</strong></div>
+                    <div><strong>Р РѕРґРёС‚РµР»СЊСЃРєРёР№ СЂР°Р·РґРµР»</strong></div>
                     <div>
-                        <div class="parent_notice" style="color:red;margin:4px 0px;display:none">Раздел будет вложен сам в себя. Выберите другого родителя.</div>
+                        <div class="parent_notice" style="color:red;margin:4px 0px;display:none">Р Р°Р·РґРµР» Р±СѓРґРµС‚ РІР»РѕР¶РµРЅ СЃР°Рј РІ СЃРµР±СЏ. Р’С‹Р±РµСЂРёС‚Рµ РґСЂСѓРіРѕРіРѕ СЂРѕРґРёС‚РµР»СЏ.</div>
                         <select name="parent_id" size="12" id="parent_id" style="width:100%" onchange="if($(this).val()=='<?php echo $mod['id']; ?>'){ $('.parent_notice').show(); } else { $('.parent_notice').hide(); }">
                             <?php $rootid = $inDB->get_field('cms_category', 'parent_id=0', 'id'); ?>
-                            <option value="<?php echo $rootid; ?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- Корневой раздел --</option>
+                            <option value="<?php echo $rootid; ?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- РљРѕСЂРЅРµРІРѕР№ СЂР°Р·РґРµР» --</option>
                             <?php
                                 if (isset($mod['parent_id'])){
                                     echo $inCore->getListItemsNS('cms_category', $mod['parent_id']);
@@ -442,122 +442,122 @@ function applet_cats(){
                         </select>
                     </div>
 
-                    <div><strong>Описание раздела</strong></div>
+                    <div><strong>РћРїРёСЃР°РЅРёРµ СЂР°Р·РґРµР»Р°</strong></div>
                     <div>
                         <?php $inCore->insertEditor('description', $mod['description'], '250', '100%'); ?>
                     </div>
 
                 </td>
 
-                <!-- боковая -->
+                <!-- Р±РѕРєРѕРІР°СЏ -->
                 <td valign="top" width="300" style="background:#ECECEC;">
 
                     <?php ob_start(); ?>
 
-                    {tab=Публикация}
+                    {tab=РџСѓР±Р»РёРєР°С†РёСЏ}
 
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
                         <tr>
                             <td width="20"><input type="checkbox" name="published" id="published" value="1" <?php if ($mod['published'] || $do=='add') { echo 'checked="checked"'; } ?>/></td>
-                            <td><label for="published"><strong>Публиковать раздел</strong></label></td>
+                            <td><label for="published"><strong>РџСѓР±Р»РёРєРѕРІР°С‚СЊ СЂР°Р·РґРµР»</strong></label></td>
                         </tr>
                     </table>
 
                     <div style="margin-top:15px">
-                        <strong>URL раздела</strong><br/>
-                        <div style="color:gray">Если не указан, генерируется из заголовка</div>
+                        <strong>URL СЂР°Р·РґРµР»Р°</strong><br/>
+                        <div style="color:gray">Р•СЃР»Рё РЅРµ СѓРєР°Р·Р°РЅ, РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ РёР· Р·Р°РіРѕР»РѕРІРєР°</div>
                     </div>
                     <div>
                         <input type="text" name="url" value="<?php echo $mod['url']; ?>" style="width:99%"/>
                     </div>
 
-                    <div style="margin-top:20px"><strong>Сортировка статей</strong></div>
+                    <div style="margin-top:20px"><strong>РЎРѕСЂС‚РёСЂРѕРІРєР° СЃС‚Р°С‚РµР№</strong></div>
                     <div>
                         <select name="orderby" id="orderby" style="width:100%">
-                            <option value="pubdate" <?php if(@$mod['orderby']=='pubdate') { echo 'selected'; } ?>>По дате</option>
-                            <option value="title" <?php if(@$mod['orderby']=='title') { echo 'selected'; } ?>>По заголовку</option>
-                            <option value="ordering" <?php if(@$mod['orderby']=='ordering') { echo 'selected'; } ?>>По порядку</option>
-                            <option value="hits" <?php if(@$mod['orderby']=='hits') { echo 'selected'; } ?>>По просмотрам</option>
+                            <option value="pubdate" <?php if(@$mod['orderby']=='pubdate') { echo 'selected'; } ?>>РџРѕ РґР°С‚Рµ</option>
+                            <option value="title" <?php if(@$mod['orderby']=='title') { echo 'selected'; } ?>>РџРѕ Р·Р°РіРѕР»РѕРІРєСѓ</option>
+                            <option value="ordering" <?php if(@$mod['orderby']=='ordering') { echo 'selected'; } ?>>РџРѕ РїРѕСЂСЏРґРєСѓ</option>
+                            <option value="hits" <?php if(@$mod['orderby']=='hits') { echo 'selected'; } ?>>РџРѕ РїСЂРѕСЃРјРѕС‚СЂР°Рј</option>
                         </select>
                         <select name="orderto" id="orderto" style="width:100%">
-                            <option value="ASC" <?php if(@$mod['orderto']=='ASC') { echo 'selected'; } ?>>По возрастанию</option>
-                            <option value="DESC" <?php if(@$mod['orderto']=='DESC') { echo 'selected'; } ?>>По убыванию</option>
+                            <option value="ASC" <?php if(@$mod['orderto']=='ASC') { echo 'selected'; } ?>>РџРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ</option>
+                            <option value="DESC" <?php if(@$mod['orderto']=='DESC') { echo 'selected'; } ?>>РџРѕ СѓР±С‹РІР°РЅРёСЋ</option>
                         </select>
                     </div>
 
-                    <div style="margin-top:20px"><strong>Число колонок для вывода статей</strong></div>
+                    <div style="margin-top:20px"><strong>Р§РёСЃР»Рѕ РєРѕР»РѕРЅРѕРє РґР»СЏ РІС‹РІРѕРґР° СЃС‚Р°С‚РµР№</strong></div>
                     <div>
                         <?php if (!isset($mod['maxcols'])) { $mod['maxcols'] = 1; } ?>
                         <input name="maxcols" type="text" id="maxcols" style="width:99%" value="<?php echo @$mod['maxcols'];?>" />
                     </div>
 
-                    <div style="margin-top:20px"><strong>Параметры публикации</strong></div>
+                    <div style="margin-top:20px"><strong>РџР°СЂР°РјРµС‚СЂС‹ РїСѓР±Р»РёРєР°С†РёРё</strong></div>
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist">
                         <tr>
                             <td width="20"><input type="checkbox" name="showdesc" id="showdesc" value="1" <?php if ($mod['showdesc'] || $do=='add') { echo 'checked="checked"'; } ?>/></td>
-                            <td><label for="showdesc">Показывать анонсы статей</label></td>
+                            <td><label for="showdesc">РџРѕРєР°Р·С‹РІР°С‚СЊ Р°РЅРѕРЅСЃС‹ СЃС‚Р°С‚РµР№</label></td>
                         </tr>
                         <tr>
                             <td width="20"><input type="checkbox" name="showdate" id="showdate" value="1" <?php if ($mod['showdate'] || $do=='add') { echo 'checked="checked"'; } ?>/></td>
-                            <td><label for="showdate">Показывать даты статей</label></td>
+                            <td><label for="showdate">РџРѕРєР°Р·С‹РІР°С‚СЊ РґР°С‚С‹ СЃС‚Р°С‚РµР№</label></td>
                         </tr>
                         <tr>
                             <td width="20"><input type="checkbox" name="showcomm" id="showcomm" value="1" <?php if ($mod['showcomm'] || $do=='add') { echo 'checked="checked"'; } ?>/></td>
-                            <td><label for="showcomm">Показывать число комментариев</label></td>
+                            <td><label for="showcomm">РџРѕРєР°Р·С‹РІР°С‚СЊ С‡РёСЃР»Рѕ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ</label></td>
                         </tr>
                         <tr>
                             <td width="20"><input type="checkbox" name="showtags" id="showtags" value="1" <?php if ($mod['showtags'] || $do=='add') { echo 'checked="checked"'; } ?>/></td>
-                            <td><label for="showtags">Показывать теги статей</label></td>
+                            <td><label for="showtags">РџРѕРєР°Р·С‹РІР°С‚СЊ С‚РµРіРё СЃС‚Р°С‚РµР№</label></td>
                         </tr>
                         <tr>
                             <td width="20"><input type="checkbox" name="showrss" id="showrss" value="1" <?php if ($mod['showrss'] || $do=='add') { echo 'checked="checked"'; } ?>/></td>
-                            <td><label for="showrss">Показывать иконку RSS</label></td>
+                            <td><label for="showrss">РџРѕРєР°Р·С‹РІР°С‚СЊ РёРєРѕРЅРєСѓ RSS</label></td>
                         </tr>
                     </table>
 
                     <?php if ($do=='add'){ ?>
                         <div style="margin-top:25px">
-                            <strong>Создать ссылку в меню</strong>
+                            <strong>РЎРѕР·РґР°С‚СЊ СЃСЃС‹Р»РєСѓ РІ РјРµРЅСЋ</strong>
                         </div>
                         <div>
                             <select name="createmenu" id="createmenu" style="width:99%">
-                                <option value="0" selected="selected">-- не создавать --</option>
-                                <option value="mainmenu">Главное меню</option>
+                                <option value="0" selected="selected">-- РЅРµ СЃРѕР·РґР°РІР°С‚СЊ --</option>
+                                <option value="mainmenu">Р“Р»Р°РІРЅРѕРµ РјРµРЅСЋ</option>
                                 <?php for($m=1;$m<=15;$m++){ ?>
-                                    <option value="menu<?php echo $m; ?>">Дополнительное меню <?php echo $m; ?></option>
+                                    <option value="menu<?php echo $m; ?>">Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ РјРµРЅСЋ <?php echo $m; ?></option>
                                 <?php } ?>
                             </select>
                         </div>
                     <?php } ?>
 
-                    {tab=Редакторы}
+                    {tab=Р РµРґР°РєС‚РѕСЂС‹}
 
                         <div style="margin-top:10px">
-                            <strong>Принимать статьи от пользователей</strong><br/>
-                            <span class="hinttext">Если включено, то раздел отображается в списке доступных для публикации разделов, когда пользователь добавляет статью с сайта.</span>
+                            <strong>РџСЂРёРЅРёРјР°С‚СЊ СЃС‚Р°С‚СЊРё РѕС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</strong><br/>
+                            <span class="hinttext">Р•СЃР»Рё РІРєР»СЋС‡РµРЅРѕ, С‚Рѕ СЂР°Р·РґРµР» РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РІ СЃРїРёСЃРєРµ РґРѕСЃС‚СѓРїРЅС‹С… РґР»СЏ РїСѓР±Р»РёРєР°С†РёРё СЂР°Р·РґРµР»РѕРІ, РєРѕРіРґР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РґРѕР±Р°РІР»СЏРµС‚ СЃС‚Р°С‚СЊСЋ СЃ СЃР°Р№С‚Р°.</span>
                         </div>
                         <div>
                             <select name="is_public" id="is_public" style="width:100%">
-                                <option value="0" <?php if(!$mod['is_public']) { echo 'selected'; } ?>>Нет</option>
-                                <option value="1" <?php if($mod['is_public']) { echo 'selected'; } ?>>Да</option>
+                                <option value="0" <?php if(!$mod['is_public']) { echo 'selected'; } ?>>РќРµС‚</option>
+                                <option value="1" <?php if($mod['is_public']) { echo 'selected'; } ?>>Р”Р°</option>
                             </select>
                         </div>
                         <?php if (IS_BILLING){ ?>
                             <div style="margin-top:15px">
-                                <strong>Стоимость добавления статьи</strong><br/>
-                                <div style="color:gray">Если не указана здесь, то используется цена по-умолчанию, указанная в настройках биллинга</div>
+                                <strong>РЎС‚РѕРёРјРѕСЃС‚СЊ РґРѕР±Р°РІР»РµРЅРёСЏ СЃС‚Р°С‚СЊРё</strong><br/>
+                                <div style="color:gray">Р•СЃР»Рё РЅРµ СѓРєР°Р·Р°РЅР° Р·РґРµСЃСЊ, С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С†РµРЅР° РїРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ, СѓРєР°Р·Р°РЅРЅР°СЏ РІ РЅР°СЃС‚СЂРѕР№РєР°С… Р±РёР»Р»РёРЅРіР°</div>
                             </div>
                             <div>
-                                <input type="text" name="cost" value="<?php echo $mod['cost']; ?>" style="width:50px"/> баллов
+                                <input type="text" name="cost" value="<?php echo $mod['cost']; ?>" style="width:50px"/> Р±Р°Р»Р»РѕРІ
                             </div>
                         <?php } ?>
                         <div style="margin-top:20px">
-                            <strong>Редакторы раздела</strong><br/>
-                            <span class="hinttext">Пользователи выбранной группы смогут заходить в админку, но будут видеть только этот раздел и его подразделы</span>
+                            <strong>Р РµРґР°РєС‚РѕСЂС‹ СЂР°Р·РґРµР»Р°</strong><br/>
+                            <span class="hinttext">РџРѕР»СЊР·РѕРІР°С‚РµР»Рё РІС‹Р±СЂР°РЅРЅРѕР№ РіСЂСѓРїРїС‹ СЃРјРѕРіСѓС‚ Р·Р°С…РѕРґРёС‚СЊ РІ Р°РґРјРёРЅРєСѓ, РЅРѕ Р±СѓРґСѓС‚ РІРёРґРµС‚СЊ С‚РѕР»СЊРєРѕ СЌС‚РѕС‚ СЂР°Р·РґРµР» Рё РµРіРѕ РїРѕРґСЂР°Р·РґРµР»С‹</span>
                         </div>
                         <div>
                             <select name="modgrp_id" id="modgrp_id" style="width:100%">
-                                <option value="0" <?php if (!isset($mod['modgrp_id']) || @$mod['modgrp_id']==0) { echo 'selected'; }?>>Только администраторы</option>
+                                <option value="0" <?php if (!isset($mod['modgrp_id']) || @$mod['modgrp_id']==0) { echo 'selected'; }?>>РўРѕР»СЊРєРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂС‹</option>
                                 <?php
                                     if (@$mod['modgrp_id']) {
                                         echo $inCore->getListItems('cms_user_groups', $mod['modgrp_id']);
@@ -568,15 +568,15 @@ function applet_cats(){
                             </select>
                         </div>
 
-                    {tab=Фото}
+                    {tab=Р¤РѕС‚Рѕ}
 
                         <div style="margin-top:10px">
-                            <strong>Привязать фотоальбом</strong><br/>
-                            <span class="hinttext">При просмотре раздела справа будут выводиться фотографии из выбранного альбома</span>
+                            <strong>РџСЂРёРІСЏР·Р°С‚СЊ С„РѕС‚РѕР°Р»СЊР±РѕРј</strong><br/>
+                            <span class="hinttext">РџСЂРё РїСЂРѕСЃРјРѕС‚СЂРµ СЂР°Р·РґРµР»Р° СЃРїСЂР°РІР° Р±СѓРґСѓС‚ РІС‹РІРѕРґРёС‚СЊСЃСЏ С„РѕС‚РѕРіСЂР°С„РёРё РёР· РІС‹Р±СЂР°РЅРЅРѕРіРѕ Р°Р»СЊР±РѕРјР°</span>
                         </div>
                         <div>
                             <select name="album_id" id="album_id" style="width:100%">
-                                <option value="0" <?php if (!isset($mod['photoalbum']['id']) || @$mod['photoalbum']['id']==-1) { echo 'selected'; }?>>-- не привязывать --</option>
+                                <option value="0" <?php if (!isset($mod['photoalbum']['id']) || @$mod['photoalbum']['id']==-1) { echo 'selected'; }?>>-- РЅРµ РїСЂРёРІСЏР·С‹РІР°С‚СЊ --</option>
                                 <?php  //FIND ROOT
                                     $rootid = $inDB->get_field('cms_photo_albums', 'parent_id=0', 'id');
                                     if (isset($mod['photoalbum']['id'])){
@@ -589,42 +589,42 @@ function applet_cats(){
                         </div>
 
                         <div style="margin-top:20px">
-                            <strong>Заголовок</strong><br/>
-                            <span class="hinttext">Выводится над фотографиями</span>
+                            <strong>Р—Р°РіРѕР»РѕРІРѕРє</strong><br/>
+                            <span class="hinttext">Р’С‹РІРѕРґРёС‚СЃСЏ РЅР°Рґ С„РѕС‚РѕРіСЂР°С„РёСЏРјРё</span>
                         </div>
                         <div>
                             <input name="album_header" type="text" id="album_header" style="width:99%" value="<?php echo @$mod['photoalbum']['header'];?>" />
                         </div>
 
                         <div style="margin-top:20px">
-                            <strong>Показывать названия фото</strong>
+                            <strong>РџРѕРєР°Р·С‹РІР°С‚СЊ РЅР°Р·РІР°РЅРёСЏ С„РѕС‚Рѕ</strong>
                         </div>
                         <div>
                             <select name="album_titles" id="album_titles" style="width:100%">
                                 <?php if(!isset($mod['photoalbum']['titles'])) { $mod['photoalbum']['titles'] = 0; } ?>
-                                <option value="0" <?php if(!$mod['photoalbum']['titles']) { echo 'selected'; } ?>>Нет</option>
-                                <option value="1" <?php if($mod['photoalbum']['titles']) { echo 'selected'; } ?>>Да</option>
+                                <option value="0" <?php if(!$mod['photoalbum']['titles']) { echo 'selected'; } ?>>РќРµС‚</option>
+                                <option value="1" <?php if($mod['photoalbum']['titles']) { echo 'selected'; } ?>>Р”Р°</option>
                             </select>
                         </div>
 
                         <div style="margin-top:20px">
-                            <strong>Сортировка фото</strong>
+                            <strong>РЎРѕСЂС‚РёСЂРѕРІРєР° С„РѕС‚Рѕ</strong>
                         </div>
                         <div>
                             <select name="album_orderby" id="album_orderby" style="width:100%">
-                                <option value="title" <?php if(@$mod['photoalbum']['orderby']=='title') { echo 'selected'; } ?>>По алфавиту</option>
-                                <option value="pubdate" <?php if(@$mod['photoalbum']['orderby']=='pubdate') { echo 'selected'; } ?>>По дате</option>
-                                <option value="rating" <?php if(@$mod['photoalbum']['orderby']=='rating') { echo 'selected'; } ?>>По рейтингу</option>
-                                <option value="hits" <?php if(@$mod['photoalbum']['orderby']=='hits') { echo 'selected'; } ?>>По просмотрам</option>
+                                <option value="title" <?php if(@$mod['photoalbum']['orderby']=='title') { echo 'selected'; } ?>>РџРѕ Р°Р»С„Р°РІРёС‚Сѓ</option>
+                                <option value="pubdate" <?php if(@$mod['photoalbum']['orderby']=='pubdate') { echo 'selected'; } ?>>РџРѕ РґР°С‚Рµ</option>
+                                <option value="rating" <?php if(@$mod['photoalbum']['orderby']=='rating') { echo 'selected'; } ?>>РџРѕ СЂРµР№С‚РёРЅРіСѓ</option>
+                                <option value="hits" <?php if(@$mod['photoalbum']['orderby']=='hits') { echo 'selected'; } ?>>РџРѕ РїСЂРѕСЃРјРѕС‚СЂР°Рј</option>
                             </select>
                             <select name="album_orderto" id="album_orderto" style="width:100%">
-                                <option value="desc" <?php if(@$mod['photoalbum']['orderto']=='desc') { echo 'selected'; } ?>>по убыванию</option>
-                                <option value="asc" <?php if(@$mod['photoalbum']['orderto']=='asc') { echo 'selected'; } ?>>по возрастанию</option>
+                                <option value="desc" <?php if(@$mod['photoalbum']['orderto']=='desc') { echo 'selected'; } ?>>РїРѕ СѓР±С‹РІР°РЅРёСЋ</option>
+                                <option value="asc" <?php if(@$mod['photoalbum']['orderto']=='asc') { echo 'selected'; } ?>>РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ</option>
                             </select>
                         </div>
 
                         <div style="margin-top:20px">
-                            <strong>Число колонок для вывода</strong>
+                            <strong>Р§РёСЃР»Рѕ РєРѕР»РѕРЅРѕРє РґР»СЏ РІС‹РІРѕРґР°</strong>
                         </div>
                         <div>
                             <?php if(!isset($mod['photoalbum']['maxcols'])) { $mod['photoalbum']['maxcols'] = 2; } ?>
@@ -632,13 +632,13 @@ function applet_cats(){
                         </div>
 
                         <div style="margin-top:20px">
-                            <strong>Число фотографий</strong>
+                            <strong>Р§РёСЃР»Рѕ С„РѕС‚РѕРіСЂР°С„РёР№</strong>
                         </div>
                         <div>
                             <?php if(!isset($mod['photoalbum']['max'])) { $mod['photoalbum']['max'] = 8; } ?>
                             <input name="album_max" type="text" id="album_max" style="width:99%" value="<?php echo @$mod['photoalbum']['max'];?>"/>
                         </div>
-                      {tab=Доступ}
+                      {tab=Р”РѕСЃС‚СѓРї}
   
                       <table width="100%" cellpadding="0" cellspacing="0" border="0" class="checklist" style="margin-top:5px">
                           <tr>
@@ -667,20 +667,20 @@ function applet_cats(){
                                   ?>
                                   <input name="is_access" type="checkbox" id="is_public" onclick="checkGroupList()" value="1" <?php echo $public?> />
                               </td>
-                              <td><label for="is_public"><strong>Общий доступ</strong></label></td>
+                              <td><label for="is_public"><strong>РћР±С‰РёР№ РґРѕСЃС‚СѓРї</strong></label></td>
                           </tr>
                       </table>
                       <div style="padding:5px">
                           <span class="hinttext">
-                              Если отмечено, категория будет видна всем посетителям. Снимите галочку, чтобы вручную выбрать разрешенные группы пользователей.
+                              Р•СЃР»Рё РѕС‚РјРµС‡РµРЅРѕ, РєР°С‚РµРіРѕСЂРёСЏ Р±СѓРґРµС‚ РІРёРґРЅР° РІСЃРµРј РїРѕСЃРµС‚РёС‚РµР»СЏРј. РЎРЅРёРјРёС‚Рµ РіР°Р»РѕС‡РєСѓ, С‡С‚РѕР±С‹ РІСЂСѓС‡РЅСѓСЋ РІС‹Р±СЂР°С‚СЊ СЂР°Р·СЂРµС€РµРЅРЅС‹Рµ РіСЂСѓРїРїС‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№.
                           </span>
                       </div>
   
                       <div style="margin-top:10px;padding:5px;padding-right:0px;" id="grp">
                           <div>
-                              <strong>Показывать группам:</strong><br />
+                              <strong>РџРѕРєР°Р·С‹РІР°С‚СЊ РіСЂСѓРїРїР°Рј:</strong><br />
                               <span class="hinttext">
-                                  Можно выбрать несколько, удерживая CTRL.
+                                  РњРѕР¶РЅРѕ РІС‹Р±СЂР°С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ, СѓРґРµСЂР¶РёРІР°СЏ CTRL.
                               </span>
                           </div>
                           <div>
@@ -715,8 +715,8 @@ function applet_cats(){
             </tr>
         </table>
         <p>
-            <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add') { echo 'value="Создать раздел"'; } else { echo 'value="Сохранить раздел"'; } ?> />
-            <input name="back" type="button" id="back" value="Отмена" onclick="window.history.back();"/>
+            <input name="add_mod" type="submit" id="add_mod" <?php if ($do=='add') { echo 'value="РЎРѕР·РґР°С‚СЊ СЂР°Р·РґРµР»"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ СЂР°Р·РґРµР»"'; } ?> />
+            <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.history.back();"/>
             <input name="do" type="hidden" id="do" <?php if ($do=='add') { echo 'value="submit"'; } else { echo 'value="update"'; } ?> />
             <?php
                 if ($do=='edit'){

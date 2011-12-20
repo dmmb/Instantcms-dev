@@ -17,21 +17,21 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	$GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="js/forms.js"></script>';									
 	$GLOBALS['cp_page_head'][] = jwHeader();
 
-	cpAddPathway('Конструктор форм', '?view=components&do=config&id='.$_REQUEST['id']);
+	cpAddPathway('РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРј', '?view=components&do=config&id='.$_REQUEST['id']);
 	if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list'; }
 
 	$toolmenu = array();
 	$toolmenu[0]['icon'] = 'newform.gif';
-	$toolmenu[0]['title'] = 'Новая форма';
+	$toolmenu[0]['title'] = 'РќРѕРІР°СЏ С„РѕСЂРјР°';
 	$toolmenu[0]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add';
 
 	$toolmenu[1]['icon'] = 'listforms.gif';
-	$toolmenu[1]['title'] = 'Формы';
+	$toolmenu[1]['title'] = 'Р¤РѕСЂРјС‹';
 	$toolmenu[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list';
 
 	if($opt!='list'){
 		$toolmenu[3]['icon'] = 'cancel.gif';
-		$toolmenu[3]['title'] = 'Отмена';
+		$toolmenu[3]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[3]['link'] = '?view=components&do=config&id='.$_REQUEST['id'];
 	}
 
@@ -157,7 +157,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	if ($opt == 'submit'){
 			
-		$title = $inCore->request('title', 'str', 'Форма без названия');
+		$title = $inCore->request('title', 'str', 'Р¤РѕСЂРјР° Р±РµР· РЅР°Р·РІР°РЅРёСЏ');
 		$description = $_REQUEST['description'];
 
 		$sendto = $_REQUEST['sendto']; 
@@ -188,7 +188,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		if(isset($_REQUEST['item_id'])) { 
 			$id = $_REQUEST['item_id'];
 			
-			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("Укажите название формы!"); }	
+			if (!empty($_REQUEST['title'])) { $title = $_REQUEST['title']; } else { error("РЈРєР°Р¶РёС‚Рµ РЅР°Р·РІР°РЅРёРµ С„РѕСЂРјС‹!"); }	
 			$description = $_REQUEST['description'];
 
 			$sendto = $_REQUEST['sendto']; 
@@ -210,27 +210,27 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	if ($opt == 'list'){
-		cpAddPathway('Формы', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
-		echo '<h3>Формы</h3>';
+		cpAddPathway('Р¤РѕСЂРјС‹', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=list');
+		echo '<h3>Р¤РѕСЂРјС‹</h3>';
 		
 		//TABLE COLUMNS
 		$fields = array();
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = ''; $fields[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id=%id%';
+		$fields[1]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[1]['field'] = 'title';		$fields[1]['width'] = ''; $fields[1]['link'] = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id=%id%';
 
 		$fields[2]['title'] = 'E-Mail';		$fields[2]['field'] = 'email';		$fields[2]['width'] = '150'; 	
 
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Редактировать';
+		$actions[0]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[0]['icon']  = 'edit.gif';
 		$actions[0]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id=%id%';
 
-		$actions[1]['title'] = 'Удалить';
+		$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[1]['icon']  = 'delete.gif';
-		$actions[1]['confirm'] = 'Удалить форму?';
+		$actions[1]['confirm'] = 'РЈРґР°Р»РёС‚СЊ С„РѕСЂРјСѓ?';
 		$actions[1]['link']  = '?view=components&do=config&id='.$_REQUEST['id'].'&opt=delete&item_id=%id%';
 				
 		//Print table
@@ -241,8 +241,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					
 		if ($opt=='add'){
 
-			 cpAddPathway('Добавить форму', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add');
-			 echo '<h3>Добавить форму</h3>';
+			 cpAddPathway('Р”РѕР±Р°РІРёС‚СЊ С„РѕСЂРјСѓ', '?view=components&do=config&id='.$_REQUEST['id'].'&opt=add');
+			 echo '<h3>Р”РѕР±Р°РІРёС‚СЊ С„РѕСЂРјСѓ</h3>';
 			 
 		} else {
 			 if(isset($_REQUEST['item_id'])){
@@ -254,25 +254,25 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 				 }
 			 }
 			
-			 echo '<h3>Форма: '.$mod['title'].'</h3>';
+			 echo '<h3>Р¤РѕСЂРјР°: '.$mod['title'].'</h3>';
  			 cpAddPathway($mod['title'], '?view=components&do=config&id='.$_REQUEST['id'].'&opt=edit&item_id='.$id);
 
 		}
 
 	?>
-      <?php if($opt=='edit'){ob_start();} ?><?php if($opt=='edit') { echo '{tab=Свойства формы}'; } ?>
+      <?php if($opt=='edit'){ob_start();} ?><?php if($opt=='edit') { echo '{tab=РЎРІРѕР№СЃС‚РІР° С„РѕСЂРјС‹}'; } ?>
       <form id="addform" name="addform" method="post" action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>">
         <table width="605" border="0" cellspacing="5" class="proptable">
           <tr>
-            <td width="200"><strong>Название формы: </strong></td>
+            <td width="200"><strong>РќР°Р·РІР°РЅРёРµ С„РѕСЂРјС‹: </strong></td>
             <td width=""><input name="title" type="text" id="title" size="30" value="<?php echo htmlspecialchars($mod['title']);?>" style="width:220px;"/></td>
           </tr>
           <tr>
-            <td><strong>Куда отправлять форму: </strong></td>
+            <td><strong>РљСѓРґР° РѕС‚РїСЂР°РІР»СЏС‚СЊ С„РѕСЂРјСѓ: </strong></td>
             <td>
 			 <select name="sendto" id="sendto" style="width:220px;" onChange="toggleSendTo()">
-              <option value="mail" <?php if(@$mod['sendto']=='mail' || !isset($mod['sendto'])) { echo 'selected'; } ?>>На адрес e-mail</option>
-              <option value="user" <?php if(@$mod['sendto']=='user') { echo 'selected'; } ?>>Личным сообщением на сайте</option>
+              <option value="mail" <?php if(@$mod['sendto']=='mail' || !isset($mod['sendto'])) { echo 'selected'; } ?>>РќР° Р°РґСЂРµСЃ e-mail</option>
+              <option value="user" <?php if(@$mod['sendto']=='user') { echo 'selected'; } ?>>Р›РёС‡РЅС‹Рј СЃРѕРѕР±С‰РµРЅРёРµРј РЅР° СЃР°Р№С‚Рµ</option>
             </select>			</td>
           </tr>
         </table>
@@ -280,7 +280,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		<table width="605" border="0" cellspacing="5" class="proptable">
           <tr>
             <td width="16"><img src="/admin/components/forms/email.gif" width="16" height="16"></td>
-            <td width="178"><strong>Адрес e-mail: </strong></td>
+            <td width="178"><strong>РђРґСЂРµСЃ e-mail: </strong></td>
             <td><input name="email" type="text" id="email" size="30" value="<?php echo @$mod['email'];?>" style="width:220px;"/></td>
           </tr>
 		</table>
@@ -289,7 +289,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		<table width="605" border="0" cellspacing="5" class="proptable">
           <tr>
             <td width="16"><img src="/admin/components/forms/user.gif" width="16" height="16"></td>
-            <td width="178"><strong>Получатель: </strong></td>
+            <td width="178"><strong>РџРѕР»СѓС‡Р°С‚РµР»СЊ: </strong></td>
             <td>
                 <select name="user_id" id="user_id" style="width:220px">
                   <?php
@@ -308,7 +308,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
           <tr>
             <?php
 				echo '<td width="52%" valign="top">';
-				echo '<p><strong>Пояснения к форме:</strong></p>';
+				echo '<p><strong>РџРѕСЏСЃРЅРµРЅРёСЏ Рє С„РѕСЂРјРµ:</strong></p>';
 
                 $inCore->insertEditor('description', $mod['description'], '280', '100%');
 				
@@ -316,14 +316,14 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			?>
           </tr>
         </table>	
-        <?php if ($opt=='add') { echo '<p><b>Примечание: </b>После создания формы вернитесь в режим ее редактирования, чтобы добавить поля. </p>'; } 
-		else {echo '<p><b>Примечание: </b> Чтобы вставить форму в материал (статью/новость), укажите в нужном<br/> месте статьи выражение {ФОРМА=Название формы}, либо воспользуйтесь панелью вставки,<br/> расположенной над окном редактора материала.';} ?>
+        <?php if ($opt=='add') { echo '<p><b>РџСЂРёРјРµС‡Р°РЅРёРµ: </b>РџРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ С„РѕСЂРјС‹ РІРµСЂРЅРёС‚РµСЃСЊ РІ СЂРµР¶РёРј РµРµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ, С‡С‚РѕР±С‹ РґРѕР±Р°РІРёС‚СЊ РїРѕР»СЏ. </p>'; } 
+		else {echo '<p><b>РџСЂРёРјРµС‡Р°РЅРёРµ: </b> Р§С‚РѕР±С‹ РІСЃС‚Р°РІРёС‚СЊ С„РѕСЂРјСѓ РІ РјР°С‚РµСЂРёР°Р» (СЃС‚Р°С‚СЊСЋ/РЅРѕРІРѕСЃС‚СЊ), СѓРєР°Р¶РёС‚Рµ РІ РЅСѓР¶РЅРѕРј<br/> РјРµСЃС‚Рµ СЃС‚Р°С‚СЊРё РІС‹СЂР°Р¶РµРЅРёРµ {Р¤РћР РњРђ=РќР°Р·РІР°РЅРёРµ С„РѕСЂРјС‹}, Р»РёР±Рѕ РІРѕСЃРїРѕР»СЊР·СѓР№С‚РµСЃСЊ РїР°РЅРµР»СЊСЋ РІСЃС‚Р°РІРєРё,<br/> СЂР°СЃРїРѕР»РѕР¶РµРЅРЅРѕР№ РЅР°Рґ РѕРєРЅРѕРј СЂРµРґР°РєС‚РѕСЂР° РјР°С‚РµСЂРёР°Р»Р°.';} ?>
         <p>
           <label>
-          <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add') { echo 'value="Создать форму"'; } else { echo 'value="Сохранить изменения"'; } ?> />
+          <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add') { echo 'value="РЎРѕР·РґР°С‚СЊ С„РѕСЂРјСѓ"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ"'; } ?> />
           </label>
           <label>
-          <input name="reset" type="reset" id="reset" value="Сброс" />
+          <input name="reset" type="reset" id="reset" value="РЎР±СЂРѕСЃ" />
           </label>
           <input name="opt" type="hidden" id="do" <?php if ($opt=='add') { echo 'value="submit"'; } else { echo 'value="update"'; } ?> />
           <?php
@@ -339,40 +339,40 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if ($opt=='edit'){
 		$last_order = 1 + $inDB->get_field('cms_form_fields', "form_id='{$mod['id']}' ORDER BY ordering DESC", 'ordering');
 ?>	
-	{tab=Поля формы}
+	{tab=РџРѕР»СЏ С„РѕСЂРјС‹}
 	<table width="761" cellpadding="8" cellspacing="5">
 	<tr>
 		<td width="300" valign="top" class="proptable">
-			<p style="border-bottom:solid 1px black"><b>Добавить поле</b></p>
+			<p style="border-bottom:solid 1px black"><b>Р”РѕР±Р°РІРёС‚СЊ РїРѕР»Рµ</b></p>
 			<form id="fieldform" name="fieldform" method="post" action="index.php?view=components&do=config&id=<?php echo $_REQUEST['id'];?>">
 			 <input type="hidden" name="opt" value="add_field"/>
 			  <input name="form_id" type="hidden" id="form_id" value="<?php echo @$id?>"/>
 			  <table width="100%" border="0" cellspacing="2" cellpadding="0">
                 <tr>
-                  <td width="100">Тип поля: </td>
+                  <td width="100">РўРёРї РїРѕР»СЏ: </td>
                   <td>
 					  <select name="kind" id="kind" onchange="show()">
-						  <option value="text" selected="selected">Текстовое</option>
-						  <option value="textarea">Многострочное</option>
-						  <option value="checkbox">Опция да/нет</option>
-						  <option value="radiogroup">Группа опций</option>
-						  <option value="list">Выпадающий список</option>
-						  <option value="menu">Видимый список</option>
+						  <option value="text" selected="selected">РўРµРєСЃС‚РѕРІРѕРµ</option>
+						  <option value="textarea">РњРЅРѕРіРѕСЃС‚СЂРѕС‡РЅРѕРµ</option>
+						  <option value="checkbox">РћРїС†РёСЏ РґР°/РЅРµС‚</option>
+						  <option value="radiogroup">Р“СЂСѓРїРїР° РѕРїС†РёР№</option>
+						  <option value="list">Р’С‹РїР°РґР°СЋС‰РёР№ СЃРїРёСЃРѕРє</option>
+						  <option value="menu">Р’РёРґРёРјС‹Р№ СЃРїРёСЃРѕРє</option>
 					  </select>				  </td>
                 </tr>
                 <tr>
-                  <td>Заголовок:</td>
+                  <td>Р—Р°РіРѕР»РѕРІРѕРє:</td>
                   <td><input name="f_title" type="text" id="f_title" size="25" /></td>
                 </tr>
                 <tr>
-                  <td>Порядок:</td>
+                  <td>РџРѕСЂСЏРґРѕРє:</td>
                   <td><input name="f_order" type="text" id="f_order" value="<?php echo $last_order?>" size="6" /></td>
                 </tr>
                 <tr>
-                  <td>Заполнение:</td>
+                  <td>Р—Р°РїРѕР»РЅРµРЅРёРµ:</td>
                   <td><select name="mustbe" id="mustbe" onchange="show()">
-                    <option value="1">Обязательно</option>
-                    <option value="0">Не обязательно</option>
+                    <option value="1">РћР±СЏР·Р°С‚РµР»СЊРЅРѕ</option>
+                    <option value="0">РќРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ</option>
                                     </select></td>
                 </tr>
               </table>
@@ -381,17 +381,17 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			  <table width="100%" border="0" cellspacing="2" cellpadding="0">
 
                 <tr>
-                  <td width="100">Макс. длина :</td>
+                  <td width="100">РњР°РєСЃ. РґР»РёРЅР° :</td>
                   <td><input name="f_text_max" type="text" id="f_text_max" value="200" size="6" /> 
-                    символов </td>
+                    СЃРёРјРІРѕР»РѕРІ </td>
                 </tr>
                 <tr>
-                  <td>Размер:</td>
+                  <td>Р Р°Р·РјРµСЂ:</td>
                   <td><input name="f_text_size" type="text" id="f_text_size" value="30" size="6" /> 
-                    символов </td>
+                    СЃРёРјРІРѕР»РѕРІ </td>
                 </tr>
                 <tr>
-                  <td>Текст: </td>
+                  <td>РўРµРєСЃС‚: </td>
                   <td><input name="f_text_default" type="text" id="f_text_default" size="25" /></td>
                 </tr>
               </table>
@@ -400,21 +400,21 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			<table width="100%" border="0" cellspacing="2" cellpadding="0">
 
                 <tr>
-                  <td width="100">Макс. длина :</td>
+                  <td width="100">РњР°РєСЃ. РґР»РёРЅР° :</td>
                   <td><input name="f_ta_max" type="text" id="f_ta_max" value="200" size="6" /> 
-                    символов </td>
+                    СЃРёРјРІРѕР»РѕРІ </td>
                 </tr>
                 <tr>
-                  <td>Размер:</td>
+                  <td>Р Р°Р·РјРµСЂ:</td>
                   <td><input name="f_ta_size" type="text" id="f_ta_size" value="30" size="6" /> 
-                    символов </td>
+                    СЃРёРјРІРѕР»РѕРІ </td>
                 </tr>
                 <tr>
 			  <tr>
-					  <td>Строк:</td>
+					  <td>РЎС‚СЂРѕРє:</td>
 					  <td><input name="f_ta_rows" type="text" id="f_ta_rows" value="5" size="6" /></td>
 			  </tr>
-                  <td>Текст: </td>
+                  <td>РўРµРєСЃС‚: </td>
                   <td><input name="f_ta_default" type="text" id="f_ta_default" size="25" /></td>
                 </tr>
               </table>
@@ -423,10 +423,10 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			  <div id="div" >
                 <table width="100%" border="0" cellspacing="2" cellpadding="0">
                   <tr>
-                    <td width="100">Отметка:</td>
+                    <td width="100">РћС‚РјРµС‚РєР°:</td>
                     <td><select name="f_checked" id="f_checked">
-                      <option value="1">Отмечена</option>
-                      <option value="0">Не отмечена</option>
+                      <option value="1">РћС‚РјРµС‡РµРЅР°</option>
+                      <option value="0">РќРµ РѕС‚РјРµС‡РµРЅР°</option>
                     </select>
                     </td>
                   </tr>
@@ -436,8 +436,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			<div id="kind_radiogroup" style="display:none">
 			  <table width="100%" border="0" cellspacing="2" cellpadding="0">
                 <tr>
-                  <td width="100">Элементы:<br />
-                    <small>через "<b>/</b>"</small> </td>
+                  <td width="100">Р­Р»РµРјРµРЅС‚С‹:<br />
+                    <small>С‡РµСЂРµР· "<b>/</b>"</small> </td>
                   <td><textarea name="f_rg_list" cols="20" rows="5" id="f_rg_list"></textarea></td>
                 </tr>
               </table>
@@ -445,8 +445,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			<div id="kind_list" style="display:none">
 			  <table width="100%" border="0" cellspacing="2" cellpadding="0">
                 <tr>
-                  <td width="100">Элементы:<br />
-                      <small>через "<b>/</b>"</small> </td>
+                  <td width="100">Р­Р»РµРјРµРЅС‚С‹:<br />
+                      <small>С‡РµСЂРµР· "<b>/</b>"</small> </td>
                   <td><textarea name="f_list_list" cols="20" rows="5" id="f_list_list"></textarea></td>
                 </tr>
               </table>
@@ -454,20 +454,20 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			<div id="kind_menu" style="display:none">
 			  <table width="100%" border="0" cellspacing="2" cellpadding="0">
                 <tr>
-                  <td width="100">Элементы:<br />
-                      <small>через "<b>/</b>"</small> </td>
+                  <td width="100">Р­Р»РµРјРµРЅС‚С‹:<br />
+                      <small>С‡РµСЂРµР· "<b>/</b>"</small> </td>
                   <td><textarea name="f_menu_list" cols="20" rows="5" id="f_menu_list"></textarea></td>
                 </tr>
               </table>
 			</div>	
 						
 			<p>
-			  <input type="submit" name="Submit" value="Добавить поле" />
+			  <input type="submit" name="Submit" value="Р”РѕР±Р°РІРёС‚СЊ РїРѕР»Рµ" />
 			</p>
 			</form>			
 			
 	  </td>
-		<td width="440" valign="top" class="proptable"><p style="border-bottom:solid 1px black"><b>Предварительный просмотр </b></p>
+		<td width="440" valign="top" class="proptable"><p style="border-bottom:solid 1px black"><b>РџСЂРµРґРІР°СЂРёС‚РµР»СЊРЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ </b></p>
           <?php echo $inPage->buildForm($id, true); ?></td>
 	</tr>
 	</table>

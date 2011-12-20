@@ -145,7 +145,7 @@ function forum(){
     $inUser = cmsUser::getInstance();
 
 	$cfg = $inCore->loadComponentConfig('forum');
-	// Ïðîâåðÿåì âêëþ÷åíè ëè êîìïîíåíò
+	// ÐŸÑ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼ Ð²ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸ Ð»Ð¸ ÐºÐ¾Ð¼Ð¿Ð¾Ð½ÐµÐ½Ñ‚
 	if(!$cfg['component_enabled']) { cmsCore::error404(); }
 
     $inCore->loadModel('forum');
@@ -252,7 +252,7 @@ if ($do=='forum'){
 
     $f = $model->getForum($id);
 	if (!$f){ cmsCore::error404(); }
-	// ïðàâà äîñòóïà ê ôîðóìó
+	// Ð¿Ñ€Ð°Ð²Ð° Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð° Ðº Ñ„Ð¾Ñ€ÑƒÐ¼Ñƒ
 	if(!$inCore->checkContentAccess($f['access_list'])) {
 		$inPage->includeTemplateFile('special/accessdenied.php');
 		return;
@@ -268,8 +268,8 @@ if ($do=='forum'){
     $rs_rows    = $inDB->query($sql);
 
     while($pcat = $inDB->fetch_assoc($rs_rows)){
-		// åñëè â öåïî÷êå ðîäèòåëåé ôîðóìà âñòðå÷àþòñÿ
-		// ôîðóìû ñ îãðàíè÷åííûì äîñòóïîì, çàïðåùàåì äîñòóï
+		// ÐµÑÐ»Ð¸ Ð² Ñ†ÐµÐ¿Ð¾Ñ‡ÐºÐµ Ñ€Ð¾Ð´Ð¸Ñ‚ÐµÐ»ÐµÐ¹ Ñ„Ð¾Ñ€ÑƒÐ¼Ð° Ð²ÑÑ‚Ñ€ÐµÑ‡Ð°ÑŽÑ‚ÑÑ
+		// Ñ„Ð¾Ñ€ÑƒÐ¼Ñ‹ Ñ Ð¾Ð³Ñ€Ð°Ð½Ð¸Ñ‡ÐµÐ½Ð½Ñ‹Ð¼ Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð¾Ð¼, Ð·Ð°Ð¿Ñ€ÐµÑ‰Ð°ÐµÐ¼ Ð´Ð¾ÑÑ‚ÑƒÐ¿
 		if(!$inCore->checkContentAccess($pcat['access_list'])) {
 			$inPage->includeTemplateFile('special/accessdenied.php');
 			return;
@@ -277,7 +277,7 @@ if ($do=='forum'){
         $inPage->addPathway($pcat['title'], '/forum/'.$pcat['id']);
     }
 
-    // --------- Ñïèñîê ïîäôîðóìîâ ---------------
+    // --------- Ð¡Ð¿Ð¸ÑÐ¾Ðº Ð¿Ð¾Ð´Ñ„Ð¾Ñ€ÑƒÐ¼Ð¾Ð² ---------------
     
     $subforums_sql      = "SELECT *
                            FROM cms_forums
@@ -316,11 +316,11 @@ if ($do=='forum'){
         }        
     }
 
-    // ------ Ñïèñîê òåì ôîðóìà -------
+    // ------ Ð¡Ð¿Ð¸ÑÐ¾Ðº Ñ‚ÐµÐ¼ Ñ„Ð¾Ñ€ÑƒÐ¼Ð° -------
 
     $perpage = $cfg['pp_forum'] ? $cfg['pp_forum'] : 25;
 
-    // ñ÷èòàåì êîëè÷åñòâî òåì è äåëèì íà ñòðàíèöû
+    // ÑÑ‡Ð¸Ñ‚Ð°ÐµÐ¼ ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ñ‚ÐµÐ¼ Ð¸ Ð´ÐµÐ»Ð¸Ð¼ Ð½Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñ‹
     $threads_count          = $inDB->rows_count('cms_forum_threads', "forum_id = {$f['id']}");
     $threads_page_select    = '';
 
@@ -493,8 +493,8 @@ if ($do=='thread'){
 	$sql = "SELECT id, title, NSLevel, access_list FROM cms_forums WHERE NSLeft <= $left_key AND NSRight >= $right_key AND parent_id > 0 ORDER BY NSLeft";
 	$rs_rows = $inDB->query($sql);
 	while($pcat=$inDB->fetch_assoc($rs_rows)){
-		// åñëè â öåïî÷êå ðîäèòåëåé ôîðóìà âñòðå÷àþòñÿ
-		// ôîðóìû ñ îãðàíè÷åííûì äîñòóïîì, çàïðåùàåì äîñòóï
+		// ÐµÑÐ»Ð¸ Ð² Ñ†ÐµÐ¿Ð¾Ñ‡ÐºÐµ Ñ€Ð¾Ð´Ð¸Ñ‚ÐµÐ»ÐµÐ¹ Ñ„Ð¾Ñ€ÑƒÐ¼Ð° Ð²ÑÑ‚Ñ€ÐµÑ‡Ð°ÑŽÑ‚ÑÑ
+		// Ñ„Ð¾Ñ€ÑƒÐ¼Ñ‹ Ñ Ð¾Ð³Ñ€Ð°Ð½Ð¸Ñ‡ÐµÐ½Ð½Ñ‹Ð¼ Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð¾Ð¼, Ð·Ð°Ð¿Ñ€ÐµÑ‰Ð°ÐµÐ¼ Ð´Ð¾ÑÑ‚ÑƒÐ¿
 		if(!$inCore->checkContentAccess($pcat['access_list'])) {
 			$inPage->includeTemplateFile('special/accessdenied.php');
 			return;
@@ -706,12 +706,12 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 
 	$inPage->addHeadJS('core/js/smiles.js');
 	
-	// íîâàÿ òåìà
+	// Ð½Ð¾Ð²Ð°Ñ Ñ‚ÐµÐ¼Ð°
 	if ($do == 'newthread') {
 
 		$forum = $model->getForum($id);
 		if(!$forum) { cmsCore::error404(); }
-		// ïðàâà äîñòóïà ê ôîðóìó
+		// Ð¿Ñ€Ð°Ð²Ð° Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð° Ðº Ñ„Ð¾Ñ€ÑƒÐ¼Ñƒ
 		if(!$inCore->checkContentAccess($forum['access_list'])) {
 			$inPage->includeTemplateFile('special/accessdenied.php');
 			return;
@@ -727,17 +727,17 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 		echo '<div class="con_heading">'.$_LANG['NEW_THREAD'].'</div>';
 
 	}
-	// íîâûé ïîñò
+	// Ð½Ð¾Ð²Ñ‹Ð¹ Ð¿Ð¾ÑÑ‚
 	if ($do == 'newpost'){
 
-		// Ïîëó÷àåì òåìó
+		// ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ñ‚ÐµÐ¼Ñƒ
 		$t = $model->getThread($id);
 		if(!$t) { cmsCore::error404(); }
 		if($t['closed'] == 1) { cmsCore::error404(); }
 
-		// Ïîëó÷àåì ôîðóì
+		// ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ñ„Ð¾Ñ€ÑƒÐ¼
 		$forum = $model->getForum($t['forum_id']);
-		// ïðàâà äîñòóïà ê ôîðóìó
+		// Ð¿Ñ€Ð°Ð²Ð° Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð° Ðº Ñ„Ð¾Ñ€ÑƒÐ¼Ñƒ
 		if(!$inCore->checkContentAccess($forum['access_list'])) {
 			$inPage->includeTemplateFile('special/accessdenied.php');
 			return;
@@ -755,14 +755,14 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 		$is_topic_starter = ($t['user_id'] == $inUser->id);
 
 	}
-	// ðåäàêòèðîâàíèå ïîñòà
+	// Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ð¿Ð¾ÑÑ‚Ð°
 	if ($do == 'editpost'){	
 
 		$msg = $model->getPost($id);
 		if(!$msg) { cmsCore::error404(); }
 		if(!$inUser->is_admin && !$inCore->isUserCan('forum/moderate') && $inUser->id != $msg['user_id']) { cmsCore::error404(); }
 
-		// Ïîëó÷àåì òåìó
+		// ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ñ‚ÐµÐ¼Ñƒ
 		$t = $model->getThread($msg['thread_id']);
 		if(!$t) { cmsCore::error404(); }
 		if($t['closed'] == 1) { cmsCore::error404(); }
@@ -793,7 +793,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 		$inDB->query("DELETE FROM cms_upload_images WHERE session_id='".session_id()."'");
 	
 		if ($replyid){
-			$sql = "SELECT p.*, u.*, DATE_FORMAT(p.pubdate, '%d-%m-%Y â %H:%i') senddate
+			$sql = "SELECT p.*, u.*, DATE_FORMAT(p.pubdate, '%d-%m-%Y Ð² %H:%i') senddate
 					FROM cms_forum_posts p, cms_users u
 					WHERE p.id = '$replyid' AND p.user_id = u.id";
 			$result = $inDB->query($sql) ;
@@ -907,11 +907,11 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 			$posts_in_thread = $inDB->rows_count('cms_forum_posts', 'thread_id='.$id);
 			$pages = ceil($posts_in_thread / $cfg['pp_thread']);
 			if (!$t['is_hidden']){
-				//ðåãèñòðèðóåì ñîáûòèå
+				//Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€ÑƒÐµÐ¼ ÑÐ¾Ð±Ñ‹Ñ‚Ð¸Ðµ
 				$message_post = $inCore->parseSmiles($message_post, true);
 				$message_post = strip_tags($message_post);
 				cmsActions::log('add_fpost', array(
-					'object' => 'ïîñò',
+					'object' => 'Ð¿Ð¾ÑÑ‚',
 					'object_url' => '/forum/thread'.$id.'-'.$pages.'.html#'.$lastid,
 					'object_id' => $lastid,
 					'target' => $t['title'],
@@ -984,7 +984,7 @@ if ($do=='newthread' || $do=='newpost' || $do=='editpost'){
 					if (!$is_hidden) {
 						$message = $inCore->parseSmiles($message, true);
 						$message = strip_tags($message);
-						//ðåãèñòðèðóåì ñîáûòèå
+						//Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€ÑƒÐµÐ¼ ÑÐ¾Ð±Ñ‹Ñ‚Ð¸Ðµ
 						cmsActions::log('add_thread', array(
 							'object' => $title,
 							'object_url' => '/forum/thread'.$threadlastid.'.html',
@@ -1234,7 +1234,7 @@ if ($do=='reloadfile'){
 	if (!$inUser->id){ cmsUser::goToLogin(); }
 
 	//get current file data	
-	$sql = "SELECT f.*, p.thread_id as tid, u.id as uid, DATE_FORMAT(f.pubdate, '%d-%m-%Y â %H:%i') as fpubdate
+	$sql = "SELECT f.*, p.thread_id as tid, u.id as uid, DATE_FORMAT(f.pubdate, '%d-%m-%Y Ð² %H:%i') as fpubdate
 			FROM cms_forum_files f, cms_users u, cms_forum_posts p
 			WHERE f.id = '$id' AND f.post_id = p.id AND p.user_id = u.id";
 	$result = $inDB->query($sql) ;
@@ -1309,7 +1309,7 @@ if ($do=='reloadfile'){
 	} else { echo '<p>'.$_LANG['FILE_NOT_FOUND'].'!</p>'; }
 	
 }
-///////////////////////////// ïîñëåäíèå ñîîáùåíèÿ //////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// Ð¿Ð¾ÑÐ»ÐµÐ´Ð½Ð¸Ðµ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ //////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='latest_posts'){
 
 	$page = $inCore->request('page', 'int', 1);
@@ -1343,7 +1343,7 @@ if ($do=='latest_posts'){
 	$smarty->display('com_actions_view.tpl');
 
 }
-///////////////////////////// ïîñëåäíèå òåìû ///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// Ð¿Ð¾ÑÐ»ÐµÐ´Ð½Ð¸Ðµ Ñ‚ÐµÐ¼Ñ‹ ///////////////////////////////////////////////////////////////////////////////////////////////
 if ($do=='latest_thread'){
 
 	$page = $inCore->request('page', 'int', 1);

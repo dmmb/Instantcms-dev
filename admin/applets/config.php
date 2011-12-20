@@ -22,9 +22,9 @@ function applet_config(){
 	global $adminAccess;
 	if (!$inCore->isAdminCan('admin/config', $adminAccess)) { cpAccessDenied(); }
 
-	$GLOBALS['cp_page_title'] = 'Настройки сайта';
+	$GLOBALS['cp_page_title'] = 'РќР°СЃС‚СЂРѕР№РєРё СЃР°Р№С‚Р°';
  	
-	cpAddPathway('Настройки сайта', 'index.php?view=config');	
+	cpAddPathway('РќР°СЃС‚СЂРѕР№РєРё СЃР°Р№С‚Р°', 'index.php?view=config');	
 	
 	$GLOBALS['cp_page_head'][] = '<script language="JavaScript" type="text/javascript" src="js/content.js"></script>';
 	$GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/admin/js/config.js"></script>';
@@ -94,7 +94,7 @@ function applet_config(){
         }
 	}
 	
-	if ($inCore->inRequest('msg')) { $msg='Настройки сохранены'; }
+	if ($inCore->inRequest('msg')) { $msg='РќР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅРµРЅС‹'; }
 	
 ?>
 <div style="width:800px">
@@ -106,13 +106,13 @@ function applet_config(){
 <div id="config_tabs">
 
   <ul id="tabs">
-	  	<li><a href="#basic"><span>Сайт</span></a></li>
-	  	<li><a href="#home"><span>Главная страница</span></a></li>
-		<li><a href="#design"><span>Дизайн</span></a></li>
-		<li><a href="#time"><span>Время</span></a></li>
-		<li><a href="#database"><span>База данных</span></a></li>
-		<li><a href="#mail"><span>Почта</span></a></li>
-		<li><a href="#other"><span>Разное</span></a></li>
+	  	<li><a href="#basic"><span>РЎР°Р№С‚</span></a></li>
+	  	<li><a href="#home"><span>Р“Р»Р°РІРЅР°СЏ СЃС‚СЂР°РЅРёС†Р°</span></a></li>
+		<li><a href="#design"><span>Р”РёР·Р°Р№РЅ</span></a></li>
+		<li><a href="#time"><span>Р’СЂРµРјСЏ</span></a></li>
+		<li><a href="#database"><span>Р‘Р°Р·Р° РґР°РЅРЅС‹С…</span></a></li>
+		<li><a href="#mail"><span>РџРѕС‡С‚Р°</span></a></li>
+		<li><a href="#other"><span>Р Р°Р·РЅРѕРµ</span></a></li>
   </ul>
 	
 	<form action="/admin/index.php?view=config" method="post" name="CFGform" target="_self" id="CFGform" style="margin-bottom:30px">
@@ -120,8 +120,8 @@ function applet_config(){
 			<table width="720" border="0" cellpadding="5">
 				<tr>
 					<td>
-                        <strong>Название сайта:</strong><br/>
-						<span class="hinttext">Используется в заголовках страниц</span>
+                        <strong>РќР°Р·РІР°РЅРёРµ СЃР°Р№С‚Р°:</strong><br/>
+						<span class="hinttext">РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ Р·Р°РіРѕР»РѕРІРєР°С… СЃС‚СЂР°РЅРёС†</span>
                     </td>
 					<td width="350" valign="top">
                         <input name="sitename" type="text" id="sitename" value="<?php echo @$_CFG['sitename'];?>" style="width:358px" />
@@ -129,7 +129,7 @@ function applet_config(){
 				</tr>
 				<tr>
 					<td>
-                        <strong>Язык сайта:</strong>
+                        <strong>РЇР·С‹Рє СЃР°Р№С‚Р°:</strong>
                     </td>
 					<td width="350" valign="top">
                         <select name="lang" id="lang" style="width:364px">
@@ -139,44 +139,44 @@ function applet_config(){
 				</tr>
 				<tr>
 					<td>
-                        <strong>Сайт работает:</strong><br/>
-                        <span class="hinttext">Отключенный сайт виден только администраторам</span>
+                        <strong>РЎР°Р№С‚ СЂР°Р±РѕС‚Р°РµС‚:</strong><br/>
+                        <span class="hinttext">РћС‚РєР»СЋС‡РµРЅРЅС‹Р№ СЃР°Р№С‚ РІРёРґРµРЅ С‚РѕР»СЊРєРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°Рј</span>
                     </td>
 					<td valign="top">
-                        <input name="siteoff" type="radio" value="0" <?php if (@!$_CFG['siteoff']) { echo 'checked="checked"'; } ?>/> Да
-                        <input name="siteoff" type="radio" value="1" <?php if (@$_CFG['siteoff']) { echo 'checked="checked"'; } ?>/> Нет
+                        <input name="siteoff" type="radio" value="0" <?php if (@!$_CFG['siteoff']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                        <input name="siteoff" type="radio" value="1" <?php if (@$_CFG['siteoff']) { echo 'checked="checked"'; } ?>/> РќРµС‚
                     </td>
                 </tr>
 				<tr>
 					<td>
-                        <strong>Включить режим отладки:</strong><br/>
-						<span class="hinttext">Показывает ошибки базы данных и тексты запросов</span>
+                        <strong>Р’РєР»СЋС‡РёС‚СЊ СЂРµР¶РёРј РѕС‚Р»Р°РґРєРё:</strong><br/>
+						<span class="hinttext">РџРѕРєР°Р·С‹РІР°РµС‚ РѕС€РёР±РєРё Р±Р°Р·С‹ РґР°РЅРЅС‹С… Рё С‚РµРєСЃС‚С‹ Р·Р°РїСЂРѕСЃРѕРІ</span>
                     </td>
 					<td valign="top">
-						<input name="debug" type="radio" value="1" <?php if (@$_CFG['debug']) { echo 'checked="checked"'; } ?>/> Да
-						<input name="debug" type="radio" value="0" <?php if (@!$_CFG['debug']) { echo 'checked="checked"'; } ?>/> Нет
+						<input name="debug" type="radio" value="1" <?php if (@$_CFG['debug']) { echo 'checked="checked"'; } ?>/> Р”Р°
+						<input name="debug" type="radio" value="0" <?php if (@!$_CFG['debug']) { echo 'checked="checked"'; } ?>/> РќРµС‚
                     </td>
 				</tr>
 				<tr>
 					<td valign="middle">
-                        <strong>Причина остановки работы:</strong><br />
-						<span class="hinttext">Отображается на главной странице<br/>при отключении сайта</span>
+                        <strong>РџСЂРёС‡РёРЅР° РѕСЃС‚Р°РЅРѕРІРєРё СЂР°Р±РѕС‚С‹:</strong><br />
+						<span class="hinttext">РћС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РЅР° РіР»Р°РІРЅРѕР№ СЃС‚СЂР°РЅРёС†Рµ<br/>РїСЂРё РѕС‚РєР»СЋС‡РµРЅРёРё СЃР°Р№С‚Р°</span>
 
                     </td>
 					<td valign="top"><input name="offtext" type="text" id="offtext" value="<?php echo @$_CFG['offtext'];?>" style="width:358px" /></td>
 				</tr>
 				<tr>
 					<td>
-                        <strong>E-mail сайта: </strong><br/>
-						<span class="hinttext">Адрес от имени которого будут рассылаться<br/>уведомления пользователям</span>
+                        <strong>E-mail СЃР°Р№С‚Р°: </strong><br/>
+						<span class="hinttext">РђРґСЂРµСЃ РѕС‚ РёРјРµРЅРё РєРѕС‚РѕСЂРѕРіРѕ Р±СѓРґСѓС‚ СЂР°СЃСЃС‹Р»Р°С‚СЊСЃСЏ<br/>СѓРІРµРґРѕРјР»РµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј</span>
                     </td>
 					<td>
 						<input name="sitemail" type="text" id="sitemail" value="<?php echo @$_CFG['sitemail'];?>" style="width:358px" />					</td>
 				</tr>
 				<tr>
 					<td>
-                        <strong>Водяной знак для фотографий: </strong><br/>
-						<span class="hinttext">Название картинки в папке /images/</span>
+                        <strong>Р’РѕРґСЏРЅРѕР№ Р·РЅР°Рє РґР»СЏ С„РѕС‚РѕРіСЂР°С„РёР№: </strong><br/>
+						<span class="hinttext">РќР°Р·РІР°РЅРёРµ РєР°СЂС‚РёРЅРєРё РІ РїР°РїРєРµ /images/</span>
                     </td>
 					<td>
 						<input name="wmark" type="text" id="wmark" value="<?php echo @$_CFG['wmark'];?>" style="width:358px" />
@@ -184,25 +184,25 @@ function applet_config(){
 				</tr>
 				<tr>
 					<td>
-                        <strong>Сбор статистики: </strong></strong><br/>
-						<span class="hinttext">Просматривать статистику можно через админку компонента <a href="index.php?view=components&do=config&link=statistics">Статистика</a></span>
+                        <strong>РЎР±РѕСЂ СЃС‚Р°С‚РёСЃС‚РёРєРё: </strong></strong><br/>
+						<span class="hinttext">РџСЂРѕСЃРјР°С‚СЂРёРІР°С‚СЊ СЃС‚Р°С‚РёСЃС‚РёРєСѓ РјРѕР¶РЅРѕ С‡РµСЂРµР· Р°РґРјРёРЅРєСѓ РєРѕРјРїРѕРЅРµРЅС‚Р° <a href="index.php?view=components&do=config&link=statistics">РЎС‚Р°С‚РёСЃС‚РёРєР°</a></span>
                     </td>
 					<td>
-						<input name="stats" type="radio" value="1" <?php if (@$_CFG['stats']) { echo 'checked="checked"'; } ?>/> Вкл
-						<input name="stats" type="radio" value="0" <?php if (@!$_CFG['stats']) { echo 'checked="checked"'; } ?>/> Выкл					</td>
+						<input name="stats" type="radio" value="1" <?php if (@$_CFG['stats']) { echo 'checked="checked"'; } ?>/> Р’РєР»
+						<input name="stats" type="radio" value="0" <?php if (@!$_CFG['stats']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»					</td>
 				</tr>
 				<tr>
 					<td>
-						<strong>Быстрая настройка:</strong> <br />
-						<span class="hinttext">Если включено, на сайте заголовки модулей снабжаются ссылками &quot;Настроить&quot;. </span>					</td>
+						<strong>Р‘С‹СЃС‚СЂР°СЏ РЅР°СЃС‚СЂРѕР№РєР°:</strong> <br />
+						<span class="hinttext">Р•СЃР»Рё РІРєР»СЋС‡РµРЅРѕ, РЅР° СЃР°Р№С‚Рµ Р·Р°РіРѕР»РѕРІРєРё РјРѕРґСѓР»РµР№ СЃРЅР°Р±Р¶Р°СЋС‚СЃСЏ СЃСЃС‹Р»РєР°РјРё &quot;РќР°СЃС‚СЂРѕРёС‚СЊ&quot;. </span>					</td>
 				<td valign="top">
-					<input name="fastcfg" type="radio" value="1" <?php if (@$_CFG['fastcfg']) { echo 'checked="checked"'; } ?>/> Вкл
-					<input name="fastcfg" type="radio" value="0" <?php if (@!$_CFG['fastcfg']) { echo 'checked="checked"'; } ?>/> Выкл				</td>
+					<input name="fastcfg" type="radio" value="1" <?php if (@$_CFG['fastcfg']) { echo 'checked="checked"'; } ?>/> Р’РєР»
+					<input name="fastcfg" type="radio" value="0" <?php if (@!$_CFG['fastcfg']) { echo 'checked="checked"'; } ?>/> Р’С‹РєР»				</td>
 				</tr>
 				<tr>
 					<td>
-						<strong>IP адреса, с которых разрешен доступ в админку:</strong> <br />
-						<span class="hinttext">Введите ip адреса через запятую, с которых разрешен доступ в админку. Если не заданы, доступ разрешен всем. </span>					</td>
+						<strong>IP Р°РґСЂРµСЃР°, СЃ РєРѕС‚РѕСЂС‹С… СЂР°Р·СЂРµС€РµРЅ РґРѕСЃС‚СѓРї РІ Р°РґРјРёРЅРєСѓ:</strong> <br />
+						<span class="hinttext">Р’РІРµРґРёС‚Рµ ip Р°РґСЂРµСЃР° С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ, СЃ РєРѕС‚РѕСЂС‹С… СЂР°Р·СЂРµС€РµРЅ РґРѕСЃС‚СѓРї РІ Р°РґРјРёРЅРєСѓ. Р•СЃР»Рё РЅРµ Р·Р°РґР°РЅС‹, РґРѕСЃС‚СѓРї СЂР°Р·СЂРµС€РµРЅ РІСЃРµРј. </span>					</td>
 				<td valign="top">
 					<input name="allow_ip" type="text" id="allow_ip" value="<?php echo @$_CFG['allow_ip'];?>" style="width:358px" /></td>
 				</tr>
@@ -212,9 +212,9 @@ function applet_config(){
 			<table width="720" border="0" cellpadding="5">
                 <tr>
     				<td>
-                        <strong>Заголовок главной страницы:</strong><br />
-						<span class="hinttext">Если не указан, будет совпадать с названием сайта</span><br/>
-                        <span class="hinttext">Показывается в заголовке окна браузера</span>
+                        <strong>Р—Р°РіРѕР»РѕРІРѕРє РіР»Р°РІРЅРѕР№ СЃС‚СЂР°РЅРёС†С‹:</strong><br />
+						<span class="hinttext">Р•СЃР»Рё РЅРµ СѓРєР°Р·Р°РЅ, Р±СѓРґРµС‚ СЃРѕРІРїР°РґР°С‚СЊ СЃ РЅР°Р·РІР°РЅРёРµРј СЃР°Р№С‚Р°</span><br/>
+                        <span class="hinttext">РџРѕРєР°Р·С‹РІР°РµС‚СЃСЏ РІ Р·Р°РіРѕР»РѕРІРєРµ РѕРєРЅР° Р±СЂР°СѓР·РµСЂР°</span>
                     </td>
                     <td width="350" valign="top">
                         <input name="hometitle" type="text" id="hometitle" value="<?php echo @$_CFG['hometitle'];?>" style="width:358px" />
@@ -222,18 +222,18 @@ function applet_config(){
 			    </tr>
 				<tr>
 					<td valign="top">
-						<strong>Ключевые слова:</strong><br />
-						<span class="hinttext">Через запятую, 10-15 слов.</span>
-						<div class="hinttext" style="margin-top:4px"><a style="color:#09C" href="http://tutorial.semonitor.ru/#5" target="_blank">Как подобрать ключевые слова?</a></div>
+						<strong>РљР»СЋС‡РµРІС‹Рµ СЃР»РѕРІР°:</strong><br />
+						<span class="hinttext">Р§РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ, 10-15 СЃР»РѕРІ.</span>
+						<div class="hinttext" style="margin-top:4px"><a style="color:#09C" href="http://tutorial.semonitor.ru/#5" target="_blank">РљР°Рє РїРѕРґРѕР±СЂР°С‚СЊ РєР»СЋС‡РµРІС‹Рµ СЃР»РѕРІР°?</a></div>
                     </td>
 					<td>
 						<textarea name="keywords" style="width:350px" rows="3" id="keywords"><?php echo @$_CFG['keywords'];?></textarea>					</td>
 				</tr>
 				<tr>
 					<td valign="top">
-						<strong>Описание:</strong><br />
-						<span class="hinttext">Не более 250 символов.</span>
-						<div class="hinttext" style="margin-top:4px"><a style="color:#09C" href="http://tutorial.semonitor.ru/#219" target="_blank">Как правильно составить описание?</a></div>
+						<strong>РћРїРёСЃР°РЅРёРµ:</strong><br />
+						<span class="hinttext">РќРµ Р±РѕР»РµРµ 250 СЃРёРјРІРѕР»РѕРІ.</span>
+						<div class="hinttext" style="margin-top:4px"><a style="color:#09C" href="http://tutorial.semonitor.ru/#219" target="_blank">РљР°Рє РїСЂР°РІРёР»СЊРЅРѕ СЃРѕСЃС‚Р°РІРёС‚СЊ РѕРїРёСЃР°РЅРёРµ?</a></div>
                     </td>
 					<td>
 						<textarea name="metadesc" style="width:350px" rows="3" id="metadesc"><?php echo @$_CFG['metadesc'];?></textarea>
@@ -241,24 +241,24 @@ function applet_config(){
 				</tr>
                 <tr>
     				<td>
-                        <strong>Компонент на главной странице:</strong>
+                        <strong>РљРѕРјРїРѕРЅРµРЅС‚ РЅР° РіР»Р°РІРЅРѕР№ СЃС‚СЂР°РЅРёС†Рµ:</strong>
                     </td>
                     <td width="350" valign="top">
                         <select name="homecom" style="width:358px">
-                            <option value="" <?php if(!$_CFG['homecom']){ ?>selected="selected"<?php } ?>>-- Без компонента, только модули --</option>
+                            <option value="" <?php if(!$_CFG['homecom']){ ?>selected="selected"<?php } ?>>-- Р‘РµР· РєРѕРјРїРѕРЅРµРЅС‚Р°, С‚РѕР»СЊРєРѕ РјРѕРґСѓР»Рё --</option>
                             <?php echo $inCore->getListItems('cms_components', $_CFG['homecom'], 'title', 'ASC', 'internal=0', 'link'); ?>
                         </select>
                     </td>
 			    </tr>
 				<tr>
 					<td>
-						<strong>Входная страница:</strong> <br/>
-						<span class="hinttext">Показывается при первом посещении сайта</span> <br/>
-                        <span class="hinttext">Файл: <strong>/templates/&lt;ваш шаблон&gt;/splash/splash.php</strong></span>
+						<strong>Р’С…РѕРґРЅР°СЏ СЃС‚СЂР°РЅРёС†Р°:</strong> <br/>
+						<span class="hinttext">РџРѕРєР°Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїРµСЂРІРѕРј РїРѕСЃРµС‰РµРЅРёРё СЃР°Р№С‚Р°</span> <br/>
+                        <span class="hinttext">Р¤Р°Р№Р»: <strong>/templates/&lt;РІР°С€ С€Р°Р±Р»РѕРЅ&gt;/splash/splash.php</strong></span>
 					</td>
 					<td valign="top">
-						<input name="splash" type="radio" value="0" <?php if (@!$_CFG['splash']) { echo 'checked="checked"'; } ?>/>	Скрыть
-						<input name="splash" type="radio" value="1" <?php if (@$_CFG['splash']) { echo 'checked="checked"'; } ?>/> Показывать
+						<input name="splash" type="radio" value="0" <?php if (@!$_CFG['splash']) { echo 'checked="checked"'; } ?>/>	РЎРєСЂС‹С‚СЊ
+						<input name="splash" type="radio" value="1" <?php if (@$_CFG['splash']) { echo 'checked="checked"'; } ?>/> РџРѕРєР°Р·С‹РІР°С‚СЊ
 					</td>
 				</tr>
 			</table>
@@ -268,8 +268,8 @@ function applet_config(){
 				<tr>
 					<td valign="top">
                         <div style="margin-top:2px">
-                            <strong>Шаблон:</strong><br />
-                            <span class="hinttext">Содержимое папки &quot;templates/&quot; </span>
+                            <strong>РЁР°Р±Р»РѕРЅ:</strong><br />
+                            <span class="hinttext">РЎРѕРґРµСЂР¶РёРјРѕРµ РїР°РїРєРё &quot;templates/&quot; </span>
                         </div>                        
 					</td>
 					<td>
@@ -277,22 +277,22 @@ function applet_config(){
                             <?php $inCore->templatesList($_CFG['template']); ?>
                         </select>
                         <div style="margin-top:5px" class="hinttext">
-                            При смене шаблона необходимо очистить папку &laquo;<strong>cache</strong>&raquo; на сервере
+                            РџСЂРё СЃРјРµРЅРµ С€Р°Р±Р»РѕРЅР° РЅРµРѕР±С…РѕРґРёРјРѕ РѕС‡РёСЃС‚РёС‚СЊ РїР°РїРєСѓ &laquo;<strong>cache</strong>&raquo; РЅР° СЃРµСЂРІРµСЂРµ
                         </div>
 					</td>
 				</tr>
 				<tr>
-					<td><strong>Подсветка результатов поиска:</strong></td>
+					<td><strong>РџРѕРґСЃРІРµС‚РєР° СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РїРѕРёСЃРєР°:</strong></td>
 					<td valign="top">
-						<input name="slight" type="radio" value="1" <?php if (@$_CFG['slight']) { echo 'checked="checked"'; } ?>/> Да
-						<input name="slight" type="radio" value="0" <?php if (@!$_CFG['slight']) { echo 'checked="checked"'; } ?>/> Нет
+						<input name="slight" type="radio" value="1" <?php if (@$_CFG['slight']) { echo 'checked="checked"'; } ?>/> Р”Р°
+						<input name="slight" type="radio" value="0" <?php if (@!$_CFG['slight']) { echo 'checked="checked"'; } ?>/> РќРµС‚
 					</td>
 				</tr>
                 <tr>
-					<td><strong>Показывать кнопку &laquo;Назад&raquo;:</strong></td>
+					<td><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ РєРЅРѕРїРєСѓ &laquo;РќР°Р·Р°Рґ&raquo;:</strong></td>
 					<td valign="top">
-						<input name="back_btn" type="radio" value="1" <?php if (@$_CFG['back_btn']) { echo 'checked="checked"'; } ?>/> Да
-						<input name="back_btn" type="radio" value="0" <?php if (@!$_CFG['back_btn']) { echo 'checked="checked"'; } ?>/> Нет
+						<input name="back_btn" type="radio" value="1" <?php if (@$_CFG['back_btn']) { echo 'checked="checked"'; } ?>/> Р”Р°
+						<input name="back_btn" type="radio" value="0" <?php if (@!$_CFG['back_btn']) { echo 'checked="checked"'; } ?>/> РќРµС‚
 					</td>
 				</tr>
 			</table>
@@ -302,7 +302,7 @@ function applet_config(){
 				<tr>
 					<td valign="top" width="100">
                         <div style="margin-top:2px">
-                            <strong>Временная зона:</strong>
+                            <strong>Р’СЂРµРјРµРЅРЅР°СЏ Р·РѕРЅР°:</strong>
                         </div>
 					</td>
 					<td>
@@ -316,7 +316,7 @@ function applet_config(){
 				</tr>
 				<tr>
 					<td>
-						<strong>Смещение в часах:</strong>
+						<strong>РЎРјРµС‰РµРЅРёРµ РІ С‡Р°СЃР°С…:</strong>
 					</td>
 					<td width="350">
                         <select name="timediff" id="timediff" style="width:60px">
@@ -332,8 +332,8 @@ function applet_config(){
 			<table width="720" border="0" cellpadding="5" style="margin-top:15px;">
 				<tr>
 					<td>
-						<strong>Сервер:</strong><br />
-						<span class="hinttext">Обычно это &quot;localhost&quot; </span>
+						<strong>РЎРµСЂРІРµСЂ:</strong><br />
+						<span class="hinttext">РћР±С‹С‡РЅРѕ СЌС‚Рѕ &quot;localhost&quot; </span>
 					</td>
 					<td width="350">
 						<input name="db_host" type="text" id="db_host" value="<?php echo @$_CFG['db_host'];?>" style="width:350px" />
@@ -341,8 +341,8 @@ function applet_config(){
 				</tr>
 				<tr>
 					<td>
-						<strong>База данных:</strong><br />
-						<span class="hinttext">Название БД MySQL </span>
+						<strong>Р‘Р°Р·Р° РґР°РЅРЅС‹С…:</strong><br />
+						<span class="hinttext">РќР°Р·РІР°РЅРёРµ Р‘Р” MySQL </span>
 					</td>
 					<td>
 						<input name="db_base" type="text" id="db_base" value="<?php echo @$_CFG['db_base'];?>" style="width:350px" />
@@ -350,15 +350,15 @@ function applet_config(){
 				</tr>
 				<tr>
 					<td>
-						<strong>Префикс базы данных:</strong><br />
-						<span class="hinttext">Префикс БД MySQL </span>
+						<strong>РџСЂРµС„РёРєСЃ Р±Р°Р·С‹ РґР°РЅРЅС‹С…:</strong><br />
+						<span class="hinttext">РџСЂРµС„РёРєСЃ Р‘Р” MySQL </span>
 					</td>
 					<td>
 						<input name="db_prefix" type="text" id="db_prefix" value="<?php echo @$_CFG['db_prefix'];?>" style="width:350px" />
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2"><span class="hinttext">Пользователь и пароль MySQL настраиваются в файле /includes/config.inc.php</span></td>
+					<td colspan="2"><span class="hinttext">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ Рё РїР°СЂРѕР»СЊ MySQL РЅР°СЃС‚СЂР°РёРІР°СЋС‚СЃСЏ РІ С„Р°Р№Р»Рµ /includes/config.inc.php</span></td>
 				</tr>
 			</table>
         </div>
@@ -366,21 +366,21 @@ function applet_config(){
 			<table width="720" border="0" cellpadding="5" style="margin-top:15px;">
 				<tr>
 					<td>
-						<strong>Способ отправки:</strong>
+						<strong>РЎРїРѕСЃРѕР± РѕС‚РїСЂР°РІРєРё:</strong>
 					</td>
 					<td width="250">
 						<?php if(!isset($_CFG['mailer'])) { $_CFG['mailer'] = 'mail'; } ?>
 						<select name="mailer" style="width:354px">
-							<option value="mail" <?php if (@$_CFG['mailer']=='mail') { echo 'selected="selected"'; } ?>>Функция mail в PHP</option>
+							<option value="mail" <?php if (@$_CFG['mailer']=='mail') { echo 'selected="selected"'; } ?>>Р¤СѓРЅРєС†РёСЏ mail РІ PHP</option>
 							<option value="sendmail" <?php if (@$_CFG['mailer']=='sendmail') { echo 'selected="selected"'; } ?>>Sendmail</option>
-							<option value="smtp" <?php if (@$_CFG['mailer']=='smtp') { echo 'selected="selected"'; } ?>>SMTP-сервер</option>
+							<option value="smtp" <?php if (@$_CFG['mailer']=='smtp') { echo 'selected="selected"'; } ?>>SMTP-СЃРµСЂРІРµСЂ</option>
 						</select>
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<strong>Путь к Sendmail:</strong><br/>
-						<span class="hinttext">Обычно это /usr/sbin/sendmail</span>
+						<strong>РџСѓС‚СЊ Рє Sendmail:</strong><br/>
+						<span class="hinttext">РћР±С‹С‡РЅРѕ СЌС‚Рѕ /usr/sbin/sendmail</span>
 					</td>
 					<td width="350">
 						<?php if(!isset($_CFG['sendmail'])) { $_CFG['sendmail'] = '/usr/sbin/sendmail'; } ?>
@@ -389,17 +389,17 @@ function applet_config(){
 				</tr>
 				<tr>
 					<td>
-						<strong>SMTP авторизация:</strong>
+						<strong>SMTP Р°РІС‚РѕСЂРёР·Р°С†РёСЏ:</strong>
 					</td>
 					<td width="350">
 						<?php if(!isset($_CFG['smtpauth'])) { $_CFG['smtpauth'] = 0; } ?>
-						<input name="smtpauth" type="radio" value="1" <?php if (@$_CFG['smtpauth']) { echo 'checked="checked"'; } ?>/> Да
-						<input name="smtpauth" type="radio" value="0" <?php if (@!$_CFG['smtpauth']) { echo 'checked="checked"'; } ?>/> Нет
+						<input name="smtpauth" type="radio" value="1" <?php if (@$_CFG['smtpauth']) { echo 'checked="checked"'; } ?>/> Р”Р°
+						<input name="smtpauth" type="radio" value="0" <?php if (@!$_CFG['smtpauth']) { echo 'checked="checked"'; } ?>/> РќРµС‚
 					</td>
 				</tr>	
 				<tr>
 					<td>
-						<strong>SMTP пользователь:</strong>
+						<strong>SMTP РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ:</strong>
 					</td>
 					<td width="350">
 						<?php if(!isset($_CFG['smtpuser'])) { $_CFG['smtpuser'] = ''; } ?>
@@ -408,7 +408,7 @@ function applet_config(){
 				</tr>
 				<tr>
 					<td>
-						<strong>SMTP пароль:</strong>
+						<strong>SMTP РїР°СЂРѕР»СЊ:</strong>
 					</td>
 					<td width="350">
 						<?php if(!isset($_CFG['smtppass'])) { $_CFG['smtppass'] = ''; } ?>
@@ -417,7 +417,7 @@ function applet_config(){
 				</tr>	
 				<tr>
 					<td>
-						<strong>SMTP хост:</strong>
+						<strong>SMTP С…РѕСЃС‚:</strong>
 					</td>
 					<td width="350">
 						<?php if(!isset($_CFG['smtphost'])) { $_CFG['smtphost'] = 'localhost'; } ?>
@@ -430,29 +430,29 @@ function applet_config(){
 			<table width="720" border="0" cellpadding="5">
 				<tr>
 					<td>
-						<strong>Показывать глубиномер?</strong><br />
+						<strong>РџРѕРєР°Р·С‹РІР°С‚СЊ РіР»СѓР±РёРЅРѕРјРµСЂ?</strong><br />
 						<span class="hinttext">
-                            Отображает путь к разделу,<br/>
-                            в котором находится посетитель
+                            РћС‚РѕР±СЂР°Р¶Р°РµС‚ РїСѓС‚СЊ Рє СЂР°Р·РґРµР»Сѓ,<br/>
+                            РІ РєРѕС‚РѕСЂРѕРј РЅР°С…РѕРґРёС‚СЃСЏ РїРѕСЃРµС‚РёС‚РµР»СЊ
                         </span>
 					</td>
 					<td>
-						<input name="show_pw" type="radio" value="1" <?php if (@$_CFG['show_pw']) { echo 'checked="checked"'; } ?>/> Да
-						<input name="show_pw" type="radio" value="0" <?php if (@!$_CFG['show_pw']) { echo 'checked="checked"'; } ?>/> Нет 
+						<input name="show_pw" type="radio" value="1" <?php if (@$_CFG['show_pw']) { echo 'checked="checked"'; } ?>/> Р”Р°
+						<input name="show_pw" type="radio" value="0" <?php if (@!$_CFG['show_pw']) { echo 'checked="checked"'; } ?>/> РќРµС‚ 
 					</td>
 				</tr>
 				<tr>
-					<td><strong>Глубиномер на главной странице:</strong></td>
+					<td><strong>Р“Р»СѓР±РёРЅРѕРјРµСЂ РЅР° РіР»Р°РІРЅРѕР№ СЃС‚СЂР°РЅРёС†Рµ:</strong></td>
 					<td>
-						<input name="index_pw" type="radio" value="1" <?php if (@$_CFG['index_pw']) { echo 'checked="checked"'; } ?>/> Да
-						<input name="index_pw" type="radio" value="0" <?php if (@!$_CFG['index_pw']) { echo 'checked="checked"'; } ?>/>	Нет 
+						<input name="index_pw" type="radio" value="1" <?php if (@$_CFG['index_pw']) { echo 'checked="checked"'; } ?>/> Р”Р°
+						<input name="index_pw" type="radio" value="0" <?php if (@!$_CFG['index_pw']) { echo 'checked="checked"'; } ?>/>	РќРµС‚ 
 					</td>
 				</tr>
 				<tr>
-					<td><strong>Выводить текущую страницу в глубиномере:</strong></td>
+					<td><strong>Р’С‹РІРѕРґРёС‚СЊ С‚РµРєСѓС‰СѓСЋ СЃС‚СЂР°РЅРёС†Сѓ РІ РіР»СѓР±РёРЅРѕРјРµСЂРµ:</strong></td>
 					<td>
-						<input name="short_pw" type="radio" value="0" <?php if (!$_CFG['short_pw']) { echo 'checked="checked"'; } ?>/> Да
-						<input name="short_pw" type="radio" value="1" <?php if ($_CFG['short_pw']) { echo 'checked="checked"'; } ?>/> Нет
+						<input name="short_pw" type="radio" value="0" <?php if (!$_CFG['short_pw']) { echo 'checked="checked"'; } ?>/> Р”Р°
+						<input name="short_pw" type="radio" value="1" <?php if ($_CFG['short_pw']) { echo 'checked="checked"'; } ?>/> РќРµС‚
 					</td>
 				</tr>
 			</table>
@@ -461,10 +461,10 @@ function applet_config(){
 
 	<script type="text/javascript">$('#config_tabs > ul#tabs').tabs();</script>
 	<div align="left">
-    <p><strong>Внимание:</strong> после конфигурирования в целях безопасности необходимо сменить владельца файла /includes/config.inc.php и выставить права доступа на него 644.</p>
+    <p><strong>Р’РЅРёРјР°РЅРёРµ:</strong> РїРѕСЃР»Рµ РєРѕРЅС„РёРіСѓСЂРёСЂРѕРІР°РЅРёСЏ РІ С†РµР»СЏС… Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё РЅРµРѕР±С…РѕРґРёРјРѕ СЃРјРµРЅРёС‚СЊ РІР»Р°РґРµР»СЊС†Р° С„Р°Р№Р»Р° /includes/config.inc.php Рё РІС‹СЃС‚Р°РІРёС‚СЊ РїСЂР°РІР° РґРѕСЃС‚СѓРїР° РЅР° РЅРµРіРѕ 644.</p>
 		<input name="do" type="hidden" id="do" value="save" />
-		<input name="save" type="submit" id="save" value="Сохранить" />
-		<input name="back" type="button" id="back" value="Отмена" onclick="window.history.back();"/> 
+		<input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+		<input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.history.back();"/> 
 	</div>
 </form>
 </div>

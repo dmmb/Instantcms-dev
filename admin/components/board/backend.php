@@ -16,17 +16,17 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
         $inCore = cmsCore::getInstance();
 
-		// Загружаем класс загрузки фото
+		// Р—Р°РіСЂСѓР¶Р°РµРј РєР»Р°СЃСЃ Р·Р°РіСЂСѓР·РєРё С„РѕС‚Рѕ
 		$inCore->loadClass('upload_photo');
 		$inUploadPhoto = cmsUploadPhoto::getInstance();
-		// Выставляем конфигурационные параметры
+		// Р’С‹СЃС‚Р°РІР»СЏРµРј РєРѕРЅС„РёРіСѓСЂР°С†РёРѕРЅРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹
 		$inUploadPhoto->upload_dir    = PATH.'/upload/board/';
 		$inUploadPhoto->dir_medium    = 'cat_icons/';
 		$inUploadPhoto->medium_size_w = 32;
 		$inUploadPhoto->medium_size_h = 32;
 		$inUploadPhoto->only_medium   = true;
 		$inUploadPhoto->is_watermark  = false;
-		// Процесс загрузки фото
+		// РџСЂРѕС†РµСЃСЃ Р·Р°РіСЂСѓР·РєРё С„РѕС‚Рѕ
 		$files = $inUploadPhoto->uploadPhoto($file);
 
 		$icon = $files['filename'] ? $files['filename'] : $file;
@@ -43,8 +43,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
     define('IS_BILLING', $inCore->isComponentInstalled('billing'));
     if (IS_BILLING) { $inCore->loadClass('billing'); }
 
-	cpAddPathway('Доска объявлений', '?view=components&do=config&id='.$_REQUEST['id']);
-	echo '<h3>Доска объявлений</h3>';
+	cpAddPathway('Р”РѕСЃРєР° РѕР±СЉСЏРІР»РµРЅРёР№', '?view=components&do=config&id='.$_REQUEST['id']);
+	echo '<h3>Р”РѕСЃРєР° РѕР±СЉСЏРІР»РµРЅРёР№</h3>';
 	if (isset($_REQUEST['opt'])) { $opt = $inCore->request('opt', 'str'); } else { $opt = 'list_items'; }
 
     $inUser = cmsUser::getInstance();
@@ -79,7 +79,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         
 		$inCore->saveComponentConfig('board', $cfg);
 		
-		$msg = 'Настройки сохранены.';
+		$msg = 'РќР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅРµРЅС‹.';
 		$opt = 'config';
 
 	}
@@ -87,34 +87,34 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if ($opt=='list_items' || $opt=='list_cats' || $opt=='config' || $opt == 'show_item' || $opt == 'hide_item'){
 
 		$toolmenu[0]['icon'] = 'newstuff.gif';
-		$toolmenu[0]['title'] = 'Новое объявление';
+		$toolmenu[0]['title'] = 'РќРѕРІРѕРµ РѕР±СЉСЏРІР»РµРЅРёРµ';
 		$toolmenu[0]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_item';
 	
 		$toolmenu[1]['icon'] = 'newfolder.gif';
-		$toolmenu[1]['title'] = 'Новая рубрика';
+		$toolmenu[1]['title'] = 'РќРѕРІР°СЏ СЂСѓР±СЂРёРєР°';
 		$toolmenu[1]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_cat';
 	
 		$toolmenu[2]['icon'] = 'liststuff.gif';
-		$toolmenu[2]['title'] = 'Все объявления';
+		$toolmenu[2]['title'] = 'Р’СЃРµ РѕР±СЉСЏРІР»РµРЅРёСЏ';
 		$toolmenu[2]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items';
 
         $toolmenu[3]['icon'] = 'folders.gif';
-		$toolmenu[3]['title'] = 'Все рубрики';
+		$toolmenu[3]['title'] = 'Р’СЃРµ СЂСѓР±СЂРёРєРё';
 		$toolmenu[3]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats';
 
 	}
 	if($opt=='list_items' || $opt == 'show_item' || $opt == 'hide_item'){
 
 		$toolmenu[11]['icon'] = 'edit.gif';
-		$toolmenu[11]['title'] = 'Редактировать выбранные';
+		$toolmenu[11]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[11]['link'] = "javascript:checkSel('?view=components&do=config&id=".(int)$_REQUEST['id']."&opt=edit_item&multiple=1');";
 
 		$toolmenu[12]['icon'] = 'show.gif';
-		$toolmenu[12]['title'] = 'Публиковать выбранные';
+		$toolmenu[12]['title'] = 'РџСѓР±Р»РёРєРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=".(int)$_REQUEST['id']."&opt=show_item&multiple=1');";
 
 		$toolmenu[13]['icon'] = 'hide.gif';
-		$toolmenu[13]['title'] = 'Скрыть выбранные';
+		$toolmenu[13]['title'] = 'РЎРєСЂС‹С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
 		$toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=".(int)$_REQUEST['id']."&opt=hide_item&multiple=1');";
 
 	}
@@ -122,18 +122,18 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if ($opt=='add_cat' || $opt=='add_item' || $opt=='edit_item' || $opt=='edit_cat'){
 
 		$toolmenu[20]['icon'] = 'save.gif';
-		$toolmenu[20]['title'] = 'Сохранить';
+		$toolmenu[20]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
 		$toolmenu[20]['link'] = 'javascript:document.addform.submit();';
 
 		$toolmenu[21]['icon'] = 'cancel.gif';
-		$toolmenu[21]['title'] = 'Отмена';
+		$toolmenu[21]['title'] = 'РћС‚РјРµРЅР°';
 		$toolmenu[21]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'];
 	
 	} else {
 
         if ($opt!='config'){
             $toolmenu[40]['icon'] = 'config.gif';
-            $toolmenu[40]['title'] = 'Настройки';
+            $toolmenu[40]['title'] = 'РќР°СЃС‚СЂРѕР№РєРё';
             $toolmenu[40]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=config';
 
         }
@@ -165,7 +165,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if ($opt == 'submit_item'){	
 	
 			if (!empty($_REQUEST['category_id'])) { $category_id = $inCore->request('category_id', 'int'); } else { $category_id = 1; }
-			if (!empty($_REQUEST['title'])) { $title = $inCore->request('title', 'str'); } else { $title = 'Объявление'; }
+			if (!empty($_REQUEST['title'])) { $title = $inCore->request('title', 'str'); } else { $title = 'РћР±СЉСЏРІР»РµРЅРёРµ'; }
 			$content   = $inCore->request('content', 'str');
 			$published = $inCore->request('published', 'int');
 			$city      = $inCore->request('city', 'str');
@@ -221,7 +221,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			$id = (int)$_REQUEST['item_id'];
 
 			if (!empty($_REQUEST['category_id'])) { $category_id = $inCore->request('category_id', 'int'); } else { $category_id = 1; }
-			if (!empty($_REQUEST['title'])) { $title = $inCore->request('title', 'str'); } else { $title = 'Объявление'; }
+			if (!empty($_REQUEST['title'])) { $title = $inCore->request('title', 'str'); } else { $title = 'РћР±СЉСЏРІР»РµРЅРёРµ'; }
 			$content   = $inCore->request('content', 'str');
 			$published = $inCore->request('published', 'int');
 			$city      = $inCore->request('city', 'str');
@@ -275,7 +275,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         $items_unpub = $items_total - $items_pub;
 
 		if ($items_unpub) {
-			echo '<div style="margin-top:10px;color:#FF3333" ><strong>Неопубликованных объявлений:</strong> '.$items_unpub.' - <a href="index.php?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items">Показать</a></div>';
+			echo '<div style="margin-top:10px;color:#FF3333" ><strong>РќРµРѕРїСѓР±Р»РёРєРѕРІР°РЅРЅС‹С… РѕР±СЉСЏРІР»РµРЅРёР№:</strong> '.$items_unpub.' - <a href="index.php?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items">РџРѕРєР°Р·Р°С‚СЊ</a></div>';
 		}
 		
         $GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/includes/jquery/jquery.form.js"></script>';
@@ -311,56 +311,56 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
     <div id="config_tabs" style="margin-top:12px;">
 
         <ul id="tabs">
-            <li><a href="#basic"><span>Общие</span></a></li>
-            <li><a href="#access"><span>Доступ</span></a></li>
-            <li><a href="#types"><span>Типы</span></a></li>
+            <li><a href="#basic"><span>РћР±С‰РёРµ</span></a></li>
+            <li><a href="#access"><span>Р”РѕСЃС‚СѓРї</span></a></li>
+            <li><a href="#types"><span>РўРёРїС‹</span></a></li>
             <li><a href="#vip"><span>VIP</span></a></li>
         </ul>
 
         <div id="basic">
             <table width="600" border="0" cellpadding="0" cellspacing="10" class="proptable" style="border:none">
                 <tr>
-                    <td><strong>Разрешить фотографии:</strong></td>
+                    <td><strong>Р Р°Р·СЂРµС€РёС‚СЊ С„РѕС‚РѕРіСЂР°С„РёРё:</strong></td>
                     <td width="250">
-                        <input name="photos" type="radio" value="1" <?php if (@$cfg['photos']) { echo 'checked="checked"'; } ?>/> Да
-                        <input name="photos" type="radio" value="0" <?php if (@!$cfg['photos']) { echo 'checked="checked"'; } ?>/> Нет
+                        <input name="photos" type="radio" value="1" <?php if (@$cfg['photos']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                        <input name="photos" type="radio" value="0" <?php if (@!$cfg['photos']) { echo 'checked="checked"'; } ?>/> РќРµС‚
                     </td>
                 </tr>
                 <tr>
                     <td valign="top">
-                        <strong>Наносить водяной знак:</strong>
+                        <strong>РќР°РЅРѕСЃРёС‚СЊ РІРѕРґСЏРЅРѕР№ Р·РЅР°Рє:</strong>
                     </td>
                     <td valign="top">
-                        <input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Да
-                        <input name="watermark" type="radio" value="0" <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Нет
+                        <input name="watermark" type="radio" value="1" <?php if (@$cfg['watermark']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                        <input name="watermark" type="radio" value="0" <?php if (@!$cfg['watermark']) { echo 'checked="checked"'; } ?>/> РќРµС‚
                     </td>
                 </tr>
                 <tr>
                     <td valign="top">
-                        <strong>Комментарии для объявлений:</strong>
+                        <strong>РљРѕРјРјРµРЅС‚Р°СЂРёРё РґР»СЏ РѕР±СЉСЏРІР»РµРЅРёР№:</strong>
                     </td>
                     <td valign="top">
-                        <input name="comments" type="radio" value="1" <?php if (@$cfg['comments']) { echo 'checked="checked"'; } ?>/> Да
-                        <input name="comments" type="radio" value="0" <?php if (@!$cfg['comments']) { echo 'checked="checked"'; } ?>/> Нет
+                        <input name="comments" type="radio" value="1" <?php if (@$cfg['comments']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                        <input name="comments" type="radio" value="0" <?php if (@!$cfg['comments']) { echo 'checked="checked"'; } ?>/> РќРµС‚
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Количество объявлений на главной странице компонента: </strong></td>
-                    <td width="250"><input name="home_perpage" type="text" id="home_perpage" size="5" value="<?php echo @$cfg['home_perpage'];?>"/> шт</td>
+                    <td><strong>РљРѕР»РёС‡РµСЃС‚РІРѕ РѕР±СЉСЏРІР»РµРЅРёР№ РЅР° РіР»Р°РІРЅРѕР№ СЃС‚СЂР°РЅРёС†Рµ РєРѕРјРїРѕРЅРµРЅС‚Р°: </strong></td>
+                    <td width="250"><input name="home_perpage" type="text" id="home_perpage" size="5" value="<?php echo @$cfg['home_perpage'];?>"/> С€С‚</td>
                 </tr>
                 <tr>
-                    <td><strong>Число колонок для вывода объявлений на главной странице компонента: </strong></td>
-                    <td width="250"><input name="maxcols_on_home" type="text" id="maxcols_on_home" size="5" value="<?php echo @$cfg['maxcols_on_home'];?>"/> шт</td>
+                    <td><strong>Р§РёСЃР»Рѕ РєРѕР»РѕРЅРѕРє РґР»СЏ РІС‹РІРѕРґР° РѕР±СЉСЏРІР»РµРЅРёР№ РЅР° РіР»Р°РІРЅРѕР№ СЃС‚СЂР°РЅРёС†Рµ РєРѕРјРїРѕРЅРµРЅС‚Р°: </strong></td>
+                    <td width="250"><input name="maxcols_on_home" type="text" id="maxcols_on_home" size="5" value="<?php echo @$cfg['maxcols_on_home'];?>"/> С€С‚</td>
                 </tr>
                 <tr>
-                    <td><strong>Количество колонок для вывода списка рубрик: </strong></td>
-                    <td width="250"><input name="maxcols" type="text" id="maxcols" size="5" value="<?php echo @$cfg['maxcols'];?>"/> шт</td>
+                    <td><strong>РљРѕР»РёС‡РµСЃС‚РІРѕ РєРѕР»РѕРЅРѕРє РґР»СЏ РІС‹РІРѕРґР° СЃРїРёСЃРєР° СЂСѓР±СЂРёРє: </strong></td>
+                    <td width="250"><input name="maxcols" type="text" id="maxcols" size="5" value="<?php echo @$cfg['maxcols'];?>"/> С€С‚</td>
                 </tr>
                 <tr>
-                    <td><strong>Включить автоссылки:</strong></td>
+                    <td><strong>Р’РєР»СЋС‡РёС‚СЊ Р°РІС‚РѕСЃСЃС‹Р»РєРё:</strong></td>
                     <td width="250">
-                        <input name="auto_link" type="radio" value="1" <?php if (@$cfg['auto_link']) { echo 'checked="checked"'; } ?>/> Да
-                        <input name="auto_link" type="radio" value="0" <?php if (@!$cfg['auto_link']) { echo 'checked="checked"'; } ?>/> Нет
+                        <input name="auto_link" type="radio" value="1" <?php if (@$cfg['auto_link']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                        <input name="auto_link" type="radio" value="0" <?php if (@!$cfg['auto_link']) { echo 'checked="checked"'; } ?>/> РќРµС‚
                     </td>
                 </tr>
             </table>
@@ -370,56 +370,56 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             <table width="600" border="0" cellpadding="0" cellspacing="10" class="proptable" style="border:none">
                 <tr>
                     <td width="250">
-                        <strong>Добавление объявлений: </strong><br/>
-                        <span class="hinttext">Дополнительно зависит от настроек<br/>прав группы пользователя</span>
+                        <strong>Р”РѕР±Р°РІР»РµРЅРёРµ РѕР±СЉСЏРІР»РµРЅРёР№: </strong><br/>
+                        <span class="hinttext">Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ Р·Р°РІРёСЃРёС‚ РѕС‚ РЅР°СЃС‚СЂРѕРµРє<br/>РїСЂР°РІ РіСЂСѓРїРїС‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ</span>
                     </td>
                     <td valign="top">
                         <select name="public" id="public" style="width:260px">
-                                <option value="0" <?php if(@$cfg['public']=='0') { echo 'selected'; } ?>>Запрещено</option>
-                                <option value="1" <?php if(@$cfg['public']=='1') { echo 'selected'; } ?>>Разрешено с премодерацией</option>
-                                <option value="2" <?php if(@$cfg['public']=='2') { echo 'selected'; } ?>>Разрешено без модерации</option>
+                                <option value="0" <?php if(@$cfg['public']=='0') { echo 'selected'; } ?>>Р—Р°РїСЂРµС‰РµРЅРѕ</option>
+                                <option value="1" <?php if(@$cfg['public']=='1') { echo 'selected'; } ?>>Р Р°Р·СЂРµС€РµРЅРѕ СЃ РїСЂРµРјРѕРґРµСЂР°С†РёРµР№</option>
+                                <option value="2" <?php if(@$cfg['public']=='2') { echo 'selected'; } ?>>Р Р°Р·СЂРµС€РµРЅРѕ Р±РµР· РјРѕРґРµСЂР°С†РёРё</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td width="250">
-                        <strong>Модерация объявлений после редактирования: </strong><br/>
+                        <strong>РњРѕРґРµСЂР°С†РёСЏ РѕР±СЉСЏРІР»РµРЅРёР№ РїРѕСЃР»Рµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ: </strong><br/>
                     </td>
                     <td valign="top">
                         <select name="publish_after_edit" id="publish_after_edit" style="width:260px">
-                                <option value="0" <?php if(@$cfg['publish_after_edit']=='0') { echo 'selected'; } ?>>по умолчанию</option>
-                                <option value="1" <?php if(@$cfg['publish_after_edit']=='1') { echo 'selected'; } ?>>без модерации</option>
+                                <option value="0" <?php if(@$cfg['publish_after_edit']=='0') { echo 'selected'; } ?>>РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</option>
+                                <option value="1" <?php if(@$cfg['publish_after_edit']=='1') { echo 'selected'; } ?>>Р±РµР· РјРѕРґРµСЂР°С†РёРё</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
-                    <td valign="top"><strong>Срок публикации объявлений:</strong></td>
+                    <td valign="top"><strong>РЎСЂРѕРє РїСѓР±Р»РёРєР°С†РёРё РѕР±СЉСЏРІР»РµРЅРёР№:</strong></td>
                     <td valign="top">
-                        <div><input name="srok" type="radio" value="1" <?php if (@$cfg['srok']) { echo 'checked="checked"'; } ?>/>Разрешить выбор</div>
-                        <div><input name="srok" type="radio" value="0" <?php if (@!$cfg['srok']) { echo 'checked="checked"'; } ?>/>Фиксированный: <input name="pubdays" type="text" id="pubdays" size="3" value="<?php echo @$cfg['pubdays'];?>"/> дней</div>
+                        <div><input name="srok" type="radio" value="1" <?php if (@$cfg['srok']) { echo 'checked="checked"'; } ?>/>Р Р°Р·СЂРµС€РёС‚СЊ РІС‹Р±РѕСЂ</div>
+                        <div><input name="srok" type="radio" value="0" <?php if (@!$cfg['srok']) { echo 'checked="checked"'; } ?>/>Р¤РёРєСЃРёСЂРѕРІР°РЅРЅС‹Р№: <input name="pubdays" type="text" id="pubdays" size="3" value="<?php echo @$cfg['pubdays'];?>"/> РґРЅРµР№</div>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <strong>Просроченные объявления: </strong><br/>
-                        <span class="hinttext">Выберите действие</span>
+                        <strong>РџСЂРѕСЃСЂРѕС‡РµРЅРЅС‹Рµ РѕР±СЉСЏРІР»РµРЅРёСЏ: </strong><br/>
+                        <span class="hinttext">Р’С‹Р±РµСЂРёС‚Рµ РґРµР№СЃС‚РІРёРµ</span>
                     </td>
                     <td valign="top">
                         <select name="aftertime" id="aftertime" style="width:260px">
-                                <option value="delete" <?php if(@$cfg['aftertime']=='delete') { echo 'selected'; } ?>>Удалять</option>
-                                <option value="hide" <?php if(@$cfg['aftertime']=='hide') { echo 'selected'; } ?>>Скрывать</option>
-                                <option value="" <?php if(@$cfg['aftertime']=='') { echo 'selected'; } ?>>Ничего не делать</option>
+                                <option value="delete" <?php if(@$cfg['aftertime']=='delete') { echo 'selected'; } ?>>РЈРґР°Р»СЏС‚СЊ</option>
+                                <option value="hide" <?php if(@$cfg['aftertime']=='hide') { echo 'selected'; } ?>>РЎРєСЂС‹РІР°С‚СЊ</option>
+                                <option value="" <?php if(@$cfg['aftertime']=='') { echo 'selected'; } ?>>РќРёС‡РµРіРѕ РЅРµ РґРµР»Р°С‚СЊ</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <strong>Разрешать пользователям продлевать сроки показа объявлений: </strong><br/>
-                        <span class="hinttext">Работает, если выбрана опция "скрывать" для просроченных объявлений.</span>
+                        <strong>Р Р°Р·СЂРµС€Р°С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј РїСЂРѕРґР»РµРІР°С‚СЊ СЃСЂРѕРєРё РїРѕРєР°Р·Р° РѕР±СЉСЏРІР»РµРЅРёР№: </strong><br/>
+                        <span class="hinttext">Р Р°Р±РѕС‚Р°РµС‚, РµСЃР»Рё РІС‹Р±СЂР°РЅР° РѕРїС†РёСЏ "СЃРєСЂС‹РІР°С‚СЊ" РґР»СЏ РїСЂРѕСЃСЂРѕС‡РµРЅРЅС‹С… РѕР±СЉСЏРІР»РµРЅРёР№.</span>
                     </td>
                     <td valign="top">
-                        <input name="extend" type="radio" value="1" <?php if (@$cfg['extend']) { echo 'checked="checked"'; } ?>/> Да
-                        <input name="extend" type="radio" value="0" <?php if (@!$cfg['extend']) { echo 'checked="checked"'; } ?>/> Нет
+                        <input name="extend" type="radio" value="1" <?php if (@$cfg['extend']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                        <input name="extend" type="radio" value="0" <?php if (@!$cfg['extend']) { echo 'checked="checked"'; } ?>/> РќРµС‚
                     </td>
                 </tr>
             </table>
@@ -429,9 +429,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             <table width="600" border="0" cellpadding="0" cellspacing="10" class="proptable" style="border:none">
                 <tr>
                     <td width="250" valign="top">
-                        <div><strong>Типы объявлений:</strong></div>
-                        <div class="hinttext">Каждый тип с новой строки</div>
-                        <div class="hinttext">Вы можете задать разные типы<br/>в настройках каждой рубрики</div>
+                        <div><strong>РўРёРїС‹ РѕР±СЉСЏРІР»РµРЅРёР№:</strong></div>
+                        <div class="hinttext">РљР°Р¶РґС‹Р№ С‚РёРї СЃ РЅРѕРІРѕР№ СЃС‚СЂРѕРєРё</div>
+                        <div class="hinttext">Р’С‹ РјРѕР¶РµС‚Рµ Р·Р°РґР°С‚СЊ СЂР°Р·РЅС‹Рµ С‚РёРїС‹<br/>РІ РЅР°СЃС‚СЂРѕР№РєР°С… РєР°Р¶РґРѕР№ СЂСѓР±СЂРёРєРё</div>
                     </td>
                     <td valign="top">
                         <textarea name="obtypes" style="width:250px" rows="10"><?php echo @$cfg['obtypes'];?></textarea>
@@ -443,44 +443,44 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         <div id="vip">
             <?php if (!IS_BILLING){ ?>
                 <p>
-                    Для поддержки VIP-объявлений необходим компонент &laquo;<a href="http://www.instantcms.ru/billing/about.html">Биллинг пользователей</a>&raquo;
+                    Р”Р»СЏ РїРѕРґРґРµСЂР¶РєРё VIP-РѕР±СЉСЏРІР»РµРЅРёР№ РЅРµРѕР±С…РѕРґРёРј РєРѕРјРїРѕРЅРµРЅС‚ &laquo;<a href="http://www.instantcms.ru/billing/about.html">Р‘РёР»Р»РёРЅРі РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</a>&raquo;
                 </p>
                 <p>
-                    Пользователи смогут покупать VIP-статусы для своих объявлений.<br/>
-                    VIP-объявления выделяются цветом, всегда выводятся в начале списка <br/>
-                    и могут быть выведены на главную в отдельном модуле &laquo;VIP-Объявления&raquo;
+                    РџРѕР»СЊР·РѕРІР°С‚РµР»Рё СЃРјРѕРіСѓС‚ РїРѕРєСѓРїР°С‚СЊ VIP-СЃС‚Р°С‚СѓСЃС‹ РґР»СЏ СЃРІРѕРёС… РѕР±СЉСЏРІР»РµРЅРёР№.<br/>
+                    VIP-РѕР±СЉСЏРІР»РµРЅРёСЏ РІС‹РґРµР»СЏСЋС‚СЃСЏ С†РІРµС‚РѕРј, РІСЃРµРіРґР° РІС‹РІРѕРґСЏС‚СЃСЏ РІ РЅР°С‡Р°Р»Рµ СЃРїРёСЃРєР° <br/>
+                    Рё РјРѕРіСѓС‚ Р±С‹С‚СЊ РІС‹РІРµРґРµРЅС‹ РЅР° РіР»Р°РІРЅСѓСЋ РІ РѕС‚РґРµР»СЊРЅРѕРј РјРѕРґСѓР»Рµ &laquo;VIP-РћР±СЉСЏРІР»РµРЅРёСЏ&raquo;
                 </p>
                 <p>
-                    Без компонента &laquo;<a href="http://www.instantcms.ru/billing/about.html">Биллинг пользователей</a>&raquo; VIP-статусы для объявлений<br/>
-                    может устанавливать только администратор, при создании или редактировании <br/>
-                    любого объявления на сайте.
+                    Р‘РµР· РєРѕРјРїРѕРЅРµРЅС‚Р° &laquo;<a href="http://www.instantcms.ru/billing/about.html">Р‘РёР»Р»РёРЅРі РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</a>&raquo; VIP-СЃС‚Р°С‚СѓСЃС‹ РґР»СЏ РѕР±СЉСЏРІР»РµРЅРёР№<br/>
+                    РјРѕР¶РµС‚ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊ С‚РѕР»СЊРєРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ, РїСЂРё СЃРѕР·РґР°РЅРёРё РёР»Рё СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРё <br/>
+                    Р»СЋР±РѕРіРѕ РѕР±СЉСЏРІР»РµРЅРёСЏ РЅР° СЃР°Р№С‚Рµ.
                 </p>
             <?php } else { ?>
                 <table width="550" border="0" cellpadding="0" cellspacing="10" class="proptable" style="border:none">
                     <tr>
-                        <td><strong>Разрешить VIP-объявления:</strong></td>
+                        <td><strong>Р Р°Р·СЂРµС€РёС‚СЊ VIP-РѕР±СЉСЏРІР»РµРЅРёСЏ:</strong></td>
                         <td width="250">
-                            <input name="vip_enabled" type="radio" value="1" <?php if (@$cfg['vip_enabled']) { echo 'checked="checked"'; } ?>/> Да
-                            <input name="vip_enabled" type="radio" value="0" <?php if (@!$cfg['vip_enabled']) { echo 'checked="checked"'; } ?>/> Нет
+                            <input name="vip_enabled" type="radio" value="1" <?php if (@$cfg['vip_enabled']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                            <input name="vip_enabled" type="radio" value="0" <?php if (@!$cfg['vip_enabled']) { echo 'checked="checked"'; } ?>/> РќРµС‚
                         </td>
                     </tr>
                     <tr>
-                        <td><strong>Разрешить продлевать VIP-статус:</strong></td>
+                        <td><strong>Р Р°Р·СЂРµС€РёС‚СЊ РїСЂРѕРґР»РµРІР°С‚СЊ VIP-СЃС‚Р°С‚СѓСЃ:</strong></td>
                         <td width="250">
-                            <input name="vip_prolong" type="radio" value="1" <?php if (@$cfg['vip_prolong']) { echo 'checked="checked"'; } ?>/> Да
-                            <input name="vip_prolong" type="radio" value="0" <?php if (@!$cfg['vip_prolong']) { echo 'checked="checked"'; } ?>/> Нет
+                            <input name="vip_prolong" type="radio" value="1" <?php if (@$cfg['vip_prolong']) { echo 'checked="checked"'; } ?>/> Р”Р°
+                            <input name="vip_prolong" type="radio" value="0" <?php if (@!$cfg['vip_prolong']) { echo 'checked="checked"'; } ?>/> РќРµС‚
                         </td>
                     </tr>
                     <tr>
-                        <td><strong>Максимальный срок VIP-статуса: </strong></td>
+                        <td><strong>РњР°РєСЃРёРјР°Р»СЊРЅС‹Р№ СЃСЂРѕРє VIP-СЃС‚Р°С‚СѓСЃР°: </strong></td>
                         <td width="250">
-                            <input name="vip_max_days" type="text" id="vip_max_days" size="5" value="<?php echo @$cfg['vip_max_days'];?>"/> дней
+                            <input name="vip_max_days" type="text" id="vip_max_days" size="5" value="<?php echo @$cfg['vip_max_days'];?>"/> РґРЅРµР№
                         </td>
                     </tr>
                     <tr>
-                        <td><strong>Стоимость VIP-статуса: </strong></td>
+                        <td><strong>РЎС‚РѕРёРјРѕСЃС‚СЊ VIP-СЃС‚Р°С‚СѓСЃР°: </strong></td>
                         <td width="250">
-                            <input name="vip_day_cost" type="text" id="vip_day_cost" size="5" value="<?php echo @$cfg['vip_day_cost'];?>"/> баллов за 1 день
+                            <input name="vip_day_cost" type="text" id="vip_day_cost" size="5" value="<?php echo @$cfg['vip_day_cost'];?>"/> Р±Р°Р»Р»РѕРІ Р·Р° 1 РґРµРЅСЊ
                         </td>
                     </tr>
                 </table>
@@ -492,8 +492,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
     <p>
         <input name="opt" type="hidden" id="do" value="saveconfig" />
-        <input name="save" type="submit" id="save" value="Сохранить" />
-        <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+        <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+        <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components';"/>
     </p>
 </form>
 
@@ -519,7 +519,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	}
 	
 	if ($opt == 'submit_cat'){	
-		$title = $inCore->request('title', 'str', 'рубрика без названия');
+		$title = $inCore->request('title', 'str', 'СЂСѓР±СЂРёРєР° Р±РµР· РЅР°Р·РІР°РЅРёСЏ');
 		$description = $inCore->request('description', 'str');
 		$published   = $inCore->request('published', 'int');
 		$showdate    = $inCore->request('showdate', 'int');
@@ -606,7 +606,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 				$mod['icon'] = $mod['icon'] == 'folder_grey.png' ? '' : $mod['icon'];
 			 }
 
-			$title = $inCore->request('title', 'str', 'рубрика без названия');
+			$title = $inCore->request('title', 'str', 'СЂСѓР±СЂРёРєР° Р±РµР· РЅР°Р·РІР°РЅРёСЏ');
 			$description = $inCore->request('description', 'str');
 			$published   = $inCore->request('published', 'int');
 			$showdate    = $inCore->request('showdate', 'int');
@@ -658,29 +658,29 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	}
 	
 	if ($opt == 'list_cats'){
-		cpAddPathway('Рубрики', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats');
-		echo '<h3>Рубрики</h3>';
+		cpAddPathway('Р СѓР±СЂРёРєРё', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_cats');
+		echo '<h3>Р СѓР±СЂРёРєРё</h3>';
 
 		//TABLE COLUMNS
 		$fields = array();
 
 		$fields[0]['title'] = 'Lt';			$fields[0]['field'] = 'NSLeft';			$fields[0]['width'] = '30';
 		
-		$fields[1]['title'] = 'Название';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
+		$fields[1]['title'] = 'РќР°Р·РІР°РЅРёРµ';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
 		$fields[1]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_cat&item_id=%id%';
 
-		$fields[2]['title'] = 'Показ';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
-		$fields[2]['do'] = 'opt'; $fields[2]['do_suffix'] = '_cat'; //Чтобы вместо 'do=hide&id=1' было 'opt=hide_cat&item_id=1'
+		$fields[2]['title'] = 'РџРѕРєР°Р·';		$fields[2]['field'] = 'published';	$fields[2]['width'] = '100';
+		$fields[2]['do'] = 'opt'; $fields[2]['do_suffix'] = '_cat'; //Р§С‚РѕР±С‹ РІРјРµСЃС‚Рѕ 'do=hide&id=1' Р±С‹Р»Рѕ 'opt=hide_cat&item_id=1'
 
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Редактировать';
+		$actions[0]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[0]['icon']  = 'edit.gif';
 		$actions[0]['link']  = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_cat&item_id=%id%';
 
-		$actions[1]['title'] = 'Удалить';
+		$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[1]['icon']  = 'delete.gif';
-		$actions[1]['confirm'] = 'Вместе с рубрикой будут удалены все объявления. Удалить рубрику?';
+		$actions[1]['confirm'] = 'Р’РјРµСЃС‚Рµ СЃ СЂСѓР±СЂРёРєРѕР№ Р±СѓРґСѓС‚ СѓРґР°Р»РµРЅС‹ РІСЃРµ РѕР±СЉСЏРІР»РµРЅРёСЏ. РЈРґР°Р»РёС‚СЊ СЂСѓР±СЂРёРєСѓ?';
 		$actions[1]['link']  = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=delete_cat&item_id=%id%';
 				
 		//Print table
@@ -688,42 +688,42 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	}
 
 	if ($opt == 'list_items'){
-		cpAddPathway('Объявления', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items');
-		echo '<h3>Объявления</h3>';
+		cpAddPathway('РћР±СЉСЏРІР»РµРЅРёСЏ', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items');
+		echo '<h3>РћР±СЉСЏРІР»РµРЅРёСЏ</h3>';
 		
 		//TABLE COLUMNS
 		$fields = array();
 
 		$fields[0]['title'] = 'id';			$fields[0]['field'] = 'id';			$fields[0]['width'] = '30';
 
-		$fields[1]['title'] = 'Дата';		$fields[1]['field'] = 'pubdate';		$fields[1]['width'] = '80';		$fields[1]['filter'] = 15;
+		$fields[1]['title'] = 'Р”Р°С‚Р°';		$fields[1]['field'] = 'pubdate';		$fields[1]['width'] = '80';		$fields[1]['filter'] = 15;
 		$fields[1]['fdate'] = '%d/%m/%Y';
 
-		$fields[2]['title'] = 'Тип';		$fields[2]['field'] = 'obtype';		$fields[2]['width'] = '80';		$fields[2]['filter'] = 15;
+		$fields[2]['title'] = 'РўРёРї';		$fields[2]['field'] = 'obtype';		$fields[2]['width'] = '80';		$fields[2]['filter'] = 15;
 
-		$fields[3]['title'] = 'Заголовок';	$fields[3]['field'] = 'title';		$fields[3]['width'] = '';
+		$fields[3]['title'] = 'Р—Р°РіРѕР»РѕРІРѕРє';	$fields[3]['field'] = 'title';		$fields[3]['width'] = '';
 		$fields[3]['filter'] = 15;
 		$fields[3]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
 
-		$fields[4]['title'] = 'Показ';		$fields[4]['field'] = 'published';	$fields[4]['width'] = '50';
+		$fields[4]['title'] = 'РџРѕРєР°Р·';		$fields[4]['field'] = 'published';	$fields[4]['width'] = '50';
 		$fields[4]['do'] = 'opt'; $fields[4]['do_suffix'] = '_item';
 
-		$fields[5]['title'] = 'Просмотров';	$fields[5]['field'] = 'hits';		$fields[5]['width'] = '80';
+		$fields[5]['title'] = 'РџСЂРѕСЃРјРѕС‚СЂРѕРІ';	$fields[5]['field'] = 'hits';		$fields[5]['width'] = '80';
 
 		$fields[6]['title'] = 'IP';	$fields[6]['field'] = 'ip';		$fields[6]['width'] = '80'; $fields[6]['prc'] = 'long2ip';
 
-		$fields[7]['title'] = 'Рубрика';		$fields[7]['field'] = 'category_id';	$fields[7]['width'] = '230';
+		$fields[7]['title'] = 'Р СѓР±СЂРёРєР°';		$fields[7]['field'] = 'category_id';	$fields[7]['width'] = '230';
 		$fields[7]['prc'] = 'cpBoardCatById';  $fields[7]['filter'] = 1;  $fields[7]['filterlist'] = cpGetList('cms_board_cats');
 	
 		//ACTIONS
 		$actions = array();
-		$actions[0]['title'] = 'Редактировать';
+		$actions[0]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 		$actions[0]['icon']  = 'edit.gif';
 		$actions[0]['link']  = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
 
-		$actions[1]['title'] = 'Удалить';
+		$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 		$actions[1]['icon']  = 'delete.gif';
-		$actions[1]['confirm'] = 'Удалить объявление?';
+		$actions[1]['confirm'] = 'РЈРґР°Р»РёС‚СЊ РѕР±СЉСЏРІР»РµРЅРёРµ?';
 		$actions[1]['link']  = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=delete_item&item_id=%id%';
 				
 		//Print table
@@ -732,8 +732,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	
 	if ($opt == 'add_cat' || $opt == 'edit_cat'){
 		if ($opt=='add_cat'){
-			cpAddPathway('Добавить рубрику', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_cat');
-			 echo '<h3>Добавить рубрику</h3>';
+			cpAddPathway('Р”РѕР±Р°РІРёС‚СЊ СЂСѓР±СЂРёРєСѓ', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=add_cat');
+			 echo '<h3>Р”РѕР±Р°РІРёС‚СЊ СЂСѓР±СЂРёРєСѓ</h3>';
 		} else {
 			 if(isset($_REQUEST['item_id'])){
 				 $id = (int)$_REQUEST['item_id'];
@@ -745,8 +745,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 				 }
 			 }
 			
-			 echo '<h3>Редактировать рубрику</h3>';
-			 cpAddPathway('Редактировать рубрику '.$mod['title'], '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_cat&item_id='.(int)$_REQUEST['item_id']);
+			 echo '<h3>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ СЂСѓР±СЂРёРєСѓ</h3>';
+			 cpAddPathway('Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ СЂСѓР±СЂРёРєСѓ '.$mod['title'], '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_cat&item_id='.(int)$_REQUEST['item_id']);
 			   }
 
 		//DEFAULT VALUES
@@ -767,16 +767,16 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		<form id="addform" name="addform" enctype="multipart/form-data" method="post" action="index.php?view=components&amp;do=config&amp;id=<?php echo (int)$_REQUEST['id'];?>">
 			<table width="610" border="0" cellpadding="0" cellspacing="10" class="proptable">
 			  <tr>
-				<td><strong>Название рубрики: </strong></td>
+				<td><strong>РќР°Р·РІР°РЅРёРµ СЂСѓР±СЂРёРєРё: </strong></td>
 				<td width="250"><input name="title" type="text" id="title" style="width:250px" value="<?php echo htmlspecialchars($mod['title']);?>"/></td>
 			  </tr>
 			  <tr>
-                <td valign="top"><strong>Родительская рубрика:</strong></td>
+                <td valign="top"><strong>Р РѕРґРёС‚РµР»СЊСЃРєР°СЏ СЂСѓР±СЂРёРєР°:</strong></td>
 			    <td valign="top"><select name="parent_id" id="parent_id" style="width:250px">
                     <?php  //FIND BOARD ROOT
                         $rootid = $inDB->get_field('cms_board_cats', 'parent_id=0', 'id');
                     ?>
-                    <option value="<?php echo $rootid?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- Корневая рубрика --</option>
+                    <option value="<?php echo $rootid?>" <?php if (@$mod['parent_id']==$rootid || !isset($mod['parent_id'])) { echo 'selected'; }?>>-- РљРѕСЂРЅРµРІР°СЏ СЂСѓР±СЂРёРєР° --</option>
                     <?php
                         if (isset($mod['parent_id'])){
                             echo $inCore->getListItemsNS('cms_board_cats', $mod['parent_id']);
@@ -787,18 +787,18 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                 </select></td>
 		      </tr>
                 <tr>
-                    <td><strong>Иконка рубрики:</strong><br/>
-                        <span class="hinttext">файл размером 32px и менее вставляется оригиналом</span></td>
+                    <td><strong>РРєРѕРЅРєР° СЂСѓР±СЂРёРєРё:</strong><br/>
+                        <span class="hinttext">С„Р°Р№Р» СЂР°Р·РјРµСЂРѕРј 32px Рё РјРµРЅРµРµ РІСЃС‚Р°РІР»СЏРµС‚СЃСЏ РѕСЂРёРіРёРЅР°Р»РѕРј</span></td>
                     <td valign="middle"> <?php if (@$mod['icon']) { ?><img src="/upload/board/cat_icons/<?php echo @$mod['icon'];?>" border="0" /><?php } ?> 
                         <input name="Filedata" type="file" style="width:215px; margin:0 0 0 5px; vertical-align:top" />
                     </td>
                 </tr>
 			  <tr>
-				<td><strong>Привязать форму</strong><br/>
-                    <span class="hinttext">Поля формы будут присутствовать в объявлениях данной рубрики</span></td>
+				<td><strong>РџСЂРёРІСЏР·Р°С‚СЊ С„РѕСЂРјСѓ</strong><br/>
+                    <span class="hinttext">РџРѕР»СЏ С„РѕСЂРјС‹ Р±СѓРґСѓС‚ РїСЂРёСЃСѓС‚СЃС‚РІРѕРІР°С‚СЊ РІ РѕР±СЉСЏРІР»РµРЅРёСЏС… РґР°РЅРЅРѕР№ СЂСѓР±СЂРёРєРё</span></td>
 				<td>
                     <select name="form_id" style="width:250px">
-                    	<option value="" <?php if (@!$mod['form_id']) { echo 'selected'; }?>>-- не привязывать --</option>
+                    	<option value="" <?php if (@!$mod['form_id']) { echo 'selected'; }?>>-- РЅРµ РїСЂРёРІСЏР·С‹РІР°С‚СЊ --</option>
                         <?php
                         $sql = "SELECT id, title FROM cms_forms";
                         $rs = dbQuery($sql);
@@ -815,97 +815,97 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                 </td>
 			  </tr>
 			  <tr>
-				<td><strong>Публиковать рубрику?</strong></td>
+				<td><strong>РџСѓР±Р»РёРєРѕРІР°С‚СЊ СЂСѓР±СЂРёРєСѓ?</strong></td>
 				<td><input name="published" type="radio" value="1" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> />
-				  Да
+				  Р”Р°
 				  <label>
 			  <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> />
-					Нет</label></td>
+					РќРµС‚</label></td>
 			  </tr>
 			  <tr>
-				<td><strong>Показывать даты? </strong></td>
+				<td><strong>РџРѕРєР°Р·С‹РІР°С‚СЊ РґР°С‚С‹? </strong></td>
 				<td><input name="showdate" type="radio" value="1" checked="checked" <?php if (@$mod['showdate']) { echo 'checked="checked"'; } ?> />
-					Да
+					Р”Р°
 				  <label>
 				  <input name="showdate" type="radio" value="0"  <?php if (@!$mod['showdate']) { echo 'checked="checked"'; } ?> />
-					Нет</label></td>
+					РќРµС‚</label></td>
 			  </tr>
 			  <tr>
-			    <td><strong>Сортировать объвления: </strong></td>
+			    <td><strong>РЎРѕСЂС‚РёСЂРѕРІР°С‚СЊ РѕР±СЉРІР»РµРЅРёСЏ: </strong></td>
 			    <td><select name="orderby" id="orderby" style="width:250px">
-                  <option value="title" <?php if(@$mod['orderby']=='title') { echo 'selected'; } ?>>По алфавиту</option>
-                  <option value="pubdate" <?php if(@$mod['orderby']=='pubdate') { echo 'selected'; } ?>>По дате</option>
-                  <option value="hits" <?php if(@$mod['orderby']=='hits') { echo 'selected'; } ?>>По просмотрам</option>
-                  <option value="obtype" <?php if(@$mod['orderby']=='obtype') { echo 'selected'; } ?>>По типу</option>
-                  <option value="user_id" <?php if(@$mod['orderby']=='user_id') { echo 'selected'; } ?>>По автору</option>
+                  <option value="title" <?php if(@$mod['orderby']=='title') { echo 'selected'; } ?>>РџРѕ Р°Р»С„Р°РІРёС‚Сѓ</option>
+                  <option value="pubdate" <?php if(@$mod['orderby']=='pubdate') { echo 'selected'; } ?>>РџРѕ РґР°С‚Рµ</option>
+                  <option value="hits" <?php if(@$mod['orderby']=='hits') { echo 'selected'; } ?>>РџРѕ РїСЂРѕСЃРјРѕС‚СЂР°Рј</option>
+                  <option value="obtype" <?php if(@$mod['orderby']=='obtype') { echo 'selected'; } ?>>РџРѕ С‚РёРїСѓ</option>
+                  <option value="user_id" <?php if(@$mod['orderby']=='user_id') { echo 'selected'; } ?>>РџРѕ Р°РІС‚РѕСЂСѓ</option>
                 </select>
                   <select name="orderto" id="orderto" style="width:250px">
-                    <option value="desc" <?php if(@$mod['orderto']=='desc') { echo 'selected'; } ?>>по убыванию</option>
-                    <option value="asc" <?php if(@$mod['orderto']=='asc') { echo 'selected'; } ?>>по возрастанию</option>
+                    <option value="desc" <?php if(@$mod['orderto']=='desc') { echo 'selected'; } ?>>РїРѕ СѓР±С‹РІР°РЅРёСЋ</option>
+                    <option value="asc" <?php if(@$mod['orderto']=='asc') { echo 'selected'; } ?>>РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ</option>
                   </select></td>
 		      </tr>
 			  <tr>
-                <td><strong>Форма сортировки: </strong></td>
+                <td><strong>Р¤РѕСЂРјР° СЃРѕСЂС‚РёСЂРѕРІРєРё: </strong></td>
 			    <td><input name="orderform" type="radio" value="1" checked="checked" <?php if (@$mod['orderform']) { echo 'checked="checked"'; } ?> />
-			      Показать
+			      РџРѕРєР°Р·Р°С‚СЊ
 			      <label>
       <input name="orderform" type="radio" value="0"  <?php if (@!$mod['orderform']) { echo 'checked="checked"'; } ?> />
-			        Скрыть </label></td>
+			        РЎРєСЂС‹С‚СЊ </label></td>
 		      </tr>
 			  <tr>
-			    <td><strong>Число колонок для вывода:</strong></td>
+			    <td><strong>Р§РёСЃР»Рѕ РєРѕР»РѕРЅРѕРє РґР»СЏ РІС‹РІРѕРґР°:</strong></td>
 			    <td><input name="maxcols" type="text" id="maxcols" size="5" value="<?php echo @$mod['maxcols'];?>"/>
-шт</td>
+С€С‚</td>
 		      </tr>
 			  <tr>
-			    <td><strong>Добавление объявлений пользователями: </strong></td>
+			    <td><strong>Р”РѕР±Р°РІР»РµРЅРёРµ РѕР±СЉСЏРІР»РµРЅРёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРјРё: </strong></td>
 			    <td><select name="public" id="select" style="width:250px">
-					  <option value="0" <?php if(@$mod['public']=='0') { echo 'selected'; } ?>>Запрещено</option>
-					  <option value="1" <?php if(@$mod['public']=='1') { echo 'selected'; } ?>>Разрешено с премодерацией</option>
-					  <option value="2" <?php if(@$mod['public']=='2') { echo 'selected'; } ?>>Разрешено без модерации</option>
-					  <option value="-1" <?php if(@$mod['public']=='-1') { echo 'selected'; } ?>>По-умолчанию</option>
+					  <option value="0" <?php if(@$mod['public']=='0') { echo 'selected'; } ?>>Р—Р°РїСЂРµС‰РµРЅРѕ</option>
+					  <option value="1" <?php if(@$mod['public']=='1') { echo 'selected'; } ?>>Р Р°Р·СЂРµС€РµРЅРѕ СЃ РїСЂРµРјРѕРґРµСЂР°С†РёРµР№</option>
+					  <option value="2" <?php if(@$mod['public']=='2') { echo 'selected'; } ?>>Р Р°Р·СЂРµС€РµРЅРѕ Р±РµР· РјРѕРґРµСЂР°С†РёРё</option>
+					  <option value="-1" <?php if(@$mod['public']=='-1') { echo 'selected'; } ?>>РџРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ</option>
                   </select></td>
 		      </tr>
 			  <tr>
-			    <td><strong>Максимум объявлений </strong> <br />
-		        <span class="hinttext">От одного пользователя в сутки, 0 неограничено</span></td>
+			    <td><strong>РњР°РєСЃРёРјСѓРј РѕР±СЉСЏРІР»РµРЅРёР№ </strong> <br />
+		        <span class="hinttext">РћС‚ РѕРґРЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РІ СЃСѓС‚РєРё, 0 РЅРµРѕРіСЂР°РЅРёС‡РµРЅРѕ</span></td>
 			    <td><input name="uplimit" type="text" id="uplimit" size="5" value="<?php echo @$mod['uplimit'];?>"/>
-шт</td>
+С€С‚</td>
 		      </tr>
 			  <tr>
-			    <td><strong>Объявлений на странице: </strong></td>
+			    <td><strong>РћР±СЉСЏРІР»РµРЅРёР№ РЅР° СЃС‚СЂР°РЅРёС†Рµ: </strong></td>
 			    <td><input name="perpage" type="text" id="perpage" size="5" value="<?php echo @$mod['perpage'];?>"/>
-		        шт</td>
+		        С€С‚</td>
 		      </tr>
 			  <tr>
-                <td><p><strong>Фотографии в объявлениях: </strong></p>                </td>
+                <td><p><strong>Р¤РѕС‚РѕРіСЂР°С„РёРё РІ РѕР±СЉСЏРІР»РµРЅРёСЏС…: </strong></p>                </td>
 			    <td><input name="is_photos" type="radio" value="1" checked="checked" <?php if (@$mod['is_photos']) { echo 'checked="checked"'; } ?> />
-			      Да
+			      Р”Р°
 			        <label>
       <input name="is_photos" type="radio" value="0"  <?php if (@!$mod['is_photos']) { echo 'checked="checked"'; } ?> />
-			        Нет </label></td>
+			        РќРµС‚ </label></td>
 		      </tr>
 			  <tr>
-			    <td><strong>Ширина маленькой копии фото: </strong><br/><span class="hinttext">В пикселях</span></td>
+			    <td><strong>РЁРёСЂРёРЅР° РјР°Р»РµРЅСЊРєРѕР№ РєРѕРїРёРё С„РѕС‚Рѕ: </strong><br/><span class="hinttext">Р’ РїРёРєСЃРµР»СЏС…</span></td>
 			    <td><table border="0" cellspacing="0" cellpadding="1">
                   <tr>
                     <td width="60" valign="middle"><input name="thumb1" type="text" id="thumb1" size="5" value="<?php echo @$mod['thumb1'];?>"/></td>
-                    <td width="100" align="center" valign="middle" style="background-color:#EBEBEB">Квадратные:</td>
-                    <td width="115" align="center" valign="middle" style="background-color:#EBEBEB"><input name="thumbsqr" type="radio" value="1" checked="checked" <?php if (@$mod['thumbsqr']) { echo 'checked="checked"'; } ?> />Да  
+                    <td width="100" align="center" valign="middle" style="background-color:#EBEBEB">РљРІР°РґСЂР°С‚РЅС‹Рµ:</td>
+                    <td width="115" align="center" valign="middle" style="background-color:#EBEBEB"><input name="thumbsqr" type="radio" value="1" checked="checked" <?php if (@$mod['thumbsqr']) { echo 'checked="checked"'; } ?> />Р”Р°  
                       <label>  
-					<input name="thumbsqr" type="radio" value="0"  <?php if (@!$mod['thumbsqr']) { echo 'checked="checked"'; } ?> />Нет</label></td>
+					<input name="thumbsqr" type="radio" value="0"  <?php if (@!$mod['thumbsqr']) { echo 'checked="checked"'; } ?> />РќРµС‚</label></td>
                   </tr>
                 </table></td>
 		      </tr>
 			  <tr>
-			    <td><strong>Ширина средней копии фото: </strong><br/><span class="hinttext">В пикселях</span></td>
+			    <td><strong>РЁРёСЂРёРЅР° СЃСЂРµРґРЅРµР№ РєРѕРїРёРё С„РѕС‚Рѕ: </strong><br/><span class="hinttext">Р’ РїРёРєСЃРµР»СЏС…</span></td>
 			    <td><input name="thumb2" type="text" id="thumb2" size="5" value="<?php echo @$mod['thumb2'];?>"/></td>
 		      </tr
               ><tr>
                     <td valign="top">
-                        <div><strong>Типы объявлений:</strong></div>
-                        <div class="hinttext">Каждый тип с новой строки</div>
-                        <div class="hinttext">Если не указаны, будут браться из родительской категории</div>
+                        <div><strong>РўРёРїС‹ РѕР±СЉСЏРІР»РµРЅРёР№:</strong></div>
+                        <div class="hinttext">РљР°Р¶РґС‹Р№ С‚РёРї СЃ РЅРѕРІРѕР№ СЃС‚СЂРѕРєРё</div>
+                        <div class="hinttext">Р•СЃР»Рё РЅРµ СѓРєР°Р·Р°РЅС‹, Р±СѓРґСѓС‚ Р±СЂР°С‚СЊСЃСЏ РёР· СЂРѕРґРёС‚РµР»СЊСЃРєРѕР№ РєР°С‚РµРіРѕСЂРёРё</div>
                     </td>
                     <td valign="top">
                         <textarea name="obtypes" style="width:220px" rows="6"><?php echo @$mod['obtypes'];?></textarea>
@@ -914,17 +914,17 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		  </table>
 			<table width="100%" border="0">
 			  <tr>
-			  	<h3>Описание рубрики</h3>
+			  	<h3>РћРїРёСЃР°РЅРёРµ СЂСѓР±СЂРёРєРё</h3>
 				<textarea name="description" style="width:580px" rows="4"><?php echo @$mod['description']?></textarea>
 			  </tr>
 			</table>
 			<p>
 			  <input name="opt" type="hidden" id="opt" <?php if ($opt=='add_cat') { echo 'value="submit_cat"'; } else { echo 'value="update_cat"'; } ?> />
 			  <label>
-			  <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_cat') { echo 'value="Создать категорию"'; } else { echo 'value="Сохранить категорию"'; } ?> />
+			  <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_cat') { echo 'value="РЎРѕР·РґР°С‚СЊ РєР°С‚РµРіРѕСЂРёСЋ"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ РєР°С‚РµРіРѕСЂРёСЋ"'; } ?> />
 			  </label>
 			  <label>
-			  <input name="back2" type="button" id="back2" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+			  <input name="back2" type="button" id="back2" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components';"/>
 			  </label>
 			  <?php
 				if ($opt=='edit_cat'){
@@ -939,13 +939,13 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if ($opt == 'add_item' || $opt == 'edit_item'){	
 			
 		if ($opt=='add_item'){
-			 echo '<h3>Добавить объявление</h3>';
+			 echo '<h3>Р”РѕР±Р°РІРёС‚СЊ РѕР±СЉСЏРІР»РµРЅРёРµ</h3>';
 		} else {
 					if(isset($_REQUEST['multiple'])){				 
 						if (isset($_REQUEST['item'])){					
 							$_SESSION['editlist'] = $_REQUEST['item'];
 						} else {
-							echo '<p class="error">Нет выбранных объектов!</p>';
+							echo '<p class="error">РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ!</p>';
 							return;
 						}				 
 					 }
@@ -955,7 +955,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					 if (isset($_SESSION['editlist'])){
 						$id = array_shift($_SESSION['editlist']);
 						if (sizeof($_SESSION['editlist'])==0) { unset($_SESSION['editlist']); } else 
-						{ $ostatok = '(На очереди: '.sizeof($_SESSION['editlist']).')'; }
+						{ $ostatok = '(РќР° РѕС‡РµСЂРµРґРё: '.sizeof($_SESSION['editlist']).')'; }
 					 } else { $id = (int)$_REQUEST['item_id']; }
 		
 		
@@ -966,7 +966,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 					 }
 
 					 echo '<h3>'.$mod['title'].' '.$ostatok.'</h3>';
-					 cpAddPathway('Объявления', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items');
+					 cpAddPathway('РћР±СЉСЏРІР»РµРЅРёСЏ', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items');
 					 cpAddPathway($mod['title'], '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_item&item_id='.$id);		
 						
 					 $mod['title'] = str_replace($mod['obtype'].' ', '', $mod['title']); 
@@ -986,7 +986,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 		<form action="index.php?view=components&amp;do=config&amp;id=<?php echo (int)$_REQUEST['id'];?>" method="post" enctype="multipart/form-data" name="addform" id="addform">
 				<table width="600" border="0" cellspacing="5" class="proptable">
 				  <tr>
-					<td width="177"><strong>Заголовок объявления: </strong></td>
+					<td width="177"><strong>Р—Р°РіРѕР»РѕРІРѕРє РѕР±СЉСЏРІР»РµРЅРёСЏ: </strong></td>
 					<td width="311">
 					  <select name="obtype" id="obtype" style="width:120px">
 					  	<?php echo $model->getTypesOptions($mod['obtype']); ?>
@@ -994,7 +994,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 				    <input name="title" type="text" id="title" size="30" value="<?php echo htmlspecialchars($mod['title']);?>"/></td>
 				  </tr>
 				  <tr>
-                    <td valign="top"><strong>Рубрика:</strong></td>
+                    <td valign="top"><strong>Р СѓР±СЂРёРєР°:</strong></td>
 				    <td valign="top"><select name="category_id" size="8" id="category_id" style="width:330px">
                       <?php  //FIND BOARD ROOT
 			$rootid = $inDB->get_field('cms_board_cats', 'parent_id=0', 'id');
@@ -1008,7 +1008,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                     </select></td>
 			      </tr>
 				  <tr>
-				    <td><strong>Город:</strong></td>
+				    <td><strong>Р“РѕСЂРѕРґ:</strong></td>
 				    <td><input name="city" type="text" id="city" size="30" value="<?php echo htmlspecialchars($mod['city']);?>"/></td>
 			      </tr>
 					<?php if ($do=='add_item'){ ?>
@@ -1017,7 +1017,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 				<table width="600" border="0" cellspacing="5" class="proptable">
 				  <tr>
 				  	<td>
-						<strong>Полный текст объявления:</strong>
+						<strong>РџРѕР»РЅС‹Р№ С‚РµРєСЃС‚ РѕР±СЉСЏРІР»РµРЅРёСЏ:</strong>
 					</td>
 				  </tr>
 				  <tr>
@@ -1035,25 +1035,25 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 				<table width="600" border="0" cellspacing="5" class="proptable">
                   <?php if ($opt=='add_item') { ?>
 				  <tr>
-                    <td width="177"><strong>Файл фотографии: </strong></td>
+                    <td width="177"><strong>Р¤Р°Р№Р» С„РѕС‚РѕРіСЂР°С„РёРё: </strong></td>
                     <td width="311"><?php if (@$mod['file']) { 
 							echo '<div><img src="/images/photos/small/'.$mod['file'].'" border="1" /></div>';
-							echo '<div><a href="/images/photos/'.$mod['file'].'" title="Посмотреть фото">'.$mod['file'].'</a></div>'; 
+							echo '<div><a href="/images/photos/'.$mod['file'].'" title="РџРѕСЃРјРѕС‚СЂРµС‚СЊ С„РѕС‚Рѕ">'.$mod['file'].'</a></div>'; 
 						} else { ?>
                         <input name="picture" type="file" id="picture" size="30" />
                         <?php } ?></td>
                   </tr>
 				  <?php } ?>
                   <tr>
-                    <td><strong>Публиковать объявление?</strong></td>
+                    <td><strong>РџСѓР±Р»РёРєРѕРІР°С‚СЊ РѕР±СЉСЏРІР»РµРЅРёРµ?</strong></td>
                     <td><input name="published" type="radio" value="1" checked="checked" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> />
-                      Да
+                      Р”Р°
                       <label>
         <input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> />
-                        Нет</label></td>
+                        РќРµС‚</label></td>
                   </tr>
                   <tr>
-                    <td valign="top"><strong>Дата публикации: </strong></td>
+                    <td valign="top"><strong>Р”Р°С‚Р° РїСѓР±Р»РёРєР°С†РёРё: </strong></td>
                     <td valign="top"><input name="pubdate" type="text" id="pubdate" <?php if(@!$mod['pubdate']) { echo 'value="'.date('Y-m-d').'"'; } else { echo 'value="'.$mod['pubdate'].'"'; } ?>/>
                         <?php 
 					//include javascript
@@ -1071,15 +1071,15 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                     </td>
                   </tr>
                   <tr>
-                    <td><strong>Срок публикации: </strong></td>
+                    <td><strong>РЎСЂРѕРє РїСѓР±Р»РёРєР°С†РёРё: </strong></td>
                     <td><input name="pubdays" type="text" id="pubdays" size="5" value="<?php echo @$mod['pubdays'];?>"/>
-                      дней</td>
+                      РґРЅРµР№</td>
                   </tr>
 
                 </table>
 				<p>
-				  <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_item') { echo 'value="Создать"'; } else { echo 'value="Сохранить"'; } ?> />
-				  <input name="back3" type="button" id="back3" value="Отмена" onclick="window.location.href='index.php?view=components';"/>
+				  <input name="add_mod" type="submit" id="add_mod" <?php if ($opt=='add_item') { echo 'value="РЎРѕР·РґР°С‚СЊ"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ"'; } ?> />
+				  <input name="back3" type="button" id="back3" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components';"/>
 				  <input name="opt" type="hidden" id="opt" <?php if ($opt=='add_item') { echo 'value="submit_item"'; } else { echo 'value="update_item"'; } ?> />
 				  <?php
 					if ($opt=='edit_item'){
