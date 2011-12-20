@@ -66,10 +66,8 @@ function mod_bestcontent($module_id){
 
 			while($con = $inDB->fetch_assoc($result)){
 				$next = sizeof($articles);
-				$text = strip_tags($con['title']);							
-				if (mb_strlen($text)>70) { $text = mb_substr($text, 0, 70). '...'; }
 							
-				$articles[$next]['title'] = $text;
+				$articles[$next]['title'] = strip_tags($con['title']);
 				$articles[$next]['href'] = $model->getArticleURL($cfg['menuid'], $con['seolink']);
 				$articles[$next]['karma'] = cmsKarmaFormat($con['points']);
 				$articles[$next]['date'] = cmsCore::dateFormat($con['fpubdate']);

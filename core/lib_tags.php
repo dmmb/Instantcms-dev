@@ -19,7 +19,7 @@ function cmsInsertTags($tagstr, $target, $item_id){
 	$inDB->query("DELETE FROM cms_tags WHERE target='$target' AND item_id = '$item_id'");
 
 	$tagstr = mb_strtolower($tagstr);
-	$tagstr = preg_replace('/[^a-zA-Zа-яёіїєґА-ЯЁІЇЄҐ0-9\s\-\,_]/i', '', $tagstr);
+	$tagstr = preg_replace('/[^a-zA-Zа-яёіїєґА-ЯЁІЇЄҐ0-9\s\-\,_]/ui', '', $tagstr);
 	$tagstr = trim($tagstr);
 	$tagstr = preg_replace('/\s+/', ' ', $tagstr);
 	$tagstr = str_replace(', ', ',', $tagstr);

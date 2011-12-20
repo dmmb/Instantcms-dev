@@ -174,7 +174,7 @@ function smarty_function_html_select_date($params, &$smarty)
         }
     }
 
-    $field_order = strtoupper($field_order);
+    $field_order = mb_strtoupper($field_order);
 
     $html_result = $month_result = $day_result = $year_result = "";
 
@@ -303,7 +303,7 @@ function smarty_function_html_select_date($params, &$smarty)
 
     // Loop thru the field_order field
     for ($i = 0; $i <= 2; $i++){
-        $c = substr($field_order, $i, 1);
+        $c = mb_substr($field_order, $i, 1);
         switch ($c){
             case 'D':
                 $html_result .= $day_result;

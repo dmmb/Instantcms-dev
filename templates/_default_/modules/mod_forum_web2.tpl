@@ -17,7 +17,7 @@
         {if $cfg.showtext neq 0}
         <tr>
             <td>&nbsp;</td>
-            <td colspan="2"><div class="mod_fweb2_shorttext">{$thread.msg}</div></td>
+            <td colspan="2"><div class="mod_fweb2_shorttext">{$thread.msg|truncate:70}</div></td>
         </tr>
         {/if}
 

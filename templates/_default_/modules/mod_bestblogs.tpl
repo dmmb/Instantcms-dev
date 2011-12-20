@@ -5,7 +5,7 @@
 		<td valign="top">
 			<div>
 				<a class="mod_blog_userlink" href="{$post.bloghref}">{$post.blog}</a> &rarr; 
-				<a class="mod_blog_link" href="{$post.href}">{$post.title}</a> ({$post.date})
+				<a class="mod_blog_link" href="{$post.href}">{$post.title|truncate:60}</a> ({$post.date})
 			</div>
 		</td>
 	</tr>

@@ -36,7 +36,7 @@ function getAlphaList($cat_id){
     if ($inDB->num_rows($result)){
         $html .= '<div class="uc_alpha_list">';
         while($a = $inDB->fetch_assoc($result)){
-			if(preg_match('/^([a-zA-Zа-яёіїєґА-ЯЁІЇЄҐ0-9]+)$/i', $a['first_letter'])){
+			if(preg_match('/^([a-zA-Zа-яёіїєґА-ЯЁІЇЄҐ0-9]+)$/ui', $a['first_letter'])){
             	$html .= '<a class="uc_alpha_link" href="/catalog/'.$cat_id.'/find-first/'.urlencode($a['first_letter']).'" title="'.$_LANG['ARTICLES'].': '.$a['num'].'">'.$a['first_letter'].'</a>';
 			}
         }

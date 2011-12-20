@@ -27,10 +27,11 @@ function smarty_function_math($params, &$smarty)
         return;
     }
 
-    $equation = $params['equation'];
+    // strip out backticks, not necessary for math
+    $equation = str_replace('`','',$params['equation']);
 
     // make sure parenthesis are balanced
-    if (substr_count($equation,"(") != substr_count($equation,")")) {
+    if (mb_substr_count($equation,"(") != mb_substr_count($equation,")")) {
         $smarty->trigger_error("math: unbalanced parenthesis");
         return;
     }
@@ -50,7 +51,7 @@ function smarty_function_math($params, &$smarty)
     foreach($params as $key => $val) {
         if ($key != "equation" && $key != "format" && $key != "assign") {
             // make sure value is not empty
-            if (strlen($val)==0) {
+            if (mb_strlen($val)==0) {
                 $smarty->trigger_error("math: parameter $key is empty");
                 return;
             }

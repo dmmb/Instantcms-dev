@@ -413,7 +413,7 @@ function cpModulePositions($template){
 
 function cpAddParam($query, $param, $value){
 	$new_query = '';
-	parse_str($query, $params);
+	mb_parse_str($query, $params);
 	$l = 0; $added= false;
 	foreach($params as $key => $val){
 		$l ++;

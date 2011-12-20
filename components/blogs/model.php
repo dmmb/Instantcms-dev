@@ -234,7 +234,7 @@ class cms_model_blogs{
 
     public function getPostShort($post_content, $post_url = false, $is_after = false){
 
-        $regex      = '/\[(cut=)\s*(.*?)\]/i';
+        $regex      = '/\[(cut=)\s*(.*?)\]/ui';
         $matches    = array();
         preg_match_all( $regex, $post_content, $matches, PREG_SET_ORDER );
 
@@ -244,7 +244,7 @@ class cms_model_blogs{
             $elm[0]     = str_replace('[', '', $elm[0]);
             $elm[0]     = str_replace(']', '', $elm[0]);
 
-            parse_str( $elm[0], $args );
+            mb_parse_str( $elm[0], $args );
 
             $cut_title  = $args['cut'];
 
@@ -269,7 +269,7 @@ class cms_model_blogs{
 
     public function getPostCut($post_content){
 
-        $regex      = '/\[(cut=)\s*(.*?)\]/i';
+        $regex      = '/\[(cut=)\s*(.*?)\]/ui';
         $matches    = array();
         preg_match_all( $regex, $post_content, $matches, PREG_SET_ORDER );
 
@@ -279,7 +279,7 @@ class cms_model_blogs{
             $elm[0]     = str_replace('[', '', $elm[0]);
             $elm[0]     = str_replace(']', '', $elm[0]);
 
-            parse_str( $elm[0], $args );
+            mb_parse_str( $elm[0], $args );
 			
 			$cut .= '[cut='.$args['cut'].'...]';
 

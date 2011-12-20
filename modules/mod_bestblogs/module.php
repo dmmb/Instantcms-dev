@@ -66,10 +66,7 @@ function mod_bestblogs($module_id){
                     $con['blog'] = $inDB->get_field('cms_clubs', 'id='.$con['uid'], 'title');
                 }
 
-				$text = strip_tags($con['title']);							
-				if (mb_strlen($text)>70) { $text = mb_substr($text, 0, 70). '...'; }				
-
-				$posts[$next]['title'] = $text;
+				$posts[$next]['title'] = strip_tags($con['title']);
                 $posts[$next]['href'] = $model->getPostURL(null, $con['bloglink'], $con['seolink']);
 
                 if ($con['owner']=='user' && $con['ownertype']=='single' && $cfg['namemode']=='user'){

@@ -40,11 +40,11 @@ function smarty_modifier_date_format($string, $format = '%b %e, %Y', $default_da
     if (DIRECTORY_SEPARATOR == '\\') {
         $_win_from = array('%D',       '%h', '%n', '%r',          '%R',    '%t', '%T');
         $_win_to   = array('%m/%d/%y', '%b', "\n", '%I:%M:%S %p', '%H:%M', "\t", '%H:%M:%S');
-        if (strpos($format, '%e') !== false) {
+        if (mb_strpos($format, '%e') !== false) {
             $_win_from[] = '%e';
             $_win_to[]   = sprintf('%\' 2d', date('j', $timestamp));
         }
-        if (strpos($format, '%l') !== false) {
+        if (mb_strpos($format, '%l') !== false) {
             $_win_from[] = '%l';
             $_win_to[]   = sprintf('%\' 2d', date('h', $timestamp));
         }

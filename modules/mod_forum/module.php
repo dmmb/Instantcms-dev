@@ -90,7 +90,6 @@ function mod_forum($module_id){
 
 			if ($cfg['showtype'] == 'web2'){
 				$t['msg'] = strip_tags($inCore->parseSmiles($lastmessage['msg'], true));
-				if (mb_strlen($t['msg'])>70) { $t['msg'] = mb_substr($t['msg'], 0, 70).'...'; }
 			}
 
 			if ($t['postsnum']==1) {

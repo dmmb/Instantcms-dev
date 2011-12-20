@@ -88,7 +88,7 @@ function smarty_function_html_image($params, &$smarty)
         return;
     }
 
-    if (substr($file,0,1) == '/') {
+    if (mb_substr($file,0,1) == '/') {
         $_image_path = $basedir . $file;
     } else {
         $_image_path = $file;
@@ -124,7 +124,7 @@ function smarty_function_html_image($params, &$smarty)
     }
 
     if(isset($params['dpi'])) {
-        if(strstr($server_vars['HTTP_USER_AGENT'], 'Mac')) {
+        if(mb_strstr($server_vars['HTTP_USER_AGENT'], 'Mac')) {
             $dpi_default = 72;
         } else {
             $dpi_default = 96;

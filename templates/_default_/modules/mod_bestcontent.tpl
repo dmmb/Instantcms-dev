@@ -4,7 +4,7 @@
 		<td class="mod_blog_karma" valign="top">{$article.karma}</td>
 		<td valign="top">
 			<div>
-				<a class="mod_bcon_content" style="font-size:16px" href="{$article.href}">{$article.title}</a> &mdash; 
+				<a class="mod_bcon_content" style="font-size:16px" href="{$article.href}">{$article.title|truncate:60}</a> &mdash; 
 				<span class="mod_bcon_date">{$article.date}</span> (<a class="mod_bcon_author" href="{$article.authorhref}">{$article.author}</a>)
 			</div>
 		{if $cfg.showdesc neq 0}
