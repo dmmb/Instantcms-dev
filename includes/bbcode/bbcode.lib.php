@@ -2,8 +2,9 @@
 
 /******************************************************************************
  *                                                                            *
- *   bbcode.lib.php, v 0.08 2006/07/27 - Handling of a BBCode                 *
+ *   bbcode.lib.php, v 0.1 2011/12/21 - Handling of a BBCode                  *
  *   Copyright (C) 2006  Dmitriy Skorobogatov  dima@pc.uz                     *
+ *                 2011  InstantCMS Team, (www.instantsoft.ru)                *
  *                                                                            *
  *   This program is free software; you can redistribute it and/or modify     *
  *   it under the terms of the GNU General Public License as published by     *
@@ -35,7 +36,7 @@ class bbcode {
                      дерева элементов.
         'children' - список тегов, которым разрешено быть вложенными в данный.
     */
-    var $info_about_tags = array(
+    private $info_about_tags = array(
             'align' => array(
                     'handler' => 'align_2html',
                     'is_close' => false,
@@ -236,7 +237,7 @@ class bbcode {
                 ),
         );
     // При инициализации объекта положим сюда синтаксический разбор ббкода
-    var $syntax = array();
+    private $syntax = array();
 
 	private $smiles_img = array();
     /*
@@ -253,14 +254,16 @@ class bbcode {
     7 - последовательность прочих символов, не являющаяся именем тега
     8 - имя тега
     */
-    function get_array_of_tokens($code) {
-        $length = mb_strlen($code);
-        $tokens = array();
+    private function get_array_of_tokens($code) {
+
+        $length    = mb_strlen($code);
+        $tokens    = array();
         $token_key = -1;
         $type_of_char = null;
+
         for ( $i=0; $i<$length; ++$i ) {
             $previous_type = $type_of_char;
-            switch ( $code{$i} ) {
+            switch (mb_substr($code, $i, 1)) {
                 case '[':
                     $type_of_char = 0;
                     break;
@@ -309,16 +312,16 @@ class bbcode {
             switch ( $type_of_char ) {
                 case 6:
                     if ( 6 == $previous_type ) {
-                        $tokens[$token_key][1] .= $code{$i};
-                    } else { $tokens[++$token_key] = array( 6, $code{$i} ); }
+                        $tokens[$token_key][1] .= mb_substr($code, $i, 1);
+                    } else { $tokens[++$token_key] = array( 6, mb_substr($code, $i, 1) ); }
                     break;
                 case 7:
                     if ( 7 == $previous_type ) {
-                        $tokens[$token_key][1] .= $code{$i};
-                    } else { $tokens[++$token_key] = array( 7, $code{$i} ); }
+                        $tokens[$token_key][1] .= mb_substr($code, $i, 1);
+                    } else { $tokens[++$token_key] = array( 7, mb_substr($code, $i, 1) ); }
                     break;
                 default:
-                    $tokens[++$token_key] = array( $type_of_char, $code{$i} );
+                    $tokens[++$token_key] = array( $type_of_char, mb_substr($code, $i, 1) );
             }
         }
         return $tokens;
@@ -378,7 +381,7 @@ class bbcode {
         ...
     )
     */
-    function bbcode($code) {
+    public function __construct($code) {
         /*
         Используем метод конечных автоматов
         Список возможных состояний автомата:
@@ -447,7 +450,7 @@ class bbcode {
                 , 20 => array(  2 ,  6 ,  3 ,  3 ,  3 ,  9 ,  3 , 15 , 15 )
             );
         // Получаем массив лексем:
-        $array_of_tokens = $this -> get_array_of_tokens($code);
+        $array_of_tokens = $this->get_array_of_tokens($code);
         // Сканируем его с помощью построенного автомата:
         $mode = 0;
         $result = array();
@@ -561,7 +564,7 @@ class bbcode {
                     $tag_decomposition['layout'][] = array( 4, $token[1] );
                     break;
                 case 15:
-                    $name = mb_strtolower($token[1]);
+                    $name = $token[1];
                     $tag_decomposition['str'] .= $token[1];
                     $tag_decomposition['layout'][] = array( 6, $token[1] );
                     $tag_decomposition['attrib'][$name] = '';
@@ -607,10 +610,10 @@ class bbcode {
                     );
             }
         }
-        $this -> syntax = $result;
+        $this->syntax = $result;
     }
     // Функция возвращает нормализует и возвращает дерево элементов
-    function get_tree_of_elems() {
+    private function get_tree_of_elems() {
         /* Первый этап нормализации: превращаем $this -> syntax в правильную
            скобочную структуру */
         $structure = array();
@@ -618,7 +621,8 @@ class bbcode {
         $structure_key = -1;
         $level = 0;
         $open_tags = array();
-        foreach ( $this -> syntax as $syntax_key => $val ) {
+
+        foreach ( $this->syntax as $syntax_key => $val ) {
             unset($val['layout']);
             switch ( $val['type'] ) {
                 case 'text':
@@ -671,7 +675,7 @@ class bbcode {
                     }
                     break;
                 case 'close':
-                    if ( ! count($open_tags) ) {
+                    if ( !count($open_tags) ) {
                         $type = (-1 < $structure_key)
                             ? $structure[$structure_key]['type'] : false;
                         if ( 'text' == $type ) {
@@ -685,7 +689,7 @@ class bbcode {
                         }
                         break;
                     }
-                    if ( ! $val['name'] ) {
+                    if ( !$val['name'] ) {
                         end($open_tags);
                         list($ult_key, $ultimate) = each($open_tags);
                         $val['name'] = $ultimate;
@@ -694,7 +698,7 @@ class bbcode {
                         unset($open_tags[$ult_key]);
                         break;
                     }
-                    if ( ! in_array($val['name'],$open_tags) ) {
+                    if ( !in_array($val['name'],$open_tags) ) {
                         $type = (-1 < $structure_key)
                             ? $structure[$structure_key]['type'] : false;
                         if ( 'text' == $type ) {
@@ -898,11 +902,11 @@ class bbcode {
      */
     public static function autoLink($text){
 
-		$text = preg_replace('/\s+/', ' ', $text);
+		$text = preg_replace('/\s+/u', ' ', $text);
         $search = array(
-                "/((?:http|https|ftp):\/\/[^<\s]+[^<.,:;?!\"»'\"+\-])([.,:;?!\"»'\"+\-]*(?:<br ?\/?>)*\s|$)/si",
-                "/(^|[^\/])(www\.[^<\s]+[^<.,:;?!\"»'\"+\-])([.,:;?!\"»'\"+\-]*(?:<br ?\/?>)*\s|$)/si",
-                "'([^\w\d-\.]|^)([\w\d-\.]+@[\w\d-\.]+\.[\w]+[^.,;\s<\"\'\)]+)'si"
+                "/((?:http|https|ftp):\/\/[^<\s]+[^<.,:;?!\"»'\"+\-])([.,:;?!\"»'\"+\-]*(?:<br ?\/?>)*\s|$)/usi",
+                "/(^|[^\/])(www\.[^<\s]+[^<.,:;?!\"»'\"+\-])([.,:;?!\"»'\"+\-]*(?:<br ?\/?>)*\s|$)/usi",
+                "'([^\w\d-\.]|^)([\w\d-\.]+@[\w\d-\.]+\.[\w]+[^.,;\s<\"\'\)]+)'usi"
             );
         $replace = array(
                 '<a href="/go/url=$1" target="_blank">$1</a>$2',
@@ -917,8 +921,8 @@ class bbcode {
     Функция мнемонизирует HTML-код, вставляет в текст разрывы <br /> и
     "автоматические ссылки".
     */
-    function insert_smiles($text) {
-        $text = nl2br(htmlspecialchars($text,ENT_NOQUOTES));
+    public function insert_smiles($text) {
+        $text = nl2br(htmlspecialchars($text));
 		$text = self::autoLink($text);
         return $text;
     }
@@ -985,7 +989,7 @@ class bbcode {
 		return $smiles;
 	}
     // Функция конвертит дерево элементов BBCode в HTML и возвращает результат
-    function get_html($tree_of_elems=false) {
+    public function get_html($tree_of_elems=false) {
         if (! is_array($tree_of_elems)) {
             $tree_of_elems = $this -> get_tree_of_elems();
         }
@@ -998,7 +1002,7 @@ class bbcode {
                 for ($i=0; $i<$rbr; ++$i) {
                     $elem['str'] = ltrim($elem['str']);
                     if ('<br />' == mb_substr($elem['str'], 0, 6)) {
-                        $elem['str'] = substr_replace($elem['str'], '', 0, 6);
+                        $elem['str'] = cmsCore::substr_replace($elem['str'], '', 0, 6);
                     }
                 }
                 $result .= $elem['str'];
@@ -1008,7 +1012,7 @@ class bbcode {
                 for ($i=0; $i<$lbr; ++$i) {
                     $result = rtrim($result);
                     if ('<br />' == mb_substr($result, -6)) {
-                        $result = substr_replace($result, '', -6, 6);
+                        $result = cmsCore::substr_replace($result, '', -6, 6);
                     }
                 }
                 $func_name = $this -> info_about_tags[$elem['name']]['handler'];
@@ -1062,8 +1066,8 @@ class bbcode {
             
             if ('item'==$item['type']) { continue; }
 
-            $iframe_regexp      = '/<iframe.*?src=(?!"http:\/\/www\.youtube\.com\/embed\/|"http:\/\/vkontakte\.ru\/video_ext\.php\?).*?><\/iframe>/i';
-            $iframe_regexp2     = '/<iframe.*>.+<\/iframe>/i';
+            $iframe_regexp      = '/<iframe.*?src=(?!"http:\/\/www\.youtube\.com\/embed\/|"http:\/\/vkontakte\.ru\/video_ext\.php\?).*?><\/iframe>/iu';
+            $iframe_regexp2     = '/<iframe.*>.+<\/iframe>/iu';
             $item['str']        = preg_replace($iframe_regexp, '', $item['str']);
             $item['str']        = preg_replace($iframe_regexp2, '', $item['str']);
 
@@ -1082,7 +1086,7 @@ class bbcode {
                      <param name="loadingcolor" value="#FFFFFF" />
                      <param name="buttoncolor" value="#000000" />
                      <param name="slidercolor" value="#333333" />
-                     <param name="FlashVars" value="mp3='.htmlspecialchars($this->get_html($elem['val'])).'" />
+                     <param name="FlashVars" value="mp3='.htmlspecialchars($elem['val'][0]['str']).'" />
                 </object>';
         $str .= '</div>';
         return $str;
@@ -1178,7 +1182,7 @@ class bbcode {
 		$hegiht = '';
 		$zoom = false;
 					
-		if (!strstr($src, 'http://')){				
+		if (!mb_strstr($src, 'http://')){				
 			if(file_exists(PATH.$src)){
 				if (function_exists('getimagesize')){
 					$size = getimagesize(PATH.$src);
@@ -1253,14 +1257,14 @@ class bbcode {
         );
         $is_http = false;
         foreach ($protocols as $val) {
-            if ($val==substr($href,0,strlen($val))) {
+            if ($val==mb_substr($href,0,mb_strlen($val))) {
                 $is_http = true;
                 break;
             }
         }
         if (! $is_http) { $href = 'http://'.$href; }
         if ($href) {
-            if (preg_match('/^http:\/\/'.$_SERVER['HTTP_HOST'].'/', $href) || substr($href,0,1)=='/'){
+            if (preg_match('/^http:\/\/'.$_SERVER['HTTP_HOST'].'/u', $href) || mb_substr($href,0,1)=='/'){
                 $url = $href;
                 $local = true;
             } else {

@@ -52,7 +52,7 @@ function smarty_core_process_cached_inserts($params, &$smarty)
             $replace = '';
         }
 
-        $params['results'] = substr_replace($params['results'], $replace, strpos($params['results'], $cached_inserts[$i]), strlen($cached_inserts[$i]));
+        $params['results'] = cmsCore::substr_replace($params['results'], $replace, strpos($params['results'], $cached_inserts[$i]), strlen($cached_inserts[$i]));
         if ($smarty->debugging) {
             $_params = array();
             require_once(SMARTY_CORE_DIR . 'core.get_microtime.php');

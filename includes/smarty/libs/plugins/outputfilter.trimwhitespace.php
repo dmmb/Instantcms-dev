@@ -66,7 +66,7 @@ function smarty_outputfilter_trimwhitespace_replace($search_str, $replace, &$sub
     $_pos = 0;
     for ($_i=0, $_count=count($replace); $_i<$_count; $_i++)
         if (($_pos=mb_strpos($subject, $search_str, $_pos))!==false)
-            $subject = substr_replace($subject, $replace[$_i], $_pos, $_len);
+            $subject = cmsCore::substr_replace($subject, $replace[$_i], $_pos, $_len);
         else
             break;
 

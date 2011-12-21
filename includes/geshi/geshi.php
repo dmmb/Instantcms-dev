@@ -3593,7 +3593,7 @@ class GeSHi {
                     $symbol_hl .= $symbol_match . '|>';
                 }
 
-                $stuff_to_parse = substr_replace($stuff_to_parse, $symbol_hl, $symbol_offset + $global_offset, $symbol_length);
+                $stuff_to_parse = cmsCore::substr_replace($stuff_to_parse, $symbol_hl, $symbol_offset + $global_offset, $symbol_length);
 
                 // since we replace old text with something of different size,
                 // we'll have to keep track of the differences

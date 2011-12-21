@@ -198,7 +198,7 @@ class IXR_Message
         // first remove the XML declaration
         // merged from WP #10698 - this method avoids the RAM usage of preg_replace on very large messages
         $header = preg_replace( '/<\?xml.*?\?'.'>/', '', substr($this->message, 0, 100), 1);
-        $this->message = substr_replace($this->message, $header, 0, 100);
+        $this->message = cmsCore::substr_replace($this->message, $header, 0, 100);
         if (trim($this->message) == '') {
             return false;
         }

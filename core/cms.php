@@ -497,7 +497,7 @@ class cmsCore {
                     ($nextfile != '..') &&
                     is_dir($dir.'/'.$nextfile) &&
                     ($nextfile!='.svn') &&
-                    (substr($nextfile, 0, 2)=='p_')
+                    (mb_substr($nextfile, 0, 2)=='p_')
                ) {
                 $plugins[$nextfile] = $nextfile;
             }
@@ -1530,7 +1530,7 @@ class cmsCore {
 
         $folder = rtrim($uri, '/');
 
-        if (mb_strstr($uri, "?") && !preg_match('/^admin\/(.*)/i', $uri) && !mb_strstr($uri, 'go/url=')){
+        if (mb_strstr($uri, "?") && !preg_match('/^admin\/(.*)/ui', $uri) && !mb_strstr($uri, 'go/url=')){
             $query_str = mb_substr($uri, mb_strpos($uri, "?")+1);
             $uri = mb_substr($uri, 0, mb_strpos($uri, "?"));
             mb_parse_str($query_str, $_REQUEST);
@@ -1732,15 +1732,12 @@ class cmsCore {
 		 * Критерий "включенности" компонента определяется в функции loadComponentConfig
 		 */
         //проверяем что в названии только буквы и цифры
-        if (!preg_match("/^([a-z0-9])+$/", $component)){ cmsCore::error404(); }
+        if (!preg_match("/^([a-z0-9])+$/u", $component)){ self::error404(); }
         
         $this->loadLanguage('components/'.$component);
 
         //проверяем наличие компонента
-        if(!file_exists('components/'.$component.'/frontend.php')){
-            $inPage->page_body = '<p>Компонент не найден!</p>';
-            return false;
-        }
+        if(!file_exists('components/'.$component.'/frontend.php')){ self::error404(); }
 
         //парсим адрес и заполняем массив $_REQUEST (временное решение)
         if(!$this->parseComponentRoute()) { self::error404(); }
@@ -1772,15 +1769,13 @@ class cmsCore {
         header("HTTP/1.1 404 Not Found");
         header("Status: 404 Not Found");
 
-        $inConf = cmsConfig::getInstance();
         $inPage = cmsPage::getInstance();
-        $inCore = self::getInstance();
 
         if (!$inPage->includeTemplateFile('special/error404.php')){
             echo '<h1>404</h1>';
         }
         
-        $inCore->halt();
+        self::halt();
 
     }
 
@@ -1862,7 +1857,7 @@ class cmsCore {
             switch($type){
                 case 'int':   return (int)$_REQUEST[$var]; break;
                 case 'str':   if ($_REQUEST[$var]) { return $this->strClear($_REQUEST[$var]); } else { return $default; } break;
-                case 'email': if(preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/i", $_REQUEST[$var])){ return $_REQUEST[$var]; } else { return $default; } break;
+                case 'email': if(preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/ui", $_REQUEST[$var])){ return $_REQUEST[$var]; } else { return $default; } break;
                 case 'html':  if ($_REQUEST[$var]) { return $this->strClear($_REQUEST[$var], false); } else { return $default; } break;
                 case 'array': if (is_array($_REQUEST[$var])) { return $_REQUEST[$var]; } else { return $default; } break;
                 case 'array_int': if (is_array($_REQUEST[$var])) { foreach($_REQUEST[$var] as $k=>$i){ $arr[$k] = (int)$i; } return $arr; } else { return $default; } break;
@@ -1874,21 +1869,21 @@ class cmsCore {
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public function redirectBack(){
+    public static function redirectBack(){
         header('Location:'.$_SERVER['HTTP_REFERER']);
-        $this->halt();
+        self::halt();
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public function redirect($url, $code='303'){
+    public static function redirect($url, $code='303'){
         if ($code == '301'){
             header('HTTP/1.1 301 Moved Permanently');
         } else {
             header('HTTP/1.1 303 See Other');
         }
         header('Location:'.$url);
-        $this->halt();
+        self::halt();
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2784,9 +2779,9 @@ class cmsCore {
                 cmsActions::removeObjectLog('add_comment', $comment['id']);
             }
 			
-        $sql  = "DELETE FROM cms_comments WHERE target='{$target}' AND target_id='{$target_id}'";
-
-        $inDB->query($sql);
+			$sql  = "DELETE FROM cms_comments WHERE target='{$target}' AND target_id='{$target_id}'";
+	
+			$inDB->query($sql);
 
         }
 
@@ -3293,11 +3288,11 @@ class cmsCore {
     public static function badTagClear($string){
 
         $bad_tags = array (
-            "'<script[^>]*?>.*?</script>'si",
-            "'<style[^>]*?>.*?</style>'si",
-            "'<meta[^>]*?>'si",
-            '/<iframe.*?src=(?!"http:\/\/www\.youtube\.com\/embed\/|"http:\/\/vkontakte\.ru\/video_ext\.php\?).*?>.*?<\/iframe>/i',
-            '/<iframe.*>.+<\/iframe>/i'
+            "'<script[^>]*?>.*?</script>'siu",
+            "'<style[^>]*?>.*?</style>'siu",
+            "'<meta[^>]*?>'siu",
+            '/<iframe.*?src=(?!"http:\/\/www\.youtube\.com\/embed\/|"http:\/\/vkontakte\.ru\/video_ext\.php\?).*?>.*?<\/iframe>/iu',
+            '/<iframe.*>.+<\/iframe>/iu'
         );
 
         $string = preg_replace($bad_tags, '', $string);
@@ -3333,7 +3328,7 @@ class cmsCore {
 
         $inConf = cmsConfig::getInstance();
 
-        $message = wordwrap($message, 70);
+        $message = preg_replace('#([\S]{70})#u', '$1', $message);
 
 		if ($content=="text/html") {
 			$this->sendMail($inConf->sitemail, $inConf->sitename, $email, $subject, $message, 1);
@@ -3690,7 +3685,7 @@ class cmsCore {
         $str    = trim($str);        
         $str    = mb_strtolower($str);
         $str    = str_replace(' ', '-', $str);
-        $string = preg_replace ('/[^a-zA-Zа-яёА-ЯЁ0-9\-]/i', '-', $str);
+        $string = preg_replace ('/[^a-zA-Zа-яёА-ЯЁ0-9\-]/iu', '-', $str);
         $string = rtrim($string, '-');
 
         while(mb_strstr($string, '--')){ $string = str_replace('--', '-', $string); }
@@ -3706,7 +3701,7 @@ class cmsCore {
                       );
 
         foreach($ru_en as $ru=>$en){
-            $string = preg_replace('/(['.$ru.']+)/i', $en, $string);
+            $string = preg_replace('/(['.$ru.']+)/iu', $en, $string);
         }
 
         if (!$string){ $string = 'untitled'; }
@@ -3717,7 +3712,7 @@ class cmsCore {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public function halt($message=''){
+    public static function halt($message=''){
         die($message);
     }
 
@@ -3795,6 +3790,9 @@ class cmsCore {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	public static function substr_replace($output, $replace, $posOpen, $posClose) { 
+         return mb_substr($output, 0, $posOpen).$replace.mb_substr($output, $posClose+1); 
+    }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
