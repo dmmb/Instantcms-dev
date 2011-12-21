@@ -30,7 +30,7 @@ function jwTabs( $text, $published = true ) {
 $use_optimized_loader = 0; // Use optimized JS code loader? 0=no and 1=yes. Default is 0.
 
   if (!$published) {
-    if (preg_match_all("/{tab=.+?}/", $text, $matches, PREG_PATTERN_ORDER) > 0) {
+    if (preg_match_all("/{tab=.+?}/u", $text, $matches, PREG_PATTERN_ORDER) > 0) {
      foreach ($matches[0] as $match) {
       $match = str_replace("{tab=", "", $match);
       $match = str_replace("}", "", $match);
@@ -38,7 +38,7 @@ $use_optimized_loader = 0; // Use optimized JS code loader? 0=no and 1=yes. Defa
       $text = str_replace( "{/tabs}", "", $text );
      }     
     }
-    if (preg_match_all("/{slide=.+?}/", $text, $matches, PREG_PATTERN_ORDER) > 0) {
+    if (preg_match_all("/{slide=.+?}/u", $text, $matches, PREG_PATTERN_ORDER) > 0) {
       foreach ($matches[0] as $match) {
         $match = str_replace("{slide=", "", $match);
         $match = str_replace("}", "", $match);
@@ -57,7 +57,7 @@ $use_optimized_loader = 0; // Use optimized JS code loader? 0=no and 1=yes. Defa
   // index.php
   if($enable_tabs) {
 	   $b=1;
-	   if (preg_match_all("/{tab=.+?}{tab=.+?}|{tab=.+?}|{\/tabs}/", $text, $matches, PREG_PATTERN_ORDER) > 0) { 	
+	   if (preg_match_all("/{tab=.+?}{tab=.+?}|{tab=.+?}|{\/tabs}/u", $text, $matches, PREG_PATTERN_ORDER) > 0) { 	
 	    foreach ($matches[0] as $match) {	
 	      if($b==1 && $match!="{/tabs}") {
 	    	$tabs[] = 1;
@@ -67,7 +67,7 @@ $use_optimized_loader = 0; // Use optimized JS code loader? 0=no and 1=yes. Defa
 	      	$tabs[]=3;
 	      	$b=1;
 	      }
-	      elseif(preg_match("/{tab=.+?}{tab=.+?}/", $match)){
+	      elseif(preg_match("/{tab=.+?}{tab=.+?}/u", $match)){
 	      	$tabs[]=2;
 	      	$tabs[]=1;
 	      	$b=2;
@@ -79,7 +79,7 @@ $use_optimized_loader = 0; // Use optimized JS code loader? 0=no and 1=yes. Defa
 	   }
 	   @reset($tabs);
 	   $tabscount = 0;
-	  if (preg_match_all("/{tab=.+?}|{\/tabs}/", $text, $matches, PREG_PATTERN_ORDER) > 0) {
+	  if (preg_match_all("/{tab=.+?}|{\/tabs}/u", $text, $matches, PREG_PATTERN_ORDER) > 0) {
 	    foreach ($matches[0] as $match) {
 	      if($tabs[$tabscount]==1) {
 	      	$match = str_replace("{tab=", "", $match);
@@ -103,7 +103,7 @@ $use_optimized_loader = 0; // Use optimized JS code loader? 0=no and 1=yes. Defa
   // Start Slides Replacement
   // index.php
   if($enable_slides) {
-	   if (preg_match_all("/{slide=.+?}/", $text, $matches, PREG_PATTERN_ORDER) > 0) {
+	   if (preg_match_all("/{slide=.+?}/u", $text, $matches, PREG_PATTERN_ORDER) > 0) {
 	    foreach ($matches[0] as $match) {
 	      $match = str_replace("{slide=", "", $match);
 	      $match = str_replace("}", "", $match);

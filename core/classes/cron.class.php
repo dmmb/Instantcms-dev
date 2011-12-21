@@ -327,7 +327,7 @@ class cmsCron {
 
             $classfile = '';
 
-            if (!strstr($job['class_name'], '|')){
+            if (!mb_strstr($job['class_name'], '|')){
                 $classname = $job['class_name'];
             } else {
                 $job['class_name'] = explode('|', $job['class_name']);

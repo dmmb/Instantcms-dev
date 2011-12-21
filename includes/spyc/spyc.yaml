@@ -5,7 +5,7 @@
 # authors: [vlad andersen (vlad.andersen@gmail.com), chris wanstrath (chris@ozmm.org)]
 # websites: [http://www.yaml.org, http://spyc.sourceforge.net/]
 # license: [MIT License, http://www.opensource.org/licenses/mit-license.php]
-# copyright: (c) 2005-2006 Chris Wanstrath, 2006-2009 Vlad Andersen
+# copyright: (c) 2005-2006 Chris Wanstrath, 2006-2011 Vlad Andersen
 #
 # spyc.yml - A file containing the YAML that Spyc understands.
 
@@ -18,7 +18,14 @@ True: true
 False: false
 Zero: 0
 Null: NULL
+NotNull: 'null'
+NotTrue: 'y'
+NotBoolTrue: 'true'
+NotInt: '5'
 Float: 5.34
+Negative: -90
+SmallFloat: 0.7
+NewLine: \n
 
 # A sequence
 - PHP Class
@@ -144,6 +151,52 @@ empty_sequence: [ ]
 empty_hash: { }
 
 special_characters: "[{]]{{]]"
+
+asterisks: "*"
+
+empty_key:
+  :
+    key: value
+
+trailing_colon: "foo:"
+
+multiline_items:
+  - type: SomeItem
+    values: [blah, blah, blah,
+      blah]
+    ints: [2, 54, 12,
+      2143]
+
+many_lines: |
+  A quick
+  fox
+
+
+  jumped
+  over
+
+
+
+
+
+  a lazy
+
+
+
+  dog
+
+
+werte:
+  1: nummer 1
+  0: Stunde 0
+
+noindent_records:
+- record1: value1
+- record2: value2
+
+"a:1": [1000]
+"a:2":
+  - 2000
 
 # [Endloop]
 endloop: |

@@ -1144,7 +1144,7 @@ class mosPHPMailer
 			// Can't use addslashes as we don't know what value has magic_quotes_sybase.
 			$encoded = addcslashes($str, "\0..\37\177\\\"");
 
-			if (($str == $encoded) && !preg_match('/[^A-Za-z0-9!#$%&\'*+\/=?^_`{|}~ -]/', $str))
+			if (($str == $encoded) && !preg_match('/[^A-Za-z0-9!#$%&\'*+\/=?^_`{|}~ -]/u', $str))
 			  return ($encoded);
 			else
 			  return ("\"$encoded\"");
@@ -1217,7 +1217,7 @@ class mosPHPMailer
 
 		switch (mb_strtolower($position)) {
 		  case "phrase":
-			$encoded = preg_replace("/([^A-Za-z0-9!*+\/ -])/e", "'='.sprintf('%02X', ord('\\1'))", $encoded);
+			$encoded = preg_replace("/([^A-Za-z0-9!*+\/ -])/eu", "'='.sprintf('%02X', ord('\\1'))", $encoded);
 			break;
 		  case "comment":
 			$encoded = preg_replace("/([\(\)\"])/e", "'='.sprintf('%02X', ord('\\1'))", $encoded);

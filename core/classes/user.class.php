@@ -208,7 +208,7 @@ class cmsUser {
 
             $cookie_code = $inCore->getCookie('userid');
 
-            if (!preg_match('/([0-9a-zA-Z]{32})/i', $cookie_code)){ return false; }
+            if (!preg_match('/([0-9a-zA-Z]{32})/ui', $cookie_code)){ return false; }
 
             $sql = "SELECT * FROM cms_users WHERE md5(CONCAT(id, password)) = '$cookie_code' AND is_deleted=0 AND is_locked=0";
             $res = $inDB->query($sql);
@@ -1467,7 +1467,7 @@ class cmsUser {
 		$inCore = cmsCore::getInstance();
 
 		// Авторизация по логину или e-mail
-		if (!preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/i", $login)){
+		if (!preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/ui", $login)){
 			$where_login = "login = '{$login}'";
 		} else {
 			$where_login = "email = '{$login}'";

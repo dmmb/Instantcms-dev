@@ -41,7 +41,7 @@
 	$item_id = $inCore->request('item_id', 'int');
 	$opt     = $inCore->request('opt', 'str');
 	
-	if (!preg_match('/^([a-zA-Z0-9\_]+)$/i', $target)) { return; }
+	if (!preg_match('/^([a-zA-Z0-9\_]+)$/iu', $target)) { return; }
 
 	$inCore->loadLib('karma');
 	

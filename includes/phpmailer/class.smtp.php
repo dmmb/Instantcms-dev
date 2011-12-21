@@ -152,7 +152,7 @@ class SMTP
 			$this->error =
 				array("error" => "AUTH not accepted from server",
 					  "smtp_code" => $code,
-					  "smtp_msg" => substr($rply,4));
+					  "smtp_msg" => mb_substr($rply,4));
 			if($this->do_debug >= 1) {
 				echo "SMTP -> ERROR: " . $this->error["error"] .
 						 ": " . $rply . $this->CRLF;

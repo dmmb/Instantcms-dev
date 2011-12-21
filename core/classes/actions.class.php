@@ -59,8 +59,8 @@ class cmsActions {
 		foreach($input_array as $k=>$v){
 		   	if (!isset(self::$defaultLogArray[$k])) { unset($input_array[$k]); continue; }
 			$input_array[$k] =  $inDB->escape_string(stripslashes(str_replace(array('\r', '\n'), ' ', $input_array[$k])));
-			$input_array[$k] =  preg_replace('/\[hide\](.*?)\[\/hide\]/i', '', $input_array[$k]);
-			$input_array[$k] =  preg_replace('/\[hide\](.*?)$/i', '', $input_array[$k]);
+			$input_array[$k] =  preg_replace('/\[hide\](.*?)\[\/hide\]/iu', '', $input_array[$k]);
+			$input_array[$k] =  preg_replace('/\[hide\](.*?)$/iu', '', $input_array[$k]);
 		}
 
 		return $input_array;

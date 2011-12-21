@@ -1066,7 +1066,7 @@ public static function getModuleTemplates() {
                 ($nextfile != '..') &&
                 !is_dir($tpl_dir.'/'.$nextfile) &&
                 ($nextfile!='.svn') &&
-                (substr($nextfile, 0, 6)=='module')
+                (mb_substr($nextfile, 0, 6)=='module')
            ) {
             $templates[$nextfile] = $nextfile;
         }
