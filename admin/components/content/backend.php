@@ -33,6 +33,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 	if($opt=='saveconfig'){	
 		$cfg = array();
         $cfg['readdesc']    = $inCore->request('readdesc', 'int', 0);
+		$cfg['is_url_cyrillic'] = $inCore->request('is_url_cyrillic', 'int', 0);
 		$cfg['rating']      = $inCore->request('rating', 'int', 0);
 		$cfg['perpage']     = $inCore->request('perpage', 'int', 0);
         $cfg['pt_show']     = $inCore->request('pt_show', 'int', 0);
@@ -86,8 +87,15 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
 <form action="index.php?view=components&do=config&id=<?php echo (int)$_REQUEST['id'];?>" method="post" name="optform" target="_self" id="form1">
     <?php ob_start(); ?>
-    {tab=Внешний вид}
+    {tab=Общие}
     <table width="550" border="0" cellpadding="10" cellspacing="0" class="proptable">
+        <tr>
+            <td><strong>Генерировать киррилические url категорий и статей: </strong></td>
+            <td width="110">
+                <label><input name="is_url_cyrillic" type="radio" value="1" <?php if (@$cfg['is_url_cyrillic']) { echo 'checked="checked"'; } ?>/> Да </label>
+                <label><input name="is_url_cyrillic" type="radio" value="0" <?php if (@!$cfg['is_url_cyrillic']) { echo 'checked="checked"'; } ?>/> Нет </label>
+            </td>
+        </tr>
         <tr>
             <td><strong>Выводить анонсы при просмотре статей: </strong></td>
             <td width="110">

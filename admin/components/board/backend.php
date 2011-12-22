@@ -232,7 +232,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 			$title     = str_ireplace($obtype, '', $title);
 			
 			$pubdate = $inCore->request('pubdate', 'str');
-			if(!strstr($pubdate, '-')){
+			if(!mb_strstr($pubdate, '-')){
 				$pubdate = explode('.', $pubdate);
 				$pubdate = $pubdate[2] . '-' . $pubdate[1] . '-' . $pubdate[0];
 			}

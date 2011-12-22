@@ -33,14 +33,14 @@ class KCAPTCHA{
 		    closedir($handle);
 		}	
 	
-		$alphabet_length=strlen($alphabet);
+		$alphabet_length=mb_strlen($alphabet);
 		
 		do{
 			// generating random keystring
 			while(true){
 				$this->keystring='';
 				for($i=0;$i<$length;$i++){
-					$this->keystring.=$allowed_symbols{mt_rand(0,strlen($allowed_symbols)-1)};
+					$this->keystring.=$allowed_symbols{mt_rand(0,mb_strlen($allowed_symbols)-1)};
 				}
 				if(!preg_match('/cp|cb|ck|c6|c9|rn|rm|mm|co|do|cl|db|qp|qb|dp|ww/', $this->keystring)) break;
 			}
@@ -150,7 +150,7 @@ class KCAPTCHA{
 		imagefilledrectangle($img2, 0, 0, $width-1, $height-1, $background);		
 		imagefilledrectangle($img2, 0, $height, $width-1, $height+12, $foreground);
 		$credits=empty($credits)?$_SERVER['HTTP_HOST']:$credits;
-		imagestring($img2, 2, $width/2-imagefontwidth(2)*strlen($credits)/2, $height-2, $credits, $background);
+		imagestring($img2, 2, $width/2-imagefontwidth(2)*mb_strlen($credits)/2, $height-2, $credits, $background);
 
 		// periods
 		$rand1=mt_rand(750000,1200000)/10000000;

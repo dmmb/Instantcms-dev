@@ -14,16 +14,17 @@
     if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
     $inUser = cmsUser::getInstance();
     $inCore = cmsCore::getInstance();
+	$inPage = cmsPage::getInstance();
 
-    $mod_count['top']   = cmsCountModules('top');
-    $mod_count['sidebar']  = cmsCountModules('sidebar');
+    $mod_count['top']     = $inPage->countModules('top');
+    $mod_count['sidebar'] = $inPage->countModules('sidebar');
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <!-- HEAD !-->
-    <?php cmsPrintHead(); ?>
+    <?php $inPage->printHead(); ?>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <?php if($inUser->is_admin){ ?>
         <script src="/admin/js/modconfig.js" type="text/javascript"></script>
@@ -53,7 +54,7 @@
                             <span class="login"><a href="/login">Вход</a></span>
                         </div>
                     <?php } else { ?>
-                        <?php cmsModule('header'); ?>
+                        <?php $inPage->printModules('header'); ?>
                     <?php } ?>
                 </div>
             </div>
@@ -63,7 +64,7 @@
 
             <div class="container_12" id="topmenu">
                 <div class="grid_12">
-                    <?php cmsModule('topmenu'); ?>
+                    <?php $inPage->printModules('topmenu'); ?>
                 </div>
             </div>
 
@@ -71,19 +72,19 @@
             <div class="clear"></div>
 
             <div id="topwide" class="container_12">
-                <div class="grid_12" id="topmod"><?php cmsModule('top'); ?></div>
+                <div class="grid_12" id="topmod"><?php $inPage->printModules('top'); ?></div>
             </div>
             <?php } ?>
 
                 <div id="pathway" class="container_12">
-                    <div class="grid_12"><?php cmsPathway('&rarr;'); ?></div>
+                    <div class="grid_12"><?php $inPage->printPathway('&rarr;'); ?></div>
                 </div>
 
             <div class="clear"></div>
 
             <div id="mainbody" class="container_12">
                 <div id="main" class="<?php if ($mod_count['sidebar']) { ?>grid_8<?php } else { ?>grid_12<?php } ?>">
-                    <?php cmsModule('maintop'); ?>
+                    <?php $inPage->printModules('maintop'); ?>
 
                     <?php $messages = cmsCore::getSessionMessages(); ?>
                     <?php if ($messages) { ?>
@@ -94,11 +95,11 @@
                     </div>
                     <?php } ?>
 
-                    <?php cmsBody(); ?>
-                    <?php cmsModule('mainbottom'); ?>
+                    <?php $inPage->printBody(); ?>
+                    <?php $inPage->printModules('mainbottom'); ?>
                 </div>
                 <?php if ($mod_count['sidebar']) { ?>
-                    <div class="grid_4" id="sidebar"><?php cmsModule('sidebar'); ?></div>
+                    <div class="grid_4" id="sidebar"><?php $inPage->printModules('sidebar'); ?></div>
                 <?php } ?>
             </div>
 
@@ -111,7 +112,7 @@
     <div id="footer">
         <div class="container_12">
             <div class="grid_8">
-                <div id="copyright"><?php cmsPrintSitename(); ?> &copy; <?php echo date('Y'); ?></div>
+                <div id="copyright"><?php $inPage->printSitename(); ?> &copy; <?php echo date('Y'); ?></div>
             </div>
             <div class="grid_4 foot_right">
                 <a href="http://www.instantcms.ru/" title="Работает на InstantCMS">

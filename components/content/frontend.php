@@ -54,9 +54,8 @@ function content(){
 ///////////////////////////////////// VIEW CATEGORY ////////////////////////////////////////////////////////////////////////////////
 if ($do=='view'){
 
-    $seolink = $inCore->request('seolink', 'str', '');
-
-    $seolink = preg_replace ('/[^a-z0-9_\/\-]/i', '', $seolink);
+    $seolink = urldecode($inCore->request('seolink', 'str', ''));
+    $seolink = preg_replace ('/[^a-zа-я0-9_\/\-]/ui', '', $seolink);
 
     if ($seolink) { 
         $cat = $model->getCategoryByLink($seolink);
@@ -187,9 +186,8 @@ if ($do=='read'){
 
 	$inCore->includeConfig();
 
-    $seolink = $inCore->request('seolink', 'str', '');
-
-    $seolink = preg_replace ('/[^a-z0-9_\/\-]/i', '', $seolink);
+    $seolink = urldecode($inCore->request('seolink', 'str', ''));
+    $seolink = preg_replace ('/[^a-zа-я0-9_\/\-]/iu', '', $seolink);
 
     if ($seolink) { 
         $article = $model->getArticleByLink($seolink);

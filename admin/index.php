@@ -43,7 +43,7 @@
     date_default_timezone_set($inConf->timezone);
 
 	$domain = str_replace('http://', '', HOST);
-	if(!strstr($_SERVER['HTTP_REFERER'], $domain)) { cmsCore::error404(); }
+	if(!mb_strstr($_SERVER['HTTP_REFERER'], $domain)) { cmsCore::error404(); }
 
     if ( !$inUser->update() ) { cmsCore::error404(); }
 

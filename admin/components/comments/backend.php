@@ -16,7 +16,7 @@ function cpStripComment($text){
 
     if (sizeof($text) < 120) { return $text; }
 
-    return substr($text, 0, 120) . '...';
+    return mb_substr($text, 0, 120) . '...';
 
 }
 

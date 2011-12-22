@@ -262,7 +262,7 @@ class cmsCore {
      */
     public function executePluginRoute($do){
 
-		$do = preg_replace ('/[^a-z_]/i', '', $do);
+		$do = preg_replace ('/[^a-z_]/iu', '', $do);
 		if(!$do) { return false; }
 
 		if (file_exists(PATH.'/components/'.$this->component.'/plugins/'.$do.'.php')){
@@ -3450,7 +3450,7 @@ class cmsCore {
         $text = html_entity_decode($text);
         $text = strip_tags($text);
         $text = trim($text);
-        if (!strstr($text, ',')){
+        if (!mb_strstr($text, ',')){
             $html .= '<a href="/catalog/'.$cat_id.'/find/'.urlencode(urlencode($text)).'">'.$text.'</a>';
         } else {
             $text = str_replace(', ', ',', $text);
@@ -3558,7 +3558,7 @@ class cmsCore {
                 $cachefile = PATH.'/cache/'.$page['cachefile'];
                 if (file_exists($cachefile)){
                     $cache = file_get_contents($cachefile);
-                    if(strstr($_SERVER['QUERY_STRING'], 'show_cache')){
+                    if(mb_strstr($_SERVER['QUERY_STRING'], 'show_cache')){
                         $cache .= '<div style="background-color:gray;color:white">Printed from cache!</div>';
                     }
                     return $cache;
@@ -3680,7 +3680,7 @@ class cmsCore {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    static public function strToURL($str){
+    static public function strToURL($str, $is_cyr = false){
 
         $str    = trim($str);        
         $str    = mb_strtolower($str);
@@ -3690,19 +3690,21 @@ class cmsCore {
 
         while(mb_strstr($string, '--')){ $string = str_replace('--', '-', $string); }
 
-        $ru_en = array(
-                        'а'=>'a','б'=>'b','в'=>'v','г'=>'g','д'=>'d',
-                        'е'=>'e','ё'=>'yo','ж'=>'zh','з'=>'z',
-                        'и'=>'i','й'=>'i','к'=>'k','л'=>'l','м'=>'m',
-                        'н'=>'n','о'=>'o','п'=>'p','р'=>'r','с'=>'s',
-                        'т'=>'t','у'=>'u','ф'=>'f','х'=>'h','ц'=>'c',
-                        'ч'=>'ch','ш'=>'sh','щ'=>'sch','ъ'=>'','ы'=>'y',
-                        'ь'=>'','э'=>'ye','ю'=>'yu','я'=>'ja'
-                      );
-
-        foreach($ru_en as $ru=>$en){
-            $string = preg_replace('/(['.$ru.']+)/iu', $en, $string);
-        }
+		if(!$is_cyr){
+			$ru_en = array(
+							'а'=>'a','б'=>'b','в'=>'v','г'=>'g','д'=>'d',
+							'е'=>'e','ё'=>'yo','ж'=>'zh','з'=>'z',
+							'и'=>'i','й'=>'i','к'=>'k','л'=>'l','м'=>'m',
+							'н'=>'n','о'=>'o','п'=>'p','р'=>'r','с'=>'s',
+							'т'=>'t','у'=>'u','ф'=>'f','х'=>'h','ц'=>'c',
+							'ч'=>'ch','ш'=>'sh','щ'=>'sch','ъ'=>'','ы'=>'y',
+							'ь'=>'','э'=>'ye','ю'=>'yu','я'=>'ja'
+						  );
+	
+			foreach($ru_en as $ru=>$en){
+				$string = preg_replace('/(['.$ru.']+)/iu', $en, $string);
+			}
+		}
 
         if (!$string){ $string = 'untitled'; }
 

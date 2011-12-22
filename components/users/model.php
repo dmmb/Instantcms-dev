@@ -419,7 +419,7 @@ class cms_model_users{
 
     public function checkInvite($code) {
 
-        if (!preg_match('/^([a-z0-9]{32})$/i', $code)) { return false; }
+        if (!preg_match('/^([a-z0-9]{32})$/ui', $code)) { return false; }
 
         $correct = $this->inDB->get_field('cms_user_invites', "code='{$code}' AND is_used = 0", 'id');
 
@@ -429,7 +429,7 @@ class cms_model_users{
 
     public function getInviteOwner($code) {
 
-        if (!preg_match('/^([a-z0-9]{32})$/i', $code)) { return false; }
+        if (!preg_match('/^([a-z0-9]{32})$/ui', $code)) { return false; }
 
         $owner_id = $this->inDB->get_field('cms_user_invites', "code='{$code}' AND is_used = 0", 'owner_id');
 
@@ -486,7 +486,7 @@ class cms_model_users{
 
     public function closeInvite($code){
 
-        if (!preg_match('/^([a-z0-9]{32})$/i', $code)) { return false; }
+        if (!preg_match('/^([a-z0-9]{32})$/ui', $code)) { return false; }
 
         $this->inDB->query("UPDATE cms_user_invites SET is_used = 1 WHERE code='{$code}'");
 

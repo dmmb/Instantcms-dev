@@ -1041,7 +1041,7 @@ if($do=='post'){
     $msg = $post['content_html'];
 
     //Убираем тег [cut]
-    $regex  = '/\[(cut=)\s*(.*?)\]/i';
+    $regex  = '/\[(cut=)\s*(.*?)\]/ui';
     $msg    = preg_replace($regex, '', $msg);
 
 	// meta descriptions

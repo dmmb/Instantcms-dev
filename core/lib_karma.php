@@ -94,7 +94,7 @@ function cmsClearKarma($target, $item_id){
 
 function cmsKarma($target, $item_id){ //returns array with total votes and total points of karma
     
-    if (!preg_match('/^([a-zA-Z0-9\_]+)$/i', $target)) { return; }
+    if (!preg_match('/^([a-zA-Z0-9\_]+)$/ui', $target)) { return; }
 
     $item_id = intval($item_id);
 

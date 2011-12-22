@@ -1346,9 +1346,9 @@ function cpPriceInput($id){
                                         </td>
                                         <td valign="top">
                                             <select name="int_2" id="int_2" style="width:100%">
-                                                <option value="HOUR"  <?php if(@strstr($mod['newint'], 'HOUR')) { echo 'selected'; } ?>>часов</option>
-                                                <option value="DAY" <?php if(@strstr($mod['newint'], 'DAY')) { echo 'selected'; } ?>>дней</option>
-                                                <option value="MONTH" <?php if(@strstr($mod['newint'], 'MONTH')) { echo 'selected'; } ?>>месяцев</option>
+                                                <option value="HOUR"  <?php if(@mb_strstr($mod['newint'], 'HOUR')) { echo 'selected'; } ?>>часов</option>
+                                                <option value="DAY" <?php if(@mb_strstr($mod['newint'], 'DAY')) { echo 'selected'; } ?>>дней</option>
+                                                <option value="MONTH" <?php if(@mb_strstr($mod['newint'], 'MONTH')) { echo 'selected'; } ?>>месяцев</option>
                                             </select>
                                         </td>
                                     </tr>

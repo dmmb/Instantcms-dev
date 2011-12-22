@@ -81,7 +81,6 @@ function mod_latestblogs($module_id){
 
                     $con['href'] 	 = $model->getPostURL(null, $con['bloglink'], $con['seolink']);
                     $con['title'] 	 = strip_tags($con['title']);
-					if (mb_strlen($con['title'])>70) { $con['title'] = mb_substr($con['title'], 0, 70). '...'; }
 					$con['fpubdate'] = $inCore->dateFormat($con['fpubdate']);
 					$con['comments'] = $cfg['showcom'] ? $inCore->getCommentsCount('blog', $con['id']) : false;
 					$con['bloghref'] = $model->getBlogURL(null, $con['bloglink']);

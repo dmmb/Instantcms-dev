@@ -30,8 +30,8 @@ function rssfeed(){
     $item_id    = $inCore->request('item_id', 'str', 'all');
 
 	// фильтруем входные параметры
-	$target  = preg_replace ('/[^a-z0-9]/i', '', $target);
-	if (!preg_match('/^([a-z0-9\-]+)$/i', $item_id)) { $item_id = 'all'; }
+	$target  = preg_replace ('/[^a-z0-9]/ui', '', $target);
+	if (!preg_match('/^([a-z0-9\-]+)$/ui', $item_id)) { $item_id = 'all'; }
 
     if (!isset($cfg['addsite'])) { $cfg['addsite'] = 1; }
 	if (!isset($cfg['icon_on'])) { $cfg['icon_on'] = 0; }

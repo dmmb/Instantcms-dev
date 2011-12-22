@@ -67,7 +67,7 @@ function mod_uc_latest($module_id){
 			if ($cfg['showtype']=='list'){
 					while($item = $inDB->fetch_assoc($result)){
 							$item['fieldsdata'] = unserialize($item['fieldsdata']);
-							$item['title'] = substr($item['title'], 0, 40);
+							$item['title'] = mb_substr($item['title'], 0, 40);
 							
 							for($f = 0; $f<$cfg['showf']; $f++){
 								$item['fdata'][] = $inCore->getUCSearchLink($item['category_id'], null, $f, stripslashes($item['fieldsdata'][$f]));

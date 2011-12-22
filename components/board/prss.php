@@ -25,13 +25,13 @@ function rss_board($item_id, $cfg, &$rssdata){
 	$channel = array();
 	$items   = array();
 
-	if ($item_id != 'all' && preg_match('/^([0-9]+)$/i', $item_id)) {
+	if ($item_id != 'all' && preg_match('/^([0-9]+)$/ui', $item_id)) {
 
 		$model->whereCatIs($item_id);
 
 		$cat = $model->getCategory($item_id);
 		$channel['title']       = $cat['title'];
-		$channel['description'] = preg_replace ("'&([a-z]{2,5});'i", '', $cat['description']);
+		$channel['description'] = preg_replace ("'&([a-z]{2,5});'iu", '', $cat['description']);
 		$channel['link']        = HOST.'/board/'.$cat['id'];
 
 	} else {

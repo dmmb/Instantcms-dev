@@ -7,7 +7,7 @@
                 {$post.image}
             </div>
 
-            <a class="mod_latest_blog_title" href="{$post.href}">{$post.title}</a>
+            <a class="mod_latest_blog_title" href="{$post.href}">{$post.title|truncate:70}</a>
 
             <div class="mod_latest_date">
                 {$post.fpubdate} - <a href="{$post.bloghref}">{$post.blog}</a>{if $cfg.showcom} - <a href="{$post.href}" title="{$post.comments|spellcount:$LANG.COMMENT1:$LANG.COMMENT2:$LANG.COMMENT10}" class="mod_latest_comments">{$post.comments}</a>{/if}

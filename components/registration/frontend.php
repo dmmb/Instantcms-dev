@@ -19,7 +19,7 @@ function sendActivationNotice($send_pass, $user_id){
     $inDB   = cmsDatabase::getInstance();
     $user   = dbGetFields('cms_users', 'id='.$user_id, '*');
     global $_LANG;
-    $code = md5($user['email'].substr(md5(rand(0,9999)), 0, 8));
+    $code = md5($user['email'].mb_substr(md5(rand(0,9999)), 0, 8));
     $codelink = HOST.'/activate/'.$code;
 
     $sql = "INSERT cms_users_activate (pubdate, user_id, code)
@@ -92,7 +92,7 @@ function registration(){
             //SEND NEW PASSWORD TO EMAIL
             $email = $inCore->request('email', 'str');
 
-            if (!preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/i", $email)){
+            if (!preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/ui", $email)){
                 echo '<p style="color:red">'.$_LANG['ERR_EMAIL'].'</p>';
             } else {
 
@@ -137,7 +137,7 @@ function registration(){
 		$pass2	= $inCore->request('pass2', 'str', '');
 
         if(mb_strlen($login)<2) 					{ $msg .= $_LANG['TYPE_LOGIN'].'<br/>'; }
-		if ((!preg_match("/^([a-zA-Z0-9])+$/i", $login)) && mb_strlen($login)>=2)	{$msg  .= $_LANG['ERR_LOGIN'].'<br/>'; }
+		if ((!preg_match("/^([a-zA-Z0-9])+$/ui", $login)) && mb_strlen($login)>=2)	{$msg  .= $_LANG['ERR_LOGIN'].'<br/>'; }
         if(!$pass) 								{ $msg .= $_LANG['TYPE_PASS'].'<br/>'; }
         if($pass && !$pass2) 					{ $msg .= $_LANG['TYPE_PASS_TWICE'].'<br/>'; }
 		if($pass && $pass2 && mb_strlen($pass)<6) 	{ $msg .= $_LANG['PASS_SHORT'].'<br/>'; }
@@ -176,7 +176,7 @@ function registration(){
 		// Если есть опция показывать icq при регистрации, то проверяем
         if ($cfg['ask_icq']){
             $icq = $inCore->request('icq', 'str', '');
-			$icq = preg_replace('/([^0-9])/i', '', $icq);
+			$icq = preg_replace('/([^0-9])/ui', '', $icq);
         } else {
             $icq = '';
         }
@@ -366,7 +366,7 @@ function registration(){
 				$smarty->assign('is_sess_back', $auth_back_url);
 				$smarty->display('com_registration_login.tpl');
 
-				if(!strstr($inCore->getBackURL(), '/login')){
+				if(!mb_strstr($inCore->getBackURL(), '/login')){
 					cmsUser::sessionPut('auth_back_url', $inCore->getBackURL());
 				}
 
@@ -441,7 +441,7 @@ function registration(){
         $usercode = $inCore->request('code', 'str', '');
 
         //проверяем формат кода
-        if (!preg_match('/^([a-z0-9]{32})$/i', $usercode)) { $inCore->halt(); }
+        if (!preg_match('/^([a-z0-9]{32})$/ui', $usercode)) { $inCore->halt(); }
 
         //ищем пользователя по коду
         $sql = "SELECT * FROM cms_users

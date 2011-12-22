@@ -46,9 +46,6 @@ function mod_latest_faq($module_id){
 			
 			while($con = $inDB->fetch_assoc($result)){
 				$next = sizeof($faq);
-				if(mb_strlen($con['quest'])>$cfg['maxlen']){
-					$con['quest'] = mb_substr($con['quest'], 0, $cfg['maxlen']) . '...';
-				}
 				$faq[$next]['quest'] = $con['quest'];
 				$faq[$next]['date']  = $inCore->dateformat($con['pubdate']);
 				$faq[$next]['href'] = '/faq/quest'.$con['id'].'.html';
@@ -56,10 +53,11 @@ function mod_latest_faq($module_id){
 			
 		}
 		
-			$smarty = $inCore->initSmarty('modules', 'mod_latest_faq.tpl');			
-			$smarty->assign('faq', $faq);
+		$smarty = $inCore->initSmarty('modules', 'mod_latest_faq.tpl');			
+		$smarty->assign('faq', $faq);
+		$smarty->assign('cfg', $cfg);
 		$smarty->assign('is_faq', $is_faq);
-			$smarty->display('mod_latest_faq.tpl');
+		$smarty->display('mod_latest_faq.tpl');
 						
 		return true;
 	

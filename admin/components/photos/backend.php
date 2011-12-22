@@ -668,7 +668,7 @@ function showMapMarker(){
                                 ?>
                             </select>
                         <?php } else {
-                                $club['id']     = substr($mod['NSDiffer'], 4);
+                                $club['id']     = mb_substr($mod['NSDiffer'], 4);
                                 $club['title']  = $inDB->get_field('cms_clubs', "id={$club['id']}", 'title');
                         ?>
                             <input type="hidden" name="parent_id" value="<?php echo $mod['parent_id']; ?>" />
@@ -925,7 +925,7 @@ function showMapMarker(){
                         ?>
                     </select>
                 <?php } else {
-                    $club['id']     = substr($mod['NSDiffer'], 4);
+                    $club['id']     = mb_substr($mod['NSDiffer'], 4);
                     $club['title']  = $inDB->get_field('cms_clubs', "id={$club['id']}", 'title');
                 ?><input type="hidden" name="album_id" value="<?php echo $mod['album_id']; ?>" />
                     Клуб <a href="index.php?view=components&do=config&id=23&opt=edit&item_id=<?php echo $club['id']; ?>"><?php echo $club['title'];?></a> &rarr; <?php echo $mod['album']; ?>

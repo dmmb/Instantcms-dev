@@ -86,7 +86,7 @@ function parseHide($text){
 
 	$inUser = cmsUser::getInstance();
 
-	$pattern        = '/\[hide\](.*?)\[\/hide\]/i';
+	$pattern        = '/\[hide\](.*?)\[\/hide\]/ui';
 	$hidden_text    = '';
 
 	if (!$inUser->id){

@@ -106,7 +106,7 @@ function users(){
 	
 	$id     =   $inCore->request('id', 'int', 0);
 	$do     =   $inCore->request('do', 'str', 'view');
-	$do     = preg_replace ('/[^a-z_]/i', '', $do);
+	$do     = preg_replace ('/[^a-z_]/ui', '', $do);
 
     $inPage->setTitle($_LANG['USERS']);
 	
@@ -402,8 +402,8 @@ if ($do=='editprofile'){
 		$city = $inCore->request('city', 'str');
 		if (mb_strlen($city)>25) { cmsCore::addSessionMessage($_LANG['LONG_CITY_NAME'], 'error'); $errors = true; }
 
-		$email = $inCore->request('email', 'str');
-		if (!preg_match('/^([a-z0-9\._-]+)@([a-z0-9\._-]+)\.([a-z]{2,4})$/i', $email)) { cmsCore::addSessionMessage($_LANG['REALY_ADRESS_EMAIL'], 'error'); $errors = true; }
+		$email = $inCore->request('email', 'email');
+		if (!$email) { cmsCore::addSessionMessage($_LANG['REALY_ADRESS_EMAIL'], 'error'); $errors = true; }
 		$old_email = $inDB->get_field('cms_users', "id='{$id}'", 'email');
 		if($old_email != $email){
 			$is_set_email = $inDB->get_field('cms_users', "email='{$email}'", 'id');
@@ -420,15 +420,15 @@ if ($do=='editprofile'){
 		$signature      = $inCore->request('signature', 'str', '');
 
 		$allow_who      = $inCore->request('allow_who', 'str');
-		if (!preg_match('/^([a-zA-Z]+)$/i', $allow_who)) { $errors = true; }
+		if (!preg_match('/^([a-zA-Z]+)$/ui', $allow_who)) { $errors = true; }
 
 		$icq            = $inCore->request('icq', 'str');
-		$icq            = preg_replace('/([^0-9])/i', '', $icq);
+		$icq            = preg_replace('/([^0-9])/ui', '', $icq);
 		
 		$showicq        = $inCore->request('showicq', 'int');
 		
 		$cm_subscribe   = $inCore->request('cm_subscribe', 'str');
-		if (!preg_match('/^([a-zA-Z]+)$/i', $cm_subscribe)) { $errors = true; }
+		if (!preg_match('/^([a-zA-Z]+)$/ui', $cm_subscribe)) { $errors = true; }
 		
 		if ($inCore->inRequest('field')){
 			foreach($_POST['field'] as $k=>$val){
@@ -2334,7 +2334,7 @@ if ($do=='addfile'){
 			
 			// Переводим имя файла в транслит
 			// отделяем имя файла от расширения
-			$name  = substr($name, 0, mb_strrpos($name, '.'));
+			$name  = mb_substr($name, 0, mb_strrpos($name, '.'));
 			// транслитируем
 			$name  = cmsCore::strToURL($name);
 			// присоединяем расширения файла

@@ -1,6 +1,6 @@
 <?php
 /*************************************************************************************
- * html5.php
+ * html4strict.php
  * ---------------
  * Author: Nigel McNie (nigel@geshi.org)
  * Copyright: (c) 2004 Nigel McNie (http://qbnz.com/highlighter/)
@@ -58,64 +58,42 @@ $language_data = array (
     'ESCAPE_CHAR' => '',
     'KEYWORDS' => array(
         2 => array(
-            'a', 'abbr', 'address', 'article', 'aside', 'audio'.
-
-            'base', 'bdo', 'blockquote', 'body', 'br', 'button', 'b',
-
-            'caption', 'cite', 'code', 'colgroup', 'col', 'canvas', 'command', 'datalist', 'details',
-
-            'dd', 'del', 'dfn', 'div', 'dl', 'dt',
-
-            'em', 'embed',
-
-            'fieldset', 'form', 'figcaption', 'figure', 'footer',
-
-            'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head', 'hr', 'html', 'header', 'hgroup',
-
+            'a', 'abbr', 'acronym', 'address', 'applet',
+            'base', 'basefont', 'bdo', 'big', 'blockquote', 'body', 'br', 'button', 'b',
+            'caption', 'center', 'cite', 'code', 'colgroup', 'col',
+            'dd', 'del', 'dfn', 'dir', 'div', 'dl', 'dt',
+            'em',
+            'fieldset', 'font', 'form', 'frame', 'frameset',
+            'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head', 'hr', 'html',
             'iframe', 'ilayer', 'img', 'input', 'ins', 'isindex', 'i',
-
-            'kbd', 'keygen',
-
+            'kbd',
             'label', 'legend', 'link', 'li',
-
-            'map', 'meta', 'mark', 'meter',
-
-            'noscript', 'nav',
-
-            'object', 'ol', 'optgroup', 'option', 'output',
-
-            'param', 'pre', 'p', 'progress',
-
+            'map', 'meta',
+            'noframes', 'noscript',
+            'object', 'ol', 'optgroup', 'option',
+            'param', 'pre', 'p',
             'q',
-
-            'rp', 'rt', 'ruby',
-
-            'samp', 'script', 'select', 'small', 'span', 'strong', 'style', 'sub', 'sup', 's', 'section', 'source', 'summary',
-
-            'table', 'tbody', 'td', 'textarea', 'text', 'tfoot', 'thead', 'th', 'title', 'tr', 'time',
-
-            'ul',
-
-            'var', 'video',
-
-            'wbr',
+            'samp', 'script', 'select', 'small', 'span', 'strike', 'strong', 'style', 'sub', 'sup', 's',
+            'table', 'tbody', 'td', 'textarea', 'text', 'tfoot', 'thead', 'th', 'title', 'tr', 'tt',
+            'ul', 'u',
+            'var',
             ),
         3 => array(
-            'abbr', 'accept-charset', 'accept', 'accesskey', 'action', 'align', 'alink', 'alt', 'archive', 'axis', 'autocomplete', 'autofocus',
+            'abbr', 'accept-charset', 'accept', 'accesskey', 'action', 'align', 'alink', 'alt', 'archive', 'axis',
             'background', 'bgcolor', 'border',
-            'cellpadding', 'cellspacing', 'char', 'charoff', 'charset', 'checked', 'cite', 'class', 'classid', 'clear', 'code', 'codebase', 'codetype', 'color', 'cols', 'colspan', 'compact', 'content', 'coords', 'contenteditable', 'contextmenu',
-            'data', 'datetime', 'declare', 'defer', 'dir', 'disabled', 'draggable', 'dropzone',
+            'cellpadding', 'cellspacing', 'char', 'charoff', 'charset', 'checked', 'cite', 'class', 'classid', 'clear', 'code', 'codebase', 'codetype', 'color', 'cols', 'colspan', 'compact', 'content', 'coords',
+            'data', 'datetime', 'declare', 'defer', 'dir', 'disabled',
             'enctype',
-            'face', 'for', 'frame', 'frameborder', 'form', 'formaction', 'formenctype', 'formmethod', 'formnovalidate', 'formtarget',
-            'headers', 'height', 'href', 'hreflang', 'hspace', 'http-equiv', 'hidden',
+            'face', 'for', 'frame', 'frameborder',
+            'headers', 'height', 'href', 'hreflang', 'hspace', 'http-equiv',
             'id', 'ismap',
             'label', 'lang', 'language', 'link', 'longdesc',
-            'marginheight', 'marginwidth', 'maxlength', 'media', 'method', 'multiple', 'min', 'max',
-            'name', 'nohref', 'noresize', 'noshade', 'nowrap', 'novalidate',
-            'object', 'onblur', 'onchange', 'onclick', 'ondblclick', 'onfocus', 'onkeydown', 'onkeypress', 'onkeyup', 'onload', 'onmousedown', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onselect', 'onsubmit', 'onunload', 'onafterprint', 'onbeforeprint', 'onbeforeonload', 'onerror', 'onhaschange', 'onmessage', 'onoffline', 'ononline', 'onpagehide', 'onpageshow', 'onpopstate', 'onredo', 'onresize', 'onstorage', 'onundo', 'oncontextmenu', 'onformchange', 'onforminput', 'oninput', 'oninvalid', 'ondrag', 'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onmousewheel', 'onscroll', 'oncanplay', 'oncanplaythrough', 'ondurationchange', 'onemptied', 'onended', 'onloadeddata', 'onloadedmetadata', 'onloadstart', 'onpause', 'onplay', 'onplaying', 'onprogress', 'onratechange', 'onreadystatechange', 'onseeked', 'onseeking', 'onstalled', 'onsuspend', 'ontimeupdate', 'onvolumechange', 'onwaiting',
-            'profile', 'prompt', 'pattern', 'placeholder',
-            'readonly', 'rel', 'rev', 'rowspan', 'rows', 'rules', 'required',
-            'scheme', 'scope', 'scrolling', 'selected', 'shape', 'size', 'span', 'src', 'standby', 'start', 'style', 'summary', 'spellcheck', 'step',
+            'marginheight', 'marginwidth', 'maxlength', 'media', 'method', 'multiple',
+            'name', 'nohref', 'noresize', 'noshade', 'nowrap',
+            'object', 'onblur', 'onchange', 'onclick', 'ondblclick', 'onfocus', 'onkeydown', 'onkeypress', 'onkeyup', 'onload', 'onmousedown', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onreset', 'onselect', 'onsubmit', 'onunload',
+            'profile', 'prompt',
+            'readonly', 'rel', 'rev', 'rowspan', 'rows', 'rules',
+            'scheme', 'scope', 'scrolling', 'selected', 'shape', 'size', 'span', 'src', 'standby', 'start', 'style', 'summary',
             'tabindex', 'target', 'text', 'title', 'type',
             'usemap',
             'valign', 'value', 'valuetype', 'version', 'vlink', 'vspace',

@@ -609,7 +609,7 @@ function catalog(){
                                         $field = $item['fdata'][$key];
                                     }
 
-                                    if (isset($query)) { if (@strstr($query, $fdata[$key]) || @strstr($fdata[$key], $query)) { $field .= '<span class="uc_findsame"> &larr; <i>'.$_LANG['MATCHE'].'</i></span>';} }
+                                    if (isset($query)) { if (mb_strstr($query, $fdata[$key]) || mb_strstr($fdata[$key], $query)) { $field .= '<span class="uc_findsame"> &larr; <i>'.$_LANG['MATCHE'].'</i></span>';} }
                                     $fields_show++;
 
                                     $item['fields'][stripslashes($value)] = stripslashes($field);

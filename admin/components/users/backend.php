@@ -192,10 +192,10 @@ if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
                     <td valign="top">
                         <input name="karmatime" type="text" id="int_1" size="5" value="<?php echo @(int)$cfg['karmatime']?>"/>
                         <select name="karmaint" id="int_2">
-                            <option value="MINUTE"  <?php if(@strstr($cfg['karmaint'], 'MINUTE')) { echo 'selected'; } ?>>минут</option>
-                            <option value="HOUR"  <?php if(@strstr($cfg['karmaint'], 'HOUR')) { echo 'selected'; } ?>>часов</option>
-                            <option value="DAY" <?php if(@strstr($cfg['karmaint'], 'DAY')) { echo 'selected'; } ?>>дней</option>
-                            <option value="MONTH" <?php if(@strstr($cfg['karmaint'], 'MONTH')) { echo 'selected'; } ?>>месяцев</option>
+                            <option value="MINUTE"  <?php if(@mb_strstr($cfg['karmaint'], 'MINUTE')) { echo 'selected'; } ?>>минут</option>
+                            <option value="HOUR"  <?php if(@mb_strstr($cfg['karmaint'], 'HOUR')) { echo 'selected'; } ?>>часов</option>
+                            <option value="DAY" <?php if(@mb_strstr($cfg['karmaint'], 'DAY')) { echo 'selected'; } ?>>дней</option>
+                            <option value="MONTH" <?php if(@mb_strstr($cfg['karmaint'], 'MONTH')) { echo 'selected'; } ?>>месяцев</option>
                         </select>
                     </td>
                 </tr>

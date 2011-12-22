@@ -4,7 +4,7 @@
 	<tr>
 		<td width="20" valign="top"><img src="/images/markers/faq.png" border="0" /></td>
 		<td>
-			<div class="mod_faq_quest">{$quest.quest}</div>
+			<div class="mod_faq_quest">{$quest.quest|truncate:$cfg.maxlen}</div>
 		</td>
 	</tr>
 	<tr>

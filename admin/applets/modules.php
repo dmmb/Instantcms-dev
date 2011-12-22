@@ -868,10 +868,10 @@ function applet_modules(){
                                     </td>
                                     <td valign="top" style="padding-left:5px">
                                         <select name="cacheint" id="int_2" style="width:100%">
-                                            <option value="MINUTE"  <?php if(@strstr($mod['cacheint'], 'MINUTE')) { echo 'selected'; } ?>>минут</option>
-                                            <option value="HOUR"  <?php if(@strstr($mod['cacheint'], 'HOUR')) { echo 'selected'; } ?>>часов</option>
-                                            <option value="DAY" <?php if(@strstr($mod['cacheint'], 'DAY')) { echo 'selected'; } ?>>дней</option>
-                                            <option value="MONTH" <?php if(@strstr($mod['cacheint'], 'MONTH')) { echo 'selected'; } ?>>месяцев</option>
+                                            <option value="MINUTE"  <?php if(@mb_strstr($mod['cacheint'], 'MINUTE')) { echo 'selected'; } ?>>минут</option>
+                                            <option value="HOUR"  <?php if(@mb_strstr($mod['cacheint'], 'HOUR')) { echo 'selected'; } ?>>часов</option>
+                                            <option value="DAY" <?php if(@mb_strstr($mod['cacheint'], 'DAY')) { echo 'selected'; } ?>>дней</option>
+                                            <option value="MONTH" <?php if(@mb_strstr($mod['cacheint'], 'MONTH')) { echo 'selected'; } ?>>месяцев</option>
                                         </select>
                                     </td>
                                 </tr>

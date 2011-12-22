@@ -40,7 +40,7 @@ function search_faq($query, $look){
 				$result_array['place']       = $_LANG['FAQ'].' &rarr; '.$item['cat_title'];
 				$result_array['placelink']   = '/faq/'.$item['cat_id'];
 				$result_array['description'] = $searchModel->getProposalWithSearchWord($item['answer']);
-				$result_array['title']       = substr($item['quest'], 0, 70).'...';
+				$result_array['title']       = mb_substr($item['quest'], 0, 70).'...';
 				$result_array['pubdate']     = $item['pubdate'];
 				$result_array['session_id']  = session_id();
 

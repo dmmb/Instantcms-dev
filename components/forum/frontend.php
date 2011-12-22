@@ -111,7 +111,7 @@ function uploadFiles($post_id, $cfg){
                     if (mb_strstr(mb_strtolower($cfg['fa_ext']), $ext)){
 
 						$name = mb_substr($file, 0, mb_strrpos($file, '.'));
-						$name = preg_replace ('/[^a-zA-Z0-9]/i', '', $name);
+						$name = preg_replace ('/[^a-zA-Z0-9]/iu', '', $name);
                         $file = $inDB->escape_string($name . '_' . mb_substr(session_id(), 0, 5) . '.' . $ext);
 
 						@mkdir(PATH."/upload/forum/post".$post_id);
@@ -1266,10 +1266,10 @@ if ($do=='reloadfile'){
 					if ($filesize <= $cfg['fa_size']*1024){
 							
 						//check file extension is allowed									
-						if ( (!$cfg['fa_ext_not'] && mb_strstr($cfg['fa_ext'], $ext)) || ($cfg['fa_ext_not'] && !strstr($cfg['fa_ext'], $ext))){									
+						if ( (!$cfg['fa_ext_not'] && mb_strstr($cfg['fa_ext'], $ext)) || ($cfg['fa_ext_not'] && !mb_strstr($cfg['fa_ext'], $ext))){									
 							$name = basename($filename, '.' . $path_parts['extension']);
 									
-							$filename = $name . '_' . substr(session_id(), 0, 5) . '.' . $ext;
+							$filename = $name . '_' . mb_substr(session_id(), 0, 5) . '.' . $ext;
 							$destination = PATH."/upload/forum/post".$post_id."/".$filename;
 							
 							@unlink(PATH."/upload/forum/post".$post_id."/".$file['filename']);

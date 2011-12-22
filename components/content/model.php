@@ -469,6 +469,9 @@ class cms_model_content{
 
     public function getSeoLink($article){
 
+		$inCore = cmsCore::getInstance();
+		$cfg = $inCore->loadComponentConfig('content');
+
         $seolink    = '';
         
         $category   = $this->inDB->get_fields('cms_category', "id={$article['category_id']}", 'NSLeft, NSRight');
@@ -481,12 +484,12 @@ class cms_model_content{
         if ($path_list){
             foreach($path_list as $pcat){
                 if ($pcat['id']!=1){
-                    $seolink .= cmsCore::strToURL(($pcat['url'] ? $pcat['url'] : $pcat['title'])) . '/';
+                    $seolink .= cmsCore::strToURL(($pcat['url'] ? $pcat['url'] : $pcat['title']), $cfg['is_url_cyrillic']) . '/';
                 }
             }
         }
 
-        $seolink .= cmsCore::strToURL(($article['url'] ? $article['url'] : $article['title']));
+        $seolink .= cmsCore::strToURL(($article['url'] ? $article['url'] : $article['title']), $cfg['is_url_cyrillic']);
 
         if ($article['id']){
             $where = ' AND id<>'.$article['id'];
@@ -507,6 +510,9 @@ class cms_model_content{
 
     public function getCategorySeoLink($category){
 
+		$inCore = cmsCore::getInstance();
+		$cfg = $inCore->loadComponentConfig('content');
+
         $seolink    = '';
 
         //Строим путь к разделу
@@ -520,12 +526,12 @@ class cms_model_content{
         if ($path_list){
             foreach($path_list as $pcat){
                 if ($pcat['id']!=1){
-                    $seolink .= cmsCore::strToURL(($pcat['url'] ? $pcat['url'] : $pcat['title'])) . '/';
+                    $seolink .= cmsCore::strToURL(($pcat['url'] ? $pcat['url'] : $pcat['title']), $cfg['is_url_cyrillic']) . '/';
                 }
             }
         }
 
-        $seolink .= cmsCore::strToURL(($category['url'] ? $category['url'] : $category['title']));
+        $seolink .= cmsCore::strToURL(($category['url'] ? $category['url'] : $category['title']), $cfg['is_url_cyrillic']);
 
         //Обновляем пути всех статей этого раздела
         $sql = "SELECT id, title, url FROM cms_content WHERE category_id = '{$category['id']}'";
@@ -536,7 +542,7 @@ class cms_model_content{
 
             while($article = $this->inDB->fetch_assoc($result)){
 
-                $article_seolink = $seolink . '/' . cmsCore::strToURL(($article['url'] ? $article['url'] : $article['title']));
+                $article_seolink = $seolink . '/' . cmsCore::strToURL(($article['url'] ? $article['url'] : $article['title']), $cfg['is_url_cyrillic']);
 
                 $this->inDB->query("UPDATE cms_content SET seolink='{$article_seolink}' WHERE id='{$article['id']}'");
 
@@ -703,10 +709,10 @@ class cms_model_content{
 
     public function addArticle($article){
         $inCore = cmsCore::getInstance();
-
+		$cfg = $inCore->loadComponentConfig('content');
         $article = cmsCore::callEvent('ADD_ARTICLE', $article);
 
-        if ($article['url']) { $article['url'] = cmsCore::strToURL($article['url']); }
+        if ($article['url']) { $article['url'] = cmsCore::strToURL($article['url'], $cfg['is_url_cyrillic']); }
 
 		// получаем значение порядка последней статьи
 		$last_ordering = (int)$this->inDB->get_field('cms_content', "category_id = '{$article['category_id']}' ORDER BY ordering DESC", 'ordering');
@@ -750,12 +756,12 @@ class cms_model_content{
 
         $inCore             = cmsCore::getInstance();
         $inUser             = cmsUser::getInstance();
-
+		$cfg = $inCore->loadComponentConfig('content');
         $article['id']      = $id;
 
 		if(!$not_upd_seo){
 			if ($article['url']) { 
-				$article['url']  = cmsCore::strToURL($article['url']);
+				$article['url']  = cmsCore::strToURL($article['url'], $cfg['is_url_cyrillic']);
 			}
         	$article['seolink'] = $this->getSeoLink($article);
 			$article_seo_sql = "url='{$article['url']}', seolink='{$article['seolink']}',";

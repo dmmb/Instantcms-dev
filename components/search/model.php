@@ -203,7 +203,7 @@ class cms_model_search{
 			   if(!$from_component[$key]){
 				  unset($from_component[$key]);
 			   } else {
-				   $from_component[$key] = preg_replace('/[^a-z_]/i', '', $from_component[$key]);
+				   $from_component[$key] = preg_replace('/[^a-z_]/ui', '', $from_component[$key]);
 			   }
 			}
 		}

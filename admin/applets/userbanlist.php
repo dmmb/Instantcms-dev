@@ -267,10 +267,10 @@ function applet_userbanlist(){
             <td valign="top"><p>
             <input name="int_num" type="text" id="int_num" size="5" value="<?php echo @(int)$mod['int_num']?>"/>
               <select name="int_period" id="int_period">
-                <option value="MINUTE"  <?php if(@strstr($mod['int_period'], 'MINUTE')) { echo 'selected'; } ?>>минут</option>
-                <option value="HOUR"  <?php if(@strstr($mod['int_period'], 'HOUR')) { echo 'selected'; } ?>>часов</option>
-                <option value="DAY" <?php if(@strstr($mod['int_period'], 'DAY')) { echo 'selected'; } ?>>дней</option>
-                <option value="MONTH" <?php if(@strstr($mod['int_period'], 'MONTH')) { echo 'selected'; } ?>>месяцев</option>
+                <option value="MINUTE"  <?php if(@mb_strstr($mod['int_period'], 'MINUTE')) { echo 'selected'; } ?>>минут</option>
+                <option value="HOUR"  <?php if(@mb_strstr($mod['int_period'], 'HOUR')) { echo 'selected'; } ?>>часов</option>
+                <option value="DAY" <?php if(@mb_strstr($mod['int_period'], 'DAY')) { echo 'selected'; } ?>>дней</option>
+                <option value="MONTH" <?php if(@mb_strstr($mod['int_period'], 'MONTH')) { echo 'selected'; } ?>>месяцев</option>
               </select>
             </p>
               <p>
