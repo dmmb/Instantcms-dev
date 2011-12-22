@@ -624,7 +624,8 @@ CREATE TABLE `#__form_fields` (
   `kind` varchar(30) NOT NULL,
   `mustbe` int(11) NOT NULL,
   `config` text NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY "form_id" ("form_id")
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 

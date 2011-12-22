@@ -281,7 +281,7 @@ public function printPathway($separator='&rarr;'){
  */
 public function addPathway($title, $link=''){
     //Если ссылка не указана, берем текущий URI
-    if (empty($link)) { $link = $_SERVER['REQUEST_URI']; }
+    if (empty($link)) { $link = htmlspecialchars($_SERVER['REQUEST_URI']); }
     //Проверяем, есть ли уже в глубиномере такое звено
     $already = false;
     foreach($this->pathway as $key => $val){
@@ -656,6 +656,7 @@ public function buildForm($form_id, $admin=false, $showtitle=true){
 public function buildFormField($form_id, $field, $default=''){
 
     $html   = '';
+
     $cfg    = unserialize($field['config']);
 
     $style  = 'background-color:white';
