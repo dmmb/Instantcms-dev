@@ -12,7 +12,8 @@
 /******************************************************************************/
 
     session_start();
-
+    setlocale(LC_ALL, 'ru_RU.UTF-8');
+    header('Content-Type: text/html; charset=utf-8');
     define('VALID_CMS', 1);
     
     define('PATH', $_SERVER['DOCUMENT_ROOT']);
@@ -20,171 +21,284 @@
     include(PATH.'/core/cms.php');
     include(PATH.'/includes/config.inc.php');
 
-    $inCore     = cmsCore::getInstance();
+    $inCore = cmsCore::getInstance();
 
     define('HOST', 'http://' . $inCore->getHost());
 
-    $inCore->loadClass('config');       //конфигурация
-    $inCore->loadClass('db');           //база данных
+    $inCore->loadClass('config');
+    $inCore->loadClass('db');
     $inCore->loadClass('user');
 	$inCore->loadClass('cron');
 
-    $inConf     = cmsConfig::getInstance();
-    $inDB       = cmsDatabase::getInstance();
+    $inConf = cmsConfig::getInstance();
+    $inDB   = cmsDatabase::getInstance();
+
+	global $_CFG;
 
     $version_prev = '1.9';
     $version_next = '1.9.1';
-	
-	$is_was_migrate = false;
+
+	$info_migrate_file = PATH.'/migrate/info.php';
+	$array_m = array();
+	$M_INFO  = array();
+
+	if (file_exists($info_migrate_file)){
+
+		include($info_migrate_file);
+
+	}
 
 // ========================================================================== //
 // ========================================================================== //
+?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>InstantCMS - Миграция</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
 
-    echo '<style type="text/css">
-            body { font-family:Arial; font-size:14px; }
+<body>
+<style type="text/css">
+	body { font-family:Arial; font-size:14px; }
 
-            a { color: #0099CC; }
-            a:hover { color: #375E93; }
-            h2 { color: #375E93; }
+	a { color: #0099CC; }
+	a:hover { color: #375E93; }
+	h2 { color: #375E93; }
 
-            #wrapper { padding:10px 30px; }
-            #wrapper p{ line-height: 20px; }
+	#wrapper { padding:10px 30px; }
+	#wrapper p{ line-height: 20px; }
 
-            .migrate p { 
-                           line-height:16px;
-                           padding-left:20px;
-                           margin:2px;
-                           margin-left:20px;                           
-                           background:url(/admin/images/actions/on.gif) no-repeat;
-                       }
-            .important {
-                           margin:20px;
-                           margin-left:0px;
-                           border:solid 1px silver;
-                           padding:15px;
-                           padding-left:65px;
-                           background:url(important.png) no-repeat 15px 15px;
-                       }
-             .nextlink {
-                           margin-top:15px;
-                           font-size:18px;
-             }
-          </style>';
-
-    echo '<div id="wrapper">';
-
+	.migrate p { 
+				   line-height:16px;
+				   padding-left:20px;
+				   margin:2px;
+				   margin-left:20px;                           
+				   background:url(/admin/images/actions/on.gif) no-repeat;
+			   }
+	.important {
+				   margin:20px;
+				   margin-left:0px;
+				   border:solid 1px silver;
+				   padding:15px;
+				   padding-left:65px;
+				   background:url(important.png) no-repeat 15px 15px;
+			   }
+	 .nextlink {
+				   margin-top:15px;
+				   font-size:18px;
+	 }
+  </style>
+<div id="wrapper" class="migrate">
+<?php
     echo "<h2>Миграция InstantCMS {$version_prev} &rarr; {$version_next}</h2>";
+    echo "<h3>Внимание! Будет произведена конвертация базы в UTF-8. Убедитесь, что резервная копия базы создана и сайт выключен для посетителей.</h3>";
+
+	$folders = array();
+	$folders[] = '/includes';
+	$folders[] = '/migrate';
+
+	foreach($folders as $key=>$folder){	
+		$right = true;
+		if(!@is_writable(PATH.$folder)){
+			if (!@chmod(PATH.$folder, 0777)){
+					echo '<div style="color:red">Директория "'.$folder.'" недоступна для записи. Миграция приостановлена.</div>';
+			}
+		}
+	}
+
+	if(!@is_writable(PATH.'/includes') || !@is_writable(PATH.'/migrate')){ exit; }
+
+	$filepath = PATH.'/includes/config.inc.php';
+
+	if (file_exists($filepath)){
+		if (!@is_writable($filepath)){ echo '<div style="color:red">Файл <strong>'.$filepath.'</strong> недоступен для записи!</div>'; exit; }
+	}
 
 // ========================================================================== //
 // ========================================================================== //
-// -------------Конвертация базы данных---------------------------------------//
 
-	// проверяем кодировку БД
-	$result = $inDB->query('SHOW VARIABLES LIKE "character_set_results"');
-	$ch = $inDB->fetch_assoc($result);
-
-	//if (mb_strtolower($ch['Value']) == 'cp1251'){
+	if(!$M_INFO['is_convert']){
 
 		$result = $inDB->query('SHOW TABLES');
 		while($table = $inDB->fetch_assoc($result)){
-			$inDB->query('ALTER TABLE '.$table['Tables_in_'.$inConf->db_base].' CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci');
-			$inDB->query('ALTER TABLE '.$table['Tables_in_'.$inConf->db_base].' DEFAULT CHARACTER SET utf8');
+			$inDB->query('ALTER TABLE '.$table['Tables_in_'.$inConf->db_base].' CONVERT TO CHARACTER SET utf8 COLLATE utf8_bin');
 		}
-		$inDB->query('ALTER DATABASE `'.$inConf->db_base.'` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci');
+		$inDB->query('ALTER DATABASE `'.$inConf->db_base.'` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin');
 
-	//} else {
-		echo '<p>база данных уже была сконвертирована в UTF-8.</p>';
-	//}
+		echo '<p>База данных сконвертирована в UTF-8, сравнение строк utf8_bin.</p>';
+		$M_INFO['is_convert'] = 1;
+
+	}
 
 // ========================================================================== //
 // ========================================================================== //
 
-	$sql = "SELECT id, config FROM cms_form_fields";
+	if(!$M_INFO['is_convert_pools']){
 
-	$result = $inDB->query($sql);
+		$sql = "SELECT id, answers FROM cms_polls";
+	
+		$result = $inDB->query($sql);
+	
+		if ($inDB->num_rows($result)){
+	
+			while($item = $inDB->fetch_assoc($result)){
 
-	if ($inDB->num_rows($result)){
-
-		while($item = $inDB->fetch_assoc($result)){
-
-			$item['config'] = iconv('utf-8', 'cp1251', $item['config']);
-			$cfg    = unserialize($item['config']);
-			foreach($cfg as $param=>$value){
-				$cfg[$param] = iconv('cp1251', 'utf-8', $value);
+				$item['answers'] = iconv('utf-8', 'cp1251', $item['answers']);
+				$cfg    = unserialize($item['answers']);
+				foreach($cfg as $param=>$value){
+					$answers[iconv('cp1251', 'utf-8', $param)] = iconv('cp1251', 'utf-8', $value);
+				}
+				$answers = serialize($answers);echo $answers;
+				$answers = $inDB->escape_string($answers);
+				$inDB->query("UPDATE cms_polls SET answers='{$answers}' WHERE id='{$item['id']}'");
+				unset($cfg);
 			}
-			$cfg = serialize($cfg);
-			$cfg = $inDB->escape_string($cfg);
-			//$inDB->query("UPDATE cms_form_fields SET config='{$cfg}' WHERE id='{$item['id']}'");
-			unset($cfg);
+	
 		}
+
+		echo '<p>Конвертаци опросов выполнена.</p>';
+		$M_INFO['is_convert_pools'] = 1;
 
 	}
 
-	echo '<p>Настройки значений форм сконверчены.</p>';
-	$is_was_migrate = true;
 // ========================================================================== //
 // ========================================================================== //
 
-	$sql = "SELECT id, fieldsdata FROM cms_uc_items";
+	if(!$M_INFO['is_convert_form']){
 
-	$result = $inDB->query($sql);
-
-	if ($inDB->num_rows($result)){
-
-		while($item = $inDB->fetch_assoc($result)){
-
-			$item['fieldsdata'] = iconv('utf-8', 'cp1251', $item['fieldsdata']);
-			$cfg    = unserialize($item['fieldsdata']);
-			foreach($cfg as $param=>$value){
-				$cfg[$param] = iconv('cp1251', 'utf-8', $value);
+		$sql = "SELECT id, config FROM cms_form_fields";
+	
+		$result = $inDB->query($sql);
+	
+		if ($inDB->num_rows($result)){
+	
+			while($item = $inDB->fetch_assoc($result)){
+	
+				$item['config'] = iconv('utf-8', 'cp1251', $item['config']);
+				$cfg    = unserialize($item['config']);
+				foreach($cfg as $param=>$value){
+					$cfg[$param] = iconv('cp1251', 'utf-8', $value);
+				}
+				$cfg = serialize($cfg);
+				$cfg = $inDB->escape_string($cfg);
+				$inDB->query("UPDATE cms_form_fields SET config='{$cfg}' WHERE id='{$item['id']}'");
+				unset($cfg);
 			}
-			$cfg = serialize($cfg);
-			$cfg = $inDB->escape_string($cfg);
-			//$inDB->query("UPDATE cms_uc_items SET fieldsdata='{$cfg}' WHERE id='{$item['id']}'");
-			unset($cfg);
+	
 		}
-
+	
+		echo '<p>Настройки значений форм сконверчены.</p>';
+		$M_INFO['is_convert_form'] = 1;
 	}
-
-	echo '<p>Поля записей каталога сконверчены.</p>';
-	$is_was_migrate = true;
-
 // ========================================================================== //
 // ========================================================================== //
 
-	$sql = "SELECT id, fieldsstruct FROM cms_uc_cats";
+	if(!$M_INFO['is_convert_uc_items']){
 
-	$result = $inDB->query($sql);
-
-	if ($inDB->num_rows($result)){
-
-		while($item = $inDB->fetch_assoc($result)){
-
-			$item['fieldsstruct'] = iconv('utf-8', 'cp1251', $item['fieldsstruct']);
-			$cfg    = unserialize($item['fieldsstruct']);
-			foreach($cfg as $param=>$value){
-				$cfg[$param] = iconv('cp1251', 'utf-8', $value);
+		$sql = "SELECT id, fieldsdata FROM cms_uc_items";
+	
+		$result = $inDB->query($sql);
+	
+		if ($inDB->num_rows($result)){
+	
+			while($item = $inDB->fetch_assoc($result)){
+	
+				$item['fieldsdata'] = iconv('utf-8', 'cp1251', $item['fieldsdata']);
+				$cfg    = unserialize($item['fieldsdata']);
+				foreach($cfg as $param=>$value){
+					$cfg[$param] = iconv('cp1251', 'utf-8', $value);
+				}
+				$cfg = serialize($cfg);
+				$cfg = $inDB->escape_string($cfg);
+				$inDB->query("UPDATE cms_uc_items SET fieldsdata='{$cfg}' WHERE id='{$item['id']}'");
+				unset($cfg);
 			}
-			$cfg = serialize($cfg);
-			$cfg = $inDB->escape_string($cfg);
-			//$inDB->query("UPDATE cms_uc_cats SET fieldsstruct='{$cfg}' WHERE id='{$item['id']}'");
-			unset($cfg);
+	
 		}
+	
+		echo '<p>Поля записей каталога сконверчены.</p>';
+		$M_INFO['is_convert_uc_items'] = 1;
 
 	}
 
-	echo '<p>Поля категорий каталога сконверчены.</p>';
-	$is_was_migrate = true;
+// ========================================================================== //
+// ========================================================================== //
+
+	if(!$M_INFO['is_convert_uc_cats']){
+
+		$sql = "SELECT id, fieldsstruct FROM cms_uc_cats";
+	
+		$result = $inDB->query($sql);
+	
+		if ($inDB->num_rows($result)){
+	
+			while($item = $inDB->fetch_assoc($result)){
+	
+				$item['fieldsstruct'] = iconv('utf-8', 'cp1251', $item['fieldsstruct']);
+				$cfg    = unserialize($item['fieldsstruct']);
+				foreach($cfg as $param=>$value){
+					$cfg[$param] = iconv('cp1251', 'utf-8', $value);
+				}
+				$cfg = serialize($cfg);
+				$cfg = $inDB->escape_string($cfg);
+				$inDB->query("UPDATE cms_uc_cats SET fieldsstruct='{$cfg}' WHERE id='{$item['id']}'");
+				unset($cfg);
+			}
+	
+		}
+	
+		echo '<p>Поля категорий каталога сконверчены.</p>';
+		$M_INFO['is_convert_uc_cats'] = 1;
+
+	}
 
 // ========================================================================== //
 // ========================================================================== //
-	if ($is_was_migrate) {
-	    echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Миграция завершена. Удалите папку /migrate/ прежде чем продолжить!</div>';
-	} else {
-		echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Вы уже прошли миграцию.</div>';
+
+	if(!$M_INFO['is_convert_config']){
+
+		$new_cfg = myIconv('cp1251', 'utf-8', $_CFG);
+
+		$inConf->saveToFile($new_cfg);
+
+		echo '<p>Конвертация файла конфигурации "/includes/config.inc.php" выполнено.</p>';
+		$M_INFO['is_convert_config'] = 1;
+
 	}
+
+// ========================================================================== //
+// ========================================================================== //
+
+	echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Миграция завершена. Удалите папку /migrate/ прежде чем продолжить!</div>';
     echo '<div class="nextlink"><a href="/">Перейти на сайт</a></div>';
-    echo '</div>';
+    echo '</div></body></html>';
 
 // ========================================================================== //
+
+	$cfg_file = fopen($info_migrate_file, 'w+');
+
+	fputs($cfg_file, "<?php \n");
+	fputs($cfg_file, '$M_INFO = array();'."\n");
+
+	foreach($M_INFO as $key=>$value){
+		$s = '$M_INFO' . "['$key'] \t= $value;\n";
+		fwrite($cfg_file, $s);
+	}
+
+	fwrite($cfg_file, "?>");
+	fclose($cfg_file);
+
+	function myIconv($from, $to, $var){
+		if (is_array($var)){
+			$new = array();
+			foreach ($var as $key => $val){
+				$new[self::myIconv($from, $to, $key)] = self::myIconv($from, $to, str_replace('\n', "\n", $val));
+			}
+			$var = $new;
+		} else if (is_string($var)){
+			$var = stripslashes(iconv($from, $to, str_replace('\n', "\n", $var)));
+		}
+		return $var;
+	}
+
 ?>
