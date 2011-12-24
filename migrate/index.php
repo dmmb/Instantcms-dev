@@ -91,7 +91,6 @@
 <div id="wrapper" class="migrate">
 <?php
     echo "<h2>Миграция InstantCMS {$version_prev} &rarr; {$version_next}</h2>";
-    echo "<h3>Внимание! Будет произведена конвертация базы в UTF-8. Убедитесь, что резервная копия базы создана и сайт выключен для посетителей.</h3>";
 
 	$folders = array();
 	$folders[] = '/includes';
@@ -114,6 +113,11 @@
 		if (!@is_writable($filepath)){ echo '<div style="color:red">Файл <strong>'.$filepath.'</strong> недоступен для записи!</div>'; exit; }
 	}
 
+	if(!$inCore->inRequest('go')){
+	    echo '<h3>Внимание! Будет произведена конвертация базы в UTF-8. Убедитесь, что резервная копия базы создана и сайт выключен для посетителей.</h3>';
+		echo '<h3><a href="/migrate/index.php?go=1">продолжить</a></h3>';
+		exit;
+	}
 // ========================================================================== //
 // ========================================================================== //
 
@@ -127,6 +131,37 @@
 
 		echo '<p>База данных сконвертирована в UTF-8, сравнение строк utf8_bin.</p>';
 		$M_INFO['is_convert'] = 1;
+
+	}
+
+// ========================================================================== //
+// ========================================================================== //
+
+	if(!$M_INFO['is_convert_cat_photoalbum']){
+
+		$sql = "SELECT id, photoalbum FROM cms_category";
+	
+		$result = $inDB->query($sql);
+	
+		if ($inDB->num_rows($result)){
+	
+			while($item = $inDB->fetch_assoc($result)){
+
+				$item['photoalbum'] = iconv('utf-8', 'cp1251', $item['photoalbum']);
+				$cfg    = unserialize($item['photoalbum']);
+				foreach($cfg as $param=>$value){
+					$photoalbum[iconv('cp1251', 'utf-8', $param)] = iconv('cp1251', 'utf-8', $value);
+				}
+				$photoalbum = serialize($photoalbum);
+				$photoalbum = $inDB->escape_string($photoalbum);
+				$inDB->query("UPDATE cms_category SET photoalbum='{$photoalbum}' WHERE id='{$item['id']}'");
+				unset($cfg);
+			}
+	
+		}
+
+		echo '<p>Конвертация настроек категорий выполнена.</p>';
+		$M_INFO['is_convert_cat_photoalbum'] = 1;
 
 	}
 
@@ -148,7 +183,7 @@
 				foreach($cfg as $param=>$value){
 					$answers[iconv('cp1251', 'utf-8', $param)] = iconv('cp1251', 'utf-8', $value);
 				}
-				$answers = serialize($answers);echo $answers;
+				$answers = serialize($answers);
 				$answers = $inDB->escape_string($answers);
 				$inDB->query("UPDATE cms_polls SET answers='{$answers}' WHERE id='{$item['id']}'");
 				unset($cfg);
@@ -156,8 +191,46 @@
 	
 		}
 
-		echo '<p>Конвертаци опросов выполнена.</p>';
+		echo '<p>Конвертация опросов выполнена.</p>';
 		$M_INFO['is_convert_pools'] = 1;
+
+	}
+
+// ========================================================================== //
+// ========================================================================== //
+
+	if(!$M_INFO['is_convert__forum_pools']){
+
+		$sql = "SELECT id, answers, options FROM cms_forum_polls";
+
+		$result = $inDB->query($sql);
+	
+		if ($inDB->num_rows($result)){
+	
+			while($item = $inDB->fetch_assoc($result)){
+
+				$item['answers'] = unserialize(iconv('utf-8', 'cp1251', $item['answers']));
+				foreach($item['answers'] as $param=>$value){
+					$answers[iconv('cp1251', 'utf-8', $param)] = iconv('cp1251', 'utf-8', $value);
+				}
+				$answers = serialize($answers);
+				$answers = $inDB->escape_string($answers);
+
+				$item['options'] = unserialize(iconv('utf-8', 'cp1251', $item['options']));
+				foreach($item['options'] as $param=>$value){
+					$options[iconv('cp1251', 'utf-8', $param)] = iconv('cp1251', 'utf-8', $value);
+				}
+				$options = serialize($options);
+				$options = $inDB->escape_string($options);
+
+				$inDB->query("UPDATE cms_forum_polls SET answers='{$answers}', options='{$options}' WHERE id='{$item['id']}'");
+
+			}
+	
+		}
+
+		echo '<p>Конвертация опросов на форуме выполнена.</p>';
+		$M_INFO['is_convert__forum_pools'] = 1;
 
 	}
 
@@ -261,7 +334,7 @@
 
 		$inConf->saveToFile($new_cfg);
 
-		echo '<p>Конвертация файла конфигурации "/includes/config.inc.php" выполнено.</p>';
+		echo '<p>Конвертация файла конфигурации "/includes/config.inc.php" выполнена.</p>';
 		$M_INFO['is_convert_config'] = 1;
 
 	}

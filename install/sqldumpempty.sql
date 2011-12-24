@@ -686,7 +686,8 @@ CREATE TABLE `#__forum_images` (
   `post_id` int(11) NOT NULL,
   `session_id` varchar(50) NOT NULL,
   `fileurl` varchar(250) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `post_id` (`post_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
@@ -699,7 +700,8 @@ CREATE TABLE `#__forum_polls` (
   `answers` text NOT NULL,
   `options` varchar(250) NOT NULL,
   `enddate` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `thread_id` (`thread_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 

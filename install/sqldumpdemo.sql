@@ -665,7 +665,7 @@ CREATE TABLE `#__form_fields` (
   `mustbe` int(11) NOT NULL,
   `config` text NOT NULL,
   PRIMARY KEY (`id`),
-  KEY "form_id" ("form_id")
+  KEY `form_id` (`form_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__form_fields` (`id`, `form_id`, `title`, `ordering`, `kind`, `mustbe`, `config`) VALUES
@@ -739,7 +739,8 @@ CREATE TABLE `#__forum_images` (
   `post_id` int(11) NOT NULL,
   `session_id` varchar(50) NOT NULL,
   `fileurl` varchar(250) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `post_id` (`post_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__forum_polls`;
@@ -751,7 +752,8 @@ CREATE TABLE `#__forum_polls` (
   `answers` text NOT NULL,
   `options` varchar(250) NOT NULL,
   `enddate` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `thread_id` (`thread_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__forum_posts`;
