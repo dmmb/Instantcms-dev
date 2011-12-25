@@ -114,258 +114,302 @@
 	}
 
 	if(!$inCore->inRequest('go')){
-	    echo '<h3>Внимание! Будет произведена конвертация базы в UTF-8. Убедитесь, что резервная копия базы создана и сайт выключен для посетителей.</h3>';
+	    echo '<h3 style="color: red">Внимание! Будет произведена конвертация базы в UTF-8. Убедитесь, что резервная копия базы создана и сайт выключен для посетителей.</h3>';
 		echo '<h3><a href="/migrate/index.php?go=1">продолжить</a></h3>';
 		exit;
 	}
+	$step = $inCore->request('go', 'int', 0);
 // ========================================================================== //
 // ========================================================================== //
 
-	if(!$M_INFO['is_convert']){
+	if($step == 1){
+		if(!$M_INFO['is_convert']){
 
-		$result = $inDB->query('SHOW TABLES');
-		while($table = $inDB->fetch_assoc($result)){
-			$inDB->query('ALTER TABLE '.$table['Tables_in_'.$inConf->db_base].' CONVERT TO CHARACTER SET utf8 COLLATE utf8_bin');
-		}
-		$inDB->query('ALTER DATABASE `'.$inConf->db_base.'` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin');
-
-		echo '<p>База данных сконвертирована в UTF-8, сравнение строк utf8_bin.</p>';
-		$M_INFO['is_convert'] = 1;
-
-	}
-
-// ========================================================================== //
-// ========================================================================== //
-
-	if(!$M_INFO['is_convert_cat_photoalbum']){
-
-		$sql = "SELECT id, photoalbum FROM cms_category";
-	
-		$result = $inDB->query($sql);
-	
-		if ($inDB->num_rows($result)){
-	
-			while($item = $inDB->fetch_assoc($result)){
-
-				$item['photoalbum'] = iconv('utf-8', 'cp1251', $item['photoalbum']);
-				$cfg    = unserialize($item['photoalbum']);
-				foreach($cfg as $param=>$value){
-					$photoalbum[iconv('cp1251', 'utf-8', $param)] = iconv('cp1251', 'utf-8', $value);
+			// формируем список таблиц, которые остались для конвертации
+			$tables = array();
+			$result = $inDB->query('SHOW TABLES');
+			while($table = $inDB->fetch_assoc($result)){
+				if(!in_array($table['Tables_in_'.$inConf->db_base], $M_INFO)){
+					$tables[] = $table['Tables_in_'.$inConf->db_base];
 				}
-				$photoalbum = serialize($photoalbum);
-				$photoalbum = $inDB->escape_string($photoalbum);
-				$inDB->query("UPDATE cms_category SET photoalbum='{$photoalbum}' WHERE id='{$item['id']}'");
-				unset($cfg);
 			}
-	
-		}
 
-		echo '<p>Конвертация настроек категорий выполнена.</p>';
-		$M_INFO['is_convert_cat_photoalbum'] = 1;
+			// если массив не пуст
+			// берем из массива первый элемент
+			if($tables){
 
-	}
+				$curr_table = array_shift($tables);
+				$inDB->query('ALTER TABLE '.$curr_table.' CONVERT TO CHARACTER SET utf8 COLLATE utf8_bin');
+				// помечаем что сконвертили таблицу
+				$M_INFO[$curr_table] = $curr_table;
 
-// ========================================================================== //
-// ========================================================================== //
+				echo '<form method=post id=postform><input type=hidden name=go value="1"></form>
+						<p>Таблица '.$curr_table.' успешно сконверчена.</p>
+						<script>window.setTimeout("document.getElementById(\'postform\').submit()",300);</script>';
 
-	if(!$M_INFO['is_convert_pools']){
-
-		$sql = "SELECT id, answers FROM cms_polls";
-	
-		$result = $inDB->query($sql);
-	
-		if ($inDB->num_rows($result)){
-	
-			while($item = $inDB->fetch_assoc($result)){
-
-				$item['answers'] = iconv('utf-8', 'cp1251', $item['answers']);
-				$cfg    = unserialize($item['answers']);
-				foreach($cfg as $param=>$value){
-					$answers[iconv('cp1251', 'utf-8', $param)] = iconv('cp1251', 'utf-8', $value);
+				echo '<h4>Оставшиеся таблицы:</h4>';
+				echo '<ul>';
+				foreach($tables as $table){
+					echo '<li>'.$table.'</li>';
 				}
-				$answers = serialize($answers);
-				$answers = $inDB->escape_string($answers);
-				$inDB->query("UPDATE cms_polls SET answers='{$answers}' WHERE id='{$item['id']}'");
-				unset($cfg);
-			}
-	
-		}
+				echo '</ul>';
 
-		echo '<p>Конвертация опросов выполнена.</p>';
-		$M_INFO['is_convert_pools'] = 1;
+			} else { // считаем, что таблицы все сконверчены, меняем сравнение БД
 
-	}
-
-// ========================================================================== //
-// ========================================================================== //
-
-	if(!$M_INFO['is_convert__forum_pools']){
-
-		$sql = "SELECT id, answers, options FROM cms_forum_polls";
-
-		$result = $inDB->query($sql);
-	
-		if ($inDB->num_rows($result)){
-	
-			while($item = $inDB->fetch_assoc($result)){
-
-				$item['answers'] = unserialize(iconv('utf-8', 'cp1251', $item['answers']));
-				foreach($item['answers'] as $param=>$value){
-					$answers[iconv('cp1251', 'utf-8', $param)] = iconv('cp1251', 'utf-8', $value);
-				}
-				$answers = serialize($answers);
-				$answers = $inDB->escape_string($answers);
-
-				$item['options'] = unserialize(iconv('utf-8', 'cp1251', $item['options']));
-				foreach($item['options'] as $param=>$value){
-					$options[iconv('cp1251', 'utf-8', $param)] = iconv('cp1251', 'utf-8', $value);
-				}
-				$options = serialize($options);
-				$options = $inDB->escape_string($options);
-
-				$inDB->query("UPDATE cms_forum_polls SET answers='{$answers}', options='{$options}' WHERE id='{$item['id']}'");
+				$inDB->query('ALTER DATABASE `'.$inConf->db_base.'` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin');
+				echo '<p>База данных сконвертирована в UTF-8, сравнение строк utf8_bin.</p>';
+				echo '<h3><a href="/migrate/index.php?go=2">перейти ко второму шагу</a></h3>';
+				$M_INFO['is_convert'] = 1;
 
 			}
 	
+		} else {
+			echo '<p>База данных уже была сконвертирована в UTF-8.</p>';
+			echo '<h3><a href="/migrate/index.php?go=2">переходите ко второму шагу</a></h3>';
 		}
 
-		echo '<p>Конвертация опросов на форуме выполнена.</p>';
-		$M_INFO['is_convert__forum_pools'] = 1;
-
 	}
-
 // ========================================================================== //
 // ========================================================================== //
 
-	if(!$M_INFO['is_convert_form']){
-
-		$sql = "SELECT id, config FROM cms_form_fields";
+	if($step == 2){
+		if(!$M_INFO['is_convert_cat_photoalbum']){
 	
-		$result = $inDB->query($sql);
+			$sql = "SELECT id, photoalbum FROM cms_category";
+		
+			$result = $inDB->query($sql);
+		
+			if ($inDB->num_rows($result)){
+		
+				while($item = $inDB->fetch_assoc($result)){
 	
-		if ($inDB->num_rows($result)){
-	
-			while($item = $inDB->fetch_assoc($result)){
-	
-				$item['config'] = iconv('utf-8', 'cp1251', $item['config']);
-				$cfg    = unserialize($item['config']);
-				foreach($cfg as $param=>$value){
-					$cfg[$param] = iconv('cp1251', 'utf-8', $value);
+					$item['photoalbum'] = iconv('utf-8', 'cp1251', $item['photoalbum']);
+					$cfg    = unserialize($item['photoalbum']);
+					foreach($cfg as $param=>$value){
+						$photoalbum[iconv('cp1251', 'utf-8', $param)] = iconv('cp1251', 'utf-8', $value);
+					}
+					$photoalbum = serialize($photoalbum);
+					$photoalbum = $inDB->escape_string($photoalbum);
+					$inDB->query("UPDATE cms_category SET photoalbum='{$photoalbum}' WHERE id='{$item['id']}'");
+					unset($cfg);
 				}
-				$cfg = serialize($cfg);
-				$cfg = $inDB->escape_string($cfg);
-				$inDB->query("UPDATE cms_form_fields SET config='{$cfg}' WHERE id='{$item['id']}'");
-				unset($cfg);
+		
 			}
 	
+			echo '<p>Конвертация настроек категорий выполнена.</p>';
+			$M_INFO['is_convert_cat_photoalbum'] = 1;
+	
 		}
 	
-		echo '<p>Настройки значений форм сконверчены.</p>';
-		$M_INFO['is_convert_form'] = 1;
-	}
-// ========================================================================== //
-// ========================================================================== //
-
-	if(!$M_INFO['is_convert_uc_items']){
-
-		$sql = "SELECT id, fieldsdata FROM cms_uc_items";
+	// ========================================================================== //
+	// ========================================================================== //
 	
-		$result = $inDB->query($sql);
+		if(!$M_INFO['is_convert_pools']){
 	
-		if ($inDB->num_rows($result)){
+			$sql = "SELECT id, answers FROM cms_polls";
+		
+			$result = $inDB->query($sql);
+		
+			if ($inDB->num_rows($result)){
+		
+				while($item = $inDB->fetch_assoc($result)){
 	
-			while($item = $inDB->fetch_assoc($result)){
-	
-				$item['fieldsdata'] = iconv('utf-8', 'cp1251', $item['fieldsdata']);
-				$cfg    = unserialize($item['fieldsdata']);
-				foreach($cfg as $param=>$value){
-					$cfg[$param] = iconv('cp1251', 'utf-8', $value);
+					$item['answers'] = iconv('utf-8', 'cp1251', $item['answers']);
+					$cfg    = unserialize($item['answers']);
+					foreach($cfg as $param=>$value){
+						$answers[iconv('cp1251', 'utf-8', $param)] = iconv('cp1251', 'utf-8', $value);
+					}
+					$answers = serialize($answers);
+					$answers = $inDB->escape_string($answers);
+					$inDB->query("UPDATE cms_polls SET answers='{$answers}' WHERE id='{$item['id']}'");
+					unset($cfg);
 				}
-				$cfg = serialize($cfg);
-				$cfg = $inDB->escape_string($cfg);
-				$inDB->query("UPDATE cms_uc_items SET fieldsdata='{$cfg}' WHERE id='{$item['id']}'");
-				unset($cfg);
+		
 			}
 	
+			echo '<p>Конвертация опросов выполнена.</p>';
+			$M_INFO['is_convert_pools'] = 1;
+	
 		}
 	
-		echo '<p>Поля записей каталога сконверчены.</p>';
-		$M_INFO['is_convert_uc_items'] = 1;
-
-	}
-
-// ========================================================================== //
-// ========================================================================== //
-
-	if(!$M_INFO['is_convert_uc_cats']){
-
-		$sql = "SELECT id, fieldsstruct FROM cms_uc_cats";
+	// ========================================================================== //
+	// ========================================================================== //
 	
-		$result = $inDB->query($sql);
+		if(!$M_INFO['is_convert__forum_pools']){
 	
-		if ($inDB->num_rows($result)){
+			$sql = "SELECT id, answers, options FROM cms_forum_polls";
 	
-			while($item = $inDB->fetch_assoc($result)){
+			$result = $inDB->query($sql);
+		
+			if ($inDB->num_rows($result)){
+		
+				while($item = $inDB->fetch_assoc($result)){
 	
-				$item['fieldsstruct'] = iconv('utf-8', 'cp1251', $item['fieldsstruct']);
-				$cfg    = unserialize($item['fieldsstruct']);
-				foreach($cfg as $param=>$value){
-					$cfg[$param] = iconv('cp1251', 'utf-8', $value);
+					$item['answers'] = unserialize(iconv('utf-8', 'cp1251', $item['answers']));
+					foreach($item['answers'] as $param=>$value){
+						$answers[iconv('cp1251', 'utf-8', $param)] = iconv('cp1251', 'utf-8', $value);
+					}
+					$answers = serialize($answers);
+					$answers = $inDB->escape_string($answers);
+	
+					$item['options'] = unserialize(iconv('utf-8', 'cp1251', $item['options']));
+					foreach($item['options'] as $param=>$value){
+						$options[iconv('cp1251', 'utf-8', $param)] = iconv('cp1251', 'utf-8', $value);
+					}
+					$options = serialize($options);
+					$options = $inDB->escape_string($options);
+	
+					$inDB->query("UPDATE cms_forum_polls SET answers='{$answers}', options='{$options}' WHERE id='{$item['id']}'");
+	
 				}
-				$cfg = serialize($cfg);
-				$cfg = $inDB->escape_string($cfg);
-				$inDB->query("UPDATE cms_uc_cats SET fieldsstruct='{$cfg}' WHERE id='{$item['id']}'");
-				unset($cfg);
+		
 			}
 	
+			echo '<p>Конвертация опросов на форуме выполнена.</p>';
+			$M_INFO['is_convert__forum_pools'] = 1;
+	
 		}
 	
-		echo '<p>Поля категорий каталога сконверчены.</p>';
-		$M_INFO['is_convert_uc_cats'] = 1;
+	// ========================================================================== //
+	// ========================================================================== //
+	
+		if(!$M_INFO['is_convert_form']){
+	
+			$sql = "SELECT id, config FROM cms_form_fields";
+		
+			$result = $inDB->query($sql);
+		
+			if ($inDB->num_rows($result)){
+		
+				while($item = $inDB->fetch_assoc($result)){
+		
+					$item['config'] = iconv('utf-8', 'cp1251', $item['config']);
+					$cfg    = unserialize($item['config']);
+					foreach($cfg as $param=>$value){
+						$cfg[$param] = iconv('cp1251', 'utf-8', $value);
+					}
+					$cfg = serialize($cfg);
+					$cfg = $inDB->escape_string($cfg);
+					$inDB->query("UPDATE cms_form_fields SET config='{$cfg}' WHERE id='{$item['id']}'");
+					unset($cfg);
+				}
+		
+			}
+		
+			echo '<p>Настройки значений форм сконверчены.</p>';
+			$M_INFO['is_convert_form'] = 1;
+		}
+	// ========================================================================== //
+	// ========================================================================== //
+	
+		if(!$M_INFO['is_convert_uc_items']){
+	
+			$sql = "SELECT id, fieldsdata FROM cms_uc_items";
+		
+			$result = $inDB->query($sql);
+		
+			if ($inDB->num_rows($result)){
+		
+				while($item = $inDB->fetch_assoc($result)){
+		
+					$item['fieldsdata'] = iconv('utf-8', 'cp1251', $item['fieldsdata']);
+					$cfg    = unserialize($item['fieldsdata']);
+					foreach($cfg as $param=>$value){
+						$cfg[$param] = iconv('cp1251', 'utf-8', $value);
+					}
+					$cfg = serialize($cfg);
+					$cfg = $inDB->escape_string($cfg);
+					$inDB->query("UPDATE cms_uc_items SET fieldsdata='{$cfg}' WHERE id='{$item['id']}'");
+					unset($cfg);
+				}
+		
+			}
+		
+			echo '<p>Поля записей каталога сконверчены.</p>';
+			$M_INFO['is_convert_uc_items'] = 1;
+	
+		}
+	
+	// ========================================================================== //
+	// ========================================================================== //
+	
+		if(!$M_INFO['is_convert_uc_cats']){
+	
+			$sql = "SELECT id, fieldsstruct FROM cms_uc_cats";
+		
+			$result = $inDB->query($sql);
+		
+			if ($inDB->num_rows($result)){
+		
+				while($item = $inDB->fetch_assoc($result)){
+		
+					$item['fieldsstruct'] = iconv('utf-8', 'cp1251', $item['fieldsstruct']);
+					$cfg    = unserialize($item['fieldsstruct']);
+					foreach($cfg as $param=>$value){
+						$cfg[$param] = iconv('cp1251', 'utf-8', $value);
+					}
+					$cfg = serialize($cfg);
+					$cfg = $inDB->escape_string($cfg);
+					$inDB->query("UPDATE cms_uc_cats SET fieldsstruct='{$cfg}' WHERE id='{$item['id']}'");
+					unset($cfg);
+				}
+		
+			}
+		
+			echo '<p>Поля категорий каталога сконверчены.</p>';
+			$M_INFO['is_convert_uc_cats'] = 1;
+	
+		}
+	
+	// ========================================================================== //
+	// ========================================================================== //
+	
+		if(!$M_INFO['is_convert_config']){
+	
+			$new_cfg = myIconv('cp1251', 'utf-8', $_CFG);
+	
+			$inConf->saveToFile($new_cfg);
+	
+			echo '<p>Конвертация файла конфигурации "/includes/config.inc.php" выполнена.</p>';
+			$M_INFO['is_convert_config'] = 1;
+	
+		}
+
+		echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Миграция завершена. Удалите папку /migrate/ прежде чем продолжить!</div>';
+		echo '<div class="nextlink"><a href="/">Перейти на сайт</a></div>';
 
 	}
-
 // ========================================================================== //
 // ========================================================================== //
 
-	if(!$M_INFO['is_convert_config']){
-
-		$new_cfg = myIconv('cp1251', 'utf-8', $_CFG);
-
-		$inConf->saveToFile($new_cfg);
-
-		echo '<p>Конвертация файла конфигурации "/includes/config.inc.php" выполнена.</p>';
-		$M_INFO['is_convert_config'] = 1;
-
-	}
-
-// ========================================================================== //
-// ========================================================================== //
-
-	echo '<div style="margin:15px 0px 15px 0px;font-weight:bold">Миграция завершена. Удалите папку /migrate/ прежде чем продолжить!</div>';
-    echo '<div class="nextlink"><a href="/">Перейти на сайт</a></div>';
     echo '</div></body></html>';
 
 // ========================================================================== //
 
 	$cfg_file = fopen($info_migrate_file, 'w+');
 
-	fputs($cfg_file, "<?php \n");
-	fputs($cfg_file, '$M_INFO = array();'."\n");
+	$text_info  = "<?php \n";
+	$text_info .= '$M_INFO = array();'."\n";
 
 	foreach($M_INFO as $key=>$value){
-		$s = '$M_INFO' . "['$key'] \t= $value;\n";
-		fwrite($cfg_file, $s);
+
+		if (is_int($value)){
+			$text_info .= '$M_INFO' . "['$key'] \t= $value;\n";
+		} else {
+			$text_info .= '$M_INFO' . "['$key'] \t= '$value';\n";
+		}
+
 	}
 
-	fwrite($cfg_file, "?>");
+	$text_info .= "?>";
+	fwrite($cfg_file, $text_info);
 	fclose($cfg_file);
 
 	function myIconv($from, $to, $var){
 		if (is_array($var)){
 			$new = array();
 			foreach ($var as $key => $val){
-				$new[self::myIconv($from, $to, $key)] = self::myIconv($from, $to, str_replace('\n', "\n", $val));
+				$new[myIconv($from, $to, $key)] = myIconv($from, $to, str_replace('\n', "\n", $val));
 			}
 			$var = $new;
 		} else if (is_string($var)){
