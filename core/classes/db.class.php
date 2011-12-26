@@ -29,8 +29,7 @@ private function __construct(){
 
     mysql_select_db($inConf->db_base, $this->db_link) or die('Cannot select "'.$inConf->db_base.'" database');
 
-    $this->query("SET NAMES utf8");
-	$this->query("SET CHARACTER SET utf8");
+    $this->query("SET NAMES utf8, CHARACTER SET utf8");
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

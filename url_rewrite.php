@@ -136,13 +136,13 @@
         //
 
         $rules[] = array(
-                            'source'  => '/^subscribe\/([a-z]+)\/([0-9]+)$/i',
+                            'source'  => '/^subscribe\/([a-z_]+)\/([0-9]+)$/i',
                             'target'  => 'subscribes/{1}/{2}/1',
                             'action'  => 'rewrite'
                          );
 
         $rules[] = array(
-                            'source'  => '/^unsubscribe\/([a-z]+)\/([0-9]+)$/i',
+                            'source'  => '/^unsubscribe\/([a-z_]+)\/([0-9]+)$/i',
                             'target'  => 'subscribes/{1}/{2}/0',
                             'action'  => 'rewrite'
                          );
