@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<backend>    
+    <module>
+        <id>mod_random_image</id>
+        <title>Случайное изображение</title>
+    </module>
+    <params>
+        <param type="flag" name="showtitle" title="Показывать название фото" default="on" />
+        <param type="list_db" name="album_id" title="Фотографии из альбома" src="cms_photo_albums" src_title="title" src_value="id" tree="1">
+            <option title="-- Все альбомы --" value="0" />
+        </param>
+		<param type="flag" name="subs" title="Вместе с подальбомами" default="off" />
+    </params>
+</backend>

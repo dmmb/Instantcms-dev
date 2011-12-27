@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<backend>
+
+    <module>
+        <id>mod_forum</id>
+        <title>Темы на форуме</title>
+    </module>
+
+    <params>
+
+        <param type="number" name="shownum" title="Показывать тем" units="шт." default="4" />
+
+        <param type="list" name="showtype" title="Режим вывода тем">
+            <option title="Классический" value="classic" />
+            <option title="Web 2.0" value="web2" />
+        </param>
+
+		<param type="list_db" name="cat_id" title="Категория" src="cms_forum_cats" src_title="title" src_value="id" tree="0" >
+            <option title="-- Все категории --" value="0" />
+        </param>
+
+		<param type="list_db" name="forum_id" title="Темы из форума" src="cms_forums" src_title="title" src_value="id" tree="1" >
+            <option title="-- Все форумы --" value="0" />
+        </param>
+
+		<param type="flag" name="subs" title="Вместе с подфорумами" default="off" />
+		
+		<param type="flag" name="show_hidden" title="Выводить сообщения из закрытых форумов" default="off" />
+
+		<param type="flag" name="show_pinned" title="Выводить только прикрепленные темы" default="off" />
+
+        <param type="flag" name="showtext" title="Показывать часть сообщения" default="off" hint="Только для режима Web 2.0" />
+
+        <param type="flag" name="showforum" title="Показывать название форума" default="off" hint="Только для режима Web 2.0" />
+
+        <param type="flag" name="showlink" title="Показывать ссылку на форум" default="off" hint="Только для режима Web 2.0" />
+
+    </params>
+
+</backend>

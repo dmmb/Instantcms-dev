@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<backend>    
+    <module>
+        <id>mod_rss</id>
+        <title>Лента RSS</title>
+    </module>
+    <params>
+        <param type="string" name="rssurl" title="Адрес RSS-канала" default="http://www.lenta.ru/rss" />
+        <param type="flag" name="showdesc" title="Показывать анонсы" default="on" />
+        <param type="number" name="itemslimit" title="Количество новостей" units="шт." default="5" />
+        <param type="list" name="cols" title="Количество колонок">
+            <option title="1" value="1" />
+            <option title="2" value="2" />
+            <option title="3" value="3" />
+        </param>
+        <param type="flag" name="showicon" title="Показывать иконки RSS" default="on" />
+    </params>
+</backend>

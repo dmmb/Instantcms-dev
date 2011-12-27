@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<backend>
+
+    <module>
+        <id>mod_lastreg</id>
+        <title>Друзья онлайн</title>
+    </module>
+
+    <params>
+
+        <param type="number" name="limit" title="Количество друзей онлайн" default="5" />
+
+        <param type="list" name="view_type" title="Показывать как">
+            <option title="С аватарами" value="table" />
+            <option title="Списком" value="list" />
+        </param>
+
+    </params>
+
+</backend>

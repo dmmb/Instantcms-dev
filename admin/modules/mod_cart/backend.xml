@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<backend>    
+    <module>
+        <id>mod_cart</id>
+        <title>Корзина покупателя</title>
+    </module>
+    <params>
+
+        <param type="list" name="source" title="Источник товаров (компонент)">
+            <option title="Прайс-лист" value="price" />
+            <option title="Универсальный каталог" value="catalog" />
+        </param>
+
+        <param type="list" name="showtype" title="Показывать">
+            <option title="Список товаров в корзине" value="list" />
+            <option title="Количество товаров в корзине" value="qty" />
+            <option title="Количество и общую сумму" value="qtyprice" />
+        </param>
+
+        <param type="flag" name="showqty" title="Показывать количество товара" default="on" />
+
+    </params>
+</backend>

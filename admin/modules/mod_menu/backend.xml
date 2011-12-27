@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<backend>    
+    <module>
+        <id>mod_menu</id>
+        <title>Меню</title>
+    </module>
+    <params>
+
+        <param type="list" name="menu" title="Меню для отображения">
+            <option title="Главное меню" value="mainmenu" />
+            <option title="Дополнительное меню 1" value="menu1" />
+            <option title="Дополнительное меню 2" value="menu2" />
+            <option title="Дополнительное меню 3" value="menu3" />
+            <option title="Дополнительное меню 4" value="menu4" />
+            <option title="Дополнительное меню 5" value="menu5" />
+            <option title="Дополнительное меню 6" value="menu6" />
+            <option title="Дополнительное меню 7" value="menu7" />
+            <option title="Дополнительное меню 8" value="menu8" />
+            <option title="Дополнительное меню 9" value="menu9" />
+            <option title="Дополнительное меню 10" value="menu10" />
+            <option title="Дополнительное меню 11" value="menu11" />
+            <option title="Дополнительное меню 12" value="menu12" />
+            <option title="Дополнительное меню 13" value="menu13" />
+            <option title="Дополнительное меню 14" value="menu14" />
+            <option title="Дополнительное меню 15" value="menu15" />
+        </param>
+
+        <param type="flag" name="show_home" title="Показывать пункт &amp;laquo;Главная&amp;raquo;" hint="Кроме режима подменю" default="on" />
+
+        <param type="string" name="tpl" title="Использовать шаблон" default="mod_menu.tpl" />
+
+		<param type="flag" name="is_sub_menu" title="Режим подменю" hint="Выводятся дочерние пункты меню от текущего" default="off" />
+
+    </params>
+</backend>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<backend>    
+    <module>
+        <id>mod_uc_latest</id>
+        <title>Новинки каталога</title>
+    </module>
+    <params>
+        <param type="number" name="newscount" title="Количество новинок" units="шт." default="5" />
+        <param type="list" name="showtype" title="Режим вывода">
+            <option title="Галерея" value="thumb" />
+            <option title="Список" value="list" />
+        </param>
+        <param type="number" name="showf" title="Показывать полей" hint="для режима &amp;laquo;Список&amp;raquo;" units="шт." default="5" />
+        <param type="list_db" name="cat_id" title="Новинки из рубрики" src="cms_uc_cats" src_title="title" src_value="id" tree="1">
+            <option title="-- Все рубрики --" value="0" />
+        </param>
+        <param type="flag" name="subs" title="Вместе с подрубриками" default="off" />
+        <param type="flag" name="fulllink" title="Показывать ссылку на каталог" default="on" />
+    </params>
+</backend>

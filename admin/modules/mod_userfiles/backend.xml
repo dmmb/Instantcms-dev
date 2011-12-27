@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<backend>    
+    <module>
+        <id>mod_userfiles</id>
+        <title>Файлы пользователей</title>
+    </module>
+    <params>
+        <param type="flag" name="sw_latest" title="Показывать новые файлы" default="on" />
+        <param type="number" name="num_latest" title="Количество новых файлов" units="шт." default="5" />
+        <param type="flag" name="sw_popular" title="Показывать популярные файлы" default="on" />
+        <param type="number" name="num_popular" title="Количество популярных файлов" units="шт." default="5" />
+        <param type="flag" name="sw_stats" title="Показывать счетчик файлов" default="on" />
+    </params>
+</backend>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<backend>    
+    <module>
+        <id>mod_user_rating</id>
+        <title>Рейтинг пользователей</title>
+    </module>
+    <params>
+        <param type="number" name="count" title="Количество пользователей" default="5" />
+        <param type="list" name="view_type" title="Показывать как">
+            <option title="Карма" value="karma" />
+            <option title="Рейтинг" value="rating" />
+        </param>
+    </params>
+</backend>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<backend>    
+    <module>
+        <id>mod_comments</id>
+        <title>Последние комментарии</title>
+    </module>
+    <params>
+
+        <param type="number" name="shownum" title="Количество комментариев" units="шт." default="15" />
+
+        <param type="number" name="minrate" title="Ограничение по рейтингу" default="0" hint="Показывать комментарии с рейтингом выше указанного" />
+
+        <param type="flag" name="showguest" title="Показывать комментарии гостей" default="on" />
+
+        <param type="flag" name="showrss" title="Ссылка на RSS" default="on" />
+
+		<param type="flag" name="showtarg" title="Показывать цель и рейтинг" default="on" />
+
+        <param type="list_db" multiple="1" name="targets" title="Показывать комментарии для" src="cms_comment_targets" src_title="title" src_value="target" />
+
+    </params>
+</backend>

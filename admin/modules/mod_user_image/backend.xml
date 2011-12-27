@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<backend>    
+    <module>
+        <id>mod_uc_random</id>
+        <title>Случайное фото</title>
+    </module>
+    <params>
+     
+        <param type="flag" name="showtitle" title="Показывать название фото" default="on" />
+        
+    </params>
+</backend>

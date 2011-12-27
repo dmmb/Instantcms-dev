@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<backend>    
+    <module>
+        <id>mod_pricecat</id>
+        <title>Категории прайса</title>
+    </module>
+    <params>
+
+        <param type="flag" name="showdesc" title="Показывать описания" default="on" />
+
+        <param type="string" name="icon" title="Иконка" hint="Оставьте поле пустым, если иконка не нужна" default="/images/markers/pricelist.png" />
+
+    </params>
+</backend>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<backend>    
+    <module>
+        <id>mod_arhive</id>
+        <title>Архив материалов</title>
+    </module>
+    <params>        
+        <param type="list" name="source" title="Источник материалов">
+            <option title="Каталог статей" value="content" />
+            <option title="Архив статей" value="arhive" />
+            <option title="Каталог и архив" value="both" />
+        </param>
+        <param type="list_db" name="cat_id" title="Материалы из раздела" src="cms_category" src_title="title" src_value="id" tree="1" />
+    </params>
+</backend>

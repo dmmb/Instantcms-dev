@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<backend>
+
+    <module>
+        <id>mod_lastreg</id>
+        <title>Новые пользователи</title>
+    </module>
+
+    <params>
+
+        <param type="number" name="newscount" title="Количество для показа" default="5" />
+
+        <param type="list" name="view_type" title="Показывать как">
+            <option title="Таблица" value="table" />
+			<option title="Горизонтальная таблица" value="hr_table" />
+            <option title="Список" value="list" />
+        </param>
+
+		<param type="number" name="maxcool" title="Количество колонок" default="2" />
+
+    </params>
+
+</backend>

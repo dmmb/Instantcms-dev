@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<backend>    
+    <module>
+        <id>mod_auth</id>
+        <title>Авторизация</title>
+    </module>
+    <params>
+        <param type="flag" name="autolog" title="Опция &amp;laquo;Запомнить меня&amp;raquo;" default="on" />
+        <param type="flag" name="passrem" title="Ссылка &amp;laquo;Напомнить пароль&amp;raquo;" default="on" />
+    </params>
+</backend>

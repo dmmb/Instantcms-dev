@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<backend>    
+    <module>
+        <id>mod_user_stats</id>
+        <title>Статистика пользователей</title>
+    </module>
+    <params>
+
+        <param type="flag" name="show_total" title="Показывать число пользователей" default="on" />
+        <param type="flag" name="show_online" title="Показывать кто онлайн" default="on" />
+        <param type="flag" name="show_gender" title="Показывать соотношение полов" default="on" />
+        <param type="flag" name="show_city" title="Показывать города" default="on" />
+        <param type="flag" name="show_bday" title="Показывать именинников" default="on" />
+
+    </params>
+</backend>

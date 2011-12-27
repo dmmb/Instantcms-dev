@@ -1,0 +1,137 @@
+html, body { 
+	font-size:0.9em; 
+	font-family:Trebuchet MS, Arial, Helvetica, sans-serif;
+}
+h2{
+	color:#49545C;
+}
+a { color:#0099FF; }
+a:hover { color:#333333; }
+#header{
+	width:590px; 
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:30px;
+	margin-bottom:20px;
+	color:#0099FF;
+}
+#footer{
+	width:600px; 
+	margin-left:auto;
+	margin-right:auto;
+	border-top:solid 1px silver;
+	margin-top:20px;
+	padding-top:20px;
+	text-align:center;
+	color:#666666;
+}
+#footer a{
+	color:#0099FF;
+}
+#wrapper{
+	width:700px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.panel{
+	width:650px;
+	height:50px;
+	line-height:50px;
+	margin-left:auto;
+	margin-right:auto;
+	border:solid 1px silver;
+	overflow:hidden;
+}
+.wizard{
+	margin-bottom:20px;
+}
+.wizard-nav{
+	padding-left:22px;
+	padding-right:22px;
+	padding-top:5px;
+	padding-bottom:5px;
+	background:url(/install/images/panel.jpg) no-repeat ;
+	display:table;
+	margin-left:auto;
+	margin-right:auto;
+	overflow:hidden;
+	_width:632px;
+	_height:77px;
+}
+.wizard-nav a{
+	text-decoration: none;
+	height:65px;
+	line-height:65px;
+	width: 145px;
+	display: block;
+	float:left;
+	margin: 0;
+	text-align:center;
+	color:#000000;
+	font-size:1em;	
+	background:none;
+}
+.wizard-nav a.active { 	
+	background:url(/install/images/panel-active.jpg) repeat-x; 
+	color:#FFF;
+	font-size:1.2em;
+}
+
+.wizardcontrols { margin-top:20px; margin-bottom:20px; _margin-top:10px; overflow:hidden; }
+
+.wizardcontrols .wizardnext { 
+	width: 120px;  padding:2px; font-size:1.2em;
+}
+.wizardcontrols .wizardprev { width: 120px; ;  padding:2px; font-size:1.2em; }
+
+.wizardpage img{ float:left; margin-right:12px; margin-bottom:12px; }
+
+.wizardpage{ 
+	width:580px; 
+	margin-left:auto;
+	margin-right:auto;
+	padding-top:5px;
+	padding-bottom:20px;
+	_padding-left:30px;
+	_padding-top:16px;
+}
+
+table{
+	margin-bottom:15px;
+}	
+
+th, td{
+	text-align:left;
+	font-size:0.9em;
+}
+
+th { padding-bottom:12px; font-size: 1em; }
+
+td.folder{
+	background:url(/install/images/folder.gif) no-repeat left center; 
+	line-height:16px;
+	padding-left:20px;
+}
+
+td.extension{
+	background:url(/install/images/ext.gif) no-repeat left center;
+	line-height:16px;
+	padding-left:20px;
+}
+
+.txt{ width:200px; border:solid 1px #246493; padding: 2px; }
+.txt:focus{ border:1px solid #FFD100; }
+
+#tutorial { 
+	background:url(/install/images/book.png) no-repeat left center;
+	line-height:16px;
+	padding-left:22px;
+    margin-right: 15px;
+}
+#video {
+	background:url(/install/images/video.png) no-repeat left center;
+	line-height:16px;
+	padding-left:22px;
+    margin-right: 15px;
+}

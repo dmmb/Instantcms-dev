@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<backend>    
+    <module>
+        <id>mod_whoonline</id>
+        <title>Кто онлайн?</title>
+    </module>
+    <params>
+        <param type="flag" name="show_today" title="Показывать кто был сегодня" hint="Выводит дополнительно список всех посетителей за сегодня" default="on" />
+		<param type="flag" name="admin_editor" title="Подсвечивать администраторов и редакторов?" hint="Администраторы и редакторы будут подсвечены соответственно красным и зеленым" default="on" />
+        <param type="string" name="color_admin" title="Цвет администраторов" hint="в формате #XXYYZZ" default="#FF0000" />
+        <param type="string" name="color_editor" title="Цвет редакторов" hint="в формате #XXYYZZ" default="#009900" />
+    </params>
+</backend>

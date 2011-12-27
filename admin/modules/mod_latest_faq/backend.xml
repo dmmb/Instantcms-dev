@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<backend>    
+    <module>
+        <id>mod_latest</id>
+        <title>Последние материалы</title>
+    </module>
+    <params>
+
+        <param type="number" name="newscount" title="Количество вопросов" units="шт." default="5" />
+
+        <param type="number" name="maxlen" title="Максимальная длина вопроса" units="симв." default="120" />
+
+        <param type="list_db" name="cat_id" title="Вопросы из категории" src="cms_faq_cats" src_title="title" src_value="id">
+            <option title="-- Все категории --" value="-1" />
+        </param>
+
+    </params>
+</backend>
