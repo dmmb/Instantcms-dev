@@ -51,6 +51,8 @@ class cmsCore {
         $this->loadClass('db');
         $this->loadClass('config');
 
+		self::loadLanguage('lang');
+
         $inConf = cmsConfig::getInstance();
 
         //проверяем был ли переопределен шаблон через сессию
@@ -3287,11 +3289,14 @@ class cmsCore {
      */
     public static function badTagClear($string){
 
+		$my_domen_regexp = str_replace('.', '\.', HOST);
+		$my_domen_regexp = str_replace('/', '\/', HOST);
+
         $bad_tags = array (
             "'<script[^>]*?>.*?</script>'siu",
             "'<style[^>]*?>.*?</style>'siu",
             "'<meta[^>]*?>'siu",
-            '/<iframe.*?src=(?!"http:\/\/www\.youtube\.com\/embed\/|"http:\/\/vkontakte\.ru\/video_ext\.php\?).*?>.*?<\/iframe>/iu',
+            '/<iframe.*?src=(?!"http:\/\/www\.youtube\.com\/embed\/|"http:\/\/vkontakte\.ru\/video_ext\.php\?|"'.$my_domen_regexp.').*?>.*?<\/iframe>/iu',
             '/<iframe.*>.+<\/iframe>/iu'
         );
 

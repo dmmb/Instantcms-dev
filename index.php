@@ -57,8 +57,6 @@
 
     date_default_timezone_set($inConf->timezone);
 
-    cmsCore::loadLanguage('lang');      //главный языковый файл
-
 	$inUser->autoLogin();     //автоматически авторизуем пользователя, если найден кукис
 
     //проверяем что пользователь не удален и не забанен

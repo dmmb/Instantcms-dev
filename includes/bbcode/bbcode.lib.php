@@ -1066,7 +1066,10 @@ class bbcode {
             
             if ('item'==$item['type']) { continue; }
 
-            $iframe_regexp      = '/<iframe.*?src=(?!"http:\/\/www\.youtube\.com\/embed\/|"http:\/\/vkontakte\.ru\/video_ext\.php\?).*?><\/iframe>/iu';
+			$my_domen_regexp = str_replace('.', '\.', HOST);
+			$my_domen_regexp = str_replace('/', '\/', HOST);
+
+            $iframe_regexp      = '/<iframe.*?src=(?!"http:\/\/www\.youtube\.com\/embed\/|"http:\/\/vkontakte\.ru\/video_ext\.php\?|"'.$my_domen_regexp.').*?><\/iframe>/iu';
             $iframe_regexp2     = '/<iframe.*>.+<\/iframe>/iu';
             $item['str']        = preg_replace($iframe_regexp, '', $item['str']);
             $item['str']        = preg_replace($iframe_regexp2, '', $item['str']);
