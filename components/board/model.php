@@ -230,15 +230,18 @@ class cms_model_board{
 
 /* ==================================================================================================== */
 /* ==================================================================================================== */
-
+    /**
+     * Возвращает категории
+     * @param int $category_id - id категории
+     * @return array
+     */
     public function getSubCats($category_id) {
         $cats = array();
 
-        $sql = "SELECT c.*, IFNULL(COUNT(i.id), 0) as content_count
+        $sql = "SELECT c.*
                 FROM cms_board_cats c
                 LEFT JOIN cms_board_items i ON i.category_id = c.id AND i.published = 1
                 WHERE c.published = 1 AND c.parent_id = '$category_id'
-                GROUP BY c.id
                 ORDER BY title ASC";
         $result = $this->inDB->query($sql);
 
@@ -248,6 +251,7 @@ class cms_model_board{
             if (!$cat['obtypes']){
                 $cat['obtypes'] = $this->inDB->get_field('cms_board_cats', "NSLeft <= {$cat['NSLeft']} AND NSRight >= {$cat['NSRight']} AND obtypes <> ''", 'obtypes');
             }
+			$cat['content_count'] = $this->getAdvertsCountFromCat($cat['NSLeft'], $cat['NSRight']);
 			$cat['ob_links'] = $this->getTypesLinks($cat['id'], $cat['obtypes']);
 			$cat['icon'] = $cat['icon'] ? $cat['icon'] : 'folder_grey.png';
             $cats[] = $cat;
@@ -256,6 +260,23 @@ class cms_model_board{
         $cats = cmsCore::callEvent('GET_BOARD_SUBCATS', $cats);
             
         return $cats;
+    }
+
+    /**
+     * Возвращает количество объвлений в категории и подкатегориях
+     * @return int
+     */
+    public function getAdvertsCountFromCat($left_key, $right_key) {
+
+		$sql = "SELECT i.id
+				FROM cms_board_items i
+				INNER JOIN cms_board_cats cat ON cat.id = i.category_id AND cat.NSLeft >= '$left_key' AND cat.NSRight <= '$right_key'
+				WHERE i.published = 1";
+
+        $result = $this->inDB->query($sql);
+
+        return $this->inDB->num_rows($result);
+
     }
 
 /* ==================================================================================================== */
