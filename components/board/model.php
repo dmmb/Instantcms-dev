@@ -238,10 +238,9 @@ class cms_model_board{
     public function getSubCats($category_id) {
         $cats = array();
 
-        $sql = "SELECT c.*
-                FROM cms_board_cats c
-                LEFT JOIN cms_board_items i ON i.category_id = c.id AND i.published = 1
-                WHERE c.published = 1 AND c.parent_id = '$category_id'
+        $sql = "SELECT *
+                FROM cms_board_cats
+                WHERE published = 1 AND parent_id = '$category_id'
                 ORDER BY title ASC";
         $result = $this->inDB->query($sql);
 
